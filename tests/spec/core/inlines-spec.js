@@ -104,47 +104,47 @@ describe("Core - Inlines", () => {
     const doc = await makeRSDoc(makeStandardOps(null, body));
 
     const a1 = doc.querySelector("#a1 var");
-    expect(a1.textContent).toEqual("variable");
-    expect(a1.dataset.type).toEqual("Type");
+    expect(a1.textContent).toBe("variable");
+    expect(a1.dataset.type).toBe("Type");
 
     const a2 = doc.querySelector("#a2 var");
-    expect(a2.textContent).toEqual("variable with spaces");
-    expect(a2.dataset.type).toEqual("Type");
+    expect(a2.textContent).toBe("variable with spaces");
+    expect(a2.dataset.type).toBe("Type");
     const a3 = doc.querySelector("#a3 var");
-    expect(a3.textContent).toEqual("with spaces");
-    expect(a3.dataset.type).toEqual("Type");
+    expect(a3.textContent).toBe("with spaces");
+    expect(a3.dataset.type).toBe("Type");
 
     const a4 = doc.querySelector("#a4 var");
-    expect(a4.textContent).toEqual("with spaces");
-    expect(a4.dataset.type).toEqual("Type with spaces");
+    expect(a4.textContent).toBe("with spaces");
+    expect(a4.dataset.type).toBe("Type with spaces");
 
     const b = doc.querySelector("#b var");
-    expect(b.textContent).toEqual("variable");
+    expect(b.textContent).toBe("variable");
     expect(b.dataset.type).toBeUndefined();
 
     expect(doc.querySelector("#c var")).toBeFalsy();
     expect(doc.querySelector("#d var")).toBeFalsy();
 
     const e = doc.querySelector("#e var");
-    expect(e.textContent).toEqual("p");
+    expect(e.textContent).toBe("p");
     expect(e.dataset.type).toBeUndefined();
     const f = doc.querySelector("#f var");
-    expect(f.textContent).toEqual("p");
-    expect(f.dataset.type).toEqual("Type with spaces");
+    expect(f.textContent).toBe("p");
+    expect(f.dataset.type).toBe("Type with spaces");
 
     const g = doc.querySelectorAll("#g var");
-    expect(g[0].textContent).toEqual("p");
-    expect(g[0].dataset.type).toEqual("Type with spaces");
-    expect(g[1].textContent).toEqual("var1");
+    expect(g[0].textContent).toBe("p");
+    expect(g[0].dataset.type).toBe("Type with spaces");
+    expect(g[1].textContent).toBe("var1");
     expect(g[1].dataset.type).toBeUndefined();
-    expect(g[2].textContent).toEqual("var2");
-    expect(g[2].dataset.type).toEqual("Type");
+    expect(g[2].textContent).toBe("var2");
+    expect(g[2].dataset.type).toBe("Type");
 
     const h = doc.querySelectorAll("#h var");
-    expect(h[0].textContent).toEqual("var");
-    expect(h[0].dataset.type).toEqual("Generic<int>");
-    expect(h[1].textContent).toEqual("var2");
-    expect(h[1].dataset.type).toEqual("Generic<unsigned short int>");
+    expect(h[0].textContent).toBe("var");
+    expect(h[0].dataset.type).toBe("Generic<int>");
+    expect(h[1].textContent).toBe("var2");
+    expect(h[1].dataset.type).toBe("Generic<unsigned short int>");
   });
 
   it("expands inline references and they get classified as normative/informative correctly", async () => {

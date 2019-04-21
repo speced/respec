@@ -136,7 +136,7 @@ describe("Core — Examples", () => {
     const example = doc.querySelector("aside.example");
     expect(
       exampleLink.getAttribute("href").includes("this-is-a-very-long-link")
-    ).toEqual(false);
+    ).toBe(false);
     expect(exampleLink.getAttribute("href")).toBe("#example-1");
     expect(example.id).toBe("example-1");
   });

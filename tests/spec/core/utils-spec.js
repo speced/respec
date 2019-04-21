@@ -82,7 +82,7 @@ describe("Core - Utils", () => {
         href: "https://example.com",
         hint: "preconnect",
       });
-      expect(link instanceof HTMLLinkElement).toEqual(true);
+      expect(link instanceof HTMLLinkElement).toBe(true);
     });
     it("throws given invalid opts", () => {
       expect(() => {
@@ -134,14 +134,14 @@ describe("Core - Utils", () => {
         hint: "dns-prefetch",
         href: "http://origin:8080/./../test",
       });
-      expect(link.href).toEqual("http://origin:8080/");
+      expect(link.href).toBe("http://origin:8080/");
     });
     it("normalizes a URL intended for preconnect to an origin", () => {
       const link = utils.createResourceHint({
         hint: "preconnect",
         href: "http://origin:8080/./../test",
       });
-      expect(link.href).toEqual("http://origin:8080/");
+      expect(link.href).toBe("http://origin:8080/");
     });
     it("ignores 'as' member on dns-prefetch", () => {
       const link = utils.createResourceHint({
@@ -149,7 +149,7 @@ describe("Core - Utils", () => {
         href: "https://example.com",
         as: "media",
       });
-      expect(link.hasAttribute("as")).toEqual(false);
+      expect(link.hasAttribute("as")).toBe(false);
     });
     it("ignores 'as' member on preconnect", () => {
       const link = utils.createResourceHint({
@@ -157,7 +157,7 @@ describe("Core - Utils", () => {
         href: "https://example.com",
         as: "style",
       });
-      expect(link.hasAttribute("as")).toEqual(false);
+      expect(link.hasAttribute("as")).toBe(false);
     });
     it("respects 'as' member on preload", () => {
       const link = utils.createResourceHint({
@@ -165,8 +165,8 @@ describe("Core - Utils", () => {
         href: "https://example.com",
         as: "style",
       });
-      expect(link.hasAttribute("as")).toEqual(true);
-      expect(link.getAttribute("as")).toEqual("style");
+      expect(link.hasAttribute("as")).toBe(true);
+      expect(link.getAttribute("as")).toBe("style");
     });
     it("respects override of the CORS mode", () => {
       const link = utils.createResourceHint({
@@ -174,7 +174,7 @@ describe("Core - Utils", () => {
         href: "https://other.origin.com",
         corsMode: "use-credentials",
       });
-      expect(link.crossOrigin).toEqual("use-credentials");
+      expect(link.crossOrigin).toBe("use-credentials");
     });
     it("allows the browser to recover from bogus CORS mode", () => {
       const link = utils.createResourceHint({
@@ -182,28 +182,28 @@ describe("Core - Utils", () => {
         href: "https://other.origin.com",
         corsMode: "this will magically become anonymous!",
       });
-      expect(link.crossOrigin).toEqual("anonymous");
+      expect(link.crossOrigin).toBe("anonymous");
     });
     it("automatically detects cross-origin requests for dns-prefetch", () => {
       const link = utils.createResourceHint({
         hint: "dns-prefetch",
         href: "https://other.origin.com",
       });
-      expect(link.crossOrigin).toEqual("anonymous");
+      expect(link.crossOrigin).toBe("anonymous");
     });
     it("automatically detects cross-origin requests for preconnect", () => {
       const link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
       });
-      expect(link.crossOrigin).toEqual("anonymous");
+      expect(link.crossOrigin).toBe("anonymous");
     });
     it("marks the link element for removal on save by default", () => {
       const link = utils.createResourceHint({
         href: "https://example.com",
         hint: "preconnect",
       });
-      expect(link.classList.contains("removeOnSave")).toEqual(true);
+      expect(link.classList.contains("removeOnSave")).toBe(true);
     });
     it("repects leaving a hint in the spec when told to", () => {
       const link = utils.createResourceHint({
@@ -211,7 +211,7 @@ describe("Core - Utils", () => {
         hint: "preconnect",
         dontRemove: true,
       });
-      expect(link.classList.contains("removeOnSave")).toEqual(false);
+      expect(link.classList.contains("removeOnSave")).toBe(false);
     });
   });
 
@@ -223,19 +223,19 @@ describe("Core - Utils", () => {
       expect(() => utils.calculateLeftPad(null)).toThrow();
     });
     it("calculates the smallest left padding of multiline text", () => {
-      expect(utils.calculateLeftPad("")).toEqual(0);
-      expect(utils.calculateLeftPad("\n    \n  ")).toEqual(2);
-      expect(utils.calculateLeftPad("                         ")).toEqual(25);
-      expect(utils.calculateLeftPad(" a                        ")).toEqual(1);
-      expect(utils.calculateLeftPad("  \n a                        ")).toEqual(
+      expect(utils.calculateLeftPad("")).toBe(0);
+      expect(utils.calculateLeftPad("\n    \n  ")).toBe(2);
+      expect(utils.calculateLeftPad("                         ")).toBe(25);
+      expect(utils.calculateLeftPad(" a                        ")).toBe(1);
+      expect(utils.calculateLeftPad("  \n a                        ")).toBe(
         1
       );
-      expect(utils.calculateLeftPad(" \n   a ")).toEqual(1);
-      expect(utils.calculateLeftPad("\n    \n      \n    ")).toEqual(4);
-      expect(utils.calculateLeftPad("\n    \n      \n  ")).toEqual(2);
-      expect(utils.calculateLeftPad("\n   \n      \n  \n    ")).toEqual(2);
-      expect(utils.calculateLeftPad("\n\n\n\n\n\n\n\n\n\n")).toEqual(0);
-      expect(utils.calculateLeftPad("    \n\n\n\n\n  \n\n\n\n\n   ")).toEqual(
+      expect(utils.calculateLeftPad(" \n   a ")).toBe(1);
+      expect(utils.calculateLeftPad("\n    \n      \n    ")).toBe(4);
+      expect(utils.calculateLeftPad("\n    \n      \n  ")).toBe(2);
+      expect(utils.calculateLeftPad("\n   \n      \n  \n    ")).toBe(2);
+      expect(utils.calculateLeftPad("\n\n\n\n\n\n\n\n\n\n")).toBe(0);
+      expect(utils.calculateLeftPad("    \n\n\n\n\n  \n\n\n\n\n   ")).toBe(
         2
       );
     });
@@ -264,34 +264,34 @@ describe("Core - Utils", () => {
     });
 
     it("returns the empty string given falsy values", () => {
-      expect(utils.normalizePadding()).toEqual("");
-      expect(utils.normalizePadding("")).toEqual("");
-      expect(utils.normalizePadding(null)).toEqual("");
+      expect(utils.normalizePadding()).toBe("");
+      expect(utils.normalizePadding("")).toBe("");
+      expect(utils.normalizePadding(null)).toBe("");
     });
 
     it("normalises whitespace, but ignore white with pre tags", () => {
       const str = `   trim start\n    * trim 3 from start \n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
       const testStrings = utils.normalizePadding(str).split("\n");
-      expect(testStrings[0]).toEqual("trim start");
-      expect(testStrings[1]).toEqual(" * trim 3 from start ");
-      expect(testStrings[2]).toEqual("<pre>trim 1");
-      expect(testStrings[3]).toEqual("   if(x){");
-      expect(testStrings[4]).toEqual("\t party()</pre>");
-      expect(testStrings[5]).toEqual("foo ");
-      expect(testStrings[6]).toEqual(" bar");
+      expect(testStrings[0]).toBe("trim start");
+      expect(testStrings[1]).toBe(" * trim 3 from start ");
+      expect(testStrings[2]).toBe("<pre>trim 1");
+      expect(testStrings[3]).toBe("   if(x){");
+      expect(testStrings[4]).toBe("\t party()</pre>");
+      expect(testStrings[5]).toBe("foo ");
+      expect(testStrings[6]).toBe(" bar");
     });
   });
 
   describe("linkCSS", () => {
     it("adds a link element", () => {
       utils.linkCSS(document, "BOGUS");
-      expect(document.querySelectorAll("link[href='BOGUS']").length).toEqual(1);
+      expect(document.querySelectorAll("link[href='BOGUS']").length).toBe(1);
       document.querySelector("link[href='BOGUS']").remove();
     });
 
     it("adds several link elements", () => {
       utils.linkCSS(document, ["BOGUS", "BOGUS", "BOGUS"]);
-      expect(document.querySelectorAll("link[href='BOGUS']").length).toEqual(3);
+      expect(document.querySelectorAll("link[href='BOGUS']").length).toBe(3);
       document
         .querySelectorAll("link[href='BOGUS']")
         .forEach(element => element.remove());
@@ -300,52 +300,52 @@ describe("Core - Utils", () => {
 
   describe("lead0", () => {
     it("prepends 0 only when needed", () => {
-      expect(utils.lead0("1")).toEqual("01");
-      expect(utils.lead0("01")).toEqual("01");
+      expect(utils.lead0("1")).toBe("01");
+      expect(utils.lead0("01")).toBe("01");
     });
   });
 
   describe("concatDate", () => {
     it("formats the date as needed", () => {
       const d = new Date("1977-03-01");
-      expect(utils.concatDate(d)).toEqual("19770301");
-      expect(utils.concatDate(d, "-")).toEqual("1977-03-01");
+      expect(utils.concatDate(d)).toBe("19770301");
+      expect(utils.concatDate(d, "-")).toBe("1977-03-01");
     });
   });
 
   describe("parseSimpleDate", () => {
     it("parses a simple date", () => {
       const d = utils.parseSimpleDate("1977-03-01");
-      expect(d.getUTCFullYear()).toEqual(1977);
-      expect(d.getUTCMonth()).toEqual(2);
-      expect(d.getUTCDate()).toEqual(1);
+      expect(d.getUTCFullYear()).toBe(1977);
+      expect(d.getUTCMonth()).toBe(2);
+      expect(d.getUTCDate()).toBe(1);
     });
   });
 
   describe("parseLastModified", () => {
     it("parses a date in lastModified format", () => {
       const d = utils.parseLastModified("03/15/1977 13:05:42");
-      expect(d.getUTCFullYear()).toEqual(1977);
-      expect(d.getUTCMonth()).toEqual(2);
-      expect(d.getUTCDate()).toEqual(15);
+      expect(d.getUTCFullYear()).toBe(1977);
+      expect(d.getUTCMonth()).toBe(2);
+      expect(d.getUTCDate()).toBe(15);
     });
   });
 
   describe("humanDate", () => {
     it("produces a human date", () => {
-      expect(utils.humanDate("1977-03-15")).toEqual("15 March 1977");
+      expect(utils.humanDate("1977-03-15")).toBe("15 March 1977");
       const d = new Date("1977-03-15");
-      expect(utils.humanDate(d)).toEqual("15 March 1977");
+      expect(utils.humanDate(d)).toBe("15 March 1977");
     });
 
     it("produces a human date in different languages", () => {
-      expect(utils.humanDate("1977-03-15", "en")).toEqual("15 March 1977");
+      expect(utils.humanDate("1977-03-15", "en")).toBe("15 March 1977");
       const d = new Date("1977-03-15");
-      expect(utils.humanDate(d)).toEqual("15 March 1977");
-      expect(utils.humanDate(d, "en")).toEqual("15 March 1977");
-      expect(utils.humanDate(d, "nl")).toEqual("15 maart 1977");
-      expect(utils.humanDate(d, "fr")).toEqual("15 mars 1977");
-      expect(utils.humanDate(d, "unknown")).toEqual("15 March 1977");
+      expect(utils.humanDate(d)).toBe("15 March 1977");
+      expect(utils.humanDate(d, "en")).toBe("15 March 1977");
+      expect(utils.humanDate(d, "nl")).toBe("15 maart 1977");
+      expect(utils.humanDate(d, "fr")).toBe("15 mars 1977");
+      expect(utils.humanDate(d, "unknown")).toBe("15 March 1977");
     });
   });
 
@@ -359,28 +359,28 @@ describe("Core - Utils", () => {
 
   describe("joinAnd", () => {
     it("joins with proper commas and 'and'", () => {
-      expect(utils.joinAnd([])).toEqual("");
-      expect(utils.joinAnd(["x"])).toEqual("x");
-      expect(utils.joinAnd(["x", "x"])).toEqual("x and x");
-      expect(utils.joinAnd(["x", "x", "x"])).toEqual("x, x, and x");
-      expect(utils.joinAnd(["x", "x", "x", "x"])).toEqual("x, x, x, and x");
+      expect(utils.joinAnd([])).toBe("");
+      expect(utils.joinAnd(["x"])).toBe("x");
+      expect(utils.joinAnd(["x", "x"])).toBe("x and x");
+      expect(utils.joinAnd(["x", "x", "x"])).toBe("x, x, and x");
+      expect(utils.joinAnd(["x", "x", "x", "x"])).toBe("x, x, x, and x");
       expect(
         utils.joinAnd(["x", "x", "x", "x"], str => {
           return str.toUpperCase();
         })
-      ).toEqual("X, X, X, and X");
+      ).toBe("X, X, X, and X");
     });
   });
 
   describe("xmlEscape", () => {
     it("escapes properly", () => {
-      expect(utils.xmlEscape('&<>"')).toEqual("&amp;&lt;&gt;&quot;");
+      expect(utils.xmlEscape('&<>"')).toBe("&amp;&lt;&gt;&quot;");
     });
   });
 
   describe("norm", () => {
     it("normalises text", () => {
-      expect(utils.norm("  a   b   ")).toEqual("a b");
+      expect(utils.norm("  a   b   ")).toBe("a b");
     });
   });
 
@@ -399,7 +399,7 @@ describe("Core - Utils", () => {
       const expected =
         'editors=[{"name":"Person Name"}], specStatus="ED", ' +
         'edDraftURI="http://foo.com", shortName="Foo"';
-      expect(utils.toKeyValuePairs(obj)).toEqual(expected);
+      expect(utils.toKeyValuePairs(obj)).toBe(expected);
     });
   });
 
@@ -417,7 +417,7 @@ describe("Core - Utils", () => {
     const expected =
       'editors=[{"name":"Person Name"}]|||specStatus="ED"|||' +
       'edDraftURI="http://foo.com"|||shortName="Foo"';
-    expect(utils.toKeyValuePairs(obj, "|||")).toEqual(expected);
+    expect(utils.toKeyValuePairs(obj, "|||")).toBe(expected);
   });
 
   it("converts objects to key values pairs with different separator and delimiter", () => {
@@ -434,12 +434,12 @@ describe("Core - Utils", () => {
     let expected =
       'editors;[{"name":"Person Name"}], specStatus;"ED", ' +
       'edDraftURI;"http://foo.com", shortName;"Foo"';
-    expect(utils.toKeyValuePairs(obj, undefined, ";")).toEqual(expected);
+    expect(utils.toKeyValuePairs(obj, undefined, ";")).toBe(expected);
 
     expected =
       'editors^[{"name":"Person Name"}] % specStatus^"ED" % ' +
       'edDraftURI^"http://foo.com" % shortName^"Foo"';
-    expect(utils.toKeyValuePairs(obj, " % ", "^")).toEqual(expected);
+    expect(utils.toKeyValuePairs(obj, " % ", "^")).toBe(expected);
   });
 
   describe("flatten()", () => {
@@ -495,9 +495,9 @@ describe("Core - Utils", () => {
           "<div>aa<span>bb<div class='exclude'>ignore me</div></span><p>cc<i>dd</i></p><pre>nope</pre></div>";
 
         const textNodes = utils.getTextNodes(node, ["pre", ".exclude"]);
-        expect(textNodes.length).toEqual(4);
+        expect(textNodes.length).toBe(4);
         const str = textNodes.map(tn => tn.nodeValue).join("");
-        expect(str).toEqual("aabbccdd");
+        expect(str).toBe("aabbccdd");
       });
       it("Excludes white space nodes", () => {
         const node = document.createElement("div");
@@ -505,8 +505,8 @@ describe("Core - Utils", () => {
           " <exclude> </exclude> <exclude>\t \n</exclude>include me";
 
         const textNodes = utils.getTextNodes(node, [], "");
-        expect(textNodes.length).toEqual(1);
-        expect(textNodes[0].nodeValue).toEqual("include me");
+        expect(textNodes.length).toBe(1);
+        expect(textNodes[0].nodeValue).toBe("include me");
       });
     });
 
@@ -546,57 +546,57 @@ describe("Core - Utils", () => {
         const { addId } = utils;
         let elem = document.createElement("p");
         elem.id = "ID";
-        expect(addId(elem)).toEqual("ID");
+        expect(addId(elem)).toBe("ID");
 
         elem = document.createElement("p");
         elem.title = "TITLE";
-        expect(addId(elem)).toEqual("title");
+        expect(addId(elem)).toBe("title");
 
         elem = document.createElement("p");
         elem.textContent = "TEXT";
-        expect(addId(elem)).toEqual("text");
+        expect(addId(elem)).toBe("text");
 
         elem = document.createElement("p");
-        expect(addId(elem, null, "PASSED")).toEqual("passed");
+        expect(addId(elem, null, "PASSED")).toBe("passed");
 
         elem = document.createElement("p");
-        expect(addId(elem, "PFX", "PASSED")).toEqual("PFX-passed");
+        expect(addId(elem, "PFX", "PASSED")).toBe("PFX-passed");
 
         elem = document.createElement("p");
         elem.textContent = "TEXT";
-        expect(addId(elem, "PFX")).toEqual("PFX-text");
+        expect(addId(elem, "PFX")).toBe("PFX-text");
 
         elem = document.createElement("p");
         elem.textContent = "TEXT";
         addId(elem);
-        expect(elem.id).toEqual("text");
+        expect(elem.id).toBe("text");
 
         elem = document.createElement("p");
         elem.textContent = "  A--Bé9\n C";
-        expect(addId(elem)).toEqual("a-be9-c");
+        expect(addId(elem)).toBe("a-be9-c");
 
         elem = document.createElement("p");
-        expect(addId(elem)).toEqual("generatedID");
+        expect(addId(elem)).toBe("generatedID");
 
         elem = document.createElement("p");
         elem.textContent = "2017";
-        expect(addId(elem)).toEqual("x2017");
+        expect(addId(elem)).toBe("x2017");
 
         const div = document.createElement("div");
         div.innerHTML =
           "<p id='a'></p><p id='a-1'></p><span>A</span><span title='a'></span>";
         document.body.appendChild(div);
         const span = div.querySelector("span");
-        expect(addId(span)).toEqual("a-0");
+        expect(addId(span)).toBe("a-0");
         const spanWithTitle = div.querySelector("span[title]");
-        expect(addId(spanWithTitle)).toEqual("a-2");
+        expect(addId(spanWithTitle)).toBe("a-2");
         div.remove();
 
         elem = document.createElement("p");
         elem.textContent = ` ¡™£¢∞§¶•ªº
         THIS is a ------------
       test (it_contains [[stuff]] '123') 😎		`;
-        expect(addId(elem)).toEqual("this-is-a-test-it_contains-stuff-123");
+        expect(addId(elem)).toBe("this-is-a-test-it_contains-stuff-123");
       });
     });
 
@@ -607,9 +607,9 @@ describe("Core - Utils", () => {
         document.body.appendChild(dfn);
 
         const titles = utils.getDfnTitles(dfn, { isDefinition: true });
-        expect(titles[0]).toEqual("dfn");
-        expect(titles[1]).toEqual("dfn2");
-        expect(titles[2]).toEqual("dfn3");
+        expect(titles[0]).toBe("dfn");
+        expect(titles[1]).toBe("dfn2");
+        expect(titles[2]).toBe("dfn3");
 
         dfn.remove();
       });
@@ -621,10 +621,10 @@ describe("Core - Utils", () => {
         document.body.appendChild(dfn);
 
         const titles = utils.getDfnTitles(dfn, { isDefinition: true });
-        expect(titles[0]).toEqual("dfn");
-        expect(titles[1]).toEqual("dfn2");
-        expect(titles[2]).toEqual("dfn3");
-        expect(titles[3]).toEqual(undefined);
+        expect(titles[0]).toBe("dfn");
+        expect(titles[1]).toBe("dfn2");
+        expect(titles[2]).toBe("dfn3");
+        expect(titles[3]).toBeUndefined();
 
         dfn.remove();
       });
@@ -636,16 +636,16 @@ describe("Core - Utils", () => {
         document.body.appendChild(dfn);
 
         const titles = utils.getDfnTitles(dfn, { isDefinition: true });
-        expect(titles[0]).toEqual("dfn");
-        expect(titles[1]).toEqual("dfn2");
-        expect(titles[2]).toEqual("dfn3");
-        expect(titles[3]).toEqual("text");
+        expect(titles[0]).toBe("dfn");
+        expect(titles[1]).toBe("dfn2");
+        expect(titles[2]).toBe("dfn3");
+        expect(titles[3]).toBe("text");
 
         dfn.removeAttribute("data-lt");
-        expect(utils.getDfnTitles(dfn)[0]).toEqual("abbr");
+        expect(utils.getDfnTitles(dfn)[0]).toBe("abbr");
 
         dfn.querySelector("abbr").removeAttribute("title");
-        expect(utils.getDfnTitles(dfn)[0]).toEqual("text");
+        expect(utils.getDfnTitles(dfn)[0]).toBe("text");
 
         dfn.remove();
       });

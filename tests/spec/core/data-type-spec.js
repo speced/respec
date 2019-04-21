@@ -152,39 +152,39 @@ describe("Core — data-type attribute", () => {
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
     const a1 = doc.querySelector("#a1 var");
-    expect(a1.textContent).toEqual("varA");
+    expect(a1.textContent).toBe("varA");
     expect(a1.dataset.type).toBeUndefined();
 
     const a2 = doc.querySelector("#a2 var");
-    expect(a2.textContent).toEqual("varA");
-    expect(a2.dataset.type).toEqual("DOMString");
+    expect(a2.textContent).toBe("varA");
+    expect(a2.dataset.type).toBe("DOMString");
 
     const a3 = doc.querySelector("#a3 var");
-    expect(a3.textContent).toEqual("varA");
-    expect(a3.dataset.type).toEqual("DOMString");
+    expect(a3.textContent).toBe("varA");
+    expect(a3.dataset.type).toBe("DOMString");
 
     const a4 = doc.querySelector("#a4 var");
-    expect(a4.textContent).toEqual("varA");
-    expect(a4.dataset.type).toEqual("float");
+    expect(a4.textContent).toBe("varA");
+    expect(a4.dataset.type).toBe("float");
 
     const a5 = doc.querySelector("#a5 var");
-    expect(a5.textContent).toEqual("varA");
-    expect(a5.dataset.type).toEqual("float");
+    expect(a5.textContent).toBe("varA");
+    expect(a5.dataset.type).toBe("float");
 
     const b1 = doc.querySelector("#b1 var");
-    expect(b1.textContent).toEqual("varB");
-    expect(b1.dataset.type).toEqual("DOMString");
+    expect(b1.textContent).toBe("varB");
+    expect(b1.dataset.type).toBe("DOMString");
 
     const a6 = doc.querySelector("#a6 var");
-    expect(a6.textContent).toEqual("varA");
+    expect(a6.textContent).toBe("varA");
     expect(a6.dataset.type).toBeUndefined();
 
     const b2 = doc.querySelector("#b2 var");
-    expect(b2.textContent).toEqual("varB");
-    expect(b2.dataset.type).toEqual("sequence<Promise>");
+    expect(b2.textContent).toBe("varB");
+    expect(b2.dataset.type).toBe("sequence<Promise>");
 
     const b3 = doc.querySelector("#b2 var");
-    expect(b3.textContent).toEqual("varB");
-    expect(b3.dataset.type).toEqual("sequence<Promise>");
+    expect(b3.textContent).toBe("varB");
+    expect(b3.dataset.type).toBe("sequence<Promise>");
   });
 });

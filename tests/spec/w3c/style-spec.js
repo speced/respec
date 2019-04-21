@@ -89,7 +89,7 @@ async function loadWithStatus(status, expectedURL, mode) {
   const query = `link[href^='${testedURL}']`;
   const elem = doc.querySelector(query);
   expect(elem).toBeTruthy();
-  expect(elem.href).toEqual(testedURL);
+  expect(elem.href).toBe(testedURL);
   return doc;
 }
 
@@ -101,7 +101,7 @@ describe("W3C - Style", () => {
     const doc = await makeRSDoc(ops, "spec/core/simple.html");
     const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
     const elem = doc.querySelector(query);
-    expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
+    expect(elem.src).toBe("https://www.w3.org/scripts/TR/2016/fixup.js");
   });
 
   it("should have a meta viewport added", async () => {
@@ -110,7 +110,7 @@ describe("W3C - Style", () => {
     const elem = doc.head.querySelector("meta[name=viewport]");
     expect(elem).toBeTruthy();
     const expectedStr = "width=device-width, initial-scale=1, shrink-to-fit=no";
-    expect(elem.content).toEqual(expectedStr);
+    expect(elem.content).toBe(expectedStr);
   });
 
   it("should default to base when specStatus is missing", async () => {
