@@ -182,7 +182,7 @@ describe("Core - Markdown", () => {
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
     const bar = doc.getElementById("bar");
-    expect(bar.textContent).toMatch("1.1 Bar");
+    expect(bar.textContent).toContain("1.1 Bar");
     const foo = doc.getElementById("foo");
     expect(foo.parentElement.contains(bar)).toBeTruthy();
   });

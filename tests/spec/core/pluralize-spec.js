@@ -103,9 +103,7 @@ describe("Core - Pluralize", () => {
     expect(dfnId).toBe("dfn-foo");
     const [validLink, invalidLink] = [...doc.querySelectorAll("#section a")];
     expect(validLink.getAttribute("href")).toBe("#dfn-foo");
-    expect(
-      invalidLink.classList.contains("respec-offending-element")
-    ).toBeTruthy();
+    expect(invalidLink.classList).toContain("respec-offending-element");
   });
 
   it("does nothing if conf.pluralize is not defined", async () => {
@@ -123,9 +121,7 @@ describe("Core - Pluralize", () => {
     expect(dfnId).toBe("dfn-foo");
     const [validLink, invalidLink] = [...doc.querySelectorAll("#section a")];
     expect(validLink.getAttribute("href")).toBe("#dfn-foo");
-    expect(
-      invalidLink.classList.contains("respec-offending-element")
-    ).toBeTruthy();
+    expect(invalidLink.classList).toContain("respec-offending-element");
   });
 
   it("doesn't pluralize when [data-lt-noDefault] is defined", async () => {
@@ -145,12 +141,8 @@ describe("Core - Pluralize", () => {
       ...doc.querySelectorAll("#section a"),
     ];
     expect(validLink.getAttribute("href")).toBe("#dfn-baz");
-    expect(
-      badLink1.classList.contains("respec-offending-element")
-    ).toBeTruthy();
-    expect(
-      badLink2.classList.contains("respec-offending-element")
-    ).toBeTruthy();
+    expect(badLink1.classList).toContain("respec-offending-element");
+    expect(badLink2.classList).toContain("respec-offending-element");
   });
 
   it("doesn't mishandle pluralization when both plural and singular <dfn> exists", async () => {
@@ -257,6 +249,6 @@ describe("Core - Pluralize", () => {
     expect(dfn.dataset.lt).toBeUndefined();
     const [goodLink, badLink] = [...doc.querySelectorAll("#section a")];
     expect(goodLink.getAttribute("href")).toBe("#dfn-baz");
-    expect(badLink.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(badLink.classList).toContain("respec-offending-element");
   });
 });

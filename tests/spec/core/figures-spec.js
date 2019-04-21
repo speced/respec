@@ -88,9 +88,7 @@ describe("Core - Figures", () => {
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("fig");
-    expect(
-      anchorFig.classList.contains("respec-offending-element")
-    ).toBeTruthy();
+    expect(anchorFig.classList).toContain("respec-offending-element");
   });
 
   describe("normalize images", () => {

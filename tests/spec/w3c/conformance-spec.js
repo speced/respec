@@ -27,10 +27,10 @@ describe("W3C — Conformance", () => {
       /\d+\.\s+Conformance/
     );
     expect(conformance.querySelectorAll("p").length).toBe(3);
-    expect(conformance.querySelector("p:first-of-type").textContent).toMatch(
+    expect(conformance.querySelector("p:first-of-type").textContent).toContain(
       "non-normative"
     );
-    expect(conformance.querySelector("p:last-child").textContent).toMatch(
+    expect(conformance.querySelector("p:last-child").textContent).toContain(
       "CONFORMANCE"
     );
   });

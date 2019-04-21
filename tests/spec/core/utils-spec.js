@@ -203,7 +203,7 @@ describe("Core - Utils", () => {
         href: "https://example.com",
         hint: "preconnect",
       });
-      expect(link.classList.contains("removeOnSave")).toBe(true);
+      expect(link.classList).toContain("removeOnSave");
     });
     it("repects leaving a hint in the spec when told to", () => {
       const link = utils.createResourceHint({
@@ -211,7 +211,7 @@ describe("Core - Utils", () => {
         hint: "preconnect",
         dontRemove: true,
       });
-      expect(link.classList.contains("removeOnSave")).toBe(false);
+      expect(link.classList).not.toContain("removeOnSave");
     });
   });
 
