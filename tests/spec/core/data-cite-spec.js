@@ -163,12 +163,12 @@ describe("Core — data-cite attribute", () => {
     expect(a2.href).toBe("");
     expect(a1.hasAttribute("data-cite")).toBe(false);
     expect(a2.hasAttribute("data-cite")).toBe(false);
-    expect(
-      doc.getElementById("bib-no-exist-inf").closest("section").id
-    ).toBe("informative-references");
-    expect(
-      doc.getElementById("bib-no-exist-norm").closest("section").id
-    ).toBe("normative-references");
+    expect(doc.getElementById("bib-no-exist-inf").closest("section").id).toBe(
+      "informative-references"
+    );
+    expect(doc.getElementById("bib-no-exist-norm").closest("section").id).toBe(
+      "normative-references"
+    );
   });
 
   it("adds the path and fragment identifier to the link", async () => {
@@ -208,9 +208,9 @@ describe("Core — data-cite attribute", () => {
         "https://html.spec.whatwg.org/multipage/webappapis.html#pass"
       );
       expect(a.hasAttribute("data-cite")).toBe(false);
-      expect(
-        doc.getElementById("bib-whatwg-html").closest("section").id
-      ).toBe("informative-references");
+      expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
+        "informative-references"
+      );
     });
 
     it("resolves paths relative to the cited spec, even when path is absolute", async () => {
@@ -239,9 +239,9 @@ describe("Core — data-cite attribute", () => {
       expect(a.textContent).toBe("inline link");
       expect(a.href).toBe("https://html.spec.whatwg.org/multipage/#pass");
       expect(a.hasAttribute("data-cite")).toBe(false);
-      expect(
-        doc.getElementById("bib-whatwg-html").closest("section").id
-      ).toBe("normative-references");
+      expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
+        "normative-references"
+      );
     });
   });
 

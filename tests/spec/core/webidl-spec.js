@@ -17,9 +17,7 @@ describe("Core - WebIDL", () => {
     expect(idl.querySelector(".idlType:first-child").textContent).toBe(
       "\n  record<DOMString, USVString>"
     );
-    expect(idl.querySelector(".idlMember .idlName").textContent).toBe(
-      "pass"
-    );
+    expect(idl.querySelector(".idlMember .idlName").textContent).toBe("pass");
   });
 
   it("links standardized IDL types to WebIDL spec", () => {
@@ -215,12 +213,12 @@ describe("Core - WebIDL", () => {
 
     target = doc.getElementById("if-doc");
     const interfaces = target.querySelectorAll(".idlInterface");
-    expect(
-      interfaces[0].querySelector(".idlID a").getAttribute("href")
-    ).toBe("#dom-docinterface");
-    expect(
-      interfaces[1].querySelector(".idlID a").getAttribute("href")
-    ).toBe("#dom-docisnotcasesensitive");
+    expect(interfaces[0].querySelector(".idlID a").getAttribute("href")).toBe(
+      "#dom-docinterface"
+    );
+    expect(interfaces[1].querySelector(".idlID a").getAttribute("href")).toBe(
+      "#dom-docisnotcasesensitive"
+    );
     expect(interfaces[0].id).toBe("idl-def-docinterface");
     expect(interfaces[1].id).toBe("idl-def-docisnotcasesensitive");
     expect(interfaces[2].id).toBe("idl-def-undocinterface");
@@ -245,12 +243,12 @@ describe("Core - WebIDL", () => {
     expect(ctor.querySelector("a").textContent).toBe("Constructor");
     const params = [...ctor.getElementsByClassName("idlType")];
     expect(params.length).toBe(3);
-    expect(
-      params.filter(p => p.textContent.includes("sequence")).length
-    ).toBe(1);
-    expect(
-      params.filter(p => p.textContent.includes("Promise")).length
-    ).toBe(1);
+    expect(params.filter(p => p.textContent.includes("sequence")).length).toBe(
+      1
+    );
+    expect(params.filter(p => p.textContent.includes("Promise")).length).toBe(
+      1
+    );
     expect(params[0].textContent).toBe("boolean");
 
     target = doc.getElementById("ctor-noea");
@@ -274,9 +272,7 @@ describe("Core - WebIDL", () => {
     );
     const params = [...ctor.getElementsByClassName("idlType")];
     expect(params.length).toBe(2);
-    expect(params.filter(p => p.textContent.includes("Date")).length).toBe(
-      1
-    );
+    expect(params.filter(p => p.textContent.includes("Date")).length).toBe(1);
     expect(params[0].textContent).toBe("boolean");
   });
 
@@ -325,9 +321,9 @@ describe("Core - WebIDL", () => {
     const const1 = target.querySelector(".idlConst");
     expect(const1.querySelector(".idlType").textContent).toBe(" boolean");
     expect(const1.querySelector(".idlName").textContent).toBe("test");
-    expect(
-      consts[consts.length - 1].querySelectorAll(".extAttr").length
-    ).toBe(1);
+    expect(consts[consts.length - 1].querySelectorAll(".extAttr").length).toBe(
+      1
+    );
 
     // Links and IDs.
     expect(
@@ -542,9 +538,7 @@ describe("Core - WebIDL", () => {
       ({ textContent }) => textContent === "Performance"
     );
     expect(performanceTypeLink).toBeTruthy();
-    expect(performanceTypeLink.getAttribute("href")).toBe(
-      "#dfn-performance"
-    );
+    expect(performanceTypeLink.getAttribute("href")).toBe("#dfn-performance");
     const performanceMethodLink = Array.from(target.querySelectorAll("a")).find(
       ({ textContent }) => textContent === "performance"
     );
@@ -591,9 +585,7 @@ interface ReadOnlySetLike {
       "  \n" +
       "};";
     expect(target.textContent).toBe(text);
-    expect(target.getElementsByClassName("idlSectionComment").length).toBe(
-      1
-    );
+    expect(target.getElementsByClassName("idlSectionComment").length).toBe(1);
   });
 
   it("should handle dictionaries", () => {
@@ -660,9 +652,9 @@ interface ReadOnlySetLike {
     expect(dictDocTest.getAttribute("id")).toBe("idl-def-dictdoctest");
     const mems = [...dictDocTest.querySelectorAll(".idlMember")];
     const dictDocField = mems.find(m => m.textContent.includes("dictDocField"));
-    expect(
-      dictDocField.querySelector(".idlName a").getAttribute("href")
-    ).toBe("#dom-dictdoctest-dictdocfield");
+    expect(dictDocField.querySelector(".idlName a").getAttribute("href")).toBe(
+      "#dom-dictdoctest-dictdocfield"
+    );
     expect(
       mems
         .find(m => m.textContent.includes("otherField"))
@@ -800,9 +792,9 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(prm[0].textContent).toBe("value");
 
     // Links and IDs.
-    expect(
-      target.querySelector("a[href='#dom-cblessbasic']").textContent
-    ).toBe("CbLessBasic");
+    expect(target.querySelector("a[href='#dom-cblessbasic']").textContent).toBe(
+      "CbLessBasic"
+    );
     expect(target.querySelector(".idlCallback").getAttribute("id")).toBe(
       "idl-def-cblessbasic"
     );
@@ -835,9 +827,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(
       target.querySelector(".idlID").children[0].getAttribute("href")
     ).toBe("#dom-tdlessbasic");
-    expect(target.querySelector(".idlTypedef").id).toBe(
-      "idl-def-tdlessbasic"
-    );
+    expect(target.querySelector(".idlTypedef").id).toBe("idl-def-tdlessbasic");
 
     target = doc.getElementById("td-extended-attribute");
     text =
@@ -878,9 +868,9 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       section.querySelector("dfn#dom-documented-docstring").textContent
     ).toBe("docString");
 
-    expect(
-      section.querySelector("dfn#dfn-some-generic-term").textContent
-    ).toBe("Some generic term");
+    expect(section.querySelector("dfn#dfn-some-generic-term").textContent).toBe(
+      "Some generic term"
+    );
     expect(
       section.querySelector("a[href='#dfn-some-generic-term']").textContent
     ).toBe("Some generic term");

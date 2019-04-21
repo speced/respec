@@ -606,9 +606,7 @@ describe("Core — xref", () => {
       expect(eventTargetLink.href).toBe(expectedLinks.get("EventTarget"));
 
       const link2 = doc.querySelector("#link2 code a");
-      expect(link2.href).toBe(
-        expectedLinks.get("PermissionStatus.[[query]]")
-      );
+      expect(link2.href).toBe(expectedLinks.get("PermissionStatus.[[query]]"));
       expect(link2.textContent).toBe("query");
 
       const link3 = doc.querySelector("#link3 code a");
@@ -777,12 +775,8 @@ describe("Core — xref", () => {
       expect(link2.textContent).toBe(`"blob" "imports"`);
 
       const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
-      expect(blockLink1.href).toBe(
-        expectedLinks.get("ChildDisplayType.block")
-      );
-      expect(blockLink2.href).toBe(
-        expectedLinks.get("ChildDisplayType.block")
-      );
+      expect(blockLink1.href).toBe(expectedLinks.get("ChildDisplayType.block"));
+      expect(blockLink2.href).toBe(expectedLinks.get("ChildDisplayType.block"));
 
       const [dashedThing, emptyString] = doc.querySelectorAll("#link4 code a");
       expect(dashedThing.textContent).toBe("dashed-thing");

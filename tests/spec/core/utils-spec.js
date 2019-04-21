@@ -227,17 +227,13 @@ describe("Core - Utils", () => {
       expect(utils.calculateLeftPad("\n    \n  ")).toBe(2);
       expect(utils.calculateLeftPad("                         ")).toBe(25);
       expect(utils.calculateLeftPad(" a                        ")).toBe(1);
-      expect(utils.calculateLeftPad("  \n a                        ")).toBe(
-        1
-      );
+      expect(utils.calculateLeftPad("  \n a                        ")).toBe(1);
       expect(utils.calculateLeftPad(" \n   a ")).toBe(1);
       expect(utils.calculateLeftPad("\n    \n      \n    ")).toBe(4);
       expect(utils.calculateLeftPad("\n    \n      \n  ")).toBe(2);
       expect(utils.calculateLeftPad("\n   \n      \n  \n    ")).toBe(2);
       expect(utils.calculateLeftPad("\n\n\n\n\n\n\n\n\n\n")).toBe(0);
-      expect(utils.calculateLeftPad("    \n\n\n\n\n  \n\n\n\n\n   ")).toBe(
-        2
-      );
+      expect(utils.calculateLeftPad("    \n\n\n\n\n  \n\n\n\n\n   ")).toBe(2);
     });
   });
 
