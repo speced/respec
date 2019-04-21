@@ -101,7 +101,7 @@ describe("W3C — Headers", () => {
       // if `mailto` is specified in People, `url` won't be used
       expect(dd.querySelectorAll("a[href='http://URI']").length).toBe(0);
       expect(dd.dataset.editorId).toBe("1234");
-      expect(dd.textContent).toMatch("(NOTE)");
+      expect(dd.textContent).toContain("(NOTE)");
       expect(
         dd.querySelector("a[href='https://orcid.org/0000-0002-1694-233X']")
       ).not.toBeNull();
@@ -1058,8 +1058,8 @@ describe("W3C — Headers", () => {
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
         ).length
       ).toBe(1);
-      expect(doc.querySelector(".head h2").textContent).toMatch(
-        /Draft Community Group Report/
+      expect(doc.querySelector(".head h2").textContent).toContain(
+        "Draft Community Group Report"
       );
       const sotd = doc.getElementById("sotd");
       expect(sotd.querySelectorAll("a[href='http://WG']").length).toBe(1);
@@ -1146,7 +1146,7 @@ describe("W3C — Headers", () => {
       const sotd = doc.getElementById("sotd").textContent.replace(/\s+/gm, " ");
       const testString =
         "the Submitting Members have made a formal Submission request";
-      expect(sotd).toMatch(testString);
+      expect(sotd).toContain(testString);
     });
     it("links the right submitting members", async () => {
       const anchor = doc.querySelector(

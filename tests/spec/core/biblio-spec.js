@@ -104,7 +104,7 @@ describe("W3C — Bibliographic References", () => {
   it("resolves a localy-aliased spec", () => {
     const ref = doc.querySelector("#bib-foobarglop + dd");
     expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/BARBAR/);
+    expect(ref.textContent).toContain("BARBAR");
   });
 
   it("normalizes aliases", async () => {
@@ -155,8 +155,8 @@ describe("W3C — Bibliographic References", () => {
     const { textContent: last } = doc.querySelector(
       "#normative-references dt:last-of-type"
     );
-    expect(first).toMatch("[a]");
-    expect(last).toMatch("[Zzz]");
+    expect(first).toBe("[aaa]");
+    expect(last).toBe("[Zzz]");
   });
 
   it("makes sure that normative references win irrespective of case", () => {
