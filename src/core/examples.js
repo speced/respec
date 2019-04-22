@@ -63,11 +63,11 @@ function makeTitle(elem, num, report) {
  * Link <a href="#example">
  */
 function replaceEmptyAnchors() {
-  for (const id of examplesMap.keys()) {
+  for (const [id, text] of examplesMap.entries()) {
     [...document.querySelectorAll(`a[href="#${id}"]`)]
       .filter(elem => elem.textContent.trim() === "")
       .forEach(elem => {
-        elem.textContent = examplesMap.get(id);
+        elem.textContent = text;
       });
   }
 }
