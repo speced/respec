@@ -164,11 +164,9 @@ export function normalizePadding(text = "") {
   function isTextNode(node) {
     return node !== null && node.nodeType === Node.TEXT_NODE;
   }
-  // Force into body
-  const parserInput = `<body>${text}`;
-  const doc = new DOMParser().parseFromString(parserInput, "text/html");
+  const doc = document.createRange().createContextualFragment(text);
   // Normalize block level elements children first
-  Array.from(doc.body.children)
+  Array.from(doc.children)
     .filter(elem => !inlineElems.has(elem.localName))
     .filter(elem => elem.localName !== "pre")
     .filter(elem => elem.localName !== "table")
@@ -176,14 +174,12 @@ export function normalizePadding(text = "") {
       elem.innerHTML = normalizePadding(elem.innerHTML);
     });
   // Normalize root level now
-  Array.from(doc.body.childNodes)
+  Array.from(doc.childNodes)
     .filter(node => isTextNode(node) && node.textContent.trim() === "")
-    .forEach(node =>
-      node.parentElement.replaceChild(doc.createTextNode("\n"), node)
-    );
+    .forEach(node => node.replaceWith("\n"));
   // Normalize text node
-  if (!isTextNode(doc.body.firstChild)) {
-    Array.from(doc.body.firstChild.children)
+  if (!isTextNode(doc.firstChild)) {
+    Array.from(doc.firstChild.children)
       .filter(child => child.localName !== "table")
       .forEach(child => {
         child.innerHTML = normalizePadding(child.innerHTML);
@@ -191,22 +187,20 @@ export function normalizePadding(text = "") {
   }
   doc.normalize();
   // use the first space as an indicator of how much to chop off the front
-  const firstSpace = doc.body.textContent
+  const firstSpace = doc.textContent
     .replace(/^ *\n/, "")
     .split("\n")
     .filter(item => item && item.startsWith(" "))[0];
   const chop = firstSpace ? firstSpace.match(/ +/)[0].length : 0;
   if (chop) {
     // Chop chop from start, but leave pre elem alone
-    Array.from(doc.body.childNodes)
+    Array.from(doc.childNodes)
       .filter(node => node.localName !== "pre")
       .filter(isTextNode)
       .filter(node => {
         // we care about text next to a block level element
         const prevSib = node.previousElementSibling;
-        const nextTo = prevSib
-          ? prevSib.localName
-          : node.parentElement.localName;
+        const nextTo = prevSib && prevSib.localName;
         // and we care about text elements that finish on a new line
         return (
           !inlineElems.has(nextTo) || node.textContent.trim().includes("\n")
@@ -216,9 +210,7 @@ export function normalizePadding(text = "") {
         // We need to retain white space if the text Node is next to an in-line element
         let padding = "";
         const prevSib = node.previousElementSibling;
-        const nextTo = prevSib
-          ? prevSib.localName
-          : node.parentElement.localName;
+        const nextTo = prevSib && prevSib.localName;
         if (/^[\t ]/.test(node.textContent) && inlineElems.has(nextTo)) {
           padding = node.textContent.match(/^\s+/)[0];
         }
@@ -227,7 +219,7 @@ export function normalizePadding(text = "") {
       }, new RegExp(`^ {1,${chop}}`, "gm"));
     // deal with pre elements... we can chop whitespace from their siblings
     const endsWithSpace = new RegExp(`\\ {${chop}}$`, "gm");
-    Array.from(doc.body.querySelectorAll("pre"))
+    Array.from(doc.querySelectorAll("pre"))
       .map(elem => elem.previousSibling)
       .filter(isTextNode)
       .reduce((chop, node) => {
@@ -240,9 +232,11 @@ export function normalizePadding(text = "") {
         return chop;
       }, chop);
   }
-  const result = endsWithSpace.test(doc.body.innerHTML)
-    ? `${doc.body.innerHTML.trimRight()}\n`
-    : doc.body.innerHTML;
+  const wrap = document.createElement("body");
+  wrap.append(doc);
+  const result = endsWithSpace.test(wrap.innerHTML)
+    ? `${wrap.innerHTML.trimRight()}\n`
+    : wrap.innerHTML;
   return result;
 }
 
