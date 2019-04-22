@@ -76,7 +76,8 @@ function highlightVars(varElem) {
   const highlightColor = getHighlightColor(varElem);
 
   const varsToHighlight = [...parent.querySelectorAll("var")].filter(
-    el => el.textContent.trim() === textContent
+    el =>
+      el.textContent.trim() === textContent && el.closest("section") === parent
   );
 
   // update availability of highlight color
