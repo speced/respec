@@ -246,38 +246,6 @@ describe("Core - Utils", () => {
     });
   });
 
-  describe("normalizePadding() method", () => {
-    it("throws given an argument that is not a string", () => {
-      expect(() => {
-        utils.normalizePadding({});
-      }).toThrow();
-      expect(() => {
-        utils.normalizePadding([]);
-      }).toThrow();
-      expect(() => {
-        utils.normalizePadding(123);
-      }).toThrow();
-    });
-
-    it("returns the empty string given falsy values", () => {
-      expect(utils.normalizePadding()).toBe("");
-      expect(utils.normalizePadding("")).toBe("");
-      expect(utils.normalizePadding(null)).toBe("");
-    });
-
-    it("normalises whitespace, but ignore white with pre tags", () => {
-      const str = `   trim start\n    * trim 3 from start \n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
-      const testStrings = utils.normalizePadding(str).split("\n");
-      expect(testStrings[0]).toBe("trim start");
-      expect(testStrings[1]).toBe(" * trim 3 from start ");
-      expect(testStrings[2]).toBe("<pre>trim 1");
-      expect(testStrings[3]).toBe("   if(x){");
-      expect(testStrings[4]).toBe("\t party()</pre>");
-      expect(testStrings[5]).toBe("foo ");
-      expect(testStrings[6]).toBe(" bar");
-    });
-  });
-
   describe("linkCSS", () => {
     it("adds a link element", () => {
       utils.linkCSS(document, "BOGUS");

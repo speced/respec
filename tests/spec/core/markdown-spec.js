@@ -329,4 +329,28 @@ describe("Core - Markdown", () => {
       expect(dontChange).toBe("## this should not change");
     });
   });
+  describe("Whitespace compatibility", () => {
+    it("normalises whitespace, but ignore white with pre tags", async () => {
+      const str = `   trim start\n    * trim 3 from start \n\n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
+      const ops = makeStandardOps(
+        null,
+        `<section id=markdown1 data-format=markdown>${str}`
+      );
+      const doc = await makeRSDoc(ops);
+      const [p1, ul, pre, p2] = doc.getElementById("markdown1").children;
+      expect(p1.localName).toBe("p");
+      expect(p1.textContent).toBe("trim start");
+      expect(p2.textContent).toBe("foo \n bar");
+      expect(ul.children.length).toBe(1);
+
+      const [li] = ul.children;
+      expect(li.localName).toBe("li");
+      expect(li.textContent).toBe("trim 3 from start ");
+
+      const preText = pre.textContent.split("\n");
+      expect(preText[0]).toBe("trim 1");
+      expect(preText[1]).toBe("   if(x){");
+      expect(preText[2]).toBe("     party()");
+    });
+  });
 });
