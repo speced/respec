@@ -2,11 +2,11 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import { addId } from "./utils";
-import { biblio } from "./biblio";
-import { lang as defaultLang } from "../core/l10n";
-import hyperHTML from "../../js/html-template";
-import { pub } from "./pubsubhub";
+import { addId } from "./utils.js";
+import { biblio } from "./biblio.js";
+import { lang as defaultLang } from "../core/l10n.js";
+import hyperHTML from "../../js/html-template.js";
+import { pub } from "./pubsubhub.js";
 
 export const name = "core/render-biblio";
 

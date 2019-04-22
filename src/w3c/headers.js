@@ -90,12 +90,12 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import { ISODate, concatDate, joinAnd } from "../core/utils";
-import cgbgHeadersTmpl from "./templates/cgbg-headers";
-import cgbgSotdTmpl from "./templates/cgbg-sotd";
-import headersTmpl from "./templates/headers";
-import { pub } from "../core/pubsubhub";
-import sotdTmpl from "./templates/sotd";
+import { ISODate, concatDate, joinAnd } from "../core/utils.js";
+import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
+import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
+import headersTmpl from "./templates/headers.js";
+import { pub } from "../core/pubsubhub.js";
+import sotdTmpl from "./templates/sotd.js";
 
 export const name = "w3c/headers";
 
@@ -383,6 +383,16 @@ export default function({ document, configuration: conf }) {
     pub("error", "At least one editor is required");
   const peopCheck = function(it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
+    if (it.orcid) {
+      try {
+        it.orcid = normalizeOrcid(it.orcid);
+      } catch (e) {
+        pub("error", `"${it.orcid}" is not an ORCID. ${e.message}`);
+        // A failed orcid link could link to something outside of orcid,
+        // which would be misleading.
+        delete it.orcid;
+      }
+    }
   };
   if (conf.editors) {
     conf.editors.forEach(peopCheck);
@@ -667,6 +677,43 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
     // Whatever sections are left, we throw at the end.
     additionalSections: sotdClone.childNodes,
   };
+}
+
+/**
+ * @param {string} orcid Either an ORCID URL or just the 16-digit ID which comes after the /
+ * @return {string} the full ORCID URL. Throws an error if the ID is invalid.
+ */
+function normalizeOrcid(orcid) {
+  const orcidUrl = new URL(orcid, "https://orcid.org/");
+  if (orcidUrl.origin !== "https://orcid.org") {
+    throw new Error(
+      `The origin should be "https://orcid.org", not "${orcidUrl.origin}".`
+    );
+  }
+
+  // trailing slash would mess up checksum
+  const orcidId = orcidUrl.pathname.slice(1).replace(/\/$/, "");
+  if (!/^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/.test(orcidId)) {
+    throw new Error(
+      `ORCIDs have the format "1234-1234-1234-1234", not "${orcidId}"`
+    );
+  }
+
+  // calculate checksum as per https://support.orcid.org/hc/en-us/articles/360006897674-Structure-of-the-ORCID-Identifier
+  const lastDigit = orcidId[orcidId.length - 1];
+  const remainder = orcidId
+    .split("")
+    .slice(0, -1)
+    .filter(c => /\d/.test(c))
+    .map(Number)
+    .reduce((acc, c) => (acc + c) * 2, 0);
+  const lastDigitInt = (12 - (remainder % 11)) % 11;
+  const lastDigitShould = lastDigitInt === 10 ? "X" : String(lastDigitInt);
+  if (lastDigit !== lastDigitShould) {
+    throw new Error(`"${orcidId}" has an invalid checksum.`);
+  }
+
+  return orcidUrl.href;
 }
 
 /**

@@ -1,4 +1,5 @@
-import html from "../../../js/html-template";
+// @ts-check
+import html from "../../../js/html-template.js";
 
 export default (conf, opts) => {
   return html`

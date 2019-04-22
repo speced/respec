@@ -1,6 +1,6 @@
 // @ts-check
-import html from "../../../js/html-template";
-import { showInlineWarning } from "../../core/utils";
+import html from "../../../js/html-template.js";
+import { showInlineWarning } from "../../core/utils.js";
 
 export default obj => {
   /** @type {HTMLAnchorElement} */
@@ -10,16 +10,18 @@ export default obj => {
   if (!obj.alt) {
     showInlineWarning(a, "Found spec logo without an `alt` attribute");
   }
-  a.appendChild(html`
+  /** @type {HTMLImageElement} */
+  const img = html`
     <img
       id="${obj.id}"
       alt="${obj.alt}"
       width="${obj.width}"
       height="${obj.height}"
     />
-  `);
+  `;
   // avoid triggering 404 requests from dynamically generated
   // hyperHTML attribute values
-  a.querySelector("img").src = obj.src;
+  img.src = obj.src;
+  a.append(img);
   return a;
 };

@@ -6,11 +6,11 @@
  * That is, elements that have a "removeOnSave" css class.
  */
 
-import { expose } from "./expose-modules";
-import html from "../../js/html-template";
-import { pub } from "./pubsubhub";
-import { removeReSpec } from "./utils";
-import { version } from "../../js/respec-version";
+import { expose } from "./expose-modules.js";
+import html from "../../js/html-template.js";
+import { pub } from "./pubsubhub.js";
+import { removeReSpec } from "./utils.js";
+import { version } from "../../js/respec-version.js";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
 

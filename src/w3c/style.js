@@ -5,7 +5,7 @@
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
-import { createResourceHint, toKeyValuePairs } from "../core/utils";
+import { createResourceHint, toKeyValuePairs } from "../core/utils.js";
 export const name = "w3c/style";
 
 const headElements =

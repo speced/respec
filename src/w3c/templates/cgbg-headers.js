@@ -1,7 +1,7 @@
-import html from "../../../js/html-template";
-import showLink from "./show-link";
-import showLogo from "./show-logo";
-import showPeople from "./show-people";
+import html from "../../../js/html-template.js";
+import showLink from "./show-link.js";
+import showLogo from "./show-logo.js";
+import showPeople from "./show-people.js";
 
 export default (_, conf) => {
   return html`

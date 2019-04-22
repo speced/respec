@@ -1,5 +1,6 @@
-import html from "../../../js/html-template";
-import { pub } from "../../core/pubsubhub";
+// @ts-check
+import html from "../../../js/html-template.js";
+import { pub } from "../../core/pubsubhub.js";
 
 export default link => {
   if (!link.key) {

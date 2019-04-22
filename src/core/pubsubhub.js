@@ -1,5 +1,5 @@
 // @ts-check
-import { expose } from "./expose-modules";
+import { expose } from "./expose-modules.js";
 
 /**
  * Module core/pubsubhub

@@ -3,9 +3,9 @@
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
-import { pub, sub } from "./pubsubhub";
+import { pub, sub } from "./pubsubhub.js";
 import caniuseCss from "text!../../assets/caniuse.css";
-import { createResourceHint } from "./utils";
+import { createResourceHint } from "./utils.js";
 import hyperHTML from "hyperhtml";
 
 export const name = "core/caniuse";
