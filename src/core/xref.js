@@ -173,7 +173,7 @@ function getRequestEntry(elem) {
     term,
     types,
     ...(specs.length && { specs: [...new Set(specs)].sort() }),
-    ...(forContext && { for: forContext }),
+    ...(typeof forContext === "string" && { for: forContext }),
   };
 }
 
@@ -183,17 +183,30 @@ function getRequestEntry(elem) {
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
 async function getData(queryKeys, apiUrl) {
-  const idb = await openDB("xref", 1, {
-    upgrade(db) {
-      db.createObjectStore("xrefs");
-    },
+  const uniqueIds = new Set();
+  const uniqueQueryKeys = queryKeys.filter(key => {
+    return uniqueIds.has(key.id) ? false : uniqueIds.add(key.id) && true;
   });
-  const cache = new IDBKeyVal(idb, "xrefs");
-  const resultsFromCache = await resolveFromCache(queryKeys, cache);
 
-  const termsToLook = queryKeys.filter(key => !resultsFromCache.get(key.id));
+  let cache = null;
+  let resultsFromCache = new Map();
+  try {
+    const idb = await openDB("xref", 1, {
+      upgrade(db) {
+        db.createObjectStore("xrefs");
+      },
+    });
+    cache = new IDBKeyVal(idb, "xrefs");
+    resultsFromCache = await resolveFromCache(uniqueQueryKeys, cache);
+  } catch (error) {
+    console.error(error);
+  }
+
+  const termsToLook = uniqueQueryKeys.filter(
+    key => !resultsFromCache.get(key.id)
+  );
   const fetchedResults = await fetchFromNetwork(termsToLook, apiUrl);
-  if (fetchedResults.size) {
+  if (fetchedResults.size && cache) {
     // add data to cache
     await cache.addMany(fetchedResults);
     await cache.set("__CACHE_TIME__", Date.now());
@@ -268,7 +281,7 @@ function isNormative(elem) {
  * @param {any} conf
  */
 function addDataCiteToTerms(elems, queryKeys, data, conf) {
-  /** @type {Map<string, { elems: HTMLElement[], specs: Set<string> }>} */
+  /** @type {Map<string, { elems: HTMLElement[], results: SearchResultEntry[], term: string }>} */
   const errorsAmbiguous = new Map();
   /** @type {Map<string, HTMLElement[]>} */
   const errorsTermNotFound = new Map();
@@ -290,9 +303,8 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
       }
       default: {
         const collector =
-          errorsAmbiguous.get(term) ||
-          errorsAmbiguous.set(term, { specs: new Set(), elems: [] }).get(term);
-        results.forEach(result => collector.specs.add(result.shortname));
+          errorsAmbiguous.get(id) ||
+          errorsAmbiguous.set(id, { term, results, elems: [] }).get(id);
         collector.elems.push(elem);
       }
     }
@@ -365,11 +377,11 @@ function addToReferences(elem, cite, normative, term, conf) {
 }
 
 function showErrors({ errorsAmbiguous, errorsTermNotFound }) {
-  const linkToDataCite =
+  const dataCiteLink =
     "[`data-cite`](https://github.com/w3c/respec/wiki/data--cite)";
 
   const titleForNotFound = "Error: No matching dfn found.";
-  const hintForNotFound = `Please provide a ${linkToDataCite} attribute for it.`;
+  const hintForNotFound = `Please provide a ${dataCiteLink} attribute for it.`;
   for (const [term, elems] of errorsTermNotFound) {
     const msg =
       `Couldn't match "**${term}**" to anything in the document ` +
@@ -378,16 +390,22 @@ function showErrors({ errorsAmbiguous, errorsTermNotFound }) {
   }
 
   const titleForAmbiguous = "Error: Linking an ambiguous dfn.";
-  const hintForAmbiguous = `To disambiguate, you need to add a ${linkToDataCite} attribute.`;
-  for (const [term, data] of errorsAmbiguous) {
-    const specList = [...data.specs];
-    const count = specList.length;
-    const specs = specList.map(s => `**${s}**`).join(", ");
-    const msg =
-      `The term "**${term}**" is defined in ${count} ` +
-      `spec(s) in multiple ways, so it's ambiguous. ${hintForAmbiguous} ` +
-      `The specs where it's defined are: ${specs}.`;
-    showInlineError(data.elems, msg, titleForAmbiguous);
+  for (const { term, elems, results } of errorsAmbiguous.values()) {
+    const definedInSpecs = new Set(results.map(entry => entry.shortname));
+    const specs = [...definedInSpecs].map(s => `**${s}**`).join(", ");
+    const msg = `The term "**${term}**" is defined in ${specs} in multiple ways, so it's ambiguous.`;
+    let hint = "";
+    if (definedInSpecs.size === 1) {
+      // defined only in one spec but in multiple ways
+      const xrefFor = new Set([].concat(...results.map(entry => entry.for)));
+      const forContext = [...xrefFor].map(s => `**${s}**`).join(", ");
+      hint = `add \`data-xref-for\` attribute with value equal to one of the following: ${forContext}.`;
+    } else {
+      // defined in multiple specs
+      hint = `add ${dataCiteLink} attribute with value equal to one of the following: ${specs}.`;
+    }
+    const message = `${msg} To disambiguate, you need to ${hint}`;
+    showInlineError(elems, message, titleForAmbiguous);
   }
 }
 

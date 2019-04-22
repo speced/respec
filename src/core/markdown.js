@@ -45,11 +45,150 @@
  */
 
 import marked from "marked";
-import { normalizePadding } from "./utils.js";
 export const name = "core/markdown";
 
 const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
+const endsWithSpace = /\s+$/gm;
+
+const inlineElems = new Set([
+  "a",
+  "abbr",
+  "acronym",
+  "b",
+  "bdo",
+  "big",
+  "br",
+  "button",
+  "cite",
+  "code",
+  "dfn",
+  "em",
+  "i",
+  "img",
+  "input",
+  "kbd",
+  "label",
+  "map",
+  "object",
+  "q",
+  "samp",
+  "script",
+  "select",
+  "small",
+  "span",
+  "strong",
+  "sub",
+  "sup",
+  "textarea",
+  "time",
+  "tt",
+  "var",
+]);
+
+/**
+ * @param {string} text
+ */
+function normalizePadding(text) {
+  if (!text) {
+    return "";
+  }
+  if (typeof text !== "string") {
+    throw TypeError("Invalid input");
+  }
+  if (text === "\n") {
+    return "\n";
+  }
+
+  /**
+   * @param {Node} node
+   * @return {node is Text}
+   */
+  function isTextNode(node) {
+    return node !== null && node.nodeType === Node.TEXT_NODE;
+  }
+  /**
+   * @param {Node} node
+   * @return {node is Element}
+   */
+  function isElementNode(node) {
+    return node !== null && node.nodeType === Node.ELEMENT_NODE;
+  }
+  const doc = document.createRange().createContextualFragment(text);
+  // Normalize block level elements children first
+  Array.from(doc.children)
+    .filter(elem => !inlineElems.has(elem.localName))
+    .filter(elem => elem.localName !== "pre")
+    .filter(elem => elem.localName !== "table")
+    .forEach(elem => {
+      elem.innerHTML = normalizePadding(elem.innerHTML);
+    });
+  // Normalize root level now
+  Array.from(doc.childNodes)
+    .filter(node => isTextNode(node) && node.textContent.trim() === "")
+    .forEach(node => node.replaceWith("\n"));
+  // Normalize text node
+  if (isElementNode(doc.firstChild)) {
+    Array.from(doc.firstChild.children)
+      .filter(child => child.localName !== "table")
+      .forEach(child => {
+        child.innerHTML = normalizePadding(child.innerHTML);
+      });
+  }
+  doc.normalize();
+  // use the first space as an indicator of how much to chop off the front
+  const firstSpace = doc.textContent
+    .replace(/^ *\n/, "")
+    .split("\n")
+    .filter(item => item && item.startsWith(" "))[0];
+  const chop = firstSpace ? firstSpace.match(/ +/)[0].length : 0;
+  if (chop) {
+    // Chop chop from start, but leave pre elem alone
+    Array.from(doc.childNodes)
+      .filter(node => node.nodeName !== "PRE")
+      .filter(isTextNode)
+      .filter(node => {
+        // we care about text next to a block level element
+        const prevSib = node.previousElementSibling;
+        const nextTo = prevSib && prevSib.localName;
+        // and we care about text elements that finish on a new line
+        return (
+          !inlineElems.has(nextTo) || node.textContent.trim().includes("\n")
+        );
+      })
+      .reduce((replacer, node) => {
+        // We need to retain white space if the text Node is next to an in-line element
+        let padding = "";
+        const prevSib = node.previousElementSibling;
+        const nextTo = prevSib && prevSib.localName;
+        if (/^[\t ]/.test(node.textContent) && inlineElems.has(nextTo)) {
+          padding = node.textContent.match(/^\s+/)[0];
+        }
+        node.textContent = padding + node.textContent.replace(replacer, "");
+        return replacer;
+      }, new RegExp(`^ {1,${chop}}`, "gm"));
+    // deal with pre elements... we can chop whitespace from their siblings
+    const endsWithSpace = new RegExp(`\\ {${chop}}$`, "gm");
+    Array.from(doc.querySelectorAll("pre"))
+      .map(elem => elem.previousSibling)
+      .filter(isTextNode)
+      .reduce((chop, node) => {
+        if (endsWithSpace.test(node.textContent)) {
+          node.textContent = node.textContent.substr(
+            0,
+            node.textContent.length - chop
+          );
+        }
+        return chop;
+      }, chop);
+  }
+  const wrap = document.createElement("body");
+  wrap.append(doc);
+  const result = endsWithSpace.test(wrap.innerHTML)
+    ? `${wrap.innerHTML.trimRight()}\n`
+    : wrap.innerHTML;
+  return result;
+}
 
 /**
  * @param {string} text
@@ -172,10 +311,13 @@ function structure(fragment, doc) {
   return process(fragment);
 }
 
+/**
+ * @param {Iterable<Element>} elements
+ */
 function substituteWithTextNodes(elements) {
   Array.from(elements).forEach(element => {
     const textNode = element.ownerDocument.createTextNode(element.textContent);
-    element.parentElement.replaceChild(textNode, element);
+    element.replaceWith(textNode);
   });
 }
 
@@ -243,5 +385,5 @@ export function run(conf) {
   // Frankenstein the whole thing back together
   newBody.appendChild(fragment);
   newBody.prepend(rsUI);
-  document.body.parentNode.replaceChild(newBody, document.body);
+  document.body.replaceWith(newBody);
 }

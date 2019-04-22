@@ -21,12 +21,12 @@ describe("Core - UI", () => {
   it("hides the UI when document is clicked", async () => {
     const doc = await makeRSDoc(makeStandardOps(), null, "display: block");
     const menu = doc.getElementById("respec-menu");
-    expect(window.getComputedStyle(menu).display).toEqual("none");
+    expect(window.getComputedStyle(menu).display).toBe("none");
     doc.getElementById("respec-pill").click();
     // spin the event loop
     await new Promise(resolve => {
       setTimeout(() => {
-        expect(window.getComputedStyle(menu).display).toEqual("block");
+        expect(window.getComputedStyle(menu).display).toBe("block");
         doc.body.click();
         resolve();
       }, 500);
@@ -34,7 +34,7 @@ describe("Core - UI", () => {
     // Allow time to fade in
     await new Promise(resolve => {
       setTimeout(() => {
-        expect(window.getComputedStyle(menu).display).toEqual("none");
+        expect(window.getComputedStyle(menu).display).toBe("none");
         resolve();
       }, 500);
     });
@@ -53,13 +53,13 @@ describe("Core - UI", () => {
       await new Promise(resolve => setTimeout(resolve, 500));
 
       const dfns = doc.querySelectorAll("ul.respec-dfn-list li a");
-      expect(dfns.length).toEqual(2);
+      expect(dfns.length).toBe(2);
 
       const [dfnBar, dfnFoo] = dfns;
-      expect(dfnBar.textContent.trim()).toEqual("bar()");
-      expect(dfnBar.getAttribute("href")).toEqual("#dfn-bar");
-      expect(dfnFoo.textContent.trim()).toEqual("foo");
-      expect(dfnFoo.getAttribute("href")).toEqual("#dfn-foo");
+      expect(dfnBar.textContent.trim()).toBe("bar()");
+      expect(dfnBar.getAttribute("href")).toBe("#dfn-bar");
+      expect(dfnFoo.textContent.trim()).toBe("foo");
+      expect(dfnFoo.getAttribute("href")).toBe("#dfn-foo");
     });
   });
 });

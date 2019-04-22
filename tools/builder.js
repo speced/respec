@@ -2,7 +2,7 @@
 
 "use strict";
 const colors = require("colors");
-const fsp = require("fs-extra");
+const { promises: fsp } = require("fs");
 const path = require("path");
 const webpack = require("webpack");
 const { promisify } = require("util");
@@ -13,7 +13,7 @@ colors.setTheme({
   info: "white",
 });
 
-/** @type {import("command-line-args").OptionDefinition[]} */
+/** @type {import("command-line-usage").OptionDefinition[]} */
 const optionList = [
   {
     alias: "h",

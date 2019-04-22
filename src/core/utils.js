@@ -8,7 +8,6 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
 const spaceOrTab = /^[ |\t]*/;
-const endsWithSpace = /\s+$/gm;
 const dashes = /-/g;
 
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
@@ -17,41 +16,6 @@ export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   month: "2-digit",
   day: "2-digit",
 });
-
-const inlineElems = new Set([
-  "a",
-  "abbr",
-  "acronym",
-  "b",
-  "bdo",
-  "big",
-  "br",
-  "button",
-  "cite",
-  "code",
-  "dfn",
-  "em",
-  "i",
-  "img",
-  "input",
-  "kbd",
-  "label",
-  "map",
-  "object",
-  "q",
-  "samp",
-  "script",
-  "select",
-  "small",
-  "span",
-  "strong",
-  "sub",
-  "sup",
-  "textarea",
-  "time",
-  "tt",
-  "var",
-]);
 
 const resourceHints = new Set([
   "dns-prefetch",
@@ -144,106 +108,6 @@ export function createResourceHint(opts) {
     linkElem.classList.add("removeOnSave");
   }
   return linkElem;
-}
-
-export function normalizePadding(text = "") {
-  if (!text) {
-    return "";
-  }
-  if (typeof text !== "string") {
-    throw TypeError("Invalid input");
-  }
-  if (text === "\n") {
-    return "\n";
-  }
-
-  /**
-   * @param {Node} node
-   * @return {node is Text}
-   */
-  function isTextNode(node) {
-    return node !== null && node.nodeType === Node.TEXT_NODE;
-  }
-  // Force into body
-  const parserInput = `<body>${text}`;
-  const doc = new DOMParser().parseFromString(parserInput, "text/html");
-  // Normalize block level elements children first
-  Array.from(doc.body.children)
-    .filter(elem => !inlineElems.has(elem.localName))
-    .filter(elem => elem.localName !== "pre")
-    .filter(elem => elem.localName !== "table")
-    .forEach(elem => {
-      elem.innerHTML = normalizePadding(elem.innerHTML);
-    });
-  // Normalize root level now
-  Array.from(doc.body.childNodes)
-    .filter(node => isTextNode(node) && node.textContent.trim() === "")
-    .forEach(node =>
-      node.parentElement.replaceChild(doc.createTextNode("\n"), node)
-    );
-  // Normalize text node
-  if (!isTextNode(doc.body.firstChild)) {
-    Array.from(doc.body.firstChild.children)
-      .filter(child => child.localName !== "table")
-      .forEach(child => {
-        child.innerHTML = normalizePadding(child.innerHTML);
-      });
-  }
-  doc.normalize();
-  // use the first space as an indicator of how much to chop off the front
-  const firstSpace = doc.body.textContent
-    .replace(/^ *\n/, "")
-    .split("\n")
-    .filter(item => item && item.startsWith(" "))[0];
-  const chop = firstSpace ? firstSpace.match(/ +/)[0].length : 0;
-  if (chop) {
-    // Chop chop from start, but leave pre elem alone
-    Array.from(doc.body.childNodes)
-      .filter(node => node.localName !== "pre")
-      .filter(isTextNode)
-      .filter(node => {
-        // we care about text next to a block level element
-        const prevSib = node.previousElementSibling;
-        const nextTo = prevSib
-          ? prevSib.localName
-          : node.parentElement.localName;
-        // and we care about text elements that finish on a new line
-        return (
-          !inlineElems.has(nextTo) || node.textContent.trim().includes("\n")
-        );
-      })
-      .reduce((replacer, node) => {
-        // We need to retain white space if the text Node is next to an in-line element
-        let padding = "";
-        const prevSib = node.previousElementSibling;
-        const nextTo = prevSib
-          ? prevSib.localName
-          : node.parentElement.localName;
-        if (/^[\t ]/.test(node.textContent) && inlineElems.has(nextTo)) {
-          padding = node.textContent.match(/^\s+/)[0];
-        }
-        node.textContent = padding + node.textContent.replace(replacer, "");
-        return replacer;
-      }, new RegExp(`^ {1,${chop}}`, "gm"));
-    // deal with pre elements... we can chop whitespace from their siblings
-    const endsWithSpace = new RegExp(`\\ {${chop}}$`, "gm");
-    Array.from(doc.body.querySelectorAll("pre"))
-      .map(elem => elem.previousSibling)
-      .filter(isTextNode)
-      .reduce((chop, node) => {
-        if (endsWithSpace.test(node.textContent)) {
-          node.textContent = node.textContent.substr(
-            0,
-            node.textContent.length - chop
-          );
-        }
-        return chop;
-      }, chop);
-  }
-  const result = endsWithSpace.test(doc.body.innerHTML)
-    ? `${doc.body.innerHTML.trimRight()}\n`
-    : doc.body.innerHTML;
-  return result;
 }
 
 // RESPEC STUFF
@@ -589,7 +453,7 @@ export async function fetchAndCache(request, maxAge = 86400000) {
   }
 
   // cache response
-  if (cache) {
+  if (cache && response.ok) {
     const clonedResponse = response.clone();
     const customHeaders = new Headers(response.headers);
     const expiryDate = new Date(Date.now() + maxAge);
@@ -599,7 +463,6 @@ export async function fetchAndCache(request, maxAge = 86400000) {
     });
     // put in cache, and forget it (there is no recovery if it throws, but that's ok).
     await cache.put(request, cacheResponse).catch(console.error);
-    return await cache.match(request);
   }
   return response;
 }
@@ -680,10 +543,10 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
   const exclusionQuery = exclusions.join(", ");
   const acceptNode = (/** @type {Text} */ node) => {
-    if (node.parentElement.closest(exclusionQuery)) {
+    if (!options.wsNodes && !node.data.trim()) {
       return NodeFilter.FILTER_REJECT;
     }
-    if (options.wsNodes && /\s/gm.test(node.data)) {
+    if (exclusionQuery && node.parentElement.closest(exclusionQuery)) {
       return NodeFilter.FILTER_REJECT;
     }
     return NodeFilter.FILTER_ACCEPT;

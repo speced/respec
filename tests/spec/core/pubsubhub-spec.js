@@ -13,6 +13,6 @@ describe("Core - pubsubhub", () => {
   });
 
   it("subscribes start-all", () => {
-    expect(doc.getElementById("start-all").textContent).toEqual("pass");
+    expect(doc.getElementById("start-all").textContent).toBe("pass");
   });
 });

@@ -1,5 +1,5 @@
 var:hover {
-  border-bottom: 1px dotted;
+  text-decoration: underline;
   cursor: pointer;
 }
 

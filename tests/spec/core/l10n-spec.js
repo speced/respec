@@ -18,8 +18,8 @@ describe("Core — l10n", () => {
       body,
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.documentElement.lang).toEqual("en");
-    expect(doc.documentElement.dir).toEqual("ltr");
+    expect(doc.documentElement.lang).toBe("en");
+    expect(doc.documentElement.dir).toBe("ltr");
   });
 
   it("shouldn't override existing dir", async () => {
@@ -31,8 +31,8 @@ describe("Core — l10n", () => {
       body,
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.documentElement.lang).toEqual("en");
-    expect(doc.documentElement.dir).toEqual("rtl");
+    expect(doc.documentElement.lang).toBe("en");
+    expect(doc.documentElement.dir).toBe("rtl");
   });
 
   it("shouldn't override existing lang and not set dir", async () => {
@@ -44,7 +44,7 @@ describe("Core — l10n", () => {
       body,
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.documentElement.lang).toEqual("fr");
-    expect(doc.documentElement.dir).toEqual("");
+    expect(doc.documentElement.lang).toBe("fr");
+    expect(doc.documentElement.dir).toBe("");
   });
 });
