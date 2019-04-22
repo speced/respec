@@ -29,14 +29,14 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
       <var>bar</var>.<a>[[f oo]]</a>
     `;
     const result = await rule.lint(config, doc);
-    expect(result.name).toEqual(ruleName);
+    expect(result.name).toBe(ruleName);
     // first fails the isPrevVar check, rest are ok tho weird...
-    expect(result.occurrences).toEqual(1);
+    expect(result.occurrences).toBe(1);
 
     const offendingElement = result.offendingElements[0];
     const { previousSibling } = offendingElement;
     // offending element's previous element won't have '.'
-    expect(previousSibling.textContent).not.toEqual(".");
+    expect(previousSibling.textContent).not.toBe(".");
   });
 
   it("doesn't generates an error for general internal slot and var usage", async () => {

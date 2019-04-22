@@ -21,9 +21,9 @@ describe("Geonovum — Defaults", () => {
       "check-internal-slots": false,
       "check-charset": false,
     });
-    expect(rsConf.highlightVars).toEqual(true);
-    expect(rsConf.license).toEqual("cc-by");
-    expect(rsConf.specStatus).toEqual("GN-BASIS");
+    expect(rsConf.highlightVars).toBe(true);
+    expect(rsConf.license).toBe("cc-by");
+    expect(rsConf.specStatus).toBe("GN-BASIS");
     expect(rsConf.addSectionLinks).toBe(true);
   });
 
@@ -59,8 +59,8 @@ describe("Geonovum — Defaults", () => {
       "check-internal-slots": true,
       "check-charset": false,
     });
-    expect(rsConf.highlightVars).toEqual(false);
-    expect(rsConf.license).toEqual("cc-by-nd");
-    expect(rsConf.specStatus).toEqual("GN-WV");
+    expect(rsConf.highlightVars).toBe(false);
+    expect(rsConf.license).toBe("cc-by-nd");
+    expect(rsConf.specStatus).toBe("GN-WV");
   });
 });

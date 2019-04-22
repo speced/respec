@@ -20,9 +20,9 @@ describe("Core — Include config as JSON", () => {
   it("should have a script tag with the correct attributes", async () => {
     const doc = await makeRSDoc(ops);
     const script = doc.getElementById("initialUserConfig");
-    expect(script.tagName).toEqual("SCRIPT");
-    expect(script.id).toEqual("initialUserConfig");
-    expect(script.type).toEqual("application/json");
+    expect(script.tagName).toBe("SCRIPT");
+    expect(script.id).toBe("initialUserConfig");
+    expect(script.type).toBe("application/json");
   });
   it("includes config options from query parameters", async () => {
     const doc = await makeRSDoc(
@@ -32,9 +32,9 @@ describe("Core — Include config as JSON", () => {
     const conf = JSON.parse(
       doc.getElementById("initialUserConfig").textContent
     );
-    expect(conf.foo).toEqual("bar");
-    expect(conf.bar).toEqual(123);
-    expect(conf.baz.length).toEqual(3);
+    expect(conf.foo).toBe("bar");
+    expect(conf.bar).toBe(123);
+    expect(conf.baz.length).toBe(3);
     expect(conf.baz).toEqual([1, 2, 3]);
   });
   it("should have the same content for the config and the script's text", async () => {
@@ -46,6 +46,6 @@ describe("Core — Include config as JSON", () => {
     const expected = JSON.stringify(expectedObj, null, 2);
     const doc = await makeRSDoc(ops);
     const text = doc.getElementById("initialUserConfig").innerHTML;
-    expect(text).toEqual(expected);
+    expect(text).toBe(expected);
   });
 });

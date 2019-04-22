@@ -19,7 +19,7 @@ describe("Core — Examples", () => {
     const doc = await makeRSDoc(ops);
     const example = doc.querySelector("div.example pre");
     const div = example.closest("div");
-    expect(div.classList.contains("example")).toBeTruthy();
+    expect(div.classList).toContain("example");
     expect(div.id).toBe("example-1-ex");
 
     const markers = div.querySelectorAll("div.marker");
@@ -134,9 +134,9 @@ describe("Core — Examples", () => {
     const doc = await makeRSDoc(ops);
     const exampleLink = doc.querySelector("aside.example a.self-link");
     const example = doc.querySelector("aside.example");
-    expect(
-      exampleLink.getAttribute("href").includes("this-is-a-very-long-link")
-    ).toEqual(false);
+    expect(exampleLink.getAttribute("href")).not.toContain(
+      "this-is-a-very-long-link"
+    );
     expect(exampleLink.getAttribute("href")).toBe("#example-1");
     expect(example.id).toBe("example-1");
   });

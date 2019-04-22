@@ -31,8 +31,8 @@ describe("Core - highlightVars", () => {
 
     elemVar.click(); // enable
     expect(doc.querySelectorAll(".respec-hl").length).toBe(2);
-    expect(elemVar.classList.contains("respec-hl")).toBe(true);
-    expect(elemVar.classList.contains("respec-hl-c1")).toBe(true);
+    expect(elemVar.classList).toContain("respec-hl");
+    expect(elemVar.classList).toContain("respec-hl-c1");
 
     elemVar.click(); // disable
     expect(doc.querySelectorAll(".respec-hl").length).toBe(0);
@@ -46,7 +46,7 @@ describe("Core - highlightVars", () => {
 
     elemVar.click(); // activate
     doc.body.click(); // external click, deactivate
-    expect(elemVar.classList.contains("respec-hl")).toBe(false);
+    expect(elemVar.classList).not.toContain("respec-hl");
   });
 
   it("highlights variables only in current section", async () => {

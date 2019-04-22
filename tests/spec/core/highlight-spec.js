@@ -46,7 +46,7 @@ describe("Core — Highlight", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("div.example pre");
-    expect(pre.firstChild.classList.contains("hljs")).toBeTruthy();
+    expect(pre.firstChild.classList).toContain("hljs");
     expect(pre.querySelector("span[class*=hljs-]")).toBeTruthy();
   });
 
@@ -63,7 +63,7 @@ describe("Core — Highlight", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("div.example pre");
-    expect(pre.classList.contains("nohighlight")).toBeTruthy();
+    expect(pre.classList).toContain("nohighlight");
     expect(pre.querySelector("span[class*=hljs-]")).toBeNull();
   });
 

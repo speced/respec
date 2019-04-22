@@ -20,9 +20,9 @@ describe("W3C — Defaults", () => {
       "check-internal-slots": false,
       "check-charset": false,
     });
-    expect(rsConf.highlightVars).toEqual(true);
-    expect(rsConf.license).toEqual("w3c-software-doc");
-    expect(rsConf.specStatus).toEqual("base");
+    expect(rsConf.highlightVars).toBe(true);
+    expect(rsConf.license).toBe("w3c-software-doc");
+    expect(rsConf.specStatus).toBe("base");
     expect(rsConf.addSectionLinks).toBe(true);
   });
 
@@ -57,8 +57,8 @@ describe("W3C — Defaults", () => {
       "check-internal-slots": true,
       "check-charset": false,
     });
-    expect(rsConf.highlightVars).toEqual(false);
-    expect(rsConf.license).toEqual("c0");
-    expect(rsConf.specStatus).toEqual("ED");
+    expect(rsConf.highlightVars).toBe(false);
+    expect(rsConf.license).toBe("c0");
+    expect(rsConf.specStatus).toBe("ED");
   });
 });
