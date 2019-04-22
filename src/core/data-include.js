@@ -24,7 +24,7 @@ function processResponse(rawData, id, url) {
     case "text":
       if (replace) {
         replacementNode = doc.createTextNode(data);
-        el.parentNode.replaceChild(replacementNode, el);
+        el.replaceWith(replacementNode);
       } else {
         el.textContent = data;
       }
@@ -37,7 +37,7 @@ function processResponse(rawData, id, url) {
         while (el.hasChildNodes()) {
           replacementNode.append(el.removeChild(el.firstChild));
         }
-        el.parentNode.replaceChild(replacementNode, el);
+        el.replaceWith(replacementNode);
       }
   }
   // If still in the dom tree, clean up

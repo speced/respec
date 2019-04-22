@@ -172,10 +172,13 @@ function structure(fragment, doc) {
   return process(fragment);
 }
 
+/**
+ * @param {Iterable<Element>} elements
+ */
 function substituteWithTextNodes(elements) {
   Array.from(elements).forEach(element => {
     const textNode = element.ownerDocument.createTextNode(element.textContent);
-    element.parentElement.replaceChild(textNode, element);
+    element.replaceWith(textNode);
   });
 }
 
@@ -243,5 +246,5 @@ export function run(conf) {
   // Frankenstein the whole thing back together
   newBody.appendChild(fragment);
   newBody.prepend(rsUI);
-  document.body.parentNode.replaceChild(newBody, document.body);
+  document.body.replaceWith(newBody);
 }

@@ -15,7 +15,7 @@ export function run() {
         break;
       default: {
         const msg =
-          `[\`data-dfn\`](https://github.com/w3c/respec/wiki/data-abbr)` +
+          `[\`data-abbr\`](https://github.com/w3c/respec/wiki/data-abbr)` +
           ` attribute not supported on \`${localName}\` elements.`;
         showInlineWarning(elem, msg, "Error: unsupported.");
       }

@@ -120,7 +120,7 @@ export function run(conf) {
       addId(div, `example`, String(number));
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${div.id}`;
-      example.parentElement.replaceChild(div, example);
+      example.replaceWith(div);
       if (!inAside) pub("example", report);
     }
   });
