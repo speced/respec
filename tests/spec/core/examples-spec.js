@@ -169,4 +169,21 @@ describe("Core — Examples", () => {
     expect(doc.documentElement.lang).toBe("nl");
     expect(textContent).toContain("Voorbeeld");
   });
+  it("substitutes empty inline links to examples", async () => {
+    const body = `
+      <p id="links">
+        <a href="#example1"></a>
+        <a href="#example2"></a>
+      </p>
+      <aside class="example" id="example1" title="one">
+      </aside>
+      <pre class="example" id="example2" title="two">
+      </pre>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const [example1, example2] = doc.querySelectorAll("#links a");
+    expect(example1.textContent).toBe("Example 1: one");
+    expect(example2.textContent).toBe("Example 2: two");
+  });
 });

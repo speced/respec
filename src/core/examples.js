@@ -30,6 +30,8 @@ const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 const l10n = localizationStrings[lang];
 
+const examplesMap = new Map();
+
 /**
  * @typedef {object} Report
  * @property {number} number
@@ -37,12 +39,11 @@ const l10n = localizationStrings[lang];
  * @property {string} [title]
  * @property {string} [content]
  *
- * @param {*} conf
  * @param {HTMLElement} elem
  * @param {number} num
  * @param {Report} report
  */
-function makeTitle(conf, elem, num, report) {
+function makeTitle(elem, num, report) {
   report.title = elem.title;
   if (report.title) elem.removeAttribute("title");
   const number = num > 0 ? ` ${num}` : "";
@@ -58,7 +59,20 @@ function makeTitle(conf, elem, num, report) {
   `;
 }
 
-export function run(conf) {
+/**
+ * Link <a href="#example">
+ */
+function replaceEmptyAnchors() {
+  for (const [id, text] of examplesMap.entries()) {
+    [...document.querySelectorAll(`a[href="#${id}"]`)]
+      .filter(elem => elem.textContent.trim() === "")
+      .forEach(elem => {
+        elem.textContent = text;
+      });
+  }
+}
+
+export function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"
@@ -85,7 +99,7 @@ export function run(conf) {
     const { title } = example;
     if (example.localName === "aside") {
       ++number;
-      const div = makeTitle(conf, example, number, report);
+      const div = makeTitle(example, number, report);
       example.prepend(div);
       if (title) {
         addId(example, `example-${number}`, title); // title gets used
@@ -96,6 +110,7 @@ export function run(conf) {
       const { id } = example;
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
+      examplesMap.set(id, div.textContent.trim());
       pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
@@ -108,10 +123,10 @@ export function run(conf) {
       // relocate the id to the div
       const id = example.id ? example.id : null;
       if (id) example.removeAttribute("id");
+      const exampleTitle = makeTitle(example, inAside ? 0 : number, report);
       const div = html`
         <div class="example" id="${id}">
-          ${makeTitle(conf, example, inAside ? 0 : number, report)}
-          ${example.cloneNode(true)}
+          ${exampleTitle} ${example.cloneNode(true)}
         </div>
       `;
       if (title) {
@@ -122,6 +137,8 @@ export function run(conf) {
       selfLink.href = `#${div.id}`;
       example.replaceWith(div);
       if (!inAside) pub("example", report);
+      examplesMap.set(id, exampleTitle.textContent.trim());
     }
+    replaceEmptyAnchors();
   });
 }
