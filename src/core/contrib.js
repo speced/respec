@@ -86,7 +86,7 @@ export async function run(conf) {
       toHTML(commenterUrls, editors, ghCommenters, headers),
       toHTML(contributorUrls, editors, ghContributors, headers)
     );
-  } catch (error) {
+  } catch {
     pub("error", "Error loading contributors and/or commenters from GitHub.");
   }
 }

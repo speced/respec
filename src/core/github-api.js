@@ -70,7 +70,7 @@ async function processResponse(response, issueNumber) {
   try {
     const json = await response.json();
     Object.assign(issue, json);
-  } catch (err) {
+  } catch {
     issue.message = `Error JSON parsing issue #${issueNumber} from GitHub.`;
   }
   if (!response.ok || issue.message) {
