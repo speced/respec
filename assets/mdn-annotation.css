@@ -38,7 +38,7 @@
 
 .mdn details {
   display: inline;
-  margin-top: 1px;
+  margin-left: 2px;
 }
 
 .mdn summary {
@@ -147,6 +147,10 @@
 
 .mdnsupport > .webview_android::before {
   background-image: url(https://cdnjs.loli.net/ajax/libs/browser-logos/41.0.0/android-webview-beta/android-webview-beta_32x32.png);
+}
+
+.mdn.wrapped div:nth-child(n + 3) {
+  display: none;
 }
 
 .mdn div:nth-child(n + 3) > b {
