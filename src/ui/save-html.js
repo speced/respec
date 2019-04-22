@@ -86,7 +86,11 @@ function show() {
   saveDialog.show(button);
 }
 
-export function exportDocument(format, mimeType) {
+/**
+ * @param {*} _
+ * @param {string} mimeType
+ */
+export function exportDocument(_, mimeType) {
   const msg =
     "Exporting via ui/save-html module's `exportDocument()` is deprecated and will be removed. " +
     "Use core/exporter `rsDocToDataURL()` instead.";
