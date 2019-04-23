@@ -1,15 +1,12 @@
 "use strict";
+
+import { rule } from "../../../../src/core/linter-rules/no-headingless-sections.js";
+
 describe("Core Linter Rule - 'no-headingless-sections'", () => {
   const ruleName = "no-headingless-sections";
   const config = {
     lint: { [ruleName]: true },
   };
-  let rule;
-  beforeAll(async () => {
-    rule = await new Promise(resolve => {
-      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
-    });
-  });
   const doc = document.implementation.createHTMLDocument("test doc");
   beforeEach(() => {
     // Make sure every unordered test get an empty document
@@ -61,7 +58,7 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
     `;
     const badone = doc.getElementById("badone");
     const result = await rule.lint(config, doc);
-    expect(result.offendingElements.length).toEqual(1);
+    expect(result.offendingElements.length).toBe(1);
     expect(result.offendingElements[0]).toEqual(badone);
   });
 });

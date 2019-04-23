@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+} from "../SpecHelper.js";
+
 describe("Core — Seo", () => {
   afterAll(flushIframes);
   it("doesn't insert a meta description element if there is no abstract", async () => {
@@ -13,7 +21,7 @@ describe("Core — Seo", () => {
       const check = () => {
         const hasMetaDesc = doc.querySelectorAll("meta[name=description]")
           .length;
-        expect(hasMetaDesc).toEqual(0);
+        expect(hasMetaDesc).toBe(0);
         resolve();
       };
       window.requestIdleCallback ? window.requestIdleCallback(check) : check();
@@ -40,9 +48,9 @@ describe("Core — Seo", () => {
           expect(true).toBe(true);
           return;
         }
-        expect(hasMetaDesc).toEqual(1);
+        expect(hasMetaDesc).toBe(1);
         const meta = doc.head.querySelector("meta[name=description]");
-        expect(meta.content).toEqual("Pass");
+        expect(meta.content).toBe("Pass");
         resolve();
       };
       window.requestIdleCallback

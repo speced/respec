@@ -1,12 +1,8 @@
+import { rule } from "../../../../src/core/linter-rules/no-http-props.js";
+
 describe("Core Linter Rule - 'no-http-props'", () => {
   const ruleName = "no-http-props";
   const config = { lint: { [ruleName]: true } };
-  let rule;
-  beforeAll(async () => {
-    rule = await new Promise(resolve => {
-      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
-    });
-  });
   it("checks any prop ending with 'URI' (case sensitive)", async () => {
     const conf = Object.assign(
       {
@@ -44,10 +40,10 @@ describe("Core Linter Rule - 'no-http-props'", () => {
       config
     );
     const result = await rule.lint(conf);
-    expect(result.howToFix.includes("prevED")).toBe(true);
+    expect(result.howToFix).toContain("prevED");
     conf.prevED = "https://valid-now";
     const r2 = await rule.lint(conf);
-    expect(r2.howToFix.includes("prevED")).toBe(false);
+    expect(r2.howToFix).not.toContain("prevED");
   });
   it("flags well-known props as invalid, when invalid URLs are present", async () => {
     const conf = Object.assign(
@@ -66,16 +62,16 @@ describe("Core Linter Rule - 'no-http-props'", () => {
       config
     );
     const { howToFix } = await rule.lint(conf);
-    expect(howToFix.includes("charterDisclosureURI")).toBe(true);
-    expect(howToFix.includes("edDraftURI")).toBe(true);
-    expect(howToFix.includes("implementationReportURI")).toBe(true);
-    expect(howToFix.includes("previousDiffURI")).toBe(true);
-    expect(howToFix.includes("previousMaturityURI")).toBe(true);
-    expect(howToFix.includes("previousURI")).toBe(true);
-    expect(howToFix.includes("prevRecURI")).toBe(true);
-    expect(howToFix.includes("testSuiteURI")).toBe(true);
-    expect(howToFix.includes("wgPatentURI")).toBe(true);
-    expect(howToFix.includes("wgURI")).toBe(true);
+    expect(howToFix).toContain("charterDisclosureURI");
+    expect(howToFix).toContain("edDraftURI");
+    expect(howToFix).toContain("implementationReportURI");
+    expect(howToFix).toContain("previousDiffURI");
+    expect(howToFix).toContain("previousMaturityURI");
+    expect(howToFix).toContain("previousURI");
+    expect(howToFix).toContain("prevRecURI");
+    expect(howToFix).toContain("testSuiteURI");
+    expect(howToFix).toContain("wgPatentURI");
+    expect(howToFix).toContain("wgURI");
   });
   it("ignores well-known URIs when they are valid", async () => {
     const conf = Object.assign(
@@ -106,8 +102,8 @@ describe("Core Linter Rule - 'no-http-props'", () => {
       config
     );
     const { howToFix } = await rule.lint(conf);
-    expect(howToFix.includes("someRelativeURI")).toBe(true);
-    expect(howToFix.includes("somePathURI")).toBe(true);
-    expect(howToFix.includes("someControlURI")).toBe(false);
+    expect(howToFix).toContain("someRelativeURI");
+    expect(howToFix).toContain("somePathURI");
+    expect(howToFix).not.toContain("someControlURI");
   });
 });

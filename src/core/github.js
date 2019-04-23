@@ -4,7 +4,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { pub } from "./pubsubhub";
+import { pub } from "./pubsubhub.js";
 
 export const name = "core/github";
 
@@ -28,7 +28,7 @@ export async function run(conf) {
   let ghURL;
   try {
     ghURL = new URL(tempURL, "https://github.com");
-  } catch (err) {
+  } catch {
     pub("error", `\`respecConf.github\` is not a valid URL? (${ghURL})`);
     return;
   }

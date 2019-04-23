@@ -1,7 +1,7 @@
 // @ts-check
 // Module core/data-abbr
 // - Finds all elements with data-abbr attribute and processes them.
-import { showInlineWarning } from "./utils";
+import { showInlineWarning } from "./utils.js";
 export const name = "core/dfn-abbr";
 
 export function run() {
@@ -15,7 +15,7 @@ export function run() {
         break;
       default: {
         const msg =
-          `[\`data-dfn\`](https://github.com/w3c/respec/wiki/data-abbr)` +
+          `[\`data-abbr\`](https://github.com/w3c/respec/wiki/data-abbr)` +
           ` attribute not supported on \`${localName}\` elements.`;
         showInlineWarning(elem, msg, "Error: unsupported.");
       }

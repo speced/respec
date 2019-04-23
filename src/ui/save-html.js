@@ -1,11 +1,11 @@
 // @ts-check
 // Module ui/save-html
 // Saves content to HTML when asked to
-import { l10n, lang } from "../core/l10n";
+import { l10n, lang } from "../core/l10n.js";
 import hyperHTML from "hyperhtml";
-import { pub } from "../core/pubsubhub";
-import { rsDocToDataURL } from "../core/exporter";
-import { ui } from "../core/ui";
+import { pub } from "../core/pubsubhub.js";
+import { rsDocToDataURL } from "../core/exporter.js";
+import { ui } from "../core/ui.js";
 
 export const name = "ui/save-html";
 
@@ -86,7 +86,11 @@ function show() {
   saveDialog.show(button);
 }
 
-export function exportDocument(format, mimeType) {
+/**
+ * @param {*} _
+ * @param {string} mimeType
+ */
+export function exportDocument(_, mimeType) {
   const msg =
     "Exporting via ui/save-html module's `exportDocument()` is deprecated and will be removed. " +
     "Use core/exporter `rsDocToDataURL()` instead.";

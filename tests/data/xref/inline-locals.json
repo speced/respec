@@ -1,0 +1,40 @@
+{
+  "result": [
+    [
+      "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1",
+      [
+        {
+          "shortname": "html",
+          "type": "interface",
+          "normative": true,
+          "uri": "window-object.html#window"
+        }
+      ]
+    ],
+    [
+      "5530bca3f739b4cec44acfa985117a332bff078e",
+      [
+        {
+          "shortname": "dom",
+          "type": "attribute",
+          "for": ["Window"],
+          "normative": true,
+          "uri": "#dom-window-event"
+        }
+      ]
+    ]
+  ],
+  "query": [
+    {
+      "term": "Window",
+      "types": ["_IDL_"],
+      "id": "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1"
+    },
+    {
+      "term": "event",
+      "types": ["attribute", "dict-member"],
+      "for": "Window",
+      "id": "5530bca3f739b4cec44acfa985117a332bff078e"
+    }
+  ]
+}

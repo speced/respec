@@ -1,5 +1,5 @@
-import { children } from "./utils";
-import { pub } from "./pubsubhub";
+import { children } from "./utils.js";
+import { pub } from "./pubsubhub.js";
 export const name = "core/list-sorter";
 
 function makeSorter(direction) {

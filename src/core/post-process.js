@@ -8,7 +8,7 @@
  *      want to be using a new module with your own profile.
  *  - afterEnd: final thing that is called.
  */
-import { pub, sub } from "./pubsubhub";
+import { pub, sub } from "./pubsubhub.js";
 
 export const name = "core/post-process";
 

@@ -1,5 +1,5 @@
-import { fetchAndCache } from "./utils";
-import { pub } from "./pubsubhub";
+import { fetchAndCache } from "./utils.js";
+import { pub } from "./pubsubhub.js";
 export const name = "core/github-api";
 
 export function githubRequestHeaders(conf) {
@@ -71,6 +71,7 @@ async function processResponse(response, issueNumber) {
     const json = await response.json();
     Object.assign(issue, json);
   } catch (err) {
+    console.error(err);
     issue.message = `Error JSON parsing issue #${issueNumber} from GitHub.`;
   }
   if (!response.ok || issue.message) {

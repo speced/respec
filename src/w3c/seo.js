@@ -1,8 +1,8 @@
 // Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
-import { biblio } from "../core/biblio";
-import { pub } from "../core/pubsubhub";
+import { biblio } from "../core/biblio.js";
+import { pub } from "../core/pubsubhub.js";
 export const name = "w3c/seo";
 export function run(conf) {
   const trLatestUri = conf.shortName
