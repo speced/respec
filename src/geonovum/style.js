@@ -71,7 +71,7 @@ function createResourceHints() {
       as: "image",
     },
   ]
-    .map(createResourceHint)
+    .map(opts => createResourceHint(opts, document))
     .reduce((frag, link) => {
       frag.appendChild(link);
       return frag;
