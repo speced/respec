@@ -22,7 +22,7 @@ describe("Core - Markdown", () => {
     });
     const foo = doc.getElementById("foo");
     expect(foo).toBeTruthy();
-    expect(foo.textContent).toEqual("1. Foo");
+    expect(foo.textContent).toBe("1. Foo");
   });
 
   it("processes markdown inside of sections", async () => {
@@ -31,7 +31,7 @@ describe("Core - Markdown", () => {
     const doc = await makeRSDoc(ops);
     const foo = doc.getElementById("foo");
     expect(foo).toBeTruthy();
-    expect(foo.textContent).toEqual("1. Foo");
+    expect(foo.textContent).toBe("1. Foo");
   });
 
   it("processes markdown inside of notes, issues and reqs.", async () => {
@@ -64,11 +64,11 @@ describe("Core - Markdown", () => {
     const listItems = doc.querySelectorAll(
       "section > ul:not([class=toc]) > li"
     );
-    expect(listItems.length).toEqual(2);
-    expect(listItems[0].textContent).toEqual("list item 1");
+    expect(listItems.length).toBe(2);
+    expect(listItems[0].textContent).toBe("list item 1");
     const nestedLi = doc.querySelector("li > ul > li");
     expect(nestedLi).toBeTruthy();
-    expect(nestedLi.textContent).toEqual("nested list item");
+    expect(nestedLi.textContent).toBe("nested list item");
   });
 
   it("assigns unique ids to headers", async () => {
@@ -124,28 +124,28 @@ describe("Core - Markdown", () => {
     const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
     const foo = doc.querySelector("#foo h2");
-    expect(foo.textContent).toEqual("1. Foo");
-    expect(foo.parentElement.localName).toEqual("section");
+    expect(foo.textContent).toBe("1. Foo");
+    expect(foo.parentElement.localName).toBe("section");
 
     const bar = doc.querySelector("#bar h3");
-    expect(bar.textContent).toEqual("1.1 Bar");
-    expect(bar.parentElement.localName).toEqual("section");
+    expect(bar.textContent).toBe("1.1 Bar");
+    expect(bar.parentElement.localName).toBe("section");
 
     const baz = doc.querySelector("#baz h3");
-    expect(baz.textContent).toEqual("1.2 Baz");
-    expect(baz.parentElement.localName).toEqual("section");
+    expect(baz.textContent).toBe("1.2 Baz");
+    expect(baz.parentElement.localName).toBe("section");
 
     const foobar = doc.querySelector("#foobar h4");
-    expect(foobar.textContent).toEqual("1.2.1 Foobar");
-    expect(foobar.parentElement.localName).toEqual("section");
+    expect(foobar.textContent).toBe("1.2.1 Foobar");
+    expect(foobar.parentElement.localName).toBe("section");
 
     const foobaz = doc.querySelector("#foobaz h5");
-    expect(foobaz.textContent).toEqual("1.2.1.1 Foobaz");
-    expect(foobaz.parentElement.localName).toEqual("section");
+    expect(foobaz.textContent).toBe("1.2.1.1 Foobaz");
+    expect(foobaz.parentElement.localName).toBe("section");
 
     const zing = doc.querySelector("#zing h3");
-    expect(zing.textContent).toEqual("1.3 Zing");
-    expect(zing.parentElement.localName).toEqual("section");
+    expect(zing.textContent).toBe("1.3 Zing");
+    expect(zing.parentElement.localName).toBe("section");
   });
 
   it("gracefully handles jumps in nested headers", async () => {
@@ -171,7 +171,7 @@ describe("Core - Markdown", () => {
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
     const bar = doc.getElementById("bar");
-    expect(bar.textContent).toEqual("2. Bar");
+    expect(bar.textContent).toBe("2. Bar");
   });
 
   it("nests sections according to their headers", async () => {
@@ -182,7 +182,7 @@ describe("Core - Markdown", () => {
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
     const bar = doc.getElementById("bar");
-    expect(bar.textContent).toMatch("1.1 Bar");
+    expect(bar.textContent).toContain("1.1 Bar");
     const foo = doc.getElementById("foo");
     expect(foo.parentElement.contains(bar)).toBeTruthy();
   });
@@ -210,7 +210,7 @@ describe("Core - Markdown", () => {
     const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
     const baz = doc.querySelector("#baz h2");
-    expect(baz.textContent).toEqual("2. Baz");
+    expect(baz.textContent).toBe("2. Baz");
     const bar = doc.querySelector("#bar h3");
     expect(bar.parentElement.contains(baz)).toBeFalsy();
     expect(baz.parentElement.contains(bar)).toBeFalsy();
@@ -224,7 +224,7 @@ describe("Core - Markdown", () => {
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
     const bar = doc.getElementById("bar");
-    expect(bar.textContent).toEqual("2. Bar");
+    expect(bar.textContent).toBe("2. Bar");
     expect(doc.body.contains(bar)).toBeTruthy();
   });
 
@@ -253,9 +253,9 @@ describe("Core - Markdown", () => {
       const ops = makeStandardOps({ format: "markdown" }, body);
       const doc = await makeRSDoc(ops);
       const anchors = doc.querySelectorAll("#testElem a");
-      expect(anchors.length).toEqual(2);
-      expect(anchors[0].href).toEqual("http://no-links-foo.com/");
-      expect(anchors[1].href).toEqual("http://no-links-bar.com/");
+      expect(anchors.length).toBe(2);
+      expect(anchors[0].href).toBe("http://no-links-foo.com/");
+      expect(anchors[1].href).toBe("http://no-links-bar.com/");
     });
 
     it("replaces HTMLAnchors when present", async () => {
@@ -268,7 +268,7 @@ describe("Core - Markdown", () => {
       const ops = makeStandardOps({ format: "markdown" }, body);
       const doc = await makeRSDoc(ops);
       const anchors = doc.querySelectorAll("#testElem a");
-      expect(anchors.length).toEqual(0);
+      expect(anchors.length).toBe(0);
       expect(
         doc.querySelector("a[href='http://no-links-foo.com']")
       ).toBeFalsy();
@@ -287,13 +287,13 @@ describe("Core - Markdown", () => {
       const ops = makeStandardOps({ format: "markdown" }, body);
       const doc = await makeRSDoc(ops);
       const text1 = doc.getElementById("test-text1");
-      expect(text1.textContent).toEqual(`test1 text "inner text".`);
-      expect(text1.innerHTML).toEqual(`test1 text "<code>inner text</code>".`);
+      expect(text1.textContent).toBe(`test1 text "inner text".`);
+      expect(text1.innerHTML).toBe(`test1 text "<code>inner text</code>".`);
       const text2 = doc.getElementById("test-text2");
-      expect(text2.textContent).toEqual(`test2 'inner'.`);
-      expect(text2.innerHTML).toEqual(`test2 '<code>inner</code>'.`);
+      expect(text2.textContent).toBe(`test2 'inner'.`);
+      expect(text2.innerHTML).toBe(`test2 '<code>inner</code>'.`);
       const text3 = doc.getElementById("test-text3");
-      expect(text3.innerHTML).toEqual(`test3 text "<code>inner text</code>".`);
+      expect(text3.innerHTML).toBe(`test3 text "<code>inner text</code>".`);
     });
   });
   describe("data-format=markdown", () => {
@@ -318,15 +318,39 @@ describe("Core - Markdown", () => {
       const headings = Array.from(
         doc.querySelectorAll("#markdown1 h2, #markdown1 h3")
       );
-      expect(headings.length).toEqual(3);
+      expect(headings.length).toBe(3);
       const [h2, h3, anotherH3] = headings;
-      expect(h2.localName).toEqual("h2");
-      expect(h3.localName).toEqual("h3");
-      expect(anotherH3.localName).toEqual("h3");
-      expect(anotherH3.textContent.trim()).toEqual("1.2 another h3");
+      expect(h2.localName).toBe("h2");
+      expect(h3.localName).toBe("h3");
+      expect(anotherH3.localName).toBe("h3");
+      expect(anotherH3.textContent.trim()).toBe("1.2 another h3");
       expect(doc.querySelector("#markdown1 code")).toBeTruthy();
       const dontChange = doc.getElementById("dontTouch").textContent.trim();
-      expect(dontChange).toEqual("## this should not change");
+      expect(dontChange).toBe("## this should not change");
+    });
+  });
+  describe("Whitespace compatibility", () => {
+    it("normalises whitespace, but ignore white with pre tags", async () => {
+      const str = `   trim start\n    * trim 3 from start \n\n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
+      const ops = makeStandardOps(
+        null,
+        `<section id=markdown1 data-format=markdown>${str}`
+      );
+      const doc = await makeRSDoc(ops);
+      const [p1, ul, pre, p2] = doc.getElementById("markdown1").children;
+      expect(p1.localName).toBe("p");
+      expect(p1.textContent).toBe("trim start");
+      expect(p2.textContent).toBe("foo \n bar");
+      expect(ul.children.length).toBe(1);
+
+      const [li] = ul.children;
+      expect(li.localName).toBe("li");
+      expect(li.textContent).toBe("trim 3 from start ");
+
+      const preText = pre.textContent.split("\n");
+      expect(preText[0]).toBe("trim 1");
+      expect(preText[1]).toBe("   if(x){");
+      expect(preText[2]).toBe("     party()");
     });
   });
 });

@@ -58,7 +58,7 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
     `;
     const badone = doc.getElementById("badone");
     const result = await rule.lint(config, doc);
-    expect(result.offendingElements.length).toEqual(1);
+    expect(result.offendingElements.length).toBe(1);
     expect(result.offendingElements[0]).toEqual(badone);
   });
 });

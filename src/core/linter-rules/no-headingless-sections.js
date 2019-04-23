@@ -29,11 +29,11 @@ const hasNoHeading = ({ firstElementChild: elem }) => {
 };
 
 /**
- * @param {*} conf
+ * @param {*} _
  * @param {Document} doc
  * @return {import("../../core/LinterRule").LinterResult}
  */
-function linterFunction(conf, doc) {
+function linterFunction(_, doc) {
   const offendingElements = [...doc.querySelectorAll("section")].filter(
     hasNoHeading
   );

@@ -23,7 +23,7 @@ describe("Core — Algorithm Lists", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelectorAll(".assert").length).toEqual(2);
+    expect(doc.querySelectorAll(".assert").length).toBe(2);
   });
 
   it("doesn't add 'assert' CSS class to Assert: in ordered lists that are not marked as algorithms", async () => {
@@ -37,6 +37,6 @@ describe("Core — Algorithm Lists", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelectorAll(".assert").length).toEqual(0);
+    expect(doc.querySelectorAll(".assert").length).toBe(0);
   });
 });

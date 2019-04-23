@@ -5,7 +5,7 @@ import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 function makeTest(uri) {
   return doc => {
     const canLink = doc.querySelector("link[rel='canonical']");
-    expect(canLink.href).toEqual(uri);
+    expect(canLink.href).toBe(uri);
   };
 }
 describe("W3C - SEO", () => {
@@ -34,7 +34,7 @@ describe("W3C - SEO", () => {
     const ops = makeStandardOps();
     ops.config.shortName = undefined;
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelector("link[rel='canonical']")).toEqual(null);
+    expect(doc.querySelector("link[rel='canonical']")).toBe(null);
   });
 
   it("sets the canonical URI if explicitly set", async () => {
@@ -106,19 +106,19 @@ describe("W3C - SEO", () => {
     const script = doc.querySelector("script[type='application/ld+json']");
     const jsonld = JSON.parse(script.textContent);
     expect(jsonld["@context"]).toContain("http://schema.org");
-    expect(jsonld.id).toEqual("https://www.w3.org/TR/some-spec/");
+    expect(jsonld.id).toBe("https://www.w3.org/TR/some-spec/");
     expect(jsonld.type).toContain("TechArticle");
     expect(jsonld.type).toContain("w3p:PER");
-    expect(jsonld.datePublished).toEqual("2013-06-25");
+    expect(jsonld.datePublished).toBe("2013-06-25");
     expect(jsonld.description).toContain("test abstract");
-    expect(jsonld.inLanguage).toEqual("en");
-    expect(jsonld.isBasedOn).toEqual(
+    expect(jsonld.inLanguage).toBe("en");
+    expect(jsonld.isBasedOn).toBe(
       "https://www.w3.org/TR/2012/REC-some-spec-20120607/"
     );
-    expect(jsonld.license).toEqual(
+    expect(jsonld.license).toBe(
       "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
     );
-    expect(jsonld.name).toEqual("Basic Title");
+    expect(jsonld.name).toBe("Basic Title");
     expect(jsonld.copyrightHolder).toEqual({
       name: "World Wide Web Consortium",
       url: "https://www.w3.org/",

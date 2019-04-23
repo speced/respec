@@ -83,9 +83,9 @@ describe("Core — data-tests attribute", () => {
       const items = Array.from(
         doc.querySelectorAll("#testable > .respec-tests-details > ul > li > a")
       );
-      expect(items.length).toEqual(5);
+      expect(items.length).toBe(5);
       items.forEach(({ origin, pathname }, i) => {
-        expect(origin).toEqual("https://wpt.fyi");
+        expect(origin).toBe("https://wpt.fyi");
         expect(pathname.endsWith(`test${i}.html`)).toBe(true);
       });
     });
@@ -94,68 +94,68 @@ describe("Core — data-tests attribute", () => {
       const [fileElement, secureIconElement] = li.children;
 
       const fileName = fileElement.innerText.trim();
-      expect(fileName).toEqual("this-is-secure");
+      expect(fileName).toBe("this-is-secure");
 
       const link = fileElement.href;
-      expect(link).toEqual("https://wpt.fyi/respec/this-is-secure.https.html");
+      expect(link).toBe("https://wpt.fyi/respec/this-is-secure.https.html");
 
       const emoji = secureIconElement.innerText;
-      expect(emoji).toEqual("🔒");
+      expect(emoji).toBe("🔒");
 
       const spanAriaLabel = secureIconElement.getAttribute("aria-label");
-      expect(spanAriaLabel).toEqual("requires a secure connection");
+      expect(spanAriaLabel).toBe("requires a secure connection");
 
       const spanTitle = secureIconElement.getAttribute("title");
-      expect(spanTitle).toEqual("Test requires HTTPS");
+      expect(spanTitle).toBe("Test requires HTTPS");
     });
     it(`adds emojis for manual tests`, () => {
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(2)");
       const [fileElement, manualIconElement] = li.children;
 
       const fileName = fileElement.innerText.trim();
-      expect(fileName).toEqual("this-is");
+      expect(fileName).toBe("this-is");
 
       const link = fileElement.href;
-      expect(link).toEqual("https://wpt.fyi/respec/this-is-manual.html");
+      expect(link).toBe("https://wpt.fyi/respec/this-is-manual.html");
 
       const emoji = manualIconElement.innerText;
-      expect(emoji).toEqual("💪");
+      expect(emoji).toBe("💪");
 
       const spanAriaLabel = manualIconElement.getAttribute("aria-label");
-      expect(spanAriaLabel).toEqual("the test must be run manually");
+      expect(spanAriaLabel).toBe("the test must be run manually");
 
       const spanTitle = manualIconElement.getAttribute("title");
-      expect(spanTitle).toEqual("Manual test");
+      expect(spanTitle).toBe("Manual test");
     });
     it(`adds emojis for secure manual tests`, () => {
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(3)");
       const [fileElement, secureIconElement, manualIconElement] = li.children;
 
       const fileName = fileElement.innerText.trim();
-      expect(fileName).toEqual("this-is-secure-and");
+      expect(fileName).toBe("this-is-secure-and");
 
       const link = fileElement.href;
-      expect(link).toEqual(
+      expect(link).toBe(
         "https://wpt.fyi/respec/this-is-secure-and-manual.https.html"
       );
 
       const emojiSecure = secureIconElement.innerText;
-      expect(emojiSecure).toEqual("🔒");
+      expect(emojiSecure).toBe("🔒");
 
       const spanAriaLabel1 = secureIconElement.getAttribute("aria-label");
-      expect(spanAriaLabel1).toEqual("requires a secure connection");
+      expect(spanAriaLabel1).toBe("requires a secure connection");
 
       const spanTitle1 = secureIconElement.getAttribute("title");
-      expect(spanTitle1).toEqual("Test requires HTTPS");
+      expect(spanTitle1).toBe("Test requires HTTPS");
 
       const spanEmoji2 = manualIconElement.innerText;
-      expect(spanEmoji2).toEqual("💪");
+      expect(spanEmoji2).toBe("💪");
 
       const spanAriaLabel2 = manualIconElement.getAttribute("aria-label");
-      expect(spanAriaLabel2).toEqual("the test must be run manually");
+      expect(spanAriaLabel2).toBe("the test must be run manually");
 
       const spanTitle2 = manualIconElement.getAttribute("title");
-      expect(spanTitle2).toEqual("Manual test");
+      expect(spanTitle2).toBe("Manual test");
     });
   });
   describe("duplicate test removal", () => {
@@ -165,7 +165,7 @@ describe("Core — data-tests attribute", () => {
           "#duplicates > .respec-tests-details > ul > li > a"
         )
       );
-      expect(items.length).toEqual(2);
+      expect(items.length).toBe(2);
       expect(items[0].textContent.trim()).toBe("payment-request-show-method");
       expect(items[1].textContent.trim()).toBe("some-other-test");
     });

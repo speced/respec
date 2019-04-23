@@ -76,10 +76,10 @@ describe("Core — data-cite attribute", () => {
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    expect(doc.getElementById("bib-url").closest("section").id).toEqual(
+    expect(doc.getElementById("bib-url").closest("section").id).toBe(
       "normative-references"
     );
-    expect(doc.getElementById("bib-fetch").closest("section").id).toEqual(
+    expect(doc.getElementById("bib-fetch").closest("section").id).toBe(
       "informative-references"
     );
   });
@@ -94,20 +94,20 @@ describe("Core — data-cite attribute", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > a");
-    expect(a.textContent).toEqual("inline link");
-    expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#test");
-    expect(a.hasAttribute("data-cite")).toEqual(false);
-    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
+    expect(a.textContent).toBe("inline link");
+    expect(a.href).toBe("https://html.spec.whatwg.org/multipage/#test");
+    expect(a.hasAttribute("data-cite")).toBe(false);
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
       "normative-references"
     );
     // Definition part
     const dfn = doc.querySelector("#t2 > dfn");
     expect(dfn).toBeTruthy();
     const dfnA = doc.querySelector("#t2 > dfn > a");
-    expect(dfnA.textContent).toEqual("inline link");
-    expect(dfnA.href).toEqual("https://html.spec.whatwg.org/multipage/#test");
-    expect(dfnA.hasAttribute("data-cite")).toEqual(false);
-    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
+    expect(dfnA.textContent).toBe("inline link");
+    expect(dfnA.href).toBe("https://html.spec.whatwg.org/multipage/#test");
+    expect(dfnA.hasAttribute("data-cite")).toBe(false);
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
       "normative-references"
     );
   });
@@ -121,10 +121,10 @@ describe("Core — data-cite attribute", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > cite > a");
-    expect(a.textContent).toEqual("inline link");
-    expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/");
-    expect(a.hasAttribute("data-cite")).toEqual(false);
-    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
+    expect(a.textContent).toBe("inline link");
+    expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
+    expect(a.hasAttribute("data-cite")).toBe(false);
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
       "normative-references"
     );
   });
@@ -138,10 +138,10 @@ describe("Core — data-cite attribute", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > cite > a");
-    expect(a.textContent).toEqual("inline link");
-    expect(a.href).toEqual("https://dom.spec.whatwg.org/");
-    expect(a.hasAttribute("data-cite")).toEqual(false);
-    expect(doc.getElementById("bib-whatwg-dom").closest("section").id).toEqual(
+    expect(a.textContent).toBe("inline link");
+    expect(a.href).toBe("https://dom.spec.whatwg.org/");
+    expect(a.hasAttribute("data-cite")).toBe(false);
+    expect(doc.getElementById("bib-whatwg-dom").closest("section").id).toBe(
       "informative-references"
     );
   });
@@ -157,18 +157,18 @@ describe("Core — data-cite attribute", () => {
     const doc = await makeRSDoc(ops);
     const a1 = doc.querySelector("#t1 > a");
     const a2 = doc.querySelector("#t2 > a");
-    expect(a1.textContent).toEqual("link 1");
-    expect(a2.textContent).toEqual("link 2");
-    expect(a1.href).toEqual("");
-    expect(a2.href).toEqual("");
-    expect(a1.hasAttribute("data-cite")).toEqual(false);
-    expect(a2.hasAttribute("data-cite")).toEqual(false);
-    expect(
-      doc.getElementById("bib-no-exist-inf").closest("section").id
-    ).toEqual("informative-references");
-    expect(
-      doc.getElementById("bib-no-exist-norm").closest("section").id
-    ).toEqual("normative-references");
+    expect(a1.textContent).toBe("link 1");
+    expect(a2.textContent).toBe("link 2");
+    expect(a1.href).toBe("");
+    expect(a2.href).toBe("");
+    expect(a1.hasAttribute("data-cite")).toBe(false);
+    expect(a2.hasAttribute("data-cite")).toBe(false);
+    expect(doc.getElementById("bib-no-exist-inf").closest("section").id).toBe(
+      "informative-references"
+    );
+    expect(doc.getElementById("bib-no-exist-norm").closest("section").id).toBe(
+      "normative-references"
+    );
   });
 
   it("adds the path and fragment identifier to the link", async () => {
@@ -181,12 +181,12 @@ describe("Core — data-cite attribute", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > a");
-    expect(a.textContent).toEqual("inline link");
-    expect(a.href).toEqual(
+    expect(a.textContent).toBe("inline link");
+    expect(a.href).toBe(
       "https://html.spec.whatwg.org/multipage/webappapis.html#scripting"
     );
-    expect(a.hasAttribute("data-cite")).toEqual(false);
-    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
+    expect(a.hasAttribute("data-cite")).toBe(false);
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
       "normative-references"
     );
   });
@@ -203,14 +203,14 @@ describe("Core — data-cite attribute", () => {
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
       const a = doc.querySelector("#t1 > a");
-      expect(a.textContent).toEqual("inline link");
-      expect(a.href).toEqual(
+      expect(a.textContent).toBe("inline link");
+      expect(a.href).toBe(
         "https://html.spec.whatwg.org/multipage/webappapis.html#pass"
       );
-      expect(a.hasAttribute("data-cite")).toEqual(false);
-      expect(
-        doc.getElementById("bib-whatwg-html").closest("section").id
-      ).toEqual("informative-references");
+      expect(a.hasAttribute("data-cite")).toBe(false);
+      expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
+        "informative-references"
+      );
     });
 
     it("resolves paths relative to the cited spec, even when path is absolute", async () => {
@@ -236,12 +236,12 @@ describe("Core — data-cite attribute", () => {
       const doc = await makeRSDoc(ops);
 
       const a = doc.querySelector("#t1 > a");
-      expect(a.textContent).toEqual("inline link");
-      expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#pass");
-      expect(a.hasAttribute("data-cite")).toEqual(false);
-      expect(
-        doc.getElementById("bib-whatwg-html").closest("section").id
-      ).toEqual("normative-references");
+      expect(a.textContent).toBe("inline link");
+      expect(a.href).toBe("https://html.spec.whatwg.org/multipage/#pass");
+      expect(a.hasAttribute("data-cite")).toBe(false);
+      expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
+        "normative-references"
+      );
     });
   });
 
