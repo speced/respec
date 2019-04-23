@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core — Requirements", () => {
   afterAll(flushIframes);
 
@@ -8,12 +11,12 @@ describe("Core — Requirements", () => {
     const doc = await makeRSDoc(ops);
 
     const req = doc.querySelector("p.req");
-    expect(req.textContent).toEqual("Req. 1: REQ");
+    expect(req.textContent).toBe("Req. 1: REQ");
     const refs = req.querySelectorAll("a");
-    expect(refs.length).toEqual(1);
+    expect(refs.length).toBe(1);
     const [ref] = refs;
-    expect(ref.textContent).toEqual("Req. 1");
-    expect(ref.getAttribute("href")).toEqual("#req-id");
+    expect(ref.textContent).toBe("Req. 1");
+    expect(ref.getAttribute("href")).toBe("#req-id");
   });
 
   it("should process requirement references", async () => {
@@ -26,9 +29,9 @@ describe("Core — Requirements", () => {
     const doc = await makeRSDoc(ops);
 
     const refs = doc.querySelectorAll("a.reqRef");
-    expect(refs.length).toEqual(2);
+    expect(refs.length).toBe(2);
     const [validRef, invalidRef] = refs;
-    expect(validRef.textContent).toEqual("Req. 1");
-    expect(invalidRef.textContent).toEqual("Req. not found 'foo'");
+    expect(validRef.textContent).toBe("Req. 1");
+    expect(invalidRef.textContent).toBe("Req. not found 'foo'");
   });
 });

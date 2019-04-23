@@ -8,9 +8,9 @@ import {
   checkLimitReached,
   fetchIndex,
   githubRequestHeaders,
-} from "./github-api";
-import { flatten, joinAnd } from "./utils";
-import { pub } from "./pubsubhub";
+} from "./github-api.js";
+import { flatten, joinAnd } from "./utils.js";
+import { pub } from "./pubsubhub.js";
 export const name = "core/contrib";
 
 function prop(prop) {
@@ -86,7 +86,8 @@ export async function run(conf) {
       toHTML(commenterUrls, editors, ghCommenters, headers),
       toHTML(contributorUrls, editors, ghContributors, headers)
     );
-  } catch (error) {
+  } catch (err) {
     pub("error", "Error loading contributors and/or commenters from GitHub.");
+    console.log(err);
   }
 }

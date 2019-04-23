@@ -3,8 +3,8 @@
  *
  * Checks whether the document has `<meta charset="utf-8">` properly.
  */
-import LinterRule from "../LinterRule";
-import { lang as defaultLang } from "../l10n";
+import LinterRule from "../LinterRule.js";
+import { lang as defaultLang } from "../l10n.js";
 
 const name = "check-charset";
 const meta = {
@@ -20,10 +20,10 @@ const lang = defaultLang in meta ? defaultLang : "en";
 /**
  * Runs linter rule.
  *
- * @param {Object} conf The ReSpec config.
+ * @param {Object} _ The ReSpec config.
  * @param {Document} doc The document to be checked.
  */
-function linterFunction(conf, doc) {
+function linterFunction(_, doc) {
   const metas = doc.querySelectorAll("meta[charset]");
   const val = [];
   for (const meta of metas) {

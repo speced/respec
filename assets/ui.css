@@ -286,22 +286,6 @@
   border-radius: inherit;
 }
 
-.respec-offending-element {
-  display: inline-block;
-  position: relative;
-  background: url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=)
-    bottom repeat-x;
-}
-
-@supports (text-decoration-style: wavy) {
-  .respec-offending-element {
-    background: none;
-    text-decoration-line: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: red;
-  }
-}
-
 .respec-button-copy-paste {
   position: absolute;
   display: block;

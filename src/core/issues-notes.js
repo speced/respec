@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/issues-notes
 // Manages issues and notes, including marking them up, numbering, inserting the title,
 // and injecting the style sheet.
@@ -10,24 +11,32 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, joinAnd, parents } from "./utils";
+import { addId, joinAnd, parents } from "./utils.js";
 import css from "text!../../assets/issues-notes.css";
-import { lang as defaultLang } from "../core/l10n";
-import { fetchAndStoreGithubIssues } from "./github-api";
+import { lang as defaultLang } from "../core/l10n.js";
+import { fetchAndStoreGithubIssues } from "./github-api.js";
 import hyperHTML from "hyperhtml";
-import { pub } from "./pubsubhub";
+import { pub } from "./pubsubhub.js";
+
+/**
+ * @typedef {import("./github-api").GitHubIssue} GitHubIssue
+ * @typedef {import("./github-api").GitHubLabel} GitHubLabel
+ */
 
 export const name = "core/issues-notes";
 
 const localizationStrings = {
   en: {
     issue_summary: "Issue Summary",
+    no_issues_in_spec: "There are no issues listed in this specification.",
   },
   nl: {
     issue_summary: "Lijst met issues",
+    no_issues_in_spec: "Er zijn geen problemen vermeld in deze specificatie.",
   },
   es: {
     issue_summary: "Resumen de la cuestión",
+    no_issues_in_spec: "No hay problemas enumerados en esta especificación.",
   },
 };
 
@@ -46,8 +55,6 @@ function handleIssues(ins, ghIssues, conf) {
   const hasDataNum = !!document.querySelector(".issue[data-number]");
   let issueNum = 0;
   const issueList = document.createElement("ul");
-  const issueSummary = hyperHTML`
-    <div><h2>${l10n.issue_summary}</h2>${issueList}</div>`;
   ins.forEach(inno => {
     const { type, displayType, isFeatureAtRisk } = getIssueType(inno, conf);
     const isIssue = type === "issue";
@@ -120,6 +127,7 @@ function handleIssues(ins, ghIssues, conf) {
         }
         titleParent.append(createLabelsGroup(labels, report.title, repoURL));
       }
+      /** @type {HTMLElement | DocumentFragment} */
       let body = inno;
       inno.replaceWith(div);
       body.classList.remove(type);
@@ -135,15 +143,7 @@ function handleIssues(ins, ghIssues, conf) {
     }
     pub(report.type, report);
   });
-  const issueSummaryElement = document.getElementById("issue-summary");
-  if (issueSummaryElement) {
-    if (document.querySelectorAll(".issue").length) {
-      issueSummaryElement.append(...issueSummary.childNodes);
-    } else {
-      pub("warn", "Using issue summary (#issue-summary) but no issues found.");
-      issueSummaryElement.remove();
-    }
-  }
+  makeIssueSectionSummary(issueList);
 }
 
 /**
@@ -177,7 +177,7 @@ function getIssueType(inno, conf) {
 }
 
 /**
- * @param {number} dataNum
+ * @param {string} dataNum
  * @param {*} conf
  */
 function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
@@ -201,6 +201,29 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
   return hyperHTML`
     <li><a href="${`#${id}`}">${issueNumberText}</a>${title}</li>
   `;
+}
+
+/**
+ *
+ * @param {HTMLUListElement} issueList
+ */
+function makeIssueSectionSummary(issueList) {
+  const issueSummaryElement = document.getElementById("issue-summary");
+  if (!issueSummaryElement) return;
+  const heading = issueSummaryElement.querySelector("h2, h3, h4, h5, h6");
+
+  issueList.hasChildNodes()
+    ? issueSummaryElement.append(issueList)
+    : issueSummaryElement.append(hyperHTML`<p>${l10n.no_issues_in_spec}</p>`);
+  if (
+    !heading ||
+    (heading && heading !== issueSummaryElement.firstElementChild)
+  ) {
+    issueSummaryElement.insertAdjacentHTML(
+      "afterbegin",
+      `<h2>${l10n.issue_summary}</h2>`
+    );
+  }
 }
 
 function isLight(rgb) {

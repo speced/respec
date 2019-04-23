@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core - ID headers", () => {
   afterAll(flushIframes);
   let doc;
@@ -7,6 +10,15 @@ describe("Core - ID headers", () => {
     <section id="t0"><p>BLAH</p><h6>FOO</h6></section>
     <section><h2>test-1</h2></section>
     <section><h2>Pass</h2></section>
+    <section id="sotd">
+    <p>...</p>
+    <section>
+      <h3>Level 3 heading</h3>
+      <section>
+        <h4>Level 4 heading</h4>
+      </section>
+    </section>
+  </section>
   `;
   beforeAll(async () => {
     const ops = makeStandardOps({ addSectionLinks: true }, body);
@@ -45,6 +57,12 @@ describe("Core - ID headers", () => {
 
       const test2 = doc.querySelector("#pass > h2 > a.self-link");
       expect(test2.getAttribute("href")).toBe("#pass");
+    });
+
+    it("doesn't add section links to h2s .introductory, but h3, h4s are ok", () => {
+      const [h3, h4] = doc.querySelectorAll("#sotd h3, #sotd h4");
+      expect(h3.id).toBe("level-3-heading");
+      expect(h4.id).toBe("level-4-heading");
     });
   });
 });

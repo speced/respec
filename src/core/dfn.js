@@ -2,8 +2,8 @@
 // Module core/dfn
 // - Finds all <dfn> elements and populates conf.definitionMap to identify them.
 
-import { getDfnTitles } from "./utils";
-import { registerDefinition } from "./dfn-map";
+import { getDfnTitles } from "./utils.js";
+import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/dfn";
 

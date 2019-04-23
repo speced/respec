@@ -1,7 +1,7 @@
-import hyperHTML from "hyperhtml";
+// @ts-check
+import html from "hyperhtml";
 
 export default (conf, opts) => {
-  const html = hyperHTML;
   return html`
     <h2>${conf.l10n.sotd}</h2>
     ${conf.isPreview

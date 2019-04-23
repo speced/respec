@@ -1,7 +1,7 @@
 // @ts-check
-import { definitionMap, registerDefinition } from "./dfn-map";
-import { pub } from "./pubsubhub";
-import { wrapInner } from "./utils";
+import { definitionMap, registerDefinition } from "./dfn-map.js";
+import { pub } from "./pubsubhub.js";
+import { wrapInner } from "./utils.js";
 
 const topLevelEntities = new Set([
   "callback interface",
@@ -235,11 +235,11 @@ function getDfns(dfnForArray, parent, originalName, type) {
  * @return {string}
  */
 function getDataType(idlStruct) {
-  const { idlType, baseName, generic, type, body, union } = idlStruct;
+  const { idlType, generic, type, body, union } = idlStruct;
   if (typeof idlType === "string") return idlType;
-  if (generic) return generic.value;
+  if (generic) return generic;
   if (type === "operation") return getDataType(body.idlType);
   // join on "|" handles for "unsigned short" etc.
   if (union) return idlType.map(getDataType).join("|");
-  return baseName ? baseName : getDataType(idlType);
+  return getDataType(idlType);
 }

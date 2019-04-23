@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+} from "../SpecHelper.js";
+
 describe("Core — IDL Index", () => {
   afterAll(flushIframes);
   it("generates an idl summary", async () => {
@@ -35,10 +43,10 @@ interface Bar {
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
-    expect(idlIndex.querySelector("pre").textContent).toEqual(expectedIDL);
+    expect(idlIndex.querySelector("pre").textContent).toBe(expectedIDL);
     const header = doc.querySelector("#idl-index > h2");
     expect(header).not.toBe(null);
-    expect(header.textContent).toEqual("1. IDL Index");
+    expect(header.textContent).toBe("1. IDL Index");
   });
 
   //  this should exclude because it has an "exclude" class declared
@@ -228,7 +236,7 @@ dictionary PromptResponseObject {
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
-    expect(idlIndex.querySelector("pre").textContent).toEqual(expectedIDL);
+    expect(idlIndex.querySelector("pre").textContent).toBe(expectedIDL);
   });
 
   it("allows custom content and header", async () => {
@@ -246,11 +254,11 @@ dictionary PromptResponseObject {
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
-    expect(idlIndex.querySelector("pre")).toEqual(null);
+    expect(idlIndex.querySelector("pre")).toBe(null);
     const header = doc.querySelector("#idl-index > h2");
     expect(header).not.toBe(null);
-    expect(header.textContent).toEqual("1. PASS");
-    expect(doc.querySelectorAll("#idl-index > h2").length).toEqual(1);
+    expect(header.textContent).toBe("1. PASS");
+    expect(doc.querySelectorAll("#idl-index > h2").length).toBe(1);
   });
 
   it("doesn't include ids in the cloned indexed", async () => {
@@ -273,6 +281,6 @@ dictionary PromptResponseObject {
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("#idl-index pre");
-    expect(pre.querySelectorAll("*[id]").length).toEqual(0);
+    expect(pre.querySelectorAll("*[id]").length).toBe(0);
   });
 });

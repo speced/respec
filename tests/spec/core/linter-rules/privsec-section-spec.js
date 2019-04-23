@@ -1,16 +1,13 @@
 "use strict";
+
+import { rule } from "../../../../src/core/linter-rules/privsec-section.js";
+
 describe("W3C Linter Rule - 'privsec-section'", () => {
   const ruleName = "privsec-section";
   const config = {
     isRecTrack: true,
     lint: { [ruleName]: true },
   };
-  let rule;
-  beforeAll(async () => {
-    rule = await new Promise(resolve => {
-      require([`w3c/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
-    });
-  });
   const doc = document.implementation.createHTMLDocument("test doc");
   it("returns errors when missing privacy section", async () => {
     const result = await rule.lint(config, doc);

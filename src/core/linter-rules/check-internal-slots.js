@@ -2,8 +2,8 @@
 /**
  * Linter rule "check-internal-slots".
  */
-import LinterRule from "../LinterRule";
-import { lang as defaultLang } from "../l10n";
+import LinterRule from "../LinterRule.js";
+import { lang as defaultLang } from "../l10n.js";
 
 const name = "check-internal-slots";
 
@@ -20,11 +20,11 @@ const lang = defaultLang in meta ? defaultLang : "en";
 
 /**
  * Runs linter rule.
- * @param {Object} conf The ReSpec config.
+ * @param {Object} _ The ReSpec config.
  * @param {Document} doc The document to be checked.
  * @return {import("../../core/LinterRule").LinterResult}
  */
-function linterFunction(conf, doc) {
+function linterFunction(_, doc) {
   const offendingElements = [...doc.querySelectorAll("var+a")].filter(
     ({ previousSibling: { nodeName } }) => {
       const isPrevVar = nodeName && nodeName === "VAR";

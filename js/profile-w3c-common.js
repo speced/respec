@@ -7,7 +7,6 @@ window.addEventListener("error", ev => {
 // this is only set in a build, not at all in the dev environment
 require.config({
   paths: {
-    clipboard: "deps/clipboard",
     hyperhtml: "deps/hyperhtml",
     idb: "deps/idb",
     jquery: "deps/jquery",
@@ -31,6 +30,7 @@ define([
   "./core/base-runner",
   "./core/ui",
   "./core/pubsubhub",
+  "./core/jquery-enhanced",
   "./core/reindent",
   "./core/location-hash",
   "./core/l10n",
@@ -77,6 +77,7 @@ define([
   "./core/data-tests",
   "./core/list-sorter",
   "./core/highlight-vars",
+  "./core/data-type",
   "./core/algorithms",
   /* Linter must be the last thing to run */
   "./core/linter",

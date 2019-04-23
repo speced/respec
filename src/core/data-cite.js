@@ -14,8 +14,8 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
-import { biblio, resolveRef, updateFromNetwork } from "./biblio";
-import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils";
+import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
+import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils.js";
 import hyperHTML from "hyperhtml";
 export const name = "core/data-cite";
 
@@ -58,6 +58,11 @@ function requestLookup(conf) {
           elem.textContent = title;
         }
         elem.href = href;
+        if (!path && !frag) {
+          const cite = document.createElement("cite");
+          elem.replaceWith(cite);
+          cite.append(elem);
+        }
         break;
       }
       case "dfn": {
@@ -67,6 +72,11 @@ function requestLookup(conf) {
           elem.append(anchor);
         } else {
           wrapInner(elem, anchor);
+        }
+        if (!path && !frag) {
+          const cite = document.createElement("cite");
+          cite.append(anchor);
+          elem.append(cite);
         }
         break;
       }

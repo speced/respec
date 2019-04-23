@@ -3,31 +3,19 @@
 // This is currently in core though it comes from a W3C rule. It may move in the future.
 
 export const name = "core/id-headers";
-import { addId } from "./utils";
+import { addId } from "./utils.js";
 import hyperHTML from "hyperhtml";
 
 export function run(conf) {
-  document
-    .querySelectorAll(
-      `
-      section:not(.introductory) h2,
-      section:not(.introductory) h3,
-      section:not(.introductory) h4,
-      section:not(.introductory) h5,
-      section:not(.introductory) h6`
-    )
-    .forEach(elem => {
-      addId(elem);
-      if (conf.addSectionLinks) {
-        addSectionLink(elem);
-      }
-    });
-}
-
-function addSectionLink(h) {
-  const section = h.closest("section[id]");
-  const id = section ? section.id : h.id;
-  h.appendChild(hyperHTML`
-    <a href="${`#${id}`}" class="self-link" aria-label="§"></a>
-  `);
+  const headings = document.querySelectorAll(
+    `section:not(.head):not(.introductory) h2, h3, h4, h5, h6`
+  );
+  for (const h of headings) {
+    addId(h);
+    if (!conf.addSectionLinks) return;
+    const id = h.parentElement.id || h.id;
+    h.appendChild(hyperHTML`
+      <a href="${`#${id}`}" class="self-link" aria-label="§"></a>
+    `);
+  }
 }

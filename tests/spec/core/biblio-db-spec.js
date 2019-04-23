@@ -1,4 +1,7 @@
 "use strict";
+
+import { biblioDB } from "../../../src/core/biblio-db.js";
+
 describe("Core - biblioDB", () => {
   const data = {
     "whatwg-dom": {
@@ -37,13 +40,6 @@ describe("Core - biblioDB", () => {
       id: "DAHUT",
     },
   };
-  let biblioDB;
-  beforeAll(done => {
-    require(["core/biblio-db"], ({ biblioDB: db }) => {
-      biblioDB = db;
-      done();
-    });
-  });
 
   describe("ready getter", () => {
     it("resolves with a IDB database", async () => {
@@ -121,7 +117,7 @@ describe("Core - biblioDB", () => {
       });
 
       const entry = await biblioDB.get("reference", "get-ref-test");
-      expect(entry.title).toEqual("PASS");
+      expect(entry.title).toBe("PASS");
     });
 
     it("retrieves an alias", async () => {
@@ -130,7 +126,7 @@ describe("Core - biblioDB", () => {
         aliasOf: "PASS",
       });
       const entry = await biblioDB.get("alias", "ALIAS-GET-TEST");
-      expect(entry.aliasOf).toEqual("PASS");
+      expect(entry.aliasOf).toBe("PASS");
     });
 
     it("returns null when it can't find an entry", async () => {
@@ -228,9 +224,9 @@ describe("Core - biblioDB", () => {
     it("finds a references and resolves aliases", async () => {
       await biblioDB.addAll(data);
       const r1 = await biblioDB.find("DAHU");
-      expect(r1.id).toEqual("DAHUT");
+      expect(r1.id).toBe("DAHUT");
       const r2 = await biblioDB.find("whatwg-dom"); // alias
-      expect(r2.title).toEqual("DOM Standard");
+      expect(r2.title).toBe("DOM Standard");
     });
   });
 
@@ -249,7 +245,7 @@ describe("Core - biblioDB", () => {
     it("resolves known aliases or return null when alias is unknown", async () => {
       await biblioDB.addAll(data);
       const alias = await biblioDB.resolveAlias("whatwg-dom");
-      expect(alias).toEqual("WHATWG-DOM");
+      expect(alias).toBe("WHATWG-DOM");
       const noAlias = await biblioDB.resolveAlias("does not exist");
       expect(noAlias).toBe(null);
     });
