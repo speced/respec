@@ -88,7 +88,10 @@ const inlineElems = new Set([
   "var",
 ]);
 
-export function normalizePadding(text = "") {
+/**
+ * @param {string} text
+ */
+function normalizePadding(text) {
   if (!text) {
     return "";
   }
@@ -125,7 +128,7 @@ export function normalizePadding(text = "") {
   // Normalize root level now
   Array.from(doc.childNodes)
     .filter(node => isTextNode(node) && node.textContent.trim() === "")
-    .forEach(node => (node.textContent = "\n"));
+    .forEach(node => node.replaceWith("\n"));
   // Normalize text node
   if (isElementNode(doc.firstChild)) {
     Array.from(doc.firstChild.children)
@@ -310,10 +313,13 @@ function structure(fragment, doc) {
   return process(fragment);
 }
 
+/**
+ * @param {Iterable<Element>} elements
+ */
 function substituteWithTextNodes(elements) {
   Array.from(elements).forEach(element => {
     const textNode = element.ownerDocument.createTextNode(element.textContent);
-    element.parentElement.replaceChild(textNode, element);
+    element.replaceWith(textNode);
   });
 }
 
@@ -388,5 +394,5 @@ export default function({ document, configuration: conf }) {
   if (rsUI) {
     newBody.prepend(rsUI);
   }
-  document.body.parentNode.replaceChild(newBody, document.body);
+  document.body.replaceWith(newBody);
 }

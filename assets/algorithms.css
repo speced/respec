@@ -1,8 +1,7 @@
 /* For assertions in lists containing algorithms */
 
 .assert {
-    border-color: #AAA;
     background: #EEE;
-    border-left: .5em solid;
+    border-left: 0.5em solid #AAA;
     padding: 0.3em;
 }

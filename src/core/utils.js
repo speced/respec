@@ -198,12 +198,37 @@ export class IDBKeyVal {
   }
 
   /**
+   * @param {string[]} keys
+   * @returns {[string, any][]}
+   */
+  async getMany(keys) {
+    const keySet = new Set(keys);
+    const results = [];
+    let cursor = await this.idb.transaction(this.storeName).store.openCursor();
+    while (cursor) {
+      if (keySet.has(cursor.key)) {
+        results.push([cursor.key, cursor.value]);
+      }
+      cursor = await cursor.continue();
+    }
+    return results;
+  }
+
+  /**
    * @param {string} key
    * @param {any} value
    */
   async set(key, value) {
     const tx = this.idb.transaction(this.storeName, "readwrite");
     tx.objectStore(this.storeName).put(value, key);
+    return await tx.complete;
+  }
+
+  async addMany(entries) {
+    const tx = this.idb.transaction(this.storeName, "readwrite");
+    for (const [key, value] of entries) {
+      tx.objectStore(this.storeName).put(value, key);
+    }
     return await tx.complete;
   }
 
@@ -430,7 +455,7 @@ export async function fetchAndCache(request, maxAge = 86400000) {
   }
 
   // cache response
-  if (cache) {
+  if (cache && response.ok) {
     const clonedResponse = response.clone();
     const customHeaders = new Headers(response.headers);
     const expiryDate = new Date(Date.now() + maxAge);
@@ -440,7 +465,6 @@ export async function fetchAndCache(request, maxAge = 86400000) {
     });
     // put in cache, and forget it (there is no recovery if it throws, but that's ok).
     await cache.put(request, cacheResponse).catch(console.error);
-    return await cache.match(request);
   }
   return response;
 }
@@ -515,13 +539,19 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
  * Returns all the descendant text nodes of an element.
  * @param {Node} el
  * @param {string[]} exclusions node localName to exclude
+ * @param {boolean} options.wsNodes if nodes that only have whitespace are returned.
  * @returns {Text[]}
  */
-export function getTextNodes(el, exclusions = []) {
+export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
+  const exclusionQuery = exclusions.join(", ");
   const acceptNode = (/** @type {Text} */ node) => {
-    return exclusions.includes(node.parentElement.localName)
-      ? 2 // NodeFilter.FILTER_REJECT
-      : 1; // NodeFilter.FILTER_ACCEPT
+    if (!options.wsNodes && !node.data.trim()) {
+      return 2; // NodeFilter.FILTER_REJECT
+    }
+    if (exclusionQuery && node.parentElement.closest(exclusionQuery)) {
+      return 2; // NodeFilter.FILTER_REJECT
+    }
+    return 1; // NodeFilter.FILTER_ACCEPT
   };
   const nodeIterator = el.ownerDocument.createNodeIterator(
     el,

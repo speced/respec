@@ -1,15 +1,12 @@
 "use strict";
+
+import { rule } from "../../../../src/core/linter-rules/check-internal-slots.js";
+
 describe("Core Linter Rule - 'check-internal-slots'", () => {
   const ruleName = "check-internal-slots";
   const config = {
     lint: { [ruleName]: true },
   };
-  let rule;
-  beforeAll(async () => {
-    rule = await new Promise(resolve => {
-      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
-    });
-  });
   const doc = document.implementation.createHTMLDocument("test doc");
   beforeEach(() => {
     // Make sure every unordered test get an empty document
@@ -32,14 +29,14 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
       <var>bar</var>.<a>[[f oo]]</a>
     `;
     const result = await rule.lint(config, doc);
-    expect(result.name).toEqual(ruleName);
+    expect(result.name).toBe(ruleName);
     // first fails the isPrevVar check, rest are ok tho weird...
-    expect(result.occurrences).toEqual(1);
+    expect(result.occurrences).toBe(1);
 
     const offendingElement = result.offendingElements[0];
     const { previousSibling } = offendingElement;
     // offending element's previous element won't have '.'
-    expect(previousSibling.textContent).not.toEqual(".");
+    expect(previousSibling.textContent).not.toBe(".");
   });
 
   it("doesn't generates an error for general internal slot and var usage", async () => {

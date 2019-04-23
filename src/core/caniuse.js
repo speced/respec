@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module: "core/caniuse"
  * Adds a caniuse support table for a "feature" #1238
@@ -42,6 +43,16 @@ const supportTitles = new Map([
   ["d", "Disabled by default (needs to enabled)."],
 ]);
 
+if (
+  !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
+) {
+  const link = createResourceHint({
+    hint: "preconnect",
+    href: "https://respec.org",
+  });
+  document.head.appendChild(link);
+}
+
 export async function run(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
@@ -52,11 +63,7 @@ export async function run(conf) {
     return; // no feature to show
   }
   const featureURL = `https://caniuse.com/#feat=${options.feature}`;
-  const link = createResourceHint({
-    hint: "preconnect",
-    href: "https://respec.org",
-  });
-  document.head.appendChild(link);
+
   document.head.appendChild(hyperHTML`
     <style class="removeOnSave">${caniuseCss}</style>`);
 
@@ -77,13 +84,13 @@ export async function run(conf) {
     }
     resolve(content);
   });
-  const definitionPair = hyperHTML.bind(document.createDocumentFragment())`
-    <dt class="caniuse-title">Can I Use this API?</dt>
+  const definitionPair = hyperHTML`
+    <dt class="caniuse-title">Browser support:</dt>
     <dd class="caniuse-stats">${{
       any: contentPromise,
       placeholder: "Fetching data from caniuse.com...",
     }}</dd>`;
-  headDlElem.appendChild(definitionPair);
+  headDlElem.append(...definitionPair.childNodes);
   await contentPromise;
 
   // remove from export
@@ -155,7 +162,7 @@ function createTableHTML(featureURL, stats) {
 
 /**
  * Add a browser and it's support to table.
- * @param {[ string, ApiResponse["browserName"] ]}
+ * @param {[ string, ApiResponse["browserName"] ]} args
  */
 function addBrowser([browserName, browserData]) {
   /** @param {string[]} supportKeys */
@@ -169,7 +176,7 @@ function addBrowser([browserName, browserData]) {
     };
   };
 
-  /** @param {[string, string[]]} */
+  /** @param {[string, string[]]} args */
   const addLatestVersion = ([version, supportKeys]) => {
     const { className, title } = getSupport(supportKeys);
     const buttonText = `${BROWSERS.get(browserName) || browserName} ${version}`;
@@ -177,7 +184,7 @@ function addBrowser([browserName, browserData]) {
       <button class="${className}" title="${title}">${buttonText}</button>`;
   };
 
-  /** @param {[string, string[]]} */
+  /** @param {[string, string[]]} args */
   const addBrowserVersion = ([version, supportKeys]) => {
     const { className, title } = getSupport(supportKeys);
     return `<li class="${className}" title="${title}">${version}</li>`;

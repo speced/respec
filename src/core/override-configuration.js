@@ -20,7 +20,7 @@ function overrideConfig(config) {
       let value;
       try {
         value = JSON.parse(decodedValue);
-      } catch (err) {
+      } catch {
         value = decodedValue;
       }
       return { key, value };

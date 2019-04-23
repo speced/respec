@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core — Remove ReSpec", () => {
   afterAll(flushIframes);
   it("should have removed all artifacts", async () => {

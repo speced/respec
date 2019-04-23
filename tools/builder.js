@@ -2,20 +2,18 @@
 
 "use strict";
 const colors = require("colors");
-const fsp = require("fs-extra");
-const loading = require("loading-indicator");
+const { promises: fsp } = require("fs");
 const path = require("path");
-const presets = require("loading-indicator/presets");
 const webpack = require("webpack");
 const { promisify } = require("util");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 colors.setTheme({
   error: "red",
-  info: "green",
+  info: "white",
 });
 
-/** @type {import("command-line-args").OptionDefinition[]} */
+/** @type {import("command-line-usage").OptionDefinition[]} */
 const optionList = [
   {
     alias: "h",
@@ -118,11 +116,7 @@ const Builder = {
     const buildPath = path.join(__dirname, "../builds");
     const outFile = `respec-${name}.js`;
     const outPath = path.join(buildPath, outFile);
-    const loadingMsg = colors.info(` Generating ${outFile}. Please wait... `);
-    const timer = loading.start(loadingMsg, {
-      frames: presets.clock,
-      delay: 1,
-    });
+    console.log(colors.info(`Generating ${outFile}. Please wait...`));
 
     // optimisation settings
     const buildVersion = await this.getRespecVersion();
@@ -169,7 +163,6 @@ const Builder = {
       `${workerDir}/respec-worker.js`,
       `${buildDir}/respec-worker.js`
     );
-    loading.stop(timer);
   },
 };
 

@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core — list-sorter", () => {
   afterAll(flushIframes);
   let doc;
@@ -72,29 +75,29 @@ describe("Core — list-sorter", () => {
       const list = doc.querySelector("ol[data-sort='ascending']");
       const first = list.querySelector("li:first-of-type");
       const last = list.querySelector("li:last-of-type");
-      expect(first.textContent).toEqual("a");
-      expect(last.textContent).toEqual("Z");
+      expect(first.textContent).toBe("a");
+      expect(last.textContent).toBe("Z");
     });
 
     it("sorts unordered lists in descending order", () => {
       const list = doc.querySelector("ul[data-sort='descending']");
       const first = list.querySelector("li:first-of-type");
       const last = list.querySelector("li:last-of-type");
-      expect(first.textContent).toEqual("Z");
-      expect(last.textContent).toEqual("a");
+      expect(first.textContent).toBe("Z");
+      expect(last.textContent).toBe("a");
     });
 
     it("defaults to sorting in ascending order", () => {
       const list = doc.getElementById("ol-default");
-      expect(list.firstElementChild.textContent).toEqual("a");
-      expect(list.lastElementChild.textContent).toEqual("Z");
+      expect(list.firstElementChild.textContent).toBe("a");
+      expect(list.lastElementChild.textContent).toBe("Z");
     });
 
     it("sorts nested lists", () => {
       const list = doc.getElementById("nested-list");
       const first = list.querySelector("li:first-of-type");
       const last = list.querySelector("li:last-of-type");
-      expect(first.textContent).toEqual("z");
+      expect(first.textContent).toBe("z");
       expect(last.firstChild.textContent.startsWith("A")).toBe(true);
     });
   });
@@ -103,36 +106,36 @@ describe("Core — list-sorter", () => {
       const list = doc.querySelector("dl[data-sort='ascending']");
       const firstDt = list.querySelector("dt:first-of-type");
       const lastDt = list.querySelector("dt:last-of-type");
-      expect(firstDt.textContent).toEqual("a");
-      expect(lastDt.textContent).toEqual("Z");
-      expect(lastDt.nextElementSibling.textContent).toEqual("First");
-      expect(list.lastElementChild.textContent).toEqual("Last when sorted.");
-      expect(list.lastElementChild.previousElementSibling.textContent).toEqual(
+      expect(firstDt.textContent).toBe("a");
+      expect(lastDt.textContent).toBe("Z");
+      expect(lastDt.nextElementSibling.textContent).toBe("First");
+      expect(list.lastElementChild.textContent).toBe("Last when sorted.");
+      expect(list.lastElementChild.previousElementSibling.textContent).toBe(
         "Second last"
       );
     });
 
     it("sorts definition lists in descending order", () => {
       const list = doc.querySelector("dl[data-sort='descending']");
-      expect(list.firstElementChild.textContent).toEqual("9");
+      expect(list.firstElementChild.textContent).toBe("9");
       const lastDt = list.querySelector("dt:last-of-type");
-      expect(lastDt.nextElementSibling.textContent).toEqual("First");
-      expect(list.lastElementChild.textContent).toEqual("Last when sorted.");
-      expect(list.lastElementChild.previousElementSibling.textContent).toEqual(
+      expect(lastDt.nextElementSibling.textContent).toBe("First");
+      expect(list.lastElementChild.textContent).toBe("Last when sorted.");
+      expect(list.lastElementChild.previousElementSibling.textContent).toBe(
         "Second last"
       );
     });
 
     it("defaults to sorting in definition lists in ascending order", () => {
       const list = doc.getElementById("default-sort");
-      expect(list.firstElementChild.textContent).toEqual("1");
-      expect(list.lastElementChild.textContent).toEqual("9");
+      expect(list.firstElementChild.textContent).toBe("1");
+      expect(list.lastElementChild.textContent).toBe("9");
     });
 
     it("leaves unmarked lists alone", () => {
       const list = doc.getElementById("dont-sort");
-      expect(list.firstElementChild.textContent).toEqual("dont");
-      expect(list.lastElementChild.textContent).toEqual("me");
+      expect(list.firstElementChild.textContent).toBe("dont");
+      expect(list.lastElementChild.textContent).toBe("me");
     });
   });
 });

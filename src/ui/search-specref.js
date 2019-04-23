@@ -79,8 +79,8 @@ function resultProcessor({ includeVersions } = { includeVersions: false }) {
     }
     // Remove legacy string entries
     Array.from(results.entries())
-      .filter(([, entry]) => typeof entry !== "object")
-      .reduce((result, [key]) => results.delete(key) && results, results);
+      .filter(([, value]) => typeof value !== "object")
+      .forEach(([key]) => results.delete(key));
     return results;
   };
 }

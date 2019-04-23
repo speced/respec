@@ -8,6 +8,8 @@ bevy.json
 .idea
 js/*
 !js/profile-w3c-common.js
+!js/profile-geonovum.js
+!js/profile-w3c.js
 !js/shortcut.js
 !js/html-parser.js
 !js/html-parser.d.ts

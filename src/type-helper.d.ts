@@ -40,3 +40,29 @@ interface Node {
 declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
 
 type PromiseParameter<T> = T extends Promise<infer X> ? X : null;
+
+module "core/xref" {
+  export interface RequestEntry {
+    term: string;
+    id: string;
+    types: string[];
+    specs?: string[];
+    for?: string;
+  }
+
+  export interface SearchResultEntry {
+    uri: string;
+    shortname: string;
+    spec: string;
+    type: string;
+    normative: boolean;
+    for?: string[];
+  }
+
+  export interface Response {
+    result: {
+      [id: string]: SearchResultEntry[];
+    };
+    query?: RequestEntry[];
+  }
+}

@@ -152,9 +152,8 @@ function createIdlAnchor(escaped, data, parentName, dfn) {
       .dataset.lt || ""}">${escaped}</a>`;
   }
   const isDefaultJSON =
-    data.body &&
-    data.body.name &&
-    data.body.name.value === "toJSON" &&
+    data.type === "operation" &&
+    data.name === "toJSON" &&
     data.extAttrs &&
     data.extAttrs.items.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
@@ -264,14 +263,14 @@ function getIdlId(name, parentName) {
 }
 
 function getDefnName(defn) {
-  if (defn.type === "enum-value") {
-    return defn.value;
-  } else if (defn.type !== "operation") {
-    return defn.name || defn.type;
-  } else if (defn.body && defn.body.name) {
-    return defn.body.name.value;
+  switch (defn.type) {
+    case "enum-value":
+      return defn.value;
+    case "operation":
+      return defn.name;
+    default:
+      return defn.name || defn.type;
   }
-  return "";
 }
 
 export function run() {

@@ -1,4 +1,6 @@
+// @ts-check
 import html from "../../../js/html-template.js";
+import { norm } from "../../core/utils.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
@@ -19,11 +21,17 @@ function getSpecTitleElem(document, conf) {
     document.querySelector("h1#title") || document.createElement("h1");
   if (specTitleElem.parentElement) {
     specTitleElem.remove();
-    conf.title = specTitleElem.textContent.trim();
   } else {
     specTitleElem.textContent = conf.title;
     specTitleElem.id = "title";
   }
+  if (conf.isPreview && conf.prNumber) {
+    const { childNodes } = html`
+      Preview of PR <a href="${conf.prUrl}">#${conf.prNumber}</a>:
+    `;
+    specTitleElem.prepend(...childNodes);
+  }
+  conf.title = norm(specTitleElem.textContent);
   specTitleElem.classList.add("title", "p-name");
   if (document.querySelector("title") === null) {
     document.title = conf.title;

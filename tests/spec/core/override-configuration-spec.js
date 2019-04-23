@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core — Override Configuration", () => {
   afterAll(flushIframes);
   const simpleURL = new URL("./spec/core/simple.html", document.location);
@@ -14,12 +17,12 @@ describe("Core — Override Configuration", () => {
     const doc = await makeRSDoc(makeStandardOps(), url);
     const { respecConfig: conf } = doc.defaultView;
     const { textContent } = doc.querySelector(".head h2");
-    expect(textContent).toMatch(/W3C Rescinded Recommendation/);
+    expect(textContent).toContain("W3C Rescinded Recommendation");
     const month = conf.previousPublishDate.getUTCMonth();
-    expect(month).toEqual(2);
+    expect(month).toBe(2);
     const { previousMaturity } = conf;
-    expect(previousMaturity).toEqual("REC");
+    expect(previousMaturity).toBe("REC");
     const copyrightText = doc.querySelector(".copyright").textContent;
-    expect(copyrightText).toMatch(/Internet Engineering Task Force/);
+    expect(copyrightText).toContain("Internet Engineering Task Force");
   });
 });

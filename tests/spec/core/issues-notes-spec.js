@@ -1,4 +1,13 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 describe("Core — Issues and Notes", () => {
   afterAll(flushIframes);
   it("treats each issue as unique", async () => {
@@ -248,7 +257,7 @@ describe("Core — Issues and Notes", () => {
     const doc = await makeRSDoc(ops);
     const issueDiv1 = doc.getElementById("this-should-exist");
     expect(issueDiv1).toBeTruthy();
-    expect(issueDiv1.classList.contains("closed")).toBeTruthy();
+    expect(issueDiv1.classList).toContain("closed");
 
     const issueDiv2 = doc.getElementById("issue-container-number-1540");
     expect(issueDiv2).toBeTruthy();

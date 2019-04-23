@@ -1,4 +1,13 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 describe("Core - Figures", () => {
   afterAll(flushIframes);
   it("creates autolinks from the anchor to the figure", async () => {
@@ -16,14 +25,14 @@ describe("Core - Figures", () => {
     const anchorFigTitleSet = doc.getElementById("anchor-fig-title-set");
     const anchorFigTitleEmpty = doc.getElementById("anchor-fig-title-empty");
 
-    expect(anchorFig.innerText).toEqual("Figure 1");
-    expect(anchorFig.title).toEqual("test figure caption");
+    expect(anchorFig.innerText).toBe("Figure 1");
+    expect(anchorFig.title).toBe("test figure caption");
 
-    expect(anchorFigTitleSet.innerText).toEqual("Figure 1");
-    expect(anchorFigTitleSet.title).toEqual("pass");
+    expect(anchorFigTitleSet.innerText).toBe("Figure 1");
+    expect(anchorFigTitleSet.title).toBe("pass");
 
-    expect(anchorFigTitleEmpty.innerText).toEqual("Figure 1");
-    expect(anchorFigTitleEmpty.title).toEqual("");
+    expect(anchorFigTitleEmpty.innerText).toBe("Figure 1");
+    expect(anchorFigTitleEmpty.title).toBe("");
   });
 
   it("localizes the anchor of figure", async () => {
@@ -39,8 +48,8 @@ describe("Core - Figures", () => {
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("anchor-fig");
-    expect(anchorFig.innerText).toEqual("図1");
-    expect(anchorFig.title).toEqual("漢字と仮名のサイズの示し方");
+    expect(anchorFig.innerText).toBe("図1");
+    expect(anchorFig.title).toBe("漢字と仮名のサイズの示し方");
   });
 
   it("generates table of figures", async () => {
@@ -63,10 +72,10 @@ describe("Core - Figures", () => {
     const figLinks = tof.querySelectorAll("ul li a");
     expect(tof.querySelector("figcaption")).toBeNull();
     expect(tofHeader).toBeTruthy();
-    expect(tofHeader.textContent).toEqual("1. Table of Figures");
-    expect(tofItems.length).toEqual(2);
-    expect(figLinks[0].textContent).toEqual("Figure 1 test 1");
-    expect(figLinks[1].textContent).toEqual("Figure 2 test 2");
+    expect(tofHeader.textContent).toBe("1. Table of Figures");
+    expect(tofItems.length).toBe(2);
+    expect(figLinks[0].textContent).toBe("Figure 1 test 1");
+    expect(figLinks[1].textContent).toBe("Figure 2 test 2");
   });
 
   it("warns when no <figcaption>", async () => {
@@ -79,9 +88,7 @@ describe("Core - Figures", () => {
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("fig");
-    expect(
-      anchorFig.classList.contains("respec-offending-element")
-    ).toBeTruthy();
+    expect(anchorFig.classList).toContain("respec-offending-element");
   });
 
   describe("normalize images", () => {

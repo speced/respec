@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core - pubsubhub", () => {
   afterAll(flushIframes);
   let doc;
@@ -10,6 +13,6 @@ describe("Core - pubsubhub", () => {
   });
 
   it("subscribes start-all", () => {
-    expect(doc.getElementById("start-all").textContent).toEqual("pass");
+    expect(doc.getElementById("start-all").textContent).toBe("pass");
   });
 });
