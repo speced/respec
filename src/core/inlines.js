@@ -18,6 +18,7 @@ import {
   InsensitiveStringSet,
   getTextNodes,
   refTypeFromContext,
+  showInlineError,
   showInlineWarning,
 } from "./utils.js";
 import hyperHTML from "hyperhtml";
@@ -51,10 +52,21 @@ function inlineRFC2119Matches(matched) {
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
-  const nodeElement = ref.startsWith("#")
-    ? hyperHTML`<a href="${ref}"></a>`
-    : hyperHTML`<a data-cite="${ref}"></a>`;
-  return nodeElement;
+  if (ref.startsWith("#")) {
+    if (!document.querySelector(ref)) {
+      const badReference = hyperHTML`
+        <span>${matched}</span>
+      `;
+      showInlineError(
+        badReference, // cite element
+        `Wasn't able to expand ${matched} as it didn't match any id in the document.`,
+        `Please make sure there is element with id ${ref} in the document.`
+      );
+      return badReference;
+    }
+    return hyperHTML`<a href="${ref}"></a>`;
+  }
+  return hyperHTML`<a data-cite="${ref}"></a>`;
 }
 
 /**

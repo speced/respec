@@ -208,15 +208,20 @@ describe("Core - Inlines", () => {
         [[[#figure]]]
         [[[#example-aside]]]
         [[[#example-pre]]]
+        [[[#does-not-exist]]]
       </p>`;
     const doc = await makeRSDoc(makeStandardOps(null, body));
-    const [section, figure, exampleAside, examplePre] = doc.querySelectorAll(
-      "#output a"
-    );
+    const anchors = doc.querySelectorAll("#output a");
+
+    expect(anchors.length).toBe(4);
+    const [section, figure, exampleAside, examplePre] = anchors;
     expect(section.textContent).toBe("§ 1. section heading");
     expect(figure.textContent).toBe("Figure 1");
     expect(exampleAside.textContent).toBe("Example 1: aside");
     expect(examplePre.textContent).toBe("Example 2: pre");
+
+    const badOne = doc.querySelector("#output span.respec-offending-element");
+    expect(badOne.textContent).toBe("[[[#does-not-exist]]]");
   });
 
   it("proceseses backticks inside [= =] inline links", async () => {
