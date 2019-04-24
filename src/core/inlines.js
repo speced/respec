@@ -205,7 +205,7 @@ export function run(conf) {
       "(?:{{[^}]+}})", // inline IDL references,
       "\\B\\|\\w[\\w\\s]*(?:\\s*\\:[\\w\\s&;<>]+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
-      "(?:\\[\\[\\[(?:!|\\\\|\\?)?[#A-Za-z0-9\\.-]+\\]\\]\\])",
+      "(?:\\[\\[\\[(?:!|\\\\|\\?)?#?[A-Za-z0-9\\.-]+\\]\\]\\])",
       "(?:\\[=[^=]+=\\])", // Inline [= For/link =]
       inlineCodeRegExp.source,
       ...(abbrRx ? [abbrRx] : []),
