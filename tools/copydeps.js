@@ -5,7 +5,6 @@ const path = require("path");
 const fsp = require("fs-extra");
 
 const srcDesMap = [
-  ["./node_modules/clipboard/dist/clipboard.js", "./js/deps/"],
   [
     "./node_modules/handlebars/dist/handlebars.runtime.js",
     "./js/deps/handlebars.js",

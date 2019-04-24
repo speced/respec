@@ -32,21 +32,21 @@ describe("Core - Github", () => {
   describe("respecConfig options", () => {
     function generateMembersTest(doc) {
       const { respecConfig: conf } = doc.defaultView;
-      expect(conf.hasOwnProperty("githubAPI")).toEqual(true);
-      expect(conf.githubAPI).toEqual("https://api.github.com/repos/w3c/respec");
-      expect(conf.hasOwnProperty("issueBase")).toEqual(true);
-      expect(conf.issueBase).toEqual("https://github.com/w3c/respec/issues/");
-      expect(conf.hasOwnProperty("edDraftURI")).toEqual(true);
-      expect(conf.edDraftURI).toEqual("https://w3c.github.io/respec/");
-      expect(conf.hasOwnProperty("shortName")).toEqual(true);
-      expect(conf.shortName).toEqual("respec");
+      expect(conf.hasOwnProperty("githubAPI")).toBe(true);
+      expect(conf.githubAPI).toBe("https://api.github.com/repos/w3c/respec");
+      expect(conf.hasOwnProperty("issueBase")).toBe(true);
+      expect(conf.issueBase).toBe("https://github.com/w3c/respec/issues/");
+      expect(conf.hasOwnProperty("edDraftURI")).toBe(true);
+      expect(conf.edDraftURI).toBe("https://w3c.github.io/respec/");
+      expect(conf.hasOwnProperty("shortName")).toBe(true);
+      expect(conf.shortName).toBe("respec");
     }
     function doesntOverrideTest(doc) {
       const { respecConfig: conf } = doc.defaultView;
-      expect(conf.githubAPI).toEqual("https://test.com/githubAPI");
-      expect(conf.issueBase).toEqual("https://test.com/issueBase");
-      expect(conf.edDraftURI).toEqual("https://test.com/edDraftURI");
-      expect(conf.shortName).toEqual("dontOverrideThis");
+      expect(conf.githubAPI).toBe("https://test.com/githubAPI");
+      expect(conf.issueBase).toBe("https://test.com/issueBase");
+      expect(conf.edDraftURI).toBe("https://test.com/edDraftURI");
+      expect(conf.shortName).toBe("dontOverrideThis");
     }
     it("generates githubAPI, issueBase, edDraftURI, shortName members from string", async () => {
       const doc = await makeRSDoc(stringOpt);
@@ -94,7 +94,7 @@ describe("Core - Github", () => {
         elem => elem.textContent.trim() === l10n.file_a_bug
       );
       expect(fileABug).toBeTruthy();
-      expect(fileABug.querySelector("a").href).toEqual(
+      expect(fileABug.querySelector("a").href).toBe(
         "https://github.com/w3c/respec/issues/"
       );
       const commitHistory = Array.from(doc.querySelectorAll("dd")).find(
@@ -108,11 +108,11 @@ describe("Core - Github", () => {
         elem => elem.textContent.trim() === l10n.pull_requests
       );
       expect(pullRequests).toBeTruthy();
-      expect(pullRequests.querySelector("a").href).toEqual(
+      expect(pullRequests.querySelector("a").href).toBe(
         "https://github.com/w3c/respec/pulls/"
       );
       expect(ghLink).toBeTruthy();
-      expect(ghLink.querySelector("a").href).toEqual(
+      expect(ghLink.querySelector("a").href).toBe(
         "https://github.com/w3c/respec/"
       );
       // This differs between the string and the object tests, so we return it
@@ -121,14 +121,14 @@ describe("Core - Github", () => {
     it("generates a participate set of links (from string)", async () => {
       const doc = await makeRSDoc(stringOpt);
       const commitHistory = definitionListTest(doc);
-      expect(commitHistory.querySelector("a").href).toEqual(
+      expect(commitHistory.querySelector("a").href).toBe(
         "https://github.com/w3c/respec/commits/gh-pages"
       );
     });
     it("generates a participate set of links (from object)", async () => {
       const doc = await makeRSDoc(objOpt);
       const commitHistory = definitionListTest(doc);
-      expect(commitHistory.querySelector("a").href).toEqual(
+      expect(commitHistory.querySelector("a").href).toBe(
         "https://github.com/w3c/respec/commits/develop"
       );
     });

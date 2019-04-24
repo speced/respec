@@ -61,10 +61,6 @@ module.exports = function(config) {
         included: false,
       },
       {
-        pattern: "tests/*.html",
-        included: false,
-      },
-      {
         pattern: "tests/**/*.html",
         included: false,
       },
@@ -110,7 +106,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["mocha"],
+    reporters: ["mocha", "kjhtml"],
 
     // web server port
     port: config.port || 9876,
@@ -127,6 +123,20 @@ module.exports = function(config) {
 
     // See "detectBrowsers"
     // browsers: ["Chrome", "Safari", "Firefox"],
+    customLaunchers: {
+      FirefoxPref: {
+        base: "Firefox",
+        prefs: {
+          "javascript.options.dynamicImport": true,
+        },
+      },
+      FirefoxHeadlessPref: {
+        base: "FirefoxHeadless",
+        prefs: {
+          "javascript.options.dynamicImport": true,
+        },
+      },
+    },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -144,12 +154,12 @@ module.exports = function(config) {
   };
   if (process.env.TRAVIS) {
     process.env.CHROME_BIN = require("puppeteer").executablePath();
-    options.detectBrowsers.enabled = false;
     options.autoWatch = false;
-    options.singleRun = true;
     options.concurrency = 1;
-    options.reporters = ["mocha"];
-    options.browsers = ["ChromeHeadless"];
+  }
+  if (process.env.BROWSERS) {
+    options.detectBrowsers.enabled = false;
+    options.browsers = process.env.BROWSERS.split(" ");
   }
   config.set(options);
 };

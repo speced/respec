@@ -43,6 +43,16 @@ const supportTitles = new Map([
   ["d", "Disabled by default (needs to enabled)."],
 ]);
 
+if (
+  !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
+) {
+  const link = createResourceHint({
+    hint: "preconnect",
+    href: "https://respec.org",
+  });
+  document.head.appendChild(link);
+}
+
 export async function run(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
@@ -53,11 +63,7 @@ export async function run(conf) {
     return; // no feature to show
   }
   const featureURL = `https://caniuse.com/#feat=${options.feature}`;
-  const link = createResourceHint({
-    hint: "preconnect",
-    href: "https://respec.org",
-  });
-  document.head.appendChild(link);
+
   document.head.appendChild(hyperHTML`
     <style class="removeOnSave">${caniuseCss}</style>`);
 
@@ -79,7 +85,7 @@ export async function run(conf) {
     resolve(content);
   });
   const definitionPair = hyperHTML`
-    <dt class="caniuse-title">Can I Use this API?</dt>
+    <dt class="caniuse-title">Browser support:</dt>
     <dd class="caniuse-stats">${{
       any: contentPromise,
       placeholder: "Fetching data from caniuse.com...",

@@ -71,6 +71,7 @@ async function processResponse(response, issueNumber) {
     const json = await response.json();
     Object.assign(issue, json);
   } catch (err) {
+    console.error(err);
     issue.message = `Error JSON parsing issue #${issueNumber} from GitHub.`;
   }
   if (!response.ok || issue.message) {

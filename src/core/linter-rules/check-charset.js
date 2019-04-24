@@ -20,10 +20,10 @@ const lang = defaultLang in meta ? defaultLang : "en";
 /**
  * Runs linter rule.
  *
- * @param {Object} conf The ReSpec config.
+ * @param {Object} _ The ReSpec config.
  * @param {Document} doc The document to be checked.
  */
-function linterFunction(conf, doc) {
+function linterFunction(_, doc) {
   const metas = doc.querySelectorAll("meta[charset]");
   const val = [];
   for (const meta of metas) {

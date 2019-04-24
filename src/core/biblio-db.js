@@ -13,7 +13,7 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
 
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
-// Database initialization, tracked by "readyPromise"
+/* Database initialization tracker */
 const readyPromise = openDB("respec-biblio2", 12, {
   upgrade(db) {
     Array.from(db.objectStoreNames).map(storeName =>

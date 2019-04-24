@@ -21,7 +21,11 @@
     "no-duplicate-imports": 2,
     "no-eval": "error",
     "no-implied-eval": "error",
-    "no-unused-vars": 2,
+    "no-unused-vars": ["error", {
+      "args": "all",
+      "argsIgnorePattern": "^_",
+      "caughtErrors": "all"
+    }],
     "no-var": 2,
     "object-shorthand": 2,
     "one-var": ["error", "never"],
