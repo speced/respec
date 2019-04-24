@@ -163,7 +163,7 @@ p + .mdn {
 }
 
 .mdn.before {
-  margin-top: 2px;
+  margin-top: 3em;
 }
 
 h2 + .mdn {
