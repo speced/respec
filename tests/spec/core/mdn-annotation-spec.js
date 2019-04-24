@@ -13,12 +13,12 @@ describe("Core - MDN Annotation", () => {
     doc = await makeRSDoc(ops, "spec/core/mdn-annotation.html");
   });
 
-  it("should attach MDNbox if there exists ID in the spec", () => {
+  it("attaches MDNbox if there exists ID in the spec", () => {
     const mdnBox = doc.querySelector("aside.mdn");
     expect(mdnBox).toBeTruthy();
   });
 
-  it("should attach MDNbox to the closest <section>", () => {
+  it("attaches MDNbox to the closest <section>", () => {
     const paymentInterfaceSection = doc.getElementById(
       "paymentrequest-interface"
     );
@@ -29,7 +29,7 @@ describe("Core - MDN Annotation", () => {
     expect(classList).toContain("mdn");
   });
 
-  it("should attach MDNbox with browser list", () => {
+  it("attaches MDNbox with browser list", () => {
     const paymentInterfaceSection = doc.getElementById(
       "paymentrequest-interface"
     );
@@ -42,7 +42,7 @@ describe("Core - MDN Annotation", () => {
     expect(browserRows.length).toBeGreaterThan(0);
   });
 
-  it("should display correct browser support info", () => {
+  it("displays correct browser support info", () => {
     const paymentInterfaceSection = doc.getElementById(
       "paymentrequest-interface"
     );
@@ -55,14 +55,14 @@ describe("Core - MDN Annotation", () => {
     expect(versionSpan.textContent).toBe("61+");
   });
 
-  it("should not attach MDNbox if ID is not in the spec", () => {
+  it("doesn't attach MDNbox if ID is not in the spec", () => {
     const {
       previousElementSibling: { classList },
     } = doc.getElementById("not-in-spec");
     expect(classList).not.toContain("mdn");
   });
 
-  it("should allow overriding defaults", () => {
+  it("allows overriding defaults", () => {
     const {
       previousElementSibling: { classList, tagName },
     } = doc.getElementById("custom-method");
