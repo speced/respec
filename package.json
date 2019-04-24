@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.19.0",
+  "version": "24.20.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -65,7 +65,7 @@
     "serve": "^11.0.0",
     "snyk": "^1.153.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
-    "typescript": "^3.4.4",
+    "typescript": "^3.4.5",
     "webidl2": "^19.0.1",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.1"
