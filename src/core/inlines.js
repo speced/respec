@@ -52,19 +52,19 @@ function inlineRFC2119Matches(matched) {
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
-  if (ref.startsWith("#")) {
-    if (document.querySelector(ref)) {
-      return hyperHTML`<a href="${ref}"></a>`;
-    }
-    const badReference = hyperHTML`<span>${matched}</span>`;
-    showInlineError(
-      badReference, // cite element
-      `Wasn't able to expand ${matched} as it didn't match any id in the document.`,
-      `Please make sure there is element with id ${ref} in the document.`
-    );
-    return badReference;
+  if (!ref.startsWith("#")) {
+    return hyperHTML`<a data-cite="${ref}"></a>`;
   }
-  return hyperHTML`<a data-cite="${ref}"></a>`;
+  if (document.querySelector(ref)) {
+    return hyperHTML`<a href="${ref}"></a>`;
+  }
+  const badReference = hyperHTML`<span>${matched}</span>`;
+  showInlineError(
+    badReference, // cite element
+    `Wasn't able to expand ${matched} as it didn't match any id in the document.`,
+    `Please make sure there is element with id ${ref} in the document.`
+  );
+  return badReference;
 }
 
 /**
