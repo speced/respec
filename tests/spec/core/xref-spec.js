@@ -119,7 +119,7 @@ describe("Core — xref", () => {
     ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
     [
       "allowedFeatures",
-      "https://wicg.github.io/feature-policy/#dom-featurepolicy-allowedfeatures",
+      "https://www.w3.org/TR/feature-policy-1/#dom-featurepolicy-allowedfeatures",
     ],
     ["ChildNode", "https://dom.spec.whatwg.org/#childnode"],
     ["ChildNode.after", "https://dom.spec.whatwg.org/#dom-childnode-after"],

@@ -18,6 +18,7 @@ import {
   InsensitiveStringSet,
   getTextNodes,
   refTypeFromContext,
+  showInlineError,
   showInlineWarning,
 } from "./utils.js";
 import hyperHTML from "hyperhtml";
@@ -51,8 +52,19 @@ function inlineRFC2119Matches(matched) {
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
-  const nodeElement = hyperHTML`<a data-cite="${ref}"></a>`;
-  return nodeElement;
+  if (!ref.startsWith("#")) {
+    return hyperHTML`<a data-cite="${ref}"></a>`;
+  }
+  if (document.querySelector(ref)) {
+    return hyperHTML`<a href="${ref}"></a>`;
+  }
+  const badReference = hyperHTML`<span>${matched}</span>`;
+  showInlineError(
+    badReference, // cite element
+    `Wasn't able to expand ${matched} as it didn't match any id in the document.`,
+    `Please make sure there is element with id ${ref} in the document.`
+  );
+  return badReference;
 }
 
 /**
@@ -191,7 +203,7 @@ export function run(conf) {
       "(?:{{[^}]+}})", // inline IDL references,
       "\\B\\|\\w[\\w\\s]*(?:\\s*\\:[\\w\\s&;<>]+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
-      "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
+      "(?:\\[\\[\\[(?:!|\\\\|\\?)?#?[A-Za-z0-9\\.-]+\\]\\]\\])",
       "(?:\\[=[^=]+=\\])", // Inline [= For/link =]
       inlineCodeRegExp.source,
       ...(abbrRx ? [abbrRx] : []),
