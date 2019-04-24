@@ -51,7 +51,9 @@ function inlineRFC2119Matches(matched) {
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
-  const nodeElement = hyperHTML`<a data-cite="${ref}"></a>`;
+  const nodeElement = ref.startsWith("#")
+    ? hyperHTML`<a href="${ref}"></a>`
+    : hyperHTML`<a data-cite="${ref}"></a>`;
   return nodeElement;
 }
 
@@ -191,7 +193,7 @@ export function run(conf) {
       "(?:{{[^}]+}})", // inline IDL references,
       "\\B\\|\\w[\\w\\s]*(?:\\s*\\:[\\w\\s&;<>]+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
-      "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
+      "(?:\\[\\[\\[(?:!|\\\\|\\?)?[#A-Za-z0-9\\.-]+\\]\\]\\])",
       "(?:\\[=[^=]+=\\])", // Inline [= For/link =]
       inlineCodeRegExp.source,
       ...(abbrRx ? [abbrRx] : []),
