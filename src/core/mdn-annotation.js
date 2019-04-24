@@ -83,8 +83,8 @@ function buildBrowserSupportTable(support) {
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
     const browserRow = `
       <span class="${classList}">
-        <span>${MDN_BROWSERS[browserId]}</span>
-        <span>${version ? version : displayStatus}</span>
+        <span class="browser-name">${MDN_BROWSERS[browserId]}</span>
+        <span class="version">${version ? version : displayStatus}</span>
       </span>`;
     innerHTML += browserRow;
   }
