@@ -22,7 +22,16 @@ describe("Core - highlightVars", () => {
         <li><var>foo</foo>
         <li><var id="section2-bar">bar</var>
       </ol>
-    </section>`;
+    </section>
+
+    <section id="overmatch">
+      <p><var id="level-1">foo</var></p>
+      <p><var id="level-1-1">foo</var></p>
+      <section>
+        <p><var id="level-2">foo</var></p>
+      </section>
+    </section>
+    `;
 
   it("toggles highlight class on click", async () => {
     const ops = makeStandardOps({ highlightVars: true }, testBody);
@@ -62,5 +71,15 @@ describe("Core - highlightVars", () => {
     doc.getElementById("section2-foo").click();
     highlightedSec2 = doc.querySelectorAll("#section2 var.respec-hl");
     expect(highlightedSec2.length).toBe(2);
+  });
+
+  it("doesn't overmatch outside its own section's vars", async () => {
+    const ops = makeStandardOps({ highlightVars: true }, testBody);
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector("var.respec-hl")).toBeNull();
+    doc.getElementById("level-1").click();
+    expect(doc.querySelector("#level-1-1.respec-hl")).toBeTruthy();
+    const level2 = doc.querySelector("#overmatch > section > .respec-hl");
+    expect(level2).toBeNull();
   });
 });

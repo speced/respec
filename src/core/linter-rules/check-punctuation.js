@@ -21,11 +21,11 @@ const lang = defaultLang in meta ? defaultLang : "en";
 /**
  * Runs linter rule.
  *
- * @param {Object} conf The ReSpec config.
+ * @param {Object} _ The ReSpec config.
  * @param  {Document} doc The document to be checked.
  * @return {import("../../core/LinterRule").LinterResult}
  */
-function lintingFunction(conf, doc) {
+function lintingFunction(_, doc) {
   // Check string ends with one of ., !, ?, :, ], or is empty.
   const punctuatingRegExp = new RegExp(
     `[${punctuationMarks.join("")}\\]]$|^ *$`,

@@ -34,7 +34,7 @@ function renderResults(resultMap, query, timeTaken) {
       </p>
     `;
   }
-  const wires = Array.from(resultMap.entries())
+  const wires = Array.from(resultMap)
     .slice(0, 99)
     .map(toDefinitionPair)
     .reduce((collector, pair) => collector.concat(pair), []);
@@ -64,7 +64,7 @@ function resultProcessor({ includeVersions } = { includeVersions: false }) {
     );
     const results = new Map(Object.entries(combinedResults));
     // remove aliases
-    Array.from(results.entries())
+    Array.from(results)
       .filter(([, entry]) => entry.aliasOf)
       .map(([key]) => key)
       .reduce((results, key) => results.delete(key) && results, results);
@@ -78,9 +78,9 @@ function resultProcessor({ includeVersions } = { includeVersions: false }) {
         });
     }
     // Remove legacy string entries
-    Array.from(results.entries())
-      .filter(([, entry]) => typeof entry !== "object")
-      .reduce((result, [key]) => results.delete(key) && results, results);
+    Array.from(results)
+      .filter(([, value]) => typeof value !== "object")
+      .forEach(([key]) => results.delete(key));
     return results;
   };
 }

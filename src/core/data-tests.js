@@ -94,7 +94,7 @@ export function run(conf) {
           let href = "";
           try {
             href = new URL(url, conf.testSuiteURI).href;
-          } catch (err) {
+          } catch {
             pub("warn", `${l10n[lang].bad_uri}: ${url}`);
           }
           return href;
