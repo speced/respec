@@ -5,10 +5,6 @@ const path = require("path");
 const fsp = require("fs-extra");
 
 const srcDesMap = [
-  [
-    "./node_modules/handlebars/dist/handlebars.runtime.js",
-    "./js/deps/handlebars.js",
-  ],
   ["./node_modules/highlight.js/styles/github.css", "./assets/"],
   ["./node_modules/hyperhtml/umd.js", "./js/deps/hyperhtml.js"],
   ["./node_modules/jquery/dist/jquery.slim.js", "./js/deps/jquery.js"],
