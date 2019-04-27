@@ -121,7 +121,6 @@ describe("Core - Github", () => {
       return commitHistory;
     }
     it("generates a participate set of links (from string)", async () => {
-      debugger;
       const doc = await makeRSDoc({ ...l10n, ...stringOpt });
       const commitHistory = definitionListTest(doc);
       expect(commitHistory.querySelector("a").href).toBe(
