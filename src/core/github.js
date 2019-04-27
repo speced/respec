@@ -4,9 +4,29 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
+import { lang as defaultLang } from "../core/l10n.js";
 import { pub } from "./pubsubhub.js";
-
 export const name = "core/github";
+
+const localizationStrings = {
+  en: {
+    file_a_bug: "File a bug",
+    participate: "Participate",
+    commit_history: "Commit history",
+  },
+  nl: {
+    commit_history: "Revisiehistorie",
+    file_a_bug: "Dien een melding in",
+    participate: "Doe mee",
+  },
+  es: {
+    commit_history: "Historia de cambios",
+    file_a_bug: "Nota un bug",
+    participate: "Participe",
+  },
+};
+const lang = defaultLang in localizationStrings ? defaultLang : "en";
+const l10n = localizationStrings[lang];
 
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
@@ -58,22 +78,22 @@ export async function run(conf) {
     shortName: repo,
   };
   const otherLink = {
-    key: conf.l10n.participate,
+    key: l10n.participate,
     data: [
       {
         value: `GitHub ${org}/${repo}`,
         href: ghURL,
       },
       {
-        value: conf.l10n.file_a_bug,
+        value: l10n.file_a_bug,
         href: newProps.issueBase,
       },
       {
-        value: conf.l10n.commit_history,
+        value: l10n.commit_history,
         href: new URL(`./commits/${branch}`, ghURL.href).href,
       },
       {
-        value: conf.l10n.pull_requests,
+        value: "Pull requests",
         href: newProps.pullBase,
       },
     ],
