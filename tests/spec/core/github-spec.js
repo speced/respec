@@ -82,30 +82,32 @@ describe("Core - Github", () => {
     });
   });
   describe("the definition list items (localized)", () => {
+    const l10n = {
+      htmlAttrs: {
+        lang: "nl",
+      },
+    };
     function definitionListTest(doc) {
-      const {
-        respecConfig: { l10n },
-      } = doc.defaultView;
       const participate = Array.from(doc.querySelectorAll("dt")).find(
-        node => node.textContent === `${l10n.participate}:`
+        node => node.textContent === "Doe mee:"
       );
       expect(participate).toBeTruthy();
       const fileABug = Array.from(doc.querySelectorAll("dd")).find(
-        elem => elem.textContent.trim() === l10n.file_a_bug
+        elem => elem.textContent.trim() === "Dien een melding in"
       );
       expect(fileABug).toBeTruthy();
       expect(fileABug.querySelector("a").href).toBe(
         "https://github.com/w3c/respec/issues/"
       );
       const commitHistory = Array.from(doc.querySelectorAll("dd")).find(
-        elem => elem.textContent.trim() === l10n.commit_history
+        elem => elem.textContent.trim() === "Revisiehistorie"
       );
       expect(commitHistory).toBeTruthy();
       const ghLink = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "GitHub w3c/respec"
       );
       const pullRequests = Array.from(doc.querySelectorAll("dd")).find(
-        elem => elem.textContent.trim() === l10n.pull_requests
+        elem => elem.textContent.trim() === "Pull requests"
       );
       expect(pullRequests).toBeTruthy();
       expect(pullRequests.querySelector("a").href).toBe(
@@ -119,14 +121,15 @@ describe("Core - Github", () => {
       return commitHistory;
     }
     it("generates a participate set of links (from string)", async () => {
-      const doc = await makeRSDoc(stringOpt);
+      debugger;
+      const doc = await makeRSDoc({ ...l10n, ...stringOpt });
       const commitHistory = definitionListTest(doc);
       expect(commitHistory.querySelector("a").href).toBe(
         "https://github.com/w3c/respec/commits/gh-pages"
       );
     });
     it("generates a participate set of links (from object)", async () => {
-      const doc = await makeRSDoc(objOpt);
+      const doc = await makeRSDoc({ ...l10n, ...objOpt });
       const commitHistory = definitionListTest(doc);
       expect(commitHistory.querySelector("a").href).toBe(
         "https://github.com/w3c/respec/commits/develop"
