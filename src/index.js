@@ -1,16 +1,7 @@
 // @ts-check
-import addL10nConfiguration, { setDocumentLocale } from "./core/l10n";
-import { cleanup } from "./core/exporter";
-import { createRespecDocument } from "./respec-document";
-import insertStyle from "./core/style";
-import insertW3CHeader from "./w3c/headers";
-import insertW3CStyle from "./w3c/style";
-import processAbbreviation from "./core/data-abbr";
-import processAbstract from "./w3c/abstract";
-import processInlineText from "./core/inlines";
-import processMarkdown from "./core/markdown";
-import reindent from "./core/reindent";
-import setGitHubConfiguration from "./core/github";
+import { cleanup } from "./core/exporter.js";
+import { createRespecDocument } from "./respec-document.js";
+import { setDocumentLocale } from "./core/l10n.js";
 
 /**
  * @param {string|Document} doc A document that will be preprocessed
@@ -19,16 +10,23 @@ import setGitHubConfiguration from "./core/github";
 export async function preprocess(doc, conf) {
   const respecDoc = await createRespecDocument(doc, conf);
   setDocumentLocale(respecDoc.document);
-  reindent(respecDoc);
-  await insertStyle(respecDoc);
-  insertW3CStyle(respecDoc);
-  addL10nConfiguration(respecDoc);
-  setGitHubConfiguration(respecDoc);
-  processMarkdown(respecDoc);
-  insertW3CHeader(respecDoc);
-  processAbstract(respecDoc);
-  processAbbreviation(respecDoc);
-  processInlineText(respecDoc);
+
+  const modules = [
+    import("./core/reindent.js"),
+    import("./core/style.js"),
+    import("./w3c/style.js"),
+    import("./core/l10n.js"),
+    import("./core/github.js"),
+    import("./core/markdown.js"),
+    import("./w3c/headers.js"),
+    import("./w3c/abstract.js"),
+    import("./core/data-abbr.js"),
+    import("./core/inlines"),
+  ];
+  for (const module of modules) {
+    const loaded = await module;
+    await loaded.default(respecDoc);
+  }
 
   cleanup(respecDoc.document, respecDoc.hub);
   return respecDoc;
