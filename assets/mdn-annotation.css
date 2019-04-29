@@ -1,0 +1,226 @@
+.mdn {
+  display: block;
+  font: 12px sans-serif;
+  position: absolute;
+  z-index: 9;
+  right: 0.3em;
+  background-color: #eee;
+  margin: -26px 0 0 0;
+  padding: 7px 5px 5px 6px;
+  min-width: 140px;
+  box-shadow: 0 0 3px #999;
+}
+
+.mdn button {
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: -2px;
+  height: 1em;
+  border: none;
+  color: #000;
+  background: transparent;
+  margin-left: -8px;
+  font-size: 10px;
+  line-height: 1em;
+  outline: none;
+}
+
+.mdn b {
+  color: #fff;
+  background-color: #000;
+  font-weight: normal;
+  font-family: zillaslab, Palatino, "Palatino Linotype", serif;
+  padding: 2px 3px 0px 3px;
+  line-height: 1.3em;
+  vertical-align: top;
+}
+
+.mdn details {
+  display: inline;
+  margin-left: 2px;
+}
+
+.mdn summary {
+  outline: none;
+}
+
+.mdn summary a {
+  margin-left: -4px;
+}
+
+.nosupportdata {
+  font-style: italic;
+  margin-top: 4px;
+  margin-left: 8px;
+  padding-bottom: 8px;
+}
+
+.mdnsupport {
+  display: table;
+  margin-top: 4px;
+}
+
+.mdnsupport > span {
+  display: table-row;
+  padding: 0.2em 0;
+  padding-top: 0.2em;
+  font-size: 9.6px;
+}
+
+.mdnsupport > span > span {
+  display: table-cell;
+  padding: 0 0.5em;
+  vertical-align: top;
+  line-height: 1.5em;
+}
+
+.mdnsupport > span > span:last-child {
+  text-align: right;
+  padding: 0;
+}
+
+.mdnsupport > span.no {
+  color: #cccccc;
+  filter: grayscale(100%);
+}
+
+.mdnsupport > span.unknown {
+  color: #cccccc;
+  filter: grayscale(100%);
+}
+
+.mdnsupport > span.no::before {
+  opacity: 0.5;
+}
+
+.mdnsupport > span.unknown::before {
+  opacity: 0.5;
+}
+
+.mdnsupport > span::before {
+  content: "";
+  display: table-cell;
+  min-width: 1.5em;
+  height: 1.5em;
+  background: no-repeat center center / contain;
+  text-align: right;
+  font-size: 0.75em;
+  font-weight: bold;
+}
+
+.mdnsupport > .chrome::before,
+.mdnsupport > .chrome_android::before {
+  background-image: url(https://resources.whatwg.org/browser-logos/chrome.svg);
+}
+
+.mdnsupport > .edge::before,
+.mdnsupport > .edge_mobile::before {
+  background-image: url(https://resources.whatwg.org/browser-logos/edge.svg);
+}
+
+.mdnsupport > .firefox::before,
+.mdnsupport > .firefox_android::before {
+  background-image: url(https://resources.whatwg.org/browser-logos/firefox.png);
+}
+
+.mdnsupport > .ie::before {
+  background-image: url(https://resources.whatwg.org/browser-logos/ie.png);
+}
+
+.mdnsupport > .opera::before,
+.mdnsupport > .opera_android::before {
+  background-image: url(https://resources.whatwg.org/browser-logos/opera.png);
+}
+
+.mdnsupport > .safari::before {
+  background-image: url(https://resources.whatwg.org/browser-logos/safari.png);
+}
+
+.mdnsupport > .safari_ios::before {
+  background-image: url(https://resources.whatwg.org/browser-logos/safari-ios.svg);
+}
+
+.mdnsupport > .samsunginternet_android::before {
+  background-image: url(https://resources.whatwg.org/browser-logos/samsung.png);
+}
+
+.mdnsupport > .webview_android::before {
+  background-image: url(https://cdnjs.loli.net/ajax/libs/browser-logos/41.0.0/android-webview-beta/android-webview-beta_32x32.png);
+}
+
+.mdn.wrapped div:nth-child(n + 3) {
+  display: none;
+}
+
+.mdn div:nth-child(n + 3) > b {
+  color: #eee;
+  background-color: #eee;
+}
+
+p + .mdn {
+  margin-top: -45px;
+}
+
+.mdn.before {
+  margin-top: 3em;
+}
+
+h2 + .mdn {
+  margin: -48px 0 0 0;
+}
+
+h3 + .mdn {
+  margin: -46px 0 0 0;
+}
+
+h4 + .mdn {
+  margin: -42px 0 0 0;
+}
+
+h5 + .mdn {
+  margin: -40px 0 0 0;
+}
+
+h6 + .mdn {
+  margin: -40px 0 0 0;
+}
+
+.mdn div {
+  margin: 0;
+}
+
+.mdn :link {
+  color: #0000ee;
+}
+
+.mdn :visited {
+  color: #551a8b;
+}
+
+.mdn :link:active,
+:visited:active {
+  color: #ff0000;
+}
+
+.mdn :link,
+:visited {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.mdn.wrapped {
+  min-width: 0px;
+}
+
+.mdn.wrapped details {
+  display: none;
+}
+
+.mdn:hover {
+  z-index: 11;
+}
+
+.mdn:focus-within {
+  z-index: 11;
+}

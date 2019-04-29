@@ -28,7 +28,7 @@ function ariaDecorate(elem, ariaMap) {
   if (!elem) {
     return;
   }
-  Array.from(ariaMap.entries()).reduce((elem, [name, value]) => {
+  Array.from(ariaMap).reduce((elem, [name, value]) => {
     elem.setAttribute(`aria-${name}`, value);
     return elem;
   }, elem);

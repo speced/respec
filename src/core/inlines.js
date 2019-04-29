@@ -5,19 +5,12 @@
 // is harder to orthogonalise, and in some browsers can also be particularly slow.
 // Things that are recognised are <abbr>/<acronym> which when used once are applied
 // throughout the document, [[REFERENCES]]/[[!REFERENCES]], {{ IDL }} and RFC2119 keywords.
-// CONFIGURATION:
-//  These options do not configure the behaviour of this module per se, rather this module
-//  manipulates them (oftentimes being the only source to set them) so that other modules
-//  may rely on them.
-//  - normativeReferences: a map of normative reference identifiers.
-//  - informativeReferences: a map of informative reference identifiers.
-//  - respecRFC2119: a list of the number of times each RFC2119
-//    key word was used.  NOTE: While each member is a counter, at this time
-//    the counter is not used.
+
 import {
   InsensitiveStringSet,
   getTextNodes,
   refTypeFromContext,
+  showInlineError,
   showInlineWarning,
 } from "./utils.js";
 import hyperHTML from "../../js/html-template.js";
@@ -30,7 +23,12 @@ export const rfc2119Usage = {};
 // Inline `code`
 // TODO: Replace (?!`) at the end with (?:<!`) at the start when Firefox + Safari
 // add support.
-const inlineCodeRegExp = new RegExp("(?:`[^`]+`)(?!`)");
+const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
+const inlineIdlReference = /(?:{{[^}]+}})/; // {{ WebIDLThing }}
+const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
+const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
+const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[A-Za-z0-9.-]+\]\]\])/; // [[[expand]]]
+const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 
 /**
  * @param {string} matched
@@ -52,9 +50,20 @@ function inlineRFC2119Matches(matched) {
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
-  /** @type {HTMLAnchorElement} */
-  const nodeElement = hyperHTML`<a data-cite="${ref}"></a>`;
-  return nodeElement;
+  if (!ref.startsWith("#")) {
+    return hyperHTML`<a data-cite="${ref}"></a>`;
+  }
+  if (document.querySelector(ref)) {
+    return hyperHTML`<a href="${ref}"></a>`;
+  }
+  /** @type {HTMLElement} */
+  const badReference = hyperHTML`<span>${matched}</span>`;
+  showInlineError(
+    badReference, // cite element
+    `Wasn't able to expand ${matched} as it didn't match any id in the document.`,
+    `Please make sure there is element with id ${ref} in the document.`
+  );
+  return badReference;
 }
 
 /**
@@ -193,11 +202,11 @@ export default function({ document, configuration: conf }) {
   const rx = new RegExp(
     `(${[
       keywords.source,
-      "(?:{{[^}]+}})", // inline IDL references,
-      "\\B\\|\\w[\\w\\s]*(?:\\s*\\:[\\w\\s&;<>]+)?\\|\\B", // inline variable regex
-      "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
-      "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
-      "(?:\\[=[^=]+=\\])", // Inline [= For/link =]
+      inlineIdlReference.source,
+      inlineVariable.source,
+      inlineCitation.source,
+      inlineExpansion.source,
+      inlineAnchor.source,
       inlineCodeRegExp.source,
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`

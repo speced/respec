@@ -63,7 +63,7 @@ function makeTitle(elem, num, report) {
  * Link <a href="#example">
  */
 function replaceEmptyAnchors() {
-  for (const [id, text] of examplesMap.entries()) {
+  for (const [id, text] of examplesMap) {
     [...document.querySelectorAll(`a[href="#${id}"]`)]
       .filter(elem => elem.textContent.trim() === "")
       .forEach(elem => {
