@@ -143,7 +143,7 @@ function getRequestEntry(elem) {
   // if element itself contains data-cite, we don't take inline context into account
   if (dataciteElem !== elem) {
     /** @type {NodeListOf<HTMLElement>} */
-    const bibrefs = elem.closest("section").querySelectorAll("a.bibref");
+    const bibrefs = elem.closest("section, body").querySelectorAll("a.bibref");
     for (const el of bibrefs) {
       const ref = el.textContent.toLowerCase();
       specs.push(ref);
