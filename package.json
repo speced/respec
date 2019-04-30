@@ -74,7 +74,7 @@
     "babel:build": "babel src -d js --source-maps -q",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:components": "npm run copydeps && npm run babel:build",
-    "build:geonovum-debug": "node ./tools/builder.js --profile=geonovum --debug",
+    "build:geonovum-debug": "npm run build:geonovum -- --debug",
     "build:geonovum": "node ./tools/builder.js --profile=geonovum",
     "build:w3c-debug": "./tools/builder.js --profile=w3c --debug",
     "build:w3c-with-jquery": "node ./tools/builder.js --profile=w3c-common",
