@@ -219,7 +219,6 @@ export function run(conf) {
         const node = inlineXrefMatches(t);
         df.append(node);
       } else if (t.startsWith("[[[")) {
-        debugger;
         const node = inlineRefMatches(t);
         df.append(node);
       } else if (t.startsWith("[[")) {
