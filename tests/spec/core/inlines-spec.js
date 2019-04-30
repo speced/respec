@@ -192,27 +192,27 @@ describe("Core - Inlines", () => {
     ]);
   });
 
-  it("allows [[[#...]]] to be a general expander for ids in document", async () => {
+  fit("allows [[[#...]]] to be a general expander for ids in document", async () => {
     const body = `
       <section id="section">
         <h2>section heading</h2>
         <figure id="figure">
           <figcaption>figure caption</figcaption>
         </figure>
-        <aside class="example" id="example-aside" title="aside"></aside>
+        <aside class="example" id="example-aside_thing" title="aside"></aside>
         <pre class="example" id="example-pre" title="pre">
         </pre>
       </section>
       <p id="output">
         [[[#section]]]
         [[[#figure]]]
-        [[[#example-aside]]]
+        [[[#example-aside_thing]]]
         [[[#example-pre]]]
         [[[#does-not-exist]]]
       </p>`;
     const doc = await makeRSDoc(makeStandardOps(null, body));
     const anchors = doc.querySelectorAll("#output a");
-
+    debugger
     expect(anchors.length).toBe(4);
     const [section, figure, exampleAside, examplePre] = anchors;
     expect(section.textContent).toBe("§ 1. section heading");

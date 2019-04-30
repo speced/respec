@@ -27,7 +27,7 @@ const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
 const inlineIdlReference = /(?:{{[^}]+}})/; // {{ WebIDLThing }}
 const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
-const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[A-Za-z0-9.-]+\]\]\])/; // [[[expand]]]
+const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[A-Za-z0-9-_.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 
 /**
@@ -219,6 +219,7 @@ export function run(conf) {
         const node = inlineXrefMatches(t);
         df.append(node);
       } else if (t.startsWith("[[[")) {
+        debugger;
         const node = inlineRefMatches(t);
         df.append(node);
       } else if (t.startsWith("[[")) {
