@@ -76,7 +76,7 @@
     "build:components": "npm run copydeps && npm run babel:build",
     "build:geonovum-debug": "npm run build:geonovum -- --debug",
     "build:geonovum": "node ./tools/builder.js --profile=geonovum",
-    "build:w3c-debug": "./tools/builder.js --profile=w3c --debug",
+    "build:w3c-debug": "npm run build:w3c -- --debug",
     "build:w3c-with-jquery": "node ./tools/builder.js --profile=w3c-common",
     "build:w3c": "node ./tools/builder.js --profile=w3c",
     "build": "snyk protect && npm run build:components",
