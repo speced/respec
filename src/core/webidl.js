@@ -102,6 +102,14 @@ function makeMarkup(parse, { suppressWarnings } = {}) {
       }
       return hyperHTML`<span class='idlSectionComment'>${t}</span>`;
     },
+    generic(wrapped) {
+      if (standardTypes.has(wrapped)) {
+        return hyperHTML`<a data-cite='${standardTypes.get(
+          wrapped
+        )}'>${wrapped}</a>`;
+      }
+      return hyperHTML`<a data-link-for="">${wrapped}</a>`;
+    },
     reference(wrapped, name) {
       if (standardTypes.has(name)) {
         return hyperHTML`<a data-cite='${standardTypes.get(
