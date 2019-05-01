@@ -18,15 +18,11 @@ function prop(prop) {
 }
 const nameProp = prop("name");
 
-function URLByUser(user) {
-  return new URL(user.url, window.parent.location.origin).href;
-}
-
 function findUserURLs(...thingsWithUsers) {
   const usersURLs = thingsWithUsers
     .reduce(flatten, [])
     .filter(thing => thing && thing.user)
-    .map(({ user }) => URLByUser(user));
+    .map(({ user }) => new URL(user.url, window.parent.location.origin).href);
   return [...new Set(usersURLs)];
 }
 
@@ -87,19 +83,22 @@ export async function run(conf) {
     otherComments,
     contributors,
   ] = await Promise.all(
-    [issues_url, issue_comment_url, comments_url, contributors_url].map(url =>
-      fetchAll(
-        new URL(url.replace(/\{[^}]+\}/, ""), window.parent.location.origin).href,
+    [issues_url, issue_comment_url, comments_url, contributors_url].map(url => {
+      const cleansedUrl = url.replace(/\{[^}]+\}/, "");
+      return fetchAll(
+        new URL(cleansedUrl, window.parent.location.origin).href,
         headers
-      )
-    )
+      );
+    })
   );
 
   const editors = conf.editors.map(nameProp);
   const commenterUrls = ghCommenters
     ? findUserURLs(issues, issueComments, otherComments)
     : [];
-  const contributorUrls = ghContributors ? contributors.map(URLByUser) : [];
+  const contributorUrls = ghContributors
+    ? contributors.map(c => new URL(c.url, window.parent.location.origin).href)
+    : [];
   try {
     const toHTMLPromises = [];
     if (ghCommenters) {
