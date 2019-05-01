@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+} from "../SpecHelper.js";
+
 describe("Core — Definition finder", () => {
   afterAll(flushIframes);
 

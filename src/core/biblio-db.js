@@ -8,11 +8,14 @@
  *
  */
 /* globals IDBKeyRange, DOMException */
-import { pub } from "./pubsubhub";
+import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
 
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
-// Database initialization, tracked by "readyPromise"
+/**
+ * Database initialization tracker
+ * @type {Promise<IDBDatabase>}
+ */
 const readyPromise = new Promise((resolve, reject) => {
   let request;
   try {

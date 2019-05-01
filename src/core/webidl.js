@@ -5,12 +5,12 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import * as webidl2 from "webidl2";
-import { flatten, normalizePadding } from "./utils";
 import css from "text!../../assets/webidl.css";
-import { findDfn } from "./dfn-finder";
+import { findDfn } from "./dfn-finder.js";
+import { flatten } from "./utils.js";
 import hyperHTML from "hyperhtml";
-import { pub } from "./pubsubhub";
-import { registerDefinition } from "./dfn-map";
+import { pub } from "./pubsubhub.js";
+import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";
 
@@ -57,7 +57,7 @@ const standardTypes = new Map([
   ["DOMString", "WEBIDL#idl-DOMString"],
   ["double", "WEBIDL#idl-double"],
   ["Error", "WEBIDL#idl-Error"],
-  ["EventHandler", "HTML#eventhandler"],
+  ["EventHandler", "HTML/webappapis.html#eventhandler"],
   ["float", "WEBIDL#idl-float"],
   ["Float32Array", "WEBIDL#idl-Float32Array"],
   ["Float64Array", "WEBIDL#idl-Float64Array"],
@@ -101,6 +101,14 @@ function makeMarkup(parse, { suppressWarnings } = {}) {
         return t;
       }
       return hyperHTML`<span class='idlSectionComment'>${t}</span>`;
+    },
+    generic(wrapped) {
+      if (standardTypes.has(wrapped)) {
+        return hyperHTML`<a data-cite='${standardTypes.get(
+          wrapped
+        )}'>${wrapped}</a>`;
+      }
+      return hyperHTML`<a data-link-for="">${wrapped}</a>`;
     },
     reference(wrapped, name) {
       if (standardTypes.has(name)) {
@@ -152,9 +160,8 @@ function createIdlAnchor(escaped, data, parentName, dfn) {
       .dataset.lt || ""}">${escaped}</a>`;
   }
   const isDefaultJSON =
-    data.body &&
-    data.body.name &&
-    data.body.name.value === "toJSON" &&
+    data.type === "operation" &&
+    data.name === "toJSON" &&
     data.extAttrs &&
     data.extAttrs.items.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
@@ -264,14 +271,14 @@ function getIdlId(name, parentName) {
 }
 
 function getDefnName(defn) {
-  if (defn.type === "enum-value") {
-    return defn.value;
-  } else if (defn.type !== "operation") {
-    return defn.name || defn.type;
-  } else if (defn.body && defn.body.name) {
-    return defn.body.name.value;
+  switch (defn.type) {
+    case "enum-value":
+      return defn.value;
+    case "operation":
+      return defn.name;
+    default:
+      return defn.name || defn.type;
   }
-  return "";
 }
 
 export function run() {
@@ -297,7 +304,7 @@ export function run() {
         "error",
         `Failed to parse WebIDL: ${e.message}.
         <details>
-        <pre>${normalizePadding(idlElement.textContent)}\n ${e}</pre>
+        <pre>${idlElement.textContent}\n ${e}</pre>
         </details>`
       );
       // Skip this <pre> and move on to the next one.

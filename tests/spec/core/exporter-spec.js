@@ -1,5 +1,7 @@
 "use strict";
 
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core - exporter", () => {
   afterAll(flushIframes);
 

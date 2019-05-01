@@ -1,9 +1,10 @@
 // @ts-check
 import html from "hyperhtml";
-import { pub } from "../../core/pubsubhub";
-import showLink from "./show-link";
-import showLogo from "./show-logo";
-import showPeople from "./show-people";
+import { norm } from "../../core/utils.js";
+import { pub } from "../../core/pubsubhub.js";
+import showLink from "./show-link.js";
+import showLogo from "./show-logo.js";
+import showPeople from "./show-people.js";
 
 const ccLicense = "https://creativecommons.org/licenses/by/3.0/";
 const w3cLicense = "https://www.w3.org/Consortium/Legal/copyright-documents";
@@ -17,11 +18,17 @@ function getSpecTitleElem(conf) {
     document.querySelector("h1#title") || document.createElement("h1");
   if (specTitleElem.parentElement) {
     specTitleElem.remove();
-    conf.title = specTitleElem.textContent.trim();
   } else {
     specTitleElem.textContent = conf.title;
     specTitleElem.id = "title";
   }
+  if (conf.isPreview && conf.prNumber) {
+    const { childNodes } = html`
+      Preview of PR <a href="${conf.prUrl}">#${conf.prNumber}</a>:
+    `;
+    specTitleElem.prepend(...childNodes);
+  }
+  conf.title = norm(specTitleElem.textContent);
   specTitleElem.classList.add("title", "p-name");
   if (document.querySelector("title") === null) {
     document.title = conf.title;

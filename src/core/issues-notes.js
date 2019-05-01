@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/issues-notes
 // Manages issues and notes, including marking them up, numbering, inserting the title,
 // and injecting the style sheet.
@@ -10,12 +11,17 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, joinAnd, parents } from "./utils";
+import { addId, joinAnd, parents } from "./utils.js";
 import css from "text!../../assets/issues-notes.css";
-import { lang as defaultLang } from "../core/l10n";
-import { fetchAndStoreGithubIssues } from "./github-api";
+import { lang as defaultLang } from "../core/l10n.js";
+import { fetchAndStoreGithubIssues } from "./github-api.js";
 import hyperHTML from "hyperhtml";
-import { pub } from "./pubsubhub";
+import { pub } from "./pubsubhub.js";
+
+/**
+ * @typedef {import("./github-api").GitHubIssue} GitHubIssue
+ * @typedef {import("./github-api").GitHubLabel} GitHubLabel
+ */
 
 export const name = "core/issues-notes";
 
@@ -121,6 +127,7 @@ function handleIssues(ins, ghIssues, conf) {
         }
         titleParent.append(createLabelsGroup(labels, report.title, repoURL));
       }
+      /** @type {HTMLElement | DocumentFragment} */
       let body = inno;
       inno.replaceWith(div);
       body.classList.remove(type);
@@ -170,7 +177,7 @@ function getIssueType(inno, conf) {
 }
 
 /**
- * @param {number} dataNum
+ * @param {string} dataNum
  * @param {*} conf
  */
 function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {

@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core — Link to definitions", () => {
   afterAll(flushIframes);
 
@@ -12,7 +15,7 @@ describe("Core — Link to definitions", () => {
     const doc = await makeRSDoc(ops);
     const a = doc.getElementById("testAnchor");
     expect(a).toBeTruthy();
-    expect(a.hash).toEqual("#dfn-test");
+    expect(a.hash).toBe("#dfn-test");
     const decodedHash = decodeURIComponent(a.hash);
     expect(doc.getElementById(decodedHash.slice(1))).toBeTruthy();
   });
@@ -31,12 +34,12 @@ describe("Core — Link to definitions", () => {
     const doc = await makeRSDoc(ops);
     const hasCode = doc.body.querySelector("#codeWrap a");
     expect(hasCode).toBeTruthy();
-    expect(hasCode.firstElementChild.localName).toEqual("code");
-    expect(hasCode.textContent).toEqual("Request");
+    expect(hasCode.firstElementChild.localName).toBe("code");
+    expect(hasCode.textContent).toBe("Request");
     const noCodeWrap = doc.body.querySelector("#noCodeWrap a");
     expect(noCodeWrap).toBeTruthy();
     expect(noCodeWrap.querySelector("code")).toBeFalsy();
-    expect(noCodeWrap.textContent).toEqual("the request interface");
+    expect(noCodeWrap.textContent).toBe("the request interface");
   });
 
   it("checks for duplicate definitions", async () => {

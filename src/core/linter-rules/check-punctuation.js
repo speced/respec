@@ -3,8 +3,8 @@
  * Linter rule "check-punctuation". Makes sure the there are no punctuations missing at the end of a <p>
  *   in the ReSpec config.
  */
-import LinterRule from "../LinterRule";
-import { lang as defaultLang } from "../l10n";
+import LinterRule from "../LinterRule.js";
+import { lang as defaultLang } from "../l10n.js";
 
 const name = "check-punctuation";
 const punctuationMarks = [".", ":", "!", "?"];
@@ -21,11 +21,11 @@ const lang = defaultLang in meta ? defaultLang : "en";
 /**
  * Runs linter rule.
  *
- * @param {Object} conf The ReSpec config.
+ * @param {Object} _ The ReSpec config.
  * @param  {Document} doc The document to be checked.
  * @return {import("../../core/LinterRule").LinterResult}
  */
-function lintingFunction(conf, doc) {
+function lintingFunction(_, doc) {
   // Check string ends with one of ., !, ?, :, ], or is empty.
   const punctuatingRegExp = new RegExp(
     `[${punctuationMarks.join("")}\\]]$|^ *$`,

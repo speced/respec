@@ -1,12 +1,11 @@
-/* exported pickRandomsFromList, makeRSDoc, flushIframes,
- makeStandardOps, makeDefaultBody, makeBasicConfig */
 "use strict";
 const iframes = [];
 
 /**
  * @return {Promise<Document>}
  */
-function makeRSDoc(opts = {}, src, style = "") {
+export function makeRSDoc(opts, src, style = "") {
+  opts = { profile: "w3c", ...opts };
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
@@ -64,20 +63,11 @@ function decorateDocument(doc, opts) {
     return element;
   }
 
-  function addRespecLoader({ jsPath = "../js/" }) {
+  function addReSpecLoader(opts) {
+    const { profile } = opts;
     const loader = doc.createElement("script");
-    const isKarma = !!window.__karma__;
-    const loadAttr = {
-      src: isKarma
-        ? new URL("/base/builds/respec-w3c-common.js", location).href
-        : "/js/deps/require.js",
-      "data-main": isKarma
-        ? ""
-        : jsPath + (opts.profile || "profile-w3c-common"),
-    };
-    Object.keys(loadAttr)
-      .reduce(intoAttributes.bind(loadAttr), loader)
-      .classList.add("remove");
+    loader.classList.add("remove");
+    loader.src = `/base/builds/respec-${profile}.js`;
     doc.head.appendChild(loader);
   }
 
@@ -119,18 +109,18 @@ function decorateDocument(doc, opts) {
   decorateBody(opts);
   addRespecConfig(opts);
   if (!doc.querySelector("script[src]")) {
-    addRespecLoader(opts);
+    addReSpecLoader(opts);
   }
 }
 
-function flushIframes() {
+export function flushIframes() {
   while (iframes.length) {
     // Popping them from the list prevents memory leaks.
     iframes.pop().remove();
   }
 }
 
-function pickRandomsFromList(list, howMany) {
+export function pickRandomsFromList(list, howMany) {
   // Get at least half by default.
   if (!howMany) {
     howMany = Math.floor(list.length / 2);
@@ -156,27 +146,41 @@ function pickRandomsFromList(list, howMany) {
   }, []);
 }
 
-function makeBasicConfig() {
-  return {
-    editors: [
-      {
-        name: "Person Name",
-      },
-    ],
-    specStatus: "ED",
-    edDraftURI: "https://foo.com",
-    shortName: "Foo",
-    previousMaturity: "CR",
-    previousPublishDate: "1999-01-01",
-    errata: "https://github.com/tabatkins/bikeshed",
-    implementationReportURI: "https://example.com/implementationReportURI",
-    perEnd: "1999-01-01",
-    lint: false,
-    definitionMap: {},
-  };
+export function makeBasicConfig(profile = "w3c") {
+  switch (profile) {
+    case "w3c":
+      return {
+        editors: [
+          {
+            name: "Person Name",
+          },
+        ],
+        specStatus: "ED",
+        edDraftURI: "https://foo.com",
+        shortName: "Foo",
+        previousMaturity: "CR",
+        previousPublishDate: "1999-01-01",
+        errata: "https://github.com/tabatkins/bikeshed",
+        implementationReportURI: "https://example.com/implementationReportURI",
+        perEnd: "1999-01-01",
+        lint: false,
+        definitionMap: {},
+      };
+    case "geonovum":
+      return {
+        editors: [
+          {
+            name: "Person Name",
+          },
+        ],
+        specStatus: "GN-BASIS",
+        edDraftURI: "https://foo.com",
+        shortName: "Foo",
+      };
+  }
 }
 
-function makeDefaultBody() {
+export function makeDefaultBody() {
   return "<section id='sotd'><p>foo</p></section><section id='toc'></section>";
 }
 
@@ -187,9 +191,20 @@ function makeDefaultBody() {
  * @returns {{config: {editors, specStatus, edDraftURI, shortName, previousMaturity, previousPublishDate, errata, implementationReportURI, perEnd, lint} & any, body: string}}
  */
 
-function makeStandardOps(config = {}, body = makeDefaultBody()) {
+export function makeStandardOps(config = {}, body = makeDefaultBody()) {
   return {
     body,
     config: { ...makeBasicConfig(), ...config },
   };
+}
+
+export function makeStandardGeoOps(config = {}, body = makeDefaultBody()) {
+  return {
+    body,
+    config: { ...makeBasicConfig("geonovum"), ...config },
+  };
+}
+
+export function xrefTestUrl(id) {
+  return `${location.origin}/tests/data/xref/${id}.json`;
 }

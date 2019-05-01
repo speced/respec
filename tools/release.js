@@ -4,7 +4,7 @@ const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
 const { exec } = require("child_process");
-const fsp = require("fs-extra");
+const { promises: fsp } = require("fs");
 const loading = require("loading-indicator");
 const path = require("path");
 const MAIN_BRANCH = "develop";
@@ -384,14 +384,16 @@ const run = async () => {
     console.log(colors.info(" Performing npm upgrade... 📦"));
     await npm("update", { showOutput: true });
 
-    // Updates could trash our previouls protection, so reprotect.
+    // Updates could trash our previous protection, so reprotect.
     console.log(colors.info(" Running snyk-protect... 🐺"));
     await npm("run snyk-protect", { showOutput: true });
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
     await npm("run build:components");
-    await Builder.build({ name: "w3c-common" });
+    for (const name of ["w3c-common", "w3c", "geonovum"]) {
+      await Builder.build({ name });
+    }
     console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
     await node(
       `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../examples/basic.built.html --out /dev/null`,

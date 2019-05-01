@@ -1,7 +1,7 @@
 // Module core/location-hash
 // Resets window.location.hash to jump to the right point in the document
 
-import { pub } from "./pubsubhub";
+import { pub } from "./pubsubhub.js";
 export const name = "core/location-hash";
 
 export function run() {

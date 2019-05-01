@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core — Contributors and Commenters", () => {
   afterAll(flushIframes);
   it("Expands contributors and commenters", async () => {

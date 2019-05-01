@@ -1,0 +1,166 @@
+{
+  "result": [
+    [
+      "c6d3c68906956ac107378e2a84bcb55ea71a06c6",
+      [
+        {
+          "shortname": "dom",
+          "type": "method",
+          "for": ["EventTarget"],
+          "normative": true,
+          "uri": "#dom-eventtarget-addeventlistener"
+        }
+      ]
+    ],
+    [
+      "fe2c17ac17606b140aa1c868f37155594a26903a",
+      [
+        {
+          "shortname": "dom",
+          "type": "interface",
+          "normative": true,
+          "uri": "#eventtarget"
+        }
+      ]
+    ],
+    [
+      "a33d6eae47b4960c5958b91bb323a601b09ab0a1",
+      [
+        {
+          "shortname": "dom",
+          "type": "method",
+          "for": ["EventTarget"],
+          "normative": true,
+          "uri": "#dom-eventtarget-addeventlistener"
+        }
+      ]
+    ],
+    [
+      "f38a792f9220d2766650da49838a527cef820b0d",
+      [
+        {
+          "shortname": "dom",
+          "type": "interface",
+          "normative": true,
+          "uri": "#childnode"
+        }
+      ]
+    ],
+    [
+      "5d080147dd5fac7f89220ca374378a2b0ff03ef2",
+      [
+        {
+          "shortname": "dom",
+          "type": "method",
+          "for": ["ChildNode"],
+          "normative": true,
+          "uri": "#dom-childnode-after"
+        }
+      ]
+    ],
+    [
+      "044ddd505b3673759ed445e1ae1301f5132d9101",
+      [
+        {
+          "shortname": "feature-policy",
+          "type": "method",
+          "for": ["FeaturePolicy"],
+          "normative": true,
+          "uri": "#dom-featurepolicy-allowedfeatures"
+        }
+      ]
+    ],
+    [
+      "c6968990e96146140852e66a6e09bd32c92dfdca",
+      [
+        {
+          "shortname": "fetch",
+          "type": "method",
+          "for": ["Headers"],
+          "normative": true,
+          "uri": "#dom-headers-append"
+        },
+        {
+          "shortname": "xhr",
+          "type": "method",
+          "for": ["FormData"],
+          "normative": true,
+          "uri": "#dom-formdata-append"
+        }
+      ]
+    ],
+    [
+      "e96636bab8acd8fa7aeea74b972727fe3bd2c6aa",
+      [
+        {
+          "shortname": "url",
+          "type": "interface",
+          "normative": true,
+          "uri": "#urlsearchparams"
+        }
+      ]
+    ],
+    [
+      "2a569a9eb6d37a0c1583b592b19558458ca2fb15",
+      [
+        {
+          "shortname": "url",
+          "type": "method",
+          "for": ["URLSearchParams"],
+          "normative": true,
+          "uri": "#dom-urlsearchparams-append"
+        }
+      ]
+    ]
+  ],
+  "query": [
+    {
+      "term": "addEventListener(type, callback)",
+      "types": ["method"],
+      "id": "c6d3c68906956ac107378e2a84bcb55ea71a06c6"
+    },
+    {
+      "term": "EventTarget",
+      "types": ["_IDL_"],
+      "id": "fe2c17ac17606b140aa1c868f37155594a26903a"
+    },
+    {
+      "term": "addEventListener(type, callback)",
+      "types": ["method"],
+      "for": "EventTarget",
+      "id": "a33d6eae47b4960c5958b91bb323a601b09ab0a1"
+    },
+    {
+      "term": "ChildNode",
+      "types": ["_IDL_"],
+      "id": "f38a792f9220d2766650da49838a527cef820b0d"
+    },
+    {
+      "term": "after(...nodes)",
+      "types": ["method"],
+      "for": "ChildNode",
+      "id": "5d080147dd5fac7f89220ca374378a2b0ff03ef2"
+    },
+    {
+      "term": "allowedFeatures()",
+      "types": ["method"],
+      "id": "044ddd505b3673759ed445e1ae1301f5132d9101"
+    },
+    {
+      "term": "append(name, value)",
+      "types": ["method"],
+      "id": "c6968990e96146140852e66a6e09bd32c92dfdca"
+    },
+    {
+      "term": "URLSearchParams",
+      "types": ["_IDL_"],
+      "id": "e96636bab8acd8fa7aeea74b972727fe3bd2c6aa"
+    },
+    {
+      "term": "append(name, value)",
+      "types": ["method"],
+      "for": "URLSearchParams",
+      "id": "2a569a9eb6d37a0c1583b592b19558458ca2fb15"
+    }
+  ]
+}
