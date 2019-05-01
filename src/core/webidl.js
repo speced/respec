@@ -31,8 +31,8 @@ const templates = {
     return hyperHTML`<span class='idlSectionComment'>${t}</span>`;
   },
   generic(keyword) {
-    // Shepherd classifies "interfaces" as starting with capital letters, 
-    // like Promise, FrozenArray, etc. 
+    // Shepherd classifies "interfaces" as starting with capital letters,
+    // like Promise, FrozenArray, etc.
     return /^[A-Z]/.test(keyword)
       ? hyperHTML`<a data-xref-type="_IDL_">${keyword}</a>`
       : // Other keywords like sequence, maplike, etc...
