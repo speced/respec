@@ -93,24 +93,23 @@ export async function run(conf) {
   );
 
   const editors = conf.editors.map(nameProp);
-  const commenterUrls = ghCommenters
-    ? findUserURLs(issues, issueComments, otherComments)
-    : [];
-  const contributorUrls = ghContributors
-    ? contributors.map(c => new URL(c.url, window.parent.location.origin).href)
-    : [];
   try {
-    const toHTMLPromises = [];
-    if (ghCommenters) {
-      toHTMLPromises.push(
-        toHTML(commenterUrls, editors, ghCommenters, headers)
-      );
-    }
-    if (ghContributors) {
-      toHTMLPromises.push(
-        toHTML(contributorUrls, editors, ghContributors, headers)
-      );
-    }
+    const toHTMLPromises = [
+      {
+        elt: ghCommenters,
+        getUrls: () => findUserURLs(issues, issueComments, otherComments),
+      },
+      {
+        elt: ghContributors,
+        getUrls: () =>
+          contributors.map(
+            c => new URL(c.url, window.parent.location.origin).href
+          ),
+      },
+    ]
+      .filter(c => c.elt)
+      .map(c => toHTML(c.getUrls(), editors, c.elt, headers));
+
     await Promise.all(toHTMLPromises);
   } catch (error) {
     pub(
