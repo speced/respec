@@ -1,0 +1,14 @@
+[
+  {
+    "login": "neil_armstrong",
+    "url": "/tests/data/contrib/users/neil_armstrong"
+  },
+  {
+    "login": "bob_park",
+    "url": "/tests/data/contrib/users/bob_park"
+  },
+  {
+    "login": "buzz_aldrin",
+    "url": "/tests/data/contrib/users/buzz_aldrin"
+  }
+]
