@@ -107,12 +107,3 @@ export async function fetchAll(url, headers, output = []) {
   const next = findNext(response.headers.get("Link"));
   return next ? fetchAll(next, headers, output) : output;
 }
-
-export async function fetchIndex(url, headers) {
-  // converts URLs of the form:
-  // https://api.github.com/repos/user/repo/comments{/number}
-  // into:
-  // https://api.github.com/repos/user/repo/comments
-  // which is what you need if you want to get the index.
-  return fetchAll(url.replace(/\{[^}]+\}/, ""), headers);
-}

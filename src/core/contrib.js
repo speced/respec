@@ -6,7 +6,7 @@
 // Spec editors get filtered out automatically.
 import {
   checkLimitReached,
-  fetchIndex,
+  fetchAll,
   githubRequestHeaders,
 } from "./github-api.js";
 import { flatten, joinAnd } from "./utils.js";
@@ -17,13 +17,12 @@ function prop(prop) {
   return o => o[prop];
 }
 const nameProp = prop("name");
-const urlProp = prop("url");
 
 function findUserURLs(...thingsWithUsers) {
   const usersURLs = thingsWithUsers
     .reduce(flatten, [])
     .filter(thing => thing && thing.user)
-    .map(({ user }) => user.url);
+    .map(({ user }) => new URL(user.url, window.parent.location.origin).href);
   return [...new Set(usersURLs)];
 }
 
@@ -43,7 +42,6 @@ async function toHTML(urls, editors, element, headers) {
     .filter(name => !editors.includes(name))
     .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
   element.textContent = joinAnd(names);
-  element.id = null;
 }
 
 export async function run(conf) {
@@ -60,6 +58,7 @@ export async function run(conf) {
     pub("error", msg);
     return;
   }
+
   const headers = githubRequestHeaders(conf);
   const response = await fetch(new Request(githubAPI, { headers }));
   checkLimitReached(response);
@@ -71,23 +70,49 @@ export async function run(conf) {
     return;
   }
   const indexes = await response.json();
-  const { issues_url, issue_comment_url, contributors_url } = indexes;
+  const {
+    issues_url,
+    issue_comment_url,
+    comments_url,
+    contributors_url,
+  } = indexes;
 
-  const [issues, comments, contributors] = await Promise.all([
-    fetchIndex(issues_url, headers),
-    fetchIndex(issue_comment_url, headers),
-    fetchIndex(contributors_url, headers),
-  ]);
+  const [
+    issues,
+    issueComments,
+    otherComments,
+    contributors,
+  ] = await Promise.all(
+    [issues_url, issue_comment_url, comments_url, contributors_url].map(url => {
+      const cleansedUrl = url.replace(/\{[^}]+\}/, "");
+      return fetchAll(
+        new URL(cleansedUrl, window.parent.location.origin).href,
+        headers
+      );
+    })
+  );
+
   const editors = conf.editors.map(nameProp);
-  const commenterUrls = ghCommenters ? findUserURLs(issues, comments) : [];
-  const contributorUrls = ghContributors ? contributors.map(urlProp) : [];
   try {
-    await Promise.all(
-      toHTML(commenterUrls, editors, ghCommenters, headers),
-      toHTML(contributorUrls, editors, ghContributors, headers)
-    );
-  } catch (err) {
+    const toHTMLPromises = [
+      {
+        elt: ghCommenters,
+        getUrls: () => findUserURLs(issues, issueComments, otherComments),
+      },
+      {
+        elt: ghContributors,
+        getUrls: () =>
+          contributors.map(
+            c => new URL(c.url, window.parent.location.origin).href
+          ),
+      },
+    ]
+      .filter(c => c.elt)
+      .map(c => toHTML(c.getUrls(), editors, c.elt, headers));
+
+    await Promise.all(toHTMLPromises);
+  } catch (error) {
     pub("error", "Error loading contributors and/or commenters from GitHub.");
-    console.log(err);
+    console.error(error);
   }
 }

@@ -1,0 +1,6 @@
+{
+  "issues_url": "/tests/data/contrib/issues{/number}",
+  "contributors_url": "/tests/data/contrib/contributors{/////}",
+  "comments_url": "/tests/data/contrib/comments{/number}",
+  "issue_comment_url": "/tests/data/contrib/issues_comments{/number}"
+}
