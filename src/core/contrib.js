@@ -19,7 +19,7 @@ function prop(prop) {
 const nameProp = prop("name");
 
 function URLByUser(user) {
-  return new URL(user.url, window.location.origin).href;
+  return new URL(user.url, window.parent.location.origin).href;
 }
 
 function findUserURLs(...thingsWithUsers) {
@@ -89,7 +89,7 @@ export async function run(conf) {
   ] = await Promise.all(
     [issues_url, issue_comment_url, comments_url, contributors_url].map(url =>
       fetchAll(
-        new URL(url.replace(/\{[^}]+\}/, ""), window.location.origin).href,
+        new URL(url.replace(/\{[^}]+\}/, ""), window.parent.location.origin).href,
         headers
       )
     )
