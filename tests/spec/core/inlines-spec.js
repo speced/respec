@@ -213,12 +213,18 @@ describe("Core - Inlines", () => {
     const doc = await makeRSDoc(makeStandardOps(null, body));
     const anchors = doc.querySelectorAll("#output a");
     expect(anchors.length).toBe(4);
+    expect(
+      [...anchors].every(a => a.classList.contains("respec-inline-expansion"))
+    ).toBeTruthy();
     const [section, figure, exampleAside, examplePre] = anchors;
-    expect(section.textContent).toBe("§ 1. section heading");
+    expect(section.textContent).toBe("§\u00A01. section heading");
+    expect(section.classList).toContain("sec-ref");
     expect(figure.textContent).toBe("Figure 1");
-    expect(exampleAside.textContent).toBe("Example 1: aside");
-    expect(examplePre.textContent).toBe("Example 2: pre");
-
+    expect(figure.classList).toContain("fig-ref");
+    expect(exampleAside.textContent).toBe("Example 1");
+    expect(exampleAside.classList).toContain("box-ref");
+    expect(examplePre.textContent).toBe("Example 2");
+    expect(examplePre.classList).toContain("box-ref");
     const badOne = doc.querySelector("#output span.respec-offending-element");
     expect(badOne.textContent).toBe("[[[#does-not-exist]]]");
   });

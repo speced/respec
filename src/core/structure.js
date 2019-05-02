@@ -44,7 +44,6 @@ const l10n = localizationStrings[lang];
  */
 function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
   /** @type {Record<string, SectionInfo>} */
-  const secMap = {};
   let appendixMode = false;
   let lastNonAppendix = 0;
   let index = 1;
@@ -75,8 +74,6 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
       section.header.before(document.createComment("OddPage"));
     }
 
-    secMap[section.element.id] = { secno, title: section.title };
-
     if (!section.isIntro) {
       index += 1;
       section.header.prepend(hyperHTML`<span class='secno'>${secno} </span>`);
@@ -88,13 +85,12 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
         prefix: secno,
       });
       if (sub) {
-        Object.assign(secMap, sub.secMap);
         item.append(sub.ol);
       }
       ol.append(item);
     }
   }
-  return { ol, secMap };
+  return { ol };
 }
 
 /**
@@ -178,7 +174,6 @@ export function run(conf) {
     const result = scanSections(sectionTree, conf.maxTocLevel);
     if (result) {
       createTableOfContents(result.ol, conf);
-      updateEmptyAnchors(result.secMap);
     }
   }
 }
@@ -232,32 +227,4 @@ function createTableOfContents(ol) {
 
   const link = hyperHTML`<p role='navigation' id='back-to-top'><a href='#title'><abbr title='Back to Top'>&uarr;</abbr></a></p>`;
   document.body.append(link);
-}
-
-/**
- * Update all anchors with empty content that reference a section ID
- * @param {Record<string, SectionInfo>} secMap
- */
-function updateEmptyAnchors(secMap) {
-  [...document.querySelectorAll("a[href^='#']:not(.tocxref)")]
-    .filter(
-      anchor =>
-        anchor.textContent.trim() === "" &&
-        anchor.getAttribute("href").slice(1) in secMap
-    )
-    .forEach(anchor => {
-      const id = anchor.getAttribute("href").slice(1);
-      const { secno, title } = secMap[id];
-      anchor.classList.add("sec-ref");
-      if (anchor.classList.contains("sectionRef")) {
-        anchor.append("section ");
-      }
-      if (secno) {
-        anchor.append(
-          hyperHTML`<span class='secno'>§&nbsp;${secno}</span>`,
-          " "
-        );
-      }
-      anchor.append(hyperHTML`<span class='sec-title'>${title.trim()}</span>`);
-    });
 }

@@ -12,7 +12,7 @@ describe("Core - Figures", () => {
   afterAll(flushIframes);
   it("creates autolinks from the anchor to the figure", async () => {
     const body = `
-      <figure id='fig'> <img src='img' alt=''>
+       <figure id='fig'>
         <figcaption>test figure caption</figcaption>
        </figure>
        <a id='anchor-fig-title-empty' title='' href='#fig'></a>
@@ -21,17 +21,18 @@ describe("Core - Figures", () => {
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
+
     const anchorFig = doc.getElementById("anchor-fig");
     const anchorFigTitleSet = doc.getElementById("anchor-fig-title-set");
     const anchorFigTitleEmpty = doc.getElementById("anchor-fig-title-empty");
 
-    expect(anchorFig.innerText).toBe("Figure 1");
+    expect(anchorFig.textContent).toBe("Figure 1");
     expect(anchorFig.title).toBe("test figure caption");
 
-    expect(anchorFigTitleSet.innerText).toBe("Figure 1");
+    expect(anchorFigTitleSet.textContent).toBe("Figure 1");
     expect(anchorFigTitleSet.title).toBe("pass");
 
-    expect(anchorFigTitleEmpty.innerText).toBe("Figure 1");
+    expect(anchorFigTitleEmpty.textContent).toBe("Figure 1");
     expect(anchorFigTitleEmpty.title).toBe("");
   });
 

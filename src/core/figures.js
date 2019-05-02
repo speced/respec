@@ -29,9 +29,7 @@ const l10n = localizationStrings[lang];
 export function run(conf) {
   normalizeImages(document);
 
-  const { figMap, tof } = collectFigures(conf);
-
-  updateEmptyAnchors(figMap);
+  const { tof } = collectFigures(conf);
 
   // Create a Table of Figures if a section with id 'tof' exists.
   const tofElement = document.getElementById("tof");
@@ -48,8 +46,6 @@ export function run(conf) {
  * process all figures
  */
 function collectFigures(conf) {
-  /** @type {Record<string, NodeList>} */
-  const figMap = {};
   /** @type {HTMLElement[]} */
   const tof = [];
   document.querySelectorAll("figure").forEach((fig, i) => {
@@ -57,14 +53,13 @@ function collectFigures(conf) {
 
     if (caption) {
       decorateFigure(fig, caption, i, conf);
-      figMap[fig.id] = caption.childNodes;
     } else {
       showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
     }
 
     tof.push(getTableOfFiguresListItem(fig.id, caption));
   });
-  return { figMap, tof };
+  return { tof };
 }
 
 /**
@@ -110,50 +105,6 @@ function normalizeImages(doc) {
       img.height = img.naturalHeight;
       img.width = img.naturalWidth;
     });
-}
-
-/**
- * Update all anchors with empty content that reference a figure ID
- * @param {Record<string, NodeList>} figMap
- */
-function updateEmptyAnchors(figMap) {
-  /** @type {NodeListOf<HTMLAnchorElement>} */
-  const anchors = document.querySelectorAll("a[href]");
-  anchors.forEach(anchor => {
-    const href = anchor.getAttribute("href");
-    if (!href) {
-      return;
-    }
-    const nodes = figMap[href.slice(1)];
-    if (!nodes) {
-      return;
-    }
-    anchor.classList.add("fig-ref");
-    if (anchor.innerHTML !== "") {
-      return;
-    }
-    const shortFigDescriptor = nodeListToFragment(nodes, 0, 2);
-    anchor.append(shortFigDescriptor);
-    if (!anchor.hasAttribute("title")) {
-      const longFigDescriptor = nodeListToFragment(nodes, 2).textContent;
-      anchor.title = longFigDescriptor.trim();
-    }
-  });
-}
-
-/**
- * Clones nodes into a fragment
- * @param {NodeList} nodeList
- * @param {number=} rangeStart
- * @param {number=} rangeEnd
- */
-function nodeListToFragment(nodeList, rangeStart = 0, rangeEnd) {
-  const fragment = document.createDocumentFragment();
-  const end = rangeEnd !== undefined ? rangeEnd : nodeList.length;
-  for (let i = rangeStart; i < end; i++) {
-    fragment.appendChild(nodeList[i].cloneNode(true));
-  }
-  return fragment;
 }
 
 /**

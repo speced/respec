@@ -59,19 +59,6 @@ function makeTitle(elem, num, report) {
   `;
 }
 
-/**
- * Link <a href="#example">
- */
-function replaceEmptyAnchors() {
-  for (const [id, text] of examplesMap) {
-    [...document.querySelectorAll(`a[href="#${id}"]`)]
-      .filter(elem => elem.textContent.trim() === "")
-      .forEach(elem => {
-        elem.textContent = text;
-      });
-  }
-}
-
 export function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
@@ -139,6 +126,5 @@ export function run() {
       if (!inAside) pub("example", report);
       examplesMap.set(id, exampleTitle.textContent.trim());
     }
-    replaceEmptyAnchors();
   });
 }

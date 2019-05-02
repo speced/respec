@@ -183,7 +183,7 @@ describe("Core — Examples", () => {
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
     const [example1, example2] = doc.querySelectorAll("#links a");
-    expect(example1.textContent).toBe("Example 1: one");
-    expect(example2.textContent).toBe("Example 2: two");
+    expect(example1.textContent.trim()).toBe("Example 1");
+    expect(example2.textContent.trim()).toBe("Example 2");
   });
 });
