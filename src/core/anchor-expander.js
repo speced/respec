@@ -127,7 +127,13 @@ function localize(matchingElement, newElement) {
     const newClosest = newElement.closest(`[${attrName}]`);
 
     // It's the same, so already inherited from closet (probably HTML element or body).
-    if (matchingClosest === newClosest) continue;
+    if (
+      matchingClosest &&
+      newClosest &&
+      matchingClosest.getAttribute(attrName) ===
+        newClosest.getAttribute(attrName)
+    )
+      continue;
     // Otherwise, apply it.
     newElement.setAttribute(attrName, matchingClosest.getAttribute(attrName));
   }
