@@ -76,7 +76,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
 
     if (!section.isIntro) {
       index += 1;
-      section.header.prepend(hyperHTML`<span class='secno'>${secno} </span>`);
+      section.header.prepend(hyperHTML`<bdi class='secno'>${secno} </bdi>`);
     }
 
     if (level <= maxTocLevel) {

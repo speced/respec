@@ -1,5 +1,5 @@
 // expands empty anchors based on their context
-import { norm, showInlineError } from "./utils.js";
+import { norm, renameElement, showInlineError } from "./utils.js";
 
 export const name = "core/anchor-expander";
 
@@ -113,14 +113,7 @@ function processHeading(heading, a) {
 function makeSafeCopy(node) {
   const clone = node.cloneNode(true);
   clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
-  clone.querySelectorAll("dfn").forEach(dfn => {
-    const span = document.createElement("span");
-    span.append(...dfn.childNodes);
-    [...dfn.attributes].forEach(({ name, value }) => {
-      span.setAttribute(name, value);
-    });
-    dfn.parentNode.replaceChild(span, dfn);
-  });
+  clone.querySelectorAll("dfn").forEach(dfn => renameElement(dfn, "span"));
   return [...clone.childNodes].filter(
     node => node.nodeType !== Node.COMMENT_NODE
   );

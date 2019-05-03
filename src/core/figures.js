@@ -12,13 +12,28 @@ export const name = "core/figures";
 
 const localizationStrings = {
   en: {
-    table_of_fig: "Table of Figures",
+    list_of_figures: "List of Figures",
+    fig: "Figure ",
+  },
+  ja: {
+    fig: "図",
+    list_of_figures: "図のリスト ",
+  },
+  ko: {
+    fig: "그림 ",
+    list_of_figures: "그림 목록",
   },
   nl: {
-    table_of_fig: "Lijst met figuren",
+    fig: "Figuur ",
+    list_of_figures: "Lijst met figuren",
   },
   es: {
-    table_of_fig: "Tabla de Figuras",
+    fig: "Figura ",
+    list_of_figures: "Lista de Figuras",
+  },
+  zh: {
+    fig: "圖 ",
+    list_of_figures: "List of Figures",
   },
 };
 
@@ -26,17 +41,17 @@ const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 const l10n = localizationStrings[lang];
 
-export function run(conf) {
+export function run() {
   normalizeImages(document);
 
-  const { tof } = collectFigures(conf);
+  const { tof } = collectFigures();
 
   // Create a Table of Figures if a section with id 'tof' exists.
   const tofElement = document.getElementById("tof");
   if (tof.length && tofElement) {
     decorateTableOfFigures(tofElement);
     tofElement.append(
-      hyperHTML`<h2>${l10n.table_of_fig}</h2>`,
+      hyperHTML`<h2>${l10n.list_of_figures}</h2>`,
       hyperHTML`<ul class='tof'>${tof}</ul>`
     );
   }
@@ -45,14 +60,14 @@ export function run(conf) {
 /**
  * process all figures
  */
-function collectFigures(conf) {
+function collectFigures() {
   /** @type {HTMLElement[]} */
   const tof = [];
   document.querySelectorAll("figure").forEach((fig, i) => {
     const caption = fig.querySelector("figcaption");
 
     if (caption) {
-      decorateFigure(fig, caption, i, conf);
+      decorateFigure(fig, caption, i);
     } else {
       showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
     }
@@ -66,18 +81,13 @@ function collectFigures(conf) {
  * @param {HTMLElement} figure
  * @param {HTMLElement} caption
  * @param {number} i
- * @param {*} conf
  */
-function decorateFigure(figure, caption, i, conf) {
+function decorateFigure(figure, caption, i) {
   const title = caption.textContent;
   addId(figure, "fig", title);
   // set proper caption title
   wrapInner(caption, hyperHTML`<span class='fig-title'>`);
-  caption.prepend(
-    conf.l10n.fig,
-    hyperHTML`<span class='figno'>${i + 1}</span>`,
-    " "
-  );
+  caption.prepend(l10n.fig, hyperHTML`<bdi class='figno'>${i + 1}</bdi>`, " ");
 }
 
 /**

@@ -54,7 +54,8 @@ function makeTitle(elem, num, report) {
     : "";
   return html`
     <div class="marker">
-      <a class="self-link">${l10n.example}${number}</a>${title}
+      <a class="self-link">${l10n.example}<bdi>${number}</bdi></a
+      >${title}
     </div>
   `;
 }
