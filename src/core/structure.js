@@ -90,7 +90,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
       ol.append(item);
     }
   }
-  return { ol };
+  return ol;
 }
 
 /**

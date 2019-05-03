@@ -59,7 +59,7 @@ function collectFigures(conf) {
 
     tof.push(getTableOfFiguresListItem(fig.id, caption));
   });
-  return { tof };
+  return tof;
 }
 
 /**
