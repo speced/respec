@@ -67,7 +67,7 @@ define([
   "./core/list-sorter",
   "./core/highlight-vars",
   "./core/algorithms",
-  "./core/anchor-expander.js",
+  "./core/anchor-expander",
   /* Linter must be the last thing to run */
   "./core/linter",
 ], (runner, { ui }, ...plugins) => {
