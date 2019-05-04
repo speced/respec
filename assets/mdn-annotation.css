@@ -13,16 +13,10 @@
 
 .mdn button {
   cursor: pointer;
-  position: absolute;
-  left: 0;
-  top: -2px;
-  height: 1em;
   border: none;
   color: #000;
   background: transparent;
-  margin-left: -8px;
-  font-size: 10px;
-  line-height: 1em;
+  margin: -8px;
   outline: none;
 }
 
@@ -36,18 +30,11 @@
   vertical-align: top;
 }
 
-.mdn details {
-  display: inline;
-  margin-left: 2px;
+.mdn > div > div {
+  display: inline-block;
+  margin-left: 5px;
 }
 
-.mdn summary {
-  outline: none;
-}
-
-.mdn summary a {
-  margin-left: -4px;
-}
 
 .nosupportdata {
   font-style: italic;
@@ -213,7 +200,7 @@ h6 + .mdn {
   min-width: 0px;
 }
 
-.mdn.wrapped details {
+.mdn.wrapped > div > div {
   display: none;
 }
 
