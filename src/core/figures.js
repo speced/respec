@@ -17,7 +17,7 @@ const localizationStrings = {
   },
   ja: {
     fig: "図",
-    list_of_figures: "図のリスト ",
+    list_of_figures: "図のリスト",
   },
   ko: {
     fig: "그림 ",
