@@ -1,0 +1,14 @@
+[
+  {
+    "user": {
+      "login": "jane_smith",
+      "url": "/tests/data/contrib/users/jane_smith"
+    }
+  },
+  {
+    "user": {
+      "login": "buzz_aldrin",
+      "url": "/tests/data/contrib/users/buzz_aldrin"
+    }
+  }
+]
