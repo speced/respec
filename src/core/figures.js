@@ -12,13 +12,28 @@ export const name = "core/figures";
 
 const localizationStrings = {
   en: {
-    table_of_fig: "Table of Figures",
+    list_of_figures: "List of Figures",
+    fig: "Figure ",
+  },
+  ja: {
+    fig: "図",
+    list_of_figures: "図のリスト",
+  },
+  ko: {
+    fig: "그림 ",
+    list_of_figures: "그림 목록",
   },
   nl: {
-    table_of_fig: "Lijst met figuren",
+    fig: "Figuur ",
+    list_of_figures: "Lijst met figuren",
   },
   es: {
-    table_of_fig: "Tabla de Figuras",
+    fig: "Figura ",
+    list_of_figures: "Lista de Figuras",
+  },
+  zh: {
+    fig: "圖 ",
+    list_of_figures: "List of Figures",
   },
 };
 
@@ -26,19 +41,17 @@ const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 const l10n = localizationStrings[lang];
 
-export function run(conf) {
+export function run() {
   normalizeImages(document);
 
-  const { figMap, tof } = collectFigures(conf);
-
-  updateEmptyAnchors(figMap);
+  const tof = collectFigures();
 
   // Create a Table of Figures if a section with id 'tof' exists.
   const tofElement = document.getElementById("tof");
   if (tof.length && tofElement) {
     decorateTableOfFigures(tofElement);
     tofElement.append(
-      hyperHTML`<h2>${l10n.table_of_fig}</h2>`,
+      hyperHTML`<h2>${l10n.list_of_figures}</h2>`,
       hyperHTML`<ul class='tof'>${tof}</ul>`
     );
   }
@@ -47,42 +60,34 @@ export function run(conf) {
 /**
  * process all figures
  */
-function collectFigures(conf) {
-  /** @type {Record<string, NodeList>} */
-  const figMap = {};
+function collectFigures() {
   /** @type {HTMLElement[]} */
   const tof = [];
   document.querySelectorAll("figure").forEach((fig, i) => {
     const caption = fig.querySelector("figcaption");
 
     if (caption) {
-      decorateFigure(fig, caption, i, conf);
-      figMap[fig.id] = caption.childNodes;
+      decorateFigure(fig, caption, i);
     } else {
       showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
     }
 
     tof.push(getTableOfFiguresListItem(fig.id, caption));
   });
-  return { figMap, tof };
+  return tof;
 }
 
 /**
  * @param {HTMLElement} figure
  * @param {HTMLElement} caption
  * @param {number} i
- * @param {*} conf
  */
-function decorateFigure(figure, caption, i, conf) {
+function decorateFigure(figure, caption, i) {
   const title = caption.textContent;
   addId(figure, "fig", title);
   // set proper caption title
   wrapInner(caption, hyperHTML`<span class='fig-title'>`);
-  caption.prepend(
-    conf.l10n.fig,
-    hyperHTML`<span class='figno'>${i + 1}</span>`,
-    " "
-  );
+  caption.prepend(l10n.fig, hyperHTML`<bdi class='figno'>${i + 1}</bdi>`, " ");
 }
 
 /**
@@ -110,50 +115,6 @@ function normalizeImages(doc) {
       img.height = img.naturalHeight;
       img.width = img.naturalWidth;
     });
-}
-
-/**
- * Update all anchors with empty content that reference a figure ID
- * @param {Record<string, NodeList>} figMap
- */
-function updateEmptyAnchors(figMap) {
-  /** @type {NodeListOf<HTMLAnchorElement>} */
-  const anchors = document.querySelectorAll("a[href]");
-  anchors.forEach(anchor => {
-    const href = anchor.getAttribute("href");
-    if (!href) {
-      return;
-    }
-    const nodes = figMap[href.slice(1)];
-    if (!nodes) {
-      return;
-    }
-    anchor.classList.add("fig-ref");
-    if (anchor.innerHTML !== "") {
-      return;
-    }
-    const shortFigDescriptor = nodeListToFragment(nodes, 0, 2);
-    anchor.append(shortFigDescriptor);
-    if (!anchor.hasAttribute("title")) {
-      const longFigDescriptor = nodeListToFragment(nodes, 2).textContent;
-      anchor.title = longFigDescriptor.trim();
-    }
-  });
-}
-
-/**
- * Clones nodes into a fragment
- * @param {NodeList} nodeList
- * @param {number=} rangeStart
- * @param {number=} rangeEnd
- */
-function nodeListToFragment(nodeList, rangeStart = 0, rangeEnd) {
-  const fragment = document.createDocumentFragment();
-  const end = rangeEnd !== undefined ? rangeEnd : nodeList.length;
-  for (let i = rangeStart; i < end; i++) {
-    fragment.appendChild(nodeList[i].cloneNode(true));
-  }
-  return fragment;
 }
 
 /**
