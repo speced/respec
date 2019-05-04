@@ -44,7 +44,7 @@ const l10n = localizationStrings[lang];
 export function run() {
   normalizeImages(document);
 
-  const { tof } = collectFigures();
+  const tof = collectFigures();
 
   // Create a Table of Figures if a section with id 'tof' exists.
   const tofElement = document.getElementById("tof");

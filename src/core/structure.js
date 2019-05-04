@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/structure
 //  Handles producing the ToC and numbering sections across the document.
 
@@ -43,7 +44,6 @@ const l10n = localizationStrings[lang];
  * @param {number} maxTocLevel
  */
 function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
-  /** @type {Record<string, SectionInfo>} */
   let appendixMode = false;
   let lastNonAppendix = 0;
   let index = 1;
@@ -85,7 +85,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
         prefix: secno,
       });
       if (sub) {
-        item.append(sub.ol);
+        item.append(sub);
       }
       ol.append(item);
     }
@@ -173,7 +173,7 @@ export function run(conf) {
     });
     const result = scanSections(sectionTree, conf.maxTocLevel);
     if (result) {
-      createTableOfContents(result.ol, conf);
+      createTableOfContents(result);
     }
   }
 }
@@ -203,7 +203,6 @@ function getNonintroductorySectionHeaders() {
 
 /**
  * @param {HTMLElement} ol
- * @param {*} conf
  */
 function createTableOfContents(ol) {
   if (!ol) {
