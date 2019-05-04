@@ -50,10 +50,10 @@ function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
   if (!ref.startsWith("#")) {
-    return hyperHTML`<a class="respec-inline-expansion" data-cite="${ref}"></a>`;
+    return hyperHTML`<a data-cite="${ref}"></a>`;
   }
   if (document.querySelector(ref)) {
-    return hyperHTML`<a class="respec-inline-expansion" href="${ref}"></a>`;
+    return hyperHTML`<a href="${ref}"></a>`;
   }
   const badReference = hyperHTML`<span>${matched}</span>`;
   showInlineError(
