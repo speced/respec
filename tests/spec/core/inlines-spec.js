@@ -213,9 +213,6 @@ describe("Core - Inlines", () => {
     const doc = await makeRSDoc(makeStandardOps(null, body));
     const anchors = doc.querySelectorAll("#output a");
     expect(anchors.length).toBe(4);
-    expect(
-      [...anchors].every(a => a.classList.contains("respec-inline-expansion"))
-    ).toBeTruthy();
     const [section, figure, exampleAside, examplePre] = anchors;
     expect(section.textContent).toBe("§\u00A01. section heading");
     expect(section.classList).toContain("sec-ref");
