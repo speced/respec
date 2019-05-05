@@ -94,7 +94,7 @@ function inlineBibrefMatches(matched, txt, conf) {
     showInlineWarning(
       cite.childNodes[1], // cite element
       "Normative references in informative sections are not allowed. " +
-        `Remove '!' from the start of the reference \`[[!${ref}]]\``
+        `Remove '!' from the start of the reference \`[[${ref}]]\``
     );
   }
 
