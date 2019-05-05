@@ -258,7 +258,6 @@ function renderWebIDL(idlElement) {
   });
 }
 
-
 export function run() {
   const idls = document.querySelectorAll("pre.idl");
   if (!idls.length) {
