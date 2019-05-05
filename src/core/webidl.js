@@ -38,6 +38,9 @@ const templates = {
       : // Other keywords like sequence, maplike, etc...
         hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
   },
+  reference(wrapped) {
+    return hyperHTML`<a data-xref-type="_IDL_">${wrapped}</a>`;
+  },
   name(escaped, { data, parent }) {
     if (data.idlType && data.idlType.type === "argument-type") {
       return hyperHTML`<span class="idlParamName">${escaped}</span>`;
@@ -70,37 +73,8 @@ const templates = {
     const result = hyperHTML`<span class="extAttr">${contents}</span>`;
     return result;
   },
-  reference(stringOrArray) {
-    let lt = null;
-    let cite = "WebIDL";
-    let type = "_IDL_";
-    if (typeof stringOrArray === "string") {
-      type = "interface";
-      cite = null;
-      if (stringOrArray.includes("Worker")) {
-        lt = `${stringOrArray}GlobalScope`;
-      }
-    }
-    return hyperHTML`<a
-      data-cite="${cite}"
-      data-lt="${lt}"
-      data-xref-type="${type}"
-      >${stringOrArray}</a>`;
-  },
   extendedAttributeReference(name) {
-    let lt = null;
-    let type = "_IDL_";
-    let cite = "WebIDL";
-    if (typeof name === "string" && name.includes("Worker")) {
-      lt = `${name}GlobalScope`;
-      type = "interface";
-      cite = null;
-    }
-    return hyperHTML`<a
-      data-lt="${lt}"
-      data-xref-type="${type}"
-      data-cite="${cite}"
-      >${name}</a>`;
+    return hyperHTML`<a data-xref-type="extended-attribute">${name}</a>`;
   },
 };
 
@@ -262,10 +236,7 @@ function renderWebIDL(idlElement) {
       .map(item => item.toLowerCase())
       .includes("webidl");
     if (!hasWebIDL) {
-      const newDataCite = ["WebIDL"].concat(
-        dataset.cite.split(/\s+/).filter(i => i)
-      );
-      dataset.cite = newDataCite.join(" ");
+      dataset.cite += "WebIDL";
     }
   } else {
     dataset.cite = "WebIDL";
