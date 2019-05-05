@@ -123,18 +123,22 @@ function localize(matchingElement, newElement) {
   for (const attrName of ["dir", "lang"]) {
     // Already set on element, don't override.
     if (newElement.hasAttribute(attrName)) continue;
+
+    // Closest in tree setting the attribute
     const matchingClosest = matchingElement.closest(`[${attrName}]`);
+    if (!matchingClosest) continue;
+
+    // Closest to reference setting the attribute
     const newClosest = newElement.closest(`[${attrName}]`);
 
-    // It's the same, so already inherited from closet (probably HTML element or body).
+    // It's the same, so already inherited from closest (probably HTML element or body).
     if (
-      matchingClosest &&
       newClosest &&
-      matchingClosest.getAttribute(attrName) ===
-        newClosest.getAttribute(attrName)
+      newClosest.getAttribute(attrName) ===
+        matchingClosest.getAttribute(attrName)
     )
       continue;
-    // Otherwise, apply it.
+    // Otherwise, set it.
     newElement.setAttribute(attrName, matchingClosest.getAttribute(attrName));
   }
 }
