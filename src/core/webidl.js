@@ -236,7 +236,10 @@ function renderWebIDL(idlElement) {
       .map(item => item.toLowerCase())
       .includes("webidl");
     if (!hasWebIDL) {
-      dataset.cite += "WebIDL";
+      const newDataCite = ["WebIDL"].concat(
+        dataset.cite.split(/\s+/).filter(i => i)
+      );
+      dataset.cite = newDataCite.join(" ");
     }
   } else {
     dataset.cite = "WebIDL";
@@ -254,6 +257,7 @@ function renderWebIDL(idlElement) {
     registerDefinition(elem, [title]);
   });
 }
+
 
 export function run() {
   const idls = document.querySelectorAll("pre.idl");
