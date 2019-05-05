@@ -34,9 +34,9 @@ const templates = {
     // Shepherd classifies "interfaces" as starting with capital letters,
     // like Promise, FrozenArray, etc.
     return /^[A-Z]/.test(keyword)
-      ? hyperHTML`<a data-xref-type="interface">${keyword}</a>`
+      ? hyperHTML`<a data-xref-type="interface" data-cite="WebIDL">${keyword}</a>`
       : // Other keywords like sequence, maplike, etc...
-        hyperHTML`<a data-xref-type="dfn">${keyword}</a>`;
+        hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
   },
   reference(wrapped) {
     return hyperHTML`<a data-xref-type="_IDL_">${wrapped}</a>`;
