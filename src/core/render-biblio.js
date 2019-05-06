@@ -116,7 +116,7 @@ export function run(conf) {
     refsec.appendChild(sec);
 
     const aliases = getAliases(goodRefs);
-    fixRefUrls(uniqueRefs, aliases);
+    decorateInlineReference(uniqueRefs, aliases);
     warnBadRefs(badRefs);
   }
 
@@ -249,7 +249,8 @@ function getAliases(refs) {
 }
 
 // fix biblio reference URLs
-function fixRefUrls(refs, aliases) {
+// Add title attribute to references
+function decorateInlineReference(refs, aliases) {
   refs
     .map(({ ref, refcontent }) => {
       const refUrl = `#bib-${ref.toLowerCase()}`;
@@ -258,10 +259,13 @@ function fixRefUrls(refs, aliases) {
         .map(alias => `a.bibref[href="#bib-${alias.toLowerCase()}"]`)
         .join(",");
       const elems = document.querySelectorAll(selectors);
-      return { refUrl, elems };
+      return { refUrl, elems, refcontent };
     })
-    .forEach(({ refUrl, elems }) => {
-      elems.forEach(a => a.setAttribute("href", refUrl));
+    .forEach(({ refUrl, elems, refcontent }) => {
+      elems.forEach(a => {
+        a.setAttribute("href", refUrl);
+        a.setAttribute("title", refcontent.title);
+      });
     });
 }
 
