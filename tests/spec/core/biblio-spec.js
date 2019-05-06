@@ -71,6 +71,30 @@ describe("W3C — Bibliographic References", () => {
     expect(specRefOk).toBeTruthy();
   });
 
+  it("includes the title of a spec for an inline citation, including aliases", async () => {
+    const body = `
+      <section id="conformance">
+        <p id="ref-local">[[LOCAL]]</p>
+        <p id="refs-dom">[[DOM4]] [[DOM]] [[dom]] [[dom4]]</p>
+      </section>
+    `;
+    const localBiblio = {
+      LOCAL: {
+        title: "Test ref title",
+        href: "http://test.com",
+      },
+    };
+    const ops = makeStandardOps({ localBiblio }, body);
+    const doc = await makeRSDoc(ops);
+
+    const refLocal = doc.querySelector("#ref-local a");
+    expect(refLocal.title).toBe("Test ref title");
+    const refsDom = doc.querySelectorAll("#refs-dom a");
+    expect(
+      [...refsDom].every(a => a.getAttribute("title") === "DOM Standard")
+    ).toBeTruthy();
+  });
+
   it("includes a dns-prefetch to bibref server", () => {
     const host = bibRefsURL.host;
     const link = doc.querySelector(`link[rel='dns-prefetch'][href*='${host}']`);
