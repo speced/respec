@@ -17,12 +17,8 @@ p.practicedesc {
   border-left-width: 0.5em;
   border-left-style: solid;
   border-color: #8CCBF2;
-  background: 
+  background:
   rgb(241, 246, 253);
-}
-
-.practicebox {
-    background: black;
 }
 
 @media (max-width: 767px) {
