@@ -827,8 +827,32 @@ export function makeSafeCopy(node) {
   const clone = node.cloneNode(true);
   clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
   clone.querySelectorAll("dfn").forEach(dfn => renameElement(dfn, "span"));
-  // TODO: make a tree walker and remove all the comment nodes, not just first level.
-  return [...clone.childNodes].filter(
-    node => node.nodeType !== Node.COMMENT_NODE
+  cleanupHyperComments(clone);
+  return clone;
+}
+
+export function cleanupHyperComments(node) {
+  // collect first, or walker will cease too early
+  /** @param {Comment} comment */
+  const filter = comment =>
+    comment.textContent.startsWith("-") && comment.textContent.endsWith("%");
+  const walker = document.createTreeWalker(
+    node,
+    NodeFilter.SHOW_COMMENT,
+    filter
   );
+  for (const comment of [...walkTree(walker)]) {
+    comment.remove();
+  }
+}
+
+/**
+ * @template {Node} T
+ * @param {TreeWalker<T>} walker
+ * @return {IterableIterator<T>}
+ */
+function* walkTree(walker) {
+  while (walker.nextNode()) {
+    yield /** @type {T} */ (walker.currentNode);
+  }
 }

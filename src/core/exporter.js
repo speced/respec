@@ -6,10 +6,10 @@
  * That is, elements that have a "removeOnSave" css class.
  */
 
+import { cleanupHyperComments, removeReSpec } from "./utils.js";
 import { expose } from "./expose-modules.js";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub.js";
-import { removeReSpec } from "./utils.js";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
 
@@ -53,7 +53,7 @@ function serialize(format, doc) {
 
 function cleanup(cloneDoc) {
   const { head, body, documentElement } = cloneDoc;
-  cleanupHyper(cloneDoc);
+  cleanupHyperComments(cloneDoc);
 
   cloneDoc
     .querySelectorAll(".removeOnSave, #toc-nav")
@@ -87,32 +87,6 @@ function cleanup(cloneDoc) {
   insertions.appendChild(metaGenerator);
   head.prepend(insertions);
   pub("beforesave", documentElement);
-}
-
-function cleanupHyper({ documentElement: node }) {
-  // collect first, or walker will cease too early
-  /** @param {Comment} comment */
-  const filter = comment =>
-    comment.textContent.startsWith("-") && comment.textContent.endsWith("%");
-  const walker = document.createTreeWalker(
-    node,
-    NodeFilter.SHOW_COMMENT,
-    filter
-  );
-  for (const comment of [...walkTree(walker)]) {
-    comment.remove();
-  }
-}
-
-/**
- * @template {Node} T
- * @param {TreeWalker<T>} walker
- * @return {IterableIterator<T>}
- */
-function* walkTree(walker) {
-  while (walker.nextNode()) {
-    yield /** @type {T} */ (walker.currentNode);
-  }
 }
 
 expose("core/exporter", { rsDocToDataURL });
