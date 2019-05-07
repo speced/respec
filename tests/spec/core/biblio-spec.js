@@ -38,11 +38,18 @@ describe("W3C — Bibliographic References", () => {
     BARBAR: {
       title: "The BARBAR Spec",
     },
+    EVERCOOKIE: {
+      authors: ["Samy Kamkar"],
+      href: "https://samy.pl/evercookie/",
+      title: "evercookie - virtually irrevocable persistent cookies",
+      date: "September 2010",
+    },
   };
   const body = `
     <section id='sotd'>
       <p>[[DOM]] [[dom]] [[fetch]] [[?FeTcH]] [[FETCh]] [[fetCH]]
       <p>foo [[TestRef1]] [[TestRef2]] [[TestRef3]]</p>
+      <p>[[EVERCOOKIE]]</p>
     </section>
     <section id='sample'>
       <h2>Privacy</h2>
@@ -65,6 +72,13 @@ describe("W3C — Bibliographic References", () => {
   beforeAll(async () => {
     doc = await makeRSDoc(ops);
     specRefOk = (await fetch(bibRefsURL, { method: "HEAD" })).ok;
+  });
+
+  it("displays references correctly", async () => {
+    const ref = doc.querySelector("#bib-evercookie + dd");
+    expect(ref.textContent).toBe(
+      "evercookie - virtually irrevocable persistent cookies. Samy Kamkar. September 2010. URL: https://samy.pl/evercookie/"
+    );
   });
 
   it("pings biblio service to see if it's running", () => {
