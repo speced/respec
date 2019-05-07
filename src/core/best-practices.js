@@ -11,8 +11,9 @@ export const name = "core/best-practices";
 
 export function run() {
   let num = 0;
-  const bps = document.querySelectorAll("span.practicelab");
   const ul = document.createElement("ul");
+  /** @type {NodeListOf<HTMLElement>} */
+  const bps = document.querySelectorAll("span.practicelab");
   for (const bp of bps) {
     num++;
     const id = addId(bp, "bp");
@@ -26,9 +27,9 @@ export function run() {
       continue;
     }
     container.classList.add("advisement");
-    const marker = hyperHTML`<a href="${`#${id}`}"
+    const title = hyperHTML`<a href="${`#${id}`}"
       class="self-link"><span class="marker">Best Practice ${num}</span></a>: ${bp}`;
-    container.prepend(...marker.childNodes);
+    container.prepend(...title.childNodes);
   }
   const bpSummary = document.getElementById("bp-summary");
   if (bps.length) {
