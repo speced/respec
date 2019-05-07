@@ -822,3 +822,13 @@ export class InsensitiveStringSet extends Set {
         );
   }
 }
+
+export function makeSafeCopy(node) {
+  const clone = node.cloneNode(true);
+  clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
+  clone.querySelectorAll("dfn").forEach(dfn => renameElement(dfn, "span"));
+  // TODO: make a tree walker and remove all the comment nodes, not just first level.
+  return [...clone.childNodes].filter(
+    node => node.nodeType !== Node.COMMENT_NODE
+  );
+}
