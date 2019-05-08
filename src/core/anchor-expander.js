@@ -60,8 +60,8 @@ function processBox(matchingElement, id, a) {
     showInlineError(a, msg, "Missing title.");
     return;
   }
-  const children = makeSafeCopy(selfLink);
-  a.append(...children);
+  const copy = makeSafeCopy(selfLink);
+  a.append(...copy.childNodes);
   a.classList.add("box-ref");
 }
 
@@ -74,7 +74,7 @@ function processFigure(matchingElement, id, a) {
     return;
   }
   // remove the figure's title
-  const children = [...makeSafeCopy(figcaption)].filter(
+  const children = [...makeSafeCopy(figcaption).childNodes].filter(
     node => !node.classList || !node.classList.contains("fig-title")
   );
   // drop an empty space at the end.
@@ -102,7 +102,7 @@ function processSection(matchingElement, id, a) {
 
 function processHeading(heading, a) {
   const hadSelfLink = heading.querySelector(".self-link");
-  const children = [...makeSafeCopy(heading)].filter(
+  const children = [...makeSafeCopy(heading).childNodes].filter(
     node => !node.classList || !node.classList.contains("self-link")
   );
   a.append(...children);

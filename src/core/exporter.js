@@ -6,7 +6,7 @@
  * That is, elements that have a "removeOnSave" css class.
  */
 
-import { cleanupHyperComments, removeReSpec } from "./utils.js";
+import { removeCommentNodes, removeReSpec } from "./utils.js";
 import { expose } from "./expose-modules.js";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub.js";
@@ -53,7 +53,7 @@ function serialize(format, doc) {
 
 function cleanup(cloneDoc) {
   const { head, body, documentElement } = cloneDoc;
-  cleanupHyperComments(cloneDoc);
+  removeCommentNodes(cloneDoc);
 
   cloneDoc
     .querySelectorAll(".removeOnSave, #toc-nav")

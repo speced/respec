@@ -827,20 +827,13 @@ export function makeSafeCopy(node) {
   const clone = node.cloneNode(true);
   clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
   clone.querySelectorAll("dfn").forEach(dfn => renameElement(dfn, "span"));
-  cleanupHyperComments(clone);
+  if (clone.hasAttribute("id")) clone.removeAttribute("id");
+  removeCommentNodes(clone);
   return clone;
 }
 
-export function cleanupHyperComments(node) {
-  // collect first, or walker will cease too early
-  /** @param {Comment} comment */
-  const filter = comment =>
-    comment.textContent.startsWith("-") && comment.textContent.endsWith("%");
-  const walker = document.createTreeWalker(
-    node,
-    NodeFilter.SHOW_COMMENT,
-    filter
-  );
+export function removeCommentNodes(node) {
+  const walker = document.createTreeWalker(node, NodeFilter.SHOW_COMMENT);
   for (const comment of [...walkTree(walker)]) {
     comment.remove();
   }
