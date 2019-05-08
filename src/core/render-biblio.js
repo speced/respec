@@ -225,7 +225,7 @@ export function stringifyReference(ref) {
   if (ref.authors && ref.authors.length) {
     output += ref.authors.join("; ");
     if (ref.etAl) output += " et al";
-    output += ".";
+    output += ". ";
   }
   if (ref.publisher) {
     output = `${output} ${endWithDot(ref.publisher)} `;
