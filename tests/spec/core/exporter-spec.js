@@ -28,9 +28,9 @@ describe("Core - exporter", () => {
     expect(doc.querySelectorAll(".removeOnSave").length).toBe(0);
   });
 
-  it("cleans up hyperHTML comments", async () => {
+  it("removes all comments", async () => {
     const ops = makeStandardOps();
-    ops.body = `<div><!---LEAVE%-->PASS<!-- STAY --></div>`;
+    ops.body = `<div><!-- remove -->PASS <span><!-- remove --></span></div>`;
     const doc = await getExportedDoc(ops);
 
     const walker = document.createTreeWalker(doc.body, NodeFilter.SHOW_COMMENT);
@@ -38,15 +38,7 @@ describe("Core - exporter", () => {
     while (walker.nextNode()) {
       comments.push(walker.currentNode);
     }
-
-    const hyperComments = comments.filter(
-      comment =>
-        comment.textContent.startsWith("-") && comment.textContent.endsWith("%")
-    );
-    expect(hyperComments.length).toBe(0);
-
-    expect(comments.length).toBe(1);
-    expect(comments[0].textContent.trim()).toBe("STAY");
+    expect(comments.length).toBe(0);
   });
 
   it("moves the W3C style sheet to be last thing in documents head", async () => {
