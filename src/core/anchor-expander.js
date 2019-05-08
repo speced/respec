@@ -1,5 +1,5 @@
 // expands empty anchors based on their context
-import { norm, renameElement, showInlineError } from "./utils.js";
+import { makeSafeCopy, norm, showInlineError } from "./utils.js";
 
 export const name = "core/anchor-expander";
 
@@ -60,8 +60,8 @@ function processBox(matchingElement, id, a) {
     showInlineError(a, msg, "Missing title.");
     return;
   }
-  const children = makeSafeCopy(selfLink);
-  a.append(...children);
+  const copy = makeSafeCopy(selfLink);
+  a.append(...copy.childNodes);
   a.classList.add("box-ref");
 }
 
@@ -74,7 +74,7 @@ function processFigure(matchingElement, id, a) {
     return;
   }
   // remove the figure's title
-  const children = [...makeSafeCopy(figcaption)].filter(
+  const children = [...makeSafeCopy(figcaption).childNodes].filter(
     node => !node.classList || !node.classList.contains("fig-title")
   );
   // drop an empty space at the end.
@@ -102,21 +102,12 @@ function processSection(matchingElement, id, a) {
 
 function processHeading(heading, a) {
   const hadSelfLink = heading.querySelector(".self-link");
-  const children = [...makeSafeCopy(heading)].filter(
+  const children = [...makeSafeCopy(heading).childNodes].filter(
     node => !node.classList || !node.classList.contains("self-link")
   );
   a.append(...children);
   if (hadSelfLink) a.prepend("§\u00A0");
   a.classList.add("sec-ref");
-}
-
-function makeSafeCopy(node) {
-  const clone = node.cloneNode(true);
-  clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
-  clone.querySelectorAll("dfn").forEach(dfn => renameElement(dfn, "span"));
-  return [...clone.childNodes].filter(
-    node => node.nodeType !== Node.COMMENT_NODE
-  );
 }
 
 function localize(matchingElement, newElement) {
