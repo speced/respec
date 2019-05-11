@@ -98,7 +98,7 @@
     "command-line-args": "^5.1.1",
     "command-line-usage": "^5.0.5",
     "epipebomb": "^1.0.0",
-    "fs-extra": "^7.0.1",
+    "fs-extra": "^8.0.0",
     "loading-indicator": "^2.0.0",
     "prompt": "^1.0.0",
     "puppeteer": "^1.15.0"
