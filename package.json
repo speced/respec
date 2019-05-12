@@ -99,7 +99,6 @@
     "command-line-args": "^5.1.1",
     "command-line-usage": "^5.0.5",
     "epipebomb": "^1.0.0",
-    "fs-extra": "^7.0.1",
     "loading-indicator": "^2.0.0",
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
