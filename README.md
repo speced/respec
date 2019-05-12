@@ -1,6 +1,6 @@
 # ReSpec
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/w3c/respec.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.org/w3c/respec.svg?branch=develop)](https://travis-ci.org/w3c/respec) [![Known Vulnerabilities](https://snyk.io/test/github/w3c/respec/badge.svg)](https://snyk.io/test/github/w3c/respec)
+[![Backers on Open Collective](https://opencollective.com/respec/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/respec/sponsors/badge.svg)](#sponsors) [![Greenkeeper badge](https://badges.greenkeeper.io/w3c/respec.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.org/w3c/respec.svg?branch=develop)](https://travis-ci.org/w3c/respec) [![Known Vulnerabilities](https://snyk.io/test/github/w3c/respec/badge.svg)](https://snyk.io/test/github/w3c/respec)
 
 ReSpec is a JS library that makes it easier to write technical specifications, or documents
 that tend to be technical in nature in general. It was originally designed for the purpose
@@ -48,3 +48,31 @@ Bibliographical references have been moved out of ReSpec. You want to use
 Please see our [developer guide](https://github.com/w3c/respec/wiki/Developers-Guide). 
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
+## Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/w3c/respec/graphs/contributors"><img src="https://opencollective.com/respec/contributors.svg?width=890&button=false" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/respec#backer)]
+
+<a href="https://opencollective.com/respec#backers" target="_blank"><img src="https://opencollective.com/respec/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/respec#sponsor)]
+
+<a href="https://opencollective.com/respec/sponsor/0/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/1/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/2/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/3/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/4/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/5/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/6/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/7/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/8/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/9/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/9/avatar.svg"></a>
