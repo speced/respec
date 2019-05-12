@@ -62,7 +62,9 @@ async function copyDeprecated() {
     await deleteFolder(depsPath);
     try {
       await fs.unlink(path.resolve("./js/core/css/github.css"));
-    } catch {}
+    } catch {
+      // File not found.
+    }
     await copyDeps();
     await copyDeprecated();
   } catch (err) {
