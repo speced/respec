@@ -15,7 +15,10 @@ export const name = "w3c/conformance";
 function processConformance(conformance, conf) {
   const terms = [...Object.keys(rfc2119Usage)];
   // Add RFC2119 to blibliography
-  if (terms.length) conf.normativeReferences.add("RFC2119");
+  if (terms.length) {
+    conf.normativeReferences.add("RFC2119");
+    conf.normativeReferences.add("RFC8174");
+  }
   // Put in the 2119 clause and reference
   const keywords = joinAnd(
     terms.sort(),
