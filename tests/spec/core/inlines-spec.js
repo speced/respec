@@ -41,7 +41,7 @@ describe("Core - Inlines", () => {
     expect(inform.map(el => el.textContent)).toEqual(["[infra]", "[webidl]"]);
 
     const links = [...doc.querySelectorAll("section cite a")];
-    expect(links.length).toBe(7);
+    expect(links.length).toBe(8);
     expect(links[0].textContent).toBe("RFC2119");
     expect(links[0].getAttribute("href")).toBe("#bib-rfc2119");
     expect(links[1].textContent).toBe("dom");
