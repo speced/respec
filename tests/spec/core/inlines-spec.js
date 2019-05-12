@@ -41,13 +41,15 @@ describe("Core - Inlines", () => {
     expect(inform.map(el => el.textContent)).toEqual(["[infra]", "[webidl]"]);
 
     const links = [...doc.querySelectorAll("section cite a")];
-    expect(links.length).toBe(7);
+    expect(links.length).toBe(8);
     expect(links[0].textContent).toBe("RFC2119");
     expect(links[0].getAttribute("href")).toBe("#bib-rfc2119");
-    expect(links[1].textContent).toBe("dom");
-    expect(links[1].getAttribute("href")).toBe("#bib-dom");
-    expect(links[5].textContent).toBe("svg");
-    expect(links[5].getAttribute("href")).toBe("#bib-svg");
+    expect(links[1].textContent).toBe("RFC8174");
+    expect(links[1].getAttribute("href")).toBe("#bib-rfc8174");
+    expect(links[2].textContent).toBe("dom");
+    expect(links[2].getAttribute("href")).toBe("#bib-dom");
+    expect(links[6].textContent).toBe("svg");
+    expect(links[6].getAttribute("href")).toBe("#bib-svg");
 
     const illegalCite = doc.querySelector("#illegal cite");
     expect(illegalCite.classList.contains("respec-offending-element")).toBe(
