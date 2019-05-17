@@ -834,8 +834,12 @@ export function makeSafeCopy(node) {
   return clone;
 }
 
+/**
+ * @param {Node} node
+ */
 export function removeCommentNodes(node) {
-  const walker = document.createTreeWalker(node, NodeFilter.SHOW_COMMENT);
+  const doc = node.ownerDocument || /** @type {Document} */ (node);
+  const walker = doc.createTreeWalker(node, 128 /* NodeFilter.SHOW_COMMENT */);
   for (const comment of [...walkTree(walker)]) {
     comment.remove();
   }

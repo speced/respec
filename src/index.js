@@ -21,8 +21,9 @@ export async function preprocess(doc, conf) {
     import("./w3c/headers.js"),
     import("./w3c/abstract.js"),
     import("./core/data-abbr.js"),
-    import("./core/inlines"),
+    import("./core/inlines.js"),
   ];
+
   for (const module of modules) {
     const loaded = await module;
     await loaded.default(respecDoc);
