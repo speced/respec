@@ -1,18 +1,16 @@
 // @ts-check
 // Module w3c/conformance
 // Handle the conformance section properly.
-import html from "hyperhtml";
+import html from "../../js/html-template.js";
 import { joinAnd } from "../core/utils.js";
-import { pub } from "../core/pubsubhub.js";
 import { renderInlineCitation } from "../core/render-biblio.js";
-import { rfc2119Usage } from "../core/inlines.js";
 export const name = "w3c/conformance";
 
 /**
  * @param {Element} conformance
  * @param {*} conf
  */
-function processConformance(conformance, conf) {
+function processConformance(conformance, rfc2119Usage, conf) {
   const terms = [...Object.keys(rfc2119Usage)];
   // Add RFC2119 to blibliography
   if (terms.length) {
@@ -48,12 +46,15 @@ function processConformance(conformance, conf) {
   conformance.prepend(...content.childNodes);
 }
 
-export function run(conf) {
+/**
+ * @param {import("../respec-document").RespecDocument} respecDoc
+ */
+export default function({ document, rfc2119Usage, configuration, hub }) {
   const conformance = document.querySelector("section#conformance");
   if (conformance) {
-    processConformance(conformance, conf);
+    processConformance(conformance, rfc2119Usage, configuration);
   }
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793
-  pub("end", name);
+  hub.pub("end", name);
 }

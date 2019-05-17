@@ -18,7 +18,6 @@ import { idlStringToHtml } from "./inline-idl-parser.js";
 import { renderInlineCitation } from "./render-biblio.js";
 
 export const name = "core/inlines";
-export const rfc2119Usage = {};
 
 // Inline `code`
 // TODO: Replace (?!`) at the end with (?:<!`) at the start when Firefox + Safari
@@ -38,8 +37,6 @@ function inlineRFC2119Matches(matched) {
   const normalize = matched.split(/\s+/).join(" ");
   /** @type {HTMLElement} */
   const nodeElement = hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`;
-  // remember which ones were used
-  rfc2119Usage[normalize] = true;
   return nodeElement;
 }
 
@@ -161,7 +158,7 @@ function processInlineContent(text) {
 /**
  * @param {import("../respec-document").RespecDocument} respecDoc
  */
-export default function({ document, configuration: conf }) {
+export default function({ document, rfc2119Usage, configuration: conf }) {
   const abbrMap = new Map();
   document.normalize();
   if (!document.querySelector("section#conformance")) {
@@ -243,6 +240,8 @@ export default function({ document, configuration: conf }) {
         df.append(node);
       } else if (keywords.test(t)) {
         const node = inlineRFC2119Matches(t);
+        // remember which ones were used
+        rfc2119Usage[node.textContent] = true;
         df.append(node);
       } else {
         // FAIL -- not sure that this can really happen

@@ -22,6 +22,7 @@ export async function preprocess(doc, conf) {
     import("./w3c/abstract.js"),
     import("./core/data-abbr.js"),
     import("./core/inlines.js"),
+    import("./w3c/conformance.js"),
   ];
 
   for (const module of modules) {

@@ -34,6 +34,10 @@ export async function createRespecDocument(doc, conf) {
     document,
     configuration,
     hub: new PubSubHub(),
+
+    /** @type {Record<string, boolean>} */
+    rfc2119Usage: {},
+
     get lang() {
       return document.documentElement.lang;
     },
