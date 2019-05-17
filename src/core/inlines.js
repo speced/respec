@@ -27,7 +27,7 @@ const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
 const inlineIdlReference = /(?:{{[^}]+}})/; // {{ WebIDLThing }}
 const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
-const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[A-Za-z0-9.-]+\]\]\])/; // [[[expand]]]
+const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 
 /**
@@ -96,7 +96,7 @@ function inlineBibrefMatches(matched, txt, conf) {
     showInlineWarning(
       cite.children[0], // cite element
       "Normative references in informative sections are not allowed. " +
-        `Remove '!' from the start of the reference \`[[!${ref}]]\``
+        `Remove '!' from the start of the reference \`[[${ref}]]\``
     );
   }
 

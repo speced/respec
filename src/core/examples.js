@@ -54,22 +54,10 @@ function makeTitle(elem, num, report) {
     : "";
   return html`
     <div class="marker">
-      <a class="self-link">${l10n.example}${number}</a>${title}
+      <a class="self-link">${l10n.example}<bdi>${number}</bdi></a
+      >${title}
     </div>
   `;
-}
-
-/**
- * Link <a href="#example">
- */
-function replaceEmptyAnchors() {
-  for (const [id, text] of examplesMap) {
-    [...document.querySelectorAll(`a[href="#${id}"]`)]
-      .filter(elem => elem.textContent.trim() === "")
-      .forEach(elem => {
-        elem.textContent = text;
-      });
-  }
 }
 
 export function run() {
@@ -139,6 +127,5 @@ export function run() {
       if (!inAside) pub("example", report);
       examplesMap.set(id, exampleTitle.textContent.trim());
     }
-    replaceEmptyAnchors();
   });
 }

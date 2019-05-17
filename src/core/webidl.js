@@ -102,6 +102,14 @@ function makeMarkup(parse, { suppressWarnings } = {}) {
       }
       return hyperHTML`<span class='idlSectionComment'>${t}</span>`;
     },
+    generic(wrapped) {
+      if (standardTypes.has(wrapped)) {
+        return hyperHTML`<a data-cite='${standardTypes.get(
+          wrapped
+        )}'>${wrapped}</a>`;
+      }
+      return hyperHTML`<a data-link-for="">${wrapped}</a>`;
+    },
     reference(wrapped, name) {
       if (standardTypes.has(name)) {
         return hyperHTML`<a data-cite='${standardTypes.get(
@@ -154,8 +162,7 @@ function createIdlAnchor(escaped, data, parentName, dfn) {
   const isDefaultJSON =
     data.type === "operation" &&
     data.name === "toJSON" &&
-    data.extAttrs &&
-    data.extAttrs.items.some(({ name }) => name === "Default");
+    data.extAttrs.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
     return hyperHTML`<a data-cite="WEBIDL#default-tojson-operation">${escaped}</a>`;
   }
@@ -216,8 +223,8 @@ function resolveNameAndId(defn, parent) {
       const overload = resolveOverload(name, parent);
       if (overload) {
         name += overload;
-      } else if (defn.body && defn.body.arguments.length) {
-        idlId += defn.body.arguments
+      } else if (defn.arguments.length) {
+        idlId += defn.arguments
           .map(arg => `-${arg.name.toLowerCase()}`)
           .join("");
       }

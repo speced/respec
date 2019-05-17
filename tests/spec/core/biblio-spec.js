@@ -38,11 +38,18 @@ describe("W3C — Bibliographic References", () => {
     BARBAR: {
       title: "The BARBAR Spec",
     },
+    EVERCOOKIE: {
+      authors: ["Samy Kamkar"],
+      href: "https://samy.pl/evercookie/",
+      title: "evercookie - virtually irrevocable persistent cookies",
+      date: "September 2010",
+    },
   };
   const body = `
     <section id='sotd'>
       <p>[[DOM]] [[dom]] [[fetch]] [[?FeTcH]] [[FETCh]] [[fetCH]]
       <p>foo [[TestRef1]] [[TestRef2]] [[TestRef3]]</p>
+      <p>[[EVERCOOKIE]]</p>
     </section>
     <section id='sample'>
       <h2>Privacy</h2>
@@ -67,8 +74,39 @@ describe("W3C — Bibliographic References", () => {
     specRefOk = (await fetch(bibRefsURL, { method: "HEAD" })).ok;
   });
 
+  it("displays references correctly", async () => {
+    const ref = doc.querySelector("#bib-evercookie + dd");
+    expect(ref.textContent).toBe(
+      "evercookie - virtually irrevocable persistent cookies. Samy Kamkar. September 2010. URL: https://samy.pl/evercookie/"
+    );
+  });
+
   it("pings biblio service to see if it's running", () => {
     expect(specRefOk).toBeTruthy();
+  });
+
+  it("includes the title of a spec for an inline citation, including aliases", async () => {
+    const body = `
+      <section id="conformance">
+        <p id="ref-local">[[LOCAL]]</p>
+        <p id="refs-dom">[[DOM4]] [[DOM]] [[dom]] [[dom4]]</p>
+      </section>
+    `;
+    const localBiblio = {
+      LOCAL: {
+        title: "Test ref title",
+        href: "http://test.com",
+      },
+    };
+    const ops = makeStandardOps({ localBiblio }, body);
+    const doc = await makeRSDoc(ops);
+
+    const refLocal = doc.querySelector("#ref-local a");
+    expect(refLocal.title).toBe("Test ref title");
+    const refsDom = doc.querySelectorAll("#refs-dom a");
+    expect(
+      [...refsDom].every(a => a.getAttribute("title") === "DOM Standard")
+    ).toBeTruthy();
   });
 
   it("includes a dns-prefetch to bibref server", () => {

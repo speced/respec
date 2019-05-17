@@ -6,10 +6,10 @@
  * That is, elements that have a "removeOnSave" css class.
  */
 
+import { removeCommentNodes, removeReSpec } from "./utils.js";
 import { expose } from "./expose-modules.js";
 import html from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
-import { removeReSpec } from "./utils.js";
 import { version } from "../../js/respec-version.js";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
@@ -64,7 +64,7 @@ function serialize(format, doc) {
  */
 export function cleanup(cloneDoc, hub) {
   const { head, body, documentElement } = cloneDoc;
-  cleanupHyper(cloneDoc);
+  removeCommentNodes(cloneDoc);
 
   cloneDoc
     .querySelectorAll(".removeOnSave, #toc-nav")
@@ -101,35 +101,6 @@ export function cleanup(cloneDoc, hub) {
   head.prepend(insertions);
   head.append(head.querySelector(".w3c-move-last"));
   hub.pub("beforesave", cloneDoc);
-}
-
-/**
- * @param {Document} document
- */
-function cleanupHyper(document) {
-  // collect first, or walker will cease too early
-  /** @param {Comment} comment */
-  const filter = comment =>
-    comment.textContent.startsWith("-") && comment.textContent.endsWith("%");
-  const walker = document.createTreeWalker(
-    document.documentElement,
-    128, // NodeFilter.SHOW_COMMENT
-    filter
-  );
-  for (const comment of [...walkTree(walker)]) {
-    comment.remove();
-  }
-}
-
-/**
- * @template {Node} T
- * @param {TreeWalker<T>} walker
- * @return {IterableIterator<T>}
- */
-function* walkTree(walker) {
-  while (walker.nextNode()) {
-    yield /** @type {T} */ (walker.currentNode);
-  }
 }
 
 expose("core/exporter", { rsDocToDataURL });

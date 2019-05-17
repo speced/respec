@@ -824,3 +824,30 @@ export class InsensitiveStringSet extends Set {
         );
   }
 }
+
+export function makeSafeCopy(node) {
+  const clone = node.cloneNode(true);
+  clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
+  clone.querySelectorAll("dfn").forEach(dfn => renameElement(dfn, "span"));
+  if (clone.hasAttribute("id")) clone.removeAttribute("id");
+  removeCommentNodes(clone);
+  return clone;
+}
+
+export function removeCommentNodes(node) {
+  const walker = document.createTreeWalker(node, NodeFilter.SHOW_COMMENT);
+  for (const comment of [...walkTree(walker)]) {
+    comment.remove();
+  }
+}
+
+/**
+ * @template {Node} T
+ * @param {TreeWalker<T>} walker
+ * @return {IterableIterator<T>}
+ */
+function* walkTree(walker) {
+  while (walker.nextNode()) {
+    yield /** @type {T} */ (walker.currentNode);
+  }
+}
