@@ -32,6 +32,7 @@ describe("Core - Inlines", () => {
       "[dom]",
       "[html]",
       "[RFC2119]", // added by conformance section
+      "[RFC8174]", // added by conformance section
       "[svg]",
     ]);
 
