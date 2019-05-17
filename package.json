@@ -30,7 +30,7 @@
     "chai": "^4.2.0",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
     "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.2.0",
+    "eslint-config-prettier": "^4.3.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.1.0",
     "exports-loader": "^0.7.0",
@@ -59,11 +59,11 @@
     "mocha": "^6.1.4",
     "moment": "^2.24.0",
     "pluralize": "^7.0.0",
-    "prettier": "^1.17.0",
+    "prettier": "^1.17.1",
     "raw-loader": "^2.0.0",
     "requirejs": "^2.3.6",
     "serve": "^11.0.0",
-    "snyk": "^1.163.3",
+    "snyk": "^1.165.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.4.5",
     "webidl2": "^21.0.0",
@@ -100,10 +100,10 @@
     "command-line-usage": "^5.0.5",
     "epipebomb": "^1.0.0",
     "loading-indicator": "^2.0.0",
+    "opencollective": "^1.0.3",
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
-    "puppeteer": "^1.15.0",
-    "opencollective": "^1.0.3"
+    "puppeteer": "^1.16.0"
   },
   "prettier": {
     "trailingComma": "es5"
