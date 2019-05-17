@@ -93,8 +93,7 @@ function createIdlAnchor(escaped, data, parent) {
   const isDefaultJSON =
     data.type === "operation" &&
     data.name === "toJSON" &&
-    data.extAttrs &&
-    data.extAttrs.items.some(({ name }) => name === "Default");
+    data.extAttrs.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
     return hyperHTML`<a data-lt="default toJSON operation">${escaped}</a>`;
   }
@@ -156,8 +155,8 @@ function resolveNameAndId(defn, parent) {
       const overload = resolveOverload(name, parent);
       if (overload) {
         name += overload;
-      } else if (defn.body && defn.body.arguments.length) {
-        idlId += defn.body.arguments
+      } else if (defn.arguments.length) {
+        idlId += defn.arguments
           .map(arg => `-${arg.name.toLowerCase()}`)
           .join("");
       }
