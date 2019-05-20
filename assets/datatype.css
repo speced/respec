@@ -1,7 +1,5 @@
 var {
-  position: relative;
   cursor: pointer;
-  display: inline-block;
 }
 
 var[data-type]::before,
