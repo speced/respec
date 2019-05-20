@@ -28,11 +28,11 @@ describe("Core - Inlines", () => {
     const doc = await makeRSDoc(ops);
 
     const norm = [...doc.querySelectorAll("#normative-references dt")];
-    expect(norm.length).toBe(4);
     expect(norm.map(el => el.textContent)).toEqual([
       "[dom]",
       "[html]",
       "[RFC2119]", // added by conformance section
+      "[RFC8174]", // added by conformance section
       "[svg]",
     ]);
 
