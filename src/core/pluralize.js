@@ -23,7 +23,7 @@ export default function({
 }) {
   if (!pluralize) return;
 
-  const pluralizeDfn = getPluralizer();
+  const pluralizeDfn = getPluralizer(document);
 
   /** @type {NodeListOf<HTMLElement>} */
   const dfns = document.querySelectorAll(
@@ -46,7 +46,10 @@ export default function({
   });
 }
 
-function getPluralizer() {
+/**
+ * @param {Document} document
+ */
+function getPluralizer(document) {
   /** @type {Set<string>} */
   const links = new Set();
   /** @type {NodeListOf<HTMLAnchorElement>} */
