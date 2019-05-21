@@ -30,8 +30,6 @@ const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 const l10n = localizationStrings[lang];
 
-const examplesMap = new Map();
-
 /**
  * @typedef {object} Report
  * @property {number} number
@@ -98,7 +96,6 @@ export function run() {
       const { id } = example;
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
-      examplesMap.set(id, div.textContent.trim());
       pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
@@ -125,7 +122,6 @@ export function run() {
       selfLink.href = `#${div.id}`;
       example.replaceWith(div);
       if (!inAside) pub("example", report);
-      examplesMap.set(id, exampleTitle.textContent.trim());
     }
   });
 }
