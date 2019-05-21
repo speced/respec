@@ -411,17 +411,15 @@ export function runTransforms(content, flist) {
 
 /**
  * Cached request handler
- * @param {Request} request
- * @param {Object} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
+ * @param {RequestInfo} input
+ * @param {number} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
  * @return {Promise<Response>}
  *  if a cached response is available and it's not stale, return it
  *  else: request from network, cache and return fresh response.
  *    If network fails, return a stale cached version if exists (else throw)
  */
-export async function fetchAndCache(request, maxAge = 86400000) {
-  if (typeof request === "string" || request instanceof URL) {
-    request = new Request(request);
-  }
+export async function fetchAndCache(input, maxAge) {
+  const request = new Request(input);
   const url = new URL(request.url);
 
   // use data from cache data if valid and render
