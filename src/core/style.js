@@ -22,7 +22,7 @@ async function loadStyle() {
   try {
     return (await import("text!../../assets/respec2.css")).default;
   } catch {
-    const loader = await import("./asset-loader");
+    const loader = await import("./asset-loader.js");
     return loader.loadAssetOnNode("respec2.css");
   }
 }

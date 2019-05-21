@@ -7,9 +7,8 @@
 // be used by a containing shell to extract all examples.
 
 import { addId } from "./utils.js";
-import css from "text!../../assets/examples.css";
 import { lang as defaultLang } from "../core/l10n.js";
-import html from "hyperhtml";
+import html from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/examples";
@@ -30,7 +29,14 @@ const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 const l10n = localizationStrings[lang];
 
-const examplesMap = new Map();
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/examples.css")).default;
+  } catch {
+    const loader = await import("./asset-loader.js");
+    return loader.loadAssetOnNode("examples.css");
+  }
+}
 
 /**
  * @typedef {object} Report
@@ -42,6 +48,7 @@ const examplesMap = new Map();
  * @param {HTMLElement} elem
  * @param {number} num
  * @param {Report} report
+ * @return {HTMLDivElement}
  */
 function makeTitle(elem, num, report) {
   report.title = elem.title;
@@ -52,6 +59,7 @@ function makeTitle(elem, num, report) {
         <span class="example-title">: ${report.title}</span>
       `
     : "";
+
   return html`
     <div class="marker">
       <a class="self-link">${l10n.example}<bdi>${number}</bdi></a
@@ -60,13 +68,17 @@ function makeTitle(elem, num, report) {
   `;
 }
 
-export function run() {
+/**
+ * @param {import("../respec-document").RespecDocument} respecDoc
+ */
+export default async function({ document }) {
   /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"
   );
   if (!examples.length) return;
 
+  const css = await loadStyle();
   document.head.insertBefore(
     html`
       <style>
@@ -96,9 +108,9 @@ export function run() {
         addId(example, `example`, String(number));
       }
       const { id } = example;
+      /** @type {HTMLAnchorElement} */
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
-      examplesMap.set(id, div.textContent.trim());
       pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
@@ -112,6 +124,7 @@ export function run() {
       const id = example.id ? example.id : null;
       if (id) example.removeAttribute("id");
       const exampleTitle = makeTitle(example, inAside ? 0 : number, report);
+      /** @type {HTMLDivElement} */
       const div = html`
         <div class="example" id="${id}">
           ${exampleTitle} ${example.cloneNode(true)}
@@ -121,11 +134,11 @@ export function run() {
         addId(div, `example-${number}`, title);
       }
       addId(div, `example`, String(number));
+      /** @type {HTMLAnchorElement} */
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${div.id}`;
       example.replaceWith(div);
       if (!inAside) pub("example", report);
-      examplesMap.set(id, exampleTitle.textContent.trim());
     }
   });
 }
