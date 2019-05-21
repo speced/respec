@@ -23,6 +23,7 @@ export async function preprocess(doc, conf) {
     import("./core/data-abbr.js"),
     import("./core/inlines.js"),
     import("./w3c/conformance.js"),
+    import("./core/dfn.js"),
   ];
 
   for (const module of modules) {

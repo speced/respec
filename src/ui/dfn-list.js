@@ -1,7 +1,6 @@
 // Module ui/dfn-list
 // Displays all definitions with links to the defining element.
 import { l10n, lang } from "../core/l10n.js";
-import { definitionMap } from "../core/dfn-map.js";
 import hyperHTML from "hyperhtml";
 import { ui } from "../core/ui.js";
 
@@ -22,7 +21,7 @@ ul.addEventListener("click", ev => {
 });
 
 function show() {
-  const definitionLinks = Object.entries(definitionMap)
+  const definitionLinks = [...window.respecDoc.definitionMap.entries()]
     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
     .map(([, [dfn]]) => {
       return hyperHTML.wire(dfn, ":li>a")`

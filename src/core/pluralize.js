@@ -10,12 +10,18 @@ import {
   singular as singularOf,
 } from "pluralize";
 import { norm as normalize } from "./utils.js";
-import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/pluralize";
 
-export function run(conf) {
-  if (!conf.pluralize) return;
+/**
+ * @param {import("../respec-document").RespecDocument} respecDoc
+ */
+export default function({
+  document,
+  definitionMap,
+  configuration: { pluralize },
+}) {
+  if (!pluralize) return;
 
   const pluralizeDfn = getPluralizer();
 
@@ -35,7 +41,7 @@ export function run(conf) {
         : [];
       const uniquePlurals = [...new Set([...userDefinedPlurals, ...plurals])];
       dfn.dataset.plurals = uniquePlurals.join("|");
-      registerDefinition(dfn, uniquePlurals);
+      definitionMap.registerDefinition(dfn, uniquePlurals);
     }
   });
 }

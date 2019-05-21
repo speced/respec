@@ -1,4 +1,5 @@
-import { PubSubHub } from "./core/pubsubhub";
+import { DefinitionMap } from "./core/dfn-map.js";
+import { PubSubHub } from "./core/pubsubhub.js";
 
 // @ts-check
 /**
@@ -36,7 +37,9 @@ export async function createRespecDocument(doc, conf) {
     hub: new PubSubHub(),
 
     /** @type {Record<string, boolean>} */
-    rfc2119Usage: {},
+    rfc2119Usage: Object.create(null),
+
+    definitionMap: new DefinitionMap(),
 
     get lang() {
       return document.documentElement.lang;

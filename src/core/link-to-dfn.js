@@ -11,7 +11,6 @@ import {
 } from "./utils.js";
 import { run as addExternalReferences } from "./xref.js";
 import { lang as defaultLang } from "./l10n.js";
-import { definitionMap } from "./dfn-map.js";
 import { linkInlineCitations } from "./data-cite.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
@@ -22,10 +21,12 @@ const l10n = {
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
 
-export async function run(conf) {
+/** @param {import("../respec-document").RespecDocument} respecDoc */
+export default async function run(respecDoc) {
+  const { configuration: conf, definitionMap } = respecDoc;
   document.normalize();
 
-  const titleToDfns = mapTitleToDfns();
+  const titleToDfns = mapTitleToDfns(definitionMap);
 
   /** @type {HTMLElement[]} */
   const possibleExternalLinks = [];
@@ -76,11 +77,12 @@ export async function run(conf) {
   pub("end", "core/link-to-dfn");
 }
 
-function mapTitleToDfns() {
+/** @param {Map<string, HTMLElement[]>} definitionMap */
+function mapTitleToDfns(definitionMap) {
   /** @type {Record<string, Record<string, HTMLElement>>} */
   const titleToDfns = {};
-  Object.keys(definitionMap).forEach(title => {
-    const { result, duplicates } = collectDfns(title);
+  definitionMap.forEach((_, title) => {
+    const { result, duplicates } = collectDfns(title, definitionMap);
     titleToDfns[title] = result;
     if (duplicates.length > 0) {
       showInlineError(
@@ -95,12 +97,13 @@ function mapTitleToDfns() {
 
 /**
  * @param {string} title
+ * @param {Map<string, HTMLElement[]>} definitionMap
  */
-function collectDfns(title) {
+function collectDfns(title, definitionMap) {
   /** @type {Record<string, HTMLElement>} */
   const result = {};
   const duplicates = [];
-  definitionMap[title].forEach(dfn => {
+  definitionMap.get(title).forEach(dfn => {
     if (dfn.dataset.idl === undefined) {
       // Non-IDL definitions aren't "for" an interface.
       delete dfn.dataset.dfnFor;
