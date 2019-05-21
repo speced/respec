@@ -418,7 +418,7 @@ export function runTransforms(content, flist) {
  *  else: request from network, cache and return fresh response.
  *    If network fails, return a stale cached version if exists (else throw)
  */
-export async function fetchAndCache(input, maxAge) {
+export async function fetchAndCache(input, maxAge = 86400000) {
   const request = new Request(input);
   const url = new URL(request.url);
 
