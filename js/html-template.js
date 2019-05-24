@@ -15,16 +15,30 @@
   "use strict";
   exports.__esModule = true;
   exports.default = (strings, ...args) => {
-    const normalized = args.map(normalizeArg);
+    const preprocessed = preprocessArgs(args);
     const result = (hypermorphic.default || hypermorphic)(
       strings,
-      ...normalized
+      ...preprocessed.result
     );
+    const fragment = createFragment(result);
+    restoreReplacements(fragment, preprocessed.nodes);
+    return fragment;
+  };
+
+  function createFragment(result) {
     if (result.constructor.name === "Buffer") {
       const { JSDOM } = require("jsdom");
       const fragment = JSDOM.fragment(result.toString());
-      if (fragment.childNodes.length === 1) {
-        return fragment.childNodes[0];
+      const { childNodes } = fragment;
+      if (childNodes.length === 1) {
+        return childNodes[0];
+      }
+      if (fragment.children.length) {
+        removeIfEmptyText(childNodes[0]);
+        removeIfEmptyText(childNodes[childNodes.length - 1]);
+        if (childNodes.length === 1) {
+          return childNodes[0];
+        }
       }
       return fragment;
     } else if (!(result instanceof Node)) {
@@ -33,20 +47,45 @@
       return fragment;
     }
     return result;
-  };
+  }
 
-  function normalizeArg(arg) {
-    if (!Array.isArray(arg)) {
-      const html = getOuterHTML(arg);
-      if (html) {
-        return [html];
+  function preprocessArgs(args) {
+    function iterative(arg) {
+      if (arg == null) {
+        return arg;
+      } else if (arg.nodeType) {
+        nodes.push(arg);
+        return [replacement];
+      } else if (!Array.isArray(arg) || !(arg.find(_ => _) || {}).nodeType) {
+        return arg;
       }
-      return arg;
+      nodes.push(...arg);
+      return [arg.map(_ => replacement).join("")];
     }
-    if (!arg.length || typeof arg[0] === "string") {
-      return arg;
+
+    const replacement = "<respec-replacement></respec-replacement>";
+    const nodes = [];
+    const result = args.map(iterative);
+    return { result, nodes };
+  }
+
+  function restoreReplacements(target, nodes) {
+    if (target.localName === "respec-replacement") {
+      target.replaceWith(nodes[0]);
+      return;
+    } else if (!target.childNodes.length) {
+      return;
     }
-    return arg.map(getOuterHTML);
+    const reps = target.querySelectorAll("respec-replacement");
+    for (const [i, rep] of reps.entries()) {
+      rep.replaceWith(nodes[i]);
+    }
+  }
+
+  function removeIfEmptyText(node) {
+    if (node.nodeType === node.TEXT_NODE && !node.textContent.trim()) {
+      node.remove();
+    }
   }
 
   function getOuterHTML(node) {
