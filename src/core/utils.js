@@ -4,6 +4,7 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
+import fetch from "./fetch.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
@@ -414,23 +415,24 @@ export function runTransforms(content, flist) {
 /**
  * Cached request handler
  * @param {RequestInfo} input
- * @param {number} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
+ * @param {RequestInit} [init]
+ * @param {number} [init.maxAge] cache expiration duration in ms. defaults to 24 hours (86400000 ms)
  * @return {Promise<Response>}
  *  if a cached response is available and it's not stale, return it
  *  else: request from network, cache and return fresh response.
  *    If network fails, return a stale cached version if exists (else throw)
  */
-export async function fetchAndCache(input, maxAge = 86400000) {
-  const request = new Request(input);
-  const url = new URL(request.url);
+export async function fetchAndCache(input, init = {}) {
+  const { maxAge = 86400000 } = init;
 
   // use data from cache data if valid and render
   let cache;
   let cachedResponse;
-  if ("caches" in window) {
+  if (typeof caches !== "undefined") {
+    const url = new URL(new Request(input).url);
     try {
       cache = await caches.open(url.origin);
-      cachedResponse = await cache.match(request);
+      cachedResponse = await cache.match(input);
       if (
         cachedResponse &&
         new Date(cachedResponse.headers.get("Expires")) > new Date()
@@ -443,11 +445,11 @@ export async function fetchAndCache(input, maxAge = 86400000) {
   }
 
   // otherwise fetch new data and cache
-  const response = await fetch(request);
+  const response = await fetch(input, init);
   if (!response.ok) {
     if (cachedResponse) {
       // return stale version
-      console.warn(`Returning a stale cached response for ${url}`);
+      console.warn(`Returning a stale cached response for ${response.url}`);
       return cachedResponse;
     }
   }
@@ -462,7 +464,7 @@ export async function fetchAndCache(input, maxAge = 86400000) {
       headers: customHeaders,
     });
     // put in cache, and forget it (there is no recovery if it throws, but that's ok).
-    await cache.put(request, cacheResponse).catch(console.error);
+    await cache.put(input, cacheResponse).catch(console.error);
   }
   return response;
 }

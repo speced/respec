@@ -32,7 +32,7 @@ const MDN_BROWSERS = {
 
 function fetchAndCacheJson(url, maxAge) {
   if (!url) return {};
-  return fetchAndCache(url, maxAge).then(r => r.json());
+  return fetchAndCache(url, { maxAge }).then(r => r.json());
 }
 
 function insertMDNBox(node) {

@@ -12,10 +12,9 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, joinAnd, parents } from "./utils.js";
-import css from "text!../../assets/issues-notes.css";
 import { lang as defaultLang } from "../core/l10n.js";
 import { fetchAndStoreGithubIssues } from "./github-api.js";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
 
 /**
@@ -44,14 +43,24 @@ const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 const l10n = localizationStrings[lang];
 
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/issues-notes.css")).default;
+  } catch {
+    const loader = await import("./asset-loader.js");
+    return loader.loadAssetOnNode("issues-notes.css");
+  }
+}
+
 /**
  * @typedef {{ type: string, inline: boolean, number: number, title: string }} Report
  *
+ * @param {Document} document
  * @param {NodeListOf<HTMLElement>} ins
  * @param {Map<number, GitHubIssue>} ghIssues
  * @param {*} conf
  */
-function handleIssues(ins, ghIssues, conf) {
+function handleIssues(document, ins, ghIssues, conf) {
   const hasDataNum = !!document.querySelector(".issue[data-number]");
   let issueNum = 0;
   const issueList = document.createElement("ul");
@@ -76,10 +85,13 @@ function handleIssues(ins, ghIssues, conf) {
     if (!isInline) {
       const cssClass = isFeatureAtRisk ? `${type} atrisk` : type;
       const ariaRole = type === "note" ? "note" : null;
+      /** @type {HTMLDivElement} */
       const div = hyperHTML`<div class="${cssClass}" role="${ariaRole}"></div>`;
       const title = document.createElement("span");
+      /** @type {HTMLDivElement} */
       const titleParent = hyperHTML`
         <div role='heading' class='${`${type}-title marker`}'>${title}</div>`;
+      console.log(titleParent.constructor.name);
       addId(titleParent, "h", type);
       let text = displayType;
       if (inno.id) {
@@ -133,17 +145,15 @@ function handleIssues(ins, ghIssues, conf) {
       body.classList.remove(type);
       body.removeAttribute("data-number");
       if (ghIssue && !body.innerHTML.trim()) {
-        body = document
-          .createRange()
-          .createContextualFragment(ghIssue.body_html);
+        body = hyperHTML`${[ghIssue.body_html]}`;
       }
       div.append(titleParent, body);
       const level = parents(titleParent, "section").length + 2;
-      titleParent.setAttribute("aria-level", level);
+      titleParent.setAttribute("aria-level", String(level));
     }
     pub(report.type, report);
   });
-  makeIssueSectionSummary(issueList);
+  makeIssueSectionSummary(document, issueList);
 }
 
 /**
@@ -179,6 +189,7 @@ function getIssueType(inno, conf) {
 /**
  * @param {string} dataNum
  * @param {*} conf
+ * @return {HTMLAnchorElement}
  */
 function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
   // Set issueBase to cause issue to be linked to the external issue tracker
@@ -204,10 +215,10 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
 }
 
 /**
- *
+ * @param {Document} document
  * @param {HTMLUListElement} issueList
  */
-function makeIssueSectionSummary(issueList) {
+function makeIssueSectionSummary(document, issueList) {
   const issueSummaryElement = document.getElementById("issue-summary");
   if (!issueSummaryElement) return;
   const heading = issueSummaryElement.querySelector("h2, h3, h4, h5, h6");
@@ -244,7 +255,7 @@ function createLabelsGroup(labels, title, repoURL) {
   const labelNames = labels.map(label => label.name);
   const joinedNames = joinAnd(labelNames);
   if (labelsGroup.length) {
-    labelsGroup.unshift(document.createTextNode(" "));
+    labelsGroup.unshift(labelsGroup[0].ownerDocument.createTextNode(" "));
   }
   if (labelNames.length) {
     const ariaLabel = `This issue is labelled as ${joinedNames}.`;
@@ -273,7 +284,10 @@ function createLabel(label, repoURL) {
     href="${issuesURL.href}">${name}</a>`;
 }
 
-export async function run(conf) {
+/**
+ * @param {import("../respec-document").RespecDocument} respecDoc
+ */
+export default async function({ document, configuration: conf }) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
   const issuesAndNotes = document.querySelectorAll(query);
@@ -282,14 +296,15 @@ export async function run(conf) {
   }
   /** @type {Map<number, GitHubIssue>} */
   const ghIssues = conf.githubAPI
-    ? await fetchAndStoreGithubIssues(conf)
+    ? await fetchAndStoreGithubIssues(document, conf)
     : new Map();
   const { head: headElem } = document;
+  const css = await loadStyle();
   headElem.insertBefore(
     hyperHTML`<style>${[css]}</style>`,
     headElem.querySelector("link")
   );
-  handleIssues(issuesAndNotes, ghIssues, conf);
+  handleIssues(document, issuesAndNotes, ghIssues, conf);
   const ednotes = document.querySelectorAll(".ednote");
   ednotes.forEach(ednote => {
     ednote.classList.remove("ednote");

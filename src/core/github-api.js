@@ -1,3 +1,4 @@
+import fetch from "./fetch.js";
 import { fetchAndCache } from "./utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github-api";
@@ -33,7 +34,7 @@ export function checkLimitReached(response) {
   return false;
 }
 
-export async function fetchAndStoreGithubIssues(conf) {
+export async function fetchAndStoreGithubIssues(document, conf) {
   const { githubAPI } = conf;
   const specIssues = document.querySelectorAll(".issue[data-number]");
   const issuePromises = [...specIssues]
@@ -42,12 +43,11 @@ export async function fetchAndStoreGithubIssues(conf) {
     .map(async issueNumber => {
       const issueURL = `${githubAPI}/issues/${issueNumber}`;
       const headers = githubRequestHeaders(conf);
-      const request = new Request(issueURL, {
+      const response = await fetchAndCache(issueURL, {
         mode: "cors",
         referrerPolicy: "no-referrer",
         headers,
       });
-      const response = await fetchAndCache(request);
       return processResponse(response, issueNumber);
     });
   const issues = await Promise.all(issuePromises);
@@ -96,9 +96,12 @@ export async function fetchAll(url, headers, output = []) {
   if (urlObj.searchParams && !urlObj.searchParams.has("per_page")) {
     urlObj.searchParams.append("per_page", "100");
   }
-  const request = new Request(urlObj, { headers });
-  request.headers.set("Accept", "application/vnd.github.v3+json");
-  const response = await fetch(request);
+  const response = await fetch(urlObj, {
+    headers: {
+      ...headers,
+      Accept: "application/vnd.github.v3+json",
+    },
+  });
   const json = await response.json();
   if (Array.isArray(json)) {
     output.push(...json);

@@ -67,7 +67,7 @@ describe("Core - Utils", () => {
 
     it("allows overriding the default cache time", async () => {
       const url = `${location.origin}/tests/data/pass.txt`;
-      const cachedResponse = await utils.fetchAndCache(url, 0);
+      const cachedResponse = await utils.fetchAndCache(url, { maxAge: 0 });
       expect(cachedResponse.headers.has("Expires")).toBe(true);
       const cacheTime = new Date(
         cachedResponse.headers.get("Expires")

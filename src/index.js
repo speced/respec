@@ -26,6 +26,7 @@ export async function preprocess(doc, conf) {
     import("./core/dfn.js"),
     import("./core/pluralize.js"),
     import("./core/examples.js"),
+    import("./core/issues-notes.js"),
   ];
 
   for (const module of modules) {
