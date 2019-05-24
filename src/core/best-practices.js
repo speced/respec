@@ -4,8 +4,7 @@
 // The summary is generated if there is a section in the document with ID bp-summary.
 // Best practices are marked up with span.practicelab.
 import { addId, makeSafeCopy } from "./utils.js";
-import { lang as defaultLang } from "../core/l10n.js";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/best-practices";
@@ -15,15 +14,15 @@ const localizationStrings = {
     best_practice: "Best Practice ",
   },
 };
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
-export function run() {
+/** @param {import("../respec-document").RespecDocument} respecDoc */
+export default function({ document, lang }) {
   /** @type {NodeListOf<HTMLElement>} */
   const bps = document.querySelectorAll(".practicelab");
   const l10n = localizationStrings[lang];
   const bpSummary = document.getElementById("bp-summary");
   const summaryItems = bpSummary ? document.createElement("ul") : null;
-  [...bps].forEach((bp, num) => {
+  bps.forEach((bp, num) => {
     const id = addId(bp, "bp");
     const localizedBpName = hyperHTML`
       <a class="marker self-link" href="${`#${id}`}"><bdi lang="${lang}">${

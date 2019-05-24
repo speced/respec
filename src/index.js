@@ -28,6 +28,7 @@ export async function preprocess(doc, conf) {
     import("./core/examples.js"),
     import("./core/issues-notes.js"),
     import("./core/requirements.js"),
+    import("./core/best-practices.js"),
   ];
 
   for (const module of modules) {
