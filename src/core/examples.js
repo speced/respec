@@ -7,7 +7,6 @@
 // be used by a containing shell to extract all examples.
 
 import { addId } from "./utils.js";
-import { lang as defaultLang } from "../core/l10n.js";
 import html from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
 
@@ -24,10 +23,6 @@ const localizationStrings = {
     example: "Ejemplo",
   },
 };
-
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
 
 async function loadStyle() {
   try {
@@ -48,9 +43,10 @@ async function loadStyle() {
  * @param {HTMLElement} elem
  * @param {number} num
  * @param {Report} report
+ * @param {*} l10n
  * @return {HTMLDivElement}
  */
-function makeTitle(elem, num, report) {
+function makeTitle(elem, num, report, l10n) {
   report.title = elem.title;
   if (report.title) elem.removeAttribute("title");
   const number = num > 0 ? ` ${num}` : "";
@@ -71,12 +67,14 @@ function makeTitle(elem, num, report) {
 /**
  * @param {import("../respec-document").RespecDocument} respecDoc
  */
-export default async function({ document }) {
+export default async function({ document, lang }) {
   /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"
   );
   if (!examples.length) return;
+
+  const l10n = localizationStrings[lang];
 
   const css = await loadStyle();
   document.head.insertBefore(
@@ -99,7 +97,7 @@ export default async function({ document }) {
     const { title } = example;
     if (example.localName === "aside") {
       ++number;
-      const div = makeTitle(example, number, report);
+      const div = makeTitle(example, number, report, l10n);
       example.prepend(div);
       if (title) {
         addId(example, `example-${number}`, title); // title gets used
@@ -123,7 +121,12 @@ export default async function({ document }) {
       // relocate the id to the div
       const id = example.id ? example.id : null;
       if (id) example.removeAttribute("id");
-      const exampleTitle = makeTitle(example, inAside ? 0 : number, report);
+      const exampleTitle = makeTitle(
+        example,
+        inAside ? 0 : number,
+        report,
+        l10n
+      );
       /** @type {HTMLDivElement} */
       const div = html`
         <div class="example" id="${id}">

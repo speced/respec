@@ -12,7 +12,6 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, joinAnd, parents } from "./utils.js";
-import { lang as defaultLang } from "../core/l10n.js";
 import { fetchAndStoreGithubIssues } from "./github-api.js";
 import hyperHTML from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
@@ -39,10 +38,6 @@ const localizationStrings = {
   },
 };
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/issues-notes.css")).default;
@@ -59,8 +54,9 @@ async function loadStyle() {
  * @param {NodeListOf<HTMLElement>} ins
  * @param {Map<number, GitHubIssue>} ghIssues
  * @param {*} conf
+ * @param {*} l10n
  */
-function handleIssues(document, ins, ghIssues, conf) {
+function handleIssues(document, ins, ghIssues, conf, l10n) {
   const hasDataNum = !!document.querySelector(".issue[data-number]");
   let issueNum = 0;
   const issueList = document.createElement("ul");
@@ -153,7 +149,7 @@ function handleIssues(document, ins, ghIssues, conf) {
     }
     pub(report.type, report);
   });
-  makeIssueSectionSummary(document, issueList);
+  makeIssueSectionSummary(document, issueList, l10n);
 }
 
 /**
@@ -217,8 +213,9 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
 /**
  * @param {Document} document
  * @param {HTMLUListElement} issueList
+ * @param {*} l10n
  */
-function makeIssueSectionSummary(document, issueList) {
+function makeIssueSectionSummary(document, issueList, l10n) {
   const issueSummaryElement = document.getElementById("issue-summary");
   if (!issueSummaryElement) return;
   const heading = issueSummaryElement.querySelector("h2, h3, h4, h5, h6");
@@ -287,13 +284,14 @@ function createLabel(label, repoURL) {
 /**
  * @param {import("../respec-document").RespecDocument} respecDoc
  */
-export default async function({ document, configuration: conf }) {
+export default async function({ document, configuration: conf, lang }) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
   const issuesAndNotes = document.querySelectorAll(query);
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
+  const l10n = localizationStrings[lang];
   /** @type {Map<number, GitHubIssue>} */
   const ghIssues = conf.githubAPI
     ? await fetchAndStoreGithubIssues(document, conf)
@@ -304,7 +302,7 @@ export default async function({ document, configuration: conf }) {
     hyperHTML`<style>${[css]}</style>`,
     headElem.querySelector("link")
   );
-  handleIssues(document, issuesAndNotes, ghIssues, conf);
+  handleIssues(document, issuesAndNotes, ghIssues, conf, l10n);
   const ednotes = document.querySelectorAll(".ednote");
   ednotes.forEach(ednote => {
     ednote.classList.remove("ednote");

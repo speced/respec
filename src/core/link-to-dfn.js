@@ -10,7 +10,6 @@ import {
   wrapInner,
 } from "./utils.js";
 import { run as addExternalReferences } from "./xref.js";
-import { lang as defaultLang } from "./l10n.js";
 import { linkInlineCitations } from "./data-cite.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
@@ -19,14 +18,12 @@ const l10n = {
     duplicate: "This is defined more than once in the document.",
   },
 };
-const lang = defaultLang in l10n ? defaultLang : "en";
 
 /** @param {import("../respec-document").RespecDocument} respecDoc */
-export default async function run(respecDoc) {
-  const { configuration: conf, definitionMap } = respecDoc;
+export default async function({ configuration: conf, definitionMap, lang }) {
   document.normalize();
 
-  const titleToDfns = mapTitleToDfns(definitionMap);
+  const titleToDfns = mapTitleToDfns(definitionMap, lang);
 
   /** @type {HTMLElement[]} */
   const possibleExternalLinks = [];
@@ -77,8 +74,11 @@ export default async function run(respecDoc) {
   pub("end", "core/link-to-dfn");
 }
 
-/** @param {Map<string, HTMLElement[]>} definitionMap */
-function mapTitleToDfns(definitionMap) {
+/**
+ * @param {Map<string, HTMLElement[]>} definitionMap
+ * @param {string} lang
+ */
+function mapTitleToDfns(definitionMap, lang) {
   /** @type {Record<string, Record<string, HTMLElement>>} */
   const titleToDfns = {};
   definitionMap.forEach((_, title) => {
