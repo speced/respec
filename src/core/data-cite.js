@@ -16,7 +16,7 @@
  */
 import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
 import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils.js";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template.js";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {
@@ -127,7 +127,10 @@ function citeDetailsConverter(conf) {
   };
 }
 
-export async function run(conf) {
+/**
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default async function({ document, configuration: conf }) {
   const toCiteDetails = citeDetailsConverter(conf);
   /** @type {NodeListOf<HTMLElement>} */
   const cites = document.querySelectorAll("dfn[data-cite], a[data-cite]");
