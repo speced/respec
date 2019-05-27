@@ -20,7 +20,12 @@ const l10n = {
 };
 
 /** @param {import("../respec-document").RespecDocument} respecDoc */
-export default async function({ configuration: conf, definitionMap, lang }) {
+export default async function({
+  document,
+  configuration: conf,
+  definitionMap,
+  lang,
+}) {
   document.normalize();
 
   const titleToDfns = mapTitleToDfns(definitionMap, lang);

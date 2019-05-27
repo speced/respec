@@ -30,6 +30,7 @@ export async function preprocess(doc, conf) {
     import("./core/requirements.js"),
     import("./core/best-practices.js"),
     import("./core/figures.js"),
+    import("./core/webidl.js"),
   ];
 
   for (const module of modules) {

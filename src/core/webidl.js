@@ -5,9 +5,8 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import * as webidl2 from "webidl2";
-import css from "text!../../assets/webidl.css";
 import { flatten } from "./utils.js";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/webidl";
@@ -86,13 +85,22 @@ const standardTypes = new Map([
 const operationNames = {};
 const idlPartials = {};
 
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/webidl.css")).default;
+  } catch {
+    const loader = await import("./asset-loader.js");
+    return loader.loadAssetOnNode("webidl.css");
+  }
+}
+
 // Takes the result of WebIDL2.parse(), an array of definitions.
-function makeMarkup(parse, definitionMap, { suppressWarnings } = {}) {
+function makeMarkup(parse, document, definitionMap, { suppressWarnings } = {}) {
   const templates = {
     wrap(items) {
       return items
         .reduce(flatten, [])
-        .map(x => (typeof x === "string" ? new Text(x) : x));
+        .map(x => (typeof x === "string" ? document.createTextNode(x) : x));
     },
     trivia(t) {
       if (!t.trim()) {
@@ -281,7 +289,7 @@ function getDefnName(defn) {
 /**
  * @param {import("../respec-document").RespecDocument} respecDoc
  */
-export default function({ document, definitionMap }) {
+export default async function({ document, definitionMap }) {
   const idls = document.querySelectorAll("pre.idl");
   if (!idls.length) {
     return;
@@ -290,7 +298,7 @@ export default function({ document, definitionMap }) {
     const link = document.querySelector("head link");
     if (link) {
       const style = document.createElement("style");
-      style.textContent = css;
+      style.textContent = await loadStyle();
       link.before(style);
     }
   }
@@ -310,7 +318,7 @@ export default function({ document, definitionMap }) {
       // Skip this <pre> and move on to the next one.
       return;
     }
-    const newElement = makeMarkup(parse, definitionMap, {
+    const newElement = makeMarkup(parse, document, definitionMap, {
       suppressWarnings: idlElement.classList.contains("no-link-warnings"),
     });
     if (idlElement.id) newElement.id = idlElement.id;
