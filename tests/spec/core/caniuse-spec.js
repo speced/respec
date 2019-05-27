@@ -8,7 +8,7 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
-describe("Core — Can I Use", () => {
+fdescribe("Core — Can I Use", () => {
   afterAll(flushIframes);
   const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.json`;
 
@@ -69,7 +69,7 @@ describe("Core — Can I Use", () => {
 
     const link = doc.querySelector(".caniuse-stats a");
     expect(link.textContent).toBe("caniuse.com");
-    expect(link.href).toBe("https://caniuse.com/#feat=FEATURE");
+    expect(link.href).toBe("https://caniuse.com/FEATURE");
   });
 
   it("shows caniuse browser support table", async () => {
@@ -87,7 +87,7 @@ describe("Core — Can I Use", () => {
     const stats = doc.querySelector(".caniuse-stats");
 
     const moreInfoLink = stats.querySelector("a");
-    expect(moreInfoLink.href).toBe("https://caniuse.com/#feat=FEATURE");
+    expect(moreInfoLink.href).toBe("https://caniuse.com/FEATURE");
     expect(moreInfoLink.textContent.trim()).toBe("More info");
 
     const browsers = stats.querySelectorAll(".caniuse-browser");
