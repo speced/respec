@@ -30,7 +30,7 @@ async function toHTML(urls, editors, element, headers) {
   const args = await Promise.all(
     urls
       .map(url =>
-        fetch(new Request(url, { headers })).then(r => {
+        fetch(url, { headers }).then(r => {
           if (checkLimitReached(r)) return null;
           return r.json();
         })
@@ -60,7 +60,7 @@ export async function run(conf) {
   }
 
   const headers = githubRequestHeaders(conf);
-  const response = await fetch(new Request(githubAPI, { headers }));
+  const response = await fetch(githubAPI, { headers });
   checkLimitReached(response);
   if (!response.ok) {
     const msg =

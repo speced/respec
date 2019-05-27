@@ -27,7 +27,6 @@ export function checkLimitReached(response) {
       checkLimitReached.warned = true;
       const msg = `You have run out of github requests. Some github assets will not show up.`;
       pub("warning", msg);
-      window.pub = pub;
     }
     return true;
   }
