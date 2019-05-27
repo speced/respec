@@ -35,6 +35,8 @@ var[data-type]::after {
   padding: 6px;
   border-radius: 3px;
   color: #daca88;
+  text-indent: 0;
+  font-weight: normal;
 }
 
 var[data-type]:hover::after,
