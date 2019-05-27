@@ -8,7 +8,7 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
-fdescribe("Core — Can I Use", () => {
+describe("Core — Can I Use", () => {
   afterAll(flushIframes);
   const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.json`;
 
