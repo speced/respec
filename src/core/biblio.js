@@ -7,6 +7,7 @@
 /* globals console */
 import { biblioDB } from "./biblio-db.js";
 import { createResourceHint } from "./utils.js";
+import fetch from "./fetch.js";
 import { pub } from "./pubsubhub.js";
 export const biblio = {};
 
@@ -67,7 +68,8 @@ export async function updateFromNetwork(
 ) {
   const refsToFetch = [...new Set(refs)].filter(ref => ref.trim());
   // Update database if needed, if we are online
-  if (!refsToFetch.length || navigator.onLine === false) {
+  const offline = typeof navigator !== "undefined" && !navigator.onLine;
+  if (!refsToFetch.length || offline) {
     return null;
   }
   let response;

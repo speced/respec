@@ -87,7 +87,6 @@ function handleIssues(document, ins, ghIssues, conf, l10n) {
       /** @type {HTMLDivElement} */
       const titleParent = hyperHTML`
         <div role='heading' class='${`${type}-title marker`}'>${title}</div>`;
-      console.log(titleParent.constructor.name);
       addId(titleParent, "h", type);
       let text = displayType;
       if (inno.id) {

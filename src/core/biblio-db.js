@@ -18,7 +18,7 @@ const ALLOWED_TYPES = new Set(["alias", "reference"]);
  */
 const readyPromise = new Promise((resolve, reject) => {
   if (typeof indexedDB === "undefined") {
-    return;
+    return reject(new Error("IndexedDB API is not available"));
   }
   let request;
   try {
