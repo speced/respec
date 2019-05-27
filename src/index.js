@@ -29,6 +29,7 @@ export async function preprocess(doc, conf) {
     import("./core/issues-notes.js"),
     import("./core/requirements.js"),
     import("./core/best-practices.js"),
+    import("./core/figures.js"),
   ];
 
   for (const module of modules) {

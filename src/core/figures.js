@@ -5,8 +5,7 @@
 // Generates a Table of Figures wherever there is a #tof element.
 
 import { addId, renameElement, showInlineWarning, wrapInner } from "./utils.js";
-import { lang as defaultLang } from "../core/l10n.js";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template.js";
 
 export const name = "core/figures";
 
@@ -37,14 +36,12 @@ const localizationStrings = {
   },
 };
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
-
-export function run() {
+/** @param {import("../respec-document").RespecDocument} respecDoc */
+export default function({ document, lang }) {
   normalizeImages(document);
 
-  const tof = collectFigures();
+  const l10n = localizationStrings[lang];
+  const tof = collectFigures(document, l10n);
 
   // Create a Table of Figures if a section with id 'tof' exists.
   const tofElement = document.getElementById("tof");
@@ -59,15 +56,17 @@ export function run() {
 
 /**
  * process all figures
+ * @param {Document} document
+ * @param {*} l10n
  */
-function collectFigures() {
+function collectFigures(document, l10n) {
   /** @type {HTMLElement[]} */
   const tof = [];
   document.querySelectorAll("figure").forEach((fig, i) => {
     const caption = fig.querySelector("figcaption");
 
     if (caption) {
-      decorateFigure(fig, caption, i);
+      decorateFigure(fig, caption, i, l10n);
     } else {
       showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
     }
@@ -82,7 +81,7 @@ function collectFigures() {
  * @param {HTMLElement} caption
  * @param {number} i
  */
-function decorateFigure(figure, caption, i) {
+function decorateFigure(figure, caption, i, l10n) {
   const title = caption.textContent;
   addId(figure, "fig", title);
   // set proper caption title
