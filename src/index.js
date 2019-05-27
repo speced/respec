@@ -33,6 +33,7 @@ export async function preprocess(doc, conf) {
     import("./core/webidl.js"),
     import("./core/data-cite.js"),
     import("./core/biblio.js"),
+    import("./core/webidl-index.js"),
   ];
 
   for (const module of modules) {

@@ -13,7 +13,10 @@
 export const name = "core/webidl-index";
 import { nonNormativeSelector } from "./utils.js";
 
-export function run() {
+/**
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default function({ document }) {
   const idlIndexSec = document.querySelector("section#idl-index");
   if (!idlIndexSec) {
     return;
