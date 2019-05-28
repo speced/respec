@@ -42,7 +42,7 @@ const templates = {
     const { tokens } = context;
     let type = "_IDL_";
     let cite = null;
-    let lt = null;
+    let lt;
     switch (unescaped) {
       case "Window":
         type = "interface";
@@ -51,10 +51,19 @@ const templates = {
       case "object":
         type = "interface";
         cite = "WebIDL";
-    }
-    const isWorkerType = unescaped.includes("Worker");
-    if (isWorkerType && tokens && tokens.name.value === "Exposed") {
-      lt = `${unescaped}GlobalScope`;
+        break;
+      default: {
+        const isWorkerType = unescaped.includes("Worker");
+        if (isWorkerType && tokens && tokens.name.value === "Exposed") {
+          lt = `${unescaped}GlobalScope`;
+          type = "interface";
+          cite = ["Worker", "DedicatedWorker", "SharedWorker"].includes(
+            unescaped
+          )
+            ? "HTML"
+            : null;
+        }
+      }
     }
     return hyperHTML`<a
       data-xref-type="${type}" data-cite="${cite}" data-lt="${lt}">${wrapped}</a>`;
