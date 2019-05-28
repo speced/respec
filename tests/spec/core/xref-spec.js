@@ -144,7 +144,7 @@ describe("Core — xref", () => {
 
   it("does nothing if xref is not enabled", async () => {
     const body = `<a id="external-link">event handler</a>`;
-    const ops = makeStandardOps(null, body);
+    const ops = makeStandardOps({ specStatus: "unofficial" }, body);
     const doc = await makeRSDoc(ops);
 
     const link = doc.getElementById("external-link");

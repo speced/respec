@@ -25,6 +25,7 @@ const w3cDefaults = {
       url: "https://www.w3.org/",
     },
   ],
+  xref: true,
 };
 
 export function run(conf) {
