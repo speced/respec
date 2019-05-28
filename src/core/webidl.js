@@ -38,9 +38,11 @@ const templates = {
       : // Other keywords like sequence, maplike, etc...
         hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
   },
-  reference(wrapped, unescaped) {
+  reference(wrapped, unescaped, context = {}) {
+    const { tokens } = context;
     let type = "_IDL_";
     let cite = null;
+    let lt = null;
     switch (unescaped) {
       case "Window":
         type = "interface";
@@ -50,8 +52,12 @@ const templates = {
         type = "interface";
         cite = "WebIDL";
     }
+    const isWorkerType = unescaped.includes("Worker");
+    if (isWorkerType && tokens && tokens.name.value === "Exposed") {
+      lt = `${unescaped}GlobalScope`;
+    }
     return hyperHTML`<a
-      data-xref-type="${type}" data-cite="${cite}">${wrapped}</a>`;
+      data-xref-type="${type}" data-cite="${cite}" data-lt="${lt}">${wrapped}</a>`;
   },
   name(escaped, { data, parent }) {
     if (data.idlType && data.idlType.type === "argument-type") {
