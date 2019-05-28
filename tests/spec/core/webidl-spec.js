@@ -1077,4 +1077,28 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const enumValueType = doc.getElementById("dom-enumtype-enumvaluetype");
     expect(enumValueType.dataset.idl).toBe("enum-value");
   });
+  it("auto-links some IDL types", async () => {
+    const body = `
+      <section>
+        <pre class="idl" id="link-test">
+          [Exposed=Window]
+          interface Foo {
+            readonly attribute object bar;
+          };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const windowAnchor = doc.querySelector("#link-test a[href$=window]");
+    expect(windowAnchor.href).toBe(
+      "https://html.spec.whatwg.org/multipage/window-object.html#window"
+    );
+    expect(windowAnchor.dataset.xrefType).toBe("interface");
+    const objectAnchor = doc.querySelector("#link-test a[href$=idl-object]");
+    expect(windowAnchor.dataset.xrefType).toBe("interface");
+    expect(objectAnchor.href).toBe(
+      "https://heycam.github.io/webidl/#idl-object"
+    );
+  });
 });
