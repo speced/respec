@@ -62,7 +62,7 @@ export async function run(conf) {
   if (!options.feature) {
     return; // no feature to show
   }
-  const featureURL = `https://caniuse.com/#feat=${options.feature}`;
+  const featureURL = new URL(options.feature, "https://caniuse.com/").href;
 
   document.head.appendChild(hyperHTML`
     <style class="removeOnSave">${caniuseCss}</style>`);

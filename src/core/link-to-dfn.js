@@ -43,11 +43,6 @@ export async function run(conf) {
       return findLinkTarget(target, ant, titleToDfns, possibleExternalLinks);
     });
     if (!foundDfn && linkTargets.length !== 0) {
-      // ignore WebIDL
-      if (ant.closest("pre.idl")) {
-        ant.replaceWith(...ant.childNodes);
-        return;
-      }
       if (ant.dataset.cite === "") {
         badLinks.push(ant);
       } else {

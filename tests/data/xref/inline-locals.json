@@ -1,6 +1,17 @@
 {
   "result": [
     [
+      "318a08442ab399ac176948abb64c7fe6a4c3e8a6",
+      [
+        {
+          "shortname": "webidl",
+          "type": "interface",
+          "normative": true,
+          "uri": "#idl-DOMString"
+        }
+      ]
+    ],
+    [
       "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1",
       [
         {
