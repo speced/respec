@@ -38,17 +38,10 @@ const templates = {
       : // Other keywords like sequence, maplike, etc...
         hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
   },
-  reference(wrapped) {
+  reference(wrapped, unescaped) {
     let type = "_IDL_";
     let cite = null;
-    if (
-      Array.isArray(wrapped) &&
-      wrapped.length === 1 &&
-      wrapped[0] instanceof Text
-    ) {
-      wrapped = wrapped[0].data;
-    }
-    switch (wrapped) {
+    switch (unescaped) {
       case "Window":
         type = "interface";
         cite = "HTML";
