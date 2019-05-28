@@ -38,8 +38,20 @@ const templates = {
       : // Other keywords like sequence, maplike, etc...
         hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
   },
-  reference(wrapped) {
-    return hyperHTML`<a data-xref-type="_IDL_">${wrapped}</a>`;
+  reference(wrapped, unescaped) {
+    let type = "_IDL_";
+    let cite = null;
+    switch (unescaped) {
+      case "Window":
+        type = "interface";
+        cite = "HTML";
+        break;
+      case "object":
+        type = "interface";
+        cite = "WebIDL";
+    }
+    return hyperHTML`<a
+      data-xref-type="${type}" data-cite="${cite}">${wrapped}</a>`;
   },
   name(escaped, { data, parent }) {
     if (data.idlType && data.idlType.type === "argument-type") {
