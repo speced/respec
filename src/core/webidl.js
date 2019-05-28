@@ -38,7 +38,7 @@ const templates = {
       : // Other keywords like sequence, maplike, etc...
         hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
   },
-  reference(wrapped, unescaped, context = {}) {
+  reference(wrapped, unescaped, context) {
     const { tokens } = context;
     let type = "_IDL_";
     let cite = null;
