@@ -39,7 +39,6 @@ const templates = {
         hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
   },
   reference(wrapped, unescaped, context) {
-    const { tokens } = context;
     let type = "_IDL_";
     let cite = null;
     let lt;
@@ -54,7 +53,11 @@ const templates = {
         break;
       default: {
         const isWorkerType = unescaped.includes("Worker");
-        if (isWorkerType && context.type === "extended-attribute" && context.name === "Exposed") {
+        if (
+          isWorkerType &&
+          context.type === "extended-attribute" &&
+          context.name === "Exposed"
+        ) {
           lt = `${unescaped}GlobalScope`;
           type = "interface";
           cite = ["Worker", "DedicatedWorker", "SharedWorker"].includes(
