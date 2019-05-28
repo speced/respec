@@ -39,7 +39,26 @@ const templates = {
         hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
   },
   reference(wrapped) {
-    return hyperHTML`<a data-xref-type="_IDL_">${wrapped}</a>`;
+    let type = "_IDL_";
+    let cite = null;
+    if (
+      Array.isArray(wrapped) &&
+      wrapped.length === 1 &&
+      wrapped[0] instanceof Text
+    ) {
+      wrapped = wrapped[0].data;
+    }
+    switch (wrapped) {
+      case "Window":
+        type = "interface";
+        cite = "HTML";
+        break;
+      case "object":
+        type = "interface";
+        cite = "WebIDL";
+    }
+    return hyperHTML`<a
+      data-xref-type="${type}" data-cite="${cite}">${wrapped}</a>`;
   },
   name(escaped, { data, parent }) {
     if (data.idlType && data.idlType.type === "argument-type") {
