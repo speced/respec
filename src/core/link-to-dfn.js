@@ -20,12 +20,8 @@ const l10n = {
 };
 
 /** @param {import("../respec-document").RespecDocument} respecDoc */
-export default async function({
-  document,
-  configuration: conf,
-  definitionMap,
-  lang,
-}) {
+export default async function(respecDoc) {
+  const { document, configuration: conf, definitionMap, lang } = respecDoc;
   document.normalize();
 
   const titleToDfns = mapTitleToDfns(definitionMap, lang);
@@ -46,11 +42,6 @@ export default async function({
       return findLinkTarget(target, ant, titleToDfns, possibleExternalLinks);
     });
     if (!foundDfn && linkTargets.length !== 0) {
-      // ignore WebIDL
-      if (ant.closest("pre.idl")) {
-        ant.replaceWith(...ant.childNodes);
-        return;
-      }
       if (ant.dataset.cite === "") {
         badLinks.push(ant);
       } else {
@@ -64,7 +55,7 @@ export default async function({
   if (conf.xref) {
     possibleExternalLinks.push(...findExplicitExternalLinks());
     try {
-      await addExternalReferences(conf, possibleExternalLinks);
+      await addExternalReferences(respecDoc, possibleExternalLinks);
     } catch (error) {
       console.error(error);
       showLinkingError(possibleExternalLinks);
@@ -214,7 +205,7 @@ function wrapAsCode(ant, dfn) {
   const isIDL = dfn.dataset.hasOwnProperty("idl");
   const needsCode = shouldWrapByCode(dfn, term);
   if (!isIDL || needsCode) {
-    wrapInner(ant, document.createElement("code"));
+    wrapInner(ant, ant.ownerDocument.createElement("code"));
   }
 }
 

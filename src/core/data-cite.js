@@ -59,7 +59,7 @@ function requestLookup(conf) {
         }
         elem.href = href;
         if (!path && !frag) {
-          const cite = document.createElement("cite");
+          const cite = elem.ownerDocument.createElement("cite");
           elem.replaceWith(cite);
           cite.append(elem);
         }
@@ -74,7 +74,7 @@ function requestLookup(conf) {
           wrapInner(elem, anchor);
         }
         if (!path && !frag) {
-          const cite = document.createElement("cite");
+          const cite = elem.ownerDocument.createElement("cite");
           cite.append(anchor);
           elem.append(cite);
         }

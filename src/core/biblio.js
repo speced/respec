@@ -48,6 +48,7 @@ function insertResourceHint(document) {
     document
   );
   document.head.appendChild(link);
+  return link;
 }
 
 // Opportunistically dns-prefetch to bibref server, as we don't know yet

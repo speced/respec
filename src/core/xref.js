@@ -27,22 +27,35 @@ const profiles = {
 const API_URL = "https://respec.org/xref";
 const CACHE_MAX_AGE = 86400000; // 24 hours
 
-if (
-  !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
-) {
-  const link = createResourceHint({
-    hint: "preconnect",
-    href: "https://respec.org",
-  });
-  document.head.appendChild(link);
+const linkElement =
+  typeof document !== "undefined" ? insertResourceHint(document) : undefined;
+
+/**
+ * @param {Document} document
+ */
+function insertResourceHint(document) {
+  if (
+    !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
+  ) {
+    const link = createResourceHint({
+      hint: "preconnect",
+      href: "https://respec.org",
+    });
+    document.head.appendChild(link);
+    return link;
+  }
 }
 
 /**
  * main external reference driver
- * @param {Object} conf respecConfig
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
  * @param {HTMLElement[]} elems possibleExternalLinks
  */
-export async function run(conf, elems) {
+export async function run({ document, configuration: conf }, elems) {
+  if (!linkElement) {
+    insertResourceHint(document);
+  }
+
   const xref = normalizeConfig(conf.xref);
   if (xref.specs) {
     const bodyCite = document.body.dataset.cite

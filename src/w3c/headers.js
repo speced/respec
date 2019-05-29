@@ -166,17 +166,18 @@ const status2long = {
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
-const recTrackStatus = ["FPWD", "WD", "FPLC", "LC", "CR", "PR", "PER", "REC"];
+const maybeRecTrack = ["FPWD", "WD"];
+const recTrackStatus = ["FPLC", "LC", "CR", "PR", "PER", "REC"];
 const noTrackStatus = [
-  "MO",
-  "unofficial",
   "base",
-  "finding",
-  "draft-finding",
-  "CG-DRAFT",
-  "CG-FINAL",
   "BG-DRAFT",
   "BG-FINAL",
+  "CG-DRAFT",
+  "CG-FINAL",
+  "draft-finding",
+  "finding",
+  "MO",
+  "unofficial",
 ];
 const cgbg = ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"];
 const precededByAn = ["ED", "IG-NOTE"];
@@ -286,7 +287,7 @@ export default function({ document, configuration: conf }) {
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
   conf.isRecTrack = conf.noRecTrack
     ? false
-    : recTrackStatus.includes(conf.specStatus);
+    : recTrackStatus.concat(maybeRecTrack).includes(conf.specStatus);
   conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
   if (conf.isMemberSubmission) {
     const memSubmissionLogo = {

@@ -24,6 +24,7 @@ const w3cDefaults = {
       url: "https://www.w3.org/",
     },
   ],
+  xref: true,
 };
 
 /** @param {import("../respec-document").RespecDocument} respecDoc */

@@ -12,11 +12,6 @@ const topLevelEntities = new Set([
   "typedef",
 ]);
 
-// TODO: make these linkable somehow.
-// https://github.com/w3c/respec/issues/999
-// https://github.com/w3c/respec/issues/982
-const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
-
 /**
  * @augments {Map<string, HTMLElement[]>}
  */
@@ -47,27 +42,11 @@ export class DefinitionMap extends Map {
    * the function returns 'undefined'.
    * @param {*} defn
    * @param {string} name
-   * @param {{ parent?: string; suppressWarnings?: boolean }} options
+   * @param {object} [options]
+   * @param {string} [options.parent]
    */
-  findDfn(defn, name, { parent = "", suppressWarnings = false } = {}) {
-    if (unlinkable.has(name)) {
-      return;
-    }
-    const dfn = this.tryFindDfn(defn, parent, name);
-    if (dfn) {
-      return dfn;
-    }
-    const showWarnings = name && !(suppressWarnings || defn.type === "typedef");
-    if (showWarnings) {
-      const styledName = defn.type === "operation" ? `${name}()` : name;
-      const ofParent = parent ? ` \`${parent}\`'s` : "";
-      pub(
-        "warn",
-        `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${
-          defn.type
-        }. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`
-      );
-    }
+  findDfn(defn, name, { parent = "" } = {}) {
+    return this.tryFindDfn(defn, parent, name);
   }
 
   /**

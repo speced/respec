@@ -34,6 +34,7 @@ export async function preprocess(doc, conf) {
     import("./core/data-cite.js"),
     import("./core/biblio.js"),
     import("./core/webidl-index.js"),
+    import("./core/link-to-dfn.js"),
   ];
 
   for (const module of modules) {

@@ -83,7 +83,11 @@ async function deleteFolder(path) {
   for (const file of await fs.readdir(path)) {
     const curPath = `${path}/${file}`;
     const stat = await fs.lstat(curPath);
-    stat.isDirectory() ? deleteFolder(curPath) : await fs.unlink(curPath);
+    if (stat.isDirectory()) {
+      await deleteFolder(curPath);
+    } else {
+      await fs.unlink(curPath);
+    }
   }
   await fs.rmdir(path);
 }

@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.21.7",
+  "version": "24.22.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -24,8 +24,8 @@
   ],
   "devDependencies": {
     "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
     "@types/clipboard": "^2.0.1",
     "@types/pluralize": "0.0.29",
     "babel-eslint": "^10.0.1",
@@ -39,7 +39,7 @@
     "exports-loader": "^0.7.0",
     "handlebars": "^4.1.2",
     "highlight.js": "^9.15.6",
-    "hyperhtml": "^2.27.0",
+    "hyperhtml": "^2.28.0",
     "idb": "^4.0.3",
     "jasmine-core": "^3.4.0",
     "jasmine-reporters": "^2.3.2",
@@ -61,16 +61,16 @@
     "marked": "^0.6.2",
     "mocha": "^6.1.4",
     "moment": "^2.24.0",
-    "pluralize": "^7.0.0",
+    "pluralize": "^8.0.0",
     "prettier": "^1.17.1",
     "raw-loader": "^2.0.0",
     "requirejs": "^2.3.6",
-    "serve": "^11.0.0",
-    "snyk": "^1.165.0",
+    "serve": "^11.0.1",
+    "snyk": "^1.167.2",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.4.5",
     "webidl2": "^21.0.0",
-    "webpack": "^4.31.0",
+    "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2"
   },
   "scripts": {
@@ -108,7 +108,7 @@
     "opencollective": "^1.0.3",
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
-    "puppeteer": "^1.16.0",
+    "puppeteer": "1.16.0",
     "viperhtml": "^2.17.0"
   },
   "prettier": {
