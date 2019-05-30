@@ -1,7 +1,7 @@
 {
   "result": [
     [
-      "318a08442ab399ac176948abb64c7fe6a4c3e8a6",
+      "0eca50dead2a4aa568d80cde770d660417a20b78",
       [
         {
           "shortname": "webidl",
@@ -36,6 +36,11 @@
     ]
   ],
   "query": [
+    {
+      "term": "DOMString",
+      "types": ["_IDL_"],
+      "id": "0eca50dead2a4aa568d80cde770d660417a20b78"
+    },
     {
       "term": "Window",
       "types": ["_IDL_"],
