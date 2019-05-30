@@ -271,21 +271,21 @@ function renderWebIDL(idlElement) {
     registerDefinition(elem, [title]);
   });
   // cross reference
-  const closestCite = idlElement.closest("[data-cite]");
-  if (!closestCite) {
-    document.body.dataset.cite = "WebIDL";
+  const closestCite = idlElement.closest("[data-cite], body");
+  const { dataset } = closestCite;
+  if ("cite" in dataset) {
+    const hasWebIDL = dataset.cite
+      .split(/s+/)
+      .map(item => item.toLowerCase())
+      .includes("webidl");
+    if (hasWebIDL) return;
+  } else {
+    // this is body, so just add it
+    dataset.cite = "WebIDL";
     return;
   }
-  const { dataset } = closestCite;
-  const hasWebIDL = dataset.cite
-    .split(/s+/)
-    .map(item => item.toLowerCase())
-    .includes("webidl");
-  if (hasWebIDL) return;
-  dataset.cite = dataset.cite
-    .split(/s+/)
-    .push("WebIDL")
-    .join(" ");
+  const newCite = ["WebIDL"].concat(dataset.cite.split(/s+/)).filter(i => i);
+  dataset.cite = newCite.join(" ");
 }
 
 export function run() {

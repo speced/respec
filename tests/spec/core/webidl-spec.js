@@ -1080,7 +1080,8 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
   it("auto-links based on definition context", async () => {
     const body = `
       <section>
-        <pre class="idl" id="link-test">
+        <h2>Test</h2>
+        <pre class="idl" id="link-test" data-cite="HTML DOM">
           interface Foo {
             DOMString fromWebIDL(); // defined in WebIDL
             attribute EventTarget fromDomSpec; // Defined in DOM
