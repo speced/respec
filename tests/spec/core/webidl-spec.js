@@ -1077,6 +1077,40 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const enumValueType = doc.getElementById("dom-enumtype-enumvaluetype");
     expect(enumValueType.dataset.idl).toBe("enum-value");
   });
+  it("auto-links based on definition context", async () => {
+    const body = `
+      <section>
+        <pre class="idl" id="link-test">
+          interface Foo {
+            DOMString fromWebIDL(); // defined in WebIDL
+            attribute EventTarget fromDomSpec; // Defined in DOM
+            attribute EventHandler fromHTMLSpec; // Defined in HTML
+          };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps({ xref: "web-platform" }, body);
+    const doc = await makeRSDoc(ops);
+
+    // DOMString fromWebIDL();
+    const domString = doc.querySelector(
+      "#link-test a[href='https://heycam.github.io/webidl/#idl-DOMString']"
+    );
+    expect(domString).toBeTruthy();
+
+    // attribute EventTarget fromDomSpec; // Defined in DOM
+    const eventTarget = doc.querySelector(
+      "#link-test a[href='https://dom.spec.whatwg.org/#eventtarget']"
+    );
+    expect(eventTarget).toBeTruthy();
+
+    // attribute EventHandler fromHTMLSpec; // Defined in HTML
+    const eventHandler = doc.querySelector(
+      "#link-test a[href='https://html.spec.whatwg.org/multipage/webappapis.html#eventhandler']"
+    );
+    expect(eventHandler).toBeTruthy();
+  });
+
   it("auto-links some IDL types", async () => {
     const body = `
       <section>
