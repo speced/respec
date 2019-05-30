@@ -259,9 +259,7 @@ function renderWebIDL(idlElement) {
   }
   idlElement.classList.add("def", "idl");
   const closestCite = idlElement.closest("[data-cite]");
-  if (!closestCite) {
-    document.body.dataset.cite = "WebIDL";
-  } else {
+  if (closestCite) {
     const { dataset } = closestCite;
     if (dataset.cite) {
       const hasWebIDL = dataset.cite
