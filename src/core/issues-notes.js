@@ -45,7 +45,11 @@ const lang = defaultLang in localizationStrings ? defaultLang : "en";
 const l10n = localizationStrings[lang];
 
 /**
- * @typedef {{ type: string, inline: boolean, number: number, title: string }} Report
+ * @typedef {object} Report
+ * @property {string} type
+ * @property {boolean} inline
+ * @property {number} number
+ * @property {string} title
  *
  * @param {NodeListOf<HTMLElement>} ins
  * @param {Map<number, GitHubIssue>} ghIssues
@@ -147,7 +151,10 @@ function handleIssues(ins, ghIssues, conf) {
 }
 
 /**
- * @typedef {{ type: string, displayType: string, isFeatureAtRisk: boolean }} IssueType
+ * @typedef {object} IssueType
+ * @property {string} type
+ * @property {string} displayType
+ * @property {boolean} isFeatureAtRisk
  *
  * @param {HTMLElement} inno
  * @return {IssueType}

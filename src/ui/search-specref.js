@@ -153,8 +153,11 @@ const mast = hyperHTML.wire()`
 `;
 
 /**
- *
- * @param {{ state?: string, results?: Map<string, string>, timeTaken?: number, query?: string }} options
+ * @param {object} options
+ * @param {string} [options.state]
+ * @param {Map<string, string>} [options.results]
+ * @param {number} [options.timeTaken]
+ * @param {string} [options.query]
  */
 function render({ state = "", results, timeTaken, query } = {}) {
   if (!results) {

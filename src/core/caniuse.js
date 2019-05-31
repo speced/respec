@@ -128,7 +128,7 @@ function getNormalizedConf(conf) {
 
 /**
  * @param {string} apiURL
- * @typedef {{ [browserName: string]: [string, string[]][] }} ApiResponse
+ * @typedef {Record<string, [string, string[]][]>} ApiResponse
  * @return {Promise<ApiResponse>}
  * @throws {Error} on failure
  */
