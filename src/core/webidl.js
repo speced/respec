@@ -273,16 +273,11 @@ function renderWebIDL(idlElement) {
   // cross reference
   const closestCite = idlElement.closest("[data-cite], body");
   const { dataset } = closestCite;
-  if (!dataset.cite) {
-    dataset.cite = "WebIDL";
-    return;
-  }
-  const cites = dataset.cite.split(/\s+/).filter(i => i);
-  const hasWebIDL = cites.map(item => item.toLowerCase()).includes("webidl");
-
-  if (hasWebIDL) return;
-
-  dataset.cite = cites.concat("WebIDL").join(" ");
+  if (!dataset.cite) dataset.cite = "WebIDL";
+  // includes webidl in some form
+  if (/\bwebidl\b/i.test(dataset.cite)) return;
+  const cites = dataset.cite.trim().split(/\s+/);
+  dataset.cite = ["WebIDL", ...cites].join(" ");
 }
 
 export function run() {
