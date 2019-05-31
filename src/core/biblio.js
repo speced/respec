@@ -17,8 +17,10 @@ export const name = "core/biblio";
 
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
-// Normative references take precedence over informative ones,
-// so any duplicates ones are removed from the informative set.
+/**
+ * Normative references take precedence over informative ones,
+ * so any duplicates ones are removed from the informative set.
+ */
 function normalizeReferences(conf) {
   const normalizedNormativeRefs = new Set(
     [...conf.normativeReferences].map(key => key.toLowerCase())
