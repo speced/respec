@@ -28,10 +28,9 @@ function ariaDecorate(elem, ariaMap) {
   if (!elem) {
     return;
   }
-  Array.from(ariaMap).reduce((elem, [name, value]) => {
+  Array.from(ariaMap).forEach(([name, value]) => {
     elem.setAttribute(`aria-${name}`, value);
-    return elem;
-  }, elem);
+  });
 }
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
