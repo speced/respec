@@ -476,7 +476,7 @@ export async function fetchAndCache(input, maxAge = 86400000) {
 export function flatten(collector, item) {
   const items = !Array.isArray(item)
     ? [item]
-    : [...item.values()].reduce(flatten, []);
+    : item.slice().reduce(flatten, []);
   collector.push(...items);
   return collector;
 }

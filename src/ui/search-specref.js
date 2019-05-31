@@ -1,6 +1,7 @@
 // Module ui/search-specref
 // Search Specref database
 import { l10n, lang } from "../core/l10n.js";
+import { flatten } from "../core/utils.js";
 import hyperHTML from "hyperhtml";
 import { ui } from "../core/ui.js";
 import { wireReference } from "../core/biblio.js";
@@ -72,7 +73,7 @@ function resultProcessor({ includeVersions } = { includeVersions: false }) {
     if (!includeVersions) {
       Array.from(results.values())
         .filter(entry => typeof entry === "object" && "versions" in entry)
-        .reduce((collector, entry) => collector.concat(entry.versions), [])
+        .reduce(flatten, [])
         .forEach(version => {
           results.delete(version);
         });

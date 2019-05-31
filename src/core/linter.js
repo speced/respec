@@ -24,7 +24,7 @@ class Linter {
    * @param  {...import("./LinterRule").default} newRules
    */
   register(...newRules) {
-    newRules.reduce((rules, newRule) => rules.add(newRule), this.rules);
+    newRules.forEach(newRule => this.rules.add(newRule));
   }
   async lint(conf, doc = window.document) {
     const promisesToLint = [...privates.get(this).rules].map(rule =>
