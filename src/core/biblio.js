@@ -9,7 +9,6 @@ import { biblioDB } from "./biblio-db.js";
 import { createResourceHint } from "./utils.js";
 import fetch from "./fetch.js";
 import { pub } from "./pubsubhub.js";
-export const biblio = {};
 
 // for backward compatibity
 export { wireReference, stringifyReference } from "./render-biblio.js";
@@ -104,7 +103,10 @@ export async function resolveRef(key) {
   return entry;
 }
 
-export default async function({ document, configuration: conf }) {
+/**
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default async function({ document, configuration: conf, biblio }) {
   const finish = () => {
     doneResolver(conf.biblio);
   };

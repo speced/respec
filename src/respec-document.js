@@ -41,6 +41,9 @@ export async function createRespecDocument(doc, conf) {
 
     definitionMap: new DefinitionMap(),
 
+    /** @type {Record<string, *>} */
+    biblio: {},
+
     get lang() {
       return document.documentElement.lang;
     },

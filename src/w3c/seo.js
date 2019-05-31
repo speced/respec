@@ -1,10 +1,13 @@
 // Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
-import { biblio } from "../core/biblio.js";
 import { pub } from "../core/pubsubhub.js";
 export const name = "w3c/seo";
-export function run(conf) {
+
+/**
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default function({ document, configuration: conf, biblio }) {
   const trLatestUri = conf.shortName
     ? `https://www.w3.org/TR/${conf.shortName}/`
     : null;
@@ -58,11 +61,11 @@ export function run(conf) {
     document.head.appendChild(linkElem);
   }
   if (conf.doJsonLd) {
-    addJSONLDInfo(conf, document);
+    addJSONLDInfo(conf, document, biblio);
   }
 }
 
-async function addJSONLDInfo(conf, doc) {
+async function addJSONLDInfo(conf, doc, biblio) {
   await doc.respecIsReady;
   // Content for JSON
   const type = ["TechArticle"];
@@ -88,6 +91,9 @@ async function addJSONLDInfo(conf, doc) {
     inLanguage: doc.documentElement.lang || "en",
     license: conf.licenseInfo.url,
     datePublished: conf.dashDate,
+    /**
+     * @type {{ name: string, url: string }[]}
+     */
     copyrightHolder: {
       name: "World Wide Web Consortium",
       url: "https://www.w3.org/",

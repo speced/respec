@@ -21,7 +21,13 @@ const l10n = {
 
 /** @param {import("../respec-document").RespecDocument} respecDoc */
 export default async function(respecDoc) {
-  const { document, configuration: conf, definitionMap, lang } = respecDoc;
+  const {
+    document,
+    configuration: conf,
+    definitionMap,
+    lang,
+    biblio,
+  } = respecDoc;
   document.normalize();
 
   const titleToDfns = mapTitleToDfns(definitionMap, lang);
@@ -64,7 +70,7 @@ export default async function(respecDoc) {
     showLinkingError(possibleExternalLinks);
   }
 
-  await linkInlineCitations(document, conf);
+  await linkInlineCitations(document, conf, biblio);
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793
   pub("end", "core/link-to-dfn");

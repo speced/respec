@@ -14,8 +14,8 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
-import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
 import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils.js";
+import { resolveRef, updateFromNetwork } from "./biblio.js";
 import hyperHTML from "../../js/html-template.js";
 export const name = "core/data-cite";
 
@@ -151,7 +151,12 @@ export default async function({ document, configuration: conf }) {
     });
 }
 
-export async function linkInlineCitations(doc, conf = respecConfig) {
+/**
+ * @param {Document} doc
+ * @param {*} conf
+ * @param {import("../respec-document.js").RespecDocument["biblio"]} biblio
+ */
+export async function linkInlineCitations(doc, conf = respecConfig, biblio) {
   const toLookupRequest = requestLookup(conf);
   const elems = [
     ...doc.querySelectorAll(

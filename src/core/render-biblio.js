@@ -3,8 +3,6 @@
 // renders the biblio data pre-processed in core/biblio
 
 import { addId } from "./utils.js";
-import { biblio } from "./biblio.js";
-import { lang as defaultLang } from "../core/l10n.js";
 import hyperHTML from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
 
@@ -27,10 +25,6 @@ const localizationStrings = {
     references: "Referencias",
   },
 };
-
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
 
 const REF_STATUSES = new Map([
   ["CR", "W3C Candidate Recommendation"],
@@ -57,7 +51,12 @@ const defaultsReference = Object.freeze({
 
 const endWithDot = endNormalizer(".");
 
-export function run(conf) {
+/**
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default function run({ document, configuration: conf, lang, biblio }) {
+  const l10n = localizationStrings[lang];
+
   const informs = Array.from(conf.informativeReferences);
   const norms = Array.from(conf.normativeReferences);
 
@@ -82,14 +81,16 @@ export function run(conf) {
       </section>`;
     addId(sec);
 
-    const { goodRefs, badRefs } = refs.map(toRefContent).reduce(
-      (refObjects, ref) => {
-        const refType = ref.refcontent ? "goodRefs" : "badRefs";
-        refObjects[refType].push(ref);
-        return refObjects;
-      },
-      { goodRefs: [], badRefs: [] }
-    );
+    const { goodRefs, badRefs } = refs
+      .map(ref => toRefContent(ref, biblio))
+      .reduce(
+        (refObjects, ref) => {
+          const refType = ref.refcontent ? "goodRefs" : "badRefs";
+          refObjects[refType].push(ref);
+          return refObjects;
+        },
+        { goodRefs: [], badRefs: [] }
+      );
 
     const uniqueRefs = [
       ...goodRefs
@@ -117,19 +118,24 @@ export function run(conf) {
     refsec.appendChild(sec);
 
     const aliases = getAliases(goodRefs);
-    decorateInlineReference(uniqueRefs, aliases);
-    warnBadRefs(badRefs);
+    decorateInlineReference(document, uniqueRefs, aliases);
+    warnBadRefs(document, badRefs);
   }
 
   document.body.appendChild(refsec);
 }
 
 /**
+ * @typedef {object} BiblioRef
+ * @property {string} ref
+ * @property {*} refcontent
+ *
  * returns refcontent and unique key for a reference among its aliases
  * and warns about circular references
  * @param {String} ref
+ * @return {BiblioRef}
  */
-function toRefContent(ref) {
+function toRefContent(ref, biblio) {
   let refcontent = biblio[ref];
   let key = ref;
   const circular = new Set([key]);
@@ -237,7 +243,11 @@ export function stringifyReference(ref) {
   return output;
 }
 
-// get aliases for a reference "key"
+/**
+ * get aliases for a reference "key"
+ * @param {BiblioRef[]} refs
+ * @return {Map<string, string[]>}
+ */
 function getAliases(refs) {
   return refs.reduce((aliases, ref) => {
     const key = ref.refcontent.id;
@@ -249,9 +259,14 @@ function getAliases(refs) {
   }, new Map());
 }
 
-// fix biblio reference URLs
-// Add title attribute to references
-function decorateInlineReference(refs, aliases) {
+/**
+ * fix biblio reference URLs
+ * Add title attribute to references
+ * @param {Document} document
+ * @param {BiblioRef[]} refs
+ * @param {Map<string, string[]>} aliases
+ */
+function decorateInlineReference(document, refs, aliases) {
   refs
     .map(({ ref, refcontent }) => {
       const refUrl = `#bib-${ref.toLowerCase()}`;
@@ -270,8 +285,12 @@ function decorateInlineReference(refs, aliases) {
     });
 }
 
-// warn about bad references
-function warnBadRefs(badRefs) {
+/**
+ * warn about bad references
+ * @param {Document} document
+ * @param {BiblioRef[]} badRefs
+ */
+function warnBadRefs(document, badRefs) {
   badRefs.forEach(({ ref }) => {
     const badrefs = [
       ...document.querySelectorAll(
