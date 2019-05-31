@@ -1081,7 +1081,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const body = `
       <section>
         <pre class="idl" id="link-test">
-          [Exposed=Window]
+          [Exposed=(Window, Worker, DedicatedWorker)]
           interface Foo {
             readonly attribute object bar;
           };
@@ -1091,12 +1091,32 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const windowAnchor = doc.querySelector("#link-test a[href$=window]");
+    // Exposed=(Window)
     expect(windowAnchor.href).toBe(
       "https://html.spec.whatwg.org/multipage/window-object.html#window"
     );
     expect(windowAnchor.dataset.xrefType).toBe("interface");
+    // Exposed=(Worker)
+    const workerAnchor = doc.querySelector(
+      "#link-test a[href$=workerglobalscope]"
+    );
+    expect(workerAnchor.href).toBe(
+      "https://html.spec.whatwg.org/multipage/workers.html#workerglobalscope"
+    );
+    expect(workerAnchor.dataset.xrefType).toBe("interface");
+
+    // Exposed=(DedicatedWoker)
+    const dedicatedWorkerAnchor = doc.querySelector(
+      "#link-test a[href$=dedicatedworkerglobalscope]"
+    );
+    expect(dedicatedWorkerAnchor.href).toBe(
+      "https://html.spec.whatwg.org/multipage/workers.html#dedicatedworkerglobalscope"
+    );
+    expect(dedicatedWorkerAnchor.dataset.xrefType).toBe("interface");
+
+    // readonly attribute object bar;
     const objectAnchor = doc.querySelector("#link-test a[href$=idl-object]");
-    expect(windowAnchor.dataset.xrefType).toBe("interface");
+    expect(objectAnchor.dataset.xrefType).toBe("interface");
     expect(objectAnchor.href).toBe(
       "https://heycam.github.io/webidl/#idl-object"
     );

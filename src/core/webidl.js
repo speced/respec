@@ -46,9 +46,10 @@ function makeMarkup(parse, document, definitionMap) {
         : // Other keywords like sequence, maplike, etc...
           hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
     },
-    reference(wrapped, unescaped) {
+    reference(wrapped, unescaped, context) {
       let type = "_IDL_";
       let cite = null;
+      let lt;
       switch (unescaped) {
         case "Window":
           type = "interface";
@@ -57,9 +58,26 @@ function makeMarkup(parse, document, definitionMap) {
         case "object":
           type = "interface";
           cite = "WebIDL";
+          break;
+        default: {
+          const isWorkerType = unescaped.includes("Worker");
+          if (
+            isWorkerType &&
+            context.type === "extended-attribute" &&
+            context.name === "Exposed"
+          ) {
+            lt = `${unescaped}GlobalScope`;
+            type = "interface";
+            cite = ["Worker", "DedicatedWorker", "SharedWorker"].includes(
+              unescaped
+            )
+              ? "HTML"
+              : null;
+          }
+        }
       }
       return hyperHTML`<a
-        data-xref-type="${type}" data-cite="${cite}">${wrapped}</a>`;
+        data-xref-type="${type}" data-cite="${cite}" data-lt="${lt}">${wrapped}</a>`;
     },
     name(escaped, { data, parent }) {
       if (data.idlType && data.idlType.type === "argument-type") {
