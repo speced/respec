@@ -1,15 +1,29 @@
 "use strict";
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { IDBKeyVal } from "../../../src/core/utils.js";
+import { openDB } from "../../../node_modules/idb/build/esm/index.js";
 
 describe("Core - WebIDL", () => {
   afterAll(flushIframes);
   /** @type {Document} */
   let doc;
+  let cache;
   beforeAll(async () => {
     const ops = makeStandardOps();
     ops.config.xref = true;
     doc = await makeRSDoc(ops, "spec/core/webidl.html");
+    const idb = await openDB("xref", 1, {
+      upgrade(db) {
+        db.createObjectStore("xrefs");
+      },
+    });
+    cache = new IDBKeyVal(idb, "xrefs");
+  });
+
+  beforeEach(async () => {
+    // clear idb cache before each
+    await cache.clear();
   });
 
   describe("records", () => {
@@ -1090,7 +1104,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         </pre>
       </section>
     `;
-    const ops = makeStandardOps({ xref: "web-platform" }, body);
+    const ops = makeStandardOps({ xref: true }, body);
     const doc = await makeRSDoc(ops);
 
     // DOMString fromWebIDL();
