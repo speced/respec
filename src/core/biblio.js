@@ -138,14 +138,12 @@ export async function run(conf) {
     console.warn(err);
   }
   const split = { hasData: [], noData: [] };
-  idbRefs.reduce((collector, ref) => {
-    ref.data ? collector.hasData.push(ref) : collector.noData.push(ref);
-    return collector;
-  }, split);
-  split.hasData.reduce((collector, ref) => {
-    collector[ref.id] = ref.data;
-    return collector;
-  }, biblio);
+  idbRefs.forEach(ref => {
+    (ref.data ? split.hasData : split.noData).push(ref);
+  });
+  split.hasData.forEach(ref => {
+    biblio[ref.id] = ref.data;
+  });
   const externalRefs = split.noData.map(item => item.id);
   if (externalRefs.length) {
     // Going to the network for refs we don't have
