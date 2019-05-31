@@ -1,15 +1,29 @@
 "use strict";
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { IDBKeyVal } from "../../../src/core/utils.js";
+import { openDB } from "../../../node_modules/idb/build/esm/index.js";
 
 describe("Core - WebIDL", () => {
   afterAll(flushIframes);
   /** @type {Document} */
   let doc;
+  let cache;
   beforeAll(async () => {
     const ops = makeStandardOps();
     ops.config.xref = true;
     doc = await makeRSDoc(ops, "spec/core/webidl.html");
+    const idb = await openDB("xref", 1, {
+      upgrade(db) {
+        db.createObjectStore("xrefs");
+      },
+    });
+    cache = new IDBKeyVal(idb, "xrefs");
+  });
+
+  beforeEach(async () => {
+    // clear idb cache before each
+    await cache.clear();
   });
 
   describe("records", () => {
@@ -1077,6 +1091,41 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const enumValueType = doc.getElementById("dom-enumtype-enumvaluetype");
     expect(enumValueType.dataset.idl).toBe("enum-value");
   });
+  it("auto-links based on definition context", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <pre class="idl" id="link-test" data-cite="HTML DOM">
+          interface Foo {
+            DOMString fromWebIDL(); // defined in WebIDL
+            attribute EventTarget fromDomSpec; // Defined in DOM
+            attribute EventHandler fromHTMLSpec; // Defined in HTML
+          };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps({ xref: true }, body);
+    const doc = await makeRSDoc(ops);
+
+    // DOMString fromWebIDL();
+    const domString = doc.querySelector(
+      "#link-test a[href='https://heycam.github.io/webidl/#idl-DOMString']"
+    );
+    expect(domString).toBeTruthy();
+
+    // attribute EventTarget fromDomSpec; // Defined in DOM
+    const eventTarget = doc.querySelector(
+      "#link-test a[href='https://dom.spec.whatwg.org/#eventtarget']"
+    );
+    expect(eventTarget).toBeTruthy();
+
+    // attribute EventHandler fromHTMLSpec; // Defined in HTML
+    const eventHandler = doc.querySelector(
+      "#link-test a[href='https://html.spec.whatwg.org/multipage/webappapis.html#eventhandler']"
+    );
+    expect(eventHandler).toBeTruthy();
+  });
+
   it("auto-links some IDL types", async () => {
     const body = `
       <section>

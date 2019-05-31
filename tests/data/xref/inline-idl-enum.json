@@ -1,7 +1,7 @@
 {
   "result": [
     [
-      "9a7f11d8f9a46fce8d14170914f73271d1cc8896",
+      "322b86ae2a57f3f9c9808ed6eef392ad921a66db",
       [
         {
           "shortname": "service-workers",
@@ -13,7 +13,7 @@
       ]
     ],
     [
-      "2dc7c88bffd81e1ddc880de8841fb9cdd3f612d5",
+      "ae23c059caeaa0072e8c6cd9ac6685d3b77bc22a",
       [
         {
           "shortname": "xhr",
@@ -42,12 +42,12 @@
       "term": "imports",
       "types": ["enum-value"],
       "for": "ServiceWorkerUpdateViaCache",
-      "id": "9a7f11d8f9a46fce8d14170914f73271d1cc8896"
+      "id": "322b86ae2a57f3f9c9808ed6eef392ad921a66db"
     },
     {
       "term": "blob",
       "types": ["enum-value"],
-      "id": "2dc7c88bffd81e1ddc880de8841fb9cdd3f612d5"
+      "id": "ae23c059caeaa0072e8c6cd9ac6685d3b77bc22a"
     },
     {
       "term": "block",
