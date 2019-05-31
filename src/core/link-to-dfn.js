@@ -137,7 +137,7 @@ function assignDfnId(dfn, title) {
 }
 
 /**
- * @param {{ for: string, title: string }} target
+ * @param {import("./utils.js").LinkTarget} target
  * @param {HTMLAnchorElement} ant
  * @param {Record<string, Record<string, HTMLElement>>} titleToDfns
  * @param {HTMLElement[]} possibleExternalLinks

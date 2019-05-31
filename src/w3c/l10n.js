@@ -30,7 +30,6 @@ const additions = {
   },
 };
 
-Object.keys(additions).reduce((l10n, key) => {
+Object.keys(additions).forEach(key => {
   Object.assign(l10n[key], additions[key]);
-  return l10n;
-}, l10n);
+});

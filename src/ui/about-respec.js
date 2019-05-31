@@ -35,10 +35,9 @@ function show() {
         return { name, duration: humanDuration };
       })
       .map(perfEntryToTR)
-      .reduce((collector, entry) => {
-        collector.push(entry);
-        return collector;
-      }, entries);
+      .forEach(entry => {
+        entries.push(entry);
+      });
   }
   render`
   <p>
