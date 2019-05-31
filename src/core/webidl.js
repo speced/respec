@@ -277,17 +277,12 @@ function renderWebIDL(idlElement) {
     dataset.cite = "WebIDL";
     return;
   }
-  const hasWebIDL = dataset.cite
-    .split(/\s+/)
-    .map(item => item.toLowerCase())
-    .includes("webidl");
+  const cites = dataset.cite.split(/\s+/).filter(i => i);
+  const hasWebIDL = cites.map(item => item.toLowerCase()).includes("webidl");
 
   if (hasWebIDL) return;
 
-  dataset.cite = ["WebIDL"]
-    .concat(dataset.cite.split(/\s+/))
-    .filter(i => i)
-    .join(" ");
+  dataset.cite = cites.concat("WebIDL").join(" ");
 }
 
 export function run() {
