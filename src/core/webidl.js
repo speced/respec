@@ -275,7 +275,7 @@ function renderWebIDL(idlElement) {
   const { dataset } = closestCite;
   if ("cite" in dataset) {
     const hasWebIDL = dataset.cite
-      .split(/s+/)
+      .split(/\s+/)
       .map(item => item.toLowerCase())
       .includes("webidl");
     if (hasWebIDL) return;
@@ -284,7 +284,7 @@ function renderWebIDL(idlElement) {
     dataset.cite = "WebIDL";
     return;
   }
-  const newCite = ["WebIDL"].concat(dataset.cite.split(/s+/)).filter(i => i);
+  const newCite = ["WebIDL"].concat(dataset.cite.split(/\s+/)).filter(i => i);
   dataset.cite = newCite.join(" ");
 }
 
