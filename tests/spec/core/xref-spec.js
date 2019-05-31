@@ -801,7 +801,7 @@ describe("Core — xref", () => {
         <section id="test">
           <h2>Ignore</h2>
           <p>Some other <dfn>languageCode</dfn> definitions.</p>
-          <p id="link-internal">{{ PaymentAddress.languageCode }} links to PaymentAddress definitionss.</p>
+          <p id="link-internal">{{ PaymentAddress.languageCode }} links to PaymentAddress definitions.</p>
           <p id="link-internal-dfn">{{ languageCode }} links to some other definitions.</p>
           <p id="link-external">{{ Window.event }} links to html spec.</p>
         </section>
