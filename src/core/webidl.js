@@ -272,21 +272,6 @@ function renderWebIDL(idlElement, definitionMap) {
     return;
   }
   idlElement.classList.add("def", "idl");
-  const { dataset } = idlElement;
-  if (dataset.cite) {
-    const hasWebIDL = dataset.cite
-      .split(" ")
-      .map(item => item.toLowerCase())
-      .includes("webidl");
-    if (!hasWebIDL) {
-      const newDataCite = ["WebIDL"].concat(
-        dataset.cite.split(/\s+/).filter(i => i)
-      );
-      dataset.cite = newDataCite.join(" ");
-    }
-  } else {
-    dataset.cite = "WebIDL";
-  }
   const html = makeMarkup(parse, idlElement.ownerDocument, definitionMap);
   idlElement.textContent = "";
   idlElement.append(...html);
@@ -299,6 +284,14 @@ function renderWebIDL(idlElement, definitionMap) {
     }
     definitionMap.registerDefinition(elem, [title]);
   });
+  // cross reference
+  const closestCite = idlElement.closest("[data-cite], body");
+  const { dataset } = closestCite;
+  if (!dataset.cite) dataset.cite = "WebIDL";
+  // includes webidl in some form
+  if (/\bwebidl\b/i.test(dataset.cite)) return;
+  const cites = dataset.cite.trim().split(/\s+/);
+  dataset.cite = ["WebIDL", ...cites].join(" ");
 }
 
 /**

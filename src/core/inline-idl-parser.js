@@ -76,7 +76,9 @@ function renderBase(details) {
   return hyperHTML`<a data-xref-type="_IDL_">${identifier}</a>`;
 }
 
-// Internal slot: .[[identifier]] or [[identifier]]
+/**
+ * Internal slot: .[[identifier]] or [[identifier]]
+ */
 function renderInternalSlot(details) {
   const { identifier, parent } = details;
   const { identifier: linkFor } = parent || {};
@@ -89,7 +91,9 @@ function renderInternalSlot(details) {
   return html;
 }
 
-// Attribute: .identifier
+/**
+ * Attribute: .identifier
+ */
 function renderAttribute(details) {
   const { parent, identifier } = details;
   const { identifier: linkFor } = parent || {};
@@ -101,7 +105,9 @@ function renderAttribute(details) {
   return html;
 }
 
-// Method: .identifier(arg1, arg2, ...), identifier(arg1, arg2, ...)
+/**
+ * Method: .identifier(arg1, arg2, ...), identifier(arg1, arg2, ...)
+ */
 function renderMethod(details) {
   const { args, identifier, type, parent } = details;
   const { identifier: linkFor } = parent || {};
@@ -116,7 +122,9 @@ function renderMethod(details) {
   return html;
 }
 
-// Enum: Identifier["enum value"]
+/**
+ * Enum: Identifier["enum value"]
+ */
 function renderEnum(details) {
   const { identifier, enumValue } = details;
   const html = hyperHTML`"<a
@@ -127,7 +135,9 @@ function renderEnum(details) {
   return html;
 }
 
-// Enum value: "enum value"
+/**
+ * Enum value: "enum value"
+ */
 function renderEnumValue(details) {
   const { identifier } = details;
   const lt = identifier === "" ? "the-empty-string" : null;

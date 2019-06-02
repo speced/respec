@@ -55,8 +55,17 @@ export async function fetchAndStoreGithubIssues(document, conf) {
 }
 
 /**
- * @typedef {{ color: string, name: string }} GitHubLabel
- * @typedef {{ title: string, number: number, state: string, message: string, body_html: string, labels: GitHubLabel[] }} GitHubIssue
+ * @typedef {object} GitHubLabel
+ * @property {string} color
+ * @property {string} name
+ *
+ * @typedef {object} GitHubIssue
+ * @property {string} title
+ * @property {number} number
+ * @property {string} state
+ * @property {string} message
+ * @property {string} body_html
+ * @property {GitHubLabel[]} labels
  *
  * @param {Response} response
  * @param {number} issueNumber

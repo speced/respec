@@ -57,13 +57,12 @@ export default function({ document }) {
       }
       return fragment;
     })
-    .reduce((collector, elem) => {
-      if (collector.lastChild) {
-        collector.appendChild(document.createTextNode("\n\n"));
+    .forEach(elem => {
+      if (pre.lastChild) {
+        pre.append("\n\n");
       }
-      collector.appendChild(elem);
-      return collector;
-    }, pre);
+      pre.appendChild(elem);
+    });
   // Remove duplicate IDs
   pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
   idlIndexSec.appendChild(pre);

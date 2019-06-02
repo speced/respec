@@ -480,7 +480,7 @@ export async function fetchAndCache(input, init = {}) {
 export function flatten(collector, item) {
   const items = !Array.isArray(item)
     ? [item]
-    : [...item.values()].reduce(flatten, []);
+    : item.slice().reduce(flatten, []);
   collector.push(...items);
   return collector;
 }
@@ -628,7 +628,9 @@ export function getDfnTitles(elem, { isDefinition = false } = {}) {
 /**
  * For an element (usually <a>), returns an array of targets that
  * element might refer to, of the form
- * @typedef {{for: string, title: string}} LinkTarget
+ * @typedef {object} LinkTarget
+ * @property {string} for
+ * @property {string} title
  *
  * For an element like:
  *  <p data-link-for="Int1"><a data-link-for="Int2">Int3.member</a></p>

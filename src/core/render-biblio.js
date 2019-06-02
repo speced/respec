@@ -168,7 +168,9 @@ export function renderInlineCitation(ref) {
   return hyperHTML`[<cite><a class="bibref" href="${href}">${key}</a></cite>]`;
 }
 
-// renders a reference
+/**
+ * renders a reference
+ */
 function showRef({ ref, refcontent }) {
   const refId = `bib-${ref.toLowerCase()}`;
   if (refcontent) {

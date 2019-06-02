@@ -48,7 +48,11 @@ async function loadStyle() {
 }
 
 /**
- * @typedef {{ type: string, inline: boolean, number: number, title: string }} Report
+ * @typedef {object} Report
+ * @property {string} type
+ * @property {boolean} inline
+ * @property {number} number
+ * @property {string} title
  *
  * @param {Document} document
  * @param {NodeListOf<HTMLElement>} ins
@@ -152,7 +156,10 @@ function handleIssues(document, ins, ghIssues, conf, l10n) {
 }
 
 /**
- * @typedef {{ type: string, displayType: string, isFeatureAtRisk: boolean }} IssueType
+ * @typedef {object} IssueType
+ * @property {string} type
+ * @property {string} displayType
+ * @property {boolean} isFeatureAtRisk
  *
  * @param {HTMLElement} inno
  * @return {IssueType}

@@ -37,7 +37,9 @@ const lang = defaultLang in localizationStrings ? defaultLang : "en";
 const l10n = localizationStrings[lang];
 
 /**
- * @typedef {{ secno: string, title: string }} SectionInfo
+ * @typedef {object} SectionInfo
+ * @property {string} secno
+ * @property {string} title
  *
  * Scans sections and generate ordered list element + ID-to-anchor-content dictionary.
  * @param {Section[]} sections the target element to find child sections
@@ -94,7 +96,13 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
 }
 
 /**
- * @typedef {{ element: Element, header: Element, title: string, isIntro: boolean, isAppendix: boolean, subsections: Section[] }} Section
+ * @typedef {object} Section
+ * @property {Element} element
+ * @property {Element} header
+ * @property {string} title
+ * @property {boolean} isIntro
+ * @property {boolean} isAppendix
+ * @property {Section[]} subsections
  *
  * @param {Element} parent
  */

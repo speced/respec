@@ -21,11 +21,13 @@ function attachFixupScript(doc, version) {
   doc.body.appendChild(script);
 }
 
-// Make a best effort to attach meta viewport at the top of the head.
-// Other plugins might subsequently push it down, but at least we start
-// at the right place. When ReSpec exports the HTML, it again moves the
-// meta viewport to the top of the head - so to make sure it's the first
-// thing the browser sees. See js/ui/save-html.js.
+/**
+ * Make a best effort to attach meta viewport at the top of the head.
+ * Other plugins might subsequently push it down, but at least we start
+ * at the right place. When ReSpec exports the HTML, it again moves the
+ * meta viewport to the top of the head - so to make sure it's the first
+ * thing the browser sees. See js/ui/save-html.js.
+ */
 function createMetaViewport() {
   const meta = document.createElement("meta");
   meta.name = "viewport";
