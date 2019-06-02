@@ -143,7 +143,7 @@ function getRequestEntry(elem) {
   // if element itself contains data-cite, we don't take inline context into account
   if (dataciteElem !== elem) {
     const closestSection = elem.closest("section");
-    /** @type {NodeListOf<HTMLElement>} */
+    /** @type {Iterable<HTMLElement>} */
     const bibrefs = closestSection
       ? closestSection.querySelectorAll("a.bibref")
       : [];
@@ -166,6 +166,7 @@ function getRequestEntry(elem) {
 
   let { xrefFor: forContext } = elem.dataset;
   if (!forContext && isIDL) {
+    /** @type {HTMLElement} */
     const dataXrefForElem = elem.closest("[data-xref-for]");
     if (dataXrefForElem) {
       forContext = dataXrefForElem.dataset.xrefFor;
