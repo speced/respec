@@ -81,4 +81,20 @@ describe("Core — Definitions", () => {
     expect(dfn.dataset.lt).toBe("text|text 1|text 2|text 3");
     expect(dfn.dataset.dfnType).toBe("dfn");
   });
+
+  it("adds data-export", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}<section id='dfn'>
+        <dfn>banana</dfn>
+        <dfn data-noexport>nana</dfn>
+      </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const [doexport, noexport] = doc.getElementsByTagName("dfn");
+    expect(doexport.dataset.export).toBe("");
+    expect(doexport.dataset.noexport).not.toBeDefined();
+    expect(noexport.dataset.export).not.toBeDefined()
+    expect(noexport.dataset.noexport).toBe("");
+  });
 });

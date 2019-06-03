@@ -1,6 +1,9 @@
 // @ts-check
 // Module core/dfn
-// - Finds all <dfn> elements and populates conf.definitionMap to identify them.
+// Finds all <dfn> elements and:
+// - populates definitionMap to identify them.
+// - normalize `data-dfn-for`
+// - add `data-export` unless there is `data-noexport`
 
 import { getDfnTitles } from "./utils.js";
 import { registerDefinition } from "./dfn-map.js";
@@ -17,6 +20,10 @@ export function run() {
     if (dfn.dataset.dfnFor) {
       dfn.dataset.dfnFor = dfn.dataset.dfnFor.toLowerCase();
     }
+    if (!("noexport" in dfn.dataset)) {
+      dfn.dataset.export = "";
+    }
+
     // TODO: we should probably use weakmaps and weaksets here to avoid leaks.
     const titles = getDfnTitles(dfn, { isDefinition: true });
     registerDefinition(dfn, titles);
