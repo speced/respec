@@ -1197,4 +1197,25 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(nana.dataset.dfnFor).toBe("banana");
     expect(bananice.dataset.export).not.toBeDefined();
   });
+
+  it("does not export partial IDL definitions", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          partial interface Banana {
+            void nana();
+          };
+        </pre>
+        <p id="p">
+          This partial interface <dfn>Banana</dfn> somehow requires
+          a definition even if it's partial.
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const p = doc.getElementById("p");
+    const banana = p.querySelector("dfn");
+    expect(banana.dataset.export).not.toBeDefined();
+  });
 });
