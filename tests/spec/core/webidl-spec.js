@@ -202,7 +202,7 @@ describe("Core - WebIDL", () => {
         expect(elem.firstElementChild.localName).toBe("code");
         expect(elem.textContent).toBe(`${methodName}()`);
         expect(elem.id).toBe(`dom-parenthesistest-${id}`);
-        expect(elem.dataset.dfnType).toBe("dfn");
+        expect(elem.dataset.dfnType).toBe("method");
         expect(elem.dataset.dfnFor).toBe("parenthesistest");
         expect(elem.dataset.idl).toBe("operation");
         // corresponding link
@@ -1169,5 +1169,32 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(objectAnchor.href).toBe(
       "https://heycam.github.io/webidl/#idl-object"
     );
+  });
+
+  it("exports IDL definitions", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          interface Banana {
+            void nana();
+          };
+        </pre>
+        <p id="p" data-dfn-for="Banana">
+          The interface <dfn>Banana</dfn> is nice
+          and its operation <dfn>nana</dfn> is also nice.
+          Our Banana is nice, so <dfn>Bananice</dfn>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const p = doc.getElementById("p");
+    const [banana, nana, bananice] = p.querySelectorAll("dfn");
+    expect(banana.dataset.export).toBeDefined();
+    expect(banana.dataset.dfnType).toBe("interface");
+    expect(nana.dataset.export).toBeDefined();
+    expect(nana.dataset.dfnType).toBe("method");
+    expect(nana.dataset.dfnFor).toBe("banana");
+    expect(bananice.dataset.export).not.toBeDefined();
   });
 });
