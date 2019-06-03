@@ -1170,4 +1170,30 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       "https://heycam.github.io/webidl/#idl-object"
     );
   });
+
+  it("exports IDL definitions", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          interface Banana {
+            void nana();
+          };
+        </pre>
+        <p id="p" data-dfn-for="Banana">
+          The interface <dfn>Banana</dfn> is nice
+          and its operation <dfn>nana</dfn> is also nice.
+          Our Banana is nice, so <dfn>Bananice</dfn>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const p = doc.getElementById("p");
+    const [banana, nana, bananice] = p.querySelectorAll("dfn");
+    expect(banana.dataset.export).toBeDefined();
+    expect(banana.dataset.dfnType).toBe("interface");
+    expect(nana.dataset.export).toBeDefined();
+    expect(nana.dataset.dfnType).toBe("method");
+    expect(bananice.dataset.export).not.toBeDefined();
+  });
 });

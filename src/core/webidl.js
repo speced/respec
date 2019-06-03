@@ -115,6 +115,8 @@ function createIdlAnchor(escaped, data, parent) {
     parent: parentName,
   });
   if (dfn) {
+    dfn.dataset.export = "";
+    dfn.dataset.dfnType = getDfnType(data.type);
     return hyperHTML`<a
       data-link-for="${parentName.toLowerCase()}"
       data-lt="${dfn.dataset.lt || null}">${escaped}</a>`;
@@ -141,6 +143,17 @@ function createIdlAnchor(escaped, data, parent) {
     showInlineWarning(unlinkedAnchor, msg, "");
   }
   return unlinkedAnchor;
+}
+
+function getDfnType(idlType) {
+  switch (idlType) {
+    case "operation":
+      return "method";
+    case "field":
+      return "dict-member";
+    default:
+      return idlType;
+  }
 }
 
 function getIdlDefinitionClassName(defn) {
