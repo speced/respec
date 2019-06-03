@@ -115,8 +115,10 @@ function createIdlAnchor(escaped, data, parent) {
     parent: parentName,
   });
   if (dfn) {
-    dfn.dataset.export = "";
-    dfn.dataset.dfnType = getDfnType(data.type);
+    if (!data.partial) {
+      dfn.dataset.export = "";
+      dfn.dataset.dfnType = getDfnType(data.type);
+    }
     return hyperHTML`<a
       data-link-for="${parentName.toLowerCase()}"
       data-lt="${dfn.dataset.lt || null}">${escaped}</a>`;
