@@ -1194,6 +1194,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(banana.dataset.dfnType).toBe("interface");
     expect(nana.dataset.export).toBeDefined();
     expect(nana.dataset.dfnType).toBe("method");
+    expect(nana.dataset.dfnFor).toBe("banana");
     expect(bananice.dataset.export).not.toBeDefined();
   });
 });
