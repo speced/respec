@@ -145,6 +145,10 @@ function createIdlAnchor(escaped, data, parent) {
   return unlinkedAnchor;
 }
 
+/** 
+ * Map to Shepherd types, for export. 
+ * @see https://tabatkins.github.io/bikeshed/#dfn-types
+ */
 function getDfnType(idlType) {
   switch (idlType) {
     case "operation":
