@@ -202,7 +202,7 @@ describe("Core - WebIDL", () => {
         expect(elem.firstElementChild.localName).toBe("code");
         expect(elem.textContent).toBe(`${methodName}()`);
         expect(elem.id).toBe(`dom-parenthesistest-${id}`);
-        expect(elem.dataset.dfnType).toBe("dfn");
+        expect(elem.dataset.dfnType).toBe("method");
         expect(elem.dataset.dfnFor).toBe("parenthesistest");
         expect(elem.dataset.idl).toBe("operation");
         // corresponding link
