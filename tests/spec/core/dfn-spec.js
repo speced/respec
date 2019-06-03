@@ -94,7 +94,7 @@ describe("Core — Definitions", () => {
     const [doexport, noexport] = doc.getElementsByTagName("dfn");
     expect(doexport.dataset.export).toBe("");
     expect(doexport.dataset.noexport).not.toBeDefined();
-    expect(noexport.dataset.export).not.toBeDefined()
+    expect(noexport.dataset.export).not.toBeDefined();
     expect(noexport.dataset.noexport).toBe("");
   });
 });
