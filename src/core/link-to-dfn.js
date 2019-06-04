@@ -158,6 +158,10 @@ function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
     ant.dataset.lt = lt[0] || dfn.textContent;
     possibleExternalLinks.push(ant);
   } else {
+    if (ant.dataset.idl === "partial") {
+      possibleExternalLinks.push(ant);
+      return true;
+    }
     ant.href = `#${dfn.id}`;
     ant.classList.add("internalDFN");
   }

@@ -120,6 +120,7 @@ function createIdlAnchor(escaped, data, parent) {
       dfn.dataset.dfnType = getDfnType(data.type);
     }
     return hyperHTML`<a
+      data-link-type="idl"
       data-link-for="${parentName.toLowerCase()}"
       data-lt="${dfn.dataset.lt || null}">${escaped}</a>`;
   }
@@ -131,10 +132,17 @@ function createIdlAnchor(escaped, data, parent) {
   if (isDefaultJSON) {
     return hyperHTML`<a data-lt="default toJSON operation">${escaped}</a>`;
   }
+  const unlinkedAnchor = hyperHTML`<a
+    data-link-type="idl"
+    data-idl="${data.partial ? "partial" : null}"
+    data-title="${escaped}"
+    data-xref-type="${getDfnType(data.type)}">${escaped}</a>`;
 
-  const unlinkedAnchor = hyperHTML`<a data-xref-type="${
-    data.type
-  }">${escaped}</a>`;
+  // Partial interfaces must always link somewhere else.
+  if (data.partial && !dfn) {
+    return unlinkedAnchor;
+  }
+
   const showWarnings = name && data.type !== "typedef";
   if (showWarnings) {
     const styledName = data.type === "operation" ? `${name}()` : name;
@@ -157,6 +165,8 @@ function getDfnType(idlType) {
       return "method";
     case "field":
       return "dict-member";
+    case "interface mixin":
+      return "interface";
     default:
       return idlType;
   }
