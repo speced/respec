@@ -160,16 +160,15 @@ function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
   } else {
     if (ant.dataset.idl === "partial") {
       possibleExternalLinks.push(ant);
-      return true;
+    } else {
+      ant.href = `#${dfn.id}`;
+      ant.classList.add("internalDFN");
     }
-    ant.href = `#${dfn.id}`;
-    ant.classList.add("internalDFN");
   }
   // add a bikeshed style indication of the type of link
   if (!ant.hasAttribute("data-link-type")) {
     ant.dataset.linkType = "dfn";
   }
-
   if (isCode(dfn)) {
     wrapAsCode(ant, dfn);
   }
