@@ -60,7 +60,7 @@
     "moment": "^2.24.0",
     "pluralize": "^8.0.0",
     "prettier": "^1.17.1",
-    "raw-loader": "^2.0.0",
+    "raw-loader": "^3.0.0",
     "requirejs": "^2.3.6",
     "serve": "^11.0.1",
     "snyk": "^1.171.1",
