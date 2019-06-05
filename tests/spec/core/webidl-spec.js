@@ -1248,8 +1248,8 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       bananaPartial,
       docOrShadowMixin,
       requestPartialInterface,
-      eventInitDict,
-      , // skip testing boolean link, tested elsewhere.
+      eventInitDict, // skip testing boolean link (next line), tested elsewhere.
+      ,
       itWorksMember,
     ] = doc.querySelectorAll(".idl a");
 
