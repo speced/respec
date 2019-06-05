@@ -1218,4 +1218,79 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const banana = p.querySelector("dfn");
     expect(banana.dataset.export).not.toBeDefined();
   });
+  it("autolinks partial definitions", async () => {
+    const body = `
+      <section data-dfn-for="EventInit">
+        <p>
+          <dfn>Banana</dfn>
+          <dfn>itWorks</dfn>
+        </p>
+        <pre class="idl">
+          // Local ref
+          interface Banana {};
+          // Local ref
+          partial interface Banana {};
+          // DOM spec
+          partial interface mixin DocumentOrShadowRoot {};
+          // Fetch spec
+          partial interface Request {};
+          // DOM spec
+          partial dictionary EventInit {
+            boolean itWorks;
+          };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps({ xref: "web-platform" }, body);
+    const doc = await makeRSDoc(ops);
+    const [
+      banana,
+      bananaPartial,
+      docOrShadowMixin,
+      requestPartialInterface,
+      eventInitDict, // skip testing boolean link (next line), tested elsewhere.
+      ,
+      itWorksMember,
+    ] = doc.querySelectorAll(".idl a");
+
+    expect(banana.textContent).toBe("Banana");
+    expect(banana.getAttribute("href")).toBe("#dom-banana");
+    expect(banana.dataset.linkType).toBe("interface");
+    expect(banana.classList).toContain("internalDFN");
+
+    expect(bananaPartial.textContent).toBe("Banana");
+    expect(bananaPartial.getAttribute("href")).toBe("#dom-banana");
+    expect(bananaPartial.dataset.linkType).toBe("interface");
+    expect(banana.classList).toContain("internalDFN");
+
+    expect(docOrShadowMixin.textContent).toBe("DocumentOrShadowRoot");
+    expect(docOrShadowMixin.dataset.xrefType).toBe("interface");
+    expect(docOrShadowMixin.dataset.linkType).toBe("interface");
+    expect(docOrShadowMixin.dataset.idl).toBe("partial");
+    expect(docOrShadowMixin.dataset.title).toBe("DocumentOrShadowRoot");
+    expect(docOrShadowMixin.href).toBe(
+      "https://dom.spec.whatwg.org/#documentorshadowroot"
+    );
+
+    expect(requestPartialInterface.textContent).toBe("Request");
+    expect(requestPartialInterface.dataset.xrefType).toBe("interface");
+    expect(requestPartialInterface.dataset.linkType).toBe("interface");
+    expect(requestPartialInterface.dataset.idl).toBe("partial");
+    expect(requestPartialInterface.dataset.title).toBe("Request");
+    expect(requestPartialInterface.href).toBe(
+      "https://fetch.spec.whatwg.org/#request"
+    );
+
+    expect(eventInitDict.textContent).toBe("EventInit");
+    expect(eventInitDict.dataset.xrefType).toBe("dictionary");
+    expect(eventInitDict.dataset.linkType).toBe("dictionary");
+    expect(eventInitDict.dataset.idl).toBe("partial");
+    expect(eventInitDict.dataset.title).toBe("EventInit");
+    expect(eventInitDict.href).toBe(
+      "https://dom.spec.whatwg.org/#dictdef-eventinit"
+    );
+
+    expect(itWorksMember.classList).toContain("internalDFN");
+    expect(itWorksMember.getAttribute("href")).toBe("#dom-eventinit-itworks");
+  });
 });
