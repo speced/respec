@@ -125,6 +125,10 @@ function createIdlAnchor(escaped, data, parent, definitionMap) {
     parent: parentName,
   });
   if (dfn) {
+    if (!data.partial) {
+      dfn.dataset.export = "";
+      dfn.dataset.dfnType = getDfnType(data.type);
+    }
     return hyperHTML`<a
       data-link-for="${parentName.toLowerCase()}"
       data-lt="${dfn.dataset.lt || null}">${escaped}</a>`;
@@ -151,6 +155,21 @@ function createIdlAnchor(escaped, data, parent, definitionMap) {
     showInlineWarning(unlinkedAnchor, msg, "");
   }
   return unlinkedAnchor;
+}
+
+/**
+ * Map to Shepherd types, for export.
+ * @see https://tabatkins.github.io/bikeshed/#dfn-types
+ */
+function getDfnType(idlType) {
+  switch (idlType) {
+    case "operation":
+      return "method";
+    case "field":
+      return "dict-member";
+    default:
+      return idlType;
+  }
 }
 
 function getIdlDefinitionClassName(defn) {
