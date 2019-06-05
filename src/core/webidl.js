@@ -135,7 +135,7 @@ function createIdlAnchor(escaped, data, parent) {
   const unlinkedAnchor = hyperHTML`<a
     data-link-type="idl"
     data-idl="${data.partial ? "partial" : null}"
-    data-title="${escaped}"
+    data-title="${data.name}"
     data-xref-type="${getDfnType(data.type)}">${escaped}</a>`;
 
   // Partial interfaces must always link somewhere else.
@@ -165,6 +165,7 @@ function getDfnType(idlType) {
       return "method";
     case "field":
       return "dict-member";
+    case "callback interface":
     case "interface mixin":
       return "interface";
     default:
