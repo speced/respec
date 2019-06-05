@@ -143,11 +143,6 @@ function createIdlAnchor(escaped, data, parent) {
     data-xref-type="${linkType}"
     >${escaped}</a>`;
 
-  // Partial interfaces must always link somewhere else.
-  if (data.partial && !dfn) {
-    return unlinkedAnchor;
-  }
-
   const showWarnings =
     name && data.type !== "typedef" && !(data.partial && !dfn);
   if (showWarnings) {
