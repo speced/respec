@@ -1249,7 +1249,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       docOrShadowMixin,
       requestPartialInterface,
       eventInitDict,
-      ,
+      , // skip testing boolean link, tested elsewhere.
       itWorksMember,
     ] = doc.querySelectorAll(".idl a");
 
