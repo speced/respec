@@ -148,7 +148,8 @@ function createIdlAnchor(escaped, data, parent) {
     return unlinkedAnchor;
   }
 
-   const showWarnings = name && data.type !== "typedef" && !(data.partial && !dfn);
+  const showWarnings =
+    name && data.type !== "typedef" && !(data.partial && !dfn);
   if (showWarnings) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
