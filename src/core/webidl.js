@@ -114,14 +114,17 @@ function createIdlAnchor(escaped, data, parent) {
   const dfn = findDfn(data, name, {
     parent: parentName,
   });
+  const linkType = getDfnType(data.type);
   if (dfn) {
     if (!data.partial) {
       dfn.dataset.export = "";
-      dfn.dataset.dfnType = getDfnType(data.type);
+      dfn.dataset.dfnType = linkType;
     }
     return hyperHTML`<a
       data-link-for="${parentName.toLowerCase()}"
-      data-lt="${dfn.dataset.lt || null}">${escaped}</a>`;
+      data-link-type="${linkType}"
+      data-lt="${dfn.dataset.lt || null}"
+      >${escaped}</a>`;
   }
 
   const isDefaultJSON =
@@ -129,13 +132,19 @@ function createIdlAnchor(escaped, data, parent) {
     data.name === "toJSON" &&
     data.extAttrs.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
-    return hyperHTML`<a data-lt="default toJSON operation">${escaped}</a>`;
+    return hyperHTML`<a
+     data-link-type="dfn"
+     data-lt="default toJSON operation">${escaped}</a>`;
   }
+  const unlinkedAnchor = hyperHTML`<a
+    data-idl="${data.partial ? "partial" : null}"
+    data-link-type="${linkType}"
+    data-title="${data.name}"
+    data-xref-type="${linkType}"
+    >${escaped}</a>`;
 
-  const unlinkedAnchor = hyperHTML`<a data-xref-type="${
-    data.type
-  }">${escaped}</a>`;
-  const showWarnings = name && data.type !== "typedef";
+  const showWarnings =
+    name && data.type !== "typedef" && !(data.partial && !dfn);
   if (showWarnings) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
@@ -157,6 +166,9 @@ function getDfnType(idlType) {
       return "method";
     case "field":
       return "dict-member";
+    case "callback interface":
+    case "interface mixin":
+      return "interface";
     default:
       return idlType;
   }
