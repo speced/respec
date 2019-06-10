@@ -65,9 +65,7 @@ export default (conf, opts) => {
             >
             (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
             <a
-              href="${`https://lists.w3.org/Archives/Public/${
-                conf.wgPublicList
-              }/`}"
+              href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
               >archives</a
             >)${conf.subjectPrefix
               ? html`
