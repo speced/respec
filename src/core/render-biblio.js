@@ -283,6 +283,7 @@ function decorateInlineReference(document, refs, aliases) {
       elems.forEach(a => {
         a.setAttribute("href", refUrl);
         a.setAttribute("title", refcontent.title);
+        a.dataset.linkType = "biblio";
       });
     });
 }

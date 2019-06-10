@@ -26,10 +26,10 @@ export default function({ document }) {
   if (!idlIndexSec.querySelector(query)) {
     const header = document.createElement("h2");
     if (idlIndexSec.title) {
-      header.innerHTML = idlIndexSec.title;
+      header.textContent = idlIndexSec.title;
       idlIndexSec.removeAttribute("title");
     } else {
-      header.innerHTML = "IDL Index";
+      header.textContent = "IDL Index";
     }
     idlIndexSec.prepend(header);
   }
@@ -41,8 +41,7 @@ export default function({ document }) {
 
   if (idlIndex.length === 0) {
     const text = "This specification doesn't declare any Web IDL.";
-    const noIDLFound = document.createTextNode(text);
-    idlIndexSec.appendChild(noIDLFound);
+    idlIndexSec.append(text);
     return;
   }
 

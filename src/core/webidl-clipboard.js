@@ -18,12 +18,10 @@ copyButton.classList.add("respec-button-copy-paste", "removeOnSave");
 export async function run() {
   for (const pre of document.querySelectorAll("pre.idl")) {
     const button = copyButton.cloneNode(true);
-    const wrapper = document.createElement("div");
     button.addEventListener("click", () => {
       clipboardWriteText(pre.textContent);
     });
-    pre.replaceWith(wrapper);
-    wrapper.append(button, pre);
+    pre.prepend(button);
   }
 }
 

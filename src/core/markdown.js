@@ -318,8 +318,7 @@ function structure(fragment, doc) {
  */
 function substituteWithTextNodes(elements) {
   Array.from(elements).forEach(element => {
-    const textNode = element.ownerDocument.createTextNode(element.textContent);
-    element.replaceWith(textNode);
+    element.replaceWith(element.textContent);
   });
 }
 
@@ -359,7 +358,7 @@ export default function({ document, configuration: conf }) {
           section.remove();
           elem.append(...section.childNodes);
         } else {
-          elem.innerHTML = "";
+          elem.textContent = "";
         }
         elem.appendChild(structuredInternals);
         elem.setAttribute("aria-busy", "false");

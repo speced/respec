@@ -36,7 +36,7 @@ function toListItem(href) {
   const isSecureTest = testParts.find(part => part === "https");
   if (isSecureTest) {
     const requiresConnectionEmoji = document.createElement("span");
-    requiresConnectionEmoji.innerHTML = "🔒";
+    requiresConnectionEmoji.textContent = "🔒";
     requiresConnectionEmoji.setAttribute(
       "aria-label",
       "requires a secure connection"
@@ -53,7 +53,7 @@ function toListItem(href) {
     .find(part => part === "manual");
   if (isManualTest) {
     const manualPerformEmoji = document.createElement("span");
-    manualPerformEmoji.innerHTML = "💪";
+    manualPerformEmoji.textContent = "💪";
     manualPerformEmoji.setAttribute(
       "aria-label",
       "the test must be run manually"
