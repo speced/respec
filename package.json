@@ -63,12 +63,12 @@
     "raw-loader": "^3.0.0",
     "requirejs": "^2.3.6",
     "serve": "^11.0.1",
-    "snyk": "^1.174.1",
+    "snyk": "^1.175.2",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.5.1",
     "webidl2": "^22.0.0",
     "webpack": "^4.33.0",
-    "webpack-cli": "^3.3.3"
+    "webpack-cli": "^3.3.4"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps -q",
