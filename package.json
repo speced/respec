@@ -30,7 +30,7 @@
     "chai": "^4.2.0",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
     "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.3.0",
+    "eslint-config-prettier": "^5.0.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.1.0",
     "exports-loader": "^0.7.0",
