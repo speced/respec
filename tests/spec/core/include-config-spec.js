@@ -48,4 +48,19 @@ describe("Core — Include config as JSON", () => {
     const text = doc.getElementById("initialUserConfig").innerHTML;
     expect(text).toBe(expected);
   });
+  it("excludes security sensitive members", async () => {
+    const ops = {
+      config: {
+        specStatus: "unofficial",
+        ghToken: "fail",
+        ghUser: "fail",
+      },
+      body: makeDefaultBody(),
+    };
+    const doc = await makeRSDoc(ops);
+    const obj = JSON.parse(doc.getElementById("initialUserConfig").innerHTML);
+    expect(obj.specStatus).toBe("unofficial");
+    expect(obj.ghToken).toBeUndefined();
+    expect(obj.ghUser).toBeUndefined();
+  });
 });
