@@ -52,15 +52,15 @@ describe("Core — Include config as JSON", () => {
     const ops = {
       config: {
         specStatus: "unofficial",
-        ghToken: "fail",
-        ghUser: "fail",
+        githubToken: "fail",
+        githubUser: "fail",
       },
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);
     const obj = JSON.parse(doc.getElementById("initialUserConfig").innerHTML);
     expect(obj.specStatus).toBe("unofficial");
-    expect(obj.ghToken).toBeUndefined();
-    expect(obj.ghUser).toBeUndefined();
+    expect(obj.githubToken).toBeUndefined();
+    expect(obj.githubUser).toBeUndefined();
   });
 });

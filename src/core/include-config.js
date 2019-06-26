@@ -5,7 +5,7 @@ export const name = "core/include-config";
 
 const userConfig = {};
 const amendConfig = newValues => Object.assign(userConfig, newValues);
-const removeList = ["ghToken", "ghUser"];
+const removeList = ["githubToken", "githubUser"];
 
 sub("start-all", amendConfig);
 sub("amend-user-config", amendConfig);
