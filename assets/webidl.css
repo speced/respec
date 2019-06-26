@@ -2,6 +2,7 @@
 
 pre.idl {
   padding: 1em;
+  position: relative;
 }
 
 @media print {

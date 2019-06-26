@@ -75,9 +75,7 @@ export async function run() {
       const text = await response.text();
       processResponse(text, id, url);
     } catch (err) {
-      const msg = `\`data-include\` failed: \`${url}\` (${
-        err.message
-      }). See console for details.`;
+      const msg = `\`data-include\` failed: \`${url}\` (${err.message}). See console for details.`;
       console.error("data-include failed for element: ", el, err);
       pub("error", msg);
     }
