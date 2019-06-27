@@ -380,6 +380,6 @@ describe("Core — data-cite attribute", () => {
     const dfn2 = doc.querySelector("#t2");
     expect(dfn2.classList).toContain("respec-offending-element");
     expect("export" in dfn2.dataset).toBe(false);
-    expect("no-export" in dfn2.dataset).toBe(true);
+    expect("noExport" in dfn2.dataset).toBe(true);
   });
 });
