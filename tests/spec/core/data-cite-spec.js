@@ -361,4 +361,25 @@ describe("Core — data-cite attribute", () => {
     const cite = doc.querySelector("#t1 > cite");
     expect(cite).toBeNull();
   });
+  it("prevents re-exporting things defined in other specs", async () => {
+    const body = `
+      <section>
+        <p>
+          <dfn id="t1" data-cite="html#foo">no export</dfn>
+          <dfn id="t2" data-cite="html#bar" data-export>attempt to export</dfn>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const dfn1 = doc.querySelector("#t1");
+    expect("export" in dfn1.dataset).toBe(false);
+    expect("noExport" in dfn1.dataset).toBe(true);
+
+    const dfn2 = doc.querySelector("#t2");
+    expect(dfn2.classList).toContain("respec-offending-element");
+    expect("export" in dfn2.dataset).toBe(false);
+    expect("noExport" in dfn2.dataset).toBe(true);
+  });
 });
