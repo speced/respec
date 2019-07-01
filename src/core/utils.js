@@ -1,5 +1,3 @@
-/* jshint browser: true */
-/* globals console */
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.

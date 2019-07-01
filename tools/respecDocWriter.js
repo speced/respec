@@ -103,11 +103,7 @@ async function fetchAndWrite(
       case "":
         break;
       default:
-        try {
-          await writeTo(out, html);
-        } catch (err) {
-          throw err;
-        }
+        await writeTo(out, html);
     }
     return html;
   } finally {
