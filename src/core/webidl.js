@@ -109,7 +109,7 @@ const templates = {
 };
 
 /**
- * Returns a link to existing <dfn> or creates one if not exists.
+ * Returns a link to existing <dfn> or creates one if doesn’t exists.
  */
 function defineIdlName(escaped, data, parent) {
   const parentName = parent ? parent.name : "";
