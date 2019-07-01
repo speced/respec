@@ -75,12 +75,12 @@ const templates = {
     if (data.idlType && data.idlType.type === "argument-type") {
       return hyperHTML`<span class="idlParamName">${escaped}</span>`;
     }
-    const idlAnchor = createIdlAnchor(escaped, data, parent);
-    const className = parent ? "idlName" : "idlID";
-    if (data.type === "enum-value") {
-      return idlAnchor;
+    const idlLink = defineIdlName(escaped, data, parent);
+    if (data.type !== "enum-value") {
+      const className = parent ? "idlName" : "idlID";
+      idlLink.classList.add(className);
     }
-    return hyperHTML`<span class="${className}">${idlAnchor}</span>`;
+    return idlLink;
   },
   type(contents) {
     return hyperHTML`<span class="idlType">${contents}</span>`;
@@ -108,7 +108,10 @@ const templates = {
   },
 };
 
-function createIdlAnchor(escaped, data, parent) {
+/**
+ * Returns a link to existing <dfn> or creates one if not exists.
+ */
+function defineIdlName(escaped, data, parent) {
   const parentName = parent ? parent.name : "";
   const { name } = getNameAndId(data, parentName);
   const dfn = findDfn(data, name, {
@@ -136,6 +139,11 @@ function createIdlAnchor(escaped, data, parent) {
      data-link-type="dfn"
      data-lt="default toJSON operation">${escaped}</a>`;
   }
+  if (!data.partial) {
+    return hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
+      parent.name}">${escaped}</dfn>`;
+  }
+
   const unlinkedAnchor = hyperHTML`<a
     data-idl="${data.partial ? "partial" : null}"
     data-link-type="${linkType}"
