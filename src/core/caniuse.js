@@ -68,22 +68,20 @@ export async function run(conf) {
     <style class="removeOnSave">${caniuseCss}</style>`);
 
   const headDlElem = document.querySelector(".head dl");
-  const contentPromise = new Promise(async resolve => {
-    let content;
+  const contentPromise = (async () => {
     try {
       const apiUrl = options.apiURL || API_URL;
       const stats = await fetchStats(apiUrl, options);
-      content = createTableHTML(featureURL, stats);
+      return createTableHTML(featureURL, stats);
     } catch (err) {
       console.error(err);
       const msg =
         `Couldn't find feature "${options.feature}" on caniuse.com? ` +
         "Please check the feature key on [caniuse.com](https://caniuse.com)";
       pub("error", msg);
-      content = hyperHTML`<a href="${featureURL}">caniuse.com</a>`;
+      return hyperHTML`<a href="${featureURL}">caniuse.com</a>`;
     }
-    resolve(content);
-  });
+  })();
   const definitionPair = hyperHTML`
     <dt class="caniuse-title">Browser support:</dt>
     <dd class="caniuse-stats">${{
