@@ -1001,4 +1001,21 @@ describe("Core — xref", () => {
       ["__CACHE_TIME__", keys.get("dictionary"), keys.get("url parser")].sort()
     );
   });
+
+  it("respects requests to not perform an xref lookup", async () => {
+    const body = `
+      <section>
+      <a id="test1" data-cite="service-workers" data-no-xref>JSON</a>
+      <a id="test2" data-cite="service-workers">JSON</a>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+    const test1 = doc.getElementById("test1");
+    expect(test1.href).toBe("https://www.w3.org/TR/service-workers-1/");
+    expect(test1.classList).not.toContain("respec-offending-element");
+    const test2 = doc.getElementById("test2");
+    expect(test2.classList).toContain("respec-offending-element");
+  });
 });
