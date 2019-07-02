@@ -231,8 +231,8 @@ function shouldWrapByCode(dfn, term) {
 function findExplicitExternalLinks() {
   /** @type {NodeListOf<HTMLElement>} */
   const links = document.querySelectorAll(
-    "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
-      "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
+    "a[data-cite]:not([data-cite='']):not([data-cite*='#']):not([data-no-xref]), " +
+      "dfn[data-cite]:not([data-cite='']):not([data-cite*='#']):not([data-no-xref])"
   );
   /** @type {NodeListOf<HTMLElement>} */
   const externalDFNs = document.querySelectorAll("dfn.externalDFN");
