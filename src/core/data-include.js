@@ -1,4 +1,3 @@
-/* globals console */
 // Module core/data-include
 // Support for the data-include attribute. Causes external content to be included inside an
 // element that has data-include='some URI'. There is also a data-oninclude attribute that

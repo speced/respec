@@ -21,6 +21,7 @@
     "no-duplicate-imports": 2,
     "no-eval": "error",
     "no-implied-eval": "error",
+    "no-prototype-builtins": 0,
     "no-unused-vars": ["error", {
       "args": "all",
       "argsIgnorePattern": "^_",
@@ -33,6 +34,7 @@
     "prefer-const": 2,
     "prefer-template": 2,
     "quotes": 0,
+    "require-atomic-updates": 0,
     "semi": ["error", "always"],
     "sort-imports": 2,
     "spaced-comment": ["error", "always", { "block": { "balanced": true } }]
