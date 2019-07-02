@@ -42,10 +42,10 @@ export async function run(conf) {
     const foundDfn = linkTargets.some(target => {
       return findLinkTarget(target, ant, titleToDfns, possibleExternalLinks);
     });
-    if (!foundDfn && linkTargets.length !== 0 && !("noXref" in ant.dataset)) {
+    if (!foundDfn && linkTargets.length !== 0) {
       if (ant.dataset.cite === "") {
         badLinks.push(ant);
-      } else {
+      } else if (!ant.closest("[data-no-xref]")) {
         possibleExternalLinks.push(ant);
       }
     }
