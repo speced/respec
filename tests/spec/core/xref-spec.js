@@ -1004,15 +1004,12 @@ describe("Core — xref", () => {
 
   it("respects requests to not perform an xref lookup", async () => {
     const body = `
-    <section>
-    <a id="test1" data-cite="service-workers" data-no-xref>JSON</a>
-    <a id="test2" data-cite="service-workers">JSON</a>
-    </section>
+      <section>
+      <a id="test1" data-cite="service-workers" data-no-xref>JSON</a>
+      <a id="test2" data-cite="service-workers">JSON</a>
+      </section>
     `;
-    const config = {
-      xref: true,
-      localBiblio,
-    };
+    const config = { xref: true, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const test1 = doc.getElementById("test1");
