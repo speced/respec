@@ -292,6 +292,7 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
 
   for (let i = 0, l = elems.length; i < l; i++) {
     const elem = elems[i];
+    if (elem.closest("[data-no-xref]")) continue;
     const { id, term } = queryKeys[i];
     const results = data.get(id);
     switch (results.length) {

@@ -45,7 +45,7 @@ export async function run(conf) {
     if (!foundDfn && linkTargets.length !== 0) {
       if (ant.dataset.cite === "") {
         badLinks.push(ant);
-      } else if (!ant.closest("[data-no-xref]")) {
+      } else {
         possibleExternalLinks.push(ant);
       }
     }
@@ -231,8 +231,8 @@ function shouldWrapByCode(dfn, term) {
 function findExplicitExternalLinks() {
   /** @type {NodeListOf<HTMLElement>} */
   const links = document.querySelectorAll(
-    "a[data-cite]:not([data-cite='']):not([data-cite*='#']):not([data-no-xref]), " +
-      "dfn[data-cite]:not([data-cite='']):not([data-cite*='#']):not([data-no-xref])"
+    "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
+      "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
   );
   /** @type {NodeListOf<HTMLElement>} */
   const externalDFNs = document.querySelectorAll("dfn.externalDFN");
