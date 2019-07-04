@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.13.3
+version: v1.13.5
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -70,3 +70,6 @@ patch:
   'npm:uglify-js:20150824':
     - highlight.js > gear-lib > handlebars > uglify-js:
         patched: '2019-01-18T02:14:59.305Z'
+  SNYK-JS-LODASH-450202:
+    - opencollective > inquirer > lodash:
+        patched: '2019-07-04T07:40:22.289Z'
