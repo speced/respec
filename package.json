@@ -55,7 +55,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "2.0.2",
     "karma-verbose-summary-reporter": "0.0.1",
-    "marked": "^0.6.3",
+    "marked": "^0.7.0",
     "mocha": "^6.1.4",
     "moment": "^2.24.0",
     "pluralize": "^8.0.0",
