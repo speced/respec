@@ -5,7 +5,7 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import * as webidl2 from "webidl2";
-import { flatten, showInlineWarning } from "./utils.js";
+import { flatten, showInlineError, showInlineWarning } from "./utils.js";
 import css from "text!../../assets/webidl.css";
 import { findDfn } from "./dfn-finder.js";
 import hyperHTML from "hyperhtml";
@@ -279,10 +279,12 @@ function getDefnName(defn) {
   }
 }
 
-function renderWebIDL(idlElement) {
+function renderWebIDL(idlElement, index) {
   let parse;
   try {
-    parse = webidl2.parse(idlElement.textContent);
+    parse = webidl2.parse(idlElement.textContent, {
+      sourceName: String(index),
+    });
   } catch (e) {
     pub(
       "error",
@@ -292,7 +294,7 @@ function renderWebIDL(idlElement) {
       </details>`
     );
     // Skip this <pre> and move on to the next one.
-    return;
+    return [];
   }
   idlElement.classList.add("def", "idl");
   const html = webidl2.write(parse, { templates });
@@ -312,9 +314,11 @@ function renderWebIDL(idlElement) {
   const { dataset } = closestCite;
   if (!dataset.cite) dataset.cite = "WebIDL";
   // includes webidl in some form
-  if (/\bwebidl\b/i.test(dataset.cite)) return;
-  const cites = dataset.cite.trim().split(/\s+/);
-  dataset.cite = ["WebIDL", ...cites].join(" ");
+  if (!/\bwebidl\b/i.test(dataset.cite)) {
+    const cites = dataset.cite.trim().split(/\s+/);
+    dataset.cite = ["WebIDL", ...cites].join(" ");
+  }
+  return parse;
 }
 
 export function run() {
@@ -330,6 +334,17 @@ export function run() {
       link.before(style);
     }
   }
-  idls.forEach(renderWebIDL);
+  const astArray = [...idls].map(renderWebIDL);
+
+  const validations = webidl2.validate(astArray);
+  for (const validation of validations) {
+    showInlineError(
+      idls[validation.sourceName],
+      `WebIDL validation error in IDL block ${validation.sourceName} at line ${validation.line}:
+      <details>
+      <pre>${validation.message}</pre>
+      </details>`
+    );
+  }
   document.normalize();
 }
