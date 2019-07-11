@@ -1335,6 +1335,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
           };
         </pre>
         <pre class="idl">
+          [Exposed=Window]
           interface Moka {
             void eat(optional Bread bread);
           };
