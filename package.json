@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.23.6",
+  "version": "24.25.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -29,7 +29,7 @@
     "babel-eslint": "^10.0.2",
     "chai": "^4.2.0",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
-    "eslint": "^5.16.0",
+    "eslint": "^6.0.1",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.1.0",
@@ -55,7 +55,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "2.0.2",
     "karma-verbose-summary-reporter": "0.0.1",
-    "marked": "^0.6.2",
+    "marked": "^0.7.0",
     "mocha": "^6.1.4",
     "moment": "^2.24.0",
     "pluralize": "^8.0.0",
@@ -63,11 +63,10 @@
     "raw-loader": "^3.0.0",
     "requirejs": "^2.3.6",
     "serve": "^11.0.2",
-    "snyk": "^1.185.1",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.5.2",
-    "webidl2": "^22.0.0",
-    "webpack": "^4.35.0",
+    "webidl2": "^23.1.0",
+    "webpack": "^4.35.2",
     "webpack-cli": "^3.3.5"
   },
   "scripts": {
@@ -83,7 +82,7 @@
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
     "lint": "tsc -p src/jsconfig.json && eslint .",
-    "prepare": "npm run build:components",
+    "prepare": "npm run snyk-protect; npm run build:components",
     "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk-protect": "snyk protect",
@@ -104,6 +103,7 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "1.18.0"
+    "snyk": "^1.191.0"
   },
   "prettier": {
     "trailingComma": "es5"
