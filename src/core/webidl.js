@@ -287,9 +287,7 @@ function renderWebIDL(idlElement) {
       idlElement,
       `Failed to parse WebIDL: ${e.bareMessage}.`,
       e.bareMessage,
-      {
-        details: `<pre>${e.context}</pre>`,
-      }
+      { details: `<pre>${e.context}</pre>` }
     );
     // Skip this <pre> and move on to the next one.
     return;

@@ -151,7 +151,7 @@ export function showInlineError(elems, msg, title, { details } = {}) {
     .join(", ");
   let message = `${msg} at: ${links}.`;
   if (details) {
-    message += `<details>${details}</details>`;
+    message += `\n\n<details>${details}</details>`;
   }
   pub("error", message);
   console.error(msg, elems);
