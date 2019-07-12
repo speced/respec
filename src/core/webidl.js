@@ -9,7 +9,6 @@ import { flatten, showInlineError, showInlineWarning } from "./utils.js";
 import css from "text!../../assets/webidl.css";
 import { findDfn } from "./dfn-finder.js";
 import hyperHTML from "hyperhtml";
-import { pub } from "./pubsubhub.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";
@@ -286,12 +285,11 @@ function renderWebIDL(idlElement, index) {
       sourceName: String(index),
     });
   } catch (e) {
-    pub(
-      "error",
-      `Failed to parse WebIDL: ${e.message}.
-      <details>
-      <pre>${idlElement.textContent}\n ${e}</pre>
-      </details>`
+    showInlineError(
+      idlElement,
+      `Failed to parse WebIDL: ${e.bareMessage}.`,
+      e.bareMessage,
+      { details: `<pre>${e.context}</pre>` }
     );
     // Skip this <pre> and move on to the next one.
     return [];

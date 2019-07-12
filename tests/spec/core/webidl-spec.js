@@ -1311,6 +1311,20 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const [, tea] = doc.querySelectorAll(".respec-offending-element");
     expect(tea.textContent).toBe("TeaTime");
   });
+  it("marks a failing IDL block", async () => {
+    const body = `
+      <section>
+        <pre class="idl" id="pre">
+          interface Muscle {}
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const pre = doc.getElementById("pre");
+
+    expect(pre.classList).toContain("respec-offending-element");
+  });
   it("validates IDL", async () => {
     const body = `
       <section>
