@@ -278,10 +278,12 @@ function getDefnName(defn) {
   }
 }
 
-function renderWebIDL(idlElement) {
+function renderWebIDL(idlElement, index) {
   let parse;
   try {
-    parse = webidl2.parse(idlElement.textContent);
+    parse = webidl2.parse(idlElement.textContent, {
+      sourceName: String(index),
+    });
   } catch (e) {
     showInlineError(
       idlElement,
@@ -290,7 +292,7 @@ function renderWebIDL(idlElement) {
       { details: `<pre>${e.context}</pre>` }
     );
     // Skip this <pre> and move on to the next one.
-    return;
+    return [];
   }
   idlElement.classList.add("def", "idl");
   const html = webidl2.write(parse, { templates });
@@ -310,9 +312,11 @@ function renderWebIDL(idlElement) {
   const { dataset } = closestCite;
   if (!dataset.cite) dataset.cite = "WebIDL";
   // includes webidl in some form
-  if (/\bwebidl\b/i.test(dataset.cite)) return;
-  const cites = dataset.cite.trim().split(/\s+/);
-  dataset.cite = ["WebIDL", ...cites].join(" ");
+  if (!/\bwebidl\b/i.test(dataset.cite)) {
+    const cites = dataset.cite.trim().split(/\s+/);
+    dataset.cite = ["WebIDL", ...cites].join(" ");
+  }
+  return parse;
 }
 
 export function run() {
@@ -328,6 +332,16 @@ export function run() {
       link.before(style);
     }
   }
-  idls.forEach(renderWebIDL);
+  const astArray = [...idls].map(renderWebIDL);
+
+  const validations = webidl2.validate(astArray);
+  for (const validation of validations) {
+    showInlineError(
+      idls[validation.sourceName],
+      `WebIDL validation error: ${validation.bareMessage}`,
+      validation.bareMessage,
+      { details: `<pre>${validation.context}</pre>` }
+    );
+  }
   document.normalize();
 }
