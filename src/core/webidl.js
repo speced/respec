@@ -338,10 +338,9 @@ export function run() {
   for (const validation of validations) {
     showInlineError(
       idls[validation.sourceName],
-      `WebIDL validation error in IDL block ${validation.sourceName} at line ${validation.line}:
-      <details>
-      <pre>${validation.message}</pre>
-      </details>`
+      `WebIDL validation error: ${validation.bareMessage}`,
+      validation.bareMessage,
+      { details: `<pre>${validation.context}</pre>` }
     );
   }
   document.normalize();
