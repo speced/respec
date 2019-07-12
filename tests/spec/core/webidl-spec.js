@@ -1338,7 +1338,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const idl = doc.getElementById("circle");
 
     expect(idl.classList).toContain("respec-offending-element");
-    expect(idl.title.startsWith("WebIDL validation error")).toBe(true);
+    expect(idl.title).toContain("Exposed");
   });
   it("validates across IDL", async () => {
     const body = `
@@ -1362,6 +1362,6 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
 
     expect(idl1.classList).not.toContain("respec-offending-element");
     expect(idl2.classList).toContain("respec-offending-element");
-    expect(idl2.title.startsWith("WebIDL validation error")).toBe(true);
+    expect(idl2.title).toContain("Optional dictionary");
   });
 });
