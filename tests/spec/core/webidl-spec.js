@@ -1308,7 +1308,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(it.dataset.export).toBe("");
     expect(attr.dataset.dfnType).toBe("attribute");
 
-    const tea = doc.querySelector(".respec-offending-element");
+    const [, tea] = doc.querySelectorAll(".respec-offending-element");
     expect(tea.textContent).toBe("TeaTime");
   });
   it("marks a failing IDL block", async () => {
@@ -1324,5 +1324,44 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const pre = doc.getElementById("pre");
 
     expect(pre.classList).toContain("respec-offending-element");
+  });
+  it("validates IDL", async () => {
+    const body = `
+      <section>
+        <pre class="idl" id="circle">
+          interface Circle {};
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const idl = doc.getElementById("circle");
+
+    expect(idl.classList).toContain("respec-offending-element");
+    expect(idl.title).toContain("Exposed");
+  });
+  it("validates across IDL", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          dictionary Bread {
+            DOMString type = "melon";
+          };
+        </pre>
+        <pre class="idl">
+          [Exposed=Window]
+          interface Moka {
+            void eat(optional Bread bread);
+          };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const [idl1, idl2] = doc.getElementsByTagName("pre");
+
+    expect(idl1.classList).not.toContain("respec-offending-element");
+    expect(idl2.classList).toContain("respec-offending-element");
+    expect(idl2.title).toContain("Optional dictionary");
   });
 });
