@@ -1,4 +1,3 @@
-/* globals console */
 // Module core/data-include
 // Support for the data-include attribute. Causes external content to be included inside an
 // element that has data-include='some URI'. There is also a data-oninclude attribute that
@@ -75,9 +74,7 @@ export async function run() {
       const text = await response.text();
       processResponse(text, id, url);
     } catch (err) {
-      const msg = `\`data-include\` failed: \`${url}\` (${
-        err.message
-      }). See console for details.`;
+      const msg = `\`data-include\` failed: \`${url}\` (${err.message}). See console for details.`;
       console.error("data-include failed for element: ", el, err);
       pub("error", msg);
     }

@@ -103,11 +103,7 @@ async function fetchAndWrite(
       case "":
         break;
       default:
-        try {
-          await writeTo(out, html);
-        } catch (err) {
-          throw err;
-        }
+        await writeTo(out, html);
     }
     return html;
   } finally {
@@ -230,13 +226,13 @@ function makeConsoleMsgHandler(page) {
       const text = args.filter(msg => msg !== "undefined").join(" ");
       const type = message.type();
       if (
-        type === "error" &&
+        (type === "error" || type === "warning") &&
         msgText && // browser errors have text
-        !message.args().length // browser errors have no arguments
+        !message.args().length // browser errors/warnings have no arguments
       ) {
         // Since Puppeteer 1.4 reports _all_ errors, including CORS
-        // violations. Unfortunately, there is no way to distinguish these errors
-        // from other errors, so using this ugly hack.
+        // violations and slow preloads. Unfortunately, there is no way to distinguish
+        // these errors from other errors, so using this ugly hack.
         // https://github.com/GoogleChrome/puppeteer/issues/1939
         return;
       }

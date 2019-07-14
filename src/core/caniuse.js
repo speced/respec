@@ -62,28 +62,26 @@ export async function run(conf) {
   if (!options.feature) {
     return; // no feature to show
   }
-  const featureURL = `https://caniuse.com/#feat=${options.feature}`;
+  const featureURL = new URL(options.feature, "https://caniuse.com/").href;
 
   document.head.appendChild(hyperHTML`
     <style class="removeOnSave">${caniuseCss}</style>`);
 
   const headDlElem = document.querySelector(".head dl");
-  const contentPromise = new Promise(async resolve => {
-    let content;
+  const contentPromise = (async () => {
     try {
       const apiUrl = options.apiURL || API_URL;
       const stats = await fetchStats(apiUrl, options);
-      content = createTableHTML(featureURL, stats);
+      return createTableHTML(featureURL, stats);
     } catch (err) {
       console.error(err);
       const msg =
         `Couldn't find feature "${options.feature}" on caniuse.com? ` +
         "Please check the feature key on [caniuse.com](https://caniuse.com)";
       pub("error", msg);
-      content = hyperHTML`<a href="${featureURL}">caniuse.com</a>`;
+      return hyperHTML`<a href="${featureURL}">caniuse.com</a>`;
     }
-    resolve(content);
-  });
+  })();
   const definitionPair = hyperHTML`
     <dt class="caniuse-title">Browser support:</dt>
     <dd class="caniuse-stats">${{
@@ -128,7 +126,7 @@ function getNormalizedConf(conf) {
 
 /**
  * @param {string} apiURL
- * @typedef {{ [browserName: string]: [string, string[]][] }} ApiResponse
+ * @typedef {Record<string, [string, string[]][]>} ApiResponse
  * @return {Promise<ApiResponse>}
  * @throws {Error} on failure
  */

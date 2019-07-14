@@ -43,11 +43,6 @@ export async function run(conf) {
       return findLinkTarget(target, ant, titleToDfns, possibleExternalLinks);
     });
     if (!foundDfn && linkTargets.length !== 0) {
-      // ignore WebIDL
-      if (ant.closest("pre.idl")) {
-        ant.replaceWith(...ant.childNodes);
-        return;
-      }
       if (ant.dataset.cite === "") {
         badLinks.push(ant);
       } else {
@@ -142,7 +137,7 @@ function assignDfnId(dfn, title) {
 }
 
 /**
- * @param {{ for: string, title: string }} target
+ * @param {import("./utils.js").LinkTarget} target
  * @param {HTMLAnchorElement} ant
  * @param {Record<string, Record<string, HTMLElement>>} titleToDfns
  * @param {HTMLElement[]} possibleExternalLinks
@@ -163,14 +158,17 @@ function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
     ant.dataset.lt = lt[0] || dfn.textContent;
     possibleExternalLinks.push(ant);
   } else {
-    ant.href = `#${dfn.id}`;
-    ant.classList.add("internalDFN");
+    if (ant.dataset.idl === "partial") {
+      possibleExternalLinks.push(ant);
+    } else {
+      ant.href = `#${dfn.id}`;
+      ant.classList.add("internalDFN");
+    }
   }
   // add a bikeshed style indication of the type of link
   if (!ant.hasAttribute("data-link-type")) {
     ant.dataset.linkType = "dfn";
   }
-
   if (isCode(dfn)) {
     wrapAsCode(ant, dfn);
   }
@@ -253,9 +251,7 @@ function showLinkingError(elems) {
   elems.forEach(elem => {
     showInlineWarning(
       elem,
-      `Found linkless \`<a>\` element with text "${
-        elem.textContent
-      }" but no matching \`<dfn>\``,
+      `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``,
       "Linking error: not matching <dfn>"
     );
   });

@@ -28,11 +28,11 @@ describe("Core - Inlines", () => {
     const doc = await makeRSDoc(ops);
 
     const norm = [...doc.querySelectorAll("#normative-references dt")];
-    expect(norm.length).toBe(4);
     expect(norm.map(el => el.textContent)).toEqual([
       "[dom]",
       "[html]",
       "[RFC2119]", // added by conformance section
+      "[RFC8174]", // added by conformance section
       "[svg]",
     ]);
 
@@ -41,13 +41,15 @@ describe("Core - Inlines", () => {
     expect(inform.map(el => el.textContent)).toEqual(["[infra]", "[webidl]"]);
 
     const links = [...doc.querySelectorAll("section cite a")];
-    expect(links.length).toBe(7);
+    expect(links.length).toBe(8);
     expect(links[0].textContent).toBe("RFC2119");
     expect(links[0].getAttribute("href")).toBe("#bib-rfc2119");
-    expect(links[1].textContent).toBe("dom");
-    expect(links[1].getAttribute("href")).toBe("#bib-dom");
-    expect(links[5].textContent).toBe("svg");
-    expect(links[5].getAttribute("href")).toBe("#bib-svg");
+    expect(links[1].textContent).toBe("RFC8174");
+    expect(links[1].getAttribute("href")).toBe("#bib-rfc8174");
+    expect(links[2].textContent).toBe("dom");
+    expect(links[2].getAttribute("href")).toBe("#bib-dom");
+    expect(links[6].textContent).toBe("svg");
+    expect(links[6].getAttribute("href")).toBe("#bib-svg");
 
     const illegalCite = doc.querySelector("#illegal cite");
     expect(illegalCite.classList.contains("respec-offending-element")).toBe(
@@ -199,27 +201,29 @@ describe("Core - Inlines", () => {
         <figure id="figure">
           <figcaption>figure caption</figcaption>
         </figure>
-        <aside class="example" id="example-aside" title="aside"></aside>
+        <aside class="example" id="example-aside_thing" title="aside"></aside>
         <pre class="example" id="example-pre" title="pre">
         </pre>
       </section>
       <p id="output">
         [[[#section]]]
         [[[#figure]]]
-        [[[#example-aside]]]
+        [[[#example-aside_thing]]]
         [[[#example-pre]]]
         [[[#does-not-exist]]]
       </p>`;
     const doc = await makeRSDoc(makeStandardOps(null, body));
     const anchors = doc.querySelectorAll("#output a");
-
     expect(anchors.length).toBe(4);
     const [section, figure, exampleAside, examplePre] = anchors;
-    expect(section.textContent).toBe("§ 1. section heading");
+    expect(section.textContent).toBe("§\u00A01. section heading");
+    expect(section.classList).toContain("sec-ref");
     expect(figure.textContent).toBe("Figure 1");
-    expect(exampleAside.textContent).toBe("Example 1: aside");
-    expect(examplePre.textContent).toBe("Example 2: pre");
-
+    expect(figure.classList).toContain("fig-ref");
+    expect(exampleAside.textContent).toBe("Example 1");
+    expect(exampleAside.classList).toContain("box-ref");
+    expect(examplePre.textContent).toBe("Example 2");
+    expect(examplePre.classList).toContain("box-ref");
     const badOne = doc.querySelector("#output span.respec-offending-element");
     expect(badOne.textContent).toBe("[[[#does-not-exist]]]");
   });

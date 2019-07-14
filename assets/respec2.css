@@ -56,24 +56,17 @@ a.bibref {
   animation: pop 0.25s ease-in-out 0s 1;
 }
 
-/* TODO: Remove once https://github.com/w3c/tr-design/pull/176 is merged. */
-.respec-offending-element a[href] {
-  margin: 0;
-}
-
 .respec-offending-element {
-  display: inline-block;
-  position: relative;
-  /* Red squiggly line */
-  background: url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=)
-    bottom repeat-x;
+  text-decoration: red wavy underline;
 }
-@supports (text-decoration-style: wavy) {
+@supports not (text-decoration: red wavy underline) {
+  .respec-offending-element:not(pre) {
+    display: inline-block;
+  }
   .respec-offending-element {
-    background: none;
-    text-decoration-line: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: red;
+    /* Red squiggly line */
+    background: url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=)
+      bottom repeat-x;
   }
 }
 

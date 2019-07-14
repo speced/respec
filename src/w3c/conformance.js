@@ -15,7 +15,10 @@ export const name = "w3c/conformance";
 function processConformance(conformance, conf) {
   const terms = [...Object.keys(rfc2119Usage)];
   // Add RFC2119 to blibliography
-  if (terms.length) conf.normativeReferences.add("RFC2119");
+  if (terms.length) {
+    conf.normativeReferences.add("RFC2119");
+    conf.normativeReferences.add("RFC8174");
+  }
   // Put in the 2119 clause and reference
   const keywords = joinAnd(
     terms.sort(),
@@ -32,9 +35,12 @@ function processConformance(conformance, conf) {
     ${terms.length
       ? html`
           <p>
-            The key word${plural ? "s" : ""} ${[keywords]}
+            The key word${plural ? "s" : ""} ${[keywords]} in this document
             ${plural ? "are" : "is"} to be interpreted as described in
-            ${renderInlineCitation("RFC2119")}.
+            <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+            ${renderInlineCitation("RFC2119")}
+            ${renderInlineCitation("RFC8174")} when, and only when, they appear
+            in all capitals, as shown here.
           </p>
         `
       : null}

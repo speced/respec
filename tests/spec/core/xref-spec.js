@@ -144,7 +144,7 @@ describe("Core — xref", () => {
 
   it("does nothing if xref is not enabled", async () => {
     const body = `<a id="external-link">event handler</a>`;
-    const ops = makeStandardOps(null, body);
+    const ops = makeStandardOps({ specStatus: "unofficial" }, body);
     const doc = await makeRSDoc(ops);
 
     const link = doc.getElementById("external-link");
@@ -800,9 +800,9 @@ describe("Core — xref", () => {
         </section>
         <section id="test">
           <h2>Ignore</h2>
-          <p>Some other <dfn>languageCode</dfn> definiton.</p>
-          <p id="link-internal">{{ PaymentAddress.languageCode }} links to PaymentAddress definitons.</p>
-          <p id="link-internal-dfn">{{ languageCode }} links to some other definiton.</p>
+          <p>Some other <dfn>languageCode</dfn> definitions.</p>
+          <p id="link-internal">{{ PaymentAddress.languageCode }} links to PaymentAddress definitions.</p>
+          <p id="link-internal-dfn">{{ languageCode }} links to some other definitions.</p>
           <p id="link-external">{{ Window.event }} links to html spec.</p>
         </section>
       `;
@@ -1000,5 +1000,22 @@ describe("Core — xref", () => {
     expect(cacheKeys).toEqual(
       ["__CACHE_TIME__", keys.get("dictionary"), keys.get("url parser")].sort()
     );
+  });
+
+  it("respects requests to not perform an xref lookup", async () => {
+    const body = `
+      <section>
+      <a id="test1" data-cite="service-workers" data-no-xref>JSON</a>
+      <a id="test2" data-cite="service-workers">JSON</a>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+    const test1 = doc.getElementById("test1");
+    expect(test1.href).toBe("https://www.w3.org/TR/service-workers-1/");
+    expect(test1.classList).not.toContain("respec-offending-element");
+    const test2 = doc.getElementById("test2");
+    expect(test2.classList).toContain("respec-offending-element");
   });
 });

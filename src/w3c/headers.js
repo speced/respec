@@ -167,17 +167,18 @@ const status2long = {
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
-const recTrackStatus = ["FPWD", "WD", "FPLC", "LC", "CR", "PR", "PER", "REC"];
+const maybeRecTrack = ["FPWD", "WD"];
+const recTrackStatus = ["FPLC", "LC", "CR", "PR", "PER", "REC"];
 const noTrackStatus = [
-  "MO",
-  "unofficial",
   "base",
-  "finding",
-  "draft-finding",
-  "CG-DRAFT",
-  "CG-FINAL",
   "BG-DRAFT",
   "BG-FINAL",
+  "CG-DRAFT",
+  "CG-FINAL",
+  "draft-finding",
+  "finding",
+  "MO",
+  "unofficial",
 ];
 const cgbg = ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"];
 const precededByAn = ["ED", "IG-NOTE"];
@@ -266,9 +267,7 @@ export function run(conf) {
       const msg =
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
         "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
-        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/${
-          conf.shortName
-        } ).`;
+        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/${conf.shortName} ).`;
       pub("warn", msg);
     }
   }
@@ -287,7 +286,7 @@ export function run(conf) {
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
   conf.isRecTrack = conf.noRecTrack
     ? false
-    : recTrackStatus.includes(conf.specStatus);
+    : recTrackStatus.concat(maybeRecTrack).includes(conf.specStatus);
   conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
   if (conf.isMemberSubmission) {
     const memSubmissionLogo = {
@@ -329,9 +328,7 @@ export function run(conf) {
     }-${conf.shortName}-${concatDate(conf.publishDate)}/`;
   if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
   if (conf.isRegular)
-    conf.latestVersion = `https://www.w3.org/${publishSpace}/${
-      conf.shortName
-    }/`;
+    conf.latestVersion = `https://www.w3.org/${publishSpace}/${conf.shortName}/`;
   if (conf.isTagFinding) {
     conf.latestVersion = `https://www.w3.org/2001/tag/doc/${conf.shortName}`;
     conf.thisVersion = `${conf.latestVersion}-${ISODate.format(
@@ -429,11 +426,7 @@ export function run(conf) {
     });
   if (conf.bugTracker) {
     if (conf.bugTracker.new && conf.bugTracker.open) {
-      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>${
-        conf.l10n.file_a_bug
-      }</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${
-        conf.l10n.open_bugs
-      }</a>${conf.l10n.close_parens}`;
+      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>${conf.l10n.file_a_bug}</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${conf.l10n.open_bugs}</a>${conf.l10n.close_parens}`;
     } else if (conf.bugTracker.open) {
       conf.bugTrackerHTML = `<a href='${conf.bugTracker.open}'>open bugs</a>`;
     } else if (conf.bugTracker.new) {

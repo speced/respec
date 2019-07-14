@@ -1255,7 +1255,7 @@ describe("W3C — Headers", () => {
       // There should only be one thing in the ToC
       expect(doc.querySelectorAll("#toc li").length).toBe(1);
       // and it should say "PASS"
-      expect(doc.querySelector("#toc li span").nextSibling.textContent).toBe(
+      expect(doc.querySelector("#toc li bdi").nextSibling.textContent).toBe(
         "PASS"
       );
     };

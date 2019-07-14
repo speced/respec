@@ -4,7 +4,6 @@
 //  - localBiblio: override or supplement the official biblio with your own.
 
 /* jshint jquery: true */
-/* globals console */
 import { biblioDB } from "./biblio-db.js";
 import { createResourceHint } from "./utils.js";
 import { pub } from "./pubsubhub.js";
@@ -17,8 +16,10 @@ export const name = "core/biblio";
 
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
-// Normative references take precedence over informative ones,
-// so any duplicates ones are removed from the informative set.
+/**
+ * Normative references take precedence over informative ones,
+ * so any duplicates ones are removed from the informative set.
+ */
 function normalizeReferences(conf) {
   const normalizedNormativeRefs = new Set(
     [...conf.normativeReferences].map(key => key.toLowerCase())
@@ -136,14 +137,12 @@ export async function run(conf) {
     console.warn(err);
   }
   const split = { hasData: [], noData: [] };
-  idbRefs.reduce((collector, ref) => {
-    ref.data ? collector.hasData.push(ref) : collector.noData.push(ref);
-    return collector;
-  }, split);
-  split.hasData.reduce((collector, ref) => {
-    collector[ref.id] = ref.data;
-    return collector;
-  }, biblio);
+  idbRefs.forEach(ref => {
+    (ref.data ? split.hasData : split.noData).push(ref);
+  });
+  split.hasData.forEach(ref => {
+    biblio[ref.id] = ref.data;
+  });
   const externalRefs = split.noData.map(item => item.id);
   if (externalRefs.length) {
     // Going to the network for refs we don't have

@@ -12,7 +12,7 @@ describe("Core - Figures", () => {
   afterAll(flushIframes);
   it("creates autolinks from the anchor to the figure", async () => {
     const body = `
-      <figure id='fig'> <img src='img' alt=''>
+       <figure id='fig'>
         <figcaption>test figure caption</figcaption>
        </figure>
        <a id='anchor-fig-title-empty' title='' href='#fig'></a>
@@ -21,17 +21,18 @@ describe("Core - Figures", () => {
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
+
     const anchorFig = doc.getElementById("anchor-fig");
     const anchorFigTitleSet = doc.getElementById("anchor-fig-title-set");
     const anchorFigTitleEmpty = doc.getElementById("anchor-fig-title-empty");
 
-    expect(anchorFig.innerText).toBe("Figure 1");
+    expect(anchorFig.textContent).toBe("Figure 1");
     expect(anchorFig.title).toBe("test figure caption");
 
-    expect(anchorFigTitleSet.innerText).toBe("Figure 1");
+    expect(anchorFigTitleSet.textContent).toBe("Figure 1");
     expect(anchorFigTitleSet.title).toBe("pass");
 
-    expect(anchorFigTitleEmpty.innerText).toBe("Figure 1");
+    expect(anchorFigTitleEmpty.textContent).toBe("Figure 1");
     expect(anchorFigTitleEmpty.title).toBe("");
   });
 
@@ -52,7 +53,7 @@ describe("Core - Figures", () => {
     expect(anchorFig.title).toBe("漢字と仮名のサイズの示し方");
   });
 
-  it("generates table of figures", async () => {
+  it("generates list of figures", async () => {
     const body = `
       <figure>
         <img src='img' alt=''>
@@ -72,7 +73,7 @@ describe("Core - Figures", () => {
     const figLinks = tof.querySelectorAll("ul li a");
     expect(tof.querySelector("figcaption")).toBeNull();
     expect(tofHeader).toBeTruthy();
-    expect(tofHeader.textContent).toBe("1. Table of Figures");
+    expect(tofHeader.textContent).toBe("1. List of Figures");
     expect(tofItems.length).toBe(2);
     expect(figLinks[0].textContent).toBe("Figure 1 test 1");
     expect(figLinks[1].textContent).toBe("Figure 2 test 2");
@@ -158,7 +159,7 @@ describe("Core - Figures", () => {
       expect(image.hasAttribute("width")).toBeFalsy();
     });
   });
-  it("localizes table of figures", async () => {
+  it("localizes list of figures", async () => {
     const ops = {
       config: makeBasicConfig(),
       htmlAttrs: {

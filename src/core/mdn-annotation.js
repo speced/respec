@@ -32,8 +32,7 @@ const MDN_BROWSERS = {
 
 function fetchAndCacheJson(url, maxAge) {
   if (!url) return {};
-  const request = new Request(url);
-  return fetchAndCache(request, maxAge).then(r => r.json());
+  return fetchAndCache(url, maxAge).then(r => r.json());
 }
 
 function insertMDNBox(node) {
@@ -43,23 +42,19 @@ function insertMDNBox(node) {
     // If the target ancestor already has a mdnBox inserted, we just use it
     return targetSibling;
   }
-  const mdnBox = hyperHTML`<aside class="mdn before wrapped">
-    <button onclick="toggleMDNStatus(this)" aria-label="Expand MDN details">⋰</button>
-  </aside>`;
+  const mdnBox = hyperHTML`<aside class="mdn before wrapped"></aside>`;
   parentNode.insertBefore(mdnBox, targetAncestor);
   return mdnBox;
 }
 
 function attachMDNDetail(container, mdnSpec) {
   const { slug, summary } = mdnSpec;
-  container.innerHTML += "<b>MDN </b>";
+  container.innerHTML += `<button onclick="toggleMDNStatus(this.parentNode)" aria-label="Expand MDN details"><b>MDN</b></button>`;
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
-  const mdnDetail = document.createElement("details");
+  const mdnDetail = document.createElement("div");
   const href = `${MDN_URL_BASE}${slug}`;
   hyperHTML(mdnDetail)`
-    <summary>
       <a title="${summary}" href="${href}">${mdnSubPath}</a>
-    </summary>
   `;
   attachMDNBrowserSupport(mdnDetail, mdnSpec);
   container.appendChild(mdnDetail);

@@ -63,19 +63,11 @@ function decorateDocument(doc, opts) {
     return element;
   }
 
-  function addRespecLoader(opts) {
-    const { jsPath, profile } = { jsPath: "../js/", ...opts };
+  function addReSpecLoader(opts) {
+    const { profile } = opts;
     const loader = doc.createElement("script");
-    const isKarma = !!window.__karma__;
-    const loadAttr = {
-      src: isKarma
-        ? new URL(`/base/builds/respec-${profile}.js`, location).href
-        : "/js/deps/require.js",
-      "data-main": isKarma ? "" : `${jsPath}/profile-${profile}`,
-    };
-    Object.keys(loadAttr)
-      .reduce(intoAttributes.bind(loadAttr), loader)
-      .classList.add("remove");
+    loader.classList.add("remove");
+    loader.src = `/base/builds/respec-${profile}.js`;
     doc.head.appendChild(loader);
   }
 
@@ -117,7 +109,7 @@ function decorateDocument(doc, opts) {
   decorateBody(opts);
   addRespecConfig(opts);
   if (!doc.querySelector("script[src]")) {
-    addRespecLoader(opts);
+    addReSpecLoader(opts);
   }
 }
 

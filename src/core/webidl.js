@@ -5,173 +5,178 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import * as webidl2 from "webidl2";
+import { flatten, showInlineError, showInlineWarning } from "./utils.js";
 import css from "text!../../assets/webidl.css";
 import { findDfn } from "./dfn-finder.js";
-import { flatten } from "./utils.js";
 import hyperHTML from "hyperhtml";
-import { pub } from "./pubsubhub.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";
 
-const extendedAttributesLinks = new Map([
-  ["AllowShared", "WEBIDL#AllowShared"],
-  ["CEReactions", "HTML#cereactions"],
-  ["Clamp", "WEBIDL#Clamp"],
-  ["Constructor", "WEBIDL#Constructor"],
-  ["Default", "WEBIDL#Default"],
-  ["EnforceRange", "WEBIDL#EnforceRange"],
-  ["Exposed", "WEBIDL#Exposed"],
-  ["Global", "WEBIDL#Global"],
-  ["HTMLConstructor", "HTML#htmlconstructor"],
-  [
-    "LegacyUnenumerableNamedProperties",
-    "WEBIDL#LegacyUnenumerableNamedProperties",
-  ],
-  ["LegacyWindowAlias", "WEBIDL#LegacyWindowAlias"],
-  ["LenientSetter", "WEBIDL#LenientSetter"],
-  ["LenientThis", "WEBIDL#LenientThis"],
-  ["NamedConstructor", "WEBIDL#NamedConstructor"],
-  ["NewObject", "WEBIDL#NewObject"],
-  ["NoInterfaceObject", "WEBIDL#NoInterfaceObject"],
-  ["OverrideBuiltins", "WEBIDL#OverrideBuiltins"],
-  ["PutForwards", "WEBIDL#PutForwards"],
-  ["Replaceable", "WEBIDL#Replaceable"],
-  ["SameObject", "WEBIDL#SameObject"],
-  ["SecureContext", "WEBIDL#SecureContext"],
-  ["TreatNonObjectAsNull", "WEBIDL#TreatNonObjectAsNull"],
-  ["TreatNullAs", "WEBIDL#TreatNullAs"],
-  ["Unforgeable", "WEBIDL#Unforgeable"],
-  ["Unscopable", "WEBIDL#Unscopable"],
-]);
-
-const standardTypes = new Map([
-  ["any", "WEBIDL#idl-any"],
-  ["ArrayBuffer", "WEBIDL#idl-ArrayBuffer"],
-  ["boolean", "WEBIDL#idl-boolean"],
-  ["Buffer", "WEBIDL#idl-Buffer"],
-  ["byte", "WEBIDL#idl-byte"],
-  ["ByteString", "WEBIDL#idl-ByteString"],
-  ["DataView", "WEBIDL#idl-DataView"],
-  ["DOMException", "WEBIDL#idl-DOMException"],
-  ["DOMString", "WEBIDL#idl-DOMString"],
-  ["double", "WEBIDL#idl-double"],
-  ["Error", "WEBIDL#idl-Error"],
-  ["EventHandler", "HTML/webappapis.html#eventhandler"],
-  ["float", "WEBIDL#idl-float"],
-  ["Float32Array", "WEBIDL#idl-Float32Array"],
-  ["Float64Array", "WEBIDL#idl-Float64Array"],
-  ["FrozenArray", "WEBIDL#idl-frozen-array"],
-  ["Int16Array", "WEBIDL#idl-Int16Array"],
-  ["Int32Array", "WEBIDL#idl-Int32Array"],
-  ["Int8Array", "WEBIDL#idl-Int8Array"],
-  ["long long", "WEBIDL#idl-long-long"],
-  ["long", "WEBIDL#idl-long"],
-  ["object", "WEBIDL#idl-object"],
-  ["octet", "WEBIDL#idl-octet"],
-  ["Promise", "WEBIDL#idl-promise"],
-  ["record", "WEBIDL#idl-record"],
-  ["sequence", "WEBIDL#idl-sequence"],
-  ["short", "WEBIDL#idl-short"],
-  ["Uint16Array", "WEBIDL#idl-Uint16Array"],
-  ["Uint32Array", "WEBIDL#idl-Uint32Array"],
-  ["Uint8Array", "WEBIDL#idl-Uint8Array"],
-  ["Uint8ClampedArray", "WEBIDL#dl-Uint8ClampedArray"],
-  ["unrestricted double", "WEBIDL#idl-unrestricted-double"],
-  ["unrestricted float", "WEBIDL#idl-unrestricted-float"],
-  ["unsigned long long", "WEBIDL#idl-unsigned-long-long"],
-  ["unsigned long", "WEBIDL#idl-unsigned-long"],
-  ["unsigned short", "WEBIDL#idl-unsigned-short"],
-  ["USVString", "WEBIDL#idl-USVString"],
-]);
-
 const operationNames = {};
 const idlPartials = {};
 
-// Takes the result of WebIDL2.parse(), an array of definitions.
-function makeMarkup(parse, { suppressWarnings } = {}) {
-  const templates = {
-    wrap(items) {
-      return items
-        .reduce(flatten, [])
-        .map(x => (typeof x === "string" ? new Text(x) : x));
-    },
-    trivia(t) {
-      if (!t.trim()) {
-        return t;
+const templates = {
+  wrap(items) {
+    return items
+      .reduce(flatten, [])
+      .filter(x => x !== "")
+      .map(x => (typeof x === "string" ? new Text(x) : x));
+  },
+  trivia(t) {
+    if (!t.trim()) {
+      return t;
+    }
+    return hyperHTML`<span class='idlSectionComment'>${t}</span>`;
+  },
+  generic(keyword) {
+    // Shepherd classifies "interfaces" as starting with capital letters,
+    // like Promise, FrozenArray, etc.
+    return /^[A-Z]/.test(keyword)
+      ? hyperHTML`<a data-xref-type="interface" data-cite="WebIDL">${keyword}</a>`
+      : // Other keywords like sequence, maplike, etc...
+        hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
+  },
+  reference(wrapped, unescaped, context) {
+    let type = "_IDL_";
+    let cite = null;
+    let lt;
+    switch (unescaped) {
+      case "Window":
+        type = "interface";
+        cite = "HTML";
+        break;
+      case "object":
+        type = "interface";
+        cite = "WebIDL";
+        break;
+      default: {
+        const isWorkerType = unescaped.includes("Worker");
+        if (
+          isWorkerType &&
+          context.type === "extended-attribute" &&
+          context.name === "Exposed"
+        ) {
+          lt = `${unescaped}GlobalScope`;
+          type = "interface";
+          cite = ["Worker", "DedicatedWorker", "SharedWorker"].includes(
+            unescaped
+          )
+            ? "HTML"
+            : null;
+        }
       }
-      return hyperHTML`<span class='idlSectionComment'>${t}</span>`;
-    },
-    reference(wrapped, name) {
-      if (standardTypes.has(name)) {
-        return hyperHTML`<a data-cite='${standardTypes.get(
-          name
-        )}'>${wrapped}</a>`;
-      }
-      return hyperHTML`<a data-link-for="">${wrapped}</a>`;
-    },
-    name(escaped, { data, parent }) {
-      if (data.idlType && data.idlType.type === "argument-type") {
-        return hyperHTML`<span class="idlParamName">${escaped}</span>`;
-      }
-      const parentName = parent ? parent.name : "";
-      const { name } = getNameAndId(data, parentName);
-      const dfn = findDfn(data, name, {
-        parent: parentName,
-        suppressWarnings,
-      });
-      const idlAnchor = createIdlAnchor(escaped, data, parentName, dfn);
+    }
+    return hyperHTML`<a
+      data-xref-type="${type}" data-cite="${cite}" data-lt="${lt}">${wrapped}</a>`;
+  },
+  name(escaped, { data, parent }) {
+    if (data.idlType && data.idlType.type === "argument-type") {
+      return hyperHTML`<span class="idlParamName">${escaped}</span>`;
+    }
+    const idlLink = defineIdlName(escaped, data, parent);
+    if (data.type !== "enum-value") {
       const className = parent ? "idlName" : "idlID";
-      if (data.type === "enum-value") {
-        return idlAnchor;
-      }
-      return hyperHTML`<span class="${className}">${idlAnchor}</span>`;
-    },
-    type: contents => hyperHTML`<span class="idlType">${contents}</span>`,
-    inheritance: contents =>
-      hyperHTML`<span class="idlSuperclass">${contents}</span>`,
-    definition: createIdlElement,
-    extendedAttribute: contents =>
-      hyperHTML`<span class="extAttr">${contents}</span>`,
-    extendedAttributeReference(name) {
-      if (!extendedAttributesLinks.has(name)) {
-        return hyperHTML`<a>${name}</a>`;
-      }
-      return hyperHTML`<a data-cite="${extendedAttributesLinks.get(
-        name
-      )}">${name}</a>`;
-    },
-  };
-  const result = webidl2.write(parse, { templates });
-  return hyperHTML`<pre class="def idl">${result}</pre>`;
-}
+      idlLink.classList.add(className);
+    }
+    return idlLink;
+  },
+  type(contents) {
+    return hyperHTML`<span class="idlType">${contents}</span>`;
+  },
+  inheritance(contents) {
+    return hyperHTML`<span class="idlSuperclass">${contents}</span>`;
+  },
+  definition(contents, { data, parent }) {
+    const className = getIdlDefinitionClassName(data);
+    switch (data.type) {
+      case "includes":
+      case "enum-value":
+        return hyperHTML`<span class='${className}'>${contents}</span>`;
+    }
+    const parentName = parent ? parent.name : "";
+    const { name, idlId } = getNameAndId(data, parentName);
+    return hyperHTML`<span class='${className}' id='${idlId}' data-idl data-title='${name}'>${contents}</span>`;
+  },
+  extendedAttribute(contents) {
+    const result = hyperHTML`<span class="extAttr">${contents}</span>`;
+    return result;
+  },
+  extendedAttributeReference(name) {
+    return hyperHTML`<a data-xref-type="extended-attribute">${name}</a>`;
+  },
+};
 
-function createIdlAnchor(escaped, data, parentName, dfn) {
+/**
+ * Returns a link to existing <dfn> or creates one if doesn’t exists.
+ */
+function defineIdlName(escaped, data, parent) {
+  const parentName = parent ? parent.name : "";
+  const { name } = getNameAndId(data, parentName);
+  const dfn = findDfn(data, name, {
+    parent: parentName,
+  });
+  const linkType = getDfnType(data.type);
   if (dfn) {
-    return hyperHTML`<a data-link-for="${parentName.toLowerCase()}" data-lt="${dfn
-      .dataset.lt || ""}">${escaped}</a>`;
+    if (!data.partial) {
+      dfn.dataset.export = "";
+      dfn.dataset.dfnType = linkType;
+    }
+    return hyperHTML`<a
+      data-link-for="${parentName.toLowerCase()}"
+      data-link-type="${linkType}"
+      data-lt="${dfn.dataset.lt || null}"
+      >${escaped}</a>`;
   }
+
   const isDefaultJSON =
     data.type === "operation" &&
     data.name === "toJSON" &&
-    data.extAttrs &&
-    data.extAttrs.items.some(({ name }) => name === "Default");
+    data.extAttrs.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
-    return hyperHTML`<a data-cite="WEBIDL#default-tojson-operation">${escaped}</a>`;
+    return hyperHTML`<a
+     data-link-type="dfn"
+     data-lt="default toJSON operation">${escaped}</a>`;
   }
-  return escaped;
+  if (!data.partial) {
+    return hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
+      parent.name}">${escaped}</dfn>`;
+  }
+
+  const unlinkedAnchor = hyperHTML`<a
+    data-idl="${data.partial ? "partial" : null}"
+    data-link-type="${linkType}"
+    data-title="${data.name}"
+    data-xref-type="${linkType}"
+    >${escaped}</a>`;
+
+  const showWarnings =
+    name && data.type !== "typedef" && !(data.partial && !dfn);
+  if (showWarnings) {
+    const styledName = data.type === "operation" ? `${name}()` : name;
+    const ofParent = parentName ? ` \`${parentName}\`'s` : "";
+    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
+    showInlineWarning(unlinkedAnchor, msg, "");
+  }
+  return unlinkedAnchor;
 }
 
-function createIdlElement(contents, { data, parent }) {
-  const className = getIdlDefinitionClassName(data);
-  switch (data.type) {
-    case "includes":
-    case "enum-value":
-      return hyperHTML`<span class='${className}'>${contents}</span>`;
+/**
+ * Map to Shepherd types, for export.
+ * @see https://tabatkins.github.io/bikeshed/#dfn-types
+ */
+function getDfnType(idlType) {
+  switch (idlType) {
+    case "operation":
+      return "method";
+    case "field":
+      return "dict-member";
+    case "callback interface":
+    case "interface mixin":
+      return "interface";
+    default:
+      return idlType;
   }
-  const parentName = parent ? parent.name : "";
-  const { name, idlId } = getNameAndId(data, parentName);
-  return hyperHTML`<span class='${className}' id='${idlId}' data-idl data-title='${name}'>${contents}</span>`;
 }
 
 function getIdlDefinitionClassName(defn) {
@@ -216,8 +221,8 @@ function resolveNameAndId(defn, parent) {
       const overload = resolveOverload(name, parent);
       if (overload) {
         name += overload;
-      } else if (defn.body && defn.body.arguments.length) {
-        idlId += defn.body.arguments
+      } else if (defn.arguments.length) {
+        idlId += defn.arguments
           .map(arg => `-${arg.name.toLowerCase()}`)
           .join("");
       }
@@ -273,6 +278,47 @@ function getDefnName(defn) {
   }
 }
 
+function renderWebIDL(idlElement, index) {
+  let parse;
+  try {
+    parse = webidl2.parse(idlElement.textContent, {
+      sourceName: String(index),
+    });
+  } catch (e) {
+    showInlineError(
+      idlElement,
+      `Failed to parse WebIDL: ${e.bareMessage}.`,
+      e.bareMessage,
+      { details: `<pre>${e.context}</pre>` }
+    );
+    // Skip this <pre> and move on to the next one.
+    return [];
+  }
+  idlElement.classList.add("def", "idl");
+  const html = webidl2.write(parse, { templates });
+  const render = hyperHTML.bind(idlElement);
+  render`${html}`;
+  idlElement.querySelectorAll("[data-idl]").forEach(elem => {
+    const title = elem.dataset.title.toLowerCase();
+    // Select the nearest ancestor element that can contain members.
+    const parent = elem.parentElement.closest("[data-idl][data-title]");
+    if (parent) {
+      elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
+    }
+    registerDefinition(elem, [title]);
+  });
+  // cross reference
+  const closestCite = idlElement.closest("[data-cite], body");
+  const { dataset } = closestCite;
+  if (!dataset.cite) dataset.cite = "WebIDL";
+  // includes webidl in some form
+  if (!/\bwebidl\b/i.test(dataset.cite)) {
+    const cites = dataset.cite.trim().split(/\s+/);
+    dataset.cite = ["WebIDL", ...cites].join(" ");
+  }
+  return parse;
+}
+
 export function run() {
   const idls = document.querySelectorAll("pre.idl");
   if (!idls.length) {
@@ -286,37 +332,16 @@ export function run() {
       link.before(style);
     }
   }
+  const astArray = [...idls].map(renderWebIDL);
 
-  idls.forEach(idlElement => {
-    let parse;
-    try {
-      parse = webidl2.parse(idlElement.textContent);
-    } catch (e) {
-      pub(
-        "error",
-        `Failed to parse WebIDL: ${e.message}.
-        <details>
-        <pre>${idlElement.textContent}\n ${e}</pre>
-        </details>`
-      );
-      // Skip this <pre> and move on to the next one.
-      return;
-    }
-    const newElement = makeMarkup(parse, {
-      suppressWarnings: idlElement.classList.contains("no-link-warnings"),
-    });
-    if (idlElement.id) newElement.id = idlElement.id;
-    newElement.querySelectorAll("[data-idl]").forEach(elem => {
-      const title = elem.dataset.title.toLowerCase();
-      // Select the nearest ancestor element that can contain members.
-      const parent = elem.parentElement.closest("[data-idl][data-title]");
-      if (parent) {
-        elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
-      }
-      registerDefinition(elem, [title]);
-    });
-    idlElement.replaceWith(newElement);
-    newElement.classList.add(...idlElement.classList);
-  });
+  const validations = webidl2.validate(astArray);
+  for (const validation of validations) {
+    showInlineError(
+      idls[validation.sourceName],
+      `WebIDL validation error: ${validation.bareMessage}`,
+      validation.bareMessage,
+      { details: `<pre>${validation.context}</pre>` }
+    );
+  }
   document.normalize();
 }

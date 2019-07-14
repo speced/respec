@@ -23,10 +23,10 @@ export function run() {
   if (!idlIndexSec.querySelector(query)) {
     const header = document.createElement("h2");
     if (idlIndexSec.title) {
-      header.innerHTML = idlIndexSec.title;
+      header.textContent = idlIndexSec.title;
       idlIndexSec.removeAttribute("title");
     } else {
-      header.innerHTML = "IDL Index";
+      header.textContent = "IDL Index";
     }
     idlIndexSec.prepend(header);
   }
@@ -38,8 +38,7 @@ export function run() {
 
   if (idlIndex.length === 0) {
     const text = "This specification doesn't declare any Web IDL.";
-    const noIDLFound = document.createTextNode(text);
-    idlIndexSec.appendChild(noIDLFound);
+    idlIndexSec.append(text);
     return;
   }
 
@@ -54,13 +53,12 @@ export function run() {
       }
       return fragment;
     })
-    .reduce((collector, elem) => {
-      if (collector.lastChild) {
-        collector.appendChild(document.createTextNode("\n\n"));
+    .forEach(elem => {
+      if (pre.lastChild) {
+        pre.append("\n\n");
       }
-      collector.appendChild(elem);
-      return collector;
-    }, pre);
+      pre.appendChild(elem);
+    });
   // Remove duplicate IDs
   pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
   idlIndexSec.appendChild(pre);

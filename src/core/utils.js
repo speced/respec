@@ -1,5 +1,3 @@
-/* jshint browser: true */
-/* globals console */
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
@@ -140,8 +138,10 @@ export function showInlineWarning(elems, msg, title) {
  * @param {Element|Element[]} elems
  * @param {String} msg message to show in warning
  * @param {String} title error message to add on each element
+ * @param {object} [options]
+ * @param {string} [options.details]
  */
-export function showInlineError(elems, msg, title) {
+export function showInlineError(elems, msg, title, { details } = {}) {
   if (!Array.isArray(elems)) elems = [elems];
   const links = elems
     .map((element, i) => {
@@ -149,7 +149,11 @@ export function showInlineError(elems, msg, title) {
       return generateMarkdownLink(element, i);
     })
     .join(", ");
-  pub("error", `${msg} at: ${links}.`);
+  let message = `${msg} at: ${links}.`;
+  if (details) {
+    message += `\n\n<details>${details}</details>`;
+  }
+  pub("error", message);
   console.error(msg, elems);
 }
 
@@ -411,17 +415,15 @@ export function runTransforms(content, flist) {
 
 /**
  * Cached request handler
- * @param {Request} request
- * @param {Object} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
+ * @param {RequestInfo} input
+ * @param {number} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
  * @return {Promise<Response>}
  *  if a cached response is available and it's not stale, return it
  *  else: request from network, cache and return fresh response.
  *    If network fails, return a stale cached version if exists (else throw)
  */
-export async function fetchAndCache(request, maxAge = 86400000) {
-  if (typeof request === "string" || request instanceof URL) {
-    request = new Request(request);
-  }
+export async function fetchAndCache(input, maxAge = 86400000) {
+  const request = new Request(input);
   const url = new URL(request.url);
 
   // use data from cache data if valid and render
@@ -478,7 +480,7 @@ export async function fetchAndCache(request, maxAge = 86400000) {
 export function flatten(collector, item) {
   const items = !Array.isArray(item)
     ? [item]
-    : [...item.values()].reduce(flatten, []);
+    : item.slice().reduce(flatten, []);
   collector.push(...items);
   return collector;
 }
@@ -626,7 +628,9 @@ export function getDfnTitles(elem, { isDefinition = false } = {}) {
 /**
  * For an element (usually <a>), returns an array of targets that
  * element might refer to, of the form
- * @typedef {{for: string, title: string}} LinkTarget
+ * @typedef {object} LinkTarget
+ * @property {string} for
+ * @property {string} title
  *
  * For an element like:
  *  <p data-link-for="Int1"><a data-link-for="Int2">Int3.member</a></p>
@@ -820,5 +824,32 @@ export class InsensitiveStringSet extends Set {
       : [...this.keys()].find(
           existingKey => existingKey.toLowerCase() === key.toLowerCase()
         );
+  }
+}
+
+export function makeSafeCopy(node) {
+  const clone = node.cloneNode(true);
+  clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
+  clone.querySelectorAll("dfn").forEach(dfn => renameElement(dfn, "span"));
+  if (clone.hasAttribute("id")) clone.removeAttribute("id");
+  removeCommentNodes(clone);
+  return clone;
+}
+
+export function removeCommentNodes(node) {
+  const walker = document.createTreeWalker(node, NodeFilter.SHOW_COMMENT);
+  for (const comment of [...walkTree(walker)]) {
+    comment.remove();
+  }
+}
+
+/**
+ * @template {Node} T
+ * @param {TreeWalker<T>} walker
+ * @return {IterableIterator<T>}
+ */
+function* walkTree(walker) {
+  while (walker.nextNode()) {
+    yield /** @type {T} */ (walker.currentNode);
   }
 }

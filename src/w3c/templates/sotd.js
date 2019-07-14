@@ -67,9 +67,7 @@ export default (conf, opts) => {
                                       >subscribe</a
                                     >,
                                     <a
-                                      href="${`https://lists.w3.org/Archives/Public/${
-                                        conf.wgPublicList
-                                      }/`}"
+                                      href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
                                       >archives</a
                                     >) through ${conf.humanPREnd}. Advisory
                                     Committee Representatives should consult
@@ -354,9 +352,7 @@ function linkToCommunity(conf, opts) {
               >${conf.wgPublicList}@w3.org</a
             >
             (<a
-              href="${`https://lists.w3.org/Archives/Public/${
-                conf.wgPublicList
-              }/`}"
+              href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
               >archives</a
             >)${conf.subjectPrefix
               ? html`

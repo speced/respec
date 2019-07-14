@@ -142,8 +142,11 @@ function getRequestEntry(elem) {
   }
   // if element itself contains data-cite, we don't take inline context into account
   if (dataciteElem !== elem) {
-    /** @type {NodeListOf<HTMLElement>} */
-    const bibrefs = elem.closest("section").querySelectorAll("a.bibref");
+    const closestSection = elem.closest("section");
+    /** @type {Iterable<HTMLElement>} */
+    const bibrefs = closestSection
+      ? closestSection.querySelectorAll("a.bibref")
+      : [];
     for (const el of bibrefs) {
       const ref = el.textContent.toLowerCase();
       specs.push(ref);
@@ -163,6 +166,7 @@ function getRequestEntry(elem) {
 
   let { xrefFor: forContext } = elem.dataset;
   if (!forContext && isIDL) {
+    /** @type {HTMLElement} */
     const dataXrefForElem = elem.closest("[data-xref-for]");
     if (dataXrefForElem) {
       forContext = dataXrefForElem.dataset.xrefFor;
@@ -288,6 +292,7 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
 
   for (let i = 0, l = elems.length; i < l; i++) {
     const elem = elems[i];
+    if (elem.closest("[data-no-xref]")) continue;
     const { id, term } = queryKeys[i];
     const results = data.get(id);
     switch (results.length) {
