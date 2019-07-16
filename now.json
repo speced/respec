@@ -1,6 +1,7 @@
 {
-  "name": "respec",
   "version": 2,
+  "name": "respec",
+  "scope": "respec",
   "public": true,
   "builds": [{ "src": "*", "use": "@now/static" }]
 }

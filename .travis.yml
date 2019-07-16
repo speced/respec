@@ -22,7 +22,7 @@ now_deploy: &now_deploy
   - npm run build:geonovum
   - chmod +x ./tools/create-pr-meta.sh && ./tools/create-pr-meta.sh
   - npx now ./builds/ -A ../now.json --meta branch=$TRAVIS_BRANCH --token $NOW_TOKEN
-  - npx now alias respec-$TRAVIS_BRANCH --token $NOW_TOKEN
+  - npx now alias respec-$TRAVIS_BRANCH -A ../now.json --token $NOW_TOKEN
 
 jobs:
   include:
