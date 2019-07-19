@@ -1,0 +1,56 @@
+{
+  "result": [
+    [
+      "318a08442ab399ac176948abb64c7fe6a4c3e8a6",
+      [
+        {
+          "shortname": "webidl",
+          "type": "interface",
+          "normative": true,
+          "uri": "#idl-DOMString"
+        }
+      ]
+    ],
+    [
+      "4e91016cfc0939b42979e950ae4571b0e6576763",
+      [
+        {
+          "shortname": "html",
+          "type": "interface",
+          "normative": true,
+          "uri": "window-object.html#window"
+        }
+      ]
+    ],
+    [
+      "929b4f5cad2be24d5025bc092ff848711bc04cca",
+      [
+        {
+          "shortname": "dom",
+          "type": "attribute",
+          "for": ["Window"],
+          "normative": true,
+          "uri": "#dom-window-event"
+        }
+      ]
+    ]
+  ],
+  "query": [
+    {
+      "term": "DOMString",
+      "types": ["_IDL_"],
+      "id": "318a08442ab399ac176948abb64c7fe6a4c3e8a6"
+    },
+    {
+      "term": "Window",
+      "types": ["_IDL_"],
+      "id": "4e91016cfc0939b42979e950ae4571b0e6576763"
+    },
+    {
+      "term": "event",
+      "types": ["attribute", "dict-member"],
+      "for": "Window",
+      "id": "929b4f5cad2be24d5025bc092ff848711bc04cca"
+    }
+  ]
+}
