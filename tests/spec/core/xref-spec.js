@@ -50,6 +50,12 @@ describe("Core — xref", () => {
       href: "https://www.w3.org/TR/css-layout-api-1/",
       id: "css-layout-api-1",
     },
+    "css-snappoints": {
+      href: "https://www.w3.org/TR/css-snappoints-1/",
+    },
+    "css-scroll-snap": {
+      href: "https://drafts.csswg.org/css-scroll-snap-1/",
+    },
     "local-1": { id: "local-1", href: "https://example.com/" },
     "local-2": { id: "local-2", href: "https://example.com/" },
     "local-3": { id: "local-3", href: "https://example.com/" },
@@ -197,9 +203,9 @@ describe("Core — xref", () => {
 
   it("uses data-cite to disambiguate", async () => {
     const body = `
-      <section id="links" data-cite="service-workers">
-        <p><a>fetch</a> is defined 1 time in service-workers and 2 times in fetch.
-          It uses parent's data-cite (service-workers).</p>
+      <section id="links" data-cite="css-snappoints">
+        <p><a>intended direction</a> is defined 1 time in css-scroll-snap and 1 time in css-snappoints.
+          It uses parent's data-cite (css-snappoints).</p>
         <p>Looks up <a data-cite="infra">ASCII uppercase</a> in infra.</p>
         <p>As <a data-cite="infra">ASCII upcasing</a> doesn't exist in INFRA,
           it resolves to spec only.</p>
@@ -216,7 +222,9 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const [link1, link2, link3] = [...doc.querySelectorAll("#links a")];
-    expect(link1.href).toBe(expectedLinks.get("sw-fetch"));
+    expect(link1.href).toBe(
+      "https://www.w3.org/TR/css-snappoints-1/#intended-direction"
+    );
     expect(link2.href).toBe(expectedLinks.get("uppercase"));
     expect(link3.href).toBe("https://infra.spec.whatwg.org/");
 
@@ -228,11 +236,11 @@ describe("Core — xref", () => {
 
   it("shows error if cannot resolve by data-cite", async () => {
     const body = `
-      <section data-cite="fetch">
-        <p><a id="link">fetch</a> twice in fetch spec.</p>
+      <section data-cite="svg">
+        <p><a id="link">symbol</a> twice in svg spec.</p>
       </section>
     `;
-    const config = { xref: ["fetch"], localBiblio };
+    const config = { xref: ["svg"], localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -245,31 +253,28 @@ describe("Core — xref", () => {
     // https://github.com/w3c/respec/pull/1750
     const body = `
       <section id="test">
-        <p data-cite="fileapi"><a id="one">object</a></p>
-        <p data-cite="html"><a id="two">object</a></p>
-        <p data-cite="html">
-          <a id="three" data-cite="fileapi">object</a> (overrides parent)
-          <a id="four">object</a> (uses parent's data-cite - html)
+        <p data-cite="css-scroll-snap"><a id="one">intended direction</a></p>
+        <p data-cite="css-snappoints"><a id="two">intended direction</a></p>
+        <p data-cite="css-snappoints">
+          <a id="three" data-cite="css-scroll-snap">intended direction</a> (overrides parent)
+          <a id="four">intended direction</a> (uses parent's data-cite - css-snappoints)
         </p>
-        <p><a id="five" data-cite="NOT-FOUND">object</a></p>
+        <p><a id="five" data-cite="NOT-FOUND">intended direction</a></p>
       </section>
     `;
-    const config = { xref: ["html", "fileapi"], localBiblio };
+    const config = { xref: true, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    expect(doc.getElementById("one").href).toBe(
-      expectedLinks.get("object@fileapi")
-    );
-    expect(doc.getElementById("two").href).toBe(
-      expectedLinks.get("object@html")
-    );
-    expect(doc.getElementById("three").href).toBe(
-      expectedLinks.get("object@fileapi")
-    );
-    expect(doc.getElementById("four").href).toBe(
-      expectedLinks.get("object@html")
-    );
+    const scrollSnapLink =
+      "https://drafts.csswg.org/css-scroll-snap-1/#intended-direction";
+    const snappointsLink =
+      "https://www.w3.org/TR/css-snappoints-1/#intended-direction";
+
+    expect(doc.getElementById("one").href).toBe(scrollSnapLink);
+    expect(doc.getElementById("two").href).toBe(snappointsLink);
+    expect(doc.getElementById("three").href).toBe(scrollSnapLink);
+    expect(doc.getElementById("four").href).toBe(snappointsLink);
 
     const five = doc.getElementById("five");
     expect(five.href).toBe("");
@@ -585,9 +590,8 @@ describe("Core — xref", () => {
       const body = `
       <section id="test">
         <p id="link1">{{ Window }} and {{EventTarget}}</p>
-        <p id="link2">{{ [[query]] }}</p>
-        <p id="link3">{{ [[type]] }} is ambiguous.</p>
-        <p id="link4"> This should work {{
+        <p id="link2">{{ [[query]] }} has no meaning without forContext</p>
+        <p id="link3"> This should work {{
               EventTarget
 
         }} , i.e. should trim the whitespace.</p>
@@ -604,35 +608,29 @@ describe("Core — xref", () => {
       expect(eventTargetLink.href).toBe(expectedLinks.get("EventTarget"));
 
       const link2 = doc.querySelector("#link2 code a");
-      expect(link2.href).toBe(expectedLinks.get("PermissionStatus.[[query]]"));
+      expect(link2.href).toBeFalsy();
       expect(link2.textContent).toBe("query");
 
       const link3 = doc.querySelector("#link3 code a");
-      expect(link3.href).toBeFalsy();
-      expect(link3.title).toBe("Error: Linking an ambiguous dfn.");
-
-      const link4 = doc.querySelector("#link4 code a");
-      expect(link4.href).toBe(expectedLinks.get("EventTarget"));
-      expect(link4.textContent).toBe("EventTarget");
+      expect(link3.href).toBe(expectedLinks.get("EventTarget"));
+      expect(link3.textContent).toBe("EventTarget");
     });
 
     it("links methods", async () => {
       const body = `
       <section id="test">
-        <p id="link1">{{ addEventListener(type, callback) }}</p>
-        <p id="link2">{{ EventTarget.addEventListener(type, callback) }}</p>
-        <p id="link3">{{ ChildNode.after(...nodes) }}</p>
-        <p id="link4">{{ allowedFeatures() }}</p>
-        <p id="link5">{{ append(name, value) }} is ambiguous</p>
-        <p id="link6">{{ URLSearchParams.append(name, value) }} is not ambiguous</p>
+        <p id="link1">{{ EventTarget.addEventListener(type, callback) }}</p>
+        <p id="link2">{{ ChildNode.after(...nodes) }}</p>
+        <p id="link3">{{ URLSearchParams.append(name, value) }} is not ambiguous</p>
       </section>
       `;
       const config = { xref: true, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const link1 = doc.querySelector("#link1 code a");
-      expect(link1.href).toBe(
+      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
+      expect(link1a.href).toBe(expectedLinks.get("EventTarget"));
+      expect(link1b.href).toBe(
         expectedLinks.get("EventTarget.addEventListener")
       );
       const vars1 = [...doc.querySelectorAll("#link1 var")];
@@ -641,29 +639,12 @@ describe("Core — xref", () => {
       expect(vars1[1].textContent).toBe("callback");
 
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
-      expect(link2a.href).toBe(expectedLinks.get("EventTarget"));
-      expect(link2b.href).toBe(
-        expectedLinks.get("EventTarget.addEventListener")
-      );
-      const vars2 = [...doc.querySelectorAll("#link2 var")];
-      expect(vars2.length).toBe(2);
-      expect(vars2[0].textContent).toBe("type");
-      expect(vars2[1].textContent).toBe("callback");
+      expect(link2a.href).toBe(expectedLinks.get("ChildNode"));
+      expect(link2b.href).toBe(expectedLinks.get("ChildNode.after"));
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 code a")];
-      expect(link3a.href).toBe(expectedLinks.get("ChildNode"));
-      expect(link3b.href).toBe(expectedLinks.get("ChildNode.after"));
-
-      const link4 = doc.querySelector("#link4 code a");
-      expect(link4.href).toBe(expectedLinks.get("allowedFeatures"));
-
-      const link5 = doc.querySelector("#link5 code a");
-      expect(link5.href).toBe("");
-      expect(link5.title).toBe("Error: Linking an ambiguous dfn.");
-
-      const [link6a, link6b] = [...doc.querySelectorAll("#link6 code a")];
-      expect(link6a.href).toBe(expectedLinks.get("URLSearchParams"));
-      expect(link6b.href).toBe(expectedLinks.get("URLSearchParams.append"));
+      expect(link3a.href).toBe(expectedLinks.get("URLSearchParams"));
+      expect(link3b.href).toBe(expectedLinks.get("URLSearchParams.append"));
     });
 
     it("links attribute and dict-member", async () => {
@@ -734,7 +715,6 @@ describe("Core — xref", () => {
           enum Foo { "dashed-thing", "" };
           </pre>
           <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
-          <p id="link2">{{ "blob" }} {{ ServiceWorkerUpdateViaCache["imports"] }}</p>
           <p id="link3"
             data-cite="css-layout-api" data-xref-for="ChildDisplayType"
           >{{ "block" }} {{"block"}} </p>
@@ -757,14 +737,6 @@ describe("Core — xref", () => {
       expect(link1.querySelector("a").href).toBe(
         expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
       );
-
-      const link2 = doc.getElementById("link2");
-      const [blobLink, swImport] = link2.querySelectorAll("a");
-      expect(blobLink.href).toBe(expectedLinks.get("blob"));
-      expect(swImport.href).toBe(
-        expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
-      );
-      expect(link2.textContent).toBe(`"blob" "imports"`);
 
       const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
       expect(blockLink1.href).toBe(expectedLinks.get("ChildDisplayType.block"));
