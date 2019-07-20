@@ -282,6 +282,38 @@ describe("Core — xref", () => {
     expect(five.title).toBe("Error: No matching dfn found.");
   });
 
+  it("uses data-cite fallbacks", async () => {
+    const body = `
+      <section data-cite="dom html" id="test">
+        <p><a id="link1">event handler</a> try either [dom] or [html]</p>
+        <section data-cite="dom">
+          <p data-cite="svg">
+            <a id="link2">event handler</a>
+            - not in [svg] -> fallback to [dom] -> fallback to [dom], [html]
+          </p>
+          <p>
+            <a id="link3" data-cite="fetch">event handler</a>
+            - try and stop at [fetch] as data-cite is on self
+          </p>
+        </section>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link1 = doc.getElementById("link1");
+    expect(link1.href).toEqual(expectedLinks.get("event handler"));
+
+    const link2 = doc.getElementById("link2");
+    expect(link2.href).toEqual(expectedLinks.get("event handler"));
+
+    const link3 = doc.getElementById("link3");
+    expect(link3.href).toEqual("https://fetch.spec.whatwg.org/");
+    expect(link3.classList).toContain("respec-offending-element");
+    expect(link3.title).toEqual("Error: No matching dfn found.");
+  });
+
   it("treats terms as local if empty data-cite on parent", async () => {
     const body = `
       <section data-cite="" id="test">
