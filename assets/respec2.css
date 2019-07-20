@@ -57,7 +57,7 @@ a.bibref {
 }
 
 .respec-offending-element {
-  text-decoration: red wavy underline;
+  text-decoration: red wavy underline !important;
 }
 @supports not (text-decoration: red wavy underline) {
   .respec-offending-element:not(pre) {
