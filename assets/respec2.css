@@ -56,8 +56,9 @@ a.bibref {
   animation: pop 0.25s ease-in-out 0s 1;
 }
 
-.respec-offending-element {
-  text-decoration: red wavy underline !important;
+.respec-offending-element,
+a[href].respec-offending-element {
+  text-decoration: red wavy underline;
 }
 @supports not (text-decoration: red wavy underline) {
   .respec-offending-element:not(pre) {
