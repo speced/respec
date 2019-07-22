@@ -1,7 +1,5 @@
 "use strict";
 
-import { preprocess } from "../../src/index.js";
-
 const iframes = [];
 
 export async function makeRSDoc(opts, src, style = "") {
@@ -13,6 +11,7 @@ export async function makeRSDoc(opts, src, style = "") {
     opts.config.logos = [];
   }
   opts.config.continueOnError = true;
+  const { preprocess } = await import("../../src/index.js");
   const rsDoc = await preprocess(opts.body, opts.config);
   return rsDoc.document;
 }
