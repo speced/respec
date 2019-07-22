@@ -32,6 +32,7 @@ export async function createRespecDocument(doc, conf) {
     );
   }
   const { continueOnError } = configuration;
+  delete configuration.continueOnError; // TODO: remove this line
   return {
     document,
     configuration,
