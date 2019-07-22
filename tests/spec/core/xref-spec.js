@@ -284,8 +284,8 @@ describe("Core — xref", () => {
 
   it("uses data-cite fallbacks", async () => {
     const body = `
-      <section><dfn>local</dfn></section>
       <section data-cite="dom html" id="test">
+        <section><dfn>local</dfn></section>
         <p><a id="link1">event handler</a> try either [dom] or [html]</p>
         <section data-cite="dom">
           <p data-cite="svg">
@@ -318,10 +318,11 @@ describe("Core — xref", () => {
 
     const linkLocal1 = doc.getElementById("link-local-1");
     expect(linkLocal1.getAttribute("href")).toEqual("#dfn-local");
-    expect(link3.classList).not.toContain("respec-offending-element");
+    expect(linkLocal1.classList).not.toContain("respec-offending-element");
+
     const linkLocal2 = doc.getElementById("link-local-2");
-    expect(linkLocal2.getAttribute("href")).toEqual("#dfn-local");
-    expect(link3.classList).not.toContain("respec-offending-element");
+    expect(linkLocal2.href).toEqual("https://dom.spec.whatwg.org/");
+    expect(linkLocal2.classList).toContain("respec-offending-element");
   });
 
   it("treats terms as local if empty data-cite on parent", async () => {
