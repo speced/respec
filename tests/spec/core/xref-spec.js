@@ -284,6 +284,7 @@ describe("Core — xref", () => {
 
   it("uses data-cite fallbacks", async () => {
     const body = `
+      <section><dfn>local</dfn></section>
       <section data-cite="dom html" id="test">
         <p><a id="link1">event handler</a> try either [dom] or [html]</p>
         <section data-cite="dom">
@@ -295,6 +296,8 @@ describe("Core — xref", () => {
             <a id="link3" data-cite="fetch">event handler</a>
             - try and stop at [fetch] as data-cite is on self
           </p>
+          <p><a id="link-local-1">local</a></p>
+          <p><a id="link-local-2" data-cite="dom">local</a></p>
         </section>
       </section>
     `;
@@ -312,6 +315,13 @@ describe("Core — xref", () => {
     expect(link3.href).toEqual("https://fetch.spec.whatwg.org/");
     expect(link3.classList).toContain("respec-offending-element");
     expect(link3.title).toEqual("Error: No matching dfn found.");
+
+    const linkLocal1 = doc.getElementById("link-local-1");
+    expect(linkLocal1.href).toEqual("#dfn-local");
+    expect(link3.classList).not.toContain("respec-offending-element");
+    const linkLocal2 = doc.getElementById("link-local-2");
+    expect(linkLocal2.href).toEqual("#dfn-local");
+    expect(link3.classList).not.toContain("respec-offending-element");
   });
 
   it("treats terms as local if empty data-cite on parent", async () => {
