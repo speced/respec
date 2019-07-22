@@ -24,7 +24,7 @@ const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
 };
 
-const API_URL = "https://respec.org/xref";
+const API_URL = "https://respec.org/xref/beta";
 const CACHE_MAX_AGE = 86400000; // 24 hours
 
 if (
