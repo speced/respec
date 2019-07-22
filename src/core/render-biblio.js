@@ -276,6 +276,7 @@ function decorateInlineReference(document, refs, aliases) {
         .get(refcontent.id)
         .map(alias => `a.bibref[href="#bib-${alias.toLowerCase()}"]`)
         .join(",");
+      /** @type {NodeListOf<HTMLAnchorElement>} */
       const elems = document.querySelectorAll(selectors);
       return { refUrl, elems, refcontent };
     })
