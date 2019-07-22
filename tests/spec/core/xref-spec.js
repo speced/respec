@@ -317,10 +317,10 @@ describe("Core — xref", () => {
     expect(link3.title).toEqual("Error: No matching dfn found.");
 
     const linkLocal1 = doc.getElementById("link-local-1");
-    expect(linkLocal1.href).toEqual("#dfn-local");
+    expect(linkLocal1.getAttribute("href")).toEqual("#dfn-local");
     expect(link3.classList).not.toContain("respec-offending-element");
     const linkLocal2 = doc.getElementById("link-local-2");
-    expect(linkLocal2.href).toEqual("#dfn-local");
+    expect(linkLocal2.getAttribute("href")).toEqual("#dfn-local");
     expect(link3.classList).not.toContain("respec-offending-element");
   });
 
