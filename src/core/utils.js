@@ -1,5 +1,3 @@
-/* jshint browser: true */
-/* globals console */
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
@@ -143,8 +141,10 @@ export function showInlineWarning(elems, msg, title) {
  * @param {Element|Element[]} elems
  * @param {String} msg message to show in warning
  * @param {String} title error message to add on each element
+ * @param {object} [options]
+ * @param {string} [options.details]
  */
-export function showInlineError(elems, msg, title) {
+export function showInlineError(elems, msg, title, { details } = {}) {
   if (!Array.isArray(elems)) elems = [elems];
   const links = elems
     .map((element, i) => {
@@ -152,7 +152,11 @@ export function showInlineError(elems, msg, title) {
       return generateMarkdownLink(element, i);
     })
     .join(", ");
-  pub("error", `${msg} at: ${links}.`);
+  let message = `${msg} at: ${links}.`;
+  if (details) {
+    message += `\n\n<details>${details}</details>`;
+  }
+  pub("error", message);
   console.error(msg, elems);
 }
 

@@ -266,9 +266,7 @@ export default function({ document, configuration: conf }) {
       const msg =
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
         "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
-        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/${
-          conf.shortName
-        } ).`;
+        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/${conf.shortName} ).`;
       pub("warn", msg);
     }
   }
@@ -329,9 +327,7 @@ export default function({ document, configuration: conf }) {
     }-${conf.shortName}-${concatDate(conf.publishDate)}/`;
   if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
   if (conf.isRegular)
-    conf.latestVersion = `https://www.w3.org/${publishSpace}/${
-      conf.shortName
-    }/`;
+    conf.latestVersion = `https://www.w3.org/${publishSpace}/${conf.shortName}/`;
   if (conf.isTagFinding) {
     conf.latestVersion = `https://www.w3.org/2001/tag/doc/${conf.shortName}`;
     conf.thisVersion = `${conf.latestVersion}-${ISODate.format(
@@ -429,11 +425,7 @@ export default function({ document, configuration: conf }) {
     });
   if (conf.bugTracker) {
     if (conf.bugTracker.new && conf.bugTracker.open) {
-      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>${
-        conf.l10n.file_a_bug
-      }</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${
-        conf.l10n.open_bugs
-      }</a>${conf.l10n.close_parens}`;
+      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>${conf.l10n.file_a_bug}</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${conf.l10n.open_bugs}</a>${conf.l10n.close_parens}`;
     } else if (conf.bugTracker.open) {
       conf.bugTrackerHTML = `<a href='${conf.bugTracker.open}'>open bugs</a>`;
     } else if (conf.bugTracker.new) {

@@ -14,9 +14,13 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
-import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils.js";
+import {
+  refTypeFromContext,
+  showInlineError,
+  showInlineWarning,
+  wrapInner,
+} from "./utils.js";
 import { resolveRef, updateFromNetwork } from "./biblio.js";
-import hyperHTML from "../../js/html-template.js";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {
@@ -66,7 +70,8 @@ function requestLookup(conf) {
         break;
       }
       case "dfn": {
-        const anchor = hyperHTML`<a href="${href}">`;
+        const anchor = document.createElement("a");
+        anchor.href = href;
         if (!elem.textContent) {
           anchor.textContent = title;
           elem.append(anchor);
@@ -78,6 +83,15 @@ function requestLookup(conf) {
           cite.append(anchor);
           elem.append(cite);
         }
+        if ("export" in elem.dataset) {
+          showInlineError(
+            elem,
+            "Exporting an linked external definition is not allowed. Please remove the `data-export` attribute",
+            "Please remove the `data-export` attribute."
+          );
+          delete elem.dataset.export;
+        }
+        elem.dataset.noExport = "";
         break;
       }
     }

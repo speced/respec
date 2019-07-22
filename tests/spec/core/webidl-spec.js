@@ -87,7 +87,7 @@ describe("Core - WebIDL", () => {
       );
 
       // Promise&lt;void> returnsPromise(unsigned long long argument);
-      const [promiseLink, voidLink, , unsignedLongLink] = idl.querySelectorAll(
+      const [promiseLink, voidLink, unsignedLongLink] = idl.querySelectorAll(
         "*[data-title='returnsPromise'] a"
       );
       // Promise
@@ -126,7 +126,7 @@ describe("Core - WebIDL", () => {
       mapLike,
     ] = similarlyNamedInterface.querySelectorAll(".idlAttribute, .idlMaplike");
     const typeQuery = "span.idlType a";
-    const nameQuery = "span.idlName a";
+    const nameQuery = "a.idlName";
     // attribute TestInterface testInterface;
     expect(testInterface.querySelector(typeQuery).getAttribute("href")).toBe(
       "#dom-testinterface"
@@ -269,20 +269,18 @@ describe("Core - WebIDL", () => {
 
     target = doc.getElementById("if-doc");
     const interfaces = target.querySelectorAll(".idlInterface");
-    expect(interfaces[0].querySelector(".idlID a").getAttribute("href")).toBe(
+    expect(interfaces[0].querySelector("a.idlID").getAttribute("href")).toBe(
       "#dom-docinterface"
     );
-    expect(interfaces[1].querySelector(".idlID a").getAttribute("href")).toBe(
+    expect(interfaces[1].querySelector("a.idlID").getAttribute("href")).toBe(
       "#dom-docisnotcasesensitive"
     );
     expect(interfaces[0].id).toBe("idl-def-docinterface");
     expect(interfaces[1].id).toBe("idl-def-docisnotcasesensitive");
     expect(interfaces[2].id).toBe("idl-def-undocinterface");
-    expect(
-      interfaces[2].querySelector(".idlID a.respec-offending-element")
-    ).toBeTruthy();
+    expect(interfaces[2].querySelector("dfn.idlID")).toBeTruthy();
     const namespace = target.querySelector(".idlNamespace");
-    expect(namespace.querySelector(".idlID a").getAttribute("href")).toBe(
+    expect(namespace.querySelector("a.idlID").getAttribute("href")).toBe(
       "#dom-afterglow"
     );
   });
@@ -387,7 +385,7 @@ describe("Core - WebIDL", () => {
     expect(
       consts
         .find(c => c.textContent.includes("rambaldi"))
-        .querySelector(".idlName a")
+        .querySelector("a.idlName")
         .getAttribute("href")
     ).toBe("#dom-consttest-rambaldi");
     expect(
@@ -396,19 +394,19 @@ describe("Core - WebIDL", () => {
     expect(
       consts
         .find(c => c.textContent.includes("bite"))
-        .querySelector(".idlName a")
+        .querySelector("a.idlName")
         .getAttribute("href")
     ).toBe("#dom-consttest-bite");
     expect(
       consts
         .find(c => c.textContent.includes("inf"))
-        .querySelector(".idlName a")
+        .querySelector("a.idlName")
         .getAttribute("href")
     ).toBe("#dom-consttest-inf");
     expect(
       consts
         .find(c => c.textContent.includes("ationDevice"))
-        .querySelector(".idlName a.respec-offending-element")
+        .querySelector("dfn.idlName")
     ).toBeTruthy();
   });
 
@@ -456,13 +454,13 @@ describe("Core - WebIDL", () => {
     expect(
       attrs
         .find(c => c.textContent.includes("regular"))
-        .querySelector(".idlName a")
+        .querySelector("a.idlName")
         .getAttribute("href")
     ).toBe("#dom-attrbasic-regular");
     expect(
       attrs
         .find(c => c.textContent.includes("alist"))
-        .querySelector(".idlName a.respec-offending-element")
+        .querySelector("dfn.idlName")
     ).toBeTruthy();
 
     const performanceInterfaceLink = Array.from(
@@ -583,13 +581,13 @@ describe("Core - WebIDL", () => {
     // Links and IDs.
     const ulls = methods
       .filter(m => m.textContent.includes("ull"))
-      .map(m => m.querySelector(".idlName a").getAttribute("href"));
+      .map(m => m.querySelector("a.idlName").getAttribute("href"));
     expect(ulls[0]).toBe("#dom-methbasic-ull");
     expect(ulls[ulls.length - 1]).toBe("#dom-methbasic-ull!overload-1");
     expect(
       methods
         .find(m => m.textContent.includes("withName"))
-        .querySelector(".idlName a.respec-offending-element")
+        .querySelector("dfn.idlName")
     ).toBeTruthy();
 
     const performanceTypeLink = Array.from(target.querySelectorAll("a")).find(
@@ -704,19 +702,19 @@ interface ReadOnlySetLike {
     const dictDocTest = doc
       .getElementById("dict-doc")
       .querySelector(".idlDictionary");
-    expect(dictDocTest.querySelector(".idlID a").getAttribute("href")).toBe(
+    expect(dictDocTest.querySelector("a.idlID").getAttribute("href")).toBe(
       "#dom-dictdoctest"
     );
     expect(dictDocTest.getAttribute("id")).toBe("idl-def-dictdoctest");
     const mems = [...dictDocTest.querySelectorAll(".idlMember")];
     const dictDocField = mems.find(m => m.textContent.includes("dictDocField"));
-    expect(dictDocField.querySelector(".idlName a").getAttribute("href")).toBe(
+    expect(dictDocField.querySelector("a.idlName").getAttribute("href")).toBe(
       "#dom-dictdoctest-dictdocfield"
     );
     expect(
       mems
         .find(m => m.textContent.includes("otherField"))
-        .querySelector(".idlName a")
+        .querySelector("a.idlName")
         .getAttribute("href")
     ).toBe("#dom-dictdoctest-otherfield");
     expect(dictDocField.getAttribute("id")).toBe(
@@ -724,7 +722,7 @@ interface ReadOnlySetLike {
     );
     const warningLink = mems
       .find(m => m.textContent.includes("undocField"))
-      .querySelector(".idlName a.respec-offending-element");
+      .querySelector("dfn.idlName");
     expect(warningLink).toBeTruthy();
   });
 
@@ -802,7 +800,7 @@ enum EnumBasic {
         target.querySelector("a[href='#dom-enumbasic-white-space']")
       ).toBeTruthy();
       // Links and IDs.
-      expect(target.querySelector(".idlID a").getAttribute("href")).toBe(
+      expect(target.querySelector("a.idlID").getAttribute("href")).toBe(
         "#dom-enumbasic"
       );
       expect(doc.getElementById("idl-def-enumbasic")).toBeTruthy();
@@ -907,9 +905,9 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(target.textContent).toBe(text);
 
     // Links and IDs.
-    expect(
-      target.querySelector(".idlID").children[0].getAttribute("href")
-    ).toBe("#dom-tdlessbasic");
+    expect(target.querySelector(".idlID").getAttribute("href")).toBe(
+      "#dom-tdlessbasic"
+    );
     expect(target.querySelector(".idlTypedef").id).toBe("idl-def-tdlessbasic");
 
     target = doc.getElementById("td-extended-attribute");
@@ -944,7 +942,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const target = doc.getElementById("doc-iface");
 
     expect(
-      target.querySelector(".idlName a[href='#dom-documented-docstring']")
+      target.querySelector("a.idlName[href='#dom-documented-docstring']")
         .textContent
     ).toBe("docString");
     expect(
@@ -962,9 +960,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         "p[data-link-for] a[href='#dom-documented-docstring']"
       ).textContent
     ).toBe("docString");
-    const notDefinedAttr = target.querySelectorAll(
-      ".idlAttribute .idlName .respec-offending-element"
-    );
+    const notDefinedAttr = target.querySelectorAll(".idlAttribute dfn.idlName");
     expect(notDefinedAttr.length).toBe(1);
     expect(notDefinedAttr[0].getElementsByTagName("a").length).toBe(0);
     expect(notDefinedAttr[0].textContent).toBe("notDefined");
@@ -982,9 +978,8 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     );
     expect(definedElsewhere.textContent).toBe("Documented.definedElsewhere");
     expect(
-      target.querySelector(
-        ".idlName a[href='#dom-documented-definedelsewhere']"
-      ).textContent
+      target.querySelector("a.idlName[href='#dom-documented-definedelsewhere']")
+        .textContent
     ).toBe("definedElsewhere");
     expect(linkFromElsewhere.textContent).toBe("Documented.docString");
 
@@ -1292,5 +1287,81 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
 
     expect(itWorksMember.classList).toContain("internalDFN");
     expect(itWorksMember.getAttribute("href")).toBe("#dom-eventinit-itworks");
+  });
+  it("self-defining IDL", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          interface RASAintShared {
+            attribute DOMString layer;
+          };
+          partial interface TeaTime {};
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const [it, attr] = doc.querySelectorAll("pre dfn");
+
+    expect(it.classList).not.toContain("respec-offending-element");
+    expect(it.dataset.dfnType).toBe("interface");
+    expect(it.dataset.export).toBe("");
+    expect(attr.dataset.dfnType).toBe("attribute");
+
+    const [, tea] = doc.querySelectorAll(".respec-offending-element");
+    expect(tea.textContent).toBe("TeaTime");
+  });
+  it("marks a failing IDL block", async () => {
+    const body = `
+      <section>
+        <pre class="idl" id="pre">
+          interface Muscle {}
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const pre = doc.getElementById("pre");
+
+    expect(pre.classList).toContain("respec-offending-element");
+  });
+  it("validates IDL", async () => {
+    const body = `
+      <section>
+        <pre class="idl" id="circle">
+          interface Circle {};
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const idl = doc.getElementById("circle");
+
+    expect(idl.classList).toContain("respec-offending-element");
+    expect(idl.title).toContain("Exposed");
+  });
+  it("validates across IDL", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          dictionary Bread {
+            DOMString type = "melon";
+          };
+        </pre>
+        <pre class="idl">
+          [Exposed=Window]
+          interface Moka {
+            void eat(optional Bread bread);
+          };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const [idl1, idl2] = doc.getElementsByTagName("pre");
+
+    expect(idl1.classList).not.toContain("respec-offending-element");
+    expect(idl2.classList).toContain("respec-offending-element");
+    expect(idl2.title).toContain("Optional dictionary");
   });
 });

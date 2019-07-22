@@ -35,9 +35,7 @@ sub(
           } catch (err) {
             pub(
               "error",
-              `Function ${
-                f.name
-              } threw an error during \`preProcess\`. See developer console.`
+              `Function ${f.name} threw an error during \`preProcess\`. See developer console.`
             );
             console.error(err);
           }

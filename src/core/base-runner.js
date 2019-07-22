@@ -18,6 +18,7 @@ function toRunnable(plug) {
     console.warn("Plugin lacks name:", plug);
   }
   return respecDoc => {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       const timerId = setTimeout(() => {
         const msg = `Plugin ${name} took too long.`;

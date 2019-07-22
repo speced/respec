@@ -83,9 +83,7 @@ async function processResponse(response, issueNumber) {
     issue.message = `Error JSON parsing issue #${issueNumber} from GitHub.`;
   }
   if (!response.ok || issue.message) {
-    const msg = `Error fetching issue #${issueNumber} from GitHub. ${
-      issue.message
-    } (HTTP Status ${response.status}).`;
+    const msg = `Error fetching issue #${issueNumber} from GitHub. ${issue.message} (HTTP Status ${response.status}).`;
     pub("error", msg);
   }
   return [issueNumber, issue];

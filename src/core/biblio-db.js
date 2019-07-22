@@ -7,7 +7,6 @@
  * It's a standalone module that can be imported into other modules.
  *
  */
-/* globals IDBKeyRange, DOMException */
 import { flatten } from "./utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";

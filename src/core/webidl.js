@@ -5,9 +5,8 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import * as webidl2 from "webidl2";
-import { flatten, showInlineWarning } from "./utils.js";
+import { flatten, showInlineError, showInlineWarning } from "./utils.js";
 import hyperHTML from "../../js/html-template.js";
-import { pub } from "./pubsubhub.js";
 
 export const name = "core/webidl";
 
@@ -83,12 +82,12 @@ function makeMarkup(parse, document, definitionMap) {
       if (data.idlType && data.idlType.type === "argument-type") {
         return hyperHTML`<span class="idlParamName">${escaped}</span>`;
       }
-      const idlAnchor = createIdlAnchor(escaped, data, parent, definitionMap);
-      const className = parent ? "idlName" : "idlID";
-      if (data.type === "enum-value") {
-        return idlAnchor;
+      const idlLink = defineIdlName(escaped, data, parent, definitionMap);
+      if (data.type !== "enum-value") {
+        const className = parent ? "idlName" : "idlID";
+        idlLink.classList.add(className);
       }
-      return hyperHTML`<span class="${className}">${idlAnchor}</span>`;
+      return idlLink;
     },
     type(contents) {
       return hyperHTML`<span class="idlType">${contents}</span>`;
@@ -118,7 +117,10 @@ function makeMarkup(parse, document, definitionMap) {
   return webidl2.write(parse, { templates });
 }
 
-function createIdlAnchor(escaped, data, parent, definitionMap) {
+/**
+ * Returns a link to existing <dfn> or creates one if doesn’t exists.
+ */
+function defineIdlName(escaped, data, parent, definitionMap) {
   const parentName = parent ? parent.name : "";
   const { name } = getNameAndId(data, parentName);
   const dfn = definitionMap.findDfn(data, name, {
@@ -146,6 +148,11 @@ function createIdlAnchor(escaped, data, parent, definitionMap) {
      data-link-type="dfn"
      data-lt="default toJSON operation">${escaped}</a>`;
   }
+  if (!data.partial) {
+    return hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
+      parent.name}">${escaped}</dfn>`;
+  }
+
   const unlinkedAnchor = hyperHTML`<a
     data-idl="${data.partial ? "partial" : null}"
     data-link-type="${linkType}"
@@ -158,9 +165,7 @@ function createIdlAnchor(escaped, data, parent, definitionMap) {
   if (showWarnings) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
-    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${
-      data.type
-    }. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
+    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
     showInlineWarning(unlinkedAnchor, msg, "");
   }
   return unlinkedAnchor;
@@ -286,21 +291,23 @@ function getDefnName(defn) {
 /**
  * @param {Element} idlElement
  * @param {import("./dfn-map.js").DefinitionMap} definitionMap
+ * @param {number} index
  */
-function renderWebIDL(idlElement, definitionMap) {
+function renderWebIDL(idlElement, definitionMap, index) {
   let parse;
   try {
-    parse = webidl2.parse(idlElement.textContent);
+    parse = webidl2.parse(idlElement.textContent, {
+      sourceName: String(index),
+    });
   } catch (e) {
-    pub(
-      "error",
-      `Failed to parse WebIDL: ${e.message}.
-      <details>
-      <pre>${idlElement.textContent}\n ${e}</pre>
-      </details>`
+    showInlineError(
+      idlElement,
+      `Failed to parse WebIDL: ${e.bareMessage}.`,
+      e.bareMessage,
+      { details: `<pre>${e.context}</pre>` }
     );
     // Skip this <pre> and move on to the next one.
-    return;
+    return [];
   }
   idlElement.classList.add("def", "idl");
   const html = makeMarkup(parse, idlElement.ownerDocument, definitionMap);
@@ -320,9 +327,11 @@ function renderWebIDL(idlElement, definitionMap) {
   const { dataset } = closestCite;
   if (!dataset.cite) dataset.cite = "WebIDL";
   // includes webidl in some form
-  if (/\bwebidl\b/i.test(dataset.cite)) return;
-  const cites = dataset.cite.trim().split(/\s+/);
-  dataset.cite = ["WebIDL", ...cites].join(" ");
+  if (!/\bwebidl\b/i.test(dataset.cite)) {
+    const cites = dataset.cite.trim().split(/\s+/);
+    dataset.cite = ["WebIDL", ...cites].join(" ");
+  }
+  return parse;
 }
 
 /**
@@ -341,6 +350,18 @@ export default async function({ document, definitionMap }) {
       link.before(style);
     }
   }
-  idls.forEach(idl => renderWebIDL(idl, definitionMap));
+  const astArray = [...idls].map((idl, i) =>
+    renderWebIDL(idl, definitionMap, i)
+  );
+
+  const validations = webidl2.validate(astArray);
+  for (const validation of validations) {
+    showInlineError(
+      idls[validation.sourceName],
+      `WebIDL validation error: ${validation.bareMessage}`,
+      validation.bareMessage,
+      { details: `<pre>${validation.context}</pre>` }
+    );
+  }
   document.normalize();
 }

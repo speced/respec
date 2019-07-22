@@ -261,9 +261,7 @@ function showLinkingError(elems) {
   elems.forEach(elem => {
     showInlineWarning(
       elem,
-      `Found linkless \`<a>\` element with text "${
-        elem.textContent
-      }" but no matching \`<dfn>\``,
+      `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``,
       "Linking error: not matching <dfn>"
     );
   });

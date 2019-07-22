@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.13.3
+version: v1.13.5
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -70,3 +70,28 @@ patch:
   'npm:uglify-js:20150824':
     - highlight.js > gear-lib > handlebars > uglify-js:
         patched: '2019-01-18T02:14:59.305Z'
+  SNYK-JS-LODASH-450202:
+    - opencollective > inquirer > lodash:
+        patched: '2019-07-04T07:40:22.289Z'
+    - snyk > snyk-mvn-plugin > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
+    - snyk > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
+    - snyk > snyk-nodejs-lockfile-parser > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
+    - snyk > @snyk/dep-graph > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
+    - snyk > inquirer > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
+    - snyk > snyk-nuget-plugin > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
+    - snyk > snyk-config > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
+    - snyk > @snyk/dep-graph > graphlib > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
+    - snyk > snyk-nodejs-lockfile-parser > graphlib > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
+    - snyk > snyk-go-plugin > graphlib > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
+    - snyk > snyk-php-plugin > @snyk/composer-lockfile-parser > lodash:
+        patched: '2019-07-04T12:24:15.288Z'
