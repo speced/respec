@@ -22,7 +22,10 @@ jobs:
     - stage: Run eslint
       script:
         - npm run lint
-    - stage: Run headless
+    - stage: Run node.js-based headless
+      script:
+        - npm run test:node
+    - stage: Run browser-based headless
       script:
         - npm run build:w3c
         - npm run test:headless

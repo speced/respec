@@ -1,10 +1,26 @@
 "use strict";
+
+import { preprocess } from "../../src/index.js";
+
 const iframes = [];
+
+export async function makeRSDoc(opts, src, style = "") {
+  if (typeof document !== "undefined") {
+    return makeRSDocInIframe(opts, src, style);
+  }
+  // TODO: remove this line
+  if (!opts.config.logos) {
+    opts.config.logos = [];
+  }
+  opts.config.continueOnError = true;
+  const rsDoc = await preprocess(opts.body, opts.config);
+  return rsDoc.document;
+}
 
 /**
  * @return {Promise<Document>}
  */
-export function makeRSDoc(opts, src, style = "") {
+function makeRSDocInIframe(opts, src, style = "") {
   opts = { profile: "w3c", ...opts };
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");

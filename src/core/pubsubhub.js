@@ -10,7 +10,8 @@ import { expose } from "./expose-modules.js";
 export const name = "core/pubsubhub";
 
 export class PubSubHub {
-  constructor() {
+  constructor({ continueOnError = false } = {}) {
+    this.continueOnError = continueOnError;
     this.subscriptions = new Map();
     this.sub("error", console.error);
     this.sub("warn", console.warn);
@@ -24,7 +25,7 @@ export class PubSubHub {
     if (!this.subscriptions.has(topic)) {
       return; // Nothing to do...
     }
-    if (typeof document === "undefined" && topic === "error") {
+    if (!this.continueOnError && topic === "error") {
       throw new Error(data[0]);
     }
     Array.from(this.subscriptions.get(topic)).forEach(cb => {
@@ -92,7 +93,7 @@ export class PubSubHub {
   }
 }
 
-const hub = new PubSubHub();
+const hub = new PubSubHub({ continueOnError: true });
 
 export const pub = hub.pub.bind(hub);
 export const sub = hub.sub.bind(hub);

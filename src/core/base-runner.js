@@ -54,6 +54,7 @@ function toRunnable(plug) {
 }
 
 export async function runAll(plugs) {
+  respecConfig.continueOnError = true;
   const respecDoc = await createRespecDocument(document, respecConfig);
   window.respecDoc = respecDoc;
   const { configuration, hub } = respecDoc;

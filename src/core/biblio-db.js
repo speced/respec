@@ -17,62 +17,62 @@ const ALLOWED_TYPES = new Set(["alias", "reference"]);
  * Database initialization tracker
  * @type {Promise<IDBDatabase>}
  */
-const readyPromise = new Promise((resolve, reject) => {
-  if (typeof indexedDB === "undefined") {
-    return reject(new Error("IndexedDB API is not available"));
-  }
-  let request;
-  try {
-    request = window.indexedDB.open("respec-biblio2", 12);
-  } catch (err) {
-    return reject(err);
-  }
-  request.onerror = () => {
-    reject(new DOMException(request.error.message, request.error.name));
-  };
-  request.onsuccess = () => {
-    resolve(request.result);
-  };
-  request.onupgradeneeded = async () => {
-    const db = request.result;
-    Array.from(db.objectStoreNames).map(storeName =>
-      db.deleteObjectStore(storeName)
-    );
-    const promisesToCreateSchema = [
-      new Promise((resolve, reject) => {
+const readyPromise =
+  typeof indexedDB !== "undefined"
+    ? new Promise((resolve, reject) => {
+        let request;
         try {
-          const store = db.createObjectStore("alias", { keyPath: "id" });
-          store.createIndex("aliasOf", "aliasOf", { unique: false });
-          store.transaction.oncomplete = resolve;
-          store.transaction.onerror = reject;
+          request = window.indexedDB.open("respec-biblio2", 12);
         } catch (err) {
-          reject(err);
+          return reject(err);
         }
-      }),
-      new Promise((resolve, reject) => {
-        try {
-          const transaction = db.createObjectStore("reference", {
-            keyPath: "id",
-          }).transaction;
-          transaction.oncomplete = resolve;
-          transaction.onerror = reject;
-        } catch (err) {
-          reject(err);
-        }
-      }),
-    ];
-    try {
-      await Promise.all(promisesToCreateSchema);
-      resolve();
-    } catch (err) {
-      reject(err);
-    }
-  };
-});
+        request.onerror = () => {
+          reject(new DOMException(request.error.message, request.error.name));
+        };
+        request.onsuccess = () => {
+          resolve(request.result);
+        };
+        request.onupgradeneeded = async () => {
+          const db = request.result;
+          Array.from(db.objectStoreNames).map(storeName =>
+            db.deleteObjectStore(storeName)
+          );
+          const promisesToCreateSchema = [
+            new Promise((resolve, reject) => {
+              try {
+                const store = db.createObjectStore("alias", { keyPath: "id" });
+                store.createIndex("aliasOf", "aliasOf", { unique: false });
+                store.transaction.oncomplete = resolve;
+                store.transaction.onerror = reject;
+              } catch (err) {
+                reject(err);
+              }
+            }),
+            new Promise((resolve, reject) => {
+              try {
+                const transaction = db.createObjectStore("reference", {
+                  keyPath: "id",
+                }).transaction;
+                transaction.oncomplete = resolve;
+                transaction.onerror = reject;
+              } catch (err) {
+                reject(err);
+              }
+            }),
+          ];
+          try {
+            await Promise.all(promisesToCreateSchema);
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        };
+      })
+    : null;
 
 export const biblioDB = {
   get ready() {
-    return readyPromise;
+    return readyPromise || Promise.reject("IndexedDB API is not available");
   },
   /**
    * Finds either a reference or an alias.

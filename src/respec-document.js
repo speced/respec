@@ -31,10 +31,11 @@ export async function createRespecDocument(doc, conf) {
       "Configuration object required if not given within document"
     );
   }
+  const { continueOnError } = configuration;
   return {
     document,
     configuration,
-    hub: new PubSubHub(),
+    hub: new PubSubHub({ continueOnError }),
 
     /** @type {Record<string, boolean>} */
     rfc2119Usage: Object.create(null),

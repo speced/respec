@@ -18,3 +18,4 @@ js/*
 !js/respec-version.js
 !js/respec-version.d.ts
 .vscode/
+.nyc_output/
