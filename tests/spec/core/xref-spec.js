@@ -282,6 +282,54 @@ describe("Core — xref", () => {
     expect(five.title).toBe("Error: No matching dfn found.");
   });
 
+  it("uses data-cite fallbacks", async () => {
+    const body = `
+      <section data-cite="dom html" id="test">
+        <section><dfn>local</dfn></section>
+        <p><a id="link1">event handler</a> try either [dom] or [html]</p>
+        <section data-cite="dom">
+          <p data-cite="svg">
+            <a id="link2">event handler</a>
+            - not in [svg] -> fallback to [dom] -> fallback to [dom], [html]
+            <a id="link-local-0">local</a>
+          </p>
+          <p>
+            <a id="link3" data-cite="fetch">event handler</a>
+            - try and stop at [fetch] as data-cite is on self
+          </p>
+          <p><a id="link-local-1">local</a></p>
+          <p><a id="link-local-2" data-cite="dom">local</a></p>
+        </section>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link1 = doc.getElementById("link1");
+    expect(link1.href).toEqual(expectedLinks.get("event handler"));
+
+    const link2 = doc.getElementById("link2");
+    expect(link2.href).toEqual(expectedLinks.get("event handler"));
+
+    const link3 = doc.getElementById("link3");
+    expect(link3.href).toEqual("https://fetch.spec.whatwg.org/");
+    expect(link3.classList).toContain("respec-offending-element");
+    expect(link3.title).toEqual("Error: No matching dfn found.");
+
+    const linkLocal0 = doc.getElementById("link-local-0");
+    expect(linkLocal0.getAttribute("href")).toEqual("#dfn-local");
+    expect(linkLocal0.classList).not.toContain("respec-offending-element");
+
+    const linkLocal1 = doc.getElementById("link-local-1");
+    expect(linkLocal1.getAttribute("href")).toEqual("#dfn-local");
+    expect(linkLocal1.classList).not.toContain("respec-offending-element");
+
+    const linkLocal2 = doc.getElementById("link-local-2");
+    expect(linkLocal2.href).toEqual("https://dom.spec.whatwg.org/");
+    expect(linkLocal2.classList).toContain("respec-offending-element");
+  });
+
   it("treats terms as local if empty data-cite on parent", async () => {
     const body = `
       <section data-cite="" id="test">
