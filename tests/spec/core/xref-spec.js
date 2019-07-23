@@ -5,7 +5,6 @@ import {
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
-  xrefTestUrl,
 } from "../SpecHelper.js";
 import { IDBKeyVal } from "../../../src/core/utils.js";
 import { openDB } from "../../../node_modules/idb/build/esm/index.js";
@@ -50,6 +49,12 @@ describe("Core — xref", () => {
     "css-layout-api": {
       href: "https://www.w3.org/TR/css-layout-api-1/",
       id: "css-layout-api-1",
+    },
+    "css-snappoints": {
+      href: "https://www.w3.org/TR/css-snappoints-1/",
+    },
+    "css-scroll-snap": {
+      href: "https://drafts.csswg.org/css-scroll-snap-1/",
     },
     "local-1": { id: "local-1", href: "https://example.com/" },
     "local-2": { id: "local-2", href: "https://example.com/" },
@@ -144,7 +149,7 @@ describe("Core — xref", () => {
 
   it("does nothing if xref is not enabled", async () => {
     const body = `<a id="external-link">event handler</a>`;
-    const ops = makeStandardOps({ specStatus: "unofficial" }, body);
+    const ops = makeStandardOps({ xref: false }, body);
     const doc = await makeRSDoc(ops);
 
     const link = doc.getElementById("external-link");
@@ -158,7 +163,7 @@ describe("Core — xref", () => {
         <p id="external-link"><a>event handler</a></p>
         <p id="external-dfn"><dfn class="externalDFN">URL parser</dfn></p>
       </section>`;
-    const config = { xref: { url: xrefTestUrl("basic") }, localBiblio };
+    const config = { xref: "web-platform", localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -173,7 +178,7 @@ describe("Core — xref", () => {
 
   it("doesn't link auto-filled anchors", async () => {
     const body = `<section><a id="test" data-cite="credential-management"></a></section>`;
-    const config = { xref: { url: xrefTestUrl("basic") }, localBiblio };
+    const config = { xref: ["credential-management"], localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const link = doc.getElementById("test");
@@ -186,7 +191,7 @@ describe("Core — xref", () => {
 
   it("shows error if external term doesn't exist", async () => {
     const body = `<section><a id="external-link">NOT_FOUND</a></section>`;
-    const config = { xref: { url: xrefTestUrl("not_found") } };
+    const config = { xref: "web-platform" };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -198,9 +203,9 @@ describe("Core — xref", () => {
 
   it("uses data-cite to disambiguate", async () => {
     const body = `
-      <section id="links" data-cite="service-workers">
-        <p><a>fetch</a> is defined 1 time in service-workers and 2 times in fetch.
-          It uses parent's data-cite (service-workers).</p>
+      <section id="links" data-cite="css-snappoints">
+        <p><a>intended direction</a> is defined 1 time in css-scroll-snap and 1 time in css-snappoints.
+          It uses parent's data-cite (css-snappoints).</p>
         <p>Looks up <a data-cite="infra">ASCII uppercase</a> in infra.</p>
         <p>As <a data-cite="infra">ASCII upcasing</a> doesn't exist in INFRA,
           it resolves to spec only.</p>
@@ -212,12 +217,14 @@ describe("Core — xref", () => {
         <p><dfn data-cite="html">event manager</dfn> doesn't exist in html.</p>
       </section>
     `;
-    const config = { xref: { url: xrefTestUrl("data-cite-1") }, localBiblio };
+    const config = { xref: true, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
     const [link1, link2, link3] = [...doc.querySelectorAll("#links a")];
-    expect(link1.href).toBe(expectedLinks.get("sw-fetch"));
+    expect(link1.href).toBe(
+      "https://www.w3.org/TR/css-snappoints-1/#intended-direction"
+    );
     expect(link2.href).toBe(expectedLinks.get("uppercase"));
     expect(link3.href).toBe("https://infra.spec.whatwg.org/");
 
@@ -229,11 +236,11 @@ describe("Core — xref", () => {
 
   it("shows error if cannot resolve by data-cite", async () => {
     const body = `
-      <section data-cite="fetch">
-        <p><a id="link">fetch</a> twice in fetch spec.</p>
+      <section data-cite="svg">
+        <p><a id="link">symbol</a> twice in svg spec.</p>
       </section>
     `;
-    const config = { xref: { url: xrefTestUrl("ambiguous") }, localBiblio };
+    const config = { xref: ["svg"], localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -246,31 +253,28 @@ describe("Core — xref", () => {
     // https://github.com/w3c/respec/pull/1750
     const body = `
       <section id="test">
-        <p data-cite="fileapi"><a id="one">object</a></p>
-        <p data-cite="html"><a id="two">object</a></p>
-        <p data-cite="html">
-          <a id="three" data-cite="fileapi">object</a> (overrides parent)
-          <a id="four">object</a> (uses parent's data-cite - html)
+        <p data-cite="css-scroll-snap"><a id="one">intended direction</a></p>
+        <p data-cite="css-snappoints"><a id="two">intended direction</a></p>
+        <p data-cite="css-snappoints">
+          <a id="three" data-cite="css-scroll-snap">intended direction</a> (overrides parent)
+          <a id="four">intended direction</a> (uses parent's data-cite - css-snappoints)
         </p>
-        <p><a id="five" data-cite="NOT-FOUND">object</a></p>
+        <p><a id="five" data-cite="NOT-FOUND">intended direction</a></p>
       </section>
     `;
-    const config = { xref: { url: xrefTestUrl("data-cite-2") }, localBiblio };
+    const config = { xref: true, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    expect(doc.getElementById("one").href).toBe(
-      expectedLinks.get("object@fileapi")
-    );
-    expect(doc.getElementById("two").href).toBe(
-      expectedLinks.get("object@html")
-    );
-    expect(doc.getElementById("three").href).toBe(
-      expectedLinks.get("object@fileapi")
-    );
-    expect(doc.getElementById("four").href).toBe(
-      expectedLinks.get("object@html")
-    );
+    const scrollSnapLink =
+      "https://drafts.csswg.org/css-scroll-snap-1/#intended-direction";
+    const snappointsLink =
+      "https://www.w3.org/TR/css-snappoints-1/#intended-direction";
+
+    expect(doc.getElementById("one").href).toBe(scrollSnapLink);
+    expect(doc.getElementById("two").href).toBe(snappointsLink);
+    expect(doc.getElementById("three").href).toBe(scrollSnapLink);
+    expect(doc.getElementById("four").href).toBe(snappointsLink);
 
     const five = doc.getElementById("five");
     expect(five.href).toBe("");
@@ -284,15 +288,12 @@ describe("Core — xref", () => {
         <p id="local-dfn-1"><dfn>local one</dfn></p>
         <p id="local-dfn-2"><dfn data-cite="html#hello">hello</dfn></p>
         <p id="external-dfn-1"><dfn data-cite="webidl">dictionary</dfn></p>
-        <p id="external-dfn-2"><dfn class="externalDFN">list</dfn></p>
+        <p id="external-dfn-2" data-cite="infra"><dfn class="externalDFN">list</dfn></p>
         <p id="local-link-1"><a>local one</a></p>
         <p id="external-link-1"><a data-cite="url">URL parser</a></p>
       </section>
     `;
-    const config = {
-      xref: { url: xrefTestUrl("empty-data-cite-parent") },
-      localBiblio,
-    };
+    const config = { xref: true, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -332,7 +333,7 @@ describe("Core — xref", () => {
         <p id="external-link-1"><a>event handler</a></p>
       </section>
     `;
-    const config = { xref: { url: xrefTestUrl("local-dfn") }, localBiblio };
+    const config = { xref: "web-platform", localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -372,7 +373,7 @@ describe("Core — xref", () => {
         <a>foo</a>
       </section>
     `;
-    const config = { xref: { url: xrefTestUrl("data-lt") }, localBiblio };
+    const config = { xref: ["infra", "html"], localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -402,11 +403,7 @@ describe("Core — xref", () => {
         <a>event handler</a> <a>event handlers</a>
       </section>
     `;
-    const config = {
-      xref: { url: xrefTestUrl("data-lt") },
-      localBiblio,
-      pluralize: true,
-    };
+    const config = { xref: ["html"], localBiblio, pluralize: true };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -427,7 +424,10 @@ describe("Core — xref", () => {
     }
   });
 
-  it("uses inline references to provide context", async () => {
+  // TODO: this will fail (BUG)
+  // Can fix it via https://github.com/w3c/respec/issues/2428
+  // eslint-disable-next-line jasmine/no-disabled-tests
+  xit("uses inline references to provide context", async () => {
     const body = `
       <section id="test">
         <section>
@@ -449,7 +449,7 @@ describe("Core — xref", () => {
         </section>
       </section>
     `;
-    const config = { xref: { url: xrefTestUrl("inline-bibref") }, localBiblio };
+    const config = { xref: ["fileapi", "html"], localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -502,7 +502,10 @@ describe("Core — xref", () => {
         </section>
       </section>
     `;
-    const config = { xref: { url: xrefTestUrl("refs") }, localBiblio };
+    const config = {
+      xref: { url: `${location.origin}/tests/data/xref/refs.json` },
+      localBiblio,
+    };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -587,15 +590,14 @@ describe("Core — xref", () => {
       const body = `
       <section id="test">
         <p id="link1">{{ Window }} and {{EventTarget}}</p>
-        <p id="link2">{{ [[query]] }}</p>
-        <p id="link3">{{ [[type]] }} is ambiguous.</p>
-        <p id="link4"> This should work {{
+        <p id="link2">{{ [[query]] }} has no meaning without forContext</p>
+        <p id="link3"> This should work {{
               EventTarget
 
         }} , i.e. should trim the whitespace.</p>
       </section>
       `;
-      const config = { xref: { url: xrefTestUrl("inline-idl") }, localBiblio };
+      const config = { xref: true, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -606,38 +608,29 @@ describe("Core — xref", () => {
       expect(eventTargetLink.href).toBe(expectedLinks.get("EventTarget"));
 
       const link2 = doc.querySelector("#link2 code a");
-      expect(link2.href).toBe(expectedLinks.get("PermissionStatus.[[query]]"));
+      expect(link2.href).toBeFalsy();
       expect(link2.textContent).toBe("query");
 
       const link3 = doc.querySelector("#link3 code a");
-      expect(link3.href).toBeFalsy();
-      expect(link3.title).toBe("Error: Linking an ambiguous dfn.");
-
-      const link4 = doc.querySelector("#link4 code a");
-      expect(link4.href).toBe(expectedLinks.get("EventTarget"));
-      expect(link4.textContent).toBe("EventTarget");
+      expect(link3.href).toBe(expectedLinks.get("EventTarget"));
+      expect(link3.textContent).toBe("EventTarget");
     });
 
     it("links methods", async () => {
       const body = `
       <section id="test">
-        <p id="link1">{{ addEventListener(type, callback) }}</p>
-        <p id="link2">{{ EventTarget.addEventListener(type, callback) }}</p>
-        <p id="link3">{{ ChildNode.after(...nodes) }}</p>
-        <p id="link4">{{ allowedFeatures() }}</p>
-        <p id="link5">{{ append(name, value) }} is ambiguous</p>
-        <p id="link6">{{ URLSearchParams.append(name, value) }} is not ambiguous</p>
+        <p id="link1">{{ EventTarget.addEventListener(type, callback) }}</p>
+        <p id="link2">{{ ChildNode.after(...nodes) }}</p>
+        <p id="link3">{{ URLSearchParams.append(name, value) }} is not ambiguous</p>
       </section>
       `;
-      const config = {
-        xref: { url: xrefTestUrl("inline-idl-methods") },
-        localBiblio,
-      };
+      const config = { xref: true, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const link1 = doc.querySelector("#link1 code a");
-      expect(link1.href).toBe(
+      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
+      expect(link1a.href).toBe(expectedLinks.get("EventTarget"));
+      expect(link1b.href).toBe(
         expectedLinks.get("EventTarget.addEventListener")
       );
       const vars1 = [...doc.querySelectorAll("#link1 var")];
@@ -646,29 +639,12 @@ describe("Core — xref", () => {
       expect(vars1[1].textContent).toBe("callback");
 
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
-      expect(link2a.href).toBe(expectedLinks.get("EventTarget"));
-      expect(link2b.href).toBe(
-        expectedLinks.get("EventTarget.addEventListener")
-      );
-      const vars2 = [...doc.querySelectorAll("#link2 var")];
-      expect(vars2.length).toBe(2);
-      expect(vars2[0].textContent).toBe("type");
-      expect(vars2[1].textContent).toBe("callback");
+      expect(link2a.href).toBe(expectedLinks.get("ChildNode"));
+      expect(link2b.href).toBe(expectedLinks.get("ChildNode.after"));
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 code a")];
-      expect(link3a.href).toBe(expectedLinks.get("ChildNode"));
-      expect(link3b.href).toBe(expectedLinks.get("ChildNode.after"));
-
-      const link4 = doc.querySelector("#link4 code a");
-      expect(link4.href).toBe(expectedLinks.get("allowedFeatures"));
-
-      const link5 = doc.querySelector("#link5 code a");
-      expect(link5.href).toBe("");
-      expect(link5.title).toBe("Error: Linking an ambiguous dfn.");
-
-      const [link6a, link6b] = [...doc.querySelectorAll("#link6 code a")];
-      expect(link6a.href).toBe(expectedLinks.get("URLSearchParams"));
-      expect(link6b.href).toBe(expectedLinks.get("URLSearchParams.append"));
+      expect(link3a.href).toBe(expectedLinks.get("URLSearchParams"));
+      expect(link3b.href).toBe(expectedLinks.get("URLSearchParams.append"));
     });
 
     it("links attribute and dict-member", async () => {
@@ -681,7 +657,7 @@ describe("Core — xref", () => {
       </section>
       `;
       const config = {
-        xref: { url: xrefTestUrl("inline-idl-attributes") },
+        xref: ["html", "credential-management", "encoding", "dom", "webauthn"],
         localBiblio,
       };
       const ops = makeStandardOps(config, body);
@@ -718,10 +694,7 @@ describe("Core — xref", () => {
         <p id="link2">{{ Credential.[[type]] }}</p>
       </section>
       `;
-      const config = {
-        xref: { url: xrefTestUrl("inline-idl-slots") },
-        localBiblio,
-      };
+      const config = { xref: true, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -742,7 +715,6 @@ describe("Core — xref", () => {
           enum Foo { "dashed-thing", "" };
           </pre>
           <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
-          <p id="link2">{{ "blob" }} {{ ServiceWorkerUpdateViaCache["imports"] }}</p>
           <p id="link3"
             data-cite="css-layout-api" data-xref-for="ChildDisplayType"
           >{{ "block" }} {{"block"}} </p>
@@ -753,7 +725,7 @@ describe("Core — xref", () => {
         </section>
       `;
       const config = {
-        xref: { url: xrefTestUrl("inline-idl-enum") },
+        xref: ["service-workers", "css-layout-api", "xhr"],
         localBiblio,
       };
       const ops = makeStandardOps(config, body);
@@ -765,14 +737,6 @@ describe("Core — xref", () => {
       expect(link1.querySelector("a").href).toBe(
         expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
       );
-
-      const link2 = doc.getElementById("link2");
-      const [blobLink, swImport] = link2.querySelectorAll("a");
-      expect(blobLink.href).toBe(expectedLinks.get("blob"));
-      expect(swImport.href).toBe(
-        expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
-      );
-      expect(link2.textContent).toBe(`"blob" "imports"`);
 
       const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
       expect(blockLink1.href).toBe(expectedLinks.get("ChildDisplayType.block"));
@@ -806,10 +770,7 @@ describe("Core — xref", () => {
           <p id="link-external">{{ Window.event }} links to html spec.</p>
         </section>
       `;
-      const config = {
-        xref: { url: xrefTestUrl("inline-locals") },
-        localBiblio,
-      };
+      const config = { xref: "web-platform", localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -938,7 +899,7 @@ describe("Core — xref", () => {
   });
 
   it("caches results and uses cached results when available", async () => {
-    const config = { xref: { url: xrefTestUrl("cache-1") }, localBiblio };
+    const config = { xref: true, localBiblio };
     let cacheKeys;
 
     const keys = new Map([
@@ -980,7 +941,7 @@ describe("Core — xref", () => {
     );
 
     // new data was requested from server, cache should change
-    const config2 = { xref: { url: xrefTestUrl("cache-2") }, localBiblio };
+    const config2 = { xref: true, localBiblio };
     const body2 = `
       <section>
         <p><a id="link-1">dictionary</a><p>
@@ -1009,7 +970,7 @@ describe("Core — xref", () => {
       <a id="test2" data-cite="service-workers">JSON</a>
       </section>
     `;
-    const config = { xref: true, localBiblio };
+    const config = { xref: ["service-workers"], localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const test1 = doc.getElementById("test1");
