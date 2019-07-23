@@ -133,23 +133,30 @@ function getRequestEntry(elem) {
   term = normalize(term);
   if (!isIDL) term = term.toLowerCase();
 
+  /** @type {string[][]} */
   const specs = [];
   /** @type {HTMLElement} */
-  const dataciteElem = elem.closest("[data-cite]");
-  if (dataciteElem && dataciteElem.dataset.cite) {
+  let dataciteElem = elem.closest("[data-cite]");
+  while (dataciteElem) {
     const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
-    specs.push(...cite.split(/\s+/));
+    const cites = cite.split(/\s+/).filter(s => s);
+    if (cites.length) {
+      specs.push(cites.sort());
+    }
+    if (dataciteElem === elem) break;
+    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
   }
   // if element itself contains data-cite, we don't take inline context into account
-  if (dataciteElem !== elem) {
+  if (elem.closest("[data-cite]") !== elem) {
     const closestSection = elem.closest("section");
     /** @type {Iterable<HTMLElement>} */
     const bibrefs = closestSection
       ? closestSection.querySelectorAll("a.bibref")
       : [];
-    for (const el of bibrefs) {
-      const ref = el.textContent.toLowerCase();
-      specs.push(ref);
+    const inlineRefs = [...bibrefs].map(el => el.textContent.toLowerCase());
+    const uniqueInlineRefs = [...new Set(inlineRefs)].sort();
+    if (uniqueInlineRefs.length) {
+      specs.unshift(uniqueInlineRefs);
     }
   }
 
@@ -176,7 +183,7 @@ function getRequestEntry(elem) {
   return {
     term,
     types,
-    ...(specs.length && { specs: [...new Set(specs)].sort() }),
+    ...(specs.length && { specs }),
     ...(typeof forContext === "string" && { for: forContext }),
   };
 }

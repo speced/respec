@@ -40,7 +40,7 @@ module "core/xref" {
     term: string;
     id: string;
     types: string[];
-    specs?: string[];
+    specs?: string[][];
     for?: string;
   }
 
