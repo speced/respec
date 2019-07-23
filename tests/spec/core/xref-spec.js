@@ -291,6 +291,7 @@ describe("Core — xref", () => {
           <p data-cite="svg">
             <a id="link2">event handler</a>
             - not in [svg] -> fallback to [dom] -> fallback to [dom], [html]
+            <a id="link-local-0">local</a>
           </p>
           <p>
             <a id="link3" data-cite="fetch">event handler</a>
@@ -315,6 +316,10 @@ describe("Core — xref", () => {
     expect(link3.href).toEqual("https://fetch.spec.whatwg.org/");
     expect(link3.classList).toContain("respec-offending-element");
     expect(link3.title).toEqual("Error: No matching dfn found.");
+
+    const linkLocal0 = doc.getElementById("link-local-0");
+    expect(linkLocal0.getAttribute("href")).toEqual("#dfn-local");
+    expect(linkLocal0.classList).not.toContain("respec-offending-element");
 
     const linkLocal1 = doc.getElementById("link-local-1");
     expect(linkLocal1.getAttribute("href")).toEqual("#dfn-local");
