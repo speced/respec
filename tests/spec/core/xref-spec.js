@@ -760,12 +760,12 @@ describe("Core — xref", () => {
       const body = `
         <section id="test">
           <pre class="idl">
-          enum Foo { "dashed-thing", "" };
+          enum Foo { "dashed-thing" };
           </pre>
           <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
           <p id="link2" data-link-for="Foo" data-dfn-for="Foo">
-            <dfn>dashed-thing</dfn> <dfn>""</dfn>
-            {{ Foo["dashed-thing"] }} {{Foo[""]}}
+            <dfn>dashed-thing</dfn>
+            {{ Foo["dashed-thing"] }}
           </p>
         </section>
       `;
@@ -780,11 +780,9 @@ describe("Core — xref", () => {
         expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
       );
 
-      const [dashedThing, emptyString] = doc.querySelectorAll("#link2 code a");
+      const dashedThing = doc.querySelector("#link2 code a");
       expect(dashedThing.textContent).toBe("dashed-thing");
       expect(dashedThing.hash).toBe("#dom-foo-dashed-thing");
-      expect(emptyString.textContent).toBe("");
-      expect(emptyString.hash).toBe("#dom-foo-the-empty-string");
     });
 
     it("links local definitions first", async () => {
