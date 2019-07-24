@@ -233,6 +233,13 @@ describe("Core - Inlines", () => {
         <p id="inlines">
           [= \`link\` element =] and [= some \`Coded\` thing =]
         </p>
+        <p id="multiline">
+        [=environment 
+            settings
+          object / 
+          responsible 
+          document =]
+        </p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
@@ -245,6 +252,9 @@ describe("Core - Inlines", () => {
     expect(someCodedThing.getAttribute("href")).toBe("#dfn-some-coded-thing");
     const codedThingCodeElem = someCodedThing.querySelector("code");
     expect(codedThingCodeElem.textContent).toBe("Coded");
+
+    const responsibleDocLink = doc.querySelector("#multiline a");
+    expect(responsibleDocLink.hash).toBe("#responsible-document");
   });
 
   it("proceseses `backticks` as code", async () => {

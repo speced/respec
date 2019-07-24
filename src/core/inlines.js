@@ -9,6 +9,7 @@
 import {
   InsensitiveStringSet,
   getTextNodes,
+  norm,
   refTypeFromContext,
   showInlineError,
   showInlineWarning,
@@ -34,10 +35,10 @@ const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
  * @return {HTMLElement}
  */
 function inlineRFC2119Matches(matched) {
-  const normalize = matched.split(/\s+/).join(" ");
-  const nodeElement = hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`;
+  const value = norm(matched);
+  const nodeElement = hyperHTML`<em class="rfc2119" title="${value}">${value}</em>`;
   // remember which ones were used
-  rfc2119Usage[normalize] = true;
+  rfc2119Usage[value] = true;
   return nodeElement;
 }
 
@@ -128,14 +129,15 @@ function inlineVariableMatches(matched) {
   return hyperHTML`<var data-type="${type}">${varName}</var>`;
 }
 
-function inlineLinkMatches(matched) {
+function inlineAnchorMatches(matched) {
   const parts = matched
     .slice(2, -2) // Chop [= =]
     .split("/", 2)
     .map(s => s.trim());
   const [isFor, content] = parts.length === 2 ? parts : ["", parts[0]];
   const processedContent = processInlineContent(content);
-  return hyperHTML`<a data-link-for="${isFor}" data-xref-for="${isFor}">${processedContent}</a>`;
+  const forValue = norm(isFor);
+  return hyperHTML`<a data-link-for="${forValue}" data-xref-for="${forValue}">${processedContent}</a>`;
 }
 
 function inlineCodeMatches(matched) {
@@ -227,7 +229,7 @@ export function run(conf) {
         const node = inlineVariableMatches(t);
         df.append(node);
       } else if (t.startsWith("[=")) {
-        const node = inlineLinkMatches(t);
+        const node = inlineAnchorMatches(t);
         df.append(node);
       } else if (t.startsWith("`")) {
         const node = inlineCodeMatches(t);
