@@ -253,7 +253,7 @@ describe("Core - Inlines", () => {
     const codedThingCodeElem = someCodedThing.querySelector("code");
     expect(codedThingCodeElem.textContent).toBe("Coded");
 
-    const responsibleDocLink = doc.querySelector("multiline a");
+    const responsibleDocLink = doc.querySelector("#multiline a");
     expect(responsibleDocLink.hash).toBe("#responsible-document");
   });
 
