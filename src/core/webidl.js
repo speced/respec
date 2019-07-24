@@ -157,9 +157,7 @@ function defineIdlName(escaped, data, parent) {
   if (showWarnings) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
-    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${
-      data.type
-    }. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
+    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
     showInlineWarning(unlinkedAnchor, msg, "");
   }
   return unlinkedAnchor;
