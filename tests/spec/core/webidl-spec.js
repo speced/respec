@@ -1315,7 +1315,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(enumDfn.dataset.dfnType).toBe("enum");
     expect(enumDfn.id).toBe("dom-testenum");
 
-    expect(enumDfn.dataset.dfnType).toBe("enum-value");
+    expect(enumVal.dataset.dfnType).toBe("enum-value");
     expect(enumVal.id).toBe("dom-testenum-the-empty-string");
 
     const [, tea] = doc.querySelectorAll(".respec-offending-element");
