@@ -254,7 +254,7 @@ describe("Core - Inlines", () => {
     expect(codedThingCodeElem.textContent).toBe("Coded");
     
     const responsibleDocLink = doc.querySelector("multiline a");
-    expect(sponsibleDocLink.hash).toBe("#responsible-document");
+    expect(responsibleDocLink.hash).toBe("#responsible-document");
     
   });
 
