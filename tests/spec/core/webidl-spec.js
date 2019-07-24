@@ -1295,18 +1295,28 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
           interface RASAintShared {
             attribute DOMString layer;
           };
+          enum TestEnum {""};
           partial interface TeaTime {};
         </pre>
       </section>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const [it, attr] = doc.querySelectorAll("pre dfn");
+    const [it, attr, enumDfn, enumVal] = doc.querySelectorAll("pre dfn");
 
     expect(it.classList).not.toContain("respec-offending-element");
     expect(it.dataset.dfnType).toBe("interface");
     expect(it.dataset.export).toBe("");
+    expect(it.id).toBe("dom-rasaintshared");
+
     expect(attr.dataset.dfnType).toBe("attribute");
+    expect(attr.id).toBe("dom-rasaintshared-layer");
+
+    expect(enumDfn.dataset.dfnType).toBe("enum");
+    expect(enumDfn.id).toBe("dom-testenum");
+
+    expect(enumDfn.dataset.dfnType).toBe("enum-value");
+    expect(enumVal.id).toBe("dom-testenum-the-empty-string");
 
     const [, tea] = doc.querySelectorAll(".respec-offending-element");
     expect(tea.textContent).toBe("TeaTime");

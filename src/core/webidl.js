@@ -7,7 +7,7 @@
 import * as webidl2 from "webidl2";
 import { flatten, showInlineError, showInlineWarning } from "./utils.js";
 import css from "text!../../assets/webidl.css";
-import { findDfn } from "./dfn-finder.js";
+import { findDfn, decorateDfn } from "./dfn-finder.js";
 import hyperHTML from "hyperhtml";
 import { registerDefinition } from "./dfn-map.js";
 
@@ -139,8 +139,10 @@ function defineIdlName(escaped, data, parent) {
      data-lt="default toJSON operation">${escaped}</a>`;
   }
   if (!data.partial) {
-    return hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
+    const dfn = hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
       parent.name}">${escaped}</dfn>`;
+    decorateDfn(dfn, data, parentName, name);
+    return dfn;
   }
 
   const unlinkedAnchor = hyperHTML`<a
@@ -270,7 +272,7 @@ function getIdlId(name, parentName) {
 function getDefnName(defn) {
   switch (defn.type) {
     case "enum-value":
-      return defn.value;
+      return defn.value === "" ? "the-empty-string" : defn.value;
     case "operation":
       return defn.name;
     default:

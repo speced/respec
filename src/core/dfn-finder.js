@@ -150,10 +150,13 @@ function findNormalDfn(defn, parent, name) {
  * @param {string} parent
  * @param {string} name
  */
-function decorateDfn(dfn, defn, parent, name) {
+export function decorateDfn(dfn, defn, parent, name) {
   if (!dfn.id) {
-    const middle = parent ? `${parent}-` : "";
-    const last = name.replace(/[()]/g, "").replace(/\s/g, "-");
+    const middle = parent ? `${parent.toLowerCase()}-` : "";
+    const last = name
+      .toLowerCase()
+      .replace(/[()]/g, "")
+      .replace(/\s/g, "-");
     dfn.id = `dom-${middle}${last}`;
   }
   dfn.dataset.idl = defn.type;
