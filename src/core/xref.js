@@ -176,10 +176,11 @@ function getRequestEntry(elem) {
     /** @type {HTMLElement} */
     const dataXrefForElem = elem.closest("[data-xref-for]");
     if (dataXrefForElem) {
-      forContext = dataXrefForElem.dataset.xrefFor;
+      forContext = normalize(dataXrefForElem.dataset.xrefFor);
     }
+  } else if (forContext && typeof forContext === "string") {
+    forContext = normalize(forContext);
   }
-
   return {
     term,
     types,
