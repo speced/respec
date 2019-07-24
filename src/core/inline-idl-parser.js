@@ -11,7 +11,6 @@ const slotRegex = /^\[\[(\w+)\]\]$/;
 // NOTE: [[value]] is actually a slot, but database has this as type="attribute"
 const attributeRegex = /^((?:\[\[)?(?:\w+)(?:\]\])?)$/;
 const enumRegex = /^(\w+)\["([\w ]+)"\]$/;
-const enumValueRegex = /\B"([^"]*)"\B/;
 // TODO: const splitRegex = /(?<=\]\]|\b)\./
 // https://github.com/w3c/respec/pull/1848/files#r225087385
 const methodSplitRegex = /\.?(\w+\(.*\)$)/;
@@ -26,12 +25,6 @@ function parseInlineIDL(str) {
   const results = [];
   while (tokens.length) {
     const value = tokens.pop();
-    // Exception - "NotAllowedError"
-    if (exceptionRegex.test(value)) {
-      const [, identifier] = value.match(exceptionRegex);
-      results.push({ type: "exception", identifier });
-      continue;
-    }
     // Method
     if (methodRegex.test(value)) {
       const [, identifier, allArgs] = value.match(methodRegex);
@@ -45,9 +38,10 @@ function parseInlineIDL(str) {
       results.push({ type: "enum", identifier, enumValue });
       continue;
     }
-    if (enumValueRegex.test(value)) {
-      const [, identifier] = value.match(enumValueRegex);
-      results.push({ type: "enum-value", identifier });
+    // Exception - "NotAllowedError"
+    if (exceptionRegex.test(value)) {
+      const [, identifier] = value.match(exceptionRegex);
+      results.push({ type: "exception", identifier });
       continue;
     }
     // internal slot
@@ -143,19 +137,6 @@ function renderEnum(details) {
 }
 
 /**
- * Enum value: "enum value"
- */
-function renderEnumValue(details) {
-  const { identifier } = details;
-  const lt = identifier === "" ? "the-empty-string" : null;
-  const html = hyperHTML`"<a
-    data-xref-type="enum-value"
-    data-lt="${lt}"
-    >${identifier}</a>"`;
-  return html;
-}
-
-/**
  * Exception value: "NotAllowedError"
  * Only the WebIDL spec can define exceptions
  */
@@ -200,9 +181,6 @@ export function idlStringToHtml(str) {
         break;
       case "enum":
         output.push(renderEnum(details));
-        break;
-      case "enum-value":
-        output.push(renderEnumValue(details));
         break;
       case "exception":
         output.push(renderException(details));
