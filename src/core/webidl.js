@@ -272,7 +272,7 @@ function getIdlId(name, parentName) {
 function getDefnName(defn) {
   switch (defn.type) {
     case "enum-value":
-      return defn.value === "" ? "the-empty-string" : defn.value;
+      return defn.value;
     case "operation":
       return defn.name;
     default:
