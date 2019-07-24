@@ -275,6 +275,21 @@ describe("Core - Inlines", () => {
     expect(doc.querySelector("#no-match code")).toBeNull();
   });
 
+  it('processes inline {{"Exceptions"}}', async () => {
+    const body = `
+      <section>
+        <p id="test"> {{
+          "SyntaxError"
+        }}</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const syntaxErrorAnchor = doc.querySelector("#test a");
+    expect(syntaxErrorAnchor.href).toBe(
+      "https://heycam.github.io/webidl/#syntaxerror"
+    );
+  });
+
   it("processes [= BikeShed style inline links =]", async () => {
     const body = `
       <section data-cite="INFRA">
