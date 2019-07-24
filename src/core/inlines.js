@@ -30,7 +30,7 @@ const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
-const inlineElement = /(?:\[\^(?:!|\\|\?)?[A-Za-z]+\^\])/; // Inline [^element^]
+const inlineElement = /(?:\[\^[A-Za-z]+\^\])/; // Inline [^element^]
 
 /**
  * @param {string} matched
