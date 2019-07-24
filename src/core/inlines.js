@@ -30,6 +30,18 @@ const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
+const inlineElement = /(?:\[\^(?:!|\\|\?)?[A-Za-z]+\^\])/; // Inline [^element^]
+
+/**
+ * @param {string} matched
+ * @return {HTMLElement}
+ */
+function inlineElementMatches(matched) {
+  const value = matched.slice(2, -2).trim();
+  const html = hyperHTML`<code><a data-xref-type="element">${value}</a></code>`;
+  return html;
+}
+
 /**
  * @param {string} matched
  * @return {HTMLElement}
@@ -204,6 +216,7 @@ export function run(conf) {
       inlineExpansion.source,
       inlineAnchor.source,
       inlineCodeRegExp.source,
+      inlineElement.source,
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
   );
@@ -233,6 +246,9 @@ export function run(conf) {
         df.append(node);
       } else if (t.startsWith("`")) {
         const node = inlineCodeMatches(t);
+        df.append(node);
+      } else if (t.startsWith("[^")) {
+        const node = inlineElementMatches(t);
         df.append(node);
       } else if (abbrMap.has(t)) {
         const node = inlineAbbrMatches(t, txt, abbrMap);
