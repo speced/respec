@@ -5,9 +5,9 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import * as webidl2 from "webidl2";
+import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { flatten, showInlineError, showInlineWarning } from "./utils.js";
 import css from "text!../../assets/webidl.css";
-import { findDfn, decorateDfn } from "./dfn-finder.js";
 import hyperHTML from "hyperhtml";
 import { registerDefinition } from "./dfn-map.js";
 
@@ -157,7 +157,9 @@ function defineIdlName(escaped, data, parent) {
   if (showWarnings) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
-    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
+    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${
+      data.type
+    }. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
     showInlineWarning(unlinkedAnchor, msg, "");
   }
   return unlinkedAnchor;
