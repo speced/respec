@@ -82,7 +82,7 @@
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
     "lint": "tsc -p src/jsconfig.json && eslint .",
-    "prepare": "npm run snyk-protect; npm run build:components",
+    "prepare": "npm run snyk-protect && npm run build:components",
     "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk-protect": "snyk protect",
@@ -103,7 +103,7 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "1.19.0",
-    "snyk": "^2.0.0"
+    "snyk": "^1.199.0"
   },
   "prettier": {
     "trailingComma": "es5"
