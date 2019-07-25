@@ -96,7 +96,7 @@
     "start": "npm run build:components && serve",
     "test:build": "mocha --timeout 60000 ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
-    "test:node": "npx tap -Rspec tests/spec/core/data-abbr-spec.js",
+    "test:node": "npx tap -Rspec tests/test-node.js",
     "test:karma": "npm run karma",
     "postinstall": "opencollective-postinstall"
   },

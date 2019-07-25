@@ -68,7 +68,7 @@ module.exports = function(config) {
         included: false,
       },
       {
-        pattern: "tests/spec/SpecHelperCore.js",
+        pattern: "tests/spec/SpecHelper.js",
         type: "module",
         included: false,
       },
@@ -96,7 +96,6 @@ module.exports = function(config) {
       "/worker/respec-worker.js": "/base/worker/respec-worker.js",
       "/support-files/hljs-testlang.js":
         "/base/tests/support-files/hljs-testlang.js",
-      "/base/tests/spec/SpecHelper.js": "/base/tests/spec/SpecHelperCore.js",
     },
 
     // preprocess matching files before serving them to the browser
