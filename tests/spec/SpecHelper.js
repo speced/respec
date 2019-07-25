@@ -219,3 +219,11 @@ export function makeStandardGeoOps(config = {}, body = makeDefaultBody()) {
     config: { ...makeBasicConfig("geonovum"), ...config },
   };
 }
+
+export function getLocationOrigin() {
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+  // This must match your actual server port
+  return "http://localhost:5000/";
+}

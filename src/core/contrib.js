@@ -10,6 +10,7 @@ import {
   githubRequestHeaders,
 } from "./github-api.js";
 import { flatten, joinAnd } from "./utils.js";
+import fetch from "./fetch.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/contrib";
 
@@ -18,11 +19,15 @@ function prop(prop) {
 }
 const nameProp = prop("name");
 
-function findUserURLs(...thingsWithUsers) {
+/**
+ * @param {string} origin
+ * @param  {...any} thingsWithUsers
+ */
+function findUserURLs(origin, ...thingsWithUsers) {
   const usersURLs = thingsWithUsers
     .reduce(flatten, [])
     .filter(thing => thing && thing.user)
-    .map(({ user }) => new URL(user.url, window.parent.location.origin).href);
+    .map(({ user }) => new URL(user.url, origin).href);
   return [...new Set(usersURLs)];
 }
 
@@ -44,7 +49,8 @@ async function toHTML(urls, editors, element, headers) {
   element.textContent = joinAnd(names);
 }
 
-export async function run(conf) {
+/** @param {import("../respec-document.js").RespecDocument} */
+export default async function({ document, configuration: conf }) {
   const ghCommenters = document.getElementById("gh-commenters");
   const ghContributors = document.getElementById("gh-contributors");
   if (!ghCommenters && !ghContributors) {
@@ -77,6 +83,7 @@ export async function run(conf) {
     contributors_url,
   } = indexes;
 
+  const origin = new URL(githubAPI).origin;
   const [
     issues,
     issueComments,
@@ -85,10 +92,7 @@ export async function run(conf) {
   ] = await Promise.all(
     [issues_url, issue_comment_url, comments_url, contributors_url].map(url => {
       const cleansedUrl = url.replace(/\{[^}]+\}/, "");
-      return fetchAll(
-        new URL(cleansedUrl, window.parent.location.origin).href,
-        headers
-      );
+      return fetchAll(new URL(cleansedUrl, origin).href, headers);
     })
   );
 
@@ -97,14 +101,12 @@ export async function run(conf) {
     const toHTMLPromises = [
       {
         elt: ghCommenters,
-        getUrls: () => findUserURLs(issues, issueComments, otherComments),
+        getUrls: () =>
+          findUserURLs(origin, issues, issueComments, otherComments),
       },
       {
         elt: ghContributors,
-        getUrls: () =>
-          contributors.map(
-            c => new URL(c.url, window.parent.location.origin).href
-          ),
+        getUrls: () => contributors.map(c => new URL(c.url, origin).href),
       },
     ]
       .filter(c => c.elt)

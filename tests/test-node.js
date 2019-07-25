@@ -19,6 +19,7 @@ global.expect = expect;
 
 (async () => {
   await import("./spec/core/data-abbr-spec.js");
+  await import("./spec/core/contrib-spec.js");
   // for (const testSet of readdirSync(`${__dirname}/spec/`)) {
   //   await importTestSets(testSet);
   // }

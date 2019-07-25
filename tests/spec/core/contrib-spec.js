@@ -1,9 +1,15 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  getLocationOrigin,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
 
 describe("Core — Contributors and Commenters", () => {
   afterAll(flushIframes);
+  const origin = getLocationOrigin();
   it("Expands contributors and commenters", async () => {
     const body = `
       <section>
@@ -13,7 +19,7 @@ describe("Core — Contributors and Commenters", () => {
     `;
     const ops = makeStandardOps(
       {
-        githubAPI: `${window.parent.location.origin}/tests/data/contrib/index`,
+        githubAPI: `${origin}/tests/data/contrib/index`,
       },
       body
     );
@@ -38,7 +44,7 @@ describe("Core — Contributors and Commenters", () => {
     `;
     const ops = makeStandardOps(
       {
-        githubAPI: `${window.parent.location.origin}/tests/data/contrib/index`,
+        githubAPI: `${origin}/tests/data/contrib/index`,
       },
       body
     );
