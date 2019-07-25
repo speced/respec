@@ -9,7 +9,7 @@ import { PubSubHub } from "./core/pubsubhub.js";
 /**
  * @param {string} text
  */
-async function parseDocument(text) {
+export async function parseDocument(text) {
   if (typeof DOMParser !== "undefined") {
     return new DOMParser().parseFromString(text, "text/html");
   }
@@ -30,6 +30,10 @@ export async function createRespecDocument(doc, conf) {
     throw new Error(
       "Configuration object required if not given within document"
     );
+  }
+  if (document.defaultView) {
+    // only to pass tests
+    document.defaultView.respecConfig = configuration;
   }
   const { continueOnError } = configuration;
   delete configuration.continueOnError; // TODO: remove this line

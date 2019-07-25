@@ -11,9 +11,20 @@ export async function makeRSDoc(opts, src, style = "") {
     opts.config.logos = [];
   }
   opts.config.continueOnError = true;
+  const { parseDocument } = await import("../../src/respec-document.js");
   const { preprocess } = await import("../../src/index.js");
-  const rsDoc = await preprocess(opts.body, opts.config);
+  const doc = await parseDocument(opts.body);
+  if (opts.htmlAttrs) {
+    setHtmlAttrs(doc.documentElement, opts.htmlAttrs);
+  }
+  const rsDoc = await preprocess(doc, opts.config);
   return rsDoc.document;
+}
+
+function setHtmlAttrs(element, htmlAttrs) {
+  for (const [key, value] of Object.entries(htmlAttrs)) {
+    element.setAttribute(key, value);
+  }
 }
 
 /**
@@ -73,11 +84,6 @@ function makeRSDocInIframe(opts, src, style = "") {
 }
 
 function decorateDocument(doc, opts) {
-  function intoAttributes(element, key) {
-    element.setAttribute(key, this[key]);
-    return element;
-  }
-
   function addReSpecLoader(opts) {
     const { profile } = opts;
     const loader = doc.createElement("script");
@@ -113,10 +119,7 @@ function decorateDocument(doc, opts) {
   }
 
   if (opts.htmlAttrs) {
-    Object.keys(opts.htmlAttrs).reduce(
-      intoAttributes.bind(opts.htmlAttrs),
-      doc.documentElement
-    );
+    setHtmlAttrs(doc.documentElement, opts.htmlAttrs);
   }
   if (opts.title) {
     doc.title = opts.title;

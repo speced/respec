@@ -55,9 +55,10 @@ function inlineRFC2119Matches(matched) {
 
 /**
  * @param {string} matched
+ * @param {Document} document
  * @return {HTMLElement}
  */
-function inlineRefMatches(matched) {
+function inlineRefMatches(matched, document) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
   if (!ref.startsWith("#")) {
@@ -141,29 +142,42 @@ function inlineVariableMatches(matched) {
   return hyperHTML`<var data-type="${type}">${varName}</var>`;
 }
 
-function inlineAnchorMatches(matched) {
+/**
+ * @param {string} matched
+ * @param {Document} document
+ * @return {HTMLElement}
+ */
+function inlineAnchorMatches(matched, document) {
   const parts = matched
     .slice(2, -2) // Chop [= =]
     .split("/", 2)
     .map(s => s.trim());
   const [isFor, content] = parts.length === 2 ? parts : ["", parts[0]];
-  const processedContent = processInlineContent(content);
+  const processedContent = processInlineContent(content, document);
   const forValue = norm(isFor);
   return hyperHTML`<a data-link-for="${forValue}" data-xref-for="${forValue}">${processedContent}</a>`;
 }
 
+/**
+ * @param {string} matched
+ * @return {HTMLElement}
+ */
 function inlineCodeMatches(matched) {
   const clean = matched.slice(1, -1); // Chop ` and `
   return hyperHTML`<code>${clean}</code>`;
 }
 
-function processInlineContent(text) {
+/**
+ * @param {string} text
+ * @param {Document} document
+ */
+function processInlineContent(text, document) {
   if (inlineCodeRegExp.test(text)) {
     // We use a capture group to split, so we can process all the parts.
     return text.split(/(`[^`]+`)(?!`)/).map(part => {
       return part.startsWith("`")
         ? inlineCodeMatches(part)
-        : processInlineContent(part);
+        : processInlineContent(part, document);
     });
   }
   return document.createTextNode(text);
@@ -236,7 +250,7 @@ export default function({ document, rfc2119Usage, configuration: conf }) {
         const node = inlineXrefMatches(t);
         df.append(node);
       } else if (t.startsWith("[[[")) {
-        const node = inlineRefMatches(t);
+        const node = inlineRefMatches(t, document);
         df.append(node);
       } else if (t.startsWith("[[")) {
         const nodes = inlineBibrefMatches(t, txt, conf);
@@ -245,7 +259,7 @@ export default function({ document, rfc2119Usage, configuration: conf }) {
         const node = inlineVariableMatches(t);
         df.append(node);
       } else if (t.startsWith("[=")) {
-        const node = inlineAnchorMatches(t);
+        const node = inlineAnchorMatches(t, document);
         df.append(node);
       } else if (t.startsWith("`")) {
         const node = inlineCodeMatches(t);
