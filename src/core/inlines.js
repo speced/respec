@@ -9,6 +9,7 @@
 import {
   InsensitiveStringSet,
   getTextNodes,
+  norm,
   refTypeFromContext,
   showInlineError,
   showInlineWarning,
@@ -28,14 +29,27 @@ const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
+const inlineElement = /(?:\[\^[A-Za-z]+(?:-[A-Za-z]+)?\^\])/; // Inline [^element^]
+
+/**
+ * @param {string} matched
+ * @return {HTMLElement}
+ */
+function inlineElementMatches(matched) {
+  const value = matched.slice(2, -2).trim();
+  /** @type {HTMLElement} */
+  const html = hyperHTML`<code><a data-xref-type="element">${value}</a></code>`;
+  return html;
+}
+
 /**
  * @param {string} matched
  * @return {HTMLElement}
  */
 function inlineRFC2119Matches(matched) {
-  const normalize = matched.split(/\s+/).join(" ");
+  const value = norm(matched);
   /** @type {HTMLElement} */
-  const nodeElement = hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`;
+  const nodeElement = hyperHTML`<em class="rfc2119" title="${value}">${value}</em>`;
   return nodeElement;
 }
 
@@ -127,14 +141,15 @@ function inlineVariableMatches(matched) {
   return hyperHTML`<var data-type="${type}">${varName}</var>`;
 }
 
-function inlineLinkMatches(matched) {
+function inlineAnchorMatches(matched) {
   const parts = matched
     .slice(2, -2) // Chop [= =]
     .split("/", 2)
     .map(s => s.trim());
   const [isFor, content] = parts.length === 2 ? parts : ["", parts[0]];
   const processedContent = processInlineContent(content);
-  return hyperHTML`<a data-link-for="${isFor}" data-xref-for="${isFor}">${processedContent}</a>`;
+  const forValue = norm(isFor);
+  return hyperHTML`<a data-link-for="${forValue}" data-xref-for="${forValue}">${processedContent}</a>`;
 }
 
 function inlineCodeMatches(matched) {
@@ -204,6 +219,7 @@ export default function({ document, rfc2119Usage, configuration: conf }) {
       inlineExpansion.source,
       inlineAnchor.source,
       inlineCodeRegExp.source,
+      inlineElement.source,
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
   );
@@ -229,10 +245,13 @@ export default function({ document, rfc2119Usage, configuration: conf }) {
         const node = inlineVariableMatches(t);
         df.append(node);
       } else if (t.startsWith("[=")) {
-        const node = inlineLinkMatches(t);
+        const node = inlineAnchorMatches(t);
         df.append(node);
       } else if (t.startsWith("`")) {
         const node = inlineCodeMatches(t);
+        df.append(node);
+      } else if (t.startsWith("[^")) {
+        const node = inlineElementMatches(t);
         df.append(node);
       } else if (abbrMap.has(t)) {
         const node = inlineAbbrMatches(t, txt, abbrMap);
