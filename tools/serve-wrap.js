@@ -11,8 +11,13 @@ const http = require("http");
 const subprocess = require("child_process");
 
 const port = 5000;
-const server = http.createServer(handler);
+const server = http.createServer((request, response) => {
+  return handler(request, response, {
+    cleanUrls: false, // prevents `path/index` implicitly converted as `path/index.html`
+  });
+});
 server.listen(port);
+console.log(`Opened ReSpec test server for port ${port}`);
 
 const subargs = process.argv.slice(2);
 const child = subprocess.spawn(subargs[0], subargs.slice(1), {
