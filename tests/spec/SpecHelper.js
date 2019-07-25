@@ -225,5 +225,5 @@ export function getLocationOrigin() {
     return window.location.origin;
   }
   // This must match your actual server port
-  return "http://localhost:5000/";
+  return "http://localhost:5000";
 }
