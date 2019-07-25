@@ -88,7 +88,7 @@
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
     "lint": "tsc -p src/jsconfig.json && eslint .",
-    "prepare": "npm run snyk-protect; npm run build:components",
+    "prepare": "npm run snyk-protect && npm run build:components",
     "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk-protect": "snyk protect",
