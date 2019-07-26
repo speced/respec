@@ -74,8 +74,8 @@ describe("Core - anchor-expander", () => {
     </section>`;
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
-    expect(document.querySelector("#expansion dfn")).toBeNull();
-    expect(document.querySelector("#expansion *[id]")).toBeNull();
+    expect(doc.querySelector("#expansion dfn")).toBeNull();
+    expect(doc.querySelector("#expansion *[id]")).toBeNull();
 
     const [firstSpan, secondSpan] = doc.querySelectorAll("#expansion a > span");
     expect(firstSpan.title).toBe("pass");

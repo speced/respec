@@ -92,6 +92,24 @@ describe("Core - Figures", () => {
     expect(anchorFig.classList).toContain("respec-offending-element");
   });
 
+  it("excludes figures with no <figcaption>", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      htmlAttrs: {
+        lang: "ja",
+      },
+      body: `${makeDefaultBody()}
+      <figure><img src='img' alt=''></figure>
+      <figure><img src='img' alt=''><figcaption>Geralt of Rivia</figcaption</figure>
+      <section id=tof></section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const tof = doc.getElementById("tof");
+    const tofItems = tof.querySelectorAll("ul li");
+    expect(tof.querySelector("figcaption")).toBeNull();
+    expect(tofItems.length).toBe(1);
+  });
+
   describe("normalize images", () => {
     const imgDataURL =
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAADCAIAAADUVFKvAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gQKACEWdS72PwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAMSURBVAjXY2AgDQAAADAAAceqhY4AAAAASUVORK5CYII=";
