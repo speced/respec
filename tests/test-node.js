@@ -31,6 +31,7 @@ global.beforeAll = jasmine.env.beforeAll;
 global.beforeEach = jasmine.env.beforeEach;
 
 (async () => {
+  await import("./spec/core/anchor-expander-spec.js");
   await import("./spec/core/contrib-spec.js");
   await import("./spec/core/data-abbr-spec.js");
   // for (const testSet of readdirSync(`${__dirname}/spec/`)) {

@@ -11,8 +11,7 @@
 //  - maxTocLevel: only generate a TOC so many levels deep
 
 import { addId, children, parents, renameElement } from "./utils.js";
-import { lang as defaultLang } from "../core/l10n.js";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template.js";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
 const headerTags = ["h1", ...lowerHeaderTags];
@@ -31,10 +30,6 @@ const localizationStrings = {
     toc: "Tabla de Contenidos",
   },
 };
-
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
 
 /**
  * @typedef {object} SectionInfo
@@ -73,7 +68,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
       // if this is a top level item, insert
       // an OddPage comment so html2ps will correctly
       // paginate the output
-      section.header.before(document.createComment("OddPage"));
+      section.header.before(ol.ownerDocument.createComment("OddPage"));
     }
 
     if (!section.isIntro) {
@@ -140,8 +135,10 @@ function getSectionTree(parent, { tocIntroductory = false } = {}) {
 /**
  * @param {Element} header
  * @param {string} id
+ * @return {HTMLLIElement}
  */
 function createTocListItem(header, id) {
+  /** @type {HTMLAnchorElement} */
   const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref"/>`;
   anchor.append(...header.cloneNode(true).childNodes);
   filterHeader(anchor);
@@ -164,7 +161,10 @@ function filterHeader(h) {
   });
 }
 
-export function run(conf) {
+/**
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default function({ document, lang, configuration: conf }) {
   if ("tocIntroductory" in conf === false) {
     conf.tocIntroductory = false;
   }
@@ -172,7 +172,7 @@ export function run(conf) {
     conf.maxTocLevel = Infinity;
   }
 
-  renameSectionHeaders();
+  renameSectionHeaders(document);
 
   // makeTOC
   if (!conf.noTOC) {
@@ -181,13 +181,16 @@ export function run(conf) {
     });
     const result = scanSections(sectionTree, conf.maxTocLevel);
     if (result) {
-      createTableOfContents(result);
+      createTableOfContents(document, result, lang);
     }
   }
 }
 
-function renameSectionHeaders() {
-  const headers = getNonintroductorySectionHeaders();
+/**
+ * @param {Document} document
+ */
+function renameSectionHeaders(document) {
+  const headers = getNonintroductorySectionHeaders(document);
   if (!headers.length) {
     return;
   }
@@ -200,7 +203,10 @@ function renameSectionHeaders() {
   });
 }
 
-function getNonintroductorySectionHeaders() {
+/**
+ * @param {Document} document
+ */
+function getNonintroductorySectionHeaders(document) {
   const headerSelector = headerTags
     .map(h => `section:not(.introductory) ${h}:first-child`)
     .join(",");
@@ -210,13 +216,18 @@ function getNonintroductorySectionHeaders() {
 }
 
 /**
+ * @param {Document} document
  * @param {HTMLElement} ol
+ * @param {string} lang
  */
-function createTableOfContents(ol) {
+function createTableOfContents(document, ol, lang) {
   if (!ol) {
     return;
   }
+  const l10n = localizationStrings[lang];
+  /** @type {HTMLElement} */
   const nav = hyperHTML`<nav id="toc">`;
+  /** @type {HTMLHeadingElement} */
   const h2 = hyperHTML`<h2 class="introductory">${l10n.toc}</h2>`;
   addId(h2);
   nav.append(h2, ol);

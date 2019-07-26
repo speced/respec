@@ -38,7 +38,7 @@ export async function preprocess(doc, conf) {
     import("./core/render-biblio.js"),
     import("./core/contrib.js"),
     // import("./core/fix-headers.js"),
-    // import("./core/structure.js"),
+    import("./core/structure.js"),
     // import("./core/informative.js"),
     // import("./core/id-headers.js"),
     // import("./core/caniuse.js"),
@@ -56,7 +56,7 @@ export async function preprocess(doc, conf) {
     // import("./core/highlight-vars.js"),
     // import("./core/data-type.js"),
     // import("./core/algorithms.js"),
-    // import("./core/anchor-expander.js"),
+    import("./core/anchor-expander.js"),
   ];
 
   for (const module of modules) {

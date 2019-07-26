@@ -71,7 +71,9 @@ function collectFigures(document, l10n) {
       showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
     }
 
-    tof.push(getTableOfFiguresListItem(fig.id, caption));
+    if (caption) {
+      tof.push(getTableOfFiguresListItem(fig.id, caption));
+    }
   });
   return tof;
 }

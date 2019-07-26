@@ -3,7 +3,10 @@ import { makeSafeCopy, norm, showInlineError } from "./utils.js";
 
 export const name = "core/anchor-expander";
 
-export function run() {
+/**
+ * @type {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default function({ document }) {
   const anchors = [
     ...document.querySelectorAll(
       "a[href^='#']:not(.self-link):not([href$='the-empty-string'])"
