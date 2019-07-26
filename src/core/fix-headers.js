@@ -6,7 +6,10 @@ import { renameElement } from "./utils.js";
 
 export const name = "core/fix-headers";
 
-export function run() {
+/**
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default function({ document }) {
   [...document.querySelectorAll("section:not(.introductory)")]
     .map(sec => sec.querySelector("h1, h2, h3, h4, h5, h6"))
     .filter(h => h)

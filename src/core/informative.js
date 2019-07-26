@@ -1,7 +1,6 @@
 // Module core/informative
 // Mark specific sections as informative, based on CSS
-import { lang as defaultLang } from "../core/l10n.js";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template.js";
 
 export const name = "core/informative";
 
@@ -14,11 +13,12 @@ const localizationStrings = {
   },
 };
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
+/**
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default function({ document, lang }) {
+  const l10n = localizationStrings[lang] || localizationStrings.en;
 
-const l10n = localizationStrings[lang];
-
-export function run() {
   Array.from(document.querySelectorAll("section.informative"))
     .map(informative => informative.querySelector("h2, h3, h4, h5, h6"))
     .filter(heading => heading)

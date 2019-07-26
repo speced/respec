@@ -4,9 +4,12 @@
 
 export const name = "core/id-headers";
 import { addId } from "./utils.js";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template.js";
 
-export function run(conf) {
+/**
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default function({ document, configuration: conf }) {
   const headings = document.querySelectorAll(
     `section:not(.head):not(.introductory) h2, h3, h4, h5, h6`
   );
