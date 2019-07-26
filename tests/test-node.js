@@ -35,6 +35,7 @@ global.beforeEach = jasmine.env.beforeEach;
   await import("./spec/core/contrib-spec.js");
   await import("./spec/core/data-abbr-spec.js");
   await import("./spec/core/fix-headers-spec.js");
+  await import("./spec/core/id-headers-spec.js");
   await import("./spec/core/informative-spec.js");
   // for (const testSet of readdirSync(`${__dirname}/spec/`)) {
   //   await importTestSets(testSet);

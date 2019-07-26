@@ -589,7 +589,6 @@ export default function({ document, configuration: conf }) {
   }
 
   const populated = populateSoTD(conf, sotd);
-  sotd.textContent = "";
   sotd.append(populated);
 
   if (!conf.implementationReportURI && conf.isCR) {
