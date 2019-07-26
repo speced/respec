@@ -68,11 +68,10 @@ function collectFigures() {
 
     if (caption) {
       decorateFigure(fig, caption, i);
+      tof.push(getTableOfFiguresListItem(fig.id, caption));
     } else {
       showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
     }
-
-    tof.push(getTableOfFiguresListItem(fig.id, caption));
   });
   return tof;
 }
