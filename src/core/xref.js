@@ -37,10 +37,13 @@ function insertResourceHint(document) {
   if (
     !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
   ) {
-    const link = createResourceHint({
-      hint: "preconnect",
-      href: "https://respec.org",
-    });
+    const link = createResourceHint(
+      {
+        hint: "preconnect",
+        href: "https://respec.org",
+      },
+      document
+    );
     document.head.appendChild(link);
     return link;
   }
@@ -215,16 +218,18 @@ async function getData(queryKeys, apiUrl) {
 
   let cache = null;
   let resultsFromCache = new Map();
-  try {
-    const idb = await openDB("xref", 1, {
-      upgrade(db) {
-        db.createObjectStore("xrefs");
-      },
-    });
-    cache = new IDBKeyVal(idb, "xrefs");
-    resultsFromCache = await resolveFromCache(uniqueQueryKeys, cache);
-  } catch (error) {
-    console.error(error);
+  if (typeof indexedDB !== "undefined") {
+    try {
+      const idb = await openDB("xref", 1, {
+        upgrade(db) {
+          db.createObjectStore("xrefs");
+        },
+      });
+      cache = new IDBKeyVal(idb, "xrefs");
+      resultsFromCache = await resolveFromCache(uniqueQueryKeys, cache);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const termsToLook = uniqueQueryKeys.filter(

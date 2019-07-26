@@ -59,7 +59,7 @@ export default async function(respecDoc) {
   showLinkingError(badLinks);
 
   if (conf.xref) {
-    possibleExternalLinks.push(...findExplicitExternalLinks());
+    possibleExternalLinks.push(...findExplicitExternalLinks(document));
     try {
       await addExternalReferences(respecDoc, possibleExternalLinks);
     } catch (error) {
@@ -237,8 +237,9 @@ function shouldWrapByCode(dfn, term) {
 /**
  * Find additional references that need to be looked up externally.
  * Examples: a[data-cite="spec"], dfn[data-cite="spec"], dfn.externalDFN
+ * @param {Document} document
  */
-function findExplicitExternalLinks() {
+function findExplicitExternalLinks(document) {
   /** @type {NodeListOf<HTMLElement>} */
   const links = document.querySelectorAll(
     "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +

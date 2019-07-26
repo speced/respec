@@ -14,9 +14,7 @@ export async function makeRSDoc(opts, src, style = "") {
   const { parseDocument } = await import("../../src/respec-document.js");
   const { preprocess } = await import("../../src/index.js");
   const doc = await parseDocument(opts.body);
-  if (opts.htmlAttrs) {
-    setHtmlAttrs(doc.documentElement, opts.htmlAttrs);
-  }
+  decorateDocument(doc, opts);
   const rsDoc = await preprocess(doc, opts.config);
   return rsDoc.document;
 }
@@ -42,6 +40,7 @@ function makeRSDocInIframe(opts, src, style = "") {
       const doc = ifr.contentDocument;
       if (src) {
         decorateDocument(doc, opts);
+        insertReSpec(doc, opts);
       }
       if (doc.respecIsReady) {
         await doc.respecIsReady;
@@ -74,7 +73,9 @@ function makeRSDocInIframe(opts, src, style = "") {
       ifr.src = src;
     } else {
       const doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = opts.body || "";
       decorateDocument(doc, opts);
+      insertReSpec(doc, opts);
       ifr.srcdoc = doc.documentElement.outerHTML;
     }
     // trigger load
@@ -83,7 +84,27 @@ function makeRSDocInIframe(opts, src, style = "") {
   });
 }
 
+/**
+ * @param {Document} doc
+ * @param {*} opts
+ */
 function decorateDocument(doc, opts) {
+  const { abstract = "<p>test abstract</p>", bodyAttrs = {} } = opts;
+  doc.body.insertAdjacentHTML(
+    "afterbegin",
+    `<section id='abstract'>${abstract}</section>`
+  );
+  setHtmlAttrs(doc.body, bodyAttrs);
+
+  if (opts.htmlAttrs) {
+    setHtmlAttrs(doc.documentElement, opts.htmlAttrs);
+  }
+  if (opts.title) {
+    doc.title = opts.title;
+  }
+}
+
+function insertReSpec(doc, opts) {
   function addReSpecLoader(opts) {
     const { profile } = opts;
     const loader = doc.createElement("script");
@@ -107,24 +128,6 @@ function decorateDocument(doc, opts) {
     }
   }
 
-  function decorateBody({
-    abstract = "<p>test abstract</p>",
-    body = "",
-    bodyAttrs = {},
-  }) {
-    doc.body.innerHTML += `<section id='abstract'>${abstract}</section>${body}`;
-    Object.entries(bodyAttrs).forEach(([key, value]) => {
-      doc.body.setAttribute(key, value);
-    });
-  }
-
-  if (opts.htmlAttrs) {
-    setHtmlAttrs(doc.documentElement, opts.htmlAttrs);
-  }
-  if (opts.title) {
-    doc.title = opts.title;
-  }
-  decorateBody(opts);
   addRespecConfig(opts);
   if (!doc.querySelector("script[src]")) {
     addReSpecLoader(opts);

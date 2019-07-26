@@ -13,6 +13,7 @@ export async function preprocess(doc, conf) {
 
   const modules = [
     import("./core/reindent.js"),
+    import("./w3c/defaults.js"),
     import("./core/style.js"),
     import("./w3c/style.js"),
     import("./core/l10n.js"),
@@ -52,6 +53,7 @@ export async function preprocess(doc, conf) {
     // import("./core/highlight-vars.js"),
     // import("./core/data-type.js"),
     // import("./core/algorithms.js"),
+    // import("./core/linter.js"),
     import("./core/anchor-expander.js"),
   ];
 
