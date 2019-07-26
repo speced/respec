@@ -26,7 +26,7 @@ const localizationStrings = {
   },
 };
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
-const l10n = localizationStrings[lang];
+const l10n = localizationStrings[lang] || localizationStrings.en;
 
 export default async function({ configuration: conf }) {
   if (!conf.hasOwnProperty("github") || !conf.github) {

@@ -19,7 +19,7 @@ const localizationStrings = {
 export default function({ document, lang }) {
   /** @type {NodeListOf<HTMLElement>} */
   const bps = document.querySelectorAll(".practicelab");
-  const l10n = localizationStrings[lang];
+  const l10n = localizationStrings[lang] || localizationStrings.en;
   const bpSummary = document.getElementById("bp-summary");
   const summaryItems = bpSummary ? document.createElement("ul") : null;
   bps.forEach((bp, num) => {

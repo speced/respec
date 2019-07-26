@@ -40,7 +40,7 @@ const localizationStrings = {
 export default function({ document, lang }) {
   normalizeImages(document);
 
-  const l10n = localizationStrings[lang];
+  const l10n = localizationStrings[lang] || localizationStrings.en;
   const tof = collectFigures(document, l10n);
 
   // Create a Table of Figures if a section with id 'tof' exists.

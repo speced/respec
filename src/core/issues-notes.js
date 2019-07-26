@@ -297,7 +297,7 @@ export default async function({ document, configuration: conf, lang }) {
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
-  const l10n = localizationStrings[lang];
+  const l10n = localizationStrings[lang] || localizationStrings.en;
   /** @type {Map<number, GitHubIssue>} */
   const ghIssues = conf.githubAPI
     ? await fetchAndStoreGithubIssues(document, conf)

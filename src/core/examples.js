@@ -74,7 +74,7 @@ export default async function({ document, lang }) {
   );
   if (!examples.length) return;
 
-  const l10n = localizationStrings[lang];
+  const l10n = localizationStrings[lang] || localizationStrings.en;
 
   const css = await loadStyle();
   document.head.insertBefore(

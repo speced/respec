@@ -224,7 +224,7 @@ function createTableOfContents(document, ol, lang) {
   if (!ol) {
     return;
   }
-  const l10n = localizationStrings[lang];
+  const l10n = localizationStrings[lang] || localizationStrings.en;
   /** @type {HTMLElement} */
   const nav = hyperHTML`<nav id="toc">`;
   /** @type {HTMLHeadingElement} */

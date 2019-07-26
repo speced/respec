@@ -55,7 +55,7 @@ const endWithDot = endNormalizer(".");
  * @param {import("../respec-document.js").RespecDocument} respecDoc
  */
 export default function run({ document, configuration: conf, lang, biblio }) {
-  const l10n = localizationStrings[lang];
+  const l10n = localizationStrings[lang] || localizationStrings.en;
 
   const informs = Array.from(conf.informativeReferences);
   const norms = Array.from(conf.normativeReferences);
