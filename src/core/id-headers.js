@@ -15,7 +15,7 @@ export default function({ document, configuration: conf }) {
   );
   for (const h of headings) {
     addId(h);
-    if (!conf.addSectionLinks) return;
+    if (!conf.addSectionLinks) continue;
     const id = h.parentElement.id || h.id;
     h.appendChild(hyperHTML`
       <a href="${`#${id}`}" class="self-link" aria-label="§"></a>
