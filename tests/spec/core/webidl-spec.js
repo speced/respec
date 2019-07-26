@@ -12,7 +12,7 @@ describe("Core - WebIDL", () => {
   beforeAll(async () => {
     const ops = makeStandardOps();
     ops.config.xref = true;
-    doc = await makeRSDoc(ops, "spec/core/webidl.html");
+    doc = await makeRSDoc(ops, "tests/spec/core/webidl.html");
     const idb = await openDB("xref", 1, {
       upgrade(db) {
         db.createObjectStore("xrefs");

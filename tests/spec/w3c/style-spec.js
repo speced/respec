@@ -98,7 +98,7 @@ describe("W3C - Style", () => {
 
   it("should include 'fixup.js'", async () => {
     const ops = makeStandardOps();
-    const doc = await makeRSDoc(ops, "spec/core/simple.html");
+    const doc = await makeRSDoc(ops, "tests/spec/core/simple.html");
     const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
     const elem = doc.querySelector(query);
     expect(elem.src).toBe("https://www.w3.org/scripts/TR/2016/fixup.js");
@@ -106,7 +106,7 @@ describe("W3C - Style", () => {
 
   it("should have a meta viewport added", async () => {
     const ops = makeStandardOps();
-    const doc = await makeRSDoc(ops, "spec/core/simple.html");
+    const doc = await makeRSDoc(ops, "tests/spec/core/simple.html");
     const elem = doc.head.querySelector("meta[name=viewport]");
     expect(elem).toBeTruthy();
     const expectedStr = "width=device-width, initial-scale=1, shrink-to-fit=no";
@@ -149,7 +149,7 @@ describe("W3C - Style", () => {
       noToc: true,
     };
     Object.assign(ops.config, newProps);
-    const doc = await makeRSDoc(ops, "spec/core/simple.html");
+    const doc = await makeRSDoc(ops, "tests/spec/core/simple.html");
     const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
     const elem = doc.querySelector(query);
     expect(elem).toBe(null);

@@ -1,5 +1,7 @@
 "use strict";
 
+import fetch from "../../src/core/fetch.js";
+
 const iframes = [];
 
 export async function makeRSDoc(opts, src, style = "") {
@@ -13,7 +15,8 @@ export async function makeRSDoc(opts, src, style = "") {
   opts.config.continueOnError = true;
   const { parseDocument } = await import("../../src/respec-document.js");
   const { preprocess } = await import("../../src/index.js");
-  const doc = await parseDocument(opts.body);
+  const html = src ? await (await fetch(src)).text() : opts.body;
+  const doc = await parseDocument(html);
   decorateDocument(doc, opts);
   const rsDoc = await preprocess(doc, opts.config);
   return rsDoc.document;

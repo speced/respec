@@ -12,7 +12,7 @@ const findContent = string => {
 };
 describe("W3C — Headers", () => {
   afterEach(flushIframes);
-  const simpleSpecURL = "spec/core/simple.html";
+  const simpleSpecURL = "tests/spec/core/simple.html";
   const contains = (el, query, string) =>
     [...el.querySelectorAll(query)].filter(child =>
       child.innerHTML.includes(string)
@@ -1412,7 +1412,7 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps();
       const doc = await makeRSDoc(
         ops,
-        "spec/core/simple.html?isPreview=true&prNumber=123&prUrl=%22http%3A//w3c.github.io/respec/%22"
+        "tests/spec/core/simple.html?isPreview=true&prNumber=123&prUrl=%22http%3A//w3c.github.io/respec/%22"
       );
       expect(doc.title).toBe("Preview of PR #123: Simple Spec");
       const h1 = doc.querySelector("h1#title");

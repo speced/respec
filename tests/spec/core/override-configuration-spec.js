@@ -4,7 +4,7 @@ import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 
 describe("Core — Override Configuration", () => {
   afterAll(flushIframes);
-  const simpleURL = new URL("./spec/core/simple.html", document.location);
+  const simpleURL = new URL("./tests/spec/core/simple.html", document.location);
   it("overrides a simple string setting and decodes URL key/values strings correctly", async () => {
     const url = new URL(simpleURL.href);
     url.searchParams.set("specStatus", "RSCND");

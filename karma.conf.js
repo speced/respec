@@ -89,7 +89,6 @@ module.exports = function(config) {
       "/node_modules/": "/base/node_modules/",
       "/builds/": "/base/builds/",
       "/tests/": "/base/tests/",
-      "/spec/": "/base/tests/spec/",
       "/deps/": "/base/js/deps/",
       "/js/deps/": "/base/js/deps/",
       "/base/deps/": "/base/js/deps/",

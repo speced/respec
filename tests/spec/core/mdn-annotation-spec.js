@@ -10,7 +10,7 @@ describe("Core - MDN Annotation", () => {
       },
       shortName: "payment-request",
     });
-    doc = await makeRSDoc(ops, "spec/core/mdn-annotation.html");
+    doc = await makeRSDoc(ops, "tests/spec/core/mdn-annotation.html");
   });
 
   it("attaches MDNbox if there exists ID in the spec", () => {
