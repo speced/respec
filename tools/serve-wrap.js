@@ -17,7 +17,6 @@ const server = http.createServer((request, response) => {
   });
 });
 server.listen(port);
-console.log(`Opened ReSpec test server for port ${port}`);
 
 const subargs = process.argv.slice(2);
 const child = subprocess.spawn(subargs[0], subargs.slice(1), {

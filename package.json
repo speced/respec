@@ -98,7 +98,7 @@
     "start": "npm run build:components && serve",
     "test:build": "mocha --timeout 60000 ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
-    "test:node-noserver": "npx tap -Rterse tests/test-node.js",
+    "test:node-noserver": "node -r esm tests/test-node.js",
     "test:node": "node tools/serve-wrap.js npm run test:node-noserver",
     "test:karma": "npm run karma",
     "postinstall": "opencollective-postinstall"
