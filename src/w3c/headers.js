@@ -589,6 +589,7 @@ export default function({ document, configuration: conf }) {
   }
 
   const populated = populateSoTD(conf, sotd);
+  sotd.textContent = "";
   sotd.append(populated);
 
   if (!conf.implementationReportURI && conf.isCR) {
@@ -670,7 +671,7 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
   return {
     additionalContent,
     // Whatever sections are left, we throw at the end.
-    additionalSections: sotdClone.childNodes,
+    additionalSections: [...sotdClone.childNodes],
   };
 }
 
