@@ -41,14 +41,17 @@ describe("Core - ID headers", () => {
     });
 
     it("doesn't add sections links when addSectionLinks is false", async () => {
-      const ops = makeStandardOps(
-        {
-          addSectionLinks: false,
-        },
-        body
-      );
+      const ops = makeStandardOps({ addSectionLinks: false }, body);
       const doc = await makeRSDoc(ops);
       expect(doc.querySelector("h2 > a.self-link")).toBeFalsy();
+    });
+
+    it("add header ids when addSectionLinks is false", async () => {
+      const ops = makeStandardOps({ addSectionLinks: false }, body);
+      const doc = await makeRSDoc(ops);
+      const [h3, h4] = doc.querySelectorAll("#sotd h3, #sotd h4");
+      expect(h3.id).toBe("level-3-heading");
+      expect(h4.id).toBe("level-4-heading");
     });
 
     it("adds section links", () => {
