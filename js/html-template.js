@@ -34,8 +34,7 @@
         return childNodes[0];
       }
       if (fragment.children.length) {
-        removeIfEmptyText(childNodes[0]);
-        removeIfEmptyText(childNodes[childNodes.length - 1]);
+        childNodes.forEach(removeIfEmptyText);
         if (childNodes.length === 1) {
           return childNodes[0];
         }

@@ -1231,10 +1231,10 @@ describe("W3C — Headers", () => {
       expect(p2.textContent.trim()).toBe("CUSTOM PARAGRAPH 2");
 
       const commentNode = p2.nextSibling;
-      expect(commentNode.nodeType).toBe(Node.COMMENT_NODE);
+      expect(commentNode.nodeType).toBe(commentNode.COMMENT_NODE);
 
       const textNode = commentNode.nextSibling;
-      expect(textNode.nodeType).toBe(Node.TEXT_NODE);
+      expect(textNode.nodeType).toBe(textNode.TEXT_NODE);
 
       const ol = doc.getElementById("ol");
       expect(ol).toBeTruthy();
