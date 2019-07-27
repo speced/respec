@@ -536,10 +536,10 @@ describe("W3C — Headers", () => {
 
   describe("previousPublishDate & previousMaturity", () => {
     it("recovers given bad date inputs", async () => {
-      const { ISODate } = await import("../../../src/core/utils.js");
+      const { toShortIsoDate } = await import("../../../src/core/utils.js");
 
       const ops = makeStandardOps();
-      const start = new Date(ISODate.format(Date.now())).valueOf();
+      const start = new Date(toShortIsoDate(Date.now())).valueOf();
       const newProps = {
         publishDate: "2117-0123-15",
         previousPublishDate: "197-123131-15",

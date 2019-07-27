@@ -90,7 +90,7 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import { ISODate, concatDate, joinAnd } from "../core/utils.js";
+import { concatDate, joinAnd, lead0, toShortIsoDate } from "../core/utils.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
@@ -99,12 +99,18 @@ import sotdTmpl from "./templates/sotd.js";
 
 export const name = "w3c/headers";
 
-const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
-  timeZone: "UTC",
-  year: "numeric",
-  month: "long",
-  day: "2-digit",
-});
+/**
+ * @param {Date} date
+ */
+function toShortW3CDate(date) {
+  const yyyy = date.getUTCFullYear();
+  const month = date.toLocaleString("default", {
+    timeZone: "UTC",
+    month: "long",
+  });
+  const dd = lead0(date.getUTCDate());
+  return `${dd} ${month} ${yyyy}`;
+}
 
 const status2maturity = {
   LS: "WD",
@@ -223,14 +229,14 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   const date = conf[prop] ? new Date(conf[prop]) : new Date(fallbackDate);
   // if date is valid
   if (Number.isFinite(date.valueOf())) {
-    const formattedDate = ISODate.format(date);
+    const formattedDate = toShortIsoDate(date);
     return new Date(formattedDate);
   }
   const msg =
     `[\`${prop}\`](https://github.com/w3c/respec/wiki/${prop}) ` +
     `is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
   pub("error", msg);
-  return new Date(ISODate.format(new Date()));
+  return new Date(toShortIsoDate(new Date()));
 }
 
 export default function({ document, configuration: conf }) {
@@ -257,7 +263,7 @@ export default function({ document, configuration: conf }) {
     pub("error", "Missing required configuration: `shortName`");
   }
   if (conf.testSuiteURI) {
-    const url = new URL(conf.testSuiteURI, location.href);
+    const url = new URL(conf.testSuiteURI, document.location.href);
     const { host, pathname } = url;
     if (
       host === "github.com" &&
@@ -281,7 +287,7 @@ export default function({ document, configuration: conf }) {
     document.lastModified
   );
   conf.publishYear = conf.publishDate.getUTCFullYear();
-  conf.publishHumanDate = W3CDate.format(conf.publishDate);
+  conf.publishHumanDate = toShortW3CDate(conf.publishDate);
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
   conf.isRecTrack = conf.noRecTrack
     ? false
@@ -330,7 +336,7 @@ export default function({ document, configuration: conf }) {
     conf.latestVersion = `https://www.w3.org/${publishSpace}/${conf.shortName}/`;
   if (conf.isTagFinding) {
     conf.latestVersion = `https://www.w3.org/2001/tag/doc/${conf.shortName}`;
-    conf.thisVersion = `${conf.latestVersion}-${ISODate.format(
+    conf.thisVersion = `${conf.latestVersion}-${toShortIsoDate(
       conf.publishDate
     )}`;
   }
@@ -348,7 +354,7 @@ export default function({ document, configuration: conf }) {
       ? status2maturity[conf.previousMaturity]
       : conf.previousMaturity;
     if (conf.isTagFinding) {
-      conf.prevVersion = `${conf.latestVersion}-${ISODate.format(
+      conf.prevVersion = `${conf.latestVersion}-${toShortIsoDate(
         conf.previousPublishDate
       )}`;
     } else if (conf.isCGBG) {
@@ -463,9 +469,9 @@ export default function({ document, configuration: conf }) {
   conf.isMO = conf.specStatus === "MO";
   conf.isNote = ["FPWD-NOTE", "WG-NOTE"].includes(conf.specStatus);
   conf.isIGNote = conf.specStatus === "IG-NOTE";
-  conf.dashDate = ISODate.format(conf.publishDate);
+  conf.dashDate = toShortIsoDate(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
-  conf.shortISODate = ISODate.format(conf.publishDate);
+  conf.shortISODate = toShortIsoDate(conf.publishDate);
   if (conf.hasOwnProperty("wgPatentURI") && !Array.isArray(conf.wgPatentURI)) {
     Object.defineProperty(conf, "wgId", {
       get() {
@@ -552,19 +558,19 @@ export default function({ document, configuration: conf }) {
     );
   }
   conf.crEnd = validateDateAndRecover(conf, "crEnd");
-  conf.humanCREnd = W3CDate.format(conf.crEnd);
+  conf.humanCREnd = toShortW3CDate(conf.crEnd);
 
   if (conf.specStatus === "PR" && !conf.prEnd) {
     pub("error", `\`specStatus\` is "PR" but no \`prEnd\` is specified.`);
   }
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
-  conf.humanPREnd = W3CDate.format(conf.prEnd);
+  conf.humanPREnd = toShortW3CDate(conf.prEnd);
 
   if (conf.specStatus === "PER" && !conf.perEnd) {
     pub("error", "Status is PER but no perEnd is specified");
   }
   conf.perEnd = validateDateAndRecover(conf, "perEnd");
-  conf.humanPEREnd = W3CDate.format(conf.perEnd);
+  conf.humanPEREnd = toShortW3CDate(conf.perEnd);
   conf.recNotExpected =
     conf.noRecTrack || conf.recNotExpected
       ? true

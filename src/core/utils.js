@@ -9,13 +9,6 @@ export const name = "core/utils";
 const spaceOrTab = /^[ |\t]*/;
 const dashes = /-/g;
 
-export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
-  timeZone: "UTC",
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-});
-
 const resourceHints = new Set([
   "dns-prefetch",
   "preconnect",
@@ -303,12 +296,21 @@ export function norm(str) {
 // Takes a Date object and an optional separator and returns the year,month,day representation with
 // the custom separator (defaulting to none) and proper 0-padding
 export function concatDate(date, sep = "") {
-  return ISODate.format(date).replace(dashes, sep);
+  return toShortIsoDate(date).replace(dashes, sep);
 }
 
-// formats a date to "yyyy-mm-dd"
+/**
+ * formats a date to "yyyy-mm-dd"
+ * @param {Date} date
+ */
 export function toShortIsoDate(date) {
-  return ISODate.format(date);
+  if (!(date instanceof Date)) {
+    date = new Date(date);
+  }
+  const yyyy = date.getUTCFullYear();
+  const mm = lead0(date.getUTCMonth() + 1);
+  const dd = lead0(date.getUTCDate());
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
