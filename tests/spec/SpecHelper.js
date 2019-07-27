@@ -15,7 +15,9 @@ export async function makeRSDoc(opts, src, style = "") {
   opts.config.continueOnError = true;
   const { parseDocument } = await import("../../src/respec-document.js");
   const { preprocess } = await import("../../src/index.js");
-  const html = src ? await (await fetch(src)).text() : opts.body;
+  const html = src
+    ? await (await fetch(new URL(src, getLocationOrigin()))).text()
+    : opts.body;
   const doc = await parseDocument(html);
   decorateDocument(doc, opts);
   const rsDoc = await preprocess(doc, opts.config);
