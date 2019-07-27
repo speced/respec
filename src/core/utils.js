@@ -307,10 +307,7 @@ export function toShortIsoDate(date) {
   if (!(date instanceof Date)) {
     date = new Date(date);
   }
-  const yyyy = date.getUTCFullYear();
-  const mm = lead0(date.getUTCMonth() + 1);
-  const dd = lead0(date.getUTCDate());
-  return `${yyyy}-${mm}-${dd}`;
+  return date.toISOString().slice(0, 10);
 }
 
 // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
