@@ -122,6 +122,7 @@ function defineIdlName(escaped, data, parent) {
       dfn.dataset.export = "";
       dfn.dataset.dfnType = linkType;
     }
+    decorateDfn(dfn, data, parentName, name);
     return hyperHTML`<a
       data-link-for="${parentName.toLowerCase()}"
       data-link-type="${linkType}"

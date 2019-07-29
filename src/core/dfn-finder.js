@@ -140,7 +140,7 @@ function findNormalDfn(defn, parent, name) {
     if (name !== resolvedName) {
       dfns[0].dataset.lt = resolvedName;
     }
-    return decorateDfn(dfns[0], defn, parentLow, nameLow);
+    return dfns[0];
   }
 }
 
@@ -151,8 +151,9 @@ function findNormalDfn(defn, parent, name) {
  * @param {string} name
  */
 export function decorateDfn(dfn, defn, parent, name) {
+  parent = parent.toLowerCase();
   if (!dfn.id) {
-    const middle = parent ? `${parent.toLowerCase()}-` : "";
+    const middle = parent ? `${parent}-` : "";
     let last = name
       .toLowerCase()
       .replace(/[()]/g, "")
