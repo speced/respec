@@ -285,6 +285,17 @@ describe("Core - Inlines", () => {
     expect(doc.querySelector("#no-match code")).toBeNull();
   });
 
+  it("processes inline inline [^element^]s.", async () => {
+    const body = `
+      <section>
+        <p id="test">[^body^]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps({ xref: ["HTML"] }, body));
+    const bodyAnchor = doc.querySelector("#test a");
+    expect(bodyAnchor.hash).toBe("#the-body-element");
+  });
+
   it("processes [= BikeShed style inline links =]", async () => {
     const body = `
       <section data-cite="INFRA">
