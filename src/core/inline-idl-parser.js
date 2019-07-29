@@ -132,6 +132,7 @@ function renderEnum(details) {
     data-xref-type="enum-value"
     data-link-for="${identifier}"
     data-xref-for="${identifier}"
+    data-lt="${!enumValue ? "the-empty-string" : null}"
     >${enumValue}</a>"`;
   return html;
 }

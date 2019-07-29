@@ -763,19 +763,13 @@ describe("Core — xref", () => {
           enum Foo { "dashed-thing", "" };
           </pre>
           <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
-          <p id="link3"
-            data-cite="css-layout-api" data-xref-for="ChildDisplayType"
-          >{{ "block" }} {{"block"}} </p>
-          <p id="link4" data-link-for="Foo" data-dfn-for="Foo">
+          <div data-dfn-for="Foo">
             <dfn>dashed-thing</dfn> <dfn>""</dfn>
-            {{ "dashed-thing" }} {{""}} {{Foo[""]}}
-          </p>
+          </div>
+          <p id="link2">{{ Foo["dashed-thing"] }} {{Foo[""]}}</p>
         </section>
       `;
-      const config = {
-        xref: ["service-workers", "css-layout-api", "xhr"],
-        localBiblio,
-      };
+      const config = { xref: ["service-workers"], localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -786,20 +780,10 @@ describe("Core — xref", () => {
         expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
       );
 
-      const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
-      expect(blockLink1.href).toBe(expectedLinks.get("ChildDisplayType.block"));
-      expect(blockLink2.href).toBe(expectedLinks.get("ChildDisplayType.block"));
-
-      const [dashedThing, emptyString, qualifiedEmpty] = doc.querySelectorAll(
-        "#link4 code a"
-      );
+      const [dashedThing, qualifiedEmpty] = doc.querySelectorAll("#link2 a");
       expect(dashedThing.textContent).toBe("dashed-thing");
       expect(dashedThing.getAttribute("href")).toBe("#dom-foo-dashed-thing");
-      expect(emptyString.textContent).toBe("");
-      expect(emptyString.getAttribute("href")).toBe(
-        "#dom-foo-the-empty-string"
-      );
-      expect(emptyString.textContent).toBe("");
+      expect(qualifiedEmpty.textContent).toBe("");
       expect(qualifiedEmpty.getAttribute("href")).toBe(
         "#dom-foo-the-empty-string"
       );
