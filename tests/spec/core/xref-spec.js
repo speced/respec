@@ -756,20 +756,26 @@ describe("Core — xref", () => {
       expect(link2b.href).toBe(expectedLinks.get("Credential.[[type]]"));
     });
 
-    it("links enums", async () => {
+    it("links enum and enum-values", async () => {
       const body = `
         <section id="test">
           <pre class="idl">
-          enum Foo { "dashed-thing" };
+          enum Foo { "dashed-thing", "" };
           </pre>
           <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
-          <p id="link2" data-link-for="Foo" data-dfn-for="Foo">
-            <dfn>dashed-thing</dfn>
-            {{ Foo["dashed-thing"] }}
+          <p id="link3"
+            data-cite="css-layout-api" data-xref-for="ChildDisplayType"
+          >{{ "block" }} {{"block"}} </p>
+          <p id="link4" data-link-for="Foo" data-dfn-for="Foo">
+            <dfn>dashed-thing</dfn> <dfn>""</dfn>
+            {{ "dashed-thing" }} {{""}} {{Foo[""]}}
           </p>
         </section>
       `;
-      const config = { xref: ["service-workers"], localBiblio };
+      const config = {
+        xref: ["service-workers", "css-layout-api", "xhr"],
+        localBiblio,
+      };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -780,9 +786,23 @@ describe("Core — xref", () => {
         expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
       );
 
-      const dashedThing = doc.querySelector("#link2 code a");
+      const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
+      expect(blockLink1.href).toBe(expectedLinks.get("ChildDisplayType.block"));
+      expect(blockLink2.href).toBe(expectedLinks.get("ChildDisplayType.block"));
+
+      const [dashedThing, emptyString, qualifiedEmpty] = doc.querySelectorAll(
+        "#link4 code a"
+      );
       expect(dashedThing.textContent).toBe("dashed-thing");
-      expect(dashedThing.hash).toBe("#dom-foo-dashed-thing");
+      expect(dashedThing.getAttribute("href")).toBe("#dom-foo-dashed-thing");
+      expect(emptyString.textContent).toBe("");
+      expect(emptyString.getAttribute("href")).toBe(
+        "#dom-foo-the-empty-string"
+      );
+      expect(emptyString.textContent).toBe("");
+      expect(qualifiedEmpty.getAttribute("href")).toBe(
+        "#dom-foo-the-empty-string"
+      );
     });
 
     it("links local definitions first", async () => {
