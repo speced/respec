@@ -5,9 +5,9 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import * as webidl2 from "webidl2";
+import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { flatten, showInlineError, showInlineWarning } from "./utils.js";
 import css from "text!../../assets/webidl.css";
-import { findDfn } from "./dfn-finder.js";
 import hyperHTML from "hyperhtml";
 import { registerDefinition } from "./dfn-map.js";
 
@@ -139,8 +139,10 @@ function defineIdlName(escaped, data, parent) {
      data-lt="default toJSON operation">${escaped}</a>`;
   }
   if (!data.partial) {
-    return hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
+    const dfn = hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
       parent.name}">${escaped}</dfn>`;
+    decorateDfn(dfn, data, parentName, name);
+    return dfn;
   }
 
   const unlinkedAnchor = hyperHTML`<a
