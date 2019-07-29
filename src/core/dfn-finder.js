@@ -153,10 +153,11 @@ function findNormalDfn(defn, parent, name) {
 export function decorateDfn(dfn, defn, parent, name) {
   if (!dfn.id) {
     const middle = parent ? `${parent.toLowerCase()}-` : "";
-    const last = name
+    let last = name
       .toLowerCase()
       .replace(/[()]/g, "")
       .replace(/\s/g, "-");
+    if (last === "") last = "the-empty-string";
     dfn.id = `dom-${middle}${last}`;
   }
   dfn.dataset.idl = defn.type;
