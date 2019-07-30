@@ -1185,7 +1185,7 @@ describe("W3C — Headers", () => {
     });
   });
   it("allows custom sections and custom content, not just paragraphs", async () => {
-    const ops = makeStandardOps();
+    const ops = makeStandardOps({ noCleanup: true });
     ops.body = `
         <section>
           <h2>PASS</h2>
@@ -1261,7 +1261,10 @@ describe("W3C — Headers", () => {
     };
     theTest(await makeRSDoc(ops));
     const cgOpts = Object.assign({}, ops, {
-      config: { specStatus: "CG-DRAFT" },
+      config: {
+        ...ops.config,
+        specStatus: "CG-DRAFT",
+      },
     });
     theTest(await makeRSDoc(cgOpts));
   });
@@ -1409,11 +1412,12 @@ describe("W3C — Headers", () => {
 
   describe("Add Preview Status in title", () => {
     it("when document title is present", async () => {
-      const ops = makeStandardOps();
-      const doc = await makeRSDoc(
-        ops,
-        "tests/spec/core/simple.html?isPreview=true&prNumber=123&prUrl=%22http%3A//w3c.github.io/respec/%22"
-      );
+      const ops = makeStandardOps({
+        isPreview: true,
+        prNumber: 123,
+        prUrl: "http://w3c.github.io/respec/",
+      });
+      const doc = await makeRSDoc(ops, "tests/spec/core/simple.html");
       expect(doc.title).toBe("Preview of PR #123: Simple Spec");
       const h1 = doc.querySelector("h1#title");
       expect(h1.textContent).toContain("Preview of PR #123:");

@@ -21,6 +21,10 @@
       ...preprocessed.result
     );
     const fragment = createFragment(result);
+    // TODO: remove after https://github.com/WebReflection/viperHTML/issues/35
+    if (fragment.children) {
+      removeNullAttributes(fragment);
+    }
     restoreReplacements(fragment, preprocessed.nodes);
     return fragment;
   };
@@ -34,6 +38,7 @@
         return childNodes[0];
       }
       if (fragment.children.length) {
+        // TODO: remove after https://github.com/WebReflection/viperHTML/issues/34
         childNodes.forEach(removeIfEmptyText);
         if (childNodes.length === 1) {
           return childNodes[0];
@@ -66,6 +71,18 @@
     const nodes = [];
     const result = args.map(iterative);
     return { result, nodes };
+  }
+
+  function removeNullAttributes(element) {
+    if (element.attributes) {
+      for (let i = 0; i < element.attributes.length; i++) {
+        const attr = element.attributes.item(i);
+        if (["null", "undefined"].includes(attr.value)) {
+          element.removeAttribute(attr.name);
+        }
+      }
+    }
+    Array.from(element.children).forEach(removeNullAttributes);
   }
 
   function restoreReplacements(target, nodes) {

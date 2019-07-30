@@ -62,6 +62,8 @@ export async function preprocess(doc, conf) {
     await loaded.default(respecDoc);
   }
 
-  cleanup(respecDoc.document, respecDoc.hub);
+  if (!conf.noCleanup) {
+    cleanup(respecDoc.document, respecDoc.hub);
+  }
   return respecDoc;
 }
