@@ -17,8 +17,10 @@ import {
   showInlineError,
   showInlineWarning,
 } from "./utils.js";
+import fetch from "./fetch.js";
 import { openDB } from "idb";
 import { pub } from "./pubsubhub.js";
+import { sha1Digest } from "../../js/crypto.js";
 
 const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
@@ -443,7 +445,7 @@ function showErrors({ errorsAmbiguous, errorsTermNotFound }) {
 function objectHash(obj) {
   const str = JSON.stringify(obj, Object.keys(obj).sort());
   const buffer = new TextEncoder().encode(str);
-  return crypto.subtle.digest("SHA-1", buffer).then(bufferToHexString);
+  return sha1Digest(buffer).then(bufferToHexString);
 }
 
 /** @param {ArrayBuffer} buffer */
