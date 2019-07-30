@@ -542,7 +542,9 @@ export default function({ document, configuration: conf }) {
     conf.wgPatentHTML = joinAnd(pats);
   } else {
     conf.multipleWGs = false;
-    conf.wgHTML = `the <a href='${conf.wgURI}'>${conf.wg}</a>`;
+    if (conf.wg) {
+      conf.wgHTML = `the <a href='${conf.wgURI}'>${conf.wg}</a>`;
+    }
   }
   if (conf.specStatus === "PR" && !conf.crEnd) {
     pub(
