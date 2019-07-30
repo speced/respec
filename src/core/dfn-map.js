@@ -1,6 +1,5 @@
 // @ts-check
 import { pub } from "./pubsubhub.js";
-import { wrapInner } from "./utils.js";
 
 const topLevelEntities = new Set([
   "callback interface",
@@ -159,41 +158,9 @@ export class DefinitionMap extends Map {
       if (name !== resolvedName) {
         dfns[0].dataset.lt = resolvedName;
       }
-      return decorateDfn(dfns[0], defn, parentLow, nameLow);
+      return dfns[0];
     }
   }
-}
-
-/**
- * @param {HTMLElement} dfn
- * @param {*} defn
- * @param {string} parent
- * @param {string} name
- */
-function decorateDfn(dfn, defn, parent, name) {
-  if (!dfn.id) {
-    const middle = parent ? `${parent}-` : "";
-    const last = name.replace(/[()]/g, "").replace(/\s/g, "-");
-    dfn.id = `dom-${middle}${last}`;
-  }
-  dfn.dataset.idl = defn.type;
-  dfn.dataset.title = dfn.textContent;
-  dfn.dataset.dfnFor = parent;
-  // Derive the data-type for dictionary members, interface attributes,
-  // and methods
-  switch (defn.type) {
-    case "operation":
-    case "attribute":
-    case "field":
-      dfn.dataset.type = getDataType(defn);
-      break;
-  }
-
-  // Mark the definition as code.
-  if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
-    wrapInner(dfn, dfn.ownerDocument.createElement("code"));
-  }
-  return dfn;
 }
 
 /**
@@ -222,16 +189,4 @@ function getDfns(dfnForArray, parent, originalName, type) {
     if (dfn) return [dfn];
   }
   return dfns;
-}
-
-/**
- * @return {string}
- */
-function getDataType(idlStruct) {
-  const { idlType, generic, union } = idlStruct;
-  if (typeof idlType === "string") return idlType;
-  if (generic) return generic;
-  // join on "|" handles for "unsigned short" etc.
-  if (union) return idlType.map(getDataType).join("|");
-  return getDataType(idlType);
 }

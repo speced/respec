@@ -6,6 +6,7 @@
 //  - don't use generated content in the CSS!
 import * as webidl2 from "webidl2";
 import { flatten, showInlineError, showInlineWarning } from "./utils.js";
+import { decorateDfn } from "./dfn-finder.js";
 import hyperHTML from "../../js/html-template.js";
 
 export const name = "core/webidl";
@@ -132,6 +133,7 @@ function defineIdlName(escaped, data, parent, definitionMap) {
       dfn.dataset.export = "";
       dfn.dataset.dfnType = linkType;
     }
+    decorateDfn(dfn, data, parentName, name);
     return hyperHTML`<a
       data-link-for="${parentName.toLowerCase()}"
       data-link-type="${linkType}"
@@ -149,8 +151,10 @@ function defineIdlName(escaped, data, parent, definitionMap) {
      data-lt="default toJSON operation">${escaped}</a>`;
   }
   if (!data.partial) {
-    return hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
+    const dfn = hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
       parent.name}">${escaped}</dfn>`;
+    decorateDfn(dfn, data, parentName, name);
+    return dfn;
   }
 
   const unlinkedAnchor = hyperHTML`<a
