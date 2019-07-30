@@ -66,6 +66,7 @@ define([
   "./core/mdn-annotation",
   "./ui/save-html",
   "./ui/search-specref",
+  "./ui/search-xref",
   "./ui/dfn-list",
   "./ui/about-respec",
   "./core/seo",

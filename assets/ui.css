@@ -401,3 +401,18 @@
     display: none;
   }
 }
+
+#xref-ui {
+  width: 100%;
+  min-height: 550px;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+#xref-ui:not(.ready) {
+  background: url("http://loadinggif.com/images/image-selection/8.gif")
+    no-repeat center;
+}
