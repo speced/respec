@@ -8,6 +8,8 @@
  * @typedef {import('core/xref').RequestEntry} RequestEntry
  * @typedef {import('core/xref').Response} Response
  * @typedef {import('core/xref').SearchResultEntry} SearchResultEntry
+ * @typedef {Map<string, { elems: HTMLElement[], results: SearchResultEntry[], query: RequestEntry }>} ErrorCollection
+ * @typedef {{ ambiguous: ErrorCollection, notFound: ErrorCollection }} Errors
  */
 import {
   IDBKeyVal,
@@ -293,37 +295,29 @@ function isNormative(elem) {
  * @param {any} conf
  */
 function addDataCiteToTerms(elems, queryKeys, data, conf) {
-  /** @type {Map<string, { elems: HTMLElement[], results: SearchResultEntry[], term: string }>} */
-  const errorsAmbiguous = new Map();
-  /** @type {Map<string, HTMLElement[]>} */
-  const errorsTermNotFound = new Map();
+  /** @type {Errors} */
+  const errors = { ambiguous: new Map(), notFound: new Map() };
 
   for (let i = 0, l = elems.length; i < l; i++) {
+    if (elems[i].closest("[data-no-xref]")) continue;
+
     const elem = elems[i];
-    if (elem.closest("[data-no-xref]")) continue;
-    const { id, term } = queryKeys[i];
+    const query = queryKeys[i];
+
+    const { id } = query;
     const results = data.get(id);
-    switch (results.length) {
-      case 1:
-        addDataCite(elem, queryKeys[i], results[0], conf);
-        break;
-      case 0: {
-        const collector =
-          errorsTermNotFound.get(term) ||
-          errorsTermNotFound.set(term, []).get(term);
-        collector.push(elem);
-        break;
+    if (results.length === 1) {
+      addDataCite(elem, queryKeys[i], results[0], conf);
+    } else {
+      const collector = errors[results.length === 0 ? "notFound" : "ambiguous"];
+      if (!collector.has(id)) {
+        collector.set(id, { elems: [], results, query });
       }
-      default: {
-        const collector =
-          errorsAmbiguous.get(id) ||
-          errorsAmbiguous.set(id, { term, results, elems: [] }).get(id);
-        collector.elems.push(elem);
-      }
+      collector.get(id).elems.push(elem);
     }
   }
 
-  showErrors({ errorsAmbiguous, errorsTermNotFound });
+  showErrors(errors);
 }
 
 /**
@@ -389,24 +383,25 @@ function addToReferences(elem, cite, normative, term, conf) {
   showInlineWarning(elem, msg, title);
 }
 
-function showErrors({ errorsAmbiguous, errorsTermNotFound }) {
+/** @param {Errors} errors */
+function showErrors({ ambiguous, notFound }) {
   const dataCiteLink =
     "[`data-cite`](https://github.com/w3c/respec/wiki/data--cite)";
 
   const titleForNotFound = "Error: No matching dfn found.";
   const hintForNotFound = `Please provide a ${dataCiteLink} attribute for it.`;
-  for (const [term, elems] of errorsTermNotFound) {
+  for (const { query, elems } of notFound.values()) {
     const msg =
-      `Couldn't match "**${term}**" to anything in the document ` +
+      `Couldn't match "**${query.term}**" to anything in the document ` +
       `or to any other spec. ${hintForNotFound}`;
     showInlineError(elems, msg, titleForNotFound);
   }
 
   const titleForAmbiguous = "Error: Linking an ambiguous dfn.";
-  for (const { term, elems, results } of errorsAmbiguous.values()) {
+  for (const { query, elems, results } of ambiguous.values()) {
     const definedInSpecs = new Set(results.map(entry => entry.shortname));
     const specs = [...definedInSpecs].map(s => `**${s}**`).join(", ");
-    const msg = `The term "**${term}**" is defined in ${specs} in multiple ways, so it's ambiguous.`;
+    const msg = `The term "**${query.term}**" is defined in ${specs} in multiple ways, so it's ambiguous.`;
     let hint = "";
     if (definedInSpecs.size === 1) {
       // defined only in one spec but in multiple ways
