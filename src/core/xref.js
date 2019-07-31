@@ -14,6 +14,7 @@
 import {
   IDBKeyVal,
   createResourceHint,
+  flatten,
   nonNormativeSelector,
   norm as normalize,
   showInlineError,
@@ -385,35 +386,33 @@ function addToReferences(elem, cite, normative, term, conf) {
 
 /** @param {Errors} errors */
 function showErrors({ ambiguous, notFound }) {
-  const dataCiteLink =
-    "[`data-cite`](https://github.com/w3c/respec/wiki/data--cite)";
+  const getPrefilledFormURL = (query, specs = []) => {
+    const url = new URL(API_URL);
+    url.searchParams.set("term", query.term);
+    if (query.for) url.searchParams.set("for", query.for);
+    url.searchParams.set("types", query.types.join(","));
+    if (specs.length) url.searchParams.set("cite", specs.join(","));
+    return url;
+  };
 
-  const titleForNotFound = "Error: No matching dfn found.";
-  const hintForNotFound = `Please provide a ${dataCiteLink} attribute for it.`;
   for (const { query, elems } of notFound.values()) {
+    const specs = [...new Set(flatten([], query.specs))].sort();
+    const formUrl = getPrefilledFormURL(query, specs);
+    const specsString = specs.map(spec => `\`${spec}\``).join(", ");
     const msg =
-      `Couldn't match "**${query.term}**" to anything in the document ` +
-      `or to any other spec. ${hintForNotFound}`;
-    showInlineError(elems, msg, titleForNotFound);
+      `Couldn't match "**${query.term}**" to anything in the document or in any other document cited in this specification: ${specsString}. ` +
+      `See [how to cite to resolve the error](${formUrl})`;
+    showInlineError(elems, msg, "Error: No matching dfn found.");
   }
 
-  const titleForAmbiguous = "Error: Linking an ambiguous dfn.";
   for (const { query, elems, results } of ambiguous.values()) {
-    const definedInSpecs = new Set(results.map(entry => entry.shortname));
-    const specs = [...definedInSpecs].map(s => `**${s}**`).join(", ");
-    const msg = `The term "**${query.term}**" is defined in ${specs} in multiple ways, so it's ambiguous.`;
-    let hint = "";
-    if (definedInSpecs.size === 1) {
-      // defined only in one spec but in multiple ways
-      const xrefFor = new Set([].concat(...results.map(entry => entry.for)));
-      const forContext = [...xrefFor].map(s => `**${s}**`).join(", ");
-      hint = `add \`data-xref-for\` attribute with value equal to one of the following: ${forContext}.`;
-    } else {
-      // defined in multiple specs
-      hint = `add ${dataCiteLink} attribute with value equal to one of the following: ${specs}.`;
-    }
-    const message = `${msg} To disambiguate, you need to ${hint}`;
-    showInlineError(elems, message, titleForAmbiguous);
+    const specs = [...new Set(results.map(entry => entry.shortname))].sort();
+    const formUrl = getPrefilledFormURL(query, specs);
+    const specsString = specs.map(s => `**${s}**`).join(", ");
+    const msg =
+      `The term "**${query.term}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ` +
+      `See [how to cite to resolve the error](${formUrl})`;
+    showInlineError(elems, msg, "Error: Linking an ambiguous dfn.");
   }
 }
 
