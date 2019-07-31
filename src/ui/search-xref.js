@@ -16,9 +16,8 @@ const l10n = localizationStrings[lang];
 
 const button = ui.addCommand(l10n.title, show, "Ctrl+Shift+Alt+x", "📚");
 
-export function show() {
-  const url = new URL(XREF_URL); // TODO: add search params
+function show() {
   const iframe = hyperHTML`
-    <iframe src="${url}" id="xref-ui" onload="this.classList.add('ready')"></iframe>`;
+    <iframe src="${XREF_URL}" id="xref-ui" onload="this.classList.add('ready')"></iframe>`;
   ui.freshModal(l10n.title, iframe, button);
 }
