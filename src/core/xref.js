@@ -308,7 +308,7 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
     const { id } = query;
     const results = data.get(id);
     if (results.length === 1) {
-      addDataCite(elem, queryKeys[i], results[0], conf);
+      addDataCite(elem, query, results[0], conf);
     } else {
       const collector = errors[results.length === 0 ? "notFound" : "ambiguous"];
       if (!collector.has(id)) {
