@@ -75,11 +75,12 @@
 
   function removeNullAttributes(element) {
     if (element.attributes) {
-      for (let i = 0; i < element.attributes.length; i++) {
-        const attr = element.attributes.item(i);
-        if (["null", "undefined"].includes(attr.value)) {
-          element.removeAttribute(attr.name);
-        }
+      // collect first as removal mutates the list
+      const targets = Array.from(element.attributes).filter(attr =>
+        ["null", "undefined"].includes(attr.value)
+      );
+      for (const attr of targets) {
+        element.removeAttribute(attr.name);
       }
     }
     Array.from(element.children).forEach(removeNullAttributes);
