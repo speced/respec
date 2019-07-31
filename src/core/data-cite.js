@@ -58,7 +58,7 @@ function requestLookup(conf) {
     }
     switch (elem.localName) {
       case "a": {
-        if (elem.textContent === "") {
+        if (elem.textContent === "" && elem.dataset.lt !== "the-empty-string") {
           elem.textContent = title;
         }
         elem.href = href;

@@ -785,7 +785,7 @@ describe("Core — xref", () => {
       );
 
       const link2 = doc.getElementById("link2");
-      // expect(link2.textContent).toBe(`""`); // TODO
+      expect(link2.textContent).toBe(`""`);
       expect(link2.querySelector("a").href).toBe(
         "https://www.w3.org/TR/referrer-policy/#dom-referrerpolicy"
       );
