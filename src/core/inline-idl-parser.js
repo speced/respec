@@ -22,6 +22,7 @@ function parseInlineIDL(str) {
     .split(/[./]/)
     .concat(methodPart)
     .filter(s => s && s.trim());
+  const renderParent = !str.includes("/");
   const results = [];
   while (tokens.length) {
     const value = tokens.pop();
@@ -29,35 +30,35 @@ function parseInlineIDL(str) {
     if (methodRegex.test(value)) {
       const [, identifier, allArgs] = value.match(methodRegex);
       const args = allArgs.split(/,\s*/).filter(arg => arg);
-      results.push({ type: "method", identifier, args, str });
+      results.push({ type: "method", identifier, args, renderParent });
       continue;
     }
     // Enum["enum value"]
     if (enumRegex.test(value)) {
       const [, identifier, enumValue] = value.match(enumRegex);
-      results.push({ type: "enum", identifier, enumValue, str });
+      results.push({ type: "enum", identifier, enumValue, renderParent });
       continue;
     }
     if (enumValueRegex.test(value)) {
       const [, identifier] = value.match(enumValueRegex);
-      results.push({ type: "enum-value", identifier, str });
+      results.push({ type: "enum-value", identifier, renderParent });
       continue;
     }
     // internal slot
     if (slotRegex.test(value)) {
       const [, identifier] = value.match(slotRegex);
-      results.push({ type: "internal-slot", identifier, str });
+      results.push({ type: "internal-slot", identifier, renderParent });
       continue;
     }
     // attribute
     if (attributeRegex.test(value) && tokens.length) {
       const [, identifier] = value.match(attributeRegex);
-      results.push({ type: "attribute", identifier, str });
+      results.push({ type: "attribute", identifier, renderParent });
       continue;
     }
     // base, always final token
     if (attributeRegex.test(value) && tokens.length === 0) {
-      results.push({ type: "base", identifier: value, str });
+      results.push({ type: "base", identifier: value, renderParent });
       continue;
     }
     throw new SyntaxError(`IDL micro-syntax parsing error in \`{{ ${str} }}\``);
@@ -72,8 +73,8 @@ function parseInlineIDL(str) {
 
 function renderBase(details) {
   // Check if base is a local variable in a section
-  const { identifier, str } = details;
-  if (str.includes("/")) return document.createDocumentFragment();
+  const { identifier, renderParent } = details;
+  if (!renderParent) return document.createDocumentFragment();
   return hyperHTML`<a data-xref-type="_IDL_">${identifier}</a>`;
 }
 
@@ -81,10 +82,10 @@ function renderBase(details) {
  * Internal slot: .[[identifier]] or [[identifier]]
  */
 function renderInternalSlot(details) {
-  const { identifier, parent } = details;
+  const { identifier, parent, renderParent } = details;
   const { identifier: linkFor } = parent || {};
   const lt = `[[${identifier}]]`;
-  const html = hyperHTML`${parent ? "." : ""}[[<a
+  const html = hyperHTML`${parent && renderParent ? "." : ""}[[<a
     data-xref-type="attribute"
     data-link-for=${linkFor}
     data-xref-for=${linkFor}
@@ -96,9 +97,9 @@ function renderInternalSlot(details) {
  * Attribute: .identifier
  */
 function renderAttribute(details) {
-  const { parent, identifier, str } = details;
+  const { parent, identifier, renderParent } = details;
   const { identifier: linkFor } = parent || {};
-  const html = hyperHTML`${str.includes("/") ? "" : "."}<a
+  const html = hyperHTML`${renderParent ? "." : ""}<a
       data-xref-type="attribute|dict-member"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
@@ -110,11 +111,11 @@ function renderAttribute(details) {
  * Method: .identifier(arg1, arg2, ...), identifier(arg1, arg2, ...)
  */
 function renderMethod(details) {
-  const { args, identifier, type, parent, str } = details;
+  const { args, identifier, type, parent, renderParent } = details;
   const { identifier: linkFor } = parent || {};
   const argsText = args.map(arg => `<var>${arg}</var>`).join(", ");
   const searchText = `${identifier}(${args.join(", ")})`;
-  const html = hyperHTML`${parent && !str.includes("/") ? "." : ""}<a
+  const html = hyperHTML`${parent && renderParent ? "." : ""}<a
     data-xref-type="${type}"
     data-link-for="${linkFor}"
     data-xref-for="${linkFor}"
