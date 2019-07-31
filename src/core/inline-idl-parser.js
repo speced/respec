@@ -21,7 +21,8 @@ function parseInlineIDL(str) {
   const tokens = nonMethodPart
     .split(/[./]/)
     .concat(methodPart)
-    .filter(s => s && s.trim());
+    .filter(s => s && s.trim())
+    .map(s => s.trim());
   const renderParent = !str.includes("/");
   const results = [];
   while (tokens.length) {

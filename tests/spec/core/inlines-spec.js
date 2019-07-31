@@ -368,12 +368,17 @@ describe("Core - Inlines", () => {
     );
   });
 
-  it("processes {{ forContext/term }} IDL", async () => {
+  fit("processes {{ forContext/term }} IDL", async () => {
     const body = `
       <section>
         <p id="link1">{{ Window.event }}</p>
         <p id="link2">{{ Window/event }}</p>
         <p id="link3">{{ EventTarget/addEventListener(type, callback) }}</p>
+        <p id="link4">{{
+          Window
+          /
+          event
+        }}</p>
       </section>
     `;
     const config = { xref: ["DOM", "HTML"] };
@@ -393,5 +398,8 @@ describe("Core - Inlines", () => {
     expect(doc.querySelector("#link3 a").hash).toBe(
       "#dom-eventtarget-addeventlistener"
     );
+
+    expect(doc.getElementById("link4").textContent).toBe("event");
+    expect(doc.querySelector("#link4 a").hash).toBe("#dom-window-event");
   });
 });
