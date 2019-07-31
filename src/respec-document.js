@@ -1,3 +1,4 @@
+import { Biblio } from "./core/biblio.js";
 import { DefinitionMap } from "./core/dfn-map.js";
 import { PubSubHub } from "./core/pubsubhub.js";
 
@@ -47,8 +48,7 @@ export async function createRespecDocument(doc, conf) {
 
     definitionMap: new DefinitionMap(),
 
-    /** @type {Record<string, *>} */
-    biblio: {},
+    biblio: new Biblio(),
 
     get lang() {
       return document.documentElement.lang;

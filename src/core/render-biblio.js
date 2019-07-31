@@ -82,7 +82,7 @@ export default function run({ document, configuration: conf, lang, biblio }) {
     addId(sec);
 
     const { goodRefs, badRefs } = refs
-      .map(ref => toRefContent(ref, biblio))
+      .map(ref => toRefContent(ref, biblio.map))
       .reduce(
         (refObjects, ref) => {
           const refType = ref.refcontent ? "goodRefs" : "badRefs";

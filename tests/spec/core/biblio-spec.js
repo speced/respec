@@ -6,6 +6,7 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
+import fetch from "../../../src/core/fetch.js";
 
 describe("W3C — Bibliographic References", () => {
   const localBiblio = {
@@ -62,7 +63,7 @@ describe("W3C — Bibliographic References", () => {
     <section id="conformance"></section>
   `;
 
-  const ops = makeStandardOps({ localBiblio }, body);
+  const ops = makeStandardOps({ localBiblio, noCleanup: true }, body);
 
   afterAll(flushIframes);
   const bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");

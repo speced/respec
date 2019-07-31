@@ -130,7 +130,7 @@ async function addJSONLDInfo(conf, doc, biblio) {
 
   // normative and informative references
   jsonld.citation = [...conf.normativeReferences, ...conf.informativeReferences]
-    .map(ref => biblio[ref])
+    .map(ref => biblio.map[ref])
     .filter(ref => typeof ref === "object")
     .map(addRef);
 

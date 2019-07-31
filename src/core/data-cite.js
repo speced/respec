@@ -20,10 +20,14 @@ import {
   showInlineWarning,
   wrapInner,
 } from "./utils.js";
-import { resolveRef, updateFromNetwork } from "./biblio.js";
+import { updateFromNetwork } from "./biblio.js";
 export const name = "core/data-cite";
 
-function requestLookup(conf) {
+/**
+ * @param {import("../core/biblio.js").Biblio} biblio
+ * @param {*} conf
+ */
+function requestLookup(biblio, conf) {
   const toCiteDetails = citeDetailsConverter(conf);
   return async elem => {
     const originalKey = elem.dataset.cite;
@@ -39,7 +43,7 @@ function requestLookup(conf) {
       href = document.location.href;
     } else {
       // Let's go look it up in spec ref...
-      const entry = await resolveRef(key);
+      const entry = await biblio.resolveRef(key);
       cleanElement(elem);
       if (!entry) {
         showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
@@ -168,10 +172,10 @@ export default async function({ document, configuration: conf }) {
 /**
  * @param {Document} doc
  * @param {*} conf
- * @param {import("../respec-document.js").RespecDocument["biblio"]} biblio
+ * @param {import("../core/biblio.js").Biblio} biblio
  */
 export async function linkInlineCitations(doc, conf = respecConfig, biblio) {
-  const toLookupRequest = requestLookup(conf);
+  const toLookupRequest = requestLookup(biblio, conf);
   const elems = [
     ...doc.querySelectorAll(
       "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
@@ -182,7 +186,7 @@ export async function linkInlineCitations(doc, conf = respecConfig, biblio) {
   const promisesForMissingEntries = elems
     .map(citeConverter)
     .map(async entry => {
-      const result = await resolveRef(entry);
+      const result = await biblio.resolveRef(entry);
       return { entry, result };
     });
   const bibEntries = await Promise.all(promisesForMissingEntries);
@@ -193,7 +197,7 @@ export async function linkInlineCitations(doc, conf = respecConfig, biblio) {
 
   // we now go to network to fetch missing entries
   const newEntries = await updateFromNetwork(missingBibEntries);
-  if (newEntries) Object.assign(biblio, newEntries);
+  if (newEntries) Object.assign(biblio.map, newEntries);
 
   const lookupRequests = [...new Set(elems)].map(toLookupRequest);
   return await Promise.all(lookupRequests);
