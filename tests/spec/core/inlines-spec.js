@@ -368,7 +368,7 @@ describe("Core - Inlines", () => {
     );
   });
 
-  fit("processes {{ forContext/term }} IDL", async () => {
+  it("processes {{ forContext/term }} IDL", async () => {
     const body = `
       <section>
         <p id="link1">{{ Window.event }}</p>
