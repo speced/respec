@@ -131,6 +131,7 @@ function getRequestEntry(elem) {
     ? elem.dataset.lt.split("|", 1)[0]
     : elem.textContent;
   term = normalize(term);
+  if (term === "the-empty-string") term = "";
   if (!isIDL) term = term.toLowerCase();
 
   /** @type {string[][]} */
