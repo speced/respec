@@ -24,6 +24,7 @@ If you are new to spec writing, we strongly encourage you to read:
   * [Writing Promise-Using Specifications](https://www.w3.org/2001/tag/doc/promises-guide)
   * [Privacy and Security Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/)
   * [Short i18n review checklist](https://www.w3.org/International/techniques/shortchecklist.html)
+  * [Adding another permission? A guide](https://github.com/w3cping/adding-permissions/blob/master/README.md)
 
 ## Getting help
 

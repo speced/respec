@@ -140,7 +140,7 @@ function findNormalDfn(defn, parent, name) {
     if (name !== resolvedName) {
       dfns[0].dataset.lt = resolvedName;
     }
-    return decorateDfn(dfns[0], defn, parentLow, nameLow);
+    return dfns[0];
   }
 }
 
@@ -150,10 +150,15 @@ function findNormalDfn(defn, parent, name) {
  * @param {string} parent
  * @param {string} name
  */
-function decorateDfn(dfn, defn, parent, name) {
+export function decorateDfn(dfn, defn, parent, name) {
+  parent = parent.toLowerCase();
   if (!dfn.id) {
     const middle = parent ? `${parent}-` : "";
-    const last = name.replace(/[()]/g, "").replace(/\s/g, "-");
+    let last = name
+      .toLowerCase()
+      .replace(/[()]/g, "")
+      .replace(/\s/g, "-");
+    if (last === "") last = "the-empty-string";
     dfn.id = `dom-${middle}${last}`;
   }
   dfn.dataset.idl = defn.type;
