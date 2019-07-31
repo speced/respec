@@ -8,13 +8,13 @@ const XREF_URL = "https://respec.org/xref/";
 
 const localizationStrings = {
   en: {
-    title: "Search xref",
+    title: "Search definitions",
   },
 };
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 const l10n = localizationStrings[lang];
 
-const button = ui.addCommand(l10n.title, show, "Ctrl+Shift+Alt+x", "🔎");
+const button = ui.addCommand(l10n.title, show, "Ctrl+Shift+Alt+x", "📚");
 
 export function show() {
   const url = new URL(XREF_URL); // TODO: add search params
