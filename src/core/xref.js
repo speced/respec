@@ -363,7 +363,7 @@ function addDataCite(elem, query, result, conf) {
 
   // update indirect links (data-lt, data-plurals)
   /** @type {NodeListOf<HTMLElement>} */
-  const indirectLinks = document.querySelectorAll(
+  const indirectLinks = elem.ownerDocument.querySelectorAll(
     `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`
   );
   indirectLinks.forEach(el => {

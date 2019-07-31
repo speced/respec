@@ -2,6 +2,7 @@
 
 import {
   flushIframes,
+  getLocationOrigin,
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
@@ -14,17 +15,21 @@ describe("Core — xref", () => {
 
   let cache;
   beforeAll(async () => {
-    const idb = await openDB("xref", 1, {
-      upgrade(db) {
-        db.createObjectStore("xrefs");
-      },
-    });
-    cache = new IDBKeyVal(idb, "xrefs");
+    if (typeof indexedDB !== "undefined") {
+      const idb = await openDB("xref", 1, {
+        upgrade(db) {
+          db.createObjectStore("xrefs");
+        },
+      });
+      cache = new IDBKeyVal(idb, "xrefs");
+    }
   });
 
   beforeEach(async () => {
-    // clear idb cache before each
-    await cache.clear();
+    if (cache) {
+      // clear idb cache before each
+      await cache.clear();
+    }
   });
 
   const localBiblio = {
@@ -551,7 +556,7 @@ describe("Core — xref", () => {
       </section>
     `;
     const config = {
-      xref: { url: `${location.origin}/tests/data/xref/refs.json` },
+      xref: { url: `${getLocationOrigin()}/tests/data/xref/refs.json` },
       localBiblio,
     };
     const ops = makeStandardOps(config, body);
@@ -947,6 +952,11 @@ describe("Core — xref", () => {
   });
 
   it("caches results and uses cached results when available", async () => {
+    if (!cache) {
+      // skip this if no cache
+      return;
+    }
+
     const config = { xref: true, localBiblio };
     let cacheKeys;
 

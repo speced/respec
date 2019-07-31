@@ -40,7 +40,7 @@ function requestLookup(biblio, conf) {
         elem,
         `The reference "${key}" is resolved into the current document per \`conf.shortName\`.`
       );
-      href = document.location.href;
+      href = elem.ownerDocument.location.href;
     } else {
       // Let's go look it up in spec ref...
       const entry = await biblio.resolveRef(key);
@@ -74,7 +74,7 @@ function requestLookup(biblio, conf) {
         break;
       }
       case "dfn": {
-        const anchor = document.createElement("a");
+        const anchor = elem.ownerDocument.createElement("a");
         anchor.href = href;
         if (!elem.textContent) {
           anchor.textContent = title;
