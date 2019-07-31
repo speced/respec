@@ -32,13 +32,13 @@ global.beforeEach = jasmine.env.beforeEach;
 
 (async () => {
   await import("./spec/core/anchor-expander-spec.js");
+  await import("./spec/core/biblio-spec.js");
   await import("./spec/core/contrib-spec.js");
   await import("./spec/core/data-abbr-spec.js");
   await import("./spec/core/fix-headers-spec.js");
   await import("./spec/core/id-headers-spec.js");
   await import("./spec/core/informative-spec.js");
   await import("./spec/core/structure-spec.js");
-  await import("./spec/core/biblio-spec.js");
   await import("./spec/core/xref-spec.js");
   await import("./spec/w3c/abstract-spec.js");
   await import("./spec/w3c/defaults-spec.js");

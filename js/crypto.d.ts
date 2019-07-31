@@ -1,1 +1,1 @@
-export function sha1Digest(buffer: Uint8Array): Promise<ArrayBuffer>;
+export function sha1Digest(str: string): Promise<ArrayBuffer>;

@@ -11,12 +11,13 @@
 })((exports, crypto) => {
   "use strict";
   exports.__esModule = true;
-  exports.sha1Digest = buffer => {
+  exports.sha1Digest = str => {
     if (crypto) {
       const hash = crypto.createHash("sha1");
-      hash.update(buffer);
+      hash.update(str);
       return Promise.resolve(hash.digest().buffer);
     }
-    return (window || globalThis).crypto.subtle.digest("SHA-1", buffer);
+    const buffer = new TextEncoder().encode(str);
+    return crypto.subtle.digest("SHA-1", buffer);
   };
 });

@@ -444,8 +444,7 @@ function showErrors({ errorsAmbiguous, errorsTermNotFound }) {
 
 function objectHash(obj) {
   const str = JSON.stringify(obj, Object.keys(obj).sort());
-  const buffer = new TextEncoder().encode(str);
-  return sha1Digest(buffer).then(bufferToHexString);
+  return sha1Digest(str).then(bufferToHexString);
 }
 
 /** @param {ArrayBuffer} buffer */
