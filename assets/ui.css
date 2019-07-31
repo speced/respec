@@ -413,6 +413,5 @@
 }
 
 #xref-ui:not(.ready) {
-  background: url("http://loadinggif.com/images/image-selection/8.gif")
-    no-repeat center;
+  background: url("https://respec.org/xref/loader.gif") no-repeat center;
 }
