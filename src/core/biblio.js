@@ -76,6 +76,9 @@ export async function updateFromNetwork(
   return data;
 }
 
+/**
+ * @param {string} key
+ */
 export async function resolveRef(key) {
   const biblio = await done;
   if (!biblio.hasOwnProperty(key)) {

@@ -104,6 +104,10 @@ function cleanElement(elem) {
     .forEach(attrName => elem.removeAttribute(attrName));
 }
 
+/**
+ * @param {string} component
+ * @return {(key: string) => string}
+ */
 function makeComponentFinder(component) {
   return key => {
     const position = key.search(component);
@@ -111,6 +115,15 @@ function makeComponentFinder(component) {
   };
 }
 
+/**
+ * @typedef {object} CiteDetails
+ * @property {string} key
+ * @property {boolean} isNormative
+ * @property {string} frag
+ * @property {string} path
+ *
+ * @return {(elem: HTMLElement) => CiteDetails};
+ */
 function citeDetailsConverter(conf) {
   const findFrag = makeComponentFinder("#");
   const findPath = makeComponentFinder("/");
@@ -120,6 +133,7 @@ function citeDetailsConverter(conf) {
     // The key is a fragment, resolve using the shortName as key
     if (rawKey.startsWith("#") && !citeFrag) {
       // Closes data-cite not starting with "#"
+      /** @type {HTMLElement} */
       const closest = elem.parentElement.closest(
         `[data-cite]:not([data-cite^="#"])`
       );
@@ -135,7 +149,8 @@ function citeDetailsConverter(conf) {
     const { type } = refTypeFromContext(rawKey, elem);
     const isNormative = type === "normative";
     // key is before "/" and "#" but after "!" or "?" (e.g., ?key/path#frag)
-    const key = rawKey.split(/[/|#]/)[0].substring(/^[?|!]/.test(rawKey));
+    const hasPrecedingMark = /^[?|!]/.test(rawKey);
+    const key = rawKey.split(/[/|#]/)[0].substring(Number(hasPrecedingMark));
     const details = { key, isNormative, frag, path };
     return details;
   };
@@ -162,6 +177,10 @@ export async function run(conf) {
     });
 }
 
+/**
+ * @param {Document} doc
+ * @param {*} conf
+ */
 export async function linkInlineCitations(doc, conf = respecConfig) {
   const toLookupRequest = requestLookup(conf);
   const elems = [
@@ -174,7 +193,7 @@ export async function linkInlineCitations(doc, conf = respecConfig) {
   const promisesForMissingEntries = elems
     .map(citeConverter)
     .map(async entry => {
-      const result = await resolveRef(entry);
+      const result = await resolveRef(entry.key);
       return { entry, result };
     });
   const bibEntries = await Promise.all(promisesForMissingEntries);
