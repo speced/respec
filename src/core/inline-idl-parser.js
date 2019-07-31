@@ -19,7 +19,7 @@ const methodSplitRegex = /\.?(\w+\(.*\)$)/;
 function parseInlineIDL(str) {
   const [nonMethodPart, methodPart] = str.split(methodSplitRegex);
   const tokens = nonMethodPart
-    .split(".")
+    .split(/[./]/)
     .concat(methodPart)
     .filter(s => s && s.trim());
   const results = [];
@@ -29,35 +29,35 @@ function parseInlineIDL(str) {
     if (methodRegex.test(value)) {
       const [, identifier, allArgs] = value.match(methodRegex);
       const args = allArgs.split(/,\s*/).filter(arg => arg);
-      results.push({ type: "method", identifier, args });
+      results.push({ type: "method", identifier, args, str });
       continue;
     }
     // Enum["enum value"]
     if (enumRegex.test(value)) {
       const [, identifier, enumValue] = value.match(enumRegex);
-      results.push({ type: "enum", identifier, enumValue });
+      results.push({ type: "enum", identifier, enumValue, str });
       continue;
     }
     if (enumValueRegex.test(value)) {
       const [, identifier] = value.match(enumValueRegex);
-      results.push({ type: "enum-value", identifier });
+      results.push({ type: "enum-value", identifier, str });
       continue;
     }
     // internal slot
     if (slotRegex.test(value)) {
       const [, identifier] = value.match(slotRegex);
-      results.push({ type: "internal-slot", identifier });
+      results.push({ type: "internal-slot", identifier, str });
       continue;
     }
     // attribute
     if (attributeRegex.test(value) && tokens.length) {
       const [, identifier] = value.match(attributeRegex);
-      results.push({ type: "attribute", identifier });
+      results.push({ type: "attribute", identifier, str });
       continue;
     }
     // base, always final token
     if (attributeRegex.test(value) && tokens.length === 0) {
-      results.push({ type: "base", identifier: value });
+      results.push({ type: "base", identifier: value, str });
       continue;
     }
     throw new SyntaxError(`IDL micro-syntax parsing error in \`{{ ${str} }}\``);
@@ -72,7 +72,8 @@ function parseInlineIDL(str) {
 
 function renderBase(details) {
   // Check if base is a local variable in a section
-  const { identifier } = details;
+  const { identifier, str } = details;
+  if (str.includes("/")) return document.createDocumentFragment();
   return hyperHTML`<a data-xref-type="_IDL_">${identifier}</a>`;
 }
 
@@ -95,9 +96,9 @@ function renderInternalSlot(details) {
  * Attribute: .identifier
  */
 function renderAttribute(details) {
-  const { parent, identifier } = details;
+  const { parent, identifier, str } = details;
   const { identifier: linkFor } = parent || {};
-  const html = hyperHTML`.<a
+  const html = hyperHTML`${str.includes("/") ? "" : "."}<a
       data-xref-type="attribute|dict-member"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
@@ -109,11 +110,11 @@ function renderAttribute(details) {
  * Method: .identifier(arg1, arg2, ...), identifier(arg1, arg2, ...)
  */
 function renderMethod(details) {
-  const { args, identifier, type, parent } = details;
+  const { args, identifier, type, parent, str } = details;
   const { identifier: linkFor } = parent || {};
   const argsText = args.map(arg => `<var>${arg}</var>`).join(", ");
   const searchText = `${identifier}(${args.join(", ")})`;
-  const html = hyperHTML`${parent ? "." : ""}<a
+  const html = hyperHTML`${parent && !str.includes("/") ? "." : ""}<a
     data-xref-type="${type}"
     data-link-for="${linkFor}"
     data-xref-for="${linkFor}"

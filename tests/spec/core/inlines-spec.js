@@ -367,4 +367,31 @@ describe("Core - Inlines", () => {
       "https://infra.spec.whatwg.org/#map-iterate"
     );
   });
+
+  it("processes {{ forContext/term }} IDL", async () => {
+    const body = `
+      <section>
+        <p id="link1">{{ Window.event }}</p>
+        <p id="link2">{{ Window/event }}</p>
+        <p id="link3">{{ EventTarget/addEventListener(type, callback) }}</p>
+      </section>
+    `;
+    const config = { xref: ["DOM", "HTML"] };
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+
+    expect(doc.getElementById("link1").textContent).toBe("Window.event");
+    const [linkWindow, linkWindowEvent] = doc.querySelectorAll("#link1 a");
+    expect(linkWindow.hash).toBe("#window");
+    expect(linkWindowEvent.hash).toBe("#dom-window-event");
+
+    expect(doc.getElementById("link2").textContent).toBe("event");
+    expect(doc.querySelector("#link2 a").hash).toBe("#dom-window-event");
+
+    expect(doc.getElementById("link3").textContent).toBe(
+      "addEventListener(type, callback)"
+    );
+    expect(doc.querySelector("#link3 a").hash).toBe(
+      "#dom-eventtarget-addeventlistener"
+    );
+  });
 });
