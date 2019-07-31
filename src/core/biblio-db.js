@@ -12,66 +12,73 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
 
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
+const hasIndexedDB = typeof indexedDB !== "undefined";
+const dbMaps = {
+  /** @type {Map<string, *>} */
+  reference: new Map(),
+  /** @type {Map<string, string>} */
+  alias: new Map(),
+};
+
 /**
  * Database initialization tracker
  * @type {Promise<IDBDatabase>}
  */
-const readyPromise =
-  typeof indexedDB !== "undefined"
-    ? new Promise((resolve, reject) => {
-        let request;
+const readyPromise = hasIndexedDB
+  ? new Promise((resolve, reject) => {
+      let request;
+      try {
+        request = window.indexedDB.open("respec-biblio2", 12);
+      } catch (err) {
+        return reject(err);
+      }
+      request.onerror = () => {
+        reject(new DOMException(request.error.message, request.error.name));
+      };
+      request.onsuccess = () => {
+        resolve(request.result);
+      };
+      request.onupgradeneeded = async () => {
+        const db = request.result;
+        Array.from(db.objectStoreNames).map(storeName =>
+          db.deleteObjectStore(storeName)
+        );
+        const promisesToCreateSchema = [
+          new Promise((resolve, reject) => {
+            try {
+              const store = db.createObjectStore("alias", { keyPath: "id" });
+              store.createIndex("aliasOf", "aliasOf", { unique: false });
+              store.transaction.oncomplete = resolve;
+              store.transaction.onerror = reject;
+            } catch (err) {
+              reject(err);
+            }
+          }),
+          new Promise((resolve, reject) => {
+            try {
+              const transaction = db.createObjectStore("reference", {
+                keyPath: "id",
+              }).transaction;
+              transaction.oncomplete = resolve;
+              transaction.onerror = reject;
+            } catch (err) {
+              reject(err);
+            }
+          }),
+        ];
         try {
-          request = window.indexedDB.open("respec-biblio2", 12);
+          await Promise.all(promisesToCreateSchema);
+          resolve();
         } catch (err) {
-          return reject(err);
+          reject(err);
         }
-        request.onerror = () => {
-          reject(new DOMException(request.error.message, request.error.name));
-        };
-        request.onsuccess = () => {
-          resolve(request.result);
-        };
-        request.onupgradeneeded = async () => {
-          const db = request.result;
-          Array.from(db.objectStoreNames).map(storeName =>
-            db.deleteObjectStore(storeName)
-          );
-          const promisesToCreateSchema = [
-            new Promise((resolve, reject) => {
-              try {
-                const store = db.createObjectStore("alias", { keyPath: "id" });
-                store.createIndex("aliasOf", "aliasOf", { unique: false });
-                store.transaction.oncomplete = resolve;
-                store.transaction.onerror = reject;
-              } catch (err) {
-                reject(err);
-              }
-            }),
-            new Promise((resolve, reject) => {
-              try {
-                const transaction = db.createObjectStore("reference", {
-                  keyPath: "id",
-                }).transaction;
-                transaction.oncomplete = resolve;
-                transaction.onerror = reject;
-              } catch (err) {
-                reject(err);
-              }
-            }),
-          ];
-          try {
-            await Promise.all(promisesToCreateSchema);
-            resolve();
-          } catch (err) {
-            reject(err);
-          }
-        };
-      })
-    : null;
+      };
+    })
+  : null;
 
 export const biblioDB = {
   get ready() {
-    return readyPromise || Promise.reject("IndexedDB API is not available");
+    return readyPromise;
   },
   /**
    * Finds either a reference or an alias.
@@ -100,6 +107,9 @@ export const biblioDB = {
     if (!id) {
       throw new TypeError("id is required");
     }
+    if (!hasIndexedDB) {
+      return dbMaps.reference.has(id);
+    }
     const db = await this.ready;
     return new Promise((resolve, reject) => {
       const objectStore = db.transaction([type], "readonly").objectStore(type);
@@ -122,6 +132,9 @@ export const biblioDB = {
   async isAlias(id) {
     if (!id) {
       throw new TypeError("id is required");
+    }
+    if (!hasIndexedDB) {
+      return dbMaps.alias.has(id);
     }
     const db = await this.ready;
     return new Promise((resolve, reject) => {
@@ -147,6 +160,9 @@ export const biblioDB = {
   async resolveAlias(id) {
     if (!id) {
       throw new TypeError("id is required");
+    }
+    if (!hasIndexedDB) {
+      return dbMaps.alias.get(id);
     }
     const db = await this.ready;
     return new Promise((resolve, reject) => {
@@ -179,6 +195,9 @@ export const biblioDB = {
     }
     if (!id) {
       throw new TypeError("id is required");
+    }
+    if (!hasIndexedDB) {
+      return dbMaps.reference.get(id);
     }
     const db = await this.ready;
     return new Promise((resolve, reject) => {
@@ -241,7 +260,7 @@ export const biblioDB = {
   /**
    * Adds a reference or alias to the database.
    *
-   * @param {String} type The type as per ALLOWED_TYPES.
+   * @param {keyof dbMaps} type The type as per ALLOWED_TYPES.
    * @param {String} details The object to store.
    */
   async add(type, details) {
@@ -253,6 +272,9 @@ export const biblioDB = {
     }
     if (type === "alias" && !details.hasOwnProperty("aliasOf")) {
       throw new TypeError("Invalid alias object.");
+    }
+    if (!hasIndexedDB) {
+      return dbMaps[type].set(details.id, details);
     }
     const db = await this.ready;
     const isInDB = await this.has(type, details.id);
@@ -273,13 +295,20 @@ export const biblioDB = {
    */
   async close() {
     const db = await this.ready;
-    db.close();
+    if (db) {
+      db.close();
+    }
   },
 
   /**
    * Clears the underlying database
    */
   async clear() {
+    if (!hasIndexedDB) {
+      dbMaps.alias.clear();
+      dbMaps.reference.clear();
+      return;
+    }
     const db = await this.ready;
     const storeNames = [...ALLOWED_TYPES];
     const stores = await new Promise((resolve, reject) => {
@@ -297,6 +326,6 @@ export const biblioDB = {
         request.onsuccess = resolve;
       });
     });
-    Promise.all(clearStorePromises);
+    return Promise.all(clearStorePromises);
   },
 };
