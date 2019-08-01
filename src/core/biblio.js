@@ -173,6 +173,5 @@ export default async function({ document, configuration: conf, biblio }) {
     Object.assign(biblio.map, data);
   }
   Object.assign(biblio.map, conf.localBiblio);
-  await updateFromNetwork(neededRefs);
   biblio.finish();
 }
