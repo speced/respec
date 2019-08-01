@@ -85,7 +85,7 @@ function inlineXrefMatches(matched) {
   const ref = matched.slice(2, -2).trim();
   return ref.startsWith("\\")
     ? matched.replace("\\", "")
-    : idlStringToHtml(ref);
+    : idlStringToHtml(norm(ref));
 }
 
 /**

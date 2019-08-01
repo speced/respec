@@ -120,28 +120,25 @@ describe("W3C - Style", () => {
     );
   });
 
-  it("should style according to spec status", async () => {
-    // We pick random half from the list, as running the whole set is very slow
-    const promises = pickRandomsFromList(specStatus).map(test => {
-      return loadWithStatus(test.status, test.expectedURL, "2016");
+  // We pick random half from the list, as running the whole set is very slow
+  pickRandomsFromList(specStatus).map(test => {
+    it(`should style according to spec status ${test.status}`, async () => {
+      await loadWithStatus(test.status, test.expectedURL, "2016");
     });
-    await Promise.all(promises);
   });
 
-  it("should style according to experimental styles", async () => {
-    // We pick random half from the list, as running the whole set is very slow
-    const promises = pickRandomsFromList(specStatus).map(test =>
-      loadWithStatus(test.status, test.expectedURL, "experimental")
-    );
-    await Promise.all(promises);
+  // We pick random half from the list, as running the whole set is very slow
+  pickRandomsFromList(specStatus).map(test => {
+    it(`should style according to spec status ${test.status} in experimental way`, async () => {
+      await loadWithStatus(test.status, test.expectedURL, "experimental");
+    });
   });
 
-  it("should not use 'experimental' URL when useExperimentalStyles is false", async () => {
-    // We pick random half from the list, as running the whole set is very slow
-    const promises = pickRandomsFromList(specStatus).map(test =>
-      loadWithStatus(test.status, test.expectedURL)
-    );
-    await Promise.all(promises);
+  // We pick random half from the list, as running the whole set is very slow
+  pickRandomsFromList(specStatus).map(test => {
+    it(`should not use 'experimental' URL in ${test.status} status when useExperimentalStyles is false`, async () => {
+      await loadWithStatus(test.status, test.expectedURL);
+    });
   });
   it("shouldn't include fixup.js when noToc is set", async () => {
     const ops = makeStandardOps();
