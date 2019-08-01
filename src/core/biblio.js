@@ -153,6 +153,5 @@ export async function run(conf) {
     Object.assign(biblio, data);
   }
   Object.assign(biblio, conf.localBiblio);
-  await updateFromNetwork(neededRefs);
   finish();
 }
