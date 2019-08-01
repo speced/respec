@@ -76,8 +76,9 @@ function parseInlineIDL(str) {
 function renderBase(details) {
   // Check if base is a local variable in a section
   const { identifier, renderParent } = details;
-  if (!renderParent) return document.createDocumentFragment();
-  return hyperHTML`<a data-xref-type="_IDL_">${identifier}</a>`;
+  if (renderParent) {
+    return hyperHTML`<a data-xref-type="_IDL_">${identifier}</a>`;
+  }
 }
 
 /**
