@@ -56,6 +56,9 @@ describe("Core — xref", () => {
     "css-scroll-snap": {
       href: "https://drafts.csswg.org/css-scroll-snap-1/",
     },
+    "referrer-policy": {
+      href: "https://www.w3.org/TR/referrer-policy/",
+    },
     "local-1": { id: "local-1", href: "https://example.com/" },
     "local-2": { id: "local-2", href: "https://example.com/" },
     "local-3": { id: "local-3", href: "https://example.com/" },
@@ -762,39 +765,36 @@ describe("Core — xref", () => {
           <pre class="idl">
           enum Foo { "dashed-thing", "" };
           </pre>
-          <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
-          <p id="link3"
-            data-cite="css-layout-api" data-xref-for="ChildDisplayType"
-          >{{ "block" }} {{"block"}} </p>
-          <p id="link4" data-link-for="Foo" data-dfn-for="Foo">
+          <p id="link1">{{ ReferrerPolicy["no-referrer"] }}</p>
+          <p id="link2">{{ ReferrerPolicy[""] }}</p>
+          <div data-dfn-for="Foo">
             <dfn>dashed-thing</dfn> <dfn>""</dfn>
-            {{ "dashed-thing" }} {{""}}
-          </p>
+          </div>
+          <p id="link3">{{ Foo["dashed-thing"] }} {{Foo[""]}}</p>
         </section>
       `;
-      const config = {
-        xref: ["service-workers", "css-layout-api", "xhr"],
-        localBiblio,
-      };
+      const config = { xref: ["referrer-policy"], localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
       const link1 = doc.getElementById("link1");
-      expect(link1.textContent).toBe(`"imports"`);
-      expect(link1.querySelector("a").textContent).toBe("imports");
+      expect(link1.textContent).toBe(`"no-referrer"`);
+      expect(link1.querySelector("a").textContent).toBe("no-referrer");
       expect(link1.querySelector("a").href).toBe(
-        expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
+        "https://www.w3.org/TR/referrer-policy/#dom-referrerpolicy-no-referrer"
       );
 
-      const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
-      expect(blockLink1.href).toBe(expectedLinks.get("ChildDisplayType.block"));
-      expect(blockLink2.href).toBe(expectedLinks.get("ChildDisplayType.block"));
+      const link2 = doc.getElementById("link2");
+      expect(link2.textContent).toBe(`""`);
+      expect(link2.querySelector("a").href).toBe(
+        "https://www.w3.org/TR/referrer-policy/#dom-referrerpolicy"
+      );
 
-      const [dashedThing, emptyString] = doc.querySelectorAll("#link4 code a");
+      const [dashedThing, qualifiedEmpty] = doc.querySelectorAll("#link3 a");
       expect(dashedThing.textContent).toBe("dashed-thing");
       expect(dashedThing.getAttribute("href")).toBe("#dom-foo-dashed-thing");
-      expect(emptyString.textContent).toBe("");
-      expect(emptyString.getAttribute("href")).toBe(
+      expect(qualifiedEmpty.textContent).toBe("");
+      expect(qualifiedEmpty.getAttribute("href")).toBe(
         "#dom-foo-the-empty-string"
       );
     });
