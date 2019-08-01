@@ -4,13 +4,13 @@
 import hyperHTML from "../../js/html-template";
 import { showInlineError } from "./utils";
 
+const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;
 const slotRegex = /^\[\[(\w+)\]\]$/;
 // matches: `value` or `[[value]]`
 // NOTE: [[value]] is actually a slot, but database has this as type="attribute"
 const attributeRegex = /^((?:\[\[)?(?:\w+)(?:\]\])?)$/;
-const enumRegex = /^(\w+)\["([\w ]+)"\]$/;
-const enumValueRegex = /\B"([^"]*)"\B/;
+const enumRegex = /^(\w+)\["([\w- ]*)"\]$/;
 // TODO: const splitRegex = /(?<=\]\]|\b)\./
 // https://github.com/w3c/respec/pull/1848/files#r225087385
 const methodSplitRegex = /\.?(\w+\(.*\)$)/;
@@ -38,9 +38,10 @@ function parseInlineIDL(str) {
       results.push({ type: "enum", identifier, enumValue });
       continue;
     }
-    if (enumValueRegex.test(value)) {
-      const [, identifier] = value.match(enumValueRegex);
-      results.push({ type: "enum-value", identifier });
+    // Exception - "NotAllowedError"
+    if (exceptionRegex.test(value)) {
+      const [, identifier] = value.match(exceptionRegex);
+      results.push({ type: "exception", identifier });
       continue;
     }
     // internal slot
@@ -131,19 +132,20 @@ function renderEnum(details) {
     data-xref-type="enum-value"
     data-link-for="${identifier}"
     data-xref-for="${identifier}"
+    data-lt="${!enumValue ? "the-empty-string" : null}"
     >${enumValue}</a>"`;
   return html;
 }
 
 /**
- * Enum value: "enum value"
+ * Exception value: "NotAllowedError"
+ * Only the WebIDL spec can define exceptions
  */
-function renderEnumValue(details) {
+function renderException(details) {
   const { identifier } = details;
-  const lt = identifier === "" ? "the-empty-string" : null;
   const html = hyperHTML`"<a
-    data-xref-type="enum-value"
-    data-lt="${lt}"
+    data-cite="WebIDL"
+    data-xref-type="exception"
     >${identifier}</a>"`;
   return html;
 }
@@ -180,8 +182,8 @@ export function idlStringToHtml(str) {
       case "enum":
         output.push(renderEnum(details));
         break;
-      case "enum-value":
-        output.push(renderEnumValue(details));
+      case "exception":
+        output.push(renderException(details));
         break;
       default:
         throw new Error("Unknown type.");
