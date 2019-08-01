@@ -147,6 +147,8 @@ module.exports = function(config) {
 
     browserNoActivityTimeout: 100000,
 
+    reportSlowerThan: 300,
+
     client: {
       args: ["--grep", config.grep || ""],
     },
