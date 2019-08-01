@@ -172,9 +172,11 @@ export function idlStringToHtml(str) {
   const output = [];
   for (const details of results) {
     switch (details.type) {
-      case "base":
-        output.push(renderBase(details));
+      case "base": {
+        const base = renderBase(details);
+        if (base) output.push(base);
         break;
+      }
       case "attribute":
         output.push(renderAttribute(details));
         break;
