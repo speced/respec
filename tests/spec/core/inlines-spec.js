@@ -1,11 +1,6 @@
 "use strict";
 
-import {
-  flushIframes,
-  makeRSDoc,
-  makeStandardOps,
-  xrefTestUrl,
-} from "../SpecHelper.js";
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
@@ -238,6 +233,13 @@ describe("Core - Inlines", () => {
         <p id="inlines">
           [= \`link\` element =] and [= some \`Coded\` thing =]
         </p>
+        <p id="multiline">
+        [=environment 
+            settings
+          object / 
+          responsible 
+          document =]
+        </p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
@@ -250,6 +252,9 @@ describe("Core - Inlines", () => {
     expect(someCodedThing.getAttribute("href")).toBe("#dfn-some-coded-thing");
     const codedThingCodeElem = someCodedThing.querySelector("code");
     expect(codedThingCodeElem.textContent).toBe("Coded");
+
+    const responsibleDocLink = doc.querySelector("#multiline a");
+    expect(responsibleDocLink.hash).toBe("#responsible-document");
   });
 
   it("proceseses `backticks` as code", async () => {
@@ -278,6 +283,32 @@ describe("Core - Inlines", () => {
 
     // no-match
     expect(doc.querySelector("#no-match code")).toBeNull();
+  });
+
+  it('processes inline {{"Exceptions"}}', async () => {
+    const body = `
+      <section>
+        <p id="test"> {{
+          "SyntaxError"
+        }}</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const syntaxErrorAnchor = doc.querySelector("#test a");
+    expect(syntaxErrorAnchor.href).toBe(
+      "https://heycam.github.io/webidl/#syntaxerror"
+    );
+  });
+
+  it("processes inline inline [^element^]s.", async () => {
+    const body = `
+      <section>
+        <p id="test">[^body^]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps({ xref: ["HTML"] }, body));
+    const bodyAnchor = doc.querySelector("#test a");
+    expect(bodyAnchor.hash).toBe("#the-body-element");
   });
 
   it("processes [= BikeShed style inline links =]", async () => {
@@ -317,7 +348,7 @@ describe("Core - Inlines", () => {
         </p>
       </section>
     `;
-    const config = { xref: { url: xrefTestUrl("inline-links") } };
+    const config = { xref: true };
     const doc = await makeRSDoc(makeStandardOps(config, body));
     const dfnId = doc.querySelector("#definitions dfn").id;
     const anchors = doc.querySelectorAll("#simple-links a");
@@ -350,5 +381,40 @@ describe("Core - Inlines", () => {
     expect(multiMapForEach.href).toBe(
       "https://infra.spec.whatwg.org/#map-iterate"
     );
+  });
+
+  it("processes {{ forContext/term }} IDL", async () => {
+    const body = `
+      <section>
+        <p id="link1">{{ Window.event }}</p>
+        <p id="link2">{{ Window/event }}</p>
+        <p id="link3">{{ EventTarget/addEventListener(type, callback) }}</p>
+        <p id="link4">{{
+          Window
+          /
+          event
+        }}</p>
+      </section>
+    `;
+    const config = { xref: ["DOM", "HTML"] };
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+
+    expect(doc.getElementById("link1").textContent).toBe("Window.event");
+    const [linkWindow, linkWindowEvent] = doc.querySelectorAll("#link1 a");
+    expect(linkWindow.hash).toBe("#window");
+    expect(linkWindowEvent.hash).toBe("#dom-window-event");
+
+    expect(doc.getElementById("link2").textContent).toBe("event");
+    expect(doc.querySelector("#link2 a").hash).toBe("#dom-window-event");
+
+    expect(doc.getElementById("link3").textContent).toBe(
+      "addEventListener(type, callback)"
+    );
+    expect(doc.querySelector("#link3 a").hash).toBe(
+      "#dom-eventtarget-addeventlistener"
+    );
+
+    expect(doc.getElementById("link4").textContent).toBe("event");
+    expect(doc.querySelector("#link4 a").hash).toBe("#dom-window-event");
   });
 });

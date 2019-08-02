@@ -24,21 +24,12 @@ describe("Core - UI", () => {
     expect(window.getComputedStyle(menu).display).toBe("none");
     doc.getElementById("respec-pill").click();
     // spin the event loop
-    await new Promise(resolve => {
-      setTimeout(() => {
-        expect(window.getComputedStyle(menu).display).toBe("block");
-        doc.body.click();
-        resolve();
-      }, 500);
-    });
-    // Allow time to fade in
-    await new Promise(resolve => {
-      setTimeout(() => {
-        expect(window.getComputedStyle(menu).display).toBe("none");
-        resolve();
-      }, 500);
-    });
-    // give it time to fade out
+    await new Promise(resolve => setTimeout(resolve));
+    expect(window.getComputedStyle(menu).display).toBe("block");
+    doc.body.click();
+    // spin the event loop
+    await new Promise(resolve => setTimeout(resolve));
+    expect(window.getComputedStyle(menu).display).toBe("none");
   });
 
   describe("ui/dfn-list", () => {
@@ -50,7 +41,7 @@ describe("Core - UI", () => {
       // open list and wait for loading
       const dfnListButton = doc.getElementById("respec-button-definitions");
       dfnListButton.click();
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve));
 
       const dfns = doc.querySelectorAll("ul.respec-dfn-list li a");
       expect(dfns.length).toBe(2);

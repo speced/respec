@@ -956,6 +956,13 @@ describe("W3C — Headers", () => {
       expect(contains(sotd, "a", "disclosures").length).toBe(2);
       expect(contains(sotd, "a", "WGLIST").length).toBe(1);
     });
+
+    it("does not emit working group link without conf.wg", async () => {
+      const ops = makeStandardOps();
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      expect(sotd.textContent).not.toContain("This document was published by");
+    });
   });
 
   describe("perEnd", () => {
