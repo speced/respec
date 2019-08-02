@@ -11,8 +11,8 @@
  * @typedef {Map<string, { elems: HTMLElement[], results: SearchResultEntry[], query: RequestEntry }>} ErrorCollection
  * @typedef {{ ambiguous: ErrorCollection, notFound: ErrorCollection }} Errors
  */
+import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import {
-  IDBKeyVal,
   createResourceHint,
   flatten,
   nonNormativeSelector,
@@ -20,7 +20,6 @@ import {
   showInlineError,
   showInlineWarning,
 } from "./utils.js";
-import { openDB } from "idb";
 import { pub } from "./pubsubhub.js";
 
 const profiles = {
@@ -28,7 +27,6 @@ const profiles = {
 };
 
 const API_URL = "https://respec.org/xref";
-const CACHE_MAX_AGE = 86400000; // 24 hours
 
 if (
   !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
@@ -204,48 +202,18 @@ async function getData(queryKeys, apiUrl) {
     return uniqueIds.has(key.id) ? false : uniqueIds.add(key.id) && true;
   });
 
-  let cache = null;
-  let resultsFromCache = new Map();
-  try {
-    const idb = await openDB("xref", 1, {
-      upgrade(db) {
-        db.createObjectStore("xrefs");
-      },
-    });
-    cache = new IDBKeyVal(idb, "xrefs");
-    resultsFromCache = await resolveFromCache(uniqueQueryKeys, cache);
-  } catch (error) {
-    console.error(error);
-  }
+  const resultsFromCache = await resolveXrefCache(uniqueQueryKeys);
 
   const termsToLook = uniqueQueryKeys.filter(
     key => !resultsFromCache.get(key.id)
   );
   const fetchedResults = await fetchFromNetwork(termsToLook, apiUrl);
-  if (fetchedResults.size && cache) {
+  if (fetchedResults.size) {
     // add data to cache
-    await cache.addMany(fetchedResults);
-    await cache.set("__CACHE_TIME__", Date.now());
+    await cacheXrefData(fetchedResults);
   }
 
   return new Map([...resultsFromCache, ...fetchedResults]);
-}
-
-/**
- * @param {RequestEntry[]} keys
- * @param {IDBKeyVal} cache
- * @returns {Promise<Map<string, SearchResultEntry[]>>}
- */
-async function resolveFromCache(keys, cache) {
-  const cacheTime = await cache.get("__CACHE_TIME__");
-  const bustCache = cacheTime && Date.now() - cacheTime > CACHE_MAX_AGE;
-  if (bustCache) {
-    await cache.clear();
-    return new Map();
-  }
-
-  const cachedData = await cache.getMany(keys.map(key => key.id));
-  return new Map(cachedData);
 }
 
 /**
