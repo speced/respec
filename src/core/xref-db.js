@@ -20,7 +20,7 @@ async function importIdb() {
   }
 }
 
-async function getIDBKeyValForXref() {
+async function getIdbCache() {
   const { openDB } = await importIdb();
   const idb = await openDB("xref", 1, {
     upgrade(db) {
@@ -36,7 +36,7 @@ async function getIDBKeyValForXref() {
  */
 export async function resolveXrefCache(uniqueQueryKeys) {
   try {
-    const cache = await getIDBKeyValForXref();
+    const cache = await getIdbCache();
     return await resolveFromCache(uniqueQueryKeys, cache);
   } catch (err) {
     console.error(err);
@@ -72,13 +72,13 @@ function isBustedCache(cachedTime) {
  * @param {Map<string, SearchResultEntry[]>} data
  */
 export async function cacheXrefData(data) {
-  const cache = await getIDBKeyValForXref();
+  const cache = await getIdbCache();
   // add data to cache
   await cache.addMany(data);
   await cache.set("__CACHE_TIME__", Date.now());
 }
 
 export async function clearXrefData() {
-  const cache = await getIDBKeyValForXref();
+  const cache = await getIdbCache();
   await cache.clear();
 }
