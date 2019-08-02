@@ -72,13 +72,21 @@ function isBustedCache(cachedTime) {
  * @param {Map<string, SearchResultEntry[]>} data
  */
 export async function cacheXrefData(data) {
-  const cache = await getIdbCache();
-  // add data to cache
-  await cache.addMany(data);
-  await cache.set("__CACHE_TIME__", Date.now());
+  try {
+    const cache = await getIdbCache();
+    // add data to cache
+    await cache.addMany(data);
+    await cache.set("__CACHE_TIME__", Date.now());
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 export async function clearXrefData() {
-  const cache = await getIdbCache();
-  await cache.clear();
+  try {
+    const cache = await getIdbCache();
+    await cache.clear();
+  } catch (e) {
+    console.error(e);
+  }
 }
