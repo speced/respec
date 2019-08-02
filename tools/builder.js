@@ -141,6 +141,15 @@ const Builder = {
         alias: { text: "raw-loader" },
       },
       devtool: "source-map",
+      plugins: [
+        // prevents generating 1.respec-w3c-common.js for dynamic imports
+        new webpack.optimize.LimitChunkCountPlugin({
+          maxChunks: 1,
+        }),
+        new webpack.IgnorePlugin({
+          resourceRegExp: /idb\/build/,
+        }),
+      ],
     };
     const buildDir = path.resolve(__dirname, "../builds/");
     const workerDir = path.resolve(__dirname, "../worker/");

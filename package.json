@@ -27,6 +27,7 @@
     "@types/clipboard": "^2.0.1",
     "@types/pluralize": "0.0.29",
     "babel-eslint": "^10.0.2",
+    "babel-plugin-dynamic-import-amd": "github:holyzfy/babel-plugin-dynamic-import-amd",
     "chai": "^4.2.0",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
     "eslint": "^6.1.0",
