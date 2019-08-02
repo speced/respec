@@ -8,6 +8,7 @@
     "worker": true
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  // TODO: Remove this when https://github.com/eslint/eslint/issues/11803 gets a fix
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
