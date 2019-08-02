@@ -35,8 +35,13 @@ async function getIDBKeyValForXref() {
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
 export async function resolveXrefCache(uniqueQueryKeys) {
-  const cache = await getIDBKeyValForXref();
-  return await resolveFromCache(uniqueQueryKeys, cache);
+  try {
+    const cache = await getIDBKeyValForXref();
+    return await resolveFromCache(uniqueQueryKeys, cache);
+  } catch (err) {
+    console.error(err);
+    return new Map();
+  }
 }
 
 /**
