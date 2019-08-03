@@ -45,8 +45,7 @@ export const biblioDB = {
     if (await this.isAlias(id)) {
       id = await this.resolveAlias(id);
     }
-    const result = this.get("reference", id);
-    return await result;
+    return await this.get("reference", id);
   },
   /**
    * Checks if the database has an id for a given type.
