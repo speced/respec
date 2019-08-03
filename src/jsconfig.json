@@ -2,6 +2,8 @@
   "compilerOptions": {
     "target": "es2019",
     "moduleResolution": "node",
-    "noImplicitThis": true
+    "noImplicitThis": true,
+    // TODO: use es2020 after https://github.com/microsoft/TypeScript/issues/32679
+    "module": "esnext"
   }
 }
