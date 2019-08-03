@@ -142,12 +142,13 @@ const Builder = {
       },
       devtool: "source-map",
       plugins: [
-        // prevents generating empty 1.respec-w3c-common.js
+        // prevents generating 1.respec-w3c-common.js for dynamic imports
         new webpack.optimize.LimitChunkCountPlugin({
           maxChunks: 1,
         }),
         new webpack.IgnorePlugin({
-          resourceRegExp: /^\.\/asset-loader.js$|^jsdom$|^viperhtml$/,
+          // TODO: Remove package names when browsers support import-maps
+          resourceRegExp: /^\.\/asset-loader.js$|^jsdom$|^viperhtml$|idb\/build/,
         }),
       ],
     };
