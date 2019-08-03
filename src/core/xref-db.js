@@ -6,9 +6,19 @@ import { importIdb } from "./idb.js";
  * @typedef {import('core/xref').RequestEntry} RequestEntry
  * @typedef {import('core/xref').Response} Response
  * @typedef {import('core/xref').SearchResultEntry} SearchResultEntry
+ *
+ * @typedef {object} TemporaryXrefCache
+ * @property {number} cachedTime
+ * @property {SearchResultEntry[]} data
  */
 
 const CACHE_MAX_AGE = 86400000; // 24 hours
+/**
+ * @type {Map<string, TemporaryXrefCache>}
+ */
+const xrefMap = new Map();
+
+const hasIndexedDB = typeof indexedDB !== "undefined";
 
 async function getIdbCache() {
   const { openDB } = await importIdb();
@@ -25,6 +35,9 @@ async function getIdbCache() {
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
 export async function resolveXrefCache(uniqueQueryKeys) {
+  if (!hasIndexedDB) {
+    return resolveFromMap(uniqueQueryKeys);
+  }
   try {
     const cache = await getIdbCache();
     return await resolveFromCache(uniqueQueryKeys, cache);
@@ -32,6 +45,23 @@ export async function resolveXrefCache(uniqueQueryKeys) {
     console.error(err);
     return new Map();
   }
+}
+
+/**
+ * @param {RequestEntry[]} uniqueQueryKeys
+ */
+function resolveFromMap(uniqueQueryKeys) {
+  /** @type {[string, SearchResultEntry[]][]} */
+  const entries = [];
+  for (const uniqueQueryKey of uniqueQueryKeys) {
+    if (xrefMap.has(uniqueQueryKey.id)) {
+      const cached = xrefMap.get(uniqueQueryKey.id);
+      if (!isBustedCache(cached.cachedTime)) {
+        entries.push([uniqueQueryKey.id, cached.data]);
+      }
+    }
+  }
+  return new Map(entries);
 }
 
 /**
@@ -62,6 +92,16 @@ function isBustedCache(cachedTime) {
  * @param {Map<string, SearchResultEntry[]>} data
  */
 export async function cacheXrefData(data) {
+  if (!hasIndexedDB) {
+    const dateNow = Date.now();
+    for (const [key, value] of data) {
+      xrefMap.set(key, {
+        cachedTime: dateNow,
+        data: value,
+      });
+    }
+    return;
+  }
   try {
     const cache = await getIdbCache();
     // add data to cache
@@ -73,6 +113,10 @@ export async function cacheXrefData(data) {
 }
 
 export async function clearXrefData() {
+  if (!hasIndexedDB) {
+    xrefMap.clear();
+    return;
+  }
   try {
     const cache = await getIdbCache();
     await cache.clear();
