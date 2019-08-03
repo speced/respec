@@ -1,5 +1,6 @@
 // @ts-check
 import { IDBKeyVal } from "./utils.js";
+import { importIdb } from "./idb.js";
 
 /**
  * @typedef {import('core/xref').RequestEntry} RequestEntry
@@ -8,17 +9,6 @@ import { IDBKeyVal } from "./utils.js";
  */
 
 const CACHE_MAX_AGE = 86400000; // 24 hours
-
-/**
- * Temporary workaround until browsers get import-maps
- */
-async function importIdb() {
-  try {
-    return await import("idb");
-  } catch {
-    return await import("../../node_modules/idb/build/esm/index.js");
-  }
-}
 
 async function getIdbCache() {
   const { openDB } = await importIdb();

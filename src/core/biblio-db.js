@@ -7,24 +7,28 @@
  * It's a standalone module that can be imported into other modules.
  *
  */
-/* globals IDBKeyRange */
 import { flatten } from "./utils.js";
-import { openDB } from "../../node_modules/idb/build/esm/index.js";
+import { importIdb } from "./idb.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
 
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
 /* Database initialization tracker */
-const readyPromise = openDB("respec-biblio2", 12, {
-  upgrade(db) {
-    Array.from(db.objectStoreNames).map(storeName =>
-      db.deleteObjectStore(storeName)
-    );
-    const store = db.createObjectStore("alias", { keyPath: "id" });
-    store.createIndex("aliasOf", "aliasOf", { unique: false });
-    db.createObjectStore("reference", { keyPath: "id" });
-  },
-});
+const readyPromise = openIdb();
+
+async function openIdb() {
+  const { openDB } = await importIdb();
+  return await openDB("respec-biblio2", 12, {
+    upgrade(db) {
+      Array.from(db.objectStoreNames).map(storeName =>
+        db.deleteObjectStore(storeName)
+      );
+      const store = db.createObjectStore("alias", { keyPath: "id" });
+      store.createIndex("aliasOf", "aliasOf", { unique: false });
+      db.createObjectStore("reference", { keyPath: "id" });
+    },
+  });
+}
 
 export const biblioDB = {
   get ready() {
