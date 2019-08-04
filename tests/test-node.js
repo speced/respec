@@ -42,8 +42,10 @@ global.beforeEach = jasmine.env.beforeEach;
   await import("./spec/core/webidl-spec.js");
   await import("./spec/core/xref-spec.js");
   await import("./spec/w3c/abstract-spec.js");
+  await import("./spec/w3c/conformance-spec");
   await import("./spec/w3c/defaults-spec.js");
   await import("./spec/w3c/headers-spec.js");
+  await import("./spec/w3c/style-spec.js");
   // for (const testSet of readdirSync(`${__dirname}/spec/`)) {
   //   await importTestSets(testSet);
   // }

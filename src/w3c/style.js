@@ -13,7 +13,7 @@ const headElements =
 
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
-  if (location.hash) {
+  if (doc.location.hash) {
     script.addEventListener(
       "load",
       () => {

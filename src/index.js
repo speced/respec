@@ -69,6 +69,8 @@ export async function preprocess(doc, conf) {
     }
   }
 
+  respecDoc.hub.pub("end-all", respecDoc.configuration);
+
   if (!conf.noCleanup) {
     cleanup(respecDoc.document, respecDoc.hub);
   }
