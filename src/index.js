@@ -1,6 +1,7 @@
 // @ts-check
 import { cleanup } from "./core/exporter.js";
 import { createRespecDocument } from "./respec-document.js";
+import performance from "../js/performance.js";
 import { setDocumentLocale } from "./core/l10n.js";
 
 /**
@@ -59,7 +60,13 @@ export async function preprocess(doc, conf) {
 
   for (const module of modules) {
     const loaded = await module;
+    const start = performance.now();
     await loaded.default(respecDoc);
+    const end = performance.now();
+    const duration = end - start;
+    if (duration > 200) {
+      console.warn(`Module ${loaded.name} took ${duration} ms`);
+    }
   }
 
   if (!conf.noCleanup) {

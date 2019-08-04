@@ -17,6 +17,8 @@ js/*
 !js/html-template.d.ts
 !js/crypto.js
 !js/crypto.d.ts
+!js/performance.js
+!js/performance.d.ts
 !js/respec-version.js
 !js/respec-version.d.ts
 .vscode/

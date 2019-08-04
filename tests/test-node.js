@@ -39,6 +39,7 @@ global.beforeEach = jasmine.env.beforeEach;
   await import("./spec/core/id-headers-spec.js");
   await import("./spec/core/informative-spec.js");
   await import("./spec/core/structure-spec.js");
+  await import("./spec/core/webidl-spec.js");
   await import("./spec/core/xref-spec.js");
   await import("./spec/w3c/abstract-spec.js");
   await import("./spec/w3c/defaults-spec.js");

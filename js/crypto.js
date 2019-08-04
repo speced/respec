@@ -1,4 +1,4 @@
-// A module to parse HTML into DocumentFragment both on browsers and Node.js
+// A module to expose SHA-1 digest feature both on browsers and Node.js
 // TODO: migrate to ES module when top-level await arrives
 (function(factory) {
   if (typeof define === "function" && define.amd) {

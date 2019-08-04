@@ -11,9 +11,6 @@ import hyperHTML from "../../js/html-template.js";
 
 export const name = "core/webidl";
 
-const operationNames = {};
-const idlPartials = {};
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/webidl.css")).default;
@@ -23,14 +20,19 @@ async function loadStyle() {
   }
 }
 
-// Takes the result of WebIDL2.parse(), an array of definitions.
-function makeMarkup(parse, document, definitionMap) {
+/**
+ * Takes the result of WebIDL2.parse(), an array of definitions.
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+function makeMarkup(parse, respecDoc) {
   const templates = {
     wrap(items) {
       return items
         .reduce(flatten, [])
         .filter(x => x !== "")
-        .map(x => (typeof x === "string" ? document.createTextNode(x) : x));
+        .map(x =>
+          typeof x === "string" ? respecDoc.document.createTextNode(x) : x
+        );
     },
     trivia(t) {
       if (!t.trim()) {
@@ -83,7 +85,7 @@ function makeMarkup(parse, document, definitionMap) {
       if (data.idlType && data.idlType.type === "argument-type") {
         return hyperHTML`<span class="idlParamName">${escaped}</span>`;
       }
-      const idlLink = defineIdlName(escaped, data, parent, definitionMap);
+      const idlLink = defineIdlName(escaped, data, parent, respecDoc);
       if (data.type !== "enum-value") {
         const className = parent ? "idlName" : "idlID";
         idlLink.classList.add(className);
@@ -104,7 +106,10 @@ function makeMarkup(parse, document, definitionMap) {
           return hyperHTML`<span class='${className}'>${contents}</span>`;
       }
       const parentName = parent ? parent.name : "";
-      const { name, idlId } = getNameAndId(data, parentName);
+      const { name, idlId } = respecDoc.idlNameMap.getNameAndId(
+        data,
+        parentName
+      );
       return hyperHTML`<span class='${className}' id='${idlId}' data-idl data-title='${name}'>${contents}</span>`;
     },
     extendedAttribute(contents) {
@@ -120,11 +125,12 @@ function makeMarkup(parse, document, definitionMap) {
 
 /**
  * Returns a link to existing <dfn> or creates one if doesn’t exists.
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
  */
-function defineIdlName(escaped, data, parent, definitionMap) {
+function defineIdlName(escaped, data, parent, respecDoc) {
   const parentName = parent ? parent.name : "";
-  const { name } = getNameAndId(data, parentName);
-  const dfn = definitionMap.findDfn(data, name, {
+  const { name } = respecDoc.idlNameMap.getNameAndId(data, parentName);
+  const dfn = respecDoc.definitionMap.findDfn(data, name, {
     parent: parentName,
   });
   const linkType = getDfnType(data.type);
@@ -209,69 +215,76 @@ function getIdlDefinitionClassName(defn) {
   return `idl${defn.type[0].toUpperCase()}${defn.type.slice(1)}`;
 }
 
-const nameResolverMap = new WeakMap();
-function getNameAndId(defn, parent = "") {
-  if (nameResolverMap.has(defn)) {
-    return nameResolverMap.get(defn);
+export class IDLNameMap extends WeakMap {
+  constructor() {
+    super();
+    this.operationNames = {};
+    this.idlPartials = {};
   }
-  const result = resolveNameAndId(defn, parent);
-  nameResolverMap.set(defn, result);
-  return result;
-}
 
-function resolveNameAndId(defn, parent) {
-  let name = getDefnName(defn);
-  let idlId = getIdlId(name, parent);
-  switch (defn.type) {
-    // Top-level entities with linkable members.
-    case "callback interface":
-    case "dictionary":
-    case "interface":
-    case "interface mixin": {
-      idlId += resolvePartial(defn);
-      break;
+  getNameAndId(defn, parent = "") {
+    if (this.has(defn)) {
+      return this.get(defn);
     }
-    case "operation": {
-      const overload = resolveOverload(name, parent);
-      if (overload) {
-        name += overload;
-      } else if (defn.arguments.length) {
-        idlId += defn.arguments
-          .map(arg => `-${arg.name.toLowerCase()}`)
-          .join("");
+    const result = this.resolveNameAndId(defn, parent);
+    this.set(defn, result);
+    return result;
+  }
+
+  resolveNameAndId(defn, parent) {
+    let name = getDefnName(defn);
+    let idlId = getIdlId(name, parent);
+    switch (defn.type) {
+      // Top-level entities with linkable members.
+      case "callback interface":
+      case "dictionary":
+      case "interface":
+      case "interface mixin": {
+        idlId += this.resolvePartial(defn);
+        break;
       }
-      break;
+      case "operation": {
+        const overload = this.resolveOverload(name, parent);
+        if (overload) {
+          name += overload;
+        } else if (defn.arguments.length) {
+          idlId += defn.arguments
+            .map(arg => `-${arg.name.toLowerCase()}`)
+            .join("");
+        }
+        break;
+      }
     }
+    return { name, idlId };
   }
-  return { name, idlId };
-}
 
-function resolvePartial(defn) {
-  if (!defn.partial) {
-    return "";
+  resolvePartial(defn) {
+    if (!defn.partial) {
+      return "";
+    }
+    if (!this.idlPartials[defn.name]) {
+      this.idlPartials[defn.name] = 0;
+    }
+    this.idlPartials[defn.name] += 1;
+    return `-partial-${this.idlPartials[defn.name]}`;
   }
-  if (!idlPartials[defn.name]) {
-    idlPartials[defn.name] = 0;
-  }
-  idlPartials[defn.name] += 1;
-  return `-partial-${idlPartials[defn.name]}`;
-}
 
-function resolveOverload(name, parentName) {
-  const qualifiedName = `${parentName}.${name}`;
-  const fullyQualifiedName = `${qualifiedName}()`;
-  let overload;
-  if (!operationNames[fullyQualifiedName]) {
-    operationNames[fullyQualifiedName] = 0;
+  resolveOverload(name, parentName) {
+    const qualifiedName = `${parentName}.${name}`;
+    const fullyQualifiedName = `${qualifiedName}()`;
+    let overload;
+    if (!this.operationNames[fullyQualifiedName]) {
+      this.operationNames[fullyQualifiedName] = 0;
+    }
+    if (!this.operationNames[qualifiedName]) {
+      this.operationNames[qualifiedName] = 0;
+    } else {
+      overload = `!overload-${this.operationNames[qualifiedName]}`;
+    }
+    this.operationNames[fullyQualifiedName] += 1;
+    this.operationNames[qualifiedName] += 1;
+    return overload || "";
   }
-  if (!operationNames[qualifiedName]) {
-    operationNames[qualifiedName] = 0;
-  } else {
-    overload = `!overload-${operationNames[qualifiedName]}`;
-  }
-  operationNames[fullyQualifiedName] += 1;
-  operationNames[qualifiedName] += 1;
-  return overload || "";
 }
 
 function getIdlId(name, parentName) {
@@ -294,10 +307,10 @@ function getDefnName(defn) {
 
 /**
  * @param {Element} idlElement
- * @param {import("./dfn-map.js").DefinitionMap} definitionMap
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
  * @param {number} index
  */
-function renderWebIDL(idlElement, definitionMap, index) {
+function renderWebIDL(idlElement, respecDoc, index) {
   let parse;
   try {
     parse = webidl2.parse(idlElement.textContent, {
@@ -314,7 +327,7 @@ function renderWebIDL(idlElement, definitionMap, index) {
     return [];
   }
   idlElement.classList.add("def", "idl");
-  const html = makeMarkup(parse, idlElement.ownerDocument, definitionMap);
+  const html = makeMarkup(parse, respecDoc);
   idlElement.textContent = "";
   idlElement.append(...html);
   idlElement.querySelectorAll("[data-idl]").forEach(elem => {
@@ -324,7 +337,7 @@ function renderWebIDL(idlElement, definitionMap, index) {
     if (parent) {
       elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
     }
-    definitionMap.registerDefinition(elem, [title]);
+    respecDoc.definitionMap.registerDefinition(elem, [title]);
   });
   // cross reference
   const closestCite = idlElement.closest("[data-cite], body");
@@ -341,7 +354,8 @@ function renderWebIDL(idlElement, definitionMap, index) {
 /**
  * @param {import("../respec-document").RespecDocument} respecDoc
  */
-export default async function({ document, definitionMap }) {
+export default async function(respecDoc) {
+  const { document } = respecDoc;
   const idls = document.querySelectorAll("pre.idl");
   if (!idls.length) {
     return;
@@ -354,9 +368,7 @@ export default async function({ document, definitionMap }) {
       link.before(style);
     }
   }
-  const astArray = [...idls].map((idl, i) =>
-    renderWebIDL(idl, definitionMap, i)
-  );
+  const astArray = [...idls].map((idl, i) => renderWebIDL(idl, respecDoc, i));
 
   const validations = webidl2.validate(astArray);
   for (const validation of validations) {

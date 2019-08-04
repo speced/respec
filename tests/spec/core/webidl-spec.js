@@ -1006,7 +1006,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
   });
   it("puts code elements around both IDL definitions and links", () => {
     const things = [
-      ...document.querySelectorAll("#coded-things > a, #coded-things > dfn"),
+      ...doc.querySelectorAll("#coded-things > a, #coded-things > dfn"),
     ];
     expect(things.every(elem => elem.parentElement.localName === "code")).toBe(
       true

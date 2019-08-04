@@ -1,5 +1,6 @@
 import { Biblio } from "./core/biblio.js";
 import { DefinitionMap } from "./core/dfn-map.js";
+import { IDLNameMap } from "./core/webidl.js";
 import { PubSubHub } from "./core/pubsubhub.js";
 
 // @ts-check
@@ -49,6 +50,8 @@ export async function createRespecDocument(doc, conf) {
     definitionMap: new DefinitionMap(),
 
     biblio: new Biblio(),
+
+    idlNameMap: new IDLNameMap(),
 
     get lang() {
       return document.documentElement.lang;
