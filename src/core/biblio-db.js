@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/biblio-db
  *
@@ -6,6 +7,13 @@
  *
  * It's a standalone module that can be imported into other modules.
  *
+ * @typedef {object} BiblioEntry
+ * @property {string} id
+ * @property {string} title
+ *
+ * @typedef {object} BiblioAliasEntry
+ * @property {string} id
+ * @property {string} aliasOf
  */
 import { flatten } from "./utils.js";
 import { importIdb } from "./idb.js";
@@ -15,9 +23,9 @@ export const name = "core/biblio-db";
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
 const hasIndexedDB = typeof indexedDB !== "undefined";
 const dbMaps = {
-  /** @type {Map<string, *>} */
+  /** @type {Map<string, BiblioEntry>} */
   reference: new Map(),
-  /** @type {Map<string, string>} */
+  /** @type {Map<string, BiblioAliasEntry>} */
   alias: new Map(),
 };
 
@@ -73,7 +81,7 @@ export const biblioDB = {
       throw new TypeError("id is required");
     }
     if (!hasIndexedDB) {
-      return dbMaps.reference.has(id);
+      return dbMaps[type].has(id);
     }
     const db = await this.ready;
     const objectStore = db.transaction([type], "readonly").objectStore(type);
@@ -113,7 +121,8 @@ export const biblioDB = {
       throw new TypeError("id is required");
     }
     if (!hasIndexedDB) {
-      return dbMaps.alias.get(id);
+      const result = dbMaps.alias.get(id);
+      return result ? result.aliasOf : null;
     }
     const db = await this.ready;
 
@@ -128,7 +137,7 @@ export const biblioDB = {
    * Get a reference or alias out of the database.
    *
    * @param {String} type The type as per ALLOWED_TYPES.
-   * @param {[type]} id The id for what to look up.
+   * @param {string} id The id for what to look up.
    * @return {Promise<Object?>} Resolves with the retrieved object, or null.
    */
   async get(type, id) {
@@ -139,7 +148,7 @@ export const biblioDB = {
       throw new TypeError("id is required");
     }
     if (!hasIndexedDB) {
-      return dbMaps.reference.get(id);
+      return dbMaps[type].get(id) || null;
     }
     const db = await this.ready;
     const objectStore = db.transaction([type], "readonly").objectStore(type);
@@ -181,7 +190,7 @@ export const biblioDB = {
         }
       });
     const promisesToAdd = Object.keys(aliasesAndRefs)
-      .map(type => {
+      .map((/** @type {keyof typeof dbMaps} */ type) => {
         return Array.from(aliasesAndRefs[type]).map(details =>
           this.add(type, details)
         );
@@ -192,8 +201,8 @@ export const biblioDB = {
   /**
    * Adds a reference or alias to the database.
    *
-   * @param {keyof dbMaps} type The type as per ALLOWED_TYPES.
-   * @param {String} details The object to store.
+   * @param {keyof typeof dbMaps} type The type as per ALLOWED_TYPES.
+   * @param {object} details The object to store.
    */
   async add(type, details) {
     if (!ALLOWED_TYPES.has(type)) {

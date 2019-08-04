@@ -44,7 +44,11 @@ describe("Core - biblioDB", () => {
   describe("ready getter", () => {
     it("resolves with a IDB database", async () => {
       const db = await biblioDB.ready;
-      expect(db instanceof window.IDBDatabase).toBe(true);
+      if (typeof indexedDB !== "undefined") {
+        expect(db instanceof window.IDBDatabase).toBe(true);
+      } else {
+        expect(db).toBeUndefined();
+      }
     });
   });
 
