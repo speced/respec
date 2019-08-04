@@ -3,7 +3,7 @@
 
 import hyperHTML from "hyperhtml";
 import { showInlineError } from "./utils";
-const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}} {{boolean}}
+const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;
 const slotRegex = /^\[\[(\w+)\]\]$/;
