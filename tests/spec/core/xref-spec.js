@@ -799,6 +799,37 @@ describe("Core — xref", () => {
       );
     });
 
+    it("links idl primitives that have spaces", async () => {
+      const body = `
+      <section id="test">
+        {{
+          unsigned
+          long
+          long
+        }}
+        {{  unrestricted   float
+        }}
+        {{double}}
+      </section>
+      `;
+      const config = { xref: true, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      const [uLongLong, unrestrictedFloat, double] = doc.querySelectorAll(
+        "#test a"
+      );
+
+      expect(uLongLong.textContent).toBe("unsigned long long");
+      expect(uLongLong.hash).toBe("#idl-unsigned-long-long");
+
+      expect(unrestrictedFloat.textContent).toBe("unrestricted float");
+      expect(unrestrictedFloat.hash).toBe("#idl-unrestricted-float");
+
+      expect(double.textContent).toBe("double");
+      expect(double.hash).toBe("#idl-double");
+    });
+
     it("links local definitions first", async () => {
       const body = `
         <section data-dfn-for="PaymentAddress" data-link-for="PaymentAddress">

@@ -3,7 +3,7 @@
 
 import hyperHTML from "hyperhtml";
 import { showInlineError } from "./utils";
-
+const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}} {{boolean}}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;
 const slotRegex = /^\[\[(\w+)\]\]$/;
@@ -56,6 +56,10 @@ function parseInlineIDL(str) {
     if (attributeRegex.test(value) && tokens.length) {
       const [, identifier] = value.match(attributeRegex);
       results.push({ type: "attribute", identifier, renderParent });
+      continue;
+    }
+    if (idlPrimitiveRegex.test(value)) {
+      results.push({ type: "idl-primitive", identifier: value, renderParent });
       continue;
     }
     // base, always final token
@@ -155,6 +159,19 @@ function renderException(details) {
 }
 
 /**
+ * Interface types: {{ unrestricted double }} {{long long}}
+ * Only the WebIDL spec defines these types.
+ */
+function renderIdlPrimitiveType(details) {
+  const { identifier } = details;
+  const html = hyperHTML`<a
+    data-cite="WebIDL"
+    data-xref-type="interface"
+    >${identifier}</a>`;
+  return html;
+}
+
+/**
  * Generates HTML by parsing an IDL string
  * @param {String} str IDL string
  * @return {Node} html output
@@ -191,6 +208,9 @@ export function idlStringToHtml(str) {
         break;
       case "exception":
         output.push(renderException(details));
+        break;
+      case "idl-primitive":
+        output.push(renderIdlPrimitiveType(details));
         break;
       default:
         throw new Error("Unknown type.");
