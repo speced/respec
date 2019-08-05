@@ -1,4 +1,5 @@
 import html from "hyperhtml";
+import { humanDate, showInlineError } from "../../core/utils";
 
 export default (items = []) => {
   return items.map(getItem);
@@ -85,6 +86,27 @@ export default (items = []) => {
         contents.push(document.createTextNode(", "), result);
       }
     }
+    if (p.retiredDate) {
+      const retiredDate = new Date(p.retiredDate);
+      const isValidDate = retiredDate.toString() !== "Invalid Date";
+      const result = document.createElement("time");
+      result.textContent = isValidDate
+        ? humanDate(retiredDate)
+        : "Invalid Date"; // todo: Localise invalid date
+      if (!isValidDate) {
+        showInlineError(
+          result,
+          "The date is invalid. The expected format is YYYY-MM-DD.",
+          "Invalid date"
+        );
+      }
+      contents.push(
+        html`
+          - Until ${[result]}
+        `
+      );
+    }
+
     html.bind(span)`${contents}`;
     dd.appendChild(span);
     return dd;

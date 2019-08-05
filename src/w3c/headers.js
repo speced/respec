@@ -395,18 +395,22 @@ export function run(conf) {
       }
     }
   };
+  if (!conf.formerEditors) conf.formerEditors = [];
   if (conf.editors) {
     conf.editors.forEach(peopCheck);
+    conf.formerEditors = conf.editors.reduce((collector, person) => {
+      if (person.retiredDate) collector.push(person);
+      return collector;
+    }, conf.formerEditors);
   }
-  if (conf.formerEditors) {
+  if (conf.formerEditors.length) {
     conf.formerEditors.forEach(peopCheck);
   }
   if (conf.authors) {
     conf.authors.forEach(peopCheck);
   }
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
-  conf.multipleFormerEditors =
-    Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
+  conf.multipleFormerEditors = conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
   (conf.alternateFormats || []).forEach(it => {
     if (!it.uri || !it.label) {
