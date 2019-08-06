@@ -418,7 +418,7 @@ describe("Core - Inlines", () => {
     expect(doc.getElementById("link4").textContent).toBe("event");
     expect(doc.querySelector("#link4 a").hash).toBe("#dom-window-event");
 
-    expect(doc.getElementById("link5 a").textContent).toBe("no-referrer");
+    expect(doc.querySelector("#link5 a").textContent).toBe("no-referrer");
     expect(doc.querySelector("#link5 a").hash).toBe(
       "#dom-referrerpolicy-no-referrer"
     );
