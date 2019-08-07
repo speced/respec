@@ -41,9 +41,14 @@ function parseInlineIDL(str) {
       continue;
     }
     // Exception - "NotAllowedError"
+    // Or alternate enum syntax: {{ EnumContainer / "some enum value" }}
     if (exceptionRegex.test(value)) {
       const [, identifier] = value.match(exceptionRegex);
-      results.push({ type: "exception", identifier });
+      if (renderParent) {
+        results.push({ type: "exception", identifier });
+      } else {
+        results.push({ type: "enum", enumValue: identifier, renderParent });
+      }
       continue;
     }
     // internal slot
@@ -132,14 +137,17 @@ function renderMethod(details) {
 }
 
 /**
- * Enum: Identifier["enum value"]
+ * Enum:
+ * Identifier["enum value"]
+ * Identifer / "enum value"
  */
 function renderEnum(details) {
-  const { identifier, enumValue } = details;
+  const { identifier, enumValue, parent } = details;
+  const forContext = parent ? parent.identifier : identifier;
   const html = hyperHTML`"<a
     data-xref-type="enum-value"
-    data-link-for="${identifier}"
-    data-xref-for="${identifier}"
+    data-link-for="${forContext}"
+    data-xref-for="${forContext}"
     data-lt="${!enumValue ? "the-empty-string" : null}"
     >${enumValue}</a>"`;
   return html;
