@@ -68,6 +68,89 @@ describe("W3C — Headers", () => {
 
   describe("editors", () => {
     const findEditor = findContent("Editor:");
+    describe("untilDate", () => {
+      const findFormerEditor = findContent("Former Editor:");
+      const findFormerEditors = findContent("Former Editors:");
+      fit("relocates single editor with retiredDate member to single formerEditor", async () => {
+        const ops = makeStandardOps();
+        const newProps = {
+          specStatus: "REC",
+          editors: [
+            {
+              name: "NAME",
+              retiredDate: "2020-03-01",
+            },
+          ],
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+        debugger;
+        expect(contains(doc, "dt", "Former editor:").length).toBe(1);
+      });
+      it("relocates single editor with retiredDate member to multiple formerEditors", async () => {
+        const ops = makeStandardOps();
+        const newProps = {
+          specStatus: "REC",
+          editors: [
+            {
+              name: "FORMER EDITOR 2",
+              retiredDate: "2020-03-01",
+            },
+          ],
+          formerEditors: [
+            {
+              name: "FORMER EDITOR 1",
+            },
+          ],
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+      });
+      it("relocates multiple editors with retiredDate member to multiple formerEditor", async () => {
+        const ops = makeStandardOps();
+        const newProps = {
+          specStatus: "REC",
+          editors: [
+            {
+              name: "FORMER EDITOR 1",
+              retiredDate: "2020-03-01",
+            },
+            {
+              name: "FORMER EDITOR 2",
+              retiredDate: "2020-03-01",
+            },
+          ],
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+      });
+      it("relocates multiple editors with retiredDate member to multple formerEditors", async () => {
+        const ops = makeStandardOps();
+        const newProps = {
+          specStatus: "REC",
+          editors: [
+            {
+              name: "EDITOR 1",
+            },
+            {
+              name: "FORMER EDITOR 2",
+              retiredDate: "2020-03-01",
+            },
+            {
+              name: "FORMER EDITOR 3",
+              retiredDate: "2020-03-01",
+            },
+          ],
+          formerEditors: [
+            {
+              name: "FORMER EDITOR 1",
+            },
+          ],
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+      });
+    });
     it("takes a single editors into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
