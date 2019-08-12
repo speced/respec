@@ -398,10 +398,14 @@ export function run(conf) {
   if (!conf.formerEditors) conf.formerEditors = [];
   if (conf.editors) {
     conf.editors.forEach(peopCheck);
-    conf.formerEditors = conf.editors.reduce((collector, person) => {
-      if (person.retiredDate) collector.push(person);
-      return collector;
-    }, conf.formerEditors);
+    // Move any editors with retiredDate to formerEditors.
+    for (let i = 0; i < conf.editors.length; i++) {
+      const editor = conf.editors[i];
+      if ("retiredDate" in editor) {
+        conf.formerEditors.push(editor);
+        conf.editors.splice(i--, 1);
+      }
+    }
   }
   if (conf.formerEditors.length) {
     conf.formerEditors.forEach(peopCheck);
