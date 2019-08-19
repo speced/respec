@@ -64,7 +64,7 @@ async function isBustedCache(cachedTime) {
     return false;
   }
 
-  const url = new URL("meta/versions", API_URL);
+  const url = new URL("meta/version", API_URL);
   const res = await fetch(url);
   if (!res.ok) return false;
   const lastUpdated = await res.text();
