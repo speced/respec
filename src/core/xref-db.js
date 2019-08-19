@@ -1,4 +1,5 @@
 // @ts-check
+import { API_URL } from "./xref.js";
 import { IDBKeyVal } from "./utils.js";
 import { importIdb } from "./idb.js";
 
@@ -7,8 +8,6 @@ import { importIdb } from "./idb.js";
  * @typedef {import('core/xref').Response} Response
  * @typedef {import('core/xref').SearchResultEntry} SearchResultEntry
  */
-
-const CACHE_MAX_AGE = 86400000; // 24 hours
 
 async function getIdbCache() {
   const { openDB } = await importIdb();
@@ -41,7 +40,7 @@ export async function resolveXrefCache(uniqueQueryKeys) {
  */
 async function resolveFromCache(keys, cache) {
   const cacheTime = await cache.get("__CACHE_TIME__");
-  const bustCache = cacheTime && isBustedCache(cacheTime);
+  const bustCache = cacheTime && (await isBustedCache(cacheTime));
   if (bustCache) {
     await cache.clear();
     return new Map();
@@ -52,10 +51,22 @@ async function resolveFromCache(keys, cache) {
 }
 
 /**
+ * Get lastUpdated time from server and bust cache based on that. This way, we
+ * prevent dirty/erroneous/stale data being kept on a client (which is possible
+ * if we use a `MAX_AGE` based caching strategy).
  * @param {number} cachedTime
  */
-function isBustedCache(cachedTime) {
-  return Date.now() - cachedTime > CACHE_MAX_AGE;
+async function isBustedCache(cachedTime) {
+  const url = new URL("meta/versions", API_URL);
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(res.statusText);
+    const lastUpdated = parseInt(await res.text(), 10);
+    return lastUpdated > cachedTime;
+  } catch {
+    // keep using stale data if above request failed (server down maybe)
+    return false;
+  }
 }
 
 /**
