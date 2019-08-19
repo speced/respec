@@ -68,7 +68,34 @@ describe("W3C — Headers", () => {
 
   describe("editors", () => {
     const findEditor = findContent("Editor:");
-    fdescribe("untilDate", () => {
+    describe("retiredDate", () => {
+      it("localizes", async () => {
+        const ops = makeStandardOps();
+        ops.htmlAttrs = { lang: "es" };
+        const newProps = {
+          specStatus: "REC",
+          editors: [
+            {
+              name: "NAME",
+            },
+          ],
+          formerEditors: [
+            {
+              name: "FORMER EDITOR 1",
+              retiredDate: "2020-03-01",
+            },
+          ],
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+        const dtFormerEditor = contains(doc, "dt", "Former editor:");
+        expect(dtFormerEditor[0].nextElementSibling.textContent).toContain(
+          "Hasta"
+        );
+        expect(dtFormerEditor[0].nextElementSibling.textContent).toContain(
+          "marzo"
+        );
+      });
       it("relocates single editor with retiredDate member to single formerEditor", async () => {
         const ops = makeStandardOps();
         const newProps = {
