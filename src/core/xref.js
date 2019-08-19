@@ -44,8 +44,6 @@ if (
  * @param {HTMLElement[]} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
-  if (!elems.length) return;
-
   const xref = normalizeConfig(conf.xref);
   if (xref.specs) {
     const bodyCite = document.body.dataset.cite
@@ -53,6 +51,8 @@ export async function run(conf, elems) {
       : [];
     document.body.dataset.cite = bodyCite.concat(xref.specs).join(" ");
   }
+  
+  if (!elems.length) return;
 
   /** @type {RequestEntry[]} */
   const queryKeys = [];
