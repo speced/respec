@@ -68,10 +68,8 @@ describe("W3C — Headers", () => {
 
   describe("editors", () => {
     const findEditor = findContent("Editor:");
-    describe("untilDate", () => {
-      const findFormerEditor = findContent("Former Editor:");
-      const findFormerEditors = findContent("Former Editors:");
-      fit("relocates single editor with retiredDate member to single formerEditor", async () => {
+    fdescribe("untilDate", () => {
+      it("relocates single editor with retiredDate member to single formerEditor", async () => {
         const ops = makeStandardOps();
         const newProps = {
           specStatus: "REC",
@@ -84,7 +82,7 @@ describe("W3C — Headers", () => {
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
-        debugger;
+        expect(contains(doc, "dt", "Editors:").length).toBe(0);
         expect(contains(doc, "dt", "Former editor:").length).toBe(1);
       });
       it("relocates single editor with retiredDate member to multiple formerEditors", async () => {
@@ -105,6 +103,12 @@ describe("W3C — Headers", () => {
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
+        const dtFormerEditors = contains(doc, "dt", "Former editors:");
+        const dtEditors = contains(doc, "dt", "Editors:");
+        expect(dtEditors.length).toBe(0);
+        const dd = dtFormerEditors[0].nextElementSibling;
+        expect(dd.textContent).toBe("FORMER EDITOR 1");
+        expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
       });
       it("relocates multiple editors with retiredDate member to multiple formerEditor", async () => {
         const ops = makeStandardOps();
@@ -123,6 +127,12 @@ describe("W3C — Headers", () => {
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
+        const dtFormerEditors = contains(doc, "dt", "Former editors:");
+        const dtEditors = contains(doc, "dt", "Editors:");
+        expect(dtEditors.length).toBe(0);
+        const dd = dtFormerEditors[0].nextElementSibling;
+        expect(dd.textContent).toContain("FORMER EDITOR 1");
+        expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
       });
       it("relocates multiple editors with retiredDate member to multple formerEditors", async () => {
         const ops = makeStandardOps();
@@ -149,6 +159,20 @@ describe("W3C — Headers", () => {
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
+        const dtFormerEditors = contains(doc, "dt", "Former editors:");
+        const dtEditors = contains(doc, "dt", "Editors:");
+        const dtEditor = contains(doc, "dt", "Editor:");
+        expect(dtEditor.length).toBe(1);
+        expect(dtEditors.length).toBe(0);
+        const dd = dtFormerEditors[0].nextElementSibling;
+        expect(dd.textContent).toContain("FORMER EDITOR 1");
+        expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
+        expect(dd.nextElementSibling.nextElementSibling.textContent).toContain(
+          "FORMER EDITOR 3"
+        );
+        expect(
+          dd.nextElementSibling.nextElementSibling.nextElementSibling
+        ).toBeNull();
       });
     });
     it("takes a single editors into account", async () => {
