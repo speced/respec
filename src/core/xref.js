@@ -51,7 +51,7 @@ export async function run(conf, elems) {
       : [];
     document.body.dataset.cite = bodyCite.concat(xref.specs).join(" ");
   }
-  
+
   if (!elems.length) return;
 
   /** @type {RequestEntry[]} */
