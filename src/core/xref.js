@@ -44,6 +44,8 @@ if (
  * @param {HTMLElement[]} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
+  if (!elems.length) return;
+
   const xref = normalizeConfig(conf.xref);
   if (xref.specs) {
     const bodyCite = document.body.dataset.cite

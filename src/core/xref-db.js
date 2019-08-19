@@ -9,6 +9,8 @@ import { importIdb } from "./idb.js";
  * @typedef {import('core/xref').SearchResultEntry} SearchResultEntry
  */
 
+const VERSION_CHECK_WAIT = 5 * 60 * 60 * 1000; // 5 min
+
 async function getIdbCache() {
   const { openDB } = await importIdb();
   const idb = await openDB("xref", 1, {
@@ -57,6 +59,11 @@ async function resolveFromCache(keys, cache) {
  * @param {number} cachedTime
  */
 async function isBustedCache(cachedTime) {
+  if (Date.now() - cachedTime < VERSION_CHECK_WAIT) {
+    // avoid checking network for any data update if old cache "fresh"
+    return false;
+  }
+
   const url = new URL("meta/versions", API_URL);
   const res = await fetch(url);
   if (!res.ok) return false;
