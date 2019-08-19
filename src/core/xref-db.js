@@ -57,16 +57,11 @@ async function resolveFromCache(keys, cache) {
  * @param {number} cachedTime
  */
 async function isBustedCache(cachedTime) {
-  const url = new URL("meta/version", API_URL);
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(res.statusText);
-    const lastUpdated = parseInt(await res.text(), 10);
-    return lastUpdated > cachedTime;
-  } catch {
-    // keep using stale data if above request failed (server down maybe)
-    return false;
-  }
+  const url = new URL("meta/versions", API_URL);
+  const res = await fetch(url);
+  if (!res.ok) return false;
+  const lastUpdated = await res.text();
+  return parseInt(lastUpdated, 10) > cachedTime;
 }
 
 /**
