@@ -51,13 +51,13 @@ async function resolveFromCache(keys, cache) {
 }
 
 /**
- * Get lastUpdated time from server and bust cache based on that. This way, we
+ * Get last updated timestamp from server and bust cache based on that. This way, we
  * prevent dirty/erroneous/stale data being kept on a client (which is possible
  * if we use a `MAX_AGE` based caching strategy).
  * @param {number} cachedTime
  */
 async function isBustedCache(cachedTime) {
-  const url = new URL("meta/versions", API_URL);
+  const url = new URL("meta/version", API_URL);
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error(res.statusText);
