@@ -380,8 +380,6 @@ export function run(conf) {
   }
   if (conf.prevRecShortname && !conf.prevRecURI)
     conf.prevRecURI = `https://www.w3.org/TR/${conf.prevRecShortname}`;
-  if (!conf.editors || conf.editors.length === 0)
-    pub("error", "At least one editor is required");
   const peopCheck = function(it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
     if (it.orcid) {
@@ -407,6 +405,8 @@ export function run(conf) {
       }
     }
   }
+  if (!conf.editors || conf.editors.length === 0)
+    pub("error", "At least one editor is required");
   if (conf.formerEditors.length) {
     conf.formerEditors.forEach(peopCheck);
   }
