@@ -26,7 +26,7 @@ const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
 };
 
-const API_URL = "https://respec.org/xref";
+export const API_URL = "https://respec.org/xref/";
 
 if (
   !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
@@ -51,6 +51,8 @@ export async function run(conf, elems) {
       : [];
     document.body.dataset.cite = bodyCite.concat(xref.specs).join(" ");
   }
+
+  if (!elems.length) return;
 
   /** @type {RequestEntry[]} */
   const queryKeys = [];
