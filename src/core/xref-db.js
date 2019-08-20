@@ -41,8 +41,7 @@ export async function resolveXrefCache(uniqueQueryKeys) {
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
 async function resolveFromCache(keys, cache) {
-  const cacheTime = await cache.get("__CACHE_TIME__");
-  const bustCache = cacheTime && (await isBustedCache(cacheTime));
+  const bustCache = await shouldBustCache(cache);
   if (bustCache) {
     await cache.clear();
     return new Map();
@@ -53,22 +52,30 @@ async function resolveFromCache(keys, cache) {
 }
 
 /**
- * Get last updated timestamp from server and bust cache based on that. This way, we
- * prevent dirty/erroneous/stale data being kept on a client (which is possible
- * if we use a `MAX_AGE` based caching strategy).
- * @param {number} cachedTime
+ * Get last updated timestamp from server and bust cache based on that. This
+ * way, we prevent dirty/erroneous/stale data being kept on a client (which is
+ * possible if we use a `MAX_AGE` based caching strategy).
+ * @param {IDBKeyVal} cache
  */
-async function isBustedCache(cachedTime) {
-  if (Date.now() - cachedTime < VERSION_CHECK_WAIT) {
+async function shouldBustCache(cache) {
+  const lastChecked = await cache.get("__LAST_VERSION_CHECK__");
+  const now = Date.now();
+
+  if (!lastChecked) {
+    await cache.set("__LAST_VERSION_CHECK__", now);
+    return false;
+  }
+  if (now - lastChecked < VERSION_CHECK_WAIT) {
     // avoid checking network for any data update if old cache "fresh"
     return false;
   }
 
-  const url = new URL("meta/version", API_URL);
+  const url = new URL("meta/version", API_URL).href;
   const res = await fetch(url);
   if (!res.ok) return false;
   const lastUpdated = await res.text();
-  return parseInt(lastUpdated, 10) > cachedTime;
+  await cache.set("__LAST_VERSION_CHECK__", now);
+  return parseInt(lastUpdated, 10) > lastChecked;
 }
 
 /**
@@ -79,7 +86,6 @@ export async function cacheXrefData(data) {
     const cache = await getIdbCache();
     // add data to cache
     await cache.addMany(data);
-    await cache.set("__CACHE_TIME__", Date.now());
   } catch (e) {
     console.error(e);
   }
