@@ -395,6 +395,7 @@ describe("Core - Inlines", () => {
           event
         }}</p>
         <p id="link5">{{ ReferrerPolicy/"no-referrer" }}</p>
+        <p id="link6">{{ EventListener/handleEvent }} matches as method or attribute or dict-member</p>
       </section>
     `;
     const config = { xref: ["DOM", "HTML", "referrer-policy"] };
@@ -421,6 +422,10 @@ describe("Core - Inlines", () => {
     expect(doc.querySelector("#link5 a").textContent).toBe("no-referrer");
     expect(doc.querySelector("#link5 a").hash).toBe(
       "#dom-referrerpolicy-no-referrer"
+    );
+
+    expect(doc.querySelector("#link6 a").hash).toBe(
+      "#dom-eventlistener-handleevent"
     );
   });
 });

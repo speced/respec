@@ -112,7 +112,7 @@ function renderAttribute(details) {
   const { parent, identifier, renderParent } = details;
   const { identifier: linkFor } = parent || {};
   const html = hyperHTML`${renderParent ? "." : ""}<a
-      data-xref-type="attribute|dict-member"
+      data-xref-type="attribute|dict-member|method"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
     >${identifier}</a>`;
