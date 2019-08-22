@@ -1,0 +1,45 @@
+name: Pull Request
+on: pull_request
+
+jobs:
+  test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+
+      - run: npm install # also runs build via prepare script
+        # env:
+        #   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: eslint
+        run: npm run lint
+
+      - name: build
+        run: |
+          npm run build:w3c
+          npm run build:geonovum
+
+      - name: Run headless tests
+        run: npm run test:headless
+
+      - name: Run Karma unit tests (Chrome)
+        run: npm run test:karma
+        env:
+          BROWSERS: ChromeHeadless
+          # GH_API_KEY: ${{ secrets.GH_API_KEY }}
+          # GH_USER: ${{ secrets.GH_USER }}
+
+      - name: Run Karma unit tests (Firefox)
+        run: npm run test:karma
+        env:
+          BROWSERS: FirefoxHeadlessPref
+          # GH_API_KEY: ${{ secrets.GH_API_KEY }}
+          # GH_USER: ${{ secrets.GH_USER }}
