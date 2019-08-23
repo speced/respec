@@ -33,6 +33,7 @@ jobs:
   test-headless:
     name: Headless Tests
     runs-on: *os
+    needs: lint
     steps:
       - *checkout
       - *setup-node
@@ -42,6 +43,7 @@ jobs:
   test-karma-chrome:
     name: Karma Unit Tests (Chrome)
     runs-on: *os
+    needs: test-headless
     steps:
       - *checkout
       - *setup-node
@@ -53,6 +55,7 @@ jobs:
   test-karma-firefox:
     name: Karma Unit Tests (Firefox)
     runs-on: *os
+    needs: test-headless
     steps:
       - *checkout
       - *setup-node
