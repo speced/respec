@@ -1,74 +1,62 @@
-name: Pull Request
+name: Node CI
 on: pull_request
+
+os: &os ubuntu-latest
+
+checkout: &checkout
+  uses: actions/checkout@v1
+  with:
+    fetch-depth: 1
+
+setup-node: &setup-node
+  uses: actions/setup-node@v1
+  with:
+    node-version: 10
+
+install-and-build: &install-and-build
+  name: install & build
+  run: |
+    npm install
+    npm run build:w3c
+    npm run build:geonovum
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    name: Check linting issues
+    runs-on: *os
     steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 10
-
+      - *checkout
+      - *setup-node
       - run: npm install --ignore-scripts
       - run: npm run lint
 
   test-headless:
-    runs-on: ubuntu-latest
+    name: Headless Tests
+    runs-on: *os
     steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 10
-
-      - name: install & build
-        run: |
-          npm install
-          npm run build:w3c
-
-      - name: Run headless tests
-        run: npm run test:headless
+      - *checkout
+      - *setup-node
+      - *install-and-build
+      - run: npm run test:headless
 
   test-karma-chrome:
-    runs-on: ubuntu-latest
+    name: Karma Unit Tests (Chrome)
+    runs-on: *os
     steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 10
-
-      - name: install & build
-        run: |
-          npm install
-          npm run build:w3c
-          npm run build:geonovum
-
+      - *checkout
+      - *setup-node
+      - *install-and-build
       - run: npm run test:karma
         env:
           BROWSERS: ChromeHeadless
 
   test-karma-firefox:
-    runs-on: ubuntu-latest
+    name: Karma Unit Tests (Firefox)
+    runs-on: *os
     steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 10
-
-      - name: install & build
-        run: |
-          npm install
-          npm run build:w3c
-          npm run build:geonovum
-
+      - *checkout
+      - *setup-node
+      - *install-and-build
       - run: npm run test:karma
         env:
           BROWSERS: FirefoxHeadlessPref
