@@ -3,7 +3,7 @@
 
 import hyperHTML from "../../js/html-template";
 import { showInlineError } from "./utils";
-
+const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}} {{ double }}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;
 const slotRegex = /^\[\[(\w+)\]\]$/;
@@ -41,9 +41,14 @@ function parseInlineIDL(str) {
       continue;
     }
     // Exception - "NotAllowedError"
+    // Or alternate enum syntax: {{ EnumContainer / "some enum value" }}
     if (exceptionRegex.test(value)) {
       const [, identifier] = value.match(exceptionRegex);
-      results.push({ type: "exception", identifier });
+      if (renderParent) {
+        results.push({ type: "exception", identifier });
+      } else {
+        results.push({ type: "enum", enumValue: identifier, renderParent });
+      }
       continue;
     }
     // internal slot
@@ -56,6 +61,10 @@ function parseInlineIDL(str) {
     if (attributeRegex.test(value) && tokens.length) {
       const [, identifier] = value.match(attributeRegex);
       results.push({ type: "attribute", identifier, renderParent });
+      continue;
+    }
+    if (idlPrimitiveRegex.test(value)) {
+      results.push({ type: "idl-primitive", identifier: value, renderParent });
       continue;
     }
     // base, always final token
@@ -128,14 +137,17 @@ function renderMethod(details) {
 }
 
 /**
- * Enum: Identifier["enum value"]
+ * Enum:
+ * Identifier["enum value"]
+ * Identifer / "enum value"
  */
 function renderEnum(details) {
-  const { identifier, enumValue } = details;
+  const { identifier, enumValue, parent } = details;
+  const forContext = parent ? parent.identifier : identifier;
   const html = hyperHTML`"<a
     data-xref-type="enum-value"
-    data-link-for="${identifier}"
-    data-xref-for="${identifier}"
+    data-link-for="${forContext}"
+    data-xref-for="${forContext}"
     data-lt="${!enumValue ? "the-empty-string" : null}"
     >${enumValue}</a>"`;
   return html;
@@ -151,6 +163,19 @@ function renderException(details) {
     data-cite="WebIDL"
     data-xref-type="exception"
     >${identifier}</a>"`;
+  return html;
+}
+
+/**
+ * Interface types: {{ unrestricted double }} {{long long}}
+ * Only the WebIDL spec defines these types.
+ */
+function renderIdlPrimitiveType(details) {
+  const { identifier } = details;
+  const html = hyperHTML`<a
+    data-cite="WebIDL"
+    data-xref-type="interface"
+    >${identifier}</a>`;
   return html;
 }
 
@@ -190,6 +215,9 @@ export function idlStringToHtml(str) {
         break;
       case "exception":
         output.push(renderException(details));
+        break;
+      case "idl-primitive":
+        output.push(renderIdlPrimitiveType(details));
         break;
       default:
         throw new Error("Unknown type.");

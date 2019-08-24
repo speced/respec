@@ -12,13 +12,63 @@ import { importIdb } from "./idb.js";
  * @property {SearchResultEntry[]} data
  */
 
-const CACHE_MAX_AGE = 86400000; // 24 hours
-/**
- * @type {Map<string, TemporaryXrefCache>}
- */
-const xrefMap = new Map();
-
+const xrefData = {
+  lastVersionCheck: 0,
+  /**
+   * @type {Map<string, TemporaryXrefCache>}
+   */
+  map: new Map(),
+};
 const hasIndexedDB = typeof indexedDB !== "undefined";
+const VERSION_CHECK_WAIT = 5 * 60 * 60 * 1000; // 5 min
+const API_URL = "https://respec.org/xref/";
+
+const cacheBuster = {
+  async getLastVersionCheck() {
+    if (hasIndexedDB) {
+      const cache = await getIdbCache();
+      cache.get("__LAST_VERSION_CHECK__");
+    } else {
+      return xrefData.lastVersionCheck;
+    }
+  },
+  /**
+   * @param {number} time
+   */
+  async setLastVersionCheck(time) {
+    if (hasIndexedDB) {
+      const cache = await getIdbCache();
+      cache.set("__LAST_VERSION_CHECK__", time);
+    } else {
+      xrefData.lastVersionCheck = time;
+    }
+  },
+  /**
+   * Get last updated timestamp from server and bust cache based on that. This
+   * way, we prevent dirty/erroneous/stale data being kept on a client (which is
+   * possible if we use a `MAX_AGE` based caching strategy).
+   */
+  async shouldRun() {
+    const lastChecked = await this.getLastVersionCheck();
+    const now = Date.now();
+
+    if (!lastChecked) {
+      await this.setLastVersionCheck(now);
+      return false;
+    }
+    if (now - lastChecked < VERSION_CHECK_WAIT) {
+      // avoid checking network for any data update if old cache "fresh"
+      return false;
+    }
+
+    const lastUpdated = await getRemoteLastUpdatedTime();
+    if (!lastUpdated) {
+      return false;
+    }
+    await this.setLastVersionCheck(now);
+    return parseInt(lastUpdated, 10) > lastChecked;
+  },
+};
 
 async function getIdbCache() {
   const { openDB } = await importIdb();
@@ -50,15 +100,17 @@ export async function resolveXrefCache(uniqueQueryKeys) {
 /**
  * @param {RequestEntry[]} uniqueQueryKeys
  */
-function resolveFromMap(uniqueQueryKeys) {
+async function resolveFromMap(uniqueQueryKeys) {
+  const bustCache = await cacheBuster.shouldRun();
+  if (bustCache) {
+    xrefData.map.clear();
+  }
   /** @type {[string, SearchResultEntry[]][]} */
   const entries = [];
   for (const uniqueQueryKey of uniqueQueryKeys) {
-    if (xrefMap.has(uniqueQueryKey.id)) {
-      const cached = xrefMap.get(uniqueQueryKey.id);
-      if (!isBustedCache(cached.cachedTime)) {
-        entries.push([uniqueQueryKey.id, cached.data]);
-      }
+    if (xrefData.map.has(uniqueQueryKey.id)) {
+      const cached = xrefData.map.get(uniqueQueryKey.id);
+      entries.push([uniqueQueryKey.id, cached.data]);
     }
   }
   return new Map(entries);
@@ -70,8 +122,7 @@ function resolveFromMap(uniqueQueryKeys) {
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
 async function resolveFromCache(keys, cache) {
-  const cacheTime = await cache.get("__CACHE_TIME__");
-  const bustCache = cacheTime && isBustedCache(cacheTime);
+  const bustCache = await cacheBuster.shouldRun();
   if (bustCache) {
     await cache.clear();
     return new Map();
@@ -81,11 +132,12 @@ async function resolveFromCache(keys, cache) {
   return new Map(cachedData);
 }
 
-/**
- * @param {number} cachedTime
- */
-function isBustedCache(cachedTime) {
-  return Date.now() - cachedTime > CACHE_MAX_AGE;
+async function getRemoteLastUpdatedTime() {
+  const url = new URL("meta/version", API_URL).href;
+  const res = await fetch(url);
+  if (res.ok) {
+    return await res.text();
+  }
 }
 
 /**
@@ -95,7 +147,7 @@ export async function cacheXrefData(data) {
   if (!hasIndexedDB) {
     const dateNow = Date.now();
     for (const [key, value] of data) {
-      xrefMap.set(key, {
+      xrefData.map.set(key, {
         cachedTime: dateNow,
         data: value,
       });
@@ -106,7 +158,6 @@ export async function cacheXrefData(data) {
     const cache = await getIdbCache();
     // add data to cache
     await cache.addMany(data);
-    await cache.set("__CACHE_TIME__", Date.now());
   } catch (e) {
     console.error(e);
   }
@@ -114,7 +165,7 @@ export async function cacheXrefData(data) {
 
 export async function clearXrefData() {
   if (!hasIndexedDB) {
-    xrefMap.clear();
+    xrefData.map.clear();
     return;
   }
   try {

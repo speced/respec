@@ -239,7 +239,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(toShortIsoDate(new Date()));
 }
 
-export default function({ document, configuration: conf }) {
+export default function({ document, configuration: conf, lang }) {
   conf.isUnofficial = conf.specStatus === "unofficial";
   if (conf.isUnofficial && !Array.isArray(conf.logos)) {
     conf.logos = [];
@@ -385,8 +385,6 @@ export default function({ document, configuration: conf }) {
   }
   if (conf.prevRecShortname && !conf.prevRecURI)
     conf.prevRecURI = `https://www.w3.org/TR/${conf.prevRecShortname}`;
-  if (!conf.editors || conf.editors.length === 0)
-    pub("error", "At least one editor is required");
   const peopCheck = function(it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
     if (it.orcid) {
@@ -400,18 +398,28 @@ export default function({ document, configuration: conf }) {
       }
     }
   };
+  if (!conf.formerEditors) conf.formerEditors = [];
   if (conf.editors) {
     conf.editors.forEach(peopCheck);
+    // Move any editors with retiredDate to formerEditors.
+    for (let i = 0; i < conf.editors.length; i++) {
+      const editor = conf.editors[i];
+      if ("retiredDate" in editor) {
+        conf.formerEditors.push(editor);
+        conf.editors.splice(i--, 1);
+      }
+    }
   }
-  if (conf.formerEditors) {
+  if (!conf.editors || conf.editors.length === 0)
+    pub("error", "At least one editor is required");
+  if (conf.formerEditors.length) {
     conf.formerEditors.forEach(peopCheck);
   }
   if (conf.authors) {
     conf.authors.forEach(peopCheck);
   }
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
-  conf.multipleFormerEditors =
-    Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
+  conf.multipleFormerEditors = conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
   (conf.alternateFormats || []).forEach(it => {
     if (!it.uri || !it.label) {
@@ -487,7 +495,8 @@ export default function({ document, configuration: conf }) {
   // configuration done - yay!
 
   // insert into document
-  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(document, conf);
+  const headerTemplate = conf.isCGBG ? cgbgHeadersTmpl : headersTmpl;
+  const header = headerTemplate(document, conf, lang);
   document.body.prepend(header);
   document.body.classList.add("h-entry");
 

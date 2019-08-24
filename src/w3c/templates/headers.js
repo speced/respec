@@ -63,8 +63,9 @@ function getSpecSubTitleElem(document, conf) {
 
 /**
  * @param {Document} document
+ * @param {string} lang
  */
-export default (document, conf) => {
+export default (document, conf, lang) => {
   return html`
     <div class="head">
       ${conf.logos.map(showLogo)} ${getSpecTitleElem(document, conf)}
@@ -146,7 +147,7 @@ export default (document, conf) => {
               <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
             `}
         <dt>${conf.multipleEditors ? conf.l10n.editors : conf.l10n.editor}</dt>
-        ${showPeople(conf.editors)}
+        ${showPeople(conf.editors, lang)}
         ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
           ? html`
               <dt>
@@ -154,7 +155,7 @@ export default (document, conf) => {
                   ? conf.l10n.former_editors
                   : conf.l10n.former_editor}
               </dt>
-              ${showPeople(conf.formerEditors)}
+              ${showPeople(conf.formerEditors, lang)}
             `
           : ""}
         ${conf.authors
@@ -162,7 +163,7 @@ export default (document, conf) => {
               <dt>
                 ${conf.multipleAuthors ? conf.l10n.authors : conf.l10n.author}
               </dt>
-              ${showPeople(conf.authors)}
+              ${showPeople(conf.authors, lang)}
             `
           : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}

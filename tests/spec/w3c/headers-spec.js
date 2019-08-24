@@ -68,6 +68,140 @@ describe("W3C — Headers", () => {
 
   describe("editors", () => {
     const findEditor = findContent("Editor:");
+    describe("retiredDate", () => {
+      it("localizes", async () => {
+        const ops = makeStandardOps();
+        ops.htmlAttrs = { lang: "es" };
+        const newProps = {
+          specStatus: "REC",
+          editors: [
+            {
+              name: "NAME",
+            },
+          ],
+          formerEditors: [
+            {
+              name: "FORMER EDITOR 1",
+              retiredDate: "2020-03-01",
+            },
+          ],
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+        const dtFormerEditor = contains(doc, "dt", "Former editor:");
+        expect(dtFormerEditor[0].nextElementSibling.textContent).toContain(
+          "Hasta"
+        );
+        expect(dtFormerEditor[0].nextElementSibling.textContent).toContain(
+          "marzo"
+        );
+      });
+      it("relocates single editor with retiredDate member to single formerEditor", async () => {
+        const ops = makeStandardOps();
+        const newProps = {
+          specStatus: "REC",
+          editors: [
+            {
+              name: "NAME",
+              retiredDate: "2020-03-01",
+            },
+          ],
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+        expect(contains(doc, "dt", "Editors:").length).toBe(0);
+        expect(contains(doc, "dt", "Former editor:").length).toBe(1);
+      });
+      it("relocates single editor with retiredDate member to multiple formerEditors", async () => {
+        const ops = makeStandardOps();
+        const newProps = {
+          specStatus: "REC",
+          editors: [
+            {
+              name: "FORMER EDITOR 2",
+              retiredDate: "2020-03-01",
+            },
+          ],
+          formerEditors: [
+            {
+              name: "FORMER EDITOR 1",
+            },
+          ],
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+        const dtFormerEditors = contains(doc, "dt", "Former editors:");
+        const dtEditors = contains(doc, "dt", "Editors:");
+        expect(dtEditors.length).toBe(0);
+        const dd = dtFormerEditors[0].nextElementSibling;
+        expect(dd.textContent).toBe("FORMER EDITOR 1");
+        expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
+      });
+      it("relocates multiple editors with retiredDate member to multiple formerEditor", async () => {
+        const ops = makeStandardOps();
+        const newProps = {
+          specStatus: "REC",
+          editors: [
+            {
+              name: "FORMER EDITOR 1",
+              retiredDate: "2020-03-01",
+            },
+            {
+              name: "FORMER EDITOR 2",
+              retiredDate: "2020-03-01",
+            },
+          ],
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+        const dtFormerEditors = contains(doc, "dt", "Former editors:");
+        const dtEditors = contains(doc, "dt", "Editors:");
+        expect(dtEditors.length).toBe(0);
+        const dd = dtFormerEditors[0].nextElementSibling;
+        expect(dd.textContent).toContain("FORMER EDITOR 1");
+        expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
+      });
+      it("relocates multiple editors with retiredDate member to multple formerEditors", async () => {
+        const ops = makeStandardOps();
+        const newProps = {
+          specStatus: "REC",
+          editors: [
+            {
+              name: "EDITOR 1",
+            },
+            {
+              name: "FORMER EDITOR 2",
+              retiredDate: "2020-03-01",
+            },
+            {
+              name: "FORMER EDITOR 3",
+              retiredDate: "2020-03-01",
+            },
+          ],
+          formerEditors: [
+            {
+              name: "FORMER EDITOR 1",
+            },
+          ],
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+        const dtFormerEditors = contains(doc, "dt", "Former editors:");
+        const dtEditors = contains(doc, "dt", "Editors:");
+        const dtEditor = contains(doc, "dt", "Editor:");
+        expect(dtEditor.length).toBe(1);
+        expect(dtEditors.length).toBe(0);
+        const dd = dtFormerEditors[0].nextElementSibling;
+        expect(dd.textContent).toContain("FORMER EDITOR 1");
+        expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
+        expect(dd.nextElementSibling.nextElementSibling.textContent).toContain(
+          "FORMER EDITOR 3"
+        );
+        expect(
+          dd.nextElementSibling.nextElementSibling.nextElementSibling
+        ).toBeNull();
+      });
+    });
     it("takes a single editors into account", async () => {
       const ops = makeStandardOps();
       const newProps = {

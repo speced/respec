@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.30.1",
+  "version": "24.30.5",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -32,15 +32,15 @@
     "babel-plugin-dynamic-import-amd": "github:holyzfy/babel-plugin-dynamic-import-amd#1bbaf86d4472c2eef0fc01f3199d637a4b6c51e2",
     "chai": "^4.2.0",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
-    "eslint": "^6.1.0",
-    "eslint-config-prettier": "^6.0.0",
+    "eslint": "6.1.0",
+    "eslint-config-prettier": "^6.1.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.1.0",
     "esm": "^3.2.25",
     "expect": "^24.8.0",
     "exports-loader": "^0.7.0",
     "handlebars": "^4.1.2",
-    "highlight.js": "^9.15.9",
+    "highlight.js": "^9.15.10",
     "hyperhtml": "^2.30.1",
     "idb": "^4.0.4",
     "jasmine": "^3.4.0",
@@ -49,10 +49,10 @@
     "jasmine-reporters": "^2.3.2",
     "jquery": "^3.4.1",
     "karma": "^4.2.0",
-    "karma-chrome-launcher": "^3.0.0",
+    "karma-chrome-launcher": "^3.1.0",
     "karma-detect-browsers": "^2.3.3",
     "karma-edge-launcher": "^0.4.2",
-    "karma-firefox-launcher": "^1.1.0",
+    "karma-firefox-launcher": "^1.2.0",
     "karma-jasmine": "^2.0.1",
     "karma-jasmine-html-reporter": "^1.4.2",
     "karma-mocha": "^1.3.0",
@@ -73,9 +73,9 @@
     "serve": "^11.1.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.5.3",
-    "webidl2": "^23.3.0",
-    "webpack": "^4.39.0",
-    "webpack-cli": "^3.3.6"
+    "webidl2": "^23.5.1",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps -q",
@@ -114,7 +114,7 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "1.19.0",
-    "snyk": "^1.208.0",
+    "snyk": "^1.217.3",
     "viperhtml": "^2.17.0"
   },
   "prettier": {

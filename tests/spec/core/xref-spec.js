@@ -804,6 +804,37 @@ describe("Core — xref", () => {
       );
     });
 
+    it("links idl primitives that have spaces", async () => {
+      const body = `
+      <section id="test">
+        {{
+          unsigned
+          long
+          long
+        }}
+        {{  unrestricted   float
+        }}
+        {{double}}
+      </section>
+      `;
+      const config = { xref: true, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      const [uLongLong, unrestrictedFloat, double] = doc.querySelectorAll(
+        "#test a"
+      );
+
+      expect(uLongLong.textContent).toBe("unsigned long long");
+      expect(uLongLong.hash).toBe("#idl-unsigned-long-long");
+
+      expect(unrestrictedFloat.textContent).toBe("unrestricted float");
+      expect(unrestrictedFloat.hash).toBe("#idl-unrestricted-float");
+
+      expect(double.textContent).toBe("double");
+      expect(double.hash).toBe("#idl-double");
+    });
+
     it("links local definitions first", async () => {
       const body = `
         <section data-dfn-for="PaymentAddress" data-link-for="PaymentAddress">
@@ -958,8 +989,6 @@ describe("Core — xref", () => {
     }
 
     const config = { xref: true, localBiblio };
-    let cacheKeys;
-
     const keys = new Map([
       ["dictionary", "7a82727efd37620ec8b50cac9dca75d1b1f08d94"],
       ["url parser", "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"],
@@ -970,55 +999,45 @@ describe("Core — xref", () => {
         <p><a id="link">dictionary</a><p>
       </section>`;
 
-    const preLoadTime = await cache.get("__CACHE_TIME__");
-    expect(Number.isInteger(preLoadTime)).toBeFalsy();
-    cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual([]);
-
+    expectAsync(cache.keys()).toBeResolvedTo([]);
     const preCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
     expect(preCacheDoc.getElementById("link").href).toBe(
       expectedLinks.get("dictionary")
     );
-    const preCacheTime = await cache.get("__CACHE_TIME__");
-    expect(Number.isInteger(preCacheTime)).toBeTruthy();
-    cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual(
-      ["__CACHE_TIME__", keys.get("dictionary")].sort()
-    );
+    expectAsync(cache.keys()).toBeResolvedTo([
+      keys.get("dictionary"),
+      "__LAST_VERSION_CHECK__",
+    ]);
 
     // no new data was requested from server, cache shoudln't change
     const postCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
     expect(postCacheDoc.getElementById("link").href).toBe(
       expectedLinks.get("dictionary")
     );
-    const postCacheTime = await cache.get("__CACHE_TIME__");
-    expect(postCacheTime).toEqual(preCacheTime);
-    cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual(
-      ["__CACHE_TIME__", keys.get("dictionary")].sort()
-    );
+    expectAsync(cache.keys()).toBeResolvedTo([
+      keys.get("dictionary"),
+      "__LAST_VERSION_CHECK__",
+    ]);
 
     // new data was requested from server, cache should change
-    const config2 = { xref: true, localBiblio };
     const body2 = `
       <section>
         <p><a id="link-1">dictionary</a><p>
         <p><a id="link-2">URL parser</a><p>
       </section>
     `;
-    const updatedCacheDoc = await makeRSDoc(makeStandardOps(config2, body2));
+    const updatedCacheDoc = await makeRSDoc(makeStandardOps(config, body2));
     expect(updatedCacheDoc.getElementById("link-1").href).toBe(
       expectedLinks.get("dictionary")
     );
     expect(updatedCacheDoc.getElementById("link-2").href).toBe(
       expectedLinks.get("url parser")
     );
-    const updatedCacheTime = await cache.get("__CACHE_TIME__");
-    expect(updatedCacheTime).toBeGreaterThan(preCacheTime);
-    cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual(
-      ["__CACHE_TIME__", keys.get("dictionary"), keys.get("url parser")].sort()
-    );
+    expectAsync(cache.keys()).toBeResolvedTo([
+      keys.get("dictionary"),
+      "__LAST_VERSION_CHECK__",
+      keys.get("url parser"),
+    ]);
   });
 
   it("respects requests to not perform an xref lookup", async () => {

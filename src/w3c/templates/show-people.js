@@ -1,7 +1,18 @@
 // @ts-check
+import { humanDate, showInlineError } from "../../core/utils";
 import html from "../../../js/html-template.js";
 
-export default (items = []) => {
+const localizationStrings = {
+  en: {
+    until: "Until",
+  },
+  es: {
+    until: "Hasta",
+  },
+};
+
+export default (items = [], lang) => {
+  const l10n = localizationStrings[lang];
   return items.map(getItem);
 
   function getItem(p) {
@@ -86,6 +97,27 @@ export default (items = []) => {
         contents.push(", ", result);
       }
     }
+    if (p.retiredDate) {
+      const retiredDate = new Date(p.retiredDate);
+      const isValidDate = retiredDate.toString() !== "Invalid Date";
+      const result = document.createElement("time");
+      result.textContent = isValidDate
+        ? humanDate(retiredDate)
+        : "Invalid Date"; // todo: Localise invalid date
+      if (!isValidDate) {
+        showInlineError(
+          result,
+          "The date is invalid. The expected format is YYYY-MM-DD.",
+          "Invalid date"
+        );
+      }
+      contents.push(
+        html`
+          - ${l10n.until.concat(" ")}${[result]}
+        `
+      );
+    }
+
     dd.append(...contents);
     return dd;
   }
