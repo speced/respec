@@ -194,7 +194,7 @@ describe("Core - WebIDL", () => {
         expect(elem.textContent).toBe(`${methodName}()`);
         expect(elem.id).toBe(`dom-parenthesistest-${id}`);
         expect(elem.dataset.dfnType).toBe("method");
-        expect(elem.dataset.dfnFor).toBe("parenthesistest");
+        expect(elem.dataset.dfnFor).toBe("ParenthesisTest");
         expect(elem.dataset.idl).toBe("operation");
         // corresponding link
         const aElem = section.querySelector(
@@ -263,9 +263,7 @@ describe("Core - WebIDL", () => {
     expect(interfaces[0].querySelector("a.idlID").getAttribute("href")).toBe(
       "#dom-docinterface"
     );
-    expect(interfaces[1].querySelector("a.idlID").getAttribute("href")).toBe(
-      "#dom-docisnotcasesensitive"
-    );
+    expect(interfaces[1].querySelector("a.idlID")).toBeNull();
     expect(interfaces[0].id).toBe("idl-def-docinterface");
     expect(interfaces[1].id).toBe("idl-def-docisnotcasesensitive");
     expect(interfaces[2].id).toBe("idl-def-undocinterface");

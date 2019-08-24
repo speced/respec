@@ -52,14 +52,12 @@ function tryFindDfn(defn, parent, name) {
  * @param {string} name
  */
 function findAttributeDfn(defn, parent, name) {
-  const parentLow = parent.toLowerCase();
-  const asLocalName = name.toLowerCase();
-  const asQualifiedName = `${parentLow}.${asLocalName}`;
-  const dfn = findNormalDfn(defn, parent, asLocalName);
+  const asQualifiedName = `${parent}.${name}`;
+  const dfn = findNormalDfn(defn, parent, name);
   if (!dfn) {
     return;
   }
-  addAlternativeNames(dfn, [asQualifiedName, asLocalName]);
+  addAlternativeNames(dfn, [asQualifiedName, name]);
   return dfn;
 }
 
@@ -73,11 +71,9 @@ function findOperationDfn(defn, parent, name) {
   if (name.includes("!overload")) {
     return findNormalDfn(defn, parent, name);
   }
-  const parentLow = parent.toLowerCase();
   // Allow linking to both "method()" and "method" name.
-  const asLocalName = name.toLowerCase();
-  const asMethodName = `${asLocalName}()`;
-  const asQualifiedName = `${parentLow}.${asLocalName}`;
+  const asMethodName = `${name}()`;
+  const asQualifiedName = `${parent}.${name}`;
   const asFullyQualifiedName = `${asQualifiedName}()`;
 
   const dfn =
@@ -90,7 +86,7 @@ function findOperationDfn(defn, parent, name) {
     asFullyQualifiedName,
     asQualifiedName,
     asMethodName,
-    asLocalName,
+    name,
   ]);
   return dfn;
 }
@@ -112,22 +108,20 @@ function addAlternativeNames(dfn, names) {
  * @param {string} name
  */
 function findNormalDfn(defn, parent, name) {
-  const parentLow = parent.toLowerCase();
   let resolvedName =
     defn.type === "enum-value" && name === "" ? "the-empty-string" : name;
-  const nameLow = resolvedName.toLowerCase();
-  let dfnForArray = definitionMap[nameLow];
-  let dfns = getDfns(dfnForArray, parentLow, name, defn.type);
+  let dfnForArray = definitionMap[resolvedName];
+  let dfns = getDfns(dfnForArray, parent, name, defn.type);
   // If we haven't found any definitions with explicit [for]
   // and [title], look for a dotted definition, "parent.name".
-  if (dfns.length === 0 && parentLow !== "") {
-    resolvedName = `${parentLow}.${nameLow}`;
+  if (dfns.length === 0 && parent !== "") {
+    resolvedName = `${parent}.${resolvedName}`;
     dfnForArray = definitionMap[resolvedName];
     if (dfnForArray !== undefined && dfnForArray.length === 1) {
       dfns = dfnForArray;
       // Found it: register with its local name
       delete definitionMap[resolvedName];
-      registerDefinition(dfns[0], [nameLow]);
+      registerDefinition(dfns[0], [resolvedName]);
     }
   }
   if (dfns.length > 1) {
