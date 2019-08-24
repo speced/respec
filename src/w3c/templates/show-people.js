@@ -11,7 +11,7 @@ const localizationStrings = {
   },
 };
 
-export default (items = [], lang) => {
+export default (items = [], document, lang) => {
   const l10n = localizationStrings[lang];
   return items.map(getItem);
 
@@ -102,7 +102,7 @@ export default (items = [], lang) => {
       const isValidDate = retiredDate.toString() !== "Invalid Date";
       const result = document.createElement("time");
       result.textContent = isValidDate
-        ? humanDate(retiredDate)
+        ? humanDate(retiredDate, lang)
         : "Invalid Date"; // todo: Localise invalid date
       if (!isValidDate) {
         showInlineError(

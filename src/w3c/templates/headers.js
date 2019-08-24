@@ -147,7 +147,7 @@ export default (document, conf, lang) => {
               <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
             `}
         <dt>${conf.multipleEditors ? conf.l10n.editors : conf.l10n.editor}</dt>
-        ${showPeople(conf.editors, lang)}
+        ${showPeople(conf.editors, document, lang)}
         ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
           ? html`
               <dt>
@@ -155,7 +155,7 @@ export default (document, conf, lang) => {
                   ? conf.l10n.former_editors
                   : conf.l10n.former_editor}
               </dt>
-              ${showPeople(conf.formerEditors, lang)}
+              ${showPeople(conf.formerEditors, document, lang)}
             `
           : ""}
         ${conf.authors
@@ -163,7 +163,7 @@ export default (document, conf, lang) => {
               <dt>
                 ${conf.multipleAuthors ? conf.l10n.authors : conf.l10n.author}
               </dt>
-              ${showPeople(conf.authors, lang)}
+              ${showPeople(conf.authors, document, lang)}
             `
           : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}

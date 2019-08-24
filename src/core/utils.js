@@ -330,7 +330,8 @@ export function parseLastModified(str) {
 // return a human-formatted date suitable for use in a W3C specification
 export function humanDate(
   date = new Date(),
-  lang = document.documentElement.lang || "en"
+  lang = (typeof document !== "undefined" && document.documentElement.lang) ||
+    "en"
 ) {
   if (!(date instanceof Date)) date = new Date(date);
   const langs = [lang, "en"];

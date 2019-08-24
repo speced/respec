@@ -70,6 +70,10 @@ describe("W3C — Headers", () => {
     const findEditor = findContent("Editor:");
     describe("retiredDate", () => {
       it("localizes", async () => {
+        if (!Intl.DateTimeFormat.supportedLocalesOf("es").includes("es")) {
+          // Node.js does not support anything other than "en"
+          return;
+        }
         const ops = makeStandardOps();
         ops.htmlAttrs = { lang: "es" };
         const newProps = {
