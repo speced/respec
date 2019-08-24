@@ -187,9 +187,7 @@ function getDfns(dfnForArray, parent, originalName, type) {
   }
   // Definitions that have a title and [data-dfn-for] that exactly match the
   // IDL entity:
-  const dfns = dfnForArray.filter(dfn =>
-    dfn.closest(`[data-dfn-for="${parent}"]`)
-  );
+  const dfns = dfnForArray.filter(dfn => dfn.dataset.dfnFor === parent);
   // If this is a top-level entity, and we didn't find anything with
   // an explicitly empty [for], try <dfn> that inherited a [for].
   if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
