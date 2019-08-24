@@ -1,5 +1,10 @@
 name: Node CI
-on: pull_request
+on:
+  push:
+    branches:
+      - develop
+      - gh-pages
+  pull_request: {}
 
 jobs:
   lint:
