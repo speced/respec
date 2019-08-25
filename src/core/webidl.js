@@ -302,6 +302,9 @@ function renderWebIDL(idlElement, index) {
   const render = hyperHTML.bind(idlElement);
   render`${html}`;
   idlElement.querySelectorAll("[data-idl]").forEach(elem => {
+    if (elem.dataset.dfnFor) {
+      return;
+    }
     const title = elem.dataset.title;
     // Select the nearest ancestor element that can contain members.
     const parent = elem.parentElement.closest("[data-idl][data-title]");
