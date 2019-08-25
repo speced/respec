@@ -141,7 +141,7 @@ function defineIdlName(escaped, data, parent, respecDoc) {
     }
     decorateDfn(dfn, data, parentName, name);
     return hyperHTML`<a
-      data-link-for="${parentName.toLowerCase()}"
+      data-link-for="${parentName}"
       data-link-type="${linkType}"
       data-lt="${dfn.dataset.lt || null}"
       >${escaped}</a>`;
@@ -331,11 +331,11 @@ function renderWebIDL(idlElement, respecDoc, index) {
   idlElement.textContent = "";
   idlElement.append(...html);
   idlElement.querySelectorAll("[data-idl]").forEach(elem => {
-    const title = elem.dataset.title.toLowerCase();
+    const title = elem.dataset.title;
     // Select the nearest ancestor element that can contain members.
     const parent = elem.parentElement.closest("[data-idl][data-title]");
     if (parent) {
-      elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
+      elem.dataset.dfnFor = parent.dataset.title;
     }
     respecDoc.definitionMap.registerDefinition(elem, [title]);
   });

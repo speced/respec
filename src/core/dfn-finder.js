@@ -8,9 +8,9 @@ import { wrapInner } from "./utils.js";
  * @param {string} name
  */
 export function decorateDfn(dfn, defn, parent, name) {
-  parent = parent.toLowerCase();
   if (!dfn.id) {
-    const middle = parent ? `${parent}-` : "";
+    const lCaseParent = parent.toLowerCase();
+    const middle = lCaseParent ? `${lCaseParent}-` : "";
     let last = name
       .toLowerCase()
       .replace(/[()]/g, "")

@@ -160,7 +160,7 @@ function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
   const dfn = titleToDfns[target.title][target.for];
   if (dfn.dataset.cite) {
     ant.dataset.cite = dfn.dataset.cite;
-  } else if (linkFor && !titleToDfns[linkFor.toLowerCase()]) {
+  } else if (linkFor && !titleToDfns[linkFor]) {
     possibleExternalLinks.push(ant);
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
