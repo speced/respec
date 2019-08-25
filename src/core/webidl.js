@@ -140,8 +140,7 @@ function defineIdlName(escaped, data, parent) {
      data-lt="default toJSON operation">${escaped}</a>`;
   }
   if (!data.partial) {
-    const dfn = hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
-      parent.name}">${escaped}</dfn>`;
+    const dfn = hyperHTML`<dfn data-export data-dfn-type="${linkType}">${escaped}</dfn>`;
     decorateDfn(dfn, data, parentName, name);
     return dfn;
   }
