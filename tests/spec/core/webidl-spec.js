@@ -1310,6 +1310,28 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const [, tea] = doc.querySelectorAll(".respec-offending-element");
     expect(tea.textContent).toBe("TeaTime");
   });
+  it("self-defining IDL with same member names", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          dictionary Roselia {
+            DOMString hikawa = "sayo";
+          };
+          dictionary PastelPalettes {
+            DOMString hikawa = "hina";
+          };
+        </pre>
+        <dfn>Roselia</dfn> and <dfn>PastelPalettes</dfn> are names of bands.
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const [member1, member2] = doc.querySelectorAll("pre dfn");
+    expect(member1.dataset.dfnFor).toBe("Roselia");
+    expect(member2.dataset.dfnFor).toBe("PastelPalettes");
+    expect(member1.classList).not.toContain("respec-offending-element");
+    expect(member2.classList).not.toContain("respec-offending-element");
+  });
   it("marks a failing IDL block", async () => {
     const body = `
       <section>
