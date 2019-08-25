@@ -23,6 +23,7 @@ jobs:
   test-node:
     name: Node.js-based Headless Tests
     runs-on: ubuntu-latest
+    needs: lint
     steps:
       - uses: actions/checkout@v1
         with:
