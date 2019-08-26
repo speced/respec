@@ -18,7 +18,6 @@ describe("Core - Pluralize", () => {
 
     const dfnFoo = doc.querySelectorAll("#section dfn")[0];
     expect(dfnFoo.id).toBe("dfn-foo");
-    expect(dfnFoo.dataset.lt).toBeFalsy();
     expect(dfnFoo.dataset.plurals).toBe("foos");
     const linksFoo = [...doc.querySelectorAll("#fooLinks a")];
     expect(linksFoo.length).toBe(2);
@@ -28,7 +27,6 @@ describe("Core - Pluralize", () => {
 
     const dfnBars = doc.querySelectorAll("#section dfn")[1];
     expect(dfnBars.id).toBe("dfn-bars");
-    expect(dfnBars.dataset.lt).toBeFalsy();
     expect(dfnBars.dataset.plurals).toBe("bar");
     const linksBars = [...doc.querySelectorAll("#barLinks a")];
     expect(linksBars.length).toBe(2);
@@ -178,7 +176,6 @@ describe("Core - Pluralize", () => {
     expect(dfnBars).toBeTruthy();
     const dfnFoo = doc.getElementById("dfn-foo");
     expect(dfnFoo).toBeTruthy();
-    expect("lt" in dfnFoo.dataset).toBeFalsy();
     const dfnFoos = doc.getElementById("dfn-foos");
     expect(dfnFoos).toBeTruthy();
     expect(dfnFoos.textContent).toBe("baz");
@@ -246,7 +243,6 @@ describe("Core - Pluralize", () => {
 
     const dfn = doc.querySelector("#section dfn");
     expect(dfn.id).toBe("dfn-baz"); // uses first data-lt as `id`
-    expect(dfn.dataset.lt).toBeUndefined();
     const [goodLink, badLink] = [...doc.querySelectorAll("#section a")];
     expect(goodLink.getAttribute("href")).toBe("#dfn-baz");
     expect(badLink.classList).toContain("respec-offending-element");

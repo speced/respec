@@ -25,10 +25,11 @@ describe("Core — Link to definitions", () => {
       <section data-link-for="Request">
         <h2><dfn>Request</dfn> interface</h2>
         <pre class="idl">
+          [Exposed=Window]
           interface Request {};
         </pre>
         <p id="codeWrap">A <a>Request</a> object.</p>
-        <p id="noCodeWrap">An instance of <a lt="Request">the request interface</a>.</p>
+        <p id="noCodeWrap">An instance of <a data-lt="Request">the request interface</a>.</p>
       </section>`;
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);

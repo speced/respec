@@ -14,8 +14,9 @@ export function run() {
     if (closestDfn && closestDfn !== dfn && !dfn.dataset.dfnFor) {
       dfn.dataset.dfnFor = closestDfn.dataset.dfnFor;
     }
-    // TODO: we should probably use weakmaps and weaksets here to avoid leaks.
-    const titles = getDfnTitles(dfn, { isDefinition: true });
+    const titles = getDfnTitles(dfn);
     registerDefinition(dfn, titles);
+    if (titles.length) dfn.dataset.lt = titles.join("|");
+    if (!dfn.dataset.dfnType) dfn.dataset.dfnType = "dfn";
   });
 }

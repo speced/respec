@@ -52,8 +52,8 @@ describe("Core — Definition finder", () => {
     };
     const doc = await makeRSDoc(ops);
     const bar = doc.getElementById("bar");
-    expect(bar.dataset.lt).toBe("Foo.bar()|Foo.bar|bar()|bar");
+    expect(bar.dataset.lt).toBe("bar|Foo.bar()|Foo.bar|bar()");
     const baz = doc.getElementById("baz");
-    expect(baz.dataset.lt).toBe("Foo.baz()|Foo.baz|baz()|baz");
+    expect(baz.dataset.lt).toBe("baz()|Foo.baz()|Foo.baz|baz");
   });
 });

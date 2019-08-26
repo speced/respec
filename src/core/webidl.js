@@ -129,7 +129,7 @@ function defineIdlName(escaped, data, parent) {
       data-link-type="${linkType}"
       href="${href}"
       class="internalDFN"
-      >${escaped}</a>`;
+      ><code>${escaped}</code></a>`;
   }
 
   const isDefaultJSON =

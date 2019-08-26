@@ -582,47 +582,31 @@ export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
  * @param {boolean} [args.isDefinition]
  * @returns {String[]} array of title strings
  */
-export function getDfnTitles(elem, { isDefinition = false } = {}) {
-  let titleString = "";
-  let normText = "";
+export function getDfnTitles(elem) {
+  const titleSet = new Set();
   // data-lt-noDefault avoid using the text content of a definition
   // in the definition list.
-  if (!elem.hasAttribute("data-lt-noDefault")) {
-    normText = norm(elem.textContent);
-  }
+  const normText = !elem.hasAttribute("data-lt-noDefault")
+    ? norm(elem.textContent)
+    : "";
   if (elem.dataset.lt) {
     // prefer @data-lt for the list of title aliases
-    titleString = elem.dataset.lt;
-    if (normText !== "" && !titleString.startsWith(`${normText}|`)) {
-      // Use the definition itself, so to avoid having to declare the definition twice.
-      titleString += `|${normText}`;
-    }
+    elem.dataset.lt
+      .split("|")
+      .map(item => norm(item))
+      .reduce((set, item) => set.add(item), titleSet);
   } else if (
     elem.childNodes.length === 1 &&
     elem.getElementsByTagName("abbr").length === 1 &&
     elem.children[0].title
   ) {
-    titleString = elem.children[0].title;
+    titleSet.add(elem.children[0].title);
   } else {
-    titleString =
-      elem.textContent === '""' ? "the-empty-string" : elem.textContent;
+    if (elem.textContent === '""') titleSet.add("the-empty-string");
   }
-
-  // now we have a string of one or more titles
-  titleString = norm(titleString);
-  if (isDefinition) {
-    if (elem.dataset.lt) {
-      elem.dataset.lt = titleString;
-    }
-    // if there is no pre-defined type, assume it is a 'dfn'
-    if (!elem.dataset.dfnType) elem.dataset.dfnType = "dfn";
-  }
-
-  const titles = titleString
-    .split("|")
-    .filter(item => item !== "")
-    .reduce((collector, item) => collector.add(item), new Set());
-  return [...titles];
+  titleSet.add(normText);
+  const titles = [...titleSet].filter(item => item !== "");
+  return titles;
 }
 
 /**

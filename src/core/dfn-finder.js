@@ -114,14 +114,16 @@ export function addAlternativeNames(dfn, names) {
  */
 function findNormalDfn(defn, parent, name) {
   let resolvedName =
-    defn.type === "enum-value" && name === "" ? "the-empty-string" : name;
+    defn.type === "enum-value" && name === ""
+      ? "the-empty-string"
+      : name.toLowerCase();
   let dfnForArray = definitionMap[resolvedName];
   let dfns = getDfns(dfnForArray, parent, name, defn.type);
   // If we haven't found any definitions with explicit [for]
   // and [title], look for a dotted definition, "parent.name".
   if (dfns.length === 0 && parent !== "") {
     resolvedName = `${parent}.${resolvedName}`;
-    dfnForArray = definitionMap[resolvedName];
+    dfnForArray = definitionMap[resolvedName.toLowerCase()];
     if (dfnForArray !== undefined && dfnForArray.length === 1) {
       dfns = dfnForArray;
       // Found it: register with its local name
@@ -203,11 +205,15 @@ function getDfns(dfnForArray, parent, originalName, type) {
   }
   // Definitions that have a title and [data-dfn-for] that exactly match the
   // IDL entity:
-  const dfns = dfnForArray.filter(dfn => dfn.dataset.dfnFor === parent);
+  const dfns = dfnForArray.filter(
+    dfn =>
+      dfn.closest(`[data-dfn-for="${parent}"]`)
+  );
   // If this is a top-level entity, and we didn't find anything with
   // an explicitly empty [for], try <dfn> that inherited a [for].
   if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
-    return dfnForArray;
+    // Make sure the name exactly matches
+    return dfnForArray[0].textContent === originalName ? dfnForArray : [];
   } else if (topLevelEntities.has(type) && dfnForArray.length) {
     const dfn = dfnForArray.find(
       dfn => dfn.textContent.trim() === originalName

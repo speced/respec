@@ -22,6 +22,29 @@ const l10n = {
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
 
+class CaseInsensitiveMap extends Map {
+  constructor(/** entries: Array<[String, HTMLElement]> */ entries = []) {
+    super();
+    entries.forEach(([key, elem]) => {
+      this.set(key, elem);
+    });
+    return this;
+  }
+  set(key, elem) {
+    super.set(key.toLowerCase(), elem);
+    return this;
+  }
+  get(key) {
+    return super.get(key.toLowerCase());
+  }
+  has(key) {
+    return super.has(key.toLowerCase());
+  }
+  delete(key) {
+    return super.delete(key.toLowerCase());
+  }
+}
+
 export async function run(conf) {
   const titleToDfns = mapTitleToDfns();
   /** @type {HTMLElement[]} */
@@ -68,11 +91,10 @@ export async function run(conf) {
 }
 
 function mapTitleToDfns() {
-  /** @type {Record<string, Record<string, HTMLElement>>} */
-  const titleToDfns = {};
+  const titleToDfns = new CaseInsensitiveMap();
   Object.keys(definitionMap).forEach(title => {
     const { result, duplicates } = collectDfns(title);
-    titleToDfns[title] = result;
+    titleToDfns.set(title, result);
     if (duplicates.length > 0) {
       showInlineError(
         duplicates,
@@ -88,16 +110,15 @@ function mapTitleToDfns() {
  * @param {string} title
  */
 function collectDfns(title) {
-  /** @type {Record<string, HTMLElement>} */
-  const result = {};
+  const result = new Map();
   const duplicates = [];
   definitionMap[title].forEach(dfn => {
     const { dfnFor = "" } = dfn.dataset;
-    if (dfnFor in result) {
+    if (result.has(dfnFor)) {
       // We want <dfn> definitions to take precedence over
       // definitions from WebIDL. WebIDL definitions wind
       // up as <span>s instead of <dfn>.
-      const oldIsDfn = result[dfnFor].localName === "dfn";
+      const oldIsDfn = result.get(dfnFor).localName === "dfn";
       const newIsDfn = dfn.localName === "dfn";
       if (oldIsDfn) {
         if (!newIsDfn) {
@@ -107,7 +128,7 @@ function collectDfns(title) {
         duplicates.push(dfn);
       }
     }
-    result[dfnFor] = dfn;
+    result.set(dfnFor, dfn);
     addId(dfn, "dfn", title);
   });
   return { result, duplicates };
@@ -116,19 +137,21 @@ function collectDfns(title) {
 /**
  * @param {import("./utils.js").LinkTarget} target
  * @param {HTMLAnchorElement} anchor
- * @param {Record<string, Record<string, HTMLElement>>} titleToDfns
+ * @param {CaseInsensitiveMap} titleToDfns
  * @param {HTMLElement[]} possibleExternalLinks
  */
 function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
-  debugger;
   const { linkFor } = anchor.dataset;
-  if (!titleToDfns[target.title] || !titleToDfns[target.title][target.for]) {
+  if (
+    !titleToDfns.has(target.title) ||
+    !titleToDfns.get(target.title).get(target.for)
+  ) {
     return false;
   }
-  const dfn = titleToDfns[target.title][target.for];
+  const dfn = titleToDfns.get(target.title).get(target.for);
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
-  } else if (linkFor && !titleToDfns[linkFor]) {
+  } else if (linkFor && !titleToDfns.get(linkFor)) {
     possibleExternalLinks.push(anchor);
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references

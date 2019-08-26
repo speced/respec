@@ -23,6 +23,19 @@
     </script>
   </head>
   <body>
+      <section id="multipleEnums" data-dfn-for="Test2">
+          <h2>Multiple unique enums</h2>
+          <pre class="idl">
+            enum Test1 { "enum" };
+            enum Test2 { "enum" };
+          </pre>
+          <p>
+            <!-- Test1's enum -->
+            <dfn data-dfn-for="Test1">enum</dfn>
+            <!-- Test2's enum -->
+            <dfn>enum</dfn>
+          </p>
+        </section>
     <section id='abstract'>
       <p>
         This is required.
@@ -33,82 +46,21 @@
         This is required.
       </p>
     </section>
-    <section class="introductory" id="overview">
-      <h2>
-        Overview
-      </h2>
-      <p>
-        This section has a CSS class "<code>introductory</code>", which means
-        it will not appear in the <abbr title="Table of Contents">TOC</abbr>.
-        Example Link to Section <a href="#logo"></a>.
-      </p>
-    </section>
-    <section class="informative" id="intro">
-      <h2>
-        Introduction
-      </h2>
-      <p>
-        This section has a CSS class "<code>informative</code>", so it is
-        listed in the TOC. ReSpec will list this reference as non-normative
-        since this is an informative section [[DOM]].
-      </p>
-    </section>
-    <section data-dfn-for="Foo">
-      <h2>
-        <dfn>Foo</dfn> interface
-      </h2>
-      <pre class="idl">
-      [Exposed=Window, Constructor]
-      interface Foo {
-        attribute DOMString bar;
-        void doTheFoo();
-      };
-      </pre>
-      <p>
-        The <a>Foo</a> interface is nice. Lets you do stuff.
-      </p>
-      <p>
-        The <dfn>bar</dfn> attribute, returns 🍺.
-      </p>
-      <p>
-        The <dfn>doTheFoo()</dfn> method, returns nothing.
-      </p>
-      <p>
-        ReSpec will list this reference as normative [[ECMASCRIPT]].
-      </p>
-      <p>
-        This is an example of a non-normative reference in a normative section
-        [[?HTML]]
-      </p>
-      <pre class="js example" title="Usage example">
-        const foo = new Foo();
-        if (foo.bar === "my bar") {
-          foo.doTheBar();
-        }
-      </pre>
-    </section>
-    <section id="logo">
-      <h2>
-        Figure
-      </h2>
-      <figure id="figure">
-        <img src="figure.svg" alt="W3C Logo">
-        <figcaption>
-          The W3C logo
-        </figcaption>
-      </figure>
-      <p>
-        Link to <a href="#figure"></a>
-      </p>
-    </section>
-    <section id="idl-index" class="appendix">
-      <h2>
-        IDL Index
-      </h2>
-      <p>
-        All the Web IDL in this specification is collected in this section.
-      </p>
-    </section>
-    <section id="tof" class="informative appendix"></section>
+    <section id="documentation">
+        <h2>Documentation</h2>
+        <pre id='doc-iface' class='idl'>
+          [Exposed=Window]
+          interface Documented {
+            attribute DOMString definedElsewhere;
+          };
+        </pre>
+        <p>
+          <dfn>Documented.definedElsewhere</dfn> is defined by writing its fully-qualified name.
+        </p>
+        <p id="without-link-for">
+          We had a bug where <a>Documented</a> got a [dfn-for] attribute,
+          which broke links to it without [link-for].
+        </p>
+      </section>
   </body>
 </html>
