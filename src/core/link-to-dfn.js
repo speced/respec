@@ -23,30 +23,26 @@ const l10n = {
 const lang = defaultLang in l10n ? defaultLang : "en";
 
 export async function run(conf) {
-  document.normalize();
-
   const titleToDfns = mapTitleToDfns();
-
   /** @type {HTMLElement[]} */
   const possibleExternalLinks = [];
   /** @type {HTMLAnchorElement[]} */
   const badLinks = [];
 
   const localLinkSelector =
-    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo)";
+    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)";
   document.querySelectorAll(localLinkSelector).forEach((
-    /** @type {HTMLAnchorElement} */ ant
+    /** @type {HTMLAnchorElement} */ anchor
   ) => {
-    if (ant.classList.contains("externalDFN")) return;
-    const linkTargets = getLinkTargets(ant);
+    const linkTargets = getLinkTargets(anchor);
     const foundDfn = linkTargets.some(target => {
-      return findLinkTarget(target, ant, titleToDfns, possibleExternalLinks);
+      return findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks);
     });
     if (!foundDfn && linkTargets.length !== 0) {
-      if (ant.dataset.cite === "") {
-        badLinks.push(ant);
+      if (anchor.dataset.cite === "") {
+        badLinks.push(anchor);
       } else {
-        possibleExternalLinks.push(ant);
+        possibleExternalLinks.push(anchor);
       }
     }
   });
@@ -96,10 +92,6 @@ function collectDfns(title) {
   const result = {};
   const duplicates = [];
   definitionMap[title].forEach(dfn => {
-    if (dfn.dataset.idl === undefined) {
-      // Non-IDL definitions aren't "for" an interface.
-      delete dfn.dataset.dfnFor;
-    }
     const { dfnFor = "" } = dfn.dataset;
     if (dfnFor in result) {
       // We want <dfn> definitions to take precedence over
@@ -116,61 +108,46 @@ function collectDfns(title) {
       }
     }
     result[dfnFor] = dfn;
-    assignDfnId(dfn, title);
+    addId(dfn, "dfn", title);
   });
   return { result, duplicates };
 }
 
 /**
- * @param {HTMLElement} dfn
- * @param {string} title
- */
-function assignDfnId(dfn, title) {
-  if (!dfn.id) {
-    const { dfnFor } = dfn.dataset;
-    if (dfn.dataset.idl) {
-      addId(dfn, "dom", (dfnFor ? `${dfnFor}-` : "") + title);
-    } else {
-      addId(dfn, "dfn", title);
-    }
-  }
-}
-
-/**
  * @param {import("./utils.js").LinkTarget} target
- * @param {HTMLAnchorElement} ant
+ * @param {HTMLAnchorElement} anchor
  * @param {Record<string, Record<string, HTMLElement>>} titleToDfns
  * @param {HTMLElement[]} possibleExternalLinks
  */
-function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
-  const { linkFor } = ant.dataset;
+function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
+  debugger;
+  const { linkFor } = anchor.dataset;
   if (!titleToDfns[target.title] || !titleToDfns[target.title][target.for]) {
     return false;
   }
   const dfn = titleToDfns[target.title][target.for];
   if (dfn.dataset.cite) {
-    ant.dataset.cite = dfn.dataset.cite;
+    anchor.dataset.cite = dfn.dataset.cite;
   } else if (linkFor && !titleToDfns[linkFor]) {
-    possibleExternalLinks.push(ant);
+    possibleExternalLinks.push(anchor);
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
     const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-    ant.dataset.lt = lt[0] || dfn.textContent;
-    possibleExternalLinks.push(ant);
+    anchor.dataset.lt = lt[0] || dfn.textContent;
+    possibleExternalLinks.push(anchor);
   } else {
-    if (ant.dataset.idl === "partial") {
-      possibleExternalLinks.push(ant);
+    if (anchor.dataset.idl === "partial") {
+      possibleExternalLinks.push(anchor);
     } else {
-      ant.href = `#${dfn.id}`;
-      ant.classList.add("internalDFN");
+      anchor.href = `#${dfn.id}`;
+      anchor.classList.add("internalDFN");
     }
   }
-  // add a bikeshed style indication of the type of link
-  if (!ant.hasAttribute("data-link-type")) {
-    ant.dataset.linkType = "dfn";
+  if (!anchor.hasAttribute("data-link-type")) {
+    anchor.dataset.linkType = "idl" in dfn.dataset ? "idl" : "dfn";
   }
   if (isCode(dfn)) {
-    wrapAsCode(ant, dfn);
+    wrapAsCode(anchor, dfn);
   }
   return true;
 }

@@ -71,7 +71,7 @@ describe("Core — Link to definitions", () => {
     expect(dfn3.title).toBe("test1");
   });
 
-  it("should not have data-dfn-for if not an IDL definition", async () => {
+  it("has data-dfn-for if it's included", async () => {
     const bodyText = `
       <section>
         <h2>Test Section</h2>
@@ -80,7 +80,7 @@ describe("Core — Link to definitions", () => {
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
     const [dfn] = doc.getElementsByTagName("dfn");
-    expect(dfn.dataset.dfnFor).toBeUndefined();
+    expect(dfn.dataset.dfnFor).toBe("Foo");
   });
 
   it("should get ID from the first match", async () => {

@@ -52,13 +52,27 @@ function tryFindDfn(defn, parent, name) {
  * @param {string} name
  */
 function findAttributeDfn(defn, parent, name) {
-  const asQualifiedName = `${parent}.${name}`;
   const dfn = findNormalDfn(defn, parent, name);
   if (!dfn) {
     return;
   }
-  addAlternativeNames(dfn, [asQualifiedName, name]);
+  addAlternativeNames(dfn, getAlternativeNames("attribute", parent, name));
   return dfn;
+}
+
+function getAlternativeNames(type, parent, name) {
+  const asQualifiedName = `${parent}.${name}`;
+  switch (type) {
+    case "operation": {
+      // Allow linking to both "method()" and "method" name.
+      const asMethodName = `${name}()`;
+      const asFullyQualifiedName = `${asQualifiedName}()`;
+      return [asFullyQualifiedName, asQualifiedName, asMethodName, name];
+    }
+    case "attribute":
+      return [asQualifiedName, name];
+  }
+  return;
 }
 
 /**
@@ -71,23 +85,14 @@ function findOperationDfn(defn, parent, name) {
   if (name.includes("!overload")) {
     return findNormalDfn(defn, parent, name);
   }
-  // Allow linking to both "method()" and "method" name.
   const asMethodName = `${name}()`;
-  const asQualifiedName = `${parent}.${name}`;
-  const asFullyQualifiedName = `${asQualifiedName}()`;
-
   const dfn =
     findNormalDfn(defn, parent, asMethodName) ||
     findNormalDfn(defn, parent, name);
   if (!dfn) {
     return;
   }
-  addAlternativeNames(dfn, [
-    asFullyQualifiedName,
-    asQualifiedName,
-    asMethodName,
-    name,
-  ]);
+  addAlternativeNames(dfn, getAlternativeNames("operation", parent, name));
   return dfn;
 }
 
@@ -95,7 +100,7 @@ function findOperationDfn(defn, parent, name) {
  * @param {HTMLElement} dfn
  * @param {string[]} names
  */
-function addAlternativeNames(dfn, names) {
+export function addAlternativeNames(dfn, names) {
   const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
   lt.push(...names);
   dfn.dataset.lt = [...new Set(lt)].join("|");
@@ -172,6 +177,17 @@ export function decorateDfn(dfn, defn, parent, name) {
   if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
     wrapInner(dfn, dfn.ownerDocument.createElement("code"));
   }
+
+  // Add data-lt values and register them
+  switch (defn.type) {
+    case "operation":
+      addAlternativeNames(dfn, getAlternativeNames("operation", parent, name));
+      break;
+    case "attribute":
+      addAlternativeNames(dfn, getAlternativeNames("attribute", parent, name));
+      break;
+  }
+
   return dfn;
 }
 

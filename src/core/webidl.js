@@ -123,10 +123,12 @@ function defineIdlName(escaped, data, parent) {
       dfn.dataset.dfnType = linkType;
     }
     decorateDfn(dfn, data, parentName, name);
+    const href = `#${dfn.id}`;
     return hyperHTML`<a
       data-link-for="${parentName}"
       data-link-type="${linkType}"
-      data-lt="${dfn.dataset.lt || null}"
+      href="${href}"
+      class="internalDFN"
       >${escaped}</a>`;
   }
 
