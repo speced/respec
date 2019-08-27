@@ -955,7 +955,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(notDefinedAttr[0].textContent).toBe("notDefined");
     expect(
       section.querySelector(
-        "p[data-link-for] a[href='#idl-def-documented-notdefined']"
+        "p[data-link-for] a[href='#dom-documented-notdefined']"
       ).textContent
     ).toBe("notDefined");
 
@@ -1322,6 +1322,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
           };
         </pre>
         <dfn>Roselia</dfn> and <dfn>PastelPalettes</dfn> are names of bands.
+        <span id="links"><a>Roselia</a> <a>PastelPalettes</a> {{Roselia/hikawa}}</span>.
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -1331,6 +1332,10 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(member2.dataset.dfnFor).toBe("PastelPalettes");
     expect(member1.classList).not.toContain("respec-offending-element");
     expect(member2.classList).not.toContain("respec-offending-element");
+    const [anchor1, anchor2, anchor3] = doc.querySelectorAll("#links a");
+    expect(anchor1.getAttribute("href")).toBe("#dom-roselia");
+    expect(anchor2.getAttribute("href")).toBe("#dom-pastelpalettes");
+    expect(anchor3.getAttribute("href")).toBe("#dom-roselia-hikawa");
   });
   it("marks a failing IDL block", async () => {
     const body = `

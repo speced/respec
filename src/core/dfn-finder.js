@@ -1,7 +1,6 @@
 // @ts-check
 import { definitionMap, registerDefinition } from "./dfn-map.js";
-import { pub } from "./pubsubhub.js";
-import { wrapInner } from "./utils.js";
+import { showInlineError, wrapInner } from "./utils.js";
 
 const topLevelEntities = new Set([
   "callback interface",
@@ -27,18 +26,7 @@ const topLevelEntities = new Set([
  * @param {string} name
  */
 export function findDfn(defn, name, { parent = "" } = {}) {
-  return tryFindDfn(defn, parent, name);
-}
-
-/**
- * @param {*} defn
- * @param {string} parent
- * @param {string} name
- */
-function tryFindDfn(defn, parent, name) {
   switch (defn.type) {
-    case "attribute":
-      return findAttributeDfn(defn, parent, name);
     case "operation":
       return findOperationDfn(defn, parent, name);
     default:
@@ -47,19 +35,10 @@ function tryFindDfn(defn, parent, name) {
 }
 
 /**
- * @param {*} defn
+ * @param {string} type
  * @param {string} parent
  * @param {string} name
  */
-function findAttributeDfn(defn, parent, name) {
-  const dfn = findNormalDfn(defn, parent, name);
-  if (!dfn) {
-    return;
-  }
-  addAlternativeNames(dfn, getAlternativeNames("attribute", parent, name));
-  return dfn;
-}
-
 function getAlternativeNames(type, parent, name) {
   const asQualifiedName = `${parent}.${name}`;
   switch (type) {
@@ -85,14 +64,7 @@ function findOperationDfn(defn, parent, name) {
     return findNormalDfn(defn, parent, name);
   }
   const asMethodName = `${name}()`;
-  const dfn =
-    findNormalDfn(defn, parent, asMethodName) ||
-    findNormalDfn(defn, parent, name);
-  if (!dfn) {
-    return;
-  }
-  addAlternativeNames(dfn, getAlternativeNames("operation", parent, name));
-  return dfn;
+  return findNormalDfn(defn, parent, asMethodName, name);
 }
 
 /**
@@ -109,36 +81,38 @@ function addAlternativeNames(dfn, names) {
 /**
  * @param {*} defn
  * @param {string} parent
- * @param {string} name
+ * @param {...string} names
  */
-function findNormalDfn(defn, parent, name) {
-  let resolvedName =
-    defn.type === "enum-value" && name === "" ? "the-empty-string" : name;
-  let dfnForArray = definitionMap[resolvedName];
-  let dfns = getDfns(dfnForArray, parent, name, defn.type);
-  // If we haven't found any definitions with explicit [for]
-  // and [title], look for a dotted definition, "parent.name".
-  if (dfns.length === 0 && parent !== "") {
-    resolvedName = `${parent}.${resolvedName}`;
-    dfnForArray = definitionMap[resolvedName];
-    if (dfnForArray !== undefined && dfnForArray.length === 1) {
-      dfns = dfnForArray;
-      // Found it: register with its local name
-      delete definitionMap[resolvedName];
-      registerDefinition(dfns[0], [resolvedName]);
+function findNormalDfn(defn, parent, ...names) {
+  for (const name of names) {
+    let resolvedName =
+      defn.type === "enum-value" && name === "" ? "the-empty-string" : name;
+    let dfnForArray = definitionMap[resolvedName];
+    let dfns = getDfns(dfnForArray, parent, name, defn.type);
+    // If we haven't found any definitions with explicit [for]
+    // and [title], look for a dotted definition, "parent.name".
+    if (dfns.length === 0 && parent !== "") {
+      resolvedName = `${parent}.${resolvedName}`;
+      dfnForArray = definitionMap[resolvedName];
+      if (dfnForArray !== undefined && dfnForArray.length === 1) {
+        dfns = dfnForArray;
+        // Found it: register with its local name
+        delete definitionMap[resolvedName];
+        registerDefinition(dfns[0], [resolvedName]);
+      }
     }
-  }
-  if (dfns.length > 1) {
-    const msg = `Multiple \`<dfn>\`s for \`${name}\` ${
-      parent ? `in \`${parent}\`` : ""
-    }`;
-    pub("error", msg);
-  }
-  if (dfns.length) {
-    if (name !== resolvedName) {
-      dfns[0].dataset.lt = resolvedName;
+    if (dfns.length > 1) {
+      const msg = `Multiple \`<dfn>\`s for \`${name}\` ${
+        parent ? `in \`${parent}\`` : ""
+      }`;
+      showInlineError(dfns, msg, "Duplicate definition.");
     }
-    return dfns[0];
+    if (dfns.length) {
+      if (name !== resolvedName) {
+        dfns[0].dataset.lt = resolvedName;
+      }
+      return dfns[0];
+    }
   }
 }
 
@@ -176,6 +150,15 @@ export function decorateDfn(dfn, defn, parent, name) {
   if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
     wrapInner(dfn, dfn.ownerDocument.createElement("code"));
   }
+
+  // Add data-lt values and register them
+  switch (defn.type) {
+    case "attribute":
+    case "operation":
+      addAlternativeNames(dfn, getAlternativeNames(defn.type, parent, name));
+      break;
+  }
+
   return dfn;
 }
 
