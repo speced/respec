@@ -71,7 +71,6 @@ function getAlternativeNames(type, parent, name) {
     case "attribute":
       return [asQualifiedName, name];
   }
-  return;
 }
 
 /**
