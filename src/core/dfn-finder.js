@@ -1,7 +1,6 @@
 // @ts-check
 import { definitionMap, registerDefinition } from "./dfn-map.js";
-import { pub } from "./pubsubhub.js";
-import { wrapInner } from "./utils.js";
+import { showInlineError, wrapInner } from "./utils.js";
 
 const topLevelEntities = new Set([
   "callback interface",
@@ -86,9 +85,7 @@ function findOperationDfn(defn, parent, name) {
     return findNormalDfn(defn, parent, name);
   }
   const asMethodName = `${name}()`;
-  const dfn =
-    findNormalDfn(defn, parent, asMethodName) ||
-    findNormalDfn(defn, parent, name);
+  const dfn = findNormalDfn(defn, parent, asMethodName, name);
   if (!dfn) {
     return;
   }
@@ -110,38 +107,40 @@ export function addAlternativeNames(dfn, names) {
 /**
  * @param {*} defn
  * @param {string} parent
- * @param {string} name
+ * @param {string[]} names
  */
-function findNormalDfn(defn, parent, name) {
-  let resolvedName =
-    defn.type === "enum-value" && name === ""
-      ? "the-empty-string"
-      : name.toLowerCase();
-  let dfnForArray = definitionMap[resolvedName];
-  let dfns = getDfns(dfnForArray, parent, name, defn.type);
-  // If we haven't found any definitions with explicit [for]
-  // and [title], look for a dotted definition, "parent.name".
-  if (dfns.length === 0 && parent !== "") {
-    resolvedName = `${parent}.${resolvedName}`;
-    dfnForArray = definitionMap[resolvedName.toLowerCase()];
-    if (dfnForArray !== undefined && dfnForArray.length === 1) {
-      dfns = dfnForArray;
-      // Found it: register with its local name
-      delete definitionMap[resolvedName];
-      registerDefinition(dfns[0], [resolvedName]);
+function findNormalDfn(defn, parent, ...names) {
+  for (const name of names) {
+    let resolvedName =
+      defn.type === "enum-value" && name === ""
+        ? "the-empty-string"
+        : name.toLowerCase();
+    let dfnForArray = definitionMap[resolvedName];
+    let dfns = getDfns(dfnForArray, parent, name, defn.type);
+    // If we haven't found any definitions with explicit [for]
+    // and [title], look for a dotted definition, "parent.name".
+    if (dfns.length === 0 && parent !== "") {
+      resolvedName = `${parent}.${resolvedName}`;
+      dfnForArray = definitionMap[resolvedName.toLowerCase()];
+      if (dfnForArray !== undefined && dfnForArray.length === 1) {
+        dfns = dfnForArray;
+        // Found it: register with its local name
+        delete definitionMap[resolvedName];
+        registerDefinition(dfns[0], [resolvedName]);
+      }
     }
-  }
-  if (dfns.length > 1) {
-    const msg = `Multiple \`<dfn>\`s for \`${name}\` ${
-      parent ? `in \`${parent}\`` : ""
-    }`;
-    pub("error", msg);
-  }
-  if (dfns.length) {
-    if (name !== resolvedName) {
-      dfns[0].dataset.lt = resolvedName;
+    if (dfns.length > 1) {
+      const msg = `WebIDL identifier \`${name}\` ${
+        parent ? `for \`${parent}\`` : ""
+      } is defined multiple times`;
+      showInlineError(dfns, msg, "Duplicate definition.");
     }
-    return dfns[0];
+    if (dfns.length) {
+      if (name !== resolvedName) {
+        dfns[0].dataset.lt = resolvedName;
+      }
+      return dfns[0];
+    }
   }
 }
 
@@ -195,7 +194,7 @@ export function decorateDfn(dfn, defn, parent, name) {
 
 /**
  * @param {HTMLElement[]} dfnForArray
- * @param {string} parent
+ * @param {string} parent - data-dfn-for
  * @param {string} originalName
  * @param {string} type
  */
@@ -203,14 +202,17 @@ function getDfns(dfnForArray, parent, originalName, type) {
   if (!dfnForArray) {
     return [];
   }
-  // Definitions that have a title and [data-dfn-for] that exactly match the
+  // Definitions that have a name and [data-dfn-for] that exactly match the
   // IDL entity:
-  const dfns = dfnForArray.filter(
-    dfn =>
-      dfn.closest(`[data-dfn-for="${parent}"]`)
-  );
-  // If this is a top-level entity, and we didn't find anything with
-  // an explicitly empty [for], try <dfn> that inherited a [for].
+  const dfns = [];
+  for (const dfn of dfnForArray) {
+    /** @type {HTMLElement} */
+    const closestDfnFor = dfn.closest(`[data-dfn-for]`);
+    if (!closestDfnFor) {
+      continue;
+    }
+    if (closestDfnFor.dataset.dfnFor === parent) dfns.push(dfn);
+  }
   if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
     // Make sure the name exactly matches
     return dfnForArray[0].textContent === originalName ? dfnForArray : [];

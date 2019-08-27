@@ -586,9 +586,8 @@ export function getDfnTitles(elem) {
   const titleSet = new Set();
   // data-lt-noDefault avoid using the text content of a definition
   // in the definition list.
-  const normText = !elem.hasAttribute("data-lt-noDefault")
-    ? norm(elem.textContent)
-    : "";
+  // ltNodefault is === "data-lt-noDefault"... someone screwed up 😖
+  const normText = "ltNodefault" in elem.dataset ? "" : norm(elem.textContent);
   if (elem.dataset.lt) {
     // prefer @data-lt for the list of title aliases
     elem.dataset.lt
@@ -636,9 +635,9 @@ export function getLinkTargets(elem) {
       // If there are multiple '.'s, this won't match an
       // Interface/member pair anyway.
       result.push({ for: split[0], title: split[1] });
-    } else {
-      result.push({ for: linkFor, title });
     }
+    result.push({ for: linkFor, title });
+
     // Finally, we can try to match without link for
     if (linkFor !== "") result.push({ for: "", title });
     return result;

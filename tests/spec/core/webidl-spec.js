@@ -949,7 +949,9 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         "p[data-link-for] a[href='#dom-documented-docstring']"
       ).textContent
     ).toBe("docString");
-    const selfDefinedAttr = target.querySelectorAll(".idlAttribute dfn.idlName");
+    const selfDefinedAttr = target.querySelectorAll(
+      ".idlAttribute dfn.idlName"
+    );
     expect(selfDefinedAttr.length).toBe(1);
     expect(selfDefinedAttr[0].getElementsByTagName("a").length).toBe(0);
     expect(selfDefinedAttr[0].textContent).toBe("notDefined");

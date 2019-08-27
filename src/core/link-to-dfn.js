@@ -17,7 +17,10 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
 const l10n = {
   en: {
-    duplicate: "This is defined more than once in the document.",
+    duplicateMsg(title) {
+      return `Duplicate definition(s) of '${title}'`;
+    },
+    duplicateTitle: "This is defined more than once in the document.",
   },
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
@@ -98,8 +101,8 @@ function mapTitleToDfns() {
     if (duplicates.length > 0) {
       showInlineError(
         duplicates,
-        `Duplicate definitions of '${title}'`,
-        l10n[lang].duplicate
+        l10n[lang].duplicateMsg(title),
+        l10n[lang].duplicateTitle
       );
     }
   });
@@ -252,7 +255,7 @@ function showLinkingError(elems) {
     showInlineWarning(
       elem,
       `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``,
-      "Linking error: not matching <dfn>"
+      "Linking error: not matching `<dfn>`"
     );
   });
 }
