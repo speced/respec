@@ -193,7 +193,7 @@ export function decorateDfn(dfn, defn, parent, name) {
 
 /**
  * @param {HTMLElement[]} dfnForArray
- * @param {string} parent - data-dfn-for
+ * @param {string} parent data-dfn-for
  * @param {string} originalName
  * @param {string} type
  */

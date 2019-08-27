@@ -593,18 +593,20 @@ export function getDfnTitles(elem) {
     elem.dataset.lt
       .split("|")
       .map(item => norm(item))
-      .reduce((set, item) => set.add(item), titleSet);
+      .forEach(item => titleSet.add(item));
   } else if (
     elem.childNodes.length === 1 &&
     elem.getElementsByTagName("abbr").length === 1 &&
     elem.children[0].title
   ) {
     titleSet.add(elem.children[0].title);
-  } else {
-    if (elem.textContent === '""') titleSet.add("the-empty-string");
+  } else if (elem.textContent === '""') {
+    titleSet.add("the-empty-string");
   }
+
   titleSet.add(normText);
-  const titles = [...titleSet].filter(item => item !== "");
+  titleSet.delete("");
+  const titles = [...titleSet];
   return titles;
 }
 
