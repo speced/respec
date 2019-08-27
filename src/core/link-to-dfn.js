@@ -17,7 +17,13 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
 const l10n = {
   en: {
-    duplicate: "This is defined more than once in the document.",
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `Duplicate definition(s) of '${title}'`;
+    },
+    duplicateTitle: "This is defined more than once in the document.",
   },
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
@@ -72,11 +78,11 @@ export async function run(conf) {
 }
 
 function mapTitleToDfns() {
-  /** @type {Record<string, Record<string, HTMLElement>>} */
-  const titleToDfns = {};
+  /** @type {Map<string, Map<string, HTMLElement>>} */
+  const titleToDfns = new Map();
   Object.keys(definitionMap).forEach(title => {
     const { result, duplicates } = collectDfns(title);
-    titleToDfns[title] = result;
+    titleToDfns.set(title, result);
     if (duplicates.length > 0) {
       showInlineError(
         duplicates,
@@ -92,8 +98,8 @@ function mapTitleToDfns() {
  * @param {string} title
  */
 function collectDfns(title) {
-  /** @type {Record<string, HTMLElement>} */
-  const result = {};
+  /** @type {Map<string, HTMLElement>} */
+  const result = new Map();
   const duplicates = [];
   definitionMap[title].forEach(dfn => {
     if (dfn.dataset.idl === undefined) {
@@ -101,11 +107,11 @@ function collectDfns(title) {
       delete dfn.dataset.dfnFor;
     }
     const { dfnFor = "" } = dfn.dataset;
-    if (dfnFor in result) {
+    if (result.has(dfnFor)) {
       // We want <dfn> definitions to take precedence over
       // definitions from WebIDL. WebIDL definitions wind
       // up as <span>s instead of <dfn>.
-      const oldIsDfn = result[dfnFor].localName === "dfn";
+      const oldIsDfn = result.get(dfnFor).localName === "dfn";
       const newIsDfn = dfn.localName === "dfn";
       if (oldIsDfn) {
         if (!newIsDfn) {
@@ -115,7 +121,7 @@ function collectDfns(title) {
         duplicates.push(dfn);
       }
     }
-    result[dfnFor] = dfn;
+    result.set(dfnFor, dfn);
     assignDfnId(dfn, title);
   });
   return { result, duplicates };
@@ -139,18 +145,21 @@ function assignDfnId(dfn, title) {
 /**
  * @param {import("./utils.js").LinkTarget} target
  * @param {HTMLAnchorElement} ant
- * @param {Record<string, Record<string, HTMLElement>>} titleToDfns
+ * @param {Map<string, Map<string, HTMLElement>>} titleToDfns
  * @param {HTMLElement[]} possibleExternalLinks
  */
 function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
   const { linkFor } = ant.dataset;
-  if (!titleToDfns[target.title] || !titleToDfns[target.title][target.for]) {
+  if (
+    !titleToDfns.has(target.title) ||
+    !titleToDfns.get(target.title).get(target.for)
+  ) {
     return false;
   }
-  const dfn = titleToDfns[target.title][target.for];
+  const dfn = titleToDfns.get(target.title).get(target.for);
   if (dfn.dataset.cite) {
     ant.dataset.cite = dfn.dataset.cite;
-  } else if (linkFor && !titleToDfns[linkFor]) {
+  } else if (linkFor && !titleToDfns.get(linkFor)) {
     possibleExternalLinks.push(ant);
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
@@ -252,7 +261,7 @@ function showLinkingError(elems) {
     showInlineWarning(
       elem,
       `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``,
-      "Linking error: not matching <dfn>"
+      "Linking error: not matching `<dfn>`"
     );
   });
 }

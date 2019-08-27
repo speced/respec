@@ -52,13 +52,26 @@ function tryFindDfn(defn, parent, name) {
  * @param {string} name
  */
 function findAttributeDfn(defn, parent, name) {
-  const asQualifiedName = `${parent}.${name}`;
   const dfn = findNormalDfn(defn, parent, name);
   if (!dfn) {
     return;
   }
-  addAlternativeNames(dfn, [asQualifiedName, name]);
+  addAlternativeNames(dfn, getAlternativeNames("attribute", parent, name));
   return dfn;
+}
+
+function getAlternativeNames(type, parent, name) {
+  const asQualifiedName = `${parent}.${name}`;
+  switch (type) {
+    case "operation": {
+      // Allow linking to both "method()" and "method" name.
+      const asMethodName = `${name}()`;
+      const asFullyQualifiedName = `${asQualifiedName}()`;
+      return [asFullyQualifiedName, asQualifiedName, asMethodName, name];
+    }
+    case "attribute":
+      return [asQualifiedName, name];
+  }
 }
 
 /**
@@ -71,23 +84,14 @@ function findOperationDfn(defn, parent, name) {
   if (name.includes("!overload")) {
     return findNormalDfn(defn, parent, name);
   }
-  // Allow linking to both "method()" and "method" name.
   const asMethodName = `${name}()`;
-  const asQualifiedName = `${parent}.${name}`;
-  const asFullyQualifiedName = `${asQualifiedName}()`;
-
   const dfn =
     findNormalDfn(defn, parent, asMethodName) ||
     findNormalDfn(defn, parent, name);
   if (!dfn) {
     return;
   }
-  addAlternativeNames(dfn, [
-    asFullyQualifiedName,
-    asQualifiedName,
-    asMethodName,
-    name,
-  ]);
+  addAlternativeNames(dfn, getAlternativeNames("operation", parent, name));
   return dfn;
 }
 
@@ -177,7 +181,7 @@ export function decorateDfn(dfn, defn, parent, name) {
 
 /**
  * @param {HTMLElement[]} dfnForArray
- * @param {string} parent
+ * @param {string} parent data-dfn-for
  * @param {string} originalName
  * @param {string} type
  */
@@ -185,7 +189,7 @@ function getDfns(dfnForArray, parent, originalName, type) {
   if (!dfnForArray) {
     return [];
   }
-  // Definitions that have a title and [data-dfn-for] that exactly match the
+  // Definitions that have a name and [data-dfn-for] that exactly match the
   // IDL entity:
   const dfns = dfnForArray.filter(dfn => dfn.dataset.dfnFor === parent);
   // If this is a top-level entity, and we didn't find anything with

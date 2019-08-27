@@ -9,7 +9,7 @@ export const definitionMap = Object.create(null);
  */
 export function registerDefinition(dfn, names) {
   for (const name of names) {
-    if (!definitionMap[name]) {
+    if (name in definitionMap === false) {
       definitionMap[name] = [dfn];
     } else if (!definitionMap[name].includes(dfn)) {
       definitionMap[name].push(dfn);
