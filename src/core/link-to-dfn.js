@@ -61,17 +61,17 @@ export async function run(conf) {
   const localLinkSelector =
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)";
   document.querySelectorAll(localLinkSelector).forEach((
-    /** @type {HTMLAnchorElement} */ anchor
+    /** @type {HTMLAnchorElement} */ ant
   ) => {
-    const linkTargets = getLinkTargets(anchor);
+    const linkTargets = getLinkTargets(ant);
     const foundDfn = linkTargets.some(target => {
-      return findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks);
+      return findLinkTarget(target, ant, titleToDfns, possibleExternalLinks);
     });
     if (!foundDfn && linkTargets.length !== 0) {
-      if (anchor.dataset.cite === "") {
-        badLinks.push(anchor);
+      if (ant.dataset.cite === "") {
+        badLinks.push(ant);
       } else {
-        possibleExternalLinks.push(anchor);
+        possibleExternalLinks.push(ant);
       }
     }
   });
@@ -142,12 +142,12 @@ function collectDfns(title) {
 
 /**
  * @param {import("./utils.js").LinkTarget} target
- * @param {HTMLAnchorElement} anchor
+ * @param {HTMLAnchorElement} ant
  * @param {CaseInsensitiveMap} titleToDfns
  * @param {HTMLElement[]} possibleExternalLinks
  */
-function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
-  const { linkFor } = anchor.dataset;
+function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
+  const { linkFor } = ant.dataset;
   if (
     !titleToDfns.has(target.title) ||
     !titleToDfns.get(target.title).get(target.for)
@@ -156,27 +156,27 @@ function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
   }
   const dfn = titleToDfns.get(target.title).get(target.for);
   if (dfn.dataset.cite) {
-    anchor.dataset.cite = dfn.dataset.cite;
+    ant.dataset.cite = dfn.dataset.cite;
   } else if (linkFor && !titleToDfns.get(linkFor)) {
-    possibleExternalLinks.push(anchor);
+    possibleExternalLinks.push(ant);
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
     const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-    anchor.dataset.lt = lt[0] || dfn.textContent;
-    possibleExternalLinks.push(anchor);
+    ant.dataset.lt = lt[0] || dfn.textContent;
+    possibleExternalLinks.push(ant);
   } else {
-    if (anchor.dataset.idl === "partial") {
-      possibleExternalLinks.push(anchor);
+    if (ant.dataset.idl === "partial") {
+      possibleExternalLinks.push(ant);
     } else {
-      anchor.href = `#${dfn.id}`;
-      anchor.classList.add("internalDFN");
+      ant.href = `#${dfn.id}`;
+      ant.classList.add("internalDFN");
     }
   }
-  if (!anchor.hasAttribute("data-link-type")) {
-    anchor.dataset.linkType = "idl" in dfn.dataset ? "idl" : "dfn";
+  if (!ant.hasAttribute("data-link-type")) {
+    ant.dataset.linkType = "idl" in dfn.dataset ? "idl" : "dfn";
   }
   if (isCode(dfn)) {
-    wrapAsCode(anchor, dfn);
+    wrapAsCode(ant, dfn);
   }
   return true;
 }
