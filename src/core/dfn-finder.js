@@ -96,7 +96,7 @@ function findOperationDfn(defn, parent, name) {
  * @param {HTMLElement} dfn
  * @param {string[]} names
  */
-export function addAlternativeNames(dfn, names) {
+function addAlternativeNames(dfn, names) {
   const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
   lt.push(...names);
   dfn.dataset.lt = [...new Set(lt)].join("|");
