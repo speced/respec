@@ -26,15 +26,6 @@ const topLevelEntities = new Set([
  * @param {string} name
  */
 export function findDfn(defn, name, { parent = "" } = {}) {
-  return tryFindDfn(defn, parent, name);
-}
-
-/**
- * @param {*} defn
- * @param {string} parent
- * @param {string} name
- */
-function tryFindDfn(defn, parent, name) {
   switch (defn.type) {
     case "operation":
       return findOperationDfn(defn, parent, name);
@@ -43,6 +34,11 @@ function tryFindDfn(defn, parent, name) {
   }
 }
 
+/**
+ * @param {string} type
+ * @param {string} parent
+ * @param {string} name
+ */
 function getAlternativeNames(type, parent, name) {
   const asQualifiedName = `${parent}.${name}`;
   switch (type) {

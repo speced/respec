@@ -955,7 +955,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(notDefinedAttr[0].textContent).toBe("notDefined");
     expect(
       section.querySelector(
-        "p[data-link-for] a[href='#idl-def-documented-notdefined']"
+        "p[data-link-for] a[href='#dom-documented-notdefined']"
       ).textContent
     ).toBe("notDefined");
 
