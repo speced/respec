@@ -26,18 +26,7 @@ const topLevelEntities = new Set([
  * @param {string} name
  */
 export function findDfn(defn, name, { parent = "" } = {}) {
-  return tryFindDfn(defn, parent, name);
-}
-
-/**
- * @param {*} defn
- * @param {string} parent
- * @param {string} name
- */
-function tryFindDfn(defn, parent, name) {
   switch (defn.type) {
-    case "attribute":
-      return findAttributeDfn(defn, parent, name);
     case "operation":
       return findOperationDfn(defn, parent, name);
     default:
@@ -46,19 +35,10 @@ function tryFindDfn(defn, parent, name) {
 }
 
 /**
- * @param {*} defn
+ * @param {string} type
  * @param {string} parent
  * @param {string} name
  */
-function findAttributeDfn(defn, parent, name) {
-  const dfn = findNormalDfn(defn, parent, name);
-  if (!dfn) {
-    return;
-  }
-  addAlternativeNames(dfn, getAlternativeNames("attribute", parent, name));
-  return dfn;
-}
-
 function getAlternativeNames(type, parent, name) {
   const asQualifiedName = `${parent}.${name}`;
   switch (type) {
@@ -84,12 +64,7 @@ function findOperationDfn(defn, parent, name) {
     return findNormalDfn(defn, parent, name);
   }
   const asMethodName = `${name}()`;
-  const dfn = findNormalDfn(defn, parent, asMethodName, name);
-  if (!dfn) {
-    return;
-  }
-  addAlternativeNames(dfn, getAlternativeNames("operation", parent, name));
-  return dfn;
+  return findNormalDfn(defn, parent, asMethodName, name);
 }
 
 /**
@@ -106,7 +81,7 @@ function addAlternativeNames(dfn, names) {
 /**
  * @param {*} defn
  * @param {string} parent
- * @param {string[]} names
+ * @param {...string} names
  */
 function findNormalDfn(defn, parent, ...names) {
   for (const name of names) {
@@ -180,11 +155,9 @@ export function decorateDfn(dfn, defn, parent, name) {
 
   // Add data-lt values and register them
   switch (defn.type) {
-    case "operation":
-      addAlternativeNames(dfn, getAlternativeNames("operation", parent, name));
-      break;
     case "attribute":
-      addAlternativeNames(dfn, getAlternativeNames("attribute", parent, name));
+    case "operation":
+      addAlternativeNames(dfn, getAlternativeNames(defn.type, parent, name));
       break;
   }
 

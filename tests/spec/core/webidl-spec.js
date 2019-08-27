@@ -1323,7 +1323,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
             DOMString hikawa = "hina";
           };
         </pre>
-        <dfn>Roselia</dfn> and <dfn>PastelPalettes</dfn> are names of bands
+        <dfn>Roselia</dfn> and <dfn>PastelPalettes</dfn> are names of bands.
         <span id="links"><a>Roselia</a> <a>PastelPalettes</a> {{Roselia/hikawa}}</span>.
       </section>
     `;
@@ -1335,8 +1335,11 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(member1.classList).not.toContain("respec-offending-element");
     expect(member2.classList).not.toContain("respec-offending-element");
     const [anchor1, anchor2, anchor3] = doc.querySelectorAll("#links a");
+    expect(anchor1.getAttribute("href")).toBe("#dom-roselia");
     expect(anchor1.dataset.linkType).toBe("idl");
+    expect(anchor2.getAttribute("href")).toBe("#dom-pastelpalettes");
     expect(anchor2.dataset.linkType).toBe("idl");
+    expect(anchor3.getAttribute("href")).toBe("#dom-roselia-hikawa");
     expect(anchor3.dataset.linkType).toBe("idl");
   });
   it("marks a failing IDL block", async () => {
