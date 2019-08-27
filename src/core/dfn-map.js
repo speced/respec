@@ -11,7 +11,7 @@ export function registerDefinition(dfn, names) {
   for (const name of names.map(name => name.toLowerCase())) {
     if (name in definitionMap === false) {
       definitionMap[name] = [dfn];
-    } else if (definitionMap[name].includes(dfn) === false) {
+    } else if (!definitionMap[name].includes(dfn)) {
       definitionMap[name].push(dfn);
     }
   }
