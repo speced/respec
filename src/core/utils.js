@@ -588,11 +588,11 @@ export function getDfnTitles(elem, { isDefinition = false } = {}) {
   // data-lt-noDefault avoid using the text content of a definition
   // in the definition list.
   if (!elem.hasAttribute("data-lt-noDefault")) {
-    normText = norm(elem.textContent).toLowerCase();
+    normText = norm(elem.textContent);
   }
   if (elem.dataset.lt) {
     // prefer @data-lt for the list of title aliases
-    titleString = elem.dataset.lt.toLowerCase();
+    titleString = elem.dataset.lt;
     if (normText !== "" && !titleString.startsWith(`${normText}|`)) {
       // Use the definition itself, so to avoid having to declare the definition twice.
       titleString += `|${normText}`;
@@ -609,7 +609,7 @@ export function getDfnTitles(elem, { isDefinition = false } = {}) {
   }
 
   // now we have a string of one or more titles
-  titleString = norm(titleString).toLowerCase();
+  titleString = norm(titleString);
   if (isDefinition) {
     if (elem.dataset.lt) {
       elem.dataset.lt = titleString;
@@ -643,7 +643,7 @@ export function getDfnTitles(elem, { isDefinition = false } = {}) {
  */
 export function getLinkTargets(elem) {
   const linkForElem = elem.closest("[data-link-for]");
-  const linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
+  const linkFor = linkForElem ? linkForElem.dataset.linkFor : "";
   const titles = getDfnTitles(elem);
 
   return titles.reduce((result, title) => {

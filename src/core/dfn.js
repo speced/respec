@@ -14,9 +14,6 @@ export function run() {
     if (closestDfn && closestDfn !== dfn && !dfn.dataset.dfnFor) {
       dfn.dataset.dfnFor = closestDfn.dataset.dfnFor;
     }
-    if (dfn.dataset.dfnFor) {
-      dfn.dataset.dfnFor = dfn.dataset.dfnFor.toLowerCase();
-    }
     // TODO: we should probably use weakmaps and weaksets here to avoid leaks.
     const titles = getDfnTitles(dfn, { isDefinition: true });
     registerDefinition(dfn, titles);

@@ -194,7 +194,7 @@ describe("Core - WebIDL", () => {
         expect(elem.textContent).toBe(`${methodName}()`);
         expect(elem.id).toBe(`dom-parenthesistest-${id}`);
         expect(elem.dataset.dfnType).toBe("method");
-        expect(elem.dataset.dfnFor).toBe("parenthesistest");
+        expect(elem.dataset.dfnFor).toBe("ParenthesisTest");
         expect(elem.dataset.idl).toBe("operation");
         // corresponding link
         const aElem = section.querySelector(
@@ -263,9 +263,7 @@ describe("Core - WebIDL", () => {
     expect(interfaces[0].querySelector("a.idlID").getAttribute("href")).toBe(
       "#dom-docinterface"
     );
-    expect(interfaces[1].querySelector("a.idlID").getAttribute("href")).toBe(
-      "#dom-docisnotcasesensitive"
-    );
+    expect(interfaces[1].querySelector("a.idlID")).toBeNull();
     expect(interfaces[0].id).toBe("idl-def-docinterface");
     expect(interfaces[1].id).toBe("idl-def-docisnotcasesensitive");
     expect(interfaces[2].id).toBe("idl-def-undocinterface");
@@ -1180,7 +1178,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(banana.dataset.dfnType).toBe("interface");
     expect(nana.dataset.export).toBeDefined();
     expect(nana.dataset.dfnType).toBe("method");
-    expect(nana.dataset.dfnFor).toBe("banana");
+    expect(nana.dataset.dfnFor).toBe("Banana");
     expect(bananice.dataset.export).not.toBeDefined();
   });
 
@@ -1311,6 +1309,28 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
 
     const [, tea] = doc.querySelectorAll(".respec-offending-element");
     expect(tea.textContent).toBe("TeaTime");
+  });
+  it("self-defining IDL with same member names", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          dictionary Roselia {
+            DOMString hikawa = "sayo";
+          };
+          dictionary PastelPalettes {
+            DOMString hikawa = "hina";
+          };
+        </pre>
+        <dfn>Roselia</dfn> and <dfn>PastelPalettes</dfn> are names of bands.
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const [member1, member2] = doc.querySelectorAll("pre dfn");
+    expect(member1.dataset.dfnFor).toBe("Roselia");
+    expect(member2.dataset.dfnFor).toBe("PastelPalettes");
+    expect(member1.classList).not.toContain("respec-offending-element");
+    expect(member2.classList).not.toContain("respec-offending-element");
   });
   it("marks a failing IDL block", async () => {
     const body = `
