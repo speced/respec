@@ -26,7 +26,10 @@ const l10n = {
 const lang = defaultLang in l10n ? defaultLang : "en";
 
 class CaseInsensitiveMap extends Map {
-  constructor(/** entries: Array<[String, HTMLElement]> */ entries = []) {
+  /**
+   * @param {Array<[String, HTMLElement]>} [entries]
+   */
+  constructor(entries = []) {
     super();
     entries.forEach(([key, elem]) => {
       this.set(key, elem);
