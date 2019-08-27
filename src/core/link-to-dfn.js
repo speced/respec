@@ -17,7 +17,13 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
 const l10n = {
   en: {
-    duplicate: "This is defined more than once in the document.",
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `Duplicate definition(s) of '${title}'`;
+    },
+    duplicateTitle: "This is defined more than once in the document.",
   },
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
@@ -35,18 +41,18 @@ export async function run(conf) {
   const localLinkSelector =
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo)";
   document.querySelectorAll(localLinkSelector).forEach((
-    /** @type {HTMLAnchorElement} */ ant
+    /** @type {HTMLAnchorElement} */ anchor
   ) => {
-    if (ant.classList.contains("externalDFN")) return;
-    const linkTargets = getLinkTargets(ant);
+    if (anchor.classList.contains("externalDFN")) return;
+    const linkTargets = getLinkTargets(anchor);
     const foundDfn = linkTargets.some(target => {
-      return findLinkTarget(target, ant, titleToDfns, possibleExternalLinks);
+      return findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks);
     });
     if (!foundDfn && linkTargets.length !== 0) {
-      if (ant.dataset.cite === "") {
-        badLinks.push(ant);
+      if (anchor.dataset.cite === "") {
+        badLinks.push(anchor);
       } else {
-        possibleExternalLinks.push(ant);
+        possibleExternalLinks.push(anchor);
       }
     }
   });
@@ -72,11 +78,11 @@ export async function run(conf) {
 }
 
 function mapTitleToDfns() {
-  /** @type {Record<string, Record<string, HTMLElement>>} */
-  const titleToDfns = {};
+  /** @type {Map<string, Map<string, HTMLElement>>} */
+  const titleToDfns = new Map();
   Object.keys(definitionMap).forEach(title => {
     const { result, duplicates } = collectDfns(title);
-    titleToDfns[title] = result;
+    titleToDfns.set(title, result);
     if (duplicates.length > 0) {
       showInlineError(
         duplicates,
@@ -92,8 +98,8 @@ function mapTitleToDfns() {
  * @param {string} title
  */
 function collectDfns(title) {
-  /** @type {Record<string, HTMLElement>} */
-  const result = {};
+  /** @type {Map<string, HTMLElement>} */
+  const result = new Map();
   const duplicates = [];
   definitionMap[title].forEach(dfn => {
     if (dfn.dataset.idl === undefined) {
@@ -101,11 +107,11 @@ function collectDfns(title) {
       delete dfn.dataset.dfnFor;
     }
     const { dfnFor = "" } = dfn.dataset;
-    if (dfnFor in result) {
+    if (result.has(dfnFor)) {
       // We want <dfn> definitions to take precedence over
       // definitions from WebIDL. WebIDL definitions wind
       // up as <span>s instead of <dfn>.
-      const oldIsDfn = result[dfnFor].localName === "dfn";
+      const oldIsDfn = result.get(dfnFor).localName === "dfn";
       const newIsDfn = dfn.localName === "dfn";
       if (oldIsDfn) {
         if (!newIsDfn) {
@@ -115,7 +121,7 @@ function collectDfns(title) {
         duplicates.push(dfn);
       }
     }
-    result[dfnFor] = dfn;
+    result.set(dfnFor, dfn);
     assignDfnId(dfn, title);
   });
   return { result, duplicates };
@@ -138,39 +144,42 @@ function assignDfnId(dfn, title) {
 
 /**
  * @param {import("./utils.js").LinkTarget} target
- * @param {HTMLAnchorElement} ant
- * @param {Record<string, Record<string, HTMLElement>>} titleToDfns
+ * @param {HTMLAnchorElement} anchor
+ * @param {Map<string, Map<string, HTMLElement>>} titleToDfns
  * @param {HTMLElement[]} possibleExternalLinks
  */
-function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
-  const { linkFor } = ant.dataset;
-  if (!titleToDfns[target.title] || !titleToDfns[target.title][target.for]) {
+function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
+  const { linkFor } = anchor.dataset;
+  if (
+    !titleToDfns.has(target.title) ||
+    !titleToDfns.get(target.title).get(target.for)
+  ) {
     return false;
   }
-  const dfn = titleToDfns[target.title][target.for];
+  const dfn = titleToDfns.get(target.title).get(target.for);
   if (dfn.dataset.cite) {
-    ant.dataset.cite = dfn.dataset.cite;
-  } else if (linkFor && !titleToDfns[linkFor]) {
-    possibleExternalLinks.push(ant);
+    anchor.dataset.cite = dfn.dataset.cite;
+  } else if (linkFor && !titleToDfns.get(linkFor)) {
+    possibleExternalLinks.push(anchor);
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
     const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-    ant.dataset.lt = lt[0] || dfn.textContent;
-    possibleExternalLinks.push(ant);
+    anchor.dataset.lt = lt[0] || dfn.textContent;
+    possibleExternalLinks.push(anchor);
   } else {
-    if (ant.dataset.idl === "partial") {
-      possibleExternalLinks.push(ant);
+    if (anchor.dataset.idl === "partial") {
+      possibleExternalLinks.push(anchor);
     } else {
-      ant.href = `#${dfn.id}`;
-      ant.classList.add("internalDFN");
+      anchor.href = `#${dfn.id}`;
+      anchor.classList.add("internalDFN");
     }
   }
   // add a bikeshed style indication of the type of link
-  if (!ant.hasAttribute("data-link-type")) {
-    ant.dataset.linkType = "dfn";
+  if (!anchor.hasAttribute("data-link-type")) {
+    anchor.dataset.linkType = "dfn";
   }
   if (isCode(dfn)) {
-    wrapAsCode(ant, dfn);
+    wrapAsCode(anchor, dfn);
   }
   return true;
 }
@@ -252,7 +261,7 @@ function showLinkingError(elems) {
     showInlineWarning(
       elem,
       `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``,
-      "Linking error: not matching <dfn>"
+      "Linking error: not matching `<dfn>`"
     );
   });
 }
