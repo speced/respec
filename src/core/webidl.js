@@ -141,6 +141,7 @@ function defineIdlName(escaped, data, parent) {
   }
   if (!data.partial) {
     const dfn = hyperHTML`<dfn data-export data-dfn-type="${linkType}">${escaped}</dfn>`;
+    registerDefinition(dfn, [name]);
     decorateDfn(dfn, data, parentName, name);
     return dfn;
   }
