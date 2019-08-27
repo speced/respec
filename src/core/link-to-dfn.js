@@ -39,11 +39,10 @@ export async function run(conf) {
   const badLinks = [];
 
   const localLinkSelector =
-    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo)";
+    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)";
   document.querySelectorAll(localLinkSelector).forEach((
     /** @type {HTMLAnchorElement} */ anchor
   ) => {
-    if (anchor.classList.contains("externalDFN")) return;
     const linkTargets = getLinkTargets(anchor);
     const foundDfn = linkTargets.some(target => {
       return findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks);
@@ -86,8 +85,8 @@ function mapTitleToDfns() {
     if (duplicates.length > 0) {
       showInlineError(
         duplicates,
-        `Duplicate definitions of '${title}'`,
-        l10n[lang].duplicate
+        l10n[lang].duplicateMsg(title),
+        l10n[lang].duplicateTitle
       );
     }
   });
