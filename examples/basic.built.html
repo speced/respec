@@ -29,8 +29,9 @@
     <section data-dfn-for="Foo">
       <h2><dfn>Foo</dfn> interface</h2>
       <pre class="idl">
-      [Exposed=Window, Constructor]
+      [Exposed=Window]
       interface Foo {
+        constructor();
         attribute DOMString bar;
         void doTheFoo();
       };
