@@ -301,6 +301,34 @@ describe("Core - WebIDL", () => {
     expect(target.textContent).toBe(text);
   });
 
+  it("should handle constructor operations", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          [Exposed=Window]
+          interface SuperStar {
+            constructor();
+          };
+          [Exposed=Window]
+          interface HyperStar {
+            constructor();
+          };
+        </pre>
+        <dfn>SuperStar.constructor()</dfn>
+        <dfn>HyperStar.constructor()</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelector("pre");
+    expect(
+      pre.querySelector("a[href=\\#dom-superstar-constructor]")
+    ).toBeTruthy();
+    expect(
+      pre.querySelector("a[href=\\#dom-hyperstar-constructor]")
+    ).toBeTruthy();
+  });
+
   it("should handle named constructors", () => {
     const target = doc.getElementById("namedctor-basic");
     const text =

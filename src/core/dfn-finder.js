@@ -27,6 +27,8 @@ const topLevelEntities = new Set([
  */
 export function findDfn(defn, name, { parent = "" } = {}) {
   switch (defn.type) {
+    case "constructor":
+      return findOperationDfn(defn, parent, "constructor");
     case "operation":
       return findOperationDfn(defn, parent, name);
     default:

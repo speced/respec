@@ -81,6 +81,14 @@ const templates = {
     }
     return idlLink;
   },
+  nameless(escaped, { data, parent }) {
+    switch (data.type) {
+      case "constructor":
+        return defineIdlName(escaped, data, parent);
+      default:
+        return escaped;
+    }
+  },
   type(contents) {
     return hyperHTML`<span class="idlType">${contents}</span>`;
   },
@@ -220,6 +228,7 @@ function resolveNameAndId(defn, parent) {
       idlId += resolvePartial(defn);
       break;
     }
+    case "constructor":
     case "operation": {
       const overload = resolveOverload(name, parent);
       if (overload) {
