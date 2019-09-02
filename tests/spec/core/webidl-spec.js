@@ -303,7 +303,7 @@ describe("Core - WebIDL", () => {
 
   it("should handle constructor operations", async () => {
     const body = `
-      <section>
+      <section data-dfn-for="SuperStar" data-link-for="SuperStar">
         <pre class="idl">
           [Exposed=Window]
           interface SuperStar {
@@ -313,9 +313,15 @@ describe("Core - WebIDL", () => {
           interface HyperStar {
             constructor();
           };
+          [Exposed=Window]
+          interface DeathStar {
+            constructor();
+          };
         </pre>
-        <dfn>SuperStar.constructor()</dfn>
-        <dfn>HyperStar.constructor()</dfn>
+        <dfn>constructor</dfn>
+        <dfn>HyperStar.constructor</dfn>
+        <dfn>DeathStar.constructor()</dfn>
+        <a id="linkMe">constructor</a>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -327,6 +333,12 @@ describe("Core - WebIDL", () => {
     expect(
       pre.querySelector("a[href=\\#dom-hyperstar-constructor]")
     ).toBeTruthy();
+    expect(
+      pre.querySelector("a[href=\\#dom-deathstar-constructor]")
+    ).toBeTruthy();
+    expect(doc.getElementById("linkMe").getAttribute("href")).toBe(
+      "#dom-superstar-constructor"
+    );
   });
 
   it("should handle named constructors", () => {
