@@ -32,7 +32,6 @@ export async function run(conf) {
   document.normalize();
 
   const titleToDfns = mapTitleToDfns();
-
   /** @type {HTMLElement[]} */
   const possibleExternalLinks = [];
   /** @type {HTMLAnchorElement[]} */
@@ -121,24 +120,9 @@ function collectDfns(title) {
       }
     }
     result.set(dfnFor, dfn);
-    assignDfnId(dfn, title);
+    addId(dfn, "dfn", title);
   });
   return { result, duplicates };
-}
-
-/**
- * @param {HTMLElement} dfn
- * @param {string} title
- */
-function assignDfnId(dfn, title) {
-  if (!dfn.id) {
-    const { dfnFor } = dfn.dataset;
-    if (dfn.dataset.idl) {
-      addId(dfn, "dom", (dfnFor ? `${dfnFor}-` : "") + title);
-    } else {
-      addId(dfn, "dfn", title);
-    }
-  }
 }
 
 /**

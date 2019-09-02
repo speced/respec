@@ -640,17 +640,21 @@ export function getLinkTargets(elem) {
   const linkFor = linkForElem ? linkForElem.dataset.linkFor : "";
   const titles = getDfnTitles(elem);
 
-  return titles.reduce((result, title) => {
-    result.push({ for: linkFor, title });
+  const results = titles.reduce((result, title) => {
+    // supports legacy <dfn>Foo.Bar()</dfn> definitions
     const split = title.split(".");
     if (split.length === 2) {
       // If there are multiple '.'s, this won't match an
       // Interface/member pair anyway.
       result.push({ for: split[0], title: split[1] });
     }
-    result.push({ for: "", title });
+    result.push({ for: linkFor, title });
+
+    // Finally, we can try to match without link for
+    if (linkFor !== "") result.push({ for: "", title });
     return result;
   }, []);
+  return results;
 }
 
 /**

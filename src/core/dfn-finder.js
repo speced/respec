@@ -104,9 +104,9 @@ function findNormalDfn(defn, parent, ...names) {
       }
     }
     if (dfns.length > 1) {
-      const msg = `Multiple \`<dfn>\`s for \`${name}\` ${
-        parent ? `in \`${parent}\`` : ""
-      }`;
+      const msg = `WebIDL identifier \`${name}\` ${
+        parent ? `for \`${parent}\`` : ""
+      } is defined multiple times`;
       showInlineError(dfns, msg, "Duplicate definition.");
     }
     if (dfns.length) {
