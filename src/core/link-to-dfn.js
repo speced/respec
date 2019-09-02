@@ -211,7 +211,7 @@ function shouldWrapByCode(dfn, term) {
   } else if (dataset.title === term) {
     return true;
   } else if (dataset.lt) {
-    return dataset.lt.split("|").includes(term.toLowerCase());
+    return dataset.lt.split("|").includes(term);
   }
   return false;
 }
