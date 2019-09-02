@@ -169,7 +169,6 @@ describe("Core - Pluralize", () => {
     `;
     const ops = makeStandardOps({ pluralize: true }, body);
     const doc = await makeRSDoc(ops);
-
     const dfnBar = doc.getElementById("dfn-bar");
     expect(dfnBar).toBeTruthy();
     const dfnBars = doc.getElementById("dfn-bars");

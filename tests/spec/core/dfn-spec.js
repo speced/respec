@@ -48,6 +48,25 @@ describe("Core — Definitions", () => {
     expect(anchors[3].childNodes[0].nodeName).toBe("#text");
   });
 
+  it("doesn't add redundant lt when not needed", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
+      <section>
+        <dfn id="test1">test</dfn>
+        <dfn id="test2" data-lt="I'm an lt">test</dfn>
+      </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+
+    const test1 = doc.getElementById("test1");
+    expect(Object.keys(test1.dataset)).not.toContain("lt");
+
+    const test2 = doc.getElementById("test2");
+    expect(test2.dataset.lt).toBeTruthy();
+    expect(test2.dataset.lt).toBe("I'm an lt|test");
+  });
+
   it("links <code> for IDL, but not when text doesn't match", async () => {
     const ops = {
       config: makeBasicConfig(),
