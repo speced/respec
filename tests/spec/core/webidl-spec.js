@@ -301,6 +301,46 @@ describe("Core - WebIDL", () => {
     expect(target.textContent).toBe(text);
   });
 
+  it("should handle constructor operations", async () => {
+    const body = `
+      <section data-dfn-for="SuperStar" data-link-for="SuperStar">
+        <pre class="idl">
+          [Exposed=Window]
+          interface SuperStar {
+            constructor();
+          };
+          [Exposed=Window]
+          interface HyperStar {
+            constructor();
+          };
+          [Exposed=Window]
+          interface DeathStar {
+            constructor();
+          };
+        </pre>
+        <dfn>constructor</dfn>
+        <dfn>HyperStar.constructor</dfn>
+        <dfn>DeathStar.constructor()</dfn>
+        <a id="linkMe">constructor</a>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelector("pre");
+    expect(
+      pre.querySelector("a[href=\\#dom-superstar-constructor]")
+    ).toBeTruthy();
+    expect(
+      pre.querySelector("a[href=\\#dom-hyperstar-constructor]")
+    ).toBeTruthy();
+    expect(
+      pre.querySelector("a[href=\\#dom-deathstar-constructor]")
+    ).toBeTruthy();
+    expect(doc.getElementById("linkMe").getAttribute("href")).toBe(
+      "#dom-superstar-constructor"
+    );
+  });
+
   it("should handle named constructors", () => {
     const target = doc.getElementById("namedctor-basic");
     const text =
@@ -1217,7 +1257,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
           // Local ref
           partial interface Banana {};
           // DOM spec
-          partial interface mixin DocumentOrShadowRoot {};
+          partial interface mixin NavigatorID {};
           // Fetch spec
           partial interface Request {};
           // DOM spec
@@ -1249,13 +1289,13 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(bananaPartial.dataset.linkType).toBe("interface");
     expect(banana.classList).toContain("internalDFN");
 
-    expect(docOrShadowMixin.textContent).toBe("DocumentOrShadowRoot");
+    expect(docOrShadowMixin.textContent).toBe("NavigatorID");
     expect(docOrShadowMixin.dataset.xrefType).toBe("interface");
     expect(docOrShadowMixin.dataset.linkType).toBe("interface");
     expect(docOrShadowMixin.dataset.idl).toBe("partial");
-    expect(docOrShadowMixin.dataset.title).toBe("DocumentOrShadowRoot");
+    expect(docOrShadowMixin.dataset.title).toBe("NavigatorID");
     expect(docOrShadowMixin.href).toBe(
-      "https://dom.spec.whatwg.org/#documentorshadowroot"
+      "https://html.spec.whatwg.org/multipage/system-state.html#navigatorid"
     );
 
     expect(requestPartialInterface.textContent).toBe("Request");
