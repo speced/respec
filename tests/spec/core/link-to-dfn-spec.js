@@ -31,7 +31,7 @@ describe("Core — Link to definitions", () => {
         </pre>
         <p id="codeWrap">A <a>Request</a> object has a <dfn>clone</dfn> method.</p>
         <p id="codeWrapMethod"><a>clone</a>, <a>clone()</a>, <a>Request.clone</a>, and <a>Request.clone()</a> are all same.</p>
-        <p id="noCodeWrap">An instance of <a lt="Request">the request interface</a>.</p>
+        <p id="noCodeWrap">An instance of <a data-lt="Request">the request interface</a>.</p>
       </section>`;
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
