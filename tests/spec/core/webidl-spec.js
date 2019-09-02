@@ -1215,7 +1215,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
           // Local ref
           partial interface Banana {};
           // DOM spec
-          partial interface mixin DocumentOrShadowRoot {};
+          partial interface mixin NavigatorID {};
           // Fetch spec
           partial interface Request {};
           // DOM spec
@@ -1247,13 +1247,13 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(bananaPartial.dataset.linkType).toBe("interface");
     expect(banana.classList).toContain("internalDFN");
 
-    expect(docOrShadowMixin.textContent).toBe("DocumentOrShadowRoot");
+    expect(docOrShadowMixin.textContent).toBe("NavigatorID");
     expect(docOrShadowMixin.dataset.xrefType).toBe("interface");
     expect(docOrShadowMixin.dataset.linkType).toBe("interface");
     expect(docOrShadowMixin.dataset.idl).toBe("partial");
-    expect(docOrShadowMixin.dataset.title).toBe("DocumentOrShadowRoot");
+    expect(docOrShadowMixin.dataset.title).toBe("NavigatorID");
     expect(docOrShadowMixin.href).toBe(
-      "https://dom.spec.whatwg.org/#documentorshadowroot"
+      "https://html.spec.whatwg.org/multipage/system-state.html#navigatorid"
     );
 
     expect(requestPartialInterface.textContent).toBe("Request");
