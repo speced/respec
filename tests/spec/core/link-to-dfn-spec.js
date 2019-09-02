@@ -43,6 +43,7 @@ describe("Core — Link to definitions", () => {
     expect(codeWrapMethods.length).toBe(4);
     const noCodeWrap = doc.body.querySelector("#noCodeWrap a");
     expect(noCodeWrap).toBeTruthy();
+    expect(noCodeWrap.getAttribute("href")).toBe("#dom-request");
     expect(noCodeWrap.querySelector("code")).toBeFalsy();
     expect(noCodeWrap.textContent).toBe("the request interface");
   });
