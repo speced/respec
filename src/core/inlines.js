@@ -150,10 +150,10 @@ function inlineVariableMatches(matched) {
 function inlineAnchorMatches(matched) {
   matched = matched.slice(2, -2); // Chop [= =]
   const parts = matched.split("/", 2).map(s => s.trim());
-  const [isFor, content] = parts.length === 2 ? parts : ["", parts[0]];
+  const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
   const processedContent = processInlineContent(content);
-  const forValue = norm(isFor);
-  return hyperHTML`<a data-link-for="${forValue}" data-xref-for="${forValue}">${processedContent}</a>`;
+  const forContext = isFor ? norm(isFor) : null;
+  return hyperHTML`<a data-link-for="${forContext}" data-xref-for="${forContext}">${processedContent}</a>`;
 }
 
 function inlineCodeMatches(matched) {
