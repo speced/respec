@@ -361,7 +361,7 @@ describe("Core - Inlines", () => {
     expect(anchors.length).toBe(3);
     for (const a of anchors) {
       expect(a.getAttribute("href")).toBe(expectedAnchor);
-      expect(a.dataset.linkFor).toBe("");
+      expect(a.dataset.linkFor).toBeUndefined();
     }
 
     // Qualified (link is "for" something)
