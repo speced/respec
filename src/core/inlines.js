@@ -141,11 +141,15 @@ function inlineVariableMatches(matched) {
   return hyperHTML`<var data-type="${type}">${varName}</var>`;
 }
 
+/**
+ * @example [= foo =] => <a>foo</a>
+ * @example [= bar/foo =] => <a data-link-for="bar" data-xref-for="bar">foo</a>
+ * @example [= `foo` =] => <a><code>foo</code></a>
+ * @param {string} matched
+ */
 function inlineAnchorMatches(matched) {
-  const parts = matched
-    .slice(2, -2) // Chop [= =]
-    .split("/", 2)
-    .map(s => s.trim());
+  matched = matched.slice(2, -2); // Chop [= =]
+  const parts = matched.split("/", 2).map(s => s.trim());
   const [isFor, content] = parts.length === 2 ? parts : ["", parts[0]];
   const processedContent = processInlineContent(content);
   const forValue = norm(isFor);
