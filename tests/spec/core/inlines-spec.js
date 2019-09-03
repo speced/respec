@@ -346,6 +346,11 @@ describe("Core - Inlines", () => {
           For each
           =]
         </p>
+
+        <p id="alias">
+          [= code point| Unicode code point =]
+          [= iteration/break|break out of iteration =]
+        </p>
       </section>
     `;
     const config = { xref: true };
@@ -381,6 +386,13 @@ describe("Core - Inlines", () => {
     expect(multiMapForEach.href).toBe(
       "https://infra.spec.whatwg.org/#map-iterate"
     );
+
+    // term aliasing
+    const [codePoint, iterationBreak] = doc.querySelectorAll("#alias a");
+    expect(codePoint.textContent).toBe("Unicode code point");
+    expect(codePoint.hash).toBe("#code-point");
+    expect(iterationBreak.textContent).toBe("break out of iteration");
+    expect(iterationBreak.hash).toBe("#iteration-break");
   });
 
   it("processes {{ forContext/term }} IDL", async () => {
