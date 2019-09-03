@@ -8,7 +8,7 @@ export const definitionMap = Object.create(null);
  * @param {string[]} names Names to register the element by
  */
 export function registerDefinition(dfn, names) {
-  for (const name of names) {
+  for (const name of names.map(name => name.toLowerCase())) {
     if (name in definitionMap === false) {
       definitionMap[name] = [dfn];
     } else if (!definitionMap[name].includes(dfn)) {

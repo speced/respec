@@ -28,9 +28,33 @@ const l10n = {
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
 
-export async function run(conf) {
-  document.normalize();
+class CaseInsensitiveMap extends Map {
+  /**
+   * @param {Array<[String, HTMLElement]>} [entries]
+   */
+  constructor(entries = []) {
+    super();
+    entries.forEach(([key, elem]) => {
+      this.set(key, elem);
+    });
+    return this;
+  }
+  set(key, elem) {
+    super.set(key.toLowerCase(), elem);
+    return this;
+  }
+  get(key) {
+    return super.get(key.toLowerCase());
+  }
+  has(key) {
+    return super.has(key.toLowerCase());
+  }
+  delete(key) {
+    return super.delete(key.toLowerCase());
+  }
+}
 
+export async function run(conf) {
   const titleToDfns = mapTitleToDfns();
   /** @type {HTMLElement[]} */
   const possibleExternalLinks = [];
@@ -76,8 +100,7 @@ export async function run(conf) {
 }
 
 function mapTitleToDfns() {
-  /** @type {Map<string, Map<string, HTMLElement>>} */
-  const titleToDfns = new Map();
+  const titleToDfns = new CaseInsensitiveMap();
   Object.keys(definitionMap).forEach(title => {
     const { result, duplicates } = collectDfns(title);
     titleToDfns.set(title, result);
@@ -100,10 +123,6 @@ function collectDfns(title) {
   const result = new Map();
   const duplicates = [];
   definitionMap[title].forEach(dfn => {
-    if (dfn.dataset.idl === undefined) {
-      // Non-IDL definitions aren't "for" an interface.
-      delete dfn.dataset.dfnFor;
-    }
     const { dfnFor = "" } = dfn.dataset;
     if (result.has(dfnFor)) {
       // We want <dfn> definitions to take precedence over
@@ -128,7 +147,7 @@ function collectDfns(title) {
 /**
  * @param {import("./utils.js").LinkTarget} target
  * @param {HTMLAnchorElement} anchor
- * @param {Map<string, Map<string, HTMLElement>>} titleToDfns
+ * @param {CaseInsensitiveMap} titleToDfns
  * @param {HTMLElement[]} possibleExternalLinks
  */
 function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
@@ -157,9 +176,8 @@ function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
       anchor.classList.add("internalDFN");
     }
   }
-  // add a bikeshed style indication of the type of link
   if (!anchor.hasAttribute("data-link-type")) {
-    anchor.dataset.linkType = "dfn";
+    anchor.dataset.linkType = "idl" in dfn.dataset ? "idl" : "dfn";
   }
   if (isCode(dfn)) {
     wrapAsCode(anchor, dfn);

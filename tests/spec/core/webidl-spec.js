@@ -997,10 +997,12 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         "p[data-link-for] a[href='#dom-documented-docstring']"
       ).textContent
     ).toBe("docString");
-    const notDefinedAttr = target.querySelectorAll(".idlAttribute dfn.idlName");
-    expect(notDefinedAttr.length).toBe(1);
-    expect(notDefinedAttr[0].getElementsByTagName("a").length).toBe(0);
-    expect(notDefinedAttr[0].textContent).toBe("notDefined");
+    const selfDefinedAttr = target.querySelectorAll(
+      ".idlAttribute dfn.idlName"
+    );
+    expect(selfDefinedAttr.length).toBe(1);
+    expect(selfDefinedAttr[0].getElementsByTagName("a").length).toBe(0);
+    expect(selfDefinedAttr[0].textContent).toBe("notDefined");
     expect(
       section.querySelector(
         "p[data-link-for] a[href='#dom-documented-notdefined']"
@@ -1382,8 +1384,11 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(member2.classList).not.toContain("respec-offending-element");
     const [anchor1, anchor2, anchor3] = doc.querySelectorAll("#links a");
     expect(anchor1.getAttribute("href")).toBe("#dom-roselia");
+    expect(anchor1.dataset.linkType).toBe("idl");
     expect(anchor2.getAttribute("href")).toBe("#dom-pastelpalettes");
+    expect(anchor2.dataset.linkType).toBe("idl");
     expect(anchor3.getAttribute("href")).toBe("#dom-roselia-hikawa");
+    expect(anchor3.dataset.linkType).toBe("idl");
   });
   it("marks a failing IDL block", async () => {
     const body = `

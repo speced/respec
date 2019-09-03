@@ -25,6 +25,7 @@ describe("Core — Link to definitions", () => {
       <section data-link-for="Request">
         <h2><dfn>Request</dfn> interface</h2>
         <pre class="idl">
+          [Exposed=Window]
           interface Request {
             Request clone();
           };
@@ -77,7 +78,7 @@ describe("Core — Link to definitions", () => {
     expect(dfn3.title).toBe("test1");
   });
 
-  it("should not have data-dfn-for if not an IDL definition", async () => {
+  it("has data-dfn-for if it's included", async () => {
     const bodyText = `
       <section>
         <h2>Test Section</h2>
@@ -86,7 +87,7 @@ describe("Core — Link to definitions", () => {
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
     const [dfn] = doc.getElementsByTagName("dfn");
-    expect(dfn.dataset.dfnFor).toBeUndefined();
+    expect(dfn.dataset.dfnFor).toBe("Foo");
   });
 
   it("should get ID from the first match", async () => {
@@ -121,5 +122,19 @@ describe("Core — Link to definitions", () => {
     const testBar = doc.getElementById("testBar");
     expect(testFoo.hash).toBe("#dfn-foo");
     expect(testBar.hash).toBe("#dfn-bar");
+  });
+
+  it("links conceptual definitions case insensitively", async () => {
+    const bodyText = `
+    <section>
+      <h2>Test Section</h2>
+      <p><dfn>Test String</dfn>
+      <p id="links"><a>test string</a> <a>test STRING</a> <a>TesT string</a>
+    </section>`;
+    const ops = makeStandardOps(null, bodyText);
+    const doc = await makeRSDoc(ops);
+    expect(
+      doc.querySelectorAll("#links a[href='#dfn-test-string']").length
+    ).toBe(3);
   });
 });

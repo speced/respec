@@ -582,7 +582,7 @@ export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
  * @param {boolean} [args.isDefinition]
  * @returns {String[]} array of title strings
  */
-export function getDfnTitles(elem, { isDefinition = false } = {}) {
+export function getDfnTitles(elem) {
   const titleSet = new Set();
   // data-lt-noDefault avoid using the text content of a definition
   // in the definition list.
@@ -607,15 +607,6 @@ export function getDfnTitles(elem, { isDefinition = false } = {}) {
   titleSet.add(normText);
   titleSet.delete("");
   const titles = [...titleSet];
-
-  if (isDefinition) {
-    if (elem.dataset.lt) {
-      elem.dataset.lt = titles.join("|");
-    }
-    // if there is no pre-defined type, assume it is a 'dfn'
-    if (!elem.dataset.dfnType) elem.dataset.dfnType = "dfn";
-  }
-
   return titles;
 }
 
@@ -639,7 +630,6 @@ export function getLinkTargets(elem) {
   const linkForElem = elem.closest("[data-link-for]");
   const linkFor = linkForElem ? linkForElem.dataset.linkFor : "";
   const titles = getDfnTitles(elem);
-
   const results = titles.reduce((result, title) => {
     // supports legacy <dfn>Foo.Bar()</dfn> definitions
     const split = title.split(".");
