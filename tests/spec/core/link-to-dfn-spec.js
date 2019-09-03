@@ -123,4 +123,18 @@ describe("Core — Link to definitions", () => {
     expect(testFoo.hash).toBe("#dfn-foo");
     expect(testBar.hash).toBe("#dfn-bar");
   });
+
+  it("links conceptual definitions case insensitively", async () => {
+    const bodyText = `
+    <section>
+      <h2>Test Section</h2>
+      <p><dfn>Test String</dfn>
+      <p id="links"><a>test string</a> <a>test STRING</a> <a>TesT string</a>
+    </section>`;
+    const ops = makeStandardOps(null, bodyText);
+    const doc = await makeRSDoc(ops);
+    expect(
+      doc.querySelectorAll("#links a[href='#dfn-test-string']").length
+    ).toBe(3);
+  });
 });
