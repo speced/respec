@@ -44,6 +44,7 @@ export function findDfn(defn, name, { parent = "" } = {}) {
 function getAlternativeNames(type, parent, name) {
   const asQualifiedName = `${parent}.${name}`;
   switch (type) {
+    case "constructor":
     case "operation": {
       // Allow linking to both "method()" and "method" name.
       const asMethodName = `${name}()`;
@@ -158,6 +159,7 @@ export function decorateDfn(dfn, defn, parent, name) {
   // Add data-lt values and register them
   switch (defn.type) {
     case "attribute":
+    case "constructor":
     case "operation":
       addAlternativeNames(dfn, getAlternativeNames(defn.type, parent, name));
       break;

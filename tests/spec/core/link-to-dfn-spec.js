@@ -26,9 +26,12 @@ describe("Core — Link to definitions", () => {
         <h2><dfn>Request</dfn> interface</h2>
         <pre class="idl">
           [Exposed=Window]
-          interface Request {};
+          interface Request {
+            Request clone();
+          };
         </pre>
-        <p id="codeWrap">A <a>Request</a> object.</p>
+        <p id="codeWrap">A <a>Request</a> object has a <dfn>clone</dfn> method.</p>
+        <p id="codeWrapMethod"><a>clone</a>, <a>clone()</a>, <a>Request.clone</a>, and <a>Request.clone()</a> are all same.</p>
         <p id="noCodeWrap">An instance of <a data-lt="Request">the request interface</a>.</p>
       </section>`;
     const ops = makeStandardOps(null, bodyText);
@@ -37,8 +40,11 @@ describe("Core — Link to definitions", () => {
     expect(hasCode).toBeTruthy();
     expect(hasCode.firstElementChild.localName).toBe("code");
     expect(hasCode.textContent).toBe("Request");
+    const codeWrapMethods = doc.body.querySelectorAll("#codeWrapMethod a code");
+    expect(codeWrapMethods.length).toBe(4);
     const noCodeWrap = doc.body.querySelector("#noCodeWrap a");
     expect(noCodeWrap).toBeTruthy();
+    expect(noCodeWrap.getAttribute("href")).toBe("#dom-request");
     expect(noCodeWrap.querySelector("code")).toBeFalsy();
     expect(noCodeWrap.textContent).toBe("the request interface");
   });

@@ -321,7 +321,12 @@ describe("Core - WebIDL", () => {
         <dfn>constructor</dfn>
         <dfn>HyperStar.constructor</dfn>
         <dfn>DeathStar.constructor()</dfn>
-        <a id="linkMe">constructor</a>
+        <p id="linkMe">
+          <a>constructor</a>
+          <a>constructor()</a>
+          <a>SuperStar.constructor</a>
+          <a>SuperStar.constructor()</a>
+        </p>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -336,9 +341,12 @@ describe("Core - WebIDL", () => {
     expect(
       pre.querySelector("a[href=\\#dom-deathstar-constructor]")
     ).toBeTruthy();
-    expect(doc.getElementById("linkMe").getAttribute("href")).toBe(
-      "#dom-superstar-constructor"
-    );
+    const links = doc.querySelectorAll("#linkMe a");
+    expect(links.length).toBe(4);
+    for (const link of links) {
+      expect(link.getAttribute("href")).toBe("#dom-superstar-constructor");
+      expect(link.querySelector("code")).toBeTruthy();
+    }
   });
 
   it("should handle named constructors", () => {
