@@ -180,9 +180,11 @@ function getDfns(dfnForArray, parent, originalName, type) {
   }
   // Definitions that have a name and [data-dfn-for] that exactly match the
   // IDL entity:
-  const dfns = dfnForArray.filter(dfn =>
-    dfn.closest(`[data-dfn-for="${parent}"]`)
-  );
+  const dfns = dfnForArray.filter(dfn => {
+    /** @type {HTMLElement} */
+    const closestDfnFor = dfn.closest(`[data-dfn-for]`);
+    return closestDfnFor && closestDfnFor.dataset.dfnFor === parent;
+  });
 
   if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
     // Make sure the name exactly matches
