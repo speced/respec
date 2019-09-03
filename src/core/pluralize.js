@@ -46,7 +46,7 @@ function getPluralizer() {
   /** @type {NodeListOf<HTMLAnchorElement>} */
   const reflessAnchors = document.querySelectorAll("a:not([href])");
   reflessAnchors.forEach(el => {
-    const normText = normalize(el.textContent).toLowerCase();
+    const normText = normalize(el.textContent);
     links.add(normText);
     if (el.dataset.lt) {
       links.add(el.dataset.lt);
@@ -58,7 +58,7 @@ function getPluralizer() {
   /** @type {NodeListOf<HTMLElement>} */
   const dfns = document.querySelectorAll("dfn:not([data-lt-noDefault])");
   dfns.forEach(dfn => {
-    const normText = normalize(dfn.textContent).toLowerCase();
+    const normText = normalize(dfn.textContent);
     dfnTexts.add(normText);
     if (dfn.dataset.lt) {
       dfn.dataset.lt.split("|").forEach(lt => dfnTexts.add(lt));
@@ -67,7 +67,7 @@ function getPluralizer() {
 
   // returns pluralized/singularized term if `text` needs pluralization/singularization, "" otherwise
   return function pluralizeDfn(/** @type {string} */ text) {
-    const normText = normalize(text.toLowerCase());
+    const normText = normalize(text);
     const plural = isSingular(normText)
       ? pluralOf(normText)
       : singularOf(normText);

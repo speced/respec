@@ -28,7 +28,7 @@ describe("Core — Definition finder", () => {
     };
     const doc = await makeRSDoc(ops);
     const [, dfn] = doc.getElementsByTagName("dfn");
-    expect(dfn.dataset.lt).toBe("bar()|bar|foo.bar()|foo.bar");
+    expect(dfn.dataset.lt).toBe("bar()|bar|Foo.bar()|Foo.bar");
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
   });
 
@@ -52,8 +52,8 @@ describe("Core — Definition finder", () => {
     };
     const doc = await makeRSDoc(ops);
     const bar = doc.getElementById("bar");
-    expect(bar.dataset.lt).toBe("foo.bar()|foo.bar|bar()|bar");
+    expect(bar.dataset.lt).toBe("Foo.bar()|Foo.bar|bar()|bar");
     const baz = doc.getElementById("baz");
-    expect(baz.dataset.lt).toBe("foo.baz()|foo.baz|baz()|baz");
+    expect(baz.dataset.lt).toBe("Foo.baz()|Foo.baz|baz()|baz");
   });
 });

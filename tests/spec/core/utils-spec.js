@@ -571,9 +571,9 @@ describe("Core - Utils", () => {
         document.body.appendChild(dfn);
 
         const titles = utils.getDfnTitles(dfn, { isDefinition: true });
-        expect(titles[0]).toBe("dfn");
-        expect(titles[1]).toBe("dfn2");
-        expect(titles[2]).toBe("dfn3");
+        expect(titles[0]).toBe("DFN");
+        expect(titles[1]).toBe("DFN2");
+        expect(titles[2]).toBe("DFN3");
 
         dfn.remove();
       });
@@ -585,9 +585,9 @@ describe("Core - Utils", () => {
         document.body.appendChild(dfn);
 
         const titles = utils.getDfnTitles(dfn, { isDefinition: true });
-        expect(titles[0]).toBe("dfn");
-        expect(titles[1]).toBe("dfn2");
-        expect(titles[2]).toBe("dfn3");
+        expect(titles[0]).toBe("DFN");
+        expect(titles[1]).toBe("DFN2");
+        expect(titles[2]).toBe("DFN3");
         expect(titles[3]).toBeUndefined();
 
         dfn.remove();
@@ -600,16 +600,16 @@ describe("Core - Utils", () => {
         document.body.appendChild(dfn);
 
         const titles = utils.getDfnTitles(dfn, { isDefinition: true });
-        expect(titles[0]).toBe("dfn");
-        expect(titles[1]).toBe("dfn2");
-        expect(titles[2]).toBe("dfn3");
-        expect(titles[3]).toBe("text");
+        expect(titles[0]).toBe("DFN");
+        expect(titles[1]).toBe("DFN2");
+        expect(titles[2]).toBe("DFN3");
+        expect(titles[3]).toBe("TEXT");
 
         dfn.removeAttribute("data-lt");
-        expect(utils.getDfnTitles(dfn)[0]).toBe("abbr");
+        expect(utils.getDfnTitles(dfn)[0]).toBe("ABBR");
 
         dfn.querySelector("abbr").removeAttribute("title");
-        expect(utils.getDfnTitles(dfn)[0]).toBe("text");
+        expect(utils.getDfnTitles(dfn)[0]).toBe("TEXT");
 
         dfn.remove();
       });

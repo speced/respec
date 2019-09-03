@@ -582,47 +582,32 @@ export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
  * @param {boolean} [args.isDefinition]
  * @returns {String[]} array of title strings
  */
-export function getDfnTitles(elem, { isDefinition = false } = {}) {
-  let titleString = "";
-  let normText = "";
+export function getDfnTitles(elem) {
+  const titleSet = new Set();
   // data-lt-noDefault avoid using the text content of a definition
   // in the definition list.
-  if (!elem.hasAttribute("data-lt-noDefault")) {
-    normText = norm(elem.textContent).toLowerCase();
-  }
+  // ltNodefault is === "data-lt-noDefault"... someone screwed up 😖
+  const normText = "ltNodefault" in elem.dataset ? "" : norm(elem.textContent);
   if (elem.dataset.lt) {
     // prefer @data-lt for the list of title aliases
-    titleString = elem.dataset.lt.toLowerCase();
-    if (normText !== "" && !titleString.startsWith(`${normText}|`)) {
-      // Use the definition itself, so to avoid having to declare the definition twice.
-      titleString += `|${normText}`;
-    }
+    elem.dataset.lt
+      .split("|")
+      .map(item => norm(item))
+      .forEach(item => titleSet.add(item));
   } else if (
     elem.childNodes.length === 1 &&
     elem.getElementsByTagName("abbr").length === 1 &&
     elem.children[0].title
   ) {
-    titleString = elem.children[0].title;
-  } else {
-    titleString =
-      elem.textContent === '""' ? "the-empty-string" : elem.textContent;
+    titleSet.add(elem.children[0].title);
+  } else if (elem.textContent === '""') {
+    titleSet.add("the-empty-string");
   }
 
-  // now we have a string of one or more titles
-  titleString = norm(titleString).toLowerCase();
-  if (isDefinition) {
-    if (elem.dataset.lt) {
-      elem.dataset.lt = titleString;
-    }
-    // if there is no pre-defined type, assume it is a 'dfn'
-    if (!elem.dataset.dfnType) elem.dataset.dfnType = "dfn";
-  }
-
-  const titles = titleString
-    .split("|")
-    .filter(item => item !== "")
-    .reduce((collector, item) => collector.add(item), new Set());
-  return [...titles];
+  titleSet.add(normText);
+  titleSet.delete("");
+  const titles = [...titleSet];
+  return titles;
 }
 
 /**
@@ -643,20 +628,23 @@ export function getDfnTitles(elem, { isDefinition = false } = {}) {
  */
 export function getLinkTargets(elem) {
   const linkForElem = elem.closest("[data-link-for]");
-  const linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
+  const linkFor = linkForElem ? linkForElem.dataset.linkFor : "";
   const titles = getDfnTitles(elem);
-
-  return titles.reduce((result, title) => {
-    result.push({ for: linkFor, title });
+  const results = titles.reduce((result, title) => {
+    // supports legacy <dfn>Foo.Bar()</dfn> definitions
     const split = title.split(".");
     if (split.length === 2) {
       // If there are multiple '.'s, this won't match an
       // Interface/member pair anyway.
       result.push({ for: split[0], title: split[1] });
     }
-    result.push({ for: "", title });
+    result.push({ for: linkFor, title });
+
+    // Finally, we can try to match without link for
+    if (linkFor !== "") result.push({ for: "", title });
     return result;
   }, []);
+  return results;
 }
 
 /**

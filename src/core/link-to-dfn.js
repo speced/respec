@@ -17,36 +17,64 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
 const l10n = {
   en: {
-    duplicate: "This is defined more than once in the document.",
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `Duplicate definition(s) of '${title}'`;
+    },
+    duplicateTitle: "This is defined more than once in the document.",
   },
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
 
+class CaseInsensitiveMap extends Map {
+  /**
+   * @param {Array<[String, HTMLElement]>} [entries]
+   */
+  constructor(entries = []) {
+    super();
+    entries.forEach(([key, elem]) => {
+      this.set(key, elem);
+    });
+    return this;
+  }
+  set(key, elem) {
+    super.set(key.toLowerCase(), elem);
+    return this;
+  }
+  get(key) {
+    return super.get(key.toLowerCase());
+  }
+  has(key) {
+    return super.has(key.toLowerCase());
+  }
+  delete(key) {
+    return super.delete(key.toLowerCase());
+  }
+}
+
 export async function run(conf) {
-  document.normalize();
-
   const titleToDfns = mapTitleToDfns();
-
   /** @type {HTMLElement[]} */
   const possibleExternalLinks = [];
   /** @type {HTMLAnchorElement[]} */
   const badLinks = [];
 
   const localLinkSelector =
-    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo)";
+    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)";
   document.querySelectorAll(localLinkSelector).forEach((
-    /** @type {HTMLAnchorElement} */ ant
+    /** @type {HTMLAnchorElement} */ anchor
   ) => {
-    if (ant.classList.contains("externalDFN")) return;
-    const linkTargets = getLinkTargets(ant);
+    const linkTargets = getLinkTargets(anchor);
     const foundDfn = linkTargets.some(target => {
-      return findLinkTarget(target, ant, titleToDfns, possibleExternalLinks);
+      return findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks);
     });
     if (!foundDfn && linkTargets.length !== 0) {
-      if (ant.dataset.cite === "") {
-        badLinks.push(ant);
+      if (anchor.dataset.cite === "") {
+        badLinks.push(anchor);
       } else {
-        possibleExternalLinks.push(ant);
+        possibleExternalLinks.push(anchor);
       }
     }
   });
@@ -72,16 +100,15 @@ export async function run(conf) {
 }
 
 function mapTitleToDfns() {
-  /** @type {Record<string, Record<string, HTMLElement>>} */
-  const titleToDfns = {};
+  const titleToDfns = new CaseInsensitiveMap();
   Object.keys(definitionMap).forEach(title => {
     const { result, duplicates } = collectDfns(title);
-    titleToDfns[title] = result;
+    titleToDfns.set(title, result);
     if (duplicates.length > 0) {
       showInlineError(
         duplicates,
-        `Duplicate definitions of '${title}'`,
-        l10n[lang].duplicate
+        l10n[lang].duplicateMsg(title),
+        l10n[lang].duplicateTitle
       );
     }
   });
@@ -92,20 +119,16 @@ function mapTitleToDfns() {
  * @param {string} title
  */
 function collectDfns(title) {
-  /** @type {Record<string, HTMLElement>} */
-  const result = {};
+  /** @type {Map<string, HTMLElement>} */
+  const result = new Map();
   const duplicates = [];
   definitionMap[title].forEach(dfn => {
-    if (dfn.dataset.idl === undefined) {
-      // Non-IDL definitions aren't "for" an interface.
-      delete dfn.dataset.dfnFor;
-    }
     const { dfnFor = "" } = dfn.dataset;
-    if (dfnFor in result) {
+    if (result.has(dfnFor)) {
       // We want <dfn> definitions to take precedence over
       // definitions from WebIDL. WebIDL definitions wind
       // up as <span>s instead of <dfn>.
-      const oldIsDfn = result[dfnFor].localName === "dfn";
+      const oldIsDfn = result.get(dfnFor).localName === "dfn";
       const newIsDfn = dfn.localName === "dfn";
       if (oldIsDfn) {
         if (!newIsDfn) {
@@ -115,62 +138,49 @@ function collectDfns(title) {
         duplicates.push(dfn);
       }
     }
-    result[dfnFor] = dfn;
-    assignDfnId(dfn, title);
+    result.set(dfnFor, dfn);
+    addId(dfn, "dfn", title);
   });
   return { result, duplicates };
 }
 
 /**
- * @param {HTMLElement} dfn
- * @param {string} title
- */
-function assignDfnId(dfn, title) {
-  if (!dfn.id) {
-    const { dfnFor } = dfn.dataset;
-    if (dfn.dataset.idl) {
-      addId(dfn, "dom", (dfnFor ? `${dfnFor}-` : "") + title);
-    } else {
-      addId(dfn, "dfn", title);
-    }
-  }
-}
-
-/**
  * @param {import("./utils.js").LinkTarget} target
- * @param {HTMLAnchorElement} ant
- * @param {Record<string, Record<string, HTMLElement>>} titleToDfns
+ * @param {HTMLAnchorElement} anchor
+ * @param {CaseInsensitiveMap} titleToDfns
  * @param {HTMLElement[]} possibleExternalLinks
  */
-function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
-  const { linkFor } = ant.dataset;
-  if (!titleToDfns[target.title] || !titleToDfns[target.title][target.for]) {
+function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
+  const { linkFor } = anchor.dataset;
+  if (
+    !titleToDfns.has(target.title) ||
+    !titleToDfns.get(target.title).get(target.for)
+  ) {
     return false;
   }
-  const dfn = titleToDfns[target.title][target.for];
+  const dfn = titleToDfns.get(target.title).get(target.for);
   if (dfn.dataset.cite) {
-    ant.dataset.cite = dfn.dataset.cite;
-  } else if (linkFor && !titleToDfns[linkFor.toLowerCase()]) {
-    possibleExternalLinks.push(ant);
+    anchor.dataset.cite = dfn.dataset.cite;
+  } else if (linkFor && !titleToDfns.get(linkFor)) {
+    possibleExternalLinks.push(anchor);
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
     const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-    ant.dataset.lt = lt[0] || dfn.textContent;
-    possibleExternalLinks.push(ant);
+    anchor.dataset.lt = lt[0] || dfn.textContent;
+    possibleExternalLinks.push(anchor);
   } else {
-    if (ant.dataset.idl === "partial") {
-      possibleExternalLinks.push(ant);
+    if (anchor.dataset.idl === "partial") {
+      possibleExternalLinks.push(anchor);
     } else {
-      ant.href = `#${dfn.id}`;
-      ant.classList.add("internalDFN");
+      anchor.href = `#${dfn.id}`;
+      anchor.classList.add("internalDFN");
     }
   }
-  // add a bikeshed style indication of the type of link
-  if (!ant.hasAttribute("data-link-type")) {
-    ant.dataset.linkType = "dfn";
+  if (!anchor.hasAttribute("data-link-type")) {
+    anchor.dataset.linkType = "idl" in dfn.dataset ? "idl" : "dfn";
   }
   if (isCode(dfn)) {
-    wrapAsCode(ant, dfn);
+    wrapAsCode(anchor, dfn);
   }
   return true;
 }
@@ -219,7 +229,7 @@ function shouldWrapByCode(dfn, term) {
   } else if (dataset.title === term) {
     return true;
   } else if (dataset.lt) {
-    return dataset.lt.split("|").includes(term.toLowerCase());
+    return dataset.lt.split("|").includes(term);
   }
   return false;
 }
@@ -252,7 +262,7 @@ function showLinkingError(elems) {
     showInlineWarning(
       elem,
       `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``,
-      "Linking error: not matching <dfn>"
+      "Linking error: not matching `<dfn>`"
     );
   });
 }

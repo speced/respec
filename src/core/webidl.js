@@ -81,6 +81,14 @@ const templates = {
     }
     return idlLink;
   },
+  nameless(escaped, { data, parent }) {
+    switch (data.type) {
+      case "constructor":
+        return defineIdlName(escaped, data, parent);
+      default:
+        return escaped;
+    }
+  },
   type(contents) {
     return hyperHTML`<span class="idlType">${contents}</span>`;
   },
@@ -123,11 +131,13 @@ function defineIdlName(escaped, data, parent) {
       dfn.dataset.dfnType = linkType;
     }
     decorateDfn(dfn, data, parentName, name);
+    const href = `#${dfn.id}`;
     return hyperHTML`<a
-      data-link-for="${parentName.toLowerCase()}"
+      data-link-for="${parentName}"
       data-link-type="${linkType}"
-      data-lt="${dfn.dataset.lt || null}"
-      >${escaped}</a>`;
+      href="${href}"
+      class="internalDFN"
+      ><code>${escaped}</code></a>`;
   }
 
   const isDefaultJSON =
@@ -140,8 +150,8 @@ function defineIdlName(escaped, data, parent) {
      data-lt="default toJSON operation">${escaped}</a>`;
   }
   if (!data.partial) {
-    const dfn = hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
-      parent.name}">${escaped}</dfn>`;
+    const dfn = hyperHTML`<dfn data-export data-dfn-type="${linkType}">${escaped}</dfn>`;
+    registerDefinition(dfn, [name]);
     decorateDfn(dfn, data, parentName, name);
     return dfn;
   }
@@ -220,6 +230,7 @@ function resolveNameAndId(defn, parent) {
       idlId += resolvePartial(defn);
       break;
     }
+    case "constructor":
     case "operation": {
       const overload = resolveOverload(name, parent);
       if (overload) {
@@ -302,11 +313,14 @@ function renderWebIDL(idlElement, index) {
   const render = hyperHTML.bind(idlElement);
   render`${html}`;
   idlElement.querySelectorAll("[data-idl]").forEach(elem => {
-    const title = elem.dataset.title.toLowerCase();
+    if (elem.dataset.dfnFor) {
+      return;
+    }
+    const title = elem.dataset.title;
     // Select the nearest ancestor element that can contain members.
     const parent = elem.parentElement.closest("[data-idl][data-title]");
     if (parent) {
-      elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
+      elem.dataset.dfnFor = parent.dataset.title;
     }
     registerDefinition(elem, [title]);
   });
