@@ -37,12 +37,12 @@
     "exports-loader": "^0.7.0",
     "handlebars": "^4.1.2",
     "highlight.js": "^9.15.10",
-    "hyperhtml": "^2.30.1",
+    "hyperhtml": "^2.30.3",
     "idb": "^4.0.4",
     "jasmine-core": "^3.4.0",
     "jasmine-reporters": "^2.3.2",
     "jquery": "^3.4.1",
-    "karma": "^4.2.0",
+    "karma": "^4.3.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-detect-browsers": "^2.3.3",
     "karma-edge-launcher": "^0.4.2",
@@ -65,9 +65,9 @@
     "requirejs": "^2.3.6",
     "serve": "^11.1.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
-    "typescript": "^3.5.3",
-    "webidl2": "^23.7.0",
-    "webpack": "^4.39.2",
+    "typescript": "^3.6.2",
+    "webidl2": "^23.8.0",
+    "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"
   },
   "scripts": {
@@ -104,7 +104,7 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "1.19.0",
-    "snyk": "^1.217.3"
+    "snyk": "^1.223.0"
   },
   "prettier": {
     "trailingComma": "es5"
