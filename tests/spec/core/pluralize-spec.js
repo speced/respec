@@ -8,9 +8,9 @@ describe("Core - Pluralize", () => {
         <span id="fooLinks">
           <a>foo</a> or <a>foos</a>
         </span>
-        <dfn>bars</dfn> can be referenced as
+        <dfn>Bars</dfn> can be referenced as
         <span id="barLinks">
-          <a>bar</a> or <a>bars</a>
+          <a>Bar</a> or <a>bars</a> or <a>bar</a>
         </span>
       </section>`;
     const ops = makeStandardOps({ pluralize: true }, body);
@@ -31,7 +31,7 @@ describe("Core - Pluralize", () => {
     expect(dfnBars.dataset.lt).toBeFalsy();
     expect(dfnBars.dataset.plurals).toBe("bar");
     const linksBars = [...doc.querySelectorAll("#barLinks a")];
-    expect(linksBars.length).toBe(2);
+    expect(linksBars.length).toBe(3);
     expect(
       linksBars.every(el => el.getAttribute("href") === "#dfn-bars")
     ).toBeTruthy();
@@ -40,10 +40,13 @@ describe("Core - Pluralize", () => {
   it("adds pluralization when [data-lt] is defined", async () => {
     const body = `
       <section id="section">
-        <dfn data-lt="baz">bars</dfn> can be referenced
+        <dfn data-lt="Baz">Bars</dfn> can be referenced
         as <a>baz</a>
         or <a>bar</a>
+        or <a>Bar</a>
         or <a>bars</a>
+        or <a>Bars</a>
+        or <a>BaZs</a>
         or <a>bazs</a>
         but not as <a id="ignored-link" href="/PASS">bar</a>
       </section>`;
@@ -52,10 +55,10 @@ describe("Core - Pluralize", () => {
 
     const dfn = doc.querySelector("#section dfn");
     expect(dfn.id).toBe("dfn-baz"); // uses first data-lt as `id`
-    expect(dfn.dataset.lt).toBe("baz|bars");
+    expect(dfn.dataset.lt).toBe("Baz|Bars");
     expect(dfn.dataset.plurals.split("|").sort()).toEqual(["bar", "bazs"]);
     const validLinks = [...doc.querySelectorAll("#section a[href^='#']")];
-    expect(validLinks.length).toBe(4);
+    expect(validLinks.length).toBe(7);
     expect(
       validLinks.every(el => el.getAttribute("href") === "#dfn-baz")
     ).toBeTruthy();

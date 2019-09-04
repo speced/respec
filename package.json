@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.31.0",
+  "version": "24.32.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -31,13 +31,13 @@
     "chai": "^4.2.0",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
     "eslint": "^6.3.0",
-    "eslint-config-prettier": "^6.1.0",
+    "eslint-config-prettier": "^6.2.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.1.0",
     "exports-loader": "^0.7.0",
-    "handlebars": "^4.1.2",
+    "handlebars": "^4.2.0",
     "highlight.js": "^9.15.10",
-    "hyperhtml": "^2.30.3",
+    "hyperhtml": "^2.30.5",
     "idb": "^4.0.4",
     "jasmine-core": "^3.4.0",
     "jasmine-reporters": "^2.3.2",
@@ -104,7 +104,7 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "1.19.0",
-    "snyk": "^1.223.0"
+    "snyk": "^1.224.0"
   },
   "prettier": {
     "trailingComma": "es5"
