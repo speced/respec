@@ -59,6 +59,8 @@ describe("Core — xref", () => {
     "referrer-policy": {
       href: "https://www.w3.org/TR/referrer-policy/",
     },
+    "css-scoping": { aliasOf: "css-scoping-1" },
+    "css-scoping-1": { href: "https://drafts.csswg.org/css-scoping-1/" },
     "local-1": { id: "local-1", href: "https://example.com/" },
     "local-2": { id: "local-2", href: "https://example.com/" },
     "local-3": { id: "local-3", href: "https://example.com/" },
@@ -76,13 +78,8 @@ describe("Core — xref", () => {
     ],
     ["uppercase", "https://infra.spec.whatwg.org/#ascii-uppercase"],
     ["url parser", "https://url.spec.whatwg.org/#concept-url-parser"],
-    ["object@fileapi", "https://www.w3.org/TR/FileAPI/#blob-url-entry-object"],
     ["dictionary", "https://heycam.github.io/webidl/#dfn-dictionary"],
     ["alphanumeric", "https://infra.spec.whatwg.org/#ascii-alphanumeric"],
-    [
-      "object@html",
-      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element",
-    ],
     ["exception", "https://heycam.github.io/webidl/#dfn-exception"],
     [
       "Window",
@@ -475,37 +472,36 @@ describe("Core — xref", () => {
     }
   });
 
-  // TODO: this will fail (BUG)
-  // Can fix it via https://github.com/w3c/respec/issues/2428
-  // eslint-disable-next-line jasmine/no-disabled-tests
-  xit("uses inline references to provide context", async () => {
+  it("uses inline references to provide context", async () => {
     const body = `
       <section id="test">
         <section>
-          <p>Uses [[fileapi]] to create context for <a id="one">object</a></p>
+        <p>Uses [[css-scoping]] to create context for <a id="one">shadow root</a></p>
         </section>
         <section>
-          <p>Uses [[html]] to create context for <a id="two">object</a></p>
+          <p>Uses [[dom]] to create context for <a id="two">shadow root</a></p>
         </section>
         <section>
-          <p>Uses [[html]] and [[fileapi]] to create context for
-            <a id="three">object</a>. It fails as it's defined in both.
+          <p>Uses [[dom]] and [[css-scoping]] to create context for
+            <a id="three">shadow root</a>. It fails as it's defined in both.
           </p>
         </section>
         <section>
           <p>But data-cite on element itself wins.
-            <a id="four">object</a> uses [[fileapi]],
-            whereas <a data-cite="html" id="five">object</a> uses html.
+            <a id="four">shadow root</a> uses [[css-scoping]],
+            whereas <a data-cite="dom" id="five">shadow root</a> uses dom.
           </p>
         </section>
       </section>
     `;
-    const config = { xref: ["fileapi", "html"], localBiblio };
+    // `xref: true` to prevent cite fallback chaining to body[data-cite].
+    // (contrived example to check the use of context)
+    const config = { xref: true, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = expectedLinks.get("object@fileapi");
-    const expectedLink2 = expectedLinks.get("object@html");
+    const expectedLink1 = "https://drafts.csswg.org/css-scoping-1/#shadow-root";
+    const expectedLink2 = "https://dom.spec.whatwg.org/#concept-shadow-root";
 
     const one = doc.getElementById("one");
     expect(one.href).toBe(expectedLink1);
