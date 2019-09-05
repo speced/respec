@@ -374,8 +374,9 @@ function showErrors({ ambiguous, notFound }) {
     const specs = [...new Set(flatten([], query.specs))].sort();
     const formUrl = getPrefilledFormURL(query, specs);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
+    const originalTerm = getTermFromElement(elems[0]);
     const msg =
-      `Couldn't match "**${query.term}**" to anything in the document or in any other document cited in this specification: ${specsString}. ` +
+      `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}. ` +
       `See [how to cite to resolve the error](${formUrl})`;
     showInlineError(elems, msg, "Error: No matching dfn found.");
   }
@@ -384,8 +385,9 @@ function showErrors({ ambiguous, notFound }) {
     const specs = [...new Set(results.map(entry => entry.shortname))].sort();
     const formUrl = getPrefilledFormURL(query, specs);
     const specsString = specs.map(s => `**${s}**`).join(", ");
+    const originalTerm = getTermFromElement(elems[0]);
     const msg =
-      `The term "**${query.term}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ` +
+      `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ` +
       `See [how to cite to resolve the error](${formUrl})`;
     showInlineError(elems, msg, "Error: Linking an ambiguous dfn.");
   }
