@@ -56,6 +56,7 @@ class CaseInsensitiveMap extends Map {
 }
 
 export async function run(conf) {
+  console.log(definitionMap);
   const titleToDfns = mapTitleToDfns();
   /** @type {HTMLElement[]} */
   const possibleExternalLinks = [];
@@ -120,26 +121,30 @@ function mapTitleToDfns() {
  * @param {string} title
  */
 function collectDfns(title) {
-  /** @type {Map<string, HTMLElement>} */
+  /** @type {Map<string, Map<string, HTMLElement>>} */
   const result = new Map();
   const duplicates = [];
   definitionMap[title].forEach(dfn => {
-    const { dfnFor = "" } = dfn.dataset;
-    if (result.has(dfnFor)) {
-      // We want <dfn> definitions to take precedence over
-      // definitions from WebIDL. WebIDL definitions wind
-      // up as <span>s instead of <dfn>.
-      const oldIsDfn = result.get(dfnFor).localName === "dfn";
+    const { dfnFor = "", dfnType = "dfn" } = dfn.dataset;
+    if (result.has(dfnFor) && result.get(dfnFor).has(dfnType)) {
+      const oldDfn = result.get(dfnFor).get(dfnType);
+      const oldIsDfn = oldDfn.localName === "dfn";
       const newIsDfn = dfn.localName === "dfn";
+      const isSameDfnType = dfnType === oldDfn.dataset.dfnType;
       if (oldIsDfn) {
-        if (!newIsDfn) {
+        if (!newIsDfn || !isSameDfnType) {
           // Don't overwrite <dfn> definitions.
           return;
         }
         duplicates.push(dfn);
       }
     }
-    result.set(dfnFor, dfn);
+    const type = "idl" in dfn.dataset || dfnType !== "dfn" ? "idl" : "dfn";
+    if (!result.has(dfnFor)) {
+      result.set(dfnFor, new Map([[type, dfn]]));
+    } else {
+      result.get(dfnFor).set(type, dfn);
+    }
     addId(dfn, "dfn", title);
   });
   return { result, duplicates };
@@ -152,14 +157,24 @@ function collectDfns(title) {
  * @param {HTMLElement[]} possibleExternalLinks
  */
 function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
-  const { linkFor } = anchor.dataset;
+  const { linkFor, linkType = "" } = anchor.dataset;
   if (
     !titleToDfns.has(target.title) ||
     !titleToDfns.get(target.title).get(target.for)
   ) {
     return false;
   }
-  const dfn = titleToDfns.get(target.title).get(target.for);
+  const dfnFors = titleToDfns.get(target.title).get(target.for);
+
+  let dfn;
+
+  // we are going to have to guess, assume is it's for something, it's more likely IDL.
+  if (!linkType) {
+    dfn = dfnFors.get(target.for === "" ? "dfn" : "idl") || dfnFors.get("idl");
+  } else {
+    dfn = dfnFors.get(linkType === "dfn" ? "dfn" : "idl");
+  }
+
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
   } else if (linkFor && !titleToDfns.get(linkFor)) {
@@ -191,7 +206,7 @@ function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
  * @param {HTMLElement} dfn a definition
  */
 function isCode(dfn) {
-  if (dfn.closest("code,pre")) {
+  if ("idl" in dfn.dataset || dfn.closest("code,pre")) {
     return true;
   }
   // Note that childNodes.length === 1 excludes

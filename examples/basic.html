@@ -22,10 +22,29 @@
     </script>
   </head>
   <body>
+      <section data-link-for="Request">
+          <h2><dfn>Request</dfn> interface</h2>
+          <pre class="idl">
+            [Exposed=Window]
+            interface Request {
+              Request clone();
+            };
+          </pre>
+          <p id="codeWrap"><a>Request.clone</a> A <a>Request</a> object has a <dfn>clone</dfn> method.</p>
+          <p id="codeWrapMethod"><a>clone</a>, <a>clone()</a>, and <a>Request.clone()</a> are all same.</p>
+          <p id="noCodeWrap">An instance of <a data-lt="Request">the request interface</a>.</p>
+        </section>
     <section id='abstract'>
       <p>
         This is required.
       </p>
+
+      <pre class="idl">
+        [Exposed=Window]
+        interface Test {};
+        </pre>
+        <p id="t1"><a>Test</a>
+        <p id="t2"><a data-lt="Test">not wrapped in code</a>
     </section>
     <section id='sotd'>
       <p>
@@ -59,25 +78,18 @@
       <pre class="idl">
       [Exposed=Window]
       interface Foo {
-        constructor();
         attribute DOMString bar;
-        void doTheFoo();
       };
       </pre>
       <p>
-        The <a>Foo</a> interface is nice. Lets you do stuff.
-      </p>
-      <p>
-        The <dfn>Foo.constructor()</dfn> creates a Foo instance.
-      </p>
-      <p>
+        The <dfn data-dfn-for="Foo" data-dfn-type="dfn">bar</dfn> concept.
         The <dfn>bar</dfn> attribute, returns 🍺.
       </p>
       <p>
-        The <dfn>doTheFoo()</dfn> method, returns nothing.
+        Links to the concept of [=Foo/bar=].
       </p>
       <p>
-        ReSpec will list this reference as normative [[ECMASCRIPT]].
+        Links to the attribute {{Foo/bar}}.
       </p>
       <p>
         This is an example of a non-normative reference in a normative section

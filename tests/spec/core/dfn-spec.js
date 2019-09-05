@@ -99,7 +99,33 @@ describe("Core — Definitions", () => {
     const doc = await makeRSDoc(ops);
     const dfn = doc.querySelector("dfn[data-lt]");
     expect(dfn.dataset.lt).toBe("text|text 1|text 2|text 3");
-    expect(dfn.dataset.dfnType).toBe("dfn");
+  });
+
+  it("distinguishes between definition types", async () => {
+    const body = `
+      <pre class="idl">
+      [Exposed=Window]
+      interface Foo {
+        attribute DOMString bar;
+      };
+      </pre>
+      <p>
+        The <dfn data-dfn-for="Foo" data-dfn-type="dfn">bar</dfn> concept.
+        The <dfn>bar</dfn> attribute, returns 🍺.
+      </p>
+      <p id="concept-link">
+        Links to the concept of [=Foo/bar=].
+      </p>
+      <p id="idl-link">
+        Links to the attribute {{Foo/bar}}.
+      </p>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const conceptLink = doc.querySelector("#concept-link a[href='#dfn-bar']");
+    const idlLink = doc.querySelector("#idl-link a[href='#dom-foo-bar']");
+    expect(conceptLink).toBeTruthy();
+    expect(idlLink).toBeTruthy();
   });
 
   it("allows linking via data-local-lt", async () => {
