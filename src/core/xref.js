@@ -130,11 +130,7 @@ function normalizeConfig(xref) {
 function getRequestEntry(elem) {
   const isIDL = "xrefType" in elem.dataset;
 
-  let term = elem.dataset.lt
-    ? elem.dataset.lt.split("|", 1)[0]
-    : elem.textContent;
-  term = normalize(term);
-  if (term === "the-empty-string") term = "";
+  let term = getTermFromElement(elem);
   if (!isIDL) term = term.toLowerCase();
 
   /** @type {string[][]} */
@@ -191,6 +187,14 @@ function getRequestEntry(elem) {
     ...(specs.length && { specs }),
     ...(typeof forContext === "string" && { for: forContext }),
   };
+}
+
+/** @param {HTMLElement} elem */
+function getTermFromElement(elem) {
+  const { lt: linkingText } = elem.dataset;
+  let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
+  term = normalize(term);
+  return term === "the-empty-string" ? "" : term;
 }
 
 /**
