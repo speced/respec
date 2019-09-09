@@ -5,6 +5,16 @@ import { biblio } from "../core/biblio.js";
 import { pub } from "../core/pubsubhub.js";
 export const name = "w3c/seo";
 export function run(conf) {
+  // Don't include a canonical URL for documents
+  // that haven't been published.
+  if (!conf.canonicalURI) {
+    switch (conf.specStatus) {
+      case "CG-DRAFT":
+      case "BG-DRAFT":
+      case "unofficial":
+        return;
+    }
+  }
   const trLatestUri = conf.shortName
     ? `https://www.w3.org/TR/${conf.shortName}/`
     : null;
