@@ -59,6 +59,8 @@ describe("Core — xref", () => {
     "referrer-policy": {
       href: "https://www.w3.org/TR/referrer-policy/",
     },
+    "css-scoping": { aliasOf: "css-scoping-1" },
+    "css-scoping-1": { href: "https://drafts.csswg.org/css-scoping-1/" },
     "local-1": { id: "local-1", href: "https://example.com/" },
     "local-2": { id: "local-2", href: "https://example.com/" },
     "local-3": { id: "local-3", href: "https://example.com/" },
@@ -76,13 +78,8 @@ describe("Core — xref", () => {
     ],
     ["uppercase", "https://infra.spec.whatwg.org/#ascii-uppercase"],
     ["url parser", "https://url.spec.whatwg.org/#concept-url-parser"],
-    ["object@fileapi", "https://www.w3.org/TR/FileAPI/#blob-url-entry-object"],
     ["dictionary", "https://heycam.github.io/webidl/#dfn-dictionary"],
     ["alphanumeric", "https://infra.spec.whatwg.org/#ascii-alphanumeric"],
-    [
-      "object@html",
-      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element",
-    ],
     ["exception", "https://heycam.github.io/webidl/#dfn-exception"],
     [
       "Window",
@@ -475,37 +472,36 @@ describe("Core — xref", () => {
     }
   });
 
-  // TODO: this will fail (BUG)
-  // Can fix it via https://github.com/w3c/respec/issues/2428
-  // eslint-disable-next-line jasmine/no-disabled-tests
-  xit("uses inline references to provide context", async () => {
+  it("uses inline references to provide context", async () => {
     const body = `
       <section id="test">
         <section>
-          <p>Uses [[fileapi]] to create context for <a id="one">object</a></p>
+        <p>Uses [[css-scoping]] to create context for <a id="one">shadow root</a></p>
         </section>
         <section>
-          <p>Uses [[html]] to create context for <a id="two">object</a></p>
+          <p>Uses [[dom]] to create context for <a id="two">shadow root</a></p>
         </section>
         <section>
-          <p>Uses [[html]] and [[fileapi]] to create context for
-            <a id="three">object</a>. It fails as it's defined in both.
+          <p>Uses [[dom]] and [[css-scoping]] to create context for
+            <a id="three">shadow root</a>. It fails as it's defined in both.
           </p>
         </section>
         <section>
           <p>But data-cite on element itself wins.
-            <a id="four">object</a> uses [[fileapi]],
-            whereas <a data-cite="html" id="five">object</a> uses html.
+            <a id="four">shadow root</a> uses [[css-scoping]],
+            whereas <a data-cite="dom" id="five">shadow root</a> uses dom.
           </p>
         </section>
       </section>
     `;
-    const config = { xref: ["fileapi", "html"], localBiblio };
+    // `xref: true` to prevent cite fallback chaining to body[data-cite].
+    // (contrived example to check the use of context)
+    const config = { xref: true, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = expectedLinks.get("object@fileapi");
-    const expectedLink2 = expectedLinks.get("object@html");
+    const expectedLink1 = "https://drafts.csswg.org/css-scoping-1/#shadow-root";
+    const expectedLink2 = "https://dom.spec.whatwg.org/#concept-shadow-root";
 
     const one = doc.getElementById("one");
     expect(one.href).toBe(expectedLink1);
@@ -979,8 +975,6 @@ describe("Core — xref", () => {
 
   it("caches results and uses cached results when available", async () => {
     const config = { xref: true, localBiblio };
-    let cacheKeys;
-
     const keys = new Map([
       ["dictionary", "7a82727efd37620ec8b50cac9dca75d1b1f08d94"],
       ["url parser", "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"],
@@ -991,55 +985,45 @@ describe("Core — xref", () => {
         <p><a id="link">dictionary</a><p>
       </section>`;
 
-    const preLoadTime = await cache.get("__CACHE_TIME__");
-    expect(Number.isInteger(preLoadTime)).toBeFalsy();
-    cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual([]);
-
+    expectAsync(cache.keys()).toBeResolvedTo([]);
     const preCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
     expect(preCacheDoc.getElementById("link").href).toBe(
       expectedLinks.get("dictionary")
     );
-    const preCacheTime = await cache.get("__CACHE_TIME__");
-    expect(Number.isInteger(preCacheTime)).toBeTruthy();
-    cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual(
-      ["__CACHE_TIME__", keys.get("dictionary")].sort()
-    );
+    expectAsync(cache.keys()).toBeResolvedTo([
+      keys.get("dictionary"),
+      "__LAST_VERSION_CHECK__",
+    ]);
 
     // no new data was requested from server, cache shoudln't change
     const postCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
     expect(postCacheDoc.getElementById("link").href).toBe(
       expectedLinks.get("dictionary")
     );
-    const postCacheTime = await cache.get("__CACHE_TIME__");
-    expect(postCacheTime).toEqual(preCacheTime);
-    cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual(
-      ["__CACHE_TIME__", keys.get("dictionary")].sort()
-    );
+    expectAsync(cache.keys()).toBeResolvedTo([
+      keys.get("dictionary"),
+      "__LAST_VERSION_CHECK__",
+    ]);
 
     // new data was requested from server, cache should change
-    const config2 = { xref: true, localBiblio };
     const body2 = `
       <section>
         <p><a id="link-1">dictionary</a><p>
         <p><a id="link-2">URL parser</a><p>
       </section>
     `;
-    const updatedCacheDoc = await makeRSDoc(makeStandardOps(config2, body2));
+    const updatedCacheDoc = await makeRSDoc(makeStandardOps(config, body2));
     expect(updatedCacheDoc.getElementById("link-1").href).toBe(
       expectedLinks.get("dictionary")
     );
     expect(updatedCacheDoc.getElementById("link-2").href).toBe(
       expectedLinks.get("url parser")
     );
-    const updatedCacheTime = await cache.get("__CACHE_TIME__");
-    expect(updatedCacheTime).toBeGreaterThan(preCacheTime);
-    cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual(
-      ["__CACHE_TIME__", keys.get("dictionary"), keys.get("url parser")].sort()
-    );
+    expectAsync(cache.keys()).toBeResolvedTo([
+      keys.get("dictionary"),
+      "__LAST_VERSION_CHECK__",
+      keys.get("url parser"),
+    ]);
   });
 
   it("respects requests to not perform an xref lookup", async () => {

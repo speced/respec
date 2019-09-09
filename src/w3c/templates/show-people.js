@@ -1,6 +1,20 @@
+import { humanDate, showInlineError } from "../../core/utils";
+import { lang as defaultLang } from "../../core/l10n.js";
 import html from "hyperhtml";
 
+const localizationStrings = {
+  en: {
+    until: "Until",
+  },
+  es: {
+    until: "Hasta",
+  },
+};
+
+const lang = defaultLang in localizationStrings ? defaultLang : "en";
+
 export default (items = []) => {
+  const l10n = localizationStrings[lang];
   return items.map(getItem);
 
   function getItem(p) {
@@ -85,6 +99,27 @@ export default (items = []) => {
         contents.push(document.createTextNode(", "), result);
       }
     }
+    if (p.retiredDate) {
+      const retiredDate = new Date(p.retiredDate);
+      const isValidDate = retiredDate.toString() !== "Invalid Date";
+      const result = document.createElement("time");
+      result.textContent = isValidDate
+        ? humanDate(retiredDate)
+        : "Invalid Date"; // todo: Localise invalid date
+      if (!isValidDate) {
+        showInlineError(
+          result,
+          "The date is invalid. The expected format is YYYY-MM-DD.",
+          "Invalid date"
+        );
+      }
+      contents.push(
+        html`
+          - ${l10n.until.concat(" ")}${[result]}
+        `
+      );
+    }
+
     html.bind(span)`${contents}`;
     dd.appendChild(span);
     return dd;

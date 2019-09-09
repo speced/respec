@@ -67,7 +67,7 @@ function getPluralizer() {
 
   // returns pluralized/singularized term if `text` needs pluralization/singularization, "" otherwise
   return function pluralizeDfn(/** @type {string} */ text) {
-    const normText = normalize(text.toLowerCase());
+    const normText = normalize(text).toLowerCase();
     const plural = isSingular(normText)
       ? pluralOf(normText)
       : singularOf(normText);

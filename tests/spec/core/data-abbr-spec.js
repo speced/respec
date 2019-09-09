@@ -16,7 +16,7 @@ describe("Core — data-abbr", () => {
     const dfnFooBar = doc.querySelector("#section dfn");
     const abbr = doc.querySelector("#section dfn + abbr");
 
-    expect(dfnFooBar.dataset.lt).toBe("fb|foo bar");
+    expect(dfnFooBar.dataset.lt).toBe("FB|foo bar");
     expect(dfnFooBar.textContent.trim()).toBe("foo bar");
     expect(abbr.textContent).toBe("FB");
     expect(abbr.previousSibling.textContent.trim()).toBe("(");

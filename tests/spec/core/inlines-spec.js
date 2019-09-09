@@ -346,6 +346,11 @@ describe("Core - Inlines", () => {
           For each
           =]
         </p>
+
+        <p id="alias">
+          [= code point| Unicode code point =]
+          [= iteration/break|break out of iteration =]
+        </p>
       </section>
     `;
     const config = { xref: true };
@@ -356,7 +361,7 @@ describe("Core - Inlines", () => {
     expect(anchors.length).toBe(3);
     for (const a of anchors) {
       expect(a.getAttribute("href")).toBe(expectedAnchor);
-      expect(a.dataset.linkFor).toBe("");
+      expect(a.dataset.linkFor).toBeUndefined();
     }
 
     // Qualified (link is "for" something)
@@ -381,6 +386,13 @@ describe("Core - Inlines", () => {
     expect(multiMapForEach.href).toBe(
       "https://infra.spec.whatwg.org/#map-iterate"
     );
+
+    // term aliasing
+    const [codePoint, iterationBreak] = doc.querySelectorAll("#alias a");
+    expect(codePoint.textContent).toBe("Unicode code point");
+    expect(codePoint.hash).toBe("#code-point");
+    expect(iterationBreak.textContent).toBe("break out of iteration");
+    expect(iterationBreak.hash).toBe("#iteration-break");
   });
 
   it("processes {{ forContext/term }} IDL", async () => {
@@ -394,9 +406,10 @@ describe("Core - Inlines", () => {
           /
           event
         }}</p>
+        <p id="link5">{{ ReferrerPolicy/"no-referrer" }}</p>
       </section>
     `;
-    const config = { xref: ["DOM", "HTML"] };
+    const config = { xref: ["DOM", "HTML", "referrer-policy"] };
     const doc = await makeRSDoc(makeStandardOps(config, body));
 
     expect(doc.getElementById("link1").textContent).toBe("Window.event");
@@ -416,5 +429,10 @@ describe("Core - Inlines", () => {
 
     expect(doc.getElementById("link4").textContent).toBe("event");
     expect(doc.querySelector("#link4 a").hash).toBe("#dom-window-event");
+
+    expect(doc.querySelector("#link5 a").textContent).toBe("no-referrer");
+    expect(doc.querySelector("#link5 a").hash).toBe(
+      "#dom-referrerpolicy-no-referrer"
+    );
   });
 });

@@ -105,9 +105,12 @@ async function fetchAndWrite(
       default:
         await writeTo(out, html);
     }
+    // Race condition: Wait before page close for all console messages to be logged
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    await page.close();
     return html;
   } finally {
-    browser.close();
+    await browser.close();
   }
 }
 
