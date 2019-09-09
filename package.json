@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.32.1",
+  "version": "24.32.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -21,9 +21,9 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
     "@types/clipboard": "^2.0.1",
     "@types/pluralize": "0.0.29",
     "babel-eslint": "^10.0.3",
@@ -66,9 +66,9 @@
     "serve": "^11.1.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.6.2",
-    "webidl2": "^23.8.0",
+    "webidl2": "^23.8.1",
     "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7"
+    "webpack-cli": "^3.3.8"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps -q",
@@ -104,7 +104,7 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "1.19.0",
-    "snyk": "^1.224.0"
+    "snyk": "^1.226.1"
   },
   "prettier": {
     "trailingComma": "es5"
