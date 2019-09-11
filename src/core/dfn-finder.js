@@ -105,6 +105,8 @@ function findNormalDfn(defn, parent, ...names) {
         delete definitionMap[resolvedName];
         registerDefinition(dfns[0], [resolvedName]);
       }
+    } else {
+      resolvedName = name;
     }
     if (dfns.length > 1) {
       const msg = `WebIDL identifier \`${name}\` ${
@@ -140,7 +142,7 @@ export function decorateDfn(dfn, defn, parent, name) {
   }
   dfn.dataset.idl = defn.type;
   dfn.dataset.title = dfn.textContent;
-  dfn.dataset.dfnFor = parent;
+  if (parent) dfn.dataset.dfnFor = parent;
   // Derive the data-type for dictionary members, interface attributes,
   // and methods
   switch (defn.type) {
