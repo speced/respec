@@ -30,8 +30,10 @@ describe("Core — Definition finder", () => {
     const doc = await makeRSDoc(ops);
     const [barDfn, fooDfn] = doc.getElementsByTagName("dfn");
     expect(barDfn.dataset.lt).toBe("bar()|bar|Foo.bar()|Foo.bar");
+    expect(barDfn.dataset.dfnFor).toBe("Foo");
     expect(barDfn.classList.contains("respec-offending-element")).toBeFalsy();
     expect(fooDfn.dataset.lt).toBeUndefined();
+    expect(fooDfn.dataset.dfnFor).toBeUndefined();
   });
 
   it("should enumerate operation alternative names", async () => {
