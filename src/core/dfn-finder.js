@@ -1,7 +1,6 @@
 // @ts-check
 import { definitionMap, registerDefinition } from "./dfn-map.js";
-import { pub } from "./pubsubhub.js";
-import { wrapInner } from "./utils.js";
+import { showInlineError, wrapInner } from "./utils.js";
 
 const topLevelEntities = new Set([
   "callback interface",
@@ -27,18 +26,9 @@ const topLevelEntities = new Set([
  * @param {string} name
  */
 export function findDfn(defn, name, { parent = "" } = {}) {
-  return tryFindDfn(defn, parent, name);
-}
-
-/**
- * @param {*} defn
- * @param {string} parent
- * @param {string} name
- */
-function tryFindDfn(defn, parent, name) {
   switch (defn.type) {
-    case "attribute":
-      return findAttributeDfn(defn, parent, name);
+    case "constructor":
+      return findOperationDfn(defn, parent, "constructor");
     case "operation":
       return findOperationDfn(defn, parent, name);
     default:
@@ -47,20 +37,23 @@ function tryFindDfn(defn, parent, name) {
 }
 
 /**
- * @param {*} defn
+ * @param {string} type
  * @param {string} parent
  * @param {string} name
  */
-function findAttributeDfn(defn, parent, name) {
-  const parentLow = parent.toLowerCase();
-  const asLocalName = name.toLowerCase();
-  const asQualifiedName = `${parentLow}.${asLocalName}`;
-  const dfn = findNormalDfn(defn, parent, asLocalName);
-  if (!dfn) {
-    return;
+function getAlternativeNames(type, parent, name) {
+  const asQualifiedName = `${parent}.${name}`;
+  switch (type) {
+    case "constructor":
+    case "operation": {
+      // Allow linking to both "method()" and "method" name.
+      const asMethodName = `${name}()`;
+      const asFullyQualifiedName = `${asQualifiedName}()`;
+      return [asFullyQualifiedName, asQualifiedName, asMethodName, name];
+    }
+    case "attribute":
+      return [asQualifiedName, name];
   }
-  addAlternativeNames(dfn, [asQualifiedName, asLocalName]);
-  return dfn;
 }
 
 /**
@@ -73,26 +66,8 @@ function findOperationDfn(defn, parent, name) {
   if (name.includes("!overload")) {
     return findNormalDfn(defn, parent, name);
   }
-  const parentLow = parent.toLowerCase();
-  // Allow linking to both "method()" and "method" name.
-  const asLocalName = name.toLowerCase();
-  const asMethodName = `${asLocalName}()`;
-  const asQualifiedName = `${parentLow}.${asLocalName}`;
-  const asFullyQualifiedName = `${asQualifiedName}()`;
-
-  const dfn =
-    findNormalDfn(defn, parent, asMethodName) ||
-    findNormalDfn(defn, parent, name);
-  if (!dfn) {
-    return;
-  }
-  addAlternativeNames(dfn, [
-    asFullyQualifiedName,
-    asQualifiedName,
-    asMethodName,
-    asLocalName,
-  ]);
-  return dfn;
+  const asMethodName = `${name}()`;
+  return findNormalDfn(defn, parent, asMethodName, name);
 }
 
 /**
@@ -109,38 +84,42 @@ function addAlternativeNames(dfn, names) {
 /**
  * @param {*} defn
  * @param {string} parent
- * @param {string} name
+ * @param {...string} names
  */
-function findNormalDfn(defn, parent, name) {
-  const parentLow = parent.toLowerCase();
-  let resolvedName =
-    defn.type === "enum-value" && name === "" ? "the-empty-string" : name;
-  const nameLow = resolvedName.toLowerCase();
-  let dfnForArray = definitionMap[nameLow];
-  let dfns = getDfns(dfnForArray, parentLow, name, defn.type);
-  // If we haven't found any definitions with explicit [for]
-  // and [title], look for a dotted definition, "parent.name".
-  if (dfns.length === 0 && parentLow !== "") {
-    resolvedName = `${parentLow}.${nameLow}`;
-    dfnForArray = definitionMap[resolvedName];
-    if (dfnForArray !== undefined && dfnForArray.length === 1) {
-      dfns = dfnForArray;
-      // Found it: register with its local name
-      delete definitionMap[resolvedName];
-      registerDefinition(dfns[0], [nameLow]);
+function findNormalDfn(defn, parent, ...names) {
+  for (const name of names) {
+    let resolvedName =
+      defn.type === "enum-value" && name === ""
+        ? "the-empty-string"
+        : name.toLowerCase();
+    let dfnForArray = definitionMap[resolvedName];
+    let dfns = getDfns(dfnForArray, parent, name, defn.type);
+    // If we haven't found any definitions with explicit [for]
+    // and [title], look for a dotted definition, "parent.name".
+    if (dfns.length === 0 && parent !== "") {
+      resolvedName = `${parent}.${resolvedName}`;
+      dfnForArray = definitionMap[resolvedName.toLowerCase()];
+      if (dfnForArray !== undefined && dfnForArray.length === 1) {
+        dfns = dfnForArray;
+        // Found it: register with its local name
+        delete definitionMap[resolvedName];
+        registerDefinition(dfns[0], [resolvedName]);
+      }
+    } else {
+      resolvedName = name;
     }
-  }
-  if (dfns.length > 1) {
-    const msg = `Multiple \`<dfn>\`s for \`${name}\` ${
-      parent ? `in \`${parent}\`` : ""
-    }`;
-    pub("error", msg);
-  }
-  if (dfns.length) {
-    if (name !== resolvedName) {
-      dfns[0].dataset.lt = resolvedName;
+    if (dfns.length > 1) {
+      const msg = `WebIDL identifier \`${name}\` ${
+        parent ? `for \`${parent}\`` : ""
+      } is defined multiple times`;
+      showInlineError(dfns, msg, "Duplicate definition.");
     }
-    return dfns[0];
+    if (dfns.length) {
+      if (name !== resolvedName) {
+        dfns[0].dataset.lt = resolvedName;
+      }
+      return dfns[0];
+    }
   }
 }
 
@@ -151,9 +130,9 @@ function findNormalDfn(defn, parent, name) {
  * @param {string} name
  */
 export function decorateDfn(dfn, defn, parent, name) {
-  parent = parent.toLowerCase();
   if (!dfn.id) {
-    const middle = parent ? `${parent}-` : "";
+    const lCaseParent = parent.toLowerCase();
+    const middle = lCaseParent ? `${lCaseParent}-` : "";
     let last = name
       .toLowerCase()
       .replace(/[()]/g, "")
@@ -163,7 +142,7 @@ export function decorateDfn(dfn, defn, parent, name) {
   }
   dfn.dataset.idl = defn.type;
   dfn.dataset.title = dfn.textContent;
-  dfn.dataset.dfnFor = parent;
+  if (parent) dfn.dataset.dfnFor = parent;
   // Derive the data-type for dictionary members, interface attributes,
   // and methods
   switch (defn.type) {
@@ -178,12 +157,22 @@ export function decorateDfn(dfn, defn, parent, name) {
   if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
     wrapInner(dfn, dfn.ownerDocument.createElement("code"));
   }
+
+  // Add data-lt values and register them
+  switch (defn.type) {
+    case "attribute":
+    case "constructor":
+    case "operation":
+      addAlternativeNames(dfn, getAlternativeNames(defn.type, parent, name));
+      break;
+  }
+
   return dfn;
 }
 
 /**
  * @param {HTMLElement[]} dfnForArray
- * @param {string} parent
+ * @param {string} parent data-dfn-for
  * @param {string} originalName
  * @param {string} type
  */
@@ -191,15 +180,17 @@ function getDfns(dfnForArray, parent, originalName, type) {
   if (!dfnForArray) {
     return [];
   }
-  // Definitions that have a title and [data-dfn-for] that exactly match the
+  // Definitions that have a name and [data-dfn-for] that exactly match the
   // IDL entity:
-  const dfns = dfnForArray.filter(dfn =>
-    dfn.closest(`[data-dfn-for="${parent}"]`)
-  );
-  // If this is a top-level entity, and we didn't find anything with
-  // an explicitly empty [for], try <dfn> that inherited a [for].
+  const dfns = dfnForArray.filter(dfn => {
+    /** @type {HTMLElement} */
+    const closestDfnFor = dfn.closest(`[data-dfn-for]`);
+    return closestDfnFor && closestDfnFor.dataset.dfnFor === parent;
+  });
+
   if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
-    return dfnForArray;
+    // Make sure the name exactly matches
+    return dfnForArray[0].textContent === originalName ? dfnForArray : [];
   } else if (topLevelEntities.has(type) && dfnForArray.length) {
     const dfn = dfnForArray.find(
       dfn => dfn.textContent.trim() === originalName

@@ -130,11 +130,7 @@ function normalizeConfig(xref) {
 function getRequestEntry(elem) {
   const isIDL = "xrefType" in elem.dataset;
 
-  let term = elem.dataset.lt
-    ? elem.dataset.lt.split("|", 1)[0]
-    : elem.textContent;
-  term = normalize(term);
-  if (term === "the-empty-string") term = "";
+  let term = getTermFromElement(elem);
   if (!isIDL) term = term.toLowerCase();
 
   /** @type {string[][]} */
@@ -191,6 +187,14 @@ function getRequestEntry(elem) {
     ...(specs.length && { specs }),
     ...(typeof forContext === "string" && { for: forContext }),
   };
+}
+
+/** @param {HTMLElement} elem */
+function getTermFromElement(elem) {
+  const { lt: linkingText } = elem.dataset;
+  let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
+  term = normalize(term);
+  return term === "the-empty-string" ? "" : term;
 }
 
 /**
@@ -357,9 +361,9 @@ function addToReferences(elem, cite, normative, term, conf) {
 
 /** @param {Errors} errors */
 function showErrors({ ambiguous, notFound }) {
-  const getPrefilledFormURL = (query, specs = []) => {
+  const getPrefilledFormURL = (term, query, specs = []) => {
     const url = new URL(API_URL);
-    url.searchParams.set("term", query.term);
+    url.searchParams.set("term", term);
     if (query.for) url.searchParams.set("for", query.for);
     url.searchParams.set("types", query.types.join(","));
     if (specs.length) url.searchParams.set("cite", specs.join(","));
@@ -368,20 +372,22 @@ function showErrors({ ambiguous, notFound }) {
 
   for (const { query, elems } of notFound.values()) {
     const specs = [...new Set(flatten([], query.specs))].sort();
-    const formUrl = getPrefilledFormURL(query, specs);
+    const originalTerm = getTermFromElement(elems[0]);
+    const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
     const msg =
-      `Couldn't match "**${query.term}**" to anything in the document or in any other document cited in this specification: ${specsString}. ` +
+      `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}. ` +
       `See [how to cite to resolve the error](${formUrl})`;
     showInlineError(elems, msg, "Error: No matching dfn found.");
   }
 
   for (const { query, elems, results } of ambiguous.values()) {
     const specs = [...new Set(results.map(entry => entry.shortname))].sort();
-    const formUrl = getPrefilledFormURL(query, specs);
     const specsString = specs.map(s => `**${s}**`).join(", ");
+    const originalTerm = getTermFromElement(elems[0]);
+    const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const msg =
-      `The term "**${query.term}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ` +
+      `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ` +
       `See [how to cite to resolve the error](${formUrl})`;
     showInlineError(elems, msg, "Error: Linking an ambiguous dfn.");
   }

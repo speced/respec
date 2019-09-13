@@ -10,7 +10,7 @@ import {
 describe("Core — Definition finder", () => {
   afterAll(flushIframes);
 
-  it("shouldn't duplicate data-lt items", async () => {
+  it("shouldn't duplicate data-lt items or add redundant ones", async () => {
     const bodyText = `
       <section>
         <h2>Test section</h2>
@@ -21,15 +21,19 @@ describe("Core — Definition finder", () => {
           };
         </pre>
         <dfn data-dfn-for="Foo" data-lt="bar()">bar</dfn>
+        <dfn>Foo</dfn>
       </section>`;
     const ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() + bodyText,
     };
     const doc = await makeRSDoc(ops);
-    const [, dfn] = doc.getElementsByTagName("dfn");
-    expect(dfn.dataset.lt).toBe("bar()|bar|foo.bar()|foo.bar");
-    expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
+    const [barDfn, fooDfn] = doc.getElementsByTagName("dfn");
+    expect(barDfn.dataset.lt).toBe("bar()|bar|Foo.bar()|Foo.bar");
+    expect(barDfn.dataset.dfnFor).toBe("Foo");
+    expect(barDfn.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(fooDfn.dataset.lt).toBeUndefined();
+    expect(fooDfn.dataset.dfnFor).toBeUndefined();
   });
 
   it("should enumerate operation alternative names", async () => {
@@ -52,8 +56,8 @@ describe("Core — Definition finder", () => {
     };
     const doc = await makeRSDoc(ops);
     const bar = doc.getElementById("bar");
-    expect(bar.dataset.lt).toBe("foo.bar()|foo.bar|bar()|bar");
+    expect(bar.dataset.lt).toBe("Foo.bar()|Foo.bar|bar()|bar");
     const baz = doc.getElementById("baz");
-    expect(baz.dataset.lt).toBe("foo.baz()|foo.baz|baz()|baz");
+    expect(baz.dataset.lt).toBe("Foo.baz()|Foo.baz|baz()|baz");
   });
 });

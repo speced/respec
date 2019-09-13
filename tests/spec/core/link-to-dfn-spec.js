@@ -25,10 +25,14 @@ describe("Core — Link to definitions", () => {
       <section data-link-for="Request">
         <h2><dfn>Request</dfn> interface</h2>
         <pre class="idl">
-          interface Request {};
+          [Exposed=Window]
+          interface Request {
+            Request clone();
+          };
         </pre>
-        <p id="codeWrap">A <a>Request</a> object.</p>
-        <p id="noCodeWrap">An instance of <a lt="Request">the request interface</a>.</p>
+        <p id="codeWrap">A <a>Request</a> object has a <dfn>clone</dfn> method.</p>
+        <p id="codeWrapMethod"><a>clone</a>, <a>clone()</a>, <a>Request.clone</a>, and <a>Request.clone()</a> are all same.</p>
+        <p id="noCodeWrap">An instance of <a data-lt="Request">the request interface</a>.</p>
       </section>`;
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
@@ -36,8 +40,11 @@ describe("Core — Link to definitions", () => {
     expect(hasCode).toBeTruthy();
     expect(hasCode.firstElementChild.localName).toBe("code");
     expect(hasCode.textContent).toBe("Request");
+    const codeWrapMethods = doc.body.querySelectorAll("#codeWrapMethod a code");
+    expect(codeWrapMethods.length).toBe(4);
     const noCodeWrap = doc.body.querySelector("#noCodeWrap a");
     expect(noCodeWrap).toBeTruthy();
+    expect(noCodeWrap.getAttribute("href")).toBe("#dom-request");
     expect(noCodeWrap.querySelector("code")).toBeFalsy();
     expect(noCodeWrap.textContent).toBe("the request interface");
   });
@@ -71,7 +78,7 @@ describe("Core — Link to definitions", () => {
     expect(dfn3.title).toBe("test1");
   });
 
-  it("should not have data-dfn-for if not an IDL definition", async () => {
+  it("has data-dfn-for if it's included", async () => {
     const bodyText = `
       <section>
         <h2>Test Section</h2>
@@ -80,7 +87,7 @@ describe("Core — Link to definitions", () => {
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
     const [dfn] = doc.getElementsByTagName("dfn");
-    expect(dfn.dataset.dfnFor).toBeUndefined();
+    expect(dfn.dataset.dfnFor).toBe("Foo");
   });
 
   it("should get ID from the first match", async () => {
@@ -115,5 +122,19 @@ describe("Core — Link to definitions", () => {
     const testBar = doc.getElementById("testBar");
     expect(testFoo.hash).toBe("#dfn-foo");
     expect(testBar.hash).toBe("#dfn-bar");
+  });
+
+  it("links conceptual definitions case insensitively", async () => {
+    const bodyText = `
+    <section>
+      <h2>Test Section</h2>
+      <p><dfn>Test String</dfn>
+      <p id="links"><a>test string</a> <a>test STRING</a> <a>TesT string</a>
+    </section>`;
+    const ops = makeStandardOps(null, bodyText);
+    const doc = await makeRSDoc(ops);
+    expect(
+      doc.querySelectorAll("#links a[href='#dfn-test-string']").length
+    ).toBe(3);
   });
 });
