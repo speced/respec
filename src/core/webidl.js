@@ -235,6 +235,7 @@ function resolveNameAndId(defn, parent) {
       const overload = resolveOverload(name, parent);
       if (overload) {
         name += overload;
+        idlId += overload;
       } else if (defn.arguments.length) {
         idlId += defn.arguments
           .map(arg => `-${arg.name.toLowerCase()}`)
