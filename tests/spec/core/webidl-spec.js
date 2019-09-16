@@ -609,16 +609,19 @@ describe("Core - WebIDL", () => {
       "\n  // 1\n  void"
     );
     expect(first.querySelector(".idlName").textContent).toBe("basic");
-    expect(
-      methods
-        .find(m => m.textContent.includes("SuperStar?"))
-        .querySelector(".idlType a").textContent
-    ).toBe("SuperStar");
+
+    // Overloads
+    const overloads = methods.filter(m => m.textContent.includes("ull"));
+    expect(overloads[0].id).toBe("idl-def-methbasic-ull-s-n");
+    expect(overloads[1].id).toBe("idl-def-methbasic-ull!overload-1");
+    expect(overloads[1].querySelector(".idlType a").textContent).toBe(
+      "SuperStar"
+    );
 
     // Links and IDs.
-    const ulls = methods
-      .filter(m => m.textContent.includes("ull"))
-      .map(m => m.querySelector("a.idlName").getAttribute("href"));
+    const ulls = overloads.map(m =>
+      m.querySelector("a.idlName").getAttribute("href")
+    );
     expect(ulls[0]).toBe("#dom-methbasic-ull");
     expect(ulls[ulls.length - 1]).toBe("#dom-methbasic-ull!overload-1");
     expect(
