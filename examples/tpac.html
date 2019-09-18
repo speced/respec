@@ -21,6 +21,19 @@
         implementationReportURI: "https://w3c.github.io/test-results/some-API",
         mdn: true,
         format: "markdown",
+        // localBiblio: {
+        //   "credential-management": { aliasOf: "credential-management-1" },
+        //   "credential-management-1": {
+        //     href: "https://www.w3.org/TR/credential-management-1/",
+        //     title: "Credential Management Level 1",
+        //     id: "credential-management-1",
+        //   },
+        //   "css-scoping": { aliasOf: "css-scoping-1" },
+        //   "css-scoping-1": { href: "https://drafts.csswg.org/css-scoping-1/" },
+        // },
+        // lint: {
+        //   "no-headingless-sections": false,
+        // }
       };
     </script>
 
@@ -57,6 +70,155 @@
   </li>
   <li>[=set/For each=] |letter:DOMString| in |set|.</li>
 </ol>
+
+
+## xref - Automatic linking of External References (Sid)
+
+``` html
+<!-- before -->
+<a data-cite="URL#concept-url-parser">URL parser</a>
+<code>
+  <a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a>
+</code>
+
+<!-- after -->
+<a>URL parser</a>
+{{ EventHandler }}
+```
+
+### How it works?
+  - https://respec.org/xref
+    - HTTP API
+    - Integrates CSSWG's Shepherd API using bikeshed-data
+    - Links definitions exported from a spec (`data-export`)
+  - ReSpec
+    - Collect terms to link and along with their _contextual information_.
+    - Send request to the API
+    - Link terms.
+    - Profit.
+
+### How to use?
+
+<!--
+<a data-cite="URL#concept-url-parser">URL parser</a><br>
+<a>URL parser</a><br>
+
+[= URL parser =]<br>
+
+IDL Linking Syntax<br>
+
+<code><a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a></code><br>
+
+{{ EventHandler }}<br>
+
+{{ EventTarget.addEventListener(type, callback) }}
+
+-->
+
+<!-- Use profiles
+  "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"]
+-->
+
+### Context
+
+contextual information?
+- Which spec?
+- What type: IDL (interface, attribute, ...), Concept (dfn, event, element)
+- `data-dfn-for` AKA "for context"
+
+#### spec context
+
+<!--
+<section data-cite="dom html">
+  <p><a id="link1">event handler</a> try either [dom] or [html]</p>
+  <section data-cite="dom">
+    <p data-cite="svg">
+      <a id="link2">event handler</a>
+      - not in [svg] -> fallback to [dom] -> fallback to [dom], [html]
+    </p>
+    <p>
+      If you provide a `data-cite` directly on `&lt;a>`,
+      fallback won't be used: <a id="link3" data-cite="fetch">event handler</a>
+    </p>
+  </section>
+</section>
+<section data-cite="html">
+  <p>
+    Uses [[css-scoping]] to create context for <a id="link4">shadow root</a>
+  </p>
+</section>
+-->
+
+#### for context
+
+<!--
+[=set / For each=]
+[= map / For each =]
+[=Event/stop propagation flag=]
+
+// event attribute of Window interface
+<br>
+{{ Window/event }}
+<br>
+{{ Window.event }}
+<br>
+{{ EventTarget.addEventListener(type, callback) }}
+<br>
+-->
+
+#### type context
+
+<!--
+Attribute:
+{{Event/srcElement}}
+<br>
+Exception:
+{{ "NotAllowedError" }}
+<br>
+Enum["enum value"]:
+{{ ReferrerPolicy["no-referrer"] }}
+<br>
+Enum (alternative):
+{{ ReferrerPolicy / "no-referrer" }}
+<br>
+Internal Slots:
+{{ Credential.[[type]] }}
+<br>
+<p data-cite="html">
+Element: [^script^]
+</p>
+-->
+
+### Aliasing
+
+<!--
+[= code point| Unicode code point =]<br>
+[=set / For each | for each member =]<br>
+
+{{ "NotAllowedError" | don't do this }}
+-->
+
+### Error messages
+
+<!--
+<p>
+  Ambiguous Definition: defined in multiple specs: [^script^]
+</p>
+<p data-cite="html dom url">
+  No such term found: [= foobar =]
+</p>
+<p data-cite="service-workers">
+  Defined in multiple ways in a single spec: <a>request</a> (not enough
+  context to understand)<br>
+  [=cache batch operation/request=]<br>
+  {{FetchEventInit/request}}<br>
+  {{FetchEvent/request}}<br>
+</p>
+-->
+
+### xref search UI
+
+https://respec.org/xref/
 
 
 ## mdn integration - Marcos
