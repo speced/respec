@@ -71,9 +71,78 @@
     retiredDate: "YYYY-MM-DD"
   }
 ```
+
+## Web IDL linking - Kagami
+
+<pre class="idl" data-cite="webidl html dom">
+  [Exposed=Window]
+  interface LinkWorksEvent: Event {
+    void makeLinkWork(EventInit init);
+    attribute HTMLLinkElement link;
+  };
+</pre>
+
+## Web IDL validations - Kagami
+
+<pre class="idl">
+  // No duplication!
+  [Exposed=Window]
+  interface Duplicated {
+    attribute DOMString bar;
+    void doTheFoo();
+  };
+  dictionary Duplicated {};
+</pre>
+
+<pre class="idl">
+  // No Cross Overload, I'm looking at you WebGL
+  [Exposed=Window]
+  interface BaseInterface {
+    void doTheFoo();
+  };
+  interface mixin MyMixin {
+    void doTheFoo(DOMString foo);
+  };
+  BaseInterface includes MyMixin;
+</pre>
+
+<pre class="idl">
+  // Use new constructor()
+  [Exposed=Window, Constructor]
+  interface IHaveConstructor {
+    attribute DOMString bar;
+    void doTheFoo();
+  };
+</pre>
+
+<pre class="idl">
+  // Needs explict [Exposed]
+  interface ImplicitlyExposed {
+    attribute DOMString bar;
+    void doTheFoo();
+  };
+</pre>
+
+<pre class="idl">
+  // optional dictionary argument needs a default value
+  dictionary MyDictionary {
+    DOMString myField;
+  };
+  interface IUseTheDictionary {
+    void doTheFoo(optional MyDictionary dict);
+  };
+</pre>
+
+<pre class="idl">
+  // Nullable union incorrectly includes a dictionary
+  typedef (MyDictionary or DOMString) MyUnion;
+  [Exposed=Window]
+  interface IAlsoUseTheDictionary {
+    void doTheFoo(optional MyUnion? dict);
+  };
+</pre>
+
 ## Support us on Open collective!
-
-
 
 
 <section id="sotd" style="display: none">
