@@ -87,7 +87,20 @@
   partial interface Navigator {};
 </pre>
 
+## IDL self-definition - Kagami
+
+<pre class="idl">
+  [Exposed=Window]
+  interface TryLinkingToMe {};
+</pre>
+
+```
+<dfn>TryLinkingToMe</dfn> <a>TryLinkingToMe</a>
+```
+
 ## Web IDL validations - Kagami
+
+Use the ReSpec pill to read more details!
 
 <pre class="idl">
   // No duplication!
@@ -146,6 +159,20 @@
     void doTheFoo(optional MyUnion? dict);
   };
 </pre>
+
+## Pluralization / Singularization - Kagami
+
+Respec knows `bananas` is a pluralized form of `banana`.
+
+```
+<dfn>Banana</dfn> <a data-lt="banana">bananas</a>
+```
+
+It also works in a backward way.
+
+```
+<dfn>Apples</dfn> <a>apple</a>
+```
 
 ## Support us on Open collective!
 
