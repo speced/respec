@@ -40,11 +40,16 @@
 
 <section id="abstract">
   ## New stuff in ReSpec!
-  ... we have been busy! 🏋️‍♀️ this is a test-results
+
+  ... we have been busy! 🏋️‍
+
 </section>
 
 
+
+
 ## Contributor and stats - Marcos
+
   - 37 Contributors
   - Supports numerous students - GSoC, Outreachy
 
@@ -234,20 +239,6 @@ https://respec.org/xref/
 
 
 
-## mdn integration - Marcos
-
-  - config option `mdn: true`
-
-
-
-## Retiring editors - Marcos
-
-```JS
-  {
-    retiredDate: "YYYY-MM-DD"
-  }
-```
-
 ## Web IDL linking - Kagami
 
 <pre class="idl" data-cite="webidl html dom">
@@ -278,6 +269,9 @@ https://respec.org/xref/
 
 Use the ReSpec pill to read more details!
 
+
+### Duplicate identifiers
+
 <pre class="idl">
   // No duplication!
   [Exposed=Window]
@@ -288,17 +282,8 @@ Use the ReSpec pill to read more details!
   dictionary Duplicated {};
 </pre>
 
-<pre class="idl">
-  // No Cross Overload, I'm looking at you WebGL
-  [Exposed=Window]
-  interface BaseInterface {
-    void doTheFoo();
-  };
-  interface mixin MyMixin {
-    void doTheFoo(DOMString foo);
-  };
-  BaseInterface includes MyMixin;
-</pre>
+
+### Constructor syntax
 
 <pre class="idl">
   // Use new constructor() - can be autofixed!
@@ -309,16 +294,22 @@ Use the ReSpec pill to read more details!
   };
 </pre>
 
+### Implicitly exposed types
+
 <pre class="idl">
-  // Needs explict [Exposed]
+  // Needs explicit [Exposed]
   interface ImplicitlyExposed {
     attribute DOMString bar;
     void doTheFoo();
   };
 </pre>
 
+
+### Optional dictionary argument
+
 <pre class="idl">
-  // optional dictionary argument needs a default value
+  // optional dictionary argument
+  // needs a default value
   dictionary MyDictionary {
     DOMString myField;
   };
@@ -327,24 +318,17 @@ Use the ReSpec pill to read more details!
   };
 </pre>
 
-<pre class="idl">
-  // Nullable union incorrectly includes a dictionary
-  typedef (MyDictionary or DOMString) MyUnion;
-  [Exposed=Window]
-  interface IAlsoUseTheDictionary {
-    void doTheFoo(optional MyUnion? dict);
-  };
-</pre>
-
-
 ### Why just warnings, could it just fix everything for us?
 
 * Changes should be reviewed, shouldn't be magic
 * Autofix also can be used [in this way](https://github.com/w3c/payment-handler/pull/343).
 
+## Algorithms - Marcos
+
+
 ## Pluralization / Singularization - Kagami
 
-Respec knows `bananas` is a pluralized form of `banana`.
+ReSpec knows `bananas` is a pluralized form of `banana`.
 
 ```
 <dfn>Banana</dfn> <a data-lt="banana">bananas</a>
@@ -355,6 +339,22 @@ It also works in a backward way.
 ```
 <dfn>Apples</dfn> <a>apple</a>
 ```
+
+
+## mdn integration - Marcos
+
+  - config option `mdn: true`
+
+
+
+## Retiring editors - Marcos
+
+```JS
+  {
+    retiredDate: "YYYY-MM-DD"
+  }
+```
+
 
 ## Support us on Open collective!
 
