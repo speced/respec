@@ -269,10 +269,7 @@ Use the ReSpec pill to read more details!
 <pre class="idl">
   // No duplication!
   [Exposed=Window]
-  interface Duplicated {
-    attribute DOMString bar;
-    void doTheFoo();
-  };
+  interface Duplicated {};
   dictionary Duplicated {};
 </pre>
 
@@ -283,8 +280,6 @@ Use the ReSpec pill to read more details!
   // Use new constructor() - can be autofixed!
   [Exposed=Window, Constructor]
   interface IHaveConstructor {
-    attribute DOMString bar;
-    void doTheFoo();
   };
 </pre>
 
@@ -292,10 +287,7 @@ Use the ReSpec pill to read more details!
 
 <pre class="idl">
   // Needs explicit [Exposed]
-  interface ImplicitlyExposed {
-    attribute DOMString bar;
-    void doTheFoo();
-  };
+  interface ImplicitlyExposed {};
 </pre>
 
 
@@ -304,9 +296,7 @@ Use the ReSpec pill to read more details!
 <pre class="idl">
   // optional dictionary argument
   // needs a default value
-  dictionary MyDictionary {
-    DOMString myField;
-  };
+  dictionary MyDictionary {};
   interface IUseTheDictionary {
     void doTheFoo(optional MyDictionary dict);
   };
