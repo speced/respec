@@ -23,13 +23,7 @@
         format: "markdown",
         // localBiblio: {
         //   "credential-management": { aliasOf: "credential-management-1" },
-        //   "credential-management-1": {
-        //     href: "https://www.w3.org/TR/credential-management-1/",
-        //     title: "Credential Management Level 1",
-        //     id: "credential-management-1",
-        //   },
         //   "css-scoping": { aliasOf: "css-scoping-1" },
-        //   "css-scoping-1": { href: "https://drafts.csswg.org/css-scoping-1/" },
         // },
         // lint: {
         //   "no-headingless-sections": false,
@@ -71,9 +65,13 @@
 
 ``` html
 <!-- before -->
-<a data-cite="URL#concept-url-parser">URL parser</a>
+<a data-cite="URL#concept-url-parser">
+  URL parser
+</a>
 <code>
-  <a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a>
+  <a data-cite="HTML/webappapis.html#eventhandler">
+    EventHandler
+  </a>
 </code>
 
 <!-- after -->
@@ -95,11 +93,10 @@
     - Profit.
 
 
-
+<!--
 
 ### How to use?
 
-<!--
 <a data-cite="URL#concept-url-parser">URL parser</a><br>
 <a>URL parser</a><br>
 
@@ -131,10 +128,10 @@ contextual information?
 
 
 
-#### spec context
-
 <!--
+#### spec context
 <section data-cite="dom html">
+  ##### section 1
   <p><a id="link1">event handler</a> try either [dom] or [html]</p>
   <section data-cite="dom">
     <p data-cite="svg">
@@ -148,6 +145,7 @@ contextual information?
   </section>
 </section>
 <section data-cite="html">
+  ##### section 2
   <p>
     Uses [[css-scoping]] to create context for <a id="link4">shadow root</a>
   </p>
@@ -156,9 +154,10 @@ contextual information?
 
 
 
-#### for context
 
 <!--
+#### for context
+
 [=set / For each=]
 [= map / For each =]
 [=Event/stop propagation flag=]
@@ -182,28 +181,24 @@ contextual information?
 Attribute:
 {{Event/srcElement}}
 <br>
+
 Exception:
 {{ "NotAllowedError" }}
 <br>
-Enum["enum value"]:
-{{ ReferrerPolicy["no-referrer"] }}
-<br>
-Enum (alternative):
+
+Enum:
 {{ ReferrerPolicy / "no-referrer" }}
-<br>
-Internal Slots:
-{{ Credential.[[type]] }}
-<br>
+
 <p data-cite="html">
-Element: [^script^]
+  Element: [^script^]
 </p>
 -->
 
 
 
+<!--
 ### Aliasing
 
-<!--
 [= code point| Unicode code point =]<br>
 [=set / For each | for each member =]<br>
 
@@ -213,10 +208,9 @@ Element: [^script^]
 
 
 
-### Error messages
-
 <!--
-<p>
+### Error messages
+<p data-cite="svg2">
   Ambiguous Definition: defined in multiple specs: [^script^]
 </p>
 <p data-cite="html dom url">
@@ -324,7 +318,7 @@ Use the ReSpec pill to read more details!
 * Autofix also can be used [in this way](https://github.com/w3c/payment-handler/pull/343).
 
   
-  
+
 ## Algorithms - Marcos
   - var pipe syntax
   - type annotations
@@ -337,7 +331,6 @@ Use the ReSpec pill to read more details!
   </li>
   <li>[=set/For each=] |letter:DOMString| in |set|.</li>
 </ol>
-
 
 ## Pluralization / Singularization - Kagami
 
@@ -353,21 +346,13 @@ It also works in a backward way.
 <dfn>Apples</dfn> <a>apple</a>
 ```
 
-
 ## mdn integration - Marcos
 
   - config option `mdn: true`
 
+## mdn integration - Marcos
 
-
-## Retiring editors - Marcos
-
-```JS
-  {
-    retiredDate: "YYYY-MM-DD"
-  }
-```
-
+  - config option `caniuse: "feature"`
 
 ## Support us on Open collective!
 
