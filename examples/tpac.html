@@ -21,19 +21,6 @@
         implementationReportURI: "https://w3c.github.io/test-results/some-API",
         mdn: true,
         format: "markdown",
-        localBiblio: {
-          "credential-management": { aliasOf: "credential-management-1" },
-          "credential-management-1": {
-            href: "https://www.w3.org/TR/credential-management-1/",
-            title: "Credential Management Level 1",
-            id: "credential-management-1",
-          },
-          "css-scoping": { aliasOf: "css-scoping-1" },
-          "css-scoping-1": { href: "https://drafts.csswg.org/css-scoping-1/" },
-        },
-        lint: {
-          "no-headingless-sections": false,
-        }
       };
     </script>
 
@@ -72,138 +59,6 @@
 </ol>
 
 
-## xref - Automatic linking of External References
-
-``` html
-<!-- before -->
-<a data-cite="URL#concept-url-parser">URL parser</a>
-<code>
-  <a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a>
-</code>
-
-<!-- after -->
-<a>URL parser</a>
-{{ EventHandler }}
-```
-
-### How it works?
-  - https://respec.org/xref
-    - HTTP API
-    - Integrates CSSWG's Shepherd API using bikeshed-data
-    - Links definitions exported from a spec (`data-export`)
-  - ReSpec
-    - Collect terms to link and along with their _contextual information_.
-    - Send request to the API
-    - Link terms.
-    - Profit.
-
-### How to use?
-
-<!--
-<a data-cite="URL#concept-url-parser">URL parser</a><br>
-<a>URL parser</a><br>
-
-[= URL parser =]<br>
-
-IDL Linking Syntax<br>
-
-<code><a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a></code><br>
-
-{{ EventHandler }}<br>
-
-{{ EventTarget.addEventListener(type, callback) }}
-
--->
-
-<!-- Use profiles
-  "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"]
--->
-
-### Context
-
-contextual information?
-- Which spec?
-- What type: IDL (interface, attribute, ...), Concept (dfn, event, element)
-- `data-dfn-for` AKA "for context"
-
-#### spec context
-
-<!--
-<section data-cite="dom html">
-  <p><a id="link1">event handler</a> try either [dom] or [html]</p>
-  <section data-cite="dom">
-    <p data-cite="svg">
-      <a id="link2">event handler</a>
-      - not in [svg] -> fallback to [dom] -> fallback to [dom], [html]
-    </p>
-    <p>
-      If you provide a `data-cite` directly on `&lt;a>`,
-      fallback won't be used: <a id="link3" data-cite="fetch">event handler</a>
-    </p>
-  </section>
-</section>
-<section data-cite="html">
-  <p>
-    Uses [[css-scoping]] to create context for <a id="link4">shadow root</a>
-  </p>
-</section>
--->
-
-#### for context
-
-<!--
-[=set / For each=]
-[= map / For each =]
-[=Event/stop propagation flag=]
-
-// event attribute of Window interface
-<br>
-{{ Window/event }}
-<br>
-{{ Window.event }}
-<br>
-{{ EventTarget.addEventListener(type, callback) }}
-<br>
--->
-
-#### type context
-
-<!--
-Attribute:
-{{Event/srcElement}}
-<br>
-Exception:
-{{ "NotAllowedError" }}
-<br>
-Enum["enum value"]:
-{{ ReferrerPolicy["no-referrer"] }}
-<br>
-Enum (alternative):
-{{ ReferrerPolicy / "no-referrer" }}
-<br>
-Internal Slots:
-{{ Credential.[[type]] }}
-<br>
-<p data-cite="html">
-Element: [^script^]
-</p>
--->
-
-### Aliasing
-
-<!--
-[= code point| Unicode code point =]<br>
-[=set / For each | for each member =]<br>
-
-{{ "NotAllowedError" | don't do this }}
--->
-
-### Error messages
-
-<!--
-
--->
-
 ## mdn integration - Marcos
 
   - config option `mdn: true`
@@ -216,6 +71,111 @@ Element: [^script^]
     retiredDate: "YYYY-MM-DD"
   }
 ```
+
+## Web IDL linking - Kagami
+
+<pre class="idl" data-cite="webidl html dom">
+  [Exposed=Window]
+  interface LinkWorksEvent: Event {
+    void makeLinkWork(EventInit init);
+    attribute HTMLLinkElement link;
+  };
+</pre>
+
+<pre class="idl" data-cite="html">
+  [Exposed=Window]
+  partial interface Navigator {};
+</pre>
+
+## IDL self-definition - Kagami
+
+<pre class="idl">
+  [Exposed=Window]
+  interface TryLinkingToMe {};
+</pre>
+
+```
+<dfn>TryLinkingToMe</dfn> <a>TryLinkingToMe</a>
+```
+
+## Web IDL validations - Kagami
+
+Use the ReSpec pill to read more details!
+
+<pre class="idl">
+  // No duplication!
+  [Exposed=Window]
+  interface Duplicated {
+    attribute DOMString bar;
+    void doTheFoo();
+  };
+  dictionary Duplicated {};
+</pre>
+
+<pre class="idl">
+  // No Cross Overload, I'm looking at you WebGL
+  [Exposed=Window]
+  interface BaseInterface {
+    void doTheFoo();
+  };
+  interface mixin MyMixin {
+    void doTheFoo(DOMString foo);
+  };
+  BaseInterface includes MyMixin;
+</pre>
+
+<pre class="idl">
+  // Use new constructor() - can be autofixed!
+  [Exposed=Window, Constructor]
+  interface IHaveConstructor {
+    attribute DOMString bar;
+    void doTheFoo();
+  };
+</pre>
+
+<pre class="idl">
+  // Needs explict [Exposed]
+  interface ImplicitlyExposed {
+    attribute DOMString bar;
+    void doTheFoo();
+  };
+</pre>
+
+<pre class="idl">
+  // optional dictionary argument needs a default value
+  dictionary MyDictionary {
+    DOMString myField;
+  };
+  interface IUseTheDictionary {
+    void doTheFoo(optional MyDictionary dict);
+  };
+</pre>
+
+<pre class="idl">
+  // Nullable union incorrectly includes a dictionary
+  typedef (MyDictionary or DOMString) MyUnion;
+  [Exposed=Window]
+  interface IAlsoUseTheDictionary {
+    void doTheFoo(optional MyUnion? dict);
+  };
+</pre>
+
+Autofix also can be used [in this way](https://github.com/w3c/payment-handler/pull/343).
+
+## Pluralization / Singularization - Kagami
+
+Respec knows `bananas` is a pluralized form of `banana`.
+
+```
+<dfn>Banana</dfn> <a data-lt="banana">bananas</a>
+```
+
+It also works in a backward way.
+
+```
+<dfn>Apples</dfn> <a>apple</a>
+```
+
 ## Support us on Open collective!
 
 
