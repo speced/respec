@@ -92,6 +92,14 @@ function makeMarkup(parse, respecDoc) {
       }
       return idlLink;
     },
+    nameless(escaped, { data, parent }) {
+      switch (data.type) {
+        case "constructor":
+          return defineIdlName(escaped, data, parent, respecDoc);
+        default:
+          return escaped;
+      }
+    },
     type(contents) {
       return hyperHTML`<span class="idlType">${contents}</span>`;
     },
@@ -140,11 +148,19 @@ function defineIdlName(escaped, data, parent, respecDoc) {
       dfn.dataset.dfnType = linkType;
     }
     decorateDfn(dfn, data, parentName, name);
+    respecDoc.definitionMap.addAlternativeNamesByType(
+      dfn,
+      data.type,
+      parentName,
+      name
+    );
+    const href = `#${dfn.id}`;
     return hyperHTML`<a
       data-link-for="${parentName}"
       data-link-type="${linkType}"
-      data-lt="${dfn.dataset.lt || null}"
-      >${escaped}</a>`;
+      href="${href}"
+      class="internalDFN"
+      ><code>${escaped}</code></a>`;
   }
 
   const isDefaultJSON =
@@ -157,9 +173,15 @@ function defineIdlName(escaped, data, parent, respecDoc) {
      data-lt="default toJSON operation">${escaped}</a>`;
   }
   if (!data.partial) {
-    const dfn = hyperHTML`<dfn data-export data-dfn-type="${linkType}" data-dfn-for="${parent &&
-      parent.name}">${escaped}</dfn>`;
+    const dfn = hyperHTML`<dfn data-export data-dfn-type="${linkType}">${escaped}</dfn>`;
+    respecDoc.definitionMap.registerDefinition(dfn, [name]);
     decorateDfn(dfn, data, parentName, name);
+    respecDoc.definitionMap.addAlternativeNamesByType(
+      dfn,
+      data.type,
+      parentName,
+      name
+    );
     return dfn;
   }
 
@@ -243,10 +265,12 @@ export class IDLNameMap extends WeakMap {
         idlId += this.resolvePartial(defn);
         break;
       }
+      case "constructor":
       case "operation": {
         const overload = this.resolveOverload(name, parent);
         if (overload) {
           name += overload;
+          idlId += overload;
         } else if (defn.arguments.length) {
           idlId += defn.arguments
             .map(arg => `-${arg.name.toLowerCase()}`)
@@ -331,6 +355,9 @@ function renderWebIDL(idlElement, respecDoc, index) {
   idlElement.textContent = "";
   idlElement.append(...html);
   idlElement.querySelectorAll("[data-idl]").forEach(elem => {
+    if (elem.dataset.dfnFor) {
+      return;
+    }
     const title = elem.dataset.title;
     // Select the nearest ancestor element that can contain members.
     const parent = elem.parentElement.closest("[data-idl][data-title]");
@@ -372,11 +399,17 @@ export default async function(respecDoc) {
 
   const validations = webidl2.validate(astArray);
   for (const validation of validations) {
+    let details = `<pre>${validation.context}</pre>`;
+    if (validation.autofix) {
+      validation.autofix();
+      details += `Try fixing as:
+      <pre>${webidl2.write(astArray[validation.sourceName])}</pre>`;
+    }
     showInlineError(
       idls[validation.sourceName],
       `WebIDL validation error: ${validation.bareMessage}`,
       validation.bareMessage,
-      { details: `<pre>${validation.context}</pre>` }
+      { details }
     );
   }
   document.normalize();

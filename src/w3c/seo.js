@@ -8,6 +8,16 @@ export const name = "w3c/seo";
  * @param {import("../respec-document.js").RespecDocument} respecDoc
  */
 export default function({ document, configuration: conf, biblio }) {
+  // Don't include a canonical URL for documents
+  // that haven't been published.
+  if (!conf.canonicalURI) {
+    switch (conf.specStatus) {
+      case "CG-DRAFT":
+      case "BG-DRAFT":
+      case "unofficial":
+        return;
+    }
+  }
   const trLatestUri = conf.shortName
     ? `https://www.w3.org/TR/${conf.shortName}/`
     : null;

@@ -37,6 +37,16 @@ describe("W3C - SEO", () => {
     expect(doc.querySelector("link[rel='canonical']")).toBe(null);
   });
 
+  it("shouldn't set any canonical URI if it is a draft document", async () => {
+    const ops = makeStandardOps();
+    const draftStatuses = ["CG-DRAFT", "BG-DRAFT", "unofficial"];
+    for (const status of draftStatuses) {
+      ops.config.specStatus = status;
+      const doc = await makeRSDoc(ops);
+      expect(doc.querySelector("link[rel='canonical']")).toBe(null);
+    }
+  });
+
   it("sets the canonical URI if explicitly set", async () => {
     const test = makeTest("https://example.com/");
     const ops = makeStandardOps();

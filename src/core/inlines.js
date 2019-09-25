@@ -143,19 +143,24 @@ function inlineVariableMatches(matched) {
 }
 
 /**
+ * @example [= foo =] => <a>foo</a>
+ * @example [= bar/foo =] => <a data-link-for="bar" data-xref-for="bar">foo</a>
+ * @example [= `foo` =] => <a><code>foo</code></a>
+ * @example [= foo|bar =] => <a data-lt="foo">bar</a>
  * @param {string} matched
  * @param {Document} document
  * @return {HTMLElement}
  */
 function inlineAnchorMatches(matched, document) {
-  const parts = matched
-    .slice(2, -2) // Chop [= =]
-    .split("/", 2)
-    .map(s => s.trim());
-  const [isFor, content] = parts.length === 2 ? parts : ["", parts[0]];
-  const processedContent = processInlineContent(content, document);
-  const forValue = norm(isFor);
-  return hyperHTML`<a data-link-for="${forValue}" data-xref-for="${forValue}">${processedContent}</a>`;
+  matched = matched.slice(2, -2); // Chop [= =]
+  const parts = matched.split("/", 2).map(s => s.trim());
+  const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
+  const [linkingText, text] = content.includes("|")
+    ? content.split("|", 2).map(s => s.trim())
+    : [null, content];
+  const processedContent = processInlineContent(text, document);
+  const forContext = isFor ? norm(isFor) : null;
+  return hyperHTML`<a data-link-for="${forContext}" data-xref-for="${forContext}" data-lt="${linkingText}">${processedContent}</a>`;
 }
 
 /**

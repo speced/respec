@@ -20,7 +20,7 @@ export function decorateDfn(dfn, defn, parent, name) {
   }
   dfn.dataset.idl = defn.type;
   dfn.dataset.title = dfn.textContent;
-  dfn.dataset.dfnFor = parent;
+  if (parent) dfn.dataset.dfnFor = parent;
   // Derive the data-type for dictionary members, interface attributes,
   // and methods
   switch (defn.type) {
@@ -35,6 +35,7 @@ export function decorateDfn(dfn, defn, parent, name) {
   if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
     wrapInner(dfn, dfn.ownerDocument.createElement("code"));
   }
+
   return dfn;
 }
 
