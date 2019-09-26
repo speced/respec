@@ -235,6 +235,10 @@ https://respec.org/xref/
 
 ## Web IDL linking - Kagami
 
+We added several features using Web IDL parser library named
+[webidl2.js](https://github.com/w3c/webidl2.js/) and the first of them is
+automatic IDL linking.
+
 <pre class="idl" data-cite="webidl html dom">
   [Exposed=Window]
   interface LinkWorksEvent: Event {
@@ -243,10 +247,19 @@ https://respec.org/xref/
   };
 </pre>
 
+webidl2.js detects that this IDL block has several identifiers that needs
+linking, and then it uses the cross reference feature we mentioned earlier to
+link them to the relevant lines of their specifications. Here we have `Event`
+to DOM and `HTMLLinkElement` to HTML, and you can click them to nagivate to
+their relevant specifications.
+
 <pre class="idl" data-cite="html">
   [Exposed=Window]
   partial interface Navigator {};
 </pre>
+
+ReSpec also supports linking partial types. Here, you can click `Navigator` to
+navigate to the relevant section of HTML.
 
 ## IDL self-definition - Kagami
 
@@ -255,13 +268,22 @@ https://respec.org/xref/
   interface TryLinkingToMe {};
 </pre>
 
+Previously we had to provide a proper `<dfn>` element when we define any IDL
+types. Now you can skip it if you are sure you don't need one and prefer
+simpler document structure. We still recommends you to provide a good
+explanation for your IDL types with `<dfn>` whenever possible.
+
 ```
-<dfn>TryLinkingToMe</dfn> <a>TryLinkingToMe</a>
+<dfn>TryLinkingToMe</dfn> // This is now optional
+<a>TryLinkingToMe</a> // Linking is now possible without <dfn>
 ```
 
 ## Web IDL validations - Kagami
 
-Use the ReSpec pill to read more details!
+One of the best feature frow webidl2.js is validations! It's easy to write
+invalid IDL because specification authors are not always IDL experts, and the
+Web IDL specification itself sometimes changes in a breaking way. The
+validation feature in ReSpec helps fixing IDL when that happens.
 
 
 ### Duplicate identifiers
@@ -273,6 +295,11 @@ Use the ReSpec pill to read more details!
   dictionary Duplicated {};
 </pre>
 
+ReSpec detects and warns there are duplicated identifiers here. You can read
+the relevant error messages and the exact position of the errors when you click
+the ReSpec pill. You can also click `[1]` to see where the erroneous IDL blocks
+are.
+
 
 ### Constructor syntax
 
@@ -283,12 +310,23 @@ Use the ReSpec pill to read more details!
   };
 </pre>
 
+Recently Web IDL specification is changed to use new `constructor()` operation
+syntax instead of previous `[Constructor]` extended attribute. Now ReSpec warns
+when you use `[Constructor]`, and it also provides an automatically suggested
+fix from the ReSpec pill! You can copy-paste the suggestion to fix IDLs and
+voila! The error disappears.
+
+
 ### Implicitly exposed types
 
 <pre class="idl">
   // Needs explicit [Exposed]
   interface ImplicitlyExposed {};
 </pre>
+
+Previously interfaces with explicit `[Exposed]` are considered as being
+implicitly exposed to `Window` only. Now interfaces are required to exposed
+explicitly, and thus ReSpec automatically suggests adding `[Exposed=Window]`.
 
 
 ### Optional dictionary argument
@@ -303,12 +341,24 @@ Use the ReSpec pill to read more details!
   };
 </pre>
 
+Similarly, ReSpec now suggest adding `= {}` because  optional dictionary
+arguments are now required to have an explicit default value.
+
+
 ### Why just warnings, could it just fix everything for us?
 
 * Changes should be reviewed, shouldn't be magic
-* Autofix also can be used [in this way](https://github.com/w3c/payment-handler/pull/343).
 
-  
+   We want authors to know what's exactly happening, and also there are cases
+   that authors might want to review before applying the fix. For example,
+   authors might want to add `[Exposed=(Window,Worker)]` instead of just
+   `[Exposed=Window]` suggested from ReSpec.
+
+* There is [a bot](https://github.com/w3c/payment-handler/pull/343) to fix IDLs for us.
+
+   Because copy-paste is hard! It also helps non-ReSpec specifications to get
+   correct IDLs.
+
 
 ## Algorithms - Marcos
   - var pipe syntax
@@ -331,7 +381,10 @@ ReSpec knows `bananas` is a pluralized form of `banana`.
 <dfn>Banana</dfn> <a data-lt="banana">bananas</a>
 ```
 
-It also works in a backward way.
+Previously we had to add `data-lt="banana"` to link `bananas` to `banana`, but
+now you can just do `<a>bananas</a>` because ReSpec does it automatically.
+
+It also works in a backward way, where `apple` automatically links to `Apples`:
 
 ```
 <dfn>Apples</dfn> <a>apple</a>
