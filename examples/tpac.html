@@ -25,9 +25,6 @@
         //   "credential-management": { aliasOf: "credential-management-1" },
         //   "css-scoping": { aliasOf: "css-scoping-1" },
         // },
-        // lint: {
-        //   "no-headingless-sections": false,
-        // }
       };
     </script>
 <body>
@@ -63,6 +60,8 @@
 
 ## xref - Automatic references linking (Sid)
 
+We added a new way of linking to terms defined in other specs, which is a lot more cleaner and less cumbersome. The following snippet shows the difference between the old and new way of linking to external terms. [[Full Documentation](https://github.com/w3c/respec/wiki/xref)]
+
 ``` html
 <!-- before -->
 <a data-cite="URL#concept-url-parser">
@@ -82,10 +81,13 @@
 
 
 ### How it works?
-  - https://respec.org/xref
-    - HTTP API
-    - Integrates CSSWG's Shepherd API using bikeshed-data
-    - Links definitions exported from a spec (`data-export`)
+
+tl;dr: We created a search API over CSSWG's Shepherd API and integrated it in ReSpec.
+
+  - HTTP API
+    - https://respec.org/xref
+    - Integrates CSSWG's Shepherd API via tabatkins/bikeshed-data
+    - Links definitions exported from a spec (which have `data-export`)
   - ReSpec
     - Collect terms to link and along with their _contextual information_.
     - Send request to the API
@@ -93,144 +95,160 @@
     - Profit.
 
 
-<!--
 
 ### How to use?
 
-<a data-cite="URL#concept-url-parser">URL parser</a><br>
-<a>URL parser</a><br>
+Earlier, to link to [URL parser](https://url.spec.whatwg.org/#concept-url-parser) defined in [[URL]] spec, we had to write `<a data-cite="URL#concept-url-parser">URL parser</a>`.
+Now we can write `<a>URL parser</a>` or `[\= URL parser =]` (`\` added to prevent automatic linking in this document, for demonstration).
 
-[= URL parser =]<br>
+We've to tell ReSpec in which specs we want to search the definitions for. Set `respecConfig.xref = ["url"]` to let ReSpec know that we want to link to terms defined in [[URL]] spec. Now it will search for terms and link them. You can write spec shortnames as well as spec IDs, though shortnames are preferred.
 
-IDL Linking Syntax<br>
+We can also link to IDL terms using **IDL Linking micro-syntax**. Instead of writing `<code><a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a></code>`, we can write `{{\ EventHandler }}` (and don't forget to change [`respecConfig.xref`](https://github.com/w3c/respec/wiki/xref) to `["url", "html"]`).
 
-<code><a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a></code><br>
+A whitespace-separated list of specs can be added on <code>&lt;body></code> as: <code>&lt;body data-cite="url html"></code>, instead of adding it in `respecConfig.xref`.
 
-{{ EventHandler }}<br>
+We also support nested contextual linking, for example, `{{\ EventTarget.addEventListener(type, callback) }}` will link to both EventTarget interface as well as addEventListener method on EventTarget.
 
-{{ EventTarget.addEventListener(type, callback) }}
+Note: Keep in mind that the IDL linking micro-syntax is case sensitive.
 
--->
-
-<!-- Use profiles
-  "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"]
--->
-
-
+It may become a little cumbersome to specify all the specs we want to search in. We also support profiles that expand to list of specs. Setting `respecConfig.xref = "web-platform"` is equivalent to `respecConfig.xref = ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"]`. At the time of writing, only "web-platform" profile is supported.
 
 
 ### Context
 
-contextual information?
-- Which spec?
+We can provide search context in 3 ways:
+
+- Which spec(s)?
 - What type: IDL (interface, attribute, ...), Concept (dfn, event, element)
 - `data-dfn-for` AKA "for context"
 
 
-
-<!--
 #### spec context
+
+We can write specs to search using `data-cite` attributes. Go through the following example as an explanation.
+
+``` html
 <section data-cite="dom html">
-  ##### section 1
-  <p><a id="link1">event handler</a> try either [dom] or [html]</p>
+  <h2>section 1</h2>
+  <p>
+    <a id="link1">event handler</a>:
+      - will be searched in either [dom] or [html] (closest data-cite)
+  </p>
   <section data-cite="dom">
     <p data-cite="svg">
       <a id="link2">event handler</a>
-      - not in [svg] -> fallback to [dom] -> fallback to [dom], [html]
+        - will be first searched in [svg]
+        - then the search will fallback to [dom]
+        - then the search will fallback to [dom], [html]
+        (all will be done in a single request, so it's fast)
     </p>
     <p>
-      If you provide a `data-cite` directly on `&lt;a>`,
-      fallback won't be used: <a id="link3" data-cite="fetch">event handler</a>
+      If you provide a `data-cite` directly on `&lt;a>`, fallback won't be used:
+      <a id="link3" data-cite="fetch">event handler</a>:
+        - search for "event handler" in [fetch], which fails.
+        - the element will link to [fetch] for backward compatibility.
+        - an error will be shown saying the term couldn't be found.
     </p>
   </section>
 </section>
+
 <section data-cite="html">
-  ##### section 2
+  <h2>section 2</h2>
   <p>
-    Uses [[css-scoping]] to create context for <a id="link4">shadow root</a>
+    We can also use the inline `[[\ spec ]]` biblio reference syntax to create context.
+    Here, [[css-scoping]] is to create context for <a id="link4">shadow root</a>
   </p>
 </section>
--->
+```
 
-
-
-
-<!--
 #### for context
 
+Some terms are defined only in certain contexts (`data-dfn-for`) and they can't be treated as "global" for linking purposes. We can use the inline micro-syntax to provide "for context" as:
+
+``` html
+<!-- the left side of `/` provides context, the right side is the term -->
 [=set / For each=]
-[= map / For each =]
+[= map / for each =]
 [=Event/stop propagation flag=]
 
-// event attribute of Window interface
-<br>
-{{ Window/event }}
-<br>
-{{ Window.event }}
-<br>
-{{ EventTarget.addEventListener(type, callback) }}
-<br>
--->
-
+<!-- works the same way with IDL syntax -->
+{{ Window/event }} // event attribute of Window interface
+{{ Window.event }} // `.` provides context, and links to both Window and event
+{{ EventTarget/addEventListener(type, callback) }}
+```
 
 
 
 #### type context
 
-<!--
-Attribute:
-{{Event/srcElement}}
-<br>
+The IDL micro-syntax allows providing type information when needed.
 
-Exception:
-{{ "NotAllowedError" }}
-<br>
+``` html
+Attribute/method: {{Event/srcElement}}
 
-Enum:
-{{ ReferrerPolicy / "no-referrer" }}
+Exception: {{ "NotAllowedError" }}
 
-<p data-cite="html">
-  Element: [^script^]
-</p>
--->
+Enum: {{ ReferrerPolicy / "no-referrer" }}
+
+Element: [^script^]
+```
 
 
-
-<!--
 ### Aliasing
 
-[= code point| Unicode code point =]<br>
-[=set / For each | for each member =]<br>
+Sometimes, a term may be defined in a spec in a way to which linking as it is may not make sense grammatically or other way. The linking micro-syntax allow aliasing a term.
+
+``` html
+[= code point| Unicode code point =]
+<!-- links to "code point" but renders it as "Unicode code point" -->
+[=set / For each | for every =]
+<!-- links to set-iterate (set:for each) but renders it as "for every" -->
 
 {{ "NotAllowedError" | don't do this }}
--->
+<!-- aliasing IDL terms is not allowed. -->
+```
 
-
-
-
-<!--
 ### Error messages
-<p data-cite="svg2">
-  Ambiguous Definition: defined in multiple specs: [^script^]
+
+ReSpec will provide helpful error messages when terms fail to link. Each error (accessible via the ReSpec pill in top-right corner of page) will link to the location of erroneous term. A link will also be provided in error message which may help in resolving the error. In general, following kind of errors are possible:
+
+``` html
+<p data-cite="html svg2">
+  Ambiguous Definition: defined in multiple specs: [^script^].
+  Defined in both [html] and [svg2].
+  Resolution: Provide a stricter data-cite.
 </p>
 <p data-cite="html dom url">
   No such term found: [= foobar =]
+  Term not found. Possible reasons:
+    - the data-cite asked to search in wrong specs.
+    - the context was too strict.
+    - the term isn't exported from the spec.
+      - Verify the spec exports the term.
+      - Contact us or the spec author.
+    - our database (Shepherd) doesn't have it. Create an issue on GitHub.
 </p>
 <p data-cite="service-workers">
-  Defined in multiple ways in a single spec: <a>request</a> (not enough
-  context to understand)<br>
-  [=cache batch operation/request=]<br>
-  {{FetchEventInit/request}}<br>
-  {{FetchEvent/request}}<br>
+  Defined in multiple ways in a single spec: [= request =]
+  Not enough context to understand. Provide context:
+    - [=cache batch operation/request=]
+    - {{FetchEventInit/request}}
+    - {{FetchEvent/request}}
 </p>
--->
+```
 
 
 
 ### xref search UI
 
-https://respec.org/xref/
+As we kinda created a search engine for the terms in Shepherd database, we also added a UI to make it easy to search for them.
 
+The UI can be accessed in following ways:
+
+  - via the ReSpec pill
+    - Click the ReSpec pill in top-right corner of page
+    - Select "Search definitions"
+  - or, visit https://respec.org/xref/
 
 
 ## Web IDL linking - Kagami
