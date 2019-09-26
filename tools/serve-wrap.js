@@ -19,7 +19,8 @@ const server = http.createServer((request, response) => {
 server.listen(port);
 
 const subargs = process.argv.slice(2);
-const child = subprocess.spawn(subargs[0], subargs.slice(1), {
+const wrappedArgs = subargs.slice(1).map(s => (s.includes(" ") ? `"${s}"` : s));
+const child = subprocess.spawn(subargs[0], wrappedArgs, {
   stdio: "inherit", // passthrough any output
   shell: true, // to get $PATH
 });

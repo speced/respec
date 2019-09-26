@@ -11,6 +11,15 @@
 
 import Jasmine from "jasmine";
 import JasmineConsoleReporter from "jasmine-console-reporter";
+import commandLineArgs from "command-line-args";
+
+const args = commandLineArgs([
+  {
+    description: "Display this usage guide.",
+    name: "grep",
+    type: String,
+  },
+]);
 
 const jasmine = new Jasmine();
 jasmine.addReporter(
@@ -22,6 +31,14 @@ jasmine.addReporter(
     activity: false,
   })
 );
+
+if (args.grep) {
+  jasmine.env.configure({
+    specFilter(spec) {
+      return spec.getFullName().includes(args.grep);
+    },
+  });
+}
 
 global.describe = jasmine.env.describe;
 global.it = jasmine.env.it;
