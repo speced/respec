@@ -1208,6 +1208,22 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     );
   });
 
+  it("does not link arbitrary extended attribute identifiers", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <pre class="idl" id="link-test">
+          interface mixin InnerHTMLMixin {
+            [TreatNullAs=EmptyString] attribute DOMString innerHTML;
+          };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector(".respec-offending-element")).toBeFalsy();
+  });
+
   it("exports IDL definitions", async () => {
     const body = `
       <section>
