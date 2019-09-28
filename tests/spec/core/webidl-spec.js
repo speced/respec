@@ -349,6 +349,34 @@ describe("Core - WebIDL", () => {
     }
   });
 
+  it("should handle constructor operation overloads", async () => {
+    const body = `
+      <section data-dfn-for="SuperStar" data-link-for="SuperStar">
+        <pre class="idl">
+          [Exposed=Window]
+          interface SuperStar {
+            constructor();
+            constructor(short s);
+          };
+        </pre>
+        <dfn>constructor</dfn>
+        <dfn>constructor!overload-1</dfn>
+        <p id="linkMe">
+          <a>constructor</a>
+          <a>constructor!overload-1</a>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const links = doc.querySelectorAll("#linkMe a");
+    expect(links.length).toBe(2);
+    expect(links[0].getAttribute("href")).toBe("#dom-superstar-constructor");
+    expect(links[1].getAttribute("href")).toBe(
+      "#dom-superstar-constructor!overload-1"
+    );
+  });
+
   it("should handle named constructors", () => {
     const target = doc.getElementById("namedctor-basic");
     const text =
