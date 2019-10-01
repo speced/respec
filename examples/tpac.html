@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>TPAC 2019</title>
+    <title>TPAC 2019 - New Features</title>
     <meta charset='utf-8'>
     <script src='https://www.w3.org/Tools/respec/respec-w3c' class=
     'remove'></script>
@@ -37,32 +37,29 @@
 </section>
 
 
+## Contributor and stats
 
-
-## Contributor and stats - Marcos
-
-  - 37 Contributors
+  - We've had 37 new contributors project.
   - Supports numerous students - GSoC, Outreachy
 
 
 
-## Now in two flavours - Marcos
+## Now in two flavours
+ReSpec now comes into flavors:
+
   - 🍏 respec-w3c.js
     - 327Kb - (93Kb) gzip
+
   - 🍎 respec-w3c-common.js
     - includes jQuery
     - 416Kb (123Kb) gzip
-  - Significant speed improvements
-    (IDB caching + cache api)
 
+  - Significant speed improvements via IDB caching + cache api.
 
-
-
-## xref - Automatic references linking (Sid)
-
+## "xref" - Automatic references linking
 We added a new way of linking to terms defined in other specs, which is a lot more cleaner and less cumbersome. The following snippet shows the difference between the old and new way of linking to external terms. [[Full Documentation](https://github.com/w3c/respec/wiki/xref)]
 
-``` html
+```html
 <!-- before -->
 <a data-cite="URL#concept-url-parser">
   URL parser
@@ -78,32 +75,27 @@ We added a new way of linking to terms defined in other specs, which is a lot mo
 {{ EventHandler }}
 ```
 
-
-
 ### How it works?
 
-tl;dr: We created a search API over CSSWG's Shepherd API and integrated it in ReSpec.
+tl;dr: We created a search API over CSS Working Group's Shepherd APIs.
 
   - HTTP API
     - https://respec.org/xref
-    - Integrates CSSWG's Shepherd API via tabatkins/bikeshed-data
-    - Links definitions exported from a spec (which have `data-export`)
+    - Integrates CSSWG's Shepherd API via [tabatkins/bikeshed-data](https://github.com/tabatkins/bikeshed-data).
+    - Links definitions exported from a spec (which have `data-export`).
   - ReSpec
     - Collect terms to link and along with their _contextual information_.
-    - Send request to the API
+    - Send request to the API.
     - Link terms.
     - Profit.
 
-
-
-### How to use?
-
+### How to use xref?
 Earlier, to link to [URL parser](https://url.spec.whatwg.org/#concept-url-parser) defined in [[URL]] spec, we had to write `<a data-cite="URL#concept-url-parser">URL parser</a>`.
 Now we can write `<a>URL parser</a>` or `[\= URL parser =]` (`\` added to prevent automatic linking in this document, for demonstration).
 
-We've to tell ReSpec in which specs we want to search the definitions for. Set `respecConfig.xref = ["url"]` to let ReSpec know that we want to link to terms defined in [[URL]] spec. Now it will search for terms and link them. You can write spec shortnames as well as spec IDs, though shortnames are preferred.
+We have to tell ReSpec in which specs we want to search the definitions for. Set `respecConfig.xref = ["url"]` to let ReSpec know that we want to link to terms defined in [[URL]] spec. Now it will search for terms and link them. You can write spec shortnames as well as spec IDs, though shortnames are preferred.
 
-We can also link to IDL terms using **IDL Linking micro-syntax**. Instead of writing `<code><a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a></code>`, we can write `{{\ EventHandler }}` (and don't forget to change [`respecConfig.xref`](https://github.com/w3c/respec/wiki/xref) to `["url", "html"]`).
+We can also link to IDL terms using **IDL Linking micro-syntax**. Instead of writing `<code><a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a></code>`, we can write `{{\ EventHandler }}` (but don't forget to change [`respecConfig.xref`](https://github.com/w3c/respec/wiki/xref) to `["url", "html"]`).
 
 A whitespace-separated list of specs can be added on <code>&lt;body></code> as: <code>&lt;body data-cite="url html"></code>, instead of adding it in `respecConfig.xref`.
 
@@ -127,7 +119,7 @@ We can provide search context in 3 ways:
 
 We can write specs to search using `data-cite` attributes. Go through the following example as an explanation.
 
-``` html
+```html
 <section data-cite="dom html">
   <h2>section 1</h2>
   <p>
@@ -161,14 +153,14 @@ We can write specs to search using `data-cite` attributes. Go through the follow
 </section>
 ```
 
-#### for context
+#### "for" context
 
 Some terms are defined only in certain contexts (`data-dfn-for`) and they can't be treated as "global" for linking purposes. We can use the inline micro-syntax to provide "for context" as:
 
-``` html
+```html
 <!-- the left side of `/` provides context, the right side is the term -->
 [=set / For each=]
-[= map / for each =]
+[=map / for each =]
 [=Event/stop propagation flag=]
 
 <!-- works the same way with IDL syntax -->
@@ -183,7 +175,7 @@ Some terms are defined only in certain contexts (`data-dfn-for`) and they can't 
 
 The IDL micro-syntax allows providing type information when needed.
 
-``` html
+```html
 Attribute/method: {{Event/srcElement}}
 
 Exception: {{ "NotAllowedError" }}
@@ -198,7 +190,7 @@ Element: [^script^]
 
 Sometimes, a term may be defined in a spec in a way to which linking as it is may not make sense grammatically or other way. The linking micro-syntax allow aliasing a term.
 
-``` html
+```html
 [= code point| Unicode code point =]
 <!-- links to "code point" but renders it as "Unicode code point" -->
 [=set / For each | for every =]
@@ -212,7 +204,7 @@ Sometimes, a term may be defined in a spec in a way to which linking as it is ma
 
 ReSpec will provide helpful error messages when terms fail to link. Each error (accessible via the ReSpec pill in top-right corner of page) will link to the location of erroneous term. A link will also be provided in error message which may help in resolving the error. In general, following kind of errors are possible:
 
-``` html
+```html
 <p data-cite="html svg2">
   Ambiguous Definition: defined in multiple specs: [^script^].
   Defined in both [html] and [svg2].
@@ -237,8 +229,6 @@ ReSpec will provide helpful error messages when terms fail to link. Each error (
 </p>
 ```
 
-
-
 ### xref search UI
 
 As we kinda created a search engine for the terms in Shepherd database, we also added a UI to make it easy to search for them.
@@ -251,7 +241,7 @@ The UI can be accessed in following ways:
   - or, visit https://respec.org/xref/
 
 
-## Web IDL linking - Kagami
+## Web IDL linking
 
 We added several features using Web IDL parser library named
 [webidl2.js](https://github.com/w3c/webidl2.js/) and the first of them is
@@ -268,7 +258,7 @@ automatic IDL linking.
 webidl2.js detects that this IDL block has several identifiers that needs
 linking, and then it uses the cross reference feature we mentioned earlier to
 link them to the relevant lines of their specifications. Here we have `Event`
-to DOM and `HTMLLinkElement` to HTML, and you can click them to nagivate to
+to DOM and `HTMLLinkElement` to HTML, and you can click them to navigate to
 their relevant specifications.
 
 <pre class="idl" data-cite="html">
@@ -279,7 +269,7 @@ their relevant specifications.
 ReSpec also supports linking partial types. Here, you can click `Navigator` to
 navigate to the relevant section of HTML.
 
-## IDL self-definition - Kagami
+## IDL self-definition
 
 <pre class="idl">
   [Exposed=Window]
@@ -296,28 +286,27 @@ explanation for your IDL types with `<dfn>` whenever possible.
 <a>TryLinkingToMe</a> // Linking is now possible without <dfn>
 ```
 
-## Web IDL validations - Kagami
+## Web IDL validations
 
-One of the best feature frow webidl2.js is validations! It's easy to write
-invalid IDL because specification authors are not always IDL experts, and the
-Web IDL specification itself sometimes changes in a breaking way. The
+One of the best feature frow webidl2.js is validation! It's easy to write
+invalid IDL because specification authors are not always IDL experts. Also, the
+Web IDL specification itself can change in a breaking way. The
 validation feature in ReSpec helps fixing IDL when that happens.
 
 
 ### Duplicate identifiers
 
 <pre class="idl">
-  // No duplication!
+  // No duplicate ids allowed!
   [Exposed=Window]
   interface Duplicated {};
-  dictionary Duplicated {};
+  dictionary Duplicated {}; // oops!
 </pre>
 
-ReSpec detects and warns there are duplicated identifiers here. You can read
+ReSpec warns if there are duplicated identifiers. You can read
 the relevant error messages and the exact position of the errors when you click
 the ReSpec pill. You can also click `[1]` to see where the erroneous IDL blocks
 are.
-
 
 ### Constructor syntax
 
@@ -346,7 +335,6 @@ Previously interfaces with explicit `[Exposed]` are considered as being
 implicitly exposed to `Window` only. Now interfaces are required to exposed
 explicitly, and thus ReSpec automatically suggests adding `[Exposed=Window]`.
 
-
 ### Optional dictionary argument
 
 <pre class="idl">
@@ -362,10 +350,9 @@ explicitly, and thus ReSpec automatically suggests adding `[Exposed=Window]`.
 Similarly, ReSpec now suggest adding `= {}` because  optional dictionary
 arguments are now required to have an explicit default value.
 
-
 ### Why just warnings, could it just fix everything for us?
 
-* Changes should be reviewed, shouldn't be magic
+* Changes should be reviewed, shouldn't be magic.
 
    We want authors to know what's exactly happening, and also there are cases
    that authors might want to review before applying the fix. For example,
@@ -378,7 +365,7 @@ arguments are now required to have an explicit default value.
    correct IDLs.
 
 
-## Algorithms - Marcos
+## Algorithms
   - var pipe syntax
   - type annotations
   - variable highlighting
@@ -391,7 +378,7 @@ arguments are now required to have an explicit default value.
   <li>[=set/For each=] |letter:DOMString| in |set|.</li>
 </ol>
 
-## Pluralization / Singularization - Kagami
+## Pluralization / Singularizations
 
 ReSpec knows `bananas` is a pluralized form of `banana`.
 
@@ -408,16 +395,28 @@ It also works in a backward way, where `apple` automatically links to `Apples`:
 <dfn>Apples</dfn> <a>apple</a>
 ```
 
-## mdn integration - Marcos
+## mdn integration
+If your spec is documented on MDN, ReSpec can now display MDN support data directly in your specification. This is great for developers as they can see what browser implements a particular part of a spec, as well as giving direct access to developer documentation.
 
-  - config option `mdn: true`
+  - Simply add [config option](https://github.com/w3c/respec/wiki/mdn) `mdn: true`
 
-## mdn integration - Marcos
+## Caniuse integration
+ReSpec now supports caniuse.com integration, which shows up as a table at the top of your spec.
 
-  - config option `caniuse: "feature"`
+  - [config option](https://github.com/w3c/respec/wiki/caniuse) `caniuse: "feature"` (where "feature" is the id used on caniuse to identify your spec).
+
+You can also customize exactly which browsers show up.
+
+```javascript
+caniuse: {
+  feature: "payment-request",
+  browsers: ["chrome", "safari"],
+},
+```
 
 ## Support us on Open collective!
 
+💖 Support ReSpec by [becoming a sponsor](https://opencollective.com/respec) via Open Collective. 💖
 
 <section id="sotd" style="display: none">
 ... the end ...
