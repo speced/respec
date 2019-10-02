@@ -113,7 +113,7 @@ export default (items = []) => {
           "Invalid date"
         );
       }
-      timeElem.datetime = toShortIsoDate(retiredDate);
+      timeElem.dateTime = toShortIsoDate(retiredDate);
       contents.push(
         html`
           - ${l10n.until.concat(" ")}${[timeElem]}
