@@ -134,7 +134,7 @@ table.simple {
   text-align: left;
 }
 
-.simple th a:link {
+.simple th a {
   color: #fff;
   padding: 3px 5px;
   text-align: left;
