@@ -1,4 +1,4 @@
-import { humanDate, showInlineError } from "../../core/utils";
+import { humanDate, showInlineError, toShortIsoDate } from "../../core/utils";
 import { lang as defaultLang } from "../../core/l10n.js";
 import html from "hyperhtml";
 
@@ -102,20 +102,21 @@ export default (items = []) => {
     if (p.retiredDate) {
       const retiredDate = new Date(p.retiredDate);
       const isValidDate = retiredDate.toString() !== "Invalid Date";
-      const result = document.createElement("time");
-      result.textContent = isValidDate
+      const timeElem = document.createElement("time");
+      timeElem.textContent = isValidDate
         ? humanDate(retiredDate)
         : "Invalid Date"; // todo: Localise invalid date
       if (!isValidDate) {
         showInlineError(
-          result,
+          timeElem,
           "The date is invalid. The expected format is YYYY-MM-DD.",
           "Invalid date"
         );
       }
+      timeElem.dateTime = toShortIsoDate(retiredDate);
       contents.push(
         html`
-          - ${l10n.until.concat(" ")}${[result]}
+          - ${l10n.until.concat(" ")}${[timeElem]}
         `
       );
     }
