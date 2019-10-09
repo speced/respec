@@ -63,13 +63,13 @@ async function showContributors(org, repo, editors, apiURL) {
   const elem = document.getElementById("gh-contributors");
   if (!elem) return;
 
-  const contributors = await getContributors(org, repo);
+  const contributors = await getContributors();
   if (contributors !== null) {
     toHTML(contributors, editors, elem);
   }
 
   async function getContributors() {
-    const url = new URL(`${org}/${repo}/contributors`, apiURL);
+    const url = new URL(`${org}/${repo}/contributors`, apiURL).href;
     try {
       const res = await fetchAndCache(url);
       if (!res.ok) {
