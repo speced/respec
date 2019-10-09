@@ -5,6 +5,7 @@
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
 import { fetchAndCache, joinAnd } from "./utils.js";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub.js";
 export const name = "core/contrib";
 
@@ -47,9 +48,12 @@ async function showContributors(org, repo, editors, apiURL) {
   const elem = document.getElementById("gh-contributors");
   if (!elem) return;
 
+  elem.textContent = "Fetching list of contributors...";
   const contributors = await getContributors();
   if (contributors !== null) {
     toHTML(contributors, elem);
+  } else {
+    elem.textContent = "Failed to fetch contributors.";
   }
 
   async function getContributors() {
@@ -85,6 +89,15 @@ function toHTML(contributors, element) {
     const nameB = b.name || b.login;
     return nameA.toLowerCase().localeCompare(nameB.toLowerCase());
   });
+
+  if (element.tagName === "UL") {
+    hyperHTML(element)`${sortedContributors.map(
+      ({ name, login }) =>
+        `<li><a href="https://github.com/${login}">${name || login}</a></li>`
+    )}`;
+    return;
+  }
+
   const names = sortedContributors.map(user => user.name || user.login);
   element.textContent = joinAnd(names);
 }
