@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/contrib
 // Fetches names of contributors from github and uses them to fill
 // in the content of elements with key identifiers:

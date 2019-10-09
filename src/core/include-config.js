@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/include-config
 // Inject's the document's configuration into the head as JSON.
 import { sub } from "./pubsubhub.js";

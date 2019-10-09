@@ -1,5 +1,7 @@
+// @ts-check
 /**
  * Temporary workaround until browsers get import-maps
+ * @returns {Promise<import("idb")>}
  */
 export async function importIdb() {
   try {

@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/requirements
 // This module does two things:
 //
