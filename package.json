@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.33.4",
+  "version": "24.33.5",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -21,9 +21,9 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.6.2",
-    "@babel/core": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
+    "@babel/cli": "^7.6.3",
+    "@babel/core": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
     "@types/clipboard": "^2.0.1",
     "@types/pluralize": "0.0.29",
     "babel-eslint": "^10.0.3",
@@ -31,14 +31,14 @@
     "chai": "^4.2.0",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
     "eslint": "^6.5.1",
-    "eslint-config-prettier": "^6.3.0",
+    "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.1.1",
     "exports-loader": "^0.7.0",
-    "handlebars": "^4.4.0",
+    "handlebars": "^4.4.3",
     "highlight.js": "^9.15.10",
     "hyperhtml": "^2.31.0",
-    "idb": "^4.0.4",
+    "idb": "^4.0.5",
     "jasmine-core": "^3.5.0",
     "jasmine-reporters": "^2.3.2",
     "jquery": "^3.4.1",
@@ -104,7 +104,7 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "1.20.0",
-    "snyk": "^1.230.3"
+    "snyk": "^1.233.0"
   },
   "prettier": {
     "trailingComma": "es5"
