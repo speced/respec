@@ -2,7 +2,7 @@
 // Module core/contrib
 // Fetches names of contributors from github and uses them to fill
 // in the content of elements with key identifiers:
-// #gh-commenters: people having contributed comments to issues. [DEPRECATED]
+// [DEPRECATED] #gh-commenters: people having contributed comments to issues.
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
 import { fetchAndCache, joinAnd } from "./utils.js";
@@ -36,7 +36,7 @@ export async function run(conf) {
   if (!conf.github) {
     const msg =
       "Requested list of contributors from GitHub, but " +
-      "[`github`](https://github.com/w3c/respec/wiki/github) is not set.";
+      "[`github`](https://github.com/w3c/respec/wiki/github) configuration option is not set.";
     pub("error", msg);
     return;
   }
@@ -71,7 +71,7 @@ async function showContributors(org, repo, editors, apiURL) {
   }
 
   async function getContributors() {
-    const url = new URL(`${org}/${repo}/contributors`, apiURL).href;
+    const { href: url } = new URL(`${org}/${repo}/contributors`, apiURL);
     try {
       const res = await fetchAndCache(url);
       if (!res.ok) {
