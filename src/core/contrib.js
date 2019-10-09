@@ -10,16 +10,17 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/contrib";
 
 /**
- * @typedef {{ name?: string, login: string }} User
- * @param {User[]} users
- * @param {string[]} editors
+ * @typedef {{ name?: string, login: string }} Contributor
+ * @param {Contributor[]} contributors
  * @param {HTMLElement} element
  */
-function toHTML(users, editors, element) {
-  const names = users
-    .map(user => user.name || user.login)
-    .filter(name => !editors.includes(name))
-    .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+function toHTML(contributors, element) {
+  const sortedContributors = contributors.sort((a, b) => {
+    const nameA = a.name || a.login;
+    const nameB = b.name || b.login;
+    return nameA.toLowerCase().localeCompare(nameB.toLowerCase());
+  });
+  const names = sortedContributors.map(user => user.name || user.login);
   element.textContent = joinAnd(names);
 }
 
@@ -66,7 +67,7 @@ async function showContributors(org, repo, editors, apiURL) {
 
   const contributors = await getContributors();
   if (contributors !== null) {
-    toHTML(contributors, editors, elem);
+    toHTML(contributors, elem);
   }
 
   async function getContributors() {
@@ -78,9 +79,11 @@ async function showContributors(org, repo, editors, apiURL) {
           `Request to ${url} failed with status code ${res.status}`
         );
       }
-      /** @type {User[]} */
+      /** @type {Contributor[]} */
       const contributors = await res.json();
-      return contributors;
+      return contributors.filter(
+        user => !editors.includes(user.name || user.login)
+      );
     } catch (error) {
       pub("error", "Error loading contributors from GitHub.");
       console.error(error);
