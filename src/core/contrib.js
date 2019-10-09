@@ -51,7 +51,6 @@ export async function run(conf) {
   const apiURL = isTestEnv ? conf.githubAPI : GITHUB_API;
 
   await showContributors(org, repo, editors, apiURL);
-  showCommenters();
 }
 
 /**
@@ -89,16 +88,5 @@ async function showContributors(org, repo, editors, apiURL) {
       console.error(error);
       return null;
     }
-  }
-}
-
-function showCommenters() {
-  const elem = document.getElementById("gh-commenters");
-  if (elem) {
-    pub(
-      "warn",
-      "Use of `#gh-commenters` is deprecated. If you want to use this feature, " +
-        "please [add your comments](https://github.com/w3c/respec/issues/2446)."
-    );
   }
 }
