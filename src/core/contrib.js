@@ -2,34 +2,17 @@
 // Module core/contrib
 // Fetches names of contributors from github and uses them to fill
 // in the content of elements with key identifiers:
-// [DEPRECATED] #gh-commenters: people having contributed comments to issues.
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
 import { fetchAndCache, joinAnd } from "./utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/contrib";
 
-/**
- * @typedef {{ name?: string, login: string }} Contributor
- * @param {Contributor[]} contributors
- * @param {HTMLElement} element
- */
-function toHTML(contributors, element) {
-  const sortedContributors = contributors.sort((a, b) => {
-    const nameA = a.name || a.login;
-    const nameB = b.name || b.login;
-    return nameA.toLowerCase().localeCompare(nameB.toLowerCase());
-  });
-  const names = sortedContributors.map(user => user.name || user.login);
-  element.textContent = joinAnd(names);
-}
-
 const GITHUB_API = "https://respec.org/github/";
 
 export async function run(conf) {
-  const ghCommenters = document.getElementById("gh-commenters");
   const ghContributors = document.getElementById("gh-contributors");
-  if (!ghCommenters && !ghContributors) {
+  if (!ghContributors) {
     return;
   }
 
@@ -89,4 +72,19 @@ async function showContributors(org, repo, editors, apiURL) {
       return null;
     }
   }
+}
+
+/**
+ * @typedef {{ name?: string, login: string }} Contributor
+ * @param {Contributor[]} contributors
+ * @param {HTMLElement} element
+ */
+function toHTML(contributors, element) {
+  const sortedContributors = contributors.sort((a, b) => {
+    const nameA = a.name || a.login;
+    const nameB = b.name || b.login;
+    return nameA.toLowerCase().localeCompare(nameB.toLowerCase());
+  });
+  const names = sortedContributors.map(user => user.name || user.login);
+  element.textContent = joinAnd(names);
 }
