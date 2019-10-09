@@ -45,7 +45,8 @@ export async function run(conf) {
   const editors = conf.editors.map(editor => editor.name);
 
   const isTestEnv =
-    conf.githubAPI && new URL(conf.githubAPI).hostname === location.hostname;
+    conf.githubAPI &&
+    new URL(conf.githubAPI).hostname === window.parent.location.hostname;
   const apiURL = isTestEnv ? conf.githubAPI : GITHUB_API;
 
   await showContributors(org, repo, editors, apiURL);
@@ -89,7 +90,7 @@ async function showContributors(org, repo, editors, apiURL) {
 }
 
 function showCommenters() {
-  const elem = document.getElementById("gh-contributors");
+  const elem = document.getElementById("gh-commenters");
   if (elem) {
     pub(
       "warn",
