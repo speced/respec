@@ -14,7 +14,7 @@ describe("Core — Contributors", () => {
     const ops = makeStandardOps(
       {
         github: "org/repo",
-        githubAPI: `${window.parent.location.origin}/tests/data/contrib/`,
+        githubAPI: `${window.parent.location.origin}/tests/data/`,
       },
       body
     );
@@ -35,7 +35,7 @@ describe("Core — Contributors", () => {
     const ops = makeStandardOps(
       {
         github: "org/repo",
-        githubAPI: `${window.parent.location.origin}/tests/data/contrib/`,
+        githubAPI: `${window.parent.location.origin}/tests/data/`,
       },
       body
     );
