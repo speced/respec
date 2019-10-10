@@ -11,17 +11,11 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, joinAnd, parents } from "./utils.js";
+import { addId, fetchAndCache, joinAnd, parents } from "./utils.js";
 import css from "text!../../assets/issues-notes.css";
 import { lang as defaultLang } from "../core/l10n.js";
-import { fetchAndStoreGithubIssues } from "./github-api.js";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub.js";
-
-/**
- * @typedef {import("./github-api").GitHubIssue} GitHubIssue
- * @typedef {import("./github-api").GitHubLabel} GitHubLabel
- */
 
 export const name = "core/issues-notes";
 
@@ -50,9 +44,19 @@ const l10n = localizationStrings[lang];
  * @property {boolean} inline
  * @property {number} number
  * @property {string} title
+
+ * @typedef {object} GitHubLabel
+ * @property {string} color
+ * @property {string} name
  *
+ * @typedef {object} GitHubIssue
+ * @property {string} title
+ * @property {string} state
+ * @property {string} bodyHTML
+ * @property {GitHubLabel[]} labels
+
  * @param {NodeListOf<HTMLElement>} ins
- * @param {Map<number, GitHubIssue>} ghIssues
+ * @param {Map<string, GitHubIssue>} ghIssues
  * @param {*} conf
  */
 function handleIssues(ins, ghIssues, conf) {
@@ -109,7 +113,7 @@ function handleIssues(ins, ghIssues, conf) {
             link.append(title);
           }
           title.classList.add("issue-number");
-          ghIssue = ghIssues.get(Number(dataNum));
+          ghIssue = ghIssues.get(dataNum);
           if (ghIssue && !report.title) {
             report.title = ghIssue.title;
           }
@@ -126,7 +130,7 @@ function handleIssues(ins, ghIssues, conf) {
         inno.removeAttribute("title");
         const { repoURL = "" } = conf.github || {};
         const labels = ghIssue ? ghIssue.labels : [];
-        if (ghIssue && ghIssue.state === "closed") {
+        if (ghIssue && ghIssue.state === "CLOSED") {
           div.classList.add("closed");
         }
         titleParent.append(createLabelsGroup(labels, report.title, repoURL));
@@ -139,7 +143,7 @@ function handleIssues(ins, ghIssues, conf) {
       if (ghIssue && !body.innerHTML.trim()) {
         body = document
           .createRange()
-          .createContextualFragment(ghIssue.body_html);
+          .createContextualFragment(ghIssue.bodyHTML);
       }
       div.append(titleParent, body);
       const level = parents(titleParent, "section").length + 2;
@@ -280,6 +284,38 @@ function createLabel(label, repoURL) {
     href="${issuesURL.href}">${name}</a>`;
 }
 
+/**
+ * @param {string} githubAPI
+ * @returns {Promise<Map<string, GitHubIssue>>}
+ */
+async function fetchAndStoreGithubIssues(githubAPI) {
+  if (!githubAPI) {
+    return new Map();
+  }
+
+  const issueNumbers = [...document.querySelectorAll(".issue[data-number]")]
+    .map(elem => Number.parseInt(elem.dataset.number, 10))
+    .filter(issueNumber => issueNumber);
+
+  if (!issueNumbers.length) {
+    return new Map();
+  }
+
+  const url = new URL("issues", githubAPI);
+  url.searchParams.set("issues", issueNumbers.join(","));
+
+  const response = await fetchAndCache(url);
+  if (!response.ok) {
+    const msg = `Error fetching issues from GitHub. (HTTP Status ${response.status}).`;
+    pub("error", msg);
+    return null;
+  }
+
+  /** @type {{ [issueNumber: string]: GitHubIssue }} */
+  const issues = await response.json();
+  return new Map(Object.entries(issues));
+}
+
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
@@ -287,10 +323,7 @@ export async function run(conf) {
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
-  /** @type {Map<number, GitHubIssue>} */
-  const ghIssues = conf.githubAPI
-    ? await fetchAndStoreGithubIssues(conf)
-    : new Map();
+  const ghIssues = await fetchAndStoreGithubIssues(conf.githubAPI);
   const { head: headElem } = document;
   headElem.insertBefore(
     hyperHTML`<style>${[css]}</style>`,

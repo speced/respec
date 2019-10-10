@@ -70,7 +70,6 @@ export async function run(conf) {
     edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubToken: undefined,
     githubUser: undefined,
-    githubAPI: `https://api.github.com/repos/${org}/${repo}`,
     issueBase,
     atRiskBase: issueBase,
     otherLinks: [],
@@ -99,11 +98,27 @@ export async function run(conf) {
     ],
   };
   // Assign new properties, but retain existing ones
+  let githubAPI = `https://respec.org/github/${org}/${repo}/`;
+  if (conf.githubAPI) {
+    if (new URL(conf.githubAPI).hostname === window.parent.location.hostname) {
+      // for testing
+      githubAPI = conf.githubAPI;
+    } else {
+      const msg = "`respecConfig.githubAPI` should not be added manually.";
+      pub("warn", msg);
+    }
+  }
   const normalizedGHObj = {
     branch,
     repoURL: ghURL.href,
   };
-  const normalizedConfig = { ...newProps, ...conf, github: normalizedGHObj };
+
+  const normalizedConfig = {
+    ...newProps,
+    ...conf,
+    github: normalizedGHObj,
+    githubAPI,
+  };
   Object.assign(conf, normalizedConfig);
   conf.otherLinks.unshift(otherLink);
 }
