@@ -11,13 +11,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import {
-  addId,
-  fetchAndCache,
-  joinAnd,
-  parents,
-  showInlineWarning,
-} from "./utils.js";
+import { addId, fetchAndCache, joinAnd, parents } from "./utils.js";
 import css from "text!../../assets/issues-notes.css";
 import { lang as defaultLang } from "../core/l10n.js";
 import hyperHTML from "hyperhtml";
@@ -121,7 +115,7 @@ function handleIssues(ins, ghIssues, conf) {
           title.classList.add("issue-number");
           ghIssue = ghIssues.get(dataNum);
           if (!ghIssue) {
-            showInlineWarning(inno, `Failed to fetch issue number ${dataNum}`);
+            pub("warning", `Failed to fetch issue number ${dataNum}`);
           }
           if (ghIssue && !report.title) {
             report.title = ghIssue.title;
