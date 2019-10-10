@@ -11,7 +11,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, fetchAndCache, joinAnd, parents } from "./utils.js";
+import { addId, joinAnd, parents } from "./utils.js";
 import css from "text!../../assets/issues-notes.css";
 import { lang as defaultLang } from "../core/l10n.js";
 import hyperHTML from "hyperhtml";
@@ -309,7 +309,7 @@ async function fetchAndStoreGithubIssues(githubAPI) {
   const url = new URL("issues", githubAPI);
   url.searchParams.set("issues", issueNumbers.join(","));
 
-  const response = await fetchAndCache(url.href);
+  const response = await fetch(url.href);
   if (!response.ok) {
     const msg = `Error fetching issues from GitHub. (HTTP Status ${response.status}).`;
     pub("error", msg);
