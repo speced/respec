@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/data-include
 // Support for the data-include attribute. Causes external content to be included inside an
 // element that has data-include='some URI'. There is also a data-oninclude attribute that
@@ -14,6 +15,7 @@ import { runTransforms } from "./utils.js";
 export const name = "core/data-include";
 
 function processResponse(rawData, id, url) {
+  /** @type {HTMLElement} */
   const el = document.querySelector(`[data-include-id=${id}]`);
   const doc = el.ownerDocument;
   const data = runTransforms(rawData, el.dataset.oninclude, url);
@@ -60,9 +62,10 @@ function cleanUp(el) {
 }
 
 export async function run() {
-  const promisesToInclude = Array.from(
-    document.querySelectorAll("[data-include]")
-  ).map(async el => {
+  /** @type {NodeListOf<HTMLElement>} */
+  const includables = document.querySelectorAll("[data-include]");
+
+  const promisesToInclude = Array.from(includables).map(async el => {
     const url = el.dataset.include;
     if (!url) {
       return; // just skip it

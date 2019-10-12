@@ -1,3 +1,4 @@
+// @ts-check
 import { fetchAndCache } from "./utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github-api";
@@ -20,11 +21,12 @@ export function githubRequestHeaders(conf) {
   return headers;
 }
 
+let warned = false;
 export function checkLimitReached(response) {
   const { headers, status } = response;
   if (status === 403 && headers.get("X-RateLimit-Remaining") === "0") {
-    if (typeof checkLimitReached.warned === "undefined") {
-      checkLimitReached.warned = true;
+    if (!warned) {
+      warned = true;
       const msg = `You have run out of github requests. Some github assets will not show up.`;
       pub("warning", msg);
     }
@@ -35,6 +37,7 @@ export function checkLimitReached(response) {
 
 export async function fetchAndStoreGithubIssues(conf) {
   const { githubAPI } = conf;
+  /** @type {NodeListOf<HTMLElement>} */
   const specIssues = document.querySelectorAll(".issue[data-number]");
   const issuePromises = [...specIssues]
     .map(elem => Number.parseInt(elem.dataset.number, 10))
@@ -64,12 +67,12 @@ export async function fetchAndStoreGithubIssues(conf) {
  * @property {number} number
  * @property {string} state
  * @property {string} message
- * @property {string} body_html
- * @property {GitHubLabel[]} labels
+ * @property {string} [body_html]
+ * @property {GitHubLabel[]} [labels]
  *
  * @param {Response} response
  * @param {number} issueNumber
- * @returns {[number, GitHubIssue]}
+ * @returns {Promise<[number, GitHubIssue]>}
  */
 async function processResponse(response, issueNumber) {
   // "message" is always error message from GitHub
@@ -103,7 +106,7 @@ export async function fetchAll(url, headers, output = []) {
   if (urlObj.searchParams && !urlObj.searchParams.has("per_page")) {
     urlObj.searchParams.append("per_page", "100");
   }
-  const request = new Request(urlObj, { headers });
+  const request = new Request(urlObj.toString(), { headers });
   request.headers.set("Accept", "application/vnd.github.v3+json");
   const response = await fetch(request);
   const json = await response.json();

@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/l10n
  *

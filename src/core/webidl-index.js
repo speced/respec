@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module: core/webidl-index
  * constructs a summary of WebIDL in the document by
@@ -14,6 +15,7 @@ export const name = "core/webidl-index";
 import { nonNormativeSelector } from "./utils.js";
 
 export function run() {
+  /** @type {HTMLElement | null} */
   const idlIndexSec = document.querySelector("section#idl-index");
   if (!idlIndexSec) {
     return;

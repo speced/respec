@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/data-transform
 // Support for the data-transform attribute
 // Any element in the tree that has a data-transform attribute is processed here.
@@ -16,7 +17,9 @@ import { runTransforms } from "./utils.js";
 export const name = "core/data-transform";
 
 export function run() {
-  document.querySelectorAll("[data-transform]").forEach(el => {
+  /** @type {NodeListOf<HTMLElement>} */
+  const transformables = document.querySelectorAll("[data-transform]");
+  transformables.forEach(el => {
     el.innerHTML = runTransforms(el.innerHTML, el.dataset.transform);
     el.removeAttribute("data-transform");
   });

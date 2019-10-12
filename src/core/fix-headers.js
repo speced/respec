@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/fix-headers
 // Make sure that all h1-h6 headers (that are first direct children of sections) are actually
 // numbered at the right depth level. This makes it possible to just use any of them (conventionally

@@ -1,3 +1,4 @@
+// @ts-check
 // Module w3c/abstract
 // Handle the abstract section properly.
 import { l10n, lang } from "../core/l10n.js";
