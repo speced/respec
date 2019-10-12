@@ -201,12 +201,11 @@ export class IDBKeyVal {
 
   /**
    * @param {string[]} keys
-   * @returns {Promise<[string, any][]>}
    */
   async getMany(keys) {
     const keySet = new Set(keys);
-    /** @type {[string, any][]} */
-    const results = [];
+    /** @type {Map<string, any>} */
+    const results = new Map();
     let cursor = await this.idb.transaction(this.storeName).store.openCursor();
     while (cursor) {
       if (keySet.has(cursor.key)) {
