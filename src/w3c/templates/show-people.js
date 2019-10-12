@@ -1,3 +1,4 @@
+// @ts-check
 import { humanDate, showInlineError, toShortIsoDate } from "../../core/utils";
 import { lang as defaultLang } from "../../core/l10n.js";
 import html from "hyperhtml";
@@ -122,6 +123,7 @@ export default (items = []) => {
       );
     }
 
+    // @ts-ignore: hyperhtml types only support Element but we use a DocumentFragment here
     html.bind(span)`${contents}`;
     dd.appendChild(span);
     return dd;

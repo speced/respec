@@ -1,3 +1,4 @@
+// @ts-check
 // Parses an inline IDL string (`{{ idl string }}`)
 //  and renders its components as HTML
 
@@ -15,7 +16,57 @@ const enumRegex = /^(\w+)\["([\w- ]*)"\]$/;
 // https://github.com/w3c/respec/pull/1848/files#r225087385
 const methodSplitRegex = /\.?(\w+\(.*\)$)/;
 
-/** @param {string} str */
+/**
+ * @typedef {object} IdlBase
+ * @property {"base"} type
+ * @property {string} identifier
+ * @property {boolean} renderParent
+ * @property {InlineIdl | null} [parent]
+ *
+ * @typedef {object} IdlAttribute
+ * @property {"attribute"} type
+ * @property {string} identifier
+ * @property {boolean} renderParent
+ * @property {InlineIdl | null} [parent]
+ *
+ * @typedef {object} IdlInternalSlot
+ * @property {"internal-slot"} type
+ * @property {string} identifier
+ * @property {boolean} renderParent
+ * @property {InlineIdl | null} [parent]
+ *
+ * @typedef {object} IdlMethod
+ * @property {"method"} type
+ * @property {string} identifier
+ * @property {string[]} args
+ * @property {boolean} renderParent
+ * @property {InlineIdl | null} [parent]
+ *
+ * @typedef {object} IdlEnum
+ * @property {"enum"} type
+ * @property {string} [identifier]
+ * @property {string} enumValue
+ * @property {boolean} renderParent
+ * @property {InlineIdl | null} [parent]
+ *
+ * @typedef {object} IdlException
+ * @property {"exception"} type
+ * @property {string} identifier
+ * @property {InlineIdl | null} [parent]
+ *
+ * @typedef {object} IdlPrimitive
+ * @property {"idl-primitive"} type
+ * @property {string} identifier
+ * @property {boolean} renderParent
+ * @property {InlineIdl | null} [parent]
+ *
+ * @typedef {IdlBase | IdlAttribute | IdlInternalSlot | IdlMethod | IdlEnum | IdlException | IdlPrimitive} InlineIdl
+ */
+
+/**
+ * @param {string} str
+ * @returns {InlineIdl[]}
+ */
 function parseInlineIDL(str) {
   const [nonMethodPart, methodPart] = str.split(methodSplitRegex);
   const tokens = nonMethodPart
@@ -24,6 +75,7 @@ function parseInlineIDL(str) {
     .filter(s => s && s.trim())
     .map(s => s.trim());
   const renderParent = !str.includes("/");
+  /** @type {InlineIdl[]} */
   const results = [];
   while (tokens.length) {
     const value = tokens.pop();
@@ -82,6 +134,9 @@ function parseInlineIDL(str) {
   return results.reverse();
 }
 
+/**
+ * @param {IdlBase} details
+ */
 function renderBase(details) {
   // Check if base is a local variable in a section
   const { identifier, renderParent } = details;
@@ -92,6 +147,7 @@ function renderBase(details) {
 
 /**
  * Internal slot: .[[identifier]] or [[identifier]]
+ * @param {IdlInternalSlot} details
  */
 function renderInternalSlot(details) {
   const { identifier, parent, renderParent } = details;
@@ -107,6 +163,7 @@ function renderInternalSlot(details) {
 
 /**
  * Attribute: .identifier
+ * @param {IdlAttribute} details
  */
 function renderAttribute(details) {
   const { parent, identifier, renderParent } = details;
@@ -121,6 +178,7 @@ function renderAttribute(details) {
 
 /**
  * Method: .identifier(arg1, arg2, ...), identifier(arg1, arg2, ...)
+ * @param {IdlMethod} details
  */
 function renderMethod(details) {
   const { args, identifier, type, parent, renderParent } = details;
@@ -140,6 +198,7 @@ function renderMethod(details) {
  * Enum:
  * Identifier["enum value"]
  * Identifer / "enum value"
+ * @param {IdlEnum} details
  */
 function renderEnum(details) {
   const { identifier, enumValue, parent } = details;
@@ -156,6 +215,7 @@ function renderEnum(details) {
 /**
  * Exception value: "NotAllowedError"
  * Only the WebIDL spec can define exceptions
+ * @param {IdlException} details
  */
 function renderException(details) {
   const { identifier } = details;
@@ -169,6 +229,7 @@ function renderException(details) {
 /**
  * Interface types: {{ unrestricted double }} {{long long}}
  * Only the WebIDL spec defines these types.
+ * @param {IdlPrimitive} details
  */
 function renderIdlPrimitiveType(details) {
   const { identifier } = details;
