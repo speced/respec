@@ -58,13 +58,10 @@ function toDefinitionPair([key, entry]) {
   `;
 }
 
-function resultProcessor({ includeVersions } = { includeVersions: false }) {
+function resultProcessor({ includeVersions = false } = {}) {
   return (...fetchedData) => {
     /** @type {{ [key: string]: any }} */
-    const combinedResults = fetchedData.reduce(
-      (collector, resultObj) => Object.assign(collector, resultObj),
-      {}
-    );
+    const combinedResults = Object.assign({}, ...fetchedData);
     const results = new Map(Object.entries(combinedResults));
     // remove aliases
     Array.from(results)
