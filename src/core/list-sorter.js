@@ -1,3 +1,4 @@
+// @ts-check
 import { children } from "./utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/list-sorter";
@@ -54,17 +55,23 @@ export function sortDefinitionTerms(dl, dir) {
 }
 
 export function run() {
-  for (const elem of document.querySelectorAll("[data-sort]")) {
+  /** @type {NodeListOf<HTMLElement>} */
+  const sortables = document.querySelectorAll("[data-sort]");
+  for (const elem of sortables) {
     let sortedElems;
     const dir = elem.dataset.sort || "ascending";
     switch (elem.localName) {
-      case "dl":
-        sortedElems = sortDefinitionTerms(elem, dir);
+      case "dl": {
+        const definition = /** @type {HTMLDListElement} */ (elem);
+        sortedElems = sortDefinitionTerms(definition, dir);
         break;
+      }
       case "ol":
-      case "ul":
-        sortedElems = sortListItems(elem, dir);
+      case "ul": {
+        const list = /** @type {HTMLUListElement} */ (elem);
+        sortedElems = sortListItems(list, dir);
         break;
+      }
       default:
         pub("warning", `ReSpec can't sort ${elem.localName} elements.`);
     }

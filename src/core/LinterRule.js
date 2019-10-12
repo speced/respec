@@ -6,7 +6,7 @@
  * @property {string} howToFix
  * @property {string} name
  * @property {number} occurrences
- * @property {Element[]} offendingElements
+ * @property {HTMLElement[]} offendingElements
  *
  * @typedef {(conf: any, doc: Document) => (LinterResult | Promise<LinterResult>)} LintingFunction
  */

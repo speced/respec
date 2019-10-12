@@ -1,14 +1,15 @@
+// @ts-check
 // expands empty anchors based on their context
 import { makeSafeCopy, norm, showInlineError } from "./utils.js";
 
 export const name = "core/anchor-expander";
 
 export function run() {
-  const anchors = [
-    ...document.querySelectorAll(
-      "a[href^='#']:not(.self-link):not([href$='the-empty-string'])"
-    ),
-  ].filter(a => a.textContent.trim() === "");
+  /** @type {NodeListOf<HTMLElement>} */
+  const anchorElements = document.querySelectorAll(
+    "a[href^='#']:not(.self-link):not([href$='the-empty-string'])"
+  );
+  const anchors = [...anchorElements].filter(a => a.textContent.trim() === "");
   for (const a of anchors) {
     const id = a.getAttribute("href").slice(1);
     const matchingElement = document.getElementById(id);

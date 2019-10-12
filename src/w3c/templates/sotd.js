@@ -1,3 +1,4 @@
+// @ts-check
 import html from "hyperhtml";
 
 export default (conf, opts) => {

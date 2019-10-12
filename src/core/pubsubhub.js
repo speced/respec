@@ -1,3 +1,4 @@
+// @ts-check
 import { expose } from "./expose-modules.js";
 
 /**
@@ -37,11 +38,12 @@ export function pub(topic, ...data) {
 /**
  * Subscribes to a message type.
  *
- * @param  {string} topic      The topic to subscribe to (e.g., "start-all")
- * @param  {Function} cb       Callback function
- * @param  {Boolean} opts.once Add prop "once" for single notification.
- * @return {Object}            An object that should be considered opaque,
- *                             used for unsubscribing from messages.
+ * @param  {string} topic        The topic to subscribe to (e.g., "start-all")
+ * @param  {Function} cb         Callback function
+ * @param  {Object} [opts]
+ * @param  {Boolean} [opts.once] Add prop "once" for single notification.
+ * @return {Object}              An object that should be considered opaque,
+ *                               used for unsubscribing from messages.
  */
 export function sub(topic, cb, opts = { once: false }) {
   if (opts.once) {
