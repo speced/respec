@@ -1,3 +1,4 @@
+// @ts-check
 // Module geonovum/conformance
 // Handle the conformance section properly.
 // based on W3C conformance, but because Geonovum has different requirements, have a separate module

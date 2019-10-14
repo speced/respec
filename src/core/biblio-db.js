@@ -170,7 +170,7 @@ export const biblioDB = {
    * Adds a reference or alias to the database.
    *
    * @param {String} type The type as per ALLOWED_TYPES.
-   * @param {String} details The object to store.
+   * @param {Object} details The object to store.
    */
   async add(type, details) {
     if (!ALLOWED_TYPES.has(type)) {

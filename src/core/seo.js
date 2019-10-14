@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * This Module adds a metatag description to the document, based on the
  * first paragraph of the abstract.

@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/override-configuration
 // A helper module that makes it possible to override settings specified in respecConfig
 // by passing them as a query string. This is useful when you just want to make a few
