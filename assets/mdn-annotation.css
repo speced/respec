@@ -117,7 +117,7 @@
 
 .mdnsupport > .opera::before,
 .mdnsupport > .opera_android::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/opera.png);
+  background-image: url(https://resources.whatwg.org/browser-logos/opera.svg);
 }
 
 .mdnsupport > .safari::before {
@@ -129,7 +129,7 @@
 }
 
 .mdnsupport > .samsunginternet_android::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/samsung.png);
+  background-image: url(https://resources.whatwg.org/browser-logos/samsung.svg);
 }
 
 .mdnsupport > .webview_android::before {
