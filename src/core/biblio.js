@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/biblio
 // Pre-processes bibliographic references
 // Configuration:

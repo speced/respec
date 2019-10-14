@@ -33,7 +33,7 @@ describe("Core - Github", () => {
     function generateMembersTest(doc) {
       const { respecConfig: conf } = doc.defaultView;
       expect(conf.hasOwnProperty("githubAPI")).toBe(true);
-      expect(conf.githubAPI).toBe("https://api.github.com/repos/w3c/respec");
+      expect(conf.githubAPI).toBe("https://respec.org/github/w3c/respec/");
       expect(conf.hasOwnProperty("issueBase")).toBe(true);
       expect(conf.issueBase).toBe("https://github.com/w3c/respec/issues/");
       expect(conf.hasOwnProperty("edDraftURI")).toBe(true);
@@ -43,7 +43,6 @@ describe("Core - Github", () => {
     }
     function doesntOverrideTest(doc) {
       const { respecConfig: conf } = doc.defaultView;
-      expect(conf.githubAPI).toBe("https://test.com/githubAPI");
       expect(conf.issueBase).toBe("https://test.com/issueBase");
       expect(conf.edDraftURI).toBe("https://test.com/edDraftURI");
       expect(conf.shortName).toBe("dontOverrideThis");
@@ -62,7 +61,7 @@ describe("Core - Github", () => {
       edDraftURI: "https://test.com/edDraftURI",
       shortName: "dontOverrideThis",
     };
-    it("doesn't override githubAPI, issueBase, edDraftURI, shortName members if present (from string)", async () => {
+    it("doesn't override issueBase, edDraftURI, shortName members if present (from string)", async () => {
       const opts = {
         config: Object.assign(makeBasicConfig(), dontOverrideTheseOps, {
           github: "https://github.com/w3c/respec/",
@@ -71,7 +70,7 @@ describe("Core - Github", () => {
       const doc = await makeRSDoc(opts);
       doesntOverrideTest(doc);
     });
-    it("doesn't override githubAPI, issueBase, edDraftURI, shortName members if present (from object)", async () => {
+    it("doesn't override issueBase, edDraftURI, shortName members if present (from object)", async () => {
       const opts = {
         config: Object.assign(makeBasicConfig(), dontOverrideTheseOps, {
           github: { repoURL: "https://github.com/w3c/respec/" },

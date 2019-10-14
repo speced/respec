@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/location-hash
 // Resets window.location.hash to jump to the right point in the document
 
