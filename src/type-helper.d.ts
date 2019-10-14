@@ -28,7 +28,7 @@ interface Window {
       keyShort?: string,
       icon?: string
     ): any;
-    error(mg: string): void;
+    error(msg: string): void;
     warning(msg: string): void;
     closeModal(owner?: Element): void;
     freshModal(title: string, content: string, currentOwner: Element): void;
