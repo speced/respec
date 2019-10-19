@@ -113,7 +113,7 @@ export function removeReSpec(doc) {
 
 /**
  * Adds error class to each element while emitting a warning
- * @param {Element|Element[]} elems
+ * @param {HTMLElement|HTMLElement[]} elems
  * @param {String} msg message to show in warning
  * @param {String=} title error message to add on each element
  */
@@ -131,7 +131,7 @@ export function showInlineWarning(elems, msg, title) {
 
 /**
  * Adds error class to each element while emitting a warning
- * @param {Element|Element[]} elems
+ * @param {HTMLElement|HTMLElement[]} elems
  * @param {String} msg message to show in warning
  * @param {String} title error message to add on each element
  * @param {object} [options]
@@ -155,7 +155,7 @@ export function showInlineError(elems, msg, title, { details } = {}) {
 
 /**
  * Adds error class to each element while emitting a warning
- * @param {Element} elem
+ * @param {HTMLElement} elem
  * @param {String} msg message to show in warning
  * @param {String=} title error message to add on each element
  */
@@ -179,7 +179,7 @@ function generateMarkdownLink(element, i) {
 
 export class IDBKeyVal {
   /**
-   * @param {import("idb").DB} idb
+   * @param {import("idb").IDBPDatabase} idb
    * @param {string} storeName
    */
   constructor(idb, storeName) {
@@ -197,11 +197,11 @@ export class IDBKeyVal {
 
   /**
    * @param {string[]} keys
-   * @returns {[string, any][]}
    */
   async getMany(keys) {
     const keySet = new Set(keys);
-    const results = [];
+    /** @type {Map<string, any>} */
+    const results = new Map();
     let cursor = await this.idb.transaction(this.storeName).store.openCursor();
     while (cursor) {
       if (keySet.has(cursor.key)) {
@@ -219,7 +219,7 @@ export class IDBKeyVal {
   async set(key, value) {
     const tx = this.idb.transaction(this.storeName, "readwrite");
     tx.objectStore(this.storeName).put(value, key);
-    return await tx.complete;
+    return await tx.done;
   }
 
   async addMany(entries) {
@@ -227,20 +227,20 @@ export class IDBKeyVal {
     for (const [key, value] of entries) {
       tx.objectStore(this.storeName).put(value, key);
     }
-    return await tx.complete;
+    return await tx.done;
   }
 
   async clear() {
     const tx = this.idb.transaction(this.storeName, "readwrite");
     tx.objectStore(this.storeName).clear();
-    return await tx.complete;
+    return await tx.done;
   }
 
   async keys() {
     const tx = this.idb.transaction(this.storeName);
-    /** @type {string[]} */
+    /** @type {Promise<string[]>} */
     const keys = tx.objectStore(this.storeName).getAllKeys();
-    await tx.complete;
+    await tx.done;
     return keys;
   }
 }
@@ -419,7 +419,7 @@ export function runTransforms(content, flist) {
 /**
  * Cached request handler
  * @param {RequestInfo} input
- * @param {RequestInit} [init]
+ * @param {RequestInit & { maxAge: number }} [init]
  * @param {number} [init.maxAge] cache expiration duration in ms. defaults to 24 hours (86400000 ms)
  * @return {Promise<Response>}
  *  if a cached response is available and it's not stale, return it
@@ -494,7 +494,7 @@ export function flatten(collector, item) {
 /**
  * Creates and sets an ID to an element (elem)
  * using a specific prefix if provided, and a specific text if given.
- * @param {Element} elem element
+ * @param {HTMLElement} elem element
  * @param {String} pfx prefix
  * @param {String} txt text
  * @param {Boolean} noLC do not convert to lowercase
@@ -543,6 +543,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
  * Returns all the descendant text nodes of an element.
  * @param {Node} el
  * @param {string[]} exclusions node localName to exclude
+ * @param {object} options
  * @param {boolean} options.wsNodes if nodes that only have whitespace are returned.
  * @returns {Text[]}
  */
@@ -581,7 +582,7 @@ export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
  * This method now *prefers* the data-lt attribute for the list of
  *   titles. That attribute is added by this method to dfn elements, so
  *   subsequent calls to this method will return the data-lt based list.
- * @param {Element} elem
+ * @param {HTMLElement} elem
  * @param {Object} args
  * @param {boolean} [args.isDefinition]
  * @returns {String[]} array of title strings
@@ -627,10 +628,11 @@ export function getDfnTitles(elem) {
  *  * {for: "int2", title: "int3.member"}
  *  * {for: "int3", title: "member"}
  *  * {for: "", title: "int3.member"}
- * @param {Element} elem
+ * @param {HTMLElement} elem
  * @returns {LinkTarget[]}
  */
 export function getLinkTargets(elem) {
+  /** @type {HTMLElement} */
   const linkForElem = elem.closest("[data-link-for]");
   const linkFor = linkForElem ? linkForElem.dataset.linkFor : "";
   const titles = getDfnTitles(elem);
@@ -696,7 +698,7 @@ export function refTypeFromContext(ref, element) {
 /**
  * Wraps inner contents with the wrapper node
  * @param {Node} outer outer node to be modified
- * @param {Node} wrapper wrapper node to be appended
+ * @param {Element} wrapper wrapper node to be appended
  */
 export function wrapInner(outer, wrapper) {
   wrapper.append(...outer.childNodes);
@@ -730,6 +732,7 @@ export function parents(element, selector) {
  * Note that this doesn't support comma separated selectors.
  * @param {Element} element
  * @param {string} selector
+ * @returns {NodeListOf<HTMLElement>}
  */
 export function children(element, selector) {
   try {
@@ -754,7 +757,7 @@ export function children(element, selector) {
  * Generates simple ids. The id's increment after it yields.
  *
  * @param {String} namespace A string like "highlight".
- * @param {Int} counter A number, which can start at a given value.
+ * @param {number} counter A number, which can start at a given value.
  */
 export function msgIdGenerator(namespace, counter = 0) {
   function* idGenerator(namespace, counter) {

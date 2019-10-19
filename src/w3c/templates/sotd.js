@@ -1,3 +1,4 @@
+// @ts-check
 import html from "../../../js/html-template.js";
 
 export default (conf, opts) => {

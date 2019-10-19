@@ -1,3 +1,4 @@
+// @ts-check
 // Module ui/search-specref
 // Search Specref database
 import { l10n, lang } from "../core/l10n.js";
@@ -57,12 +58,10 @@ function toDefinitionPair([key, entry]) {
   `;
 }
 
-function resultProcessor({ includeVersions } = { includeVersions: false }) {
+function resultProcessor({ includeVersions = false } = {}) {
   return (...fetchedData) => {
-    const combinedResults = fetchedData.reduce(
-      (collector, resultObj) => Object.assign(collector, resultObj),
-      {}
-    );
+    /** @type {{ [key: string]: any }} */
+    const combinedResults = Object.assign({}, ...fetchedData);
     const results = new Map(Object.entries(combinedResults));
     // remove aliases
     Array.from(results)

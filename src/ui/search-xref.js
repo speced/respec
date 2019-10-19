@@ -1,3 +1,4 @@
+// @ts-check
 // Module ui/search-xref
 // Search xref database
 import { lang as defaultLang } from "../core/l10n.js";

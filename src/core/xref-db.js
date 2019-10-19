@@ -129,7 +129,7 @@ async function resolveFromCache(keys, cache) {
   }
 
   const cachedData = await cache.getMany(keys.map(key => key.id));
-  return new Map(cachedData);
+  return cachedData;
 }
 
 async function getRemoteLastUpdatedTime() {

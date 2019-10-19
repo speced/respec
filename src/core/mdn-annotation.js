@@ -1,3 +1,4 @@
+// @ts-check
 import { fetchAndCache } from "./utils";
 import hyperHTML from "hyperhtml";
 import mdnCss from "text!../../assets/mdn-annotation.css";

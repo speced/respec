@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Sets the core defaults
  */

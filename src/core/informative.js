@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/informative
 // Mark specific sections as informative, based on CSS
 import hyperHTML from "../../js/html-template.js";

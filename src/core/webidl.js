@@ -49,6 +49,9 @@ function makeMarkup(parse, respecDoc) {
           hyperHTML`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
     },
     reference(wrapped, unescaped, context) {
+      if (context.type === "extended-attribute" && context.name !== "Exposed") {
+        return wrapped;
+      }
       let type = "_IDL_";
       let cite = null;
       let lt;
@@ -63,11 +66,7 @@ function makeMarkup(parse, respecDoc) {
           break;
         default: {
           const isWorkerType = unescaped.includes("Worker");
-          if (
-            isWorkerType &&
-            context.type === "extended-attribute" &&
-            context.name === "Exposed"
-          ) {
+          if (isWorkerType && context.type === "extended-attribute") {
             lt = `${unescaped}GlobalScope`;
             type = "interface";
             cite = ["Worker", "DedicatedWorker", "SharedWorker"].includes(

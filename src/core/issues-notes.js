@@ -12,14 +12,8 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, joinAnd, parents } from "./utils.js";
-import { fetchAndStoreGithubIssues } from "./github-api.js";
 import hyperHTML from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
-
-/**
- * @typedef {import("./github-api").GitHubIssue} GitHubIssue
- * @typedef {import("./github-api").GitHubLabel} GitHubLabel
- */
 
 export const name = "core/issues-notes";
 
@@ -53,10 +47,20 @@ async function loadStyle() {
  * @property {boolean} inline
  * @property {number} number
  * @property {string} title
+
+ * @typedef {object} GitHubLabel
+ * @property {string} color
+ * @property {string} name
+ *
+ * @typedef {object} GitHubIssue
+ * @property {string} title
+ * @property {string} state
+ * @property {string} bodyHTML
+ * @property {GitHubLabel[]} labels
  *
  * @param {Document} document
  * @param {NodeListOf<HTMLElement>} ins
- * @param {Map<number, GitHubIssue>} ghIssues
+ * @param {Map<string, GitHubIssue>} ghIssues
  * @param {*} conf
  * @param {*} l10n
  */
@@ -116,7 +120,10 @@ function handleIssues(document, ins, ghIssues, conf, l10n) {
             link.append(title);
           }
           title.classList.add("issue-number");
-          ghIssue = ghIssues.get(Number(dataNum));
+          ghIssue = ghIssues.get(dataNum);
+          if (!ghIssue) {
+            pub("warning", `Failed to fetch issue number ${dataNum}`);
+          }
           if (ghIssue && !report.title) {
             report.title = ghIssue.title;
           }
@@ -133,7 +140,7 @@ function handleIssues(document, ins, ghIssues, conf, l10n) {
         inno.removeAttribute("title");
         const { repoURL = "" } = conf.github || {};
         const labels = ghIssue ? ghIssue.labels : [];
-        if (ghIssue && ghIssue.state === "closed") {
+        if (ghIssue && ghIssue.state === "CLOSED") {
           div.classList.add("closed");
         }
         titleParent.append(createLabelsGroup(labels, report.title, repoURL));
@@ -144,7 +151,9 @@ function handleIssues(document, ins, ghIssues, conf, l10n) {
       body.classList.remove(type);
       body.removeAttribute("data-number");
       if (ghIssue && !body.innerHTML.trim()) {
-        body = hyperHTML`${[ghIssue.body_html]}`;
+        body = document
+          .createRange()
+          .createContextualFragment(ghIssue.bodyHTML);
       }
       div.append(titleParent, body);
       const level = parents(titleParent, "section").length + 2;
@@ -288,6 +297,40 @@ function createLabel(label, repoURL) {
 }
 
 /**
+ * @param {string} githubAPI
+ * @returns {Promise<Map<string, GitHubIssue>>}
+ */
+async function fetchAndStoreGithubIssues(githubAPI) {
+  if (!githubAPI) {
+    return new Map();
+  }
+
+  /** @type {NodeListOf<HTMLElement>} */
+  const specIssues = document.querySelectorAll(".issue[data-number]");
+  const issueNumbers = [...specIssues]
+    .map(elem => Number.parseInt(elem.dataset.number, 10))
+    .filter(issueNumber => issueNumber);
+
+  if (!issueNumbers.length) {
+    return new Map();
+  }
+
+  const url = new URL("issues", githubAPI);
+  url.searchParams.set("issues", issueNumbers.join(","));
+
+  const response = await fetch(url.href);
+  if (!response.ok) {
+    const msg = `Error fetching issues from GitHub. (HTTP Status ${response.status}).`;
+    pub("error", msg);
+    return new Map();
+  }
+
+  /** @type {{ [issueNumber: string]: GitHubIssue }} */
+  const issues = await response.json();
+  return new Map(Object.entries(issues));
+}
+
+/**
  * @param {import("../respec-document").RespecDocument} respecDoc
  */
 export default async function({ document, configuration: conf, lang }) {
@@ -298,10 +341,7 @@ export default async function({ document, configuration: conf, lang }) {
     return; // nothing to do.
   }
   const l10n = localizationStrings[lang] || localizationStrings.en;
-  /** @type {Map<number, GitHubIssue>} */
-  const ghIssues = conf.githubAPI
-    ? await fetchAndStoreGithubIssues(document, conf)
-    : new Map();
+  const ghIssues = await fetchAndStoreGithubIssues(conf.githubAPI);
   const { head: headElem } = document;
   const css = await loadStyle();
   headElem.insertBefore(

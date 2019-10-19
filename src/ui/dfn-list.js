@@ -1,3 +1,4 @@
+// @ts-check
 // Module ui/dfn-list
 // Displays all definitions with links to the defining element.
 import { l10n, lang } from "../core/l10n.js";

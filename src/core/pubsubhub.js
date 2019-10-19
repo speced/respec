@@ -54,7 +54,7 @@ export class PubSubHub {
    *
    * @param  {string} topic      The topic to subscribe to (e.g., "start-all")
    * @param  {Function} cb       Callback function
-   * @param  {object} opts
+   * @param  {object} [opts]
    * @param  {Boolean} [opts.once] Add prop "once" for single notification.
    * @return {Object}            An object that should be considered opaque,
    *                             used for unsubscribing from messages.

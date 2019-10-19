@@ -1,0 +1,13 @@
+[
+  {
+    "login": "neil_armstrong",
+    "name": "Neil Armstrong"
+  },
+  {
+    "login": "bob_park",
+    "name": "Bobby Tables"
+  },
+  {
+    "login": "buzz_aldrin"
+  }
+]

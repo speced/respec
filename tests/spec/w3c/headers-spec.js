@@ -99,6 +99,8 @@ describe("W3C — Headers", () => {
         expect(dtFormerEditor[0].nextElementSibling.textContent).toContain(
           "marzo"
         );
+        const time = dtFormerEditor[0].nextElementSibling.querySelector("time");
+        expect(time.dateTime).toBe("2020-03-01");
       });
       it("relocates single editor with retiredDate member to single formerEditor", async () => {
         const ops = makeStandardOps();
@@ -148,7 +150,7 @@ describe("W3C — Headers", () => {
           editors: [
             {
               name: "FORMER EDITOR 1",
-              retiredDate: "2020-03-01",
+              retiredDate: "2020-03-02",
             },
             {
               name: "FORMER EDITOR 2",
@@ -163,6 +165,7 @@ describe("W3C — Headers", () => {
         expect(dtEditors.length).toBe(0);
         const dd = dtFormerEditors[0].nextElementSibling;
         expect(dd.textContent).toContain("FORMER EDITOR 1");
+        expect(dd.querySelector("time").dateTime).toBe("2020-03-02");
         expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
       });
       it("relocates multiple editors with retiredDate member to multple formerEditors", async () => {

@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Sets the defaults for W3C specs
  */

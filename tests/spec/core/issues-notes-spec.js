@@ -141,7 +141,7 @@ describe("Core — Issues and Notes", () => {
   it("shows labels for github issues", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data`,
+      githubAPI: `${window.location.origin}/tests/data/`,
     };
     const ops = {
       config: githubConfig,
@@ -242,7 +242,7 @@ describe("Core — Issues and Notes", () => {
   it("marks closed issues as closed in the spec", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data`,
+      githubAPI: `${window.location.origin}/tests/data/`,
     };
     const ops = {
       config: githubConfig,
@@ -279,7 +279,7 @@ describe("Core — Issues and Notes", () => {
   it("sets aria-label to reflect the labels from Github", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data`,
+      githubAPI: `${window.location.origin}/tests/data/`,
     };
     const ops = {
       config: githubConfig,
@@ -307,7 +307,7 @@ describe("Core — Issues and Notes", () => {
   it("renders the original issue post in an empty issue block", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data`,
+      githubAPI: `${window.location.origin}/tests/data/`,
     };
     const ops = {
       config: githubConfig,
@@ -354,7 +354,7 @@ describe("Core — Issues and Notes", () => {
   it("should link to GitHub issue tracker for features at risk", async () => {
     const config = {
       github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data`,
+      githubAPI: `${window.location.origin}/tests/data/`,
     };
     const ops = {
       config,

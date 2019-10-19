@@ -349,6 +349,34 @@ describe("Core - WebIDL", () => {
     }
   });
 
+  it("should handle constructor operation overloads", async () => {
+    const body = `
+      <section data-dfn-for="SuperStar" data-link-for="SuperStar">
+        <pre class="idl">
+          [Exposed=Window]
+          interface SuperStar {
+            constructor();
+            constructor(short s);
+          };
+        </pre>
+        <dfn>constructor</dfn>
+        <dfn>constructor!overload-1</dfn>
+        <p id="linkMe">
+          <a>constructor</a>
+          <a>constructor!overload-1</a>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const links = doc.querySelectorAll("#linkMe a");
+    expect(links.length).toBe(2);
+    expect(links[0].getAttribute("href")).toBe("#dom-superstar-constructor");
+    expect(links[1].getAttribute("href")).toBe(
+      "#dom-superstar-constructor!overload-1"
+    );
+  });
+
   it("should handle named constructors", () => {
     const target = doc.getElementById("namedctor-basic");
     const text =
@@ -1206,6 +1234,22 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(objectAnchor.href).toBe(
       "https://heycam.github.io/webidl/#idl-object"
     );
+  });
+
+  it("does not link arbitrary extended attribute identifiers", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <pre class="idl" id="link-test">
+          interface mixin InnerHTMLMixin {
+            [TreatNullAs=EmptyString] attribute DOMString innerHTML;
+          };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector(".respec-offending-element")).toBeFalsy();
   });
 
   it("exports IDL definitions", async () => {

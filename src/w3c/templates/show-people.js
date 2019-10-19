@@ -1,5 +1,5 @@
 // @ts-check
-import { humanDate, showInlineError } from "../../core/utils";
+import { humanDate, showInlineError, toShortIsoDate } from "../../core/utils";
 import html from "../../../js/html-template.js";
 
 const localizationStrings = {
@@ -64,8 +64,9 @@ export default (items = [], document, lang) => {
               <path
                 class="st1"
                 d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7C191.7 111.2 178 93 148 93h-23.7v79.4zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1s-10.1-4.6-10.1-10.1c0-5.6 4.5-10.1 10.1-10.1s10.1 4.6 10.1 10.1z"
-              /></svg
-          ></a>
+              />
+            </svg>
+          </a>
         `
       );
     }
@@ -100,20 +101,21 @@ export default (items = [], document, lang) => {
     if (p.retiredDate) {
       const retiredDate = new Date(p.retiredDate);
       const isValidDate = retiredDate.toString() !== "Invalid Date";
-      const result = document.createElement("time");
-      result.textContent = isValidDate
+      const timeElem = document.createElement("time");
+      timeElem.textContent = isValidDate
         ? humanDate(retiredDate, lang)
         : "Invalid Date"; // todo: Localise invalid date
       if (!isValidDate) {
         showInlineError(
-          result,
+          timeElem,
           "The date is invalid. The expected format is YYYY-MM-DD.",
           "Invalid date"
         );
       }
+      timeElem.dateTime = toShortIsoDate(retiredDate);
       contents.push(
         html`
-          - ${l10n.until.concat(" ")}${[result]}
+          - ${l10n.until.concat(" ")}${[timeElem]}
         `
       );
     }

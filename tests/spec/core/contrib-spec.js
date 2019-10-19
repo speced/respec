@@ -7,53 +7,50 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
-describe("Core — Contributors and Commenters", () => {
+describe("Core — Contributors", () => {
   afterAll(flushIframes);
   const origin = getLocationOrigin();
-  it("Expands contributors and commenters", async () => {
+  it("Expands list of contributor names", async () => {
     const body = `
       <section>
-        <div id="gh-commenters"></div>
         <div id="gh-contributors"></div>
       </section>
     `;
     const ops = makeStandardOps(
       {
-        githubAPI: `${origin}/tests/data/contrib/index`,
+        github: "org/repo",
+        githubAPI: `${origin}/tests/data/`,
       },
       body
     );
     const doc = await makeRSDoc(ops);
 
-    const commenters = doc.querySelector("#gh-commenters");
     const contributors = doc.querySelector("#gh-contributors");
-    expect(commenters).not.toBeNull();
-    expect(contributors).not.toBeNull();
-    expect(commenters.textContent).toBe(
-      "Bobby Tables, buzz_aldrin, jane_smith, John Doe, and Neil Armstrong"
-    );
     expect(contributors.textContent).toBe(
       "Bobby Tables, buzz_aldrin, and Neil Armstrong"
     );
   });
-  it("Expands contributors only", async () => {
+
+  it("Expands list of contributors with ul#gh-contributors", async () => {
     const body = `
       <section>
-        <div id="gh-contributors"></div>
+        <ul id="gh-contributors"></ul>
       </section>
     `;
     const ops = makeStandardOps(
       {
-        githubAPI: `${origin}/tests/data/contrib/index`,
+        github: "org/repo",
+        githubAPI: `${origin}/tests/data/`,
       },
       body
     );
     const doc = await makeRSDoc(ops);
 
-    const contributors = doc.querySelector("#gh-contributors");
-    expect(contributors).not.toBeNull();
-    expect(contributors.textContent).toBe(
-      "Bobby Tables, buzz_aldrin, and Neil Armstrong"
+    expect(doc.querySelectorAll("#gh-contributors li").length).toBe(3);
+    const bobbyTables = doc.querySelector("#gh-contributors li");
+    expect(bobbyTables.querySelector("a").textContent).toBe("Bobby Tables");
+    expect(bobbyTables.querySelector("a").href).toBe(
+      "https://github.com/bob_park"
     );
   });
 });

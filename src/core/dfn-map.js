@@ -47,7 +47,6 @@ export class DefinitionMap extends Map {
   findDfn(defn, name, { parent = "" } = {}) {
     switch (defn.type) {
       case "constructor":
-        return this.findOperationDfn(defn, parent, "constructor");
       case "operation":
         return this.findOperationDfn(defn, parent, name);
       default:

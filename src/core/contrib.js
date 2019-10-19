@@ -1,120 +1,96 @@
+// @ts-check
 // Module core/contrib
 // Fetches names of contributors from github and uses them to fill
 // in the content of elements with key identifiers:
-// #gh-commenters: people having contributed comments to issues.
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
-import {
-  checkLimitReached,
-  fetchAll,
-  githubRequestHeaders,
-} from "./github-api.js";
-import { flatten, joinAnd } from "./utils.js";
-import fetch from "./fetch.js";
+import { fetchAndCache, joinAnd } from "./utils.js";
+import hyperHTML from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/contrib";
 
-function prop(prop) {
-  return o => o[prop];
+/** @param {import("../respec-document.js").RespecDocument} respecDoc */
+export default async function({ document, configuration: conf }) {
+  const ghContributors = document.getElementById("gh-contributors");
+  if (!ghContributors) {
+    return;
+  }
+
+  if (!conf.github) {
+    const msg =
+      "Requested list of contributors from GitHub, but " +
+      "[`github`](https://github.com/w3c/respec/wiki/github) configuration option is not set.";
+    pub("error", msg);
+    return;
+  }
+
+  const editors = conf.editors.map(editor => editor.name);
+  await showContributors(document, editors, conf.githubAPI);
 }
-const nameProp = prop("name");
 
 /**
- * @param {string} origin
- * @param  {...any} thingsWithUsers
+ * Show list of contributors in #gh-contributors
+ * @param {Document} document
+ * @param {string[]} editors
+ * @param {string} apiURL
  */
-function findUserURLs(origin, ...thingsWithUsers) {
-  const usersURLs = thingsWithUsers
-    .reduce(flatten, [])
-    .filter(thing => thing && thing.user)
-    .map(({ user }) => new URL(user.url, origin).href);
-  return [...new Set(usersURLs)];
+async function showContributors(document, editors, apiURL) {
+  const elem = document.getElementById("gh-contributors");
+  if (!elem) return;
+
+  elem.textContent = "Fetching list of contributors...";
+  const contributors = await getContributors();
+  if (contributors !== null) {
+    toHTML(contributors, elem);
+  } else {
+    elem.textContent = "Failed to fetch contributors.";
+  }
+
+  async function getContributors() {
+    const { href: url } = new URL("contributors", apiURL);
+    try {
+      const res = await fetchAndCache(url);
+      if (!res.ok) {
+        throw new Error(
+          `Request to ${url} failed with status code ${res.status}`
+        );
+      }
+      /** @type {Contributor[]} */
+      const contributors = await res.json();
+      return contributors.filter(
+        user => !editors.includes(user.name || user.login)
+      );
+    } catch (error) {
+      pub("error", "Error loading contributors from GitHub.");
+      console.error(error);
+      return null;
+    }
+  }
 }
 
-async function toHTML(urls, editors, element, headers) {
-  const args = await Promise.all(
-    urls
-      .map(url =>
-        fetch(url, { headers }).then(r => {
-          if (checkLimitReached(r)) return null;
-          return r.json();
-        })
-      )
-      .filter(arg => arg)
-  );
-  const names = args
-    .map(user => user.name || user.login)
-    .filter(name => !editors.includes(name))
-    .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+/**
+ * @typedef {{ name?: string, login: string }} Contributor
+ * @param {Contributor[]} contributors
+ * @param {HTMLElement} element
+ */
+function toHTML(contributors, element) {
+  const sortedContributors = contributors.sort((a, b) => {
+    const nameA = a.name || a.login;
+    const nameB = b.name || b.login;
+    return nameA.toLowerCase().localeCompare(nameB.toLowerCase());
+  });
+
+  if (element.tagName === "UL") {
+    const children = sortedContributors.map(
+      ({ name, login }) =>
+        hyperHTML`<li><a href=${`https://github.com/${login}`}>${name ||
+          login}</a></li>`
+    );
+    element.textContent = "";
+    element.append(...children);
+    return;
+  }
+
+  const names = sortedContributors.map(user => user.name || user.login);
   element.textContent = joinAnd(names);
-}
-
-/** @param {import("../respec-document.js").RespecDocument} */
-export default async function({ document, configuration: conf }) {
-  const ghCommenters = document.getElementById("gh-commenters");
-  const ghContributors = document.getElementById("gh-contributors");
-  if (!ghCommenters && !ghContributors) {
-    return;
-  }
-  const { githubAPI } = conf;
-  if (!githubAPI) {
-    const msg =
-      "Requested list of contributors and/or commenters from GitHub, but " +
-      "[`githubAPI`](https://github.com/w3c/respec/wiki/githubAPI) is not set.";
-    pub("error", msg);
-    return;
-  }
-
-  const headers = githubRequestHeaders(conf);
-  const response = await fetch(githubAPI, { headers });
-  checkLimitReached(response);
-  if (!response.ok) {
-    const msg =
-      "Error fetching repository information from GitHub. " +
-      `(HTTP Status ${response.status}).`;
-    pub("error", msg);
-    return;
-  }
-  const indexes = await response.json();
-  const {
-    issues_url,
-    issue_comment_url,
-    comments_url,
-    contributors_url,
-  } = indexes;
-
-  const origin = new URL(githubAPI).origin;
-  const [
-    issues,
-    issueComments,
-    otherComments,
-    contributors,
-  ] = await Promise.all(
-    [issues_url, issue_comment_url, comments_url, contributors_url].map(url => {
-      const cleansedUrl = url.replace(/\{[^}]+\}/, "");
-      return fetchAll(new URL(cleansedUrl, origin).href, headers);
-    })
-  );
-
-  const editors = conf.editors.map(nameProp);
-  try {
-    const toHTMLPromises = [
-      {
-        elt: ghCommenters,
-        getUrls: () =>
-          findUserURLs(origin, issues, issueComments, otherComments),
-      },
-      {
-        elt: ghContributors,
-        getUrls: () => contributors.map(c => new URL(c.url, origin).href),
-      },
-    ]
-      .filter(c => c.elt)
-      .map(c => toHTML(c.getUrls(), editors, c.elt, headers));
-
-    await Promise.all(toHTMLPromises);
-  } catch (error) {
-    pub("error", "Error loading contributors and/or commenters from GitHub.");
-    console.error(error);
-  }
 }
