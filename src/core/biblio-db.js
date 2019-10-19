@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/biblio-db
  *
@@ -12,10 +13,29 @@ import { importIdb } from "./idb.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
 
+/**
+ * @typedef {keyof BilbioDb} AllowedType
+ * @type {Set<AllowedType>}
+ */
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
 /* Database initialization tracker */
 const readyPromise = openIdb();
 
+/**
+ * @typedef {object} BilbioDb
+ *
+ * @property {object} alias Object store for alias objects
+ * @property {string} alias.key
+ * @property {object} alias.value
+ * @property {object} alias.indexes
+ * @property {string} alias.aliasOf
+ *
+ * @property {object} reference Object store for reference objects
+ * @property {string} reference.key
+ * @property {object} reference.value
+ *
+ * @returns {Promise<import("idb").IDBPDatabase<BilbioDb>>}
+ */
 async function openIdb() {
   const { openDB } = await importIdb();
   return await openDB("respec-biblio2", 12, {
@@ -50,7 +70,7 @@ export const biblioDB = {
   /**
    * Checks if the database has an id for a given type.
    *
-   * @param {String} type One of the ALLOWED_TYPES.
+   * @param {AllowedType} type One of the ALLOWED_TYPES.
    * @param {String} id The reference to find.
    * @return {Promise<Boolean>} True if it has it, false otherwise.
    */
@@ -62,7 +82,7 @@ export const biblioDB = {
       throw new TypeError("id is required");
     }
     const db = await this.ready;
-    const objectStore = db.transaction([type], "readonly").objectStore(type);
+    const objectStore = db.transaction(type, "readonly").store;
     const range = IDBKeyRange.only(id);
     const result = await objectStore.openCursor(range);
     return !!result;
@@ -74,16 +94,7 @@ export const biblioDB = {
    * @return {Promise<Boolean>} Resolves with true if found.
    */
   async isAlias(id) {
-    if (!id) {
-      throw new TypeError("id is required");
-    }
-    const db = await this.ready;
-    const objectStore = db
-      .transaction(["alias"], "readonly")
-      .objectStore("alias");
-    const range = IDBKeyRange.only(id);
-    const result = await objectStore.openCursor(range);
-    return !!result;
+    return await this.has("alias", id);
   },
   /**
    * Resolves an alias to its corresponding reference id.
@@ -97,9 +108,7 @@ export const biblioDB = {
     }
     const db = await this.ready;
 
-    const objectStore = db
-      .transaction("alias", "readonly")
-      .objectStore("alias");
+    const objectStore = db.transaction("alias", "readonly").store;
     const range = IDBKeyRange.only(id);
     const result = await objectStore.openCursor(range);
     return result ? result.value.aliasOf : result;
@@ -107,8 +116,8 @@ export const biblioDB = {
   /**
    * Get a reference or alias out of the database.
    *
-   * @param {String} type The type as per ALLOWED_TYPES.
-   * @param {[type]} id The id for what to look up.
+   * @param {AllowedType} type The type as per ALLOWED_TYPES.
+   * @param {string} id The id for what to look up.
    * @return {Promise<Object?>} Resolves with the retrieved object, or null.
    */
   async get(type, id) {
@@ -119,7 +128,7 @@ export const biblioDB = {
       throw new TypeError("id is required");
     }
     const db = await this.ready;
-    const objectStore = db.transaction([type], "readonly").objectStore(type);
+    const objectStore = db.transaction(type, "readonly").store;
     const range = IDBKeyRange.only(id);
     const result = await objectStore.openCursor(range);
     return result ? result.value : result;
@@ -157,7 +166,7 @@ export const biblioDB = {
           aliasesAndRefs.reference.add(obj);
         }
       });
-    const promisesToAdd = Object.keys(aliasesAndRefs)
+    const promisesToAdd = [...ALLOWED_TYPES]
       .map(type => {
         return Array.from(aliasesAndRefs[type]).map(details =>
           this.add(type, details)
@@ -169,7 +178,7 @@ export const biblioDB = {
   /**
    * Adds a reference or alias to the database.
    *
-   * @param {String} type The type as per ALLOWED_TYPES.
+   * @param {AllowedType} type The type as per ALLOWED_TYPES.
    * @param {Object} details The object to store.
    */
   async add(type, details) {
@@ -184,14 +193,14 @@ export const biblioDB = {
     }
     const db = await this.ready;
     const isInDB = await this.has(type, details.id);
-    const store = db.transaction([type], "readwrite").objectStore(type);
+    const store = db.transaction(type, "readwrite").store;
     // update or add, depending of already having it in db
     return isInDB ? await store.put(details) : await store.add(details);
   },
   /**
    * Closes the underlying database.
    *
-   * @return {Promise} Resolves after database closes.
+   * @return {Promise<void>} Resolves after database closes.
    */
   async close() {
     const db = await this.ready;
@@ -204,7 +213,7 @@ export const biblioDB = {
   async clear() {
     const db = await this.ready;
     const storeNames = [...ALLOWED_TYPES];
-    const stores = await db.transaction(storeNames, "readwrite");
+    const stores = db.transaction(storeNames, "readwrite");
     const clearStorePromises = storeNames.map(name => {
       return stores.objectStore(name).clear();
     });
