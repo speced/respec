@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
@@ -205,7 +206,7 @@ export class IDBKeyVal {
     let cursor = await this.idb.transaction(this.storeName).store.openCursor();
     while (cursor) {
       if (keySet.has(cursor.key)) {
-        results.push([cursor.key, cursor.value]);
+        results.set(cursor.key, cursor.value);
       }
       cursor = await cursor.continue();
     }
@@ -389,6 +390,10 @@ export function linkCSS(doc, styles) {
 // Please note that this is a legacy method that is only kept in order
 // to maintain compatibility
 // with RSv1. It is therefore not tested and not actively supported.
+/**
+ * @this {any}
+ * @param {string} [flist]
+ */
 export function runTransforms(content, flist) {
   let args = [this, content];
   const funcArgs = Array.from(arguments);
@@ -399,10 +404,12 @@ export function runTransforms(content, flist) {
     const methods = flist.split(/\s+/);
     for (let j = 0; j < methods.length; j++) {
       const meth = methods[j];
-      if (window[meth]) {
+      /** @type {any} */
+      const method = window[meth];
+      if (method) {
         // the initial call passed |this| directly, so we keep it that way
         try {
-          content = window[meth].apply(this, args);
+          content = method.apply(this, args);
         } catch (e) {
           pub(
             "warn",
@@ -419,8 +426,8 @@ export function runTransforms(content, flist) {
 /**
  * Cached request handler
  * @param {RequestInfo} input
- * @param {RequestInit & { maxAge: number }} [init]
- * @param {number} [init.maxAge] cache expiration duration in ms. defaults to 24 hours (86400000 ms)
+ * @param {RequestInit & { maxAge?: number }} [init]
+ *        maxAge: cache expiration duration in ms. defaults to 24 hours (86400000 ms)
  * @return {Promise<Response>}
  *  if a cached response is available and it's not stale, return it
  *  else: request from network, cache and return fresh response.
@@ -583,8 +590,6 @@ export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
  *   titles. That attribute is added by this method to dfn elements, so
  *   subsequent calls to this method will return the data-lt based list.
  * @param {HTMLElement} elem
- * @param {Object} args
- * @param {boolean} [args.isDefinition]
  * @returns {String[]} array of title strings
  */
 export function getDfnTitles(elem) {
@@ -593,6 +598,7 @@ export function getDfnTitles(elem) {
   // in the definition list.
   // ltNodefault is === "data-lt-noDefault"... someone screwed up 😖
   const normText = "ltNodefault" in elem.dataset ? "" : norm(elem.textContent);
+  const child = /** @type {HTMLElement | undefined} */ (elem.children[0]);
   if (elem.dataset.lt) {
     // prefer @data-lt for the list of title aliases
     elem.dataset.lt
@@ -602,9 +608,9 @@ export function getDfnTitles(elem) {
   } else if (
     elem.childNodes.length === 1 &&
     elem.getElementsByTagName("abbr").length === 1 &&
-    elem.children[0].title
+    child.title
   ) {
-    titleSet.add(elem.children[0].title);
+    titleSet.add(child.title);
   } else if (elem.textContent === '""') {
     titleSet.add("the-empty-string");
   }
@@ -745,6 +751,7 @@ export function children(element, selector) {
       element.id = tempId;
     }
     const query = `#${element.id} > ${selector}`;
+    /** @type {NodeListOf<HTMLElement>} */
     const elements = element.parentElement.querySelectorAll(query);
     if (tempId) {
       element.id = "";

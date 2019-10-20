@@ -1,3 +1,4 @@
+// @ts-check
 // Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
@@ -101,9 +102,7 @@ async function addJSONLDInfo(conf, doc, biblio) {
     inLanguage: doc.documentElement.lang || "en",
     license: conf.licenseInfo.url,
     datePublished: conf.dashDate,
-    /**
-     * @type {{ name: string, url: string }[]}
-     */
+    /** @type {{ name: string, url?: string } | { name: string, url?: string }[]} */
     copyrightHolder: {
       name: "World Wide Web Consortium",
       url: "https://www.w3.org/",

@@ -1,3 +1,4 @@
+// @ts-check
 // Module geonovum/style
 // Inserts a link to the appropriate Geonovum style for the specification's maturity level.
 // CONFIGURATION
@@ -12,6 +13,7 @@ function attachFixupScript(doc, version) {
     "load",
     () => {
       if (window.location.hash) {
+        // @ts-ignore
         window.location = window.location.href;
       }
     },
