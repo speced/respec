@@ -2,10 +2,10 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
+import { hyperHTML, raw } from "./import-maps.js";
 import { addId } from "./utils.js";
 import { biblio } from "./biblio.js";
 import { lang as defaultLang } from "../core/l10n.js";
-import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/render-biblio";
@@ -169,7 +169,7 @@ function showRef({ ref, refcontent }) {
   if (refcontent) {
     return hyperHTML`
       <dt id="${refId}">[${ref}]</dt>
-      <dd>${{ html: stringifyReference(refcontent) }}</dd>
+      <dd>${raw(stringifyReference(refcontent))}</dd>
     `;
   } else {
     return hyperHTML`
@@ -195,7 +195,7 @@ export function wireReference(rawRef, target = "_blank") {
   const ref = Object.assign({}, defaultsReference, rawRef);
   const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
   const status = REF_STATUSES.get(ref.status) || ref.status;
-  return hyperHTML.wire(ref)`
+  return hyperHTML`
     <cite>
       <a
         href="${ref.href}"

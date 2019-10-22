@@ -430,7 +430,7 @@ describe("W3C — Headers", () => {
       const formerEditorsLabel = dtElems.find(formerEditors);
       expect(formerEditorsLabel).toBeUndefined();
 
-      const editor = formerEditorLabel.nextSibling;
+      const editor = formerEditorLabel.nextElementSibling;
       expect(editor.localName).toBe("dd");
       expect(editor.textContent.replace(/\s+/gm, " ").trim()).toBe(
         "NAME (COMPANY)"
@@ -474,11 +474,11 @@ describe("W3C — Headers", () => {
       const formerEditorsLabel = dtElems.find(formerEditors);
       expect(formerEditorsLabel).toBeDefined();
 
-      const firstEditor = formerEditorsLabel.nextSibling;
+      const firstEditor = formerEditorsLabel.nextElementSibling;
       expect(firstEditor.localName).toBe("dd");
       expect(firstEditor.textContent).toBe("NAME1");
 
-      const secondEditor = firstEditor.nextSibling;
+      const secondEditor = firstEditor.nextElementSibling;
       expect(secondEditor.localName).toBe("dd");
       expect(secondEditor.textContent).toBe("NAME2");
     });
@@ -547,11 +547,12 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect(contains(doc, "dt", "Authors:").length).toBe(1);
       expect(contains(doc, "dt", "Author:").length).toBe(0);
-      expect(contains(doc, "dt", "Authors:")[0].nextSibling.textContent).toBe(
-        "NAME1"
-      );
       expect(
-        contains(doc, "dt", "Authors:")[0].nextSibling.nextSibling.textContent
+        contains(doc, "dt", "Authors:")[0].nextElementSibling.textContent
+      ).toBe("NAME1");
+      expect(
+        contains(doc, "dt", "Authors:")[0].nextElementSibling.nextElementSibling
+          .textContent
       ).toBe("NAME2");
     });
   });
@@ -1399,8 +1400,8 @@ describe("W3C — Headers", () => {
       // There should only be one thing in the ToC
       expect(doc.querySelectorAll("#toc li").length).toBe(1);
       // and it should say "PASS"
-      expect(doc.querySelector("#toc li bdi").nextSibling.textContent).toBe(
-        "PASS"
+      expect(doc.querySelector("#toc li bdi").parentElement.textContent).toBe(
+        "1. PASS"
       );
     };
     theTest(await makeRSDoc(ops));

@@ -1,5 +1,5 @@
 // @ts-check
-import { hyperHTML as html } from "../../core/import-maps.js";
+import { hyperHTML as html, raw } from "../../core/import-maps.js";
 import { norm } from "../../core/utils.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
@@ -110,7 +110,7 @@ export default conf => {
         ${conf.bugTrackerHTML
           ? html`
               <dt>${conf.l10n.bug_tracker}</dt>
-              <dd>${[conf.bugTrackerHTML]}</dd>
+              <dd>${raw(conf.bugTrackerHTML)}</dd>
             `
           : ""}
         ${conf.isED && conf.prevED
@@ -185,7 +185,7 @@ export default conf => {
               ${conf.multipleAlternates
                 ? "This document is also available in these non-normative formats:"
                 : "This document is also available in this non-normative format:"}
-              ${[conf.alternatesHTML]}
+              ${raw(conf.alternatesHTML)}
             </p>
           `
         : ""}
@@ -210,10 +210,10 @@ function renderCopyright(conf) {
   return conf.isUnofficial
     ? conf.additionalCopyrightHolders
       ? html`
-          <p class="copyright">${[conf.additionalCopyrightHolders]}</p>
+          <p class="copyright">${raw(conf.additionalCopyrightHolders)}</p>
         `
       : conf.overrideCopyright
-      ? [conf.overrideCopyright]
+      ? raw(conf.overrideCopyright)
       : html`
           <p class="copyright">
             This document is licensed under a
@@ -225,7 +225,7 @@ function renderCopyright(conf) {
           </p>
         `
     : conf.overrideCopyright
-    ? [conf.overrideCopyright]
+    ? raw(conf.overrideCopyright)
     : renderOfficialCopyright(conf);
 }
 
@@ -235,16 +235,14 @@ function renderOfficialCopyright(conf) {
       <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
         >Copyright</a
       >
-      &copy;
+      ©
       ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
       ${conf.additionalCopyrightHolders
-        ? html`
-            ${[conf.additionalCopyrightHolders]} &amp;
-          `
+        ? raw(`${conf.additionalCopyrightHolders} &amp;`)
         : ""}
       <a href="https://www.w3.org/"
         ><abbr title="World Wide Web Consortium">W3C</abbr></a
-      ><sup>&reg;</sup> (<a href="https://www.csail.mit.edu/"
+      ><sup>®</sup> (<a href="https://www.csail.mit.edu/"
         ><abbr title="Massachusetts Institute of Technology">MIT</abbr></a
       >,
       <a href="https://www.ercim.eu/"

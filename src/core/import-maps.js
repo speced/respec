@@ -3,7 +3,7 @@
 
 import * as _idb from "../../node_modules/idb/build/esm/index.js";
 import * as _webidl2 from "../../node_modules/webidl2/index.js";
-import _hyperHTML from "../../node_modules/hyperhtml/esm.js";
+import { html as _html, raw as _raw } from "../../js/deps/builds/nanohtml.js";
 import _marked from "../../js/deps/builds/marked.js";
 import _pluralize from "../../js/deps/builds/pluralize.js";
 
@@ -11,9 +11,12 @@ import _pluralize from "../../js/deps/builds/pluralize.js";
 // @ts-ignore
 export const idb = _idb;
 export const webidl2 = _webidl2;
-/** @type {import("hyperhtml").default} */
+/** @type {import("nanohtml").default} */
 // @ts-ignore
-export const hyperHTML = _hyperHTML;
+export const hyperHTML = _html;
+/** @type {import("nanohtml/raw")} */
+// @ts-ignore
+export const raw = _raw;
 /** @type {import("marked")} */
 // @ts-ignore
 export const marked = _marked;

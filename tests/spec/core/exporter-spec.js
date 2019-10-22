@@ -2,22 +2,22 @@
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 
+export async function getExportedDoc(ops) {
+  const doc = await makeRSDoc(ops);
+  const dataURL = await new Promise(resolve => {
+    doc.defaultView.require(["core/exporter"], ({ rsDocToDataURL }) =>
+      resolve(rsDocToDataURL("text/html", doc))
+    );
+  });
+  const docString = decodeURIComponent(dataURL).replace(
+    "data:text/html;charset=utf-8,",
+    ""
+  );
+  return new DOMParser().parseFromString(docString, "text/html");
+}
+
 describe("Core - exporter", () => {
   afterAll(flushIframes);
-
-  async function getExportedDoc(ops) {
-    const doc = await makeRSDoc(ops);
-    const dataURL = await new Promise(resolve => {
-      doc.defaultView.require(["core/exporter"], ({ rsDocToDataURL }) =>
-        resolve(rsDocToDataURL("text/html", doc))
-      );
-    });
-    const docString = decodeURIComponent(dataURL).replace(
-      "data:text/html;charset=utf-8,",
-      ""
-    );
-    return new DOMParser().parseFromString(docString, "text/html");
-  }
 
   it("removes .removeOnSave elements", async () => {
     const ops = makeStandardOps();

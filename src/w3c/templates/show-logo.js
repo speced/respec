@@ -4,6 +4,7 @@ import { showInlineWarning } from "../../core/utils.js";
 
 export default obj => {
   /** @type {HTMLAnchorElement} */
+  // @ts-ignore force type assertion
   const a = html`
     <a href="${obj.url || ""}" class="logo"></a>
   `;
@@ -11,6 +12,7 @@ export default obj => {
     showInlineWarning(a, "Found spec logo without an `alt` attribute");
   }
   /** @type {HTMLImageElement} */
+  // @ts-ignore force type assertion
   const img = html`
     <img
       id="${obj.id}"

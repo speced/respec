@@ -15,7 +15,6 @@ const button = ui.addCommand(
 
 const ul = document.createElement("ul");
 ul.classList.add("respec-dfn-list");
-const render = hyperHTML.bind(ul);
 
 ul.addEventListener("click", ev => {
   ui.closeModal();
@@ -26,7 +25,7 @@ function show() {
   const definitionLinks = Object.entries(definitionMap)
     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
     .map(([, [dfn]]) => {
-      return hyperHTML.wire(dfn, ":li>a")`
+      return hyperHTML`
         <li>
           <a href="${`#${dfn.id}`}">
             ${dfn.textContent}
@@ -34,6 +33,7 @@ function show() {
         </li>
       `;
     });
-  render`${definitionLinks}`;
+  ul.textContent = "";
+  ul.append(...definitionLinks);
   ui.freshModal(l10n[lang].list_of_definitions, ul, button);
 }

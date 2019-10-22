@@ -12,9 +12,9 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, joinAnd, parents } from "./utils.js";
+import { hyperHTML, raw } from "./import-maps.js";
 import { lang as defaultLang } from "../core/l10n.js";
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/issues-notes";
@@ -93,8 +93,10 @@ function handleIssues(ins, ghIssues, conf) {
     // wrap
     if (!isInline) {
       const cssClass = isFeatureAtRisk ? `${type} atrisk` : type;
-      const ariaRole = type === "note" ? "note" : null;
-      const div = hyperHTML`<div class="${cssClass}" role="${ariaRole}"></div>`;
+      const div = hyperHTML`<div class="${cssClass}"></div>`;
+      if (type === "note") {
+        div.setAttribute("role", "note");
+      }
       const title = document.createElement("span");
       const titleParent = hyperHTML`
         <div role='heading' class='${`${type}-title marker`}'>${title}</div>`;
@@ -160,7 +162,7 @@ function handleIssues(ins, ghIssues, conf) {
       }
       div.append(titleParent, body);
       const level = parents(titleParent, "section").length + 2;
-      titleParent.setAttribute("aria-level", level);
+      titleParent.setAttribute("aria-level", String(level));
     }
     pub(report.type, report);
   });
@@ -264,6 +266,7 @@ function isLight(rgb) {
  * @param {string} repoURL
  */
 function createLabelsGroup(labels, title, repoURL) {
+  /** @type {Node[]} */
   const labelsGroup = labels.map(label => createLabel(label, repoURL));
   const labelNames = labels.map(label => label.name);
   const joinedNames = joinAnd(labelNames);
@@ -341,7 +344,7 @@ export async function run(conf) {
   const css = await cssPromise;
   const { head: headElem } = document;
   headElem.insertBefore(
-    hyperHTML`<style>${[css]}</style>`,
+    hyperHTML`<style>${raw(css)}</style>`,
     headElem.querySelector("link")
   );
   handleIssues(issuesAndNotes, ghIssues, conf);

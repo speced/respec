@@ -1,5 +1,5 @@
 // @ts-check
-import { hyperHTML as html } from "../../core/import-maps.js";
+import { hyperHTML as html, raw } from "../../core/import-maps.js";
 
 export default (conf, opts) => {
   return html`
@@ -12,7 +12,7 @@ export default (conf, opts) => {
       : conf.isNoTrack
       ? renderIsNoTrack(conf, opts)
       : html`
-          <p><em>${[conf.l10n.status_at_publication]}</em></p>
+          <p><em>${raw(conf.l10n.status_at_publication)}</em></p>
           ${conf.isSubmission
             ? noteForSubmission(conf, opts)
             : html`
@@ -96,12 +96,12 @@ export default (conf, opts) => {
                 </p>
                 ${conf.addPatentNote
                   ? html`
-                      <p>${[conf.addPatentNote]}</p>
+                      <p>${raw(conf.addPatentNote)}</p>
                     `
                   : ""}
               `}
         `}
-    ${opts.additionalSections}
+    ${[...opts.additionalSections]}
   `;
 };
 
@@ -217,18 +217,18 @@ function renderDeliverer(conf) {
   const wontBeRec = recNotExpected
     ? "The group does not expect this document to become a W3C Recommendation."
     : "";
-  return html`
-    <p data-deliverer="${isNote ? wgId : null}">
+  const paragraph = html`
+    <p>
       ${producers} ${wontBeRec}
       ${!isNote && !isIGNote
         ? html`
             ${multipleWGs
               ? html`
-                  W3C maintains ${[wgPatentHTML]}
+                  W3C maintains ${raw(wgPatentHTML)}
                 `
               : html`
                   W3C maintains a
-                  <a href="${[wgPatentURI]}" rel="disclosure"
+                  <a href="${wgPatentURI}" rel="disclosure"
                     >public list of any patent disclosures</a
                   >
                 `}
@@ -257,6 +257,10 @@ function renderDeliverer(conf) {
         : ""}
     </p>
   `;
+  if (isNote) {
+    paragraph.dataset.deliverer = wgId;
+  }
+  return paragraph;
 }
 
 function noteForSubmission(conf, opts) {
@@ -330,7 +334,7 @@ function linkToWorkingGroup(conf) {
   }
   return html`
     <p>
-      This document was published by ${[conf.wgHTML]} as ${conf.anOrA}
+      This document was published by ${raw(conf.wgHTML)} as ${conf.anOrA}
       ${conf.longStatus}.
       ${conf.notYetRec
         ? "This document is intended to become a W3C Recommendation."

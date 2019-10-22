@@ -1,7 +1,6 @@
 // @ts-check
-import { hyperHTML } from "../../core/import-maps.js";
+import { hyperHTML as html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
-const html = hyperHTML;
 
 export default link => {
   if (!link.key) {
@@ -11,15 +10,19 @@ export default link => {
     console.warn("warn", msg, link);
     return;
   }
-  return html`
-    <dt class="${link.class ? link.class : null}">${link.key}:</dt>
+  const fragment = html`
+    <dt>${link.key}:</dt>
     ${link.data ? link.data.map(showLinkData) : showLinkData(link)}
   `;
+  if (link.class) {
+    fragment.classList.add(link.class);
+  }
+  return fragment;
 };
 
 function showLinkData(data) {
-  return html`
-    <dd class="${data.class ? data.class : null}">
+  const fragment = html`
+    <dd>
       ${data.href
         ? html`
             <a href="${data.href}">${data.value || data.href}</a>
@@ -27,4 +30,8 @@ function showLinkData(data) {
         : ""}
     </dd>
   `;
+  if (data.class) {
+    fragment.classList.add(data.class);
+  }
+  return fragment;
 }

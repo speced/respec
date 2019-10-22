@@ -7,6 +7,7 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
+import { getExportedDoc } from "./exporter-spec.js";
 
 describe("Core — Can I Use", () => {
   afterAll(flushIframes);
@@ -139,5 +140,21 @@ describe("Core — Can I Use", () => {
 
     const text = doc.getElementById("initialUserConfig").textContent;
     expect(JSON.parse(text)).toEqual(expectedObj);
+  });
+
+  it("replaces caniuse table when exporting", async () => {
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "FEATURE",
+        apiURL,
+        browsers: ["firefox", "chrome", "opera"],
+        versions: 5,
+      },
+    });
+    const doc = await getExportedDoc(ops);
+
+    const statsAnchors = doc.querySelectorAll(".caniuse-stats a");
+    expect(statsAnchors.length).toBe(1);
+    expect(statsAnchors[0].textContent).toBe("caniuse.com");
   });
 });

@@ -1,7 +1,7 @@
 // @ts-check
+import { hyperHTML, raw } from "./import-maps.js";
 import { fetchAndCache } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
 
 export const name = "core/mdn-annoatation";
 
@@ -78,7 +78,7 @@ function attachMDNBrowserSupport(container, mdnSpec) {
     return;
   }
   const supportTable = hyperHTML`<p class="mdnsupport">
-    ${[buildBrowserSupportTable(mdnSpec.support)]}
+    ${raw(buildBrowserSupportTable(mdnSpec.support))}
   </p>`;
   container.appendChild(supportTable);
 }
@@ -150,7 +150,7 @@ export async function run(conf) {
     maxAge
   );
   const mdnCss = await mdnCssPromise;
-  document.head.appendChild(hyperHTML`<style>${[mdnCss]}</style>`);
+  document.head.appendChild(hyperHTML`<style>${raw(mdnCss)}</style>`);
   document.head.appendChild(hyperHTML`<script>
      function toggleMDNStatus(div) {
        div.parentNode.classList.toggle('wrapped');

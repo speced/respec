@@ -77,6 +77,6 @@ export default (conf, opts) => {
         `
       : ""}
     ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-    ${opts.additionalSections}
+    ${[...opts.additionalSections]}
   `;
 };

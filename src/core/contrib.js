@@ -80,10 +80,13 @@ function toHTML(contributors, element) {
   });
 
   if (element.tagName === "UL") {
-    hyperHTML(element)`${sortedContributors.map(
+    const children = sortedContributors.map(
       ({ name, login }) =>
-        `<li><a href="https://github.com/${login}">${name || login}</a></li>`
-    )}`;
+        hyperHTML`<li><a href=${`https://github.com/${login}`}>${name ||
+          login}</a></li>`
+    );
+    element.textContent = "";
+    element.append(...children);
     return;
   }
 

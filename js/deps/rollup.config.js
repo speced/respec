@@ -23,6 +23,15 @@ export default [
     ...template
   },
   {
+    input: "js/deps/nanohtml.js",
+    onwarn(warning, warn) {
+      if (warning.code !== "CIRCULAR_DEPENDENCY") {
+        warn(warning);
+      }
+    },
+    ...template
+  },
+  {
     input: "js/deps/pluralize.js",
     ...template
   }

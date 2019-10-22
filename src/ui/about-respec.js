@@ -8,7 +8,6 @@ import { ui } from "../core/ui.js";
 // window.respecVersion is added at build time (see tools/builder.js)
 window.respecVersion = window.respecVersion || "Developer Edition";
 const div = document.createElement("div");
-const render = hyperHTML.bind(div);
 const button = ui.addCommand(
   `About ${window.respecVersion}`,
   show,
@@ -39,7 +38,7 @@ function show() {
         entries.push(entry);
       });
   }
-  render`
+  const fragment = hyperHTML`
   <p>
     ReSpec is a document production toolchain, with a notable focus on W3C specifications.
   </p>
@@ -64,6 +63,8 @@ function show() {
     <tbody>${entries}</tbody>
   </table>
 `;
+  div.textContent = "";
+  div.append(fragment);
 }
 
 function perfEntryToTR({ name, duration }) {

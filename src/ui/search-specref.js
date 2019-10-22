@@ -17,8 +17,6 @@ const specrefURL = "https://specref.herokuapp.com/";
 const refSearchURL = `${specrefURL}search-refs`;
 const reveseLookupURL = `${specrefURL}reverse-lookup`;
 const form = document.createElement("form");
-const renderer = hyperHTML.bind(form);
-const resultList = hyperHTML.bind(document.createElement("div"));
 
 form.id = "specref-ui";
 
@@ -29,7 +27,7 @@ form.id = "specref-ui";
  */
 function renderResults(resultMap, query, timeTaken) {
   if (!resultMap.size) {
-    return resultList`
+    return hyperHTML`
       <p class="state">
         Your search - <strong> ${query} </strong> -
         did not match any references.
@@ -40,7 +38,7 @@ function renderResults(resultMap, query, timeTaken) {
     .slice(0, 99)
     .map(toDefinitionPair)
     .reduce((collector, pair) => collector.concat(pair), []);
-  return resultList`
+  return hyperHTML`
     <p class="result-stats">
       ${resultMap.size} results (${timeTaken} seconds).
       ${resultMap.size > 99 ? "First 100 results." : ""}
@@ -50,7 +48,7 @@ function renderResults(resultMap, query, timeTaken) {
 }
 
 function toDefinitionPair([key, entry]) {
-  return hyperHTML.wire(entry)`
+  return hyperHTML`
     <dt>
       [${key}]
     </dt>
@@ -129,26 +127,28 @@ function show() {
   input.focus();
 }
 
-const mast = hyperHTML.wire()`
-  <header>
-    <p>
-      An Open-Source, Community-Maintained Database of
-      Web Standards & Related References.
-    </p>
-  </header>
-  <div class="searchcomponent">
-    <input
-      name="searchBox"
-      type="search"
-      autocomplete="off"
-      placeholder="Keywords, titles, authors, urls…">
-    <button
-      type="submit">
-        Search
-    </button>
-    <label>
-      <input type="checkbox" name="includeVersions"> Include all versions.
-    </label>
+const mast = hyperHTML`
+  <div>
+    <header>
+      <p>
+        An Open-Source, Community-Maintained Database of
+        Web Standards & Related References.
+      </p>
+    </header>
+    <div class="searchcomponent">
+      <input
+        name="searchBox"
+        type="search"
+        autocomplete="off"
+        placeholder="Keywords, titles, authors, urls…">
+      <button
+        type="submit">
+          Search
+      </button>
+      <label>
+        <input type="checkbox" name="includeVersions"> Include all versions.
+      </label>
+    </div>
   </div>
 `;
 
@@ -161,11 +161,12 @@ const mast = hyperHTML.wire()`
  */
 function render({ state = "", results, timeTaken, query } = {}) {
   if (!results) {
-    renderer`<div>${mast}</div>`;
+    form.textContent = "";
+    form.append(mast);
     return;
   }
-  renderer`
-    <div>${mast}</div>
+  const content = hyperHTML`
+    ${mast}
     <p class="state" hidden="${!state}">
       ${state}
     </p>
@@ -173,4 +174,6 @@ function render({ state = "", results, timeTaken, query } = {}) {
     results ? renderResults(results, query, timeTaken) : []
   }</section>
   `;
+  form.textContent = "";
+  form.append(content);
 }

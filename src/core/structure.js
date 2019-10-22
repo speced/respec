@@ -78,7 +78,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
 
     if (!section.isIntro) {
       index += 1;
-      section.header.prepend(hyperHTML`<bdi class='secno'>${secno} </bdi>`);
+      section.header.prepend(hyperHTML`<bdi class='secno'>${secno}</bdi>`, " ");
     }
 
     if (level <= maxTocLevel) {
@@ -232,6 +232,6 @@ function createTableOfContents(ol) {
     }
   }
 
-  const link = hyperHTML`<p role='navigation' id='back-to-top'><a href='#title'><abbr title='Back to Top'>&uarr;</abbr></a></p>`;
+  const link = hyperHTML`<p role='navigation' id='back-to-top'><a href='#title'><abbr title='Back to Top'>\u2191;</abbr></a></p>`;
   document.body.append(link);
 }

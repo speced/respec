@@ -104,7 +104,7 @@ function inlineBibrefMatches(matched, txt, conf) {
   const cleanRef = ref.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
     showInlineWarning(
-      cite.childNodes[1], // cite element
+      /** @type {HTMLElement} */ (cite.childNodes[1]), // cite element
       "Normative references in informative sections are not allowed. " +
         `Remove '!' from the start of the reference \`[[${ref}]]\``
     );
@@ -138,7 +138,11 @@ function inlineVariableMatches(matched) {
   // remove "|" at the beginning and at the end, then split at an optional `:`
   const matches = matched.slice(1, -1).split(":", 2);
   const [varName, type] = matches.map(s => s.trim());
-  return hyperHTML`<var data-type="${type}">${varName}</var>`;
+  const element = hyperHTML`<var>${varName}</var>`;
+  if (type) {
+    element.dataset.type = type;
+  }
+  return element;
 }
 
 /**
@@ -157,7 +161,15 @@ function inlineAnchorMatches(matched) {
     : [null, content];
   const processedContent = processInlineContent(text);
   const forContext = isFor ? norm(isFor) : null;
-  return hyperHTML`<a data-link-for="${forContext}" data-xref-for="${forContext}" data-lt="${linkingText}">${processedContent}</a>`;
+  const anchor = hyperHTML`<a>${processedContent}</a>`;
+  if (forContext) {
+    anchor.dataset.linkFor = forContext;
+    anchor.dataset.xrefFor = forContext;
+  }
+  if (linkingText) {
+    anchor.dataset.lt = linkingText;
+  }
+  return anchor;
 }
 
 function inlineCodeMatches(matched) {

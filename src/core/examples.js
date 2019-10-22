@@ -105,6 +105,7 @@ export async function run() {
         addId(example, `example`, String(number));
       }
       const { id } = example;
+      /** @type {HTMLAnchorElement} */
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
       pub("example", report);
@@ -129,6 +130,7 @@ export async function run() {
         addId(div, `example-${number}`, title);
       }
       addId(div, `example`, String(number));
+      /** @type {HTMLAnchorElement} */
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${div.id}`;
       example.replaceWith(div);

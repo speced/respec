@@ -1,5 +1,5 @@
 // @ts-check
-import { hyperHTML as html } from "../../core/import-maps.js";
+import { hyperHTML as html, raw } from "../../core/import-maps.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
 import showPeople from "./show-people.js";
@@ -64,7 +64,7 @@ export default conf => {
         ${conf.bugTrackerHTML
           ? html`
               <dt>${conf.l10n.bug_tracker}</dt>
-              <dd>${[conf.bugTrackerHTML]}</dd>
+              <dd>${raw(conf.bugTrackerHTML)}</dd>
             `
           : ""}
         ${conf.prevVersion
@@ -111,7 +111,7 @@ export default conf => {
               ${conf.multipleAlternates
                 ? "This document is also available in these non-normative formats:"
                 : "This document is also available in this non-normative format:"}
-              ${[conf.alternatesHTML]}
+              ${raw(conf.alternatesHTML)}
             </p>
           `
         : ""}
@@ -119,13 +119,13 @@ export default conf => {
         <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
           >Copyright</a
         >
-        &copy;
+        ©
         ${conf.copyrightStart
           ? `${conf.copyrightStart}-`
           : ""}${conf.publishYear}
         ${conf.additionalCopyrightHolders
           ? html`
-              ${[conf.additionalCopyrightHolders]} &amp;
+              ${raw(conf.additionalCopyrightHolders)} &
             `
           : ""}
         the Contributors to the ${conf.title} Specification, published by the

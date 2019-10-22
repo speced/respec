@@ -2,7 +2,7 @@
 // Parses an inline IDL string (`{{ idl string }}`)
 //  and renders its components as HTML
 
-import { hyperHTML } from "./import-maps.js";
+import { hyperHTML, raw } from "./import-maps.js";
 import { showInlineError } from "./utils.js";
 const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}} {{ double }}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
@@ -153,12 +153,15 @@ function renderInternalSlot(details) {
   const { identifier, parent, renderParent } = details;
   const { identifier: linkFor } = parent || {};
   const lt = `[[${identifier}]]`;
-  const html = hyperHTML`${parent && renderParent ? "." : ""}<a
+  const dot = parent && renderParent ? "." : "";
+  const anchor = hyperHTML`<a
     data-xref-type="attribute"
-    data-link-for=${linkFor}
-    data-xref-for=${linkFor}
     data-lt="${lt}"><code>[[${identifier}]]</code></a>`;
-  return html;
+  if (linkFor) {
+    anchor.dataset.linkFor = linkFor;
+    anchor.dataset.xrefFor = linkFor;
+  }
+  return hyperHTML`${dot}${anchor}${""}`; // TODO: remove dangling empty string
 }
 
 /**
@@ -172,7 +175,7 @@ function renderAttribute(details) {
       data-xref-type="attribute|dict-member"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
-    ><code>${identifier}</code></a>`;
+    ><code>${identifier}</code></a>${""}`; // TODO: remove dangling empty string
   return html;
 }
 
@@ -190,26 +193,28 @@ function renderMethod(details) {
     data-link-for="${linkFor}"
     data-xref-for="${linkFor}"
     data-lt="${searchText}"
-    ><code>${identifier}</code></a><code>(${[argsText]})</code>`;
+    ><code>${identifier}</code></a><code>(${raw(argsText)})</code>`;
   return html;
 }
 
 /**
  * Enum:
  * Identifier["enum value"]
- * Identifer / "enum value"
+ * Identifier / "enum value"
  * @param {IdlEnum} details
  */
 function renderEnum(details) {
   const { identifier, enumValue, parent } = details;
   const forContext = parent ? parent.identifier : identifier;
-  const html = hyperHTML`"<a
+  const anchor = hyperHTML`<a
     data-xref-type="enum-value"
     data-link-for="${forContext}"
     data-xref-for="${forContext}"
-    data-lt="${!enumValue ? "the-empty-string" : null}"
-    ><code>${enumValue}</code></a>"`;
-  return html;
+    ><code>${enumValue}</code></a>`;
+  if (!enumValue) {
+    anchor.dataset.lt = "the-empty-string";
+  }
+  return hyperHTML`"${anchor}"`;
 }
 
 /**
@@ -254,7 +259,6 @@ export function idlStringToHtml(str) {
     showInlineError(el, error.message, "Error: Invalid inline IDL string");
     return el;
   }
-  const render = hyperHTML(document.createDocumentFragment());
   const output = [];
   for (const details of results) {
     switch (details.type) {
@@ -285,6 +289,6 @@ export function idlStringToHtml(str) {
         throw new Error("Unknown type.");
     }
   }
-  const result = render`${output}`;
+  const result = hyperHTML`${output}`;
   return result;
 }
