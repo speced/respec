@@ -13,8 +13,7 @@ function attachFixupScript(doc, version) {
     "load",
     () => {
       if (window.location.hash) {
-        // @ts-ignore
-        window.location = window.location.href;
+        window.location.href = window.location.hash;
       }
     },
     { once: true }

@@ -21,7 +21,7 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
 
 /**
- * @typedef {keyof BilbioDb} AllowedType
+ * @typedef {keyof BiblioDb} AllowedType
  * @type {Set<AllowedType>}
  */
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
@@ -37,7 +37,7 @@ const dbMaps = {
 const readyPromise = openIdb();
 
 /**
- * @typedef {object} BilbioDb
+ * @typedef {object} BiblioDb
  *
  * @property {object} alias Object store for alias objects
  * @property {string} alias.key
@@ -49,7 +49,7 @@ const readyPromise = openIdb();
  * @property {string} reference.key
  * @property {object} reference.value
  *
- * @returns {Promise<import("idb").IDBPDatabase<BilbioDb>>}
+ * @returns {Promise<import("idb").IDBPDatabase<BiblioDb>>}
  */
 async function openIdb() {
   if (!hasIndexedDB) {
