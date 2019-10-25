@@ -1,3 +1,4 @@
+// @ts-check
 import {
   addId,
   getDfnTitles,
@@ -16,7 +17,9 @@ window.$ = window.jQuery = $;
 // return a jQuery object containing the new elements
 window.$.fn.renameElement = function(name) {
   const arr = [];
+  // @ts-ignore
   this.each(function() {
+    // @ts-ignore
     const elem = this;
     const newElem = renameElement(elem, name);
     arr.push(newElem);
@@ -38,8 +41,8 @@ window.$.fn.renameElement = function(name) {
 //
 // This method will publish a warning if a title is used on a definition
 // instead of an @lt (as per specprod mailing list discussion).
-window.$.fn.getDfnTitles = function(args) {
-  return getDfnTitles(this[0], args);
+window.$.fn.getDfnTitles = function() {
+  return getDfnTitles(this[0]);
 };
 
 // For any element (usually <a>), returns an array of targets that

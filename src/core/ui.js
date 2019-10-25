@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/ui
 // Handles the ReSpec UI
 /* jshint laxcomma:true */
@@ -12,6 +13,7 @@
 import css from "text!../../assets/ui.css";
 import hyperHTML from "hyperhtml";
 import { markdownToHtml } from "./markdown.js";
+// @ts-ignore
 import shortcut from "../shortcut.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
@@ -46,7 +48,7 @@ sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
 const respecPill = hyperHTML`<button id='respec-pill' disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
-respecPill.addEventListener("click", function(e) {
+respecPill.addEventListener("click", e => {
   e.stopPropagation();
   if (menu.hidden) {
     menu.classList.remove("respec-hidden");
@@ -55,7 +57,7 @@ respecPill.addEventListener("click", function(e) {
     menu.classList.add("respec-hidden");
     menu.classList.remove("respec-visible");
   }
-  this.setAttribute("aria-expanded", String(menu.hidden));
+  respecPill.setAttribute("aria-expanded", String(menu.hidden));
   menu.hidden = !menu.hidden;
 });
 document.documentElement.addEventListener("click", () => {
@@ -87,8 +89,8 @@ function errWarn(msg, arr, butName, title) {
 function createWarnButton(butName, arr, title) {
   const buttonId = `respec-pill-${butName}`;
   const button = hyperHTML`<button id='${buttonId}' class='respec-info-button'>`;
-  button.addEventListener("click", function() {
-    this.setAttribute("aria-expanded", "true");
+  button.addEventListener("click", () => {
+    button.setAttribute("aria-expanded", "true");
     const ol = hyperHTML`<ol class='${`respec-${butName}-list`}'></ol>`;
     for (const err of arr) {
       const fragment = document
@@ -104,7 +106,7 @@ function createWarnButton(butName, arr, title) {
       }
       ol.appendChild(li);
     }
-    ui.freshModal(title, ol, this);
+    ui.freshModal(title, ol, button);
   });
   const ariaMap = new Map([
     ["expanded", "false"],

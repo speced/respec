@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.34.0",
+  "version": "24.34.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -35,14 +35,14 @@
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.1.1",
     "exports-loader": "^0.7.0",
-    "handlebars": "^4.4.3",
+    "handlebars": "^4.4.5",
     "highlight.js": "^9.15.10",
-    "hyperhtml": "^2.31.0",
+    "hyperhtml": "^2.31.1",
     "idb": "^4.0.5",
     "jasmine-core": "^3.5.0",
     "jasmine-reporters": "^2.3.2",
     "jquery": "^3.4.1",
-    "karma": "^4.3.0",
+    "karma": "^4.4.1",
     "karma-chrome-launcher": "^3.1.0",
     "karma-detect-browsers": "^2.3.3",
     "karma-edge-launcher": "^0.4.2",
@@ -57,7 +57,7 @@
     "karma-safaritechpreview-launcher": "2.0.2",
     "karma-verbose-summary-reporter": "0.0.1",
     "marked": "^0.7.0",
-    "mocha": "^6.2.1",
+    "mocha": "^6.2.2",
     "moment": "^2.24.0",
     "pluralize": "^8.0.0",
     "prettier": "^1.18.2",
@@ -66,8 +66,8 @@
     "serve": "^11.2.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.6.4",
-    "webidl2": "^23.10.0",
-    "webpack": "^4.41.1",
+    "webidl2": "^23.10.1",
+    "webpack": "^4.41.2",
     "webpack-cli": "^3.3.9"
   },
   "scripts": {
@@ -103,8 +103,8 @@
     "opencollective": "^1.0.3",
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
-    "puppeteer": "1.20.0",
-    "snyk": "^1.234.2"
+    "puppeteer": "2.0.0",
+    "snyk": "^1.239.0"
   },
   "prettier": {
     "trailingComma": "es5"
