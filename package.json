@@ -103,7 +103,7 @@
     "opencollective": "^1.0.3",
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
-    "puppeteer": "1.20.0",
+    "puppeteer": "2.0.0",
     "snyk": "^1.234.2"
   },
   "prettier": {
