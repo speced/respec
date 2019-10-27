@@ -1,5 +1,9 @@
 // @ts-check
-import { humanDate, showInlineError, toShortIsoDate } from "../../core/utils";
+import {
+  humanDate,
+  showInlineError,
+  toShortIsoDate,
+} from "../../core/utils.js";
 import { lang as defaultLang } from "../../core/l10n.js";
 import html from "hyperhtml";
 
