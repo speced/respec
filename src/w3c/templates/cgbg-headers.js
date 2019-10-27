@@ -1,5 +1,5 @@
 // @ts-check
-import html from "hyperhtml";
+import { hyperHTML as html } from "../../core/import-maps.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
 import showPeople from "./show-people.js";

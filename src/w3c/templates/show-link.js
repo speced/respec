@@ -1,5 +1,5 @@
 // @ts-check
-import hyperHTML from "hyperhtml";
+import { hyperHTML } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
 const html = hyperHTML;
 

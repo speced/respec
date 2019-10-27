@@ -9,7 +9,7 @@
  *
  */
 import { flatten } from "./utils.js";
-import { importIdb } from "./idb.js";
+import { importIdb } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
 

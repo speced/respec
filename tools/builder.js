@@ -130,9 +130,8 @@ const Builder = {
       module: {
         rules: [
           {
-            // shortcut.js uses global scope
-            test: require.resolve("../js/shortcut.js"),
-            use: "exports-loader?shortcut",
+            test: /\.js$/,
+            loader: require.resolve("@open-wc/webpack-import-meta-loader"),
           },
         ],
       },

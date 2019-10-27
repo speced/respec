@@ -12,9 +12,9 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, joinAnd, parents } from "./utils.js";
-import css from "text!../../assets/issues-notes.css";
 import { lang as defaultLang } from "../core/l10n.js";
-import hyperHTML from "hyperhtml";
+import { fetchAsset } from "./text-loader.js";
+import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/issues-notes";
@@ -33,6 +33,16 @@ const localizationStrings = {
     no_issues_in_spec: "No hay problemas enumerados en esta especificación.",
   },
 };
+
+const cssPromise = loadStyle();
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/issues-notes.css")).default;
+  } catch {
+    return fetchAsset("issues-notes.css");
+  }
+}
 
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
@@ -329,6 +339,7 @@ export async function run(conf) {
     return; // nothing to do.
   }
   const ghIssues = await fetchAndStoreGithubIssues(conf.githubAPI);
+  const css = await cssPromise;
   const { head: headElem } = document;
   headElem.insertBefore(
     hyperHTML`<style>${[css]}</style>`,

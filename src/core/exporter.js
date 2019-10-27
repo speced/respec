@@ -8,7 +8,7 @@
 
 import { removeCommentNodes, removeReSpec } from "./utils.js";
 import { expose } from "./expose-modules.js";
-import hyperHTML from "hyperhtml";
+import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);

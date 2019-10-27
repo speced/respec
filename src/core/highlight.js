@@ -4,13 +4,23 @@
  *
  * Performs syntax highlighting to all pre and code elements.
  */
-import ghCss from "text!../../assets/github.css";
-import html from "hyperhtml";
+import { fetchAsset } from "./text-loader.js";
+import { hyperHTML as html } from "./import-maps.js";
 import { msgIdGenerator } from "./utils.js";
-import { worker } from "./worker.js";
+import { workerPromise } from "./worker.js";
 export const name = "core/highlight";
 
 const nextMsgId = msgIdGenerator("highlight");
+
+const ghCssPromise = loadStyle();
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/github.css")).default;
+  } catch {
+    return fetchAsset("github.css");
+  }
+}
 
 function getLanguageHint(classList) {
   return Array.from(classList)
@@ -46,13 +56,14 @@ async function highlightElement(elem) {
   elem.setAttribute("aria-busy", "false");
 }
 
-function sendHighlightRequest(code, languages) {
+async function sendHighlightRequest(code, languages) {
   const msg = {
     action: "highlight",
     code,
     id: nextMsgId(),
     languages,
   };
+  const worker = await workerPromise;
   worker.postMessage(msg);
   return new Promise((resolve, reject) => {
     const timeoutId = setTimeout(() => {
@@ -90,6 +101,7 @@ export async function run(conf) {
   const promisesToHighlight = highlightables
     .filter(elem => elem.textContent.trim())
     .map(highlightElement);
+  const ghCss = await ghCssPromise;
   document.head.appendChild(
     html`
       <style>

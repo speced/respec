@@ -5,7 +5,7 @@
 
 export const name = "core/id-headers";
 import { addId } from "./utils.js";
-import hyperHTML from "hyperhtml";
+import { hyperHTML } from "./import-maps.js";
 
 export function run(conf) {
   /** @type {NodeListOf<HTMLElement>} */

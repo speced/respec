@@ -7,9 +7,9 @@
 // be used by a containing shell to extract all examples.
 
 import { addId } from "./utils.js";
-import css from "text!../../assets/examples.css";
 import { lang as defaultLang } from "../core/l10n.js";
-import html from "hyperhtml";
+import { fetchAsset } from "./text-loader.js";
+import { hyperHTML as html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/examples";
@@ -29,6 +29,16 @@ const localizationStrings = {
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 const l10n = localizationStrings[lang];
+
+const cssPromise = loadStyle();
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/examples.css")).default;
+  } catch {
+    return fetchAsset("examples.css");
+  }
+}
 
 /**
  * @typedef {object} Report
@@ -58,13 +68,14 @@ function makeTitle(elem, num, report) {
   `;
 }
 
-export function run() {
+export async function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"
   );
   if (!examples.length) return;
 
+  const css = await cssPromise;
   document.head.insertBefore(
     html`
       <style>

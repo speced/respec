@@ -44,7 +44,7 @@
  * The whitespace of pre elements are left alone.
  */
 
-import marked from "marked";
+import { marked } from "./import-maps.js";
 export const name = "core/markdown";
 
 const gtEntity = /&gt;/gm;

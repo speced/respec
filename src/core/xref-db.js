@@ -1,7 +1,7 @@
 // @ts-check
 import { API_URL } from "./xref.js";
 import { IDBKeyVal } from "./utils.js";
-import { importIdb } from "./idb.js";
+import { importIdb } from "./import-maps.js";
 
 /**
  * @typedef {import('core/xref').RequestEntry} RequestEntry

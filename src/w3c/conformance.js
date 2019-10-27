@@ -1,7 +1,7 @@
 // @ts-check
 // Module w3c/conformance
 // Handle the conformance section properly.
-import html from "hyperhtml";
+import { hyperHTML as html } from "../core/import-maps.js";
 import { joinAnd } from "../core/utils.js";
 import { pub } from "../core/pubsubhub.js";
 import { renderInlineCitation } from "../core/render-biblio.js";

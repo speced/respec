@@ -3,7 +3,7 @@
 // Search Specref database
 import { l10n, lang } from "../core/l10n.js";
 import { flatten } from "../core/utils.js";
-import hyperHTML from "hyperhtml";
+import { hyperHTML } from "../core/import-maps.js";
 import { ui } from "../core/ui.js";
 import { wireReference } from "../core/biblio.js";
 

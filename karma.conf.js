@@ -25,7 +25,6 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      "js/deps/jquery.js",
       {
         pattern: "assets/**/*.*",
         included: false,
@@ -48,6 +47,22 @@ module.exports = function(config) {
       },
       {
         pattern: "node_modules/idb/**/*.js",
+        included: false,
+      },
+      {
+        pattern: "node_modules/hyperhtml/**/*.js",
+        included: false,
+      },
+      {
+        pattern: "node_modules/marked/**/*.js",
+        included: false,
+      },
+      {
+        pattern: "node_modules/pluralize/**/*.js",
+        included: false,
+      },
+      {
+        pattern: "node_modules/webidl2/**/*.js",
         included: false,
       },
       {

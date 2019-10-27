@@ -7,9 +7,5 @@
         "modules": "amd"
       }
     ]
-  ],
-  "plugins": [
-    "dynamic-import-amd",
-    "./tools/babel-plugin-import-path-requirejs.js"
   ]
 }
