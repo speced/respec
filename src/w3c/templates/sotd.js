@@ -1,5 +1,6 @@
 // @ts-check
 import { hyperHTML as html, raw } from "../../core/import-maps.js";
+import { optdata } from "../../core/utils.js";
 
 export default (conf, opts) => {
   return html`
@@ -217,8 +218,8 @@ function renderDeliverer(conf) {
   const wontBeRec = recNotExpected
     ? "The group does not expect this document to become a W3C Recommendation."
     : "";
-  const paragraph = html`
-    <p>
+  return html`
+    <p ${optdata("deliverer", isNote ? wgId : null)}>
       ${producers} ${wontBeRec}
       ${!isNote && !isIGNote
         ? html`
@@ -257,10 +258,6 @@ function renderDeliverer(conf) {
         : ""}
     </p>
   `;
-  if (isNote) {
-    paragraph.dataset.deliverer = wgId;
-  }
-  return paragraph;
 }
 
 function noteForSubmission(conf, opts) {

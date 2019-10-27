@@ -851,3 +851,16 @@ function* walkTree(walker) {
     yield /** @type {T} */ (walker.currentNode);
   }
 }
+
+/**
+ * Generates an object with data-${name} field, useful for templating libraries.
+ * @param {string} dataAttrName
+ * @param {*} value
+ */
+export function optdata(dataAttrName, value) {
+  if (value == null) {
+    // null or undefined
+    return {};
+  }
+  return { [`data-${dataAttrName}`]: value };
+}

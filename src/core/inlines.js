@@ -10,6 +10,7 @@ import {
   InsensitiveStringSet,
   getTextNodes,
   norm,
+  optdata,
   refTypeFromContext,
   showInlineError,
   showInlineWarning,
@@ -138,11 +139,7 @@ function inlineVariableMatches(matched) {
   // remove "|" at the beginning and at the end, then split at an optional `:`
   const matches = matched.slice(1, -1).split(":", 2);
   const [varName, type] = matches.map(s => s.trim());
-  const element = hyperHTML`<var>${varName}</var>`;
-  if (type) {
-    element.dataset.type = type;
-  }
-  return element;
+  return hyperHTML`<var ${optdata("type", type)}>${varName}</var>`;
 }
 
 /**
@@ -161,15 +158,10 @@ function inlineAnchorMatches(matched) {
     : [null, content];
   const processedContent = processInlineContent(text);
   const forContext = isFor ? norm(isFor) : null;
-  const anchor = hyperHTML`<a>${processedContent}</a>`;
-  if (forContext) {
-    anchor.dataset.linkFor = forContext;
-    anchor.dataset.xrefFor = forContext;
-  }
-  if (linkingText) {
-    anchor.dataset.lt = linkingText;
-  }
-  return anchor;
+  return hyperHTML`<a
+    ${optdata("link-for", forContext)}
+    ${optdata("xref-for", forContext)}
+    ${optdata("lt", linkingText)}>${processedContent}</a>`;
 }
 
 function inlineCodeMatches(matched) {

@@ -7,6 +7,7 @@
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import {
   flatten,
+  optdata,
   showInlineError,
   showInlineWarning,
   xmlEscape,
@@ -70,14 +71,10 @@ const templates = {
         }
       }
     }
-    const anchor = hyperHTML`<a data-xref-type="${type}">${wrapped}</a>`;
-    if (cite) {
-      anchor.dataset.cite = cite;
-    }
-    if (lt) {
-      anchor.dataset.lt = lt;
-    }
-    return anchor;
+    return hyperHTML`<a
+      data-xref-type="${type}"
+      ${optdata("cite", cite)}
+      ${optdata("lt", lt)}>${wrapped}</a>`;
   },
   name(escaped, { data, parent }) {
     if (data.idlType && data.idlType.type === "argument-type") {
@@ -166,13 +163,11 @@ function defineIdlName(escaped, data, parent) {
   }
 
   const unlinkedAnchor = hyperHTML`<a
+    ${optdata("idl", data.partial ? "partial" : null)}
     data-link-type="${linkType}"
     data-title="${data.name}"
     data-xref-type="${linkType}"
     >${escaped}</a>`;
-  if (data.partial) {
-    unlinkedAnchor.dataset.idl = "partial";
-  }
 
   const showWarnings =
     name && data.type !== "typedef" && !(data.partial && !dfn);

@@ -14,7 +14,7 @@ export const webidl2 = _webidl2;
 /** @type {import("nanohtml").default} */
 // @ts-ignore
 export const hyperHTML = _html;
-/** @type {import("nanohtml/raw")} */
+/** @type {import("nanohtml/raw").default} */
 // @ts-ignore
 export const raw = _raw;
 /** @type {import("marked")} */
