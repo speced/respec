@@ -200,6 +200,7 @@ export function markdownToHtml(text) {
   const potentialMarkdown = normalizedLeftPad
     .replace(gtEntity, ">")
     .replace(ampEntity, "&");
+  // @ts-ignore
   const result = marked(potentialMarkdown, {
     sanitize: false,
     gfm: true,

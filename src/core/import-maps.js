@@ -10,10 +10,11 @@ import _pluralize from "../../node_modules/pluralize/pluralize.js";
 // @ts-ignore
 export const hyperHTML = _hyperHTML;
 export const webidl2 = _webidl2;
-/** @type {import("marked")} */
+/** @type {import("marked").default} */
 // @ts-ignore
 export const marked = _marked;
 /** @type {import("pluralize")} */
+// @ts-ignore
 export const pluralize = _pluralize;
 
 /**
