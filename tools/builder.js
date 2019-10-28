@@ -145,10 +145,6 @@ const Builder = {
         new webpack.optimize.LimitChunkCountPlugin({
           maxChunks: 1,
         }),
-        new webpack.IgnorePlugin({
-          // TODO: Remove this when browsers support import-maps
-          resourceRegExp: /idb\/build/,
-        }),
       ],
     };
     const buildDir = path.resolve(__dirname, "../builds/");

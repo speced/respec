@@ -1,7 +1,7 @@
 // @ts-check
 import { API_URL } from "./xref.js";
 import { IDBKeyVal } from "./utils.js";
-import { importIdb } from "./import-maps.js";
+import { idb } from "./import-maps.js";
 
 /**
  * @typedef {import('core/xref').RequestEntry} RequestEntry
@@ -12,13 +12,13 @@ import { importIdb } from "./import-maps.js";
 const VERSION_CHECK_WAIT = 5 * 60 * 60 * 1000; // 5 min
 
 async function getIdbCache() {
-  const { openDB } = await importIdb();
-  const idb = await openDB("xref", 1, {
+  const { openDB } = idb;
+  const db = await openDB("xref", 1, {
     upgrade(db) {
       db.createObjectStore("xrefs");
     },
   });
-  return new IDBKeyVal(idb, "xrefs");
+  return new IDBKeyVal(db, "xrefs");
 }
 
 /**
