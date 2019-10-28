@@ -77,7 +77,7 @@ async function deleteFolder(path) {
   try {
     await fs.stat(path);
   } catch (err) {
-    if (err.errno === -2) return; // doesn't exist
+    if (err.code === "ENOENT") return; // doesn't exist
     throw err;
   }
   for (const file of await fs.readdir(path)) {
