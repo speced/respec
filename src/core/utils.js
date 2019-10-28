@@ -4,7 +4,7 @@
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
 import { pub } from "./pubsubhub.js";
-export const name = "core/utils.js";
+export const name = "core/utils";
 
 const spaceOrTab = /^[ |\t]*/;
 const dashes = /-/g;
