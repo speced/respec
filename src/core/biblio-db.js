@@ -37,8 +37,7 @@ const readyPromise = openIdb();
  * @returns {Promise<import("idb").IDBPDatabase<BiblioDb>>}
  */
 async function openIdb() {
-  const { openDB } = idb;
-  return await openDB("respec-biblio2", 12, {
+  return await idb.openDB("respec-biblio2", 12, {
     upgrade(db) {
       Array.from(db.objectStoreNames).map(storeName =>
         db.deleteObjectStore(storeName)

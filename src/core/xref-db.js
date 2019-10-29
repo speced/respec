@@ -12,8 +12,7 @@ import { idb } from "./import-maps.js";
 const VERSION_CHECK_WAIT = 5 * 60 * 60 * 1000; // 5 min
 
 async function getIdbCache() {
-  const { openDB } = idb;
-  const db = await openDB("xref", 1, {
+  const db = await idb.openDB("xref", 1, {
     upgrade(db) {
       db.createObjectStore("xrefs");
     },
