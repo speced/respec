@@ -141,7 +141,7 @@ export function decorateDfn(dfn, defn, parent, name) {
   }
   dfn.dataset.idl = defn.type;
   dfn.dataset.title = dfn.textContent;
-  if (parent) dfn.dataset.dfnFor = parent;
+  dfn.dataset.dfnFor = parent;
   // Derive the data-type for dictionary members, interface attributes,
   // and methods
   switch (defn.type) {

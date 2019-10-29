@@ -33,7 +33,7 @@ describe("Core — Definition finder", () => {
     expect(barDfn.dataset.dfnFor).toBe("Foo");
     expect(barDfn.classList.contains("respec-offending-element")).toBeFalsy();
     expect(fooDfn.dataset.lt).toBeUndefined();
-    expect(fooDfn.dataset.dfnFor).toBeUndefined();
+    expect(fooDfn.dataset.dfnFor).toBe("");
   });
 
   it("should enumerate operation alternative names", async () => {
