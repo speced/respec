@@ -21,7 +21,6 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
     "@types/clipboard": "^2.0.1",
