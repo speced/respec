@@ -5,9 +5,9 @@
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
 import { pub, sub } from "./pubsubhub.js";
-import caniuseCss from "text!../../assets/caniuse.css";
 import { createResourceHint } from "./utils.js";
-import hyperHTML from "hyperhtml";
+import { fetchAsset } from "./text-loader.js";
+import { hyperHTML } from "./import-maps.js";
 
 export const name = "core/caniuse";
 
@@ -53,6 +53,16 @@ if (
   document.head.appendChild(link);
 }
 
+const caniuseCssPromise = loadStyle();
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/caniuse.css")).default;
+  } catch {
+    return fetchAsset("caniuse.css");
+  }
+}
+
 export async function run(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
@@ -64,6 +74,7 @@ export async function run(conf) {
   }
   const featureURL = new URL(options.feature, "https://caniuse.com/").href;
 
+  const caniuseCss = await caniuseCssPromise;
   document.head.appendChild(hyperHTML`
     <style class="removeOnSave">${caniuseCss}</style>`);
 

@@ -4,11 +4,10 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import * as webidl2 from "webidl2";
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { flatten, showInlineError, showInlineWarning } from "./utils.js";
-import css from "text!../../assets/webidl.css";
-import hyperHTML from "hyperhtml";
+import { hyperHTML, webidl2 } from "./import-maps.js";
+import { fetchAsset } from "./text-loader.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";
@@ -336,7 +335,17 @@ function renderWebIDL(idlElement, index) {
   return parse;
 }
 
-export function run() {
+const cssPromise = loadStyle();
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/webidl.css")).default;
+  } catch {
+    return fetchAsset("webidl.css");
+  }
+}
+
+export async function run() {
   const idls = document.querySelectorAll("pre.idl");
   if (!idls.length) {
     return;
@@ -345,7 +354,7 @@ export function run() {
     const link = document.querySelector("head link");
     if (link) {
       const style = document.createElement("style");
-      style.textContent = css;
+      style.textContent = await cssPromise;
       link.before(style);
     }
   }

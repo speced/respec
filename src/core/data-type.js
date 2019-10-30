@@ -5,17 +5,27 @@
  * Also adds the CSS for the data type tooltip.
  * Set `conf.highlightVars = true` to enable.
  */
-import tooltipStyle from "text!../../assets/datatype.css";
+import { fetchAsset } from "./text-loader.js";
 
 export const name = "core/data-type";
 
-export function run(conf) {
+const tooltipStylePromise = loadStyle();
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/datatype.css")).default;
+  } catch {
+    return fetchAsset("datatype.css");
+  }
+}
+
+export async function run(conf) {
   if (!conf.highlightVars) {
     return;
   }
 
   const style = document.createElement("style");
-  style.textContent = tooltipStyle;
+  style.textContent = await tooltipStylePromise;
   document.head.appendChild(style);
 
   let section = null;

@@ -5,7 +5,7 @@
 // Best practices are marked up with span.practicelab.
 import { addId, makeSafeCopy } from "./utils.js";
 import { lang as defaultLang } from "../core/l10n.js";
-import hyperHTML from "hyperhtml";
+import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/best-practices";

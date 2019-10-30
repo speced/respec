@@ -44,7 +44,7 @@
  * The whitespace of pre elements are left alone.
  */
 
-import marked from "marked";
+import { marked } from "./import-maps.js";
 export const name = "core/markdown";
 
 const gtEntity = /&gt;/gm;
@@ -200,6 +200,7 @@ export function markdownToHtml(text) {
   const potentialMarkdown = normalizedLeftPad
     .replace(gtEntity, ">")
     .replace(ampEntity, "&");
+  // @ts-ignore
   const result = marked(potentialMarkdown, {
     sanitize: false,
     gfm: true,

@@ -6,16 +6,30 @@
  * well-formatted IDL to the clipboard.
  *
  */
-import svgClipboard from "text!../../assets/clipboard.svg";
+import { fetchAsset } from "./text-loader.js";
 export const name = "core/webidl-clipboard";
 
-// This button serves a prototype that we clone as needed.
-const copyButton = document.createElement("button");
-copyButton.innerHTML = svgClipboard;
-copyButton.title = "Copy IDL to clipboard";
-copyButton.classList.add("respec-button-copy-paste", "removeOnSave");
+const copyButtonPromise = createButton();
+
+async function loadSVG() {
+  try {
+    return (await import("text!../../assets/clipboard.svg")).default;
+  } catch {
+    return fetchAsset("clipboard.svg");
+  }
+}
+
+async function createButton() {
+  const copyButton = document.createElement("button");
+  copyButton.innerHTML = await loadSVG();
+  copyButton.title = "Copy IDL to clipboard";
+  copyButton.classList.add("respec-button-copy-paste", "removeOnSave");
+  return copyButton;
+}
 
 export async function run() {
+  // This button serves a prototype that we clone as needed.
+  const copyButton = await copyButtonPromise;
   for (const pre of document.querySelectorAll("pre.idl")) {
     const button = copyButton.cloneNode(true);
     button.addEventListener("click", () => {
