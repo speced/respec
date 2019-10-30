@@ -6,7 +6,7 @@ import {
   getTextNodes,
   renameElement,
 } from "./utils.js";
-import { jquery as $ } from "./import-maps.js";
+import $ from "../../js/deps/builds/jquery.js";
 
 export const name = "core/jquery-enhanced";
 
