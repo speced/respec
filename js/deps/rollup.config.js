@@ -15,11 +15,15 @@ const template = {
 
 export default [
   {
-    input: "js/deps/marked",
+    input: "js/deps/jquery.js",
     ...template
   },
   {
-    input: "js/deps/pluralize",
+    input: "js/deps/marked.js",
+    ...template
+  },
+  {
+    input: "js/deps/pluralize.js",
     ...template
   }
 ]
