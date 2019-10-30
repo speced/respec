@@ -9,7 +9,7 @@
  *
  */
 import { flatten } from "./utils.js";
-import { importIdb } from "./idb.js";
+import { idb } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
 
@@ -37,8 +37,7 @@ const readyPromise = openIdb();
  * @returns {Promise<import("idb").IDBPDatabase<BiblioDb>>}
  */
 async function openIdb() {
-  const { openDB } = await importIdb();
-  return await openDB("respec-biblio2", 12, {
+  return await idb.openDB("respec-biblio2", 12, {
     upgrade(db) {
       Array.from(db.objectStoreNames).map(storeName =>
         db.deleteObjectStore(storeName)

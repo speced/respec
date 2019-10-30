@@ -5,7 +5,7 @@
  * License : BSD
  */
 "use strict";
-var shortcut = {
+export default {
   all_shortcuts: {}, //All the shortcuts are stored in this array
   add: function(shortcut_combination, callback, opt) {
     //Provide a set of default options

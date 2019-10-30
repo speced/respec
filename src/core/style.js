@@ -9,17 +9,30 @@
 // CONFIGURATION
 //  - noReSpecCSS: if you're using a profile that loads this module but you don't want
 //    the style, set this to true
-import css from "text!../../assets/respec2.css";
+import { fetchAsset } from "./text-loader.js";
 export const name = "core/style";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
-const styleElement = document.createElement("style");
-styleElement.id = "respec-mainstyle";
-styleElement.textContent = css;
-document.head.appendChild(styleElement);
+const styleElement = insertStyle();
 
-export function run(conf) {
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/respec2.css")).default;
+  } catch {
+    return fetchAsset("respec2.css");
+  }
+}
+
+async function insertStyle() {
+  const styleElement = document.createElement("style");
+  styleElement.id = "respec-mainstyle";
+  styleElement.textContent = await loadStyle();
+  document.head.appendChild(styleElement);
+  return styleElement;
+}
+
+export async function run(conf) {
   if (conf.noReSpecCSS) {
-    styleElement.remove();
+    (await styleElement).remove();
   }
 }
