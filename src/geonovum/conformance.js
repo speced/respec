@@ -2,7 +2,7 @@
 // Module geonovum/conformance
 // Handle the conformance section properly.
 // based on W3C conformance, but because Geonovum has different requirements, have a separate module
-import html from "hyperhtml";
+import { hyperHTML as html } from "../core/import-maps.js";
 export const name = "geonovum/conformance";
 
 /**

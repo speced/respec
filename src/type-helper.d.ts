@@ -89,7 +89,7 @@ declare namespace Intl {
 interface JQuery {
   renameElement(name: string): JQuery<any>;
   getDfnTitles(): string[];
-  linkTargets(): import("./core/utils").LinkTarget[];
+  linkTargets(): import("./core/utils.js").LinkTarget[];
   makeID(pfx?: string, txt?: string, noLC?: boolean): string;
   allTextNodes(exclusions: string[]): Text[];
 }

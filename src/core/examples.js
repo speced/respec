@@ -7,6 +7,7 @@
 // be used by a containing shell to extract all examples.
 
 import { addId } from "./utils.js";
+import { fetchAsset } from "./text-loader.js";
 import html from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
 
@@ -24,12 +25,13 @@ const localizationStrings = {
   },
 };
 
+const cssPromise = loadStyle();
+
 async function loadStyle() {
   try {
     return (await import("text!../../assets/examples.css")).default;
   } catch {
-    const loader = await import("./asset-loader.js");
-    return loader.loadAssetOnNode("examples.css");
+    return fetchAsset("examples.css");
   }
 }
 
@@ -76,7 +78,7 @@ export default async function({ document, lang }) {
 
   const l10n = localizationStrings[lang] || localizationStrings.en;
 
-  const css = await loadStyle();
+  const css = await cssPromise;
   document.head.insertBefore(
     html`
       <style>

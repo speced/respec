@@ -1,6 +1,6 @@
 // @ts-check
 import { IDBKeyVal } from "./utils.js";
-import { importIdb } from "./idb.js";
+import { idb } from "./import-maps.js";
 
 /**
  * @typedef {import('core/xref').RequestEntry} RequestEntry
@@ -71,13 +71,12 @@ const cacheBuster = {
 };
 
 async function getIdbCache() {
-  const { openDB } = await importIdb();
-  const idb = await openDB("xref", 1, {
+  const db = await idb.openDB("xref", 1, {
     upgrade(db) {
       db.createObjectStore("xrefs");
     },
   });
-  return new IDBKeyVal(idb, "xrefs");
+  return new IDBKeyVal(db, "xrefs");
 }
 
 /**

@@ -4,21 +4,13 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import * as webidl2 from "webidl2";
 import { flatten, showInlineError, showInlineWarning } from "./utils.js";
 import { decorateDfn } from "./dfn-finder.js";
+import { fetchAsset } from "./text-loader.js";
 import hyperHTML from "../../js/html-template.js";
+import { webidl2 } from "./import-maps.js";
 
 export const name = "core/webidl";
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/webidl.css")).default;
-  } catch {
-    const loader = await import("./asset-loader.js");
-    return loader.loadAssetOnNode("webidl.css");
-  }
-}
 
 /**
  * Takes the result of WebIDL2.parse(), an array of definitions.
@@ -377,6 +369,16 @@ function renderWebIDL(idlElement, respecDoc, index) {
   return parse;
 }
 
+const cssPromise = loadStyle();
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/webidl.css")).default;
+  } catch {
+    return fetchAsset("webidl.css");
+  }
+}
+
 /**
  * @param {import("../respec-document").RespecDocument} respecDoc
  */
@@ -390,7 +392,7 @@ export default async function(respecDoc) {
     const link = document.querySelector("head link");
     if (link) {
       const style = document.createElement("style");
-      style.textContent = await loadStyle();
+      style.textContent = await cssPromise;
       link.before(style);
     }
   }

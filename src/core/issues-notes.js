@@ -12,6 +12,7 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, joinAnd, parents } from "./utils.js";
+import { fetchAsset } from "./text-loader.js";
 import hyperHTML from "../../js/html-template.js";
 import { pub } from "./pubsubhub.js";
 
@@ -32,12 +33,13 @@ const localizationStrings = {
   },
 };
 
+const cssPromise = loadStyle();
+
 async function loadStyle() {
   try {
     return (await import("text!../../assets/issues-notes.css")).default;
   } catch {
-    const loader = await import("./asset-loader.js");
-    return loader.loadAssetOnNode("issues-notes.css");
+    return fetchAsset("issues-notes.css");
   }
 }
 
@@ -342,8 +344,8 @@ export default async function({ document, configuration: conf, lang }) {
   }
   const l10n = localizationStrings[lang] || localizationStrings.en;
   const ghIssues = await fetchAndStoreGithubIssues(conf.githubAPI);
+  const css = await cssPromise;
   const { head: headElem } = document;
-  const css = await loadStyle();
   headElem.insertBefore(
     hyperHTML`<style>${[css]}</style>`,
     headElem.querySelector("link")

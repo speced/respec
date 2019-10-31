@@ -15,6 +15,9 @@
     "ecmaVersion": 2019
   },
   "rules": {
+    "import/extensions": ["error", "always", {
+      "ignorePackages": true
+    }],
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "dot-notation": "error",
     "eol-last": ["error", "always"],
@@ -51,5 +54,5 @@
     "pickRandomsFromList": true,
     "respecConfig": true
   },
-  "plugins": ["prettier"]
+  "plugins": ["import", "prettier"]
 }

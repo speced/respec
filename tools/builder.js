@@ -4,10 +4,13 @@
 const colors = require("colors");
 const { promises: fsp } = require("fs");
 const path = require("path");
-const webpack = require("webpack");
-const { promisify } = require("util");
+const { rollup } = require("rollup");
+const alias = require("rollup-plugin-alias");
+const { string } = require("rollup-plugin-string");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
+const commonjs = require("rollup-plugin-commonjs");
+const json = require("rollup-plugin-json");
 colors.setTheme({
   error: "red",
   info: "white",
@@ -120,44 +123,44 @@ const Builder = {
 
     // optimisation settings
     const buildVersion = await this.getRespecVersion();
-    const config = {
-      mode: debug ? "none" : "production",
-      entry: require.resolve(`../js/profile-${name}.js`),
-      output: {
-        path: buildPath,
-        filename: outFile,
-      },
-      module: {
-        rules: [
-          {
-            // shortcut.js uses global scope
-            test: require.resolve("../js/shortcut.js"),
-            use: "exports-loader?shortcut",
-          },
-        ],
-      },
-      resolveLoader: {
-        // to import texts via e.g. "text!./css/webidl.css"
-        alias: { text: "raw-loader" },
-      },
-      devtool: "source-map",
-      plugins: [
-        // prevents generating 1.respec-w3c-common.js for dynamic imports
-        new webpack.optimize.LimitChunkCountPlugin({
-          maxChunks: 1,
-        }),
-        new webpack.IgnorePlugin({
-          // TODO: Remove package names when browsers support import-maps
-          resourceRegExp: /^\.\/asset-loader.js$|^jsdom$|^viperhtml$|idb\/build/,
-        }),
-      ],
-    };
     const buildDir = path.resolve(__dirname, "../builds/");
     const workerDir = path.resolve(__dirname, "../worker/");
-    const stats = await promisify(webpack)(config);
-    if (stats.hasErrors()) {
-      throw new Error(stats.toJson().errors);
-    }
+
+    const inputOptions = {
+      input: require.resolve(`../js/profile-${name}.js`),
+      plugins: [
+        !debug && require("rollup-plugin-terser").terser(),
+        alias({
+          resolve: [".css", ".svg"],
+          entries: [
+            {
+              find: /^text!(.*)/,
+              replacement: "./$1",
+            },
+          ],
+        }),
+        string({
+          include: [/\.css$/, /\.svg$/, /respec-worker\.js$/],
+        }),
+        commonjs(),
+        json(),
+      ],
+      onwarn(warning, warn) {
+        if (warning.code !== "CIRCULAR_DEPENDENCY") {
+          warn(warning);
+        }
+      },
+      inlineDynamicImports: true,
+    };
+    const outputOptions = {
+      file: outPath,
+      format: "commonjs",
+      sourcemap: true,
+    };
+
+    const bundle = await rollup(inputOptions);
+    await bundle.write(outputOptions);
+
     await appendBoilerplate(outPath, buildVersion, name);
     // copy respec-worker
     await fsp.copyFile(

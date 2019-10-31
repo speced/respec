@@ -10,7 +10,7 @@
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
 import { lang as defaultLang } from "./l10n.js";
-import hyperHTML from "hyperhtml";
+import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 import { showInlineWarning } from "./utils.js";
 const l10n = {

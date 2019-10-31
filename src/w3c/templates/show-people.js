@@ -1,5 +1,9 @@
 // @ts-check
-import { humanDate, showInlineError, toShortIsoDate } from "../../core/utils";
+import {
+  humanDate,
+  showInlineError,
+  toShortIsoDate,
+} from "../../core/utils.js";
 import html from "../../../js/html-template.js";
 
 const localizationStrings = {

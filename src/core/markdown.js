@@ -45,7 +45,7 @@
  */
 
 import { fragmentToHTML } from "../../js/html-template.js";
-import marked from "marked";
+import { marked } from "./import-maps.js";
 import { parseHTML } from "../../js/html-parser.js";
 export const name = "core/markdown";
 
@@ -202,6 +202,7 @@ export function markdownToHtml(text) {
   const potentialMarkdown = normalizedLeftPad
     .replace(gtEntity, ">")
     .replace(ampEntity, "&");
+  // @ts-ignore
   const result = marked(potentialMarkdown, {
     sanitize: false,
     gfm: true,

@@ -13,7 +13,7 @@ if (needAmdLike) {
       }
       return window.require.modules[dep];
     });
-    callback(...modules);
+    Promise.all(modules).then(results => callback(...results));
   };
   require.modules = {};
   window.require = require;
@@ -21,7 +21,7 @@ if (needAmdLike) {
 
 /**
  * @param {string} name
- * @param {any} object
+ * @param {object | Promise<object>} object
  */
 export function expose(name, object) {
   if (needAmdLike) {
