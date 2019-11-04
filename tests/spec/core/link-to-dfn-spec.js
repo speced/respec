@@ -90,6 +90,46 @@ describe("Core — Link to definitions", () => {
     expect(dfn.dataset.dfnFor).toBe("Foo");
   });
 
+  it("has empty data-dfn-for on top level things", async () => {
+    const bodyText = `
+      <section data-dfn-for="HyperStar" data-link-for="HyperStar">
+        <pre class="idl">
+          [Exposed=Window]
+          interface HyperStar {
+            constructor();
+            attribute DOMString attr;
+            void meth();
+          };
+          enum Planet {
+            "tiny",
+            "massive"
+          };
+        </pre>
+        <div id="test">
+          <p><dfn>HyperStar</dfn></p>
+          <p><dfn>attr</dfn></p>
+          <p><dfn>meth()</dfn></p>
+          <p><dfn>Planet</dfn></p>
+          <p data-dfn-for="Planet"><dfn>tiny</dfn></p>
+        </div>
+      </section>`;
+    const ops = makeStandardOps(null, bodyText);
+    const doc = await makeRSDoc(ops);
+
+    const [
+      dfnInterface,
+      dfnAttr,
+      dfnMethod,
+      dfnEnum,
+      dfnEnumValue,
+    ] = doc.querySelectorAll("#test dfn");
+    expect(dfnInterface.dataset.dfnFor).toBe("");
+    expect(dfnAttr.dataset.dfnFor).toBe("HyperStar");
+    expect(dfnMethod.dataset.dfnFor).toBe("HyperStar");
+    expect(dfnEnum.dataset.dfnFor).toBe("");
+    expect(dfnEnumValue.dataset.dfnFor).toBe("Planet");
+  });
+
   it("should get ID from the first match", async () => {
     const bodyText = `
       <section>
