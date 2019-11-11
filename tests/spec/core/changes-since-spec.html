@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<script class="remove">
+  function changesSinceFilter(commit) {
+    return !commit.message.startsWith("chore");
+  }
+  const respecConfig = {
+    github: "org/repo",
+    githubAPI: `${window.parent.location.origin}/tests/data/`,
+    changesSince: {
+      tag: "TAG",
+      filter: changesSinceFilter,
+    },
+  };
+</script>
+<section>
+  <ul id="changes-since"></ul>
+</section>
