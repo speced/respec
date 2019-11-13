@@ -9,6 +9,13 @@ import { lang as defaultLang } from "../core/l10n.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github";
 
+let apiURLResolver;
+let apiURLRejector;
+export const apiURLPromise = new Promise((resolve, reject) => {
+  apiURLResolver = resolve;
+  apiURLRejector = reject;
+});
+
 const localizationStrings = {
   en: {
     file_a_bug: "File a bug",
@@ -50,14 +57,18 @@ export async function run(conf) {
   try {
     ghURL = new URL(tempURL, "https://github.com");
   } catch {
-    pub("error", `\`respecConf.github\` is not a valid URL? (${ghURL})`);
+    const msg = `\`respecConf.github\` is not a valid URL? (${ghURL})`;
+    pub("error", );
+    apiURLRejector(new Error(msg));
     return;
   }
   if (ghURL.origin !== "https://github.com") {
     const msg = `\`respecConf.github\` must be HTTPS and pointing to GitHub. (${ghURL})`;
     pub("error", msg);
+    apiURLRejector(new Error(msg));
     return;
   }
+  apiURLResolver(ghURL);
   const [org, repo] = ghURL.pathname.split("/").filter(item => item);
   if (!org || !repo) {
     const msg =
