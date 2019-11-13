@@ -58,7 +58,7 @@ export async function run(conf) {
     ghURL = new URL(tempURL, "https://github.com");
   } catch {
     const msg = `\`respecConf.github\` is not a valid URL? (${ghURL})`;
-    pub("error", );
+    pub("error", msg);
     apiURLRejector(new Error(msg));
     return;
   }
