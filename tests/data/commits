@@ -2,7 +2,7 @@
   { "hash": "80aad0a", "message": "chore: ReSpec fixes" },
   {
     "hash": "276f4ba",
-    "message": "Editorial: Add privacy notice regarding data usage (#869)"
+    "message": "Editorial: Add privacy notice regarding <var> usage (#869)"
   },
   {
     "hash": "3ebb1c1",

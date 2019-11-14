@@ -7,7 +7,8 @@
  *
  * @typedef {{message: string, hash: string}} Commit
  */
-import { apiURLPromise } from "../github.js";
+import { github } from "../github.js";
+import { hyperHTML } from "../import-maps.js";
 import { pub } from "../pubsubhub.js";
 
 let readyResolver;
@@ -46,7 +47,7 @@ export default class Changelog extends HTMLElement {
   async getCommits() {
     const { from, to, filter } = this.props;
     try {
-      const githubAPI = await apiURLPromise;
+      const { api: githubAPI } = await github;
       const url = new URL("commits", githubAPI);
       // TODO: /s/since/from
       url.searchParams.set("since", from);
@@ -75,12 +76,18 @@ export default class Changelog extends HTMLElement {
     this.append("Fetching commits...");
     const commits = await this.state.commits;
     this.firstChild.remove();
+
     if (!commits) return;
+
+    const { repoURL } = await github;
     const nodes = commits.map(commit => {
-      const el = document.createElement("li");
-      el.textContent = commit.message;
-      return el;
+      const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
+      const commitURL = `${repoURL}commit/${commit.hash}`;
+      const prURL = prNumber ? `${repoURL}pull/${prNumber}` : null;
+      const pr = prNumber && hyperHTML` <a href="${prURL}">(#${prNumber})</a>`;
+      return hyperHTML`<li><a href="${commitURL}">${message}</a>${pr}</li>`;
     });
+
     const ul = this.appendChild(document.createElement("ul"));
     ul.append(...nodes);
   }

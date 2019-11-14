@@ -9,11 +9,12 @@ import { lang as defaultLang } from "../core/l10n.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github";
 
-let apiURLResolver;
-let apiURLRejector;
-export const apiURLPromise = new Promise((resolve, reject) => {
-  apiURLResolver = resolve;
-  apiURLRejector = reject;
+let githubResolver;
+let githubRejector;
+/** @type {Promise<{ api: string, branch: string, repoURL: string }>} */
+export const github = new Promise((resolve, reject) => {
+  githubResolver = resolve;
+  githubRejector = reject;
 });
 
 const localizationStrings = {
@@ -49,7 +50,7 @@ export async function run(conf) {
       "Config option `[github](https://github.com/w3c/respec/wiki/github)` " +
       "is missing property `repoURL`.";
     pub("error", msg);
-    apiURLRejector(new Error(msg));
+    githubRejector(new Error(msg));
     return;
   }
   let tempURL = conf.github.repoURL || conf.github;
@@ -60,13 +61,13 @@ export async function run(conf) {
   } catch {
     const msg = `\`respecConf.github\` is not a valid URL? (${ghURL})`;
     pub("error", msg);
-    apiURLRejector(new Error(msg));
+    githubRejector(new Error(msg));
     return;
   }
   if (ghURL.origin !== "https://github.com") {
     const msg = `\`respecConf.github\` must be HTTPS and pointing to GitHub. (${ghURL})`;
     pub("error", msg);
-    apiURLRejector(new Error(msg));
+    githubRejector(new Error(msg));
     return;
   }
   const [org, repo] = ghURL.pathname.split("/").filter(item => item);
@@ -74,7 +75,7 @@ export async function run(conf) {
     const msg =
       "`respecConf.github` URL needs a path with, for example, w3c/my-spec";
     pub("error", msg);
-    apiURLRejector(new Error(msg));
+    githubRejector(new Error(msg));
     return;
   }
   const branch = conf.github.branch || "gh-pages";
@@ -121,11 +122,11 @@ export async function run(conf) {
       pub("warn", msg);
     }
   }
-  apiURLResolver(githubAPI);
   const normalizedGHObj = {
     branch,
     repoURL: ghURL.href,
   };
+  githubResolver({ api: githubAPI, ...normalizedGHObj });
 
   const normalizedConfig = {
     ...newProps,

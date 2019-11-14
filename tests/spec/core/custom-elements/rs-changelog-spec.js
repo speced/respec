@@ -19,6 +19,9 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
     expect(commits.length).toBe(8);
     const firstCommit = commits[0];
     expect(firstCommit.textContent).toBe("chore: ReSpec fixes");
+    const links = firstCommit.querySelectorAll("a");
+    expect(links.length).toBe(1);
+    expect(links[0].href).toBe("https://github.com/org/repo/commit/80aad0a");
   });
 
   it("filters commits if a filter function is provided", async () => {
@@ -37,7 +40,12 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
     expect(commits.length).toBe(5);
     const firstCommit = commits[0];
     expect(firstCommit.textContent).toBe(
-      "Editorial: Add privacy notice regarding data usage (#869)"
+      "Editorial: Add privacy notice regarding <var> usage (#869)"
     );
+    const links = firstCommit.querySelectorAll("a");
+    expect(links.length).toBe(2);
+    const [commitLink, prLink] = links;
+    expect(commitLink.href).toBe("https://github.com/org/repo/commit/276f4ba");
+    expect(prLink.href).toBe("https://github.com/org/repo/pull/869");
   });
 });
