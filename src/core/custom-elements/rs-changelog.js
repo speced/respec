@@ -5,85 +5,82 @@
  * the user, it is used to filter the commits that are to be shown. Otherwise,
  * all commits are shown.
  */
-import { done } from "./index.js";
+import { apiURLPromise } from "../github.js";
 import { pub } from "../pubsubhub.js";
 
 export const name = "rs-changelog";
 
-export function run(conf) {
-  class Changelog extends HTMLElement {
-    constructor() {
-      super();
-      this.data = {
-        from: this.getAttribute("from"),
-        to: this.getAttribute("to") || "HEAD",
-        /** @type {typeof defaultFilter} */
-        filter:
-          typeof window[this.getAttribute("filter")] === "function"
-            ? window[this.getAttribute("filter")]
-            : defaultFilter,
-        /** @type {Commit[]} */
-        commits: [],
-      };
-    }
+let readyResolver;
+const readyPromise = new Promise(resolve => {
+  readyResolver = resolve;
+});
 
-    connectedCallback() {
-      this.getData()
-        .then(() => this.render())
-        .finally(() => done(this));
-    }
+export default class Changelog extends HTMLElement {
+  constructor() {
+    super();
+    this.props = {
+      from: this.getAttribute("from"),
+      to: this.getAttribute("to") || "HEAD",
+      /** @type {typeof defaultFilter} */
+      filter:
+        typeof window[this.getAttribute("filter")] === "function"
+          ? window[this.getAttribute("filter")]
+          : defaultFilter,
+    };
+  }
 
-    async getData() {
-      const { from, to, filter } = this.data;
-      this.append("Fetching commits...");
-      const commits = await getCommits(from, to, conf.githubAPI);
-      this.firstChild.remove();
-      if (!commits) return;
-      this.data.commits = commits.filter(filter);
-    }
+  get ready() {
+    return readyPromise;
+  }
 
-    async render() {
-      const { commits } = this.data;
-      const nodes = commits.map(commit => {
-        const el = document.createElement("li");
-        el.textContent = commit.message;
-        return el;
-      });
-      const ul = this.appendChild(document.createElement("ul"));
-      ul.append(...nodes);
+  async connectedCallback() {
+    this.state = {
+      commits: this.getCommits(),
+    };
+    await this.render();
+    readyResolver();
+  }
+
+  async getCommits() {
+    const { from, to, filter } = this.props;
+    try {
+      const githubAPI = await apiURLPromise;
+      const url = new URL("commits", githubAPI);
+      // TODO: /s/since/from
+      url.searchParams.set("since", from);
+      url.searchParams.set("to", to);
+
+      const res = await fetch(url.href);
+      if (!res.ok) {
+        throw new Error(
+          `Request to ${url} failed with status code ${res.status}`
+        );
+      }
+      /** @type {{message: string, hash: string}[]} */
+      const commits = await res.json();
+      if (!commits.length) {
+        throw new Error(`No commits between ${from}..${to}.`);
+      }
+      return commits.filter(filter);
+    } catch (error) {
+      pub("error", "Error loading commits from GitHub.");
+      console.error(error);
+      return null;
     }
   }
 
-  customElements.define(name, Changelog);
-}
-
-/**
- * @param {string} from commit-ish
- * @param {string} to commit-ish
- * @param {string} apiURL
- * @typedef {{ hash: string, message: string }} Commit
- */
-async function getCommits(from, to, apiURL) {
-  const url = new URL("commits", apiURL);
-  url.searchParams.set("from", from);
-  url.searchParams.set("to", to);
-  try {
-    const res = await fetch(url.href);
-    if (!res.ok) {
-      throw new Error(
-        `Request to ${url} failed with status code ${res.status}`
-      );
-    }
-    /** @type {Commit[]} */
-    const commits = await res.json();
-    if (!commits.length) {
-      throw new Error(`No commits between ${from}..${to}.`);
-    }
-    return commits;
-  } catch (error) {
-    pub("error", "Error loading commits from GitHub.");
-    console.error(error);
-    return null;
+  async render() {
+    this.append("Fetching commits...");
+    const commits = await this.state.commits;
+    this.firstChild.remove();
+    if (!commits) return;
+    const nodes = commits.map(commit => {
+      const el = document.createElement("li");
+      el.textContent = commit.message;
+      return el;
+    });
+    const ul = this.appendChild(document.createElement("ul"));
+    ul.append(...nodes);
   }
 }
 

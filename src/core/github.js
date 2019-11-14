@@ -49,6 +49,7 @@ export async function run(conf) {
       "Config option `[github](https://github.com/w3c/respec/wiki/github)` " +
       "is missing property `repoURL`.";
     pub("error", msg);
+    apiURLRejector(new Error(msg));
     return;
   }
   let tempURL = conf.github.repoURL || conf.github;
@@ -68,12 +69,12 @@ export async function run(conf) {
     apiURLRejector(new Error(msg));
     return;
   }
-  apiURLResolver(ghURL);
   const [org, repo] = ghURL.pathname.split("/").filter(item => item);
   if (!org || !repo) {
     const msg =
       "`respecConf.github` URL needs a path with, for example, w3c/my-spec";
     pub("error", msg);
+    apiURLRejector(new Error(msg));
     return;
   }
   const branch = conf.github.branch || "gh-pages";
@@ -120,6 +121,7 @@ export async function run(conf) {
       pub("warn", msg);
     }
   }
+  apiURLResolver(githubAPI);
   const normalizedGHObj = {
     branch,
     repoURL: ghURL.href,

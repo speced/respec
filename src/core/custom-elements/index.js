@@ -20,14 +20,22 @@ const CUSTOM_ELEMENTS = [changelog];
 
 export const name = "core/custom-elements";
 
-export async function run(conf) {
+export async function run() {
   // prepare and register elements
-  CUSTOM_ELEMENTS.forEach(el => el.run(conf));
+  CUSTOM_ELEMENTS.forEach(el => {
+    customElements.define(
+      el.name,
+      el.default,
+      el.extends ? { extends: el.extends } : undefined
+    );
+  });
 
   // wait for each element to be ready
-  const selectors = CUSTOM_ELEMENTS.map(el => el.name).join(", ");
+  const selectors = CUSTOM_ELEMENTS.map(el => {
+    return el.extends ? `is["${el.name}"]` : el.name;
+  }).join(", ");
   const readyPromises = [...document.querySelectorAll(selectors)].map(
-    el => new Promise(res => el.addEventListener("done", res, { once: true }))
+    el => el.ready
   );
   await Promise.all(readyPromises);
 }
