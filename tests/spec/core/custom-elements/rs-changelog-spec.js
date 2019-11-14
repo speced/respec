@@ -10,7 +10,7 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
     githubAPI: `${window.parent.location.origin}/tests/data/`,
   };
 
-  it("Shows all commits since given tag", async () => {
+  it("shows all commits since given tag", async () => {
     const body = `<rs-changelog from="CR2" to="HEAD"></rs-changelog>`;
     const ops = makeStandardOps(conf, body);
     const doc = await makeRSDoc(ops);
@@ -21,7 +21,7 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
     expect(firstCommit.textContent).toBe("chore: ReSpec fixes");
   });
 
-  it("Filters commits if a filter function is provided", async () => {
+  it("filters commits if a filter function is provided", async () => {
     const body = `
       <script>
         function changesSinceFilter(commit) {
