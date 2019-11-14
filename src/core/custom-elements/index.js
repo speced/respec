@@ -1,18 +1,15 @@
 // @ts-check
 /**
- * Waits for all custom elements to finish their processing.
+ * Registers custom elements and waits for them to finish their processing.
  *
  * Every custom element file exports:
  * - `name`: registered name of the custom element, prefixed with `rs-`.
- * - `run`: a function that accepts `conf` and calls
- *   `customElements.define(name, class {})`
+ * - `default`: class defintion of the custom element.
+ * - `extends`: an optional string if element extends some built-in element.
  *
- * Every custom element must import `done` and call it once the custom
- * element has finished its processing, with or without errors, as:
- * ``` js
- * // do processing, then call:
- * done(this);
- * ```
+ * Every custom element must have a `ready` getter function which returns a
+ * promise that tells the element has finished its processing, with or without
+ * errors.
  */
 
 import * as changelog from "./rs-changelog.js";
