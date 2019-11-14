@@ -8,24 +8,27 @@
 import { apiURLPromise } from "../github.js";
 import { pub } from "../pubsubhub.js";
 
-export const name = "rs-changelog";
-
 let readyResolver;
 const readyPromise = new Promise(resolve => {
   readyResolver = resolve;
 });
 
+export const name = "rs-changelog";
+
+/**
+ * @typedef {{message: string, hash: string}} Commit
+ */
 export default class Changelog extends HTMLElement {
   constructor() {
     super();
     this.props = {
       from: this.getAttribute("from"),
       to: this.getAttribute("to") || "HEAD",
-      /** @type {typeof defaultFilter} */
+      /** @type {(commit: Commit) => boolean} */
       filter:
         typeof window[this.getAttribute("filter")] === "function"
           ? window[this.getAttribute("filter")]
-          : defaultFilter,
+          : () => true,
     };
   }
 
@@ -56,7 +59,7 @@ export default class Changelog extends HTMLElement {
           `Request to ${url} failed with status code ${res.status}`
         );
       }
-      /** @type {{message: string, hash: string}[]} */
+      /** @type {Commit[]} */
       const commits = await res.json();
       if (!commits.length) {
         throw new Error(`No commits between ${from}..${to}.`);
@@ -82,11 +85,4 @@ export default class Changelog extends HTMLElement {
     const ul = this.appendChild(document.createElement("ul"));
     ul.append(...nodes);
   }
-}
-
-/**
- * @param {Commit} _commit
- */
-function defaultFilter(_commit) {
-  return true;
 }

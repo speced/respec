@@ -10,9 +10,13 @@
  * Every custom element must have a `ready` getter function which returns a
  * promise that tells the element has finished its processing, with or without
  * errors.
+ *
+ * @typedef {{ name: string, default: Function, extends?: string }} CustomElementDfn
+ * @typedef { HTMLElement & { ready: Promise<void> }} CustomElement
  */
 
 import * as changelog from "./rs-changelog.js";
+/** @type {CustomElementDfn[]} */
 const CUSTOM_ELEMENTS = [changelog];
 
 export const name = "core/custom-elements";
@@ -31,12 +35,8 @@ export async function run() {
   const selectors = CUSTOM_ELEMENTS.map(el => {
     return el.extends ? `is["${el.name}"]` : el.name;
   }).join(", ");
-  const readyPromises = [...document.querySelectorAll(selectors)].map(
-    el => el.ready
-  );
+  /** @type {NodeListOf<CustomElement>} */
+  const elems = document.querySelectorAll(selectors);
+  const readyPromises = [...elems].map(el => el.ready);
   await Promise.all(readyPromises);
-}
-
-export function done(self) {
-  self.dispatchEvent(new CustomEvent("done"));
 }
