@@ -84,7 +84,7 @@ export default class Changelog extends HTMLElement {
       const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
       const commitURL = `${repoURL}commit/${commit.hash}`;
       const prURL = prNumber ? `${repoURL}pull/${prNumber}` : null;
-      const pr = prNumber && hyperHTML` <a href="${prURL}">(#${prNumber})</a>`;
+      const pr = prNumber && hyperHTML` (<a href="${prURL}">#${prNumber}</a>)`;
       return hyperHTML`<li><a href="${commitURL}">${message}</a>${pr}</li>`;
     });
 
