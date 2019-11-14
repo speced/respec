@@ -4,6 +4,8 @@
  * list of "changes since" given commitish. If a filter function is provided by
  * the user, it is used to filter the commits that are to be shown. Otherwise,
  * all commits are shown.
+ *
+ * @typedef {{message: string, hash: string}} Commit
  */
 import { apiURLPromise } from "../github.js";
 import { pub } from "../pubsubhub.js";
@@ -15,9 +17,6 @@ const readyPromise = new Promise(resolve => {
 
 export const name = "rs-changelog";
 
-/**
- * @typedef {{message: string, hash: string}} Commit
- */
 export default class Changelog extends HTMLElement {
   constructor() {
     super();
