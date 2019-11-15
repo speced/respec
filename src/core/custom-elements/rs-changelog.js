@@ -49,8 +49,7 @@ export default class ChangelogElement extends HTMLElement {
     try {
       const { api: githubAPI } = await github;
       const url = new URL("commits", githubAPI);
-      // TODO: /s/since/from
-      url.searchParams.set("since", from);
+      url.searchParams.set("from", from);
       url.searchParams.set("to", to);
 
       const res = await fetch(url.href);
@@ -85,7 +84,7 @@ export default class ChangelogElement extends HTMLElement {
       const commitURL = `${repoURL}commit/${commit.hash}`;
       const prURL = prNumber ? `${repoURL}pull/${prNumber}` : null;
       const pr = prNumber && hyperHTML` (<a href="${prURL}">#${prNumber}</a>)`;
-      return hyperHTML`<li><a href="${commitURL}">${message}</a>${pr}</li>`;
+      return hyperHTML`<li><a href="${commitURL}">${message.trim()}</a>${pr}</li>`;
     });
 
     const ul = this.appendChild(document.createElement("ul"));
