@@ -18,7 +18,7 @@ const readyPromise = new Promise(resolve => {
 
 export const name = "rs-changelog";
 
-export default class Changelog extends HTMLElement {
+export default class ChangelogElement extends HTMLElement {
   constructor() {
     super();
     this.props = {
