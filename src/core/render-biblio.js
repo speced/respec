@@ -249,7 +249,11 @@ export function renderSpecrefReference(ref) {
 }
 
 export function renderCrossrefReference(ref) {
-  let output = `<cite>${ref.title}</cite>`;
+  let title = ref.title;
+  if (ref.subtitle) {
+    title = `${ref.title}. ${ref.subtitle}`;
+  }
+  let output = `<cite>${title}</cite>`;
 
   output = ref.URL ? `<a href="${ref.URL}">${output}</a>. ` : `${output}. `;
 
@@ -287,7 +291,9 @@ export function renderCrossrefReference(ref) {
     identifiers.push(
       `DOI:&nbsp;<a href="https://doi.org/"${ref.DOI}">${ref.DOI}</a>`
     );
-  // TODO we could add ISBN, ISSN here? or is it clutter?
+  if (ref.ISBN && ref.type === "book") {
+    identifiers.push(`ISBN:&nbsp;${ref.ISBN.map(formatISBN).join(", ")}`);
+  }
   output = `${output} ${identifiers.join(", ")}`;
 
   return output;
@@ -306,6 +312,12 @@ function renderCrossrefAuthor(author) {
     return author.ORCID ? `<a href="${author.ORCID}">${name}</a>` : name;
   }
   return null;
+}
+
+function formatISBN(isbn) {
+  // TODO we could insert dashes in ISBNs where appropriate.
+  // for now we just render them raw
+  return isbn;
 }
 
 /**

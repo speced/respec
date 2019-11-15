@@ -81,9 +81,7 @@ export async function updateFromNetwork(
   return data;
 }
 
-export async function updateFromCrossref(
-  refsToFetch
-) {
+export async function updateFromCrossref(refsToFetch) {
   if (!refsToFetch.length || navigator.onLine === false) {
     return null;
   }
