@@ -56,7 +56,6 @@ const defaultsReference = Object.freeze({
 });
 
 const endWithDot = endNormalizer(".");
-const endWithComma = endNormalizer(",");
 
 export function run(conf) {
   const informs = Array.from(conf.informativeReferences);
@@ -223,10 +222,10 @@ export function wireReference(rawRef, target = "_blank") {
 // Renders a reference in the references section
 export function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
-  if (ref.id.startsWith('doi:')) {
-     return renderCrossrefReference(ref);
+  if (ref.id.startsWith("doi:")) {
+    return renderCrossrefReference(ref);
   } else {
-     return renderSpecrefReference(ref);
+    return renderSpecrefReference(ref);
   }
 }
 
@@ -261,30 +260,35 @@ export function renderCrossrefReference(ref) {
 
   // Add bibliographic reference part
   const journalRefParts = [];
-  const containerTitles = ref['container-title'];
+  const containerTitles = ref["container-title"];
   if (containerTitles) {
-    const rendered = typeof containerTitles === "object" ? containerTitles[0] : containerTitles;
+    const rendered =
+      typeof containerTitles === "object"
+        ? containerTitles[0]
+        : containerTitles;
     journalRefParts.push(rendered);
-  }
-  else if (ref.publisher) {
+  } else if (ref.publisher) {
     journalRefParts.push(ref.publisher);
   }
   if (ref.volume && ref.issue) {
     journalRefParts.push(`<strong>${ref.volume}</strong> (${ref.issue})`);
   }
-  if (ref.page && typeof ref.page === 'string') {
-    journalRefParts.push('pp. '+ref.page);
+  if (ref.page && typeof ref.page === "string") {
+    journalRefParts.push(`pp. ${ref.page}`);
   }
-  if (ref.issued && ref.issued['date-parts']) {
-    journalRefParts.push(ref.issued['date-parts'].join('-'));
+  if (ref.issued && ref.issued["date-parts"]) {
+    journalRefParts.push(ref.issued["date-parts"].join("-"));
   }
-  output = `${output} ${endWithDot(journalRefParts.join(', '))} `;
-  
+  output = `${output} ${endWithDot(journalRefParts.join(", "))} `;
+
   // Add identifiers
   const identifiers = [];
-  if (ref.DOI) identifiers.push(`DOI:&nbsp;<a href="https://doi.org/"${ref.DOI}">${ref.DOI}</a>`);
+  if (ref.DOI)
+    identifiers.push(
+      `DOI:&nbsp;<a href="https://doi.org/"${ref.DOI}">${ref.DOI}</a>`
+    );
   // TODO we could add ISBN, ISSN here? or is it clutter?
-  output = `${output} ${identifiers.join(', ')}`;
+  output = `${output} ${identifiers.join(", ")}`;
 
   return output;
 }
@@ -292,14 +296,14 @@ export function renderCrossrefReference(ref) {
 function renderCrossrefAuthor(author) {
   let name = null;
   if (author.given && author.family) {
-     name = author.given + ' '+ author.family;
+    name = `${author.given} ${author.family}`;
   } else if (author.family) {
-     name = author.family;
+    name = author.family;
   } else {
-     name = author.literal;
+    name = author.literal;
   }
   if (name) {
-     return author.ORCID ? `<a href="${author.ORCID}">${name}</a>` : name;
+    return author.ORCID ? `<a href="${author.ORCID}">${name}</a>` : name;
   }
   return null;
 }

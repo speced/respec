@@ -27,7 +27,7 @@ export const rfc2119Usage = {};
 const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
 const inlineIdlReference = /(?:{{[^}]+}})/; // {{ WebIDLThing }}
 const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
-const inlineCitation = /(?:\[\[(?:(?:(?:!|\\|\?)?[A-Za-z0-9.-]+)|(?:doi\:10\.[0-9]{4,}[^ ]*\/[^ ]+))\]\])/; // [[citation]]
+const inlineCitation = /(?:\[\[(?:(?:(?:!|\\|\?)?[A-Za-z0-9.-]+)|(?:doi:10\.[0-9]{4,}[^ ]*\/[^ ]+))\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[A-Za-z]+(?:-[A-Za-z]+)?\^\])/; // Inline [^element^]

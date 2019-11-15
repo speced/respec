@@ -64,15 +64,15 @@ export async function updateFromNetwork(
 ) {
   const refsToFetch = [...new Set(refs)].filter(ref => ref.trim());
   // Split the ids by source
-  const specrefIds = refsToFetch.filter(ref => !ref.startsWith('doi:'));
-  const crossrefIds = refsToFetch.filter(ref => ref.startsWith('doi:'));
-  
+  const specrefIds = refsToFetch.filter(ref => !ref.startsWith("doi:"));
+  const crossrefIds = refsToFetch.filter(ref => ref.startsWith("doi:"));
+
   // Fetch the ids
   const specrefData = await updateFromSpecref(specrefIds, options);
-  const crossrefData = await updateFromCrossref(crossrefIds, options);
+  const crossrefData = await updateFromCrossref(crossrefIds);
 
   // Store them in the indexed DB
-  const data = {...specrefData, ...crossrefData};
+  const data = { ...specrefData, ...crossrefData };
   try {
     await biblioDB.addAll(data);
   } catch (err) {
@@ -82,34 +82,32 @@ export async function updateFromNetwork(
 }
 
 export async function updateFromCrossref(
-  refsToFetch,
-  options = { forceUpdate: false }
+  refsToFetch
 ) {
-   if (!refsToFetch.length || navigator.onLine === false) {
-     return null;
-   }
-   let response;
-   try {
-     response = await fetch(crossrefURL.href + refsToFetch.join(","));
-   } catch (err) {
-     console.error(err);
-     return null;
-   }
-   const data = await response.json();
+  if (!refsToFetch.length || navigator.onLine === false) {
+    return null;
+  }
+  let response;
+  try {
+    response = await fetch(crossrefURL.href + refsToFetch.join(","));
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+  const data = await response.json();
 
-   const keyToMetadata = data.message.items
-     .reduce(function(collector, item) {
-       if (item.DOI) {
-         const id = 'doi:'+item.DOI;
-         item.id = id;
-         delete item.reference;
-         collector[id] = item;
-       } else {
-         console.error('Invalid DOI metadata returned by Crossref');
-       }
-       return collector;
-     }, {});
-   return keyToMetadata;
+  const keyToMetadata = data.message.items.reduce((collector, item) => {
+    if (item.DOI) {
+      const id = `doi:${item.DOI}`;
+      item.id = id;
+      delete item.reference;
+      collector[id] = item;
+    } else {
+      console.error("Invalid DOI metadata returned by Crossref");
+    }
+    return collector;
+  }, {});
+  return keyToMetadata;
 }
 
 export async function updateFromSpecref(
