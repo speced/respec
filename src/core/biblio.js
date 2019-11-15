@@ -16,6 +16,7 @@ export { wireReference, stringifyReference } from "./render-biblio.js";
 export const name = "core/biblio";
 
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
+const crossrefURL = new URL("https://api.crossref.org/works?filter=");
 
 /**
  * Normative references take precedence over informative ones,
@@ -49,11 +50,72 @@ const done = new Promise(resolve => {
   doneResolver = resolve;
 });
 
+/*
+ * Fetches a set of references from Specref
+ * and / or Crossref, depending on their ids
+ * (Crossref ids start with "doi:").
+ *
+ * Returns a map from reference ids to reference
+ * contents.
+ */
 export async function updateFromNetwork(
   refs,
   options = { forceUpdate: false }
 ) {
   const refsToFetch = [...new Set(refs)].filter(ref => ref.trim());
+  // Split the ids by source
+  const specrefIds = refsToFetch.filter(ref => !ref.startsWith('doi:'));
+  const crossrefIds = refsToFetch.filter(ref => ref.startsWith('doi:'));
+  
+  // Fetch the ids
+  const specrefData = await updateFromSpecref(specrefIds, options);
+  const crossrefData = await updateFromCrossref(crossrefIds, options);
+
+  // Store them in the indexed DB
+  const data = {...specrefData, ...crossrefData};
+  try {
+    await biblioDB.addAll(data);
+  } catch (err) {
+    console.error(err);
+  }
+  return data;
+}
+
+export async function updateFromCrossref(
+  refsToFetch,
+  options = { forceUpdate: false }
+) {
+   if (!refsToFetch.length || navigator.onLine === false) {
+     return null;
+   }
+   let response;
+   try {
+     response = await fetch(crossrefURL.href + refsToFetch.join(","));
+   } catch (err) {
+     console.error(err);
+     return null;
+   }
+   const data = await response.json();
+
+   const keyToMetadata = data.message.items
+     .reduce(function(collector, item) {
+       if (item.DOI) {
+         const id = 'doi:'+item.DOI;
+         item.id = id;
+         delete item.reference;
+         collector[id] = item;
+       } else {
+         console.error('Invalid DOI metadata returned by Crossref');
+       }
+       return collector;
+     }, {});
+   return keyToMetadata;
+}
+
+export async function updateFromSpecref(
+  refsToFetch,
+  options = { forceUpdate: false }
+) {
   // Update database if needed, if we are online
   if (!refsToFetch.length || navigator.onLine === false) {
     return null;
@@ -69,11 +131,6 @@ export async function updateFromNetwork(
     return null;
   }
   const data = await response.json();
-  try {
-    await biblioDB.addAll(data);
-  } catch (err) {
-    console.error(err);
-  }
   return data;
 }
 

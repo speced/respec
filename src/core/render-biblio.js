@@ -56,6 +56,7 @@ const defaultsReference = Object.freeze({
 });
 
 const endWithDot = endNormalizer(".");
+const endWithComma = endNormalizer(",");
 
 export function run(conf) {
   const informs = Array.from(conf.informativeReferences);
@@ -188,6 +189,7 @@ function endNormalizer(endStr) {
   };
 }
 
+// Renders a reference in the embedded Specref search interface
 export function wireReference(rawRef, target = "_blank") {
   if (typeof rawRef !== "object") {
     throw new TypeError("Only modern object references are allowed");
@@ -218,8 +220,17 @@ export function wireReference(rawRef, target = "_blank") {
   `;
 }
 
+// Renders a reference in the references section
 export function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
+  if (ref.id.startsWith('doi:')) {
+     return renderCrossrefReference(ref);
+  } else {
+     return renderSpecrefReference(ref);
+  }
+}
+
+export function renderSpecrefReference(ref) {
   let output = `<cite>${ref.title}</cite>`;
 
   output = ref.href ? `<a href="${ref.href}">${output}</a>. ` : `${output}. `;
@@ -236,6 +247,61 @@ export function stringifyReference(ref) {
   if (ref.status) output += `${REF_STATUSES.get(ref.status) || ref.status}. `;
   if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
   return output;
+}
+
+export function renderCrossrefReference(ref) {
+  let output = `<cite>${ref.title}</cite>`;
+
+  output = ref.URL ? `<a href="${ref.URL}">${output}</a>. ` : `${output}. `;
+
+  if (ref.author && ref.author.length) {
+    output += ref.author.map(renderCrossrefAuthor).join(", ");
+    output += ". ";
+  }
+
+  // Add bibliographic reference part
+  const journalRefParts = [];
+  const containerTitles = ref['container-title'];
+  if (containerTitles) {
+    const rendered = typeof containerTitles === "object" ? containerTitles[0] : containerTitles;
+    journalRefParts.push(rendered);
+  }
+  else if (ref.publisher) {
+    journalRefParts.push(ref.publisher);
+  }
+  if (ref.volume && ref.issue) {
+    journalRefParts.push(`<strong>${ref.volume}</strong> (${ref.issue})`);
+  }
+  if (ref.page && typeof ref.page === 'string') {
+    journalRefParts.push('pp. '+ref.page);
+  }
+  if (ref.issued && ref.issued['date-parts']) {
+    journalRefParts.push(ref.issued['date-parts'].join('-'));
+  }
+  output = `${output} ${endWithDot(journalRefParts.join(', '))} `;
+  
+  // Add identifiers
+  const identifiers = [];
+  if (ref.DOI) identifiers.push(`DOI:&nbsp;<a href="https://doi.org/"${ref.DOI}">${ref.DOI}</a>`);
+  // TODO we could add ISBN, ISSN here? or is it clutter?
+  output = `${output} ${identifiers.join(', ')}`;
+
+  return output;
+}
+
+function renderCrossrefAuthor(author) {
+  let name = null;
+  if (author.given && author.family) {
+     name = author.given + ' '+ author.family;
+  } else if (author.family) {
+     name = author.family;
+  } else {
+     name = author.literal;
+  }
+  if (name) {
+     return author.ORCID ? `<a href="${author.ORCID}">${name}</a>` : name;
+  }
+  return null;
 }
 
 /**
