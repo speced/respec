@@ -21,20 +21,20 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@babel/core": "^7.6.4",
+    "@babel/core": "^7.7.2",
     "@types/clipboard": "^2.0.1",
     "@types/pluralize": "0.0.29",
     "babel-eslint": "^10.0.3",
     "chai": "^4.2.0",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
     "eslint": "^6.6.0",
-    "eslint-config-prettier": "^6.5.0",
+    "eslint-config-prettier": "^6.6.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jasmine": "^4.1.0",
     "eslint-plugin-prettier": "^3.1.1",
-    "handlebars": "^4.5.1",
+    "handlebars": "^4.5.2",
     "highlight.js": "^9.16.2",
-    "hyperhtml": "^2.31.1",
+    "hyperhtml": "^2.31.2",
     "idb": "^4.0.5",
     "jasmine-core": "^3.5.0",
     "jasmine-reporters": "^2.3.2",
@@ -57,16 +57,16 @@
     "mocha": "^6.2.2",
     "moment": "^2.24.0",
     "pluralize": "^8.0.0",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "requirejs": "^2.3.6",
-    "rollup": "^1.26.3",
+    "rollup": "^1.27.0",
     "rollup-plugin-alias": "^2.2.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-string": "^3.0.0",
     "rollup-plugin-terser": "^5.1.2",
     "serve": "^11.2.0",
-    "typescript": "^3.6.4",
+    "typescript": "^3.7.2",
     "webidl2": "^23.10.1"
   },
   "scripts": {
@@ -100,7 +100,7 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "2.0.0",
-    "snyk": "^1.242.1"
+    "snyk": "^1.248.0"
   },
   "prettier": {
     "trailingComma": "es5"
