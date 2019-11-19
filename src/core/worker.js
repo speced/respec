@@ -38,4 +38,7 @@ async function createWorker() {
 
 export const workerPromise = createWorker();
 
-expose(name, workerPromise.then(worker => ({ worker })));
+expose(
+  name,
+  workerPromise.then(worker => ({ worker }))
+);
