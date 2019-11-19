@@ -34,7 +34,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "handlebars": "^4.5.3",
     "highlight.js": "^9.16.2",
-    "hyperhtml": "^2.31.1",
+    "hyperhtml": "^2.31.2",
     "idb": "^4.0.5",
     "jasmine-core": "^3.5.0",
     "jasmine-reporters": "^2.3.2",
@@ -100,7 +100,7 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "2.0.0",
-    "snyk": "^1.242.1"
+    "snyk": "^1.248.0"
   },
   "prettier": {
     "trailingComma": "es5"
