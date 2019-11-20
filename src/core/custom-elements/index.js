@@ -11,7 +11,7 @@
  * promise that tells the element has finished its processing, with or without
  * errors.
  *
- * @typedef {{ name: string, default: Function, extends?: string }} CustomElementDfn
+ * @typedef {{ name: string, default: Function, is?: string }} CustomElementDfn
  */
 
 import * as changelog from "./rs-changelog.js";
@@ -40,12 +40,12 @@ export async function run() {
   await Promise.all(readyPromises);
 }
 
-/** @param {HTMLElement} */
+/** @param {HTMLElement} el */
 export function ready(el) {
   el.dispatchEvent(new CustomEvent("ready"));
 }
 
-/** @param {HTMLElement} */
+/** @param {HTMLElement} el */
 function toReadyPromise(el) {
   return new Promise(resolve => {
     const timoutId = setTimeout(failure, 3000);
