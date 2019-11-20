@@ -1,6 +1,6 @@
 # ReSpec
 
-[![Backers on Open Collective](https://opencollective.com/respec/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/respec/sponsors/badge.svg)](#sponsors) [![Greenkeeper badge](https://badges.greenkeeper.io/w3c/respec.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.com/w3c/respec.svg?branch=develop)](https://travis-ci.org/w3c/respec) [![Known Vulnerabilities](https://snyk.io/test/github/w3c/respec/badge.svg)](https://snyk.io/test/github/w3c/respec)
+[![Backers on Open Collective](https://opencollective.com/respec/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/respec/sponsors/badge.svg)](#sponsors) [![Greenkeeper badge](https://badges.greenkeeper.io/w3c/respec.svg)](https://greenkeeper.io/) [![Build Status](https://github.com/w3c/respec/workflows/Node%20CI/badge.svg?branch=develop)](https://github.com/w3c/respec/actions?query=workflow%3A%22Node+CI%22+branch%3Adevelop) [![Known Vulnerabilities](https://snyk.io/test/github/w3c/respec/badge.svg)](https://snyk.io/test/github/w3c/respec)
 
 ReSpec is a JS library that makes it easier to write technical specifications, or documents
 that tend to be technical in nature in general. It was originally designed for the purpose

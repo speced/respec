@@ -409,7 +409,10 @@ describe("Core - Utils", () => {
   describe("flatten()", () => {
     it("flattens arrays", () => {
       expect(utils.flatten(["pass"], [123, 456])).toEqual(["pass", 123, 456]);
-      const map = new Map([["key-fail", "pass"], ["anotherKey", 123]]);
+      const map = new Map([
+        ["key-fail", "pass"],
+        ["anotherKey", 123],
+      ]);
       expect(utils.flatten([], map)).toEqual([map]);
       const set = new Set(["pass", 123]);
       expect(utils.flatten([], set)).toEqual([set]);
