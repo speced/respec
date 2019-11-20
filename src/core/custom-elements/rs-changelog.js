@@ -1,9 +1,9 @@
 // @ts-check
 /**
- * Fetches commits since a given commitish (tag or commit) and shows them as a
- * list of "changes since" given commitish. If a filter function is provided by
- * the user, it is used to filter the commits that are to be shown. Otherwise,
- * all commits are shown.
+ * Fetches commits between two commitish (tag or commit) - `from` and `to=HEAD`
+ * and shows them as a list of "changes during" those commitish. If a filter
+ * function is provided by the user, it is used to filter the commits that are
+ * to be shown. Otherwise, all commits are shown.
  *
  * @typedef {{message: string, hash: string}} Commit
  */
