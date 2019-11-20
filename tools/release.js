@@ -385,6 +385,7 @@ const run = async () => {
     indicators.get("build-merge-tag").show();
 
     for (const name of ["w3c-common", "w3c", "geonovum"]) {
+      console.log(colors.info(`  - 👷‍♀️ building profile: ${name}`))
       await Builder.build({ name });
     }
     console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
