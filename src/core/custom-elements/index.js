@@ -7,9 +7,8 @@
  * - `default`: class defintion of the custom element.
  * - `is`: an optional string if element extends some built-in element.
  *
- * Every custom element must have a `ready` getter function which returns a
- * promise that tells the element has finished its processing, with or without
- * errors.
+ * Every custom element must call the `ready` function that tells the element
+ * has finished its processing, with or without errors.
  *
  * @typedef {{ name: string, default: Function, is?: string }} CustomElementDfn
  */
@@ -40,7 +39,10 @@ export async function run() {
   await Promise.all(readyPromises);
 }
 
-/** @param {HTMLElement} el */
+/**
+ * @param {HTMLElement} el
+ * In your custom element definition, call `ready(this)`.
+ */
 export function ready(el) {
   el.dispatchEvent(new CustomEvent("ready"));
 }
