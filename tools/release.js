@@ -213,7 +213,7 @@ const Prompts = {
   },
 
   async askBumpVersion() {
-    const version = await Builder.getRespecVersion();
+    const version = await npm("view respec version");
     const commits = await git(
       "log `git describe --tags --abbrev=0`..HEAD --oneline"
     );
