@@ -380,13 +380,6 @@ const run = async () => {
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
-    // 1.1 npm upgrade
-    console.log(colors.info(" Performing npm upgrade... 📦"));
-    await npm("update", { showOutput: true });
-
-    // Updates could trash our previous protection, so reprotect.
-    console.log(colors.info(" Running snyk-protect... 🐺"));
-    await npm("run snyk-protect", { showOutput: true });
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
