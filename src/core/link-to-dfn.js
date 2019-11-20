@@ -212,7 +212,10 @@ function wrapAsCode(ant, dfn) {
   // only add code to IDL when the definition matches
   const term = ant.textContent.trim();
   const isIDL = dfn.dataset.hasOwnProperty("idl");
-  const needsCode = shouldWrapByCode(dfn, term);
+  const needsCode =
+    ant.firstElementChild && ant.firstElementChild.localName === "code"
+      ? false
+      : shouldWrapByCode(dfn, term);
   if (!isIDL || needsCode) {
     wrapInner(ant, document.createElement("code"));
   }

@@ -141,7 +141,7 @@ function renderBase(details) {
   // Check if base is a local variable in a section
   const { identifier, renderParent } = details;
   if (renderParent) {
-    return hyperHTML`<a data-xref-type="_IDL_">${identifier}</a>`;
+    return hyperHTML`<a data-xref-type="_IDL_"><code>${identifier}</code></a>`;
   }
 }
 
@@ -153,11 +153,11 @@ function renderInternalSlot(details) {
   const { identifier, parent, renderParent } = details;
   const { identifier: linkFor } = parent || {};
   const lt = `[[${identifier}]]`;
-  const html = hyperHTML`${parent && renderParent ? "." : ""}[[<a
+  const html = hyperHTML`${parent && renderParent ? "." : ""}<a
     data-xref-type="attribute"
     data-link-for=${linkFor}
     data-xref-for=${linkFor}
-    data-lt="${lt}">${identifier}</a>]]`;
+    data-lt="${lt}"><code>[[${identifier}]]</code></a>`;
   return html;
 }
 
@@ -172,7 +172,7 @@ function renderAttribute(details) {
       data-xref-type="attribute|dict-member"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
-    >${identifier}</a>`;
+    ><code>${identifier}</code></a>`;
   return html;
 }
 
@@ -190,7 +190,7 @@ function renderMethod(details) {
     data-link-for="${linkFor}"
     data-xref-for="${linkFor}"
     data-lt="${searchText}"
-    >${identifier}</a>(${[argsText]})`;
+    ><code>${identifier}</code></a><code>(${[argsText]})</code>`;
   return html;
 }
 
@@ -208,7 +208,7 @@ function renderEnum(details) {
     data-link-for="${forContext}"
     data-xref-for="${forContext}"
     data-lt="${!enumValue ? "the-empty-string" : null}"
-    >${enumValue}</a>"`;
+    ><code>${enumValue}</code></a>"`;
   return html;
 }
 
@@ -222,7 +222,7 @@ function renderException(details) {
   const html = hyperHTML`"<a
     data-cite="WebIDL"
     data-xref-type="exception"
-    >${identifier}</a>"`;
+    ><code>${identifier}</code></a>"`;
   return html;
 }
 
@@ -236,7 +236,7 @@ function renderIdlPrimitiveType(details) {
   const html = hyperHTML`<a
     data-cite="WebIDL"
     data-xref-type="interface"
-    >${identifier}</a>`;
+    ><code>${identifier}</code></a>`;
   return html;
 }
 
@@ -285,6 +285,6 @@ export function idlStringToHtml(str) {
         throw new Error("Unknown type.");
     }
   }
-  const result = render`<code>${output}</code>`;
+  const result = render`${output}`;
   return result;
 }
