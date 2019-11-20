@@ -213,7 +213,8 @@ const Prompts = {
   },
 
   async askBumpVersion() {
-    const version = await Builder.getRespecVersion();
+    const rawVersion = await npm("view respec version");
+    const version = rawVersion.trim();
     const commits = await git(
       "log `git describe --tags --abbrev=0`..HEAD --oneline"
     );
@@ -373,8 +374,11 @@ const run = async () => {
       { showOutput: true }
     );
     console.log(colors.info(" Build Seems good... ✅"));
+    const didChange = await git("status --porcelain");
     // 4. Commit your changes (git commit -am 3.x.y)
-    await git(`commit -am "regenerated profiles for ${version}"`);
+    if (didChange.trim()) {
+      await git(`commit -am "regenerated profiles for ${version}"`);
+    }
     await npm(`version ${version} -m "v${version}"`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     await git("checkout gh-pages");
