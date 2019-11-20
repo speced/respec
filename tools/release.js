@@ -236,9 +236,7 @@ const Prompts = {
       message: "Values must be x.y.z",
       default: computedVersion,
     };
-    const newVersion = await this.askQuestion(promptOps);
-    await npm(`version ${newVersion} -m "bump version"`);
-    return newVersion;
+    return this.askQuestion(promptOps);
   },
 
   async askBuildAddCommitMergeTag() {
@@ -385,14 +383,13 @@ const run = async () => {
     );
     console.log(colors.info(" Build Seems good... ✅"));
     // 4. Commit your changes (git commit -am v3.x.y)
-    await git(`commit -am v${version}`);
+    await git(`commit -am "chore: regenerated all profiles."`);
+    await npm(`version ${version} -m "v${version}"`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     await git("checkout gh-pages");
     await git("pull origin gh-pages");
     await git("merge develop");
     await git("checkout develop");
-    // 6. Tag the release (git tag v3.x.y)
-    await git(`tag -m v${version} v${version}`);
     indicators.get("build-merge-tag").hide();
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
