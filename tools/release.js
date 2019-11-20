@@ -4,9 +4,7 @@ const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
 const { exec } = require("child_process");
-const { promises: fsp } = require("fs");
 const loading = require("loading-indicator");
-const path = require("path");
 const MAIN_BRANCH = "develop";
 const DEBUG = false;
 
@@ -56,10 +54,6 @@ colors.setTheme({
   warn: "yellow",
   l10n: "green",
 });
-
-function rel(f) {
-  return path.join(__dirname, f);
-}
 
 function commandRunner(program) {
   return (cmd, options = { showOutput: false }) => {
@@ -163,7 +157,10 @@ const Prompts = {
             ? commitHints.exec(line)[0].toLowerCase()
             : "";
           let result = line;
-          const icon = match && iconMap.has(match) ? iconMap.get(match) : "❓";
+          const icon =
+            match && iconMap.has(match.toLowerCase())
+              ? iconMap.get(match)
+              : "❓";
           // colorize
           if (match) {
             result = result.replace(match.toLowerCase(), colors[match](match));
@@ -216,7 +213,8 @@ const Prompts = {
   },
 
   async askBumpVersion() {
-    const version = await Builder.getRespecVersion();
+    const rawVersion = await npm("view respec version");
+    const version = rawVersion.trim();
     const commits = await git(
       "log `git describe --tags --abbrev=0`..HEAD --oneline"
     );
@@ -232,23 +230,15 @@ const Prompts = {
     if (!version) {
       throw new Error("Version string not found in package.json");
     }
-    const newVersion = this.suggestSemVersion(commits, version);
-    const packagePath = rel("../package.json");
-    const data = await fsp.readFile(packagePath, "utf8");
-    const pack = JSON.parse(data);
+    const computedVersion = this.suggestSemVersion(commits, version);
     const promptOps = {
       description: `Current version is ${version}, bump it to`,
       pattern: /^\d+\.\d+\.\d+$/i,
       message: "Values must be x.y.z",
-      default: newVersion,
+      default: computedVersion,
     };
-    pack.version = await this.askQuestion(promptOps);
-    await fsp.writeFile(
-      packagePath,
-      `${JSON.stringify(pack, null, 2)}\n`,
-      "utf8"
-    );
-    return pack.version;
+    const newVersion = await this.askQuestion(promptOps);
+    return newVersion;
   },
 
   async askBuildAddCommitMergeTag() {
@@ -340,14 +330,6 @@ const indicators = new Map([
     new Indicator(colors.info(" Performing Git remote update... 📡 ")),
   ],
   [
-    "build-merge-tag",
-    new Indicator(
-      colors.info(
-        " Building, adding, commiting, merging, and tagging ReSpec... ⚒"
-      )
-    ),
-  ],
-  [
     "push-to-server",
     new Indicator(colors.info(" Pushing everything back to server... 📡")),
   ],
@@ -380,17 +362,9 @@ const run = async () => {
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
-    // 1.1 npm upgrade
-    console.log(colors.info(" Performing npm upgrade... 📦"));
-    await npm("update", { showOutput: true });
-
-    // Updates could trash our previous protection, so reprotect.
-    console.log(colors.info(" Running snyk-protect... 🐺"));
-    await npm("run snyk-protect", { showOutput: true });
 
     // 3. Run the build script (node tools/build-w3c-common.js).
-    indicators.get("build-merge-tag").show();
-    await npm("run build:components");
+    await npm("run builddeps");
     for (const name of ["w3c-common", "w3c", "geonovum"]) {
       await Builder.build({ name });
     }
@@ -400,16 +374,17 @@ const run = async () => {
       { showOutput: true }
     );
     console.log(colors.info(" Build Seems good... ✅"));
-    // 4. Commit your changes (git commit -am v3.x.y)
-    await git(`commit -am v${version}`);
+    const didChange = await git("status --porcelain");
+    // 4. Commit your changes (git commit -am 3.x.y)
+    if (didChange.trim()) {
+      await git(`commit -am "regenerated profiles for ${version}"`);
+    }
+    await npm(`version ${version} -m "v${version}"`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     await git("checkout gh-pages");
     await git("pull origin gh-pages");
     await git("merge develop");
     await git("checkout develop");
-    // 6. Tag the release (git tag v3.x.y)
-    await git(`tag -m v${version} v${version}`);
-    indicators.get("build-merge-tag").hide();
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
     await git("push origin develop");
