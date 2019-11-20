@@ -237,7 +237,6 @@ const Prompts = {
       default: computedVersion,
     };
     const newVersion = await this.askQuestion(promptOps);
-    await npm(`version ${newVersion} -m "bump version"`);
     return newVersion;
   },
 
@@ -376,7 +375,7 @@ const run = async () => {
     console.log(colors.info(" Build Seems good... ✅"));
     // 4. Commit your changes (git commit -am 3.x.y)
     await git(`commit -am "regenerated profiles for ${version}"`);
-    await npm(`version ${version}`);
+    await npm(`version ${version} -m "v${version}"`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     await git("checkout gh-pages");
     await git("pull origin gh-pages");
