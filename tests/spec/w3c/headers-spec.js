@@ -795,9 +795,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const dt = Array.from(doc.querySelectorAll("dt")).find(
-        ({ textContent }) => /Implementation report:/.test(textContent)
-      );
+      const dt = Array.from(
+        doc.querySelectorAll("dt")
+      ).find(({ textContent }) => /Implementation report:/.test(textContent));
       const dd = dt.nextElementSibling;
       expect(dd.textContent.trim()).toBe("URI");
     });
