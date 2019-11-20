@@ -12,10 +12,10 @@
  * errors.
  *
  * @typedef {{ name: string, default: Function, extends?: string }} CustomElementDfn
- * @typedef { HTMLElement & { ready: Promise<void> }} CustomElement
  */
 
 import * as changelog from "./rs-changelog.js";
+import { pub } from "../pubsubhub.js";
 /** @type {CustomElementDfn[]} */
 const CUSTOM_ELEMENTS = [changelog];
 
@@ -35,8 +35,30 @@ export async function run() {
   const selectors = CUSTOM_ELEMENTS.map(el => {
     return el.is ? `is[${el.name}]` : el.name;
   }).join(", ");
-  /** @type {NodeListOf<CustomElement>} */
   const elems = document.querySelectorAll(selectors);
-  const readyPromises = [...elems].map(el => el.ready);
+  const readyPromises = [...elems].map(toReadyPromise);
   await Promise.all(readyPromises);
+}
+
+/** @param {HTMLElement} */
+export function ready(el) {
+  el.dispatchEvent(new CustomEvent("ready"));
+}
+
+/** @param {HTMLElement} */
+function toReadyPromise(el) {
+  return new Promise(resolve => {
+    const timoutId = setTimeout(failure, 3000);
+    el.addEventListener("ready", success, { once: true });
+    function success() {
+      clearTimeout(timoutId);
+      resolve(true);
+    }
+    function failure() {
+      el.removeEventListener("ready", success);
+      const name = el.matches("[is]") ? el.getAttribute("is") : el.localName;
+      pub("error", `Plugin \`core/custom-elements/${name}\` took too long.`);
+      resolve(false);
+    }
+  });
 }

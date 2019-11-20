@@ -10,11 +10,7 @@
 import { github } from "../github.js";
 import { hyperHTML } from "../import-maps.js";
 import { pub } from "../pubsubhub.js";
-
-let readyResolver;
-const readyPromise = new Promise(resolve => {
-  readyResolver = resolve;
-});
+import { ready } from "./index.js";
 
 export const name = "rs-changelog";
 
@@ -32,16 +28,10 @@ export default class ChangelogElement extends HTMLElement {
     };
   }
 
-  get ready() {
-    return readyPromise;
-  }
-
   async connectedCallback() {
-    this.state = {
-      commits: this.getCommits(),
-    };
+    this.state = { commits: this.getCommits() };
     await this.render();
-    readyResolver();
+    ready(this);
   }
 
   async getCommits() {
