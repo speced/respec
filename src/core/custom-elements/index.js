@@ -5,7 +5,7 @@
  * Every custom element file exports:
  * - `name`: registered name of the custom element, prefixed with `rs-`.
  * - `default`: class defintion of the custom element.
- * - `extends`: an optional string if element extends some built-in element.
+ * - `is`: an optional string if element extends some built-in element.
  *
  * Every custom element must have a `ready` getter function which returns a
  * promise that tells the element has finished its processing, with or without
@@ -27,13 +27,13 @@ export async function run() {
     customElements.define(
       el.name,
       el.default,
-      el.extends ? { extends: el.extends } : undefined
+      el.is ? { extends: el.is } : undefined
     );
   });
 
   // wait for each element to be ready
   const selectors = CUSTOM_ELEMENTS.map(el => {
-    return el.extends ? `is["${el.name}"]` : el.name;
+    return el.is ? `is[${el.name}]` : el.name;
   }).join(", ");
   /** @type {NodeListOf<CustomElement>} */
   const elems = document.querySelectorAll(selectors);
