@@ -370,7 +370,7 @@ const run = async () => {
     await Prompts.askBuildAddCommitMergeTag();
 
     // 3. Run the build script (node tools/build-w3c-common.js).
-    indicators.get("build-merge-tag").show();
+    console.log(colors.help("Building profiles:"));
     await npm("run builddeps");
     for (const name of ["w3c-common", "w3c", "geonovum"]) {
       console.log(colors.info(`  - 👷‍♀️ building profile: ${name}`));
@@ -390,7 +390,6 @@ const run = async () => {
     await git("pull origin gh-pages");
     await git("merge develop");
     await git("checkout develop");
-    indicators.get("build-merge-tag").hide();
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
     await git("push origin develop");
