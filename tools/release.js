@@ -4,9 +4,7 @@ const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
 const { exec } = require("child_process");
-const { promises: fsp } = require("fs");
 const loading = require("loading-indicator");
-const path = require("path");
 const MAIN_BRANCH = "develop";
 const DEBUG = false;
 
@@ -56,10 +54,6 @@ colors.setTheme({
   warn: "yellow",
   l10n: "green",
 });
-
-function rel(f) {
-  return path.join(__dirname, f);
-}
 
 function commandRunner(program) {
   return (cmd, options = { showOutput: false }) => {
@@ -163,7 +157,10 @@ const Prompts = {
             ? commitHints.exec(line)[0].toLowerCase()
             : "";
           let result = line;
-          const icon = match && iconMap.has(match) ? iconMap.get(match) : "❓";
+          const icon =
+            match && iconMap.has(match.toLowerCase())
+              ? iconMap.get(match)
+              : "❓";
           // colorize
           if (match) {
             result = result.replace(match.toLowerCase(), colors[match](match));
@@ -232,23 +229,16 @@ const Prompts = {
     if (!version) {
       throw new Error("Version string not found in package.json");
     }
-    const newVersion = this.suggestSemVersion(commits, version);
-    const packagePath = rel("../package.json");
-    const data = await fsp.readFile(packagePath, "utf8");
-    const pack = JSON.parse(data);
+    const computedVersion = this.suggestSemVersion(commits, version);
     const promptOps = {
       description: `Current version is ${version}, bump it to`,
       pattern: /^\d+\.\d+\.\d+$/i,
       message: "Values must be x.y.z",
-      default: newVersion,
+      default: computedVersion,
     };
-    pack.version = await this.askQuestion(promptOps);
-    await fsp.writeFile(
-      packagePath,
-      `${JSON.stringify(pack, null, 2)}\n`,
-      "utf8"
-    );
-    return pack.version;
+    const newVersion = await this.askQuestion(promptOps);
+    await npm(`version ${newVersion} -m "bump version"`);
+    return newVersion;
   },
 
   async askBuildAddCommitMergeTag() {
@@ -343,7 +333,7 @@ const indicators = new Map([
     "build-merge-tag",
     new Indicator(
       colors.info(
-        " Building, adding, commiting, merging, and tagging ReSpec... ⚒"
+        " Building, adding, committing, merging, and tagging ReSpec... ⚒"
       )
     ),
   ],
@@ -383,7 +373,7 @@ const run = async () => {
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
-
+    await npm("run builddeps");
     for (const name of ["w3c-common", "w3c", "geonovum"]) {
       console.log(colors.info(`  - 👷‍♀️ building profile: ${name}`));
       await Builder.build({ name });
