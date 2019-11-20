@@ -5,7 +5,7 @@
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
 import { fetchAndCache, joinAnd } from "./utils.js";
-import hyperHTML from "hyperhtml";
+import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/contrib";
 

@@ -4,85 +4,53 @@ window.addEventListener("error", ev => {
   console.error(ev.error, ev.message, ev);
 });
 
-// this is only set in a build, not at all in the dev environment
-require.config({
-  paths: {
-    hyperhtml: "deps/hyperhtml",
-    idb: "deps/idb",
-    jquery: "deps/jquery",
-    marked: "deps/marked",
-    pluralize: "deps/pluralize",
-    text: "deps/text",
-  },
-  shim: {
-    shortcut: {
-      exports: "shortcut",
-    },
-    idb: {
-      exports: "idb",
-    },
-  },
-});
-
-define([
+const modules = [
   // order is significant
-  "./core/base-runner",
-  "./core/ui",
-  "./core/reindent",
-  "./core/location-hash",
-  "./core/l10n",
-  "./geonovum/defaults",
-  "./core/style",
-  "./geonovum/style",
-  "./geonovum/l10n",
-  "./core/github",
-  "./core/data-include",
-  "./core/markdown",
-  "./core/data-transform",
-  "./core/inlines",
-  "./core/dfn",
-  "./core/pluralize",
-  "./core/examples",
-  "./core/issues-notes",
-  "./core/requirements",
-  "./core/best-practices",
-  "./core/figures",
-  "./core/data-cite",
-  "./core/biblio",
-  "./core/link-to-dfn",
-  "./core/render-biblio",
-  "./core/contrib",
-  "./core/fix-headers",
-  "./core/structure",
-  "./core/informative",
-  "./core/id-headers",
-  "./geonovum/conformance",
-  "./ui/save-html",
-  "./ui/search-specref",
-  "./ui/dfn-list",
-  "./ui/about-respec",
-  "./core/seo",
-  "./core/highlight",
-  "./core/data-tests",
-  "./core/list-sorter",
-  "./core/highlight-vars",
-  "./core/algorithms",
-  "./core/anchor-expander",
+  import("../src/core/base-runner.js"),
+  import("../src/core/ui.js"),
+  import("../src/core/reindent.js"),
+  import("../src/core/location-hash.js"),
+  import("../src/core/l10n.js"),
+  import("../src/geonovum/defaults.js"),
+  import("../src/core/style.js"),
+  import("../src/geonovum/style.js"),
+  import("../src/geonovum/l10n.js"),
+  import("../src/core/github.js"),
+  import("../src/core/data-include.js"),
+  import("../src/core/markdown.js"),
+  import("../src/core/data-transform.js"),
+  import("../src/core/inlines.js"),
+  import("../src/core/dfn.js"),
+  import("../src/core/pluralize.js"),
+  import("../src/core/examples.js"),
+  import("../src/core/issues-notes.js"),
+  import("../src/core/requirements.js"),
+  import("../src/core/best-practices.js"),
+  import("../src/core/figures.js"),
+  import("../src/core/data-cite.js"),
+  import("../src/core/biblio.js"),
+  import("../src/core/link-to-dfn.js"),
+  import("../src/core/render-biblio.js"),
+  import("../src/core/contrib.js"),
+  import("../src/core/fix-headers.js"),
+  import("../src/core/structure.js"),
+  import("../src/core/informative.js"),
+  import("../src/core/id-headers.js"),
+  import("../src/geonovum/conformance.js"),
+  import("../src/ui/save-html.js"),
+  import("../src/ui/search-specref.js"),
+  import("../src/ui/dfn-list.js"),
+  import("../src/ui/about-respec.js"),
+  import("../src/core/seo.js"),
+  import("../src/core/highlight.js"),
+  import("../src/core/data-tests.js"),
+  import("../src/core/list-sorter.js"),
+  import("../src/core/highlight-vars.js"),
+  import("../src/core/algorithms.js"),
+  import("../src/core/anchor-expander.js"),
   /* Linter must be the last thing to run */
-  "./core/linter",
-], (runner, { ui }, ...plugins) => {
-  ui.show();
-  domReady().then(async () => {
-    try {
-      await runner.runAll(plugins);
-      await document.respecIsReady;
-    } catch (err) {
-      console.error(err);
-    } finally {
-      ui.enable();
-    }
-  });
-});
+  import("../src/core/linter.js"),
+];
 
 async function domReady() {
   if (document.readyState === "loading") {
@@ -91,3 +59,16 @@ async function domReady() {
     );
   }
 }
+
+(async () => {
+  const [runner, { ui }, ...plugins] = await Promise.all(modules);
+  try {
+    ui.show();
+    await domReady();
+    await runner.runAll(plugins);
+  } finally {
+    ui.enable();
+  }
+})().catch(err => {
+  console.error(err);
+});

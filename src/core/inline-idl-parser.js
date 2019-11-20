@@ -2,8 +2,8 @@
 // Parses an inline IDL string (`{{ idl string }}`)
 //  and renders its components as HTML
 
-import hyperHTML from "hyperhtml";
-import { showInlineError } from "./utils";
+import { hyperHTML } from "./import-maps.js";
+import { showInlineError } from "./utils.js";
 const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}} {{ double }}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;

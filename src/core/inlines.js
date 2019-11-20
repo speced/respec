@@ -14,7 +14,7 @@ import {
   showInlineError,
   showInlineWarning,
 } from "./utils.js";
-import hyperHTML from "hyperhtml";
+import { hyperHTML } from "./import-maps.js";
 import { idlStringToHtml } from "./inline-idl-parser.js";
 import { renderInlineCitation } from "./render-biblio.js";
 

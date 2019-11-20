@@ -1,7 +1,7 @@
 // @ts-check
-import { fetchAndCache } from "./utils";
-import hyperHTML from "hyperhtml";
-import mdnCss from "text!../../assets/mdn-annotation.css";
+import { fetchAndCache } from "./utils.js";
+import { fetchAsset } from "./text-loader.js";
+import { hyperHTML } from "./import-maps.js";
 
 export const name = "core/mdn-annoatation";
 
@@ -30,6 +30,16 @@ const MDN_BROWSERS = {
   // uc_chinese_android: "Chinese UC Browser", // not enough data for features in HTML
   webview_android: "WebView Android",
 };
+
+const mdnCssPromise = loadStyle();
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/mdn-annotation.css")).default;
+  } catch {
+    return fetchAsset("mdn-annotation.css");
+  }
+}
 
 function fetchAndCacheJson(url, maxAge) {
   if (!url) return {};
@@ -138,6 +148,7 @@ export async function run(conf) {
     `${baseJsonPath}/${shortName}.json`,
     maxAge
   );
+  const mdnCss = await mdnCssPromise;
   document.head.appendChild(hyperHTML`<style>${[mdnCss]}</style>`);
   document.head.appendChild(hyperHTML`<script>
      function toggleMDNStatus(div) {
