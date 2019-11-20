@@ -236,7 +236,9 @@ const Prompts = {
       message: "Values must be x.y.z",
       default: computedVersion,
     };
-    return this.askQuestion(promptOps);
+    const newVersion = await this.askQuestion(promptOps);
+    await npm(`version ${newVersion} -m "bump version"`);
+    return newVersion;
   },
 
   async askBuildAddCommitMergeTag() {
@@ -328,14 +330,6 @@ const indicators = new Map([
     new Indicator(colors.info(" Performing Git remote update... 📡 ")),
   ],
   [
-    "build-merge-tag",
-    new Indicator(
-      colors.info(
-        " Building, adding, committing, merging, and tagging ReSpec... ⚒"
-      )
-    ),
-  ],
-  [
     "push-to-server",
     new Indicator(colors.info(" Pushing everything back to server... 📡")),
   ],
@@ -370,10 +364,8 @@ const run = async () => {
     await Prompts.askBuildAddCommitMergeTag();
 
     // 3. Run the build script (node tools/build-w3c-common.js).
-    console.log(colors.help("Building profiles:"));
     await npm("run builddeps");
     for (const name of ["w3c-common", "w3c", "geonovum"]) {
-      console.log(colors.info(`  - 👷‍♀️ building profile: ${name}`));
       await Builder.build({ name });
     }
     console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
@@ -382,9 +374,9 @@ const run = async () => {
       { showOutput: true }
     );
     console.log(colors.info(" Build Seems good... ✅"));
-    // 4. Commit your changes (git commit -am v3.x.y)
-    await git(`commit -am "chore: regenerated all profiles."`);
-    await npm(`version ${version} -m "v${version}"`);
+    // 4. Commit your changes (git commit -am 3.x.y)
+    await git(`commit -am regenerated profiles for ${version}`);
+    await npm(`version ${version}`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     await git("checkout gh-pages");
     await git("pull origin gh-pages");
