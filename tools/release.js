@@ -383,7 +383,7 @@ const run = async () => {
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
-    await npm("run build:components");
+
     for (const name of ["w3c-common", "w3c", "geonovum"]) {
       await Builder.build({ name });
     }
