@@ -48,10 +48,10 @@ export function ready(el) {
 /** @param {HTMLElement} el */
 function toReadyPromise(el) {
   return new Promise(resolve => {
-    const timoutId = setTimeout(failure, 3000);
+    const timeoutId = setTimeout(failure, 3000);
     el.addEventListener("ready", success, { once: true });
     function success() {
-      clearTimeout(timoutId);
+      clearTimeout(timeoutId);
       resolve(true);
     }
     function failure() {
