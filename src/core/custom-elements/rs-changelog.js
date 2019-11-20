@@ -10,7 +10,6 @@
 import { github } from "../github.js";
 import { hyperHTML } from "../import-maps.js";
 import { pub } from "../pubsubhub.js";
-import { ready } from "./index.js";
 
 export const name = "rs-changelog";
 
@@ -28,56 +27,57 @@ export default class ChangelogElement extends HTMLElement {
     };
   }
 
-  async connectedCallback() {
-    this.state = { commits: this.getCommits() };
-    await this.render();
-    ready(this);
-  }
-
-  async getCommits() {
+  connectedCallback() {
     const { from, to, filter } = this.props;
-    try {
-      const { api: githubAPI } = await github;
-      const url = new URL("commits", githubAPI);
-      url.searchParams.set("from", from);
-      url.searchParams.set("to", to);
+    hyperHTML.bind(this)`
+      <ul>
+      ${{
+        any: fetchCommits(from, to, filter)
+          .then(commits => toHTML(commits))
+          .catch(error => pub("error", error.message))
+          .finally(() => {
+            this.dispatchEvent(new CustomEvent("done"));
+          }),
+        placeholder: "Loading list of commits...",
+      }}
+      </ul>
+    `;
+  }
+}
 
-      const res = await fetch(url.href);
-      if (!res.ok) {
-        throw new Error(
-          `Request to ${url} failed with status code ${res.status}`
-        );
-      }
-      /** @type {Commit[]} */
-      const commits = await res.json();
-      if (!commits.length) {
-        throw new Error(`No commits between ${from}..${to}.`);
-      }
-      return commits.filter(filter);
-    } catch (error) {
-      pub("error", "Error loading commits from GitHub.");
-      console.error(error);
-      return null;
+async function fetchCommits(from, to, filter) {
+  try {
+    const { api: githubAPI } = await github;
+    const url = new URL("commits", githubAPI);
+    url.searchParams.set("from", from);
+    url.searchParams.set("to", to);
+
+    const res = await fetch(url.href);
+    if (!res.ok) {
+      throw new Error(
+        `Request to ${url} failed with status code ${res.status}`
+      );
     }
+    /** @type {Commit[]} */
+    const commits = await res.json();
+    if (!commits.length) {
+      throw new Error(`No commits between ${from}..${to}.`);
+    }
+    return commits.filter(filter);
+  } catch (error) {
+    const msg = `Error loading commits from GitHub. ${error.message}`;
+    console.error(error);
+    throw new Error(msg);
   }
+}
 
-  async render() {
-    this.append("Fetching commits...");
-    const commits = await this.state.commits;
-    this.firstChild.remove();
-
-    if (!commits) return;
-
-    const { repoURL } = await github;
-    const nodes = commits.map(commit => {
-      const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
-      const commitURL = `${repoURL}commit/${commit.hash}`;
-      const prURL = prNumber ? `${repoURL}pull/${prNumber}` : null;
-      const pr = prNumber && hyperHTML` (<a href="${prURL}">#${prNumber}</a>)`;
-      return hyperHTML`<li><a href="${commitURL}">${message.trim()}</a>${pr}</li>`;
-    });
-
-    const ul = this.appendChild(document.createElement("ul"));
-    ul.append(...nodes);
-  }
+async function toHTML(commits) {
+  const { repoURL } = await github;
+  return commits.map(commit => {
+    const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
+    const commitURL = `${repoURL}commit/${commit.hash}`;
+    const prURL = prNumber ? `${repoURL}pull/${prNumber}` : null;
+    const pr = prNumber && hyperHTML` (<a href="${prURL}">#${prNumber}</a>)`;
+    return hyperHTML`<li><a href="${commitURL}">${message.trim()}</a>${pr}</li>`;
+  });
 }
