@@ -223,16 +223,22 @@ function wrapAsCode(anchor, dfn) {
  * @param {string} term
  */
 function shouldWrapByCode(elem, term = "") {
-  if (elem.firstElementChild && elem.firstElementChild.localName === "code") {
-    return false;
-  }
-  const { dataset } = elem;
-  if (elem.textContent.trim() === term) {
-    return true;
-  } else if (dataset.title === term) {
-    return true;
-  } else if (dataset.lt) {
-    return dataset.lt.split("|").includes(term);
+  switch (elem.localName) {
+    case "a":
+      if (elem.querySelector("code")) {
+        return true;
+      }
+      break;
+    default: {
+      const { dataset } = elem;
+      if (elem.textContent.trim() === term) {
+        return true;
+      } else if (dataset.title === term) {
+        return true;
+      } else if (dataset.lt) {
+        return dataset.lt.split("|").includes(term);
+      }
+    }
   }
   return false;
 }
