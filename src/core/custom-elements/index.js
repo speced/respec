@@ -5,12 +5,11 @@
  * Every custom element file exports:
  * - `name`: registered name of the custom element, prefixed with `rs-`.
  * - `element`: class defintion of the custom element.
- * - `is`: an optional string if element extends some built-in element.
  *
  * Every custom element must dispatch a CustomEvent 'done' that tells the
  * element has finished its processing, with or without errors.
  *
- * @typedef {{ name: string, element: Function, is?: string }} CustomElementDfn
+ * @typedef {{ name: string, element: Function }} CustomElementDfn
  */
 
 import * as changelog from "./rs-changelog.js";
@@ -22,17 +21,11 @@ export const name = "core/custom-elements";
 export async function run() {
   // prepare and register elements
   CUSTOM_ELEMENTS.forEach(el => {
-    customElements.define(
-      el.name,
-      el.element,
-      el.is ? { extends: el.is } : undefined
-    );
+    customElements.define(el.name, el.element);
   });
 
   // wait for each element to be ready
-  const selectors = CUSTOM_ELEMENTS.map(el => {
-    return el.is ? `is[${el.name}]` : el.name;
-  }).join(", ");
+  const selectors = CUSTOM_ELEMENTS.map(el => el.name).join(", ");
   const elems = document.querySelectorAll(selectors);
   const readyPromises = [...elems].map(
     el => new Promise(res => el.addEventListener("done", res, { once: true }))
