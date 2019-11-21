@@ -1,5 +1,367 @@
 # Change Log
 
+## [v24.35.0](https://github.com/w3c/respec/tree/v24.35.0) (2019-11-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.34.8...v24.35.0)
+
+**Closed issues:**
+
+- Add support for “changes since” [\#1724](https://github.com/w3c/respec/issues/1724)
+
+**Merged pull requests:**
+
+- feat\(core/rs-changelog\): list changes between two commits [\#2567](https://github.com/w3c/respec/pull/2567) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.34.8](https://github.com/w3c/respec/tree/v24.34.8) (2019-11-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.34.7...v24.34.8)
+
+**Closed issues:**
+
+- Is the "w3c" license supported? [\#2575](https://github.com/w3c/respec/issues/2575)
+- Suggested fix for WebIDL should write out entities [\#2563](https://github.com/w3c/respec/issues/2563)
+
+**Merged pull requests:**
+
+- fix: put code inside anchors for IDL expansions [\#2579](https://github.com/w3c/respec/pull/2579) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webidl\): escape IDL code for fix suggestions [\#2578](https://github.com/w3c/respec/pull/2578) ([saschanaz](https://github.com/saschanaz))
+- docs\(w3c/headers\): w3c-software-doc is the default [\#2577](https://github.com/w3c/respec/pull/2577) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v24.34.7](https://github.com/w3c/respec/tree/v24.34.7) (2019-11-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.34.6...v24.34.7)
+
+## [v24.34.6](https://github.com/w3c/respec/tree/v24.34.6) (2019-11-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.34.5...v24.34.6)
+
+## [v24.34.5](https://github.com/w3c/respec/tree/v24.34.5) (2019-11-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.34.4...v24.34.5)
+
+## [v24.34.4](https://github.com/w3c/respec/tree/v24.34.4) (2019-11-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.34.3...v24.34.4)
+
+## [v24.34.3](https://github.com/w3c/respec/tree/v24.34.3) (2019-11-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.34.2...v24.34.3)
+
+**Merged pull requests:**
+
+- Add GitHub CI badge [\#2576](https://github.com/w3c/respec/pull/2576) ([saschanaz](https://github.com/saschanaz))
+- chore\(package\): update deps [\#2574](https://github.com/w3c/respec/pull/2574) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v24.34.2](https://github.com/w3c/respec/tree/v24.34.2) (2019-11-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.34.1...v24.34.2)
+
+**Closed issues:**
+
+- Guidance on how to specify changing affiliations [\#2561](https://github.com/w3c/respec/issues/2561)
+- Migrate to rollup from webpack [\#2554](https://github.com/w3c/respec/issues/2554)
+- Top level IDL things should have data-dfn-for="" [\#2546](https://github.com/w3c/respec/issues/2546)
+- Migrate to webpack/rollup and ditch requirejs [\#1975](https://github.com/w3c/respec/issues/1975)
+- \[META\] Implement cross-references feature [\#1662](https://github.com/w3c/respec/issues/1662)
+
+**Merged pull requests:**
+
+- Update eslint-plugin-jasmine to the latest version 🚀 [\#2571](https://github.com/w3c/respec/pull/2571) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- Update eslint-plugin-jasmine to the latest version 🚀 [\#2565](https://github.com/w3c/respec/pull/2565) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- chore\(package\): update deps [\#2562](https://github.com/w3c/respec/pull/2562) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/dfn-finder\): explicit empty dfn-for on top level things [\#2558](https://github.com/w3c/respec/pull/2558) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(tools/copydeps\): gracely ignore when no folder [\#2556](https://github.com/w3c/respec/pull/2556) ([saschanaz](https://github.com/saschanaz))
+- refactor: force extensions for imports [\#2555](https://github.com/w3c/respec/pull/2555) ([saschanaz](https://github.com/saschanaz))
+- refactor: migrate to pure es modules [\#2553](https://github.com/w3c/respec/pull/2553) ([saschanaz](https://github.com/saschanaz))
+
+## [v24.34.1](https://github.com/w3c/respec/tree/v24.34.1) (2019-10-25)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.34.0...v24.34.1)
+
+**Closed issues:**
+
+- Migrate to webpack built version on tests [\#2161](https://github.com/w3c/respec/issues/2161)
+- Use @ts-check wherever appropriate [\#1905](https://github.com/w3c/respec/issues/1905)
+
+**Merged pull requests:**
+
+- chore\(package\): update deps [\#2550](https://github.com/w3c/respec/pull/2550) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update puppeteer to the latest version 🚀 [\#2549](https://github.com/w3c/respec/pull/2549) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- chore: fix some nits [\#2547](https://github.com/w3c/respec/pull/2547) ([saschanaz](https://github.com/saschanaz))
+- chore: use @ts-check in all src files [\#2543](https://github.com/w3c/respec/pull/2543) ([NotWoods](https://github.com/NotWoods))
+
+## [v24.34.0](https://github.com/w3c/respec/tree/v24.34.0) (2019-10-14)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.33.5...v24.34.0)
+
+**Closed issues:**
+
+- Icons are 404 on some MDN images [\#2540](https://github.com/w3c/respec/issues/2540)
+- \[Feature request\]: output contributors as list items [\#2446](https://github.com/w3c/respec/issues/2446)
+
+**Merged pull requests:**
+
+- chore\(package\): update deps [\#2545](https://github.com/w3c/respec/pull/2545) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(assets/mdn-annotation.css\): link to svgs to fix 404 opera and samsung icons [\#2544](https://github.com/w3c/respec/pull/2544) ([contrepoint](https://github.com/contrepoint))
+- refactor: use Map and spread operator [\#2542](https://github.com/w3c/respec/pull/2542) ([saschanaz](https://github.com/saschanaz))
+- fix\(assets/issues-notes\): fix warning icon styling [\#2539](https://github.com/w3c/respec/pull/2539) ([dbass2](https://github.com/dbass2))
+- refactor\(core/issues-notes\): use respec.org based GitHub API [\#2538](https://github.com/w3c/respec/pull/2538) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/contrib\): output list of contributors with links [\#2537](https://github.com/w3c/respec/pull/2537) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore: add more @ts-check comments [\#2534](https://github.com/w3c/respec/pull/2534) ([NotWoods](https://github.com/NotWoods))
+
+## [v24.33.5](https://github.com/w3c/respec/tree/v24.33.5) (2019-10-09)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.33.4...v24.33.5)
+
+**Merged pull requests:**
+
+- refactor\(core/contrib\): Use respec.org based GitHub API [\#2536](https://github.com/w3c/respec/pull/2536) ([sidvishnoi](https://github.com/sidvishnoi))
+- \[Snyk\] Fix for 1 vulnerabilities [\#2533](https://github.com/w3c/respec/pull/2533) ([snyk-bot](https://github.com/snyk-bot))
+
+## [v24.33.4](https://github.com/w3c/respec/tree/v24.33.4) (2019-10-02)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.33.3...v24.33.4)
+
+**Closed issues:**
+
+- links in the registry table headers lack contrast [\#2522](https://github.com/w3c/respec/issues/2522)
+
+**Merged pull requests:**
+
+- fix\(templates/show-people\): add missing datetime attribute [\#2532](https://github.com/w3c/respec/pull/2532) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(assets/respec2\): make links white in .simple table [\#2521](https://github.com/w3c/respec/pull/2521) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v24.33.3](https://github.com/w3c/respec/tree/v24.33.3) (2019-10-01)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.33.2...v24.33.3)
+
+**Closed issues:**
+
+- Constructor overloads incorrectly links to the first one [\#2525](https://github.com/w3c/respec/issues/2525)
+- TOC layout error when served by GitHub pages [\#2524](https://github.com/w3c/respec/issues/2524)
+- Don't link TreatNullAs= types [\#2517](https://github.com/w3c/respec/issues/2517)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): whitelist for extended attribute linking [\#2529](https://github.com/w3c/respec/pull/2529) ([saschanaz](https://github.com/saschanaz))
+- fix\(core/dfn-finder\): properly find constructor overloads [\#2526](https://github.com/w3c/respec/pull/2526) ([saschanaz](https://github.com/saschanaz))
+- presentation: slides [\#2519](https://github.com/w3c/respec/pull/2519) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v24.33.2](https://github.com/w3c/respec/tree/v24.33.2) (2019-09-18)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.33.1...v24.33.2)
+
+**Merged pull requests:**
+
+- chore\(package\): update deps [\#2520](https://github.com/w3c/respec/pull/2520) ([saschanaz](https://github.com/saschanaz))
+
+## [v24.33.1](https://github.com/w3c/respec/tree/v24.33.1) (2019-09-16)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.33.0...v24.33.1)
+
+**Closed issues:**
+
+- Duplicate ids in markup for overloaded constructors [\#2513](https://github.com/w3c/respec/issues/2513)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): add !overload to idl-def ids [\#2515](https://github.com/w3c/respec/pull/2515) ([saschanaz](https://github.com/saschanaz))
+
+## [v24.33.0](https://github.com/w3c/respec/tree/v24.33.0) (2019-09-15)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.32.3...v24.33.0)
+
+**Closed issues:**
+
+- dfn lt lowercased [\#2511](https://github.com/w3c/respec/issues/2511)
+
+**Merged pull requests:**
+
+- feat\(core/webidl\): suggest IDL fix from autofix [\#2516](https://github.com/w3c/respec/pull/2516) ([saschanaz](https://github.com/saschanaz))
+- Update puppeteer to the latest version 🚀 [\#2514](https://github.com/w3c/respec/pull/2514) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+
+## [v24.32.3](https://github.com/w3c/respec/tree/v24.32.3) (2019-09-11)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.32.2...v24.32.3)
+
+**Merged pull requests:**
+
+- fix\(core/dfn-finder\): omit redundant data-lt [\#2512](https://github.com/w3c/respec/pull/2512) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v24.32.2](https://github.com/w3c/respec/tree/v24.32.2) (2019-09-09)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.32.1...v24.32.2)
+
+**Fixed bugs:**
+
+- Don't default to w3.org/TR/ as canonical URL! [\#2470](https://github.com/w3c/respec/issues/2470)
+- Default licence for unofficial drafts [\#2352](https://github.com/w3c/respec/issues/2352)
+
+**Closed issues:**
+
+- Reference errors flagged by respec [\#2496](https://github.com/w3c/respec/issues/2496)
+- Overloaded operations showing as errors [\#2495](https://github.com/w3c/respec/issues/2495)
+
+**Merged pull requests:**
+
+- fix\(w3c/seo\): Only add canonical link for non-draft documents [\#2510](https://github.com/w3c/respec/pull/2510) ([fycdev](https://github.com/fycdev))
+- fix\(w3c/templates/headers\): Switch default license for unofficial drafts to 4.0 \(\#2493\) [\#2493](https://github.com/w3c/respec/pull/2493) ([pradeepgangwar](https://github.com/pradeepgangwar))
+
+## [v24.32.1](https://github.com/w3c/respec/tree/v24.32.1) (2019-09-05)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.32.0...v24.32.1)
+
+**Merged pull requests:**
+
+- fix\(core/xref\): preserve original term in error messages [\#2507](https://github.com/w3c/respec/pull/2507) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.32.0](https://github.com/w3c/respec/tree/v24.32.0) (2019-09-04)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.31.0...v24.32.0)
+
+**Closed issues:**
+
+- Support aliasing with \[=linking syntax=\] [\#2498](https://github.com/w3c/respec/issues/2498)
+
+**Merged pull requests:**
+
+- tests\(core/xref\): uses inline biblio for spec context [\#2506](https://github.com/w3c/respec/pull/2506) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/pluralize\): normalize to lowercase [\#2505](https://github.com/w3c/respec/pull/2505) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/inlines\): Support aliasing with \[=linking syntax=\] [\#2504](https://github.com/w3c/respec/pull/2504) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.31.0](https://github.com/w3c/respec/tree/v24.31.0) (2019-09-03)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.30.5...v24.31.0)
+
+**Implemented enhancements:**
+
+- chore\(ci\): Setup GitHub Actions [\#2482](https://github.com/w3c/respec/pull/2482) ([sidvishnoi](https://github.com/sidvishnoi))
+
+**Fixed bugs:**
+
+- Regression on IDL operation linking [\#2500](https://github.com/w3c/respec/issues/2500)
+- Built-in IDL datatypes are not linked when specStatus is "unofficial" [\#2469](https://github.com/w3c/respec/issues/2469)
+
+**Closed issues:**
+
+- Support new constructor IDL syntax [\#2494](https://github.com/w3c/respec/issues/2494)
+- \[Feature request\] upgrade-insecure-requests [\#2485](https://github.com/w3c/respec/issues/2485)
+- Exports should retain case [\#2483](https://github.com/w3c/respec/issues/2483)
+- Use the GitHub Actions [\#2481](https://github.com/w3c/respec/issues/2481)
+- An in-range update of webidl2 is breaking the build 🚨 [\#2479](https://github.com/w3c/respec/issues/2479)
+- respec2html.js race condition: Target closed [\#2477](https://github.com/w3c/respec/issues/2477)
+- An in-range update of eslint is breaking the build 🚨 [\#2472](https://github.com/w3c/respec/issues/2472)
+- add "untilDate" to formerEditor [\#2451](https://github.com/w3c/respec/issues/2451)
+- Link constructors in WebIDL [\#394](https://github.com/w3c/respec/issues/394)
+
+**Merged pull requests:**
+
+- chore\(package\): update deps [\#2503](https://github.com/w3c/respec/pull/2503) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/dfn-finder\): allow linking with different forms [\#2502](https://github.com/w3c/respec/pull/2502) ([saschanaz](https://github.com/saschanaz))
+- fix\(core/link-to-dfn\): wrap as code for all linking formats [\#2501](https://github.com/w3c/respec/pull/2501) ([saschanaz](https://github.com/saschanaz))
+- feat\(core/webidl\): support constructor linking [\#2499](https://github.com/w3c/respec/pull/2499) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/link-to-dfn\): remove redundant assignDfnId [\#2497](https://github.com/w3c/respec/pull/2497) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/dfn-finder\): move addAlternativeNames to decorateDfn [\#2491](https://github.com/w3c/respec/pull/2491) ([saschanaz](https://github.com/saschanaz))
+- refactor: use maps and sets [\#2490](https://github.com/w3c/respec/pull/2490) ([saschanaz](https://github.com/saschanaz))
+- fix: allow linking in multiple ways [\#2489](https://github.com/w3c/respec/pull/2489) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webidl\): do not overwrite data-dfn-for [\#2487](https://github.com/w3c/respec/pull/2487) ([saschanaz](https://github.com/saschanaz))
+- Update eslint to the latest version 🚀 [\#2486](https://github.com/w3c/respec/pull/2486) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- fix\(core/dfn-finder\): dfn-for should not be lcased [\#2484](https://github.com/w3c/respec/pull/2484) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): update webidl2 to version 23.5.1 [\#2480](https://github.com/w3c/respec/pull/2480) ([saschanaz](https://github.com/saschanaz))
+
+## [v24.30.5](https://github.com/w3c/respec/tree/v24.30.5) (2019-08-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.30.4...v24.30.5)
+
+**Closed issues:**
+
+- An in-range update of webidl2 is breaking the build 🚨 [\#2471](https://github.com/w3c/respec/issues/2471)
+
+**Merged pull requests:**
+
+- Fix for race condition on page close \(fixes \#2477\) [\#2478](https://github.com/w3c/respec/pull/2478) ([nickevansuk](https://github.com/nickevansuk))
+- chore\(package\): downgrade eslint, 6.2 causes failures [\#2474](https://github.com/w3c/respec/pull/2474) ([marcoscaceres](https://github.com/marcoscaceres))
+- enhancement\(core/xref\): improve cache busting strategy [\#2473](https://github.com/w3c/respec/pull/2473) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.30.4](https://github.com/w3c/respec/tree/v24.30.4) (2019-08-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.30.3...v24.30.4)
+
+**Merged pull requests:**
+
+- Add until date to formereditor [\#2468](https://github.com/w3c/respec/pull/2468) ([fycdev](https://github.com/fycdev))
+
+## [v24.30.3](https://github.com/w3c/respec/tree/v24.30.3) (2019-08-07)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.30.2...v24.30.3)
+
+**Closed issues:**
+
+- Support {{ Parent / "child" }} relationships for enums [\#2466](https://github.com/w3c/respec/issues/2466)
+
+**Merged pull requests:**
+
+- enhancement\(core/inlines\): add {{ EnumContainer / "enum value" }} syntax [\#2467](https://github.com/w3c/respec/pull/2467) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.30.2](https://github.com/w3c/respec/tree/v24.30.2) (2019-08-05)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.30.1...v24.30.2)
+
+**Closed issues:**
+
+- Refactor biblio-db with idb dependency [\#1955](https://github.com/w3c/respec/issues/1955)
+
+**Merged pull requests:**
+
+- fix\(core/inline-idl-parser\): better support IDL primitives [\#2465](https://github.com/w3c/respec/pull/2465) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/xref\): split its cache feature [\#2463](https://github.com/w3c/respec/pull/2463) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/biblio-db\): Move from indexedDB to idb [\#2228](https://github.com/w3c/respec/pull/2228) ([Swapnilr1](https://github.com/Swapnilr1))
+
+## [v24.30.1](https://github.com/w3c/respec/tree/v24.30.1) (2019-08-02)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.30.0...v24.30.1)
+
+**Closed issues:**
+
+- Reduce network requests on core/biblio [\#2461](https://github.com/w3c/respec/issues/2461)
+
+**Merged pull requests:**
+
+- refactor\(core/biblio\): remove redundant request [\#2462](https://github.com/w3c/respec/pull/2462) ([saschanaz](https://github.com/saschanaz))
+- test\(w3c/style\): split by status [\#2460](https://github.com/w3c/respec/pull/2460) ([saschanaz](https://github.com/saschanaz))
+
+## [v24.30.0](https://github.com/w3c/respec/tree/v24.30.0) (2019-08-01)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.29.0...v24.30.0)
+
+**Closed issues:**
+
+- xref error somewhat broken [\#2358](https://github.com/w3c/respec/issues/2358)
+- clearer message for when data-cite stomps on a reference [\#2310](https://github.com/w3c/respec/issues/2310)
+
+**Merged pull requests:**
+
+- chore\(karma\): report when too slow [\#2459](https://github.com/w3c/respec/pull/2459) ([saschanaz](https://github.com/saschanaz))
+- feat\(core/inlines\): add {{ forContext/idl\_term }} syntax [\#2456](https://github.com/w3c/respec/pull/2456) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.29.0](https://github.com/w3c/respec/tree/v24.29.0) (2019-08-01)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.28.0...v24.29.0)
+
+**Closed issues:**
+
+- xref: search externally first, then look for local dfn [\#2429](https://github.com/w3c/respec/issues/2429)
+- Misleading xref error message [\#2318](https://github.com/w3c/respec/issues/2318)
+
+**Merged pull requests:**
+
+- chore\(CHANGELOG\): regenerated [\#2458](https://github.com/w3c/respec/pull/2458) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/data-cite\): pass key string instead of object [\#2457](https://github.com/w3c/respec/pull/2457) ([saschanaz](https://github.com/saschanaz))
+-  feat\(core/xref\): delegate error hints to xref UI [\#2455](https://github.com/w3c/respec/pull/2455) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/headers\): do not emit undefined wg link [\#2454](https://github.com/w3c/respec/pull/2454) ([saschanaz](https://github.com/saschanaz))
+- feat\(ui/search-xref\): add xref search UI [\#2453](https://github.com/w3c/respec/pull/2453) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/inline-idl-parser\): support exceptions [\#2441](https://github.com/w3c/respec/pull/2441) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v24.28.0](https://github.com/w3c/respec/tree/v24.28.0) (2019-07-30)
 [Full Changelog](https://github.com/w3c/respec/compare/v24.27.1...v24.28.0)
 
