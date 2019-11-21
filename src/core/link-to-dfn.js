@@ -205,31 +205,40 @@ function isCode(dfn) {
 
 /**
  * Wrap links by <code>.
- * @param {HTMLAnchorElement} ant a link
+ * @param {HTMLAnchorElement} anchor a link
  * @param {HTMLElement} dfn a definition
  */
-function wrapAsCode(ant, dfn) {
+function wrapAsCode(anchor, dfn) {
   // only add code to IDL when the definition matches
-  const term = ant.textContent.trim();
+  const term = anchor.textContent.trim();
   const isIDL = dfn.dataset.hasOwnProperty("idl");
-  const needsCode = shouldWrapByCode(dfn, term);
+  const needsCode = shouldWrapByCode(anchor) || shouldWrapByCode(dfn, term);
   if (!isIDL || needsCode) {
-    wrapInner(ant, document.createElement("code"));
+    wrapInner(anchor, document.createElement("code"));
   }
 }
 
 /**
- * @param {HTMLElement} dfn
+ * @param {HTMLElement} elem
  * @param {string} term
  */
-function shouldWrapByCode(dfn, term) {
-  const { dataset } = dfn;
-  if (dfn.textContent.trim() === term) {
-    return true;
-  } else if (dataset.title === term) {
-    return true;
-  } else if (dataset.lt) {
-    return dataset.lt.split("|").includes(term);
+function shouldWrapByCode(elem, term = "") {
+  switch (elem.localName) {
+    case "a":
+      if (elem.querySelector("code")) {
+        return true;
+      }
+      break;
+    default: {
+      const { dataset } = elem;
+      if (elem.textContent.trim() === term) {
+        return true;
+      } else if (dataset.title === term) {
+        return true;
+      } else if (dataset.lt) {
+        return dataset.lt.split("|").includes(term);
+      }
+    }
   }
   return false;
 }
