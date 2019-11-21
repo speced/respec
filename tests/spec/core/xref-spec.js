@@ -648,19 +648,20 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const [windowLink, eventTargetLink] = doc.querySelectorAll(
-        "#link1 code a"
-      );
+      const [windowLink, eventTargetLink] = doc.querySelectorAll("#link1 a");
       expect(windowLink.href).toBe(expectedLinks.get("Window"));
       expect(eventTargetLink.href).toBe(expectedLinks.get("EventTarget"));
+      expect(eventTargetLink.firstElementChild.localName).toBe("code");
 
-      const link2 = doc.querySelector("#link2 code a");
+      const link2 = doc.querySelector("#link2 a");
       expect(link2.href).toBeFalsy();
-      expect(link2.textContent).toBe("query");
+      expect(link2.textContent).toBe("[[query]]");
+      expect(link2.firstElementChild.localName).toBe("code");
 
-      const link3 = doc.querySelector("#link3 code a");
+      const link3 = doc.querySelector("#link3 a");
       expect(link3.href).toBe(expectedLinks.get("EventTarget"));
       expect(link3.textContent).toBe("EventTarget");
+      expect(link3.firstElementChild.localName).toBe("code");
     });
 
     it("links methods", async () => {
@@ -675,23 +676,29 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
+      const [link1a, link1b] = [...doc.querySelectorAll("#link1 a")];
       expect(link1a.href).toBe(expectedLinks.get("EventTarget"));
       expect(link1b.href).toBe(
         expectedLinks.get("EventTarget.addEventListener")
       );
+      expect(link1a.firstElementChild.localName).toBe("code");
+      expect(link1b.firstElementChild.localName).toBe("code");
       const vars1 = [...doc.querySelectorAll("#link1 var")];
       expect(vars1.length).toBe(2);
       expect(vars1[0].textContent).toBe("type");
       expect(vars1[1].textContent).toBe("callback");
 
-      const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
+      const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
       expect(link2a.href).toBe(expectedLinks.get("ChildNode"));
+      expect(link2a.firstElementChild.localName).toBe("code");
       expect(link2b.href).toBe(expectedLinks.get("ChildNode.after"));
+      expect(link2b.firstElementChild.localName).toBe("code");
 
-      const [link3a, link3b] = [...doc.querySelectorAll("#link3 code a")];
+      const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
       expect(link3a.href).toBe(expectedLinks.get("URLSearchParams"));
       expect(link3b.href).toBe(expectedLinks.get("URLSearchParams.append"));
+      expect(link3a.firstElementChild.localName).toBe("code");
+      expect(link3b.firstElementChild.localName).toBe("code");
     });
 
     it("links attribute and dict-member", async () => {
@@ -710,27 +717,35 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
+      const [link1a, link1b] = [...doc.querySelectorAll("#link1 a")];
       expect(link1a.href).toBe(expectedLinks.get("Window"));
       expect(link1b.href).toBe(expectedLinks.get("Window.event"));
+      expect(link1a.firstElementChild.localName).toBe("code");
+      expect(link1b.firstElementChild.localName).toBe("code");
 
       // the base "Credential" is used to disambiguate as "forContext"
-      const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
+      const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
       expect(link2a.href).toBe(expectedLinks.get("Credential"));
       expect(link2b.href).toBe(expectedLinks.get("Credential.[[type]]"));
+      expect(link2a.firstElementChild.localName).toBe("code");
+      expect(link2b.firstElementChild.localName).toBe("code");
 
-      const [link3a, link3b] = [...doc.querySelectorAll("#link3 code a")];
+      const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
       expect(link3a.href).toBe(expectedLinks.get("PublicKeyCredential"));
       expect(link3b.href).toBe(
         expectedLinks.get("PublicKeyCredential.[[type]]")
       );
+      expect(link3a.firstElementChild.localName).toBe("code");
+      expect(link3b.firstElementChild.localName).toBe("code");
 
       // "TextDecoderOptions" is dictionary and "fatal" is dict-member
-      const [link4a, link4b] = [...doc.querySelectorAll("#link4 code a")];
+      const [link4a, link4b] = [...doc.querySelectorAll("#link4 a")];
       expect(link4a.href).toBe(expectedLinks.get("TextDecoderOptions"));
       expect(link4b.href).toBe(
         expectedLinks.get(`TextDecoderOptions["fatal"]`)
       );
+      expect(link4a.firstElementChild.localName).toBe("code");
+      expect(link4b.firstElementChild.localName).toBe("code");
     });
 
     it("links internalSlots", async () => {
@@ -748,11 +763,14 @@ describe("Core — xref", () => {
       // as base == [[type]], it is treated as a local internal slot
       const link1 = doc.querySelector("#link1 a");
       expect(link1.getAttribute("href")).toBe("#dfn-type");
+      expect(link1.firstElementChild.localName).toBe("code");
 
       // the base "Credential" is used as "forContext" for [[type]]
-      const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
+      const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
       expect(link2a.href).toBe(expectedLinks.get("Credential"));
       expect(link2b.href).toBe(expectedLinks.get("Credential.[[type]]"));
+      expect(link2a.firstElementChild.localName).toBe("code");
+      expect(link2b.firstElementChild.localName).toBe("code");
     });
 
     it("links enum and enum-values", async () => {
@@ -831,6 +849,7 @@ describe("Core — xref", () => {
         <section data-dfn-for="PaymentAddress" data-link-for="PaymentAddress">
           <h2><dfn>PaymentAddress</dfn> interface</h2>
           <pre class="idl">
+            [Exposed=Window]
             interface PaymentAddress {
               attribute DOMString languageCode;
             };
