@@ -11,7 +11,7 @@ export const name = "core/github";
 
 let resolveGithubPromise;
 let rejectGithubPromise;
-/** @type {Promise<{ api: string, branch: string, repoURL: string }>} */
+/** @type {Promise<{ api: string, branch: string, repoURL: string } | null>} */
 export const github = new Promise((resolve, reject) => {
   resolveGithubPromise = resolve;
   rejectGithubPromise = error => {
