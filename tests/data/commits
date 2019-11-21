@@ -1,0 +1,22 @@
+[
+  { "hash": "80aad0a", "message": "chore: ReSpec fixes" },
+  {
+    "hash": "276f4ba",
+    "message": "Editorial: Add privacy notice regarding <var> usage (#869)"
+  },
+  {
+    "hash": "3ebb1c1",
+    "message": "fix: set default for optional dictionaries (#874)"
+  },
+  {
+    "hash": "a0c831d",
+    "message": "Remove requirement to reject after document is inactive (#875)"
+  },
+  { "hash": "c77ebf8", "message": "chore: tidy" },
+  {
+    "hash": "6f2565b",
+    "message": "Add PaymentRequest.prototype.hasEnrolledInstrument() (#833)"
+  },
+  { "hash": "72de3ba", "message": "chore: enable MDN annotations" },
+  { "hash": "4d8ed23", "message": "refactor: use | instead of <var> (#863)" }
+]

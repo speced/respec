@@ -5,7 +5,12 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import { decorateDfn, findDfn } from "./dfn-finder.js";
-import { flatten, showInlineError, showInlineWarning } from "./utils.js";
+import {
+  flatten,
+  showInlineError,
+  showInlineWarning,
+  xmlEscape,
+} from "./utils.js";
 import { hyperHTML, webidl2 } from "./import-maps.js";
 import { fetchAsset } from "./text-loader.js";
 import { registerDefinition } from "./dfn-map.js";
@@ -365,8 +370,10 @@ export async function run() {
     let details = `<pre>${validation.context}</pre>`;
     if (validation.autofix) {
       validation.autofix();
+      const idlToFix = webidl2.write(astArray[validation.sourceName]);
+      const escaped = xmlEscape(idlToFix);
       details += `Try fixing as:
-      <pre>${webidl2.write(astArray[validation.sourceName])}</pre>`;
+      <pre>${escaped}</pre>`;
     }
     showInlineError(
       idls[validation.sourceName],

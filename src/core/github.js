@@ -9,6 +9,17 @@ import { lang as defaultLang } from "../core/l10n.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github";
 
+let resolveGithubPromise;
+let rejectGithubPromise;
+/** @type {Promise<{ api: string, branch: string, repoURL: string } | null>} */
+export const github = new Promise((resolve, reject) => {
+  resolveGithubPromise = resolve;
+  rejectGithubPromise = message => {
+    pub("error", message);
+    reject(new Error(message));
+  };
+});
+
 const localizationStrings = {
   en: {
     file_a_bug: "File a bug",
@@ -32,6 +43,7 @@ const l10n = localizationStrings[lang];
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
     // nothing to do, bail out.
+    resolveGithubPromise(null);
     return;
   }
   if (
@@ -41,7 +53,7 @@ export async function run(conf) {
     const msg =
       "Config option `[github](https://github.com/w3c/respec/wiki/github)` " +
       "is missing property `repoURL`.";
-    pub("error", msg);
+    rejectGithubPromise(msg);
     return;
   }
   let tempURL = conf.github.repoURL || conf.github;
@@ -50,19 +62,20 @@ export async function run(conf) {
   try {
     ghURL = new URL(tempURL, "https://github.com");
   } catch {
-    pub("error", `\`respecConf.github\` is not a valid URL? (${ghURL})`);
+    const msg = `\`respecConf.github\` is not a valid URL? (${ghURL})`;
+    rejectGithubPromise(msg);
     return;
   }
   if (ghURL.origin !== "https://github.com") {
     const msg = `\`respecConf.github\` must be HTTPS and pointing to GitHub. (${ghURL})`;
-    pub("error", msg);
+    rejectGithubPromise(msg);
     return;
   }
   const [org, repo] = ghURL.pathname.split("/").filter(item => item);
   if (!org || !repo) {
     const msg =
       "`respecConf.github` URL needs a path with, for example, w3c/my-spec";
-    pub("error", msg);
+    rejectGithubPromise(msg);
     return;
   }
   const branch = conf.github.branch || "gh-pages";
@@ -113,6 +126,7 @@ export async function run(conf) {
     branch,
     repoURL: ghURL.href,
   };
+  resolveGithubPromise({ api: githubAPI, ...normalizedGHObj });
 
   const normalizedConfig = {
     ...newProps,
