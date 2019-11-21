@@ -14,9 +14,9 @@ let rejectGithubPromise;
 /** @type {Promise<{ api: string, branch: string, repoURL: string } | null>} */
 export const github = new Promise((resolve, reject) => {
   resolveGithubPromise = resolve;
-  rejectGithubPromise = error => {
-    pub("error", error.message);
-    reject(error);
+  rejectGithubPromise = message => {
+    pub("error", message);
+    reject(new Error(message));
   };
 });
 
@@ -53,7 +53,7 @@ export async function run(conf) {
     const msg =
       "Config option `[github](https://github.com/w3c/respec/wiki/github)` " +
       "is missing property `repoURL`.";
-    rejectGithubPromise(new Error(msg));
+    rejectGithubPromise(msg);
     return;
   }
   let tempURL = conf.github.repoURL || conf.github;
@@ -63,19 +63,19 @@ export async function run(conf) {
     ghURL = new URL(tempURL, "https://github.com");
   } catch {
     const msg = `\`respecConf.github\` is not a valid URL? (${ghURL})`;
-    rejectGithubPromise(new Error(msg));
+    rejectGithubPromise(msg);
     return;
   }
   if (ghURL.origin !== "https://github.com") {
     const msg = `\`respecConf.github\` must be HTTPS and pointing to GitHub. (${ghURL})`;
-    rejectGithubPromise(new Error(msg));
+    rejectGithubPromise(msg);
     return;
   }
   const [org, repo] = ghURL.pathname.split("/").filter(item => item);
   if (!org || !repo) {
     const msg =
       "`respecConf.github` URL needs a path with, for example, w3c/my-spec";
-    rejectGithubPromise(new Error(msg));
+    rejectGithubPromise(msg);
     return;
   }
   const branch = conf.github.branch || "gh-pages";
