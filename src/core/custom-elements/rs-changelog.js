@@ -49,7 +49,11 @@ async function fetchCommits(from, to, filter) {
   /** @type {Commit[]} */
   let commits;
   try {
-    const { api: githubAPI } = await github;
+    const githubObject = await github;
+    if (!githubObject) {
+      throw new Error("`respecConfig.github` is not set");
+    }
+    const { api: githubAPI } = githubObject;
     const url = new URL("commits", githubAPI);
     url.searchParams.set("from", from);
     url.searchParams.set("to", to);

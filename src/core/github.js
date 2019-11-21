@@ -9,12 +9,15 @@ import { lang as defaultLang } from "../core/l10n.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github";
 
-let githubResolver;
-let githubRejector;
+let resolveGithubPromise;
+let rejectGithubPromise;
 /** @type {Promise<{ api: string, branch: string, repoURL: string }>} */
 export const github = new Promise((resolve, reject) => {
-  githubResolver = resolve;
-  githubRejector = reject;
+  resolveGithubPromise = resolve;
+  rejectGithubPromise = error => {
+    pub("error", error.message);
+    reject(error);
+  };
 });
 
 const localizationStrings = {
@@ -40,6 +43,7 @@ const l10n = localizationStrings[lang];
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
     // nothing to do, bail out.
+    resolveGithubPromise(null);
     return;
   }
   if (
@@ -49,8 +53,7 @@ export async function run(conf) {
     const msg =
       "Config option `[github](https://github.com/w3c/respec/wiki/github)` " +
       "is missing property `repoURL`.";
-    pub("error", msg);
-    githubRejector(new Error(msg));
+    rejectGithubPromise(new Error(msg));
     return;
   }
   let tempURL = conf.github.repoURL || conf.github;
@@ -60,22 +63,19 @@ export async function run(conf) {
     ghURL = new URL(tempURL, "https://github.com");
   } catch {
     const msg = `\`respecConf.github\` is not a valid URL? (${ghURL})`;
-    pub("error", msg);
-    githubRejector(new Error(msg));
+    rejectGithubPromise(new Error(msg));
     return;
   }
   if (ghURL.origin !== "https://github.com") {
     const msg = `\`respecConf.github\` must be HTTPS and pointing to GitHub. (${ghURL})`;
-    pub("error", msg);
-    githubRejector(new Error(msg));
+    rejectGithubPromise(new Error(msg));
     return;
   }
   const [org, repo] = ghURL.pathname.split("/").filter(item => item);
   if (!org || !repo) {
     const msg =
       "`respecConf.github` URL needs a path with, for example, w3c/my-spec";
-    pub("error", msg);
-    githubRejector(new Error(msg));
+    rejectGithubPromise(new Error(msg));
     return;
   }
   const branch = conf.github.branch || "gh-pages";
@@ -126,7 +126,7 @@ export async function run(conf) {
     branch,
     repoURL: ghURL.href,
   };
-  githubResolver({ api: githubAPI, ...normalizedGHObj });
+  resolveGithubPromise({ api: githubAPI, ...normalizedGHObj });
 
   const normalizedConfig = {
     ...newProps,
