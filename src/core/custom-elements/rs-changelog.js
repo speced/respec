@@ -13,7 +13,7 @@ import { showInlineError } from "../utils.js";
 
 export const name = "rs-changelog";
 
-export default class ChangelogElement extends HTMLElement {
+export const element = class ChangelogElement extends HTMLElement {
   constructor() {
     super();
     this.props = {
@@ -43,7 +43,7 @@ export default class ChangelogElement extends HTMLElement {
       </ul>
     `;
   }
-}
+};
 
 async function fetchCommits(from, to, filter) {
   /** @type {Commit[]} */

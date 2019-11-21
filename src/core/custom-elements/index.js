@@ -4,13 +4,13 @@
  *
  * Every custom element file exports:
  * - `name`: registered name of the custom element, prefixed with `rs-`.
- * - `default`: class defintion of the custom element.
+ * - `element`: class defintion of the custom element.
  * - `is`: an optional string if element extends some built-in element.
  *
  * Every custom element must dispatch a CustomEvent 'done' that tells the
  * element has finished its processing, with or without errors.
  *
- * @typedef {{ name: string, default: Function, is?: string }} CustomElementDfn
+ * @typedef {{ name: string, element: Function, is?: string }} CustomElementDfn
  */
 
 import * as changelog from "./rs-changelog.js";
@@ -24,7 +24,7 @@ export async function run() {
   CUSTOM_ELEMENTS.forEach(el => {
     customElements.define(
       el.name,
-      el.default,
+      el.element,
       el.is ? { extends: el.is } : undefined
     );
   });
