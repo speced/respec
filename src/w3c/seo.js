@@ -170,10 +170,24 @@ function addPerson({ name, url, mailto, company, companyURL }) {
  */
 function addRef(ref) {
   const { href: id, title: name, href: url } = ref;
-  return {
+  let jsonld = {
     id,
     type: "TechArticle",
     name,
     url,
   };
+  if (ref.authors) {
+    jsonld.creator = ref.authors.map(a => ({name: a}));
+  }
+  if (ref.rawDate) {
+    jsonld.publishedDate = ref.rawDate;
+  }
+  if (ref.isbn) {
+    jsonld.identifier = ref.isbn;
+  }
+  if (ref.publisher) {
+    jsonld.publisher = {name: ref.publisher};
+  }
+  return jsonld;
 }
+

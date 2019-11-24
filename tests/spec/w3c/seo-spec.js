@@ -106,6 +106,7 @@ describe("W3C - SEO", () => {
         title: "Third test",
         href: "http://test.com/3",
         publisher: "Publisher Here",
+        isbn: "9783319934167",
       },
     },
   };
@@ -180,18 +181,28 @@ describe("W3C - SEO", () => {
       type: "TechArticle",
       name: "Test ref title",
       url: "http://test.com/1",
+      author: [
+        { name: "William Shakespeare" }
+      ],
+      publisher: { name: "Publishers Inc." },
     });
     expect(jsonld.citation).toContain({
       id: "http://test.com/2",
       type: "TechArticle",
       name: "Second test",
       url: "http://test.com/2",
+      author: [
+        { name: "Another author" }
+      ],
+      publisher: { name: "Testing 123" }
     });
     expect(jsonld.citation).toContain({
       id: "http://test.com/3",
       type: "TechArticle",
       name: "Third test",
       url: "http://test.com/3",
+      publisher: { name: "Publisher Here" },
+      identifier: "9783319934167",
     });
   });
 
