@@ -181,7 +181,7 @@ describe("W3C - SEO", () => {
       type: "TechArticle",
       name: "Test ref title",
       url: "http://test.com/1",
-      author: [{ name: "William Shakespeare" }],
+      creator: [{ name: "William Shakespeare" }],
       publisher: { name: "Publishers Inc." },
     });
     expect(jsonld.citation).toContain({
@@ -189,7 +189,7 @@ describe("W3C - SEO", () => {
       type: "TechArticle",
       name: "Second test",
       url: "http://test.com/2",
-      author: [{ name: "Another author" }],
+      creator: [{ name: "Another author" }],
       publisher: { name: "Testing 123" },
     });
     expect(jsonld.citation).toContain({
