@@ -170,14 +170,14 @@ function addPerson({ name, url, mailto, company, companyURL }) {
  */
 function addRef(ref) {
   const { href: id, title: name, href: url } = ref;
-  let jsonld = {
+  const jsonld = {
     id,
     type: "TechArticle",
     name,
     url,
   };
   if (ref.authors) {
-    jsonld.creator = ref.authors.map(a => ({name: a}));
+    jsonld.creator = ref.authors.map(a => ({ name: a }));
   }
   if (ref.rawDate) {
     jsonld.publishedDate = ref.rawDate;
@@ -186,8 +186,7 @@ function addRef(ref) {
     jsonld.identifier = ref.isbn;
   }
   if (ref.publisher) {
-    jsonld.publisher = {name: ref.publisher};
+    jsonld.publisher = { name: ref.publisher };
   }
   return jsonld;
 }
-
