@@ -2,8 +2,8 @@
 // Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
-import { biblio } from "../core/biblio.js";
 import { pub } from "../core/pubsubhub.js";
+import { resolveRef } from "../core/biblio.js";
 export const name = "w3c/seo";
 export function run(conf) {
   // Don't include a canonical URL for documents
@@ -135,8 +135,14 @@ async function addJSONLDInfo(conf, doc) {
   }
 
   // normative and informative references
-  jsonld.citation = [...conf.normativeReferences, ...conf.informativeReferences]
-    .map(ref => biblio[ref])
+  const citationIds = [
+    ...conf.normativeReferences,
+    ...conf.informativeReferences,
+  ];
+  const citationContents = await Promise.all(
+    citationIds.map(async ref => await resolveRef(ref))
+  );
+  jsonld.citation = citationContents
     .filter(ref => typeof ref === "object")
     .map(addRef);
 

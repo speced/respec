@@ -61,7 +61,7 @@ describe("W3C - SEO", () => {
       <p>foo</p>
     </section>
     <section id="toc"></section>
-    <p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p>
+    <p>foo [[!TestRef1]] [[TestRef2]] [[!TestAlias]]</p>
   `;
   const config = {
     editors: [
@@ -107,6 +107,9 @@ describe("W3C - SEO", () => {
         href: "http://test.com/3",
         publisher: "Publisher Here",
         isbn: "9783319934167",
+      },
+      TestAlias: {
+        aliasOf: "TestRef3",
       },
     },
   };
