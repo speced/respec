@@ -5,7 +5,7 @@
 import { pub } from "../core/pubsubhub.js";
 import { resolveRef } from "../core/biblio.js";
 export const name = "w3c/seo";
-export function run(conf) {
+export async function run(conf) {
   // Don't include a canonical URL for documents
   // that haven't been published.
   if (!conf.canonicalURI) {
@@ -69,12 +69,11 @@ export function run(conf) {
     document.head.appendChild(linkElem);
   }
   if (conf.doJsonLd) {
-    addJSONLDInfo(conf, document);
+    await addJSONLDInfo(conf, document);
   }
 }
 
 async function addJSONLDInfo(conf, doc) {
-  await doc.respecIsReady;
   // Content for JSON
   const type = ["TechArticle"];
   if (conf.rdfStatus) type.push(conf.rdfStatus);
