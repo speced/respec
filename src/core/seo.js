@@ -7,23 +7,14 @@
 export const name = "core/seo";
 
 export function run() {
-  // This is not critical, so let's continue other processing first
-  (async () => {
-    await document.respecIsReady;
-    const firstParagraph = document.querySelector("#abstract p:first-of-type");
-    if (!firstParagraph) {
-      return; // no abstract, so nothing to do
-    }
-    insertMetaDescription(firstParagraph);
-  })();
-}
-
-function insertMetaDescription(firstParagraph) {
+  const firstParagraph = document.querySelector("#abstract p:first-of-type");
+  if (!firstParagraph) {
+    return; // no abstract, so nothing to do
+  }
   // Normalize whitespace: trim, remove new lines, tabs, etc.
-  const doc = firstParagraph.ownerDocument;
   const content = firstParagraph.textContent.replace(/\s+/, " ").trim();
-  const metaElem = doc.createElement("meta");
+  const metaElem = document.createElement("meta");
   metaElem.name = "description";
   metaElem.content = content;
-  doc.head.appendChild(metaElem);
+  document.head.appendChild(metaElem);
 }
