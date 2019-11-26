@@ -81,6 +81,7 @@ if (args.interactive) {
 }
 
 printWelcomeMessage(args);
+buildAndTest();
 
 function registerStdinHandler() {
   // https://stackoverflow.com/a/12506613
