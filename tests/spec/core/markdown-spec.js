@@ -241,6 +241,45 @@ describe("Core - Markdown", () => {
     expect(foo.contains(bar)).toBeFalsy();
   });
 
+  it("supports backticks for webidl", async () => {
+    const body = `
+      ## test
+
+      \`\`\` webidl
+      [Exposed=Window]
+      interface Foo {
+        constructor();
+        attribute DOMString bar;
+        void doTheFoo();
+      };
+      \`\`\`
+
+      \`\`\` js
+      console.log("hey")
+      \`\`\`
+
+      \`\`\
+      IDK what I am
+      \`\`\`
+    `;
+    const ops = makeStandardOps({ format: "markdown" }, body);
+    const doc = await makeRSDoc(ops);
+    const [webidlBlock, jsBlock, normalBlock] = doc.querySelectorAll("pre");
+
+    expect(webidlBlock.classList).toContain("idl");
+    expect(webidlBlock.querySelector("code.hljs")).toBeFalsy();
+    expect(webidlBlock.querySelector(".respec-button-copy-paste")).toBeTruthy();
+
+    expect(jsBlock.firstElementChild.localName).toBe("code");
+    expect(jsBlock.querySelector("code.hljs").classList).toContain(
+      "language-js"
+    );
+    expect(jsBlock.querySelector(".respec-button-copy-paste")).toBeFalsy();
+
+    expect(normalBlock.firstElementChild.localName).toBe("code");
+    expect(normalBlock.querySelector(".respec-button-copy-paste")).toBeFalsy();
+  });
+
   describe("nolinks options", () => {
     it("automatically links URLs in pre when missing (smoke test)", async () => {
       const body = `
