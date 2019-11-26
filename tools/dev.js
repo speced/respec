@@ -13,7 +13,7 @@ const SERVE_PORT = 5000;
 const karmaConfig = karma.config.parseConfig(
   path.join(__dirname, "../karma.conf.js"),
   {
-    browsers: ["ChromeHeadless"],
+    browsers: ["FirefoxHeadless"],
     autoWatch: false,
     port: KARMA_PORT,
     logLevel: karma.constants.LOG_WARN,
