@@ -6,16 +6,14 @@
 
 export const name = "core/seo";
 
-export function run() {
-  // This is not critical, so let's continue other processing first
-  (async () => {
-    await document.respecIsReady;
-    const firstParagraph = document.querySelector("#abstract p:first-of-type");
-    if (!firstParagraph) {
-      return; // no abstract, so nothing to do
-    }
-    insertMetaDescription(firstParagraph);
-  })();
+export async function run() {
+  // This needs to run before JSON-LD export runs, because it relies on
+  // the meta tag being present to extract the description itself.
+  const firstParagraph = document.querySelector("#abstract p:first-of-type");
+  if (!firstParagraph) {
+    return; // no abstract, so nothing to do
+  }
+  insertMetaDescription(firstParagraph);
 }
 
 function insertMetaDescription(firstParagraph) {
