@@ -49,7 +49,7 @@ try {
   args = commandLineArgs(optionList);
 } catch (err) {
   console.error(colors.error(err.message));
-  process.exit(1);
+  process.exit(127);
 }
 
 const karmaConfig = karma.config.parseConfig(
@@ -91,9 +91,11 @@ function registerStdinHandler() {
 
   stdin.on("data", async key => {
     switch (key) {
-      case "\u0003": {
-        karma.stopper.stop(karmaConfig);
-        return process.exit(1);
+      case "\u0003":
+      case "q": {
+        return karma.stopper.stop(karmaConfig, code => {
+          setTimeout(() => process.exit(code), 0);
+        });
       }
       case "t":
         return await buildAndTest();
@@ -120,7 +122,9 @@ async function buildAndTest() {
 
 function onError(err) {
   console.error(colors.error(err.stack));
-  process.exit(1);
+  karma.stopper.stop(karmaConfig, () => {
+    process.exit(1);
+  });
 }
 
 function printWelcomeMessage(args) {
@@ -135,6 +139,7 @@ function printWelcomeMessage(args) {
   if (args.interactive) {
     messages.push(["<keypress> t", "build and run tests"]);
     messages.push(["<keypress> h", "print this help message"]);
+    messages.push(["<keypress> q", "quit"]);
   }
 
   const message = messages
