@@ -20,22 +20,17 @@ const karmaConfig = karma.config.parseConfig(
   }
 );
 const karmaServer = new karma.Server(karmaConfig);
+karmaServer.start();
 
-main();
+const server = createServer((req, res) => serve(req, res, serveConfig));
+server.listen(SERVE_PORT);
+server.on("error", onError);
 
-function main() {
-  const server = createServer((req, res) => serve(req, res, serveConfig));
-  server.listen(SERVE_PORT);
-  server.on("error", onError);
+const watcher = chokidar.watch("./src", { ignoreInitial: true });
+watcher.on("all", onFileChange);
+watcher.on("error", onError);
 
-  karmaServer.start();
-
-  const watcher = chokidar.watch("./src", { ignoreInitial: true });
-  watcher.on("all", onFileChange);
-  watcher.on("error", onError);
-
-  printWelcomeMessage();
-}
+printWelcomeMessage();
 
 async function onFileChange(_event, _file) {
   try {
