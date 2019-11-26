@@ -77,7 +77,8 @@ devServer.on("error", onError);
 if (args.interactive) {
   registerStdinHandler();
 } else {
-  const watcher = chokidar.watch("./src", { ignoreInitial: true });
+  const paths = ["./src", "./tests/spec"];
+  const watcher = chokidar.watch(paths, { ignoreInitial: true });
   watcher.on("all", onFileChange);
   watcher.on("error", onError);
 }
@@ -107,6 +108,8 @@ function registerStdinHandler() {
       }
       case "t":
         return await buildAndTest();
+      case "T":
+        return await buildAndTest(true);
       case "h":
         return printWelcomeMessage(args);
       default:
@@ -115,15 +118,18 @@ function registerStdinHandler() {
   });
 }
 
-async function onFileChange(_event, _file) {
-  await buildAndTest();
+async function onFileChange(_event, file) {
+  const preventBuild = file.startsWith("tests");
+  await buildAndTest(preventBuild);
 }
 
-async function buildAndTest() {
+async function buildAndTest(preventBuild = false) {
   if (isActive) return;
   try {
     isActive = true;
-    await Builder.build({ name: args.profile, debug: true });
+    if (!preventBuild) {
+      await Builder.build({ name: args.profile, debug: true });
+    }
     karma.runner.run(karmaConfig, () => {});
   } catch (err) {
     console.error(colors.error(err.stack));
@@ -150,6 +156,7 @@ function printWelcomeMessage(args) {
   ];
   if (args.interactive) {
     messages.push(["<keypress> t", "build and run tests"]);
+    messages.push(["<keypress> T", "run tests only"]);
     messages.push(["<keypress> h", "print this help message"]);
     messages.push(["<keypress> q", "quit"]);
   }
