@@ -4,6 +4,7 @@ const chokidar = require("chokidar");
 const karma = require("karma");
 const serve = require("serve-handler");
 const colors = require("colors");
+const boxen = require("boxen");
 const commandLineArgs = require("command-line-args");
 const serveConfig = require("../serve.json");
 const { Builder } = require("./builder");
@@ -116,36 +117,26 @@ function printWelcomeMessage(args) {
   const messages = [
     ["dev server", `http://localhost:${SERVE_PORT}`],
     ["karma server", `http://localhost:${KARMA_PORT}`],
-    ["file watcher", `${args.interactive ? "NOT " : ""}watching changes...`],
+    [
+      "file watcher",
+      `${args.interactive ? "NOT " : ""}watching for changes...`,
+    ],
   ];
   if (args.interactive) {
     messages.push(["<keypress> t", "build and run tests"]);
     messages.push(["<keypress> h", "print this help message"]);
   }
 
-  const maxMsgLength = Math.max(
-    ...messages.map(msg => msg.reduce((l, m) => l + m.length, 0))
-  );
-  const box = {
-    topLeft: "┌",
-    topRight: "┐",
-    bottomLeft: "└",
-    bottomRight: "┘",
-    hr: "─",
-    vert: "│",
+  const message = messages
+    .map(([title, text]) => {
+      return colors.white.bold(`${title}:`.padEnd(18)) + colors.white(text);
+    })
+    .join("\n");
+
+  const boxOptions = {
+    padding: 1,
+    borderColor: "green",
+    backgroundColor: "black",
   };
-  const hrWidth = maxMsgLength + 2 + 10; // TODO: remove magic constant
-  const lines = [
-    ` ${box.topLeft}${box.hr.repeat(hrWidth)}${box.topRight}`,
-    ...messages.map(msg => {
-      return [
-        box.vert,
-        colors.white.bold(`${msg[0]}:`),
-        colors.white(msg[1]),
-        box.vert,
-      ].join("\t");
-    }),
-    ` ${box.bottomLeft}${box.hr.repeat(hrWidth)}${box.bottomRight}`,
-  ];
-  console.log(colors.bgBlack.green(lines.map(line => `\t${line}`).join("\n")));
+  console.log(boxen(message, boxOptions));
 }
