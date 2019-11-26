@@ -36,6 +36,12 @@ const optionList = [
     multiple: true,
     type: String,
   },
+  {
+    name: "grep",
+    description: "Run specific tests using karma --grep",
+    defaultOption: undefined,
+    type: String,
+  },
 ];
 
 let args;
@@ -53,6 +59,10 @@ const karmaConfig = karma.config.parseConfig(
     autoWatch: false,
     port: KARMA_PORT,
     logLevel: karma.constants.LOG_WARN,
+    client: {
+      args: ["--grep", args.grep || ""],
+    },
+    mochaReporter: { ignoreSkipped: true },
   }
 );
 const karmaServer = new karma.Server(karmaConfig);
