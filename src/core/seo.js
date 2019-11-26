@@ -6,7 +6,7 @@
 
 export const name = "core/seo";
 
-export async function run() {
+export function run() {
   // This needs to run before JSON-LD export runs, because it relies on
   // the meta tag being present to extract the description itself.
   const firstParagraph = document.querySelector("#abstract p:first-of-type");
