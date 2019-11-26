@@ -72,10 +72,9 @@ function toListItem(href) {
 }
 
 export function run(conf) {
-  /** @type {HTMLElement[]} */
-  const testables = [...document.querySelectorAll("[data-tests]")].filter(
-    elem => elem.dataset.tests
-  );
+  /** @type {NodeListOf<HTMLElement>} */
+  const elems = document.querySelectorAll("[data-tests]");
+  const testables = [...elems].filter(elem => elem.dataset.tests);
 
   if (!testables.length) {
     return;
