@@ -86,7 +86,7 @@
     "server": "serve",
     "snyk-protect": "snyk protect",
     "snyk": "snyk",
-    "start": "node ./tools/dev.js",
+    "start": "node ./tools/dev-server.js",
     "test:build": "mocha --timeout 60000 ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
