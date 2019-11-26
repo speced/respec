@@ -78,5 +78,4 @@ function printWelcomeMessage() {
     ` ${box.bottomLeft}${box.hr.repeat(hrWidth)}${box.bottomRight}`,
   ];
   console.log(colors.bgBlack.green(lines.map(line => `\t${line}`).join("\n")));
-  console.log();
 }
