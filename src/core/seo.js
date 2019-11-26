@@ -12,10 +12,9 @@ export function run() {
     return; // no abstract, so nothing to do
   }
   // Normalize whitespace: trim, remove new lines, tabs, etc.
-  const doc = firstParagraph.ownerDocument;
   const content = firstParagraph.textContent.replace(/\s+/, " ").trim();
-  const metaElem = doc.createElement("meta");
+  const metaElem = document.createElement("meta");
   metaElem.name = "description";
   metaElem.content = content;
-  doc.head.appendChild(metaElem);
+  document.head.appendChild(metaElem);
 }
