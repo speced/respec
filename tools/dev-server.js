@@ -52,6 +52,8 @@ try {
   process.exit(127);
 }
 
+let isActive = false;
+
 const karmaConfig = karma.config.parseConfig(
   path.join(__dirname, "../karma.conf.js"),
   {
@@ -91,8 +93,13 @@ function registerStdinHandler() {
   stdin.setEncoding("utf8");
 
   stdin.on("data", async key => {
+    if (isActive) {
+      // do nothing if already active
+      return process.stdout.write(key);
+    }
+
     switch (key) {
-      case "\u0003":
+      case "\u0003": //  ctrl-c (end of text)
       case "q": {
         return karma.stopper.stop(karmaConfig, code => {
           setTimeout(() => process.exit(code), 0);
@@ -113,11 +120,15 @@ async function onFileChange(_event, _file) {
 }
 
 async function buildAndTest() {
+  if (isActive) return;
   try {
+    isActive = true;
     await Builder.build({ name: args.profile, debug: true });
     karma.runner.run(karmaConfig, () => {});
   } catch (err) {
     console.error(colors.error(err.stack));
+  } finally {
+    isActive = false;
   }
 }
 
