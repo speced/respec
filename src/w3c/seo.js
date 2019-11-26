@@ -139,7 +139,7 @@ async function addJSONLDInfo(conf, doc) {
     ...conf.informativeReferences,
   ];
   const citationContents = await Promise.all(
-    citationIds.map(async ref => await resolveRef(ref))
+    citationIds.map(ref => resolveRef(ref))
   );
   jsonld.citation = citationContents
     .filter(ref => typeof ref === "object")
