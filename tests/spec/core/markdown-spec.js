@@ -258,7 +258,7 @@ describe("Core - Markdown", () => {
       console.log("hey")
       \`\`\`
 
-      \`\`\
+      \`\`\`
       IDK what I am
       \`\`\`
     `;
