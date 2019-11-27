@@ -86,13 +86,14 @@ const inlineElems = new Set([
   "var",
 ]);
 
-const renderer = new marked.Renderer();
-renderer.code = function(code, language, isEscaped) {
-  if (language === "webidl") {
-    return `<pre class="idl">${code}</pre>`;
+class Renderer extends marked.Renderer {
+  code(code, language, isEscaped) {
+    if (language === "webidl") {
+      return `<pre class="idl">${code}</pre>`;
+    }
+    return super.code(code, language, isEscaped);
   }
-  return marked.Renderer.prototype.code.call(this, code, language, isEscaped);
-};
+}
 
 /**
  * @param {string} text
@@ -213,7 +214,7 @@ export function markdownToHtml(text) {
     sanitize: false,
     gfm: true,
     headerIds: false,
-    renderer,
+    renderer: new Renderer(),
   });
   return result;
 }
