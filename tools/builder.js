@@ -28,7 +28,7 @@ const optionList = [
     defaultOption: true,
     description:
       "Name of profile to build. Profile must be " +
-      "in the js/ folder, and start with 'profile-' (e.g., profile-w3c-common.js)",
+      "in the profiles/ folder (e.g., w3c.js)",
     multiple: false,
     name: "profile",
     type: String,
@@ -56,7 +56,7 @@ const usageSections = [
     content: [
       {
         desc: "1. Build W3C Profile ",
-        example: "$ ./tools/builder.js --profile=w3c-common",
+        example: "$ ./tools/builder.js --profile=w3c",
       },
     ],
   },
@@ -125,7 +125,7 @@ const Builder = {
     const workerDir = path.resolve(__dirname, "../worker/");
 
     const inputOptions = {
-      input: require.resolve(`../js/profile-${name}.js`),
+      input: require.resolve(`../profiles/${name}.js`),
       plugins: [
         !debug && require("rollup-plugin-terser").terser(),
         alias({
