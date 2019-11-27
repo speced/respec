@@ -73,7 +73,9 @@ function toListItem(href) {
 
 export function run(conf) {
   /** @type {NodeListOf<HTMLElement>} */
-  const testables = document.querySelectorAll("[data-tests]");
+  const elems = document.querySelectorAll("[data-tests]");
+  const testables = [...elems].filter(elem => elem.dataset.tests);
+
   if (!testables.length) {
     return;
   }
@@ -81,48 +83,65 @@ export function run(conf) {
     pub("error", l10n[lang].missing_test_suite_uri);
     return;
   }
-  Array.from(testables)
-    .filter(elem => elem.dataset.tests)
-    // Render details + ul, returns HTMLDetailsElement
-    .map(elem => {
-      const details = document.createElement("details");
-      const renderer = hyperHTML.bind(details);
-      const testURLs = elem.dataset.tests
-        .split(/,/gm)
-        .map(url => url.trim())
-        .map(url => {
-          let href = "";
-          try {
-            href = new URL(url, conf.testSuiteURI).href;
-          } catch {
-            pub("warn", `${l10n[lang].bad_uri}: ${url}`);
-          }
-          return href;
-        });
-      const duplicates = testURLs.filter(
-        (links, i, self) => self.indexOf(links) !== i
-      );
-      if (duplicates.length) {
-        showInlineWarning(
-          elem,
-          `Duplicate tests found`,
-          `To fix, remove duplicates from "data-tests": ${duplicates
-            .map(url => new URL(url).pathname)
-            .join(", ")}`
-        );
+
+  for (const elem of testables) {
+    const tests = elem.dataset.tests.split(/,/gm).map(url => url.trim());
+    const testURLs = toTestURLs(tests, conf.testSuiteURI);
+    handleDuplicates(testURLs, elem);
+    const details = toHTML(testURLs);
+    elem.append(details);
+    delete elem.dataset.tests;
+  }
+}
+
+/**
+ * @param {string[]} tests
+ * @param {string} testSuiteURI
+ */
+function toTestURLs(tests, testSuiteURI) {
+  return tests
+    .map(test => {
+      try {
+        return new URL(test, testSuiteURI).href;
+      } catch {
+        pub("warn", `${l10n[lang].bad_uri}: ${test}`);
       }
-      details.classList.add("respec-tests-details", "removeOnSave");
-      const uniqueList = [...new Set(testURLs)];
-      renderer`
-        <summary>
-          tests: ${uniqueList.length}
-        </summary>
-        <ul>${uniqueList.map(toListItem)}</ul>
-      `;
-      return { elem, details };
     })
-    .forEach(({ elem, details }) => {
-      delete elem.dataset.tests;
-      elem.append(details);
-    });
+    .filter(href => href);
+}
+
+/**
+ * @param {string[]} testURLs
+ * @param {HTMLElement} elem
+ */
+function handleDuplicates(testURLs, elem) {
+  const duplicates = testURLs.filter(
+    (link, i, self) => self.indexOf(link) !== i
+  );
+  if (duplicates.length) {
+    showInlineWarning(
+      elem,
+      `Duplicate tests found`,
+      `To fix, remove duplicates from "data-tests": ${duplicates
+        .map(url => new URL(url).pathname)
+        .join(", ")}`
+    );
+  }
+}
+
+/**
+ * @param {string[]} testURLs
+ */
+function toHTML(testURLs) {
+  const details = document.createElement("details");
+  const renderer = hyperHTML.bind(details);
+  details.classList.add("respec-tests-details", "removeOnSave");
+  const uniqueList = [...new Set(testURLs)];
+  renderer`
+    <summary>
+      tests: ${uniqueList.length}
+    </summary>
+    <ul>${uniqueList.map(toListItem)}</ul>
+  `;
+  return details;
 }
