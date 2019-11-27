@@ -5,21 +5,19 @@ import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 describe("Core — Contributors", () => {
   afterAll(flushIframes);
 
+  const config = {
+    github: "org/repo",
+    githubAPI: `${window.parent.location.origin}/tests/data/github/`,
+  };
+
   it("Expands list of contributor names", async () => {
     const body = `
       <section>
         <div id="gh-contributors"></div>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        github: "org/repo",
-        githubAPI: `${window.parent.location.origin}/tests/data/`,
-      },
-      body
-    );
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
-
     const contributors = doc.querySelector("#gh-contributors");
     expect(contributors.textContent).toBe(
       "Bobby Tables, buzz_aldrin, and Neil Armstrong"
@@ -32,13 +30,7 @@ describe("Core — Contributors", () => {
         <ul id="gh-contributors"></ul>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        github: "org/repo",
-        githubAPI: `${window.parent.location.origin}/tests/data/`,
-      },
-      body
-    );
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
     expect(doc.querySelectorAll("#gh-contributors li").length).toBe(3);

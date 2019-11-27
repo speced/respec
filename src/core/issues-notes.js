@@ -298,11 +298,10 @@ function createLabel(label, repoURL) {
 }
 
 /**
- * @param {string} githubAPI
  * @returns {Promise<Map<string, GitHubIssue>>}
  */
-async function fetchAndStoreGithubIssues(githubAPI) {
-  if (!githubAPI) {
+async function fetchAndStoreGithubIssues(github) {
+  if (!github || !github.apiBase) {
     return new Map();
   }
 
@@ -316,7 +315,7 @@ async function fetchAndStoreGithubIssues(githubAPI) {
     return new Map();
   }
 
-  const url = new URL("issues", githubAPI);
+  const url = new URL("issues", `${github.apiBase}${github.fullName}/`);
   url.searchParams.set("issues", issueNumbers.join(","));
 
   const response = await fetch(url.href);
@@ -338,7 +337,7 @@ export async function run(conf) {
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
-  const ghIssues = await fetchAndStoreGithubIssues(conf.githubAPI);
+  const ghIssues = await fetchAndStoreGithubIssues(conf.github);
   const css = await cssPromise;
   const { head: headElem } = document;
   headElem.insertBefore(

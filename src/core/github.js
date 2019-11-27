@@ -11,7 +11,7 @@ export const name = "core/github";
 
 let resolveGithubPromise;
 let rejectGithubPromise;
-/** @type {Promise<{ api: string, branch: string, repoURL: string } | null>} */
+/** @type {Promise<{ apiBase: string, fullName: string, branch: string, repoURL: string } | null>} */
 export const github = new Promise((resolve, reject) => {
   resolveGithubPromise = resolve;
   rejectGithubPromise = message => {
@@ -112,7 +112,7 @@ export async function run(conf) {
     ],
   };
   // Assign new properties, but retain existing ones
-  let githubAPI = `https://respec.org/github/${org}/${repo}/`;
+  let githubAPI = `https://respec.org/github/`;
   if (conf.githubAPI) {
     if (new URL(conf.githubAPI).hostname === window.parent.location.hostname) {
       // for testing
@@ -125,8 +125,10 @@ export async function run(conf) {
   const normalizedGHObj = {
     branch,
     repoURL: ghURL.href,
+    apiBase: githubAPI,
+    fullName: `${org}/${repo}`,
   };
-  resolveGithubPromise({ api: githubAPI, ...normalizedGHObj });
+  resolveGithubPromise(normalizedGHObj);
 
   const normalizedConfig = {
     ...newProps,

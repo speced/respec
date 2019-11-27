@@ -7,7 +7,7 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
 
   const conf = {
     github: "org/repo",
-    githubAPI: `${window.parent.location.origin}/tests/data/`,
+    githubAPI: `${window.parent.location.origin}/tests/data/github/`,
   };
 
   it("shows all commits since given tag", async () => {

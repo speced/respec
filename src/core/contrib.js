@@ -24,7 +24,8 @@ export async function run(conf) {
   }
 
   const editors = conf.editors.map(editor => editor.name);
-  await showContributors(editors, conf.githubAPI);
+  const apiURL = `${conf.github.apiBase}${conf.github.fullName}/`;
+  await showContributors(editors, apiURL);
 }
 
 /**
