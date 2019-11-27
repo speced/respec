@@ -429,15 +429,15 @@ export function run(conf) {
         alt.hasOwnProperty("lang") && alt.lang ? ` hreflang='${alt.lang}'` : "";
       optional +=
         alt.hasOwnProperty("type") && alt.type ? ` type='${alt.type}'` : "";
-      return `<a rel='alternate' href='${alt.uri}'${optional}>${alt.label}</a>`;
+      return hyperHTML `<a rel='alternate' href='${alt.uri}'${optional}>${alt.label}</a>`;
     });
   if (conf.bugTracker) {
     if (conf.bugTracker.new && conf.bugTracker.open) {
-      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>${conf.l10n.file_a_bug}</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${conf.l10n.open_bugs}</a>${conf.l10n.close_parens}`;
+      conf.bugTrackerHTML = hyperHTML `<a href='${conf.bugTracker.new}'>${conf.l10n.file_a_bug}</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${conf.l10n.open_bugs}</a>${conf.l10n.close_parens}`;
     } else if (conf.bugTracker.open) {
-      conf.bugTrackerHTML = `<a href='${conf.bugTracker.open}'>open bugs</a>`;
+      conf.bugTrackerHTML = hyperHTML `<a href='${conf.bugTracker.open}'>open bugs</a>`;
     } else if (conf.bugTracker.new) {
-      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>file a bug</a>`;
+      conf.bugTrackerHTML = hyperHTML `<a href='${conf.bugTracker.new}'>file a bug</a>`;
     }
   }
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
@@ -532,12 +532,12 @@ export function run(conf) {
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgHTML = joinAnd(conf.wg, (wg, idx) => {
-      return `the <a href='${conf.wgURI[idx]}'>${wg}</a>`;
+      return hyperHTML `the <a href='${conf.wgURI[idx]}'>${wg}</a>`;
     });
     const pats = [];
     for (let i = 0, n = conf.wg.length; i < n; i++) {
       pats.push(
-        `a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>` +
+        hyperHTML `a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>` +
           `public list of any patent disclosures  (${conf.wg[i]})</a>`
       );
     }
@@ -545,7 +545,7 @@ export function run(conf) {
   } else {
     conf.multipleWGs = false;
     if (conf.wg) {
-      conf.wgHTML = `the <a href='${conf.wgURI}'>${conf.wg}</a>`;
+      conf.wgHTML = hyperHTML `the <a href='${conf.wgURI}'>${conf.wg}</a>`;
     }
   }
   if (conf.specStatus === "PR" && !conf.crEnd) {

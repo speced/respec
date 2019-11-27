@@ -39,7 +39,7 @@ function show() {
         entries.push(entry);
       });
   }
-  render`
+  render hyperHTML `
   <p>
     ReSpec is a document production toolchain, with a notable focus on W3C specifications.
   </p>

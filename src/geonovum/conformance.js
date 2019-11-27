@@ -3,13 +3,14 @@
 // Handle the conformance section properly.
 // based on W3C conformance, but because Geonovum has different requirements, have a separate module
 import { hyperHTML as html } from "../core/import-maps.js";
+import hyperHTML from "hyperhtml/esm";
 export const name = "geonovum/conformance";
 
 /**
  * @param {Element} conformance
  */
 function processConformance(conformance) {
-  const content = html`
+  const content = hyperHTML`
     <h2>Conformiteit</h2>
     <p>
       Naast onderdelen die als niet normatief gemarkeerd zijn, zijn ook alle

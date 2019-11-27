@@ -196,7 +196,7 @@ function addBrowser([browserName, browserData]) {
   /** @param {[string, string[]]} args */
   const addBrowserVersion = ([version, supportKeys]) => {
     const { className, title } = getSupport(supportKeys);
-    return `<li class="${className}" title="${title}">${version}</li>`;
+    return hyperHTML `<li class="${className}" title="${title}">${version}</li>`;
   };
 
   const [latestVersion, ...olderVersions] = browserData;

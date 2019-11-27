@@ -245,7 +245,7 @@ function makeIssueSectionSummary(issueList) {
   ) {
     issueSummaryElement.insertAdjacentHTML(
       "afterbegin",
-      `<h2>${l10n.issue_summary}</h2>`
+      hyperHTML `<h2>${l10n.issue_summary}</h2>`
     );
   }
 }

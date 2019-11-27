@@ -60,7 +60,7 @@ function insertMDNBox(node) {
 
 function attachMDNDetail(container, mdnSpec) {
   const { slug, summary } = mdnSpec;
-  container.innerHTML += `<button onclick="toggleMDNStatus(this.parentNode)" aria-label="Expand MDN details"><b>MDN</b></button>`;
+  container.innerHTML += hyperHTML `<button onclick="toggleMDNStatus(this.parentNode)" aria-label="Expand MDN details"><b>MDN</b></button>`;
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const mdnDetail = document.createElement("div");
   const href = `${MDN_URL_BASE}${slug}`;
@@ -86,8 +86,8 @@ function buildBrowserSupportTable(support) {
   let innerHTML = "";
   function addMDNBrowserRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
-    const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
-    const browserRow = `
+    const classList = hyperHTML `${browserId} ${yesNoUnknown.toLowerCase()}`;
+    const browserRow = hyperHTML `
       <span class="${classList}">
         <span class="browser-name">${MDN_BROWSERS[browserId]}</span>
         <span class="version">${version ? version : displayStatus}</span>
