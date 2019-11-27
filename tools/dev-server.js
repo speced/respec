@@ -109,7 +109,7 @@ function registerStdinHandler() {
       case "t":
         return await buildAndTest();
       case "T":
-        return await buildAndTest(true);
+        return await buildAndTest({ preventBuild: true });
       case "h":
         return printWelcomeMessage(args);
       default:
@@ -120,10 +120,11 @@ function registerStdinHandler() {
 
 async function onFileChange(_event, file) {
   const preventBuild = file.startsWith("tests");
-  await buildAndTest(preventBuild);
+  await buildAndTest({ preventBuild });
 }
 
-async function buildAndTest(preventBuild = false) {
+async function buildAndTest(options = {}) {
+  const { preventBuild = false } = options;
   if (isActive) return;
   try {
     isActive = true;
