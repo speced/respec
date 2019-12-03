@@ -13,7 +13,7 @@ describe("Core — Issues and Notes", () => {
 
   const githubConfig = {
     github: "org/repo",
-    githubAPI: `${window.location.origin}/tests/data/github/`,
+    githubAPI: `${window.location.origin}/tests/data/github`,
   };
 
   it("treats each issue as unique", async () => {
@@ -344,7 +344,7 @@ describe("Core — Issues and Notes", () => {
   it("should link to GitHub issue tracker for features at risk", async () => {
     const config = {
       github: "https://github.com/org/repo",
-      githubAPI: `${window.location.origin}/tests/data/`,
+      githubAPI: `${window.location.origin}/tests/data/github`,
     };
     const ops = {
       config,

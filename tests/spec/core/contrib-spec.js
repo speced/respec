@@ -7,7 +7,7 @@ describe("Core — Contributors", () => {
 
   const config = {
     github: "org/repo",
-    githubAPI: `${window.parent.location.origin}/tests/data/github/`,
+    githubAPI: `${window.parent.location.origin}/tests/data/github`,
   };
 
   it("Expands list of contributor names", async () => {

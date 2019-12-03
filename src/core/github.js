@@ -112,7 +112,7 @@ export async function run(conf) {
     ],
   };
   // Assign new properties, but retain existing ones
-  let githubAPI = "https://respec.org/github/";
+  let githubAPI = "https://respec.org/github";
   if (conf.githubAPI) {
     if (new URL(conf.githubAPI).hostname === window.parent.location.hostname) {
       // for testing

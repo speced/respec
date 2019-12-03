@@ -53,7 +53,7 @@ async function fetchCommits(from, to, filter) {
     if (!gh) {
       throw new Error("`respecConfig.github` is not set");
     }
-    const url = new URL("commits", `${gh.apiBase}${gh.fullName}/`);
+    const url = new URL("commits", `${gh.apiBase}/${gh.fullName}/`);
     url.searchParams.set("from", from);
     url.searchParams.set("to", to);
 

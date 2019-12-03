@@ -315,7 +315,7 @@ async function fetchAndStoreGithubIssues(github) {
     return new Map();
   }
 
-  const url = new URL("issues", `${github.apiBase}${github.fullName}/`);
+  const url = new URL("issues", `${github.apiBase}/${github.fullName}/`);
   url.searchParams.set("issues", issueNumbers.join(","));
 
   const response = await fetch(url.href);
