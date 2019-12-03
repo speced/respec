@@ -1261,7 +1261,7 @@
 
 **Implemented enhancements:**
 
-- core/utils joinAnd function should use ListFormat [\#2096](https://github.com/w3c/respec/issues/2096)
+- core/utils  function should use ListFormat [\#2096](https://github.com/w3c/respec/issues/2096)
 
 **Closed issues:**
 
@@ -1274,7 +1274,7 @@
 - fix\(core/reindent\): export module's name [\#2106](https://github.com/w3c/respec/pull/2106) ([marcoscaceres](https://github.com/marcoscaceres))
 - Update mocha to the latest version 🚀 [\#2105](https://github.com/w3c/respec/pull/2105) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
 - Greenkeeper/snyk 1.134.1 [\#2104](https://github.com/w3c/respec/pull/2104) ([marcoscaceres](https://github.com/marcoscaceres))
-- Refactor\(core/utils\): joinAnd uses Intl.ListFormat if available [\#2101](https://github.com/w3c/respec/pull/2101) ([devanshbatra04](https://github.com/devanshbatra04))
+- Refactor\(core/utils\):  uses Intl.ListFormat if available [\#2101](https://github.com/w3c/respec/pull/2101) ([devanshbatra04](https://github.com/devanshbatra04))
 
 ## [v24.3.2](https://github.com/w3c/respec/tree/v24.3.2) (2019-02-18)
 [Full Changelog](https://github.com/w3c/respec/compare/v24.3.1...v24.3.2)
