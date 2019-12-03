@@ -11,6 +11,7 @@ import { rule as localRefsExist } from "./linter-rules/local-refs-exist.js";
 import { rule as noHeadinglessSectionsRule } from "./linter-rules/no-headingless-sections.js";
 import { rule as noHttpPropsRule } from "./linter-rules/no-http-props.js";
 import { rule as privsecSection } from "./linter-rules/privsec-section.js";
+import { rule as testsExist } from "./linter-rules/tests-exist.js";
 
 linter.register(
   noHttpPropsRule,
@@ -19,7 +20,8 @@ linter.register(
   localRefsExist,
   checkInternalSlots,
   checkCharset,
-  privsecSection
+  privsecSection,
+  testsExist
 );
 
 export const coreDefaults = {
@@ -31,6 +33,7 @@ export const coreDefaults = {
     "check-internal-slots": false,
     "check-charset": false,
     "privsec-section": false,
+    "tests-exist": false,
   },
   pluralize: false,
   specStatus: "base",
