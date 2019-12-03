@@ -122,7 +122,7 @@ export default (items = []) => {
       timeElem.dateTime = toShortIsoDate(retiredDate);
       contents.push(
         html`
-          - ${l10n.until.concat(" ")}${[timeElem]}
+          - ${l10n.until.concat(" ")}${timeElem}
         `
       );
     }
