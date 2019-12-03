@@ -3,6 +3,7 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
+import hyperHTML from "hyperhtml/esm.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
@@ -274,6 +275,40 @@ export function joinAnd(array = [], mapper = item => item, lang = docLang) {
       const str = items.join(", ");
       const lastComma = str.lastIndexOf(",");
       return `${str.substr(0, lastComma + 1)} and ${str.slice(lastComma + 2)}`;
+    }
+  }
+}
+// STRING HELPERS
+// Takes an array and returns a string that separates each of its items with the proper commas and
+// "and". The second argument is a mapping function that can convert the items before they are
+// joined
+// Finally converts to hyperHTML after joining them
+export function joinAndHyper(
+  array = [],
+  mapper = item => item,
+  lang = docLang
+) {
+  const items = array.map(mapper);
+  if (Intl.ListFormat && typeof Intl.ListFormat === "function") {
+    const formatter = new Intl.ListFormat(lang, {
+      style: "long",
+      type: "conjunction",
+    });
+    return formatter.format(items);
+  }
+  switch (items.length) {
+    case 0:
+    case 1: // "x"
+      return hyperHTML`${items.toString()}`;
+    case 2: // x and y
+      return hyperHTML`${items.join(" and ")}`;
+    default: {
+      // x, y, and z
+      const str = items.join(", ");
+      const lastComma = str.lastIndexOf(",");
+      return hyperHTML`${str.substr(0, lastComma + 1)} and ${str.slice(
+        lastComma + 2
+      )}`;
     }
   }
 }

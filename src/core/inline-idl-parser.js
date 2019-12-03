@@ -183,7 +183,10 @@ function renderAttribute(details) {
 function renderMethod(details) {
   const { args, identifier, type, parent, renderParent } = details;
   const { identifier: linkFor } = parent || {};
-  const argsText = args.map(arg => `<var>${arg}</var>`).join(", ");
+  const argsText = [];
+  for (const arg in args) {
+    argsText.push(hyperHTML`<var>${arg}</var>`);
+  }
   const searchText = `${identifier}(${args.join(", ")})`;
   const html = hyperHTML`${parent && renderParent ? "." : ""}<a
     data-xref-type="${type}"

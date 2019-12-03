@@ -89,7 +89,7 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", (default) the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import { ISODate, concatDate, joinAnd } from "../core/utils.js";
+import { ISODate, concatDate, joinAndHyper } from "../core/utils.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
@@ -424,11 +424,14 @@ export function run(conf) {
     conf.alternateFormats && conf.alternateFormats.length > 1;
   conf.alternatesHTML =
     conf.alternateFormats &&
-    joinAnd(conf.alternateFormats, alt => {
-      let optional =
-        alt.hasOwnProperty("lang") && alt.lang ? ` hreflang='${alt.lang}'` : "";
-      optional +=
-        alt.hasOwnProperty("type") && alt.type ? ` type='${alt.type}'` : "";
+    joinAndHyper(conf.alternateFormats, alt => {
+      const optional = [];
+      optional.push(
+        alt.hasOwnProperty("lang") && alt.lang ? ` hreflang='${alt.lang}'` : ""
+      );
+      optional.push(
+        alt.hasOwnProperty("type") && alt.type ? ` type='${alt.type}'` : ""
+      );
       return `<a rel='alternate' href='${alt.uri}'${optional}>${alt.label}</a>`;
     });
   if (conf.bugTracker) {
@@ -531,7 +534,7 @@ export function run(conf) {
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
-    conf.wgHTML = joinAnd(conf.wg, (wg, idx) => {
+    conf.wgHTML = joinAndHyper(conf.wg, (wg, idx) => {
       return `the <a href='${conf.wgURI[idx]}'>${wg}</a>`;
     });
     const pats = [];
@@ -541,7 +544,7 @@ export function run(conf) {
           `public list of any patent disclosures  (${conf.wg[i]})</a>`
       );
     }
-    conf.wgPatentHTML = joinAnd(pats);
+    conf.wgPatentHTML = joinAndHyper(pats);
   } else {
     conf.multipleWGs = false;
     if (conf.wg) {

@@ -243,10 +243,7 @@ function makeIssueSectionSummary(issueList) {
     !heading ||
     (heading && heading !== issueSummaryElement.firstElementChild)
   ) {
-    issueSummaryElement.insertAdjacentHTML(
-      "afterbegin",
-      `<h2>${l10n.issue_summary}</h2>`
-    );
+    issueSummaryElement.prepend(hyperHTML`<h2>${l10n.issue_summary}</h2>`);
   }
 }
 
