@@ -34,11 +34,11 @@ describe("Core — data-tests attribute", () => {
         </section>
         <section>
           <h2>Duplicate Tests</h2>
-          <p id="duplicates" 
+          <p id="duplicates"
             data-tests="
               payment-request-show-method.https.html,
               some-other-test.html,
-              payment-request-show-method.https.html, 
+              payment-request-show-method.https.html,
               ./payment-request-show-method.https.html,
               https://wpt.fyi/respec/payment-request-show-method.https.html"
           >
@@ -49,10 +49,7 @@ describe("Core — data-tests attribute", () => {
     doc = await makeRSDoc(ops);
   });
   afterAll(flushIframes);
-  it("deletes the data-tests attribute after processing", () => {
-    const testable = doc.getElementById("testable");
-    expect(testable.hasAttribute("data-tests")).toBe(false);
-  });
+
   describe("generated details element", () => {
     it("gets generated and added", () => {
       expect(doc.querySelector("#testable > details")).toBeTruthy();
