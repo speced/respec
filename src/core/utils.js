@@ -3,7 +3,7 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
-import hyperHTML from "hyperhtml/esm.js";
+import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
