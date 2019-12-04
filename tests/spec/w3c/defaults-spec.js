@@ -19,6 +19,7 @@ describe("W3C — Defaults", () => {
       "check-punctuation": false,
       "check-internal-slots": false,
       "check-charset": false,
+      "wpt-tests-exist": false,
     });
     expect(rsConf.highlightVars).toBe(true);
     expect(rsConf.license).toBe("w3c-software-doc");
@@ -57,6 +58,7 @@ describe("W3C — Defaults", () => {
       "fake-linter-rule": "foo",
       "check-internal-slots": true,
       "check-charset": false,
+      "wpt-tests-exist": false,
     });
     expect(rsConf.highlightVars).toBe(false);
     expect(rsConf.license).toBe("c0");

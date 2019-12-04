@@ -92,7 +92,6 @@ export function run(conf) {
     handleDuplicates(testURLs, elem);
     const details = toHTML(testURLs);
     elem.append(details);
-    delete elem.dataset.tests;
   }
 }
 
