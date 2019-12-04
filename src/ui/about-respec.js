@@ -67,16 +67,11 @@ function show() {
 }
 
 function perfEntryToTR({ name, duration }) {
-  const render = hyperHTML.bind(document.createElement("tr"));
   const moduleURL = `https://github.com/w3c/respec/tree/develop/src/${name}.js`;
-  return render`
-    <td>
-      <a href="${moduleURL}">
-        ${name}
-      </a>
-    </td>
-    <td>
-      ${duration}
-    </td>
+  return hyperHTML`
+    <tr>
+      <td><a href="${moduleURL}">${name}</a></td>
+      <td>${duration}</td>
+    </tr>
   `;
 }

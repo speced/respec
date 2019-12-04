@@ -33,7 +33,7 @@ describe("Core - Github", () => {
     function generateMembersTest(doc) {
       const { respecConfig: conf } = doc.defaultView;
       expect(conf.hasOwnProperty("githubAPI")).toBe(true);
-      expect(conf.githubAPI).toBe("https://respec.org/github/w3c/respec/");
+      expect(conf.githubAPI).toBe("https://respec.org/github");
       expect(conf.hasOwnProperty("issueBase")).toBe(true);
       expect(conf.issueBase).toBe("https://github.com/w3c/respec/issues/");
       expect(conf.hasOwnProperty("edDraftURI")).toBe(true);
