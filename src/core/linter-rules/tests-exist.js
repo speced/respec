@@ -81,9 +81,10 @@ async function getFilesInWPT(testSuiteURI, githubAPIBase) {
     } else {
       wptDirectory = testSuiteURL.pathname.replace(/\//g, "");
     }
-  } catch {
+  } catch (error) {
     const msg = "Failed to parse WPT directory from testSuiteURI";
     pub("warn", msg);
+    console.error(error);
     return null;
   }
 
