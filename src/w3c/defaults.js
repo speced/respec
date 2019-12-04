@@ -7,14 +7,14 @@ import { coreDefaults } from "../core/defaults.js";
 import { definitionMap } from "../core/dfn-map.js";
 import linter from "../core/linter.js";
 import { rule as privsecSectionRule } from "../core/linter-rules/privsec-section.js";
-import { rule as testsExist } from "../core/linter-rules/tests-exist.js";
+import { rule as wptTestsExist } from "../core/linter-rules/wpt-tests-exist.js";
 
-linter.register(privsecSectionRule, testsExist);
+linter.register(privsecSectionRule, wptTestsExist);
 
 const w3cDefaults = {
   lint: {
     "privsec-section": true,
-    "tests-exist": false,
+    "wpt-tests-exist": false,
   },
   pluralize: true,
   doJsonLd: false,

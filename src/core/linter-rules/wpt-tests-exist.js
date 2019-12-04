@@ -1,13 +1,13 @@
 // @ts-check
 /**
- * Linter rule "tests-exist".
+ * Linter rule "wpt-tests-exist".
  * Warns about nonexistent web platform tests.
  */
 import LinterRule from "../LinterRule.js";
 import { lang as defaultLang } from "../l10n.js";
 import { pub } from "../pubsubhub.js";
 
-const name = "tests-exist";
+const name = "wpt-tests-exist";
 
 const meta = {
   en: {
@@ -23,7 +23,7 @@ const lang = defaultLang in meta ? defaultLang : "en";
  * Runs linter rule.
  * @param {Object} conf The ReSpec config.
  * @param  {Document} doc The document to be checked.
- * @return {Promise<import("../../core/LinterRule").LinterResult>}
+ * @return {Promise<import("../LinterRule").LinterResult>}
  */
 async function linterFunction(conf, doc) {
   const filesInWPT = await getFilesInWPT(conf.testSuiteURI, conf.githubAPI);

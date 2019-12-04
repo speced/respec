@@ -1,14 +1,14 @@
 "use strict";
 
-import { rule } from "../../../../src/core/linter-rules/tests-exist.js";
+import { rule } from "../../../../src/core/linter-rules/wpt-tests-exist.js";
 
-describe("Core Linter Rule - 'tests-exist'", () => {
+describe("Core Linter Rule - 'wpt-tests-exist'", () => {
   const config = {
     testSuiteURI: "https://w3c-test.org/payment-request/",
     github: "org/repo",
     githubAPI: `${window.parent.location.origin}/tests/data/github`,
     lint: {
-      "tests-exist": true,
+      "wpt-tests-exist": true,
     },
   };
   const doc = document.implementation.createHTMLDocument("test doc");
@@ -28,7 +28,7 @@ describe("Core Linter Rule - 'tests-exist'", () => {
     `;
 
     const result = await rule.lint(config, doc);
-    expect(result.name).toBe("tests-exist");
+    expect(result.name).toBe("wpt-tests-exist");
     expect(result.occurrences).toBe(2);
 
     const [a, b] = result.offendingElements;
@@ -59,7 +59,7 @@ describe("Core Linter Rule - 'tests-exist'", () => {
       testSuiteURI: "https://github.com/web-platform-tests/wpt/whatever",
     };
     const result = await rule.lint(conf, doc);
-    expect(result.name).toBe("tests-exist");
+    expect(result.name).toBe("wpt-tests-exist");
     expect(result.occurrences).toBe(1);
     expect(result.description).toContain("404.html");
   });
