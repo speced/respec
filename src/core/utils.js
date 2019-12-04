@@ -278,40 +278,6 @@ export function joinAnd(array = [], mapper = item => item, lang = docLang) {
     }
   }
 }
-// STRING HELPERS
-// Takes an array and returns a string that separates each of its items with the proper commas and
-// "and". The second argument is a mapping function that can convert the items before they are
-// joined
-// Finally converts to hyperHTML after joining them
-export function joinAndHyper(
-  array = [],
-  mapper = item => item,
-  lang = docLang
-) {
-  const items = array.map(mapper);
-  if (Intl.ListFormat && typeof Intl.ListFormat === "function") {
-    const formatter = new Intl.ListFormat(lang, {
-      style: "long",
-      type: "conjunction",
-    });
-    return formatter.format(items);
-  }
-  switch (items.length) {
-    case 0:
-    case 1: // "x"
-      return hyperHTML`${items.toString()}`;
-    case 2: // x and y
-      return hyperHTML`${items.join(" and ")}`;
-    default: {
-      // x, y, and z
-      const str = items.join(", ");
-      const lastComma = str.lastIndexOf(",");
-      return hyperHTML`${str.substr(0, lastComma + 1)} and ${str.slice(
-        lastComma + 2
-      )}`;
-    }
-  }
-}
 
 // Takes a string, applies some XML escapes, and returns the escaped string.
 // Note that overall using either Handlebars' escaped output or jQuery is much
@@ -528,6 +494,31 @@ export function flatten(collector, item) {
 }
 
 // --- DOM HELPERS -------------------------------
+
+// Takes an array and returns a string that separates each of its items with the proper commas and
+// "and". The second argument is a mapping function that can convert the items before they are
+// joined
+// Finally converts to hyperHTML while joining them
+
+export function htmlJoinAnd(array = [], mapper = item => item) {
+  const items = array.map(mapper);
+  switch (items.length) {
+    case 0:
+    case 1: // "x"
+      return items[0];
+    case 2: // x and y
+      return hyperHTML`${items[0]} and ${items[1]}`;
+    default: {
+      // x, y, and z
+      let joinedItems = ``;
+      for (let i = 0; i < array.length - 1; i++) {
+        joinedItems = `${joinedItems}, ${items[i]}`;
+      }
+      joinedItems = `${joinedItems} and ${items[length - 1]}`;
+      return hyperHTML`${joinedItems}`;
+    }
+  }
+}
 
 /**
  * Creates and sets an ID to an element (elem)
