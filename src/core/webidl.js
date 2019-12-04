@@ -367,13 +367,14 @@ export async function run() {
 
   const validations = webidl2.validate(astArray);
   for (const validation of validations) {
-    let details = `<pre>${validation.context}</pre>`;
+    const details = [];
+    details.push(hyperHTML`<pre>${validation.context}</pre>`);
     if (validation.autofix) {
       validation.autofix();
       const idlToFix = webidl2.write(astArray[validation.sourceName]);
       const escaped = xmlEscape(idlToFix);
-      details += `Try fixing as:
-      <pre>${escaped}</pre>`;
+      details.push(hyperHTML`Try fixing as:
+      <pre>${escaped}</pre>`);
     }
     showInlineError(
       idls[validation.sourceName],

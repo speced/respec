@@ -84,16 +84,16 @@ function attachMDNBrowserSupport(container, mdnSpec) {
 }
 
 function buildBrowserSupportTable(support) {
-  let innerHTML = "";
+  const innerHTML = [];
   function addMDNBrowserRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
-    const browserRow = `
+    const browserRow = hyperHTML`
       <span class="${classList}">
         <span class="browser-name">${MDN_BROWSERS[browserId]}</span>
         <span class="version">${version ? version : displayStatus}</span>
       </span>`;
-    innerHTML += browserRow;
+    innerHTML.push(browserRow);
   }
 
   function processBrowserData(browserId, versionData) {

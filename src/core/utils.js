@@ -3,6 +3,7 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
+import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
@@ -493,7 +494,30 @@ export function flatten(collector, item) {
 }
 
 // --- DOM HELPERS -------------------------------
+// Takes an array and returns a string that separates each of its items with the proper commas and
+// "and". The second argument is a mapping function that can convert the items before they are
+// joined
+// Finally converts to hyperHTML while joining them
 
+export function htmlJoinAnd(array = [], mapper = item => item) {
+  const items = array.map(mapper);
+  switch (items.length) {
+    case 0:
+    case 1: // "x"
+      return items[0];
+    case 2: // x and y
+      return hyperHTML`${items[0]} and ${items[1]}`;
+    default: {
+      // x, y, and z
+      let joinedItems = ``;
+      for (let i = 0; i < array.length - 1; i++) {
+        joinedItems = `${joinedItems}, ${items[i]}`;
+      }
+      joinedItems = `${joinedItems} and ${items[length - 1]}`;
+      return hyperHTML`${joinedItems}`;
+    }
+  }
+}
 /**
  * Creates and sets an ID to an element (elem)
  * using a specific prefix if provided, and a specific text if given.
