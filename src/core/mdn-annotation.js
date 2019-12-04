@@ -62,10 +62,11 @@ function attachMDNDetail(container, mdnSpec) {
   const { slug, summary } = mdnSpec;
   container.innerHTML += `<button onclick="toggleMDNStatus(this.parentNode)" aria-label="Expand MDN details"><b>MDN</b></button>`;
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
-  const mdnDetail = document.createElement("div");
   const href = `${MDN_URL_BASE}${slug}`;
-  hyperHTML(mdnDetail)`
+  const mdnDetail = hyperHTML`
+    <div>
       <a title="${summary}" href="${href}">${mdnSubPath}</a>
+    </div>
   `;
   attachMDNBrowserSupport(mdnDetail, mdnSpec);
   container.appendChild(mdnDetail);

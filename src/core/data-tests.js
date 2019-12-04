@@ -63,10 +63,12 @@ function toListItem(href) {
     emojiList.push(manualPerformEmoji);
   }
 
-  const testList = hyperHTML.bind(document.createElement("li"))`
-    <a href="${href}">
-      ${testFileName}
-    </a> ${emojiList}
+  const testList = hyperHTML`
+    <li>
+      <a href="${href}">
+        ${testFileName}
+      </a> ${emojiList}
+    </li>
   `;
   return testList;
 }
@@ -132,15 +134,14 @@ function handleDuplicates(testURLs, elem) {
  * @param {string[]} testURLs
  */
 function toHTML(testURLs) {
-  const details = document.createElement("details");
-  const renderer = hyperHTML.bind(details);
-  details.classList.add("respec-tests-details", "removeOnSave");
   const uniqueList = [...new Set(testURLs)];
-  renderer`
-    <summary>
-      tests: ${uniqueList.length}
-    </summary>
-    <ul>${uniqueList.map(toListItem)}</ul>
+  const details = hyperHTML`
+    <details class="respec-tests-details removeOnSave">
+      <summary>
+        tests: ${uniqueList.length}
+      </summary>
+      <ul>${uniqueList.map(toListItem)}</ul>
+    </details>
   `;
   return details;
 }
