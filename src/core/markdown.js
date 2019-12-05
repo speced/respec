@@ -214,6 +214,7 @@ export function markdownToHtml(text) {
     sanitize: false,
     gfm: true,
     headerIds: false,
+    langPrefix: "",
     renderer: new Renderer(),
   });
   return result;
