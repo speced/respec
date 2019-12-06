@@ -280,6 +280,99 @@ describe("Core - Markdown", () => {
     expect(normalBlock.querySelector(".respec-button-copy-paste")).toBeFalsy();
   });
 
+  it("is case insensitive for webidl language tags", async () => {
+    const body = `
+      ## test
+
+      \`\`\` weBiDl
+      [Exposed=Window]
+      interface FooWebidl {};
+      \`\`\`
+
+      \`\`\` IdL
+      [Exposed=Window]
+      interface FooIdl {};
+      \`\`\`
+
+      \`\`\` webid
+      [Exposed=Window]
+      interface FooWebid {};
+      \`\`\`
+
+      \`\`\` webidll
+      [Exposed=Window]
+      interface FooWebIdll {};
+      \`\`\`
+
+      \`\`\` idlidl
+      [Exposed=Window]
+      interface FooIdlIdl {};
+      \`\`\`
+
+      \`\`\` webidlwebidl
+      [Exposed=Window]
+      interface FooWebidlWebidl {};
+      \`\`\`
+    `;
+
+    const ops = makeStandardOps({ format: "markdown" }, body);
+    const doc = await makeRSDoc(ops);
+    const [
+      mixedCaseWebidl,
+      mixedCaseIdl,
+      missingLettersInTag,
+      extraLettersInTag,
+      repeatedIdlTags,
+      repeatedWebidlTags,
+    ] = doc.querySelectorAll("pre");
+
+    expect(mixedCaseWebidl.classList).toContain("idl");
+    expect(mixedCaseWebidl.querySelector("code.hljs")).toBeFalsy();
+    expect(
+      mixedCaseWebidl.querySelector(".respec-button-copy-paste")
+    ).toBeTruthy();
+
+    expect(mixedCaseIdl.classList).toContain("idl");
+    expect(mixedCaseWebidl.querySelector("code.hljs")).toBeFalsy();
+    expect(
+      mixedCaseIdl.querySelector(".respec-button-copy-paste")
+    ).toBeTruthy();
+
+    expect(missingLettersInTag.classList).not.toContain("idl");
+    expect(missingLettersInTag.querySelector("code.hljs")).toBeTruthy();
+    expect(
+      missingLettersInTag.querySelector("code.language-webid")
+    ).toBeTruthy();
+    expect(
+      missingLettersInTag.querySelector(".respec-button-copy-paste")
+    ).toBeFalsy();
+
+    expect(extraLettersInTag.classList).not.toContain("idl");
+    expect(extraLettersInTag.querySelector("code.hljs")).toBeTruthy();
+    expect(
+      extraLettersInTag.querySelector("code.language-webidll")
+    ).toBeTruthy();
+    expect(
+      extraLettersInTag.querySelector(".respec-button-copy-paste")
+    ).toBeFalsy();
+
+    expect(repeatedIdlTags.classList).not.toContain("idl");
+    expect(repeatedIdlTags.querySelector("code.hljs")).toBeTruthy();
+    expect(repeatedIdlTags.querySelector("code.language-idlidl")).toBeTruthy();
+    expect(
+      repeatedIdlTags.querySelector(".respec-button-copy-paste")
+    ).toBeFalsy();
+
+    expect(repeatedWebidlTags.classList).not.toContain("idl");
+    expect(repeatedWebidlTags.querySelector("code.hljs")).toBeTruthy();
+    expect(
+      repeatedWebidlTags.querySelector("code.language-webidlwebidl")
+    ).toBeTruthy();
+    expect(
+      repeatedWebidlTags.querySelector(".respec-button-copy-paste")
+    ).toBeFalsy();
+  });
+
   describe("nolinks options", () => {
     it("automatically links URLs in pre when missing (smoke test)", async () => {
       const body = `
