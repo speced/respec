@@ -337,7 +337,7 @@ describe("Core - Markdown", () => {
     ).toBeTruthy();
 
     expect(mixedCaseIdl.classList).toContain("idl");
-    expect(mixedCaseWebidl.querySelector("code.hljs")).toBeFalsy();
+    expect(mixedCaseIdl.querySelector("code.hljs")).toBeFalsy();
     expect(
       mixedCaseIdl.querySelector(".respec-button-copy-paste")
     ).toBeTruthy();
