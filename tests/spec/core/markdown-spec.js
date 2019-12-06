@@ -344,34 +344,28 @@ describe("Core - Markdown", () => {
 
     expect(missingLettersInTag.classList).not.toContain("idl");
     expect(missingLettersInTag.querySelector("code.hljs")).toBeTruthy();
-    expect(
-      missingLettersInTag.querySelector("code.language-webid")
-    ).toBeTruthy();
+    expect(missingLettersInTag.querySelector("code.webid")).toBeTruthy();
     expect(
       missingLettersInTag.querySelector(".respec-button-copy-paste")
     ).toBeFalsy();
 
     expect(extraLettersInTag.classList).not.toContain("idl");
     expect(extraLettersInTag.querySelector("code.hljs")).toBeTruthy();
-    expect(
-      extraLettersInTag.querySelector("code.language-webidll")
-    ).toBeTruthy();
+    expect(extraLettersInTag.querySelector("code.webidll")).toBeTruthy();
     expect(
       extraLettersInTag.querySelector(".respec-button-copy-paste")
     ).toBeFalsy();
 
     expect(repeatedIdlTags.classList).not.toContain("idl");
     expect(repeatedIdlTags.querySelector("code.hljs")).toBeTruthy();
-    expect(repeatedIdlTags.querySelector("code.language-idlidl")).toBeTruthy();
+    expect(repeatedIdlTags.querySelector("code.idlidl")).toBeTruthy();
     expect(
       repeatedIdlTags.querySelector(".respec-button-copy-paste")
     ).toBeFalsy();
 
     expect(repeatedWebidlTags.classList).not.toContain("idl");
     expect(repeatedWebidlTags.querySelector("code.hljs")).toBeTruthy();
-    expect(
-      repeatedWebidlTags.querySelector("code.language-webidlwebidl")
-    ).toBeTruthy();
+    expect(repeatedWebidlTags.querySelector("code.webidlwebidl")).toBeTruthy();
     expect(
       repeatedWebidlTags.querySelector(".respec-button-copy-paste")
     ).toBeFalsy();
