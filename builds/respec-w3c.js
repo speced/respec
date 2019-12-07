@@ -6039,12 +6039,9 @@ function htmlJoinAnd(array = [], mapper = item => item) {
       return hyperHTML$1`${items[0]} and ${items[1]}`;
     default: {
       // x, y, and z
-      let joinedItems = `${items[0]}`;
-      for (let i = 1; i < items.length - 1; i++) {
-        joinedItems = hyperHTML$1`${joinedItems}, ${items[i]}`;
-      }
-      joinedItems = hyperHTML$1`${joinedItems} and ${items[length - 1]}`;
-      return hyperHTML$1`${joinedItems}`;
+      const joinedItems = items.slice(0, -1).map(item => hyperHTML$1`${item}, `);
+      return hyperHTML$1`${joinedItems}and ${items[items.length - 1]}`;
+   
     }
   }
 }
