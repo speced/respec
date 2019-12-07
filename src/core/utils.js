@@ -510,11 +510,11 @@ export function htmlJoinAnd(array = [], mapper = item => item) {
       return hyperHTML`${items[0]} and ${items[1]}`;
     default: {
       // x, y, and z
-      let joinedItems = ``;
-      for (let i = 0; i < array.length - 1; i++) {
-        joinedItems = `${joinedItems}, ${items[i]}`;
+      let joinedItems = `${items[0]}`;
+      for (let i = 1; i < items.length - 1; i++) {
+        joinedItems = hyperHTML`${joinedItems}, ${items[i]}`;
       }
-      joinedItems = `${joinedItems} and ${items[length - 1]}`;
+      joinedItems = hyperHTML`${joinedItems} and ${items[length - 1]}`;
       return hyperHTML`${joinedItems}`;
     }
   }
