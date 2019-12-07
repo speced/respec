@@ -514,7 +514,7 @@ export function htmlJoinAnd(array = [], mapper = item => item) {
       for (let i = 1; i < items.length - 1; i++) {
         joinedItems = hyperHTML`${joinedItems}, ${items[i]}`;
       }
-      joinedItems = hyperHTML`${joinedItems} and ${items[length - 1]}`;
+      joinedItems = hyperHTML`${joinedItems} and ${items[items.length - 1]}`;
       return hyperHTML`${joinedItems}`;
     }
   }
