@@ -292,27 +292,16 @@ describe("Core - Markdown", () => {
       [Exposed=Window]
       interface FooWebidl {};
       \`\`\`
-
-      \`\`\` IdL
-      [Exposed=Window]
-      interface FooIdl {};
-      \`\`\`
     `;
 
     const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
-    const [mixedCaseWebidl, mixedCaseIdl] = doc.querySelectorAll("pre");
+    const [mixedCaseWebidl] = doc.querySelectorAll("pre");
 
     expect(mixedCaseWebidl.classList).toContain("idl");
     expect(mixedCaseWebidl.querySelector("code.hljs")).toBeFalsy();
     expect(
       mixedCaseWebidl.querySelector(".respec-button-copy-paste")
-    ).toBeTruthy();
-
-    expect(mixedCaseIdl.classList).toContain("idl");
-    expect(mixedCaseIdl.querySelector("code.hljs")).toBeFalsy();
-    expect(
-      mixedCaseIdl.querySelector(".respec-button-copy-paste")
     ).toBeTruthy();
   });
 
