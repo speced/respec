@@ -88,14 +88,11 @@ const inlineElems = new Set([
 
 class Renderer extends marked.Renderer {
   code(code, language, isEscaped) {
-    if (this.isWebidlLanguageTag(language)) {
+    // regex to check whether the language is webidl
+    if (/(^webidl$|^idl$)/i.test(language)) {
       return `<pre class="idl">${code}</pre>`;
     }
     return super.code(code, language, isEscaped);
-  }
-
-  isWebidlLanguageTag(tag) {
-    return /(^(web)?idl$)/i.test(tag);
   }
 }
 
