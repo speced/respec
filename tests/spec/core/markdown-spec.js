@@ -44,6 +44,7 @@ describe("Core - Markdown", () => {
       </div>
     `;
     const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector(".note p em")).toBeTruthy();
     expect(doc.querySelector(".issue p em")).toBeTruthy();
@@ -58,6 +59,7 @@ describe("Core - Markdown", () => {
           * nested list item
     `;
     const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector("code")).toBeFalsy();
     expect(doc.querySelector("#foo h2").textContent).toBe("1. Foo");
@@ -122,6 +124,7 @@ describe("Core - Markdown", () => {
 
         `;
     const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     const foo = doc.querySelector("#foo h2");
     expect(foo.textContent).toBe("1. Foo");
@@ -208,6 +211,7 @@ describe("Core - Markdown", () => {
 
         `;
     const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     const baz = doc.querySelector("#baz h2");
     expect(baz.textContent).toBe("2. Baz");
@@ -263,6 +267,7 @@ describe("Core - Markdown", () => {
       \`\`\`
     `;
     const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     const [webidlBlock, jsBlock, normalBlock] = doc.querySelectorAll("pre");
 
@@ -295,6 +300,7 @@ describe("Core - Markdown", () => {
     `;
 
     const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     const [mixedCaseWebidl] = doc.querySelectorAll("pre");
 
@@ -315,6 +321,7 @@ describe("Core - Markdown", () => {
         </div>
       `;
       const ops = makeStandardOps({ format: "markdown" }, body);
+      ops.abstract = null;
       const doc = await makeRSDoc(ops);
       const anchors = doc.querySelectorAll("#testElem a");
       expect(anchors.length).toBe(2);
@@ -395,45 +402,21 @@ describe("Core - Markdown", () => {
     });
   });
 
-  describe("Whitespace compatibility", () => {
-    it("normalises whitespace, but ignore white with pre tags", async () => {
-      const str = `   trim start\n    * trim 3 from start \n\n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
-      const ops = makeStandardOps(
-        null,
-        `<section id=markdown1 data-format=markdown>${str}`
-      );
-      const doc = await makeRSDoc(ops);
-      const [p1, ul, pre, p2] = doc.getElementById("markdown1").children;
-      expect(p1.localName).toBe("p");
-      expect(p1.textContent).toBe("trim start");
-      expect(p2.textContent).toBe("foo \n bar");
-      expect(ul.children.length).toBe(1);
-
-      const [li] = ul.children;
-      expect(li.localName).toBe("li");
-      expect(li.textContent).toBe("trim 3 from start ");
-
-      const preText = pre.textContent.split("\n");
-      expect(preText[0]).toBe("trim 1");
-      expect(preText[1]).toBe("   if(x){");
-      expect(preText[2]).toBe("     party()");
-    });
-  });
-
   describe("Markdown-inside-block backward compatibility", () => {
     it("parses indented <pre> after a list", async () => {
-      const idl = `dictionary Indented {\n  any shouldBeIndented();\n};`;
+      const idl = `dictionary Indented {\n  any shouldBeIndented;\n};`;
       const body = `
         <div>
         1. I lack double newlines between HTML block
         </div>
         <pre class="idl" id="pre">
         dictionary Indented {
-          any shouldBeIndented();
+          any shouldBeIndented;
         };
         </pre>
       `;
       const ops = makeStandardOps({ format: "markdown" }, body);
+      ops.abstract = null;
       const doc = await makeRSDoc(ops);
       const pre = doc.getElementById("pre");
 
