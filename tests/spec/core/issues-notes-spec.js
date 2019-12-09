@@ -10,6 +10,12 @@ import {
 
 describe("Core — Issues and Notes", () => {
   afterAll(flushIframes);
+
+  const githubConfig = {
+    github: "org/repo",
+    githubAPI: `${window.location.origin}/tests/data/github`,
+  };
+
   it("treats each issue as unique", async () => {
     const body = `
       <section>
@@ -139,10 +145,6 @@ describe("Core — Issues and Notes", () => {
   });
 
   it("shows labels for github issues", async () => {
-    const githubConfig = {
-      github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data/`,
-    };
     const ops = {
       config: githubConfig,
       body: `${makeDefaultBody()}
@@ -180,7 +182,7 @@ describe("Core — Issues and Notes", () => {
     );
     expect(refactorLabel.style.backgroundColor).toBe("rgb(71, 244, 65)");
     expect(refactorLabel.href).toBe(
-      "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22refactor%22"
+      "https://github.com/org/repo/issues/?q=is%3Aissue+is%3Aopen+label%3A%22refactor%22"
     );
 
     expect(bugLabel.textContent).toBe("bug");
@@ -190,7 +192,7 @@ describe("Core — Issues and Notes", () => {
     );
     expect(bugLabel.style.backgroundColor).toBe("rgb(244, 66, 92)");
     expect(bugLabel.href).toBe(
-      "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22bug%22"
+      "https://github.com/org/repo/issues/?q=is%3Aissue+is%3Aopen+label%3A%22bug%22"
     );
 
     expect(blankLabel.textContent).toBe("blank");
@@ -199,7 +201,7 @@ describe("Core — Issues and Notes", () => {
       "respec-label-dark"
     );
     expect(blankLabel.href).toBe(
-      "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22blank%22"
+      "https://github.com/org/repo/issues/?q=is%3Aissue+is%3Aopen+label%3A%22blank%22"
     );
 
     expect(invalidLabel.textContent).toBe("not-a-color");
@@ -208,7 +210,7 @@ describe("Core — Issues and Notes", () => {
       "respec-label-dark"
     );
     expect(invalidLabel.href).toBe(
-      "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22not-a-color%22"
+      "https://github.com/org/repo/issues/?q=is%3Aissue+is%3Aopen+label%3A%22not-a-color%22"
     );
   });
 
@@ -240,10 +242,6 @@ describe("Core — Issues and Notes", () => {
   });
 
   it("marks closed issues as closed in the spec", async () => {
-    const githubConfig = {
-      github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data/`,
-    };
     const ops = {
       config: githubConfig,
       body: `${makeDefaultBody()}
@@ -277,10 +275,6 @@ describe("Core — Issues and Notes", () => {
   });
 
   it("sets aria-label to reflect the labels from Github", async () => {
-    const githubConfig = {
-      github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data/`,
-    };
     const ops = {
       config: githubConfig,
       body: `${makeDefaultBody()}
@@ -305,10 +299,6 @@ describe("Core — Issues and Notes", () => {
     ).toBeTruthy();
   });
   it("renders the original issue post in an empty issue block", async () => {
-    const githubConfig = {
-      github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data/`,
-    };
     const ops = {
       config: githubConfig,
       body: `${makeDefaultBody()}<div class='issue' id='issue1540' data-number='1540'></div>`,
@@ -353,8 +343,8 @@ describe("Core — Issues and Notes", () => {
 
   it("should link to GitHub issue tracker for features at risk", async () => {
     const config = {
-      github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data/`,
+      github: "https://github.com/org/repo",
+      githubAPI: `${window.location.origin}/tests/data/github`,
     };
     const ops = {
       config,

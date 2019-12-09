@@ -88,7 +88,8 @@ const inlineElems = new Set([
 
 class Renderer extends marked.Renderer {
   code(code, language, isEscaped) {
-    if (language === "webidl") {
+    // regex to check whether the language is webidl
+    if (/(^webidl$)/i.test(language)) {
       return `<pre class="idl">${code}</pre>`;
     }
     return super.code(code, language, isEscaped);
@@ -214,6 +215,7 @@ export function markdownToHtml(text) {
     sanitize: false,
     gfm: true,
     headerIds: false,
+    langPrefix: "",
     renderer: new Renderer(),
   });
   return result;

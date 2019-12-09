@@ -1,4 +1,5 @@
 const path = require("path");
+const { execSync } = require("child_process");
 const { createServer } = require("http");
 const chokidar = require("chokidar");
 const karma = require("karma");
@@ -82,6 +83,10 @@ if (args.interactive) {
   watcher.on("all", onFileChange);
   watcher.on("error", onError);
 }
+
+process.on("exit", () => {
+  execSync("git checkout -- builds", { stdio: "inherit" });
+});
 
 printWelcomeMessage(args);
 buildAndTest();
