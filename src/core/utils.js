@@ -613,6 +613,12 @@ export function getDfnTitles(elem) {
 
   titleSet.add(normText);
   titleSet.delete("");
+
+  if (elem.dataset.localLt) {
+    const localLt = elem.dataset.localLt.split("|");
+    localLt.forEach(item => titleSet.add(norm(item)));
+  }
+
   const titles = [...titleSet];
   return titles;
 }
