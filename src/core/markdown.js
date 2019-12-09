@@ -95,7 +95,7 @@ class Renderer extends marked.Renderer {
   }
 
   isWebidlLanguageTag(tag) {
-    return /(^webidl$|^idl$)/i.test(tag);
+    return /(^(web)?idl$)/i.test(tag);
   }
 }
 
