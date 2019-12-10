@@ -3,6 +3,7 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
+import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
@@ -495,6 +496,26 @@ export function flatten(collector, item) {
 // --- DOM HELPERS -------------------------------
 
 /**
+ * Separates each item with proper commas and "and".
+ * @param {string[]} array
+ * @param {(str: string) => object} mapper
+ */
+export function htmlJoinAnd(array, mapper = item => item) {
+  const items = array.map(mapper);
+  switch (items.length) {
+    case 0:
+    case 1: // "x"
+      return items[0];
+    case 2: // x and y
+      return hyperHTML`${items[0]} and ${items[1]}`;
+    default: {
+      const joinedItems = items.slice(0, -1).map(item => hyperHTML`${item}, `);
+      return hyperHTML`${joinedItems}and ${items[items.length - 1]}`;
+    }
+  }
+}
+
+/**
  * Creates and sets an ID to an element (elem)
  * using a specific prefix if provided, and a specific text if given.
  * @param {HTMLElement} elem element
@@ -613,6 +634,15 @@ export function getDfnTitles(elem) {
 
   titleSet.add(normText);
   titleSet.delete("");
+
+  // We could have done this with @data-lt (as the logic is same), but if
+  // @data-lt was not present, we would end up using @data-local-lt as element's
+  // id (in other words, we prefer textContent over @data-local-lt for dfn id)
+  if (elem.dataset.localLt) {
+    const localLt = elem.dataset.localLt.split("|");
+    localLt.forEach(item => titleSet.add(norm(item)));
+  }
+
   const titles = [...titleSet];
   return titles;
 }

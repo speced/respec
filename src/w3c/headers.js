@@ -89,7 +89,7 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", (default) the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import { ISODate, concatDate, joinAnd } from "../core/utils.js";
+import { ISODate, concatDate, htmlJoinAnd, joinAnd } from "../core/utils.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
@@ -531,14 +531,14 @@ export function run(conf) {
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
-    conf.wgHTML = joinAnd(conf.wg, (wg, idx) => {
-      return `the <a href='${conf.wgURI[idx]}'>${wg}</a>`;
+    conf.wgHTML = htmlJoinAnd(conf.wg, (wg, idx) => {
+      return hyperHTML`the <a href='${conf.wgURI[idx]}'>${wg}</a>`;
     });
     const pats = [];
     for (let i = 0, n = conf.wg.length; i < n; i++) {
       pats.push(
         `a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>` +
-          `public list of any patent disclosures  (${conf.wg[i]})</a>`
+          `public list of any patent disclosures (${conf.wg[i]})</a>`
       );
     }
     conf.wgPatentHTML = joinAnd(pats);

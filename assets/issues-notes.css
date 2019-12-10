@@ -50,6 +50,7 @@ input.task-list-item-checkbox {
   position: relative;
   bottom: 2px;
   border: none;
+  display: inline-block;
 }
 
 .issue a.respec-label-dark {
