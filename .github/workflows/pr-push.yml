@@ -6,6 +6,7 @@ on:
       - gh-pages
   pull_request: {}
 
+
 jobs:
   lint:
     name: Check linting issues
