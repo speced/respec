@@ -22,6 +22,9 @@ export function run(conf) {
   dfns.forEach(dfn => {
     const terms = [dfn.textContent];
     if (dfn.dataset.lt) terms.push(...dfn.dataset.lt.split("|"));
+    if (dfn.dataset.localLt) {
+      terms.push(...dfn.dataset.localLt.split("|"));
+    }
 
     const plurals = new Set(terms.map(pluralizeDfn).filter(plural => plural));
 
@@ -58,6 +61,9 @@ function getPluralizer() {
     dfnTexts.add(normText);
     if (dfn.dataset.lt) {
       dfn.dataset.lt.split("|").forEach(lt => dfnTexts.add(lt));
+    }
+    if (dfn.dataset.localLt) {
+      dfn.dataset.localLt.split("|").forEach(lt => dfnTexts.add(lt));
     }
   });
 

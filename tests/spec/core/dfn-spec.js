@@ -5,6 +5,7 @@ import {
   makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
+  makeStandardOps,
 } from "../SpecHelper.js";
 
 describe("Core — Definitions", () => {
@@ -99,5 +100,42 @@ describe("Core — Definitions", () => {
     const dfn = doc.querySelector("dfn[data-lt]");
     expect(dfn.dataset.lt).toBe("text|text 1|text 2|text 3");
     expect(dfn.dataset.dfnType).toBe("dfn");
+  });
+
+  it("allows linking via data-local-lt", async () => {
+    const body = `
+      <p id="only-lt">
+        <dfn data-lt="hello">hey</dfn>
+        [= hey =] [= hello =]
+      </p>
+      <p id="only-local-lt">
+        <dfn data-local-lt="installing|installed|installation">install</dfn>
+        [= install =] [= installation =] [= installed =] [= installing =]
+      </p>
+      <p id="lt-local-lt">
+        <dfn data-lt="first" data-local-lt="second">third</dfn>
+        [= first =] [= second =] [= third =]
+      </p>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const dfnOnlyLt = doc.querySelector("#only-lt dfn");
+    expect(dfnOnlyLt.id).toBe("dfn-hello");
+    for (const el of [...doc.querySelectorAll("#only-lt a")]) {
+      expect(el.hash).toBe("#dfn-hello");
+    }
+
+    const dfnOnlyLocalLt = doc.querySelector("#only-local-lt dfn");
+    expect(dfnOnlyLocalLt.id).toBe("dfn-install");
+    for (const el of [...doc.querySelectorAll("#only-local-lt a")]) {
+      expect(el.hash).toBe("#dfn-install");
+    }
+
+    const dfnLtLocalLt = doc.querySelector("#lt-local-lt dfn");
+    expect(dfnLtLocalLt.id).toBe("dfn-first");
+    for (const el of [...doc.querySelectorAll("#lt-local-lt a")]) {
+      expect(el.hash).toBe("#dfn-first");
+    }
   });
 });
