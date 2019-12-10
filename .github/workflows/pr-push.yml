@@ -11,7 +11,7 @@ jobs:
   lint:
     name: Check linting issues
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'ci-skip')"
+    if: "contains(github.event.head_commit.message, 'ci-skip') != true"
     steps:
       - uses: actions/checkout@v1
         with:
