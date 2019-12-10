@@ -482,17 +482,10 @@ describe("Core - Utils", () => {
       expect(div.getElementsByTagName("a").length).toBe(3);
 
       render`${utils.htmlJoinAnd(
-        ["<x>", "<x>", "<x>", "<x>"],
+        ["<x>", "<x>", "<X>", "<x>"],
         item => hyperHTML`<a>${item}</a>`
       )}`;
-      expect(div.textContent).toBe("<x>, <x>, <x>, and <x>");
-      expect(div.getElementsByTagName("a").length).toBe(4);
-
-      render`${utils.htmlJoinAnd(
-        ["<X>", "<X>", "<X>", "<X>"],
-        item => hyperHTML`<a>${item}</a>`
-      )}`;
-      expect(div.textContent).toBe("<X>, <X>, <X>, and <X>");
+      expect(div.textContent).toBe("<x>, <x>, <X>, and <x>");
       expect(div.getElementsByTagName("a").length).toBe(4);
     });
   });
