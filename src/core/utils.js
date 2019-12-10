@@ -613,6 +613,15 @@ export function getDfnTitles(elem) {
 
   titleSet.add(normText);
   titleSet.delete("");
+
+  // We could have done this with @data-lt (as the logic is same), but if
+  // @data-lt was not present, we would end up using @data-local-lt as element's
+  // id (in other words, we prefer textContent over @data-local-lt for dfn id)
+  if (elem.dataset.localLt) {
+    const localLt = elem.dataset.localLt.split("|");
+    localLt.forEach(item => titleSet.add(norm(item)));
+  }
+
   const titles = [...titleSet];
   return titles;
 }
