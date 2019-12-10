@@ -311,7 +311,7 @@ export function toShortIsoDate(date) {
 }
 
 // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
-e/*xport function lead0(str) {
+/*export function lead0(str) {
   return String(str).length === 1 ? `0${str}` : str;
 }*/
 
