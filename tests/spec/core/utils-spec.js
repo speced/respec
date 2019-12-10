@@ -457,42 +457,37 @@ describe("Core - Utils", () => {
   describe("htmlJoinAnd", () => {
     it("joins with proper commas and 'and'", () => {
       const div = document.createElement("div");
+      const render = hyperHTML.bind(div);
 
-      hyperHTML.bind(div)`${utils.htmlJoinAnd(
-        [],
-        item => hyperHTML`<a>${item}</a>`
-      )}`;
+      render`${utils.htmlJoinAnd([], item => hyperHTML`<a>${item}</a>`)}`;
       expect(div.textContent).toBe("");
 
-      hyperHTML.bind(div)`${utils.htmlJoinAnd(
-        ["x"],
+      render`${utils.htmlJoinAnd(["<x>"], item => hyperHTML`<a>${item}</a>`)}`;
+      expect(div.textContent).toBe("<x>");
+
+      render`${utils.htmlJoinAnd(
+        ["<x>", "<x>"],
         item => hyperHTML`<a>${item}</a>`
       )}`;
-      expect(div.textContent).toBe("x");
+      expect(div.textContent).toBe("<x> and <x>");
 
-      hyperHTML.bind(div)`${utils.htmlJoinAnd(
-        ["x", "x"],
+      render`${utils.htmlJoinAnd(
+        ["<x>", "<x>", "<x>"],
         item => hyperHTML`<a>${item}</a>`
       )}`;
-      expect(div.textContent).toBe("x and x");
+      expect(div.textContent).toBe("<x>, <x>, and <x>");
 
-      hyperHTML.bind(div)`${utils.htmlJoinAnd(
-        ["x", "x", "x"],
+      render`${utils.htmlJoinAnd(
+        ["<x>", "<x>", "<x>", "<x>"],
         item => hyperHTML`<a>${item}</a>`
       )}`;
-      expect(div.textContent).toBe("x, x, and x");
+      expect(div.textContent).toBe("<x>, <x>, <x>, and <x>");
 
-      hyperHTML.bind(div)`${utils.htmlJoinAnd(
-        ["x", "x", "x", "x"],
-        item => hyperHTML`<a>${item}</a>`
-      )}`;
-      expect(div.textContent).toBe("x, x, x, and x");
-
-      hyperHTML.bind(div)`${utils.htmlJoinAnd(
-        ["x", "x", "x", "x"],
+      render`${utils.htmlJoinAnd(
+        ["<x>", "<x>", "<x>", "<x>"],
         item => hyperHTML`<a>${item.toUpperCase()}</a>`
       )}`;
-      expect(div.textContent).toBe("X, X, X, and X");
+      expect(div.textContent).toBe("<X>, <X>, <X>, and <X>");
     });
   });
   describe("DOM utils", () => {
