@@ -500,7 +500,7 @@ export function flatten(collector, item) {
 // joined
 // Finally converts to hyperHTML while joining them
 // htmlJoinAnd(["x"])).toEqual(hyperHTML`x`);
-export function htmlJoinAnd(array = [], mapper = item => hyperHTML`${item}`) {
+export function htmlJoinAnd(array, mapper = item => item) {
   const items = array.map(mapper);
   switch (items.length) {
     case 0:
