@@ -461,33 +461,39 @@ describe("Core - Utils", () => {
 
       render`${utils.htmlJoinAnd([], item => hyperHTML`<a>${item}</a>`)}`;
       expect(div.textContent).toBe("");
+      expect(div.getElementsByTagName("a").length).toBe(0);
 
       render`${utils.htmlJoinAnd(["<x>"], item => hyperHTML`<a>${item}</a>`)}`;
       expect(div.textContent).toBe("<x>");
+      expect(div.getElementsByTagName("a").length).toBe(1);
 
       render`${utils.htmlJoinAnd(
         ["<x>", "<x>"],
         item => hyperHTML`<a>${item}</a>`
       )}`;
       expect(div.textContent).toBe("<x> and <x>");
+      expect(div.getElementsByTagName("a").length).toBe(2);
 
       render`${utils.htmlJoinAnd(
         ["<x>", "<x>", "<x>"],
         item => hyperHTML`<a>${item}</a>`
       )}`;
       expect(div.textContent).toBe("<x>, <x>, and <x>");
+      expect(div.getElementsByTagName("a").length).toBe(3);
 
       render`${utils.htmlJoinAnd(
         ["<x>", "<x>", "<x>", "<x>"],
         item => hyperHTML`<a>${item}</a>`
       )}`;
       expect(div.textContent).toBe("<x>, <x>, <x>, and <x>");
+      expect(div.getElementsByTagName("a").length).toBe(4);
 
       render`${utils.htmlJoinAnd(
         ["<x>", "<x>", "<x>", "<x>"],
         item => hyperHTML`<a>${item.toUpperCase()}</a>`
       )}`;
       expect(div.textContent).toBe("<X>, <X>, <X>, and <X>");
+      expect(div.getElementsByTagName("a").length).toBe(4);
     });
   });
   describe("DOM utils", () => {
