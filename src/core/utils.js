@@ -505,7 +505,7 @@ export function htmlJoinAnd(array, mapper = item => item) {
   switch (items.length) {
     case 0:
     case 1: // "x"
-      return hyperHTML`${items[0]}`;
+      return items[0];
     case 2: // x and y
       return hyperHTML`${items[0]} and ${items[1]}`;
     default: {
@@ -514,6 +514,7 @@ export function htmlJoinAnd(array, mapper = item => item) {
     }
   }
 }
+
 /**
  * Creates and sets an ID to an element (elem)
  * using a specific prefix if provided, and a specific text if given.
