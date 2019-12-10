@@ -158,7 +158,7 @@ function toRefContent(ref) {
 export function renderInlineCitation(ref) {
   const key = ref.replace(/^(!|\?)/, "");
   const href = `#bib-${key.toLowerCase()}`;
-  return hyperHTML`[<cite><a class="bibref" href="${href}">${key}</a></cite>]`;
+  return hyperHTML`[<cite><a class="biblio" href="${href}">${key}</a></cite>]`;
 }
 
 /**
