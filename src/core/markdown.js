@@ -224,11 +224,26 @@ export function markdownToHtml(text) {
 function processElements(selector) {
   return element => {
     const elements = Array.from(element.querySelectorAll(selector));
-    elements.reverse().forEach(element => {
+    elements.forEach(element => {
       element.innerHTML = markdownToHtml(element.innerHTML);
     });
     return elements;
   };
+}
+
+/**
+ * @param {HTMLElement} element
+ * @param {string} selector
+ */
+function enableBlockLevelMarkdown(element, selector) {
+  /** @type {NodeListOf<HTMLElement>} */
+  const elements = element.querySelectorAll(selector);
+  for (const element of elements) {
+    // Double newlines are needed to be parsed as Markdown
+    if (!element.innerHTML.match(/^\n\s*\n/)) {
+      element.prepend("\n\n");
+    }
+  }
 }
 
 class Builder {
@@ -334,9 +349,8 @@ function substituteWithTextNodes(elements) {
 }
 
 const processMDSections = processElements("[data-format='markdown']:not(body)");
-const processBlockLevelElements = processElements(
-  "[data-format=markdown]:not(body), section, div, address, article, aside, figure, header, main, body"
-);
+const blockLevelElements =
+  "[data-format=markdown], section, div, address, article, aside, figure, header, main";
 
 export function run(conf) {
   const hasMDSections = !!document.querySelector(
@@ -384,7 +398,8 @@ export function run(conf) {
   // so we need to normalize the inner text of some block
   // elements.
   newHTML.appendChild(newBody);
-  processBlockLevelElements(newHTML);
+  enableBlockLevelMarkdown(newBody, blockLevelElements);
+  processElements("body")(newHTML);
   // Process root level text nodes
   const cleanHTML = newBody.innerHTML
     // Markdown parsing sometimes inserts empty p tags
