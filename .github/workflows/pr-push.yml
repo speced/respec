@@ -11,7 +11,7 @@ jobs:
   lint:
     name: Check linting issues
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'ci-skip') != true"
+    if: "!contains(github.event.head_commit.message, 'ci-skip')"
     steps:
       - uses: actions/checkout@v1
         with:
@@ -27,6 +27,7 @@ jobs:
     name: Headless Tests
     runs-on: ubuntu-latest
     needs: lint
+    if: "!contains(github.event.head_commit.message, 'ci-skip')"
     steps:
       - uses: actions/checkout@v1
         with:
@@ -47,6 +48,7 @@ jobs:
         browser: [ChromeHeadless, FirefoxHeadless]
     runs-on: ubuntu-latest
     needs: lint
+    if: "!contains(github.event.head_commit.message, 'ci-skip')"
     steps:
       - uses: actions/checkout@v1
         with:
