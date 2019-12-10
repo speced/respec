@@ -489,13 +489,14 @@ describe("Core - Utils", () => {
       expect(div.getElementsByTagName("a").length).toBe(4);
 
       render`${utils.htmlJoinAnd(
-        ["<x>", "<x>", "<x>", "<x>"],
-        item => hyperHTML`<a>${item.toUpperCase()}</a>`
+        ["<X>", "<X>", "<X>", "<X>"],
+        item => hyperHTML`<a>${item}</a>`
       )}`;
       expect(div.textContent).toBe("<X>, <X>, <X>, and <X>");
       expect(div.getElementsByTagName("a").length).toBe(4);
     });
   });
+
   describe("DOM utils", () => {
     // migrated from core/jquery-enhanced
     describe("getTextNodes", () => {
