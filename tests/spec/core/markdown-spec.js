@@ -284,6 +284,27 @@ describe("Core - Markdown", () => {
     expect(normalBlock.querySelector("code.hljs span")).toBeNull();
   });
 
+  it("is case insensitive for webidl language tags", async () => {
+    const body = `
+      ## test
+
+      \`\`\` weBiDl
+      [Exposed=Window]
+      interface FooWebidl {};
+      \`\`\`
+    `;
+
+    const ops = makeStandardOps({ format: "markdown" }, body);
+    const doc = await makeRSDoc(ops);
+    const [mixedCaseWebidl] = doc.querySelectorAll("pre");
+
+    expect(mixedCaseWebidl.classList).toContain("idl");
+    expect(mixedCaseWebidl.querySelector("code.hljs")).toBeFalsy();
+    expect(
+      mixedCaseWebidl.querySelector(".respec-button-copy-paste")
+    ).toBeTruthy();
+  });
+
   describe("nolinks options", () => {
     it("automatically links URLs in pre when missing (smoke test)", async () => {
       const body = `
