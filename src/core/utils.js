@@ -495,11 +495,11 @@ export function flatten(collector, item) {
 
 // --- DOM HELPERS -------------------------------
 
-// Takes an array and returns a string that separates each of its items with the proper commas and
-// "and". The second argument is a mapping function that can convert the items before they are
-// joined
-// Finally converts to hyperHTML while joining them
-// htmlJoinAnd(["x"])).toEqual(hyperHTML`x`);
+/**
+ * Separates each item with proper commas and "and".
+ * @param {string[]} array
+ * @param {(str: string) => object} mapper
+ */
 export function htmlJoinAnd(array, mapper = item => item) {
   const items = array.map(mapper);
   switch (items.length) {
