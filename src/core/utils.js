@@ -499,17 +499,16 @@ export function flatten(collector, item) {
 // "and". The second argument is a mapping function that can convert the items before they are
 // joined
 // Finally converts to hyperHTML while joining them
-
-export function htmlJoinAnd(array = [], mapper = item => item) {
+// htmlJoinAnd(["x"])).toEqual(hyperHTML`x`);
+export function htmlJoinAnd(array = [], mapper = item => hyperHTML`${item}`) {
   const items = array.map(mapper);
   switch (items.length) {
     case 0:
     case 1: // "x"
-      return items[0];
+      return hyperHTML`${items[0]}`;
     case 2: // x and y
       return hyperHTML`${items[0]} and ${items[1]}`;
     default: {
-      // x, y, and z
       const joinedItems = items.slice(0, -1).map(item => hyperHTML`${item}, `);
       return hyperHTML`${joinedItems}and ${items[items.length - 1]}`;
     }

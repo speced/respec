@@ -1,6 +1,7 @@
 "use strict";
 
 import * as utils from "../../../src/core/utils.js";
+import { hyperHTML } from "../../../src/core/import-maps.js";
 
 describe("Core - Utils", () => {
   describe("fetchAndCache", () => {
@@ -453,6 +454,47 @@ describe("Core - Utils", () => {
     });
   });
 
+  describe("htmlJoinAnd", () => {
+    it("joins with proper commas and 'and'", () => {
+      const div = document.createElement("div");
+
+      hyperHTML.bind(div)`${utils.htmlJoinAnd(
+        [],
+        item => hyperHTML`<a>${item}</a>`
+      )}`;
+      expect(div.textContent).toBe("");
+
+      hyperHTML.bind(div)`${utils.htmlJoinAnd(
+        ["x"],
+        item => hyperHTML`<a>${item}</a>`
+      )}`;
+      expect(div.textContent).toBe("x");
+
+      hyperHTML.bind(div)`${utils.htmlJoinAnd(
+        ["x", "x"],
+        item => hyperHTML`<a>${item}</a>`
+      )}`;
+      expect(div.textContent).toBe("x and x");
+
+      hyperHTML.bind(div)`${utils.htmlJoinAnd(
+        ["x", "x", "x"],
+        item => hyperHTML`<a>${item}</a>`
+      )}`;
+      expect(div.textContent).toBe("x, x, and x");
+
+      hyperHTML.bind(div)`${utils.htmlJoinAnd(
+        ["x", "x", "x", "x"],
+        item => hyperHTML`<a>${item}</a>`
+      )}`;
+      expect(div.textContent).toBe("x, x, x, and x");
+
+      hyperHTML.bind(div)`${utils.htmlJoinAnd(
+        ["x", "x", "x", "x"],
+        item => hyperHTML`<a>${item.toUpperCase()}</a>`
+      )}`;
+      expect(div.textContent).toBe("X, X, X, and X");
+    });
+  });
   describe("DOM utils", () => {
     // migrated from core/jquery-enhanced
     describe("getTextNodes", () => {
