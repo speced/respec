@@ -7,7 +7,7 @@ import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
-// const spaceOrTab = /^[ |\t]*/;
+const spaceOrTab = /^[ |\t]*/;
 const dashes = /-/g;
 
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
