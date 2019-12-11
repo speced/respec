@@ -7,7 +7,6 @@ import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
-const spaceOrTab = /^[ |\t]*/;
 const dashes = /-/g;
 
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
@@ -46,24 +45,6 @@ const fetchDestinations = new Set([
 export const nonNormativeSelector =
   ".informative, .note, .issue, .example, .ednote, .practice, .introductory";
 
-export function calculateLeftPad(text) {
-  if (typeof text !== "string") {
-    throw new TypeError("Invalid input");
-  }
-  // Find smallest padding value
-  const leftPad = text
-    .split("\n")
-    .filter(item => item)
-    .reduce((smallest, item) => {
-      // can't go smaller than 0
-      if (smallest === 0) {
-        return smallest;
-      }
-      const match = item.match(spaceOrTab)[0] || "";
-      return Math.min(match.length, smallest);
-    }, +Infinity);
-  return leftPad === +Infinity ? 0 : leftPad;
-}
 /**
  * Creates a link element that represents a resource hint.
  *
@@ -308,22 +289,6 @@ export function concatDate(date, sep = "") {
 // formats a date to "yyyy-mm-dd"
 export function toShortIsoDate(date) {
   return ISODate.format(date);
-}
-
-// takes a string, prepends a "0" if it is of length 1, does nothing otherwise
-export function lead0(str) {
-  return String(str).length === 1 ? `0${str}` : str;
-}
-
-// takes a YYYY-MM-DD date and returns a Date object for it
-export function parseSimpleDate(str) {
-  return new Date(str);
-}
-
-// takes what document.lastModified returns and produces a Date object for it
-export function parseLastModified(str) {
-  if (!str) return new Date();
-  return new Date(Date.parse(str));
 }
 
 // given either a Date object or a date in YYYY-MM-DD format,
