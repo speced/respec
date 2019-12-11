@@ -140,11 +140,15 @@ function displayPanel(dfn, panel) {
   const panelRect = panel.getBoundingClientRect();
   const panelWidth = panelRect.right - panelRect.left;
 
-  const top = window.scrollY + dfnRect.top;
+  let top = window.scrollY + dfnRect.top;
   let left = dfnRect.left + dfnRect.width + 5;
   if (left + panelWidth > document.body.scrollWidth) {
     // Reposition, because the panel is overflowing
-    left = window.scrollX + dfnRect.left - (panelWidth + 5);
+    left = dfnRect.left - (panelWidth + 5);
+    if (left < 0) {
+      left = dfnRect.left;
+      top = top + dfnRect.height;
+    }
   }
 
   Object.assign(panel.style, { left: `${left}px`, top: `${top}px` });
