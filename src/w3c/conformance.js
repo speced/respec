@@ -2,7 +2,7 @@
 // Module w3c/conformance
 // Handle the conformance section properly.
 import { hyperHTML as html } from "../core/import-maps.js";
-import { joinAnd } from "../core/utils.js";
+import { htmlJoinAnd } from "../core/utils.js";
 import { pub } from "../core/pubsubhub.js";
 import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";
@@ -20,9 +20,12 @@ function processConformance(conformance, conf) {
     conf.normativeReferences.add("RFC8174");
   }
   // Put in the 2119 clause and reference
-  const keywords = joinAnd(
+  const keywords = htmlJoinAnd(
     terms.sort(),
-    item => `<em class="rfc2119">${item}</em>`
+    item =>
+      html`
+        <em class="rfc2119">${item}</em>
+      `
   );
   const plural = terms.length > 1;
   const content = html`
@@ -35,7 +38,7 @@ function processConformance(conformance, conf) {
     ${terms.length
       ? html`
           <p>
-            The key word${plural ? "s" : ""} ${[keywords]} in this document
+            The key word${plural ? "s" : ""} ${keywords} in this document
             ${plural ? "are" : "is"} to be interpreted as described in
             <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
             ${renderInlineCitation("RFC2119")}
