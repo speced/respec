@@ -68,8 +68,7 @@ function parseAction(clickTarget) {
 function createPanel(dfn) {
   const { id } = dfn;
   const href = `#${id}`;
-
-  const links = [...document.querySelectorAll(`a[href="${href}"]`)];
+  const links = document.querySelectorAll(`a[href="${href}"]`);
 
   /** @type {HTMLElement} */
   const panel = hyperHTML`
@@ -87,7 +86,7 @@ function createPanel(dfn) {
 
 /**
  * @param {string} id dfn id
- * @param {HTMLLinkElement[]} links
+ * @param {NodeListOf<HTMLLinkElement>} links
  * @returns {HTMLUListElement}
  */
 function referencesToHTML(id, links) {
