@@ -216,28 +216,6 @@ describe("Core - Utils", () => {
     });
   });
 
-  describe("calculateLeftPad()", () => {
-    it("throws given invalid input", () => {
-      expect(() => utils.calculateLeftPad()).toThrow();
-      expect(() => utils.calculateLeftPad({})).toThrow();
-      expect(() => utils.calculateLeftPad(123)).toThrow();
-      expect(() => utils.calculateLeftPad(null)).toThrow();
-    });
-    it("calculates the smallest left padding of multiline text", () => {
-      expect(utils.calculateLeftPad("")).toBe(0);
-      expect(utils.calculateLeftPad("\n    \n  ")).toBe(2);
-      expect(utils.calculateLeftPad("                         ")).toBe(25);
-      expect(utils.calculateLeftPad(" a                        ")).toBe(1);
-      expect(utils.calculateLeftPad("  \n a                        ")).toBe(1);
-      expect(utils.calculateLeftPad(" \n   a ")).toBe(1);
-      expect(utils.calculateLeftPad("\n    \n      \n    ")).toBe(4);
-      expect(utils.calculateLeftPad("\n    \n      \n  ")).toBe(2);
-      expect(utils.calculateLeftPad("\n   \n      \n  \n    ")).toBe(2);
-      expect(utils.calculateLeftPad("\n\n\n\n\n\n\n\n\n\n")).toBe(0);
-      expect(utils.calculateLeftPad("    \n\n\n\n\n  \n\n\n\n\n   ")).toBe(2);
-    });
-  });
-
   describe("addID()", () => {
     it("removes diacritical marks", () => {
       const elem = document.createElement("h2");
@@ -263,36 +241,11 @@ describe("Core - Utils", () => {
     });
   });
 
-  describe("lead0", () => {
-    it("prepends 0 only when needed", () => {
-      expect(utils.lead0("1")).toBe("01");
-      expect(utils.lead0("01")).toBe("01");
-    });
-  });
-
   describe("concatDate", () => {
     it("formats the date as needed", () => {
       const d = new Date("1977-03-01");
       expect(utils.concatDate(d)).toBe("19770301");
       expect(utils.concatDate(d, "-")).toBe("1977-03-01");
-    });
-  });
-
-  describe("parseSimpleDate", () => {
-    it("parses a simple date", () => {
-      const d = utils.parseSimpleDate("1977-03-01");
-      expect(d.getUTCFullYear()).toBe(1977);
-      expect(d.getUTCMonth()).toBe(2);
-      expect(d.getUTCDate()).toBe(1);
-    });
-  });
-
-  describe("parseLastModified", () => {
-    it("parses a date in lastModified format", () => {
-      const d = utils.parseLastModified("03/15/1977 13:05:42");
-      expect(d.getUTCFullYear()).toBe(1977);
-      expect(d.getUTCMonth()).toBe(2);
-      expect(d.getUTCDate()).toBe(15);
     });
   });
 
