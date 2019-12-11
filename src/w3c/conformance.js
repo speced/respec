@@ -38,7 +38,7 @@ function processConformance(conformance, conf) {
     ${terms.length
       ? html`
           <p>
-            The key word${plural ? "s" : ""} ${[keywords]} in this document
+            The key word${plural ? "s" : ""} ${keywords} in this document
             ${plural ? "are" : "is"} to be interpreted as described in
             <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
             ${renderInlineCitation("RFC2119")}
