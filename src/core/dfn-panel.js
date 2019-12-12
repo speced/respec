@@ -45,7 +45,7 @@ export async function run() {
 function deriveAction(clickTarget) {
   const hitALink = !!clickTarget.closest("a");
   if (clickTarget.closest("dfn")) {
-    return hitALink ? "noop" : "show";
+    return hitALink ? null : "show";
   }
   if (clickTarget.closest("#dfn-panel")) {
     if (hitALink) {
@@ -53,12 +53,12 @@ function deriveAction(clickTarget) {
       return clickedSelfLink ? "hide" : "minimize";
     }
     const panel = clickTarget.closest("#dfn-panel");
-    return panel.classList.contains("minimized") ? "hide" : "noop";
+    return panel.classList.contains("minimized") ? "hide" : null;
   }
   if (document.getElementById("dfn-panel")) {
     return "hide";
   }
-  return "noop";
+  return null;
 }
 
 /** @param {HTMLElement} dfn */
