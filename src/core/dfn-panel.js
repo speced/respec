@@ -5,12 +5,10 @@ import { fetchAsset } from "./text-loader.js";
 import { hyperHTML } from "./import-maps.js";
 import { norm } from "./utils.js";
 
-const cssPromise = loadStyle();
-
 export const name = "core/dfn-panel";
 
 export async function run() {
-  const css = await cssPromise;
+  const css = await loadStyle();
   document.head.insertBefore(
     hyperHTML`<style>${css}</style>`,
     document.querySelector("link")
