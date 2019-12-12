@@ -52,6 +52,7 @@ dfn {
   display: inline-block;
   position: fixed;
   left: 0.5em;
+  top: unset;
   bottom: 2em;
   margin: 0 auto;
   max-width: calc(100vw - 1.5em - 0.4em - 0.5em);
