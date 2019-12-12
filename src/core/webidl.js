@@ -353,7 +353,7 @@ async function loadStyle() {
 export async function run() {
   const idls = document.querySelectorAll("pre.idl, pre.webidl");
   if (
-    !document.querySelector(".idl:not(pre)") || 
+    !document.querySelector(".idl:not(pre)") ||
     !document.querySelector(".webidl:not(pre)")
   ) {
     const link = document.querySelector("head link");
