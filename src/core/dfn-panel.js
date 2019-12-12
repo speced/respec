@@ -27,8 +27,8 @@ export async function run() {
         displayPanel(dfn, createPanel(dfn));
         break;
       }
-      case "activate": {
-        panel.classList.add("activated");
+      case "minimize": {
+        panel.classList.add("minimized");
         panel.style.left = null;
         panel.style.top = null;
         break;
@@ -50,10 +50,10 @@ function deriveAction(clickTarget) {
   if (clickTarget.closest("#dfn-panel")) {
     if (hitALink) {
       const clickedSelfLink = clickTarget.classList.contains("self-link");
-      return clickedSelfLink ? "hide" : "activate";
+      return clickedSelfLink ? "hide" : "minimize";
     }
     const panel = clickTarget.closest("#dfn-panel");
-    return panel.classList.contains("activated") ? "hide" : "noop";
+    return panel.classList.contains("minimized") ? "hide" : "noop";
   }
   if (document.getElementById("dfn-panel")) {
     return "hide";
@@ -130,8 +130,6 @@ function getReferenceTitle(link) {
  * @param {HTMLElement} panel
  */
 function displayPanel(dfn, panel) {
-  panel.classList.add("on");
-
   const dfnRect = dfn.getBoundingClientRect();
   const panelRect = panel.getBoundingClientRect();
   const panelWidth = panelRect.right - panelRect.left;

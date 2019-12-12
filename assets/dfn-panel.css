@@ -1,3 +1,4 @@
+/* dfn popup panel that list all local references to a dfn */
 dfn {
   cursor: pointer;
 }
@@ -14,9 +15,6 @@ dfn {
   background: #dddddd;
   color: black;
   border: outset 0.2em;
-}
-.dfn-panel:not(.on) {
-  display: none;
 }
 .dfn-panel * {
   margin: 0;
@@ -45,7 +43,7 @@ dfn {
 .dfn-panel li {
   list-style: inside;
 }
-.dfn-panel.activated {
+.dfn-panel.minimized {
   display: inline-block;
   position: fixed;
   left: 0.5em;
