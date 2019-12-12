@@ -19,21 +19,21 @@ export async function run() {
     const el = event.target;
     const panel = document.getElementById("dfn-panel");
 
-    const action = parseAction(el);
+    const action = deriveAction(el);
     switch (action) {
-      case "SHOW": {
+      case "show": {
         if (panel) panel.remove();
         const dfn = el.closest("dfn");
         displayPanel(dfn, createPanel(dfn));
         break;
       }
-      case "ACTIVATE": {
+      case "activate": {
         panel.classList.add("activated");
         panel.style.left = null;
         panel.style.top = null;
         break;
       }
-      case "HIDE": {
+      case "hide": {
         panel.remove();
         break;
       }
@@ -42,23 +42,23 @@ export async function run() {
 }
 
 /** @param {HTMLElement} clickTarget */
-function parseAction(clickTarget) {
+function deriveAction(clickTarget) {
   const hitALink = !!clickTarget.closest("a");
   if (clickTarget.closest("dfn")) {
-    return hitALink ? "NOOP" : "SHOW";
+    return hitALink ? "noop" : "show";
   }
   if (clickTarget.closest("#dfn-panel")) {
     if (hitALink) {
       const clickedSelfLink = clickTarget.classList.contains("self-link");
-      return clickedSelfLink ? "HIDE" : "ACTIVATE";
+      return clickedSelfLink ? "hide" : "activate";
     }
     const panel = clickTarget.closest("#dfn-panel");
-    return panel.classList.contains("activated") ? "HIDE" : "NOOP";
+    return panel.classList.contains("activated") ? "hide" : "noop";
   }
   if (document.getElementById("dfn-panel")) {
-    return "HIDE";
+    return "hide";
   }
-  return "NOOP";
+  return "noop";
 }
 
 /** @param {HTMLElement} dfn */
