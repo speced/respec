@@ -351,14 +351,7 @@ async function loadStyle() {
 }
 
 export async function run() {
-  const idls1 = document.querySelectorAll("pre.idl");
-  const idls2 = document.querySelectorAll("pre.webidl");
-
-  if (!idls1.length && !idls2.length) {
-    return;
-  }
-  const idls = idls1.length || idls2.length ? idls1 : idls2;
-
+  const idls = document.querySelectorAll("pre.idl, pre.webidl");
   if (
     !document.querySelector(".idl:not(pre)") || 
     !document.querySelector(".webidl:not(pre)")
