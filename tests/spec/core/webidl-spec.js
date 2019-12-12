@@ -1503,7 +1503,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const idl = doc.getElementsByClassName("webidl");
 
     let i = 0;
-    for(i = 0; i < idl.length; i++) {
+    for (i = 0; i < idl.length; i++) {
       expect(idl[i].classList).toContain("respec-offending-element");
       expect(idl[i].title).toContain("Exposed");
     }
