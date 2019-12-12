@@ -27,6 +27,9 @@ dfn {
 .dfn-panel a[href] {
   color: black;
 }
+.dfn-panel a[href].self-link {
+  display: inline-block;
+}
 .dfn-panel a:not(:hover) {
   text-decoration: none !important;
   border-bottom: none !important;
