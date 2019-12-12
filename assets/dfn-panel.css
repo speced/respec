@@ -2,6 +2,7 @@
 dfn {
   cursor: pointer;
 }
+
 .dfn-panel {
   position: absolute;
   left: var(--left); /* set via JS */
@@ -18,36 +19,46 @@ dfn {
   color: black;
   border: outset 0.2em;
 }
+
 .dfn-panel * {
   margin: 0;
   padding: 0;
   text-indent: 0;
 }
+
 .dfn-panel > b {
   display: block;
 }
+
 .dfn-panel a[href] {
   color: black;
 }
+
 .dfn-panel a[href].self-link {
   display: inline-block;
 }
+
 .dfn-panel a:not(:hover) {
   text-decoration: none !important;
   border-bottom: none !important;
 }
+
 .dfn-panel a[href]:hover {
   border-bottom-width: 1px;
 }
+
 .dfn-panel > b + b {
   margin-top: 0.25em;
 }
+
 .dfn-panel ul {
   padding: 0;
 }
+
 .dfn-panel li {
   list-style: inside;
 }
+
 .dfn-panel.minimized {
   display: inline-block;
   position: fixed;
