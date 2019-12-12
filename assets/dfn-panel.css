@@ -4,6 +4,8 @@ dfn {
 }
 .dfn-panel {
   position: absolute;
+  left: var(--left); /* set via JS */
+  top: var(--top); /* set via JS */
   z-index: 35;
   height: auto;
   width: max-content;

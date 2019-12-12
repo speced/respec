@@ -29,8 +29,6 @@ export async function run() {
       }
       case "minimize": {
         panel.classList.add("minimized");
-        panel.style.left = null;
-        panel.style.top = null;
         break;
       }
       case "hide": {
@@ -151,7 +149,8 @@ function displayPanel(dfn, panel) {
     }
   }
 
-  Object.assign(panel.style, { left: `${left}px`, top: `${top}px` });
+  panel.style.setProperty("--left", `${left}px`);
+  panel.style.setProperty("--top", `${top}px`);
 }
 
 async function loadStyle() {
