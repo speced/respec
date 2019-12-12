@@ -14,17 +14,18 @@ export async function run() {
     document.querySelector("link")
   );
 
+  let panel = document.getElementById("dfn-panel");
   document.body.addEventListener("click", event => {
     /** @type {HTMLElement} */
     const el = event.target;
-    const panel = document.getElementById("dfn-panel");
 
     const action = deriveAction(el);
     switch (action) {
       case "show": {
         if (panel) panel.remove();
         const dfn = el.closest("dfn");
-        displayPanel(dfn, createPanel(dfn));
+        panel = createPanel(dfn);
+        displayPanel(dfn, panel);
         break;
       }
       case "minimize": {
