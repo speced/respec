@@ -1491,21 +1491,10 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(idl2.title).toContain("Optional dictionary");
   });
   it("checks that webidl is processed same as idl", async () => {
-    const body = `
-      <section>
-        <pre class="webidl">
-          dictionary Test {};
-        </pre>
-      </section>
-    `;
-    const ops = makeStandardOps(null, body);
-    const doc = await makeRSDoc(ops);
-    const idl = doc.getElementsByClassName("webidl");
-
-    let i = 0;
-    for (i = 0; i < idl.length; i++) {
-      expect(idl[i].classList).toContain("respec-offending-element");
-      expect(idl[i].title).toContain("Exposed");
-    }
+    const target = doc.getElementById("dict-webidl");
+    let text = "dictionary Test {};";
+    expect(target.textContent).toBe(text);
+    expect(target.querySelectorAll(".idlDictionary").length).toBe(1);
+    expect(target.querySelector(".idlID").textContent).toBe("Test");
   });
 });
