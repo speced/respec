@@ -66,6 +66,6 @@ dfn {
   top: unset;
   bottom: 2em;
   margin: 0 auto;
-  max-width: calc(100vw - 1.5em - 0.4em - 0.5em);
+  max-width: calc(100vw - 2.5em);
   max-height: 30vh;
 }
