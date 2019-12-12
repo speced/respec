@@ -14,7 +14,8 @@ export async function run() {
     document.querySelector("link")
   );
 
-  let panel = document.getElementById("dfn-panel");
+  /** @type {HTMLElement} */
+  let panel;
   document.body.addEventListener("click", event => {
     /** @type {HTMLElement} */
     const el = event.target;
