@@ -4,97 +4,98 @@ import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 describe("Core — dfnPanel", () => {
   afterAll(flushIframes);
 
-  let doc;
-  beforeAll(async () => {
-    const body = `
+  const body = `
+    <section>
+      <h2>top level heading</h2>
+      <p><dfn>many</dfn>, <dfn>one</dfn>, <dfn>zero</dfn> references.</p>
+      <p>[=many=] [=many=] [=one=]</p>
       <section>
-        <h2>top level heading</h2>
-        <p><dfn>many</dfn>, <dfn>one</dfn>, <dfn>zero</dfn> references.</p>
-        <p>[=many=] [=many=] [=one=]</p>
-        <section>
-          <h3>nested section heading</h3>
-          <p>[=many=] [=many=]</p>
-        </section>
-        <p>[= many =]</p>
+        <h3>nested section heading</h3>
+        <p>[=many=] [=many=]</p>
       </section>
-    `;
-    const ops = makeStandardOps(null, body);
-    doc = await makeRSDoc(ops);
-  });
+      <p>[= many =]</p>
+    </section>
+  `;
+  const ops = makeStandardOps(null, body);
 
-  beforeEach(() => {
-    const panel = doc.getElementById("dfn-panel");
-    if (panel) panel.remove();
-  });
+  describe("dfnPanel state", () => {
+    it("opens panel on dfn click", async () => {
+      const doc = await makeRSDoc(ops);
+      expect(doc.getElementById("dfn-panel")).toBeNull();
+      const dfn = doc.querySelector("dfn");
+      dfn.click();
+      const panel = doc.getElementById("dfn-panel");
+      expect(panel).not.toBeNull();
+      expect(panel.classList.contains("minimized")).not.toBe(true);
+    });
 
-  it("opens panel on dfn click", async () => {
-    expect(doc.getElementById("dfn-panel")).toBeNull();
-    const dfn = doc.querySelector("dfn");
-    dfn.click();
-    const panel = doc.getElementById("dfn-panel");
-    expect(panel).not.toBeNull();
-    expect(panel.classList.contains("minimized")).not.toBe(true);
-  });
+    it("closes open panel on external click", async () => {
+      const doc = await makeRSDoc(ops);
+      doc.querySelector("dfn").click();
+      let panel = doc.getElementById("dfn-panel");
+      expect(panel).not.toBeNull();
+      doc.body.click();
+      panel = doc.getElementById("dfn-panel");
+      expect(panel).toBeNull();
+    });
 
-  it("closes open panel on external click", async () => {
-    doc.querySelector("dfn").click();
-    let panel = doc.getElementById("dfn-panel");
-    expect(panel).not.toBeNull();
-    doc.body.click();
-    panel = doc.getElementById("dfn-panel");
-    expect(panel).toBeNull();
-  });
+    it("closes open panel on self link click", async () => {
+      const doc = await makeRSDoc(ops);
+      doc.querySelector("dfn").click();
+      const panel = doc.getElementById("dfn-panel");
+      expect(panel).not.toBeNull();
+      panel.querySelector("a.self-link").click();
+      expect(doc.getElementById("dfn-panel")).toBeNull();
+    });
 
-  it("closes open panel on self link click", async () => {
-    doc.querySelector("dfn").click();
-    const panel = doc.getElementById("dfn-panel");
-    expect(panel).not.toBeNull();
-    panel.querySelector("a.self-link").click();
-    expect(doc.getElementById("dfn-panel")).toBeNull();
-  });
+    it("does not close panel on panel click", async () => {
+      const doc = await makeRSDoc(ops);
+      doc.querySelector("dfn").click();
+      const panel = doc.getElementById("dfn-panel");
 
-  it("does not close panel on panel click", async () => {
-    doc.querySelector("dfn").click();
-    const panel = doc.getElementById("dfn-panel");
+      panel.click();
+      expect(doc.getElementById("dfn-panel")).toBe(panel);
+    });
 
-    panel.click();
-    expect(doc.getElementById("dfn-panel")).toBe(panel);
-  });
+    it("minimizes open panel on reference click", async () => {
+      const doc = await makeRSDoc(ops);
+      doc.querySelector("dfn").click();
+      const panel = doc.getElementById("dfn-panel");
+      expect(panel.classList.contains("minimized")).toBe(false);
+      panel.querySelector("ul a").click();
+      expect(panel.classList.contains("minimized")).toBe(true);
+    });
 
-  it("minimizes open panel on reference click", async () => {
-    doc.querySelector("dfn").click();
-    const panel = doc.getElementById("dfn-panel");
-    expect(panel.classList.contains("minimized")).toBe(false);
-    panel.querySelector("ul a").click();
-    expect(panel.classList.contains("minimized")).toBe(true);
-  });
+    it("closes minimized panel on panel click", async () => {
+      const doc = await makeRSDoc(ops);
+      doc.querySelector("dfn").click();
+      const panel = doc.getElementById("dfn-panel");
+      panel.querySelector("ul a").click();
+      expect(panel.classList.contains("minimized")).toBe(true);
 
-  it("closes minimized panel on panel click", async () => {
-    doc.querySelector("dfn").click();
-    const panel = doc.getElementById("dfn-panel");
-    panel.querySelector("ul a").click();
-    expect(panel.classList.contains("minimized")).toBe(true);
+      panel.click();
+      expect(doc.getElementById("dfn-panel")).toBeNull();
+    });
 
-    panel.click();
-    expect(doc.getElementById("dfn-panel")).toBeNull();
-  });
+    it("opens a new panel if another dfn is clicked", async () => {
+      const doc = await makeRSDoc(ops);
+      expect(doc.getElementById("dfn-panel")).toBeNull();
+      const [dfnMany, dfnOne] = doc.querySelectorAll("dfn");
 
-  it("opens a new panel if another dfn is clicked", async () => {
-    expect(doc.getElementById("dfn-panel")).toBeNull();
-    const [dfnMany, dfnOne] = doc.querySelectorAll("dfn");
+      dfnMany.click();
+      let panel = doc.getElementById("dfn-panel");
+      expect(panel.querySelector("a.self-link").hash).toBe("#dfn-many");
 
-    dfnMany.click();
-    let panel = doc.getElementById("dfn-panel");
-    expect(panel.querySelector("a.self-link").hash).toBe("#dfn-many");
-
-    dfnOne.click();
-    expect(doc.querySelectorAll(".dfn-panel").length).toBe(1);
-    expect(doc.getElementById("dfn-panel")).not.toBe(panel);
-    panel = doc.getElementById("dfn-panel");
-    expect(panel.querySelector("a.self-link").hash).toBe("#dfn-one");
+      dfnOne.click();
+      expect(doc.querySelectorAll(".dfn-panel").length).toBe(1);
+      expect(doc.getElementById("dfn-panel")).not.toBe(panel);
+      panel = doc.getElementById("dfn-panel");
+      expect(panel.querySelector("a.self-link").hash).toBe("#dfn-one");
+    });
   });
 
   it("renders only self link to dfn if no local references", async () => {
+    const doc = await makeRSDoc(ops);
     const dfnZero = doc.querySelector("dfn#dfn-zero");
     dfnZero.click();
     const panel = doc.getElementById("dfn-panel");
@@ -106,6 +107,7 @@ describe("Core — dfnPanel", () => {
   });
 
   it("renders reference with relevant title", async () => {
+    const doc = await makeRSDoc(ops);
     const dfnOne = doc.querySelector("dfn#dfn-one");
     dfnOne.click();
     const panel = doc.getElementById("dfn-panel");
@@ -127,6 +129,7 @@ describe("Core — dfnPanel", () => {
   });
 
   it("renders multiple references with relevant titles", async () => {
+    const doc = await makeRSDoc(ops);
     const dfnMany = doc.querySelector("dfn#dfn-many");
     dfnMany.click();
     const panel = doc.getElementById("dfn-panel");
