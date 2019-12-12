@@ -22,7 +22,6 @@ export async function run() {
     const panel = document.getElementById("dfn-panel");
 
     const action = parseAction(el);
-    console.log({ action });
     switch (action) {
       case "SHOW": {
         if (panel) panel.remove();
