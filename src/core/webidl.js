@@ -352,10 +352,10 @@ async function loadStyle() {
 
 export async function run() {
   const idls = document.querySelectorAll("pre.idl, pre.webidl");
-  if (
-    !document.querySelector(".idl:not(pre)") || 
-    !document.querySelector(".webidl:not(pre)")
-  ) {
+  if (!idls.length) {
+    return;
+  }
+  if (!document.querySelector(".idl:not(pre), .webidl:not(pre)")) {
     const link = document.querySelector("head link");
     if (link) {
       const style = document.createElement("style");
