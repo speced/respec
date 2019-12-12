@@ -341,7 +341,6 @@ function renderWebIDL(idlElement, index) {
 }
 
 const cssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/webidl.css")).default;
@@ -351,11 +350,16 @@ async function loadStyle() {
 }
 
 export async function run() {
-  const idls = document.querySelectorAll("pre.idl");
-  if (!idls.length) {
+  let idls;
+  const idls1 = document.querySelectorAll("pre.idl");
+  const idls2 = document.querySelectorAll("pre.webidl");
+
+  if (!idls1.length && !idls2.length) {
     return;
   }
-  if (!document.querySelector(".idl:not(pre)")) {
+  idls = (idls1.length || idls2.length) ? idls1 : idls2;
+
+  if (!document.querySelector(".idl:not(pre)") || !document.querySelector(".webidl:not(pre)")) {
     const link = document.querySelector("head link");
     if (link) {
       const style = document.createElement("style");
