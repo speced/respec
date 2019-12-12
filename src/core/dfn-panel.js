@@ -126,7 +126,7 @@ function referencesToHTML(id, links) {
 function getReferenceTitle(link) {
   const section = link.closest("section");
   if (!section) return null;
-  const heading = section.querySelector("h1, h2, h3, h4, h5");
+  const heading = section.querySelector("h1, h2, h3, h4, h5, h6");
   if (!heading) return null;
   return norm(heading.textContent);
 }
