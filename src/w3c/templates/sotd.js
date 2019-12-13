@@ -330,7 +330,7 @@ function linkToWorkingGroup(conf) {
   }
   return html`
     <p>
-      This document was published by ${[conf.wgHTML]} as ${conf.anOrA}
+      This document was published by ${conf.wgHTML} as ${conf.anOrA}
       ${conf.longStatus}.
       ${conf.notYetRec
         ? "This document is intended to become a W3C Recommendation."

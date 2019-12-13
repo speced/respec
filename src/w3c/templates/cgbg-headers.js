@@ -64,7 +64,7 @@ export default conf => {
         ${conf.bugTrackerHTML
           ? html`
               <dt>${conf.l10n.bug_tracker}</dt>
-              <dd>${[conf.bugTrackerHTML]}</dd>
+              <dd>${conf.bugTrackerHTML}</dd>
             `
           : ""}
         ${conf.prevVersion
