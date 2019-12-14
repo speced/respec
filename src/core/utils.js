@@ -463,7 +463,7 @@ export function flatten(collector, item) {
 /**
  * Separates each item with proper commas and "and".
  * @param {string[]} array
- * @param {(str: string) => object} mapper
+ * @param {(str: any) => object} mapper
  */
 export function htmlJoinAnd(array, mapper = item => item) {
   const items = array.map(mapper);
