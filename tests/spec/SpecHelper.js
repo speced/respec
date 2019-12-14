@@ -67,7 +67,9 @@ function decorateDocument(doc, opts) {
     const { profile } = opts;
     const loader = doc.createElement("script");
     loader.classList.add("remove");
-    loader.src = `/base/builds/respec-${profile}.js`;
+    loader.src = window.USE_BUNDLED_PROFILE
+      ? `/base/builds/respec-${profile}.js`
+      : `/base/profiles/${profile}.js`;
     doc.head.appendChild(loader);
   }
 

@@ -46,6 +46,10 @@ module.exports = function(config) {
         included: false,
       },
       {
+        pattern: "profiles/**/*.*",
+        included: false,
+      },
+      {
         pattern: "node_modules/idb/**/*.js",
         included: false,
       },
@@ -97,6 +101,7 @@ module.exports = function(config) {
       "/assets/": "/base/assets/",
       "/js/": "/base/js/",
       "/src/": "/base/src/",
+      "/profiles/": "/base/profiles/",
       "/node_modules/": "/base/node_modules/",
       "/builds/": "/base/builds/",
       "/tests/": "/base/tests/",
@@ -164,6 +169,11 @@ module.exports = function(config) {
       args: ["--grep", config.grep || ""],
     },
   };
+
+  if (process.env.GITHUB_WORKFLOW) {
+    options.files.unshift("tests/use_bundled_profile.js");
+  }
+
   if (process.env.TRAVIS) {
     process.env.CHROME_BIN = require("puppeteer").executablePath();
     options.autoWatch = false;
