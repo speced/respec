@@ -19,10 +19,6 @@ export default [
     ...template
   },
   {
-    input: "js/deps/marked.js",
-    ...template
-  },
-  {
     input: "js/deps/pluralize.js",
     ...template
   }

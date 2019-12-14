@@ -4,7 +4,7 @@
 import * as _idb from "../../node_modules/idb/build/esm/index.js";
 import * as _webidl2 from "../../node_modules/webidl2/index.js";
 import _hyperHTML from "../../node_modules/hyperhtml/esm.js";
-import _marked from "../../js/deps/builds/marked.js";
+import _marked from "../../node_modules/marked/lib/marked.esm.js";
 import _pluralize from "../../js/deps/builds/pluralize.js";
 
 /** @type {import("idb")} */

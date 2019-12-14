@@ -54,6 +54,10 @@ module.exports = function(config) {
         included: false,
       },
       {
+        pattern: "node_modules/marked/**/*.js",
+        included: false,
+      },
+      {
         pattern: "node_modules/webidl2/**/*.js",
         included: false,
       },
