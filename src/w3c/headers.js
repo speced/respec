@@ -421,12 +421,10 @@ export function run(conf) {
     conf.alternateFormats && conf.alternateFormats.length > 1;
   conf.alternatesHTML =
     conf.alternateFormats &&
-    joinAnd(conf.alternateFormats, alt => {
-      let optional =
-        alt.hasOwnProperty("lang") && alt.lang ? ` hreflang='${alt.lang}'` : "";
-      optional +=
-        alt.hasOwnProperty("type") && alt.type ? ` type='${alt.type}'` : "";
-      return `<a rel='alternate' href='${alt.uri}'${optional}>${alt.label}</a>`;
+    htmlJoinAnd(conf.alternateFormats, alt => {
+      const lang = alt.hasOwnProperty("lang") && alt.lang ? alt.lang : null;
+      const type = alt.hasOwnProperty("type") && alt.type ? alt.type : null;
+      return hyperHTML`<a rel='alternate' href='${alt.uri}' hreflang='${lang}' type='${type}'>${alt.label}</a>`;
     });
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
