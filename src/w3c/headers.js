@@ -89,7 +89,7 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", (default) the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import { ISODate, concatDate, htmlJoinAnd, joinAnd } from "../core/utils.js";
+import { ISODate, concatDate, htmlJoinAnd } from "../core/utils.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
