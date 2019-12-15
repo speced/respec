@@ -86,7 +86,7 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", (default) the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import { ISODate, concatDate, htmlJoinAnd, joinAnd } from "../core/utils.js";
+import { ISODate, concatDate, htmlJoinAnd } from "../core/utils.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
@@ -523,15 +523,14 @@ export function run(conf) {
     const pats = [];
     for (let i = 0, n = conf.wg.length; i < n; i++) {
       pats.push(
-        `a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>` +
-          `public list of any patent disclosures (${conf.wg[i]})</a>`
+        hyperHTML`a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>public list of any patent disclosures (${conf.wg[i]})</a>`
       );
     }
-    conf.wgPatentHTML = joinAnd(pats);
+    conf.wgPatentHTML = htmlJoinAnd(pats);
   } else {
     conf.multipleWGs = false;
     if (conf.wg) {
-      conf.wgHTML = `the <a href='${conf.wgURI}'>${conf.wg}</a>`;
+      conf.wgHTML = hyperHTML`the <a href='${conf.wgURI}'>${conf.wg}</a>`;
     }
   }
   if (conf.specStatus === "PR" && !conf.crEnd) {
