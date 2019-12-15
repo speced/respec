@@ -224,11 +224,11 @@ function renderDeliverer(conf) {
         ? html`
             ${multipleWGs
               ? html`
-                  W3C maintains ${wgPatentHTML}
+                  W3C maintains ${[wgPatentHTML]}
                 `
               : html`
                   W3C maintains a
-                  <a href="${wgPatentURI}" rel="disclosure"
+                  <a href="${[wgPatentURI]}" rel="disclosure"
                     >public list of any patent disclosures</a
                   >
                 `}
