@@ -182,6 +182,7 @@ export function run(conf) {
   document.normalize();
   if (!document.querySelector("section#conformance")) {
     // make the document informative
+    // throw an error like "Conformance not found"
     document.body.classList.add("informative");
   }
   conf.normativeReferences = new InsensitiveStringSet();
