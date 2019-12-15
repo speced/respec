@@ -39,9 +39,6 @@
 //          - each logo element must specifiy either src or alt
 //  - testSuiteURI: the URI to the test suite, if any
 //  - implementationReportURI: the URI to the implementation report, if any
-//  - bugTracker: and object with the following details
-//      - open: pointer to the list of open bugs
-//      - new: pointer to where to raise new bugs
 //  - noRecTrack: set to true if this document is not intended to be on the Recommendation track
 //  - edDraftURI: the URI of the Editor's Draft for this document, if any. Required if
 //      specStatus is set to "ED".
@@ -429,15 +426,6 @@ export function run(conf) {
       const type = alt.hasOwnProperty("type") && alt.type ? alt.type : null;
       return hyperHTML`<a rel='alternate' href='${alt.uri}' hreflang='${lang}' type='${type}'>${alt.label}</a>`;
     });
-  if (conf.bugTracker) {
-    if (conf.bugTracker.new && conf.bugTracker.open) {
-      conf.bugTrackerHTML = hyperHTML`<a href='${conf.bugTracker.new}'>${conf.l10n.file_a_bug}</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${conf.l10n.open_bugs}</a>${conf.l10n.close_parens}`;
-    } else if (conf.bugTracker.open) {
-      conf.bugTrackerHTML = hyperHTML`<a href='${conf.bugTracker.open}'>open bugs</a>`;
-    } else if (conf.bugTracker.new) {
-      conf.bugTrackerHTML = hyperHTML`<a href='${conf.bugTracker.new}'>file a bug</a>`;
-    }
-  }
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
   conf.longStatus = status2long[conf.specStatus];
