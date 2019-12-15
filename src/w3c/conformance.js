@@ -55,6 +55,8 @@ export function run(conf) {
   const conformance = document.querySelector("section#conformance");
   if (conformance) {
     processConformance(conformance, conf);
+  } else {
+    document.body.classList.add("Informative");
   }
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793
