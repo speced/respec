@@ -228,7 +228,7 @@ function renderDeliverer(conf) {
                 `
               : html`
                   W3C maintains a
-                  <a href="${[wgPatentURI]}" rel="disclosure"
+                  <a href="${wgPatentURI}" rel="disclosure"
                     >public list of any patent disclosures</a
                   >
                 `}
