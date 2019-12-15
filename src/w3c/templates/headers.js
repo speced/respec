@@ -107,12 +107,6 @@ export default conf => {
               </dd>
             `
           : ""}
-        ${conf.bugTrackerHTML
-          ? html`
-              <dt>${conf.l10n.bug_tracker}</dt>
-              <dd>${[conf.bugTrackerHTML]}</dd>
-            `
-          : ""}
         ${conf.isED && conf.prevED
           ? html`
               <dt>Previous editor's draft:</dt>
