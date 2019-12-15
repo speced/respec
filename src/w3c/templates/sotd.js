@@ -224,7 +224,7 @@ function renderDeliverer(conf) {
         ? html`
             ${multipleWGs
               ? html`
-                  W3C maintains ${[wgPatentHTML]}
+                  W3C maintains ${wgPatentHTML}
                 `
               : html`
                   W3C maintains a
