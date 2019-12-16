@@ -55,14 +55,6 @@ export function run(conf) {
   const conformance = document.querySelector("section#conformance");
   if (conformance) {
     processConformance(conformance, conf);
-    if (document.body.classList.contains("informative")) {
-      // case when both section#conformance and .informative is present
-      // to be dealt with
-    }
-  } else {
-    if (!document.body.classList.contains("informative")) {
-      pub("Informative class not found!", name);
-    }
   }
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793
