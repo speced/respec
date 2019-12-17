@@ -1,6 +1,6 @@
 // @ts-check
-import { hyperHTML as html } from "../../core/import-maps.js";
 import { lang as defaultLang } from "../../core/l10n.js";
+import { hyperHTML as html } from "../../core/import-maps.js";
 import { norm } from "../../core/utils.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
