@@ -171,6 +171,22 @@ l10n["zh-cn"] = l10n.zh;
 
 export const lang = html && html.lang in l10n ? html.lang : "en";
 
+/**
+ * @typedef {Record<string, Record<string, string|Function>>} LanguageData
+ * @type {<T extends LanguageData>(obj: T) => T[keyof T]}
+ */
+export function getIntlData(languageData) {
+  // Proxy return type is a known bug:
+  // https://github.com/Microsoft/TypeScript/issues/20846
+  // @ts-ignore
+  return new Proxy(languageData, {
+    /** @param {string} key */
+    get(data, key) {
+      return data[lang][key] || data.en[key] || key;
+    },
+  });
+}
+
 export function run(config) {
   config.l10n = l10n[lang] || l10n.en;
 }

@@ -5,7 +5,7 @@
 // Generates a Table of Figures wherever there is a #tof element.
 
 import { addId, renameElement, showInlineWarning, wrapInner } from "./utils.js";
-import { lang as defaultLang } from "../core/l10n.js";
+import { getIntlData } from "../core/l10n.js";
 import { hyperHTML } from "./import-maps.js";
 
 export const name = "core/figures";
@@ -37,9 +37,7 @@ const localizationStrings = {
   },
 };
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
+const l10n = getIntlData(localizationStrings);
 
 export function run() {
   normalizeImages(document);
