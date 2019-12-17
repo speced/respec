@@ -71,11 +71,8 @@ function createPanel(dfn) {
   const panel = hyperHTML`
     <aside class="dfn-panel" id="dfn-panel">
       <b><a class="self-link" href="${href}">Permalink</a></b>
-      ${
-        links.length
-          ? hyperHTML`<b>Referenced in:</b>${referencesToHTML(id, links)}`
-          : null
-      }
+      <b>Referenced in:</b>
+      ${referencesToHTML(id, links)}
     </aside>
   `;
   return document.body.appendChild(panel);
@@ -87,6 +84,10 @@ function createPanel(dfn) {
  * @returns {HTMLUListElement}
  */
 function referencesToHTML(id, links) {
+  if (!links.length) {
+    return hyperHTML`<ul><li>Not referenced in this document.</li></ul>`;
+  }
+
   /** @type {Map<string, string[]>} */
   const titleToIDs = new Map();
   links.forEach((link, i) => {

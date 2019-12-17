@@ -102,7 +102,12 @@ describe("Core — dfnPanel", () => {
 
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-zero");
-    expect(panel.textContent.trim()).toBe("Permalink");
+
+    const referenceSection = panel.querySelector("ul");
+    expect(referenceSection).not.toBeNull();
+    expect(referenceSection.textContent.trim()).toBe(
+      "Not referenced in this document."
+    );
   });
 
   it("renders reference with relevant title", async () => {
