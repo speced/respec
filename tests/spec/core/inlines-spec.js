@@ -39,6 +39,7 @@ describe("Core - Inlines", () => {
     expect(links.length).toBe(8);
     expect(links[0].textContent).toBe("RFC2119");
     expect(links[0].getAttribute("href")).toBe("#bib-rfc2119");
+    expect(links[0].dataset.linkType).toBe("biblio");
     expect(links[1].textContent).toBe("RFC8174");
     expect(links[1].getAttribute("href")).toBe("#bib-rfc8174");
     expect(links[2].textContent).toBe("dom");
@@ -234,10 +235,10 @@ describe("Core - Inlines", () => {
           [= \`link\` element =] and [= some \`Coded\` thing =]
         </p>
         <p id="multiline">
-        [=environment 
+        [=environment
             settings
-          object / 
-          responsible 
+          object /
+          responsible
           document =]
         </p>
       </section>
