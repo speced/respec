@@ -30,12 +30,8 @@ dfn {
   display: block;
 }
 
-.dfn-panel a[href] {
+.dfn-panel ul a[href] {
   color: black;
-}
-
-.dfn-panel a[href].self-link {
-  display: inline-block;
 }
 
 .dfn-panel a:not(:hover) {

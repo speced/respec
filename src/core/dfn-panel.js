@@ -70,7 +70,7 @@ function createPanel(dfn) {
   /** @type {HTMLElement} */
   const panel = hyperHTML`
     <aside class="dfn-panel" id="dfn-panel">
-      <b><a class="self-link" href="${href}">${href}</a></b>
+      <b><a class="self-link" href="${href}">Permalink</a></b>
       ${
         links.length
           ? hyperHTML`<b>Referenced in:</b>${referencesToHTML(id, links)}`

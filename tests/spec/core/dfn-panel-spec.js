@@ -102,8 +102,7 @@ describe("Core — dfnPanel", () => {
 
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-zero");
-    expect(selfLink.textContent).toBe("#dfn-zero");
-    expect(panel.textContent.trim()).toBe("#dfn-zero");
+    expect(panel.textContent.trim()).toBe("Permalink");
   });
 
   it("renders reference with relevant title", async () => {
@@ -114,7 +113,6 @@ describe("Core — dfnPanel", () => {
 
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-one");
-    expect(selfLink.textContent).toBe("#dfn-one");
 
     const referenceHeading = panel.querySelectorAll("b")[1];
     expect(referenceHeading.textContent).toBe("Referenced in:");
@@ -136,7 +134,6 @@ describe("Core — dfnPanel", () => {
 
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-many");
-    expect(selfLink.textContent).toBe("#dfn-many");
 
     const referenceHeading = panel.querySelectorAll("b")[1];
     expect(referenceHeading.textContent).toBe("Referenced in:");
