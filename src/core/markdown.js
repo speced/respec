@@ -249,8 +249,12 @@ function enableBlockLevelMarkdown(element, selector) {
   const elements = element.querySelectorAll(selector);
   for (const element of elements) {
     // Double newlines are needed to be parsed as Markdown
-    if (!element.innerHTML.match(/^\n\s*\n/)) {
+    const { innerHTML } = element;
+    if (!innerHTML.match(/^\n\s*\n/)) {
       element.prepend("\n\n");
+    }
+    if (!innerHTML.match(/\n\s*\n$/)) {
+      element.append("\n\n");
     }
   }
 }
