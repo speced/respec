@@ -1,9 +1,34 @@
 // @ts-check
+import { lang as defaultLang } from "../../core/l10n.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
+
+const localizationStrings = {
+  en: {
+    sotd: "Status of This Document",
+  },
+  ko: {
+    sotd: "현재 문서의 상태",
+  },
+  zh: {
+    sotd: "关于本文档",
+  },
+  ja: {
+    sotd: "この文書の位置付け",
+  },
+  nl: {
+    sotd: "Status van dit document",
+  },
+  es: {
+    sotd: "Estado de este Document",
+  },
+};
+
+const lang = defaultLang in localizationStrings ? defaultLang : "en";
+const l10n = localizationStrings[lang];
 
 export default (conf, opts) => {
   return html`
-    <h2>${conf.l10n.sotd}</h2>
+    <h2>${l10n.sotd}</h2>
     ${conf.isPreview ? renderPreview(conf) : ""}
     ${conf.isUnofficial
       ? renderIsUnofficial(opts)
