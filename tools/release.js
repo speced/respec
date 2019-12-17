@@ -387,12 +387,12 @@ const run = async () => {
     await git("checkout develop");
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
-    await git("push origin develop");
-    await git("push origin gh-pages");
-    await git("push --tags");
+    // await git("push origin develop");
+    // await git("push origin gh-pages");
+    // await git("push --tags");
     indicators.get("push-to-server").hide();
     console.log(colors.info(" Publishing to npm... 📡"));
-    await npm("publish", { showOutput: true });
+    await npm("publish --dry-run", { showOutput: true });
     // publishing generates a new build, which we don't want
     // on develop branch
     await git("checkout builds");
