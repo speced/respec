@@ -234,10 +234,10 @@ describe("Core - Inlines", () => {
           [= \`link\` element =] and [= some \`Coded\` thing =]
         </p>
         <p id="multiline">
-        [=environment 
+        [=environment
             settings
-          object / 
-          responsible 
+          object /
+          responsible
           document =]
         </p>
       </section>
@@ -434,5 +434,20 @@ describe("Core - Inlines", () => {
     expect(doc.querySelector("#link5 a").hash).toBe(
       "#dom-referrerpolicy-no-referrer"
     );
+  });
+
+  it("checks data-link-type of inline citations", async () => {
+    const body = `
+      <section>
+        <cite>
+          <a class="bibref" href="{{ href }}" data-link-type="biblio" id="biblio-link">
+            {{ key }}
+          </a>
+        </cite>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    expect(doc.getElementById("biblio-link").textContent).toBe("key");
+    expect(doc.getElementById("biblio-link").dataLinkType).toBe("biblio");
   });
 });
