@@ -424,9 +424,9 @@ describe("Core - Markdown", () => {
     it("parses indented <pre> after a list", async () => {
       const idl = `dictionary Indented {\n  any shouldBeIndented();\n};`;
       const body = `
-        <section>
+        <div>
         1. I lack double newlines between HTML block
-        </section>
+        </div>
         <pre class="idl" id="pre">
         dictionary Indented {
           any shouldBeIndented();

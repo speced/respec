@@ -49,7 +49,6 @@ export const name = "core/markdown";
 
 const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
-const endsWithSpace = /\s+$/gm;
 
 const inlineElems = new Set([
   "a",
@@ -194,10 +193,7 @@ function normalizePadding(text) {
   }
   const wrap = document.createElement("body");
   wrap.append(doc);
-  const result = endsWithSpace.test(wrap.innerHTML)
-    ? `${wrap.innerHTML.trimRight()}\n`
-    : wrap.innerHTML;
-  return result;
+  return wrap.innerHTML;
 }
 
 /**
