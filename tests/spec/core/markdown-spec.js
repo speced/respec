@@ -360,6 +360,7 @@ describe("Core - Markdown", () => {
       expect(text3.innerHTML).toBe(`test3 text "<code>inner text</code>".`);
     });
   });
+
   describe("data-format=markdown", () => {
     it("replaces processes data-format=markdown sections, but leaves other sections alone", async () => {
       const body = `
@@ -393,6 +394,7 @@ describe("Core - Markdown", () => {
       expect(dontChange).toBe("## this should not change");
     });
   });
+
   describe("Whitespace compatibility", () => {
     it("normalises whitespace, but ignore white with pre tags", async () => {
       const str = `   trim start\n    * trim 3 from start \n\n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
@@ -415,6 +417,27 @@ describe("Core - Markdown", () => {
       expect(preText[0]).toBe("trim 1");
       expect(preText[1]).toBe("   if(x){");
       expect(preText[2]).toBe("     party()");
+    });
+  });
+
+  describe("Markdown-inside-block backward compatibility", () => {
+    it("parses indented <pre> after a list", async () => {
+      const idl = `dictionary Indented {\n  any shouldBeIndented();\n};`;
+      const body = `
+        <div>
+        1. I lack double newlines between HTML block
+        </div>
+        <pre class="idl" id="pre">
+        dictionary Indented {
+          any shouldBeIndented();
+        };
+        </pre>
+      `;
+      const ops = makeStandardOps({ format: "markdown" }, body);
+      const doc = await makeRSDoc(ops);
+      const pre = doc.getElementById("pre");
+
+      expect(pre.textContent).toBe(idl);
     });
   });
 });
