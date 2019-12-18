@@ -9,11 +9,11 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { lang as defaultLang } from "./l10n.js";
+import { getIntlData } from "./l10n.js";
 import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 import { showInlineWarning } from "./utils.js";
-const l10n = {
+const localizationStrings = {
   en: {
     missing_test_suite_uri:
       "Found tests in your spec, but missing '" +
@@ -23,9 +23,9 @@ const l10n = {
   },
 };
 
-export const name = "core/data-tests";
+const l10n = getIntlData(localizationStrings);
 
-const lang = defaultLang in l10n ? defaultLang : "en";
+export const name = "core/data-tests";
 
 function toListItem(href) {
   const emojiList = [];
@@ -82,7 +82,7 @@ export function run(conf) {
     return;
   }
   if (!conf.testSuiteURI) {
-    pub("error", l10n[lang].missing_test_suite_uri);
+    pub("error", l10n.missing_test_suite_uri);
     return;
   }
 
@@ -105,7 +105,7 @@ function toTestURLs(tests, testSuiteURI) {
       try {
         return new URL(test, testSuiteURI).href;
       } catch {
-        pub("warn", `${l10n[lang].bad_uri}: ${test}`);
+        pub("warn", `Bad URI: ${test}`);
       }
     })
     .filter(href => href);

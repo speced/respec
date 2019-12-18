@@ -11,7 +11,7 @@
 //  - maxTocLevel: only generate a TOC so many levels deep
 
 import { addId, children, parents, renameElement } from "./utils.js";
-import { lang as defaultLang } from "../core/l10n.js";
+import { getIntlData } from "../core/l10n.js";
 import { hyperHTML } from "./import-maps.js";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
@@ -32,9 +32,7 @@ const localizationStrings = {
   },
 };
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
+const l10n = getIntlData(localizationStrings);
 
 /**
  * @typedef {object} SectionInfo
