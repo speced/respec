@@ -152,9 +152,7 @@ function displayPanel(dfn, panel) {
     }
   }
 
-  // We're using CSS variables instead of setting style.left explicitly as we
-  // only need to set them for "show" state (and not unset them for "minimized"
-  // state). "minimized" state can indepently set their own position in CSS.
+  // "minimized" state can independently set its own position in CSS.
   panel.style.setProperty("--left", `${left}px`);
   panel.style.setProperty("--top", `${top}px`);
 }
