@@ -26,7 +26,7 @@ describe("Core — dfnPanel", () => {
       dfn.click();
       const panel = doc.getElementById("dfn-panel");
       expect(panel).not.toBeNull();
-      expect(panel.classList).not.toContain("minimized")
+      expect(panel.classList).not.toContain("minimized");
     });
 
     it("closes open panel on external click", async () => {
