@@ -175,11 +175,11 @@ export const lang = html && html.lang in l10n ? html.lang : "en";
  * @typedef {Record<string, Record<string, string|Function>>} LanguageData
  * @type {<T extends LanguageData>(obj: T) => T[keyof T]}
  */
-export function getIntlData(languageData) {
+export function getIntlData(localizationStrings) {
   // Proxy return type is a known bug:
   // https://github.com/Microsoft/TypeScript/issues/20846
   // @ts-ignore
-  return new Proxy(languageData, {
+  return new Proxy(localizationStrings, {
     /** @param {string} key */
     get(data, key) {
       const result = data[lang][key] || data.en[key];
