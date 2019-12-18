@@ -172,10 +172,7 @@ l10n["zh-cn"] = l10n.zh;
 export const lang = html && html.lang in l10n ? html.lang : "en";
 
 /**
- * @typedef {Record<string, Record<string, string|Function>>} LocalizationStrings
- */
-/**
- * @template {LocalizationStrings} T
+ * @template {Record<string, Record<string, string|Function>>} T
  * @param {T} localizationStrings
  * @returns {T[keyof T]}
  */
