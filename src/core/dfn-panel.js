@@ -99,11 +99,11 @@ function referencesToHTML(id, links) {
   });
 
   /**
-   * Takes an "entry" from `titleToIDs`, and converts it to a list that is
-   * easier to render in `listItemToHTML`. The first list item contains title
-   * from `getReferenceTitle`, rest of items contain strings like `(2)`, `(3)`
-   * as title.
-   * @param {[string, string[]]} entry
+   * Returns a list that is easier to render in `listItemToHTML`.
+   * @param {[string, string[]]} entry an entry from `titleToIDs`
+   * @returns {{ title: string, id: string }[]} The first list item contains
+   * title from `getReferenceTitle`, rest of items contain strings like `(2)`,
+   * `(3)` as title.
    */
   const toLinkProps = ([title, ids]) => {
     return [{ title, id: ids[0] }].concat(
