@@ -4,7 +4,7 @@
 
 import { addId } from "./utils.js";
 import { biblio } from "./biblio.js";
-import { lang as defaultLang } from "../core/l10n.js";
+import { getIntlData } from "../core/l10n.js";
 import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -28,9 +28,7 @@ const localizationStrings = {
   },
 };
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
+const l10n = getIntlData(localizationStrings);
 
 const REF_STATUSES = new Map([
   ["CR", "W3C Candidate Recommendation"],

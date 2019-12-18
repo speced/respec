@@ -10,12 +10,13 @@ import {
   wrapInner,
 } from "./utils.js";
 import { run as addExternalReferences } from "./xref.js";
-import { lang as defaultLang } from "./l10n.js";
 import { definitionMap } from "./dfn-map.js";
+import { getIntlData } from "./l10n.js";
 import { linkInlineCitations } from "./data-cite.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
-const l10n = {
+
+const localizationStrings = {
   en: {
     /**
      * @param {string} title
@@ -26,7 +27,7 @@ const l10n = {
     duplicateTitle: "This is defined more than once in the document.",
   },
 };
-const lang = defaultLang in l10n ? defaultLang : "en";
+const l10n = getIntlData(localizationStrings);
 
 class CaseInsensitiveMap extends Map {
   /**
@@ -107,8 +108,8 @@ function mapTitleToDfns() {
     if (duplicates.length > 0) {
       showInlineError(
         duplicates,
-        l10n[lang].duplicateMsg(title),
-        l10n[lang].duplicateTitle
+        l10n.duplicateMsg(title),
+        l10n.duplicateTitle
       );
     }
   });
