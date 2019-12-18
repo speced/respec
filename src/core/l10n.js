@@ -182,7 +182,11 @@ export function getIntlData(languageData) {
   return new Proxy(languageData, {
     /** @param {string} key */
     get(data, key) {
-      return data[lang][key] || data.en[key] || key;
+      const result = data[lang][key] || data.en[key];
+      if (!result) {
+        throw new Error(`No l10n data for key: "${key}"`);
+      }
+      return result;
     },
   });
 }
