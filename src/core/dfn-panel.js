@@ -148,11 +148,11 @@ function displayPanel(dfn, panel) {
     left = dfnRect.left - (panelWidth + 5);
     if (left < 0) {
       left = dfnRect.left;
-      top = top + dfnRect.height;
+      top += dfnRect.height;
     }
   }
 
-  // "docked" state can independently set its own position in CSS.
+  // Allows ".docked" rule to override the position, unlike `style.left = left`.
   panel.style.setProperty("--left", `${left}px`);
   panel.style.setProperty("--top", `${top}px`);
 }
