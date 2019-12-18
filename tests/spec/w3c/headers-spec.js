@@ -2,10 +2,10 @@
 
 import {
   flushIframes,
+  makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
-  makeBasicConfig,
 } from "../SpecHelper.js";
 
 const findContent = string => {
