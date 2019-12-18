@@ -53,7 +53,7 @@ dfn {
   list-style: inside;
 }
 
-.dfn-panel.minimized {
+.dfn-panel.docked {
   display: inline-block;
   position: fixed;
   left: 0.5em;

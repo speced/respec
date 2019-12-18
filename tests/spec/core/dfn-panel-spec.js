@@ -26,7 +26,7 @@ describe("Core — dfnPanel", () => {
       dfn.click();
       const panel = doc.getElementById("dfn-panel");
       expect(panel).not.toBeNull();
-      expect(panel.classList).not.toContain("minimized");
+      expect(panel.classList).not.toContain("docked");
     });
 
     it("closes open panel on external click", async () => {
@@ -57,21 +57,21 @@ describe("Core — dfnPanel", () => {
       expect(doc.getElementById("dfn-panel")).toBe(panel);
     });
 
-    it("minimizes open panel on reference click", async () => {
+    it("docks open panel on reference click", async () => {
       const doc = await makeRSDoc(ops);
       doc.querySelector("dfn").click();
       const panel = doc.getElementById("dfn-panel");
-      expect(panel.classList).not.toContain("minimized");
+      expect(panel.classList).not.toContain("docked");
       panel.querySelector("ul a").click();
-      expect(panel.classList).toContain("minimized");
+      expect(panel.classList).toContain("docked");
     });
 
-    it("closes minimized panel on panel click", async () => {
+    it("closes docked panel on panel click", async () => {
       const doc = await makeRSDoc(ops);
       doc.querySelector("dfn").click();
       const panel = doc.getElementById("dfn-panel");
       panel.querySelector("ul a").click();
-      expect(panel.classList).toContain("minimized");
+      expect(panel.classList).toContain("docked");
 
       panel.click();
       expect(doc.getElementById("dfn-panel")).toBeNull();

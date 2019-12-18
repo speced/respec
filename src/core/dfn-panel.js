@@ -29,8 +29,8 @@ export async function run() {
         displayPanel(dfn, panel);
         break;
       }
-      case "minimize": {
-        panel.classList.add("minimized");
+      case "dock": {
+        panel.classList.add("docked");
         break;
       }
       case "hide": {
@@ -50,10 +50,10 @@ function deriveAction(clickTarget) {
   if (clickTarget.closest("#dfn-panel")) {
     if (hitALink) {
       const clickedSelfLink = clickTarget.classList.contains("self-link");
-      return clickedSelfLink ? "hide" : "minimize";
+      return clickedSelfLink ? "hide" : "dock";
     }
     const panel = clickTarget.closest("#dfn-panel");
-    return panel.classList.contains("minimized") ? "hide" : null;
+    return panel.classList.contains("docked") ? "hide" : null;
   }
   if (document.getElementById("dfn-panel")) {
     return "hide";
@@ -152,7 +152,7 @@ function displayPanel(dfn, panel) {
     }
   }
 
-  // "minimized" state can independently set its own position in CSS.
+  // "docked" state can independently set its own position in CSS.
   panel.style.setProperty("--left", `${left}px`);
   panel.style.setProperty("--top", `${top}px`);
 }
