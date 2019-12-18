@@ -311,16 +311,6 @@ function addDataCite(elem, query, result, conf) {
   const dataset = { cite, citePath, citeFrag, type };
   Object.assign(elem.dataset, dataset);
 
-  // update indirect links (data-lt, data-plurals)
-  /** @type {NodeListOf<HTMLElement>} */
-  const indirectLinks = document.querySelectorAll(
-    `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`
-  );
-  indirectLinks.forEach(el => {
-    el.removeAttribute("data-xref");
-    Object.assign(el.dataset, dataset);
-  });
-
   addToReferences(elem, cite, normative, term, conf);
 }
 

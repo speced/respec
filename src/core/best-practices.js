@@ -4,7 +4,7 @@
 // The summary is generated if there is a section in the document with ID bp-summary.
 // Best practices are marked up with span.practicelab.
 import { addId, makeSafeCopy } from "./utils.js";
-import { lang as defaultLang } from "../core/l10n.js";
+import { lang as defaultLang, getIntlData } from "../core/l10n.js";
 import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -15,12 +15,12 @@ const localizationStrings = {
     best_practice: "Best Practice ",
   },
 };
+const l10n = getIntlData(localizationStrings);
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 export function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const bps = document.querySelectorAll(".practicelab");
-  const l10n = localizationStrings[lang];
   const bpSummary = document.getElementById("bp-summary");
   const summaryItems = bpSummary ? document.createElement("ul") : null;
   [...bps].forEach((bp, num) => {

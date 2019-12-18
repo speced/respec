@@ -1,7 +1,7 @@
 // @ts-check
 // Module core/informative
 // Mark specific sections as informative, based on CSS
-import { lang as defaultLang } from "../core/l10n.js";
+import { getIntlData } from "../core/l10n.js";
 import { hyperHTML } from "./import-maps.js";
 
 export const name = "core/informative";
@@ -15,9 +15,7 @@ const localizationStrings = {
   },
 };
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
+const l10n = getIntlData(localizationStrings);
 
 export function run() {
   Array.from(document.querySelectorAll("section.informative"))
