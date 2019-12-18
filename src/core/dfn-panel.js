@@ -75,7 +75,7 @@ function createPanel(dfn) {
       ${referencesToHTML(id, links)}
     </aside>
   `;
-  return document.body.appendChild(panel);
+  return panel;
 }
 
 /**
@@ -137,6 +137,8 @@ function getReferenceTitle(link) {
  * @param {HTMLElement} panel
  */
 function displayPanel(dfn, panel) {
+  document.body.appendChild(panel);
+
   const dfnRect = dfn.getBoundingClientRect();
   const panelRect = panel.getBoundingClientRect();
   const panelWidth = panelRect.right - panelRect.left;
