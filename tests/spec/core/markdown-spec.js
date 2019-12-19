@@ -311,6 +311,25 @@ describe("Core - Markdown", () => {
     ).toBeTruthy();
   });
 
+  it("properly indents <pre> contents with no block indentation", async () => {
+    const idl = `function getAnswer() {\n  return 42;\n}`;
+    const body = `
+# test
+
+\`\`\` js
+function getAnswer() {
+  return 42;
+}
+\`\`\`
+    `;
+
+    const ops = makeStandardOps({ format: "markdown" }, body);
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelector("pre");
+
+    expect(pre.textContent).toBe(idl);
+  });
+
   describe("nolinks options", () => {
     it("automatically links URLs in pre when missing (smoke test)", async () => {
       const body = `
