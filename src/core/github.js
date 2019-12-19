@@ -5,7 +5,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { lang as defaultLang } from "../core/l10n.js";
+import { getIntlData } from "../core/l10n.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github";
 
@@ -37,8 +37,7 @@ const localizationStrings = {
     participate: "Participe",
   },
 };
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-const l10n = localizationStrings[lang];
+const l10n = getIntlData(localizationStrings);
 
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
