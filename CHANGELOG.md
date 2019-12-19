@@ -1,5 +1,163 @@
 # Change Log
 
+## [v24.38.1](https://github.com/w3c/respec/tree/v24.38.1) (2019-12-18)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.38.0...v24.38.1)
+
+**Fixed bugs:**
+
+- Release script generates profiles with older version number [\#2647](https://github.com/w3c/respec/issues/2647)
+
+**Merged pull requests:**
+
+- chore\(tools/release\): update package version before build [\#2648](https://github.com/w3c/respec/pull/2648) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.38.0](https://github.com/w3c/respec/tree/v24.38.0) (2019-12-18)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.37.1...v24.38.0)
+
+**Implemented enhancements:**
+
+- Allow "webidl" css class on pre tags to denote a WebIDL block [\#2614](https://github.com/w3c/respec/issues/2614)
+
+**Closed issues:**
+
+- Remove conf.bugTracker support [\#2632](https://github.com/w3c/respec/issues/2632)
+- Remove unused utils functions [\#2557](https://github.com/w3c/respec/issues/2557)
+- Fix alert icon styling [\#2531](https://github.com/w3c/respec/issues/2531)
+- Biblio links should have a `data-link-type="biblio"` [\#2492](https://github.com/w3c/respec/issues/2492)
+- Best practices should use .advicement class [\#2133](https://github.com/w3c/respec/issues/2133)
+- Steal WHATWG/HTML's dfn popup thing [\#1103](https://github.com/w3c/respec/issues/1103)
+
+**Merged pull requests:**
+
+- fix\(core/l10n\): fallback to 'en' for missing l10n keys [\#2646](https://github.com/w3c/respec/pull/2646) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/markdown\): indent idl correctly after a list [\#2643](https://github.com/w3c/respec/pull/2643) ([saschanaz](https://github.com/saschanaz))
+- enhancement\(core/inlines\): add `data-link-type="biblio"` to inline citations [\#2642](https://github.com/w3c/respec/pull/2642) ([ridhishjain](https://github.com/ridhishjain))
+- refactor\(core/markdown\): drop paragraph removal [\#2641](https://github.com/w3c/respec/pull/2641) ([saschanaz](https://github.com/saschanaz))
+- chore\(.github\): point OpenCollective in Sponsors [\#2639](https://github.com/w3c/respec/pull/2639) ([saschanaz](https://github.com/saschanaz))
+- chore\(package.json\): update deps [\#2637](https://github.com/w3c/respec/pull/2637) ([saschanaz](https://github.com/saschanaz))
+- chore\(w3c/headers\): remove conf.bugTracker support [\#2635](https://github.com/w3c/respec/pull/2635) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
+- refactor\(src/import-maps\): use marked es module [\#2633](https://github.com/w3c/respec/pull/2633) ([saschanaz](https://github.com/saschanaz))
+- refactor\(w3c/headers\): replace joinAnd with htmlJoinAnd [\#2631](https://github.com/w3c/respec/pull/2631) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
+- perf\(core/xref\): remove unused slow code [\#2630](https://github.com/w3c/respec/pull/2630) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(w3c/headers\): use htmlJoinAnd for wg\[Patent\]HTML [\#2629](https://github.com/w3c/respec/pull/2629) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
+- Update marked to the latest version 🚀 [\#2628](https://github.com/w3c/respec/pull/2628) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- Fixes: \#2614 \(Allow "webidl" css class on pre tags to denote a WebIDL block\) [\#2627](https://github.com/w3c/respec/pull/2627) ([ridhishjain](https://github.com/ridhishjain))
+- feat\(core/dfn-panel\): add panel with local dfn references [\#2626](https://github.com/w3c/respec/pull/2626) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(w3c/conformance\): use htmlJoinAnd [\#2623](https://github.com/w3c/respec/pull/2623) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
+- refactor\(core/utils\): remove unused utils functions [\#2622](https://github.com/w3c/respec/pull/2622) ([ridhishjain](https://github.com/ridhishjain))
+- refactor\(core/utils\): add `htmlJoinAnd` utility [\#2613](https://github.com/w3c/respec/pull/2613) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
+
+## [v24.37.1](https://github.com/w3c/respec/tree/v24.37.1) (2019-12-10)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.37.0...v24.37.1)
+
+**Fixed bugs:**
+
+- Logos for custom profile layout issue [\#1181](https://github.com/w3c/respec/issues/1181)
+
+**Closed issues:**
+
+- GitHub issue label is breaks into lines [\#2606](https://github.com/w3c/respec/issues/2606)
+
+**Merged pull requests:**
+
+- fix\(assets/issues-notes.css\): prevent word break in issue label [\#2617](https://github.com/w3c/respec/pull/2617) ([ridhishjain](https://github.com/ridhishjain))
+- refactor\(core/markdown\): parse blocks in native way [\#2615](https://github.com/w3c/respec/pull/2615) ([saschanaz](https://github.com/saschanaz))
+
+## [v24.37.0](https://github.com/w3c/respec/tree/v24.37.0) (2019-12-10)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.36.0...v24.37.0)
+
+**Implemented enhancements:**
+
+- Add support for `data-local-lt` [\#2566](https://github.com/w3c/respec/issues/2566)
+
+**Closed issues:**
+
+- Treat webIDL language tag as case insensitive in Markdown [\#2596](https://github.com/w3c/respec/issues/2596)
+
+**Merged pull requests:**
+
+- enhancement\(core/dfn\): add support for `data-local-lt` [\#2616](https://github.com/w3c/respec/pull/2616) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.36.0](https://github.com/w3c/respec/tree/v24.36.0) (2019-12-09)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.35.3...v24.36.0)
+
+**Closed issues:**
+
+- Syntax highlighting with markdown backticks doesn't work [\#2607](https://github.com/w3c/respec/issues/2607)
+- hljs with Rust not working [\#2602](https://github.com/w3c/respec/issues/2602)
+- Dev server should undo changes to builds/ [\#2601](https://github.com/w3c/respec/issues/2601)
+- Add support for importing a markdown file [\#2600](https://github.com/w3c/respec/issues/2600)
+- Remove karma-requirejs [\#2552](https://github.com/w3c/respec/issues/2552)
+- Confirm that tests exist in WPT [\#1596](https://github.com/w3c/respec/issues/1596)
+
+**Merged pull requests:**
+
+- chore\(package\): update dependencies [\#2612](https://github.com/w3c/respec/pull/2612) ([saschanaz](https://github.com/saschanaz))
+- fix\(core/markdown\): more forgiving WebIDL language tag [\#2611](https://github.com/w3c/respec/pull/2611) ([janiceshiu](https://github.com/janiceshiu))
+- fix\(core/markdown\): syntax highlight in fenced blocks [\#2608](https://github.com/w3c/respec/pull/2608) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(tools/dev-server\): cleanup builds directory on exit [\#2604](https://github.com/w3c/respec/pull/2604) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor: prefer inline HTML over bind\(\) [\#2599](https://github.com/w3c/respec/pull/2599) ([saschanaz](https://github.com/saschanaz))
+- refactor: remove requirejs dependency [\#2598](https://github.com/w3c/respec/pull/2598) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/github\): provide a more flexible apiBase [\#2594](https://github.com/w3c/respec/pull/2594) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(linter-rules/tests-exist\): confirm that tests exist in WPT [\#2593](https://github.com/w3c/respec/pull/2593) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.35.3](https://github.com/w3c/respec/tree/v24.35.3) (2019-12-03)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.35.2...v24.35.3)
+
+**Closed issues:**
+
+- markdown: Support backticks for webidl [\#1217](https://github.com/w3c/respec/issues/1217)
+
+**Merged pull requests:**
+
+- refactor\(core/data-tests\): refactor into smaller functions [\#2592](https://github.com/w3c/respec/pull/2592) ([sidvishnoi](https://github.com/sidvishnoi))
+- enhancement\(core/markdown\): support backticks for webidl [\#2591](https://github.com/w3c/respec/pull/2591) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.35.2](https://github.com/w3c/respec/tree/v24.35.2) (2019-11-27)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.35.1...v24.35.2)
+
+**Implemented enhancements:**
+
+- Smarter caching by making use of rate limit info [\#1615](https://github.com/w3c/respec/issues/1615)
+- Add "cite-summary" section magic [\#1051](https://github.com/w3c/respec/issues/1051)
+
+**Closed issues:**
+
+- Citation export in JSON-LD does not honour aliases [\#2586](https://github.com/w3c/respec/issues/2586)
+- Link to GitHub commits wrong [\#2582](https://github.com/w3c/respec/issues/2582)
+- Use rollup dev server or watcher [\#2559](https://github.com/w3c/respec/issues/2559)
+- Use GitHub v4 API [\#1519](https://github.com/w3c/respec/issues/1519)
+- Test suite linter should check if test files exist [\#1381](https://github.com/w3c/respec/issues/1381)
+
+**Merged pull requests:**
+
+- chore\(tools/dev-server\): run tests on test file change [\#2590](https://github.com/w3c/respec/pull/2590) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore: move profiles to own folder [\#2589](https://github.com/w3c/respec/pull/2589) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(dev\): improve dev mode [\#2588](https://github.com/w3c/respec/pull/2588) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/seo\): Resolve aliases for JSON-LD bibliography export [\#2587](https://github.com/w3c/respec/pull/2587) ([wetneb](https://github.com/wetneb))
+
+## [v24.35.1](https://github.com/w3c/respec/tree/v24.35.1) (2019-11-25)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.35.0...v24.35.1)
+
+**Closed issues:**
+
+- Improve citation export in JSON-LD output [\#2584](https://github.com/w3c/respec/issues/2584)
+- Support for COinS standard [\#2570](https://github.com/w3c/respec/issues/2570)
+
+**Merged pull requests:**
+
+- feat\(w3c/seo\): Improve JSON-LD export of citations [\#2585](https://github.com/w3c/respec/pull/2585) ([wetneb](https://github.com/wetneb))
+- Add conformance section to starter.html. [\#2583](https://github.com/w3c/respec/pull/2583) ([wetneb](https://github.com/wetneb))
+- chore\(CHANGELOG\): regenerate [\#2581](https://github.com/w3c/respec/pull/2581) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v24.35.0](https://github.com/w3c/respec/tree/v24.35.0) (2019-11-21)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v24.34.8...v24.35.0)
