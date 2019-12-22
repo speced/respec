@@ -4,6 +4,7 @@
  *
  * Core linter module. Exports a linter object.
  */
+import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 import { showInlineWarning } from "./utils.js";
 export const name = "core/linter";
@@ -64,7 +65,7 @@ async function toLinterWarning(resultPromise) {
     occurrences,
     offendingElements,
   } = output;
-  const message = `Linter (${name}): ${description} ${howToFix} ${help}`;
+  const message = hyperHTML`Linter (${name}): ${description} ${howToFix} ${help}`;
   if (offendingElements.length) {
     showInlineWarning(offendingElements, `${message} Occured`);
   } else {

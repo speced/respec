@@ -1,6 +1,7 @@
 // @ts-check
 // expands empty anchors based on their context
 import { makeSafeCopy, norm, showInlineError } from "./utils.js";
+import { hyperHTML } from "./import-maps.js";
 
 export const name = "core/anchor-expander";
 
@@ -15,8 +16,8 @@ export function run() {
     const matchingElement = document.getElementById(id);
     if (!matchingElement) {
       a.textContent = a.getAttribute("href");
-      const msg = `Couldn't expand inline reference. The id "${id}" is not in the document.`;
-      showInlineError(a, msg, `No matching id in document: ${id}.`);
+      const msg = hyperHTML`Couldn't expand inline reference. The id "${id}" is not in the document.`;
+      showInlineError(a, msg, hyperHTML`No matching id in document: ${id}.`);
       continue;
     }
     switch (matchingElement.localName) {
@@ -45,7 +46,7 @@ export function run() {
       default: {
         a.textContent = a.getAttribute("href");
         const msg = "ReSpec doesn't support expanding this kind of reference.";
-        showInlineError(a, msg, `Can't expand "#${id}".`);
+        showInlineError(a, msg, hyperHTML`Can't expand "#${id}".`);
       }
     }
     localize(matchingElement, a);
@@ -57,7 +58,7 @@ function processBox(matchingElement, id, a) {
   const selfLink = matchingElement.querySelector(".marker .self-link");
   if (!selfLink) {
     a.textContent = a.getAttribute("href");
-    const msg = `Found matching element "${id}", but it has no title or marker.`;
+    const msg = hyperHTML`Found matching element "${id}", but it has no title or marker.`;
     showInlineError(a, msg, "Missing title.");
     return;
   }
@@ -70,7 +71,7 @@ function processFigure(matchingElement, id, a) {
   const figcaption = matchingElement.querySelector("figcaption");
   if (!figcaption) {
     a.textContent = a.getAttribute("href");
-    const msg = `Found matching figure "${id}", but figure is lacking a \`<figcaption>\`.`;
+    const msg = hyperHTML`Found matching figure "${id}", but figure is lacking a \`<figcaption>\`.`;
     showInlineError(a, msg, "Missing figcaption in referenced figure.");
     return;
   }
@@ -94,7 +95,7 @@ function processSection(matchingElement, id, a) {
     a.textContent = a.getAttribute("href");
     const msg =
       "Found matching section, but the section was lacking a heading element.";
-    showInlineError(a, msg, `No matching id in document: "${id}".`);
+    showInlineError(a, msg, hyperHTML`No matching id in document: "${id}".`);
     return;
   }
   processHeading(heading, a);

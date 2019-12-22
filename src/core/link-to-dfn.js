@@ -12,6 +12,7 @@ import {
 import { run as addExternalReferences } from "./xref.js";
 import { definitionMap } from "./dfn-map.js";
 import { getIntlData } from "./l10n.js";
+import { hyperHTML } from "./import-maps.js";
 import { linkInlineCitations } from "./data-cite.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
@@ -22,7 +23,7 @@ const localizationStrings = {
      * @param {string} title
      */
     duplicateMsg(title) {
-      return `Duplicate definition(s) of '${title}'`;
+      return hyperHTML`Duplicate definition(s) of '${title}'`;
     },
     duplicateTitle: "This is defined more than once in the document.",
   },

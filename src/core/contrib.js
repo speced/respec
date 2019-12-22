@@ -51,7 +51,7 @@ async function showContributors(editors, apiURL) {
       const res = await fetchAndCache(url);
       if (!res.ok) {
         throw new Error(
-          `Request to ${url} failed with status code ${res.status}`
+          hyperHTML`Request to ${url} failed with status code ${res.status}`
         );
       }
       /** @type {Contributor[]} */

@@ -4,6 +4,7 @@
 import "./include-config.js";
 import "./override-configuration.js";
 import "./respec-ready.js";
+import { hyperHTML } from "./import-maps.js";
 import { done as postProcessDone } from "./post-process.js";
 import { done as preProcessDone } from "./pre-process.js";
 import { pub } from "./pubsubhub.js";
@@ -21,12 +22,12 @@ function toRunnable(plug) {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       const timerId = setTimeout(() => {
-        const msg = `Plugin ${name} took too long.`;
+        const msg = hyperHTML`Plugin ${name} took too long.`;
         console.error(msg, plug);
         reject(new Error(msg));
       }, 15000);
       if (canMeasure) {
-        performance.mark(`${name}-start`);
+        performance.mark(hyperHTML`${name}-start`);
       }
       try {
         if (plug.run.length <= 1) {
@@ -44,8 +45,12 @@ function toRunnable(plug) {
         clearTimeout(timerId);
       }
       if (canMeasure) {
-        performance.mark(`${name}-end`);
-        performance.measure(name, `${name}-start`, `${name}-end`);
+        performance.mark(hyperHTML`${name}-end`);
+        performance.measure(
+          name,
+          hyperHTML`${name}-start`,
+          hyperHTML`${name}-end`
+        );
       }
     });
   };
@@ -54,7 +59,7 @@ function toRunnable(plug) {
 export async function runAll(plugs) {
   pub("start-all", respecConfig);
   if (canMeasure) {
-    performance.mark(`${name}-start`);
+    performance.mark(hyperHTML`${name}-start`);
   }
   await preProcessDone;
   const runnables = plugs.filter(plug => plug && plug.run).map(toRunnable);
@@ -70,7 +75,7 @@ export async function runAll(plugs) {
   pub("end-all", respecConfig);
   removeReSpec(document);
   if (canMeasure) {
-    performance.mark(`${name}-end`);
-    performance.measure(name, `${name}-start`, `${name}-end`);
+    performance.mark(hyperHTML`${name}-end`);
+    performance.measure(name, hyperHTML`${name}-start`, hyperHTML`${name}-end`);
   }
 }
