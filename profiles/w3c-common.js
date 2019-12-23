@@ -29,7 +29,6 @@ const modules = [
   import("../src/core/pluralize.js"),
   import("../src/core/examples.js"),
   import("../src/core/issues-notes.js"),
-  import("../src/core/requirements.js"),
   import("../src/core/best-practices.js"),
   import("../src/core/figures.js"),
   import("../src/core/webidl.js"),
