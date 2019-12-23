@@ -6,12 +6,7 @@
 //     When a requirement is found, it is reported using the "req" event. This
 //     can be used by a containing shell to extract them.
 //     Requirements are automatically numbered.
-//
-// 2.  It allows referencing requirements by their ID simply using an empty <a>
-//     element with its href pointing to the requirement it should be referencing
-//     and a class of "reqRef".
 import { hyperHTML } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
 
 export const name = "core/requirements";
 
@@ -20,21 +15,5 @@ export function run() {
     const frag = `#${req.getAttribute("id")}`;
     const el = hyperHTML`<a href="${frag}">Req. ${i + 1}</a>`;
     req.prepend(el, ": ");
-  });
-
-  document.querySelectorAll("a.reqRef[href]").forEach(ref => {
-    const href = ref.getAttribute("href");
-    const id = href.substring(1); // href looks like `#id`
-    const req = document.getElementById(id);
-    let txt;
-    if (req) {
-      txt = req.querySelector("a:first-child").textContent;
-    } else {
-      txt = `Req. not found '${id}'`;
-      const msg = `Requirement not found in element \`a.reqRef\`: ${id}`;
-      pub("error", msg);
-      console.warn(msg, ref);
-    }
-    ref.textContent = txt;
   });
 }
