@@ -1,5 +1,5 @@
 // @ts-check
-import { lang as defaultLang } from "../../core/l10n.js";
+import { getIntlData } from "../../core/l10n.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
 
 const localizationStrings = {
@@ -23,8 +23,7 @@ const localizationStrings = {
   },
 };
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-const l10n = localizationStrings[lang];
+const l10n = getIntlData(localizationStrings);
 
 export default (conf, opts) => {
   return html`

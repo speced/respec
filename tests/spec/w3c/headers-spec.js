@@ -1591,11 +1591,9 @@ describe("W3C — Headers", () => {
         lang: "es",
       },
       body: `
-        <section class="">
-          <h2>
-            State of the document
-          </h2>
-        </section>
+        <h2>
+          State of the document
+        </h2>
         <section id="sotd"></section>
       `,
     };
