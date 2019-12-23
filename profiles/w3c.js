@@ -8,7 +8,6 @@ const modules = [
   // order is significant
   import("../src/core/base-runner.js"),
   import("../src/core/ui.js"),
-  import("../src/core/reindent.js"),
   import("../src/core/location-hash.js"),
   import("../src/core/l10n.js"),
   import("../src/w3c/defaults.js"),
@@ -18,6 +17,7 @@ const modules = [
   import("../src/core/github.js"),
   import("../src/core/data-include.js"),
   import("../src/core/markdown.js"),
+  import("../src/core/reindent.js"),
   import("../src/w3c/headers.js"),
   import("../src/w3c/abstract.js"),
   import("../src/core/data-transform.js"),
