@@ -123,7 +123,7 @@ function createWarnButton(butName, arr, title) {
     ["expanded", "false"],
     ["haspopup", "true"],
     ["controls", `respec-pill-${butName}-modal`],
-    ["label", `Document ${title.toLowerCase()}`],
+    ["label", `${arr.length} ${title}`],
   ]);
   ariaDecorate(button, ariaMap);
   return button;
@@ -156,10 +156,10 @@ export const ui = {
     return button;
   },
   error(msg) {
-    errWarn(msg, errors, "error", "Errors");
+    errWarn(msg, errors, "error", "ReSpec Errors");
   },
   warning(msg) {
-    errWarn(msg, warnings, "warning", "Warnings");
+    errWarn(msg, warnings, "warning", "ReSpec Warnings");
   },
   closeModal(owner) {
     if (overlay) {
