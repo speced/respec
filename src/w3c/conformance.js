@@ -53,13 +53,11 @@ function processConformance(conformance, conf) {
 
 export function run(conf) {
   const conformance = document.querySelector("section#conformance");
-  const usableConformance =
-    conformance && !conformance.classList.contains("override");
-  if (usableConformance) {
+  if (conformance && !conformance.classList.contains("override")) {
     processConformance(conformance, conf);
   }
   // Warn when there are RFC2119/RFC8174 keywords, but not conformance section
-  if (!usableConformance && Object.keys(rfc2119Usage).length) {
+  if (!conformance && Object.keys(rfc2119Usage).length) {
     pub(
       "warn",
       "Document uses RFC2119 keywords but lacks a conformance section. " +
