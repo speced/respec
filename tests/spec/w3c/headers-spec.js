@@ -1306,28 +1306,21 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("statusOverride", () => {
-    it("allows status paragraph to be overridden", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        overrideStatus: true,
-        wg: "WGNAME",
-        wgURI: "WGURI",
-        wgPatentURI: "WGPATENT",
-        wgPublicList: "WGLIST",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      const sotd = doc.getElementById("sotd");
-      expect(contains(sotd, "p", "CUSTOM PARAGRAPH").length).toBe(1);
-      expect(contains(sotd, "a", "WGNAME").length).toBe(0);
-      expect(contains(sotd, "a", "WGLIST@w3.org").length).toBe(0);
-      expect(contains(sotd, "a", "subscribe").length).toBe(0);
-      expect(contains(sotd, "a", "disclosures")[0].getAttribute("href")).toBe(
-        "WGPATENT"
-      );
-    });
+  it("allows sotd section to be completely overridden", async () => {
+    const body = `
+      <section id="sotd" class="override">
+        <h2>Override</h2>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const sotd = doc.getElementById("sotd");
+    expect(sotd).toBeTruthy();
+    expect(sotd.firstElementChild.localName).toBe("h2");
+    expect(sotd.firstElementChild.textContent).toBe("Override");
+    expect(sotd.firstElementChild).toBe(sotd.lastElementChild);
   });
+
   it("allows custom sections and custom content, not just paragraphs", async () => {
     const ops = makeStandardOps();
     ops.body = `
