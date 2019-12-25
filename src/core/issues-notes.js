@@ -12,8 +12,8 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, joinAnd, parents } from "./utils.js";
-import { lang as defaultLang } from "../core/l10n.js";
 import { fetchAsset } from "./text-loader.js";
+import { getIntlData } from "../core/l10n.js";
 import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -44,9 +44,7 @@ async function loadStyle() {
   }
 }
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
+const l10n = getIntlData(localizationStrings);
 
 /**
  * @typedef {object} Report

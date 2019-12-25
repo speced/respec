@@ -7,8 +7,8 @@
 // be used by a containing shell to extract all examples.
 
 import { addId } from "./utils.js";
-import { lang as defaultLang } from "../core/l10n.js";
 import { fetchAsset } from "./text-loader.js";
+import { getIntlData } from "../core/l10n.js";
 import { hyperHTML as html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -26,9 +26,7 @@ const localizationStrings = {
   },
 };
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-
-const l10n = localizationStrings[lang];
+const l10n = getIntlData(localizationStrings);
 
 const cssPromise = loadStyle();
 
