@@ -9,10 +9,10 @@
 //      - save to GitHub
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
-
 import { fetchAsset } from "./text-loader.js";
 import { hyperHTML } from "./import-maps.js";
 import { markdownToHtml } from "./markdown.js";
+import { pluralize } from "./import-maps.js";
 import shortcut from "../../js/shortcut.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
@@ -96,7 +96,8 @@ function errWarn(msg, arr, butName, title) {
   }
   const button = buttons[butName];
   button.textContent = arr.length;
-  const ariaMap = new Map([["label", `${arr.length} ${title}`]]);
+  const label = arr.length === 1 ? pluralize.singular(title) : title;
+  const ariaMap = new Map([["label", `${arr.length} ${label}`]]);
   ariaDecorate(button, ariaMap);
 }
 
@@ -126,7 +127,6 @@ function createWarnButton(butName, arr, title) {
     ["expanded", "false"],
     ["haspopup", "true"],
     ["controls", `respec-pill-${butName}-modal`],
-    ["label", `${arr.length} ${title}`],
   ]);
   ariaDecorate(button, ariaMap);
   return button;

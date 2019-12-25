@@ -68,8 +68,6 @@ describe("Core - UI", () => {
     expect(button.getAttribute("aria-label")).toBe("2 ReSpec Warnings");
   });
 
-  it("incrementally adds warnings", () => {});
-
   describe("ui/dfn-list", () => {
     it("shows a list of definitions and links them", async () => {
       const body = "<p><dfn>bar()</dfn> <dfn>foo</dfn></p>";
