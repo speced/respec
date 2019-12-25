@@ -1,6 +1,4 @@
 // @ts-check
-/* jshint forin: false */
-
 // Module w3c/headers
 // Generate the headers material based on the provided configuration.
 // CONFIGURATION
@@ -36,7 +34,7 @@
 //          - width: optional width of the logo (<img width=>)
 //          - url: the URI to the organization represented by the logo (target of <a href=>)
 //          - id: optional id for the logo, permits custom CSS (wraps logo in <span id=>)
-//          - each logo element must specifiy either src or alt
+//          - each logo element must specify either src or alt
 //  - testSuiteURI: the URI to the test suite, if any
 //  - implementationReportURI: the URI to the implementation report, if any
 //  - noRecTrack: set to true if this document is not intended to be on the Recommendation track
@@ -582,8 +580,9 @@ export function run(conf) {
       "IG-NOTEs must link to charter's disclosure section using `charterDisclosureURI`."
     );
   }
-
-  hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
+  if (!sotd.classList.contains("override")) {
+    hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
+  }
 
   if (!conf.implementationReportURI && conf.isCR) {
     pub(
