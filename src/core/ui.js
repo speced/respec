@@ -94,7 +94,10 @@ function errWarn(msg, arr, butName, title) {
     buttons[butName] = createWarnButton(butName, arr, title);
     respecUI.appendChild(buttons[butName]);
   }
-  buttons[butName].textContent = arr.length;
+  const button = buttons[butName];
+  button.textContent = arr.length;
+  const ariaMap = new Map([["label", `${arr.length} ${title}`]]);
+  ariaDecorate(button, ariaMap);
 }
 
 function createWarnButton(butName, arr, title) {
