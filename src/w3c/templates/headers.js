@@ -1,5 +1,5 @@
 // @ts-check
-import { lang as defaultLang } from "../../core/l10n.js";
+import { getIntlData } from "../../core/l10n.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
 import { norm } from "../../core/utils.js";
 import { pub } from "../../core/pubsubhub.js";
@@ -72,8 +72,7 @@ const localizationStrings = {
   },
 };
 
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-const l10n = localizationStrings[lang];
+const l10n = getIntlData(localizationStrings);
 
 function getSpecTitleElem(conf) {
   const specTitleElem =
