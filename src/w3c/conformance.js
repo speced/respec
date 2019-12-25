@@ -14,7 +14,7 @@ export const name = "w3c/conformance";
  */
 function processConformance(conformance, conf) {
   const terms = [...Object.keys(rfc2119Usage)];
-  // Add RFC2119 to blibliography
+  // Add RFC2119 to bibliography
   if (terms.length) {
     conf.normativeReferences.add("RFC2119");
     conf.normativeReferences.add("RFC8174");
@@ -53,8 +53,18 @@ function processConformance(conformance, conf) {
 
 export function run(conf) {
   const conformance = document.querySelector("section#conformance");
-  if (conformance) {
+  const usableConformance =
+    conformance && !conformance.classList.contains("override");
+  if (usableConformance) {
     processConformance(conformance, conf);
+  }
+  // Warn when there are RFC2119/RFC8174 keywords, but not conformance section
+  if (!usableConformance && Object.keys(rfc2119Usage).length) {
+    pub(
+      "warn",
+      "Document uses RFC2119 keywords but lacks a conformance section. " +
+        'Please add a `<section id="conformance">`.'
+    );
   }
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793
