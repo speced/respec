@@ -1600,4 +1600,5 @@ describe("W3C — Headers", () => {
     expect(terms[1].nextElementSibling.localName).toBe("dd");
     expect(terms[2].textContent).toBe("Laatste werkversie:");
     expect(terms[2].nextElementSibling.localName).toBe("dd");
+  });
 });
