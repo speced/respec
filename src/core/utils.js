@@ -495,6 +495,8 @@ export function htmlJoinAnd(array, mapper = item => item) {
 
 /**
  * Creates and sets an ID to an element (elem) by hashing the text content.
+ * https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
+ *
  * @param {HTMLElement} elem element to hash from
  * @param {String} prefix prefix to append to the generated id
  */
