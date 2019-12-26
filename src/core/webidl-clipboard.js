@@ -30,12 +30,15 @@ async function createButton() {
 export async function run() {
   // This button serves a prototype that we clone as needed.
   const copyButton = await copyButtonPromise;
-  for (const pre of document.querySelectorAll("pre.idl")) {
+  for (const idlHeader of document.querySelectorAll("div.idlHeader")) {
     const button = copyButton.cloneNode(true);
+    const { textContent: idlText } = idlHeader
+      .closest("pre")
+      .querySelector("span");
     button.addEventListener("click", () => {
-      clipboardWriteText(pre.textContent);
+      clipboardWriteText(idlText);
     });
-    pre.prepend(button);
+    idlHeader.append(button);
   }
 }
 

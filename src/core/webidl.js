@@ -4,13 +4,15 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import { decorateDfn, findDfn } from "./dfn-finder.js";
 import {
+  addId,
   flatten,
   showInlineError,
   showInlineWarning,
   xmlEscape,
+  wrapInner,
 } from "./utils.js";
+import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { hyperHTML, webidl2 } from "./import-maps.js";
 import { fetchAsset } from "./text-loader.js";
 import { registerDefinition } from "./dfn-map.js";
@@ -315,7 +317,11 @@ function renderWebIDL(idlElement, index) {
   idlElement.classList.add("def", "idl");
   const html = webidl2.write(parse, { templates });
   const render = hyperHTML.bind(idlElement);
-  render`${html}`;
+  const anchor = hyperHTML`<a>WebIDL</a>`;
+  addId(idlElement, "webidl");
+  anchor.href = `#${idlElement.id}`;
+  anchor.classList.add("self-link");
+  render`<div class="idlHeader">${anchor}</div>${html}`;
   idlElement.querySelectorAll("[data-idl]").forEach(elem => {
     if (elem.dataset.dfnFor) {
       return;

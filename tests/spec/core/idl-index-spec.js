@@ -43,7 +43,11 @@ interface Bar {
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
-    expect(idlIndex.querySelector("pre").textContent).toBe(expectedIDL);
+    const pre = idlIndex.querySelector("pre");
+    // idlHeaders are not tested here
+    pre.querySelectorAll(".idlHeader").forEach(elem => elem.remove());
+
+    expect(pre.textContent).toBe(expectedIDL);
     const header = doc.querySelector("#idl-index > h2");
     expect(header).not.toBe(null);
     expect(header.textContent).toBe("1. IDL Index");
@@ -236,7 +240,9 @@ dictionary PromptResponseObject {
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
-    expect(idlIndex.querySelector("pre").textContent).toBe(expectedIDL);
+    const pre = idlIndex.querySelector("pre");
+    pre.querySelector(".idlHeader").remove(); // not tested here
+    expect(pre.textContent).toBe(expectedIDL);
   });
 
   it("allows custom content and header", async () => {
