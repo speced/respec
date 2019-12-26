@@ -114,7 +114,7 @@ export default conf => {
           `
         : ""}
       ${existingCopyright
-        ? [existingCopyright]
+        ? existingCopyright
         : html`
             <p class="copyright">
               <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
