@@ -5,6 +5,10 @@ import showLogo from "./show-logo.js";
 import showPeople from "./show-people.js";
 
 export default conf => {
+  const existingCopyright = document.querySelector(".copyright");
+  if (existingCopyright) {
+    existingCopyright.remove();
+  }
   return html`
     <div class="head">
       ${conf.logos.map(showLogo)}
@@ -109,41 +113,48 @@ export default conf => {
             </p>
           `
         : ""}
-      <p class="copyright">
-        <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
-          >Copyright</a
-        >
-        &copy;
-        ${conf.copyrightStart
-          ? `${conf.copyrightStart}-`
-          : ""}${conf.publishYear}
-        ${conf.additionalCopyrightHolders
-          ? html`
-              ${[conf.additionalCopyrightHolders]} &amp;
-            `
-          : ""}
-        the Contributors to the ${conf.title} Specification, published by the
-        <a href="${conf.wgURI}">${conf.wg}</a> under the
-        ${conf.isCGFinal
-          ? html`
-              <a href="https://www.w3.org/community/about/agreements/fsa/"
-                >W3C Community Final Specification Agreement (FSA)</a
-              >. A human-readable
-              <a href="https://www.w3.org/community/about/agreements/fsa-deed/"
-                >summary</a
+      ${existingCopyright
+        ? existingCopyright
+        : html`
+            <p class="copyright">
+              <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
+                >Copyright</a
               >
-              is available.
-            `
-          : html`
-              <a href="https://www.w3.org/community/about/agreements/cla/"
-                >W3C Community Contributor License Agreement (CLA)</a
-              >. A human-readable
-              <a href="https://www.w3.org/community/about/agreements/cla-deed/"
-                >summary</a
-              >
-              is available.
-            `}
-      </p>
+              &copy;
+              ${conf.copyrightStart
+                ? `${conf.copyrightStart}-`
+                : ""}${conf.publishYear}
+              ${conf.additionalCopyrightHolders
+                ? html`
+                    ${[conf.additionalCopyrightHolders]} &amp;
+                  `
+                : ""}
+              the Contributors to the ${conf.title} Specification, published by
+              the
+              <a href="${conf.wgURI}">${conf.wg}</a> under the
+              ${conf.isCGFinal
+                ? html`
+                    <a href="https://www.w3.org/community/about/agreements/fsa/"
+                      >W3C Community Final Specification Agreement (FSA)</a
+                    >. A human-readable
+                    <a
+                      href="https://www.w3.org/community/about/agreements/fsa-deed/"
+                      >summary</a
+                    >
+                    is available.
+                  `
+                : html`
+                    <a href="https://www.w3.org/community/about/agreements/cla/"
+                      >W3C Community Contributor License Agreement (CLA)</a
+                    >. A human-readable
+                    <a
+                      href="https://www.w3.org/community/about/agreements/cla-deed/"
+                      >summary</a
+                    >
+                    is available.
+                  `}
+            </p>
+          `}
       <hr title="Separator for header" />
     </div>
   `;
