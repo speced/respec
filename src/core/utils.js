@@ -498,7 +498,7 @@ export function htmlJoinAnd(array, mapper = item => item) {
  * Creates and sets an ID to an element (elem) by hashing the text content.
  *
  * @param {HTMLElement} elem element to hash from
- * @param {String} prefix prefix to append to the generated id
+ * @param {String} prefix prefix to prepend to the generated id
  */
 export function addHashId(elem, prefix = "") {
   const text = norm(elem.textContent);
