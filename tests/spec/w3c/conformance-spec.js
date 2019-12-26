@@ -5,6 +5,7 @@ import {
   makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
+  makeStandardOps,
 } from "../SpecHelper.js";
 
 describe("W3C — Conformance", () => {
@@ -61,5 +62,30 @@ describe("W3C — Conformance", () => {
     };
     const doc = await makeRSDoc(ops);
     expect(doc.querySelectorAll("#conformance .rfc2119").length).toBe(0);
+  });
+
+  it("allows conformance section to be completely overridden via .override css class", async () => {
+    const body = `
+      <section>
+        <h2>Plain section</h2>
+        <p>MUST SHOULD MAY.</p>
+      </section>
+      <section id="conformance" class="override">
+        <h2>Overridden heading</h2>
+        <p>Overridden paragraph.</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps({}, body));
+    const conformance = doc.querySelector("#conformance");
+
+    expect(conformance.querySelectorAll(".rfc2119").length).toBe(0);
+    expect(conformance.querySelectorAll("h2").length).toBe(1);
+    expect(conformance.querySelectorAll("p").length).toBe(1);
+    expect(conformance.querySelector("h2").textContent).toContain(
+      "Overridden heading"
+    );
+    expect(conformance.querySelector("p").textContent).toBe(
+      "Overridden paragraph."
+    );
   });
 });
