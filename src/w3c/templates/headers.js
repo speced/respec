@@ -201,6 +201,18 @@ function linkLicense(text, url, cssClass) {
 }
 
 function renderCopyright(conf) {
+  // If there is already a copyright, let's relocate it.
+  const existingCopyright = document.querySelector(".copyright");
+  if (existingCopyright) {
+    existingCopyright.remove();
+    return existingCopyright;
+  }
+  if (conf.hasOwnProperty("overrideCopyright")) {
+    const msg =
+      "The `overrideCopyright` configuration option is deprecated. " +
+      'Please use `<p class="copyright">` instead.';
+    pub("warn", msg);
+  }
   return conf.isUnofficial
     ? conf.additionalCopyrightHolders
       ? html`
