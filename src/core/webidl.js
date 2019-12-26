@@ -5,12 +5,11 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import {
-  addId,
+  addHashId,
   flatten,
   showInlineError,
   showInlineWarning,
   xmlEscape,
-  wrapInner,
 } from "./utils.js";
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { hyperHTML, webidl2 } from "./import-maps.js";
@@ -318,7 +317,7 @@ function renderWebIDL(idlElement, index) {
   const html = webidl2.write(parse, { templates });
   const render = hyperHTML.bind(idlElement);
   const anchor = hyperHTML`<a>WebIDL</a>`;
-  addId(idlElement, "webidl");
+  addHashId(idlElement, "webidl");
   anchor.href = `#${idlElement.id}`;
   anchor.classList.add("self-link");
   render`<div class="idlHeader">${anchor}</div>${html}`;

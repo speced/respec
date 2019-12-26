@@ -8,6 +8,19 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
 const dashes = /-/g;
+/**
+ * Hashes a string from char code.
+ *
+ * @param {String} text
+ */
+function hashString(text) {
+  let hash = 0;
+  for (const char of text) {
+    hash = (hash << 5) - hash + char.charCodeAt(0);
+    hash |= 0; // Convert to 32bit integer
+  }
+  return String(hash);
+}
 
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   timeZone: "UTC",
@@ -478,6 +491,17 @@ export function htmlJoinAnd(array, mapper = item => item) {
       return hyperHTML`${joinedItems}and ${items[items.length - 1]}`;
     }
   }
+}
+
+/**
+ * Creates and sets an ID to an element (elem) by hashing the text content.
+ * @param {HTMLElement} elem element to hash from
+ * @param {String} prefix prefix to append to the generated id
+ */
+export function addHashId(elem, prefix = "") {
+  const text = norm(elem.textContent);
+  const hash = hashString(text);
+  return addId(elem, prefix, hash);
 }
 
 /**
