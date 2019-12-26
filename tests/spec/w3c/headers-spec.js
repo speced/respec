@@ -922,6 +922,36 @@ describe("W3C — Headers", () => {
     });
   });
 
+  it("it allows custom copyright directly in document, which gets relocated to the .head", async () => {
+    const body = `
+      <p class="copyright">
+        No copyright intended.
+      </p>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const copyright = doc.querySelector(".head p.copyright");
+    expect(copyright).toBeTruthy();
+    expect(copyright.textContent.trim()).toBe("No copyright intended.");
+    expect(doc.querySelectorAll(".copyright").length).toBe(1);
+  });
+
+  it("it allows custom copyright for different kinds of documents", async () => {
+    const body = `
+      <p class="copyright">
+        No copyright intended.
+      </p>
+    `;
+    for (const specStatus of ["CD-DRAFT", "unofficial", "CG-FINAL"]) {
+      const ops = makeStandardOps({ specStatus }, body);
+      const doc = await makeRSDoc(ops);
+      const copyright = doc.querySelector(".head p.copyright");
+      expect(copyright).toBeTruthy();
+      expect(copyright.textContent.trim()).toBe("No copyright intended.");
+      expect(doc.querySelectorAll(".copyright").length).toBe(1);
+    }
+  });
+
   describe("overrideCopyright", () => {
     it("takes overrideCopyright into account", async () => {
       const ops = makeStandardOps();
