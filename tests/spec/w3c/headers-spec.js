@@ -2,7 +2,6 @@
 
 import {
   flushIframes,
-  makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
@@ -1605,18 +1604,5 @@ describe("W3C — Headers", () => {
       expect(h1.textContent).toContain("Simple Spec");
       expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
     });
-  });
-
-  it("localizes headers", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      htmlAttrs: { lang: "nl" },
-    };
-    const doc = await makeRSDoc(ops);
-
-    const terms = doc.querySelectorAll("dt");
-    expect(terms[0].textContent).toBe("Deze versie:");
-    expect(terms[1].textContent).toBe("Laatst gepubliceerde versie:");
-    expect(terms[2].textContent).toBe("Laatste werkversie:");
   });
 });
