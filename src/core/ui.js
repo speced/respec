@@ -149,7 +149,7 @@ export const ui = {
     icon = icon || "";
     const id = `respec-button-${label.toLowerCase().replace(/\s+/, "-")}`;
     const button = hyperHTML`<button id="${id}" class="respec-option" title="${keyShort}">
-      <span class="respec-cmd-icon">${icon}</span> ${label}…
+      <span class="respec-cmd-icon" aria-hidden="true">${icon}</span> ${label}…
     </button>`;
     const menuItem = hyperHTML`<li role=menuitem>${button}</li>`;
     menuItem.addEventListener("click", handler);
