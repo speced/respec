@@ -100,7 +100,8 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "2.0.0",
-    "snyk": "^1.266.0"
+    "snyk": "^1.266.0",
+    "wicg-inert": "^3.0.0"
   },
   "prettier": {
     "trailingComma": "es5"
