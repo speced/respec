@@ -63,5 +63,8 @@ export function run() {
     });
   // Remove duplicate IDs
   pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
+  pre
+    .querySelectorAll(".idlHeader:not(:first-child)")
+    .forEach(elem => elem.remove());
   idlIndexSec.appendChild(pre);
 }

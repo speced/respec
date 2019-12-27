@@ -30,11 +30,14 @@ async function createButton() {
 export async function run() {
   // This button serves a prototype that we clone as needed.
   const copyButton = await copyButtonPromise;
-  for (const idlHeader of document.querySelectorAll("div.idlHeader")) {
+  for (const pre of document.querySelectorAll("pre.webidl, pre.idl")) {
+    const idlHeader = pre.querySelector(".idlHeader");
+    // There may be multiple <span>s of IDL, so we take everything
+    // apart from the idl header.
+    const idl = pre.cloneNode(true);
+    idl.querySelector(".idlHeader").remove();
+    const { textContent: idlText } = idl;
     const button = copyButton.cloneNode(true);
-    const { textContent: idlText } = idlHeader
-      .closest("pre")
-      .querySelector("span");
     button.addEventListener("click", () => {
       clipboardWriteText(idlText);
     });
