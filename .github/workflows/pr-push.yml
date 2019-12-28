@@ -39,7 +39,8 @@ jobs:
           key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
       - name: install & build
         run: |
-          npm install
+          npm install --ignore-scripts
+          npm run builddeps
           npm run build:w3c
       - run: npm run test:headless
 
@@ -62,9 +63,9 @@ jobs:
           key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
       - name: install & build
         run: |
-          npm install
-          npm run build:w3c
-          npm run build:geonovum
+          npm install --ignore-scripts
+          npm run builddeps
+          npm run build:w3c & npm run build:geonovum
       - run: npm run test:karma
         env:
           BROWSERS: ${{ matrix.browser }}
