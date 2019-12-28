@@ -12,20 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
       - uses: actions/setup-node@v1
         with:
           node-version: 10
       - name: Cache node modules
-        id: npm-cache
         uses: actions/cache@v1
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-test2_node-${{ hashFiles('**/package-lock.json') }}
-      - run: echo Cache hit - ${{steps.npm-cache.outputs.cache-hit}}
+          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
       - run: npm install
-      - run: npm run builddeps
       - run: npm run lint
 
   test-headless:
@@ -34,18 +29,14 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
       - uses: actions/setup-node@v1
         with:
           node-version: 10
       - name: Cache node modules
-        id: npm-cache
         uses: actions/cache@v1
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-test2_node-${{ hashFiles('**/package-lock.json') }}
-      - run: echo Cache hit - ${{steps.npm-cache.outputs.cache-hit}}
+          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
       - name: install & build
         run: |
           npm install
@@ -61,18 +52,14 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
       - uses: actions/setup-node@v1
         with:
           node-version: 10
       - name: Cache node modules
-        id: npm-cache
         uses: actions/cache@v1
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-test2_node-${{ hashFiles('**/package-lock.json') }}
-      - run: echo Cache hit - ${{steps.npm-cache.outputs.cache-hit}}
+          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
       - name: install & build
         run: |
           npm install
