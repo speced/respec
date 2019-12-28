@@ -22,9 +22,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-test_node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-test2_node-${{ hashFiles('**/package-lock.json') }}
       - run: echo Cache hit - ${{steps.npm-cache.outputs.cache-hit}}
-      - run: npm install --ignore-scripts
+      - run: npm install
       - run: npm run builddeps
       - run: npm run lint
 
@@ -44,7 +44,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-test_node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-test2_node-${{ hashFiles('**/package-lock.json') }}
       - run: echo Cache hit - ${{steps.npm-cache.outputs.cache-hit}}
       - name: install & build
         run: |
@@ -71,7 +71,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-test_node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-test2_node-${{ hashFiles('**/package-lock.json') }}
       - run: echo Cache hit - ${{steps.npm-cache.outputs.cache-hit}}
       - name: install & build
         run: |
