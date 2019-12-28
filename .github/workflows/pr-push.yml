@@ -12,13 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
       - uses: actions/setup-node@v1
         with:
           node-version: 10
-      - run: npm install --ignore-scripts
-      - run: npm run builddeps
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
+      - run: npm install
       - run: npm run lint
 
   test-headless:
@@ -27,14 +29,18 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
       - uses: actions/setup-node@v1
         with:
           node-version: 10
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
       - name: install & build
         run: |
-          npm install
+          npm install --ignore-scripts
+          npm run builddeps
           npm run build:w3c
       - run: npm run test:headless
 
@@ -47,16 +53,19 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
       - uses: actions/setup-node@v1
         with:
           node-version: 10
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
       - name: install & build
         run: |
-          npm install
-          npm run build:w3c
-          npm run build:geonovum
+          npm install --ignore-scripts
+          npm run builddeps
+          npm run build:w3c & npm run build:geonovum
       - run: npm run test:karma
         env:
           BROWSERS: ${{ matrix.browser }}
