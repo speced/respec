@@ -223,6 +223,11 @@ interface Bar {
           AppBannerPromptOutcome userChoice;
         };
         </pre>
+        <pre class="webidl">
+        dictionary Bar {
+          Bar member;
+        };
+        </pre>
       </section>
       <section id="idl-index"></section>
     `;
@@ -232,6 +237,10 @@ interface BeforeInstallPromptEvent : Event {
 };
 dictionary PromptResponseObject {
   AppBannerPromptOutcome userChoice;
+};
+
+dictionary Bar {
+  Bar member;
 };`;
     const ops = {
       config: makeBasicConfig(),
@@ -241,7 +250,9 @@ dictionary PromptResponseObject {
     const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
     const pre = idlIndex.querySelector("pre");
-    pre.querySelector(".idlHeader").remove(); // not tested here
+
+    expect(pre.querySelectorAll(".idlHeader").length).toBe(1);
+    pre.querySelector(".idlHeader").remove();
     expect(pre.textContent).toBe(expectedIDL);
   });
 
