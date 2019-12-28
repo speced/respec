@@ -313,14 +313,15 @@ function renderWebIDL(idlElement, index) {
     // Skip this <pre> and move on to the next one.
     return [];
   }
+  // we add "idl" as the canonical match, so both "webidl" and "idl" work
   idlElement.classList.add("def", "idl");
+  addHashId(idlElement, "webidl");
   const html = webidl2.write(parse, { templates });
   const render = hyperHTML.bind(idlElement);
-  const anchor = hyperHTML`<a>WebIDL</a>`;
-  addHashId(idlElement, "webidl");
-  anchor.href = `#${idlElement.id}`;
-  anchor.classList.add("self-link");
-  render`<div class="idlHeader">${anchor}</div>${html}`;
+  render`<div class="idlHeader"><a
+      class="self-link"
+      href="${`#${idlElement.id}`}"
+    >WebIDL</a></div>${html}`;
   idlElement.querySelectorAll("[data-idl]").forEach(elem => {
     if (elem.dataset.dfnFor) {
       return;
