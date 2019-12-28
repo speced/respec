@@ -60,6 +60,7 @@ const respecPill = hyperHTML`<button id='respec-pill' tabindex="-1" disabled>ReS
 respecUI.appendChild(respecPill);
 menu.inert = true;
 respecPill.addEventListener("click", e => {
+  respecPill.focus();
   e.stopPropagation();
   if (menu.hidden) {
     menu.classList.remove("respec-hidden");
