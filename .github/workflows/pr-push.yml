@@ -17,6 +17,13 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 10
+      - name: Cache node modules
+        id: npm-cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      - run: echo Cache hit - ${{steps.npm-cache.outputs.cache-hit}}
       - run: npm install --ignore-scripts
       - run: npm run builddeps
       - run: npm run lint
@@ -32,6 +39,13 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 10
+      - name: Cache node modules
+        id: npm-cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      - run: echo Cache hit - ${{steps.npm-cache.outputs.cache-hit}}
       - name: install & build
         run: |
           npm install
@@ -52,6 +66,13 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 10
+      - name: Cache node modules
+        id: npm-cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      - run: echo Cache hit - ${{steps.npm-cache.outputs.cache-hit}}
       - name: install & build
         run: |
           npm install
