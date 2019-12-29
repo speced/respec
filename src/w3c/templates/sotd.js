@@ -23,7 +23,7 @@ const localizationStrings = {
   },
 };
 
-const l10n = getIntlData(localizationStrings);
+export const l10n = getIntlData(localizationStrings);
 
 export default (conf, opts) => {
   return html`
