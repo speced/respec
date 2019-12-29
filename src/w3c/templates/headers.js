@@ -29,6 +29,11 @@ const localizationStrings = {
   ko: {
     author: "저자:",
     authors: "저자:",
+    editor: "편집자:",
+    editors: "편집자:",
+    former_editor: "이전 편집자:",
+    former_editors: "이전 편집자:",
+    latest_editors_draft: "최신 편집 초안:",
     latest_published_version: "최신 버전:",
     this_version: "현재 버전:",
   },
