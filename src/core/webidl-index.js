@@ -13,6 +13,7 @@
  */
 export const name = "core/webidl-index";
 import { nonNormativeSelector } from "./utils.js";
+import { addIDLHeader } from "./webidl.js";
 
 export function run() {
   /** @type {HTMLElement | null} */
@@ -63,8 +64,9 @@ export function run() {
     });
   // Remove duplicate IDs
   pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
-  pre
-    .querySelectorAll(".idlHeader:not(:first-child)")
-    .forEach(elem => elem.remove());
+  // Remove IDL headers
+  pre.querySelectorAll(".idlHeader").forEach(elem => elem.remove());
+  // Add our own IDL header
+  addIDLHeader(pre);
   idlIndexSec.appendChild(pre);
 }

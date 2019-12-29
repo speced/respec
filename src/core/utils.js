@@ -9,16 +9,15 @@ export const name = "core/utils";
 
 const dashes = /-/g;
 /**
- * Hashes a string from char code.
- * https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
+ * Hashes a string from char code. Can return a negative number.
+ * Based on https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
  *
  * @param {String} text
  */
 function hashString(text) {
   let hash = 0;
   for (const char of text) {
-    hash = (hash << 5) - hash + char.charCodeAt(0);
-    hash |= 0; // Convert to 32bit integer
+    hash = (Math.imul(31, hash) + char.charCodeAt(0)) | 0;
   }
   return String(hash);
 }

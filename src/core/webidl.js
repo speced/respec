@@ -315,13 +315,9 @@ function renderWebIDL(idlElement, index) {
   }
   // we add "idl" as the canonical match, so both "webidl" and "idl" work
   idlElement.classList.add("def", "idl");
-  addHashId(idlElement, "webidl");
   const html = webidl2.write(parse, { templates });
   const render = hyperHTML.bind(idlElement);
-  render`<div class="idlHeader"><a
-      class="self-link"
-      href="${`#${idlElement.id}`}"
-    >WebIDL</a></div>${html}`;
+  render`${html}`;
   idlElement.querySelectorAll("[data-idl]").forEach(elem => {
     if (elem.dataset.dfnFor) {
       return;
@@ -343,7 +339,20 @@ function renderWebIDL(idlElement, index) {
     const cites = dataset.cite.trim().split(/\s+/);
     dataset.cite = ["WebIDL", ...cites].join(" ");
   }
+  addIDLHeader(idlElement);
   return parse;
+}
+/**
+ * Adds a "WebIDL" decorative header/permalink to a block of WebIDL.
+ * @param {HTMLPreElement} pre
+ */
+export function addIDLHeader(pre) {
+  addHashId(pre, "webidl");
+  const header = hyperHTML`<div class="idlHeader"><a
+      class="self-link"
+      href="${`#${pre.id}`}"
+    >WebIDL</a></div>`;
+  pre.prepend(header);
 }
 
 const cssPromise = loadStyle();
