@@ -40,19 +40,55 @@ export function findDfn(defn, name, { parent = "" } = {}) {
  * @param {string} parent
  * @param {string} name
  */
-function getAlternativeNames(type, parent, name) {
+function getAlternativeNames(idlAst, parent, name) {
+  const { type } = idlAst;
   const asQualifiedName = `${parent}.${name}`;
   switch (type) {
     case "constructor":
     case "operation": {
-      // Allow linking to both "method()" and "method" name.
+      // Allow linking to "method()", method(arg) and "method" name.
       const asMethodName = `${name}()`;
       const asFullyQualifiedName = `${asQualifiedName}()`;
-      return [asFullyQualifiedName, asQualifiedName, asMethodName, name];
+      const asMethodWithArgs = deriveMethodWithArgs(name, idlAst.arguments);
+      return {
+        local: [asQualifiedName, asFullyQualifiedName, name],
+        exportable: [asMethodName, ...asMethodWithArgs],
+      };
     }
     case "attribute":
-      return [asQualifiedName, name];
+      return {
+        local: [asQualifiedName],
+        exportable: [name],
+      };
   }
+}
+
+function deriveMethodWithArgs(operationName, argsAst) {
+  const operationNames = [];
+  if (argsAst.length === 0) {
+    return operationNames;
+  }
+  const optional = [];
+  const required = [];
+  for (const { name, optional: isOptional } of argsAst) {
+    if (isOptional) {
+      optional.push(name);
+    } else {
+      required.push(name);
+    }
+  }
+  const requiredArgs = required.join(", ");
+  const requiredOperation = `${operationName}(${requiredArgs})`;
+  operationNames.push(requiredOperation);
+  const optionalOps = optional.map((_, index) => {
+    const optionalArgs = optional.slice(0, index + 1).join(", ");
+    const result = `${operationName}(${requiredArgs}${
+      optionalArgs ? `, ${optionalArgs}` : ""
+    })`;
+    return result;
+  });
+  operationNames.push(...optionalOps);
+  return operationNames;
 }
 
 /**
@@ -71,13 +107,15 @@ function findOperationDfn(defn, parent, name) {
 
 /**
  * @param {HTMLElement} dfn
- * @param {string[]} names
+ * @param {Object} names
  */
 function addAlternativeNames(dfn, names) {
+  const { local, exportable } = names;
   const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-  lt.push(...names);
+  lt.push(...exportable);
   dfn.dataset.lt = [...new Set(lt)].join("|");
-  registerDefinition(dfn, names);
+  dfn.dataset.localLt = local.join("|");
+  registerDefinition(dfn, [...local, ...exportable]);
 }
 
 /**
@@ -123,13 +161,13 @@ function findNormalDfn(defn, parent, ...names) {
 }
 
 /**
- * @param {HTMLElement} dfn
- * @param {*} defn
+ * @param {HTMLElement} dfnElem
+ * @param {*} idlAst
  * @param {string} parent
  * @param {string} name
  */
-export function decorateDfn(dfn, defn, parent, name) {
-  if (!dfn.id) {
+export function decorateDfn(dfnElem, idlAst, parent, name) {
+  if (!dfnElem.id) {
     const lCaseParent = parent.toLowerCase();
     const middle = lCaseParent ? `${lCaseParent}-` : "";
     let last = name
@@ -137,36 +175,40 @@ export function decorateDfn(dfn, defn, parent, name) {
       .replace(/[()]/g, "")
       .replace(/\s/g, "-");
     if (last === "") last = "the-empty-string";
-    dfn.id = `dom-${middle}${last}`;
+    dfnElem.id = `dom-${middle}${last}`;
   }
-  dfn.dataset.idl = defn.type;
-  dfn.dataset.title = dfn.textContent;
-  dfn.dataset.dfnFor = parent;
+  dfnElem.dataset.idl = idlAst.type;
+  dfnElem.dataset.title = dfnElem.textContent;
+  dfnElem.dataset.dfnFor = parent;
   // Derive the data-type for dictionary members, interface attributes,
   // and methods
-  switch (defn.type) {
+  switch (idlAst.type) {
     case "operation":
     case "attribute":
     case "field":
-      dfn.dataset.type = getDataType(defn);
+      dfnElem.dataset.type = getDataType(idlAst);
       break;
   }
 
   // Mark the definition as code.
-  if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
-    wrapInner(dfn, dfn.ownerDocument.createElement("code"));
+  if (
+    !dfnElem.querySelector("code") &&
+    !dfnElem.closest("code") &&
+    dfnElem.children
+  ) {
+    wrapInner(dfnElem, dfnElem.ownerDocument.createElement("code"));
   }
 
-  // Add data-lt values and register them
-  switch (defn.type) {
+  // Add data-lt and data-lt values and register them
+  switch (idlAst.type) {
     case "attribute":
     case "constructor":
     case "operation":
-      addAlternativeNames(dfn, getAlternativeNames(defn.type, parent, name));
+      addAlternativeNames(dfnElem, getAlternativeNames(idlAst, parent, name));
       break;
   }
 
-  return dfn;
+  return dfnElem;
 }
 
 /**
