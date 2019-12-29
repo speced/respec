@@ -77,7 +77,7 @@ const localizationStrings = {
   },
 };
 
-const l10n = getIntlData(localizationStrings);
+export const l10n = getIntlData(localizationStrings);
 
 function getSpecTitleElem(conf) {
   const specTitleElem =

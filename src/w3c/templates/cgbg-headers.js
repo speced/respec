@@ -1,74 +1,9 @@
 // @ts-check
-import { getIntlData } from "../../core/l10n.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
+import { l10n } from "./headers.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
 import showPeople from "./show-people.js";
-
-const localizationStrings = {
-  en: {
-    author: "Author:",
-    authors: "Authors:",
-    editor: "Editor:",
-    editors: "Editors:",
-    former_editor: "Former editor:",
-    former_editors: "Former editors:",
-    latest_editors_draft: "Latest editor's draft:",
-    latest_published_version: "Latest published version:",
-    this_version: "This version:",
-  },
-  ko: {
-    author: "저자:",
-    authors: "저자:",
-    editor: "편집자:",
-    editors: "편집자:",
-    former_editor: "이전 편집자:",
-    former_editors: "이전 편집자:",
-    latest_editors_draft: "최신 편집 초안:",
-    latest_published_version: "최신 버전:",
-    this_version: "현재 버전:",
-  },
-  zh: {
-    editor: "编辑：",
-    editors: "编辑：",
-    former_editor: "原编辑：",
-    former_editors: "原编辑：",
-    latest_editors_draft: "最新编辑草稿：",
-    latest_published_version: "最新发布版本：",
-    this_version: "本版本：",
-  },
-  ja: {
-    author: "著者：",
-    authors: "著者：",
-    editor: "編者：",
-    editors: "編者：",
-    former_editor: "以前の版の編者：",
-    former_editors: "以前の版の編者：",
-    latest_editors_draft: "最新の編集用草案：",
-    latest_published_version: "最新バージョン：",
-    this_version: "このバージョン：",
-  },
-  nl: {
-    author: "Auteur:",
-    authors: "Auteurs:",
-    editor: "Redacteur:",
-    editors: "Redacteurs:",
-    latest_editors_draft: "Laatste werkversie:",
-    latest_published_version: "Laatst gepubliceerde versie:",
-    this_version: "Deze versie:",
-  },
-  es: {
-    author: "Autor:",
-    authors: "Autores:",
-    editor: "Editor:",
-    editors: "Editores:",
-    latest_editors_draft: "Borrador de editor mas reciente:",
-    latest_published_version: "Versión publicada mas reciente:",
-    this_version: "Ésta versión:",
-  },
-};
-
-const l10n = getIntlData(localizationStrings);
 
 export default conf => {
   const existingCopyright = document.querySelector(".copyright");
