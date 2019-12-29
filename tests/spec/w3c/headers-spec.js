@@ -2,6 +2,7 @@
 
 import {
   flushIframes,
+  makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
@@ -1180,6 +1181,24 @@ describe("W3C — Headers", () => {
       expect(contains(f[0].previousElementSibling, "a", "WGLIST").length).toBe(
         1
       );
+    });
+
+    it("localizes sotd", async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        htmlAttrs: {
+          lang: "es",
+        },
+        body: `
+        <section id="sotd">
+          State of the document
+        </section>
+      `,
+      };
+      const doc = await makeRSDoc(ops);
+      const { textContent } = doc.querySelector("#sotd h2");
+      expect(doc.documentElement.lang).toBe("es");
+      expect(textContent).toContain("Estado de este Document");
     });
   });
 
