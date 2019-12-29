@@ -1,6 +1,11 @@
 "use strict";
 
-import { makeBasicConfig, makeDefaultBody, makeRSDoc } from "../SpecHelper.js";
+import {
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
 import { children } from "../../../src/core/utils.js";
 
 describe("Core - Structure", () => {
@@ -232,5 +237,20 @@ describe("Core - Structure", () => {
       expect(anchor.classList).toContain("sec-ref");
       expect(anchor.textContent).toContain("Sample Interface");
     });
+  });
+
+  it("prefers heading id over section id for linking", async () => {
+    const body = `
+      <section><h2>ONE</h2></section>
+      <section><h2 id="zwei">TWO</h2></section>
+    `;
+
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const links = doc.querySelectorAll("#toc li > a");
+    expect(links[0].hash).toBe("#one");
+    expect(links[0].textContent).toBe("1. ONE");
+    expect(links[1].hash).toBe("#zwei");
+    expect(links[1].textContent).toBe("2. TWO");
   });
 });
