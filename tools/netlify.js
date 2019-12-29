@@ -22,7 +22,7 @@ main().catch(console.error);
 
 async function main() {
   Builder.getRespecVersion = () => `PR#${REVIEW_ID}`;
-  await Promise.all(PROFILES.map(name => Builder.build({ name })));
+  await Promise.all(PROFILES.map(name => Builder.build({ name, debug: true })));
 
   const html = buildHTML(PROFILES, SPECS);
   await writeFile(path.join(BUILD_DIR, "index.html"), html);
