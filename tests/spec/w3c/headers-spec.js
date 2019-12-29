@@ -1152,6 +1152,24 @@ describe("W3C — Headers", () => {
         1
       );
     });
+
+    it("localizes sotd", async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        htmlAttrs: {
+          lang: "es",
+        },
+        body: `
+        <section id="sotd">
+          State of the document
+        </section>
+      `,
+      };
+      const doc = await makeRSDoc(ops);
+      const { textContent } = doc.querySelector("#sotd h2");
+      expect(doc.documentElement.lang).toBe("es");
+      expect(textContent).toContain("Estado de este Document");
+    });
   });
 
   describe("charterDisclosureURI", () => {
@@ -1582,24 +1600,5 @@ describe("W3C — Headers", () => {
       expect(h1.textContent).toContain("Simple Spec");
       expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
     });
-  });
-
-  it("localizes sotd", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      htmlAttrs: {
-        lang: "es",
-      },
-      body: `
-        <h2>
-          State of the document
-        </h2>
-        <section id="sotd"></section>
-      `,
-    };
-    const doc = await makeRSDoc(ops);
-    const { textContent } = doc.querySelector("#sotd h2");
-    expect(doc.documentElement.lang).toBe("es");
-    expect(textContent).toContain("Estado de este Document");
   });
 });
