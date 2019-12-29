@@ -1,3 +1,22 @@
+}
+// @ts-check	
+/**	
+ * Module core/l10n	
+ *	
+ * Looks at the lang attribute on the root element and uses it	
+ * to manage the config.l10n object so that other parts of the system can	
+ * localize their text.	
+ */	
+export const name = "core/l10n";	
+
+const html = document.documentElement;	
+if (html && !html.hasAttribute("lang")) {	
+  html.lang = "en";	
+  if (!html.hasAttribute("dir")) {	
+    html.dir = "ltr";
+  }
+
+}
 const base = {
   about_respec: "About",
   abstract: "Abstract",
@@ -76,6 +95,7 @@ const ja = {
   this_version: "このバージョン：",
   toc: "目次",
 };
+
 const nl = {
   about_respec: "Over",
   abstract: "Samenvatting",
@@ -130,6 +150,7 @@ const es = {
   toc: "Tabla de Contenidos",
   warning: "Aviso",
 };
+
 export const l10n = {
   en: { ...base },
   ko: { ...base, ...ko },
@@ -138,9 +159,11 @@ export const l10n = {
   nl: { ...base, ...nl },
   es: { ...base, ...es },
 };
+
 l10n["zh-hans"] = l10n.zh;
 l10n["zh-cn"] = l10n.zh;
 export const lang = html && html.lang in l10n ? html.lang : "en";
+
 /**
  * @template {Record<string, Record<string, string|Function>>} T
  * @param {T} localizationStrings
