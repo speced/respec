@@ -15,19 +15,19 @@ jobs:
       - id: log
         run: |
           echo "::set-output name=message::$(git log -1 --oneline)"
-      - if: {{ contains(steps.log.outputs.message, "ci skip") }}
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
         uses: actions/setup-node@v1
         with:
           node-version: 10
-      - if: {{ contains(steps.log.outputs.message, "ci skip") }}
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
         name: Cache node modules
         uses: actions/cache@v1
         with:
           path: ./node_modules
           key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
-      - if: {{ contains(steps.log.outputs.message, "ci skip") }}
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
         run: npm install
-      - if: {{ contains(steps.log.outputs.message, "ci skip") }}
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
         run: npm run lint
 
   test-headless:
