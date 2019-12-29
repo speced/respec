@@ -2,7 +2,6 @@
 
 import {
   flushIframes,
-  makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
@@ -923,6 +922,36 @@ describe("W3C — Headers", () => {
     });
   });
 
+  it("it allows custom copyright directly in document, which gets relocated to the .head", async () => {
+    const body = `
+      <p class="copyright">
+        No copyright intended.
+      </p>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const copyright = doc.querySelector(".head p.copyright");
+    expect(copyright).toBeTruthy();
+    expect(copyright.textContent.trim()).toBe("No copyright intended.");
+    expect(doc.querySelectorAll(".copyright").length).toBe(1);
+  });
+
+  it("it allows custom copyright for different kinds of documents", async () => {
+    const body = `
+      <p class="copyright">
+        No copyright intended.
+      </p>
+    `;
+    for (const specStatus of ["CD-DRAFT", "unofficial", "CG-FINAL"]) {
+      const ops = makeStandardOps({ specStatus }, body);
+      const doc = await makeRSDoc(ops);
+      const copyright = doc.querySelector(".head p.copyright");
+      expect(copyright).toBeTruthy();
+      expect(copyright.textContent.trim()).toBe("No copyright intended.");
+      expect(doc.querySelectorAll(".copyright").length).toBe(1);
+    }
+  });
+
   describe("overrideCopyright", () => {
     it("takes overrideCopyright into account", async () => {
       const ops = makeStandardOps();
@@ -1307,28 +1336,21 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("statusOverride", () => {
-    it("allows status paragraph to be overridden", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        overrideStatus: true,
-        wg: "WGNAME",
-        wgURI: "WGURI",
-        wgPatentURI: "WGPATENT",
-        wgPublicList: "WGLIST",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      const sotd = doc.getElementById("sotd");
-      expect(contains(sotd, "p", "CUSTOM PARAGRAPH").length).toBe(1);
-      expect(contains(sotd, "a", "WGNAME").length).toBe(0);
-      expect(contains(sotd, "a", "WGLIST@w3.org").length).toBe(0);
-      expect(contains(sotd, "a", "subscribe").length).toBe(0);
-      expect(contains(sotd, "a", "disclosures")[0].getAttribute("href")).toBe(
-        "WGPATENT"
-      );
-    });
+  it("allows sotd section to be completely overridden", async () => {
+    const body = `
+      <section id="sotd" class="override">
+        <h2>Override</h2>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const sotd = doc.getElementById("sotd");
+    expect(sotd).toBeTruthy();
+    expect(sotd.firstElementChild.localName).toBe("h2");
+    expect(sotd.firstElementChild.textContent).toBe("Override");
+    expect(sotd.firstElementChild).toBe(sotd.lastElementChild);
   });
+
   it("allows custom sections and custom content, not just paragraphs", async () => {
     const ops = makeStandardOps();
     ops.body = `
@@ -1582,23 +1604,5 @@ describe("W3C — Headers", () => {
       expect(h1.textContent).toContain("Simple Spec");
       expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
     });
-  });
-
-  it("localizes headers", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      htmlAttrs: {
-        lang: "nl",
-      },
-    };
-    const doc = await makeRSDoc(ops);
-
-    const terms = doc.querySelectorAll("dt");
-    expect(terms[0].textContent).toBe("Deze versie:");
-    expect(terms[0].nextElementSibling.localName).toBe("dd");
-    expect(terms[1].textContent).toBe("Laatst gepubliceerde versie:");
-    expect(terms[1].nextElementSibling.localName).toBe("dd");
-    expect(terms[2].textContent).toBe("Laatste werkversie:");
-    expect(terms[2].nextElementSibling.localName).toBe("dd");
   });
 });
