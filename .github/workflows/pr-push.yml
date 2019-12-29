@@ -12,20 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Should skip?
+      - id: log
         run: |
-          count=$(git log -1 --oneline | grep -c "\[ci skip \]" || true)
-          [[ $count -ne 1 ]] && exit 78 || exit 0
-      - uses: actions/setup-node@v1
+          echo "::set-output name=message::$(git log -1 --oneline)"
+      - if: contains(steps.log.outputs.message, "ci skip")
+        uses: actions/setup-node@v1
         with:
           node-version: 10
-      - name: Cache node modules
+      - if: contains(steps.log.outputs.message, "ci skip")
+        name: Cache node modules
         uses: actions/cache@v1
         with:
           path: ./node_modules
           key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
-      - run: npm install
-      - run: npm run lint
+      - if: contains(steps.log.outputs.message, "ci skip")
+        run: npm install
+      - if: contains(steps.log.outputs.message, "ci skip")
+        run: npm run lint
 
   test-headless:
     name: Headless Tests
