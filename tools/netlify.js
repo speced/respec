@@ -7,7 +7,7 @@ const path = require("path");
 const { writeFile } = require("fs").promises;
 const { Builder } = require("./builder");
 
-const { DEPLOY_PRIME_URL, COMMIT_REF, REVIEW_ID } = process.env;
+const { DEPLOY_PRIME_URL, COMMIT_REF, REVIEW_ID, REPOSITORY_URL } = process.env;
 
 const BUILD_DIR = path.resolve(__dirname, "../builds/");
 const PROFILES = ["w3c", "w3c-common", "geonovum"];
@@ -33,7 +33,8 @@ async function main() {
  * @param {string[]} specs
  */
 function buildHTML(profiles, specs) {
-  const title = `ReSpec Build Preview for PR #${REVIEW_ID}`;
+  const prURL = new URL(`pull/${REVIEW_ID}`, REPOSITORY_URL);
+  const title = `ReSpec Build Preview for PR <a href="${prURL}">#${REVIEW_ID}</a>`;
   const fileURL = profile => `${DEPLOY_PRIME_URL}/respec-${profile}.js`;
   return `<!DOCTYPE html>
 <html lang="en">
