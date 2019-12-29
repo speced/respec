@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - id: log
+      - name: log
+        id: log
         run: |
           echo "::set-output name=message::$(git log -1 --oneline)"
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
