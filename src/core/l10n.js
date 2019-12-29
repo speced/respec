@@ -46,7 +46,6 @@ const base = {
   save_as: "Save as",
   save_snapshot: "Export",
   search_specref: "Search Specref",
-  sotd: "Status of This Document",
   this_version: "This version:",
   toc: "Table of Contents",
   warning: "Warning",
@@ -57,7 +56,6 @@ const ko = {
   author: "저자:",
   authors: "저자:",
   latest_published_version: "최신 버전:",
-  sotd: "현재 문서의 상태",
   this_version: "현재 버전:",
 };
 
@@ -75,7 +73,6 @@ const zh = {
   note: "注",
   open_bugs: "修正中的错误",
   participate: "参与：",
-  sotd: "关于本文档",
   this_version: "本版本：",
   toc: "内容大纲",
 };
@@ -95,7 +92,6 @@ const ja = {
   note: "注",
   open_bugs: "改修されていないバグ",
   participate: "参加方法：",
-  sotd: "この文書の位置付け",
   this_version: "このバージョン：",
   toc: "目次",
 };
@@ -124,7 +120,6 @@ const nl = {
   save_as: "Bewaar als",
   save_snapshot: "Bewaar Snapshot",
   search_specref: "Doorzoek Specref",
-  sotd: "Status van dit document",
   this_version: "Deze versie:",
   toc: "Inhoudsopgave",
   warning: "Waarschuwing",
@@ -151,7 +146,6 @@ const es = {
   open_parens: "(",
   participate: "Participad",
   references: "Referencias",
-  sotd: "Estado de este Document",
   this_version: "Ésta versión:",
   toc: "Tabla de Contenidos",
   warning: "Aviso",
