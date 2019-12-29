@@ -27,22 +27,25 @@ async function createButton() {
   return copyButton;
 }
 
-export async function run() {
+/**
+ * Adds a HTML button that copies WebIDL to the clipboard.
+ *
+ * @param {HTMLDivElement} idlHeader
+ */
+export async function addCopyIDLButton(idlHeader) {
   // This button serves a prototype that we clone as needed.
   const copyButton = await copyButtonPromise;
-  for (const pre of document.querySelectorAll("pre.webidl, pre.idl")) {
-    const idlHeader = pre.querySelector(".idlHeader");
-    // There may be multiple <span>s of IDL, so we take everything
-    // apart from the idl header.
-    const idl = pre.cloneNode(true);
-    idl.querySelector(".idlHeader").remove();
-    const { textContent: idlText } = idl;
-    const button = copyButton.cloneNode(true);
-    button.addEventListener("click", () => {
-      clipboardWriteText(idlText);
-    });
-    idlHeader.append(button);
-  }
+  // There may be multiple <span>s of IDL, so we take everything
+  // apart from the idl header.
+  const pre = idlHeader.closest("pre.idl");
+  const idl = pre.cloneNode(true);
+  idl.querySelector(".idlHeader").remove();
+  const { textContent: idlText } = idl;
+  const button = copyButton.cloneNode(true);
+  button.addEventListener("click", () => {
+    clipboardWriteText(idlText);
+  });
+  idlHeader.append(button);
 }
 
 /**

@@ -15,7 +15,7 @@ export const name = "core/webidl-index";
 import { addIDLHeader } from "./webidl.js";
 import { nonNormativeSelector } from "./utils.js";
 
-export function run() {
+export async function run() {
   /** @type {HTMLElement | null} */
   const idlIndexSec = document.querySelector("section#idl-index");
   if (!idlIndexSec) {
@@ -67,6 +67,6 @@ export function run() {
   // Remove IDL headers
   pre.querySelectorAll(".idlHeader").forEach(elem => elem.remove());
   // Add our own IDL header
-  addIDLHeader(pre);
+  await addIDLHeader(pre);
   idlIndexSec.appendChild(pre);
 }

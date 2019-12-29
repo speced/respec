@@ -13,6 +13,7 @@ import {
 } from "./utils.js";
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { hyperHTML, webidl2 } from "./import-maps.js";
+import { addCopyIDLButton } from "./webidl-clipboard.js";
 import { fetchAsset } from "./text-loader.js";
 import { registerDefinition } from "./dfn-map.js";
 
@@ -297,7 +298,7 @@ function getDefnName(defn) {
   }
 }
 
-function renderWebIDL(idlElement, index) {
+async function renderWebIDL(idlElement, index) {
   let parse;
   try {
     parse = webidl2.parse(idlElement.textContent, {
@@ -339,20 +340,21 @@ function renderWebIDL(idlElement, index) {
     const cites = dataset.cite.trim().split(/\s+/);
     dataset.cite = ["WebIDL", ...cites].join(" ");
   }
-  addIDLHeader(idlElement);
+  await addIDLHeader(idlElement);
   return parse;
 }
 /**
  * Adds a "WebIDL" decorative header/permalink to a block of WebIDL.
  * @param {HTMLPreElement} pre
  */
-export function addIDLHeader(pre) {
+export async function addIDLHeader(pre) {
   addHashId(pre, "webidl");
   const header = hyperHTML`<div class="idlHeader"><a
       class="self-link"
       href="${`#${pre.id}`}"
     >WebIDL</a></div>`;
   pre.prepend(header);
+  await addCopyIDLButton(header);
 }
 
 const cssPromise = loadStyle();
@@ -378,7 +380,8 @@ export async function run() {
       link.before(style);
     }
   }
-  const astArray = [...idls].map(renderWebIDL);
+  const astPromises = [...idls].map(renderWebIDL);
+  const astArray = await Promise.all(astPromises);
 
   const validations = webidl2.validate(astArray);
   for (const validation of validations) {
