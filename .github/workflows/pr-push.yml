@@ -15,7 +15,7 @@ jobs:
       - name: log
         id: log
         run: |
-          echo "::set-output name=message::$(git log -2 --oneline)"
+          echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         uses: actions/setup-node@v1
         with:
