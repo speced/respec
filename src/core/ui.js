@@ -58,7 +58,6 @@ sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
 const respecPill = hyperHTML`<button id='respec-pill' tabindex="-1" disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
-menu.inert = true;
 respecPill.addEventListener("click", e => {
   respecPill.focus();
   e.stopPropagation();
@@ -71,7 +70,6 @@ respecPill.addEventListener("click", e => {
   }
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
   menu.hidden = !menu.hidden;
-  menu.inert = !menu.inert;
 });
 document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
