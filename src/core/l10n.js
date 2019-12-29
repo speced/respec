@@ -1,4 +1,3 @@
-}
 // @ts-check	
 /**	
  * Module core/l10n	
@@ -9,10 +8,10 @@
  */	
 export const name = "core/l10n";	
 
-const html = document.documentElement;	
-if (html && !html.hasAttribute("lang")) {	
-  html.lang = "en";	
-  if (!html.hasAttribute("dir")) {	
+const html = document.documentElement;
+if (html && !html.hasAttribute("lang")) {
+  html.lang = "en";
+  if (!html.hasAttribute("dir")) {
     html.dir = "ltr";
   }
 
