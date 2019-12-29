@@ -1,9 +1,10 @@
 // @ts-check
 import { hyperHTML as html } from "../../core/import-maps.js";
+import { l10n } from "./sotd.js";
 
 export default (conf, opts) => {
   return html`
-    <h2>${conf.l10n.sotd}</h2>
+    <h2>${l10n.sotd}</h2>
     ${conf.isPreview
       ? html`
           <details class="annoying-warning" open="">
