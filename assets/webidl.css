@@ -11,8 +11,7 @@ pre.idl {
   }
 }
 
-pre.idl::before {
-  content: "WebIDL";
+div.idlHeader {
   display: block;
   width: 150px;
   background: #90b8de;
@@ -21,7 +20,14 @@ pre.idl::before {
   font-weight: bold;
   margin: -1em 0 1em -1em;
   height: 28px;
-  line-height: 28px;  
+  line-height: 28px;
+}
+
+div.idlHeader a.self-link {
+   color: #fff;
+   margin-left: .3cm;
+   text-decoration: none;
+   border-bottom: none;
 }
 
 .idlID {
