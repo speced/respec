@@ -38,12 +38,14 @@ const base = {
   save_as: "Save as",
   save_snapshot: "Export",
   search_specref: "Search Specref",
+  this_version: "This version:",
   toc: "Table of Contents",
   warning: "Warning",
 };
 
 const ko = {
   abstract: "요약",
+  this_version: "현재 버전:",
 };
 
 const zh = {
@@ -54,6 +56,7 @@ const zh = {
   note: "注",
   open_bugs: "修正中的错误",
   participate: "参与：",
+  this_version: "本版本：",
   toc: "内容大纲",
 };
 
@@ -64,6 +67,7 @@ const ja = {
   note: "注",
   open_bugs: "改修されていないバグ",
   participate: "参加方法：",
+  this_version: "このバージョン：",
   toc: "目次",
 };
 
@@ -85,6 +89,7 @@ const nl = {
   save_as: "Bewaar als",
   save_snapshot: "Bewaar Snapshot",
   search_specref: "Doorzoek Specref",
+  this_version: "Deze versie:",
   toc: "Inhoudsopgave",
   warning: "Waarschuwing",
 };
@@ -104,6 +109,7 @@ const es = {
   open_parens: "(",
   participate: "Participad",
   references: "Referencias",
+  this_version: "Ésta versión:",
   toc: "Tabla de Contenidos",
   warning: "Aviso",
 };
