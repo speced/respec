@@ -298,7 +298,7 @@ function getDefnName(defn) {
   }
 }
 
-async function renderWebIDL(idlElement, index) {
+function renderWebIDL(idlElement, index) {
   let parse;
   try {
     parse = webidl2.parse(idlElement.textContent, {
@@ -340,21 +340,21 @@ async function renderWebIDL(idlElement, index) {
     const cites = dataset.cite.trim().split(/\s+/);
     dataset.cite = ["WebIDL", ...cites].join(" ");
   }
-  await addIDLHeader(idlElement);
+  addIDLHeader(idlElement);
   return parse;
 }
 /**
  * Adds a "WebIDL" decorative header/permalink to a block of WebIDL.
  * @param {HTMLPreElement} pre
  */
-export async function addIDLHeader(pre) {
+export function addIDLHeader(pre) {
   addHashId(pre, "webidl");
   const header = hyperHTML`<div class="idlHeader"><a
       class="self-link"
       href="${`#${pre.id}`}"
     >WebIDL</a></div>`;
   pre.prepend(header);
-  await addCopyIDLButton(header);
+  addCopyIDLButton(header);
 }
 
 const cssPromise = loadStyle();
@@ -380,8 +380,7 @@ export async function run() {
       link.before(style);
     }
   }
-  const astPromises = [...idls].map(renderWebIDL);
-  const astArray = await Promise.all(astPromises);
+  const astArray = [...idls].map(renderWebIDL);
 
   const validations = webidl2.validate(astArray);
   for (const validation of validations) {
