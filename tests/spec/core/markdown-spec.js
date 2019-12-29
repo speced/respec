@@ -330,6 +330,22 @@ function getAnswer() {
     expect(pre.textContent).toBe(idl);
   });
 
+  it("does not parse texts inside <pre> as markdown", async () => {
+    const code = `1 * 2 * 3;`;
+    const body = `
+      <pre class="example">
+      ${code}
+      </pre>
+    `;
+
+    const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelector("pre");
+
+    expect(pre.textContent).toBe(code);
+  });
+
   describe("nolinks options", () => {
     it("automatically links URLs in pre when missing (smoke test)", async () => {
       const body = `
