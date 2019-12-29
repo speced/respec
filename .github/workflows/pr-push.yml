@@ -26,6 +26,10 @@ jobs:
         with:
           path: ./node_modules
           key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         run: npm install
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
