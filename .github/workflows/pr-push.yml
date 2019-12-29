@@ -11,6 +11,10 @@ jobs:
     name: Check linting issues
     runs-on: ubuntu-latest
     steps:
+      - name: Should skip?
+        run: |
+          count=$(git log -1 --pretty=format:"%s" | grep -c "\[ci skip \]")
+          [[ $count -ne 1 ]] && exit 78 || exit 0
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
