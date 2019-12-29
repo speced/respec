@@ -14,6 +14,7 @@ describe("Core — IDL Index", () => {
       ${makeDefaultBody()}
       <section>
         <pre class=idl>
+        [Exposed=Window]
         interface Foo {
           readonly attribute DOMString bar;
         };
@@ -21,6 +22,7 @@ describe("Core — IDL Index", () => {
       </section>
       <section>
         <pre class=idl>
+        [Exposed=Window]
         interface Bar {
           readonly attribute DOMString foo;
         };
@@ -29,10 +31,12 @@ describe("Core — IDL Index", () => {
       <section id="idl-index"></section>
       <section id="conformance"></section>
     `;
-    const expectedIDL = `interface Foo {
+    const expectedIDL = `[Exposed=Window]
+interface Foo {
   readonly attribute DOMString bar;
 };
 
+[Exposed=Window]
 interface Bar {
   readonly attribute DOMString foo;
 };`;
@@ -60,6 +64,7 @@ interface Bar {
       ${makeDefaultBody()}
       <section id="conformance">
         <pre class="idl exclude">
+        [Exposed=Window]
         interface Excluded {
           readonly attribute DOMString bar;
         };
@@ -67,6 +72,7 @@ interface Bar {
       </section>
       <section>
         <pre class=idl>
+        [Exposed=Window]
         interface Include {
           readonly attribute DOMString foo;
         };
@@ -74,6 +80,7 @@ interface Bar {
       </section>
       <section class="informative">
         <pre class="idl">
+        [Exposed=Window]
         interface Informative {
           readonly attribute DOMString baz;
         };
@@ -98,6 +105,7 @@ interface Bar {
       ${makeDefaultBody()}
       <section class="note">
         <pre class="idl">
+        [Exposed=Window]
         interface Note {
           readonly attribute DOMString bar;
         };
@@ -105,6 +113,7 @@ interface Bar {
       </section>
       <section class="issue">
         <pre class="idl">
+        [Exposed=Window]
         interface Issue {
           readonly attribute DOMString foo;
         };
@@ -112,6 +121,7 @@ interface Bar {
       </section>
       <section class="example">
         <pre class="idl">
+          [Exposed=Window]
           interface Example {
             readonly attribute DOMString baz;
           };
@@ -119,6 +129,7 @@ interface Bar {
       </section>
       <section>
         <pre class="idl">
+          [Exposed=Window]
           interface Pass {
             readonly attribute DOMString qux;
           };
@@ -145,6 +156,7 @@ interface Bar {
       ${makeDefaultBody()}
       <section>
         <pre class="idl">
+        [Exposed=Window]
         interface Pass {
           readonly attribute DOMString bar;
         };
@@ -152,6 +164,7 @@ interface Bar {
       </section>
       <section class="ednote">
         <pre class="idl">
+        [Exposed=Window]
         interface Ednote {
           readonly attribute DOMString foo;
         };
@@ -159,6 +172,7 @@ interface Bar {
       </section>
       <section class="practice">
         <pre class="idl">
+        [Exposed=Window]
         interface Practice {
           readonly attribute DOMString baz;
         };
@@ -185,6 +199,7 @@ interface Bar {
       ${makeDefaultBody()}
       <section>
         <pre class="idl exclude">
+        [Exposed=Window]
         interface Foo {
           readonly attribute DOMString bar;
         };
@@ -192,6 +207,7 @@ interface Bar {
       </section>
       <section class="note">
         <pre class="idl">
+        [Exposed=Window]
         interface Bar {
           readonly attribute DOMString foo;
         };
@@ -215,12 +231,12 @@ interface Bar {
       ${makeDefaultBody()}
       <section id="conformance">
         <pre class=idl>
-        [Constructor, Exposed=Window]
-        interface BeforeInstallPromptEvent : Event {
+        [Exposed=Window]
+        interface BeforeInstallPromptEvent {
             Promise&lt;PromptResponseObject&gt; prompt();
         };
         dictionary PromptResponseObject {
-          AppBannerPromptOutcome userChoice;
+          BeforeInstallPromptEvent userChoice;
         };
         </pre>
         <pre class="webidl">
@@ -231,12 +247,12 @@ interface Bar {
       </section>
       <section id="idl-index"></section>
     `;
-    const expectedIDL = `[Constructor, Exposed=Window]
-interface BeforeInstallPromptEvent : Event {
+    const expectedIDL = `[Exposed=Window]
+interface BeforeInstallPromptEvent {
     Promise<PromptResponseObject> prompt();
 };
 dictionary PromptResponseObject {
-  AppBannerPromptOutcome userChoice;
+  BeforeInstallPromptEvent userChoice;
 };
 
 dictionary Bar {
@@ -252,7 +268,11 @@ dictionary Bar {
     const pre = idlIndex.querySelector("pre");
 
     expect(pre.querySelectorAll(".idlHeader").length).toBe(1);
-    pre.querySelector(".idlHeader").remove();
+    const idlHeader = pre.querySelector(".idlHeader");
+    expect(idlHeader.querySelector("a.self-link").getAttribute("href")).toBe(
+      "#actual-idl-index"
+    );
+    idlHeader.remove();
     expect(pre.textContent).toBe(expectedIDL);
   });
 
@@ -282,6 +302,7 @@ dictionary Bar {
     const body = `
       ${makeDefaultBody()}
       <pre class=idl>
+      [Exposed=Window]
       interface Test {
 
       };
