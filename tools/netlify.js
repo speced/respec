@@ -18,7 +18,10 @@ const SPECS = [
   "https://w3c.github.io/hr-time/",
 ];
 
-main().catch(console.error);
+main().catch(error => {
+  console.error(error);
+  process.exit(1);
+});
 
 async function main() {
   Builder.getRespecVersion = () => `PR#${REVIEW_ID}`;
