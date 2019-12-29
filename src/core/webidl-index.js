@@ -12,8 +12,8 @@
  * that is preferred.
  */
 export const name = "core/webidl-index";
-import { nonNormativeSelector } from "./utils.js";
 import { addIDLHeader } from "./webidl.js";
+import { nonNormativeSelector } from "./utils.js";
 
 export function run() {
   /** @type {HTMLElement | null} */
