@@ -111,9 +111,13 @@ function findOperationDfn(defn, parent, name) {
  */
 function addAlternativeNames(dfn, names) {
   const { local, exportable } = names;
-  const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-  lt.push(...exportable);
-  dfn.dataset.lt = [...new Set(lt)].join("|");
+  const lt = dfn.dataset.lt ? new Set(dfn.dataset.lt.split("|")) : new Set();
+  for (const item of exportable) {
+    lt.add(item);
+  }
+  // Fix any ill-placed ones - local ones don't belong here
+  local.filter(item => lt.has(item)).forEach(item => lt.delete(item));
+  dfn.dataset.lt = [...lt].join("|");
   dfn.dataset.localLt = local.join("|");
   registerDefinition(dfn, [...local, ...exportable]);
 }
@@ -152,9 +156,6 @@ function findNormalDfn(defn, parent, ...names) {
       showInlineError(dfns, msg, "Duplicate definition.");
     }
     if (dfns.length) {
-      if (name !== resolvedName) {
-        dfns[0].dataset.lt = resolvedName;
-      }
       return dfns[0];
     }
   }

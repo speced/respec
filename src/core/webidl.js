@@ -380,6 +380,7 @@ export async function run() {
       link.before(style);
     }
   }
+
   const astArray = [...idls].map(renderWebIDL);
 
   const validations = webidl2.validate(astArray);
