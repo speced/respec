@@ -13,9 +13,13 @@ export function run(conf) {
     `section:not(.head):not(.introductory) h2, h3, h4, h5, h6`
   );
   for (const h of headings) {
-    addId(h);
+    // prefer for ID: heading.id > parentElement.id > newly generated heading.id
+    let id = h.id;
+    if (!id) {
+      addId(h);
+      id = h.parentElement.id || h.id;
+    }
     if (!conf.addSectionLinks) continue;
-    const id = h.parentElement.id || h.id;
     h.appendChild(hyperHTML`
       <a href="${`#${id}`}" class="self-link" aria-label="§"></a>
     `);

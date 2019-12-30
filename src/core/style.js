@@ -17,9 +17,9 @@ const styleElement = insertStyle();
 
 async function loadStyle() {
   try {
-    return (await import("text!../../assets/respec2.css")).default;
+    return (await import("text!../../assets/respec.css")).default;
   } catch {
-    return fetchAsset("respec2.css");
+    return fetchAsset("respec.css");
   }
 }
 
