@@ -47,6 +47,7 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
+let menuLength = 0;
 let modal;
 let overlay;
 const errors = [];
@@ -56,21 +57,25 @@ const buttons = {};
 sub("start-all", () => document.body.prepend(respecUI), { once: true });
 sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
-const respecPill = hyperHTML`<button id='respec-pill' tabindex="-1" disabled>ReSpec</button>`;
+const respecPill = hyperHTML`<button id='respec-pill' disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
 respecPill.addEventListener("click", e => {
+  menuLength = menu.children.length;
   respecPill.focus();
   e.stopPropagation();
   if (menu.hidden) {
     menu.classList.remove("respec-hidden");
     menu.classList.add("respec-visible");
+    respecPill.setAttribute("tabindex", "-1");
   } else {
     menu.classList.add("respec-hidden");
     menu.classList.remove("respec-visible");
+    respecPill.removeAttribute("tabindex");
   }
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
   menu.hidden = !menu.hidden;
 });
+
 document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
     menu.classList.remove("respec-visible");
@@ -131,6 +136,28 @@ function createWarnButton(butName, arr, title) {
   ariaDecorate(button, ariaMap);
   return button;
 }
+window.addEventListener("load", () => {
+  menuLength = menu.children.length;
+});
+
+menu.addEventListener("keydown", e => {
+  if (
+    e.target == menu.getElementsByTagName("li")[0].firstElementChild &&
+    e.shiftKey &&
+    e.key === "Tab"
+  ) {
+    e.preventDefault();
+    menu.getElementsByTagName("li")[menuLength - 1].firstElementChild.focus();
+  }
+  if (
+    e.target ==
+      menu.getElementsByTagName("li")[menuLength - 1].firstElementChild &&
+    e.key === "Tab"
+  ) {
+    e.preventDefault();
+    menu.getElementsByTagName("li")[0].firstElementChild.focus();
+  }
+});
 
 export const ui = {
   show() {
