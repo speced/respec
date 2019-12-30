@@ -4,14 +4,16 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import { decorateDfn, findDfn } from "./dfn-finder.js";
 import {
+  addHashId,
   flatten,
   showInlineError,
   showInlineWarning,
   xmlEscape,
 } from "./utils.js";
+import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { hyperHTML, webidl2 } from "./import-maps.js";
+import { addCopyIDLButton } from "./webidl-clipboard.js";
 import { fetchAsset } from "./text-loader.js";
 import { registerDefinition } from "./dfn-map.js";
 
@@ -312,6 +314,7 @@ function renderWebIDL(idlElement, index) {
     // Skip this <pre> and move on to the next one.
     return [];
   }
+  // we add "idl" as the canonical match, so both "webidl" and "idl" work
   idlElement.classList.add("def", "idl");
   const html = webidl2.write(parse, { templates });
   const render = hyperHTML.bind(idlElement);
@@ -337,7 +340,21 @@ function renderWebIDL(idlElement, index) {
     const cites = dataset.cite.trim().split(/\s+/);
     dataset.cite = ["WebIDL", ...cites].join(" ");
   }
+  addIDLHeader(idlElement);
   return parse;
+}
+/**
+ * Adds a "WebIDL" decorative header/permalink to a block of WebIDL.
+ * @param {HTMLPreElement} pre
+ */
+export function addIDLHeader(pre) {
+  addHashId(pre, "webidl");
+  const header = hyperHTML`<div class="idlHeader"><a
+      class="self-link"
+      href="${`#${pre.id}`}"
+    >WebIDL</a></div>`;
+  pre.prepend(header);
+  addCopyIDLButton(header);
 }
 
 const cssPromise = loadStyle();
@@ -363,6 +380,7 @@ export async function run() {
       link.before(style);
     }
   }
+
   const astArray = [...idls].map(renderWebIDL);
 
   const validations = webidl2.validate(astArray);

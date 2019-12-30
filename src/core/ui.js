@@ -9,9 +9,8 @@
 //      - save to GitHub
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
-
+import { hyperHTML, pluralize } from "./import-maps.js";
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
 import { markdownToHtml } from "./markdown.js";
 import shortcut from "../../js/shortcut.js";
 import { sub } from "./pubsubhub.js";
@@ -94,7 +93,11 @@ function errWarn(msg, arr, butName, title) {
     buttons[butName] = createWarnButton(butName, arr, title);
     respecUI.appendChild(buttons[butName]);
   }
-  buttons[butName].textContent = arr.length;
+  const button = buttons[butName];
+  button.textContent = arr.length;
+  const label = arr.length === 1 ? pluralize.singular(title) : title;
+  const ariaMap = new Map([["label", `${arr.length} ${label}`]]);
+  ariaDecorate(button, ariaMap);
 }
 
 function createWarnButton(butName, arr, title) {
@@ -123,7 +126,6 @@ function createWarnButton(butName, arr, title) {
     ["expanded", "false"],
     ["haspopup", "true"],
     ["controls", `respec-pill-${butName}-modal`],
-    ["label", `Document ${title.toLowerCase()}`],
   ]);
   ariaDecorate(button, ariaMap);
   return button;
@@ -147,7 +149,7 @@ export const ui = {
     icon = icon || "";
     const id = `respec-button-${label.toLowerCase().replace(/\s+/, "-")}`;
     const button = hyperHTML`<button id="${id}" class="respec-option" title="${keyShort}">
-      <span class="respec-cmd-icon">${icon}</span> ${label}…
+      <span class="respec-cmd-icon" aria-hidden="true">${icon}</span> ${label}…
     </button>`;
     const menuItem = hyperHTML`<li role=menuitem>${button}</li>`;
     menuItem.addEventListener("click", handler);
@@ -156,10 +158,10 @@ export const ui = {
     return button;
   },
   error(msg) {
-    errWarn(msg, errors, "error", "Errors");
+    errWarn(msg, errors, "error", "ReSpec Errors");
   },
   warning(msg) {
-    errWarn(msg, warnings, "warning", "Warnings");
+    errWarn(msg, warnings, "warning", "ReSpec Warnings");
   },
   closeModal(owner) {
     if (overlay) {

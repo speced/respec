@@ -1,10 +1,15 @@
 // @ts-check
 import { hyperHTML as html } from "../../core/import-maps.js";
+import { l10n } from "./headers.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
 import showPeople from "./show-people.js";
 
 export default conf => {
+  const existingCopyright = document.querySelector(".copyright");
+  if (existingCopyright) {
+    existingCopyright.remove();
+  }
   return html`
     <div class="head">
       ${conf.logos.map(showLogo)}
@@ -23,7 +28,7 @@ export default conf => {
       <dl>
         ${conf.thisVersion
           ? html`
-              <dt>${conf.l10n.this_version}</dt>
+              <dt>${l10n.this_version}</dt>
               <dd>
                 <a class="u-url" href="${conf.thisVersion}"
                   >${conf.thisVersion}</a
@@ -33,7 +38,7 @@ export default conf => {
           : ""}
         ${conf.latestVersion
           ? html`
-              <dt>${conf.l10n.latest_published_version}</dt>
+              <dt>${l10n.latest_published_version}</dt>
               <dd>
                 <a href="${conf.latestVersion}">${conf.latestVersion}</a>
               </dd>
@@ -41,7 +46,7 @@ export default conf => {
           : ""}
         ${conf.edDraftURI
           ? html`
-              <dt>${conf.l10n.latest_editors_draft}</dt>
+              <dt>${l10n.latest_editors_draft}</dt>
               <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
             `
           : ""}
@@ -77,14 +82,14 @@ export default conf => {
                 : ""}
             `
           : ""}
-        <dt>${conf.multipleEditors ? conf.l10n.editors : conf.l10n.editor}</dt>
+        <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
         ${showPeople(conf.editors)}
         ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
           ? html`
               <dt>
                 ${conf.multipleFormerEditors
-                  ? conf.l10n.former_editors
-                  : conf.l10n.former_editor}
+                  ? l10n.former_editors
+                  : l10n.former_editor}
               </dt>
               ${showPeople(conf.formerEditors)}
             `
@@ -92,7 +97,7 @@ export default conf => {
         ${conf.authors
           ? html`
               <dt>
-                ${conf.multipleAuthors ? conf.l10n.authors : conf.l10n.author}
+                ${conf.multipleAuthors ? l10n.authors : l10n.author}
               </dt>
               ${showPeople(conf.authors)}
             `
@@ -109,41 +114,48 @@ export default conf => {
             </p>
           `
         : ""}
-      <p class="copyright">
-        <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
-          >Copyright</a
-        >
-        &copy;
-        ${conf.copyrightStart
-          ? `${conf.copyrightStart}-`
-          : ""}${conf.publishYear}
-        ${conf.additionalCopyrightHolders
-          ? html`
-              ${[conf.additionalCopyrightHolders]} &amp;
-            `
-          : ""}
-        the Contributors to the ${conf.title} Specification, published by the
-        <a href="${conf.wgURI}">${conf.wg}</a> under the
-        ${conf.isCGFinal
-          ? html`
-              <a href="https://www.w3.org/community/about/agreements/fsa/"
-                >W3C Community Final Specification Agreement (FSA)</a
-              >. A human-readable
-              <a href="https://www.w3.org/community/about/agreements/fsa-deed/"
-                >summary</a
+      ${existingCopyright
+        ? existingCopyright
+        : html`
+            <p class="copyright">
+              <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
+                >Copyright</a
               >
-              is available.
-            `
-          : html`
-              <a href="https://www.w3.org/community/about/agreements/cla/"
-                >W3C Community Contributor License Agreement (CLA)</a
-              >. A human-readable
-              <a href="https://www.w3.org/community/about/agreements/cla-deed/"
-                >summary</a
-              >
-              is available.
-            `}
-      </p>
+              &copy;
+              ${conf.copyrightStart
+                ? `${conf.copyrightStart}-`
+                : ""}${conf.publishYear}
+              ${conf.additionalCopyrightHolders
+                ? html`
+                    ${[conf.additionalCopyrightHolders]} &amp;
+                  `
+                : ""}
+              the Contributors to the ${conf.title} Specification, published by
+              the
+              <a href="${conf.wgURI}">${conf.wg}</a> under the
+              ${conf.isCGFinal
+                ? html`
+                    <a href="https://www.w3.org/community/about/agreements/fsa/"
+                      >W3C Community Final Specification Agreement (FSA)</a
+                    >. A human-readable
+                    <a
+                      href="https://www.w3.org/community/about/agreements/fsa-deed/"
+                      >summary</a
+                    >
+                    is available.
+                  `
+                : html`
+                    <a href="https://www.w3.org/community/about/agreements/cla/"
+                      >W3C Community Contributor License Agreement (CLA)</a
+                    >. A human-readable
+                    <a
+                      href="https://www.w3.org/community/about/agreements/cla-deed/"
+                      >summary</a
+                    >
+                    is available.
+                  `}
+            </p>
+          `}
       <hr title="Separator for header" />
     </div>
   `;
