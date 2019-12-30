@@ -1343,27 +1343,98 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const body = `
       <section>
         <pre class="idl">
+          [Exposed=Window]
           interface Banana {
             void nana();
+            void doTheFoo(DOMString req1, DOMString req2, optional DOMString optional3, optional DOMString optional4, DOMString... variadicArg);
+            readonly attribute boolean isFruit;
+            void selfDefined(DOMString arg1, optional DOMString arg2, DOMString ...variadic);
           };
         </pre>
         <p id="p" data-dfn-for="Banana">
           The interface <dfn>Banana</dfn> is nice
           and its operation <dfn>nana</dfn> is also nice.
           Our Banana is nice, so <dfn>Bananice</dfn>
+          And so it <dfn data-lt="I should be here too" id="doTheFoo">doTheFoo()</dfn>.
         </p>
       </section>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const p = doc.getElementById("p");
-    const [banana, nana, bananice] = p.querySelectorAll("dfn");
+
+    const [banana, nana] = p.querySelectorAll("dfn");
     expect(banana.dataset.export).toBeDefined();
     expect(banana.dataset.dfnType).toBe("interface");
     expect(nana.dataset.export).toBeDefined();
     expect(nana.dataset.dfnType).toBe("method");
     expect(nana.dataset.dfnFor).toBe("Banana");
-    expect(bananice.dataset.export).not.toBeDefined();
+
+    const doTheFoo = doc.getElementById("doTheFoo");
+    expect(doTheFoo.dataset.export).toBeDefined();
+    expect(doTheFoo.dataset.dfnFor).toBe("Banana");
+    const { lt, localLt } = doTheFoo.dataset;
+    const ltList = lt.split("|");
+    const localLtList = localLt.split("|");
+    expect(localLtList).toEqual([
+      "Banana.doTheFoo",
+      "Banana.doTheFoo()",
+      "doTheFoo",
+    ]);
+    expect(ltList).toContain("I should be here too");
+    expect(ltList).toContain("doTheFoo()");
+
+    // Only generate method names with required arguments, in the right order.
+    expect(ltList).not.toContain("doTheFoo(req1)");
+    expect(ltList).not.toContain("doTheFoo(req2)");
+    expect(ltList).not.toContain("doTheFoo(req2, req1)");
+
+    expect(ltList).toContain("doTheFoo(req1, req2)");
+    expect(ltList).toContain("doTheFoo(req1, req2, optional3)");
+    expect(ltList).toContain("doTheFoo(req1, req2, optional3, optional4)");
+    expect(ltList).toContain(
+      "doTheFoo(req1, req2, optional3, optional4, variadicArg)"
+    );
+    // Make sure none of the local-lts are in the lt
+    for (const localItem of localLtList) {
+      expect(ltList).not.toContain(localItem);
+    }
+
+    // Check isFruit attribute is exported correctly when self defined
+    const isFruitDfn = doc.getElementById("dom-banana-isfruit");
+    expect(isFruitDfn.dataset.export).toBeDefined();
+    expect(isFruitDfn.dataset.dfnFor).toBe("Banana");
+    expect(isFruitDfn.dataset.localLt).toBe("Banana.isFruit");
+    expect(isFruitDfn.dataset.lt).toBe("isFruit");
+
+    // Check that selfDefined() method is also exported correctly...
+    const selfDefinedDfn = doc.getElementById("dom-banana-selfdefined");
+    expect(selfDefinedDfn.dataset.export).toBeDefined();
+    expect(selfDefinedDfn.dataset.dfnFor).toBe("Banana");
+    const expectedLocalLt = [
+      "Banana.selfDefined",
+      "Banana.selfDefined()",
+      "selfDefined",
+    ];
+    const expectedLt = [
+      "selfDefined()",
+      "selfDefined(arg1)",
+      "selfDefined(arg1, arg2)",
+      "selfDefined(arg1, arg2, variadic)",
+    ];
+    for (const lt of expectedLt) {
+      expect(selfDefinedDfn.dataset.lt.split("|")).toContain(lt);
+    }
+    for (const lt of expectedLocalLt) {
+      expect(selfDefinedDfn.dataset.localLt.split("|")).toContain(lt);
+    }
+    // check that local/export lts are not in the wrong place
+    for (const lt of expectedLt) {
+      expect(selfDefinedDfn.dataset.localLt.split("|")).not.toContain(lt);
+    }
+    for (const lt of expectedLocalLt) {
+      expect(selfDefinedDfn.dataset.lt.split("|")).not.toContain(lt);
+    }
   });
 
   it("does not export partial IDL definitions", async () => {
