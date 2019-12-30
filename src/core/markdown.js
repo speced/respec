@@ -93,6 +93,15 @@ class Renderer extends marked.Renderer {
     }
     return super.code(code, language, isEscaped);
   }
+
+  heading(text, level, raw, slugger) {
+    const headingWithIdRegex = /(.+)\s+{#([\w-]+)}$/;
+    if (headingWithIdRegex.test(text)) {
+      const [, textContent, id] = text.match(headingWithIdRegex);
+      return `<h${level} id="${id}">${textContent}</h${level}>`;
+    }
+    return super.heading(text, level, raw, slugger);
+  }
 }
 
 /**
