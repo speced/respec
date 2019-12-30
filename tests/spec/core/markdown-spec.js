@@ -453,9 +453,9 @@ function getAnswer() {
       const ops = makeStandardOps({ format: "markdown" }, body);
       ops.abstract = null;
       const doc = await makeRSDoc(ops);
-      const pre = doc.getElementById("pre");
+      const span = doc.querySelector("pre > span");
 
-      expect(pre.textContent).toBe(idl);
+      expect(span.textContent).toBe(idl);
     });
   });
 });
