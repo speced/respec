@@ -107,7 +107,7 @@ function findOperationDfn(defn, parent, name) {
 
 /**
  * @param {HTMLElement} dfn
- * @param {Object} names
+ * @param {Record<"local" | "exportable", string[]>} names
  */
 function addAlternativeNames(dfn, names) {
   const { local, exportable } = names;
