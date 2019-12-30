@@ -376,9 +376,10 @@ const run = async () => {
     );
     console.log(colors.info(" Build Seems good... ✅"));
     const didChange = await git("status --porcelain");
-    // 4. Commit your changes (git commit -am 3.x.y)
+    // 4. Commit your changes
     if (didChange.trim()) {
-      await git(`commit -am "regenerated profiles for ${version}"`);
+      // `npm version` creates a commit. We add built files to same commit.
+      await git(`commit -a --amend --reuse-message=HEAD`);
     }
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     await git("checkout gh-pages");
