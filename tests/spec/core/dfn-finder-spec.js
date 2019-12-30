@@ -28,7 +28,6 @@ describe("Core — Definition finder", () => {
       body: makeDefaultBody() + bodyText,
     };
     const doc = await makeRSDoc(ops);
-    debugger
     const [barDfn, fooDfn] = doc.getElementsByTagName("dfn");
     expect(barDfn.dataset.lt).toBe("bar()");
     expect(barDfn.dataset.localLt).toBe("Foo.bar|Foo.bar()|bar");
