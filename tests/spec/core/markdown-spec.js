@@ -105,24 +105,25 @@ describe("Core - Markdown", () => {
 
   it("allows custom ids to headers", async () => {
     const body = `
-## Heading {#custom-id}
-PASS
+      ## Heading {#custom-id}
+      PASS
 
-Foo title {#foo}
-=========
-PASS
+      Foo title {#foo}
+      =========
+      PASS
 
-Bar title {#bar}
-------------------------------
-PASS
+      Bar title {#bar}
+      ------------------------------
+      PASS
 
-## Another title
-PASS
-`;
+      ## Another title
+      PASS
+    `;
     const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
     const doc = await makeRSDoc(ops);
 
-    const headings = doc.querySelectorAll("nav ~ section h2, nav ~ section h3");
+    const headings = doc.querySelectorAll("section h2, section h3");
     expect(headings.length).toBe(4);
 
     const [customID, foo, bar, automaticId] = headings;
