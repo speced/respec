@@ -49,6 +49,7 @@ export const name = "core/markdown";
 
 const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
+const endsWithSpace = /\s+$/gm;
 
 const inlineElems = new Set([
   "a",
@@ -202,7 +203,10 @@ function normalizePadding(text) {
   }
   const wrap = document.createElement("body");
   wrap.append(doc);
-  return wrap.innerHTML;
+  const result = endsWithSpace.test(wrap.innerHTML)
+    ? `${wrap.innerHTML.trimRight()}\n`
+    : wrap.innerHTML;
+  return result;
 }
 
 /**
@@ -254,12 +258,8 @@ function enableBlockLevelMarkdown(element, selector) {
   const elements = element.querySelectorAll(selector);
   for (const element of elements) {
     // Double newlines are needed to be parsed as Markdown
-    const { innerHTML } = element;
-    if (!/^\n\s*\n/.test(innerHTML)) {
+    if (!element.innerHTML.match(/^\n\s*\n/)) {
       element.prepend("\n\n");
-    }
-    if (!/\n\s*\n$/.test(innerHTML)) {
-      element.append("\n\n");
     }
   }
 }
