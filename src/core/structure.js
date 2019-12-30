@@ -80,7 +80,8 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
     }
 
     if (level <= maxTocLevel) {
-      const item = createTocListItem(section.header, section.element.id);
+      const id = section.header.id || section.element.id;
+      const item = createTocListItem(section.header, id);
       const sub = scanSections(section.subsections, maxTocLevel, {
         prefix: secno,
       });

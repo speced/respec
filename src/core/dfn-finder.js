@@ -40,19 +40,70 @@ export function findDfn(defn, name, { parent = "" } = {}) {
  * @param {string} parent
  * @param {string} name
  */
-function getAlternativeNames(type, parent, name) {
+function getAlternativeNames(idlAst, parent, name) {
+  const { type } = idlAst;
   const asQualifiedName = `${parent}.${name}`;
   switch (type) {
     case "constructor":
     case "operation": {
-      // Allow linking to both "method()" and "method" name.
+      // Allow linking to "method()", method(arg) and "method" name.
       const asMethodName = `${name}()`;
       const asFullyQualifiedName = `${asQualifiedName}()`;
-      return [asFullyQualifiedName, asQualifiedName, asMethodName, name];
+      const asMethodWithArgs = generateMethodNamesWithArgs(
+        name,
+        idlAst.arguments
+      );
+      return {
+        local: [asQualifiedName, asFullyQualifiedName, name],
+        exportable: [asMethodName, ...asMethodWithArgs],
+      };
     }
     case "attribute":
-      return [asQualifiedName, name];
+      return {
+        local: [asQualifiedName],
+        exportable: [name],
+      };
   }
+}
+
+/**
+ * Generates all possible permutations of a method name based
+ * on what arguments they method accepts.
+
+ * Required arguments are always present, and optional ones
+ * are stacked one by one.
+ *
+ * For examples: foo(req1, req2), foo(req1, req2, opt1) and so on.
+ *
+ * @param {String} operationName
+ * @param {*} argsAst
+ */
+function generateMethodNamesWithArgs(operationName, argsAst) {
+  const operationNames = [];
+  if (argsAst.length === 0) {
+    return operationNames;
+  }
+  const required = []; // required arguments
+  const optional = []; // optional arguments, including variadic ones
+  for (const { name, optional: isOptional, variadic } of argsAst) {
+    if (isOptional || variadic) {
+      optional.push(name);
+    } else {
+      required.push(name);
+    }
+  }
+  const requiredArgs = required.join(", ");
+  const requiredOperation = `${operationName}(${requiredArgs})`;
+  operationNames.push(requiredOperation);
+  const optionalOps = optional.map((_, index) => {
+    const optionalArgs = optional.slice(0, index + 1).join(", ");
+    const result = `${operationName}(${requiredArgs}${
+      optionalArgs ? `, ${optionalArgs}` : ""
+    })`;
+    return result;
+  });
+  operationNames.push(...optionalOps);
+  return operationNames;
 }
 
 /**
@@ -71,13 +122,19 @@ function findOperationDfn(defn, parent, name) {
 
 /**
  * @param {HTMLElement} dfn
- * @param {string[]} names
+ * @param {Record<"local" | "exportable", string[]>} names
  */
 function addAlternativeNames(dfn, names) {
-  const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-  lt.push(...names);
-  dfn.dataset.lt = [...new Set(lt)].join("|");
-  registerDefinition(dfn, names);
+  const { local, exportable } = names;
+  const lt = dfn.dataset.lt ? new Set(dfn.dataset.lt.split("|")) : new Set();
+  for (const item of exportable) {
+    lt.add(item);
+  }
+  // Fix any ill-placed ones - local ones don't belong here
+  local.filter(item => lt.has(item)).forEach(item => lt.delete(item));
+  dfn.dataset.lt = [...lt].join("|");
+  dfn.dataset.localLt = local.join("|");
+  registerDefinition(dfn, [...local, ...exportable]);
 }
 
 /**
@@ -114,22 +171,19 @@ function findNormalDfn(defn, parent, ...names) {
       showInlineError(dfns, msg, "Duplicate definition.");
     }
     if (dfns.length) {
-      if (name !== resolvedName) {
-        dfns[0].dataset.lt = resolvedName;
-      }
       return dfns[0];
     }
   }
 }
 
 /**
- * @param {HTMLElement} dfn
- * @param {*} defn
+ * @param {HTMLElement} dfnElem
+ * @param {*} idlAst
  * @param {string} parent
  * @param {string} name
  */
-export function decorateDfn(dfn, defn, parent, name) {
-  if (!dfn.id) {
+export function decorateDfn(dfnElem, idlAst, parent, name) {
+  if (!dfnElem.id) {
     const lCaseParent = parent.toLowerCase();
     const middle = lCaseParent ? `${lCaseParent}-` : "";
     let last = name
@@ -137,36 +191,40 @@ export function decorateDfn(dfn, defn, parent, name) {
       .replace(/[()]/g, "")
       .replace(/\s/g, "-");
     if (last === "") last = "the-empty-string";
-    dfn.id = `dom-${middle}${last}`;
+    dfnElem.id = `dom-${middle}${last}`;
   }
-  dfn.dataset.idl = defn.type;
-  dfn.dataset.title = dfn.textContent;
-  dfn.dataset.dfnFor = parent;
+  dfnElem.dataset.idl = idlAst.type;
+  dfnElem.dataset.title = dfnElem.textContent;
+  dfnElem.dataset.dfnFor = parent;
   // Derive the data-type for dictionary members, interface attributes,
   // and methods
-  switch (defn.type) {
+  switch (idlAst.type) {
     case "operation":
     case "attribute":
     case "field":
-      dfn.dataset.type = getDataType(defn);
+      dfnElem.dataset.type = getDataType(idlAst);
       break;
   }
 
   // Mark the definition as code.
-  if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
-    wrapInner(dfn, dfn.ownerDocument.createElement("code"));
+  if (
+    !dfnElem.querySelector("code") &&
+    !dfnElem.closest("code") &&
+    dfnElem.children
+  ) {
+    wrapInner(dfnElem, dfnElem.ownerDocument.createElement("code"));
   }
 
-  // Add data-lt values and register them
-  switch (defn.type) {
+  // Add data-lt and data-local-lt values and register them
+  switch (idlAst.type) {
     case "attribute":
     case "constructor":
     case "operation":
-      addAlternativeNames(dfn, getAlternativeNames(defn.type, parent, name));
+      addAlternativeNames(dfnElem, getAlternativeNames(idlAst, parent, name));
       break;
   }
 
-  return dfn;
+  return dfnElem;
 }
 
 /**
