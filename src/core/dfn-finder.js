@@ -49,7 +49,10 @@ function getAlternativeNames(idlAst, parent, name) {
       // Allow linking to "method()", method(arg) and "method" name.
       const asMethodName = `${name}()`;
       const asFullyQualifiedName = `${asQualifiedName}()`;
-      const asMethodWithArgs = deriveMethodWithArgs(name, idlAst.arguments);
+      const asMethodWithArgs = generateMethodNamesWithArgs(
+        name,
+        idlAst.arguments
+      );
       return {
         local: [asQualifiedName, asFullyQualifiedName, name],
         exportable: [asMethodName, ...asMethodWithArgs],
@@ -63,13 +66,25 @@ function getAlternativeNames(idlAst, parent, name) {
   }
 }
 
-function deriveMethodWithArgs(operationName, argsAst) {
+/**
+ * Generates all possible permutations of a method name based
+ * on what arguments they method accepts.
+
+ * Required arguments are always present, and optional ones
+ * are stacked one by one.
+ *
+ * For examples: foo(req1, req2), foo(req1, req2, opt1) and so on.
+ *
+ * @param {String} operationName
+ * @param {*} argsAst
+ */
+function generateMethodNamesWithArgs(operationName, argsAst) {
   const operationNames = [];
   if (argsAst.length === 0) {
     return operationNames;
   }
-  const optional = [];
-  const required = [];
+  const required = []; // required arguments
+  const optional = []; // optional arguments, including variadic ones
   for (const { name, optional: isOptional, variadic } of argsAst) {
     if (isOptional || variadic) {
       optional.push(name);
@@ -200,7 +215,7 @@ export function decorateDfn(dfnElem, idlAst, parent, name) {
     wrapInner(dfnElem, dfnElem.ownerDocument.createElement("code"));
   }
 
-  // Add data-lt and data-lt values and register them
+  // Add data-lt and data-local-lt values and register them
   switch (idlAst.type) {
     case "attribute":
     case "constructor":
