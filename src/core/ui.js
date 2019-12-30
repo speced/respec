@@ -66,11 +66,9 @@ respecPill.addEventListener("click", e => {
   if (menu.hidden) {
     menu.classList.remove("respec-hidden");
     menu.classList.add("respec-visible");
-    respecPill.setAttribute("tabindex", "-1");
   } else {
     menu.classList.add("respec-hidden");
     menu.classList.remove("respec-visible");
-    respecPill.removeAttribute("tabindex");
   }
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
   menu.hidden = !menu.hidden;
@@ -137,6 +135,7 @@ function createWarnButton(butName, arr, title) {
   return button;
 }
 window.addEventListener("load", () => {
+  ui.addCommand(`Close`, ui.closeModal, "Esc", "❌");
   menuLength = menu.children.length;
 });
 
@@ -152,6 +151,7 @@ menu.addEventListener("keydown", e => {
   if (
     e.target ==
       menu.getElementsByTagName("li")[menuLength - 1].firstElementChild &&
+    !e.shiftKey &&
     e.key === "Tab"
   ) {
     e.preventDefault();
