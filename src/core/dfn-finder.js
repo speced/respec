@@ -70,8 +70,8 @@ function deriveMethodWithArgs(operationName, argsAst) {
   }
   const optional = [];
   const required = [];
-  for (const { name, optional: isOptional } of argsAst) {
-    if (isOptional) {
+  for (const { name, optional: isOptional, variadic } of argsAst) {
+    if (isOptional || variadic) {
       optional.push(name);
     } else {
       required.push(name);
