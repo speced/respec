@@ -70,6 +70,12 @@ respecPill.addEventListener("click", e => {
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
   menu.hidden = !menu.hidden;
 });
+respecPill.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    e.preventDefault();
+    respecPill.click();
+  }
+});
 
 document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
@@ -133,15 +139,21 @@ function createWarnButton(butName, arr, title) {
 }
 
 menu.addEventListener("keydown", e => {
-  if (
+  if (e.key === "Escape") {
+    e.preventDefault();
+    menu.classList.add("respec-hidden");
+    menu.classList.remove("respec-visible");
+    respecPill.setAttribute("aria-expanded", String(menu.hidden));
+    menu.hidden = true;
+    respecPill.focus();
+  } else if (
     e.target == menu.querySelector("li:first-child").firstElementChild &&
     e.shiftKey &&
     e.key === "Tab"
   ) {
     e.preventDefault();
     menu.querySelector("li:last-child").firstElementChild.focus();
-  }
-  if (
+  } else if (
     e.target == menu.querySelector("li:last-child").firstElementChild &&
     !e.shiftKey &&
     e.key === "Tab"
