@@ -47,7 +47,6 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
-let menuLength = 0;
 let modal;
 let overlay;
 const errors = [];
@@ -60,8 +59,6 @@ sub("end-all", () => document.body.prepend(respecUI), { once: true });
 const respecPill = hyperHTML`<button id='respec-pill' disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
 respecPill.addEventListener("click", e => {
-  menuLength = menu.children.length;
-  respecPill.focus();
   e.stopPropagation();
   if (menu.hidden) {
     menu.classList.remove("respec-hidden");
@@ -134,28 +131,23 @@ function createWarnButton(butName, arr, title) {
   ariaDecorate(button, ariaMap);
   return button;
 }
-window.addEventListener("load", () => {
-  ui.addCommand(`Close`, ui.closeModal, "Esc", "❌");
-  menuLength = menu.children.length;
-});
 
 menu.addEventListener("keydown", e => {
   if (
-    e.target == menu.getElementsByTagName("li")[0].firstElementChild &&
+    e.target == menu.querySelector("li:first-child").firstElementChild &&
     e.shiftKey &&
     e.key === "Tab"
   ) {
     e.preventDefault();
-    menu.getElementsByTagName("li")[menuLength - 1].firstElementChild.focus();
+    menu.querySelector("li:last-child").firstElementChild.focus();
   }
   if (
-    e.target ==
-      menu.getElementsByTagName("li")[menuLength - 1].firstElementChild &&
+    e.target == menu.querySelector("li:last-child").firstElementChild &&
     !e.shiftKey &&
     e.key === "Tab"
   ) {
     e.preventDefault();
-    menu.getElementsByTagName("li")[0].firstElementChild.focus();
+    menu.querySelector("li:first-child").firstElementChild.focus();
   }
 });
 
