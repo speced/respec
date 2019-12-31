@@ -276,3 +276,28 @@ it("makes sure references section has expected localization text", async () => {
   expect(normRef.textContent).toContain("Normatieve referenties");
   expect(infoRef.textContent).toContain("Informatieve referenties");
 });
+
+it("allows custom content in the references section", async () => {
+  const ops = {
+    config: makeBasicConfig(),
+    htmlAttrs: {
+      lang: "nl",
+    },
+    body: `
+    <section id="conformance">[[HTML]]</section>
+    <section id="references">
+      <h2>Custom header</h2>
+      <p>Some descriptive text [[?DOM]]</p>
+    </section>
+    `,
+  };
+  const doc = await makeRSDoc(ops);
+  const { textContent: h2Text } = doc.querySelector("#references > h2");
+  const { textContent: pText } = doc.querySelector("#references > p");
+  const [normRef, infoRef] = doc.querySelectorAll("#references h3");
+  expect(doc.documentElement.lang).toBe("nl");
+  expect(h2Text).toContain("Custom header");
+  expect(pText).toContain("Some descriptive text");
+  expect(normRef.textContent).toContain("Normatieve referenties");
+  expect(infoRef.textContent).toContain("Informatieve referenties");
+});

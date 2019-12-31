@@ -105,7 +105,7 @@ export async function run(conf) {
     pub("warn", msg);
   }
   conf.biblio = biblio;
-  const localAliases = Array.from(Object.keys(conf.localBiblio))
+  const localAliases = Object.keys(conf.localBiblio)
     .filter(key => conf.localBiblio[key].hasOwnProperty("aliasOf"))
     .map(key => conf.localBiblio[key].aliasOf)
     .filter(key => !conf.localBiblio.hasOwnProperty(key));

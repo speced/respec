@@ -236,8 +236,15 @@ function shouldWrapByCode(elem, term = "") {
         return true;
       } else if (dataset.title === term) {
         return true;
-      } else if (dataset.lt) {
-        return dataset.lt.split("|").includes(term);
+      } else if (dataset.lt || dataset.localLt) {
+        const terms = [];
+        if (dataset.lt) {
+          terms.push(...dataset.lt.split("|"));
+        }
+        if (dataset.localLt) {
+          terms.push(...dataset.localLt.split("|"));
+        }
+        return terms.includes(term);
       }
     }
   }

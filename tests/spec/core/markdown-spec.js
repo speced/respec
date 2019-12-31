@@ -44,7 +44,6 @@ describe("Core - Markdown", () => {
       </div>
     `;
     const ops = makeStandardOps({ format: "markdown" }, body);
-    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector(".note p em")).toBeTruthy();
     expect(doc.querySelector(".issue p em")).toBeTruthy();
@@ -59,7 +58,6 @@ describe("Core - Markdown", () => {
           * nested list item
     `;
     const ops = makeStandardOps({ format: "markdown" }, body);
-    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector("code")).toBeFalsy();
     expect(doc.querySelector("#foo h2").textContent).toBe("1. Foo");
@@ -103,6 +101,44 @@ describe("Core - Markdown", () => {
     }
   });
 
+  xit("allows custom ids to headers", async () => {
+    const body = `
+      ## Heading {#custom-id}
+      PASS
+
+      Foo title {#foo}
+      =========
+      PASS
+
+      Bar title {#bar}
+      ------------------------------
+      PASS
+
+      ## Another title
+      PASS
+    `;
+    const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
+    const doc = await makeRSDoc(ops);
+
+    const headings = doc.querySelectorAll("section h2, section h3");
+    expect(headings.length).toBe(4);
+
+    const [customID, foo, bar, automaticId] = headings;
+
+    expect(customID.id).toBe("custom-id");
+    expect(customID.textContent).toBe("1. Heading");
+
+    expect(foo.id).toBe("foo");
+    expect(foo.textContent).toBe("2. Foo title");
+
+    expect(bar.id).toBe("bar");
+    expect(bar.textContent).toBe("2.1 Bar title");
+
+    expect(automaticId.id).toBe("x2-2-another-title");
+    expect(automaticId.textContent).toBe("2.2 Another title");
+  });
+
   it("structures content in nested sections with appropriate titles", async () => {
     const body = `
 
@@ -124,7 +160,6 @@ describe("Core - Markdown", () => {
 
         `;
     const ops = makeStandardOps({ format: "markdown" }, body);
-    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     const foo = doc.querySelector("#foo h2");
     expect(foo.textContent).toBe("1. Foo");
@@ -211,7 +246,6 @@ describe("Core - Markdown", () => {
 
         `;
     const ops = makeStandardOps({ format: "markdown" }, body);
-    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     const baz = doc.querySelector("#baz h2");
     expect(baz.textContent).toBe("2. Baz");
@@ -267,7 +301,6 @@ describe("Core - Markdown", () => {
       \`\`\`
     `;
     const ops = makeStandardOps({ format: "markdown" }, body);
-    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     const [webidlBlock, jsBlock, normalBlock] = doc.querySelectorAll("pre");
 
@@ -300,7 +333,6 @@ describe("Core - Markdown", () => {
     `;
 
     const ops = makeStandardOps({ format: "markdown" }, body);
-    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     const [mixedCaseWebidl] = doc.querySelectorAll("pre");
 
@@ -309,41 +341,6 @@ describe("Core - Markdown", () => {
     expect(
       mixedCaseWebidl.querySelector(".respec-button-copy-paste")
     ).toBeTruthy();
-  });
-
-  it("properly indents <pre> contents with no block indentation", async () => {
-    const idl = `function getAnswer() {\n  return 42;\n}`;
-    const body = `
-# test
-
-\`\`\` js
-function getAnswer() {
-  return 42;
-}
-\`\`\`
-    `;
-
-    const ops = makeStandardOps({ format: "markdown" }, body);
-    const doc = await makeRSDoc(ops);
-    const pre = doc.querySelector("pre");
-
-    expect(pre.textContent).toBe(idl);
-  });
-
-  it("does not parse texts inside <pre> as markdown", async () => {
-    const code = `1 * 2 * 3;`;
-    const body = `
-      <pre class="example">
-      ${code}
-      </pre>
-    `;
-
-    const ops = makeStandardOps({ format: "markdown" }, body);
-    ops.abstract = null;
-    const doc = await makeRSDoc(ops);
-    const pre = doc.querySelector("pre");
-
-    expect(pre.textContent).toBe(code);
   });
 
   describe("nolinks options", () => {
@@ -356,7 +353,6 @@ function getAnswer() {
         </div>
       `;
       const ops = makeStandardOps({ format: "markdown" }, body);
-      ops.abstract = null;
       const doc = await makeRSDoc(ops);
       const anchors = doc.querySelectorAll("#testElem a");
       expect(anchors.length).toBe(2);
@@ -402,7 +398,6 @@ function getAnswer() {
       expect(text3.innerHTML).toBe(`test3 text "<code>inner text</code>".`);
     });
   });
-
   describe("data-format=markdown", () => {
     it("replaces processes data-format=markdown sections, but leaves other sections alone", async () => {
       const body = `
@@ -436,26 +431,28 @@ function getAnswer() {
       expect(dontChange).toBe("## this should not change");
     });
   });
-
-  describe("Markdown-inside-block backward compatibility", () => {
-    it("parses indented <pre> after a list", async () => {
-      const idl = `dictionary Indented {\n  any shouldBeIndented;\n};`;
-      const body = `
-        <div>
-        1. I lack double newlines between HTML block
-        </div>
-        <pre class="idl" id="pre">
-        dictionary Indented {
-          any shouldBeIndented;
-        };
-        </pre>
-      `;
-      const ops = makeStandardOps({ format: "markdown" }, body);
-      ops.abstract = null;
+  describe("Whitespace compatibility", () => {
+    it("normalises whitespace, but ignore white with pre tags", async () => {
+      const str = `   trim start\n    * trim 3 from start \n\n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
+      const ops = makeStandardOps(
+        null,
+        `<section id=markdown1 data-format=markdown>${str}`
+      );
       const doc = await makeRSDoc(ops);
-      const pre = doc.getElementById("pre");
+      const [p1, ul, pre, p2] = doc.getElementById("markdown1").children;
+      expect(p1.localName).toBe("p");
+      expect(p1.textContent).toBe("trim start");
+      expect(p2.textContent).toBe("foo \n bar");
+      expect(ul.children.length).toBe(1);
 
-      expect(pre.textContent).toBe(idl);
+      const [li] = ul.children;
+      expect(li.localName).toBe("li");
+      expect(li.textContent).toBe("trim 3 from start ");
+
+      const preText = pre.textContent.split("\n");
+      expect(preText[0]).toBe("trim 1");
+      expect(preText[1]).toBe("   if(x){");
+      expect(preText[2]).toBe("     party()");
     });
   });
 });

@@ -9,7 +9,7 @@ describe("Core - ID headers", () => {
     <section class="introductory"><h2>Intro</h2></section>
     <section id="t0"><p>BLAH</p><h6>FOO</h6></section>
     <section><h2>test-1</h2></section>
-    <section><h2>Pass</h2></section>
+    <section><h2 id="custom-id">Pass</h2></section>
     <section id="sotd">
     <p>...</p>
     <section>
@@ -59,7 +59,7 @@ describe("Core - ID headers", () => {
       expect(test1.getAttribute("href")).toBe("#test-1");
 
       const test2 = doc.querySelector("#pass > h2 > a.self-link");
-      expect(test2.getAttribute("href")).toBe("#pass");
+      expect(test2.getAttribute("href")).toBe("#custom-id");
     });
 
     it("doesn't add section links to h2s .introductory, but h3, h4s are ok", () => {

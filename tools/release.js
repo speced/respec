@@ -362,7 +362,7 @@ const run = async () => {
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
-    await npm(`version ${version} -m "v${version}"`);
+    await npm(`version ${version} -m "v${version}" --no-git-tag-version`);
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     await npm("run builddeps");
@@ -376,10 +376,12 @@ const run = async () => {
     );
     console.log(colors.info(" Build Seems good... ✅"));
     const didChange = await git("status --porcelain");
-    // 4. Commit your changes (git commit -am 3.x.y)
+    // 4. Commit your changes
     if (didChange.trim()) {
-      await git(`commit -am "regenerated profiles for ${version}"`);
+      // `npm version` creates a commit. We add built files to same commit.
+      await git(`commit -a --amend --reuse-message=HEAD`);
     }
+    await git(`tag "v${version}"`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     await git("checkout gh-pages");
     await git("pull origin gh-pages");

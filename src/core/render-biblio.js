@@ -59,13 +59,17 @@ export function run(conf) {
   const informs = Array.from(conf.informativeReferences);
   const norms = Array.from(conf.normativeReferences);
 
-  if (!informs.length && !norms.length && !conf.refNote) return;
+  if (!informs.length && !norms.length) return;
 
-  const refsec = hyperHTML`
-    <section id='references' class='appendix'>
-      <h2>${l10n.references}</h2>
-      ${conf.refNote ? hyperHTML`<p>${conf.refNote}</p>` : ""}
-    </section>`;
+  const refSection =
+    document.querySelector("section#references") ||
+    hyperHTML`<section id='references'></section>`;
+
+  if (!document.querySelector("section#references > h2")) {
+    refSection.prepend(hyperHTML`<h2>${l10n.references}</h2>`);
+  }
+
+  refSection.classList.add("appendix");
 
   for (const type of ["Normative", "Informative"]) {
     const refs = type === "Normative" ? norms : informs;
@@ -111,14 +115,14 @@ export function run(conf) {
       <dl class='bibliography'>
         ${refsToShow.map(showRef)}
       </dl>`);
-    refsec.appendChild(sec);
+    refSection.appendChild(sec);
 
     const aliases = getAliases(goodRefs);
     decorateInlineReference(uniqueRefs, aliases);
     warnBadRefs(badRefs);
   }
 
-  document.body.appendChild(refsec);
+  document.body.appendChild(refSection);
 }
 
 /**
