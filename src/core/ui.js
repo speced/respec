@@ -69,12 +69,7 @@ respecPill.addEventListener("click", e => {
   }
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
   menu.hidden = !menu.hidden;
-});
-respecPill.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
-    e.preventDefault();
-    respecPill.click();
-  }
+  menu.querySelector("li:first-child").firstElementChild.focus();
 });
 
 document.documentElement.addEventListener("click", () => {
@@ -146,20 +141,20 @@ menu.addEventListener("keydown", e => {
     respecPill.setAttribute("aria-expanded", String(menu.hidden));
     menu.hidden = true;
     respecPill.focus();
-  } else if (
-    e.target == menu.querySelector("li:first-child").firstElementChild &&
-    e.shiftKey &&
-    e.key === "Tab"
-  ) {
-    e.preventDefault();
-    menu.querySelector("li:last-child").firstElementChild.focus();
-  } else if (
-    e.target == menu.querySelector("li:last-child").firstElementChild &&
-    !e.shiftKey &&
-    e.key === "Tab"
-  ) {
-    e.preventDefault();
-    menu.querySelector("li:first-child").firstElementChild.focus();
+  } else if (e.key === "Tab") {
+    if (
+      e.target == menu.querySelector("li:first-child").firstElementChild &&
+      e.shiftKey
+    ) {
+      e.preventDefault();
+      menu.querySelector("li:last-child").firstElementChild.focus();
+    } else if (
+      e.target == menu.querySelector("li:last-child").firstElementChild &&
+      !e.shiftKey
+    ) {
+      e.preventDefault();
+      menu.querySelector("li:first-child").firstElementChild.focus();
+    }
   }
 });
 
@@ -210,6 +205,7 @@ export const ui = {
     if (!modal) return;
     modal.remove();
     modal = null;
+    respecPill.focus();
   },
   freshModal(title, content, currentOwner) {
     if (modal) modal.remove();
