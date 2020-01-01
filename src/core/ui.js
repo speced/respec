@@ -69,7 +69,7 @@ respecPill.addEventListener("click", e => {
   }
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
   menu.hidden = !menu.hidden;
-  menu.querySelector("li:first-child").firstElementChild.focus();
+  menu.querySelector("li:first-child *").focus();
 });
 
 document.documentElement.addEventListener("click", () => {
@@ -142,18 +142,15 @@ menu.addEventListener("keydown", e => {
     menu.hidden = true;
     respecPill.focus();
   } else if (e.key === "Tab") {
-    if (
-      e.target == menu.querySelector("li:first-child").firstElementChild &&
-      e.shiftKey
-    ) {
+    if (e.target == menu.querySelector("li:first-child *") && e.shiftKey) {
       e.preventDefault();
-      menu.querySelector("li:last-child").firstElementChild.focus();
+      menu.querySelector("li:last-child *").focus();
     } else if (
-      e.target == menu.querySelector("li:last-child").firstElementChild &&
+      e.target == menu.querySelector("li:last-child *") &&
       !e.shiftKey
     ) {
       e.preventDefault();
-      menu.querySelector("li:first-child").firstElementChild.focus();
+      menu.querySelector("li:first-child *").focus();
     }
   }
 });
