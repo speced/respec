@@ -392,6 +392,7 @@ describe("Core - WebIDL", () => {
   it("should handle constructor operation overloads", async () => {
     const body = `
       <section data-dfn-for="SuperStar" data-link-for="SuperStar">
+        <h2>Header</h2>
         <pre class="idl">
           [Exposed=Window]
           interface SuperStar {
@@ -1141,7 +1142,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(linkFromElsewhere.textContent).toBe("Documented.docString");
 
     expect(
-      section.querySelector("#without-link-for a[href='#idl-def-documented']")
+      section.querySelector("#without-link-for a[href='#dom-documented']")
         .textContent
     ).toBe("Documented");
   });
