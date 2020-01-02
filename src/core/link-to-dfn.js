@@ -56,7 +56,6 @@ class CaseInsensitiveMap extends Map {
 }
 
 export async function run(conf) {
-  console.log(definitionMap);
   const titleToDfns = mapTitleToDfns();
   /** @type {HTMLElement[]} */
   const possibleExternalLinks = [];
