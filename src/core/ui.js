@@ -133,25 +133,32 @@ function createWarnButton(butName, arr, title) {
   return button;
 }
 
+function focusTrapper(e, firstFocussable, lastFocussable) {
+  if (e.key === "Tab") {
+    if (e.target == firstFocussable && e.shiftKey) {
+      e.preventDefault();
+      lastFocussable.focus();
+    } else if (e.target == lastFocussable && !e.shiftKey) {
+      e.preventDefault();
+      firstFocussable.focus();
+    }
+  }
+}
+
 menu.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
+  if (e.key === "Escape" && menu.hidden === false) {
     e.preventDefault();
     menu.classList.add("respec-hidden");
     menu.classList.remove("respec-visible");
     respecPill.setAttribute("aria-expanded", String(menu.hidden));
     menu.hidden = true;
     respecPill.focus();
-  } else if (e.key === "Tab") {
-    if (e.target == menu.querySelector("li:first-child *") && e.shiftKey) {
-      e.preventDefault();
-      menu.querySelector("li:last-child *").focus();
-    } else if (
-      e.target == menu.querySelector("li:last-child *") &&
-      !e.shiftKey
-    ) {
-      e.preventDefault();
-      menu.querySelector("li:first-child *").focus();
-    }
+  } else {
+    focusTrapper(
+      e,
+      menu.querySelector("li:first-child *"),
+      menu.querySelector("li:last-child *")
+    );
   }
 });
 
