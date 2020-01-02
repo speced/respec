@@ -157,11 +157,12 @@ describe("Core — xref", () => {
     expect(link.classList).toContain("respec-offending-element");
   });
 
-  it("adds link to unique external terms", async () => {
+  it("adds link to unique external terms and shows error if external term doesn't exist", async () => {
     const body = `
       <section>
         <p id="external-link"><a>event handler</a></p>
         <p id="external-dfn"><dfn class="externalDFN">URL parser</dfn></p>
+        <a id="external-link1">NOT_FOUND</a>
       </section>`;
     const config = { xref: "web-platform", localBiblio };
     const ops = makeStandardOps(config, body);
@@ -174,6 +175,11 @@ describe("Core — xref", () => {
     const dfn = doc.querySelector("#external-dfn dfn a");
     expect(dfn.href).toBe(expectedLinks.get("url parser"));
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
+
+    const link = doc.getElementById("external-link1");
+    expect(link.classList).toContain("respec-offending-element");
+    expect(link.getAttribute("href")).toBeFalsy();
+    expect(link.title).toBe("Error: No matching dfn found.");
   });
 
   it("doesn't link auto-filled anchors", async () => {
@@ -187,18 +193,6 @@ describe("Core — xref", () => {
       "https://www.w3.org/TR/credential-management-1/"
     );
     expect(link.textContent).toBe("Credential Management Level 1");
-  });
-
-  it("shows error if external term doesn't exist", async () => {
-    const body = `<section><a id="external-link">NOT_FOUND</a></section>`;
-    const config = { xref: "web-platform" };
-    const ops = makeStandardOps(config, body);
-    const doc = await makeRSDoc(ops);
-
-    const link = doc.getElementById("external-link");
-    expect(link.classList).toContain("respec-offending-element");
-    expect(link.getAttribute("href")).toBeFalsy();
-    expect(link.title).toBe("Error: No matching dfn found.");
   });
 
   it("uses data-cite to disambiguate", async () => {
