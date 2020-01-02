@@ -176,10 +176,10 @@ describe("Core — xref", () => {
     expect(dfn.href).toBe(expectedLinks.get("url parser"));
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
 
-    const link = doc.getElementById("external-link1");
-    expect(link.classList).toContain("respec-offending-element");
-    expect(link.getAttribute("href")).toBeFalsy();
-    expect(link.title).toBe("Error: No matching dfn found.");
+    const link1 = doc.getElementById("external-link1");
+    expect(link1.classList).toContain("respec-offending-element");
+    expect(link1.getAttribute("href")).toBeFalsy();
+    expect(link1.title).toBe("Error: No matching dfn found.");
   });
 
   it("doesn't link auto-filled anchors", async () => {
