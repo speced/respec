@@ -81,6 +81,19 @@ document.documentElement.addEventListener("click", () => {
 });
 respecUI.appendChild(menu);
 
+menu.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !menu.hidden) {
+    menu.classList.add("respec-hidden");
+    menu.classList.remove("respec-visible");
+    respecPill.setAttribute("aria-expanded", String(menu.hidden));
+    respecPill.focus();
+    menu.hidden = true;
+  }
+});
+window.addEventListener("load", () => {
+  trapFocus(menu);
+});
+
 const ariaMap = new Map([
   ["controls", "respec-menu"],
   ["expanded", "false"],
@@ -133,34 +146,34 @@ function createWarnButton(butName, arr, title) {
   return button;
 }
 
-function focusTrapper(e, firstFocussable, lastFocussable) {
-  if (e.key === "Tab") {
-    if (e.target == firstFocussable && e.shiftKey) {
-      e.preventDefault();
-      lastFocussable.focus();
-    } else if (e.target == lastFocussable && !e.shiftKey) {
-      e.preventDefault();
-      firstFocussable.focus();
-    }
-  }
-}
+function trapFocus(element) {
+  const focusableEls = element.querySelectorAll(
+    'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])'
+  );
+  const firstFocusableEl = focusableEls[0];
+  const lastFocusableEl = focusableEls[focusableEls.length - 1];
+  const KEYCODE_TAB = 9;
 
-menu.addEventListener("keydown", e => {
-  if (e.key === "Escape" && menu.hidden === false) {
-    e.preventDefault();
-    menu.classList.add("respec-hidden");
-    menu.classList.remove("respec-visible");
-    respecPill.setAttribute("aria-expanded", String(menu.hidden));
-    menu.hidden = true;
-    respecPill.focus();
-  } else {
-    focusTrapper(
-      e,
-      menu.querySelector("li:first-child *"),
-      menu.querySelector("li:last-child *")
-    );
-  }
-});
+  element.addEventListener("keydown", e => {
+    const isTabPressed = e.key === "Tab" || e.keyCode === KEYCODE_TAB;
+
+    if (!isTabPressed) {
+      return;
+    }
+
+    if (e.shiftKey) {
+      /* shift + tab */ if (document.activeElement === firstFocusableEl) {
+        lastFocusableEl.focus();
+        e.preventDefault();
+      }
+    } /* tab */ else {
+      if (document.activeElement === lastFocusableEl) {
+        firstFocusableEl.focus();
+        e.preventDefault();
+      }
+    }
+  });
+}
 
 export const ui = {
   show() {
