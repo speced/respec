@@ -103,28 +103,32 @@ describe("Core — Definitions", () => {
 
   it("distinguishes between definition types", async () => {
     const body = `
+      <section>
+      <h2>testing</h2>
       <pre class="idl">
       [Exposed=Window]
-      interface Foo {
+      interface Testing {
         attribute DOMString bar;
       };
       </pre>
-      <p>
-        The <dfn data-dfn-for="Foo" data-dfn-type="dfn">bar</dfn> concept.
+      <p data-dfn-for="Testing">
+        The <dfn data-dfn-for="Testing" data-dfn-type="dfn">bar</dfn> concept.
         The <dfn>bar</dfn> attribute, returns 🍺.
       </p>
       <p id="concept-link">
-        Links to the concept of [=Foo/bar=].
+        Links to the concept of [=Testing/bar=].
       </p>
       <p id="idl-link">
-        Links to the attribute {{Foo/bar}}.
+        Links to the attribute {{Testing/bar}}.
       </p>
     `;
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
+
     const conceptLink = doc.querySelector("#concept-link a[href='#dfn-bar']");
-    const idlLink = doc.querySelector("#idl-link a[href='#dom-foo-bar']");
     expect(conceptLink).toBeTruthy();
+
+    const idlLink = doc.querySelector("#idl-link a[href='#dom-testing-bar']");
     expect(idlLink).toBeTruthy();
   });
 
