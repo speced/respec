@@ -67,5 +67,5 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
     const offendingElement = result.offendingElements[0];
     const { hash } = new URL(offendingElement.href);
     expect(hash).toBe("#NAME-NOT-EXIST");
-  })
+  });
 });
