@@ -101,17 +101,17 @@ function trapFocus(element) {
   const lastFocusableEl = focusableEls[focusableEls.length - 1];
 
   element.addEventListener("keydown", e => {
-    if (e.key !== "Tab" || e.keyCode !== /*tab keycode*/ 9) {
+    if (e.key !== "Tab" || e.keyCode !== /* tab keycode */ 9) {
       return;
     }
     // shift + tab
     if (e.shiftKey) {
-       if (document.activeElement === firstFocusableEl) {
+      if (document.activeElement === firstFocusableEl) {
         lastFocusableEl.focus();
         e.preventDefault();
       }
       return;
-    } 
+    }
     // tab
     if (document.activeElement === lastFocusableEl) {
       firstFocusableEl.focus();
