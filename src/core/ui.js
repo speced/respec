@@ -101,7 +101,7 @@ function trapFocus(element) {
   const lastFocusableEl = focusableEls[focusableEls.length - 1];
 
   element.addEventListener("keydown", e => {
-    if (e.key !== "Tab" || e.keyCode !== /* tab keycode */ 9) {
+    if (e.key !== "Tab") {
       return;
     }
     // shift + tab
