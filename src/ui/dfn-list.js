@@ -18,6 +18,9 @@ ul.classList.add("respec-dfn-list");
 const render = hyperHTML.bind(ul);
 
 ul.addEventListener("click", ev => {
+  if (ev.target instanceof HTMLElement && !ev.target.matches("a")) {
+    return;
+  }
   ui.closeModal();
   ev.stopPropagation();
 });
