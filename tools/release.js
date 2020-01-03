@@ -57,10 +57,8 @@ colors.setTheme({
 
 function commandRunner(program) {
   return (cmd, options = { showOutput: false }) => {
+    console.log(colors.debug(`Run: ${program} ${colors.prompt(cmd)}`));
     if (DEBUG) {
-      console.log(
-        colors.debug(`Pretending to run: ${program} ${colors.prompt(cmd)}`)
-      );
       return Promise.resolve("");
     }
     return toExecPromise(`${program} ${cmd}`, { ...options, timeout: 200000 });
@@ -219,8 +217,7 @@ const Prompts = {
       "log `git describe --tags --abbrev=0`..HEAD --oneline"
     );
     if (!commits) {
-      console.log(colors.warn("😢  No commits. Nothing to release."));
-      return process.exit(1);
+      throw new Error("😢  No commits. Nothing to release.");
     }
     const stylizedCommits = this.stylelizeCommits(commits);
 
@@ -281,9 +278,12 @@ function toExecPromise(cmd, { timeout, showOutput }) {
       proc.stderr.pipe(process.stderr);
       proc.stdout.pipe(process.stdout);
     }
+    proc.on("error", err => {
+      reject(new Error(err));
+    });
     proc.on("close", number => {
       if (number === 1) {
-        process.exit(1);
+        reject(new Error("Abnormal termination"));
       }
     });
   });
@@ -375,13 +375,13 @@ const run = async () => {
       { showOutput: true }
     );
     console.log(colors.info(" Build Seems good... ✅"));
-    const didChange = await git("status --porcelain");
+
     // 4. Commit your changes
-    if (didChange.trim()) {
-      // `npm version` creates a commit. We add built files to same commit.
-      await git(`commit -a --amend --reuse-message=HEAD`);
-    }
+    await git("add builds");
+    // `npm version` creates a commit. We add built files to same commit.
+    await git("commit --amend --allow-empty --reuse-message=HEAD");
     await git(`tag "v${version}"`);
+
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     await git("checkout gh-pages");
     await git("pull origin gh-pages");
@@ -408,9 +408,10 @@ const run = async () => {
       await git(`checkout ${initialBranch}`);
     }
     process.exit(1);
+    return;
   }
+  // all is good...
+  process.exit(0);
 };
 
-run()
-  .then(() => process.exit(0))
-  .catch(err => console.error(err.stack));
+run();
