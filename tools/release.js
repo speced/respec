@@ -364,7 +364,7 @@ const run = async () => {
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
-    await npm(`version ${version} -m "v${version}" --no-git-tag-version`);
+    await npm(`version ${version} -m "v${version}" --no-git-tag-version --allow-same-version`);
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     await npm("run builddeps");
