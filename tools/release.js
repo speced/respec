@@ -57,10 +57,8 @@ colors.setTheme({
 
 function commandRunner(program) {
   return (cmd, options = { showOutput: false }) => {
+    console.log(colors.debug(`Run: ${program} ${colors.prompt(cmd)}`));
     if (DEBUG) {
-      console.log(
-        colors.debug(`Pretending to run: ${program} ${colors.prompt(cmd)}`)
-      );
       return Promise.resolve("");
     }
     return toExecPromise(`${program} ${cmd}`, { ...options, timeout: 200000 });
@@ -364,9 +362,7 @@ const run = async () => {
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
-    await npm(
-      `version ${version} -m "v${version}" --no-git-tag-version --allow-same-version`
-    );
+    await npm(`version ${version} -m "v${version}" --no-git-tag-version`);
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     await npm("run builddeps");
@@ -379,13 +375,13 @@ const run = async () => {
       { showOutput: true }
     );
     console.log(colors.info(" Build Seems good... ✅"));
-    const didChange = await git("status --porcelain");
+
     // 4. Commit your changes
-    if (didChange.trim()) {
-      // `npm version` creates a commit. We add built files to same commit.
-      await git(`commit -a --amend --allow-empty --reuse-message=HEAD`);
-    }
+    await git("add builds");
+    // `npm version` creates a commit. We add built files to same commit.
+    await git("commit --amend --allow-empty --reuse-message=HEAD");
     await git(`tag "v${version}"`);
+
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     await git("checkout gh-pages");
     await git("pull origin gh-pages");
@@ -393,7 +389,6 @@ const run = async () => {
     await git("checkout develop");
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
-    await git("pull origin develop");
     await git("push origin develop");
     await git("push origin gh-pages");
     await git("push --tags");
