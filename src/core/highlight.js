@@ -16,9 +16,9 @@ const ghCssPromise = loadStyle();
 
 async function loadStyle() {
   try {
-    return (await import("text!../../assets/github.css")).default;
+    return (await import("text!../../assets/highlight.css")).default;
   } catch {
-    return fetchAsset("github.css");
+    return fetchAsset("highlight.css");
   }
 }
 
