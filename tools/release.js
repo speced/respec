@@ -391,6 +391,7 @@ const run = async () => {
     await git("checkout develop");
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
+    await git("pull origin develop");
     await git("push origin develop");
     await git("push origin gh-pages");
     await git("push --tags");
