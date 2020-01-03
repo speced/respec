@@ -381,7 +381,7 @@ const run = async () => {
     // 4. Commit your changes
     if (didChange.trim()) {
       // `npm version` creates a commit. We add built files to same commit.
-      await git(`commit -a --amend --reuse-message=HEAD`);
+      await git(`commit -a --amend --allow-empty --reuse-message=HEAD`);
     }
     await git(`tag "v${version}"`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
