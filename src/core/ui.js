@@ -47,6 +47,9 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
+window.addEventListener("load", () => {
+  trapFocus(menu);
+});
 let modal;
 let overlay;
 const errors = [];
@@ -69,7 +72,6 @@ respecPill.addEventListener("click", e => {
   }
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
   menu.hidden = !menu.hidden;
-  trapFocus(menu);
   menu.querySelector("li:first-child *").focus();
 });
 
