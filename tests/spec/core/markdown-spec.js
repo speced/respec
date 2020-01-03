@@ -101,7 +101,7 @@ describe("Core - Markdown", () => {
     }
   });
 
-  it("allows custom ids to headers", async () => {
+  xit("allows custom ids to headers", async () => {
     const body = `
       ## Heading {#custom-id}
       PASS
