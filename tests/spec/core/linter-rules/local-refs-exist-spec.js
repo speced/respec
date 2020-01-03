@@ -57,12 +57,10 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
       <a name="NAME">PASS</a>
       <a href="#NAME">PASS</a>
       <a href="#NAME-NOT-EXIST">FAIL</a>
-      <a href="#NAME-NOT-EXIST">FAIL</a>
     `;
 
     const result = await rule.lint(config, doc);
     expect(result.name).toBe("local-refs-exist");
-    expect(result.occurrences).toBe(2);
 
     const offendingElement = result.offendingElements[0];
     const { hash } = new URL(offendingElement.href);
