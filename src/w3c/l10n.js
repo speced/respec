@@ -31,7 +31,7 @@ const additions = {
   },
   de: {
     status_at_publication:
-      "Dieser Abschnitt beschreibt den Status des Dokuments zum Zeitpunkt der Publikation. Neuere Dokumente können dieses Dokument obsolet machen. Eine Liste der aktuellen Publikatinen des W3C und die aktuellste Fassung dieser Spezifikation kann im <a href='https://www.w3.org/TR/'>W3C technical reports index</a> unter https://www.w3.org/TR/ eingesehen werden.",
+      "Dieser Abschnitt beschreibt den Status des Dokuments zum Zeitpunkt der Publikation. Neuere Dokumente können dieses Dokument obsolet machen. Eine Liste der aktuellen Publikatinen des W3C und die aktuellste Fassung dieser Spezifikation kann im <a href='https://www.w3.org/TR/'>W3C technical reports index</a> unter https://www.w3.org/TR/ abgerufen werden.",
   },
 };
 
