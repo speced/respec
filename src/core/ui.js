@@ -92,31 +92,30 @@ menu.addEventListener("keydown", e => {
   }
 });
 
+// Code adapted from https://hiddedevries.nl/en/blog/2017-01-29-using-javascript-to-trap-focus-in-an-element
 function trapFocus(element) {
   const focusableEls = element.querySelectorAll(
     'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])'
   );
   const firstFocusableEl = focusableEls[0];
   const lastFocusableEl = focusableEls[focusableEls.length - 1];
-  const KEYCODE_TAB = 9;
 
   element.addEventListener("keydown", e => {
-    const isTabPressed = e.key === "Tab" || e.keyCode === KEYCODE_TAB;
-
-    if (!isTabPressed) {
+    if (e.key !== "Tab" || e.keyCode !== /*tab keycode*/ 9) {
       return;
     }
-
+    // shift + tab
     if (e.shiftKey) {
-      /* shift + tab */ if (document.activeElement === firstFocusableEl) {
+       if (document.activeElement === firstFocusableEl) {
         lastFocusableEl.focus();
         e.preventDefault();
       }
-    } /* tab */ else {
-      if (document.activeElement === lastFocusableEl) {
-        firstFocusableEl.focus();
-        e.preventDefault();
-      }
+      return;
+    } 
+    // tab
+    if (document.activeElement === lastFocusableEl) {
+      firstFocusableEl.focus();
+      e.preventDefault();
     }
   });
 }
@@ -238,6 +237,7 @@ export const ui = {
     overlay.addEventListener("click", () => this.closeModal(currentOwner));
     overlay.classList.toggle("respec-show-overlay");
     modal.hidden = false;
+    trapFocus(modal);
   },
 };
 shortcut.add("Esc", () => ui.closeModal());
