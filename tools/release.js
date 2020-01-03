@@ -219,8 +219,7 @@ const Prompts = {
       "log `git describe --tags --abbrev=0`..HEAD --oneline"
     );
     if (!commits) {
-      console.log(colors.warn("😢  No commits. Nothing to release."));
-      return process.exit(1);
+      throw new Error("😢  No commits. Nothing to release.");
     }
     const stylizedCommits = this.stylelizeCommits(commits);
 
@@ -281,9 +280,12 @@ function toExecPromise(cmd, { timeout, showOutput }) {
       proc.stderr.pipe(process.stderr);
       proc.stdout.pipe(process.stdout);
     }
+    proc.on("error", err => {
+      reject(new Error(err));
+    });
     proc.on("close", number => {
       if (number === 1) {
-        process.exit(1);
+        reject(new Error("Abnormal termination"));
       }
     });
   });
@@ -362,7 +364,7 @@ const run = async () => {
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
-    await npm(`version ${version} -m "v${version}"`);
+    await npm(`version ${version} -m "v${version}" --no-git-tag-version --allow-same-version`);
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     await npm("run builddeps");
@@ -379,8 +381,9 @@ const run = async () => {
     // 4. Commit your changes
     if (didChange.trim()) {
       // `npm version` creates a commit. We add built files to same commit.
-      await git(`commit -a --amend --reuse-message=HEAD`);
+      await git(`commit -a --amend --allow-empty --reuse-message=HEAD`);
     }
+    await git(`tag "v${version}"`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     await git("checkout gh-pages");
     await git("pull origin gh-pages");
@@ -388,6 +391,7 @@ const run = async () => {
     await git("checkout develop");
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
+    await git("pull origin develop");
     await git("push origin develop");
     await git("push origin gh-pages");
     await git("push --tags");
@@ -407,9 +411,10 @@ const run = async () => {
       await git(`checkout ${initialBranch}`);
     }
     process.exit(1);
+    return;
   }
+  // all is good...
+  process.exit(0);
 };
 
-run()
-  .then(() => process.exit(0))
-  .catch(err => console.error(err.stack));
+run();
