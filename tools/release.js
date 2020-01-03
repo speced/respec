@@ -286,7 +286,6 @@ function toExecPromise(cmd, { timeout, showOutput }) {
     proc.on("close", number => {
       if (number === 1) {
         reject(new Error("Abnormal termination"));
-        process.exit(1);
       }
     });
   });
