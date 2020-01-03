@@ -219,8 +219,7 @@ const Prompts = {
       "log `git describe --tags --abbrev=0`..HEAD --oneline"
     );
     if (!commits) {
-      console.log(colors.warn("😢  No commits. Nothing to release."));
-      return process.exit(1);
+      throw new Error("😢  No commits. Nothing to release.");
     }
     const stylizedCommits = this.stylelizeCommits(commits);
 
@@ -281,8 +280,12 @@ function toExecPromise(cmd, { timeout, showOutput }) {
       proc.stderr.pipe(process.stderr);
       proc.stdout.pipe(process.stdout);
     }
+    proc.on("error", err => {
+      reject(new Error(err));
+    });
     proc.on("close", number => {
       if (number === 1) {
+        reject(new Error("Abnormal termination"));
         process.exit(1);
       }
     });
@@ -408,9 +411,10 @@ const run = async () => {
       await git(`checkout ${initialBranch}`);
     }
     process.exit(1);
+    return;
   }
+  // all is good...
+  process.exit(0);
 };
 
-run()
-  .then(() => process.exit(0))
-  .catch(err => console.error(err.stack));
+run();
