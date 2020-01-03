@@ -145,20 +145,18 @@ function addAlternativeNames(dfn, names) {
 function findNormalDfn(defn, parent, ...names) {
   for (const name of names) {
     let resolvedName =
-      defn.type === "enum-value" && name === ""
-        ? "the-empty-string"
-        : name.toLowerCase();
-    let dfnForArray = definitionMap[resolvedName];
+      defn.type === "enum-value" && name === "" ? "the-empty-string" : name;
+    let dfnForArray = [...(definitionMap.get(resolvedName) || [])];
     let dfns = getDfns(dfnForArray, parent, name, defn.type);
     // If we haven't found any definitions with explicit [for]
     // and [title], look for a dotted definition, "parent.name".
     if (dfns.length === 0 && parent !== "") {
       resolvedName = `${parent}.${resolvedName}`;
-      dfnForArray = definitionMap[resolvedName.toLowerCase()];
-      if (dfnForArray !== undefined && dfnForArray.length === 1) {
+      dfnForArray = [...(definitionMap.get(resolvedName) || [])];
+      if (dfnForArray.length === 1) {
         dfns = dfnForArray;
         // Found it: register with its local name
-        delete definitionMap[resolvedName];
+        definitionMap.delete(resolvedName);
         registerDefinition(dfns[0], [resolvedName]);
       }
     } else {
