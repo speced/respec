@@ -15,7 +15,7 @@ const localizationStrings = {
     best_practice: "Best Practice ",
   },
   de: {
-    best_practive: "Musterbeispiel ",
+    best_practice: "Musterbeispiel ",
   },
 };
 const l10n = getIntlData(localizationStrings);
