@@ -13,6 +13,9 @@ const localizationStrings = {
   nl: {
     informative: "Dit onderdeel is niet normatief.",
   },
+  de: {
+    informative: "Dieser Abschnitt ist nicht normativ.",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

@@ -26,6 +26,11 @@ const localizationStrings = {
     norm_references: "Referencias normativas",
     references: "Referencias",
   },
+  de: {
+    info_references: "Weiterführende Informationen",
+    norm_references: "Normen und Spezifikationen",
+    references: "Referenzen",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

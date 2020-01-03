@@ -14,6 +14,9 @@ const localizationStrings = {
   es: {
     until: "Hasta",
   },
+  de: {
+    until: "bis",
+  },
 };
 
 const lang = defaultLang in localizationStrings ? defaultLang : "en";

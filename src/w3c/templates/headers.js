@@ -75,6 +75,17 @@ const localizationStrings = {
     latest_published_version: "Versión publicada mas reciente:",
     this_version: "Ésta versión:",
   },
+  de: {
+    author: "Autor/in:",
+    authors: "Autor/innen:",
+    editor: "Redaktion:",
+    editors: "Redaktion:",
+    former_editor: "Frühere Mitwirkende:",
+    former_editors: "Frühere Mitwirkende:",
+    latest_editors_draft: "Letzter Entwurf:",
+    latest_published_version: "Letzte publizierte Fassung:",
+    this_version: "Diese Fassung:",
+  },
 };
 
 export const l10n = getIntlData(localizationStrings);

@@ -109,6 +109,19 @@ const es = {
   warning: "Aviso",
 };
 
+const de = {
+  about_respec: "Über ReSpec",
+  abstract: "Zusammenfassung",
+  definition_list: "Definitionen",
+  editors_note: "Redaktioneller Hinweis",
+  list_of_definitions: "Liste der Definitionen",
+  note: "Hinweis",
+  save_as: "Speichern",
+  save_snapshot: "Exportieren",
+  search_specref: "Spezifikationen",
+  warning: "Warnung",
+};
+
 export const l10n = {
   en: { ...base },
   ko: { ...base, ...ko },
@@ -116,6 +129,7 @@ export const l10n = {
   ja: { ...base, ...ja },
   nl: { ...base, ...nl },
   es: { ...base, ...es },
+  de: { ...base, ...de },
 };
 
 l10n["zh-hans"] = l10n.zh;

@@ -21,6 +21,9 @@ const localizationStrings = {
   es: {
     sotd: "Estado de este Document",
   },
+  de: {
+    sotd: "Status dieses Dokuments",
+  },
 };
 
 export const l10n = getIntlData(localizationStrings);

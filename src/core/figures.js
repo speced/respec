@@ -35,6 +35,10 @@ const localizationStrings = {
     fig: "圖 ",
     list_of_figures: "List of Figures",
   },
+  de: {
+    fig: "Abbildung",
+    list_of_figures: "Abbildungsverzeichnis",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

@@ -10,6 +10,9 @@ const localizationStrings = {
   en: {
     title: "Search definitions",
   },
+  de: {
+    title: "Definitionen durchsuchen",
+  },
 };
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 const l10n = localizationStrings[lang];

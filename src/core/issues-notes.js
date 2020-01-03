@@ -32,6 +32,10 @@ const localizationStrings = {
     issue_summary: "Resumen de la cuestión",
     no_issues_in_spec: "No hay problemas enumerados en esta especificación.",
   },
+  de: {
+    issue_summary: "Offene Fragen",
+    no_issues_in_spec: "Diese Spezifikation enthält keine offenen Fragen.",
+  },
 };
 
 const cssPromise = loadStyle();
