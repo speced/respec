@@ -135,7 +135,7 @@ export function getIntlData(localizationStrings) {
   return new Proxy(localizationStrings, {
     /** @param {string} key */
     get(data, key) {
-      const result = data[lang][key] || data.en[key];
+      const result = (data[lang] && data[lang][key]) || data.en[key];
       if (!result) {
         throw new Error(`No l10n data for key: "${key}"`);
       }
