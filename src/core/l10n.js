@@ -24,7 +24,6 @@ const base = {
   open_bugs: "open bugs",
   open_parens: "(",
   save_as: "Save as",
-  toc: "Table of Contents",
 };
 
 const ko = {};
@@ -32,20 +31,17 @@ const ko = {};
 const zh = {
   bug_tracker: "错误跟踪：",
   open_bugs: "修正中的错误",
-  toc: "内容大纲",
 };
 
 const ja = {
   bug_tracker: "バグの追跡履歴：",
   open_bugs: "改修されていないバグ",
-  toc: "目次",
 };
 
 const nl = {
   bug_tracker: "Meldingensysteem:",
   open_bugs: "open meldingen",
   save_as: "Bewaar als",
-  toc: "Inhoudsopgave",
 };
 
 const es = {
@@ -54,7 +50,6 @@ const es = {
   close_parens: ")",
   open_bugs: "Bugs abiertos",
   open_parens: "(",
-  toc: "Tabla de Contenidos",
 };
 
 export const l10n = {

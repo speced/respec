@@ -29,6 +29,12 @@ const localizationStrings = {
   en: {
     toc: "Table of Contents",
   },
+  zh: {
+    toc: "内容大纲",
+  },
+  ja: {
+    toc: "目次",
+  },
   nl: {
     toc: "Inhoudsopgave",
   },
