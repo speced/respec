@@ -21,14 +21,9 @@ if (html && !html.hasAttribute("lang")) {
 const base = {
   bug_tracker: "Bug tracker:",
   close_parens: ")",
-  info_references: "Informative references",
-  issue_summary: "Issue Summary",
-  issue: "Issue",
-  norm_references: "Normative references",
   open_bugs: "open bugs",
   open_parens: "(",
   participate: "Participate",
-  references: "References",
   save_as: "Save as",
   toc: "Table of Contents",
 };
@@ -54,12 +49,8 @@ const ja = {
 const nl = {
   bug_tracker: "Meldingensysteem:",
   file_a_bug: "Dien een melding in",
-  info_references: "Informatieve referenties",
-  issue_summary: "Lijst met issues",
-  norm_references: "Normatieve referenties",
   open_bugs: "open meldingen",
   participate: "Doe mee",
-  references: "Referenties",
   save_as: "Bewaar als",
   toc: "Inhoudsopgave",
 };
@@ -69,12 +60,9 @@ const es = {
   bug_tracker: "Repositorio de bugs:",
   close_parens: ")",
   file_a_bug: "Nota un bug",
-  info_references: "Referencias informativas",
-  norm_references: "Referencias normativas",
   open_bugs: "Bugs abiertos",
   open_parens: "(",
   participate: "Participad",
-  references: "Referencias",
   toc: "Tabla de Contenidos",
 };
 
