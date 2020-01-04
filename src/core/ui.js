@@ -83,11 +83,12 @@ menu.addEventListener("keydown", e => {
   }
 });
 
-function closeOpenMenu(){
+function closeOpenMenu() {
   menu.classList.toggle("respec-hidden");
   menu.classList.toggle("respec-visible");
   menu.hidden = !menu.hidden;
 }
+
 // Code adapted from https://hiddedevries.nl/en/blog/2017-01-29-using-javascript-to-trap-focus-in-an-element
 function trapFocus(element) {
   const focusableEls = element.querySelectorAll(
