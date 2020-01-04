@@ -63,37 +63,31 @@ const respecPill = hyperHTML`<button id='respec-pill' disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
 respecPill.addEventListener("click", e => {
   e.stopPropagation();
-  if (menu.hidden) {
-    menu.classList.remove("respec-hidden");
-    menu.classList.add("respec-visible");
-  } else {
-    menu.classList.add("respec-hidden");
-    menu.classList.remove("respec-visible");
-  }
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
-  menu.hidden = !menu.hidden;
+  closeOpenMenu();
   menu.querySelector("li:first-child *").focus();
 });
 
 document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
-    menu.classList.remove("respec-visible");
-    menu.classList.add("respec-hidden");
-    menu.hidden = true;
+    closeOpenMenu();
   }
 });
 respecUI.appendChild(menu);
 
 menu.addEventListener("keydown", e => {
   if (e.key === "Escape" && !menu.hidden) {
-    menu.classList.add("respec-hidden");
-    menu.classList.remove("respec-visible");
     respecPill.setAttribute("aria-expanded", String(menu.hidden));
+    closeOpenMenu();
     respecPill.focus();
-    menu.hidden = true;
   }
 });
 
+function closeOpenMenu(){
+  menu.classList.toggle("respec-hidden");
+  menu.classList.toggle("respec-visible");
+  menu.hidden = !menu.hidden;
+}
 // Code adapted from https://hiddedevries.nl/en/blog/2017-01-29-using-javascript-to-trap-focus-in-an-element
 function trapFocus(element) {
   const focusableEls = element.querySelectorAll(
@@ -115,7 +109,7 @@ function trapFocus(element) {
       return;
     }
     // tab
-    if (document.activeElement === lastFocusableEl) {
+    else if (document.activeElement === lastFocusableEl) {
       firstFocusableEl.focus();
       e.preventDefault();
     }
