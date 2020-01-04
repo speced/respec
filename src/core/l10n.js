@@ -21,20 +21,16 @@ if (html && !html.hasAttribute("lang")) {
 const base = {
   bug_tracker: "Bug tracker:",
   close_parens: ")",
-  editors_note: "Editor's note",
-  feature_at_risk: "(Feature at Risk) Issue",
   info_references: "Informative references",
   issue_summary: "Issue Summary",
   issue: "Issue",
   norm_references: "Normative references",
-  note: "Note",
   open_bugs: "open bugs",
   open_parens: "(",
   participate: "Participate",
   references: "References",
   save_as: "Save as",
   toc: "Table of Contents",
-  warning: "Warning",
 };
 
 const ko = {};
@@ -42,7 +38,6 @@ const ko = {};
 const zh = {
   bug_tracker: "错误跟踪：",
   file_a_bug: "反馈错误",
-  note: "注",
   open_bugs: "修正中的错误",
   participate: "参与：",
   toc: "内容大纲",
@@ -51,7 +46,6 @@ const zh = {
 const ja = {
   bug_tracker: "バグの追跡履歴：",
   file_a_bug: "問題報告",
-  note: "注",
   open_bugs: "改修されていないバグ",
   participate: "参加方法：",
   toc: "目次",
@@ -59,37 +53,29 @@ const ja = {
 
 const nl = {
   bug_tracker: "Meldingensysteem:",
-  editors_note: "Redactionele noot",
   file_a_bug: "Dien een melding in",
   info_references: "Informatieve referenties",
   issue_summary: "Lijst met issues",
   norm_references: "Normatieve referenties",
-  note: "Noot",
   open_bugs: "open meldingen",
   participate: "Doe mee",
   references: "Referenties",
   save_as: "Bewaar als",
   toc: "Inhoudsopgave",
-  warning: "Waarschuwing",
 };
 
 const es = {
   authors: "Autores:",
   bug_tracker: "Repositorio de bugs:",
   close_parens: ")",
-  editors_note: "Nota de editor",
   file_a_bug: "Nota un bug",
   info_references: "Referencias informativas",
-  issue_summary: "Resumen de la cuestión",
-  issue: "Cuestión",
   norm_references: "Referencias normativas",
-  note: "Nota",
   open_bugs: "Bugs abiertos",
   open_parens: "(",
   participate: "Participad",
   references: "Referencias",
   toc: "Tabla de Contenidos",
-  warning: "Aviso",
 };
 
 export const l10n = {
