@@ -1,7 +1,7 @@
 // @ts-check
 // Module core/informative
 // Mark specific sections as informative, based on CSS
-import { getIntlData } from "../core/l10n.js";
+import { getIntlData } from "../core/utils.js";
 import { hyperHTML } from "./import-maps.js";
 
 export const name = "core/informative";

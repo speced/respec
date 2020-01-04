@@ -10,8 +10,13 @@
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
-import { addId, children, parents, renameElement } from "./utils.js";
-import { getIntlData } from "../core/l10n.js";
+import {
+  addId,
+  children,
+  getIntlData,
+  parents,
+  renameElement,
+} from "./utils.js";
 import { hyperHTML } from "./import-maps.js";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
