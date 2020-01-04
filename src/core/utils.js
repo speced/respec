@@ -297,14 +297,14 @@ export function norm(str) {
  * @param {T} localizationStrings
  * @returns {T[keyof T]}
  */
-export function getIntlData(localizationStrings) {
+export function getIntlData(localizationStrings, lang = docLang) {
   // Proxy return type is a known bug:
   // https://github.com/Microsoft/TypeScript/issues/20846
   // @ts-ignore
   return new Proxy(localizationStrings, {
     /** @param {string} key */
     get(data, key) {
-      const result = (data[docLang] && data[docLang][key]) || data.en[key];
+      const result = (data[lang] && data[lang][key]) || data.en[key];
       if (!result) {
         throw new Error(`No l10n data for key: "${key}"`);
       }
