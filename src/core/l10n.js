@@ -6,7 +6,6 @@
  * to manage the config.l10n object so that other parts of the system can
  * localize their text.
  */
-import { getIntlData } from "./utils.js";
 
 export const name = "core/l10n";
 
@@ -124,8 +123,6 @@ l10n["zh-hans"] = l10n.zh;
 l10n["zh-cn"] = l10n.zh;
 
 export const lang = html && html.lang in l10n ? html.lang : "en";
-
-export { getIntlData };
 
 export function run(config) {
   config.l10n = l10n[lang] || l10n.en;
