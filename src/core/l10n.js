@@ -19,7 +19,6 @@ if (html && !html.hasAttribute("lang")) {
 
 // We use en-US as the base
 const base = {
-  abstract: "Abstract",
   bug_tracker: "Bug tracker:",
   close_parens: ")",
   editors_note: "Editor's note",
@@ -38,12 +37,9 @@ const base = {
   warning: "Warning",
 };
 
-const ko = {
-  abstract: "요약",
-};
+const ko = {};
 
 const zh = {
-  abstract: "摘要",
   bug_tracker: "错误跟踪：",
   file_a_bug: "反馈错误",
   note: "注",
@@ -53,7 +49,6 @@ const zh = {
 };
 
 const ja = {
-  abstract: "要約",
   bug_tracker: "バグの追跡履歴：",
   file_a_bug: "問題報告",
   note: "注",
@@ -63,7 +58,6 @@ const ja = {
 };
 
 const nl = {
-  abstract: "Samenvatting",
   bug_tracker: "Meldingensysteem:",
   editors_note: "Redactionele noot",
   file_a_bug: "Dien een melding in",
@@ -80,7 +74,6 @@ const nl = {
 };
 
 const es = {
-  abstract: "Resumen",
   authors: "Autores:",
   bug_tracker: "Repositorio de bugs:",
   close_parens: ")",
