@@ -34,7 +34,6 @@ const base = {
   participate: "Participate",
   references: "References",
   save_as: "Save as",
-  search_specref: "Search Specref",
   toc: "Table of Contents",
   warning: "Warning",
 };
@@ -76,7 +75,6 @@ const nl = {
   participate: "Doe mee",
   references: "Referenties",
   save_as: "Bewaar als",
-  search_specref: "Doorzoek Specref",
   toc: "Inhoudsopgave",
   warning: "Waarschuwing",
 };

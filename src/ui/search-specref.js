@@ -1,14 +1,23 @@
 // @ts-check
 // Module ui/search-specref
 // Search Specref database
-import { l10n, lang } from "../core/l10n.js";
-import { flatten } from "../core/utils.js";
+import { flatten, getIntlData } from "../core/utils.js";
 import { hyperHTML } from "../core/import-maps.js";
 import { ui } from "../core/ui.js";
 import { wireReference } from "../core/biblio.js";
 
+const localizationStrings = {
+  en: {
+    search_specref: "Search Specref",
+  },
+  nl: {
+    search_specref: "Doorzoek Specref",
+  },
+};
+const l10n = getIntlData(localizationStrings);
+
 const button = ui.addCommand(
-  l10n[lang].search_specref,
+  l10n.search_specref,
   show,
   "Ctrl+Shift+Alt+space",
   "🔎"
@@ -123,7 +132,7 @@ form.addEventListener("submit", async ev => {
 
 function show() {
   render();
-  ui.freshModal(l10n[lang].search_specref, form, button);
+  ui.freshModal(l10n.search_specref, form, button);
   /** @type {HTMLElement} */
   const input = form.querySelector("input[type=search]");
   input.focus();
