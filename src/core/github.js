@@ -26,6 +26,14 @@ const localizationStrings = {
     participate: "Participate",
     commit_history: "Commit history",
   },
+  zh: {
+    participate: "参与：",
+    file_a_bug: "反馈错误",
+  },
+  ja: {
+    file_a_bug: "問題報告",
+    participate: "参加方法：",
+  },
   nl: {
     commit_history: "Revisiehistorie",
     file_a_bug: "Dien een melding in",
