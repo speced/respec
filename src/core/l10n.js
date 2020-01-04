@@ -19,7 +19,6 @@ if (html && !html.hasAttribute("lang")) {
 
 // We use en-US as the base
 const base = {
-  about_respec: "About",
   abstract: "Abstract",
   bug_tracker: "Bug tracker:",
   close_parens: ")",
@@ -48,7 +47,6 @@ const ko = {
 };
 
 const zh = {
-  about_respec: "关于",
   abstract: "摘要",
   bug_tracker: "错误跟踪：",
   file_a_bug: "反馈错误",
@@ -69,7 +67,6 @@ const ja = {
 };
 
 const nl = {
-  about_respec: "Over",
   abstract: "Samenvatting",
   bug_tracker: "Meldingensysteem:",
   definition_list: "Lijst van Definities",
