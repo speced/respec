@@ -4,6 +4,7 @@
 // to the matching definitions.
 import {
   addId,
+  getIntlData,
   getLinkTargets,
   showInlineError,
   showInlineWarning,
@@ -11,7 +12,6 @@ import {
 } from "./utils.js";
 import { run as addExternalReferences } from "./xref.js";
 import { definitionMap } from "./dfn-map.js";
-import { getIntlData } from "./l10n.js";
 import { linkInlineCitations } from "./data-cite.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
