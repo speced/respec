@@ -18,39 +18,17 @@ if (html && !html.hasAttribute("lang")) {
 }
 
 // We use en-US as the base
-const base = {
-  bug_tracker: "Bug tracker:",
-  close_parens: ")",
-  open_bugs: "open bugs",
-  open_parens: "(",
-  save_as: "Save as",
-};
+const base = {};
 
 const ko = {};
 
-const zh = {
-  bug_tracker: "错误跟踪：",
-  open_bugs: "修正中的错误",
-};
+const zh = {};
 
-const ja = {
-  bug_tracker: "バグの追跡履歴：",
-  open_bugs: "改修されていないバグ",
-};
+const ja = {};
 
-const nl = {
-  bug_tracker: "Meldingensysteem:",
-  open_bugs: "open meldingen",
-  save_as: "Bewaar als",
-};
+const nl = {};
 
-const es = {
-  authors: "Autores:",
-  bug_tracker: "Repositorio de bugs:",
-  close_parens: ")",
-  open_bugs: "Bugs abiertos",
-  open_parens: "(",
-};
+const es = {};
 
 export const l10n = {
   en: { ...base },
