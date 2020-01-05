@@ -377,7 +377,7 @@ const run = async () => {
     console.log(colors.info(" Build Seems good... ✅"));
 
     // 4. Commit your changes
-    await git("add builds");
+    await git("add builds package.json package-lock.json");
     // `npm version` creates a commit. We add built files to same commit.
     await git("commit --amend --allow-empty --reuse-message=HEAD");
     await git(`tag "v${version}"`);
