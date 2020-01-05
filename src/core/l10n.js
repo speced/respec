@@ -19,7 +19,7 @@ if (html && !html.hasAttribute("lang")) {
 
 export const l10n = {};
 
-export const lang = html && html.lang in l10n ? html.lang : "en";
+export const lang = html.lang;
 
 export function run(config) {
   config.l10n = l10n[lang] || l10n.en;
