@@ -15,6 +15,9 @@ const localizationStrings = {
     norm_references: "Normative references",
     references: "References",
   },
+  ko: {
+    references: "참조",
+  },
   nl: {
     info_references: "Informatieve referenties",
     norm_references: "Normatieve referenties",
