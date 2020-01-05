@@ -47,6 +47,7 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
+const closeButton = hyperHTML`<span id="close-button">❌</span>`;
 window.addEventListener("load", () => trapFocus(menu));
 let modal;
 let overlay;
@@ -54,6 +55,7 @@ const errors = [];
 const warnings = [];
 const buttons = {};
 
+closeButton.addEventListener("click", () => ui.closeModal());
 sub("start-all", () => document.body.prepend(respecUI), { once: true });
 sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
@@ -222,7 +224,7 @@ export const ui = {
     const id = `${currentOwner.id}-modal`;
     const headingId = `${id}-heading`;
     modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog'>
-      <h3 id="${headingId}">${title}</h3>
+      <h3 id="${headingId}">${closeButton}${title}</h3>
       <div class='inside'>${content}</div>
     </div>`;
     const ariaMap = new Map([["labelledby", headingId]]);

@@ -1,3 +1,14 @@
+#close-button{
+  font-weight: bold;
+  float: left;
+  cursor: pointer;
+  margin-left: 0.5%;
+}
+
+#close-button:hover {
+  transform: scale(1.2);
+}
+
 #respec-ui {
   position: fixed;
   display: flex;
