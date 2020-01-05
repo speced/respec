@@ -100,7 +100,7 @@ function trapFocus(element) {
       return;
     }
     // shift + tab
-    else if (e.shiftKey) {
+    if (e.shiftKey) {
       if (document.activeElement === firstFocusableEl) {
         lastFocusableEl.focus();
         e.preventDefault();
