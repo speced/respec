@@ -63,7 +63,7 @@ respecPill.addEventListener("click", e => {
   e.stopPropagation();
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
   toggleMenu();
-  menu.querySelector("li:first-child build").focus();
+  menu.querySelector("li:first-child button").focus();
 });
 
 document.documentElement.addEventListener("click", () => {
