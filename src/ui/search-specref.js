@@ -140,6 +140,7 @@ const mast = hyperHTML.wire()`
     <input
       name="searchBox"
       type="search"
+      aria-label="Search"
       autocomplete="off"
       placeholder="Keywords, titles, authors, urls…">
     <button
@@ -169,7 +170,7 @@ function render({ state = "", results, timeTaken, query } = {}) {
     <p class="state" hidden="${!state}">
       ${state}
     </p>
-    <section hidden="${!results}">${
+    <section hidden="${!results}" aria-live="polite">${
     results ? renderResults(results, query, timeTaken) : []
   }</section>
   `;
