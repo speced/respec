@@ -32,6 +32,9 @@ const localizationStrings = {
   zh: {
     toc: "内容大纲",
   },
+  ko: {
+    toc: "목차",
+  },
   ja: {
     toc: "目次",
   },
