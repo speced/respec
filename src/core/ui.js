@@ -231,7 +231,6 @@ export const ui = {
     overlay.addEventListener("click", () => this.closeModal(currentOwner));
     overlay.classList.toggle("respec-show-overlay");
     modal.hidden = false;
-    trapFocus(modal);
   },
 };
 shortcut.add("Esc", () => ui.closeModal());
