@@ -5,7 +5,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { getIntlData } from "../core/l10n.js";
+import { getIntlData } from "../core/utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github";
 
