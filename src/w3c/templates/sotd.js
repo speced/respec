@@ -5,29 +5,21 @@ import { hyperHTML as html } from "../../core/import-maps.js";
 const localizationStrings = {
   en: {
     sotd: "Status of This Document",
-    status_at_publication:
-      "This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current W3C publications and the latest revision of this technical report can be found in the <a href='https://www.w3.org/TR/'>W3C technical reports index</a> at https://www.w3.org/TR/.",
   },
   ko: {
     sotd: "현재 문서의 상태",
   },
   zh: {
     sotd: "关于本文档",
-    status_at_publication:
-      "本章节描述了本文档的发布状态。其它更新版本可能会覆盖本文档。W3C的文档列 表和最新版本可通过<a href='https://www.w3.org/TR/'>W3C技术报告</a>索引访问。",
   },
   ja: {
     sotd: "この文書の位置付け",
-    status_at_publication:
-      "この節には、公開時点でのこの文書の位置づけが記されている。他の文書によって置き換えられる可能性がある。現時点でのW3Cの発行文書とこのテクニカルレポートの最新版は、下記から参照できる。 <a href='https://www.w3.org/TR/'>W3C technical reports index</a> (https://www.w3.org/TR/)",
   },
   nl: {
     sotd: "Status van dit document",
   },
   es: {
     sotd: "Estado de este Document",
-    status_at_publication:
-      "Esta sección describe el estado del presente documento al momento de su publicación. El presente documento puede ser remplazado por otros. Una lista de las publicaciones actuales del W3C y la última revisión del presente informe técnico puede hallarse en http://www.w3.org/TR/ <a href='https://www.w3.org/TR/'>el índice de informes técnicos</a> del W3C.",
   },
 };
 
@@ -44,7 +36,7 @@ export default (conf, opts) => {
       : conf.isNoTrack
       ? renderIsNoTrack(conf, opts)
       : html`
-          <p><em>${[l10n.status_at_publication]}</em></p>
+          <p><em>${[conf.l10n.status_at_publication]}</em></p>
           ${conf.isSubmission
             ? noteForSubmission(conf, opts)
             : html`
