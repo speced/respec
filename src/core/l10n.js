@@ -17,30 +17,7 @@ if (html && !html.hasAttribute("lang")) {
   }
 }
 
-// We use en-US as the base
-const base = {};
-
-const ko = {};
-
-const zh = {};
-
-const ja = {};
-
-const nl = {};
-
-const es = {};
-
-export const l10n = {
-  en: { ...base },
-  ko: { ...base, ...ko },
-  zh: { ...base, ...zh },
-  ja: { ...base, ...ja },
-  nl: { ...base, ...nl },
-  es: { ...base, ...es },
-};
-
-l10n["zh-hans"] = l10n.zh;
-l10n["zh-cn"] = l10n.zh;
+export const l10n = {};
 
 export const lang = html && html.lang in l10n ? html.lang : "en";
 
