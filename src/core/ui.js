@@ -47,9 +47,7 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
-window.addEventListener("load", () => {
-  trapFocus(menu);
-});
+window.addEventListener("load", () => trapFocus(menu));
 let modal;
 let overlay;
 const errors = [];
@@ -64,13 +62,13 @@ respecUI.appendChild(respecPill);
 respecPill.addEventListener("click", e => {
   e.stopPropagation();
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
-  closeOpenMenu();
+  toggleMenu();
   menu.querySelector("li:first-child *").focus();
 });
 
 document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
-    closeOpenMenu();
+    toggleMenu();
   }
 });
 respecUI.appendChild(menu);
@@ -78,12 +76,12 @@ respecUI.appendChild(menu);
 menu.addEventListener("keydown", e => {
   if (e.key === "Escape" && !menu.hidden) {
     respecPill.setAttribute("aria-expanded", String(menu.hidden));
-    closeOpenMenu();
+    toggleMenu();
     respecPill.focus();
   }
 });
 
-function closeOpenMenu() {
+function toggleMenu() {
   menu.classList.toggle("respec-hidden");
   menu.classList.toggle("respec-visible");
   menu.hidden = !menu.hidden;
@@ -102,12 +100,11 @@ function trapFocus(element) {
       return;
     }
     // shift + tab
-    if (e.shiftKey) {
+    else if (e.shiftKey) {
       if (document.activeElement === firstFocusableEl) {
         lastFocusableEl.focus();
         e.preventDefault();
       }
-      return;
     }
     // tab
     else if (document.activeElement === lastFocusableEl) {
