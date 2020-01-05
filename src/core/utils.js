@@ -293,11 +293,23 @@ export function norm(str) {
 }
 
 /**
+ * @param {string} lang
+ */
+function resolveLanguageAlias(lang) {
+  const aliases = {
+    "zh-hans": "zh",
+    "zh-cn": "zh",
+  };
+  return aliases[lang] || lang;
+}
+
+/**
  * @template {Record<string, Record<string, string|Function>>} T
  * @param {T} localizationStrings
  * @returns {T[keyof T]}
  */
 export function getIntlData(localizationStrings, lang = docLang) {
+  lang = resolveLanguageAlias(lang);
   // Proxy return type is a known bug:
   // https://github.com/Microsoft/TypeScript/issues/20846
   // @ts-ignore

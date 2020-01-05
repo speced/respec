@@ -1,13 +1,25 @@
 // @ts-check
 // Module ui/dfn-list
 // Displays all definitions with links to the defining element.
-import { l10n, lang } from "../core/l10n.js";
 import { definitionMap } from "../core/dfn-map.js";
+import { getIntlData } from "../core/utils.js";
 import { hyperHTML } from "../core/import-maps.js";
 import { ui } from "../core/ui.js";
 
+const localizationStrings = {
+  en: {
+    definition_list: "Definitions",
+    list_of_definitions: "List of Definitions",
+  },
+  nl: {
+    definition_list: "Lijst van Definities",
+    list_of_definitions: "Lijst van Definities",
+  },
+};
+const l10n = getIntlData(localizationStrings);
+
 const button = ui.addCommand(
-  l10n[lang].definition_list,
+  l10n.definition_list,
   show,
   "Ctrl+Shift+Alt+D",
   "📔"
@@ -37,5 +49,5 @@ function show() {
       `;
     });
   render`${definitionLinks}`;
-  ui.freshModal(l10n[lang].list_of_definitions, ul, button);
+  ui.freshModal(l10n.list_of_definitions, ul, button);
 }
