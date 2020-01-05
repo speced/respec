@@ -45,6 +45,9 @@ const base = {
 
 const ko = {
   abstract: "요약",
+  participate: "참여",
+  references: "참조",
+  toc: "목차",
 };
 
 const zh = {
