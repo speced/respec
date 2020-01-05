@@ -378,8 +378,7 @@ const run = async () => {
 
     // 4. Commit your changes
     await git("add builds package.json package-lock.json");
-    // `npm version` creates a commit. We add built files to same commit.
-    await git("commit --amend --allow-empty --reuse-message=HEAD");
+    await git(`commit -m "v${version}"`);
     await git(`tag "v${version}"`);
 
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
