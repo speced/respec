@@ -10,6 +10,9 @@ const localizationStrings = {
   en: {
     title: "Search definitions",
   },
+  ja: {
+    title: "定義検索",
+  },
 };
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 const l10n = localizationStrings[lang];

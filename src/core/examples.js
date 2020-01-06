@@ -26,6 +26,9 @@ const localizationStrings = {
   ko: {
     example: "예시",
   },
+  ja: {
+    example: "例",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

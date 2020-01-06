@@ -28,6 +28,11 @@ const localizationStrings = {
     norm_references: "Referencias normativas",
     references: "Referencias",
   },
+  ja: {
+    info_references: "参照用参考文献",
+    norm_references: "規範的参考文献",
+    references: "参考文献",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

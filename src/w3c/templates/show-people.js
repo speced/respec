@@ -29,6 +29,9 @@ const localizationStrings = {
       `;
     },
   },
+  ja: {
+    until: "以前",
+  },
 };
 
 const lang = defaultLang in localizationStrings ? defaultLang : "en";

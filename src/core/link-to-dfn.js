@@ -26,6 +26,15 @@ const localizationStrings = {
     },
     duplicateTitle: "This is defined more than once in the document.",
   },
+  ja: {
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `'${title}' の重複定義`;
+    },
+    duplicateTitle: "この文書内で複数回定義されています．",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

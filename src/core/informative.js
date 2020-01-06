@@ -16,6 +16,9 @@ const localizationStrings = {
   ko: {
     informative: "이 부분은 비규범적입니다.",
   },
+  ja: {
+    informative: "この節は仕様には含まれません．",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);
