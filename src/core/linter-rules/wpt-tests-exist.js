@@ -75,8 +75,10 @@ async function getFilesInWPT(testSuiteURI, githubAPIBase) {
   let wptDirectory;
   try {
     const testSuiteURL = new URL(testSuiteURI);
-    if (testSuiteURL.pathname.startsWith("/web-platform-tests/wpt/")) {
-      const re = /web-platform-tests\/wpt\/(.+)/;
+    if (
+      testSuiteURL.pathname.startsWith("/web-platform-tests/wpt/tree/master/")
+    ) {
+      const re = /web-platform-tests\/wpt\/tree\/master\/(.+)/;
       wptDirectory = testSuiteURL.pathname.match(re)[1].replace(/\//g, "");
     } else {
       wptDirectory = testSuiteURL.pathname.replace(/\//g, "");
