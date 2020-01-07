@@ -22,7 +22,7 @@ const copyButton = createButton();
 /**
  * Adds a HTML button that copies WebIDL to the clipboard.
  *
- * @param {HTMLDivElement} idlHeader
+ * @param {HTMLSpanElement} idlHeader
  */
 export function addCopyIDLButton(idlHeader) {
   // There may be multiple <span>s of IDL, so we take everything
