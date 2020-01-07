@@ -56,7 +56,8 @@ describe("Core Linter Rule - 'wpt-tests-exist'", () => {
     doc.body.innerHTML = `<p data-tests="404.html"></p>`;
     const conf = {
       ...config,
-      testSuiteURI: "https://github.com/web-platform-tests/wpt/whatever",
+      testSuiteURI:
+        "https://github.com/web-platform-tests/wpt/tree/master/whatever",
     };
     const result = await rule.lint(conf, doc);
     expect(result.name).toBe("wpt-tests-exist");
