@@ -9,7 +9,7 @@
 const os = require("os");
 const puppeteer = require("puppeteer");
 const colors = require("colors");
-const { mkdtemp, writeFile } = require("fs").promises;
+const { mkdtemp, readFile, writeFile } = require("fs").promises;
 const path = require("path");
 colors.setTheme({
   debug: "cyan",
@@ -77,6 +77,41 @@ async function fetchAndWrite(
       warn: false,
     };
     handleConsoleMessages(haltFlags);
+    // Intercept requests for ReSpec and serve it from the local build instead.
+    // https://github.com/tidoust/reffy/pull/212
+    await page.setRequestInterception(true);
+    page.on("request", async function callback(request) {
+      const url = new URL(request.url());
+      if (url.hostname === "www.w3.org") {
+        const pathParts = url.pathname.split("/").filter(p => p);
+        if (
+          pathParts.length === 3 &&
+          pathParts[0] === "Tools" &&
+          pathParts[1] === "respec"
+        ) {
+          let body;
+          try {
+            // Use `require.resolve` to search for .js extension.
+            const localPath = require.resolve(`../builds/${pathParts[2]}`);
+            body = await readFile(localPath);
+          } catch {
+            // Falls back to `request.continue()`.
+          }
+          if (body) {
+            console.log("Intercepting", request.url());
+            await request.respond({
+              contentType: "text/javascript; charset=utf-8",
+              body,
+            });
+            // Workaround for https://github.com/puppeteer/puppeteer/issues/4208
+            page.removeListener("request", callback);
+            await page.setRequestInterception(false);
+            return;
+          }
+        }
+      }
+      request.continue();
+    });
     const url = new URL(src);
     const response = await page.goto(url, { timeout });
     if (
