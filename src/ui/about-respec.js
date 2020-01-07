@@ -1,7 +1,7 @@
 // @ts-check
 // Module ui/about-respec
 // A simple about dialog with pointer to the help
-import { l10n, lang } from "../core/l10n.js";
+import { getIntlData } from "../core/utils.js";
 import { hyperHTML } from "../core/import-maps.js";
 import { ui } from "../core/ui.js";
 
@@ -16,12 +16,21 @@ const button = ui.addCommand(
   "ℹ️"
 );
 
+const localizationStrings = {
+  en: {
+    about_respec: "About",
+  },
+  zh: {
+    about_respec: "关于",
+  },
+  nl: {
+    about_respec: "Over",
+  },
+};
+const l10n = getIntlData(localizationStrings);
+
 function show() {
-  ui.freshModal(
-    `${l10n[lang].about_respec} - ${window.respecVersion}`,
-    div,
-    button
-  );
+  ui.freshModal(`${l10n.about_respec} - ${window.respecVersion}`, div, button);
   const entries = [];
   if ("getEntriesByType" in performance) {
     performance
