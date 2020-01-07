@@ -43,7 +43,7 @@ describe("Core - WebIDL", () => {
         const ops = makeStandardOps(null, body);
         const doc = await makeRSDoc(ops);
         const idl = doc.querySelector("pre");
-        const idlHeader = idl.querySelector("pre div.idlHeader");
+        const idlHeader = idl.querySelector("pre span.idlHeader");
         expect(idlHeader).toBeTruthy();
         const anchor = idlHeader.querySelector("a");
         expect(anchor.getAttribute("href")).toBe(`#${idl.id}`);
