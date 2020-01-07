@@ -249,9 +249,8 @@ describe("Core - WebIDL", () => {
     expect(aElem.textContent).toBe("noParens");
   });
   it("should handle interfaces", () => {
-    let target = doc
-      .getElementById("if-basic")
-      .querySelector("span:not(.idlHeader)");
+    let target = doc.getElementById("if-basic");
+    target.querySelector(".idlHeader").remove();
     let text = "interface SuperStar {};";
     expect(target.textContent).toBe(text);
     expect(
@@ -259,54 +258,47 @@ describe("Core - WebIDL", () => {
     ).toBe(1);
     expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
 
-    target = doc
-      .getElementById("if-extended-attribute")
-      .querySelector("span:not(.idlHeader)");
+    target = doc.getElementById("if-extended-attribute");
+    target.querySelector(".idlHeader").remove();
     text = `[Something, Constructor()] ${text}`;
     expect(target.textContent).toBe(text);
     const extAttrs = target.querySelectorAll(".extAttr");
     expect(extAttrs[0].textContent).toBe("Something");
     expect(extAttrs[1].textContent).toBe("Constructor()");
 
-    target = doc
-      .getElementById("if-identifier-list")
-      .querySelector("span:not(.idlHeader)");
+    target = doc.getElementById("if-identifier-list");
+    target.querySelector(".idlHeader").remove();
     text = "[Global=Window, Exposed=(Window,Worker)] interface SuperStar {};";
     const rhs = target.querySelectorAll(".extAttr");
     expect(target.textContent).toBe(text);
     expect(rhs[0].textContent).toBe("Global=Window");
     expect(rhs[1].textContent).toBe("Exposed=(Window,Worker)");
 
-    target = doc
-      .getElementById("if-inheritance")
-      .querySelector("span:not(.idlHeader)");
+    target = doc.getElementById("if-inheritance");
+    target.querySelector(".idlHeader").remove();
     text = "interface SuperStar : HyperStar {};";
     expect(target.textContent).toBe(text);
     expect(target.querySelector(".idlSuperclass").textContent).toBe(
       "HyperStar"
     );
 
-    target = doc
-      .getElementById("if-partial")
-      .querySelector("span:not(.idlHeader)");
+    target = doc.getElementById("if-partial");
+    target.querySelector(".idlHeader").remove();
     text = "partial interface SuperStar {};";
     expect(target.textContent).toBe(text);
 
-    target = doc
-      .getElementById("if-callback")
-      .querySelector("span:not(.idlHeader)");
+    target = doc.getElementById("if-callback");
+    target.querySelector(".idlHeader").remove();
     text = "callback interface SuperStar {};";
     expect(target.textContent).toBe(text);
 
-    target = doc
-      .getElementById("if-mixin")
-      .querySelector("span:not(.idlHeader)");
+    target = doc.getElementById("if-mixin");
+    target.querySelector(".idlHeader").remove();
     text = "interface mixin SuperStar {};";
     expect(target.textContent).toBe(text);
 
-    target = doc
-      .getElementById("if-partial-mixin")
-      .querySelector("span:not(.idlHeader)");
+    target = doc.getElementById("if-partial-mixin");
+    target.querySelector(".idlHeader").remove();
     text = "partial interface mixin SuperStar {};";
     expect(target.textContent).toBe(text);
 
