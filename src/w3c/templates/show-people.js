@@ -9,10 +9,25 @@ import { hyperHTML as html } from "../../core/import-maps.js";
 
 const localizationStrings = {
   en: {
-    until: "Until",
+    until(date) {
+      return html`
+        Until ${date}
+      `;
+    },
   },
   es: {
-    until: "Hasta",
+    until(date) {
+      return html`
+        Hasta ${date}
+      `;
+    },
+  },
+  ko: {
+    until(date) {
+      return html`
+        ${date} 이전
+      `;
+    },
   },
 };
 
@@ -122,7 +137,7 @@ export default (items = []) => {
       timeElem.dateTime = toShortIsoDate(retiredDate);
       contents.push(
         html`
-          - ${l10n.until.concat(" ")}${timeElem}
+          - ${l10n.until(timeElem)}
         `
       );
     }
