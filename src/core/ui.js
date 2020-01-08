@@ -47,7 +47,7 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
-const closeButton = hyperHTML`<button class="close-button">❌</delete>`;
+const closeButton = hyperHTML`<button class="close-button">❌</button>`;
 window.addEventListener("load", () => trapFocus(menu));
 closeButton.addEventListener("click", () => ui.closeModal());
 let modal;
