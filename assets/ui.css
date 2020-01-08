@@ -1,11 +1,11 @@
-#close-button{
+.close-button{
   font-weight: bold;
   float: left;
   cursor: pointer;
   margin-left: 0.5%;
 }
 
-#close-button:hover {
+.close-button:hover {
   transform: scale(1.2);
 }
 

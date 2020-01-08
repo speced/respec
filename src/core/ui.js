@@ -47,15 +47,15 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
-const closeButton = hyperHTML`<span id="close-button">❌</span>`;
+const closeButton = hyperHTML`<button class="close-button">❌</delete>`;
 window.addEventListener("load", () => trapFocus(menu));
+closeButton.addEventListener("click", () => ui.closeModal());
 let modal;
 let overlay;
 const errors = [];
 const warnings = [];
 const buttons = {};
 
-closeButton.addEventListener("click", () => ui.closeModal());
 sub("start-all", () => document.body.prepend(respecUI), { once: true });
 sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
