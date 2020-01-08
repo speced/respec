@@ -192,7 +192,7 @@ const Prompts = {
         if (/^breaking/i.test(line)) {
           return "major";
         }
-        if (/^feat/i.test(line)) {
+        if (/^feat/i.test(line) || /^enh/i.test(line)) {
           return "minor";
         }
         return "patch";
