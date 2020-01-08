@@ -133,6 +133,7 @@ const Prompts = {
       ["a11y", "♿"],
       ["breaking change", "🚨"],
       ["chore", "🔨"],
+      ["enh", "⭐️"],
       ["docs", "📖"],
       ["feat", "⭐️"],
       ["fix", "🐞"],
