@@ -30,15 +30,24 @@ const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
-const inlineElement = /(?:\[\^[A-Za-z]+(?:-[A-Za-z]+)?\^\])/; // Inline [^element^]
+const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
 
 /**
+ * @example [^iframe^] // [^element^]
+ * @example [^iframe/allow^] // [^element/element-attr^]
  * @param {string} matched
  * @return {HTMLElement}
  */
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
-  const html = hyperHTML`<code><a data-xref-type="element">${value}</a></code>`;
+  const [element, attribute] = value.split("/", 2).map(s => s && s.trim());
+  const [xrefType, xrefFor, textContent] = attribute
+    ? ["element-attr", element, attribute]
+    : ["element", null, element];
+  const html = hyperHTML`<code><a
+    data-xref-type="${xrefType}"
+    data-xref-for="${xrefFor}"
+    >${textContent}</a></code>`;
   return html;
 }
 

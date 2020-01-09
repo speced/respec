@@ -26,6 +26,16 @@ const localizationStrings = {
     },
     duplicateTitle: "This is defined more than once in the document.",
   },
+  de: {
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `Mehrfache Definition von '${title}'`;
+    },
+    duplicateTitle:
+      "Das Dokument enthält mehrere Definitionen dieses Eintrags.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

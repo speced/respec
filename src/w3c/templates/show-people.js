@@ -29,6 +29,13 @@ const localizationStrings = {
       `;
     },
   },
+  de: {
+    until(date) {
+      return html`
+        bis ${date}
+      `;
+    },
+  },
 };
 
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
