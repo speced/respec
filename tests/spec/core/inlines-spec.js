@@ -305,11 +305,15 @@ describe("Core - Inlines", () => {
     const body = `
       <section>
         <p id="test">[^body^]</p>
+        <p id="test2">[^iframe/allow^]</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps({ xref: ["HTML"] }, body));
     const bodyAnchor = doc.querySelector("#test a");
     expect(bodyAnchor.hash).toBe("#the-body-element");
+    const iframeAllowAnchor = doc.querySelector("#test2 a");
+    expect(iframeAllowAnchor.textContent).toBe("allow");
+    expect(iframeAllowAnchor.hash).toBe("#attr-iframe-allow");
   });
 
   it("processes [= BikeShed style inline links =]", async () => {
