@@ -322,7 +322,7 @@ describe("Core - Utils", () => {
       expect(intl.bar).toBe("EN Bar");
     });
 
-    it("falls back to English string if language does not exit in language data", () => {
+    it("falls back to English string if language does not exist in language data", () => {
       const intl = getIntlData(localizationStrings, "de");
       expect(intl.bar).toBe("EN Bar");
     });
