@@ -48,9 +48,9 @@ const localizationStrings = {
     participate: "Participe",
   },
   de: {
-    commit_history: "Revisionen",
     file_a_bug: "Fehler melden",
     participate: "Mitmachen",
+    commit_history: "Revisionen",
   },
 };
 const l10n = getIntlData(localizationStrings);

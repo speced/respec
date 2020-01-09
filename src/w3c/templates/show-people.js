@@ -30,7 +30,11 @@ const localizationStrings = {
     },
   },
   de: {
-    until: "bis",
+    until(date) {
+      return html`
+        bis ${date}
+      `;
+    },
   },
 };
 

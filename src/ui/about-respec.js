@@ -26,6 +26,9 @@ const localizationStrings = {
   nl: {
     about_respec: "Over",
   },
+  de: {
+    about_respec: "Über",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

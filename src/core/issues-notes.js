@@ -50,8 +50,12 @@ const localizationStrings = {
     warning: "Aviso",
   },
   de: {
+    editors_note: "Redaktioneller Hinweis",
+    issue: "Frage",
     issue_summary: "Offene Fragen",
     no_issues_in_spec: "Diese Spezifikation enthält keine offenen Fragen.",
+    note: "Hinweis",
+    warning: "Warnung",
   },
 };
 

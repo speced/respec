@@ -16,6 +16,9 @@ const localizationStrings = {
   nl: {
     save_snapshot: "Bewaar Snapshot",
   },
+  de: {
+    save_snapshot: "Exportieren",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
