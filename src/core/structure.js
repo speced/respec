@@ -44,6 +44,9 @@ const localizationStrings = {
   es: {
     toc: "Tabla de Contenidos",
   },
+  de: {
+    toc: "Inhaltsverzeichnis",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

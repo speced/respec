@@ -15,6 +15,10 @@ const localizationStrings = {
     definition_list: "Lijst van Definities",
     list_of_definitions: "Lijst van Definities",
   },
+  de: {
+    definition_list: "Definitionen",
+    list_of_definitions: "Liste der Definitionen",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
