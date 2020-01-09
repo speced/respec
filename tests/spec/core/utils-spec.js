@@ -322,6 +322,11 @@ describe("Core - Utils", () => {
       expect(intl.bar).toBe("EN Bar");
     });
 
+    it("falls back to English string if language does not exit in language data", () => {
+      const intl = getIntlData(localizationStrings, "de");
+      expect(intl.bar).toBe("EN Bar");
+    });
+
     it("throws error if key doesn't exist in either doc lang and English", () => {
       const intl = getIntlData(localizationStrings, "de");
       expect(() => intl.baz).toThrowError(/No l10n data for key/);
