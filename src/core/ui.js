@@ -47,7 +47,7 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
-const closeButton = hyperHTML`<button class="close-button" aria-label="Close">❌</button>`;
+const closeButton = hyperHTML`<button class="close-button" title="Close">❌</button>`;
 window.addEventListener("load", () => trapFocus(menu));
 closeButton.addEventListener("click", () => ui.closeModal());
 let modal;
@@ -223,13 +223,14 @@ export const ui = {
     overlay = hyperHTML`<div id='respec-overlay' class='removeOnSave'></div>`;
     const id = `${currentOwner.id}-modal`;
     const headingId = `${id}-heading`;
-    modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog'>
-      <h3 id="${headingId}">${closeButton}${title}</h3>
+    modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog' aria-labelledby='${headingId}' >
+      <h3 id="${headingId}">${title}</h3>
       <div class='inside'>${content}</div>
     </div>`;
     const ariaMap = new Map([["labelledby", headingId]]);
     ariaDecorate(modal, ariaMap);
     document.body.append(overlay, modal);
+    document.getElementById(headingId).prepend(closeButton);
     overlay.addEventListener("click", () => this.closeModal(currentOwner));
     overlay.classList.toggle("respec-show-overlay");
     modal.hidden = false;
