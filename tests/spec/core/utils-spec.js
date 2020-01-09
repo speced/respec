@@ -317,7 +317,7 @@ describe("Core - Utils", () => {
       expect(intlEn.foo).toBe("EN Foo");
     });
 
-    it("falls back to English string if key does not exit in language", () => {
+    it("falls back to English string if key does not exist in language", () => {
       const intl = getIntlData(localizationStrings, "ko");
       expect(intl.bar).toBe("EN Bar");
     });
