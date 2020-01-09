@@ -307,22 +307,26 @@ describe("Core - Utils", () => {
     const localizationStrings = {
       en: { foo: "EN Foo", bar: "EN Bar" },
       ko: { foo: "KO Foo" },
+      de: { foo: "DE Foo" },
     };
 
     it("returns localized string in given language", () => {
-      const intl = getIntlData(localizationStrings, "ko");
-      expect(intl.foo).toBe("KO Foo");
+      const intlKo = getIntlData(localizationStrings, "ko");
+      expect(intlKo.foo).toBe("KO Foo");
+
+      const intlDe = getIntlData(localizationStrings, "de");
+      expect(intlDe.foo).toBe("DE Foo");
 
       const intlEn = getIntlData(localizationStrings, "en");
       expect(intlEn.foo).toBe("EN Foo");
     });
 
-    it("falls back to English string if key does not exit in language", () => {
+    it("falls back to English string if key does not exist in language", () => {
       const intl = getIntlData(localizationStrings, "ko");
       expect(intl.bar).toBe("EN Bar");
     });
 
-    it("falls back to English string if language does not exit in language data", () => {
+    it("falls back to English string if key does not exist in language", () => {
       const intl = getIntlData(localizationStrings, "de");
       expect(intl.bar).toBe("EN Bar");
     });
