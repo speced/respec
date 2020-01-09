@@ -26,7 +26,7 @@ window.respecVersion = window.respecVersion || "Developer Edition";
 const div = document.createElement("div");
 const render = hyperHTML.bind(div);
 const button = ui.addCommand(
-  `${l10n[lang].about_respec} ${window.respecVersion}`,
+  `${l10n.about_respec} ${window.respecVersion}`,
   show,
   "Ctrl+Shift+Alt+A",
   "ℹ️"
