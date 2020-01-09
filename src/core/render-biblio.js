@@ -2,9 +2,8 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import { addId } from "./utils.js";
+import { addId, getIntlData } from "./utils.js";
 import { biblio } from "./biblio.js";
-import { getIntlData } from "../core/l10n.js";
 import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -15,6 +14,9 @@ const localizationStrings = {
     info_references: "Informative references",
     norm_references: "Normative references",
     references: "References",
+  },
+  ko: {
+    references: "참조",
   },
   nl: {
     info_references: "Informatieve referenties",

@@ -1,7 +1,6 @@
 // @ts-check
-import { getIntlData } from "../../core/l10n.js";
+import { getIntlData, norm } from "../../core/utils.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
-import { norm } from "../../core/utils.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";

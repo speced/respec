@@ -36,5 +36,6 @@ const additions = {
 };
 
 Object.keys(additions).forEach(key => {
+  if (!l10n[key]) l10n[key] = {};
   Object.assign(l10n[key], additions[key]);
 });

@@ -292,6 +292,39 @@ export function norm(str) {
   return str.trim().replace(/\s+/g, " ");
 }
 
+/**
+ * @param {string} lang
+ */
+function resolveLanguageAlias(lang) {
+  const aliases = {
+    "zh-hans": "zh",
+    "zh-cn": "zh",
+  };
+  return aliases[lang] || lang;
+}
+
+/**
+ * @template {Record<string, Record<string, string|Function>>} T
+ * @param {T} localizationStrings
+ * @returns {T[keyof T]}
+ */
+export function getIntlData(localizationStrings, lang = docLang) {
+  lang = resolveLanguageAlias(lang);
+  // Proxy return type is a known bug:
+  // https://github.com/Microsoft/TypeScript/issues/20846
+  // @ts-ignore
+  return new Proxy(localizationStrings, {
+    /** @param {string} key */
+    get(data, key) {
+      const result = (data[lang] && data[lang][key]) || data.en[key];
+      if (!result) {
+        throw new Error(`No l10n data for key: "${key}"`);
+      }
+      return result;
+    },
+  });
+}
+
 // --- DATE HELPERS -------------------------------------------------------------------------------
 // Takes a Date object and an optional separator and returns the year,month,day representation with
 // the custom separator (defaulting to none) and proper 0-padding

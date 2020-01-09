@@ -9,10 +9,9 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { getIntlData } from "./l10n.js";
+import { getIntlData, showInlineWarning } from "./utils.js";
 import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
-import { showInlineWarning } from "./utils.js";
 const localizationStrings = {
   en: {
     missing_test_suite_uri:

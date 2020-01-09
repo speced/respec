@@ -5,7 +5,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { getIntlData } from "../core/l10n.js";
+import { getIntlData } from "../core/utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github";
 
@@ -25,6 +25,17 @@ const localizationStrings = {
     file_a_bug: "File a bug",
     participate: "Participate",
     commit_history: "Commit history",
+  },
+  ko: {
+    participate: "참여",
+  },
+  zh: {
+    participate: "参与：",
+    file_a_bug: "反馈错误",
+  },
+  ja: {
+    file_a_bug: "問題報告",
+    participate: "参加方法：",
   },
   nl: {
     commit_history: "Revisiehistorie",
