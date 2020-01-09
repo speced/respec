@@ -30,7 +30,11 @@ const localizationStrings = {
     },
   },
   ja: {
-    until: "以前",
+    until(date) {
+      return html`
+        ${date} 以前
+      `;
+    },
   },
 };
 
