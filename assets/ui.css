@@ -1,4 +1,7 @@
 .close-button {
+  position: absolute;
+  z-index: inherit;
+  padding-top: 3px;
   font-weight: bold;
   float: left;
   cursor: pointer;
@@ -232,7 +235,7 @@
 }
 
 .respec-modal {
-  display: block;
+  display: inline;
   position: fixed;
   z-index: 11000;
   margin: auto;
@@ -240,7 +243,6 @@
   background: #fff;
   border: 5px solid #666;
   min-width: 20%;
-  width: 79%;
   padding: 0;
   max-height: 80%;
   overflow-y: auto;
@@ -254,6 +256,7 @@
 }
 
 .respec-modal h3 {
+  width: 100%;
   margin: 0;
   padding: 0.2em;
   text-align: center;

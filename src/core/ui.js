@@ -224,13 +224,13 @@ export const ui = {
     const id = `${currentOwner.id}-modal`;
     const headingId = `${id}-heading`;
     modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog' aria-labelledby='${headingId}' >
+      ${closeButton}
       <h3 id="${headingId}">${title}</h3>
       <div class='inside'>${content}</div>
     </div>`;
     const ariaMap = new Map([["labelledby", headingId]]);
     ariaDecorate(modal, ariaMap);
     document.body.append(overlay, modal);
-    document.getElementById(headingId).prepend(closeButton);
     overlay.addEventListener("click", () => this.closeModal(currentOwner));
     overlay.classList.toggle("respec-show-overlay");
     modal.hidden = false;
