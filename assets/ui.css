@@ -1,8 +1,10 @@
-.close-button{
+.close-button {
   font-weight: bold;
   float: left;
   cursor: pointer;
-  margin-left: 0.5%;
+  margin-left: 5px;
+  border: none;
+  background: transparent;
 }
 
 .close-button:hover {
