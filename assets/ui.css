@@ -1,7 +1,7 @@
 .close-button {
   position: absolute;
   z-index: inherit;
-  padding-top: 3px;
+  padding-top: .2em;
   font-weight: bold;
   float: left;
   cursor: pointer;
