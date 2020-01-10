@@ -235,7 +235,7 @@
 }
 
 .respec-modal {
-  display: inline;
+  display: block;
   position: fixed;
   z-index: 11000;
   margin: auto;
