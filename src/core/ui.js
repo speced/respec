@@ -223,7 +223,7 @@ export const ui = {
     overlay = hyperHTML`<div id='respec-overlay' class='removeOnSave'></div>`;
     const id = `${currentOwner.id}-modal`;
     const headingId = `${id}-heading`;
-    modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog' aria-labelledby='${headingId}' >
+    modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog' aria-labelledby='${headingId}'>
       ${closeButton}
       <h3 id="${headingId}">${title}</h3>
       <div class='inside'>${content}</div>
