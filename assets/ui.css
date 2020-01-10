@@ -1,4 +1,4 @@
-.close-button {
+.respec-modal .close-button {
   position: absolute;
   z-index: inherit;
   padding: .2em;
@@ -256,7 +256,6 @@
 }
 
 .respec-modal h3 {
-  /* width: 100%; */
   margin: 0;
   padding: 0.2em;
   text-align: center;
