@@ -91,6 +91,10 @@ a[href].orcid {
     padding-right: 4px;
 }
 
+a[href]:visited {
+  color: #c83500;
+}
+
 a[href].orcid > svg {
     margin-bottom: -2px;
 }
