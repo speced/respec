@@ -16,6 +16,9 @@ const localizationStrings = {
   ko: {
     informative: "이 부분은 비규범적입니다.",
   },
+  de: {
+    informative: "Dieser Abschnitt ist nicht normativ.",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

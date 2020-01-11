@@ -1,3 +1,14 @@
+.respec-modal .close-button {
+  position: absolute;
+  z-index: inherit;
+  padding: .2em;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 5px;
+  border: none;
+  background: transparent;
+}
+
 #respec-ui {
   position: fixed;
   display: flex;

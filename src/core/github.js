@@ -47,6 +47,11 @@ const localizationStrings = {
     file_a_bug: "Nota un bug",
     participate: "Participe",
   },
+  de: {
+    file_a_bug: "Fehler melden",
+    participate: "Mitmachen",
+    commit_history: "Revisionen",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
