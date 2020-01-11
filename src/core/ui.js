@@ -92,10 +92,14 @@ function toggleMenu() {
 // Code adapted from https://hiddedevries.nl/en/blog/2017-01-29-using-javascript-to-trap-focus-in-an-element
 function trapFocus(element) {
   const focusableEls = element.querySelectorAll(
-    "a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])"
+    "a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), iframe:not([disabled])"
   );
   const firstFocusableEl = focusableEls[0];
   const lastFocusableEl = focusableEls[focusableEls.length - 1];
+  const secondLastFocusableEl =
+    focusableEls.length >= 2
+      ? focusableEls[focusableEls.length - 2]
+      : focusableEls[0];
   if (focusableEls) {
     focusableEls[0].focus();
   }
@@ -114,6 +118,21 @@ function trapFocus(element) {
     else if (document.activeElement === lastFocusableEl) {
       firstFocusableEl.focus();
       e.preventDefault();
+    }
+  });
+  element.addEventListener("keyup", e => {
+    if (
+      document.activeElement === lastFocusableEl &&
+      lastFocusableEl.innerHTML === "invisible" &&
+      e.key === "Tab"
+    ) {
+      if (e.shiftKey) {
+        secondLastFocusableEl.focus();
+        e.preventDefault();
+      } else {
+        firstFocusableEl.focus();
+        e.preventDefault();
+      }
     }
   });
 }
@@ -229,6 +248,7 @@ export const ui = {
       ${closeButton}
       <h3 id="${headingId}">${title}</h3>
       <div class='inside'>${content}</div>
+      <button style="background:transparent; border:none; color:transparent;">invisible</button>
     </div>`;
     const ariaMap = new Map([["labelledby", headingId]]);
     ariaDecorate(modal, ariaMap);
@@ -238,9 +258,7 @@ export const ui = {
     modal.hidden = false;
     if (content.tagName === "IFRAME") {
       content.addEventListener("load", () => {
-        const innerDoc =
-          content.contentDocument || content.contentWindow.document;
-        trapFocus(innerDoc);
+        trapFocus(modal);
       });
     } else {
       trapFocus(modal);
