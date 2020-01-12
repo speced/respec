@@ -8,6 +8,7 @@
 
 import {
   InsensitiveStringSet,
+  getIntlData,
   getTextNodes,
   norm,
   refTypeFromContext,
@@ -20,6 +21,42 @@ import { renderInlineCitation } from "./render-biblio.js";
 
 export const name = "core/inlines";
 export const rfc2119Usage = {};
+
+const localizationStrings = {
+  en: {
+    rfc2119() {
+      return new RegExp(
+        [
+          "\\bMUST(?:\\s+NOT)?\\b",
+          "\\bSHOULD(?:\\s+NOT)?\\b",
+          "\\bSHALL(?:\\s+NOT)?\\b",
+          "\\bMAY\\b",
+          "\\b(?:NOT\\s+)?REQUIRED\\b",
+          "\\b(?:NOT\\s+)?RECOMMENDED\\b",
+          "\\bOPTIONAL\\b",
+        ].join("|")
+      );
+    },
+  },
+  de: {
+    rfc2119() {
+      return new RegExp(
+        [
+          "\\bMUSS\\b",
+          "\\bERFORDERLICH\\b",
+          "\\b(?:NICHT\\s+)?NÖTIG\\b",
+          "\\bDARF(?:\\s+NICHT)?\\b",
+          "\\bVERBOTEN\\b",
+          "\\bSOLL(?:\\s+NICHT)?\\b",
+          "\\b(?:NICHT\\s+)?EMPFOHLEN\\b",
+          "\\bKANN\\b",
+          "\\bOPTIONAL\\b",
+        ].join("|")
+      );
+    },
+  },
+};
+const l10n = getIntlData(localizationStrings);
 
 // Inline `code`
 // TODO: Replace (?!`) at the end with (?:<!`) at the start when Firefox + Safari
@@ -213,17 +250,7 @@ export function run(conf) {
   const txts = getTextNodes(document.body, exclusions, {
     wsNodes: false, // we don't want nodes with just whitespace
   });
-  const keywords = new RegExp(
-    [
-      "\\bMUST(?:\\s+NOT)?\\b",
-      "\\bSHOULD(?:\\s+NOT)?\\b",
-      "\\bSHALL(?:\\s+NOT)?\\b",
-      "\\bMAY\\b",
-      "\\b(?:NOT\\s+)?REQUIRED\\b",
-      "\\b(?:NOT\\s+)?RECOMMENDED\\b",
-      "\\bOPTIONAL\\b",
-    ].join("|")
-  );
+  const keywords = l10n.rfc2119();
   const rx = new RegExp(
     `(${[
       keywords.source,
