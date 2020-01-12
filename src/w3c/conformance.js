@@ -39,8 +39,8 @@ const localizationStrings = {
         ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
         und unter Berücksichtigung von
         <a href="https://goo.gl/6QZH4J">2119de</a>
-        zu interpretieren, wenn und nur wenn ${plural ? "sie" : "es"}
-        wie hier gezeigt groß geschrieben wurde${plural ? "n" : ""}.
+        zu interpretieren, wenn und nur wenn ${plural ? "sie" : "es"} wie hier
+        gezeigt durchgehend groß geschrieben wurde${plural ? "n" : ""}.
       `;
     },
   },
