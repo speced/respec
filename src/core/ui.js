@@ -120,21 +120,21 @@ function trapFocus(element) {
       e.preventDefault();
     }
   });
-  element.addEventListener("keyup", e => {
-    if (
-      document.activeElement === lastFocusableEl &&
-      lastFocusableEl.innerHTML === "invisible" &&
-      e.key === "Tab"
-    ) {
-      if (e.shiftKey) {
-        secondLastFocusableEl.focus();
-        e.preventDefault();
-      } else {
-        firstFocusableEl.focus();
-        e.preventDefault();
-      }
-    }
-  });
+  // element.addEventListener("keyup", e => {
+  //   if (
+  //     document.activeElement === lastFocusableEl &&
+  //     lastFocusableEl.innerHTML === "invisible" &&
+  //     e.key === "Tab"
+  //   ) {
+  //     if (e.shiftKey) {
+  //       secondLastFocusableEl.focus();
+  //       e.preventDefault();
+  //     } else {
+  //       firstFocusableEl.focus();
+  //       e.preventDefault();
+  //     }
+  //   }
+  // });
 }
 
 const ariaMap = new Map([
@@ -248,7 +248,7 @@ export const ui = {
       ${closeButton}
       <h3 id="${headingId}">${title}</h3>
       <div class='inside'>${content}</div>
-      <button style="background:transparent; border:none; color:transparent;">invisible</button>
+      <button style="background:transparent; border:none;">invisible</button>
     </div>`;
     const ariaMap = new Map([["labelledby", headingId]]);
     ariaDecorate(modal, ariaMap);
