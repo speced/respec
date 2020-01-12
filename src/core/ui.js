@@ -96,10 +96,10 @@ function trapFocus(element) {
   );
   const firstFocusableEl = focusableEls[0];
   const lastFocusableEl = focusableEls[focusableEls.length - 1];
-  const secondLastFocusableEl =
-    focusableEls.length >= 2
-      ? focusableEls[focusableEls.length - 2]
-      : focusableEls[0];
+  // const secondLastFocusableEl =
+  //   focusableEls.length >= 2
+  //     ? focusableEls[focusableEls.length - 2]
+  //     : focusableEls[0];
   if (focusableEls) {
     focusableEls[0].focus();
   }
