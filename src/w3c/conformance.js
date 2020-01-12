@@ -1,11 +1,8 @@
 // @ts-check
 // Module w3c/conformance
 // Handle the conformance section properly.
+import { getIntlData, htmlJoinAnd } from "../core/utils.js";
 import { hyperHTML as html } from "../core/import-maps.js";
-import {
-  getIntlData,
-  htmlJoinAnd,
-} from "../core/utils.js";
 import { pub } from "../core/pubsubhub.js";
 import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";
@@ -36,15 +33,14 @@ const localizationStrings = {
       "nicht normativ. Alle andere Angaben sind normativ.",
     keywordInterpretation(keywords, plural) {
       return html`
-        ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords}
-        in diesem Dokument ${plural ? "sind" : "ist"} gemäß
+        ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in
+        diesem Dokument ${plural ? "sind" : "ist"} gemäß
         <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
         ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
         und unter Berücksichtigung von
         <a href="https://goo.gl/6QZH4J">2119de</a>
         zu interpretieren, wenn und nur wenn ${plural ? "sie" : "es"}
-        durchgehend wie hier gezeigt groß geschrieben
-        wurde${plural ? "n" : ""}.
+        wie hier gezeigt groß geschrieben wurde${plural ? "n" : ""}.
       `;
     },
   },
@@ -76,9 +72,7 @@ function processConformance(conformance, conf) {
     <p>
       ${l10n.normativity}
     </p>
-    ${terms.length
-      ? l10n.keywordInterpretation(keywords, plural)
-      : null}
+    ${terms.length ? l10n.keywordInterpretation(keywords, plural) : null}
   `;
   conformance.prepend(...content.childNodes);
 }
