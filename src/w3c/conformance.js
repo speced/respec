@@ -17,11 +17,13 @@ const localizationStrings = {
       "Everything else in this specification is normative.",
     keywordInterpretation(keywords, plural) {
       return html`
-        <p>The key word${plural ? "s" : ""} ${keywords} in this document
-        ${plural ? "are" : "is"} to be interpreted as described in
-        <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
-        ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
-        when, and only when, they appear in all capitals, as shown here.</p>
+        <p>
+          The key word${plural ? "s" : ""} ${keywords} in this document
+          ${plural ? "are" : "is"} to be interpreted as described in
+          <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+          ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
+          when, and only when, they appear in all capitals, as shown here.
+        </p>
       `;
     },
   },
@@ -33,14 +35,16 @@ const localizationStrings = {
       "nicht normativ. Alle andere Angaben sind normativ.",
     keywordInterpretation(keywords, plural) {
       return html`
-        <p>${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in
-        diesem Dokument ${plural ? "sind" : "ist"} gemäß
-        <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
-        ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
-        und unter Berücksichtigung von
-        <a href="https://goo.gl/6QZH4J">2119de</a>
-        zu interpretieren, wenn und nur wenn ${plural ? "sie" : "es"} wie hier
-        gezeigt durchgehend groß geschrieben wurde${plural ? "n" : ""}.</p>
+        <p>
+          ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in
+          diesem Dokument ${plural ? "sind" : "ist"} gemäß
+          <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+          ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
+          und unter Berücksichtigung von
+          <a href="https://goo.gl/6QZH4J">2119de</a>
+          zu interpretieren, wenn und nur wenn ${plural ? "sie" : "es"} wie hier
+          gezeigt durchgehend groß geschrieben wurde${plural ? "n" : ""}.
+        </p>
       `;
     },
   },
