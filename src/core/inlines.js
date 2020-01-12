@@ -24,7 +24,7 @@ export const rfc2119Usage = {};
 
 const localizationStrings = {
   en: {
-    rfc2119() {
+    rfc2119Keywords() {
       return new RegExp(
         [
           "\\bMUST(?:\\s+NOT)?\\b",
@@ -39,7 +39,7 @@ const localizationStrings = {
     },
   },
   de: {
-    rfc2119() {
+    rfc2119Keywords() {
       return new RegExp(
         [
           "\\bMUSS\\b",
@@ -250,7 +250,7 @@ export function run(conf) {
   const txts = getTextNodes(document.body, exclusions, {
     wsNodes: false, // we don't want nodes with just whitespace
   });
-  const keywords = l10n.rfc2119();
+  const keywords = l10n.rfc2119Keywords();
   const rx = new RegExp(
     `(${[
       keywords.source,
