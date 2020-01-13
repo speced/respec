@@ -428,7 +428,7 @@
 }
 
 .respec-dfn-list li span.exported, span.unused {
-  margin-left: 8px;
+  margin-left: 0.5em;
   padding: 0.1em;
   text-align: center;
   white-space: nowrap;
