@@ -62,7 +62,8 @@ function show() {
  * @param {HTMLElement} dfn a definition
  */
 function labelDfnIfExported(dfn) {
-  if (dfn.hasAttribute("data-export")) {
+  const isExported = dfn.hasAttribute("data-export");
+  if (isExported) {
     return hyperHTML`<span class="exported">(exported)</span>`;
   }
   return null;
@@ -74,8 +75,8 @@ function labelDfnIfExported(dfn) {
  */
 function labelDfnIfUnused(dfn) {
   const isUsed = document.querySelector(`a[href^="#${dfn.id}"]`);
-  if (isUsed) {
-    return null;
+  if (!isUsed) {
+    return hyperHTML`<span class="unused">(unused)</span>`;
   }
-  return hyperHTML`<span class="unused">(unused)</span>`;
+  return null;
 }
