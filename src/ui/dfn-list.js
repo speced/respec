@@ -63,7 +63,7 @@ function show() {
  */
 function labelDfnIfExported(dfn) {
   if (dfn.hasAttribute("data-export")) {
-    return hyperHTML`(exported)`;
+    return hyperHTML`<span class="exported">(exported)</span>`;
   } else {
     return null;
   }
