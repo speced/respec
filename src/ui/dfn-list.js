@@ -61,7 +61,7 @@ function show() {
  * If a definition is exported, label it accordingly
  * @param {HTMLElement} dfn a definition
  */
-function labelDfnIfExported(dfn){
+function labelDfnIfExported(dfn) {
   if (dfn.hasAttribute("data-export")) {
     return hyperHTML`(exported)`;
   } else {
