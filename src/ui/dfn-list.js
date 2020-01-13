@@ -49,12 +49,24 @@ function show() {
           <a href="${`#${dfn.id}`}">
             ${dfn.textContent}
           </a>
-          ${labelDfnIfUnused(dfn)}
+          ${labelDfnIfExported(dfn)} ${labelDfnIfUnused(dfn)}
         </li>
       `;
     });
   render`${definitionLinks}`;
   ui.freshModal(l10n.list_of_definitions, ul, button);
+}
+
+/**
+ * If a definition is exported, label it accordingly
+ * @param {HTMLElement} dfn a definition
+ */
+function labelDfnIfExported(dfn){
+  if (dfn.hasAttribute("data-export")) {
+    return hyperHTML`(exported)`;
+  } else {
+    return null;
+  }
 }
 
 /**
