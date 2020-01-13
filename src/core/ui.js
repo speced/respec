@@ -96,10 +96,6 @@ function trapFocus(element) {
   );
   const firstFocusableEl = focusableEls[0];
   const lastFocusableEl = focusableEls[focusableEls.length - 1];
-  // const secondLastFocusableEl =
-  //   focusableEls.length >= 2
-  //     ? focusableEls[focusableEls.length - 2]
-  //     : focusableEls[0];
   if (focusableEls) {
     focusableEls[0].focus();
   }
@@ -120,21 +116,6 @@ function trapFocus(element) {
       e.preventDefault();
     }
   });
-  // element.addEventListener("keyup", e => {
-  //   if (
-  //     document.activeElement === lastFocusableEl &&
-  //     lastFocusableEl.innerHTML === "invisible" &&
-  //     e.key === "Tab"
-  //   ) {
-  //     if (e.shiftKey) {
-  //       secondLastFocusableEl.focus();
-  //       e.preventDefault();
-  //     } else {
-  //       firstFocusableEl.focus();
-  //       e.preventDefault();
-  //     }
-  //   }
-  // });
 }
 
 const ariaMap = new Map([
@@ -248,7 +229,6 @@ export const ui = {
       ${closeButton}
       <h3 id="${headingId}">${title}</h3>
       <div class='inside'>${content}</div>
-      <button style="background:transparent; border:none;">invisible</button>
     </div>`;
     const ariaMap = new Map([["labelledby", headingId]]);
     ariaDecorate(modal, ariaMap);
@@ -257,6 +237,10 @@ export const ui = {
     overlay.classList.toggle("respec-show-overlay");
     modal.hidden = false;
     if (content.tagName === "IFRAME") {
+      modal.insertAdjacentHTML(
+        "beforeend",
+        '<button style="background:transparent; border:none;">invisible</button>'
+      );
       content.addEventListener("load", () => {
         trapFocus(modal);
       });
