@@ -426,3 +426,10 @@
 #xref-ui:not(.ready) {
   background: url("https://respec.org/xref/loader.gif") no-repeat center;
 }
+
+#xref-ui + a[href] {
+  font-size: 0.9rem;
+  float: right;
+  margin: 0 0.5em 0.5em;
+  border-bottom-width: 1px;
+}
