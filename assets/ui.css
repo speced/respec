@@ -432,6 +432,7 @@
   padding: 0.1em;
   text-align: center;
   white-space: nowrap;
+  border-radius: 0.2em;
 }
 
 .respec-dfn-list li span.exported {
