@@ -96,7 +96,7 @@ function trapFocus(element) {
   );
   const firstFocusableEl = focusableEls[0];
   const lastFocusableEl = focusableEls[focusableEls.length - 1];
-  if (focusableEls) {
+  if (firstFocusableEl) {
     firstFocusableEl.focus();
   }
   element.addEventListener("keydown", e => {
