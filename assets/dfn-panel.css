@@ -3,6 +3,25 @@ dfn {
   cursor: pointer;
 }
 
+span.exported, span.unused {
+  margin-left: 8px;
+  padding: 0.1em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+span.exported {
+  background: hsl(205.7, 70%, 96.1%);
+  color: hsl(203.8, 70.9%, 30%);
+  box-shadow: 0 0 0 .125em hsla(204, 70.8%, 52.9%, 0.25);
+}
+
+span.unused {
+  background: hsl(347.6, 87.9%, 93.5%);
+  color: hsl(347.9, 86.3%, 33%);
+  box-shadow: 0 0 0 .125em hsla(348.1, 85.9%, 61%, 0.25);
+}
+
 .dfn-panel {
   position: absolute;
   left: var(--left); /* set via JS */
