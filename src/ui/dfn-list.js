@@ -74,9 +74,9 @@ function labelDfnIfExported(dfn) {
  * @param {HTMLElement} dfn a definition
  */
 function labelDfnIfUnused(dfn) {
-  if (dfn.hasAttribute("definition-used")) {
+  const isUsed = document.querySelector(`a[href^="#${dfn.id}"]`);
+  if (isUsed) {
     return null;
-  } else {
-    return hyperHTML`<span class="unused">(unused)</span>`;
   }
+  return hyperHTML`<span class="unused">(unused)</span>`;
 }
