@@ -49,9 +49,22 @@ function show() {
           <a href="${`#${dfn.id}`}">
             ${dfn.textContent}
           </a>
+          ${labelDfnIfUnused(dfn)}
         </li>
       `;
     });
   render`${definitionLinks}`;
   ui.freshModal(l10n.list_of_definitions, ul, button);
+}
+
+/**
+ * If a definition is unused, label it accordingly
+ * @param {HTMLElement} dfn a definition
+ */
+function labelDfnIfUnused(dfn) {
+  if (dfn.hasAttribute("definition-used")) {
+    return null;
+  } else {
+    return hyperHTML`(unused)`;
+  }
 }
