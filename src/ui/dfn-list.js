@@ -77,6 +77,6 @@ function labelDfnIfUnused(dfn) {
   if (dfn.hasAttribute("definition-used")) {
     return null;
   } else {
-    return hyperHTML`(unused)`;
+    return hyperHTML`<span class="unused">(unused)</span>`;
   }
 }
