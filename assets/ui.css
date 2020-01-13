@@ -439,13 +439,13 @@
 .respec-dfn-list li span.exported {
   background: #fcfbee;
   color: #544f08;
-  box-shadow: 0 0 0 .125em #dcd1324d;
+  box-shadow: 0 0 0 0.125em #dcd1324d;
 }
 
 .respec-dfn-list li span.unused {
   background: #fde0e6;
   color: #9d0c29;
-  box-shadow: 0 0 0 .125em #f1466840;
+  box-shadow: 0 0 0 0.125em #f1466840;
 }
 
 #xref-ui + a[href] {
