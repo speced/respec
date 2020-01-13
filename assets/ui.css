@@ -437,9 +437,9 @@
 }
 
 .respec-dfn-list li span.exported {
-  background: #eef6fc;
-  color: #165883;
-  box-shadow: 0 0 0 .125em #3298dc40;
+  background: #fcfbee;
+  color: #544f08;
+  box-shadow: 0 0 0 .125em #dcd1324d;
 }
 
 .respec-dfn-list li span.unused {
