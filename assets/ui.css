@@ -445,3 +445,10 @@
   color: hsl(347.9, 86.3%, 33%);
   box-shadow: 0 0 0 .125em hsla(348.1, 85.9%, 61%, 0.25);
 }
+
+#xref-ui + a[href] {
+  font-size: 0.9rem;
+  float: right;
+  margin: 0 0.5em 0.5em;
+  border-bottom-width: 1px;
+}
