@@ -92,7 +92,7 @@ function toggleMenu() {
 // Code adapted from https://hiddedevries.nl/en/blog/2017-01-29-using-javascript-to-trap-focus-in-an-element
 function trapFocus(element) {
   const focusableEls = element.querySelectorAll(
-    "a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), iframe:not([disabled])"
+    "a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])"
   );
   const firstFocusableEl = focusableEls[0];
   const lastFocusableEl = focusableEls[focusableEls.length - 1];
@@ -236,17 +236,7 @@ export const ui = {
     overlay.addEventListener("click", () => this.closeModal(currentOwner));
     overlay.classList.toggle("respec-show-overlay");
     modal.hidden = false;
-    if (content.tagName === "IFRAME") {
-      modal.insertAdjacentHTML(
-        "beforeend",
-        '<button style="background:transparent; border:none;">invisible</button>'
-      );
-      content.addEventListener("load", () => {
-        trapFocus(modal);
-      });
-    } else {
-      trapFocus(modal);
-    }
+    trapFocus(modal);
   },
 };
 shortcut.add("Esc", () => ui.closeModal());
