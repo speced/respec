@@ -193,7 +193,16 @@ function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
   if (isCode(dfn)) {
     wrapAsCode(anchor, dfn);
   }
+  markDfnAsUsed(dfn);
   return true;
+}
+
+/**
+ * Mark a definition as used once it has been used at least once within a spec
+ * @param {HTMLElement} dfn a definition
+ */
+function markDfnAsUsed(dfn) {
+  dfn.setAttribute("definition-used", "");
 }
 
 /**
