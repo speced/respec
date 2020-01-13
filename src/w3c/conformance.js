@@ -41,7 +41,7 @@ const localizationStrings = {
           <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
           ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
           und unter Berücksichtigung von
-          <a href="https://goo.gl/6QZH4J">2119de</a>
+          <a href="https://github.com/adfinis-sygroup/2119/blob/master/2119de.rst">2119de</a>
           zu interpretieren, wenn und nur wenn ${plural ? "sie" : "es"} wie hier
           gezeigt durchgehend groß geschrieben wurde${plural ? "n" : ""}.
         </p>
