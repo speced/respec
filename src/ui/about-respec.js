@@ -33,7 +33,6 @@ const button = ui.addCommand(
 );
 
 function show() {
-  ui.freshModal(`${l10n.about_respec} - ${window.respecVersion}`, div, button);
   const entries = [];
   if ("getEntriesByType" in performance) {
     performance
@@ -76,6 +75,7 @@ function show() {
     <tbody>${entries}</tbody>
   </table>
 `;
+  ui.freshModal(`${l10n.about_respec} - ${window.respecVersion}`, div, button);
 }
 
 function perfEntryToTR({ name, duration }) {
