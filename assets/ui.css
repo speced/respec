@@ -427,7 +427,7 @@
   background: url("https://respec.org/xref/loader.gif") no-repeat center;
 }
 
-.respec-dfn-list li span {
+.respec-dfn-list .dfn-status {
   margin-left: 0.5em;
   padding: 0.1em;
   text-align: center;

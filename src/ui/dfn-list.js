@@ -64,7 +64,7 @@ function show() {
 function labelDfnIfExported(dfn) {
   const isExported = dfn.hasAttribute("data-export");
   if (isExported) {
-    return hyperHTML`<span class="exported">exported</span>`;
+    return hyperHTML`<span class="dfn-status exported">exported</span>`;
   }
   return null;
 }
@@ -76,7 +76,7 @@ function labelDfnIfExported(dfn) {
 function labelDfnIfUnused(dfn) {
   const isUsed = document.querySelector(`a[href^="#${dfn.id}"]`);
   if (!isUsed) {
-    return hyperHTML`<span class="unused">unused</span>`;
+    return hyperHTML`<span class="dfn-status unused">unused</span>`;
   }
   return null;
 }
