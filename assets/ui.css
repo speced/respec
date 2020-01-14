@@ -437,15 +437,15 @@
 }
 
 .respec-dfn-list .exported {
-  background: #fcfbee;
-  color: #544f08;
-  box-shadow: 0 0 0 0.125em #dcd1324d;
+  background: #d1edfd;
+	color: #040b1c;
+	box-shadow: 0 0 0 0.125em #1ca5f940;
 }
 
 .respec-dfn-list .unused {
-	background: #d1edfd;
-	color: #040b1c;
-	box-shadow: 0 0 0 0.125em #1ca5f940;
+  background: #fde0e6;
+  color: #9d0c29;
+  box-shadow: 0 0 0 0.125em #f1466840;
 }
 
 #xref-ui + a[href] {
