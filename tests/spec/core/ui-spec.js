@@ -114,15 +114,15 @@ describe("Core - UI", () => {
 
     const [dfnBar, dfnBaz, dfnFoo, dfnFoobar] = dfns;
 
-    expect(dfnBar.textContent).toContain("(exported) (unused)");
+    expect(dfnBar.textContent).toContain("exported unused");
 
-    expect(dfnBaz.textContent).toContain("(unused)");
-    expect(dfnBaz.textContent).not.toContain("(exported)");
+    expect(dfnBaz.textContent).toContain("unused");
+    expect(dfnBaz.textContent).not.toContain("exported");
 
-    expect(dfnFoo.textContent).not.toContain("(unused)");
-    expect(dfnFoo.textContent).not.toContain("(exported)");
+    expect(dfnFoo.textContent).not.toContain("unused");
+    expect(dfnFoo.textContent).not.toContain("exported");
 
-    expect(dfnFoobar.textContent).toContain("(exported)");
-    expect(dfnFoobar.textContent).not.toContain("(unused)");
+    expect(dfnFoobar.textContent).toContain("exported");
+    expect(dfnFoobar.textContent).not.toContain("unused");
   });
 });
