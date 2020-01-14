@@ -443,9 +443,9 @@
 }
 
 .respec-dfn-list li span.unused {
-  background: #fde0e6;
-  color: #9d0c29;
-  box-shadow: 0 0 0 0.125em #f1466840;
+	background: #d1edfd;
+	color: #040b1c;
+	box-shadow: 0 0 0 0.125em #1ca5f940;
 }
 
 #xref-ui + a[href] {
