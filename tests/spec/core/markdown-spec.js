@@ -512,9 +512,10 @@ function getAnswer() {
       const ops = makeStandardOps({ format: "markdown" }, body);
       ops.abstract = null;
       const doc = await makeRSDoc(ops);
-      const span = doc.querySelector("pre > span");
+      const pre = doc.querySelector("pre");
+      pre.querySelector(".idlHeader").remove();
 
-      expect(span.textContent).toBe(idl);
+      expect(pre.textContent).toBe(idl);
     });
   });
 });
