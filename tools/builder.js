@@ -128,7 +128,6 @@ const Builder = {
       file: outPath,
       format: "iife",
       sourcemap: true,
-      strict: true,
       banner: `window.respecVersion = "${version}";\n`,
     };
 
