@@ -104,6 +104,14 @@ const Builder = {
       input: require.resolve(`../profiles/${name}.js`),
       plugins: [
         !debug && require("rollup-plugin-terser").terser(),
+        !debug &&
+          require("rollup-plugin-minify-html-literals").default({
+            options: {
+              shouldMinify({ tag = "" }) {
+                return /^(hyperhtml|html|render)/i.test(tag);
+              },
+            },
+          }),
         alias({
           resolve: [".css", ".svg"],
           entries: [
