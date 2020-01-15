@@ -24,6 +24,9 @@ const localizationStrings = {
   es: {
     abstract: "Resumen",
   },
+  de: {
+    abstract: "Zusammenfassung",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
