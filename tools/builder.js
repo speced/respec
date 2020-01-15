@@ -126,7 +126,7 @@ const Builder = {
     };
     const outputOptions = {
       file: outPath,
-      format: "commonjs",
+      format: "iife",
       sourcemap: true,
       strict: true,
       banner: `window.respecVersion = "${version}";\n`,
