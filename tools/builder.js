@@ -111,6 +111,7 @@ const Builder = {
                 return /^(hyperhtml|html|render)/i.test(tag);
               },
               minifyOptions: {
+                removeAttributeQuotes: false,
                 conservativeCollapse: true,
                 collapseWhitespace: true,
               },
