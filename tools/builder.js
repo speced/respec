@@ -110,6 +110,10 @@ const Builder = {
               shouldMinify({ tag = "" }) {
                 return /^(hyperhtml|html|render)/i.test(tag);
               },
+              minifyOptions: {
+                conservativeCollapse: true,
+                collapseWhitespace: true,
+              },
             },
           }),
         alias({
