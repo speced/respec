@@ -9,6 +9,10 @@
   background: transparent;
 }
 
+.respec-modal .close-button:focus {
+  outline: none;
+}
+
 #respec-ui {
   position: fixed;
   display: flex;
@@ -141,6 +145,11 @@
   margin: 0;
   border: 0;
   padding-top: 16px;
+}
+
+.respec-save-button:link:focus {
+  color: white;
+  background: rgb(42, 90, 168);
 }
 
 #respec-ui button:focus,
