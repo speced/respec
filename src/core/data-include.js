@@ -17,15 +17,12 @@ export const name = "core/data-include";
 function processResponse(rawData, id, url) {
   /** @type {HTMLElement} */
   const el = document.querySelector(`[data-include-id=${id}]`);
-  const doc = el.ownerDocument;
   const data = runTransforms(rawData, el.dataset.oninclude, url);
   const replace = typeof el.dataset.includeReplace === "string";
-  let replacementNode;
   switch (el.dataset.includeFormat) {
     case "text":
       if (replace) {
-        replacementNode = doc.createTextNode(data);
-        el.replaceWith(replacementNode);
+        el.replaceWith(data);
       } else {
         el.textContent = data;
       }
@@ -34,16 +31,12 @@ function processResponse(rawData, id, url) {
       // html, which is just using "innerHTML"
       el.innerHTML = data;
       if (replace) {
-        replacementNode = doc.createDocumentFragment();
-        while (el.hasChildNodes()) {
-          replacementNode.append(el.removeChild(el.firstChild));
-        }
-        el.replaceWith(replacementNode);
+        el.replaceWith(...el.childNodes);
       }
   }
   // If still in the dom tree, clean up
-  if (doc.contains(el)) {
-    cleanUp(el);
+  if (document.contains(el)) {
+    removeIncludeAttributes(el);
   }
 }
 /**
@@ -51,7 +44,7 @@ function processResponse(rawData, id, url) {
  *
  * @param {Element} el The element to clean up.
  */
-function cleanUp(el) {
+function removeIncludeAttributes(el) {
   [
     "data-include",
     "data-include-format",
