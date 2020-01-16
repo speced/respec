@@ -224,7 +224,7 @@ describe("Core - Inlines", () => {
     expect(badOne.textContent).toBe("[[[#does-not-exist]]]");
   });
 
-  it("supports bikeshed like `[[[spec/path#fragment]]]`section links", async () => {
+  it("supports bikeshed-like `[[[spec/path#fragment]]]`section links", async () => {
     const body = `
       <p id="output">
         [[[!HTML/path.html#some-normative-fragment]]]
