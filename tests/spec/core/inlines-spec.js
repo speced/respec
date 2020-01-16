@@ -229,15 +229,16 @@ describe("Core - Inlines", () => {
       <p id="output">
         [[[!HTML/webstorage.html#user-tracking]]]
         [[[?HTML/webstorage.html#introduction-15]]]
+        [[[HTML/webstorage.html#disk-space-2]]]
       </p>
     `;
 
     const doc = await makeRSDoc(makeStandardOps(null, body));
     const anchors = doc.querySelectorAll("#output a");
 
-    expect(anchors.length).toBe(2);
+    expect(anchors.length).toBe(3);
 
-    const [normativeAnchor, informativeAnchor] = anchors;
+    const [normativeAnchor, informativeAnchor, generalAnchor] = anchors;
 
     expect(normativeAnchor.textContent).toBe(
       "[HTML/webstorage.html#user-tracking]"
@@ -250,7 +251,14 @@ describe("Core - Inlines", () => {
       "[HTML/webstorage.html#introduction-15]"
     );
     expect(informativeAnchor.getAttribute("href")).toBe(
-      "https://html.spec.whatwg.org/multipage/path.html#some-informative-fragment"
+      "https://html.spec.whatwg.org/multipage/webstorage.html#introduction-15"
+    );
+
+    expect(generalAnchor.textContent).toBe(
+      "[HTML/webstorage.html#disk-space-2]"
+    );
+    expect(generalAnchor.getAttribute("href")).toBe(
+      "https://html.spec.whatwg.org/multipage/webstorage.html#disk-space-2"
     );
   });
 
