@@ -150,7 +150,7 @@
 
 #respec-ui button:focus,
 #respec-pill:focus,
-.respec-aoption:focus {
+.respec-option:focus {
   outline: 0;
   outline-style: none;
 }
