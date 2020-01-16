@@ -59,7 +59,14 @@ function requestLookup(conf) {
     switch (elem.localName) {
       case "a": {
         if (elem.textContent === "" && elem.dataset.lt !== "the-empty-string") {
-          elem.textContent = title;
+          // support bikeshed-like section links https://tabatkins.github.io/bikeshed/#section-links
+          // eg: [[[spec/path.html#frag]]] becomes <a href="spec/path.html#frag">[spec/path#frag]</a>
+          if (originalKey.includes("#")) {
+            // ! and ? are for respec to check whether something is normative or not. readers do not need it.
+            elem.textContent = `[${originalKey.replace(/^[!?]/, "")}]`;
+          } else {
+            elem.textContent = title;
+          }
         }
         elem.href = href;
         if (!path && !frag) {
