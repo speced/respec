@@ -227,8 +227,8 @@ describe("Core - Inlines", () => {
   it("supports bikeshed-like `[[[spec/path#fragment]]]`section links", async () => {
     const body = `
       <p id="output">
-        [[[!HTML/path.html#some-normative-fragment]]]
-        [[[?HTML/path.html#some-informative-fragment]]]
+        [[[!HTML/webstorage.html#user-tracking]]]
+        [[[?HTML/webstorage.html#introduction-15]]]
       </p>
     `;
 
@@ -240,14 +240,14 @@ describe("Core - Inlines", () => {
     const [normativeAnchor, informativeAnchor] = anchors;
 
     expect(normativeAnchor.textContent).toBe(
-      "[HTML/path.html#some-normative-fragment]"
+      "[HTML/webstorage.html#user-tracking]"
     );
     expect(normativeAnchor.getAttribute("href")).toBe(
-      "https://html.spec.whatwg.org/multipage/path.html#some-normative-fragment"
+      "https://html.spec.whatwg.org/multipage/webstorage.html#user-tracking"
     );
 
     expect(informativeAnchor.textContent).toBe(
-      "[HTML/path.html#some-informative-fragment]"
+      "[HTML/webstorage.html#introduction-15]"
     );
     expect(informativeAnchor.getAttribute("href")).toBe(
       "https://html.spec.whatwg.org/multipage/path.html#some-informative-fragment"
