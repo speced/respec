@@ -403,16 +403,11 @@ export function linkCSS(doc, styles) {
  * @this {any}
  * @param {string} [flist]
  */
-export function runTransforms(content, flist) {
-  let args = [this, content];
-  const funcArgs = Array.from(arguments);
-  funcArgs.shift();
-  funcArgs.shift();
-  args = args.concat(funcArgs);
+export function runTransforms(content, flist, ...funcArgs) {
+  const args = [this, content, ...funcArgs];
   if (flist) {
     const methods = flist.split(/\s+/);
-    for (let j = 0; j < methods.length; j++) {
-      const meth = methods[j];
+    for (const meth of methods) {
       /** @type {any} */
       const method = window[meth];
       if (method) {
