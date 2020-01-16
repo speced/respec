@@ -224,6 +224,36 @@ describe("Core - Inlines", () => {
     expect(badOne.textContent).toBe("[[[#does-not-exist]]]");
   });
 
+  it("processes normative and informative `[[[spec/path#fragment]]]` into a link with the correct data-cite and text content", async () => {
+    const body = `
+      <p id="output">
+        [[[!HTML/path.html#some-normative-fragment]]]
+        [[[?HTML/path.html#some-informative-fragment]]]
+      </p>
+    `;
+
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const anchors = doc.querySelectorAll("#output a");
+
+    expect(anchors.length).toBe(2);
+
+    const [normativeAnchor, informativeAnchor] = anchors;
+
+    expect(normativeAnchor.textContent).toBe(
+      "[HTML/path.html#some-normative-fragment]"
+    );
+    expect(normativeAnchor.getAttribute("href")).toBe(
+      "https://html.spec.whatwg.org/multipage/path.html#some-normative-fragment"
+    );
+
+    expect(informativeAnchor.textContent).toBe(
+      "[HTML/path.html#some-informative-fragment]"
+    );
+    expect(informativeAnchor.getAttribute("href")).toBe(
+      "https://html.spec.whatwg.org/multipage/path.html#some-informative-fragment"
+    );
+  });
+
   it("proceseses backticks inside [= =] inline links", async () => {
     const body = `
       <section>
