@@ -79,7 +79,7 @@ function show() {
 }
 
 function perfEntryToTR({ name, duration }) {
-  const moduleURL = `https://github.com/w3c/respec/tree/develop/src/${name}.js`;
+  const moduleURL = `https://github.com/w3c/respec/blob/develop/src/${name}.js`;
   return hyperHTML`
     <tr>
       <td><a href="${moduleURL}">${name}</a></td>
