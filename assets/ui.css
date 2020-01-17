@@ -144,8 +144,7 @@
 }
 
 .respec-save-button:link:focus {
-  color: white;
-  background: rgba(25, 55, 102);
+  background: #193766;
 }
 
 #respec-ui button:focus,
