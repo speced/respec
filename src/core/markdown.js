@@ -246,6 +246,12 @@ function convertElements(selector) {
  * @param {Element} element
  */
 function convertElement(element) {
+  for (const pre of element.getElementsByTagName("pre")) {
+    // HTML parser implicitly removes a newline after <pre> which breaks reindentation
+    // algorithm. We need two additional newlines to prevent this, one for the initial
+    // innerHTML access and another for normalizePadding.
+    pre.prepend("\n\n");
+  }
   element.innerHTML = markdownToHtml(element.innerHTML);
 }
 
