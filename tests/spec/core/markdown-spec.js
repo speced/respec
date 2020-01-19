@@ -364,6 +364,7 @@ describe("Core - Markdown", () => {
     `;
 
     const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("pre");
 
