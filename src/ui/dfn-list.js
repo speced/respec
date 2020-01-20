@@ -49,9 +49,34 @@ function show() {
           <a href="${`#${dfn.id}`}">
             ${dfn.textContent}
           </a>
+          ${labelDfnIfExported(dfn)} ${labelDfnIfUnused(dfn)}
         </li>
       `;
     });
   render`${definitionLinks}`;
   ui.freshModal(l10n.list_of_definitions, ul, button);
+}
+
+/**
+ * If a definition is exported, label it accordingly
+ * @param {HTMLElement} dfn a definition
+ */
+function labelDfnIfExported(dfn) {
+  const isExported = dfn.hasAttribute("data-export");
+  if (isExported) {
+    return hyperHTML`<span class="dfn-status exported">exported</span>`;
+  }
+  return null;
+}
+
+/**
+ * If a definition is unused, label it accordingly
+ * @param {HTMLElement} dfn a definition
+ */
+function labelDfnIfUnused(dfn) {
+  const isUsed = document.querySelector(`a[href^="#${dfn.id}"]`);
+  if (!isUsed) {
+    return hyperHTML`<span class="dfn-status unused">unused</span>`;
+  }
+  return null;
 }

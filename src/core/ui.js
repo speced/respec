@@ -96,7 +96,9 @@ function trapFocus(element) {
   );
   const firstFocusableEl = focusableEls[0];
   const lastFocusableEl = focusableEls[focusableEls.length - 1];
-
+  if (firstFocusableEl) {
+    firstFocusableEl.focus();
+  }
   element.addEventListener("keydown", e => {
     if (e.key !== "Tab") {
       return;
@@ -234,6 +236,7 @@ export const ui = {
     overlay.addEventListener("click", () => this.closeModal(currentOwner));
     overlay.classList.toggle("respec-show-overlay");
     modal.hidden = false;
+    trapFocus(modal);
   },
 };
 shortcut.add("Esc", () => ui.closeModal());
