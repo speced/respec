@@ -130,9 +130,7 @@ function normalizeConfig(xref) {
 function getRequestEntry(elem) {
   const isIDL = "xrefType" in elem.dataset;
 
-  let term = getTermFromElement(elem);
-  if (!isIDL) term = term.toLowerCase();
-
+  const term = getTermFromElement(elem, isIDL);
   const specs = getSpecContext(elem);
   const types = [];
   if (isIDL) {
@@ -163,12 +161,18 @@ function getRequestEntry(elem) {
   };
 }
 
-/** @param {HTMLElement} elem */
-function getTermFromElement(elem) {
+/**
+ * @param {HTMLElement} elem
+ * @param {boolean} isIDL
+ */
+function getTermFromElement(elem, isIDL) {
   const { lt: linkingText } = elem.dataset;
   let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
   term = normalize(term);
-  return term === "the-empty-string" ? "" : term;
+  if (term === "the-empty-string") {
+    term = "";
+  }
+  return isIDL ? term : term.toLowerCase();
 }
 
 /**
@@ -382,7 +386,7 @@ function showErrors({ ambiguous, notFound }) {
 
   for (const { query, elems } of notFound.values()) {
     const specs = [...new Set(flatten([], query.specs))].sort();
-    const originalTerm = getTermFromElement(elems[0]);
+    const originalTerm = getTermFromElement(elems[0], true);
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
     const msg =
@@ -394,7 +398,7 @@ function showErrors({ ambiguous, notFound }) {
   for (const { query, elems, results } of ambiguous.values()) {
     const specs = [...new Set(results.map(entry => entry.shortname))].sort();
     const specsString = specs.map(s => `**${s}**`).join(", ");
-    const originalTerm = getTermFromElement(elems[0]);
+    const originalTerm = getTermFromElement(elems[0], true);
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const msg =
       `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ` +
