@@ -5,6 +5,7 @@
 import {
   CaseInsensitiveMap,
   addId,
+  getIntlData,
   getLinkTargets,
   showInlineError,
   showInlineWarning,
@@ -12,7 +13,6 @@ import {
 } from "./utils.js";
 import { run as addExternalReferences } from "./xref.js";
 import { definitionMap } from "./dfn-map.js";
-import { getIntlData } from "./l10n.js";
 import { linkInlineCitations } from "./data-cite.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
@@ -26,6 +26,16 @@ const localizationStrings = {
       return `Duplicate definition(s) of '${title}'`;
     },
     duplicateTitle: "This is defined more than once in the document.",
+  },
+  de: {
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `Mehrfache Definition von '${title}'`;
+    },
+    duplicateTitle:
+      "Das Dokument enthält mehrere Definitionen dieses Eintrags.",
   },
 };
 const l10n = getIntlData(localizationStrings);

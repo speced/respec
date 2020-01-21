@@ -101,7 +101,7 @@ describe("Core - Markdown", () => {
     }
   });
 
-  xit("allows custom ids to headers", async () => {
+  it("allows custom ids to headers", async () => {
     const body = `
       ## Heading {#custom-id}
       PASS
@@ -334,13 +334,34 @@ describe("Core - Markdown", () => {
 
     const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
-    const [mixedCaseWebidl] = doc.querySelectorAll("pre");
+    const mixedCaseWebidl = doc.querySelector("pre");
 
     expect(mixedCaseWebidl.classList).toContain("idl");
     expect(mixedCaseWebidl.querySelector("code.hljs")).toBeFalsy();
     expect(
       mixedCaseWebidl.querySelector(".respec-button-copy-paste")
     ).toBeTruthy();
+  });
+
+  it("indents <pre> in markdown correctly", async () => {
+    const body = `
+      1. I am your father
+
+      2. No, no, it's not true
+    
+          <pre class="idl">
+          [Exposed=Window]
+          interface Thats {
+            attribute Impossibl e;
+          };
+          </pre>
+    `;
+
+    const ops = makeStandardOps({ format: "markdown" }, body);
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelector("pre");
+
+    expect(pre.textContent).toContain("{\n  attribute Impossibl e;\n}");
   });
 
   describe("nolinks options", () => {

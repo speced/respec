@@ -11,7 +11,7 @@ pre.idl {
   }
 }
 
-div.idlHeader {
+.idlHeader {
   display: block;
   width: 150px;
   background: #90b8de;
@@ -23,7 +23,7 @@ div.idlHeader {
   line-height: 28px;
 }
 
-div.idlHeader a.self-link {
+.idlHeader a.self-link {
    color: #fff;
    margin-left: .3cm;
    text-decoration: none;

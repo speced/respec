@@ -1,7 +1,6 @@
 // @ts-check
-import { getIntlData } from "../../core/l10n.js";
+import { getIntlData, norm } from "../../core/utils.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
-import { norm } from "../../core/utils.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
@@ -74,6 +73,17 @@ const localizationStrings = {
     latest_editors_draft: "Borrador de editor mas reciente:",
     latest_published_version: "Versión publicada mas reciente:",
     this_version: "Ésta versión:",
+  },
+  de: {
+    author: "Autor/in:",
+    authors: "Autor/innen:",
+    editor: "Redaktion:",
+    editors: "Redaktion:",
+    former_editor: "Frühere Mitwirkende:",
+    former_editors: "Frühere Mitwirkende:",
+    latest_editors_draft: "Letzter Entwurf:",
+    latest_published_version: "Letzte publizierte Fassung:",
+    this_version: "Diese Fassung:",
   },
 };
 

@@ -16,7 +16,7 @@ import * as changelog from "./rs-changelog.js";
 /** @type {CustomElementDfn[]} */
 const CUSTOM_ELEMENTS = [changelog];
 
-export const name = "core/custom-elements";
+export const name = "core/custom-elements/index";
 
 export async function run() {
   // prepare and register elements

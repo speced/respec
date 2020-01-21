@@ -349,10 +349,10 @@ function renderWebIDL(idlElement, index) {
  */
 export function addIDLHeader(pre) {
   addHashId(pre, "webidl");
-  const header = hyperHTML`<div class="idlHeader"><a
+  const header = hyperHTML`<span class="idlHeader"><a
       class="self-link"
       href="${`#${pre.id}`}"
-    >WebIDL</a></div>`;
+    >WebIDL</a></span>`;
   pre.prepend(header);
   addCopyIDLButton(header);
 }

@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData } from "../../core/l10n.js";
+import { getIntlData } from "../../core/utils.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
 
 const localizationStrings = {
@@ -20,6 +20,9 @@ const localizationStrings = {
   },
   es: {
     sotd: "Estado de este Document",
+  },
+  de: {
+    sotd: "Status dieses Dokuments",
   },
 };
 

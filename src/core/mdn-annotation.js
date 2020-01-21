@@ -3,7 +3,7 @@ import { fetchAndCache } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
 import { hyperHTML } from "./import-maps.js";
 
-export const name = "core/mdn-annoatation";
+export const name = "core/mdn-annotation";
 
 const SPEC_MAP_URL =
   "https://raw.githubusercontent.com/w3c/mdn-spec-links/master/SPECMAP.json";
