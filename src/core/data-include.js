@@ -14,28 +14,76 @@ import { runTransforms } from "./utils.js";
 
 export const name = "core/data-include";
 
+/**
+ * Calculates indentation when the element starts after a newline.
+ * The value will be empty if no newline or any non-whitespace exists after one.
+ * @param {Element} element
+ */
+function getElementIndentation(element) {
+  const { previousSibling } = element;
+  if (!previousSibling || previousSibling.nodeType !== Node.TEXT_NODE) {
+    return "";
+  }
+  const index = previousSibling.textContent.lastIndexOf("\n");
+  if (index === -1) {
+    return "";
+  }
+  const slice = previousSibling.textContent.slice(index + 1);
+  if (/[^\s]/.test(slice)) {
+    return "";
+  }
+  return slice;
+}
+
+/**
+ * @param {string} text
+ * @param {string} indent
+ */
+function indentTextWithoutFirstLine(text, indent) {
+  const lines = text.split("\n");
+  const firstLine = lines.shift();
+  return `${firstLine}\n${lines.map(line => indent + line).join("\n")}`;
+}
+
+/**
+ * @param {HTMLElement} el
+ * @param {string} data
+ * @param {boolean} replace
+ */
+function fillWithText(el, data, replace) {
+  let fill = data;
+  if (replace || data.includes("\n")) {
+    const indentation = getElementIndentation(el);
+    const indented = indentTextWithoutFirstLine(data, indentation);
+    fill = replace
+      ? indented // use element indentation
+      : `\n\n${indentation}${indented}\n\n${indentation}`;
+  }
+
+  if (el.dataset.includeFormat === "text") {
+    el.textContent = fill;
+  } else {
+    el.innerHTML = fill;
+  }
+
+  if (replace) {
+    el.replaceWith(...el.childNodes);
+  }
+}
+
+/**
+ * @param {string} rawData
+ * @param {string} id
+ * @param {string} url
+ */
 function processResponse(rawData, id, url) {
   /** @type {HTMLElement} */
   const el = document.querySelector(`[data-include-id=${id}]`);
   const data = runTransforms(rawData, el.dataset.oninclude, url);
   const replace = typeof el.dataset.includeReplace === "string";
-  switch (el.dataset.includeFormat) {
-    case "text":
-      if (replace) {
-        el.replaceWith(data);
-      } else {
-        el.textContent = data;
-      }
-      break;
-    default:
-      // html, which is just using "innerHTML"
-      el.innerHTML = data;
-      if (replace) {
-        el.replaceWith(...el.childNodes);
-      }
-  }
+  fillWithText(el, data, replace);
   // If still in the dom tree, clean up
-  if (document.contains(el)) {
+  if (!replace) {
     removeIncludeAttributes(el);
   }
 }
