@@ -134,17 +134,7 @@ function getRequestEntry(elem) {
   if (!isIDL) term = term.toLowerCase();
 
   const specs = getSpecContext(elem);
-
-  const types = [];
-  if (isIDL) {
-    if (elem.dataset.xrefType) {
-      types.push(...elem.dataset.xrefType.split("|"));
-    } else {
-      types.push("_IDL_");
-    }
-  } else {
-    types.push("_CONCEPT_");
-  }
+  const types = getTypeContext(elem, isIDL);
 
   let { xrefFor: forContext } = elem.dataset;
   if (!forContext && isIDL) {
@@ -216,6 +206,21 @@ function getSpecContext(elem) {
   }
 
   return specs;
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @param {boolean} isIDL
+ */
+function getTypeContext(elem, isIDL) {
+  if (isIDL) {
+    if (elem.dataset.xrefType) {
+      return elem.dataset.xrefType.split("|");
+    }
+    return ["_IDL_"];
+  }
+
+  return ["_CONCEPT_"];
 }
 
 /**
