@@ -135,17 +135,8 @@ function getRequestEntry(elem) {
 
   const specs = getSpecContext(elem);
   const types = getTypeContext(elem, isIDL);
+  const forContext = getForContext(elem, isIDL);
 
-  let { xrefFor: forContext } = elem.dataset;
-  if (!forContext && isIDL) {
-    /** @type {HTMLElement} */
-    const dataXrefForElem = elem.closest("[data-xref-for]");
-    if (dataXrefForElem) {
-      forContext = normalize(dataXrefForElem.dataset.xrefFor);
-    }
-  } else if (forContext && typeof forContext === "string") {
-    forContext = normalize(forContext);
-  }
   return {
     term,
     types,
@@ -206,6 +197,28 @@ function getSpecContext(elem) {
   }
 
   return specs;
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @param {boolean} isIDL
+ */
+function getForContext(elem, isIDL) {
+  if (elem.dataset.xrefFor) {
+    return normalize(elem.dataset.xrefFor);
+  }
+
+  if (!isIDL) {
+    // non-idl terms having for context is not presently supported
+    return null;
+  }
+
+  /** @type {HTMLElement} */
+  const dataXrefForElem = elem.closest("[data-xref-for]");
+  if (dataXrefForElem) {
+    return normalize(dataXrefForElem.dataset.xrefFor);
+  }
+  return null;
 }
 
 /**
