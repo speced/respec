@@ -133,33 +133,7 @@ function getRequestEntry(elem) {
   let term = getTermFromElement(elem);
   if (!isIDL) term = term.toLowerCase();
 
-  /** @type {string[][]} */
-  let specs = [];
-  /** @type {HTMLElement} */
-  let dataciteElem = elem.closest("[data-cite]");
-  while (dataciteElem) {
-    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
-    const cites = cite.split(/\s+/).filter(s => s);
-    if (cites.length) {
-      specs.push(cites.sort());
-    }
-    if (dataciteElem === elem) break;
-    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
-  }
-  // if element itself contains data-cite, we don't take inline context into account
-  if (elem.closest("[data-cite]") !== elem) {
-    const closestSection = elem.closest("section");
-    /** @type {Iterable<HTMLElement>} */
-    const bibrefs = closestSection
-      ? closestSection.querySelectorAll("a.bibref")
-      : [];
-    const inlineRefs = [...bibrefs].map(el => el.textContent.toLowerCase());
-    const uniqueInlineRefs = [...new Set(inlineRefs)].sort();
-    if (uniqueInlineRefs.length) {
-      specs.unshift(uniqueInlineRefs);
-    }
-  }
-  specs = dedupeSpecContext(specs);
+  const specs = getSpecContext(elem);
 
   const types = [];
   if (isIDL) {
@@ -198,18 +172,50 @@ function getTermFromElement(elem) {
   return term === "the-empty-string" ? "" : term;
 }
 
-/**
- * If we already have a spec in a higher priority level (closer to element) of
- * fallback chain, skip it from low priority levels, to prevent duplication.
- * @param {string[][]} specs
- * */
-function dedupeSpecContext(specs) {
-  const unique = [];
-  for (const level of specs) {
-    const higherPriority = unique[unique.length - 1] || [];
-    unique.push(level.filter(spec => !higherPriority.includes(spec)));
+/*
+ * Get spec context as a fallback chain, where each level (sub-array) represents
+ * decreasing priority.
+ * @param {HTMLElement} elem
+ */
+function getSpecContext(elem) {
+  /** @type {string[][]} */
+  const specs = [];
+
+  /** @type {HTMLElement} */
+  let dataciteElem = elem.closest("[data-cite]");
+
+  // If element itself contains data-cite, we don't take inline context into
+  // account. The inline bibref context has highest priority, if available.
+  if (dataciteElem !== elem) {
+    const closestSection = elem.closest("section");
+    /** @type {Iterable<HTMLElement>} */
+    const bibrefs = closestSection
+      ? closestSection.querySelectorAll("a.bibref")
+      : [];
+    const inlineRefs = [...bibrefs].map(el => el.textContent.toLowerCase());
+    const uniqueInlineRefs = [...new Set(inlineRefs)].sort();
+    if (uniqueInlineRefs.length) {
+      specs.push(uniqueInlineRefs);
+    }
   }
-  return unique;
+
+  // Traverse up towards the root element, adding levels of lower priority specs
+  while (dataciteElem) {
+    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
+    const cites = cite.split(/\s+/).filter(s => s);
+    // Optimization: if we already have a spec in a higher priority level of
+    // fallback chain, skip it from this level
+    const uniqueCites = [...new Set(cites)].filter(
+      spec => !(specs[specs.length - 1] || []).includes(spec)
+    );
+    if (uniqueCites.length) {
+      specs.push(uniqueCites.sort());
+    }
+    if (dataciteElem === elem) break;
+    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
+  }
+
+  return specs;
 }
 
 /**
