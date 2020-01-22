@@ -130,48 +130,29 @@ function normalizeConfig(xref) {
 function getRequestEntry(elem) {
   const isIDL = "xrefType" in elem.dataset;
 
-  const term = getTermFromElement(elem, isIDL);
-  const specs = getSpecContext(elem);
-  const types = getTypeContext(elem, isIDL);
-  const forContext = getForContext(elem, isIDL);
+  let term = getTermFromElement(elem);
+  if (!isIDL) term = term.toLowerCase();
 
-  return {
-    term,
-    types,
-    ...(specs.length && { specs }),
-    ...(typeof forContext === "string" && { for: forContext }),
-  };
-}
-
-/**
- * @param {HTMLElement} elem
- * @param {boolean} isIDL
- */
-function getTermFromElement(elem, isIDL) {
-  const { lt: linkingText } = elem.dataset;
-  let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
-  term = normalize(term);
-  if (term === "the-empty-string") {
-    term = "";
-  }
-  return isIDL ? term : term.toLowerCase();
-}
-
-/**
- * Get spec context as a fallback chain, where each level (sub-array) represents
- * decreasing priority.
- * @param {HTMLElement} elem
- */
-function getSpecContext(elem) {
   /** @type {string[][]} */
   const specs = [];
-
   /** @type {HTMLElement} */
   let dataciteElem = elem.closest("[data-cite]");
-
-  // If element itself contains data-cite, we don't take inline context into
-  // account. The inline bibref context has highest priority, if available.
-  if (dataciteElem !== elem) {
+  while (dataciteElem) {
+    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
+    const cites = cite.split(/\s+/);
+    // if we already have a spec in previous level of fallback chain, skip it
+    // from this level
+    const uniqueCites = [...new Set(cites)].filter(
+      spec => spec && !(specs[specs.length - 1] || []).includes(spec)
+    );
+    if (uniqueCites.length) {
+      specs.push(uniqueCites.sort());
+    }
+    if (dataciteElem === elem) break;
+    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
+  }
+  // if element itself contains data-cite, we don't take inline context into account
+  if (elem.closest("[data-cite]") !== elem) {
     const closestSection = elem.closest("section");
     /** @type {Iterable<HTMLElement>} */
     const bibrefs = closestSection
@@ -180,64 +161,45 @@ function getSpecContext(elem) {
     const inlineRefs = [...bibrefs].map(el => el.textContent.toLowerCase());
     const uniqueInlineRefs = [...new Set(inlineRefs)].sort();
     if (uniqueInlineRefs.length) {
-      specs.push(uniqueInlineRefs);
+      specs.unshift(uniqueInlineRefs);
     }
   }
 
-  // Traverse up towards the root element, adding levels of lower priority specs
-  while (dataciteElem) {
-    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
-    const cites = cite.split(/\s+/).filter(s => s);
-    // Optimization: if we already have a spec in a higher priority level of
-    // fallback chain, skip it from this level
-    const uniqueCites = [...new Set(cites)].filter(
-      spec => !(specs[specs.length - 1] || []).includes(spec)
-    );
-    if (uniqueCites.length) {
-      specs.push(uniqueCites.sort());
+  const types = [];
+  if (isIDL) {
+    if (elem.dataset.xrefType) {
+      types.push(...elem.dataset.xrefType.split("|"));
+    } else {
+      types.push("_IDL_");
     }
-    if (dataciteElem === elem) break;
-    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
+  } else {
+    types.push("_CONCEPT_");
   }
 
-  return specs;
+  let { xrefFor: forContext } = elem.dataset;
+  if (!forContext && isIDL) {
+    /** @type {HTMLElement} */
+    const dataXrefForElem = elem.closest("[data-xref-for]");
+    if (dataXrefForElem) {
+      forContext = normalize(dataXrefForElem.dataset.xrefFor);
+    }
+  } else if (forContext && typeof forContext === "string") {
+    forContext = normalize(forContext);
+  }
+  return {
+    term,
+    types,
+    ...(specs.length && { specs }),
+    ...(typeof forContext === "string" && { for: forContext }),
+  };
 }
 
-/**
- * @param {HTMLElement} elem
- * @param {boolean} isIDL
- */
-function getForContext(elem, isIDL) {
-  if (elem.dataset.xrefFor) {
-    return normalize(elem.dataset.xrefFor);
-  }
-
-  if (!isIDL) {
-    // non-idl terms having for context is not presently supported
-    return null;
-  }
-
-  /** @type {HTMLElement} */
-  const dataXrefForElem = elem.closest("[data-xref-for]");
-  if (dataXrefForElem) {
-    return normalize(dataXrefForElem.dataset.xrefFor);
-  }
-  return null;
-}
-
-/**
- * @param {HTMLElement} elem
- * @param {boolean} isIDL
- */
-function getTypeContext(elem, isIDL) {
-  if (!isIDL) {
-    return ["_CONCEPT_"];
-  }
-
-  if (elem.dataset.xrefType) {
-    return elem.dataset.xrefType.split("|");
-  }
-  return ["_IDL_"];
+/** @param {HTMLElement} elem */
+function getTermFromElement(elem) {
+  const { lt: linkingText } = elem.dataset;
+  let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
+  term = normalize(term);
+  return term === "the-empty-string" ? "" : term;
 }
 
 /**
@@ -405,7 +367,7 @@ function showErrors({ ambiguous, notFound }) {
 
   for (const { query, elems } of notFound.values()) {
     const specs = [...new Set(flatten([], query.specs))].sort();
-    const originalTerm = getTermFromElement(elems[0], true);
+    const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
     const msg =
@@ -417,7 +379,7 @@ function showErrors({ ambiguous, notFound }) {
   for (const { query, elems, results } of ambiguous.values()) {
     const specs = [...new Set(results.map(entry => entry.shortname))].sort();
     const specsString = specs.map(s => `**${s}**`).join(", ");
-    const originalTerm = getTermFromElement(elems[0], true);
+    const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const msg =
       `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ` +
