@@ -134,19 +134,14 @@ function getRequestEntry(elem) {
   if (!isIDL) term = term.toLowerCase();
 
   /** @type {string[][]} */
-  const specs = [];
+  let specs = [];
   /** @type {HTMLElement} */
   let dataciteElem = elem.closest("[data-cite]");
   while (dataciteElem) {
     const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
-    const cites = cite.split(/\s+/);
-    // if we already have a spec in previous level of fallback chain, skip it
-    // from this level
-    const uniqueCites = [...new Set(cites)].filter(
-      spec => spec && !(specs[specs.length - 1] || []).includes(spec)
-    );
-    if (uniqueCites.length) {
-      specs.push(uniqueCites.sort());
+    const cites = cite.split(/\s+/).filter(s => s);
+    if (cites.length) {
+      specs.push(cites.sort());
     }
     if (dataciteElem === elem) break;
     dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
@@ -164,6 +159,7 @@ function getRequestEntry(elem) {
       specs.unshift(uniqueInlineRefs);
     }
   }
+  specs = dedupeSpecContext(specs);
 
   const types = [];
   if (isIDL) {
@@ -200,6 +196,20 @@ function getTermFromElement(elem) {
   let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
   term = normalize(term);
   return term === "the-empty-string" ? "" : term;
+}
+
+/**
+ * If we already have a spec in a higher priority level (closer to element) of
+ * fallback chain, skip it from low priority levels, to prevent duplication.
+ * @param {string[][]} specs
+ * */
+function dedupeSpecContext(specs) {
+  const unique = [];
+  for (const level of specs) {
+    const higherPriority = unique[unique.length - 1] || [];
+    unique.push(level.filter(spec => !higherPriority.includes(spec)));
+  }
+  return unique;
 }
 
 /**
