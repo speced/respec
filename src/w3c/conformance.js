@@ -1,12 +1,58 @@
 // @ts-check
 // Module w3c/conformance
 // Handle the conformance section properly.
+import { getIntlData, htmlJoinAnd } from "../core/utils.js";
 import { hyperHTML as html } from "../core/import-maps.js";
-import { htmlJoinAnd } from "../core/utils.js";
 import { pub } from "../core/pubsubhub.js";
 import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";
 export const name = "w3c/conformance";
+
+const localizationStrings = {
+  en: {
+    conformance: "Conformance",
+    normativity:
+      "As well as sections marked as non-normative, all authoring guidelines, " +
+      "diagrams, examples, and notes in this specification are non-normative. " +
+      "Everything else in this specification is normative.",
+    keywordInterpretation(keywords, plural) {
+      return html`
+        <p>
+          The key word${plural ? "s" : ""} ${keywords} in this document
+          ${plural ? "are" : "is"} to be interpreted as described in
+          <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+          ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
+          when, and only when, they appear in all capitals, as shown here.
+        </p>
+      `;
+    },
+  },
+  de: {
+    conformance: "Anforderungen",
+    normativity:
+      "Neben den explizit als nicht-normativ gekennzeichneten Abschnitten " +
+      "sind auch alle Diagramme, Beispiele und Hinweise in diesem Dokument " +
+      "nicht normativ. Alle andere Angaben sind normativ.",
+    keywordInterpretation(keywords, plural) {
+      return html`
+        <p>
+          ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in
+          diesem Dokument ${plural ? "sind" : "ist"} gemäß
+          <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+          ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
+          und unter Berücksichtigung von
+          <a
+            href="https://github.com/adfinis-sygroup/2119/blob/master/2119de.rst"
+            >2119de</a
+          >
+          zu interpretieren, wenn und nur wenn ${plural ? "sie" : "es"} wie hier
+          gezeigt durchgehend groß geschrieben wurde${plural ? "n" : ""}.
+        </p>
+      `;
+    },
+  },
+};
+const l10n = getIntlData(localizationStrings);
 
 /**
  * @param {Element} conformance
@@ -29,24 +75,11 @@ function processConformance(conformance, conf) {
   );
   const plural = terms.length > 1;
   const content = html`
-    <h2>Conformance</h2>
+    <h2>${l10n.conformance}</h2>
     <p>
-      As well as sections marked as non-normative, all authoring guidelines,
-      diagrams, examples, and notes in this specification are non-normative.
-      Everything else in this specification is normative.
+      ${l10n.normativity}
     </p>
-    ${terms.length
-      ? html`
-          <p>
-            The key word${plural ? "s" : ""} ${keywords} in this document
-            ${plural ? "are" : "is"} to be interpreted as described in
-            <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
-            ${renderInlineCitation("RFC2119")}
-            ${renderInlineCitation("RFC8174")} when, and only when, they appear
-            in all capitals, as shown here.
-          </p>
-        `
-      : null}
+    ${terms.length ? l10n.keywordInterpretation(keywords, plural) : null}
   `;
   conformance.prepend(...content.childNodes);
 }
