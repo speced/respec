@@ -48,9 +48,10 @@ function indentTextWithoutFirstLine(text, indent) {
 /**
  * @param {HTMLElement} el
  * @param {string} data
- * @param {boolean} replace
+ * @param {object} options
+ * @param {boolean} options.replace
  */
-function fillWithText(el, data, replace) {
+function fillWithText(el, data, { replace }) {
   let fill = data;
   if (replace || data.includes("\n")) {
     const indentation = getElementIndentation(el);
@@ -81,7 +82,7 @@ function processResponse(rawData, id, url) {
   const el = document.querySelector(`[data-include-id=${id}]`);
   const data = runTransforms(rawData, el.dataset.oninclude, url);
   const replace = typeof el.dataset.includeReplace === "string";
-  fillWithText(el, data, replace);
+  fillWithText(el, data, { replace });
   // If still in the dom tree, clean up
   if (!replace) {
     removeIncludeAttributes(el);
