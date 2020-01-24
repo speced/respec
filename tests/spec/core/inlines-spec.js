@@ -238,9 +238,7 @@ describe("Core - Inlines", () => {
 
     expect(anchors.length).toBe(3);
 
-    expect(anchors[0].textContent).toBe(
-      "[HTML/webstorage.html#user-tracking]"
-    );
+    expect(anchors[0].textContent).toBe("[HTML/webstorage.html#user-tracking]");
     expect(anchors[0].getAttribute("href")).toBe(
       "https://html.spec.whatwg.org/multipage/webstorage.html#user-tracking"
     );
@@ -252,9 +250,7 @@ describe("Core - Inlines", () => {
       "https://html.spec.whatwg.org/multipage/webstorage.html#introduction-15"
     );
 
-    expect(anchors[2].textContent).toBe(
-      "[HTML/webstorage.html#disk-space-2]"
-    );
+    expect(anchors[2].textContent).toBe("[HTML/webstorage.html#disk-space-2]");
     expect(anchors[2].getAttribute("href")).toBe(
       "https://html.spec.whatwg.org/multipage/webstorage.html#disk-space-2"
     );
