@@ -41,7 +41,7 @@ ul.addEventListener("click", ev => {
 });
 
 function show() {
-  const definitionLinks = Object.entries(definitionMap)
+  const definitionLinks = Array.from(definitionMap)
     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
     .map(([, [dfn]]) => {
       return hyperHTML.wire(dfn, ":li>a")`
