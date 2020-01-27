@@ -27,6 +27,13 @@ const localizationStrings = {
     tests: "テスト",
     test: "テスト",
   },
+  de: {
+    missing_test_suite_uri:
+      "Die Spezifikation enthält Tests, aber in der ReSpec-Konfiguration ist keine '" +
+      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' angegeben.",
+    tests: "Tests",
+    test: "Test",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

@@ -9,7 +9,7 @@ import { idb } from "./import-maps.js";
  * @typedef {import('core/xref').SearchResultEntry} SearchResultEntry
  */
 
-const VERSION_CHECK_WAIT = 5 * 60 * 60 * 1000; // 5 min
+const VERSION_CHECK_WAIT = 5 * 60 * 1000; // 5 min
 
 async function getIdbCache() {
   const db = await idb.openDB("xref", 1, {

@@ -8,6 +8,7 @@
 
 import {
   InsensitiveStringSet,
+  getIntlData,
   getTextNodes,
   norm,
   refTypeFromContext,
@@ -21,6 +22,42 @@ import { renderInlineCitation } from "./render-biblio.js";
 export const name = "core/inlines";
 export const rfc2119Usage = {};
 
+const localizationStrings = {
+  en: {
+    rfc2119Keywords() {
+      return new RegExp(
+        [
+          "\\bMUST(?:\\s+NOT)?\\b",
+          "\\bSHOULD(?:\\s+NOT)?\\b",
+          "\\bSHALL(?:\\s+NOT)?\\b",
+          "\\bMAY\\b",
+          "\\b(?:NOT\\s+)?REQUIRED\\b",
+          "\\b(?:NOT\\s+)?RECOMMENDED\\b",
+          "\\bOPTIONAL\\b",
+        ].join("|")
+      );
+    },
+  },
+  de: {
+    rfc2119Keywords() {
+      return new RegExp(
+        [
+          "\\bMUSS\\b",
+          "\\bERFORDERLICH\\b",
+          "\\b(?:NICHT\\s+)?NÖTIG\\b",
+          "\\bDARF(?:\\s+NICHT)?\\b",
+          "\\bVERBOTEN\\b",
+          "\\bSOLL(?:\\s+NICHT)?\\b",
+          "\\b(?:NICHT\\s+)?EMPFOHLEN\\b",
+          "\\bKANN\\b",
+          "\\bOPTIONAL\\b",
+        ].join("|")
+      );
+    },
+  },
+};
+const l10n = getIntlData(localizationStrings);
+
 // Inline `code`
 // TODO: Replace (?!`) at the end with (?:<!`) at the start when Firefox + Safari
 // add support.
@@ -30,15 +67,24 @@ const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
-const inlineElement = /(?:\[\^[A-Za-z]+(?:-[A-Za-z]+)?\^\])/; // Inline [^element^]
+const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
 
 /**
+ * @example [^iframe^] // [^element^]
+ * @example [^iframe/allow^] // [^element/element-attr^]
  * @param {string} matched
  * @return {HTMLElement}
  */
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
-  const html = hyperHTML`<code><a data-xref-type="element">${value}</a></code>`;
+  const [element, attribute] = value.split("/", 2).map(s => s && s.trim());
+  const [xrefType, xrefFor, textContent] = attribute
+    ? ["element-attr", element, attribute]
+    : ["element", null, element];
+  const html = hyperHTML`<code><a
+    data-xref-type="${xrefType}"
+    data-xref-for="${xrefFor}"
+    >${textContent}</a></code>`;
   return html;
 }
 
@@ -204,17 +250,7 @@ export function run(conf) {
   const txts = getTextNodes(document.body, exclusions, {
     wsNodes: false, // we don't want nodes with just whitespace
   });
-  const keywords = new RegExp(
-    [
-      "\\bMUST(?:\\s+NOT)?\\b",
-      "\\bSHOULD(?:\\s+NOT)?\\b",
-      "\\bSHALL(?:\\s+NOT)?\\b",
-      "\\bMAY\\b",
-      "\\b(?:NOT\\s+)?REQUIRED\\b",
-      "\\b(?:NOT\\s+)?RECOMMENDED\\b",
-      "\\bOPTIONAL\\b",
-    ].join("|")
-  );
+  const keywords = l10n.rfc2119Keywords();
   const rx = new RegExp(
     `(${[
       keywords.source,

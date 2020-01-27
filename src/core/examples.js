@@ -29,6 +29,9 @@ const localizationStrings = {
   ja: {
     example: "例",
   },
+  de: {
+    example: "Beispiel",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

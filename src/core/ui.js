@@ -47,6 +47,8 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
+const closeButton = hyperHTML`<button class="close-button" onclick=${() =>
+  ui.closeModal()} title="Close">❌</button>`;
 window.addEventListener("load", () => trapFocus(menu));
 let modal;
 let overlay;
@@ -94,7 +96,9 @@ function trapFocus(element) {
   );
   const firstFocusableEl = focusableEls[0];
   const lastFocusableEl = focusableEls[focusableEls.length - 1];
-
+  if (firstFocusableEl) {
+    firstFocusableEl.focus();
+  }
   element.addEventListener("keydown", e => {
     if (e.key !== "Tab") {
       return;
@@ -221,7 +225,8 @@ export const ui = {
     overlay = hyperHTML`<div id='respec-overlay' class='removeOnSave'></div>`;
     const id = `${currentOwner.id}-modal`;
     const headingId = `${id}-heading`;
-    modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog'>
+    modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog' aria-labelledby='${headingId}'>
+      ${closeButton}
       <h3 id="${headingId}">${title}</h3>
       <div class='inside'>${content}</div>
     </div>`;
@@ -231,6 +236,7 @@ export const ui = {
     overlay.addEventListener("click", () => this.closeModal(currentOwner));
     overlay.classList.toggle("respec-show-overlay");
     modal.hidden = false;
+    trapFocus(modal);
   },
 };
 shortcut.add("Esc", () => ui.closeModal());

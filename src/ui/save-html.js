@@ -19,6 +19,9 @@ const localizationStrings = {
   ja: {
     save_snapshot: "保存する",
   },
+  de: {
+    save_snapshot: "Exportieren",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

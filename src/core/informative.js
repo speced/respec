@@ -19,6 +19,9 @@ const localizationStrings = {
   ja: {
     informative: "この節は仕様には含まれません．",
   },
+  de: {
+    informative: "Dieser Abschnitt ist nicht normativ.",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

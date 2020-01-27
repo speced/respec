@@ -55,6 +55,14 @@ const localizationStrings = {
     no_issues_in_spec: "No hay problemas enumerados en esta especificación.",
     warning: "Aviso",
   },
+  de: {
+    editors_note: "Redaktioneller Hinweis",
+    issue: "Frage",
+    issue_summary: "Offene Fragen",
+    no_issues_in_spec: "Diese Spezifikation enthält keine offenen Fragen.",
+    note: "Hinweis",
+    warning: "Warnung",
+  },
 };
 
 const cssPromise = loadStyle();

@@ -16,6 +16,9 @@ const localizationStrings = {
   ja: {
     search_specref: "仕様検索",
   },
+  de: {
+    search_specref: "Spezifikationen durchsuchen",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

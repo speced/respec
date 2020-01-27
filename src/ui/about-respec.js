@@ -5,17 +5,6 @@ import { getIntlData } from "../core/utils.js";
 import { hyperHTML } from "../core/import-maps.js";
 import { ui } from "../core/ui.js";
 
-// window.respecVersion is added at build time (see tools/builder.js)
-window.respecVersion = window.respecVersion || "Developer Edition";
-const div = document.createElement("div");
-const render = hyperHTML.bind(div);
-const button = ui.addCommand(
-  `About ${window.respecVersion}`,
-  show,
-  "Ctrl+Shift+Alt+A",
-  "ℹ️"
-);
-
 const localizationStrings = {
   en: {
     about_respec: "About",
@@ -29,11 +18,24 @@ const localizationStrings = {
   ja: {
     about_respec: "これについて",
   },
+  de: {
+    about_respec: "Über",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
+// window.respecVersion is added at build time (see tools/builder.js)
+window.respecVersion = window.respecVersion || "Developer Edition";
+const div = document.createElement("div");
+const render = hyperHTML.bind(div);
+const button = ui.addCommand(
+  `${l10n.about_respec} ${window.respecVersion}`,
+  show,
+  "Ctrl+Shift+Alt+A",
+  "ℹ️"
+);
+
 function show() {
-  ui.freshModal(`${l10n.about_respec} - ${window.respecVersion}`, div, button);
   const entries = [];
   if ("getEntriesByType" in performance) {
     performance
@@ -76,10 +78,11 @@ function show() {
     <tbody>${entries}</tbody>
   </table>
 `;
+  ui.freshModal(`${l10n.about_respec} - ${window.respecVersion}`, div, button);
 }
 
 function perfEntryToTR({ name, duration }) {
-  const moduleURL = `https://github.com/w3c/respec/tree/develop/src/${name}.js`;
+  const moduleURL = `https://github.com/w3c/respec/blob/develop/src/${name}.js`;
   return hyperHTML`
     <tr>
       <td><a href="${moduleURL}">${name}</a></td>

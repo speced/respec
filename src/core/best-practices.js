@@ -17,6 +17,9 @@ const localizationStrings = {
   ja: {
     best_practice: "最良実施例 ",
   },
+  de: {
+    best_practice: "Musterbeispiel ",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
