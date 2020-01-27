@@ -117,15 +117,23 @@ function convertElement(element) {
 }
 
 /**
+ * CommonMark requires additional empty newlines between markdown and HTML lines.
+ * This function adds them as a backward compatibility workaround.
  * @param {HTMLElement} element
  * @param {string} selector
  */
-function enableBlockLevelMarkdown(element, selector) {
+function workaroundBlockLevelMarkdown(element, selector) {
   /** @type {NodeListOf<HTMLElement>} */
   const elements = element.querySelectorAll(selector);
   for (const element of elements) {
+    const { innerHTML } = element;
+    if (/^<\w/.test(innerHTML.trimStart())) {
+      // if the block content starts with HTML-like format
+      // then assume it doesn't need a workaround
+      continue;
+    }
     // Double newlines are needed to be parsed as Markdown
-    const lines = element.innerHTML.split("\n");
+    const lines = innerHTML.split("\n");
     const firstTwo = lines.slice(0, 2).join("\n");
     const lastTwo = lines.slice(-2).join("\n");
     if (firstTwo.trim()) {
@@ -288,7 +296,7 @@ export function run(conf) {
   // Marked expects markdown be flush against the left margin
   // so we need to normalize the inner text of some block
   // elements.
-  enableBlockLevelMarkdown(newBody, blockLevelElements);
+  workaroundBlockLevelMarkdown(newBody, blockLevelElements);
   convertElement(newBody);
   // Remove links where class .nolinks
   substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
