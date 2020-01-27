@@ -89,37 +89,28 @@ describe("Core — Data Include", () => {
     expect(doc.querySelectorAll("*[data-include]").length).toBe(0);
   });
 
-  it("indents multiline text", async () => {
-    const include = `Blue rose is blue
-
-Red rose is red
-
-Rose of the wasteland is violet
-`;
+  it("processes single line markdown text", async () => {
+    const include = `On construction, see [here](https://respec.org/)`;
     const ops = {
       config: {
         ...makeBasicConfig(),
         format: "markdown",
       },
       body: `
-        ## R
+        <section id="abstract"></section>
 
-        1. Rose
-
-          <div data-include="${generateDataUrl(
-            include
-          )}" data-include-replace data-include-format="markdown"></div>
+        <section data-include="${generateDataUrl(
+          include
+        )}" data-include-format="markdown"></section>
       `,
     };
     ops.abstract = null;
 
     const doc = await makeRSDoc(ops);
-    const li = doc.querySelector("section li");
-    expect(li).toBeTruthy();
-    expect(li.textContent).toContain("Rose");
-    // all text should be indented and thus recognized as a part of the list item
-    expect(li.textContent).toContain("Blue");
-    expect(li.textContent).toContain("Red");
-    expect(li.textContent).toContain("wasteland");
+    const anchor = doc.querySelector("section a[href*=respec]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toContain("https://respec.org/");
+    // Shouldn't break other sections
+    expect(doc.getElementById("abstract")).toBeTruthy();
   });
 });

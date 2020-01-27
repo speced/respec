@@ -518,5 +518,23 @@ function getAnswer() {
 
       expect(pre.textContent).toBe(idl);
     });
+
+    it("parses indented HTML block contents as HTML", async () => {
+      const body = `
+        <section>
+          <h2 id="h2">header</h2>
+          <p id="p">This is HTML, not an indented markdown code block</p>
+        </section>
+      `;
+      const ops = makeStandardOps({ format: "markdown" }, body);
+      ops.abstract = null;
+      const doc = await makeRSDoc(ops);
+      const h2 = doc.getElementById("h2");
+      const p = doc.getElementById("p");
+
+      expect(h2.localName).toBe("h2");
+      expect(h2.textContent).toBe("1. header");
+      expect(p.localName).toBe("p");
+    });
   });
 });
