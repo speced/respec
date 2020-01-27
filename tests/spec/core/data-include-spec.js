@@ -113,4 +113,71 @@ describe("Core — Data Include", () => {
     // Shouldn't break other sections
     expect(doc.getElementById("abstract")).toBeTruthy();
   });
+
+  describe("multiline markdown text", () => {
+    const include = generateDataUrl(`# R
+
+1. Rose
+
+  Blue rose is blue
+
+  Red rose is red
+
+  Rose of the wasteland is violet
+    `);
+    it("processes multiline markdown text", async () => {
+      const ops = {
+        config: {
+          ...makeBasicConfig(),
+          format: "markdown",
+        },
+        body: `
+          <section id="abstract"></section>
+
+          <section data-include="${include}" data-include-format="markdown"></section>
+        `,
+      };
+      ops.abstract = null;
+
+      const doc = await makeRSDoc(ops);
+      const li = doc.querySelector("section li");
+      expect(li).toBeTruthy();
+      expect(li.textContent).toContain("Rose");
+      expect(li.textContent).toContain("Blue");
+      expect(li.textContent).toContain("Red");
+      expect(li.textContent).toContain("wasteland");
+      // Shouldn't break other sections
+      expect(doc.getElementById("abstract")).toBeTruthy();
+    });
+
+    it("processes multiline markdown replacement text", async () => {
+      const ops = {
+        config: {
+          ...makeBasicConfig(),
+          format: "markdown",
+        },
+        body: `
+          <section id="abstract"></section>
+
+          <section>
+
+          <div data-include="${include}" data-include-format="markdown" data-include-replace></div>
+
+          </section>
+        `,
+      };
+      ops.abstract = null;
+
+      const doc = await makeRSDoc(ops);
+      const li = doc.querySelector("section li");
+      expect(li).toBeTruthy();
+      expect(li.textContent).toContain("Rose");
+      expect(li.textContent).toContain("Blue");
+      expect(li.textContent).toContain("Red");
+      expect(li.textContent).toContain("wasteland");
+      expect(li.parentElement.parentElement.localName).toBe("section");
+      // Shouldn't break other sections
+      expect(doc.getElementById("abstract")).toBeTruthy();
+    });
+  });
 });
