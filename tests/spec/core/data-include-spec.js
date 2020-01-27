@@ -13,6 +13,13 @@ describe("Core — Data Include", () => {
   // important should provide more tests
   const url = "/tests/spec/core/includer.html";
 
+  /**
+   * @param {string} text
+   */
+  function generateDataUrl(text) {
+    return `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`;
+  }
+
   it("includes an external file and remove the data-include attr", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -71,7 +78,7 @@ describe("Core — Data Include", () => {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section
           id="includes"
-          data-include="data:text/plain;charset=utf-8,%23%23%20PASS">
+          data-include="${generateDataUrl("## PASS")}">
         </section>`,
     };
     ops.config.format = "markdown";
@@ -80,5 +87,39 @@ describe("Core — Data Include", () => {
     expect(h2).toBeTruthy();
     expect(h2.textContent).toBe("1. PASS");
     expect(doc.querySelectorAll("*[data-include]").length).toBe(0);
+  });
+
+  it("indents multiline text", async () => {
+    const include = `Blue rose is blue
+
+Red rose is red
+
+Rose of the wasteland is violet
+`;
+    const ops = {
+      config: {
+        ...makeBasicConfig(),
+        format: "markdown",
+      },
+      body: `
+        ## R
+
+        1. Rose
+
+          <div data-include="${generateDataUrl(
+            include
+          )}" data-include-replace></div>
+      `,
+    };
+    ops.abstract = null;
+
+    const doc = await makeRSDoc(ops);
+    const li = doc.querySelector("section li");
+    expect(li).toBeTruthy();
+    expect(li.textContent).toContain("Rose");
+    // all text should be indented and thus recognized as a part of the list item
+    expect(li.textContent).toContain("Blue");
+    expect(li.textContent).toContain("Red");
+    expect(li.textContent).toContain("wasteland");
   });
 });

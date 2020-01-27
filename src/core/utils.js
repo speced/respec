@@ -401,6 +401,7 @@ export function linkCSS(doc, styles) {
 // with RSv1. It is therefore not tested and not actively supported.
 /**
  * @this {any}
+ * @param {string} content
  * @param {string} [flist]
  */
 export function runTransforms(content, flist, ...funcArgs) {
