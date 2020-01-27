@@ -16,6 +16,9 @@ const localizationStrings = {
   nl: {
     save_snapshot: "Bewaar Snapshot",
   },
+  ja: {
+    save_snapshot: "保存する",
+  },
   de: {
     save_snapshot: "Exportieren",
   },
