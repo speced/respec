@@ -9,31 +9,10 @@
 //  This module only really works when you are in an HTTP context, and will most likely
 //  fail if you are editing your documents on your local drive. That is due to security
 //  restrictions in the browser.
+import { getElementIndentation, runTransforms } from "./utils.js";
 import { pub } from "./pubsubhub.js";
-import { runTransforms } from "./utils.js";
 
 export const name = "core/data-include";
-
-/**
- * Calculates indentation when the element starts after a newline.
- * The value will be empty if no newline or any non-whitespace exists after one.
- * @param {Element} element
- */
-function getElementIndentation(element) {
-  const { previousSibling } = element;
-  if (!previousSibling || previousSibling.nodeType !== Node.TEXT_NODE) {
-    return "";
-  }
-  const index = previousSibling.textContent.lastIndexOf("\n");
-  if (index === -1) {
-    return "";
-  }
-  const slice = previousSibling.textContent.slice(index + 1);
-  if (/[^\s]/.test(slice)) {
-    return "";
-  }
-  return slice;
-}
 
 /**
  * @param {string} text
@@ -52,8 +31,9 @@ function indentTextWithoutFirstLine(text, indent) {
  * @param {boolean} options.replace
  */
 function fillWithText(el, data, { replace }) {
+  const { includeFormat } = el.dataset;
   let fill = data;
-  if (replace || data.includes("\n")) {
+  if (includeFormat === "markdown") {
     const indentation = getElementIndentation(el);
     const indented = indentTextWithoutFirstLine(data, indentation);
     fill = replace
@@ -61,7 +41,7 @@ function fillWithText(el, data, { replace }) {
       : `\n\n${indentation}${indented}\n\n${indentation}`;
   }
 
-  if (el.dataset.includeFormat === "text") {
+  if (includeFormat === "text") {
     el.textContent = fill;
   } else {
     el.innerHTML = fill;

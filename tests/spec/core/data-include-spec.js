@@ -108,7 +108,7 @@ Rose of the wasteland is violet
 
           <div data-include="${generateDataUrl(
             include
-          )}" data-include-replace></div>
+          )}" data-include-replace data-include-format="markdown"></div>
       `,
     };
     ops.abstract = null;

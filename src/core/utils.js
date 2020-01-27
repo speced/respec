@@ -806,6 +806,27 @@ export function children(element, selector) {
 }
 
 /**
+ * Calculates indentation when the element starts after a newline.
+ * The value will be empty if no newline or any non-whitespace exists after one.
+ * @param {Element} element
+ */
+export function getElementIndentation(element) {
+  const { previousSibling } = element;
+  if (!previousSibling || previousSibling.nodeType !== Node.TEXT_NODE) {
+    return "";
+  }
+  const index = previousSibling.textContent.lastIndexOf("\n");
+  if (index === -1) {
+    return "";
+  }
+  const slice = previousSibling.textContent.slice(index + 1);
+  if (/[^\s]/.test(slice)) {
+    return "";
+  }
+  return slice;
+}
+
+/**
  * Generates simple ids. The id's increment after it yields.
  *
  * @param {String} namespace A string like "highlight".

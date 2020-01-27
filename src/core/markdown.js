@@ -44,6 +44,7 @@
  * The whitespace of pre elements are left alone.
  */
 
+import { getElementIndentation } from "./utils.js";
 import { marked } from "./import-maps.js";
 import { reindent } from "./reindent.js";
 export const name = "core/markdown";
@@ -132,8 +133,8 @@ function enableBlockLevelMarkdown(element, selector) {
     }
     if (lastTwo.trim()) {
       // keep the indentation of the end tag
-      const lastLine = lines[lines.length - 1] || "";
-      element.append(`\n\n${lastLine}`);
+      const indentation = getElementIndentation(element);
+      element.append(`\n\n${indentation}`);
     }
   }
 }
