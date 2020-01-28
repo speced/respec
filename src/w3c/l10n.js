@@ -29,8 +29,13 @@ const additions = {
     status_at_publication:
       "Esta sección describe el estado del presente documento al momento de su publicación. El presente documento puede ser remplazado por otros. Una lista de las publicaciones actuales del W3C y la última revisión del presente informe técnico puede hallarse en http://www.w3.org/TR/ <a href='https://www.w3.org/TR/'>el índice de informes técnicos</a> del W3C.",
   },
+  de: {
+    status_at_publication:
+      "Dieser Abschnitt beschreibt den Status des Dokuments zum Zeitpunkt der Publikation. Neuere Dokumente können dieses Dokument obsolet machen. Eine Liste der aktuellen Publikatinen des W3C und die aktuellste Fassung dieser Spezifikation kann im <a href='https://www.w3.org/TR/'>W3C technical reports index</a> unter https://www.w3.org/TR/ abgerufen werden.",
+  },
 };
 
 Object.keys(additions).forEach(key => {
+  if (!l10n[key]) l10n[key] = {};
   Object.assign(l10n[key], additions[key]);
 });

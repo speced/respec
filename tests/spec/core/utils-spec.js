@@ -302,6 +302,37 @@ describe("Core - Utils", () => {
     });
   });
 
+  describe("getIntlData", () => {
+    const { getIntlData } = utils;
+    const localizationStrings = {
+      en: { foo: "EN Foo", bar: "EN Bar" },
+      ko: { foo: "KO Foo" },
+    };
+
+    it("returns localized string in given language", () => {
+      const intl = getIntlData(localizationStrings, "ko");
+      expect(intl.foo).toBe("KO Foo");
+
+      const intlEn = getIntlData(localizationStrings, "en");
+      expect(intlEn.foo).toBe("EN Foo");
+    });
+
+    it("falls back to English string if key does not exist in language", () => {
+      const intl = getIntlData(localizationStrings, "ko");
+      expect(intl.bar).toBe("EN Bar");
+    });
+
+    it("falls back to English string if language does not exist in localization data", () => {
+      const intl = getIntlData(localizationStrings, "de");
+      expect(intl.bar).toBe("EN Bar");
+    });
+
+    it("throws error if key doesn't exist in either doc lang and English", () => {
+      const intl = getIntlData(localizationStrings, "de");
+      expect(() => intl.baz).toThrowError(/No l10n data for key/);
+    });
+  });
+
   describe("toKeyValuePairs", () => {
     it("converts objects to key values pairs", () => {
       const obj = {

@@ -6,9 +6,8 @@
 // When an example is found, it is reported using the "example" event. This can
 // be used by a containing shell to extract all examples.
 
-import { addId } from "./utils.js";
+import { addId, getIntlData } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
-import { getIntlData } from "../core/l10n.js";
 import { hyperHTML as html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -23,6 +22,15 @@ const localizationStrings = {
   },
   es: {
     example: "Ejemplo",
+  },
+  ko: {
+    example: "예시",
+  },
+  ja: {
+    example: "例",
+  },
+  de: {
+    example: "Beispiel",
   },
 };
 

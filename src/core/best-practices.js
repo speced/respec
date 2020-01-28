@@ -3,8 +3,8 @@
 // Handles the marking up of best practices, and can generate a summary of all of them.
 // The summary is generated if there is a section in the document with ID bp-summary.
 // Best practices are marked up with span.practicelab.
-import { addId, makeSafeCopy } from "./utils.js";
-import { lang as defaultLang, getIntlData } from "../core/l10n.js";
+import { addId, getIntlData, makeSafeCopy } from "./utils.js";
+import { lang as defaultLang } from "../core/l10n.js";
 import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -13,6 +13,12 @@ export const name = "core/best-practices";
 const localizationStrings = {
   en: {
     best_practice: "Best Practice ",
+  },
+  ja: {
+    best_practice: "最良実施例 ",
+  },
+  de: {
+    best_practice: "Musterbeispiel ",
   },
 };
 const l10n = getIntlData(localizationStrings);

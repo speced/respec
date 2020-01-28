@@ -5,7 +5,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { getIntlData } from "../core/l10n.js";
+import { getIntlData } from "../core/utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github";
 
@@ -26,6 +26,18 @@ const localizationStrings = {
     participate: "Participate",
     commit_history: "Commit history",
   },
+  ko: {
+    participate: "참여",
+  },
+  zh: {
+    participate: "参与：",
+    file_a_bug: "反馈错误",
+  },
+  ja: {
+    file_a_bug: "問題報告",
+    participate: "参加方法：",
+    commit_history: "変更履歴",
+  },
   nl: {
     commit_history: "Revisiehistorie",
     file_a_bug: "Dien een melding in",
@@ -35,6 +47,11 @@ const localizationStrings = {
     commit_history: "Historia de cambios",
     file_a_bug: "Nota un bug",
     participate: "Participe",
+  },
+  de: {
+    file_a_bug: "Fehler melden",
+    participate: "Mitmachen",
+    commit_history: "Revisionen",
   },
 };
 const l10n = getIntlData(localizationStrings);

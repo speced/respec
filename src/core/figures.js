@@ -4,8 +4,13 @@
 // Adds width and height to images, if they are missing.
 // Generates a Table of Figures wherever there is a #tof element.
 
-import { addId, renameElement, showInlineWarning, wrapInner } from "./utils.js";
-import { getIntlData } from "../core/l10n.js";
+import {
+  addId,
+  getIntlData,
+  renameElement,
+  showInlineWarning,
+  wrapInner,
+} from "./utils.js";
 import { hyperHTML } from "./import-maps.js";
 
 export const name = "core/figures";
@@ -16,7 +21,7 @@ const localizationStrings = {
     fig: "Figure ",
   },
   ja: {
-    fig: "図",
+    fig: "図 ",
     list_of_figures: "図のリスト",
   },
   ko: {
@@ -34,6 +39,10 @@ const localizationStrings = {
   zh: {
     fig: "圖 ",
     list_of_figures: "List of Figures",
+  },
+  de: {
+    fig: "Abbildung",
+    list_of_figures: "Abbildungsverzeichnis",
   },
 };
 

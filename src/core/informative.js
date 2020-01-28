@@ -1,7 +1,7 @@
 // @ts-check
 // Module core/informative
 // Mark specific sections as informative, based on CSS
-import { getIntlData } from "../core/l10n.js";
+import { getIntlData } from "../core/utils.js";
 import { hyperHTML } from "./import-maps.js";
 
 export const name = "core/informative";
@@ -12,6 +12,15 @@ const localizationStrings = {
   },
   nl: {
     informative: "Dit onderdeel is niet normatief.",
+  },
+  ko: {
+    informative: "이 부분은 비규범적입니다.",
+  },
+  ja: {
+    informative: "この節は仕様には含まれません．",
+  },
+  de: {
+    informative: "Dieser Abschnitt ist nicht normativ.",
   },
 };
 

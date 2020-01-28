@@ -143,22 +143,18 @@ function addAlternativeNames(dfn, names) {
  * @param {...string} names
  */
 function findNormalDfn(defn, parent, ...names) {
+  const { type } = defn;
   for (const name of names) {
     let resolvedName =
-      defn.type === "enum-value" && name === ""
-        ? "the-empty-string"
-        : name.toLowerCase();
-    let dfnForArray = definitionMap[resolvedName];
-    let dfns = getDfns(dfnForArray, parent, name, defn.type);
+      type === "enum-value" && name === "" ? "the-empty-string" : name;
+    let dfns = getDfns(resolvedName, parent, name, type);
     // If we haven't found any definitions with explicit [for]
     // and [title], look for a dotted definition, "parent.name".
     if (dfns.length === 0 && parent !== "") {
       resolvedName = `${parent}.${resolvedName}`;
-      dfnForArray = definitionMap[resolvedName.toLowerCase()];
-      if (dfnForArray !== undefined && dfnForArray.length === 1) {
-        dfns = dfnForArray;
-        // Found it: register with its local name
-        delete definitionMap[resolvedName];
+      const alternativeDfns = definitionMap.get(resolvedName);
+      if (alternativeDfns && alternativeDfns.size === 1) {
+        dfns = [...alternativeDfns];
         registerDefinition(dfns[0], [resolvedName]);
       }
     } else {
@@ -228,15 +224,17 @@ export function decorateDfn(dfnElem, idlAst, parent, name) {
 }
 
 /**
- * @param {HTMLElement[]} dfnForArray
+ * @param {string} name
  * @param {string} parent data-dfn-for
  * @param {string} originalName
  * @param {string} type
  */
-function getDfns(dfnForArray, parent, originalName, type) {
-  if (!dfnForArray) {
+function getDfns(name, parent, originalName, type) {
+  const foundDfns = definitionMap.get(name);
+  if (!foundDfns || foundDfns.size === 0) {
     return [];
   }
+  const dfnForArray = [...foundDfns];
   // Definitions that have a name and [data-dfn-for] that exactly match the
   // IDL entity:
   const dfns = dfnForArray.filter(dfn => {

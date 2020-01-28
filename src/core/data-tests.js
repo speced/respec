@@ -9,10 +9,9 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { getIntlData } from "./l10n.js";
+import { getIntlData, showInlineWarning } from "./utils.js";
 import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
-import { showInlineWarning } from "./utils.js";
 const localizationStrings = {
   en: {
     missing_test_suite_uri:
@@ -20,6 +19,20 @@ const localizationStrings = {
       "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' in your ReSpec config.",
     tests: "tests",
     test: "test",
+  },
+  ja: {
+    missing_test_suite_uri:
+      "この仕様内にテストの項目を検出しましたが，ReSpec の設定に '" +
+      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' が見つかりません．",
+    tests: "テスト",
+    test: "テスト",
+  },
+  de: {
+    missing_test_suite_uri:
+      "Die Spezifikation enthält Tests, aber in der ReSpec-Konfiguration ist keine '" +
+      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' angegeben.",
+    tests: "Tests",
+    test: "Test",
   },
 };
 

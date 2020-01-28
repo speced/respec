@@ -1,9 +1,11 @@
 // @ts-check
 // Module core/link-to-dfn
-// Gives definitions in conf.definitionMap IDs and links <a> tags
+// Gives definitions in definitionMap IDs and links <a> tags
 // to the matching definitions.
 import {
+  CaseInsensitiveMap,
   addId,
+  getIntlData,
   getLinkTargets,
   showInlineError,
   showInlineWarning,
@@ -11,7 +13,6 @@ import {
 } from "./utils.js";
 import { run as addExternalReferences } from "./xref.js";
 import { definitionMap } from "./dfn-map.js";
-import { getIntlData } from "./l10n.js";
 import { linkInlineCitations } from "./data-cite.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
@@ -26,34 +27,27 @@ const localizationStrings = {
     },
     duplicateTitle: "This is defined more than once in the document.",
   },
+  ja: {
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `'${title}' の重複定義`;
+    },
+    duplicateTitle: "この文書内で複数回定義されています．",
+  },
+  de: {
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `Mehrfache Definition von '${title}'`;
+    },
+    duplicateTitle:
+      "Das Dokument enthält mehrere Definitionen dieses Eintrags.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
-
-class CaseInsensitiveMap extends Map {
-  /**
-   * @param {Array<[String, HTMLElement]>} [entries]
-   */
-  constructor(entries = []) {
-    super();
-    entries.forEach(([key, elem]) => {
-      this.set(key, elem);
-    });
-    return this;
-  }
-  set(key, elem) {
-    super.set(key.toLowerCase(), elem);
-    return this;
-  }
-  get(key) {
-    return super.get(key.toLowerCase());
-  }
-  has(key) {
-    return super.has(key.toLowerCase());
-  }
-  delete(key) {
-    return super.delete(key.toLowerCase());
-  }
-}
 
 export async function run(conf) {
   const titleToDfns = mapTitleToDfns();
@@ -102,17 +96,13 @@ export async function run(conf) {
 
 function mapTitleToDfns() {
   const titleToDfns = new CaseInsensitiveMap();
-  Object.keys(definitionMap).forEach(title => {
-    const { result, duplicates } = collectDfns(title);
-    titleToDfns.set(title, result);
+  for (const key of definitionMap.keys()) {
+    const { result, duplicates } = collectDfns(key);
+    titleToDfns.set(key, result);
     if (duplicates.length > 0) {
-      showInlineError(
-        duplicates,
-        l10n.duplicateMsg(title),
-        l10n.duplicateTitle
-      );
+      showInlineError(duplicates, l10n.duplicateMsg(key), l10n.duplicateTitle);
     }
-  });
+  }
   return titleToDfns;
 }
 
@@ -123,7 +113,7 @@ function collectDfns(title) {
   /** @type {Map<string, HTMLElement>} */
   const result = new Map();
   const duplicates = [];
-  definitionMap[title].forEach(dfn => {
+  for (const dfn of definitionMap.get(title)) {
     const { dfnFor = "" } = dfn.dataset;
     if (result.has(dfnFor)) {
       // We want <dfn> definitions to take precedence over
@@ -134,14 +124,15 @@ function collectDfns(title) {
       if (oldIsDfn) {
         if (!newIsDfn) {
           // Don't overwrite <dfn> definitions.
-          return;
+          continue;
         }
         duplicates.push(dfn);
       }
     }
     result.set(dfnFor, dfn);
     addId(dfn, "dfn", title);
-  });
+  }
+
   return { result, duplicates };
 }
 

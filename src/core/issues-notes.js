@@ -11,9 +11,8 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, joinAnd, parents } from "./utils.js";
+import { addId, getIntlData, joinAnd, parents } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
-import { getIntlData } from "../core/l10n.js";
 import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -21,16 +20,48 @@ export const name = "core/issues-notes";
 
 const localizationStrings = {
   en: {
+    editors_note: "Editor's note",
+    feature_at_risk: "(Feature at Risk) Issue",
+    issue: "Issue",
     issue_summary: "Issue Summary",
     no_issues_in_spec: "There are no issues listed in this specification.",
+    note: "Note",
+    warning: "Warning",
+  },
+  zh: {
+    note: "注",
+  },
+  ja: {
+    note: "注",
+    editors_note: "編者注",
+    feature_at_risk: "(変更の可能性のある機能) Issue",
+    issue: "Issue",
+    issue_summary: "Issue の要約",
+    no_issues_in_spec: "この仕様には未解決の issues は含まれていません．",
+    warning: "警告",
   },
   nl: {
+    editors_note: "Redactionele noot",
     issue_summary: "Lijst met issues",
     no_issues_in_spec: "Er zijn geen problemen vermeld in deze specificatie.",
+    note: "Noot",
+    warning: "Waarschuwing",
   },
   es: {
+    editors_note: "Nota de editor",
+    issue: "Cuestión",
     issue_summary: "Resumen de la cuestión",
+    note: "Nota",
     no_issues_in_spec: "No hay problemas enumerados en esta especificación.",
+    warning: "Aviso",
+  },
+  de: {
+    editors_note: "Redaktioneller Hinweis",
+    issue: "Frage",
+    issue_summary: "Offene Fragen",
+    no_issues_in_spec: "Diese Spezifikation enthält keine offenen Fragen.",
+    note: "Hinweis",
+    warning: "Warnung",
   },
 };
 
@@ -72,7 +103,7 @@ function handleIssues(ins, ghIssues, conf) {
   let issueNum = 0;
   const issueList = document.createElement("ul");
   ins.forEach(inno => {
-    const { type, displayType, isFeatureAtRisk } = getIssueType(inno, conf);
+    const { type, displayType, isFeatureAtRisk } = getIssueType(inno);
     const isIssue = type === "issue";
     const isInline = inno.localName === "span";
     const { number: dataNum } = inno.dataset;
@@ -131,9 +162,7 @@ function handleIssues(ins, ghIssues, conf) {
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
-          issueList.append(
-            createIssueSummaryEntry(conf.l10n.issue, report, div.id)
-          );
+          issueList.append(createIssueSummaryEntry(l10n.issue, report, div.id));
         }
       }
       title.textContent = text;
@@ -174,7 +203,7 @@ function handleIssues(ins, ghIssues, conf) {
  * @param {HTMLElement} inno
  * @return {IssueType}
  */
-function getIssueType(inno, conf) {
+function getIssueType(inno) {
   const isIssue = inno.classList.contains("issue");
   const isWarning = inno.classList.contains("warning");
   const isEdNote = inno.classList.contains("ednote");
@@ -188,13 +217,13 @@ function getIssueType(inno, conf) {
     : "note";
   const displayType = isIssue
     ? isFeatureAtRisk
-      ? conf.l10n.feature_at_risk
-      : conf.l10n.issue
+      ? l10n.feature_at_risk
+      : l10n.issue
     : isWarning
-    ? conf.l10n.warning
+    ? l10n.warning
     : isEdNote
-    ? conf.l10n.editors_note
-    : conf.l10n.note;
+    ? l10n.editors_note
+    : l10n.note;
   return { type, displayType, isFeatureAtRisk };
 }
 

@@ -1,3 +1,14 @@
+.respec-modal .close-button {
+  position: absolute;
+  z-index: inherit;
+  padding: .2em;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 5px;
+  border: none;
+  background: transparent;
+}
+
 #respec-ui {
   position: fixed;
   display: flex;
@@ -130,6 +141,10 @@
   margin: 0;
   border: 0;
   padding-top: 16px;
+}
+
+.respec-save-button:link:focus {
+  background: #193766;
 }
 
 #respec-ui button:focus,
@@ -414,4 +429,32 @@
 
 #xref-ui:not(.ready) {
   background: url("https://respec.org/xref/loader.gif") no-repeat center;
+}
+
+.respec-dfn-list .dfn-status {
+  margin-left: 0.5em;
+  padding: 0.1em;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 90%;
+  border-radius: 0.2em;
+}
+
+.respec-dfn-list .exported {
+  background: #d1edfd;
+	color: #040b1c;
+	box-shadow: 0 0 0 0.125em #1ca5f940;
+}
+
+.respec-dfn-list .unused {
+  background: #fde0e6;
+  color: #9d0c29;
+  box-shadow: 0 0 0 0.125em #f1466840;
+}
+
+#xref-ui + a[href] {
+  font-size: 0.9rem;
+  float: right;
+  margin: 0 0.5em 0.5em;
+  border-bottom-width: 1px;
 }

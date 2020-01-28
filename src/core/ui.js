@@ -47,6 +47,9 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
+const closeButton = hyperHTML`<button class="close-button" onclick=${() =>
+  ui.closeModal()} title="Close">❌</button>`;
+window.addEventListener("load", () => trapFocus(menu));
 let modal;
 let overlay;
 const errors = [];
@@ -60,24 +63,60 @@ const respecPill = hyperHTML`<button id='respec-pill' disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
 respecPill.addEventListener("click", e => {
   e.stopPropagation();
-  if (menu.hidden) {
-    menu.classList.remove("respec-hidden");
-    menu.classList.add("respec-visible");
-  } else {
-    menu.classList.add("respec-hidden");
-    menu.classList.remove("respec-visible");
-  }
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
-  menu.hidden = !menu.hidden;
+  toggleMenu();
+  menu.querySelector("li:first-child button").focus();
 });
+
 document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
-    menu.classList.remove("respec-visible");
-    menu.classList.add("respec-hidden");
-    menu.hidden = true;
+    toggleMenu();
   }
 });
 respecUI.appendChild(menu);
+
+menu.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !menu.hidden) {
+    respecPill.setAttribute("aria-expanded", String(menu.hidden));
+    toggleMenu();
+    respecPill.focus();
+  }
+});
+
+function toggleMenu() {
+  menu.classList.toggle("respec-hidden");
+  menu.classList.toggle("respec-visible");
+  menu.hidden = !menu.hidden;
+}
+
+// Code adapted from https://hiddedevries.nl/en/blog/2017-01-29-using-javascript-to-trap-focus-in-an-element
+function trapFocus(element) {
+  const focusableEls = element.querySelectorAll(
+    "a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])"
+  );
+  const firstFocusableEl = focusableEls[0];
+  const lastFocusableEl = focusableEls[focusableEls.length - 1];
+  if (firstFocusableEl) {
+    firstFocusableEl.focus();
+  }
+  element.addEventListener("keydown", e => {
+    if (e.key !== "Tab") {
+      return;
+    }
+    // shift + tab
+    if (e.shiftKey) {
+      if (document.activeElement === firstFocusableEl) {
+        lastFocusableEl.focus();
+        e.preventDefault();
+      }
+    }
+    // tab
+    else if (document.activeElement === lastFocusableEl) {
+      firstFocusableEl.focus();
+      e.preventDefault();
+    }
+  });
+}
 
 const ariaMap = new Map([
   ["controls", "respec-menu"],
@@ -178,6 +217,7 @@ export const ui = {
     if (!modal) return;
     modal.remove();
     modal = null;
+    respecPill.focus();
   },
   freshModal(title, content, currentOwner) {
     if (modal) modal.remove();
@@ -185,7 +225,8 @@ export const ui = {
     overlay = hyperHTML`<div id='respec-overlay' class='removeOnSave'></div>`;
     const id = `${currentOwner.id}-modal`;
     const headingId = `${id}-heading`;
-    modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog'>
+    modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog' aria-labelledby='${headingId}'>
+      ${closeButton}
       <h3 id="${headingId}">${title}</h3>
       <div class='inside'>${content}</div>
     </div>`;
@@ -195,6 +236,7 @@ export const ui = {
     overlay.addEventListener("click", () => this.closeModal(currentOwner));
     overlay.classList.toggle("respec-show-overlay");
     modal.hidden = false;
+    trapFocus(modal);
   },
 };
 shortcut.add("Esc", () => ui.closeModal());
