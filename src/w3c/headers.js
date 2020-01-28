@@ -2,6 +2,7 @@
 // Module w3c/headers
 // Generate the headers material based on the provided configuration.
 // CONFIGURATION
+//  - level: TODO SOME EXPLANATION HERE
 //  - specStatus: the short code for the specification's maturity level or type (required)
 //  - shortName: the small name that is used after /TR/ in published reports (required)
 //  - editors: an array of people editing the document (at least one is required). People
@@ -269,6 +270,11 @@ export function run(conf) {
   if (document.title && conf.isPreview && conf.prNumber) {
     document.title = `Preview of PR #${conf.prNumber}: ${document.title}`;
   }
+
+  if (conf.level) {
+    conf.title = `${conf.title} Level ${conf.level}`;
+  }
+
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
     conf,
