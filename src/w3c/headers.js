@@ -273,6 +273,7 @@ export function run(conf) {
 
   if (conf.level) {
     conf.title = `${conf.title} Level ${conf.level}`;
+    conf.shortName = `${conf.shortName}-${conf.level}`;
   }
 
   if (!conf.subtitle) conf.subtitle = "";
