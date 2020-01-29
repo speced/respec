@@ -200,6 +200,11 @@ function normalizePadding(text) {
         }
         return chop;
       }, chop);
+    for (const pre of doc.querySelectorAll("pre")) {
+      // HTML parser implicitly removes a newline after <pre> which breaks reindentation
+      // algorithm.
+      pre.prepend("\n");
+    }
   }
   const wrap = document.createElement("body");
   wrap.append(doc);
