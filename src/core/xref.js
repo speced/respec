@@ -413,7 +413,7 @@ function showErrors({ ambiguous, notFound }) {
   for (const { query, elems } of notFound.values()) {
     const specs = [...new Set(flatten([], query.specs))].sort();
     const originalTerm = getTermFromElement(elems[0]);
-    const formUrl = getPrefilledFormURL(originalTerm, query, specs);
+    const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
     const msg =
       `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}. ` +
