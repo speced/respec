@@ -99,8 +99,9 @@ function getSpecTitleElem(conf) {
     specTitleElem.id = "title";
   }
   if (conf.isPreview && conf.prNumber) {
+    const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;
     const { childNodes } = html`
-      Preview of PR <a href="${conf.prUrl}">#${conf.prNumber}</a>:
+      Preview of PR <a href="${prUrl}">#${conf.prNumber}</a>:
     `;
     specTitleElem.prepend(...childNodes);
   }
