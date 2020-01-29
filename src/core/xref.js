@@ -153,7 +153,7 @@ function getTermFromElement(elem) {
   return term === "the-empty-string" ? "" : term;
 }
 
-/*
+/**
  * Get spec context as a fallback chain, where each level (sub-array) represents
  * decreasing priority.
  * @param {HTMLElement} elem
@@ -174,9 +174,8 @@ function getSpecContext(elem) {
       ? closestSection.querySelectorAll("a.bibref")
       : [];
     const inlineRefs = [...bibrefs].map(el => el.textContent.toLowerCase());
-    const uniqueInlineRefs = [...new Set(inlineRefs)].sort();
-    if (uniqueInlineRefs.length) {
-      specs.push(uniqueInlineRefs);
+    if (inlineRefs.length) {
+      specs.push(inlineRefs);
     }
   }
 
@@ -184,19 +183,33 @@ function getSpecContext(elem) {
   while (dataciteElem) {
     const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
     const cites = cite.split(/\s+/).filter(s => s);
-    // Optimization: if we already have a spec in a higher priority level of
-    // fallback chain, skip it from this level
-    const uniqueCites = [...new Set(cites)].filter(
-      spec => !(specs[specs.length - 1] || []).includes(spec)
-    );
-    if (uniqueCites.length) {
-      specs.push(uniqueCites.sort());
+    if (cites.length) {
+      specs.push(cites);
     }
     if (dataciteElem === elem) break;
     dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
   }
 
-  return specs;
+  const uniqueSpecContext = dedupeSpecContext(specs);
+  return uniqueSpecContext;
+}
+
+/**
+ * If we already have a spec in a higher priority level (closer to element) of
+ * fallback chain, skip it from low priority levels, to prevent duplication.
+ * @param {string[][]} specs
+ * */
+function dedupeSpecContext(specs) {
+  /** @type {string[][]} */
+  const unique = [];
+  for (const level of specs) {
+    const higherPriority = unique[unique.length - 1] || [];
+    const uniqueSpecs = [...new Set(level)].filter(
+      spec => !higherPriority.includes(spec)
+    );
+    unique.push(uniqueSpecs.sort());
+  }
+  return unique;
 }
 
 /**
