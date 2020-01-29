@@ -208,16 +208,14 @@ function getForContext(elem, isIDL) {
     return normalize(elem.dataset.xrefFor);
   }
 
-  if (!isIDL) {
-    // non-idl terms having for context is not presently supported
-    return null;
+  if (isIDL) {
+    /** @type {HTMLElement} */
+    const dataXrefForElem = elem.closest("[data-xref-for]");
+    if (dataXrefForElem) {
+      return normalize(dataXrefForElem.dataset.xrefFor);
+    }
   }
 
-  /** @type {HTMLElement} */
-  const dataXrefForElem = elem.closest("[data-xref-for]");
-  if (dataXrefForElem) {
-    return normalize(dataXrefForElem.dataset.xrefFor);
-  }
   return null;
 }
 
