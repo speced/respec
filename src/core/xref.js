@@ -133,54 +133,10 @@ function getRequestEntry(elem) {
   let term = getTermFromElement(elem);
   if (!isIDL) term = term.toLowerCase();
 
-  /** @type {string[][]} */
-  const specs = [];
-  /** @type {HTMLElement} */
-  let dataciteElem = elem.closest("[data-cite]");
-  while (dataciteElem) {
-    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
-    const cites = cite.split(/\s+/).filter(s => s);
-    if (cites.length) {
-      specs.push(cites.sort());
-    }
-    if (dataciteElem === elem) break;
-    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
-  }
-  // if element itself contains data-cite, we don't take inline context into account
-  if (elem.closest("[data-cite]") !== elem) {
-    const closestSection = elem.closest("section");
-    /** @type {Iterable<HTMLElement>} */
-    const bibrefs = closestSection
-      ? closestSection.querySelectorAll("a.bibref")
-      : [];
-    const inlineRefs = [...bibrefs].map(el => el.textContent.toLowerCase());
-    const uniqueInlineRefs = [...new Set(inlineRefs)].sort();
-    if (uniqueInlineRefs.length) {
-      specs.unshift(uniqueInlineRefs);
-    }
-  }
+  const specs = getSpecContext(elem);
+  const types = getTypeContext(elem, isIDL);
+  const forContext = getForContext(elem, isIDL);
 
-  const types = [];
-  if (isIDL) {
-    if (elem.dataset.xrefType) {
-      types.push(...elem.dataset.xrefType.split("|"));
-    } else {
-      types.push("_IDL_");
-    }
-  } else {
-    types.push("_CONCEPT_");
-  }
-
-  let { xrefFor: forContext } = elem.dataset;
-  if (!forContext && isIDL) {
-    /** @type {HTMLElement} */
-    const dataXrefForElem = elem.closest("[data-xref-for]");
-    if (dataXrefForElem) {
-      forContext = normalize(dataXrefForElem.dataset.xrefFor);
-    }
-  } else if (forContext && typeof forContext === "string") {
-    forContext = normalize(forContext);
-  }
   return {
     term,
     types,
@@ -195,6 +151,100 @@ function getTermFromElement(elem) {
   let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
   term = normalize(term);
   return term === "the-empty-string" ? "" : term;
+}
+
+/**
+ * Get spec context as a fallback chain, where each level (sub-array) represents
+ * decreasing priority.
+ * @param {HTMLElement} elem
+ */
+function getSpecContext(elem) {
+  /** @type {string[][]} */
+  const specs = [];
+
+  /** @type {HTMLElement} */
+  let dataciteElem = elem.closest("[data-cite]");
+
+  // If element itself contains data-cite, we don't take inline context into
+  // account. The inline bibref context has highest priority, if available.
+  if (dataciteElem !== elem) {
+    const closestSection = elem.closest("section");
+    /** @type {Iterable<HTMLElement>} */
+    const bibrefs = closestSection
+      ? closestSection.querySelectorAll("a.bibref")
+      : [];
+    const inlineRefs = [...bibrefs].map(el => el.textContent.toLowerCase());
+    if (inlineRefs.length) {
+      specs.push(inlineRefs);
+    }
+  }
+
+  // Traverse up towards the root element, adding levels of lower priority specs
+  while (dataciteElem) {
+    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
+    const cites = cite.split(/\s+/).filter(s => s);
+    if (cites.length) {
+      specs.push(cites);
+    }
+    if (dataciteElem === elem) break;
+    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
+  }
+
+  const uniqueSpecContext = dedupeSpecContext(specs);
+  return uniqueSpecContext;
+}
+
+/**
+ * If we already have a spec in a higher priority level (closer to element) of
+ * fallback chain, skip it from low priority levels, to prevent duplication.
+ * @param {string[][]} specs
+ * */
+function dedupeSpecContext(specs) {
+  /** @type {string[][]} */
+  const unique = [];
+  for (const level of specs) {
+    const higherPriority = unique[unique.length - 1] || [];
+    const uniqueSpecs = [...new Set(level)].filter(
+      spec => !higherPriority.includes(spec)
+    );
+    unique.push(uniqueSpecs.sort());
+  }
+  return unique;
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @param {boolean} isIDL
+ */
+function getForContext(elem, isIDL) {
+  if (elem.dataset.xrefFor) {
+    return normalize(elem.dataset.xrefFor);
+  }
+
+  if (isIDL) {
+    /** @type {HTMLElement} */
+    const dataXrefForElem = elem.closest("[data-xref-for]");
+    if (dataXrefForElem) {
+      return normalize(dataXrefForElem.dataset.xrefFor);
+    }
+  }
+
+  return null;
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @param {boolean} isIDL
+ */
+function getTypeContext(elem, isIDL) {
+  if (isIDL) {
+    if (elem.dataset.xrefType) {
+      return elem.dataset.xrefType.split("|");
+    }
+    return ["_IDL_"];
+  }
+
+  return ["_CONCEPT_"];
 }
 
 /**
@@ -363,7 +413,7 @@ function showErrors({ ambiguous, notFound }) {
   for (const { query, elems } of notFound.values()) {
     const specs = [...new Set(flatten([], query.specs))].sort();
     const originalTerm = getTermFromElement(elems[0]);
-    const formUrl = getPrefilledFormURL(originalTerm, query, specs);
+    const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
     const msg =
       `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}. ` +

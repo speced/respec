@@ -15,6 +15,10 @@ const localizationStrings = {
     definition_list: "Lijst van Definities",
     list_of_definitions: "Lijst van Definities",
   },
+  ja: {
+    definition_list: "定義",
+    list_of_definitions: "定義リスト",
+  },
   de: {
     definition_list: "Definitionen",
     list_of_definitions: "Liste der Definitionen",
@@ -41,7 +45,7 @@ ul.addEventListener("click", ev => {
 });
 
 function show() {
-  const definitionLinks = Object.entries(definitionMap)
+  const definitionLinks = Array.from(definitionMap)
     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
     .map(([, [dfn]]) => {
       return hyperHTML.wire(dfn, ":li>a")`

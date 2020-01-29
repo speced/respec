@@ -33,6 +33,12 @@ const localizationStrings = {
   },
   ja: {
     note: "注",
+    editors_note: "編者注",
+    feature_at_risk: "(変更の可能性のある機能) Issue",
+    issue: "Issue",
+    issue_summary: "Issue の要約",
+    no_issues_in_spec: "この仕様には未解決の issues は含まれていません．",
+    warning: "警告",
   },
   nl: {
     editors_note: "Redactionele noot",

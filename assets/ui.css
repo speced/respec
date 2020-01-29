@@ -143,6 +143,10 @@
   padding-top: 16px;
 }
 
+.respec-save-button:link:focus {
+  background: #193766;
+}
+
 #respec-ui button:focus,
 #respec-pill:focus,
 .respec-option:focus {

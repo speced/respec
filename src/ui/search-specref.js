@@ -13,6 +13,9 @@ const localizationStrings = {
   nl: {
     search_specref: "Doorzoek Specref",
   },
+  ja: {
+    search_specref: "仕様検索",
+  },
   de: {
     search_specref: "Spezifikationen durchsuchen",
   },

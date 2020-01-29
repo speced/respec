@@ -403,16 +403,11 @@ export function linkCSS(doc, styles) {
  * @this {any}
  * @param {string} [flist]
  */
-export function runTransforms(content, flist) {
-  let args = [this, content];
-  const funcArgs = Array.from(arguments);
-  funcArgs.shift();
-  funcArgs.shift();
-  args = args.concat(funcArgs);
+export function runTransforms(content, flist, ...funcArgs) {
+  const args = [this, content, ...funcArgs];
   if (flist) {
     const methods = flist.split(/\s+/);
-    for (let j = 0; j < methods.length; j++) {
-      const meth = methods[j];
+    for (const meth of methods) {
       /** @type {any} */
       const method = window[meth];
       if (method) {
@@ -902,5 +897,44 @@ export function removeCommentNodes(node) {
 function* walkTree(walker) {
   while (walker.nextNode()) {
     yield /** @type {T} */ (walker.currentNode);
+  }
+}
+
+export class CaseInsensitiveMap extends Map {
+  /**
+   * @param {Array<[String, HTMLElement]>} [entries]
+   */
+  constructor(entries = []) {
+    super();
+    entries.forEach(([key, elem]) => {
+      this.set(key, elem);
+    });
+    return this;
+  }
+  /**
+   * @param {String} key
+   * @param {*} value
+   */
+  set(key, value) {
+    super.set(key.toLowerCase(), value);
+    return this;
+  }
+  /**
+   * @param {String} key
+   */
+  get(key) {
+    return super.get(key.toLowerCase());
+  }
+  /**
+   * @param {String} key
+   */
+  has(key) {
+    return super.has(key.toLowerCase());
+  }
+  /**
+   * @param {String} key
+   */
+  delete(key) {
+    return super.delete(key.toLowerCase());
   }
 }
