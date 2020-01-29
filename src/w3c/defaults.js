@@ -52,5 +52,5 @@ export function run(conf) {
   // TODO: eventually, we want to remove this.
   // It's here for legacy support of json-ld specs
   // see https://github.com/w3c/respec/issues/2019
-  Object.assign(conf, { definitionMap });
+  Object.assign(conf, { ...Object.fromEntries(definitionMap) });
 }

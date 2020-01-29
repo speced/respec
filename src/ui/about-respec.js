@@ -15,6 +15,9 @@ const localizationStrings = {
   nl: {
     about_respec: "Over",
   },
+  ja: {
+    about_respec: "これについて",
+  },
   de: {
     about_respec: "Über",
   },

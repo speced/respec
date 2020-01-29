@@ -20,6 +20,13 @@ const localizationStrings = {
     tests: "tests",
     test: "test",
   },
+  ja: {
+    missing_test_suite_uri:
+      "この仕様内にテストの項目を検出しましたが，ReSpec の設定に '" +
+      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' が見つかりません．",
+    tests: "テスト",
+    test: "テスト",
+  },
   de: {
     missing_test_suite_uri:
       "Die Spezifikation enthält Tests, aber in der ReSpec-Konfiguration ist keine '" +
