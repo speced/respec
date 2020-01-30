@@ -75,6 +75,8 @@
     "build:w3c-debug": "npm run build:w3c -- --debug",
     "build:w3c-with-jquery": "node ./tools/builder.js --profile=w3c-common",
     "build:w3c": "node ./tools/builder.js --profile=w3c",
+    "build:dini-debug": "node run build:dini -- --debug",
+    "build:dini": "node ./tools/builder.js --profile=dini",
     "build": "snyk protect",
     "builddeps": "rollup -c js/deps/rollup.config.js",
     "karma": "karma start --single-run",
