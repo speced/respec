@@ -40,15 +40,20 @@ const licenses = new Map([
 
 const diniDefaults = {
   format: "markdown",
+  isED: false,
+  isNoTrack: true,
+  isPR: false,
   lint: {
     "privsec-section": true,
     "wpt-tests-exist": false,
   },
   logos: [],
   pluralize: true,
+  prependW3C: false,
   doJsonLd: false,
   license: "cc-by",
   shortName: "X",
+  showPreviousVersion: false,
 };
 
 function computeProps(conf) {

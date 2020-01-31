@@ -61,15 +61,6 @@ const status2text = {
   base: "Spezifikation vom",
 };
 
-const baseLogo = Object.freeze({
-  id: "",
-  alt: "",
-  href: "",
-  src: "",
-  height: "48",
-  width: "72",
-});
-
 /**
  * @param {*} conf
  * @param {string} prop
@@ -158,10 +149,6 @@ export function run(conf) {
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
   conf.textStatus = status2text[conf.specStatus];
-  conf.showPreviousVersion = false;
-  conf.prependW3C = false;
-  conf.isED = false;
-  conf.isPR = false;
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
