@@ -67,6 +67,58 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("levels", () => {
+    describe("is present in config", () => {
+      it("updates the page title with the level when document.title is present", async () => {
+        const body = `
+        <title>Navigation Timing</title>${makeDefaultBody()}`;
+        const ops = makeStandardOps({}, body);
+        const newProps = { specStatus: "REC", shortName: "xxx", level: "3" };
+        Object.assign(ops.config, newProps);
+
+        const doc = await makeRSDoc(ops);
+
+        const titleElem = doc.querySelector("#title");
+        expect(titleElem).toBeTruthy();
+        expect(titleElem.textContent).toBe("Navigation Timing Level 3");
+      });
+
+      it("uses the default title and adds the level when document.title is not present", async () => {
+        const ops = makeStandardOps();
+        const newProps = {
+          level: "3",
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+
+        expect(doc.title).toBe("No Title Level 3");
+      });
+    });
+
+    describe("is absent in config", () => {
+      it("uses the given title when document.title is present", async () => {
+        const body = `
+        <title>Navigation Timing</title>${makeDefaultBody()}`;
+        const ops = makeStandardOps({}, body);
+        const newProps = {};
+        Object.assign(ops.config, newProps);
+
+        const doc = await makeRSDoc(ops);
+
+        expect(doc.title).toBe("Navigation Timing");
+      });
+
+      it("uses the default title when document.title is not present", async () => {
+        const ops = makeStandardOps();
+        const newProps = {};
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+
+        expect(doc.title).toBe("No Title");
+      });
+    });
+  });
+
   describe("editors", () => {
     const findEditor = findContent("Editor:");
     describe("retiredDate", () => {
