@@ -820,7 +820,7 @@ export function getElementIndentation(element) {
     return "";
   }
   const slice = previousSibling.textContent.slice(index + 1);
-  if (/[^\s]/.test(slice)) {
+  if (/\S/.test(slice)) {
     return "";
   }
   return slice;
