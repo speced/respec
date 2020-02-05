@@ -109,7 +109,12 @@ function getSpecTitleElem(conf) {
   specTitleElem.classList.add("title", "p-name");
   if (document.querySelector("title") === null) {
     document.title = conf.title;
-  } else if (document.title !== conf.title) {
+  } else if (
+    conf.level &&
+    `${document.title} Level ${conf.level}` != conf.title
+  ) {
+    pub("warn", "The document's title and the `<title>` element differ.");
+  } else if (!conf.level && document.title !== conf.title) {
     pub("warn", "The document's title and the `<title>` element differ.");
   }
   return specTitleElem;
