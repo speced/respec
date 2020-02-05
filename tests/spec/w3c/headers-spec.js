@@ -93,6 +93,25 @@ describe("W3C — Headers", () => {
 
         expect(doc.title).toBe("No Title Level 3");
       });
+
+      it("takes shortName and level into account when both are present", async () => {
+        const ops = makeStandardOps();
+        const newProps = {
+          level: 3,
+          specStatus: "REC",
+          shortName: "xxx",
+        };
+        Object.assign(ops.config, newProps);
+        const doc = await makeRSDoc(ops);
+
+        const terms = doc.querySelectorAll("dt");
+        expect(terms[0].textContent).toBe("This version:");
+        expect(terms[0].nextElementSibling.localName).toBe("dd");
+        expect(terms[0].nextElementSibling.textContent).toContain("REC-xxx-3");
+        expect(terms[1].textContent).toBe("Latest published version:");
+        expect(terms[1].nextElementSibling.localName).toBe("dd");
+        expect(terms[1].nextElementSibling.textContent).toContain("TR/xxx-3/");
+      });
     });
 
     describe("is absent in config", () => {
