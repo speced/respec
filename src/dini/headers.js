@@ -43,7 +43,7 @@
 //      - "cc-by"
 //      - "cc0"
 import { ISODate, htmlJoinAnd } from "../core/utils.js";
-import headersTmpl from "../w3c/templates/headers.js";
+import headersTmpl from "./templates/headers.js";
 import { hyperHTML } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
 
