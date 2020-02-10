@@ -187,13 +187,13 @@ function renderCopyright(conf) {
   return conf.overrideCopyright
     ? [conf.overrideCopyright]
     : html`
-      <p class="copyright">
-        Dieses Dokument ist lizensiert unter
-        ${linkLicense(
-          "Creative Commons Attribution 4.0 International Public License",
-          ccLicense,
-          "subfoot"
-        )}.
-      </p>
-    `;
+        <p class="copyright">
+          Dieses Dokument ist lizensiert unter
+          ${linkLicense(
+            "Creative Commons Attribution 4.0 International Public License",
+            ccLicense,
+            "subfoot"
+          )}.
+        </p>
+      `;
 }
