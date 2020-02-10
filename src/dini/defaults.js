@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * Sets the defaults for W3C specs
+ * Sets the defaults for DINI specs
  */
 export const name = "dini/defaults";
 import { coreDefaults } from "../core/defaults.js";

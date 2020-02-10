@@ -49,7 +49,7 @@ import { pub } from "../core/pubsubhub.js";
 
 export const name = "dini/headers";
 
-const W3CDate = new Intl.DateTimeFormat(["de-DE"], {
+const DINIDate = new Intl.DateTimeFormat(["de-DE"], {
   timeZone: "UTC",
   year: "numeric",
   month: "long",
@@ -95,7 +95,7 @@ export function run(conf) {
     document.lastModified
   );
   conf.publishYear = conf.publishDate.getUTCFullYear();
-  conf.publishHumanDate = W3CDate.format(conf.publishDate);
+  conf.publishHumanDate = DINIDate.format(conf.publishDate);
   const peopCheck = function(it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
     if (it.orcid) {
