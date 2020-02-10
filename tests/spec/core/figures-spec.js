@@ -49,7 +49,7 @@ describe("Core - Figures", () => {
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("anchor-fig");
-    expect(anchorFig.innerText).toBe("図1");
+    expect(anchorFig.innerText).toBe("図 1");
     expect(anchorFig.title).toBe("漢字と仮名のサイズの示し方");
   });
 

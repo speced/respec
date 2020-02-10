@@ -36,6 +36,7 @@ const localizationStrings = {
   ja: {
     file_a_bug: "問題報告",
     participate: "参加方法：",
+    commit_history: "変更履歴",
   },
   nl: {
     commit_history: "Revisiehistorie",

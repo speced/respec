@@ -51,4 +51,19 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
     const result = await rule.lint(config, doc);
     expect(result).toBeUndefined();
   });
+
+  it("handles named anchors", async () => {
+    doc.body.innerHTML = `
+      <a name="NAME">PASS</a>
+      <a href="#NAME">PASS</a>
+      <a href="#NAME-NOT-EXIST">FAIL</a>
+    `;
+
+    const result = await rule.lint(config, doc);
+    expect(result.name).toBe("local-refs-exist");
+
+    const offendingElement = result.offendingElements[0];
+    const { hash } = new URL(offendingElement.href);
+    expect(hash).toBe("#NAME-NOT-EXIST");
+  });
 });

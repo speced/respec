@@ -29,6 +29,13 @@ const localizationStrings = {
       `;
     },
   },
+  ja: {
+    until(date) {
+      return html`
+        ${date} 以前
+      `;
+    },
+  },
   de: {
     until(date) {
       return html`

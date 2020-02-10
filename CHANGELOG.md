@@ -1,5 +1,78 @@
 # Changelog
 
+## [v25.1.0](https://github.com/w3c/respec/tree/v25.1.0) (2020-01-15)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.0.4...v25.1.0)
+
+**Fixed bugs:**
+
+- HTML attributes not showing up in xref  [\#2705](https://github.com/w3c/respec/issues/2705)
+
+**Closed issues:**
+
+- Exported definitions should be marked [\#2686](https://github.com/w3c/respec/issues/2686)
+- Remove w3c/linter module [\#2535](https://github.com/w3c/respec/issues/2535)
+
+**Merged pull requests:**
+
+- chore\(w3c/linter\): remove unused module [\#2714](https://github.com/w3c/respec/pull/2714) ([ridhishjain](https://github.com/ridhishjain))
+- feat\(ui/search-xref\): add link to open UI in new tab [\#2712](https://github.com/w3c/respec/pull/2712) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(ui/dfn-list\): mark exported and unused definitions [\#2711](https://github.com/w3c/respec/pull/2711) ([janiceshiu](https://github.com/janiceshiu))
+- feat\(core/ui\): trap focus inside modals [\#2709](https://github.com/w3c/respec/pull/2709) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
+- fix\(core/xref\): check for updates in 5min instead of 5h [\#2707](https://github.com/w3c/respec/pull/2707) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/inlines\): support linking element-attr types [\#2706](https://github.com/w3c/respec/pull/2706) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(show-people\): add Korean translation [\#2704](https://github.com/w3c/respec/pull/2704) ([saschanaz](https://github.com/saschanaz))
+- feat\(core/ui\): add close button to modals [\#2697](https://github.com/w3c/respec/pull/2697) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
+- feat: add German translations [\#2687](https://github.com/w3c/respec/pull/2687) ([sebastian-meyer](https://github.com/sebastian-meyer))
+
+## [v25.0.4](https://github.com/w3c/respec/tree/v25.0.4) (2020-01-07)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.0.3...v25.0.4)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): use valid markup inside pre [\#2701](https://github.com/w3c/respec/pull/2701) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v25.0.3](https://github.com/w3c/respec/tree/v25.0.3) (2020-01-07)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.0.2...v25.0.3)
+
+**Closed issues:**
+
+- tests/xref: refactor xref tests [\#2438](https://github.com/w3c/respec/issues/2438)
+- Modules should contain their own localization information [\#2084](https://github.com/w3c/respec/issues/2084)
+
+**Merged pull requests:**
+
+- fix\(core/linter-rules\): extract correct name for WPT directory [\#2698](https://github.com/w3c/respec/pull/2698) ([dontcallmedom](https://github.com/dontcallmedom))
+- chore\(tools/release\): create commit instead of amend [\#2696](https://github.com/w3c/respec/pull/2696) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(tools/release\): fix staging before checkout [\#2694](https://github.com/w3c/respec/pull/2694) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/utils\): allow lang aliases with getIntlData [\#2692](https://github.com/w3c/respec/pull/2692) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor: modules to contain their own localization data [\#2691](https://github.com/w3c/respec/pull/2691) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/l10n\): do not throw if l10n strings don't exist for lang [\#2690](https://github.com/w3c/respec/pull/2690) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat: add some Korean translations  [\#2689](https://github.com/w3c/respec/pull/2689) ([pensivej](https://github.com/pensivej))
+- fix\(ui/dfn-list\): close popup only if link is clicked [\#2685](https://github.com/w3c/respec/pull/2685) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(tools/release\): fix associated commit [\#2684](https://github.com/w3c/respec/pull/2684) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#2677](https://github.com/w3c/respec/pull/2677) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/ui\): trap focus in ReSpec menu to improve a11y [\#2667](https://github.com/w3c/respec/pull/2667) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
+
+## [v25.0.2](https://github.com/w3c/respec/tree/v25.0.2) (2020-01-03)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.0.1...v25.0.2)
+
+**Merged pull requests:**
+
+- fix\(core/highlight\): improve highlighting [\#2683](https://github.com/w3c/respec/pull/2683) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(tools/release\): associate release tag to release commit [\#2679](https://github.com/w3c/respec/pull/2679) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v25.0.1](https://github.com/w3c/respec/tree/v25.0.1) (2019-12-30)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.0.0...v25.0.1)
+
+**Merged pull requests:**
+
+- Revert "fix\(core/markdown\): use reindent\(\) instead \(\#2650\)" [\#2678](https://github.com/w3c/respec/pull/2678) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v25.0.0](https://github.com/w3c/respec/tree/v25.0.0) (2019-12-30)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v24.38.1...v25.0.0)
