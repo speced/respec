@@ -83,7 +83,6 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 export function run(conf) {
   conf.isUnofficial = conf.specStatus === "unofficial";
   conf.isBasic = conf.specStatus === "base";
-  conf.isRegular = !conf.isBasic;
   if (!conf.specStatus) {
     pub("error", "Missing required configuration: `specStatus`");
   }
@@ -151,7 +150,6 @@ export function run(conf) {
   conf.textStatus = status2text[conf.specStatus];
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
-  conf.shortISODate = ISODate.format(conf.publishDate);
   // configuration done - yay!
 
   // insert into document
