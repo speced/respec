@@ -10,7 +10,7 @@ const { Builder } = require("./builder");
 const { DEPLOY_PRIME_URL, COMMIT_REF, REVIEW_ID, REPOSITORY_URL } = process.env;
 
 const BUILD_DIR = path.resolve(__dirname, "../builds/");
-const PROFILES = ["w3c", "w3c-common", "geonovum"];
+const PROFILES = ["w3c", "w3c-common", "geonovum", "dini"];
 
 const SPECS = [
   "https://w3c.github.io/payment-request/",
