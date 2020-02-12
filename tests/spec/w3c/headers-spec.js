@@ -610,10 +610,6 @@ describe("W3C — Headers", () => {
         // html is not escaped
         expect(titleInHead.firstChild.tagName).toBe("CODE");
         expect(titleInHead.textContent).toBe("pass");
-
-        // the config title is overridden
-        const { title } = doc.defaultView.respecConfig;
-        expect(title).toBe("pass");
       });
     });
 
