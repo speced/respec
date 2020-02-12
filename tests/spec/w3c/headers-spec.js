@@ -557,37 +557,39 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("use existing h1 element", () => {
-    it("uses the <h1>'s value as the document's title", async () => {
-      const body = `
+  describe("title when h1#title element is present", () => {
+    describe("document.title absent", () => {
+      it("uses h1#title content", async () => {
+        const body = `
         <h1 id='title'>
           This should be <code>pass</code>.
          </h1>${makeDefaultBody()}`;
-      const ops = makeStandardOps({}, body);
-      const doc = await makeRSDoc(ops);
-      expect(doc.title).toBe("This should be pass.");
-      const titleElem = doc.querySelector("title");
-      expect(titleElem).toBeTruthy();
-      expect(titleElem.textContent).toBe("This should be pass.");
-    });
+        const ops = makeStandardOps({}, body);
+        const doc = await makeRSDoc(ops);
+        expect(doc.title).toBe("This should be pass.");
+        const titleElem = doc.querySelector("title");
+        expect(titleElem).toBeTruthy();
+        expect(titleElem.textContent).toBe("This should be pass.");
+      });
 
-    it("uses <h1> if already present", async () => {
-      const ops = makeStandardOps();
-      ops.body = `<h1 id='title'><code>pass</code></h1>${makeDefaultBody()}`;
-      const doc = await makeRSDoc(ops);
+      it("uses h1#title content when h1#title has content", async () => {
+        const ops = makeStandardOps();
+        ops.body = `<h1 id='title'><code>pass</code></h1>${makeDefaultBody()}`;
+        const doc = await makeRSDoc(ops);
 
-      // Title was relocated to head
-      const titleInHead = doc.querySelector(".head h1");
-      expect(titleInHead.classList).toContain("p-name");
-      expect(titleInHead.id).toBe("title");
+        // Title was relocated to head
+        const titleInHead = doc.querySelector(".head h1");
+        expect(titleInHead.classList).toContain("p-name");
+        expect(titleInHead.id).toBe("title");
 
-      // html is not escaped
-      expect(titleInHead.firstChild.tagName).toBe("CODE");
-      expect(titleInHead.textContent).toBe("pass");
+        // html is not escaped
+        expect(titleInHead.firstChild.tagName).toBe("CODE");
+        expect(titleInHead.textContent).toBe("pass");
 
-      // the config title is overridden
-      const { title } = doc.defaultView.respecConfig;
-      expect(title).toBe("pass");
+        // the config title is overridden
+        const { title } = doc.defaultView.respecConfig;
+        expect(title).toBe("pass");
+      });
     });
   });
 
