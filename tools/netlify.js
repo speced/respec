@@ -42,7 +42,7 @@ async function main() {
  * @param {Record<string, string[]>} specsByProfile
  */
 function buildHTML(profiles, specsByProfile) {
-  const prURL = new URL(`pull/${REVIEW_ID}`, REPOSITORY_URL);
+  const prURL = `${REPOSITORY_URL}/pull/${REVIEW_ID}`;
   const title = `ReSpec Build Preview for PR <a href="${prURL}">#${REVIEW_ID}</a>`;
   const fileURL = profile => `${DEPLOY_PRIME_URL}/respec-${profile}.js`;
 
