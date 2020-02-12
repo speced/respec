@@ -87,7 +87,13 @@ interface JQuery {
   allTextNodes(exclusions: string[]): Text[];
 }
 
-type BiblioData = { aliasOf?: string; id?: string };
+interface BiblioData {
+  aliasOf?: string;
+  id?: string;
+  title: string;
+  href?: string;
+  authors?: string[];
+}
 interface Conf {
   informativeReferences: Set<string>;
   normativeReferences: Set<string>;
