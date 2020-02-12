@@ -6,7 +6,6 @@
 //  - don't use generated content in the CSS!
 import {
   addHashId,
-  flatten,
   showInlineError,
   showInlineWarning,
   xmlEscape,
@@ -25,7 +24,7 @@ const idlPartials = {};
 const templates = {
   wrap(items) {
     return items
-      .reduce(flatten, [])
+      .flat()
       .filter(x => x !== "")
       .map(x => (typeof x === "string" ? new Text(x) : x));
   },

@@ -1,7 +1,7 @@
 // @ts-check
 // Module ui/search-specref
 // Search Specref database
-import { flatten, getIntlData } from "../core/utils.js";
+import { getIntlData } from "../core/utils.js";
 import { hyperHTML } from "../core/import-maps.js";
 import { ui } from "../core/ui.js";
 import { wireReference } from "../core/biblio.js";
@@ -87,7 +87,7 @@ function resultProcessor({ includeVersions = false } = {}) {
     if (!includeVersions) {
       Array.from(results.values())
         .filter(entry => typeof entry === "object" && "versions" in entry)
-        .reduce(flatten, [])
+        .flat()
         .forEach(version => {
           results.delete(version);
         });
