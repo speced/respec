@@ -1,6 +1,6 @@
 // @ts-check
+import { getSpecTitleElem, l10n } from "./headers.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
-import { l10n } from "./headers.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
 import showPeople from "./show-people.js";
@@ -12,8 +12,7 @@ export default conf => {
   }
   return html`
     <div class="head">
-      ${conf.logos.map(showLogo)}
-      <h1 class="title p-name" id="title">${conf.title}</h1>
+      ${conf.logos.map(showLogo)} ${getSpecTitleElem(conf)}
       ${conf.subtitle
         ? html`
             <h2 id="subtitle">${conf.subtitle}</h2>
