@@ -558,6 +558,31 @@ describe("W3C — Headers", () => {
   });
 
   describe("title when h1#title element is present", () => {
+    describe("document.title also present", () => {
+      it('uses document.title when h1#title textContent is ""', async () => {
+        const body = `<title>Doc Title</title><h1 id='title'></h1>${makeDefaultBody()}`;
+        const ops = makeStandardOps({}, body);
+        const doc = await makeRSDoc(ops);
+        expect(doc.title).toBe("Doc Title");
+        const titleElem = doc.querySelector("title");
+        expect(titleElem).toBeTruthy();
+        expect(titleElem.textContent).toBe("Doc Title");
+      });
+
+      it("uses h1#title content and overrides document.title when h1#title has content", async () => {
+        const body = `
+          <title>hi</title><h1 id='title'>
+            override!!!
+           </h1>${makeDefaultBody()}`;
+        const ops = makeStandardOps({}, body);
+        const doc = await makeRSDoc(ops);
+        expect(doc.title).toBe("override!!!");
+        const titleElem = doc.querySelector("title");
+        expect(titleElem).toBeTruthy();
+        expect(titleElem.textContent).toBe("override!!!");
+      });
+    });
+
     describe("document.title absent", () => {
       it("uses h1#title content", async () => {
         const body = `
@@ -589,6 +614,64 @@ describe("W3C — Headers", () => {
         // the config title is overridden
         const { title } = doc.defaultView.respecConfig;
         expect(title).toBe("pass");
+      });
+    });
+
+    it("uses default title when h1#title content is whitespace", async () => {
+      const body = `<h1 id='title'>       </h1>${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("No Title");
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toBe("No Title");
+    });
+
+    it('uses default title when h1#title content is ""', async () => {
+      const body = `
+      <h1 id='title'></h1>${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("No Title");
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toBe("No Title");
+    });
+  });
+
+  describe("title when h1#title element is not present", () => {
+    describe("document.title is neither undefined nor an empty string", () => {
+      it("uses document.title", async () => {
+        const body = `<title>Title!!!</title>${makeDefaultBody()}`;
+        const ops = makeStandardOps({}, body);
+        const doc = await makeRSDoc(ops);
+        expect(doc.title).toBe("Title!!!");
+        const titleElem = doc.querySelector("title");
+        expect(titleElem).toBeTruthy();
+        expect(titleElem.textContent).toBe("Title!!!");
+      });
+    });
+
+    describe("document.title is undefined", () => {
+      it("uses default `No Title`", async () => {
+        const ops = makeStandardOps({}, makeDefaultBody());
+        const doc = await makeRSDoc(ops);
+        expect(doc.title).toBe("No Title");
+        const titleElem = doc.querySelector("title");
+        expect(titleElem).toBeTruthy();
+        expect(titleElem.textContent).toBe("No Title");
+      });
+    });
+
+    describe("document.title is an empty string", () => {
+      it("uses default `No Title`", async () => {
+        const body = `<title></title>${makeDefaultBody()}`;
+        const ops = makeStandardOps({}, body);
+        const doc = await makeRSDoc(ops);
+        expect(doc.title).toBe("No Title");
+        const titleElem = doc.querySelector("title");
+        expect(titleElem).toBeTruthy();
+        expect(titleElem.textContent).toBe("No Title");
       });
     });
   });
