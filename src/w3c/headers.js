@@ -265,7 +265,6 @@ export function run(conf) {
       pub("warn", msg);
     }
   }
-  conf.title = document.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
     conf,

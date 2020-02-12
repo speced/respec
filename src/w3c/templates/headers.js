@@ -92,26 +92,39 @@ export const l10n = getIntlData(localizationStrings);
 export function getSpecTitleElem(conf) {
   const specTitleElem =
     document.querySelector("h1#title") || document.createElement("h1");
+
   if (specTitleElem.parentElement) {
     specTitleElem.remove();
+
+    if (specTitleElem.textContent.trim() === "") {
+      pub(
+        "warn",
+        'textContent of h1#title element is "" or whitespace. Falling back to `document.title` or "No Title"'
+      );
+      specTitleElem.textContent = document.title || "No Title";
+    }
+
+    document.title = norm(specTitleElem.textContent);
   } else {
-    specTitleElem.textContent = conf.title;
+    if (document.title) {
+      specTitleElem.textContent = document.title;
+    } else {
+      specTitleElem.textContent = document.title = "No Title";
+    }
     specTitleElem.id = "title";
   }
+
   if (conf.isPreview && conf.prNumber) {
     const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;
     const { childNodes } = html`
       Preview of PR <a href="${prUrl}">#${conf.prNumber}</a>:
     `;
     specTitleElem.prepend(...childNodes);
+    document.title = `Preview of PR #${conf.prNumber}: ${document.title}`;
   }
-  conf.title = norm(specTitleElem.textContent);
+
   specTitleElem.classList.add("title", "p-name");
-  if (document.querySelector("title") === null) {
-    document.title = conf.title;
-  } else if (document.title !== conf.title) {
-    pub("warn", "The document's title and the `<title>` element differ.");
-  }
+
   return specTitleElem;
 }
 
