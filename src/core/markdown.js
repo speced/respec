@@ -204,7 +204,7 @@ function normalizePadding(text) {
   const wrap = document.createElement("body");
   wrap.append(doc);
   const result = endsWithSpace.test(wrap.innerHTML)
-    ? `${wrap.innerHTML.trimRight()}\n`
+    ? `${wrap.innerHTML.trimEnd()}\n`
     : wrap.innerHTML;
   return result;
 }
