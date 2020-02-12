@@ -7,7 +7,8 @@
 /* jshint jquery: true */
 import { biblioDB } from "./biblio-db.js";
 import { createResourceHint } from "./utils.js";
-import { pub } from "./pubsubhub.js";
+
+/** @type {Conf['biblio']} */
 export const biblio = {};
 
 // for backward compatibity
@@ -20,6 +21,7 @@ const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 /**
  * Normative references take precedence over informative ones,
  * so any duplicates ones are removed from the informative set.
+ * @param {Conf} conf
  */
 function normalizeReferences(conf) {
   const normalizedNormativeRefs = new Set(
@@ -30,6 +32,7 @@ function normalizeReferences(conf) {
     .forEach(redundantKey => conf.informativeReferences.delete(redundantKey));
 }
 
+/** @param {Conf} conf */
 function getRefKeys(conf) {
   return {
     informativeReferences: Array.from(conf.informativeReferences),
@@ -92,17 +95,13 @@ export async function resolveRef(key) {
   return entry;
 }
 
+/** @param {Conf} conf */
 export async function run(conf) {
   const finish = () => {
     doneResolver(conf.biblio);
   };
   if (!conf.localBiblio) {
     conf.localBiblio = {};
-  }
-  if (conf.biblio) {
-    let msg = "Overriding `.biblio` in config. Please use ";
-    msg += "`.localBiblio` for custom biblio entries.";
-    pub("warn", msg);
   }
   conf.biblio = biblio;
   const localAliases = Object.keys(conf.localBiblio)
@@ -111,20 +110,17 @@ export async function run(conf) {
     .filter(key => !conf.localBiblio.hasOwnProperty(key));
   normalizeReferences(conf);
   const allRefs = getRefKeys(conf);
-  const neededRefs = allRefs.normativeReferences
-    .concat(allRefs.informativeReferences)
-    // Filter, as to not go to network for local refs
-    .filter(key => !conf.localBiblio.hasOwnProperty(key))
-    // but include local aliases which refer to external specs
-    .concat(localAliases)
-    // remove duplicates
-    .reduce((collector, item) => {
-      if (collector.indexOf(item) === -1) {
-        collector.push(item);
-      }
-      return collector;
-    }, [])
-    .sort();
+  const neededRefs = Array.from(
+    new Set(
+      allRefs.normativeReferences
+        .concat(allRefs.informativeReferences)
+        // Filter, as to not go to network for local refs
+        .filter(key => !conf.localBiblio.hasOwnProperty(key))
+        // but include local aliases which refer to external specs
+        .concat(localAliases)
+        .sort()
+    )
+  );
   const idbRefs = [];
 
   // See if we have them in IDB
