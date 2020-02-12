@@ -129,8 +129,8 @@ export default conf => {
                     ${[conf.additionalCopyrightHolders]} &amp;
                   `
                 : ""}
-              the Contributors to the ${conf.title} Specification, published by
-              the
+              the Contributors to the ${document.title} Specification, published
+              by the
               <a href="${conf.wgURI}">${conf.wg}</a> under the
               ${conf.isCGFinal
                 ? html`
