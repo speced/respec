@@ -87,6 +87,14 @@ interface JQuery {
   allTextNodes(exclusions: string[]): Text[];
 }
 
+type BiblioData = { aliasOf?: string; id?: string };
+interface Conf {
+  informativeReferences: Set<string>;
+  normativeReferences: Set<string>;
+  localBiblio?: Record<string, BiblioData>;
+  biblio: Record<string, BiblioData>;
+}
+
 module "core/xref" {
   export interface RequestEntry {
     term: string;

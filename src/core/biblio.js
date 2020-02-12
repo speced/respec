@@ -7,15 +7,9 @@
 /* jshint jquery: true */
 import { biblioDB } from "./biblio-db.js";
 import { createResourceHint } from "./utils.js";
-import { pub } from "./pubsubhub.js";
-export const biblio = {};
 
-/**
- * @typedef {object} Conf
- * @property {Set<string>} informativeReferences
- * @property {Set<string>} normativeReferences
- * @property {Record<string, { aliasOf?: string }>} localBiblio
- */
+/** @type {Conf['biblio']} */
+export const biblio = {};
 
 // for backward compatibity
 export { wireReference, stringifyReference } from "./render-biblio.js";
