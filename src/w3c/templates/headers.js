@@ -89,7 +89,7 @@ const localizationStrings = {
 
 export const l10n = getIntlData(localizationStrings);
 
-function getSpecTitleElem(conf) {
+export function getSpecTitleElem(conf) {
   const specTitleElem =
     document.querySelector("h1#title") || document.createElement("h1");
   if (specTitleElem.parentElement) {
