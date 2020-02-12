@@ -103,11 +103,6 @@ export async function run(conf) {
   if (!conf.localBiblio) {
     conf.localBiblio = {};
   }
-  if (conf.biblio) {
-    let msg = "Overriding `.biblio` in config. Please use ";
-    msg += "`.localBiblio` for custom biblio entries.";
-    pub("warn", msg);
-  }
   conf.biblio = biblio;
   const localAliases = Object.keys(conf.localBiblio)
     .filter(key => conf.localBiblio[key].hasOwnProperty("aliasOf"))
