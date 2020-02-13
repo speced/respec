@@ -1388,6 +1388,18 @@ describe("W3C — Headers", () => {
         ).length
       ).toBe(1);
     });
+
+    it("handles the spec title in the copyright section correctly when the h1#title has markup", async () => {
+      const body = `<h1 id="title">Spec with <code>markup</code>!</h1>${makeDefaultBody()}`;
+      const props = { specStatus: "BG-FINAL" };
+      const ops = makeStandardOps(props, body);
+      const doc = await makeRSDoc(ops);
+
+      // html is not escaped
+      const elemWithSpecTitle = doc.querySelector(".head .copyright span");
+      expect(elemWithSpecTitle.children[0].tagName).toBe("CODE");
+      expect(elemWithSpecTitle.textContent).toBe("Spec with markup!");
+    });
   });
 
   describe("Member-SUBM", () => {
