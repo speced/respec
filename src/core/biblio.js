@@ -16,6 +16,8 @@ export { wireReference, stringifyReference } from "./render-biblio.js";
 
 export const name = "core/biblio";
 
+export const exportsClass = true;
+
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
 /**
@@ -119,46 +121,52 @@ async function getReferencesFromIdb(neededRefs) {
   return idbRefs;
 }
 
-/** @param {Conf} conf */
-export async function run(conf) {
-  const finish = () => {
-    doneResolver(conf.biblio);
-  };
-  if (!conf.localBiblio) {
-    conf.localBiblio = {};
+export default class {
+  /** @param {Conf} conf */
+  constructor(conf) {
+    this.conf = conf;
   }
-  conf.biblio = biblio;
-  const localAliases = Object.keys(conf.localBiblio)
-    .filter(key => conf.localBiblio[key].hasOwnProperty("aliasOf"))
-    .map(key => conf.localBiblio[key].aliasOf)
-    .filter(key => !conf.localBiblio.hasOwnProperty(key));
-  normalizeReferences(conf);
-  const allRefs = getRefKeys(conf);
-  const neededRefs = Array.from(
-    new Set(
-      allRefs.normativeReferences
-        .concat(allRefs.informativeReferences)
-        // Filter, as to not go to network for local refs
-        .filter(key => !conf.localBiblio.hasOwnProperty(key))
-        // but include local aliases which refer to external specs
-        .concat(localAliases)
-        .sort()
-    )
-  );
-  const idbRefs = await getReferencesFromIdb(neededRefs);
-  const split = { hasData: [], noData: [] };
-  idbRefs.forEach(ref => {
-    (ref.data ? split.hasData : split.noData).push(ref);
-  });
-  split.hasData.forEach(ref => {
-    biblio[ref.id] = ref.data;
-  });
-  const externalRefs = split.noData.map(item => item.id);
-  if (externalRefs.length) {
-    // Going to the network for refs we don't have
-    const data = await updateFromNetwork(externalRefs, { forceUpdate: true });
-    Object.assign(biblio, data);
+
+  async run() {
+    const finish = () => {
+      doneResolver(this.conf.biblio);
+    };
+    if (!this.conf.localBiblio) {
+      this.conf.localBiblio = {};
+    }
+    this.conf.biblio = biblio;
+    const localAliases = Object.keys(this.conf.localBiblio)
+      .filter(key => this.conf.localBiblio[key].hasOwnProperty("aliasOf"))
+      .map(key => this.conf.localBiblio[key].aliasOf)
+      .filter(key => !this.conf.localBiblio.hasOwnProperty(key));
+    normalizeReferences(this.conf);
+    const allRefs = getRefKeys(this.conf);
+    const neededRefs = Array.from(
+      new Set(
+        allRefs.normativeReferences
+          .concat(allRefs.informativeReferences)
+          // Filter, as to not go to network for local refs
+          .filter(key => !this.conf.localBiblio.hasOwnProperty(key))
+          // but include local aliases which refer to external specs
+          .concat(localAliases)
+          .sort()
+      )
+    );
+    const idbRefs = await getReferencesFromIdb(neededRefs);
+    const split = { hasData: [], noData: [] };
+    idbRefs.forEach(ref => {
+      (ref.data ? split.hasData : split.noData).push(ref);
+    });
+    split.hasData.forEach(ref => {
+      biblio[ref.id] = ref.data;
+    });
+    const externalRefs = split.noData.map(item => item.id);
+    if (externalRefs.length) {
+      // Going to the network for refs we don't have
+      const data = await updateFromNetwork(externalRefs, { forceUpdate: true });
+      Object.assign(biblio, data);
+    }
+    Object.assign(biblio, this.conf.localBiblio);
+    finish();
   }
-  Object.assign(biblio, conf.localBiblio);
-  finish();
 }
