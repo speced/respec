@@ -809,6 +809,8 @@ export function children(element, selector) {
  * Calculates indentation when the element starts after a newline.
  * The value will be empty if no newline or any non-whitespace exists after one.
  * @param {Element} element
+ *
+ * @example `    <div></div>` returns "    " (4 spaces).
  */
 export function getElementIndentation(element) {
   const { previousSibling } = element;

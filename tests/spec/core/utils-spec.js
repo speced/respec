@@ -638,5 +638,16 @@ describe("Core - Utils", () => {
         dfn.remove();
       });
     });
+
+    describe("getElementIndentation", () => {
+      it("should return the indentation of the given element", () => {
+        const fragment = document.createRange().createContextualFragment(`
+          <a>My link</a>
+        `);
+        const [anchor] = fragment.children;
+
+        expect(utils.getElementIndentation(anchor)).toBe("          ");
+      });
+    });
   });
 });
