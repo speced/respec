@@ -405,7 +405,7 @@ function showErrors({ ambiguous, notFound }) {
     url.searchParams.set("term", term);
     if (query.for) url.searchParams.set("for", query.for);
     url.searchParams.set("types", query.types.join(","));
-    if (specs.length) url.searchParams.set("cite", specs.join(","));
+    if (specs.length) url.searchParams.set("specs", specs.join(","));
     return url;
   };
 
