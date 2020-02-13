@@ -10,9 +10,14 @@ export default conf => {
   if (existingCopyright) {
     existingCopyright.remove();
   }
+
+  const specTitleElem = getSpecTitleElem(conf);
+  const specTitle = document.createElement("span");
+  specTitle.innerHTML = specTitleElem.innerHTML;
+
   return html`
     <div class="head">
-      ${conf.logos.map(showLogo)} ${getSpecTitleElem(conf)}
+      ${conf.logos.map(showLogo)} ${specTitleElem}
       ${conf.subtitle
         ? html`
             <h2 id="subtitle">${conf.subtitle}</h2>
@@ -129,7 +134,7 @@ export default conf => {
                     ${[conf.additionalCopyrightHolders]} &amp;
                   `
                 : ""}
-              the Contributors to the ${document.title} Specification, published
+              the Contributors to the ${specTitle} Specification, published
               by the
               <a href="${conf.wgURI}">${conf.wg}</a> under the
               ${conf.isCGFinal
