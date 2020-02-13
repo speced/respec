@@ -93,7 +93,7 @@ export function getSpecTitleElem(conf) {
   const specTitleElem =
     document.querySelector("h1#title") || document.createElement("h1");
 
-  if (specTitleElem.parentElement) {
+  if (!specTitleElem.isConnected) {
     specTitleElem.remove();
 
     if (specTitleElem.textContent.trim() === "") {
