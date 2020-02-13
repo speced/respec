@@ -484,22 +484,6 @@ export async function fetchAndCache(input, maxAge = 86400000) {
   return response;
 }
 
-// --- COLLECTION/ITERABLE HELPERS ---------------
-/**
- * Spreads one iterable into another.
- *
- * @param {Array} collector
- * @param {any|Array} item
- * @returns {Array}
- */
-export function flatten(collector, item) {
-  const items = !Array.isArray(item)
-    ? [item]
-    : item.slice().reduce(flatten, []);
-  collector.push(...items);
-  return collector;
-}
-
 // --- DOM HELPERS -------------------------------
 
 /**
