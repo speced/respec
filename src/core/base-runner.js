@@ -55,7 +55,7 @@ function toRunnable(plug) {
 }
 
 function isRunnableModule(plug) {
-  return plug && (plug.run || plug.exportsClass);
+  return plug && (plug.run || plug.Class);
 }
 
 export async function runAll(plugs) {
