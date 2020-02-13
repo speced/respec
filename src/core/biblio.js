@@ -16,8 +16,6 @@ export { wireReference, stringifyReference } from "./render-biblio.js";
 
 export const name = "core/biblio";
 
-export const exportsClass = true;
-
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
@@ -99,7 +97,7 @@ async function getReferencesFromIdb(neededRefs) {
   return idbRefs;
 }
 
-export default class {
+export class Class {
   /** @param {Conf} conf */
   constructor(conf) {
     this.conf = conf;

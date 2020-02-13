@@ -29,8 +29,8 @@ function toRunnable(plug) {
         performance.mark(`${name}-start`);
       }
       try {
-        if (plug.exportsClass) {
-          await new plug.default(config).run();
+        if (plug.Class) {
+          await new plug.Class(config).run();
           resolve();
         } else if (plug.run.length <= 1) {
           await plug.run(config);
