@@ -654,7 +654,6 @@ describe("W3C — Headers", () => {
 
       const h1Elem = doc.querySelector("h1#title");
       expect(h1Elem.textContent).toBe("No Title");
-
     });
 
     it("uses a default title when <title> contains is an empty string", async () => {
