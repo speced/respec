@@ -20,28 +20,6 @@ export const exportsClass = true;
 
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
-/**
- * Normative references take precedence over informative ones,
- * so any duplicates ones are removed from the informative set.
- * @param {Conf} conf
- */
-function normalizeReferences(conf) {
-  const normalizedNormativeRefs = new Set(
-    [...conf.normativeReferences].map(key => key.toLowerCase())
-  );
-  Array.from(conf.informativeReferences)
-    .filter(key => normalizedNormativeRefs.has(key.toLowerCase()))
-    .forEach(redundantKey => conf.informativeReferences.delete(redundantKey));
-}
-
-/** @param {Conf} conf */
-function getRefKeys(conf) {
-  return {
-    informativeReferences: Array.from(conf.informativeReferences),
-    normativeReferences: Array.from(conf.normativeReferences),
-  };
-}
-
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.
 const link = createResourceHint({
@@ -127,6 +105,28 @@ export default class {
     this.conf = conf;
   }
 
+  /**
+   * Normative references take precedence over informative ones,
+   * so any duplicates ones are removed from the informative set.
+   */
+  normalizeReferences() {
+    const normalizedNormativeRefs = new Set(
+      [...this.conf.normativeReferences].map(key => key.toLowerCase())
+    );
+    Array.from(this.conf.informativeReferences)
+      .filter(key => normalizedNormativeRefs.has(key.toLowerCase()))
+      .forEach(redundantKey =>
+        this.conf.informativeReferences.delete(redundantKey)
+      );
+  }
+
+  getRefKeys() {
+    return {
+      informativeReferences: Array.from(this.conf.informativeReferences),
+      normativeReferences: Array.from(this.conf.normativeReferences),
+    };
+  }
+
   async run() {
     const finish = () => {
       doneResolver(this.conf.biblio);
@@ -139,8 +139,8 @@ export default class {
       .filter(key => this.conf.localBiblio[key].hasOwnProperty("aliasOf"))
       .map(key => this.conf.localBiblio[key].aliasOf)
       .filter(key => !this.conf.localBiblio.hasOwnProperty(key));
-    normalizeReferences(this.conf);
-    const allRefs = getRefKeys(this.conf);
+    this.normalizeReferences();
+    const allRefs = this.getRefKeys();
     const neededRefs = Array.from(
       new Set(
         allRefs.normativeReferences
