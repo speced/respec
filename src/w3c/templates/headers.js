@@ -95,24 +95,30 @@ export function getSpecTitleElem(conf) {
 
   if (specTitleElem.isConnected) {
     specTitleElem.remove();
-
     if (specTitleElem.textContent.trim() === "") {
       pub(
         "warn",
         'textContent of h1#title element is "" or whitespace. Falling back to `document.title` or "No Title"'
       );
-      specTitleElem.textContent = document.title || "No Title";
     }
-
-    document.title = norm(specTitleElem.textContent);
-  } else {
-    if (document.title) {
-      specTitleElem.textContent = document.title;
-    } else {
-      specTitleElem.textContent = document.title = "No Title";
-    }
-    specTitleElem.id = "title";
   }
+
+  setDocumentTitle(conf, specTitleElem);
+
+  specTitleElem.id = "title";
+  specTitleElem.classList.add("title", "p-name");
+
+  return specTitleElem;
+}
+
+function setDocumentTitle(conf, specTitleElem) {
+  let documentTitle;
+
+  if (specTitleElem.textContent.trim() === "") {
+    specTitleElem.textContent = document.title || "No Title";
+  }
+
+  documentTitle = norm(specTitleElem.textContent);
 
   if (conf.isPreview && conf.prNumber) {
     const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;
@@ -120,12 +126,10 @@ export function getSpecTitleElem(conf) {
       Preview of PR <a href="${prUrl}">#${conf.prNumber}</a>:
     `;
     specTitleElem.prepend(...childNodes);
-    document.title = `Preview of PR #${conf.prNumber}: ${document.title}`;
+    documentTitle = `Preview of PR #${conf.prNumber}: ${documentTitle}`;
   }
 
-  specTitleElem.classList.add("title", "p-name");
-
-  return specTitleElem;
+  document.title = documentTitle;
 }
 
 function getSpecSubTitleElem(conf) {
