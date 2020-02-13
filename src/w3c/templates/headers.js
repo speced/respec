@@ -17,6 +17,7 @@ const localizationStrings = {
   en: {
     author: "Author:",
     authors: "Authors:",
+    default_title: "No Title",
     editor: "Editor:",
     editors: "Editors:",
     former_editor: "Former editor:",
@@ -77,6 +78,7 @@ const localizationStrings = {
   de: {
     author: "Autor/in:",
     authors: "Autor/innen:",
+    default_title: "Kein Titel",
     editor: "Redaktion:",
     editors: "Redaktion:",
     former_editor: "Frühere Mitwirkende:",
@@ -115,7 +117,7 @@ function setDocumentTitle(conf, specTitleElem) {
   let documentTitle;
 
   if (specTitleElem.textContent.trim() === "") {
-    specTitleElem.textContent = document.title || "No Title";
+    specTitleElem.textContent = document.title || `${l10n.default_title}`;
   }
 
   documentTitle = norm(specTitleElem.textContent);
