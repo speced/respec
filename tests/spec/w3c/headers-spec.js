@@ -649,7 +649,7 @@ describe("W3C — Headers", () => {
     });
 
     describe("document.title is undefined", () => {
-      it("uses default `No Title`", async () => {
+      it("defaults to `No Title`", async () => {
         const ops = makeStandardOps({}, makeDefaultBody());
         const doc = await makeRSDoc(ops);
         expect(doc.title).toBe("No Title");
