@@ -95,6 +95,30 @@ export async function resolveRef(key) {
   return entry;
 }
 
+/**
+ * @param {string[]} neededRefs
+ */
+async function getReferencesFromIdb(neededRefs) {
+  const idbRefs = [];
+
+  // See if we have them in IDB
+  try {
+    await biblioDB.ready; // can throw
+    const promisesToFind = neededRefs.map(async id => ({
+      id,
+      data: await biblioDB.find(id),
+    }));
+    idbRefs.push(...(await Promise.all(promisesToFind)));
+  } catch (err) {
+    // IndexedDB died, so we need to go to the network for all
+    // references
+    idbRefs.push(...neededRefs.map(id => ({ id, data: null })));
+    console.warn(err);
+  }
+
+  return idbRefs;
+}
+
 /** @param {Conf} conf */
 export async function run(conf) {
   const finish = () => {
@@ -121,22 +145,7 @@ export async function run(conf) {
         .sort()
     )
   );
-  const idbRefs = [];
-
-  // See if we have them in IDB
-  try {
-    await biblioDB.ready; // can throw
-    const promisesToFind = neededRefs.map(async id => ({
-      id,
-      data: await biblioDB.find(id),
-    }));
-    idbRefs.push(...(await Promise.all(promisesToFind)));
-  } catch (err) {
-    // IndexedDB died, so we need to go to the network for all
-    // references
-    idbRefs.push(...neededRefs.map(id => ({ id, data: null })));
-    console.warn(err);
-  }
+  const idbRefs = await getReferencesFromIdb(neededRefs);
   const split = { hasData: [], noData: [] };
   idbRefs.forEach(ref => {
     (ref.data ? split.hasData : split.noData).push(ref);
