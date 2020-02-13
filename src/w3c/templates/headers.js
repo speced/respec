@@ -100,7 +100,7 @@ export function getSpecTitleElem(conf) {
     if (specTitleElem.textContent.trim() === "") {
       pub(
         "warn",
-        'textContent of h1#title element is "" or whitespace. Falling back to `document.title` or "No Title"'
+        "The h1#title element is missing a title, so defaulting to the default title."
       );
     }
   }
