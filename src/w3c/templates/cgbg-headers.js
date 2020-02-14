@@ -1,9 +1,10 @@
 // @ts-check
-import { getSpecTitleElem, l10n } from "./headers.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
+import { l10n } from "./headers.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
 import showPeople from "./show-people.js";
+import { updateSpecTitle } from "../../core/utils.js";
 
 export default conf => {
   const existingCopyright = document.querySelector(".copyright");
@@ -11,7 +12,7 @@ export default conf => {
     existingCopyright.remove();
   }
 
-  const specTitleElem = getSpecTitleElem(conf);
+  const specTitleElem = updateSpecTitle(conf);
   const specTitleElemClone = specTitleElem.cloneNode(true);
   const fragment = document.createDocumentFragment();
   fragment.append(...specTitleElemClone.childNodes);

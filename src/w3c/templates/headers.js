@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData, norm, showInlineError } from "../../core/utils.js";
+import { getIntlData, updateSpecTitle } from "../../core/utils.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
@@ -17,7 +17,6 @@ const localizationStrings = {
   en: {
     author: "Author:",
     authors: "Authors:",
-    default_title: "No Title",
     editor: "Editor:",
     editors: "Editors:",
     former_editor: "Former editor:",
@@ -78,7 +77,6 @@ const localizationStrings = {
   de: {
     author: "Autor/in:",
     authors: "Autor/innen:",
-    default_title: "Kein Titel",
     editor: "Redaktion:",
     editors: "Redaktion:",
     former_editor: "Frühere Mitwirkende:",
@@ -90,50 +88,6 @@ const localizationStrings = {
 };
 
 export const l10n = getIntlData(localizationStrings);
-
-export function getSpecTitleElem(conf) {
-  /** @type {HTMLElement} */
-  const specTitleElem =
-    document.querySelector("h1#title") || document.createElement("h1");
-
-  if (specTitleElem.isConnected) {
-    specTitleElem.remove();
-    if (specTitleElem.textContent.trim() === "") {
-      const msg =
-        'The document is missing a title, so using a default title. To fix this, please give your document a <title>. If you need special markup in the document\'s title, please use a `<h1 id="title">`.';
-      const msgTitle = "Document is missing a title";
-      showInlineError(specTitleElem, msg, msgTitle);
-    }
-  }
-
-  setDocumentTitle(conf, specTitleElem);
-
-  specTitleElem.id = "title";
-  specTitleElem.classList.add("title", "p-name");
-
-  return specTitleElem;
-}
-
-function setDocumentTitle(conf, specTitleElem) {
-  let documentTitle;
-
-  if (specTitleElem.textContent.trim() === "") {
-    specTitleElem.textContent = document.title || `${l10n.default_title}`;
-  }
-
-  documentTitle = norm(specTitleElem.textContent);
-
-  if (conf.isPreview && conf.prNumber) {
-    const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;
-    const { childNodes } = html`
-      Preview of PR <a href="${prUrl}">#${conf.prNumber}</a>:
-    `;
-    specTitleElem.prepend(...childNodes);
-    documentTitle = `Preview of PR #${conf.prNumber}: ${documentTitle}`;
-  }
-
-  document.title = documentTitle;
-}
 
 function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
@@ -155,7 +109,7 @@ function getSpecSubTitleElem(conf) {
 export default conf => {
   return html`
     <div class="head">
-      ${conf.logos.map(showLogo)} ${getSpecTitleElem(conf)}
+      ${conf.logos.map(showLogo)} ${updateSpecTitle(conf)}
       ${getSpecSubTitleElem(conf)}
       <h2>
         ${conf.prependW3C ? "W3C " : ""}${conf.textStatus}
