@@ -568,7 +568,7 @@ describe("W3C — Headers", () => {
       expect(titleElem.textContent).toBe("Doc Title");
     });
 
-    it("uses h1#title content and overrides document.title when h1#title has content", async () => {
+    it("uses h1#title content and overrides <title> when h1#title has content", async () => {
       const body = `
         <title>hi</title><h1 id='title'>
           override!!!
