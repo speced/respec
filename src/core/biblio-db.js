@@ -8,7 +8,6 @@
  * It's a standalone module that can be imported into other modules.
  *
  */
-import { flatten } from "./utils.js";
 import { idb } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
@@ -165,13 +164,11 @@ export const biblioDB = {
           aliasesAndRefs.reference.add(obj);
         }
       });
-    const promisesToAdd = [...ALLOWED_TYPES]
-      .map(type => {
-        return Array.from(aliasesAndRefs[type]).map(details =>
-          this.add(type, details)
-        );
-      })
-      .reduce(flatten, []);
+    const promisesToAdd = [...ALLOWED_TYPES].flatMap(type => {
+      return Array.from(aliasesAndRefs[type]).map(details =>
+        this.add(type, details)
+      );
+    });
     await Promise.all(promisesToAdd);
   },
   /**

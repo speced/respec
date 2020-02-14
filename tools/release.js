@@ -213,9 +213,8 @@ const Prompts = {
   async askBumpVersion() {
     const rawVersion = await npm("view respec version");
     const version = rawVersion.trim();
-    const commits = await git(
-      "log `git describe --tags --abbrev=0`..HEAD --oneline"
-    );
+    const latestTag = await git("describe --tags --abbrev=0");
+    const commits = await git(`log ${latestTag.trim()}..HEAD --oneline`);
     if (!commits) {
       throw new Error("😢  No commits. Nothing to release.");
     }
@@ -370,8 +369,10 @@ const run = async () => {
       await Builder.build({ name });
     }
     console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
+    const nullDevice =
+      process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
     await node(
-      `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../examples/basic.built.html --out /dev/null`,
+      `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../examples/basic.built.html --out ${nullDevice}`,
       { showOutput: true }
     );
     console.log(colors.info(" Build Seems good... ✅"));

@@ -14,7 +14,6 @@
 import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import {
   createResourceHint,
-  flatten,
   nonNormativeSelector,
   norm as normalize,
   showInlineError,
@@ -406,12 +405,12 @@ function showErrors({ ambiguous, notFound }) {
     url.searchParams.set("term", term);
     if (query.for) url.searchParams.set("for", query.for);
     url.searchParams.set("types", query.types.join(","));
-    if (specs.length) url.searchParams.set("cite", specs.join(","));
+    if (specs.length) url.searchParams.set("specs", specs.join(","));
     return url;
   };
 
   for (const { query, elems } of notFound.values()) {
-    const specs = [...new Set(flatten([], query.specs))].sort();
+    const specs = [...new Set(query.specs.flat())].sort();
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");

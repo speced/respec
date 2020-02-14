@@ -391,53 +391,6 @@ describe("Core - Utils", () => {
     expect(utils.toKeyValuePairs(obj, " % ", "^")).toBe(expected);
   });
 
-  describe("flatten()", () => {
-    it("flattens arrays", () => {
-      expect(utils.flatten(["pass"], [123, 456])).toEqual(["pass", 123, 456]);
-      const map = new Map([
-        ["key-fail", "pass"],
-        ["anotherKey", 123],
-      ]);
-      expect(utils.flatten([], map)).toEqual([map]);
-      const set = new Set(["pass", 123]);
-      expect(utils.flatten([], set)).toEqual([set]);
-      const object = { "key-fail": "pass", other: 123 };
-      expect(utils.flatten([], object)).toEqual([object]);
-    });
-
-    it("flattens nested arrays as a reducer", () => {
-      const input = [
-        new Map([["fail", "123"]]),
-        new Set([456]),
-        [7, [8, [new Set([9, 10])]]],
-        { key: "11" },
-      ];
-      const output = input.reduce(utils.flatten, ["first", 0]);
-      expect(output).toEqual([
-        "first",
-        0,
-        input[0],
-        input[1],
-        7,
-        8,
-        input[2][1][1][0],
-        input[3],
-      ]);
-    });
-
-    it("flattens sparse and arrays", () => {
-      const input = [, 1, 1, , , , 1, , 1];
-      const output = input.reduce(utils.flatten, ["pass"]);
-      expect(output).toEqual(["pass", 1, 1, 1, 1]);
-    });
-
-    it("flattens dense and arrays", () => {
-      const input = new Array(10);
-      const output = input.reduce(utils.flatten, ["pass"]);
-      expect(output).toEqual(["pass"]);
-    });
-  });
-
   describe("htmlJoinAnd", () => {
     it("joins with proper commas and 'and'", () => {
       const div = document.createElement("div");
@@ -636,6 +589,17 @@ describe("Core - Utils", () => {
         expect(utils.getDfnTitles(dfn)[0]).toBe("TEXT");
 
         dfn.remove();
+      });
+    });
+
+    describe("getElementIndentation", () => {
+      it("should return the indentation of the given element", () => {
+        const fragment = document.createRange().createContextualFragment(`
+          <a>My link</a>
+        `);
+        const [anchor] = fragment.children;
+
+        expect(utils.getElementIndentation(anchor)).toBe("          ");
       });
     });
   });

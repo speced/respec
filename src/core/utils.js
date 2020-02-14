@@ -401,6 +401,7 @@ export function linkCSS(doc, styles) {
 // with RSv1. It is therefore not tested and not actively supported.
 /**
  * @this {any}
+ * @param {string} content
  * @param {string} [flist]
  */
 export function runTransforms(content, flist, ...funcArgs) {
@@ -481,22 +482,6 @@ export async function fetchAndCache(input, maxAge = 86400000) {
     await cache.put(request, cacheResponse).catch(console.error);
   }
   return response;
-}
-
-// --- COLLECTION/ITERABLE HELPERS ---------------
-/**
- * Spreads one iterable into another.
- *
- * @param {Array} collector
- * @param {any|Array} item
- * @returns {Array}
- */
-export function flatten(collector, item) {
-  const items = !Array.isArray(item)
-    ? [item]
-    : item.slice().reduce(flatten, []);
-  collector.push(...items);
-  return collector;
 }
 
 // --- DOM HELPERS -------------------------------
@@ -802,6 +787,29 @@ export function children(element, selector) {
     }
     return elements;
   }
+}
+
+/**
+ * Calculates indentation when the element starts after a newline.
+ * The value will be empty if no newline or any non-whitespace exists after one.
+ * @param {Element} element
+ *
+ * @example `    <div></div>` returns "    " (4 spaces).
+ */
+export function getElementIndentation(element) {
+  const { previousSibling } = element;
+  if (!previousSibling || previousSibling.nodeType !== Node.TEXT_NODE) {
+    return "";
+  }
+  const index = previousSibling.textContent.lastIndexOf("\n");
+  if (index === -1) {
+    return "";
+  }
+  const slice = previousSibling.textContent.slice(index + 1);
+  if (/\S/.test(slice)) {
+    return "";
+  }
+  return slice;
 }
 
 /**
