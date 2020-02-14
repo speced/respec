@@ -12,8 +12,9 @@ export default conf => {
   }
 
   const specTitleElem = getSpecTitleElem(conf);
-  const specTitle = document.createElement("span");
-  specTitle.innerHTML = specTitleElem.innerHTML;
+  const specTitleElemClone = specTitleElem.cloneNode(true);
+  const fragment = document.createDocumentFragment();
+  fragment.append(...specTitleElemClone.childNodes);
 
   return html`
     <div class="head">
@@ -134,7 +135,7 @@ export default conf => {
                     ${[conf.additionalCopyrightHolders]} &amp;
                   `
                 : ""}
-              the Contributors to the ${specTitle} Specification, published by
+              the Contributors to the ${fragment} Specification, published by
               the
               <a href="${conf.wgURI}">${conf.wg}</a> under the
               ${conf.isCGFinal

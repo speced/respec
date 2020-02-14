@@ -1395,9 +1395,11 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
 
       // html is not escaped
-      const elemWithSpecTitle = doc.querySelector(".head .copyright span");
-      expect(elemWithSpecTitle.children[0].tagName).toBe("CODE");
-      expect(elemWithSpecTitle.textContent).toBe("Spec with markup!");
+      const elemWithSpecTitle = doc.querySelector(".head .copyright");
+      expect(elemWithSpecTitle.textContent).toContain("Spec with markup!");
+
+      const markupNode = elemWithSpecTitle.querySelector("code");
+      expect(markupNode.textContent).toBe("markup");
     });
   });
 
