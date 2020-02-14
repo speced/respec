@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData, norm } from "../../core/utils.js";
+import { getIntlData, norm, showInlineError } from "../../core/utils.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
@@ -92,16 +92,17 @@ const localizationStrings = {
 export const l10n = getIntlData(localizationStrings);
 
 export function getSpecTitleElem(conf) {
+  /** @type {HTMLElement} */
   const specTitleElem =
     document.querySelector("h1#title") || document.createElement("h1");
 
   if (specTitleElem.isConnected) {
     specTitleElem.remove();
     if (specTitleElem.textContent.trim() === "") {
-      pub(
-        "warn",
-        'The document is missing a title, so using a default title.. To fix this, please give your document a <title>. If you need special markup in the document\'s title, please use a `<h1 id="title">`.'
-      );
+      const msg =
+        'The document is missing a title, so using a default title. To fix this, please give your document a <title>. If you need special markup in the document\'s title, please use a `<h1 id="title">`.';
+      const msgTitle = "Document is missing a title";
+      showInlineError(specTitleElem, msg, msgTitle);
     }
   }
 
