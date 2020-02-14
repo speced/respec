@@ -22,7 +22,7 @@ const localizationStrings = {
 
 const l10n = getIntlData(localizationStrings);
 
-export function updateSpecTitle(conf) {
+export function updateSpecTitleElem(conf) {
   /** @type {HTMLElement} */
   const specTitleElem =
     document.querySelector("h1#title") || document.createElement("h1");

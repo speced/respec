@@ -4,7 +4,7 @@ import { l10n } from "./headers.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
 import showPeople from "./show-people.js";
-import { updateSpecTitle } from "../../core/utils.js";
+import { updateSpecTitleElem } from "../../core/utils.js";
 
 export default conf => {
   const existingCopyright = document.querySelector(".copyright");
@@ -12,7 +12,7 @@ export default conf => {
     existingCopyright.remove();
   }
 
-  const specTitleElem = updateSpecTitle(conf);
+  const specTitleElem = updateSpecTitleElem(conf);
   const specTitleElemClone = specTitleElem.cloneNode(true);
   const fragment = document.createDocumentFragment();
   fragment.append(...specTitleElemClone.childNodes);
