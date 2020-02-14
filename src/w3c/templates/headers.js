@@ -100,7 +100,7 @@ export function getSpecTitleElem(conf) {
     if (specTitleElem.textContent.trim() === "") {
       pub(
         "warn",
-        "The h1#title element is missing a title, so defaulting to the default title."
+        'The document is missing a title, so using a default title.. To fix this, please give your document a <title>. If you need special markup in the document\'s title, please use a `<h1 id="title">`.'
       );
     }
   }
