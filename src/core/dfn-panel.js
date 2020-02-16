@@ -111,16 +111,14 @@ function referencesToHTML(id, links) {
     );
   };
 
-  /**
-   * @param {[string, string[]]} entry
-   * @returns {HTMLLIElement}
-   */
-  const listItemToHTML = entry =>
-    hyperHTML`<li>${toLinkProps(entry).map(
-      link => hyperHTML`<a href="#${link.id}">${link.title}</a>${" "}`
-    )}</li>`;
+  const listItems = [...titleToIDs].map(
+    entry =>
+      hyperHTML`<li>${toLinkProps(entry).map(
+        link => hyperHTML`<a href="#${link.id}">${link.title}</a>${" "}`
+      )}</li>`
+  );
 
-  return hyperHTML`<ul>${[...titleToIDs.entries()].map(listItemToHTML)}</ul>`;
+  return hyperHTML`<ul>${listItems}</ul>`;
 }
 
 /** @param {HTMLAnchorElement} link */
