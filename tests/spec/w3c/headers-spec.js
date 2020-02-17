@@ -681,7 +681,7 @@ describe("W3C — Headers", () => {
       expect(h1.textContent).toBe("Title!!!");
     });
 
-    it("adds h1#title with correct text and uses a default title when the document excludes a title", async () => {
+    it("uses a default title when the document excludes a title", async () => {
       const ops = makeStandardOps({}, makeDefaultBody());
       const doc = await makeRSDoc(ops);
       expect(doc.title).toBe("No Title");
@@ -694,7 +694,7 @@ describe("W3C — Headers", () => {
       expect(h1.textContent).toBe("No Title");
     });
 
-    it("uses a default title when <title> contains is an empty string", async () => {
+    it("uses a default title when <title> contains an empty string", async () => {
       const body = `<title></title>${makeDefaultBody()}`;
       const ops = makeStandardOps({}, body);
       const doc = await makeRSDoc(ops);
