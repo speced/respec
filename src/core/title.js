@@ -26,44 +26,43 @@ const localizationStrings = {
 const l10n = getIntlData(localizationStrings);
 
 export function run(conf) {
-  updateSpecTitleElem(conf);
-}
-
-
-function updateSpecTitleElem(conf) {
   /** @type {HTMLElement} */
-  const specTitleElem =
+  const h1Elem =
     document.querySelector("h1#title") || document.createElement("h1");
 
-  if (specTitleElem.isConnected && specTitleElem.textContent.trim() === "") {
+  // check existing element is ok to use
+  if (h1Elem.isConnected && h1Elem.textContent.trim() === "") {
     const msg =
       'The document is missing a title, so using a default title. To fix this, please give your document a `<title>`. If you need special markup in the document\'s title, please use a `<h1 id="title">`.';
     const msgTitle = "Document is missing a title";
-    showInlineError(specTitleElem, msg, msgTitle);
+    showInlineError(h1Elem, msg, msgTitle);
   }
 
-  setDocumentTitle(conf, specTitleElem);
-  document.body.prepend(specTitleElem);
-  specTitleElem.id = "title";
-  specTitleElem.classList.add("title");
+  // Decorate the spec title
+  if (!h1Elem.id) h1Elem.id = "title";
+  h1Elem.classList.add("title");
+
+  setDocumentTitle(conf, h1Elem);
+
+  // This will get relocated later by a template later.
+  document.body.prepend(h1Elem);
 }
 
-function setDocumentTitle(conf, specTitleElem) {
-  // if the original html has a h1#title element with whitespace or "" content, we keep that content
-  // the new h1 element created will not an id yet and its textContent is "" by default
-  // for the new h1 element, we want to use document.title or the default title
-  if (specTitleElem.id != "title" && specTitleElem.textContent.trim() === "") {
-    specTitleElem.textContent = document.title || `${l10n.default_title}`;
+function setDocumentTitle(conf, h1Elem) {
+  // If the h1 is newly created, it won't be connected. In this case
+  // we use the <title> or a localized fallback.
+  if (!h1Elem.isConnected) {
+    h1Elem.textContent = document.title || `${l10n.default_title}`;
   }
 
-  let documentTitle = norm(specTitleElem.textContent);
+  let documentTitle = norm(h1Elem.textContent);
 
   if (conf.isPreview && conf.prNumber) {
     const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;
     const { childNodes } = hyperHTML`
       Preview of PR <a href="${prUrl}">#${conf.prNumber}</a>:
     `;
-    specTitleElem.prepend(...childNodes);
+    h1Elem.prepend(...childNodes);
     documentTitle = `Preview of PR #${conf.prNumber}: ${documentTitle}`;
   }
 
