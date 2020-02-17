@@ -28,13 +28,13 @@ export function updateSpecTitleElem(conf) {
     document.querySelector("h1#title") || document.createElement("h1");
 
   if (specTitleElem.isConnected) {
-    specTitleElem.remove();
     if (specTitleElem.textContent.trim() === "") {
       const msg =
         'The document is missing a title, so using a default title. To fix this, please give your document a `<title>`. If you need special markup in the document\'s title, please use a `<h1 id="title">`.';
       const msgTitle = "Document is missing a title";
       showInlineError(specTitleElem, msg, msgTitle);
     }
+    specTitleElem.remove();
   }
 
   setDocumentTitle(conf, specTitleElem);
