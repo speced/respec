@@ -35,7 +35,7 @@ export function run(conf) {
     const msg =
       "The document is missing a title, so using a default title. " +
       "To fix this, please give your document a `<title>`." +
-      "If you need special markup in the document\'s title, " +
+      "If you need special markup in the document's title, " +
       'please use a `<h1 id="title">`.';
     const msgTitle = "Document is missing a title";
     showInlineError(h1Elem, msg, msgTitle);
@@ -47,7 +47,7 @@ export function run(conf) {
 
   setDocumentTitle(conf, h1Elem);
 
-  // This will get relocated later by a template later.
+  // This will get relocated by a template later.
   document.body.prepend(h1Elem);
 }
 
