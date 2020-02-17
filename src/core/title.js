@@ -70,4 +70,9 @@ function setDocumentTitle(conf, h1Elem) {
   }
 
   document.title = documentTitle;
+
+  // conf.title is deperecated - we are keeping this here just to
+  // retain backwards compat as we think the ePub generator
+  // relies on it.
+  conf.title = documentTitle;
 }
