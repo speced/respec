@@ -120,7 +120,8 @@ function referencesToHTML(id, links) {
       link => hyperHTML`<a href="#${link.id}">${link.title}</a>${" "}`
     )}</li>`;
 
-  return hyperHTML`<ul>${[...titleToIDs.entries()].map(listItemToHTML)}</ul>`;
+  const listItems = [...titleToIDs].map(listItemToHTML);
+  return hyperHTML`<ul>${listItems}</ul>`;
 }
 
 /** @param {HTMLAnchorElement} link */

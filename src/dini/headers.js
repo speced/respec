@@ -42,9 +42,8 @@
 //      - "cc-by-sa"
 //      - "cc-by"
 //      - "cc0"
-import { ISODate, htmlJoinAnd } from "../core/utils.js";
+import { ISODate } from "../core/utils.js";
 import headersTmpl from "./templates/headers.js";
-import { hyperHTML } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
 
 export const name = "dini/headers";
@@ -136,15 +135,6 @@ export function run(conf) {
       pub("error", "All alternate formats must have a uri and a label.");
     }
   });
-  conf.multipleAlternates =
-    conf.alternateFormats && conf.alternateFormats.length > 1;
-  conf.alternatesHTML =
-    conf.alternateFormats &&
-    htmlJoinAnd(conf.alternateFormats, alt => {
-      const lang = alt.hasOwnProperty("lang") && alt.lang ? alt.lang : null;
-      const type = alt.hasOwnProperty("type") && alt.type ? alt.type : null;
-      return hyperHTML`<a rel='alternate' href='${alt.uri}' hreflang='${lang}' type='${type}'>${alt.label}</a>`;
-    });
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
   conf.textStatus = status2text[conf.specStatus];

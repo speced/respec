@@ -78,55 +78,54 @@ function attachMDNBrowserSupport(container, mdnSpec) {
     return;
   }
   const supportTable = hyperHTML`<p class="mdnsupport">
-    ${[buildBrowserSupportTable(mdnSpec.support)]}
+    ${buildBrowserSupportTable(mdnSpec.support)}
   </p>`;
   container.appendChild(supportTable);
 }
 
 function buildBrowserSupportTable(support) {
-  let innerHTML = "";
-  function addMDNBrowserRow(browserId, yesNoUnknown, version) {
+  function createRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
-    const browserRow = `
+    return hyperHTML`
       <span class="${classList}">
         <span class="browser-name">${MDN_BROWSERS[browserId]}</span>
         <span class="version">${version ? version : displayStatus}</span>
       </span>`;
-    innerHTML += browserRow;
   }
 
-  function processBrowserData(browserId, versionData) {
+  function createRowFromBrowserData(browserId, versionData) {
     if (versionData.version_removed) {
-      addMDNBrowserRow(browserId, "No", "");
-      return;
+      return createRow(browserId, "No", "");
     }
     const versionAdded = versionData.version_added;
     if (!versionAdded) {
-      addMDNBrowserRow(browserId, "Unknown", "");
-      return;
+      return createRow(browserId, "Unknown", "");
     }
     if (typeof versionAdded === "boolean") {
-      addMDNBrowserRow(browserId, versionAdded ? "Yes" : "No", "");
+      return createRow(browserId, versionAdded ? "Yes" : "No", "");
     } else {
-      addMDNBrowserRow(browserId, "Yes", `${versionAdded}+`);
+      return createRow(browserId, "Yes", `${versionAdded}+`);
     }
   }
 
+  const rows = [];
+
   Object.keys(MDN_BROWSERS).forEach(browserId => {
     if (!support[browserId]) {
-      addMDNBrowserRow(browserId, "Unknown", "");
+      rows.push(createRow(browserId, "Unknown", ""));
     } else {
       if (Array.isArray(support[browserId])) {
         support[browserId].forEach(b => {
-          processBrowserData(browserId, b);
+          rows.push(createRowFromBrowserData(browserId, b));
         });
       } else {
-        processBrowserData(browserId, support[browserId]);
+        rows.push(createRowFromBrowserData(browserId, support[browserId]));
       }
     }
   });
-  return innerHTML;
+
+  return rows;
 }
 
 export async function run(conf) {
@@ -150,7 +149,7 @@ export async function run(conf) {
     maxAge
   );
   const mdnCss = await mdnCssPromise;
-  document.head.appendChild(hyperHTML`<style>${[mdnCss]}</style>`);
+  document.head.appendChild(hyperHTML`<style>${mdnCss}</style>`);
   document.head.appendChild(hyperHTML`<script>
      function toggleMDNStatus(div) {
        div.parentNode.classList.toggle('wrapped');

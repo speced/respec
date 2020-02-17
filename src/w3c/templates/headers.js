@@ -132,7 +132,7 @@ function getSpecSubTitleElem(conf) {
   return specSubTitleElem;
 }
 
-export default conf => {
+export default (conf, options) => {
   return html`
     <div class="head">
       ${conf.logos.map(showLogo)} ${getSpecTitleElem(conf)}
@@ -253,10 +253,10 @@ export default conf => {
       ${conf.alternateFormats
         ? html`
             <p>
-              ${conf.multipleAlternates
+              ${options.multipleAlternates
                 ? "This document is also available in these non-normative formats:"
                 : "This document is also available in this non-normative format:"}
-              ${[conf.alternatesHTML]}
+              ${options.alternatesHTML}
             </p>
           `
         : ""}
