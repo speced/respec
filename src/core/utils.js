@@ -46,13 +46,11 @@ export function updateSpecTitleElem(conf) {
 }
 
 function setDocumentTitle(conf, specTitleElem) {
-  let documentTitle;
-
   if (specTitleElem.textContent.trim() === "") {
     specTitleElem.textContent = document.title || `${l10n.default_title}`;
   }
 
-  documentTitle = norm(specTitleElem.textContent);
+  let documentTitle = norm(specTitleElem.textContent);
 
   if (conf.isPreview && conf.prNumber) {
     const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;
