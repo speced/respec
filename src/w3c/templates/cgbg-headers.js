@@ -5,7 +5,7 @@ import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
 import showPeople from "./show-people.js";
 
-export default conf => {
+export default (conf, options) => {
   const existingCopyright = document.querySelector(".copyright");
   if (existingCopyright) {
     existingCopyright.remove();
@@ -110,10 +110,10 @@ export default conf => {
       ${conf.alternateFormats
         ? html`
             <p>
-              ${conf.multipleAlternates
+              ${options.multipleAlternates
                 ? "This document is also available in these non-normative formats:"
                 : "This document is also available in this non-normative format:"}
-              ${[conf.alternatesHTML]}
+              ${options.alternatesHTML}
             </p>
           `
         : ""}

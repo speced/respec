@@ -486,6 +486,12 @@ export async function fetchAndCache(input, maxAge = 86400000) {
 
 // --- DOM HELPERS -------------------------------
 
+export function htmlJoinComma(array, mapper = item => item) {
+  const items = array.map(mapper);
+  const joined = items.slice(0, -1).map(item => hyperHTML`${item}, `);
+  return hyperHTML`${joined}${items[items.length - 1]}`;
+}
+
 /**
  * Separates each item with proper commas and "and".
  * @param {string[]} array
@@ -500,8 +506,8 @@ export function htmlJoinAnd(array, mapper = item => item) {
     case 2: // x and y
       return hyperHTML`${items[0]} and ${items[1]}`;
     default: {
-      const joinedItems = items.slice(0, -1).map(item => hyperHTML`${item}, `);
-      return hyperHTML`${joinedItems}and ${items[items.length - 1]}`;
+      const joined = htmlJoinComma(items.slice(0, -1));
+      return hyperHTML`${joined}, and ${items[items.length - 1]}`;
     }
   }
 }
