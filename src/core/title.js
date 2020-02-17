@@ -28,7 +28,7 @@ const l10n = getIntlData(localizationStrings);
 export function run(conf) {
   /** @type {HTMLElement} */
   const h1Elem =
-    document.querySelector("h1#title") || document.createElement("h1");
+    document.querySelector("h1#title") || hyperHTML`<h1 id="title">`;
 
   // check existing element is ok to use
   if (h1Elem.isConnected && h1Elem.textContent.trim() === "") {
