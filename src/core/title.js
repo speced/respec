@@ -33,7 +33,10 @@ export function run(conf) {
   // check existing element is ok to use
   if (h1Elem.isConnected && h1Elem.textContent.trim() === "") {
     const msg =
-      'The document is missing a title, so using a default title. To fix this, please give your document a `<title>`. If you need special markup in the document\'s title, please use a `<h1 id="title">`.';
+      "The document is missing a title, so using a default title. " +
+      "To fix this, please give your document a `<title>`." +
+      "If you need special markup in the document\'s title, " +
+      'please use a `<h1 id="title">`.';
     const msgTitle = "Document is missing a title";
     showInlineError(h1Elem, msg, msgTitle);
   }
