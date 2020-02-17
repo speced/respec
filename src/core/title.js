@@ -1,3 +1,15 @@
+/**
+ * This module handles the creation of the h1#title of a spec and
+ * makes sure the <title> always matches the h1.
+ *
+ * If no h1#title is included, then the <title> becomes the h1#title.
+ *
+ * When a h1#title is included, it always takes precedence over the
+ * <title> of a spec. An error will be displayed in case of
+ * any mismatch.
+ *
+ */
+
 import { getIntlData, norm, showInlineError } from "./utils.js";
 import { hyperHTML } from "./import-maps.js";
 export const name = "core/title";
