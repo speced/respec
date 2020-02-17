@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData, updateSpecTitleElem } from "../../core/utils.js";
+import { getIntlData } from "../../core/utils.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
@@ -109,7 +109,7 @@ function getSpecSubTitleElem(conf) {
 export default conf => {
   return html`
     <div class="head">
-      ${conf.logos.map(showLogo)} ${updateSpecTitleElem(conf)}
+      ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
       ${getSpecSubTitleElem(conf)}
       <h2>
         ${conf.prependW3C ? "W3C " : ""}${conf.textStatus}

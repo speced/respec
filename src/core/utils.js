@@ -7,66 +7,6 @@ import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
-export function getSpecTitle() {
-  return document.querySelector("h1#title");
-}
-
-const localizationStrings = {
-  en: {
-    default_title: "No Title",
-  },
-  de: {
-    default_title: "Kein Titel",
-  },
-};
-
-const l10n = getIntlData(localizationStrings);
-
-export function updateSpecTitleElem(conf) {
-  /** @type {HTMLElement} */
-  const specTitleElem =
-    document.querySelector("h1#title") || document.createElement("h1");
-
-  if (specTitleElem.isConnected) {
-    if (specTitleElem.textContent.trim() === "") {
-      const msg =
-        'The document is missing a title, so using a default title. To fix this, please give your document a `<title>`. If you need special markup in the document\'s title, please use a `<h1 id="title">`.';
-      const msgTitle = "Document is missing a title";
-      showInlineError(specTitleElem, msg, msgTitle);
-    }
-    specTitleElem.remove();
-  }
-
-  setDocumentTitle(conf, specTitleElem);
-
-  specTitleElem.id = "title";
-  specTitleElem.classList.add("title", "p-name");
-
-  return specTitleElem;
-}
-
-function setDocumentTitle(conf, specTitleElem) {
-  // if the original html has a h1#title element with whitespace or "" content, we keep that content
-  // the new h1 element created will not an id yet and its textContent is "" by default
-  // for the new h1 element, we want to use document.title or the default title
-  if (specTitleElem.id != "title" && specTitleElem.textContent.trim() === "") {
-    specTitleElem.textContent = document.title || `${l10n.default_title}`;
-  }
-
-  let documentTitle = norm(specTitleElem.textContent);
-
-  if (conf.isPreview && conf.prNumber) {
-    const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;
-    const { childNodes } = hyperHTML`
-      Preview of PR <a href="${prUrl}">#${conf.prNumber}</a>:
-    `;
-    specTitleElem.prepend(...childNodes);
-    documentTitle = `Preview of PR #${conf.prNumber}: ${documentTitle}`;
-  }
-
-  document.title = documentTitle;
-}
-
 const dashes = /-/g;
 /**
  * Hashes a string from char code. Can return a negative number.
