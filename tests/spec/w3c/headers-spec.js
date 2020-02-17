@@ -558,14 +558,14 @@ describe("W3C — Headers", () => {
   });
 
   describe("title when h1#title and <title> elements are present", () => {
-    it('uses document.title when h1#title textContent is ""', async () => {
+    it('h1 always wins even when h1#title textContent is ""', async () => {
       const body = `<title>Doc Title</title><h1 id='title'></h1>${makeDefaultBody()}`;
       const ops = makeStandardOps({}, body);
       const doc = await makeRSDoc(ops);
-      expect(doc.title).toBe("Doc Title");
+      expect(doc.title).toBe("");
       const titleElem = doc.querySelector("title");
       expect(titleElem).toBeTruthy();
-      expect(titleElem.textContent).toBe("Doc Title");
+      expect(titleElem.textContent).toBe("");
     });
 
     it("uses h1#title content and overrides <title> when h1#title has content", async () => {
@@ -611,25 +611,25 @@ describe("W3C — Headers", () => {
       expect(titleInHead.textContent).toBe("pass");
     });
 
-    it("uses default title when h1#title content is whitespace", async () => {
+    it("h1 always wins even when h1#title textContent is whitespace", async () => {
       const body = `<h1 id='title'>       </h1>${makeDefaultBody()}`;
       const ops = makeStandardOps({}, body);
       const doc = await makeRSDoc(ops);
-      expect(doc.title).toBe("No Title");
+      expect(doc.title).toBe("");
       const titleElem = doc.querySelector("title");
       expect(titleElem).toBeTruthy();
-      expect(titleElem.textContent).toBe("No Title");
+      expect(titleElem.textContent).toBe("");
     });
 
-    it('uses default title when h1#title content is ""', async () => {
+    it('h1 always wins even when h1#title textContent is ""', async () => {
       const body = `
       <h1 id='title'></h1>${makeDefaultBody()}`;
       const ops = makeStandardOps({}, body);
       const doc = await makeRSDoc(ops);
-      expect(doc.title).toBe("No Title");
+      expect(doc.title).toBe("");
       const titleElem = doc.querySelector("title");
       expect(titleElem).toBeTruthy();
-      expect(titleElem.textContent).toBe("No Title");
+      expect(titleElem.textContent).toBe("");
     });
   });
 

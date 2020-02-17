@@ -46,7 +46,10 @@ export function updateSpecTitleElem(conf) {
 }
 
 function setDocumentTitle(conf, specTitleElem) {
-  if (specTitleElem.textContent.trim() === "") {
+  // if the original html has a h1#title element with whitespace or "" content, we keep that content
+  // the new h1 element created will not an id yet and its textContent is "" by default
+  // for the new h1 element, we want to use document.title or the default title
+  if (specTitleElem.id != "title" && specTitleElem.textContent.trim() === "") {
     specTitleElem.textContent = document.title || `${l10n.default_title}`;
   }
 
