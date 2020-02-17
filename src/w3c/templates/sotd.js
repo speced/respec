@@ -39,7 +39,7 @@ export default (conf, opts) => {
       : conf.isNoTrack
       ? renderIsNoTrack(conf, opts)
       : html`
-          <p><em>${[conf.l10n.status_at_publication]}</em></p>
+          <p><em>${conf.l10n.status_at_publication}</em></p>
           ${conf.isSubmission
             ? noteForSubmission(conf, opts)
             : html`
@@ -255,7 +255,7 @@ function renderDeliverer(conf) {
                 `
               : html`
                   W3C maintains a
-                  <a href="${[wgPatentURI]}" rel="disclosure"
+                  <a href="${wgPatentURI}" rel="disclosure"
                     >public list of any patent disclosures</a
                   >
                 `}
