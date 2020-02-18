@@ -97,7 +97,7 @@ async function getReferencesFromIdb(neededRefs) {
   return idbRefs;
 }
 
-export class Class {
+export class Plugin {
   /** @param {Conf} conf */
   constructor(conf) {
     this.conf = conf;

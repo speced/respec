@@ -29,8 +29,8 @@ function toRunnable(plug) {
         performance.mark(`${name}-start`);
       }
       try {
-        if (plug.Class) {
-          await new plug.Class(config).run();
+        if (plug.Plugin) {
+          await new plug.Plugin(config).run();
           resolve();
         } else if (plug.run.length <= 1) {
           await plug.run(config);
@@ -55,7 +55,7 @@ function toRunnable(plug) {
 }
 
 function isRunnableModule(plug) {
-  return plug && (plug.run || plug.Class);
+  return plug && (plug.run || plug.Plugin);
 }
 
 export async function runAll(plugs) {
