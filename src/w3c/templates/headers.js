@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData, norm } from "../../core/utils.js";
+import { getIntlData } from "../../core/utils.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
@@ -89,32 +89,6 @@ const localizationStrings = {
 
 export const l10n = getIntlData(localizationStrings);
 
-function getSpecTitleElem(conf) {
-  const specTitleElem =
-    document.querySelector("h1#title") || document.createElement("h1");
-  if (specTitleElem.parentElement) {
-    specTitleElem.remove();
-  } else {
-    specTitleElem.textContent = conf.title;
-    specTitleElem.id = "title";
-  }
-  if (conf.isPreview && conf.prNumber) {
-    const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;
-    const { childNodes } = html`
-      Preview of PR <a href="${prUrl}">#${conf.prNumber}</a>:
-    `;
-    specTitleElem.prepend(...childNodes);
-  }
-  conf.title = norm(specTitleElem.textContent);
-  specTitleElem.classList.add("title", "p-name");
-  if (document.querySelector("title") === null) {
-    document.title = conf.title;
-  } else if (document.title !== conf.title) {
-    pub("warn", "The document's title and the `<title>` element differ.");
-  }
-  return specTitleElem;
-}
-
 function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
 
@@ -132,10 +106,10 @@ function getSpecSubTitleElem(conf) {
   return specSubTitleElem;
 }
 
-export default conf => {
+export default (conf, options) => {
   return html`
     <div class="head">
-      ${conf.logos.map(showLogo)} ${getSpecTitleElem(conf)}
+      ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
       ${getSpecSubTitleElem(conf)}
       <h2>
         ${conf.prependW3C ? "W3C " : ""}${conf.textStatus}
@@ -253,10 +227,10 @@ export default conf => {
       ${conf.alternateFormats
         ? html`
             <p>
-              ${conf.multipleAlternates
+              ${options.multipleAlternates
                 ? "This document is also available in these non-normative formats:"
                 : "This document is also available in this non-normative format:"}
-              ${[conf.alternatesHTML]}
+              ${options.alternatesHTML}
             </p>
           `
         : ""}

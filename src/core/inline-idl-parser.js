@@ -2,8 +2,8 @@
 // Parses an inline IDL string (`{{ idl string }}`)
 //  and renders its components as HTML
 
+import { htmlJoinComma, showInlineError } from "./utils.js";
 import { hyperHTML } from "./import-maps.js";
-import { showInlineError } from "./utils.js";
 const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}} {{ double }}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;
@@ -183,14 +183,14 @@ function renderAttribute(details) {
 function renderMethod(details) {
   const { args, identifier, type, parent, renderParent } = details;
   const { identifier: linkFor } = parent || {};
-  const argsText = args.map(arg => `<var>${arg}</var>`).join(", ");
+  const argsText = htmlJoinComma(args, arg => hyperHTML`<var>${arg}</var>`);
   const searchText = `${identifier}(${args.join(", ")})`;
   const html = hyperHTML`${parent && renderParent ? "." : ""}<a
     data-xref-type="${type}"
     data-link-for="${linkFor}"
     data-xref-for="${linkFor}"
     data-lt="${searchText}"
-    ><code>${identifier}</code></a><code>(${[argsText]})</code>`;
+    ><code>${identifier}</code></a><code>(${argsText})</code>`;
   return html;
 }
 
