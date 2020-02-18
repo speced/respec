@@ -94,7 +94,7 @@ async function addJSONLDInfo(conf, doc) {
     ],
     id: conf.canonicalURI || conf.thisVersion,
     type,
-    name: conf.title,
+    name: document.title,
     inLanguage: doc.documentElement.lang || "en",
     license: conf.licenseInfo.url,
     datePublished: conf.dashDate,

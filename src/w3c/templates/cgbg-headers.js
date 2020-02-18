@@ -10,10 +10,13 @@ export default (conf, options) => {
   if (existingCopyright) {
     existingCopyright.remove();
   }
+
+  const specTitleElem = document.querySelector("h1#title");
+  const specTitleElemClone = specTitleElem.cloneNode(true);
+
   return html`
     <div class="head">
-      ${conf.logos.map(showLogo)}
-      <h1 class="title p-name" id="title">${conf.title}</h1>
+      ${conf.logos.map(showLogo)} ${specTitleElem}
       ${conf.subtitle
         ? html`
             <h2 id="subtitle">${conf.subtitle}</h2>
@@ -130,8 +133,8 @@ export default (conf, options) => {
                     ${[conf.additionalCopyrightHolders]} &amp;
                   `
                 : ""}
-              the Contributors to the ${conf.title} Specification, published by
-              the
+              the Contributors to the ${specTitleElemClone.childNodes}
+              Specification, published by the
               <a href="${conf.wgURI}">${conf.wg}</a> under the
               ${conf.isCGFinal
                 ? html`
