@@ -265,10 +265,6 @@ export function run(conf) {
       pub("warn", msg);
     }
   }
-  conf.title = document.title || "No Title";
-  if (document.title && conf.isPreview && conf.prNumber) {
-    document.title = `Preview of PR #${conf.prNumber}: ${document.title}`;
-  }
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
     conf,

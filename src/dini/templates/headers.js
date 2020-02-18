@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData, norm } from "../../core/utils.js";
+import { getIntlData } from "../../core/utils.js";
 import { hyperHTML as html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
@@ -84,25 +84,6 @@ const localizationStrings = {
 
 export const l10n = getIntlData(localizationStrings);
 
-function getSpecTitleElem(conf) {
-  const specTitleElem =
-    document.querySelector("h1#title") || document.createElement("h1");
-  if (specTitleElem.parentElement) {
-    specTitleElem.remove();
-  } else {
-    specTitleElem.textContent = conf.title;
-    specTitleElem.id = "title";
-  }
-  conf.title = norm(specTitleElem.textContent);
-  specTitleElem.classList.add("title", "p-name");
-  if (document.querySelector("title") === null) {
-    document.title = conf.title;
-  } else if (document.title !== conf.title) {
-    pub("warn", "The document's title and the `<title>` element differ.");
-  }
-  return specTitleElem;
-}
-
 function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
 
@@ -123,7 +104,7 @@ function getSpecSubTitleElem(conf) {
 export default conf => {
   return html`
     <div class="head">
-      ${conf.logos.map(showLogo)} ${getSpecTitleElem(conf)}
+      ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
       ${getSpecSubTitleElem(conf)}
       <h2>
         ${conf.textStatus}
