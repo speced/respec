@@ -84,7 +84,7 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", (default) the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import { ISODate, concatDate, htmlJoinAnd, validLevel } from "../core/utils.js";
+import { ISODate, concatDate, htmlJoinAnd } from "../core/utils.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
@@ -264,9 +264,6 @@ export function run(conf) {
         `new tests repository (e.g., https://github.com/web-platform-tests/wpt/${conf.shortName} ).`;
       pub("warn", msg);
     }
-  }
-  if (validLevel(conf.level)) {
-    conf.shortName = `${conf.shortName}-${conf.level}`;
   }
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(

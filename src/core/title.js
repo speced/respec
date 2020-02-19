@@ -10,13 +10,7 @@
  *
  */
 
-import {
-  getIntlData,
-  norm,
-  showInlineError,
-  showInlineWarning,
-  validLevel,
-} from "./utils.js";
+import { getIntlData, norm, showInlineError } from "./utils.js";
 import { hyperHTML } from "./import-maps.js";
 export const name = "core/title";
 
@@ -73,19 +67,6 @@ function setDocumentTitle(conf, h1Elem) {
     `;
     h1Elem.prepend(...childNodes);
     documentTitle = `Preview of PR #${conf.prNumber}: ${documentTitle}`;
-  }
-
-  if (conf.hasOwnProperty("level")) {
-    if (validLevel(conf.level)) {
-      h1Elem.append(document.createTextNode(` Level ${conf.level}`));
-      documentTitle = `${documentTitle} Level ${Number(conf.level)}`;
-    } else {
-      showInlineWarning(
-        h1Elem,
-        `The \`level\` configuration option must be a number greater or equal to 0. It is currently set to \`${conf.level}\``,
-        "Invalid level config."
-      );
-    }
   }
 
   document.title = documentTitle;
