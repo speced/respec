@@ -560,7 +560,7 @@ describe("W3C — Headers", () => {
   describe("valid level config", () => {
     it("updates relevant locations with the level when level is the integer 0", async () => {
       const body = `
-      <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
+        <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
       const ops = makeStandardOps({}, body);
       const newProps = { level: 0, specStatus: "REC", shortName: "abc" };
       Object.assign(ops.config, newProps);
@@ -610,7 +610,7 @@ describe("W3C — Headers", () => {
   describe("invalid level configs", () => {
     it("warns the user and does not add the level to the relevant places when level is a string", async () => {
       const body = `
-      <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
+        <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
       const ops = makeStandardOps({}, body);
       const newProps = { level: "1", specStatus: "REC", shortName: "xxx" };
       Object.assign(ops.config, newProps);
