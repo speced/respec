@@ -10,7 +10,13 @@
  *
  */
 
-import { getIntlData, norm, showInlineError } from "./utils.js";
+import {
+  getIntlData,
+  norm,
+  showInlineError,
+  showInlineWarning,
+  validLevel,
+} from "./utils.js";
 import { hyperHTML } from "./import-maps.js";
 export const name = "core/title";
 
@@ -67,6 +73,11 @@ function setDocumentTitle(conf, h1Elem) {
     `;
     h1Elem.prepend(...childNodes);
     documentTitle = `Preview of PR #${conf.prNumber}: ${documentTitle}`;
+  }
+
+  if (validLevel(conf.level)) {
+    h1Elem.innerHTML = `${h1Elem.innerHTML} Level ${Number(conf.level)}`;
+    documentTitle = `${documentTitle} Level ${Number(conf.level)}`;
   }
 
   document.title = documentTitle;
