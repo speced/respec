@@ -557,6 +557,116 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("valid level config", () => {
+    it("updates relevant locations with the level when level is the integer 0", async () => {
+      const body = `
+      <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const newProps = { level: 0, specStatus: "REC", shortName: "abc" };
+      Object.assign(ops.config, newProps);
+
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      // html is not escaped
+      expect(h1Elem.childNodes[1].localName).toBe("code");
+      expect(h1Elem.textContent).toBe("Spec Marked Up Level 0");
+      expect(doc.title).toBe("Spec Marked Up Level 0");
+
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[0].textContent).toBe("This version:");
+      expect(terms[0].nextElementSibling.localName).toBe("dd");
+      expect(terms[0].nextElementSibling.textContent).toContain("REC-abc-0");
+      expect(terms[1].textContent).toBe("Latest published version:");
+      expect(terms[1].nextElementSibling.localName).toBe("dd");
+      expect(terms[1].nextElementSibling.textContent).toContain("TR/abc-0/");
+    });
+
+    it("updates relevant locations with the level when level is an integer greater than 0", async () => {
+      const body = `
+      <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const newProps = { level: 9870, specStatus: "REC", shortName: "xyz" };
+      Object.assign(ops.config, newProps);
+
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      // html is not escaped
+      expect(h1Elem.childNodes[1].localName).toBe("code");
+      expect(h1Elem.textContent).toBe("Spec Marked Up Level 9870");
+      expect(doc.title).toBe("Spec Marked Up Level 9870");
+
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[0].textContent).toBe("This version:");
+      expect(terms[0].nextElementSibling.localName).toBe("dd");
+      expect(terms[0].nextElementSibling.textContent).toContain("REC-xyz-9870");
+      expect(terms[1].textContent).toBe("Latest published version:");
+      expect(terms[1].nextElementSibling.localName).toBe("dd");
+      expect(terms[1].nextElementSibling.textContent).toContain("TR/xyz-9870/");
+    });
+  });
+
+  describe("invalid level configs", () => {
+    it("warns the user and does not add the level to the relevant places when level is a string", async () => {
+      const body = `
+      <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const newProps = { level: "1", specStatus: "REC", shortName: "xxx" };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      expect(h1Elem.classList).toContain("respec-offending-element");
+      expect(h1Elem.textContent).toBe("Spec Marked Up");
+
+      const date = new Date();
+
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[0].textContent).toBe("This version:");
+      expect(terms[0].nextElementSibling.localName).toBe("dd");
+      expect(terms[0].nextElementSibling.textContent).toContain(
+        `REC-xxx-${date.getFullYear()}`
+      );
+      expect(terms[1].textContent).toBe("Latest published version:");
+      expect(terms[1].nextElementSibling.localName).toBe("dd");
+      expect(terms[1].nextElementSibling.textContent).toContain("TR/xxx/");
+    });
+
+    it("warns the user and does not add the level to the relevant places when level is a decimal", async () => {
+      const ops = makeStandardOps();
+      const newProps = { level: Math.random() };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      expect(h1Elem.classList).toContain("respec-offending-element");
+      expect(h1Elem.textContent).toBe("No Title");
+    });
+
+    it("warns the user and does not add the level to the relevant places when level is negative", async () => {
+      const ops = makeStandardOps();
+      const newProps = { level: -2 };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      expect(h1Elem.classList).toContain("respec-offending-element");
+      expect(h1Elem.textContent).toBe("No Title");
+    });
+
+    it("warns the user and does not add the level to the relevant places when level is null", async () => {
+      const ops = makeStandardOps();
+      const newProps = { level: null };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      expect(h1Elem.classList).toContain("respec-offending-element");
+      expect(h1Elem.textContent).toBe("No Title");
+    });
+  });
+
   describe("precedence order of document title when h1#title and <title> elements are present", () => {
     it('makes h1 always win even when h1#title textContent is ""', async () => {
       const body = `
@@ -1029,13 +1139,17 @@ describe("W3C — Headers", () => {
       );
     });
 
-    it("handles additionalCopyrightHolders when text is markup", async () => {
+    it("handles additionalCopyrightHolders when text is markup, is a CGBG spec, and has a valid level", async () => {
       const ops = makeStandardOps({
-        specStatus: "REC",
+        specStatus: "CG-DRAFT",
         additionalCopyrightHolders: "<span class='test'>XXX</span>",
+        level: 99,
       });
 
       const doc = await makeRSDoc(ops);
+      expect(doc.querySelector(".head .copyright").textContent).toContain(
+        "Level 99"
+      );
       expect(doc.querySelector(".head .copyright .test").textContent).toBe(
         "XXX"
       );
