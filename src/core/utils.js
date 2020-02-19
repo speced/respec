@@ -7,6 +7,15 @@ import { hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
+/**
+ * Checks whether a level is valid. Levels should be integers >= 0.
+ *
+ * @param {*} level
+ */
+export function validLevel(level) {
+  return Number.isInteger(level) && level >= 0;
+}
+
 const dashes = /-/g;
 /**
  * Hashes a string from char code. Can return a negative number.
