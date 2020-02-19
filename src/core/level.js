@@ -5,16 +5,24 @@
  * Levels should be integers >= 0.
  */
 
-import { showInlineWarning } from "./utils.js";
+import { getIntlData, showInlineWarning } from "./utils.js";
 export const name = "core/level";
+
+const localizationStrings = {
+  en: {
+    level: "Level",
+  },
+};
+
+const l10n = getIntlData(localizationStrings);
 
 export function run(conf) {
   const h1Elem = document.querySelector("h1#title");
 
   if (conf.hasOwnProperty("level")) {
     if (Number.isInteger(conf.level) && conf.level >= 0) {
-      h1Elem.append(document.createTextNode(` Level ${conf.level}`));
-      document.title = `${document.title} Level ${conf.level}`;
+      h1Elem.append(document.createTextNode(` ${l10n.level} ${conf.level}`));
+      document.title = `${document.title} ${l10n.level} ${conf.level}`;
       conf.shortName = `${conf.shortName}-${conf.level}`;
     } else {
       showInlineWarning(
