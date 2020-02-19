@@ -82,7 +82,7 @@ function setDocumentTitle(conf, h1Elem) {
     } else {
       showInlineWarning(
         h1Elem,
-        `The \`level\` config should be an integer greater than or equal to 0. It is currently set to \`${conf.level}\``,
+        `The \`level\` configuration option must be a number greater or equal to 0. It is currently set to \`${conf.level}\``,
         "Invalid level config."
       );
     }
