@@ -78,6 +78,12 @@ function setDocumentTitle(conf, h1Elem) {
   if (validLevel(conf.level)) {
     h1Elem.innerHTML = `${h1Elem.innerHTML} Level ${Number(conf.level)}`;
     documentTitle = `${documentTitle} Level ${Number(conf.level)}`;
+  } else {
+    showInlineWarning(
+      h1Elem,
+      `The \`level\` config should be an integer greater than or equal to 0. It is currently set to \`${conf.level}\``,
+      "Invalid level config."
+    );
   }
 
   document.title = documentTitle;
