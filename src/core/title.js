@@ -77,7 +77,7 @@ function setDocumentTitle(conf, h1Elem) {
 
   if (conf.hasOwnProperty("level")) {
     if (validLevel(conf.level)) {
-      h1Elem.innerHTML = `${h1Elem.innerHTML} Level ${Number(conf.level)}`;
+      h1Elem.append(document.createTextNode(` Level ${conf.level}`));
       documentTitle = `${documentTitle} Level ${Number(conf.level)}`;
     } else {
       showInlineWarning(
