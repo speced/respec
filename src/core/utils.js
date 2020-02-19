@@ -768,34 +768,6 @@ export function parents(element, selector) {
 }
 
 /**
- * Applies the selector for direct descendants.
- * This is a helper function for browsers without :scope support.
- * Note that this doesn't support comma separated selectors.
- * @param {Element} element
- * @param {string} selector
- * @returns {NodeListOf<HTMLElement>}
- */
-export function children(element, selector) {
-  try {
-    return element.querySelectorAll(`:scope > ${selector}`);
-  } catch {
-    let tempId = "";
-    // We give a temporary id, to overcome lack of ":scope" support in Edge.
-    if (!element.id) {
-      tempId = `temp-${String(Math.random()).substr(2)}`;
-      element.id = tempId;
-    }
-    const query = `#${element.id} > ${selector}`;
-    /** @type {NodeListOf<HTMLElement>} */
-    const elements = element.parentElement.querySelectorAll(query);
-    if (tempId) {
-      element.id = "";
-    }
-    return elements;
-  }
-}
-
-/**
  * Calculates indentation when the element starts after a newline.
  * The value will be empty if no newline or any non-whitespace exists after one.
  * @param {Element} element

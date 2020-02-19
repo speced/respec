@@ -10,13 +10,7 @@
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
-import {
-  addId,
-  children,
-  getIntlData,
-  parents,
-  renameElement,
-} from "./utils.js";
+import { addId, getIntlData, parents, renameElement } from "./utils.js";
 import { hyperHTML } from "./import-maps.js";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
@@ -123,10 +117,10 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
  * @param {Element} parent
  */
 function getSectionTree(parent, { tocIntroductory = false } = {}) {
-  const sectionElements = children(
-    parent,
-    tocIntroductory ? "section" : "section:not(.introductory)"
-  );
+  /** @type {NodeListOf<HTMLElement>} */
+  const sectionElements = tocIntroductory
+    ? parent.querySelectorAll(":scope > section")
+    : parent.querySelectorAll(":scope > section:not(.introductory)");
   /** @type {Section[]} */
   const sections = [];
 
