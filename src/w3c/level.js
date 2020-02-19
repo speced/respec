@@ -5,7 +5,7 @@
  * Levels should be integers >= 0.
  */
 
-import { getIntlData, showInlineWarning } from "./utils.js";
+import { getIntlData, showInlineWarning } from "../core/utils.js";
 export const name = "w3c/level";
 
 const localizationStrings = {
