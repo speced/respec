@@ -6,7 +6,7 @@
  */
 
 import { getIntlData, showInlineWarning } from "./utils.js";
-export const name = "core/level";
+export const name = "w3c/level";
 
 const localizationStrings = {
   en: {
