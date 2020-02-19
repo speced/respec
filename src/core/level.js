@@ -21,7 +21,7 @@ export function run(conf) {
 
   if (conf.hasOwnProperty("level")) {
     if (Number.isInteger(conf.level) && conf.level >= 0) {
-      h1Elem.append(`${l10n.level} ${conf.level}`));
+      h1Elem.append(` ${l10n.level} ${conf.level}`);
       document.title = `${document.title} ${l10n.level} ${conf.level}`;
       conf.shortName = `${conf.shortName}-${conf.level}`;
     } else {
