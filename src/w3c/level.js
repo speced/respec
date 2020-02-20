@@ -34,4 +34,5 @@ export function run(conf) {
   h1Elem.append(` ${l10n.level} ${level}`);
   document.title = `${document.title} ${l10n.level} ${level}`;
   conf.shortName = `${conf.shortName}-${level}`;
+  conf.level = level;
 }
