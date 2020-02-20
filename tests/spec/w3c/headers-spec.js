@@ -561,9 +561,10 @@ describe("W3C — Headers", () => {
     it("updates relevant locations with the level when level is the integer 0", async () => {
       const body = `
         <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
-      const ops = makeStandardOps({}, body);
-      const newProps = { level: 0, specStatus: "REC", shortName: "abc" };
-      Object.assign(ops.config, newProps);
+      const ops = makeStandardOps(
+        { level: 0, specStatus: "REC", shortName: "abc" },
+        body
+      );
 
       const doc = await makeRSDoc(ops);
 
@@ -585,9 +586,10 @@ describe("W3C — Headers", () => {
     it("updates relevant locations with the level when level is an integer greater than 0", async () => {
       const body = `
       <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
-      const ops = makeStandardOps({}, body);
-      const newProps = { level: 9870, specStatus: "REC", shortName: "xyz" };
-      Object.assign(ops.config, newProps);
+      const ops = makeStandardOps(
+        { level: 9870, specStatus: "REC", shortName: "xyz" },
+        body
+      );
 
       const doc = await makeRSDoc(ops);
 
@@ -610,10 +612,12 @@ describe("W3C — Headers", () => {
   describe("invalid level configs", () => {
     it("warns the user and does not add the level to the relevant places when level is a string that doesn't convert to an integer", async () => {
       const body = `
-        <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
-      const ops = makeStandardOps({}, body);
-      const newProps = { level: "a1", specStatus: "REC", shortName: "xxx" };
-      Object.assign(ops.config, newProps);
+      <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
+      const ops = makeStandardOps(
+        { level: "a1", specStatus: "REC", shortName: "xxx" },
+        body
+      );
+
       const doc = await makeRSDoc(ops);
 
       const h1Elem = doc.querySelector("h1#title");
@@ -634,9 +638,7 @@ describe("W3C — Headers", () => {
     });
 
     it("warns the user and does not add the level to the relevant places when level is negative integer", async () => {
-      const ops = makeStandardOps();
-      const newProps = { level: -2 };
-      Object.assign(ops.config, newProps);
+      const ops = makeStandardOps({ level: -2 });
       const doc = await makeRSDoc(ops);
 
       const h1Elem = doc.querySelector("h1#title");
@@ -645,9 +647,7 @@ describe("W3C — Headers", () => {
     });
 
     it("warns the user and does not add the level to the relevant places when level is null", async () => {
-      const ops = makeStandardOps();
-      const newProps = { level: null };
-      Object.assign(ops.config, newProps);
+      const ops = makeStandardOps({ level: null });
       const doc = await makeRSDoc(ops);
 
       const h1Elem = doc.querySelector("h1#title");
