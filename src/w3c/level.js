@@ -21,15 +21,16 @@ export function run(conf) {
 
   const h1Elem = document.querySelector("h1#title");
 
-  if (Number.isInteger(conf.level) && conf.level >= 0) {
-    h1Elem.append(` ${l10n.level} ${conf.level}`);
-    document.title = `${document.title} ${l10n.level} ${conf.level}`;
-    conf.shortName = `${conf.shortName}-${conf.level}`;
-  } else {
+  if (!Number.isInteger(conf.level) || conf.level < 0) {
     showInlineWarning(
       h1Elem,
       `The \`level\` configuration option must be a number greater or equal to 0. It is currently set to \`${conf.level}\``,
       "Invalid level config."
     );
+    return;
   }
+
+  h1Elem.append(` ${l10n.level} ${conf.level}`);
+  document.title = `${document.title} ${l10n.level} ${conf.level}`;
+  conf.shortName = `${conf.shortName}-${conf.level}`;
 }
