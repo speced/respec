@@ -624,12 +624,11 @@ describe("W3C — Headers", () => {
       expect(h1Elem.classList).toContain("respec-offending-element");
       expect(h1Elem.textContent).toBe("Spec Marked Up");
 
-      const linkToThisVersionRegex = /REC-xxx-[0-9]{8}/;
       const terms = doc.querySelectorAll("dt");
       expect(terms[0].textContent).toBe("This version:");
       expect(terms[0].nextElementSibling.localName).toBe("dd");
       expect(terms[0].nextElementSibling.textContent).toMatch(
-        linkToThisVersionRegex
+        /REC-xxx-[0-9]{8}/
       );
       expect(terms[1].textContent).toBe("Latest published version:");
       expect(terms[1].nextElementSibling.localName).toBe("dd");
