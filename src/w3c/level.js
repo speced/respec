@@ -23,7 +23,7 @@ export function run(conf) {
 
   const level = parseInt(conf.level);
   if (!Number.isInteger(level) || level < 0) {
-    showInlineWarning(
+    showInlineError(
       h1Elem,
       `The \`level\` configuration option must be a number greater or equal to 0. It is currently set to \`${level}\``,
       "Invalid level config."
