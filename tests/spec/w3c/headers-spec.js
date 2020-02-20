@@ -608,11 +608,11 @@ describe("W3C — Headers", () => {
   });
 
   describe("invalid level configs", () => {
-    it("warns the user and does not add the level to the relevant places when level is a string", async () => {
+    it("warns the user and does not add the level to the relevant places when level is a string that doesn't convert to an integer", async () => {
       const body = `
         <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
       const ops = makeStandardOps({}, body);
-      const newProps = { level: "1", specStatus: "REC", shortName: "xxx" };
+      const newProps = { level: "a1", specStatus: "REC", shortName: "xxx" };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
 
@@ -633,18 +633,7 @@ describe("W3C — Headers", () => {
       expect(terms[1].nextElementSibling.textContent).toContain("TR/xxx/");
     });
 
-    it("warns the user and does not add the level to the relevant places when level is a decimal", async () => {
-      const ops = makeStandardOps();
-      const newProps = { level: Math.random() };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-
-      const h1Elem = doc.querySelector("h1#title");
-      expect(h1Elem.classList).toContain("respec-offending-element");
-      expect(h1Elem.textContent).toBe("No Title");
-    });
-
-    it("warns the user and does not add the level to the relevant places when level is negative", async () => {
+    it("warns the user and does not add the level to the relevant places when level is negative integer", async () => {
       const ops = makeStandardOps();
       const newProps = { level: -2 };
       Object.assign(ops.config, newProps);
