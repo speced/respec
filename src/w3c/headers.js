@@ -265,10 +265,6 @@ export function run(conf) {
       pub("warn", msg);
     }
   }
-  conf.title = document.title || "No Title";
-  if (document.title && conf.isPreview && conf.prNumber) {
-    document.title = `Preview of PR #${conf.prNumber}: ${document.title}`;
-  }
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
     conf,
@@ -415,15 +411,6 @@ export function run(conf) {
       pub("error", "All alternate formats must have a uri and a label.");
     }
   });
-  conf.multipleAlternates =
-    conf.alternateFormats && conf.alternateFormats.length > 1;
-  conf.alternatesHTML =
-    conf.alternateFormats &&
-    htmlJoinAnd(conf.alternateFormats, alt => {
-      const lang = alt.hasOwnProperty("lang") && alt.lang ? alt.lang : null;
-      const type = alt.hasOwnProperty("type") && alt.type ? alt.type : null;
-      return hyperHTML`<a rel='alternate' href='${alt.uri}' hreflang='${lang}' type='${type}'>${alt.label}</a>`;
-    });
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
   conf.longStatus = status2long[conf.specStatus];
@@ -472,8 +459,24 @@ export function run(conf) {
   }
   // configuration done - yay!
 
+  const options = {
+    get multipleAlternates() {
+      return conf.alternateFormats && conf.alternateFormats.length > 1;
+    },
+    get alternatesHTML() {
+      return (
+        conf.alternateFormats &&
+        htmlJoinAnd(conf.alternateFormats, alt => {
+          const lang = alt.hasOwnProperty("lang") && alt.lang ? alt.lang : null;
+          const type = alt.hasOwnProperty("type") && alt.type ? alt.type : null;
+          return hyperHTML`<a rel='alternate' href='${alt.uri}' hreflang='${lang}' type='${type}'>${alt.label}</a>`;
+        })
+      );
+    },
+  };
+
   // insert into document
-  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf);
+  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf, options);
   document.body.prepend(header);
   document.body.classList.add("h-entry");
 

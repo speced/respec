@@ -6,7 +6,6 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
-import { children } from "../../../src/core/utils.js";
 
 describe("Core - Structure", () => {
   const body = `
@@ -137,10 +136,12 @@ describe("Core - Structure", () => {
     const doc = await makeRSDoc(ops);
     const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
-    expect(children(toc, "ol > li").length).toBe(7);
+    expect(toc.querySelectorAll(":scope > ol > li").length).toBe(7);
     expect(toc.querySelectorAll("li").length).toBe(19);
     expect(toc.querySelector("ol > li").textContent).toBe("Abstract");
-    expect(children(toc, "ol > li a[href='#intro']").length).toBe(1);
+    expect(
+      toc.querySelectorAll(":scope > ol > li a[href='#intro']").length
+    ).toBe(1);
   });
 
   it("should limit ToC depth with maxTocLevel", async () => {

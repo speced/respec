@@ -1,3 +1,18 @@
+/**
+ * The w3c-common profile is DEPRECATED.
+ *
+ * The difference between w3c-common and the w3c profile
+ * is that this profile includes jQuery to support legacy
+ * specs.
+ *
+ * However, you are strongly discouraged from using
+ * jQuery. Please use vanilla JS/DOM instead:
+ *
+ * http://youmightnotneedjquery.com
+ *
+ * If you need help, reach out to the ReSpec maintainers.
+ */
+
 "use strict";
 // In case everything else fails, we want the error
 window.addEventListener("error", ev => {
@@ -19,6 +34,8 @@ const modules = [
   import("../src/core/data-include.js"),
   import("../src/core/markdown.js"),
   import("../src/core/reindent.js"),
+  import("../src/core/title.js"),
+  import("../src/w3c/level.js"),
   import("../src/w3c/headers.js"),
   import("../src/w3c/abstract.js"),
   import("../src/core/data-transform.js"),

@@ -486,6 +486,12 @@ export async function fetchAndCache(input, maxAge = 86400000) {
 
 // --- DOM HELPERS -------------------------------
 
+export function htmlJoinComma(array, mapper = item => item) {
+  const items = array.map(mapper);
+  const joined = items.slice(0, -1).map(item => hyperHTML`${item}, `);
+  return hyperHTML`${joined}${items[items.length - 1]}`;
+}
+
 /**
  * Separates each item with proper commas and "and".
  * @param {string[]} array
@@ -500,8 +506,8 @@ export function htmlJoinAnd(array, mapper = item => item) {
     case 2: // x and y
       return hyperHTML`${items[0]} and ${items[1]}`;
     default: {
-      const joinedItems = items.slice(0, -1).map(item => hyperHTML`${item}, `);
-      return hyperHTML`${joinedItems}and ${items[items.length - 1]}`;
+      const joined = htmlJoinComma(items.slice(0, -1));
+      return hyperHTML`${joined}, and ${items[items.length - 1]}`;
     }
   }
 }
@@ -759,34 +765,6 @@ export function parents(element, selector) {
     parent = closest.parentElement;
   }
   return list;
-}
-
-/**
- * Applies the selector for direct descendants.
- * This is a helper function for browsers without :scope support.
- * Note that this doesn't support comma separated selectors.
- * @param {Element} element
- * @param {string} selector
- * @returns {NodeListOf<HTMLElement>}
- */
-export function children(element, selector) {
-  try {
-    return element.querySelectorAll(`:scope > ${selector}`);
-  } catch {
-    let tempId = "";
-    // We give a temporary id, to overcome lack of ":scope" support in Edge.
-    if (!element.id) {
-      tempId = `temp-${String(Math.random()).substr(2)}`;
-      element.id = tempId;
-    }
-    const query = `#${element.id} > ${selector}`;
-    /** @type {NodeListOf<HTMLElement>} */
-    const elements = element.parentElement.querySelectorAll(query);
-    if (tempId) {
-      element.id = "";
-    }
-    return elements;
-  }
 }
 
 /**

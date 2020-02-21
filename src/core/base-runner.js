@@ -29,7 +29,10 @@ function toRunnable(plug) {
         performance.mark(`${name}-start`);
       }
       try {
-        if (plug.run.length <= 1) {
+        if (plug.Plugin) {
+          await new plug.Plugin(config).run();
+          resolve();
+        } else if (plug.run.length <= 1) {
           await plug.run(config);
           resolve();
         } else {
@@ -51,13 +54,17 @@ function toRunnable(plug) {
   };
 }
 
+function isRunnableModule(plug) {
+  return plug && (plug.run || plug.Plugin);
+}
+
 export async function runAll(plugs) {
   pub("start-all", respecConfig);
   if (canMeasure) {
     performance.mark(`${name}-start`);
   }
   await preProcessDone;
-  const runnables = plugs.filter(plug => plug && plug.run).map(toRunnable);
+  const runnables = plugs.filter(isRunnableModule).map(toRunnable);
   for (const task of runnables) {
     try {
       await task(respecConfig);

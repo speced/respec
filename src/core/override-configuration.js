@@ -13,7 +13,7 @@ function overrideConfig(config) {
   // For legacy reasons, we still support both ";" and "&"
   const searchQuery = document.location.search.replace(/;/g, "&");
   const params = new URLSearchParams(searchQuery);
-  const overrideProps = Array.from(params)
+  const overrideEntries = Array.from(params)
     .filter(([key, value]) => !!key && !!value)
     .map(([codedKey, codedValue]) => {
       const key = decodeURIComponent(codedKey);
@@ -24,12 +24,9 @@ function overrideConfig(config) {
       } catch {
         value = decodedValue;
       }
-      return { key, value };
-    })
-    .reduce((collector, { key, value }) => {
-      collector[key] = value;
-      return collector;
-    }, {});
+      return [key, value];
+    });
+  const overrideProps = Object.fromEntries(overrideEntries);
   Object.assign(config, overrideProps);
   pub("amend-user-config", overrideProps);
 }
