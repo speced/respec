@@ -9,7 +9,7 @@
  * Every custom element must dispatch a CustomEvent 'done' that tells the
  * element has finished its processing, with or without errors.
  *
- * @typedef {{ name: string, element: Function }} CustomElementDfn
+ * @typedef {{ name: string, element: CustomElementConstructor }} CustomElementDfn
  */
 
 import * as changelog from "./rs-changelog.js";
