@@ -108,7 +108,7 @@ export async function run() {
         addId(example, `example-${number}`, title); // title gets used
       } else {
         // use the number as the title... so, e.g., "example-5"
-        addId(example, `example`, String(number));
+        addId(example, "example", String(number));
       }
       const { id } = example;
       const selfLink = div.querySelector("a.self-link");
