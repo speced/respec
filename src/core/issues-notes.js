@@ -138,7 +138,7 @@ function handleIssues(ins, ghIssues, conf) {
         if (report.number !== undefined) {
           text += ` ${report.number}`;
         }
-        if ("number" in inno.dataset) {
+        if (inno.dataset.hasOwnProperty("number")) {
           const link = linkToIssueTracker(dataNum, conf, { isFeatureAtRisk });
           if (link) {
             title.before(link);
