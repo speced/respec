@@ -99,26 +99,19 @@ const l10n = getIntlData(localizationStrings);
  * @param {*} conf
  */
 function handleIssues(ins, ghIssues, conf) {
-  const hasDataNum = !!document.querySelector(".issue[data-number]");
-  let issueNum = 0;
+  const getIssueNumber = createIssueNumberGetter();
   const issueList = document.createElement("ul");
   ins.forEach(inno => {
     const { type, displayType, isFeatureAtRisk } = getIssueType(inno);
     const isIssue = type === "issue";
     const isInline = inno.localName === "span";
     const { number: dataNum } = inno.dataset;
-    /** @type {Partial<Report>} */
     const report = {
       type,
       inline: isInline,
       title: inno.title,
+      number: getIssueNumber(inno),
     };
-    if (isIssue && !isInline && !hasDataNum) {
-      issueNum++;
-      report.number = issueNum;
-    } else if (dataNum) {
-      report.number = Number(dataNum);
-    }
     // wrap
     if (!isInline) {
       const cssClass = isFeatureAtRisk ? `${type} atrisk` : type;
@@ -142,10 +135,10 @@ function handleIssues(ins, ghIssues, conf) {
       /** @type {GitHubIssue} */
       let ghIssue;
       if (isIssue) {
-        if (!hasDataNum) {
-          text += ` ${issueNum}`;
-        } else if (dataNum) {
-          text += ` ${dataNum}`;
+        if (report.number !== undefined) {
+          text += ` ${report.number}`;
+        }
+        if (inno.dataset.hasOwnProperty("number")) {
           const link = linkToIssueTracker(dataNum, conf, { isFeatureAtRisk });
           if (link) {
             title.before(link);
@@ -192,6 +185,23 @@ function handleIssues(ins, ghIssues, conf) {
     pub(report.type, report);
   });
   makeIssueSectionSummary(issueList);
+}
+
+function createIssueNumberGetter() {
+  if (document.querySelector(".issue[data-number]")) {
+    return element => {
+      if (element.dataset.number) {
+        return Number(element.dataset.number);
+      }
+    };
+  }
+
+  let issueNumber = 0;
+  return element => {
+    if (element.classList.contains("issue") && element.localName !== "span") {
+      return ++issueNumber;
+    }
+  };
 }
 
 /**
@@ -242,7 +252,7 @@ function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
 
 /**
  * @param {string} l10nIssue
- * @param {Partial<Report>} report
+ * @param {Report} report
  */
 function createIssueSummaryEntry(l10nIssue, report, id) {
   const issueNumberText = `${l10nIssue} ${report.number}`;
