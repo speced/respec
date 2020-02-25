@@ -2,8 +2,6 @@
 // Module core/structure
 //  Handles producing the ToC and numbering sections across the document.
 
-// LIMITATION:
-//  At this point we don't support having more than 26 appendices.
 // CONFIGURATION:
 //  - noTOC: if set to true, no TOC is generated and sections are not numbered
 //  - tocIntroductory: if set to true, the introductory material is listed in the TOC
@@ -16,7 +14,6 @@ import { hyperHTML } from "./import-maps.js";
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
 const headerTags = ["h1", ...lowerHeaderTags];
 
-const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
 
 const localizationStrings = {
@@ -74,7 +71,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
     let secno = section.isIntro
       ? ""
       : appendixMode
-      ? alphabet.charAt(index - lastNonAppendix)
+      ? appendixNumber(index - lastNonAppendix)
       : prefix + index;
     const level = Math.ceil(secno.length / 2);
     if (level === 1) {
@@ -244,4 +241,13 @@ function createTableOfContents(ol) {
 
   const link = hyperHTML`<p role='navigation' id='back-to-top'><a href='#title'><abbr title='Back to Top'>&uarr;</abbr></a></p>`;
   document.body.append(link);
+}
+
+function appendixNumber(index) {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lastChar = alphabet.charAt(index % alphabet.length);
+  if (index < alphabet.length) {
+    return lastChar;
+  }
+  return appendixNumber(Math.floor(index / alphabet.length)) + lastChar;
 }
