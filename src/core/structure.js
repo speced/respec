@@ -208,11 +208,7 @@ function renameSectionHeaders() {
       renameElement(header, h);
     }
     if (depth > 6) {
-      if (header.classList) {
-        header.classList.add(`h${depth}`);
-      } else {
-        header.className = `h${depth}`;
-      }
+      header.classList.add(`h${depth}`);
     }
   });
 }
