@@ -22,6 +22,18 @@ function hashString(text) {
   return String(hash);
 }
 
+const localizationStrings = {
+  en: {
+    x_and_y: " and ",
+    x_y_and_z: ", and ",
+  },
+  de: {
+    x_and_y: " und ",
+    x_y_and_z: " und ",
+  },
+};
+const l10n = getIntlData(localizationStrings);
+
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   timeZone: "UTC",
   year: "numeric",
@@ -263,12 +275,13 @@ export function joinAnd(array = [], mapper = item => item, lang = docLang) {
     case 1: // "x"
       return items.toString();
     case 2: // x and y
-      return items.join(" and ");
+      return items.join(l10n.x_and_y);
     default: {
       // x, y, and z
       const str = items.join(", ");
       const lastComma = str.lastIndexOf(",");
-      return `${str.substr(0, lastComma + 1)} and ${str.slice(lastComma + 2)}`;
+      const and = l10n.x_y_and_z;
+      return `${str.substr(0, lastComma)}${and}${str.slice(lastComma + 2)}`;
     }
   }
 }
@@ -504,10 +517,10 @@ export function htmlJoinAnd(array, mapper = item => item) {
     case 1: // "x"
       return items[0];
     case 2: // x and y
-      return hyperHTML`${items[0]} and ${items[1]}`;
+      return hyperHTML`${items[0]}${l10n.x_and_y}${items[1]}`;
     default: {
       const joined = htmlJoinComma(items.slice(0, -1));
-      return hyperHTML`${joined}, and ${items[items.length - 1]}`;
+      return hyperHTML`${joined}${l10n.x_y_and_z}${items[items.length - 1]}`;
     }
   }
 }
