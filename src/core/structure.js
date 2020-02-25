@@ -76,7 +76,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
       : appendixMode
       ? alphabet.charAt(index - lastNonAppendix)
       : prefix + index;
-    const level = Math.ceil(secno.length / 2);
+    const level = parents(section.element, "section").length + 1;
     if (level === 1) {
       secno += ".";
       // if this is a top level item, insert
@@ -202,10 +202,17 @@ function renameSectionHeaders() {
     return;
   }
   headers.forEach(header => {
-    const depth = Math.min(parents(header, "section").length + 1, 6);
-    const h = `h${depth}`;
+    const depth = parents(header, "section").length + 1;
+    const h = `h${Math.min(depth, 6)}`;
     if (header.localName !== h) {
       renameElement(header, h);
+    }
+    if (depth > 6) {
+      if (header.classList) {
+        header.classList.add(`h${depth}`);
+      } else {
+        header.className = `h${depth}`;
+      }
     }
   });
 }
