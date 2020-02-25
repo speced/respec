@@ -4,5 +4,5 @@ These source files are transpiled by Babel.
 Run:
 
 ```Bash
-npm build:babel
+npm run babel:build
 ```
