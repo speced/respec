@@ -32,7 +32,7 @@ const localizationStrings = {
     normativity:
       "Neben den explizit als nicht-normativ gekennzeichneten Abschnitten " +
       "sind auch alle Diagramme, Beispiele und Hinweise in diesem Dokument " +
-      "nicht normativ. Alle andere Angaben sind normativ.",
+      "nicht normativ. Alle anderen Angaben sind normativ.",
     keywordInterpretation(keywords, plural) {
       return html`
         <p>

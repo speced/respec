@@ -564,9 +564,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 
   if (!id) {
     id = "generatedID";
-  } else if (pfx === "example") {
-    id = txt;
-  } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
+  } else if (/\.$/.test(id) || !/^[a-z]/i.test(pfx || id)) {
     id = `x${id}`; // trailing . doesn't play well with jQuery
   }
   if (pfx) {
