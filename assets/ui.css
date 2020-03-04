@@ -216,6 +216,11 @@
   display: inline-block;
 }
 
+.respec-error-list li > p:first-child,
+.respec-warning-list li > p:first-child {
+  display: inline;
+}
+
 #respec-overlay {
   display: block;
   position: fixed;
