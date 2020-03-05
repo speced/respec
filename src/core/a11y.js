@@ -63,7 +63,9 @@ async function getViolations(opts) {
   try {
     axe = await importAxe();
   } catch (error) {
-    pub("error", "Failed to load a11y linter.");
+    const msg =
+      "Failed to load a11y linter. See developer console for details.";
+    pub("error", msg);
     console.error(error);
     return [];
   }
