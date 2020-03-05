@@ -1,3 +1,4 @@
+import { pub } from "./pubsubhub.js";
 import { showInlineWarning } from "./utils.js";
 
 export const name = "core/a11y";
@@ -56,11 +57,20 @@ async function getViolations() {
     reporter: "v1", // v1 includes a `failureSummary`
   };
 
+  let axe;
   try {
-    const axe = await importAxe();
+    axe = await importAxe();
+  } catch (error) {
+    pub("error", "Failed to load a11y linter.");
+    console.error(error);
+    return [];
+  }
+
+  try {
     const result = await axe.run(document, options);
     return result.violations;
   } catch (error) {
+    pub("error", "Error while looking for a11y issues.");
     console.error(error);
     return [];
   }
