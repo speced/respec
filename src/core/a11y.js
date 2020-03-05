@@ -9,8 +9,11 @@ const DISABLED_RULES = [
   "color-contrast", // too slow 🐢
 ];
 
-export async function run(_conf) {
-  // TODO: run conditionally based on conf
+export async function run(conf) {
+  if (!conf.a11y) {
+    return;
+  }
+
   const violations = await getViolations();
   for (const violation of violations) {
     /**
