@@ -15,7 +15,7 @@ export async function run(conf) {
     return;
   }
 
-  const violations = await getViolations();
+  const violations = await getViolations(conf.a11y);
   for (const violation of violations) {
     /**
      * We're grouping by failureSummary as it contains hints to fix the issue.
@@ -43,16 +43,18 @@ export async function run(conf) {
 }
 
 /**
+ * @param {object} opts Options as described at https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#options-parameter
  * @typedef {{ failureSummary: string, element: HTMLElement }} ViolationNode
  * @typedef {{ id: string, help: string, helpUrl: string, description: string, nodes: ViolationNode[] }} Violation
  * @returns {Promise<Violation[]>}
  */
-async function getViolations() {
+async function getViolations(opts) {
   const options = {
-    elementRef: true,
     rules: Object.fromEntries(
       DISABLED_RULES.map(id => [id, { enabled: false }])
     ),
+    ...opts,
+    elementRef: true,
     resultTypes: ["violations"],
     reporter: "v1", // v1 includes a `failureSummary`
   };
