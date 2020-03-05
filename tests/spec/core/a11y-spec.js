@@ -6,7 +6,7 @@ describe("Core — a11y", () => {
   afterAll(flushIframes);
 
   const body = `
-    <section id="test">
+    <section>
       <h2>Test</h2>
       <img
         id="image-alt-1"
@@ -23,27 +23,21 @@ describe("Core — a11y", () => {
   it("does nothing if not configured", async () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const offendingElements = doc.querySelectorAll(
-      "#test .respec-offending-element"
-    );
+    const offendingElements = doc.querySelectorAll(".respec-offending-element");
     expect(offendingElements.length).toBe(0);
   });
 
   it("does nothing if disabled", async () => {
     const ops = makeStandardOps({ a11y: false }, body);
     const doc = await makeRSDoc(ops);
-    const offendingElements = doc.querySelectorAll(
-      "#test .respec-offending-element"
-    );
+    const offendingElements = doc.querySelectorAll(".respec-offending-element");
     expect(offendingElements.length).toBe(0);
   });
 
   it("runs default tests if enabled", async () => {
     const ops = makeStandardOps({ a11y: true }, body);
     const doc = await makeRSDoc(ops);
-    const offendingElements = doc.querySelectorAll(
-      "#test .respec-offending-element"
-    );
+    const offendingElements = doc.querySelectorAll(".respec-offending-element");
 
     expect(offendingElements.length).toBe(1);
     expect(offendingElements[0].id).toBe("image-alt-1");
