@@ -1,3 +1,5 @@
+// @ts-check
+
 import { pub } from "./pubsubhub.js";
 import { showInlineWarning } from "./utils.js";
 

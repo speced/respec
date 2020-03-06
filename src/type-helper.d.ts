@@ -39,6 +39,9 @@ interface Window {
   };
   $: JQueryStatic;
   jQuery: JQueryStatic;
+  axe?: {
+    run(context: HTMLElement, options: any): Promise<any>;
+  };
 }
 
 interface Document {
