@@ -1,4 +1,8 @@
 // @ts-check
+/**
+ * Module: core/a11y
+ * Lints for accessibility issues using axe-core package.
+ */
 
 import { pub } from "./pubsubhub.js";
 import { showInlineWarning } from "./utils.js";
