@@ -81,13 +81,13 @@ async function getViolations(opts) {
 }
 
 function importAxe() {
+  const script = document.createElement("script");
+  script.classList.add("remove");
+  script.src = "https://unpkg.com/axe-core@3/axe.min.js";
+  document.head.appendChild(script);
   return new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.classList.add("remove");
-    script.src = "https://unpkg.com/axe-core@3/axe.min.js";
     script.onload = () => resolve(window.axe);
     script.onerror = reject;
-    document.head.appendChild(script);
   });
 }
 
