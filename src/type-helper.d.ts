@@ -15,6 +15,15 @@ declare module "text!*" {
   export default value;
 }
 
+// See: core/a11y
+interface AxeViolation {
+  id: string;
+  help: string;
+  helpUrl: string;
+  description: string;
+  nodes: { failureSummary: string; element: HTMLElement }[];
+}
+
 declare var respecConfig: any;
 interface Window {
   respecVersion: string;
@@ -40,7 +49,7 @@ interface Window {
   $: JQueryStatic;
   jQuery: JQueryStatic;
   axe?: {
-    run(context: HTMLElement, options: any): Promise<any>;
+    run(context: Node, options: any): Promise<{ violations: AxeViolation[] }>;
   };
 }
 

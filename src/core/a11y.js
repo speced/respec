@@ -50,9 +50,6 @@ export async function run(conf) {
 
 /**
  * @param {object} opts Options as described at https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#options-parameter
- * @typedef {{ failureSummary: string, element: HTMLElement }} ViolationNode
- * @typedef {{ id: string, help: string, helpUrl: string, description: string, nodes: ViolationNode[] }} Violation
- * @returns {Promise<Violation[]>}
  */
 async function getViolations(opts) {
   const options = {
@@ -86,6 +83,7 @@ async function getViolations(opts) {
   }
 }
 
+/** @returns {Promise<typeof window.axe>} */
 function importAxe() {
   const script = document.createElement("script");
   script.classList.add("remove");
