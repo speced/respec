@@ -10,10 +10,10 @@ import { showInlineWarning } from "./utils.js";
 export const name = "core/a11y";
 
 const DISABLED_RULES = [
+  "color-contrast", // too slow 🐢
   "landmark-one-main", // need to add a <main>, else it marks entire page as errored
   "landmark-unique",
   "region",
-  "color-contrast", // too slow 🐢
 ];
 
 export async function run(conf) {
