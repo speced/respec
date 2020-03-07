@@ -79,6 +79,7 @@ const modules = [
   import("../src/core/custom-elements/index.js"),
   /* Linter must be the last thing to run */
   import("../src/core/linter.js"),
+  import("../src/core/a11y.js"),
 ];
 
 async function domReady() {

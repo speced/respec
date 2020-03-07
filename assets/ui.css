@@ -221,6 +221,12 @@
   display: inline;
 }
 
+.respec-warning-list > li li,
+.respec-error-list > li li {
+  margin: 0;
+  list-style: disc;
+}
+
 #respec-overlay {
   display: block;
   position: fixed;
