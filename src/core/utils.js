@@ -128,8 +128,10 @@ export function removeReSpec(doc) {
  * @param {HTMLElement|HTMLElement[]} elems
  * @param {String} msg message to show in warning
  * @param {String=} title error message to add on each element
+ * @param {object} [options]
+ * @param {string} [options.details]
  */
-export function showInlineWarning(elems, msg, title) {
+export function showInlineWarning(elems, msg, title, { details } = {}) {
   if (!Array.isArray(elems)) elems = [elems];
   const links = elems
     .map((element, i) => {
@@ -137,7 +139,11 @@ export function showInlineWarning(elems, msg, title) {
       return generateMarkdownLink(element, i);
     })
     .join(", ");
-  pub("warn", `${msg} at: ${links}.`);
+  let message = `${msg} at: ${links}.`;
+  if (details) {
+    message += `\n\n<details>${details}</details>`;
+  }
+  pub("warn", message);
   console.warn(msg, elems);
 }
 
