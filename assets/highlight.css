@@ -44,7 +44,7 @@ hue-6-2: #c18401
 }
 
 .hljs-literal {
-  color: #0184bb;
+  color: #0b76c5;
 }
 
 .hljs-string,
@@ -57,7 +57,7 @@ hue-6-2: #c18401
 
 .hljs-built_in,
 .hljs-class .hljs-title {
-  color: #c18401;
+  color: #9a6a01;
 }
 
 .hljs-attr,
@@ -77,7 +77,7 @@ hue-6-2: #c18401
 .hljs-meta,
 .hljs-selector-id,
 .hljs-title {
-  color: #4078f2;
+  color: #336ae3;
 }
 
 .hljs-emphasis {
