@@ -57,4 +57,20 @@ describe("Core — a11y", () => {
     expect(offendingElements[0].localName).toBe("html");
     expect(offendingElements[1].id).toBe("image-alt-1");
   });
+
+  it("allows overriding rules option", async () => {
+    const a11yOptions = {
+      rules: {
+        "landmark-one-main": { enabled: true },
+        "image-alt": { enabled: false },
+      },
+    };
+    const ops = makeStandardOps({ a11y: a11yOptions }, body);
+    const doc = await makeRSDoc(ops);
+
+    const offendingElements = doc.querySelectorAll(".respec-offending-element");
+    expect(offendingElements.length).toBe(1);
+    expect(offendingElements[0].id).toContain("a11y-landmark-one-main");
+    expect(offendingElements[0].localName).toBe("html");
+  });
 });

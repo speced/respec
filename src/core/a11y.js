@@ -52,11 +52,13 @@ export async function run(conf) {
  * @param {object} opts Options as described at https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#options-parameter
  */
 async function getViolations(opts) {
+  const { rules, ...otherOptions } = opts === true ? {} : opts;
   const options = {
-    rules: Object.fromEntries(
-      DISABLED_RULES.map(id => [id, { enabled: false }])
-    ),
-    ...opts,
+    rules: {
+      ...Object.fromEntries(DISABLED_RULES.map(id => [id, { enabled: false }])),
+      ...rules,
+    },
+    ...otherOptions,
     elementRef: true,
     resultTypes: ["violations"],
     reporter: "v1", // v1 includes a `failureSummary`
