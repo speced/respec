@@ -21,7 +21,8 @@ export async function run(conf) {
     return;
   }
 
-  const violations = await getViolations(conf.a11y);
+  const options = conf.a11y === true ? {} : conf.a11y;
+  const violations = await getViolations(options);
   for (const violation of violations) {
     /**
      * We're grouping by failureSummary as it contains hints to fix the issue.
@@ -52,7 +53,7 @@ export async function run(conf) {
  * @param {object} opts Options as described at https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#options-parameter
  */
 async function getViolations(opts) {
-  const { rules, ...otherOptions } = opts === true ? {} : opts;
+  const { rules, ...otherOptions } = opts;
   const options = {
     rules: {
       ...Object.fromEntries(DISABLED_RULES.map(id => [id, { enabled: false }])),
