@@ -40,7 +40,8 @@ hue-6-2: #c18401
 .hljs-selector-tag,
 .hljs-deletion,
 .hljs-subst {
-  color: #e45649;
+  color: #ca4706;
+  font-weight: bold;
 }
 
 .hljs-literal {
