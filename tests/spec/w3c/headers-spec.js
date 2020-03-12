@@ -987,6 +987,46 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("otherLinks", () => {
+    it("renders otherLinks with value and href", async () => {
+      const otherLinks = [
+        {
+          class: "key-other-link",
+          key: "KEY",
+          data: [{ value: "VALUE", href: "HREF" }],
+        },
+      ];
+      const ops = makeStandardOps({ otherLinks });
+      const doc = await makeRSDoc(ops);
+
+      const dt = doc.querySelector(".head dt.key-other-link");
+      expect(dt.textContent).toBe("KEY:");
+      const dd = dt.nextElementSibling;
+      expect(dd.localName).toBe("dd");
+      expect(dd.querySelector("a").textContent).toBe("VALUE");
+      expect(dd.querySelector("a").getAttribute("href")).toBe("HREF");
+    });
+
+    it("renders otherLinks without href", async () => {
+      const otherLinks = [
+        {
+          class: "key-other-link",
+          key: "KEY",
+          data: [{ value: "VALUE" }],
+        },
+      ];
+      const ops = makeStandardOps({ otherLinks });
+      const doc = await makeRSDoc(ops);
+
+      const dt = doc.querySelector(".head dt.key-other-link");
+      expect(dt.textContent).toBe("KEY:");
+      const dd = dt.nextElementSibling;
+      expect(dd.localName).toBe("dd");
+      expect(dd.textContent.trim()).toBe("VALUE");
+      expect(dd.querySelector("a")).toBeNull();
+    });
+  });
+
   describe("testSuiteURI", () => {
     it("takes testSuiteURI into account", async () => {
       const ops = makeStandardOps();
