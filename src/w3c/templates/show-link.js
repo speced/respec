@@ -24,7 +24,7 @@ function showLinkData(data) {
         ? html`
             <a href="${data.href}">${data.value || data.href}</a>
           `
-        : ""}
+        : data.value}
     </dd>
   `;
 }
