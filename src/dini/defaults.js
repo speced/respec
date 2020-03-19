@@ -48,7 +48,6 @@ const diniDefaults = {
     "wpt-tests-exist": false,
   },
   logos: [],
-  pluralize: true,
   prependW3C: false,
   doJsonLd: false,
   license: "cc-by",

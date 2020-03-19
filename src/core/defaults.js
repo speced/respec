@@ -32,7 +32,7 @@ export const coreDefaults = {
     "check-charset": false,
     "privsec-section": false,
   },
-  pluralize: false,
+  pluralize: true,
   specStatus: "base",
   highlightVars: true,
   addSectionLinks: true,

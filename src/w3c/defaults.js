@@ -16,7 +16,6 @@ const w3cDefaults = {
     "privsec-section": true,
     "wpt-tests-exist": false,
   },
-  pluralize: true,
   doJsonLd: false,
   license: "w3c-software-doc",
   logos: [
