@@ -62,7 +62,6 @@ function computeProps(conf) {
 }
 
 export function run(conf) {
-  if (conf.specStatus === "unofficial") return;
   // assign the defaults
   const lint =
     conf.lint === false

@@ -31,7 +31,6 @@ const w3cDefaults = {
 };
 
 export function run(conf) {
-  if (conf.specStatus === "unofficial") return;
   // assign the defaults
   const lint =
     conf.lint === false
