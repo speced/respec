@@ -16,7 +16,6 @@ const w3cDefaults = {
     "privsec-section": true,
     "wpt-tests-exist": false,
   },
-  pluralize: true,
   doJsonLd: false,
   license: "w3c-software-doc",
   logos: [
@@ -32,7 +31,6 @@ const w3cDefaults = {
 };
 
 export function run(conf) {
-  if (conf.specStatus === "unofficial") return;
   // assign the defaults
   const lint =
     conf.lint === false

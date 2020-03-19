@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "25.4.1",
+  "version": "25.4.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -102,7 +102,7 @@
     "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "^2.1.1",
-    "snyk": "^1.294.1"
+    "snyk": "^1.297.1"
   },
   "prettier": {
     "trailingComma": "es5"

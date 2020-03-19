@@ -48,7 +48,6 @@ const diniDefaults = {
     "wpt-tests-exist": false,
   },
   logos: [],
-  pluralize: true,
   prependW3C: false,
   doJsonLd: false,
   license: "cc-by",
@@ -63,7 +62,6 @@ function computeProps(conf) {
 }
 
 export function run(conf) {
-  if (conf.specStatus === "unofficial") return;
   // assign the defaults
   const lint =
     conf.lint === false
