@@ -102,43 +102,41 @@ function getSpecSubTitleElem(conf) {
 }
 
 export default conf => {
-  return html`
-    <div class="head">
-      ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
-      ${getSpecSubTitleElem(conf)}
-      <h2>
-        ${conf.textStatus}
-        <time class="dt-published" datetime="${conf.dashDate}"
-          >${conf.publishHumanDate}</time
-        >
-      </h2>
-      <dl>
-        <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
-        ${showPeople(conf.editors)}
-        ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
-          ? html`
-              <dt>
-                ${conf.multipleFormerEditors
-                  ? l10n.former_editors
-                  : l10n.former_editor}
-              </dt>
-              ${showPeople(conf.formerEditors)}
-            `
-          : ""}
-        ${conf.authors
-          ? html`
-              <dt>
-                ${conf.multipleAuthors ? l10n.authors : l10n.author}
-              </dt>
-              ${showPeople(conf.authors)}
-            `
-          : ""}
-        ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
-      </dl>
-      ${renderCopyright(conf)}
-      <hr />
-    </div>
-  `;
+  return html`<div class="head">
+    ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
+    ${getSpecSubTitleElem(conf)}
+    <h2>
+      ${conf.textStatus}
+      <time class="dt-published" datetime="${conf.dashDate}"
+        >${conf.publishHumanDate}</time
+      >
+    </h2>
+    <dl>
+      <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
+      ${showPeople(conf.editors)}
+      ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
+        ? html`
+            <dt>
+              ${conf.multipleFormerEditors
+                ? l10n.former_editors
+                : l10n.former_editor}
+            </dt>
+            ${showPeople(conf.formerEditors)}
+          `
+        : ""}
+      ${conf.authors
+        ? html`
+            <dt>
+              ${conf.multipleAuthors ? l10n.authors : l10n.author}
+            </dt>
+            ${showPeople(conf.authors)}
+          `
+        : ""}
+      ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
+    </dl>
+    ${renderCopyright(conf)}
+    <hr />
+  </div>`;
 };
 
 /**
@@ -147,7 +145,7 @@ export default conf => {
  * @param {string=} cssClass
  */
 function linkLicense(text, url, cssClass) {
-  return html` <a rel="license" href="${url}" class="${cssClass}">${text}</a> `;
+  return html`<a rel="license" href="${url}" class="${cssClass}">${text}</a>`;
 }
 
 function renderCopyright(conf) {
@@ -165,14 +163,12 @@ function renderCopyright(conf) {
   }
   return conf.overrideCopyright
     ? [conf.overrideCopyright]
-    : html`
-        <p class="copyright">
-          Dieses Dokument ist lizensiert unter
-          ${linkLicense(
-            "Creative Commons Attribution 4.0 International Public License",
-            ccLicense,
-            "subfoot"
-          )}.
-        </p>
-      `;
+    : html`<p class="copyright">
+        Dieses Dokument ist lizensiert unter
+        ${linkLicense(
+          "Creative Commons Attribution 4.0 International Public License",
+          ccLicense,
+          "subfoot"
+        )}.
+      </p>`;
 }

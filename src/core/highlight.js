@@ -103,11 +103,9 @@ export async function run(conf) {
     .map(highlightElement);
   const ghCss = await ghCssPromise;
   document.head.appendChild(
-    html`
-      <style>
-        ${ghCss}
-      </style>
-    `
+    html`<style>
+      ${ghCss}
+    </style>`
   );
   await Promise.all(promisesToHighlight);
 }

@@ -16,15 +16,13 @@ const localizationStrings = {
       "diagrams, examples, and notes in this specification are non-normative. " +
       "Everything else in this specification is normative.",
     keywordInterpretation(keywords, plural) {
-      return html`
-        <p>
-          The key word${plural ? "s" : ""} ${keywords} in this document
-          ${plural ? "are" : "is"} to be interpreted as described in
-          <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
-          ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
-          when, and only when, they appear in all capitals, as shown here.
-        </p>
-      `;
+      return html`<p>
+        The key word${plural ? "s" : ""} ${keywords} in this document
+        ${plural ? "are" : "is"} to be interpreted as described in
+        <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+        ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
+        when, and only when, they appear in all capitals, as shown here.
+      </p>`;
     },
   },
   de: {
@@ -34,21 +32,18 @@ const localizationStrings = {
       "sind auch alle Diagramme, Beispiele und Hinweise in diesem Dokument " +
       "nicht normativ. Alle anderen Angaben sind normativ.",
     keywordInterpretation(keywords, plural) {
-      return html`
-        <p>
-          ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in
-          diesem Dokument ${plural ? "sind" : "ist"} gemäß
-          <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
-          ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
-          und unter Berücksichtigung von
-          <a
-            href="https://github.com/adfinis-sygroup/2119/blob/master/2119de.rst"
-            >2119de</a
-          >
-          zu interpretieren, wenn und nur wenn ${plural ? "sie" : "es"} wie hier
-          gezeigt durchgehend groß geschrieben wurde${plural ? "n" : ""}.
-        </p>
-      `;
+      return html`<p>
+        ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in
+        diesem Dokument ${plural ? "sind" : "ist"} gemäß
+        <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+        ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
+        und unter Berücksichtigung von
+        <a href="https://github.com/adfinis-sygroup/2119/blob/master/2119de.rst"
+          >2119de</a
+        >
+        zu interpretieren, wenn und nur wenn ${plural ? "sie" : "es"} wie hier
+        gezeigt durchgehend groß geschrieben wurde${plural ? "n" : ""}.
+      </p>`;
     },
   },
 };
@@ -68,7 +63,7 @@ function processConformance(conformance, conf) {
   // Put in the 2119 clause and reference
   const keywords = htmlJoinAnd(
     terms.sort(),
-    item => html` <em class="rfc2119">${item}</em> `
+    item => html`<em class="rfc2119">${item}</em>`
   );
   const plural = terms.length > 1;
   const content = html`
