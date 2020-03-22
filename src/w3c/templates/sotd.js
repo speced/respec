@@ -122,9 +122,7 @@ export default (conf, opts) => {
                   >.
                 </p>
                 ${conf.addPatentNote
-                  ? html`
-                      <p>${[conf.addPatentNote]}</p>
-                    `
+                  ? html` <p>${[conf.addPatentNote]}</p> `
                   : ""}
               `}
         `}
@@ -250,9 +248,7 @@ function renderDeliverer(conf) {
       ${!isNote && !isIGNote
         ? html`
             ${multipleWGs
-              ? html`
-                  W3C maintains ${wgPatentHTML}
-                `
+              ? html` W3C maintains ${wgPatentHTML} `
               : html`
                   W3C maintains a
                   <a href="${[wgPatentURI]}" rel="disclosure"

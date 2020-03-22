@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Fri Feb 26 2016 13:09:51 GMT+1100 (AEDT)
 "use strict";
-module.exports = function(config) {
+module.exports = function (config) {
   const options = {
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: "./",

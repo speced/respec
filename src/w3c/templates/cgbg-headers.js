@@ -17,11 +17,7 @@ export default (conf, options) => {
   return html`
     <div class="head">
       ${conf.logos.map(showLogo)} ${specTitleElem}
-      ${conf.subtitle
-        ? html`
-            <h2 id="subtitle">${conf.subtitle}</h2>
-          `
-        : ""}
+      ${conf.subtitle ? html` <h2 id="subtitle">${conf.subtitle}</h2> ` : ""}
       <h2>
         ${conf.longStatus}
         <time class="dt-published" datetime="${conf.dashDate}"
@@ -129,9 +125,7 @@ export default (conf, options) => {
                 ? `${conf.copyrightStart}-`
                 : ""}${conf.publishYear}
               ${conf.additionalCopyrightHolders
-                ? html`
-                    ${[conf.additionalCopyrightHolders]} &amp;
-                  `
+                ? html` ${[conf.additionalCopyrightHolders]} &amp; `
                 : ""}
               the Contributors to the ${specTitleElemClone.childNodes}
               Specification, published by the

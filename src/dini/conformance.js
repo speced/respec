@@ -68,10 +68,7 @@ function processConformance(conformance, conf) {
   // Put in the 2119 clause and reference
   const keywords = htmlJoinAnd(
     terms.sort(),
-    item =>
-      html`
-        <em class="rfc2119">${item}</em>
-      `
+    item => html` <em class="rfc2119">${item}</em> `
   );
   const plural = terms.length > 1;
   const content = html`

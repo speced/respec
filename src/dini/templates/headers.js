@@ -147,9 +147,7 @@ export default conf => {
  * @param {string=} cssClass
  */
 function linkLicense(text, url, cssClass) {
-  return html`
-    <a rel="license" href="${url}" class="${cssClass}">${text}</a>
-  `;
+  return html` <a rel="license" href="${url}" class="${cssClass}">${text}</a> `;
 }
 
 function renderCopyright(conf) {

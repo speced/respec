@@ -10,37 +10,27 @@ import { hyperHTML as html } from "../../core/import-maps.js";
 const localizationStrings = {
   en: {
     until(date) {
-      return html`
-        Until ${date}
-      `;
+      return html` Until ${date} `;
     },
   },
   es: {
     until(date) {
-      return html`
-        Hasta ${date}
-      `;
+      return html` Hasta ${date} `;
     },
   },
   ko: {
     until(date) {
-      return html`
-        ${date} 이전
-      `;
+      return html` ${date} 이전 `;
     },
   },
   ja: {
     until(date) {
-      return html`
-        ${date} 以前
-      `;
+      return html` ${date} 以前 `;
     },
   },
   de: {
     until(date) {
-      return html`
-        bis ${date}
-      `;
+      return html` bis ${date} `;
     },
   },
 };
@@ -72,11 +62,7 @@ export default (items = []) => {
         <a class="u-url url p-name fn" href="${p.url}">${personName}</a>
       `);
     } else {
-      contents.push(
-        html`
-          <span class="p-name fn">${personName}</span>
-        `
-      );
+      contents.push(html` <span class="p-name fn">${personName}</span> `);
     }
     if (p.orcid) {
       contents.push(
@@ -116,11 +102,7 @@ export default (items = []) => {
           `
         );
       } else {
-        contents.push(
-          html`
-            (${company})
-          `
-        );
+        contents.push(html` (${company}) `);
       }
     }
     if (p.note) contents.push(document.createTextNode(` (${p.note})`));
@@ -149,11 +131,7 @@ export default (items = []) => {
         );
       }
       timeElem.dateTime = toShortIsoDate(retiredDate);
-      contents.push(
-        html`
-          - ${l10n.until(timeElem)}
-        `
-      );
+      contents.push(html` - ${l10n.until(timeElem)} `);
     }
 
     // @ts-ignore: hyperhtml types only support Element but we use a DocumentFragment here
@@ -163,14 +141,10 @@ export default (items = []) => {
   }
 
   function getExtra(extra) {
-    const span = html`
-      <span class="${extra.class || null}"></span>
-    `;
+    const span = html` <span class="${extra.class || null}"></span> `;
     let textContainer = span;
     if (extra.href) {
-      textContainer = html`
-        <a href="${extra.href}"></a>
-      `;
+      textContainer = html` <a href="${extra.href}"></a> `;
       span.appendChild(textContainer);
     }
     textContainer.textContent = extra.name;

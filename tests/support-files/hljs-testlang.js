@@ -7,7 +7,7 @@ function testLang() {
   };
 }
 
-module.exports = function(hljs) {
+module.exports = function (hljs) {
   hljs.registerLanguage("funkytest", testLang);
 };
 
