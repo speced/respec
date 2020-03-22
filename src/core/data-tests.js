@@ -10,7 +10,7 @@
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
 import { getIntlData, showInlineWarning } from "./utils.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 const localizationStrings = {
   en: {
@@ -76,11 +76,12 @@ function toListItem(href) {
     emojiList.push(manualPerformEmoji);
   }
 
-  const testList = hyperHTML`
+  const testList = html`
     <li>
       <a href="${href}">
         ${testFileName}
-      </a> ${emojiList}
+      </a>
+      ${emojiList}
     </li>
   `;
   return testList;
@@ -148,12 +149,14 @@ function handleDuplicates(testURLs, elem) {
  */
 function toHTML(testURLs) {
   const uniqueList = [...new Set(testURLs)];
-  const details = hyperHTML`
+  const details = html`
     <details class="respec-tests-details removeOnSave">
       <summary>
         tests: ${uniqueList.length}
       </summary>
-      <ul>${uniqueList.map(toListItem)}</ul>
+      <ul>
+        ${uniqueList.map(toListItem)}
+      </ul>
     </details>
   `;
   return details;

@@ -3,7 +3,7 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
@@ -507,8 +507,8 @@ export async function fetchAndCache(input, maxAge = 86400000) {
 
 export function htmlJoinComma(array, mapper = item => item) {
   const items = array.map(mapper);
-  const joined = items.slice(0, -1).map(item => hyperHTML`${item}, `);
-  return hyperHTML`${joined}${items[items.length - 1]}`;
+  const joined = items.slice(0, -1).map(item => html`${item}, `);
+  return html`${joined}${items[items.length - 1]}`;
 }
 
 /**
@@ -523,10 +523,10 @@ export function htmlJoinAnd(array, mapper = item => item) {
     case 1: // "x"
       return items[0];
     case 2: // x and y
-      return hyperHTML`${items[0]}${l10n.x_and_y}${items[1]}`;
+      return html`${items[0]}${l10n.x_and_y}${items[1]}`;
     default: {
       const joined = htmlJoinComma(items.slice(0, -1));
-      return hyperHTML`${joined}${l10n.x_y_and_z}${items[items.length - 1]}`;
+      return html`${joined}${l10n.x_y_and_z}${items[items.length - 1]}`;
     }
   }
 }

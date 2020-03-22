@@ -4,7 +4,7 @@
 
 import { addId, getIntlData } from "./utils.js";
 import { biblio } from "./biblio.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/render-biblio";
@@ -75,10 +75,10 @@ export function run(conf) {
 
   const refSection =
     document.querySelector("section#references") ||
-    hyperHTML`<section id='references'></section>`;
+    html`<section id="references"></section>`;
 
   if (!document.querySelector("section#references > h2")) {
-    refSection.prepend(hyperHTML`<h2>${l10n.references}</h2>`);
+    refSection.prepend(html`<h2>${l10n.references}</h2>`);
   }
 
   refSection.classList.add("appendix");
@@ -87,12 +87,11 @@ export function run(conf) {
     const refs = type === "Normative" ? norms : informs;
     if (!refs.length) continue;
 
-    const sec = hyperHTML`
-      <section>
-        <h3>${
-          type === "Normative" ? l10n.norm_references : l10n.info_references
-        }</h3>
-      </section>`;
+    const sec = html` <section>
+      <h3>
+        ${type === "Normative" ? l10n.norm_references : l10n.info_references}
+      </h3>
+    </section>`;
     addId(sec);
 
     const { goodRefs, badRefs } = refs.map(toRefContent).reduce(
@@ -123,10 +122,9 @@ export function run(conf) {
         a.ref.toLocaleLowerCase().localeCompare(b.ref.toLocaleLowerCase())
       );
 
-    sec.appendChild(hyperHTML`
-      <dl class='bibliography'>
-        ${refsToShow.map(showRef)}
-      </dl>`);
+    sec.appendChild(html` <dl class="bibliography">
+      ${refsToShow.map(showRef)}
+    </dl>`);
     refSection.appendChild(sec);
 
     const aliases = getAliases(goodRefs);
@@ -172,7 +170,9 @@ function toRefContent(ref) {
 export function renderInlineCitation(ref) {
   const key = ref.replace(/^(!|\?)/, "");
   const href = `#bib-${key.toLowerCase()}`;
-  return hyperHTML`[<cite><a class="bibref" href="${href}" data-link-type="biblio">${key}</a></cite>]`;
+  return html`[<cite
+      ><a class="bibref" href="${href}" data-link-type="biblio">${key}</a></cite
+    >]`;
 }
 
 /**
@@ -181,12 +181,12 @@ export function renderInlineCitation(ref) {
 function showRef({ ref, refcontent }) {
   const refId = `bib-${ref.toLowerCase()}`;
   if (refcontent) {
-    return hyperHTML`
+    return html`
       <dt id="${refId}">[${ref}]</dt>
       <dd>${{ html: stringifyReference(refcontent) }}</dd>
     `;
   } else {
-    return hyperHTML`
+    return html`
       <dt id="${refId}">[${ref}]</dt>
       <dd><em class="respec-offending-element">Reference not found.</em></dd>
     `;
@@ -209,7 +209,7 @@ export function wireReference(rawRef, target = "_blank") {
   const ref = Object.assign({}, defaultsReference, rawRef);
   const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
   const status = REF_STATUSES.get(ref.status) || ref.status;
-  return hyperHTML.wire(ref)`
+  return html.wire(ref)`
     <cite>
       <a
         href="${ref.href}"

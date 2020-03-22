@@ -5,7 +5,7 @@
 // Best practices are marked up with span.practicelab.
 import { addId, getIntlData, makeSafeCopy } from "./utils.js";
 import { lang as defaultLang } from "../core/l10n.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/best-practices";
@@ -31,14 +31,13 @@ export function run() {
   const summaryItems = bpSummary ? document.createElement("ul") : null;
   [...bps].forEach((bp, num) => {
     const id = addId(bp, "bp");
-    const localizedBpName = hyperHTML`
-      <a class="marker self-link" href="${`#${id}`}"><bdi lang="${lang}">${
-      l10n.best_practice
-    }${num + 1}</bdi></a>`;
+    const localizedBpName = html` <a class="marker self-link" href="${`#${id}`}"
+      ><bdi lang="${lang}">${l10n.best_practice}${num + 1}</bdi></a
+    >`;
 
     // Make the summary items, if we have a summary
     if (summaryItems) {
-      const li = hyperHTML`
+      const li = html`
         <li>
           ${localizedBpName}: ${makeSafeCopy(bp)}
         </li>
@@ -55,12 +54,12 @@ export function run() {
 
     // Make the advisement box
     container.classList.add("advisement");
-    const title = hyperHTML`${localizedBpName.cloneNode(true)}: ${bp}`;
+    const title = html`${localizedBpName.cloneNode(true)}: ${bp}`;
     container.prepend(...title.childNodes);
   });
   if (bps.length) {
     if (bpSummary) {
-      bpSummary.appendChild(hyperHTML`<h2>Best Practices Summary</h2>`);
+      bpSummary.appendChild(html`<h2>Best Practices Summary</h2>`);
       bpSummary.appendChild(summaryItems);
     }
   } else if (bpSummary) {
