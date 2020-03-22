@@ -370,7 +370,7 @@ export function run(conf) {
   }
   if (conf.prevRecShortname && !conf.prevRecURI)
     conf.prevRecURI = `https://www.w3.org/TR/${conf.prevRecShortname}`;
-  const peopCheck = function(it) {
+  const peopCheck = function (it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
     if (it.orcid) {
       try {

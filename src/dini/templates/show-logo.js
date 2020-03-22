@@ -4,9 +4,7 @@ import { showInlineWarning } from "../../core/utils.js";
 
 export default obj => {
   /** @type {HTMLAnchorElement} */
-  const a = html`
-    <a href="${obj.url || ""}" class="logo"></a>
-  `;
+  const a = html` <a href="${obj.url || ""}" class="logo"></a> `;
   if (!obj.alt) {
     showInlineWarning(a, "Found spec logo without an `alt` attribute");
   }

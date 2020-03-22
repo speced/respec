@@ -246,9 +246,7 @@ export default (conf, options) => {
  * @param {string=} cssClass
  */
 function linkLicense(text, url, cssClass) {
-  return html`
-    <a rel="license" href="${url}" class="${cssClass}">${text}</a>
-  `;
+  return html` <a rel="license" href="${url}" class="${cssClass}">${text}</a> `;
 }
 
 function renderCopyright(conf) {
@@ -266,9 +264,7 @@ function renderCopyright(conf) {
   }
   return conf.isUnofficial
     ? conf.additionalCopyrightHolders
-      ? html`
-          <p class="copyright">${[conf.additionalCopyrightHolders]}</p>
-        `
+      ? html` <p class="copyright">${[conf.additionalCopyrightHolders]}</p> `
       : conf.overrideCopyright
       ? [conf.overrideCopyright]
       : html`
@@ -295,9 +291,7 @@ function renderOfficialCopyright(conf) {
       &copy;
       ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
       ${conf.additionalCopyrightHolders
-        ? html`
-            ${[conf.additionalCopyrightHolders]} &amp;
-          `
+        ? html` ${[conf.additionalCopyrightHolders]} &amp; `
         : ""}
       <a href="https://www.w3.org/"
         ><abbr title="World Wide Web Consortium">W3C</abbr></a

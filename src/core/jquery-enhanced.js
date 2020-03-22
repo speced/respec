@@ -15,10 +15,10 @@ window.$ = window.jQuery = $;
 // --- JQUERY EXTRAS -----------------------------------------------------------------------
 // Applies to any jQuery object containing elements, changes their name to the one give, and
 // return a jQuery object containing the new elements
-window.$.fn.renameElement = function(name) {
+window.$.fn.renameElement = function (name) {
   const arr = [];
   // @ts-ignore
-  this.each(function() {
+  this.each(function () {
     // @ts-ignore
     const elem = this;
     const newElem = renameElement(elem, name);
@@ -41,7 +41,7 @@ window.$.fn.renameElement = function(name) {
 //
 // This method will publish a warning if a title is used on a definition
 // instead of an @lt (as per specprod mailing list discussion).
-window.$.fn.getDfnTitles = function() {
+window.$.fn.getDfnTitles = function () {
   return getDfnTitles(this[0]);
 };
 
@@ -55,19 +55,19 @@ window.$.fn.getDfnTitles = function() {
 //  * {for: "int2", title: "int3.member"}
 //  * {for: "int3", title: "member"}
 //  * {for: "", title: "int3.member"}
-window.$.fn.linkTargets = function() {
+window.$.fn.linkTargets = function () {
   return getLinkTargets(this[0]);
 };
 
 // Applied to an element, sets an ID for it (and returns it), using a specific prefix
 // if provided, and a specific text if given.
-window.$.fn.makeID = function(pfx = "", txt = "", noLC = false) {
+window.$.fn.makeID = function (pfx = "", txt = "", noLC = false) {
   const elem = this[0];
   return addId(elem, pfx, txt, noLC);
 };
 
 // Returns all the descendant text nodes of an element. Note that those nodes aren't
 // returned as a jQuery array since I'm not sure if that would make too much sense.
-window.$.fn.allTextNodes = function(exclusions) {
+window.$.fn.allTextNodes = function (exclusions) {
   return getTextNodes(this[0], exclusions);
 };

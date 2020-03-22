@@ -62,9 +62,7 @@ function makeTitle(elem, num, report) {
   if (report.title) elem.removeAttribute("title");
   const number = num > 0 ? ` ${num}` : "";
   const title = report.title
-    ? html`
-        <span class="example-title">: ${report.title}</span>
-      `
+    ? html` <span class="example-title">: ${report.title}</span> `
     : "";
   return html`
     <div class="marker">
