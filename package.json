@@ -105,7 +105,8 @@
     "snyk": "^1.297.1"
   },
   "prettier": {
-    "trailingComma": "es5"
+    "trailingComma": "es5",
+    "arrowParens": "avoid"
   },
   "snyk": true,
   "collective": {
