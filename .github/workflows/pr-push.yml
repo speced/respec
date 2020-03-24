@@ -84,7 +84,6 @@ jobs:
           npm run builddeps
           npm run build:w3c & npm run build:geonovum
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        name: test:karma
         run: npm run test:karma || node tools/output-karma-errors.js
         env:
           BROWSERS: ${{ matrix.browser }}

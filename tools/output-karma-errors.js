@@ -9,10 +9,10 @@ const failures = karmaResultsData.browsers[0].results
     const location = locationLine
       .split("/base/tests/spec/")[1]
       .replace(/\)$/, "");
-    const title = [`${suite[0]} (${location})`, ...suite.slice(1), description]
+    const title = [suite[0], ...suite.slice(1), description]
       .map((s, i) => `${" ".repeat(i === 0 ? 0 : 4)}${s}`)
       .join("\n");
-    return `${title}\n${result.replace("Error: ", "")}`;
+    return `${title}\n${location}\n${result.replace("Error: ", "")}`;
   });
 
 failures.forEach(writeFailure);
