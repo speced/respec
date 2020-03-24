@@ -49,6 +49,7 @@ const modules = [
   import("../src/core/data-type.js"),
   import("../src/core/algorithms.js"),
   import("../src/core/anchor-expander.js"),
+  import("../src/core/cleanup.js"),
   import("../src/core/custom-elements/index.js"),
   /* Linter must be the last thing to run */
   import("../src/core/linter.js"),

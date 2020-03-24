@@ -40,7 +40,6 @@ function requestLookup(conf) {
     } else {
       // Let's go look it up in spec ref...
       const entry = await resolveRef(key);
-      cleanElement(elem);
       if (!entry) {
         showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
         return;
@@ -96,12 +95,6 @@ function requestLookup(conf) {
       }
     }
   };
-}
-
-function cleanElement(elem) {
-  ["data-cite", "data-cite-frag"]
-    .filter(attrName => elem.hasAttribute(attrName))
-    .forEach(attrName => elem.removeAttribute(attrName));
 }
 
 /**

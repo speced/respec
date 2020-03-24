@@ -305,12 +305,13 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("does not create external bibliography reference when when external spec id matches its Short Name", async () => {
+    const dataCite = ["dahut#test1", "DaHuT#test2"];
     const body = `
       <section>
         <h2>test</h2>
         <p>
-          <a data-cite="dahut#test1">a</a>
-          <a data-cite="DaHuT#test2">a</a>
+          <a data-cite="${dataCite[0]}">a</a>
+          <a data-cite="${dataCite[1]}">a</a>
         </p>
       </section>
     `;
@@ -320,9 +321,8 @@ describe("Core — data-cite attribute", () => {
     const a = [...doc.querySelectorAll("section p a")];
     expect(
       a.every(
-        anchor =>
-          anchor.href ===
-          `${doc.location.href}#${anchor.dataset.cite.split("#")[1]}`
+        (anchor, i) =>
+          anchor.href === `${doc.location.href}#${dataCite[i].split("#")[1]}`
       )
     ).toBeTruthy();
     expect(dahut).toBe(null);
