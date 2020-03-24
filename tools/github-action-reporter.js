@@ -1,0 +1,79 @@
+module.exports = {
+  "reporter:respec-github-action": ["type", GithubActionReporter],
+};
+
+function GithubActionReporter() {
+  const browserFailures = [];
+  this.onSpecComplete = (_browser, result) => {
+    if (!result.success) {
+      const failure = parseFailure(result);
+      browserFailures.push(failure);
+    }
+  };
+
+  this.onRunComplete = () => {
+    print("group", "Failed tests");
+    browserFailures.forEach(printFailure);
+    print("endgroup");
+  };
+}
+
+/**
+ * @typedef {{ test: string[], file: string, line: number, col: number, message: string }} Failure
+ * @returns {Failure}
+ */
+function parseFailure(result) {
+  // convert newlines into array and flatten
+  const log = result.log.flatMap(message => message.split("\n"));
+  const { suite, description } = result;
+  const message = log[0].replace("Error: ", "");
+  const location = log[2].split(":9876/base/", 2)[1].replace(/\)$/, "");
+  // eslint-disable-next-line prefer-const
+  let [file, line, col] = location.split(":");
+  line = parseInt(line, 10);
+  col = parseInt(col, 10);
+  const test = suite.concat(description);
+  return { test, file, line, col, message };
+}
+
+/** @param {Failure} failure */
+function printFailure(failure) {
+  const { file, line, col, test, message } = failure;
+  const msg = test
+    .map((s, i) => `${" ".repeat(i * 2)}${s}`)
+    .concat([message])
+    .join("\n");
+  print("error", msg, { file, line, col });
+}
+
+/**
+ * @param {string} command
+ * @param {string} message
+ * @param {Record<string, string>} options
+ */
+function print(command, message = "", options = {}) {
+  let optionsString = Object.entries(options)
+    .map(([k, v]) => `${k}=${escapeProperty(v)}`)
+    .join(",");
+  if (optionsString) optionsString = ` ${optionsString}`;
+  const msg = escapeData(message);
+  const output = `::${command}${optionsString}::${msg}`;
+  console.log(output);
+}
+
+/** @param {string} s */
+function escapeData(s) {
+  return s.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
+}
+
+/** @param {string} s */
+function escapeProperty(s) {
+  return s
+    .toString()
+    .replace(/\r/g, "%0D")
+    .replace(/\n/g, "%0A")
+    .replace(/]/g, "%5D")
+    .replace(/:/g, "%3A")
+    .replace(/,/g, "%2C")
+    .replace(/;/g, "%3B");
+}
