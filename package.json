@@ -53,6 +53,7 @@
     "karma-opera-launcher": "^1.0.0",
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "2.0.2",
+    "karma-structured-json-reporter": "^1.0.1",
     "karma-verbose-summary-reporter": "0.0.1",
     "marked": "^0.8.1",
     "mocha": "^7.1.1",

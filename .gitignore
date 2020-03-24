@@ -12,3 +12,4 @@ js/deps/builds
 !js/profile-w3c.js
 !js/shortcut.js
 .vscode/
+karma-result.json

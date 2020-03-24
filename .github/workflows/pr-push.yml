@@ -87,3 +87,4 @@ jobs:
         run: npm run test:karma
         env:
           BROWSERS: ${{ matrix.browser }}
+      - run: node tools/output-karma-errors.js

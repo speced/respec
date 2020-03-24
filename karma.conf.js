@@ -116,7 +116,11 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["mocha", "kjhtml"],
+    reporters: ["mocha", "kjhtml", "json-result"],
+    jsonResultReporter: {
+      outputFile: "karma-result.json",
+      isSynchronous: true,
+    },
 
     // web server port
     port: config.port || 9876,
