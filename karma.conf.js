@@ -116,7 +116,7 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["mocha", "kjhtml", "json-result"],
+    reporters: ["mocha", "kjhtml", "respec-github-action"],
     jsonResultReporter: {
       outputFile: "karma-result.json",
       isSynchronous: true,
