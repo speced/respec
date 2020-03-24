@@ -25,7 +25,7 @@ const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
 };
 
-export const API_URL = "https://localhost:8080/xref/";
+export const API_URL = "https://respec.org/xref/";
 
 if (
   !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
