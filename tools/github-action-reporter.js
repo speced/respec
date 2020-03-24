@@ -55,7 +55,7 @@ function printFailure(failure) {
 function print(command, message = "", options = {}) {
   let optionsString = new URLSearchParams(options)
     .toString()
-    .replace(/&/g, "%2C");
+    .replace(/&/g, ",");
   if (optionsString) optionsString = ` ${optionsString}`;
   const msg = escapeData(message);
   const output = `::${command}${optionsString}::${msg}`;
