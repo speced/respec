@@ -15,7 +15,9 @@ const failures = karmaResultsData.browsers[0].results
 
 failures.forEach(failure => {
   const { title, result, location } = failure;
-  const output = `${title} (${location}):\n ${result.replace("Error: ", "")}`;
+  const output = `${title} (${location}):\n ${result
+    .replace("Error: ", "")
+    .replace(/\n/g, "%0A")}`;
   process.stdout.write(`::error:: ${output}${EOL}`);
 });
 if (failures.length) {
