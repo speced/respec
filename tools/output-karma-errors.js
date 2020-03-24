@@ -1,3 +1,4 @@
+const { EOL } = require("os");
 const karmaResultsData = require("../karma-result.json");
 
 const failures = karmaResultsData.browsers[0].results
@@ -15,7 +16,7 @@ const failures = karmaResultsData.browsers[0].results
 failures.forEach(failure => {
   const { title, result, location } = failure;
   const output = `${title} (${location}): ${result.replace("Error: ", "")}`;
-  console.log(`::error ${output}`);
+  process.stdout.write(`::error:: ${output}${EOL}`);
 });
 if (failures.length) {
   process.exit(1);
