@@ -175,15 +175,11 @@ module.exports = function (config) {
   }
 
   if (process.env.GITHUB_WORKFLOW) {
-    const { readdirSync } = require("fs");
-    const defaultPlugins = readdirSync("node_modules").filter(m =>
-      m.startsWith("karma-")
-    );
     const localPlugins = [
       { "reporter:respec-github-action": ["type", GithubActionReporter] },
     ];
     options.reporters.push("respec-github-action");
-    options.plugins = defaultPlugins.concat(localPlugins);
+    options.plugins = ["karma-*"].concat(localPlugins);
   }
 
   config.set(options);
