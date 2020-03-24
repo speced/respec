@@ -56,7 +56,7 @@ describe("Core - anchor-expander", () => {
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#expansion a.respec-offending-element");
-    expect(a.textContent).toBe("#figure");
+    expect(a.textContent).toBe("#figuree");
   });
 
   it("safely copies definitions and things with ids, by not duplicating them", async () => {
