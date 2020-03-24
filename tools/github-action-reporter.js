@@ -52,9 +52,7 @@ function printFailure(failure) {
  * @param {Record<string, string>} options
  */
 function print(command, message = "", options = {}) {
-  let optionsString = Object.entries(options)
-    .map(([k, v]) => `${k}=${escapeProperty(v)}`)
-    .join(",");
+  let optionsString = new URLSearchParams(options).toString();
   if (optionsString) optionsString = ` ${optionsString}`;
   const msg = escapeData(message);
   const output = `::${command}${optionsString}::${msg}`;
@@ -64,16 +62,4 @@ function print(command, message = "", options = {}) {
 /** @param {string} s */
 function escapeData(s) {
   return s.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
-}
-
-/** @param {string} s */
-function escapeProperty(s) {
-  return s
-    .toString()
-    .replace(/\r/g, "%0D")
-    .replace(/\n/g, "%0A")
-    .replace(/]/g, "%5D")
-    .replace(/:/g, "%3A")
-    .replace(/,/g, "%2C")
-    .replace(/;/g, "%3B");
 }
