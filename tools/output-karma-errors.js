@@ -7,18 +7,18 @@ const failures = karmaResultsData.browsers[0].results
     const { suite, description, log } = item;
     const [result, , locationLine] = log;
     const location = locationLine
-      .split("localhost:9876/base/tests/spec/")[1]
+      .split("/base/tests/spec/")[1]
       .replace(/\)$/, "");
     const title = suite
-      .map((s, i) => `${s}${"\t".repeat(i)}`)
       .concat(description)
+      .map((s, i) => `${"\t".repeat(i)}${s}`)
       .join("\n");
     return { title, result, location };
   });
 
 failures.forEach(failure => {
   const { title, result, location } = failure;
-  const output = `${title}\n(${location}):\n ${result.replace("Error: ", "")}`;
+  const output = `${title}\n(${location}):\n${result.replace("Error: ", "")}`;
   process.stdout.write(`::error:: ${escapeData(output)}${EOL}`);
 });
 if (failures.length) {
