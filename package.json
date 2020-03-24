@@ -52,6 +52,7 @@
     "karma-mocha": "^1.3.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-opera-launcher": "^1.0.0",
+    "karma-respec-github-action-reporter": "github:sidvishnoi/karma-respec-github-action-reporter",
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "2.0.2",
     "karma-verbose-summary-reporter": "0.0.1",
