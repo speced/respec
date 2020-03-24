@@ -53,10 +53,8 @@ function printFailure(failure) {
  * @param {Record<string, string>} options
  */
 function print(command, message = "", options = {}) {
-  let optionsString = new URLSearchParams(options)
-    .toString()
-    .replace(/&/g, ",");
-  if (optionsString) optionsString = ` ${optionsString}`;
+  let optionsString = `${new URLSearchParams(options)}`.replace(/&/g, ",");
+  if (optionsString) optionsString = ` ${escapeData(optionsString)}`;
   const msg = escapeData(message);
   const output = `::${command}${optionsString}::${msg}`;
   console.log(output);
