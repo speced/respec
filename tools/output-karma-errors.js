@@ -1,6 +1,6 @@
 const karmaResultsData = require("../karma-result.json");
 
-karmaResultsData.browsers[0].results
+const failures = karmaResultsData.browsers[0].results
   .filter(item => item.success === false)
   .map(item => {
     const { suite, description, log } = item;
@@ -10,9 +10,13 @@ karmaResultsData.browsers[0].results
       .replace(/\)$/, "");
     const title = suite.concat(description).join(" > ");
     return { title, result, location };
-  })
-  .forEach(failure => {
-    const { title, result, location } = failure;
-    const output = `${title} (${location}): ${result.replace("Error: ", "")}`;
-    console.error(`::error ${output}`);
   });
+
+failures.forEach(failure => {
+  const { title, result, location } = failure;
+  const output = `${title} (${location}): ${result.replace("Error: ", "")}`;
+  console.log(`::error ${output}`);
+});
+if (failures.length) {
+  process.exit(1);
+}
