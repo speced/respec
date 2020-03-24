@@ -1,7 +1,7 @@
 scratch
 .DS_Store
 *~
-node_modules/*
+/node_modules
 .htaccess
 examples/touchevents.html
 bevy.json
@@ -12,4 +12,3 @@ js/deps/builds
 !js/profile-w3c.js
 !js/shortcut.js
 .vscode/
-!/node_modules/karma-respec-github-action-reporter
