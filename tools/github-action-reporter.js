@@ -2,11 +2,12 @@ module.exports = {
   "reporter:respec-github-action": ["type", GithubActionReporter],
 };
 
-function GithubActionReporter() {
+function GithubActionReporter(config) {
   const browserFailures = [];
+  const locationPrefix = `:${config.port}/base/`;
   this.onSpecComplete = (_browser, result) => {
     if (!result.success) {
-      const failure = parseFailure(result);
+      const failure = parseFailure(result, locationPrefix);
       browserFailures.push(failure);
     }
   };
@@ -22,12 +23,12 @@ function GithubActionReporter() {
  * @typedef {{ test: string[], file: string, line: number, col: number, message: string }} Failure
  * @returns {Failure}
  */
-function parseFailure(result) {
+function parseFailure(result, locationPrefix) {
   // convert newlines into array and flatten
   const log = result.log.flatMap(message => message.split("\n"));
   const { suite, description } = result;
   const message = log[0].replace("Error: ", "");
-  const location = log[2].split(":9876/base/", 2)[1].replace(/\)$/, "");
+  const location = log[2].split(locationPrefix, 2)[1].replace(/\)$/, "");
   // eslint-disable-next-line prefer-const
   let [file, line, col] = location.split(":");
   line = parseInt(line, 10);
