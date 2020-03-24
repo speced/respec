@@ -9,17 +9,14 @@ const failures = karmaResultsData.browsers[0].results
     const location = locationLine
       .split("/base/tests/spec/")[1]
       .replace(/\)$/, "");
-    const title = suite
-      .concat(description)
-      .map((s, i) => `${"\t".repeat(i)}${s}`)
+    const title = [`${suite[0]}(${location})`, ...suite.slice(1), description]
+      .map((s, i) => `${"\t".repeat(i === 0 ? 0 : 1)}${s}`)
       .join("\n");
-    return { title, result, location };
+    return `${title}\n(${location}):\n${result.replace("Error: ", "")}`;
   });
 
 failures.forEach(failure => {
-  const { title, result, location } = failure;
-  const output = `${title}\n(${location}):\n${result.replace("Error: ", "")}`;
-  process.stdout.write(`::error:: ${escapeData(output)}${EOL}`);
+  process.stdout.write(`::error:: ${escapeData(failure)}${EOL}`);
 });
 if (failures.length) {
   process.exit(1);
