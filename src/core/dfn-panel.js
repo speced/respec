@@ -24,7 +24,7 @@ export async function run() {
     switch (action) {
       case "show": {
         if (panel) panel.remove();
-        const dfn = el.closest("dfn");
+        const dfn = el.closest("dfn, .index-term");
         panel = createPanel(dfn);
         displayPanel(dfn, panel);
         break;
@@ -44,7 +44,7 @@ export async function run() {
 /** @param {HTMLElement} clickTarget */
 function deriveAction(clickTarget) {
   const hitALink = !!clickTarget.closest("a");
-  if (clickTarget.closest("dfn")) {
+  if (clickTarget.closest("dfn, .index-term")) {
     return hitALink ? null : "show";
   }
   if (clickTarget.closest("#dfn-panel")) {
@@ -64,7 +64,7 @@ function deriveAction(clickTarget) {
 /** @param {HTMLElement} dfn */
 function createPanel(dfn) {
   const { id } = dfn;
-  const href = `#${id}`;
+  const href = dfn.dataset.href || `#${id}`;
   const links = document.querySelectorAll(`a[href="${href}"]`);
 
   /** @type {HTMLElement} */

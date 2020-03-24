@@ -118,7 +118,7 @@ function makeComponentFinder(component) {
  *
  * @return {(elem: HTMLElement) => CiteDetails};
  */
-function citeDetailsConverter(conf) {
+export function citeDetailsConverter(conf) {
   const findFrag = makeComponentFinder("#");
   const findPath = makeComponentFinder("/");
   return function toCiteDetails(elem) {

@@ -147,7 +147,7 @@ function getRequestEntry(elem) {
 }
 
 /** @param {HTMLElement} elem */
-function getTermFromElement(elem) {
+export function getTermFromElement(elem) {
   const { lt: linkingText } = elem.dataset;
   let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
   term = normalize(term);
@@ -355,11 +355,12 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
  */
 function addDataCite(elem, query, result, conf) {
   const { term } = query;
-  const { uri, shortname: cite, normative, type } = result;
+  const { uri, shortname: cite, normative, type, for: forContext } = result;
 
   const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
   const [citePath, citeFrag] = path.split("#");
   const dataset = { cite, citePath, citeFrag, type };
+  if (forContext) dataset.linkFor = forContext[0];
   Object.assign(elem.dataset, dataset);
 
   addToReferences(elem, cite, normative, term, conf);
