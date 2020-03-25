@@ -31,7 +31,7 @@ function parseFailure(result, locationPrefix) {
   // convert newlines into array and flatten
   const log = result.log.flatMap(message => message.split("\n"));
   const { suite, description } = result;
-  const message = log[0].replace("Error: ", "");
+  const message = log[0];
   const location = log[2].split(locationPrefix, 2)[1].replace(/\)$/, "");
   // eslint-disable-next-line prefer-const
   let [file, line, col] = location.split(":");
