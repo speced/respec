@@ -24,7 +24,7 @@ function GithubActionReporter(config) {
 }
 
 /**
- * @typedef {{ test: string[], file: string, line: number, col: number, message: string }} Failure
+ * @typedef {{ test: string[], file: string, line: string, col: string, message: string }} Failure
  * @returns {Failure}
  */
 function parseFailure(result, locationPrefix) {
@@ -34,10 +34,7 @@ function parseFailure(result, locationPrefix) {
   const { suite, description } = result;
   const message = log[0];
   const location = log[2].split(locationPrefix, 2)[1].replace(/\)$/, "");
-  // eslint-disable-next-line prefer-const
-  let [file, line, col] = location.split(":");
-  line = parseInt(line, 10);
-  col = parseInt(col, 10);
+  const [file, line, col] = location.split(":");
   const test = suite.concat(description);
   return { test, file, line, col, message };
 }
