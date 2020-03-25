@@ -11,7 +11,9 @@ function GithubActionReporter(config) {
   const locationPrefix = `:${config.port}/base/`;
   this.onSpecComplete = (_browser, result) => {
     if (!result.success) {
+      console.log(result);
       const failure = parseFailure(result, locationPrefix);
+      console.log("parsed", failure);
       browserFailures.push(failure);
     }
   };
