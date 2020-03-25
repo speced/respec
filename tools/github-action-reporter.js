@@ -32,17 +32,19 @@ function parseFailure(result, locationPrefix) {
   const log = result.log.flatMap(message => message.split("\n"));
   const { suite, description } = result;
   const message = log[0];
-  const [file, line, col] = parseLocation(message, log, locationPrefix);
+  const [file, line, col] = parseLocation(log, locationPrefix);
   const test = suite.concat(description);
   return { test, file, line, col, message };
 }
 
-function parseLocation(message, log, locationPrefix) {
-  if (message.includes("DEFAULT_TIMEOUT_INTERVAL")) {
-    return [];
-  }
-  const locLine = message.contains("Timed out waiting") ? 1 : 2;
-  const location = log[locLine].split(locationPrefix, 2)[1].replace(/\)$/, "");
+/**
+ * @param {string[]} log
+ * @param {string} locationPrefix
+ */
+function parseLocation(log, locationPrefix) {
+  const locLine = log.find(line => line.includes(locationPrefix));
+  if (!locLine) return [];
+  const location = locLine.split(locationPrefix, 2)[1].replace(/\)$/, "");
   const [file, line, col] = location.split(":");
   return [file, line, col];
 }
