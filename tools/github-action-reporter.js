@@ -32,10 +32,19 @@ function parseFailure(result, locationPrefix) {
   const log = result.log.flatMap(message => message.split("\n"));
   const { suite, description } = result;
   const message = log[0];
-  const location = log[2].split(locationPrefix, 2)[1].replace(/\)$/, "");
-  const [file, line, col] = location.split(":");
+  const [file, line, col] = parseLocation(message, log, locationPrefix);
   const test = suite.concat(description);
   return { test, file, line, col, message };
+}
+
+function parseLocation(message, log, locationPrefix) {
+  if (message.includes("DEFAULT_TIMEOUT_INTERVAL")) {
+    return [];
+  }
+  const locLine = message.contains("Timed out waiting") ? 1 : 2;
+  const location = log[locLine].split(locationPrefix, 2)[1].replace(/\)$/, "");
+  const [file, line, col] = location.split(":");
+  return [file, line, col];
 }
 
 /** @param {Failure} failure */
@@ -45,7 +54,13 @@ function printFailure(failure) {
     .map((s, i) => `${" ".repeat(i * 2)}${s}`)
     .concat([message])
     .join("\n");
-  print("error", msg, { file, line, col });
+  const options = {};
+  if (file) {
+    options.file = file;
+    if (line) options.line = line;
+    if (col) options.col = col;
+  }
+  print("error", msg, options);
 }
 
 /**
