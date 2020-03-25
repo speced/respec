@@ -7,62 +7,9 @@ on:
   pull_request: {}
 
 jobs:
-  # lint:
-  #   name: Check linting issues
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - id: log
-  #       run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
-  #     - if: "!contains(steps.log.outputs.message, 'ci skip')"
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 10
-  #     - if: "!contains(steps.log.outputs.message, 'ci skip')"
-  #       name: Cache node modules
-  #       uses: actions/cache@v1
-  #       with:
-  #         path: ./node_modules
-  #         key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
-  #     - if: "!contains(steps.log.outputs.message, 'ci skip')"
-  #       run: npm install
-  #     - if: "!contains(steps.log.outputs.message, 'ci skip')"
-  #       run: npm run lint
-
-  # test-headless:
-  #   name: Headless Tests
-  #   runs-on: ubuntu-latest
-  #   needs: lint
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - id: log
-  #       run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
-  #     - if: "!contains(steps.log.outputs.message, 'ci skip')"
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 10
-  #     - if: "!contains(steps.log.outputs.message, 'ci skip')"
-  #       name: Cache node modules
-  #       uses: actions/cache@v1
-  #       with:
-  #         path: ./node_modules
-  #         key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
-  #     - if: "!contains(steps.log.outputs.message, 'ci skip')"
-  #       name: install & build
-  #       run: |
-  #         npm install --ignore-scripts
-  #         npm run builddeps
-  #         npm run build:w3c
-  #     - if: "!contains(steps.log.outputs.message, 'ci skip')"
-  #       run: npm run test:headless
-
-  test-karma:
-    name: Karma Unit Tests (${{ matrix.browser }})
-    strategy:
-      matrix:
-        browser: [ChromeHeadless]
+  lint:
+    name: Check linting issues
     runs-on: ubuntu-latest
-    # needs: lint
     steps:
       - uses: actions/checkout@v1
       - id: log
@@ -70,17 +17,70 @@ jobs:
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         uses: actions/setup-node@v1
         with:
-          node-version: 12
-      # - if: "!contains(steps.log.outputs.message, 'ci skip')"
-      #   name: Cache node modules
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: ./node_modules
-      #     key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
+          node-version: 10
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
+        name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
+        run: npm install
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
+        run: npm run lint
+
+  test-headless:
+    name: Headless Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v1
+      - id: log
+        run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
+        name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         name: install & build
         run: |
-          npm install
+          npm install --ignore-scripts
+          npm run builddeps
+          npm run build:w3c
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
+        run: npm run test:headless
+
+  test-karma:
+    name: Karma Unit Tests (${{ matrix.browser }})
+    strategy:
+      matrix:
+        browser: [ChromeHeadless, FirefoxHeadless]
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v1
+      - id: log
+        run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
+        name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
+      - if: "!contains(steps.log.outputs.message, 'ci skip')"
+        name: install & build
+        run: |
+          npm install --ignore-scripts
           npm run builddeps
           npm run build:w3c & npm run build:geonovum
       - if: "!contains(steps.log.outputs.message, 'ci skip')"

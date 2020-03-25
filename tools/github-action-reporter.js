@@ -11,9 +11,7 @@ function GithubActionReporter(config) {
   const locationPrefix = `:${config.port}/base/`;
   this.onSpecComplete = (_browser, result) => {
     if (!result.success) {
-      console.log(result);
       const failure = parseFailure(result, locationPrefix);
-      console.log("parsed", failure);
       browserFailures.push(failure);
     }
   };
@@ -31,7 +29,8 @@ function GithubActionReporter(config) {
  */
 function parseFailure(result, locationPrefix) {
   // convert newlines into array and flatten
-  const log = result.log.flatMap(message => message.split("\n"));
+  // TODO: Use Arrat.prototype.flatMap when Node on CI is updated.
+  const log = [].concat(...result.log.map(message => message.split("\n")));
   const { suite, description } = result;
   const message = log[0];
   const location = log[2].split(locationPrefix, 2)[1].replace(/\)$/, "");
