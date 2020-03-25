@@ -1304,7 +1304,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(windowAnchor.href).toBe(
       "https://html.spec.whatwg.org/multipage/window-object.html#window"
     );
-    expect(windowAnchor.dataset.type).toBe("interface");
+    expect(windowAnchor.dataset.xrefType).toBe("interface");
     // Exposed=(Worker)
     const workerAnchor = doc.querySelector(
       "#link-test a[href$=workerglobalscope]"
@@ -1312,7 +1312,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(workerAnchor.href).toBe(
       "https://html.spec.whatwg.org/multipage/workers.html#workerglobalscope"
     );
-    expect(workerAnchor.dataset.type).toBe("interface");
+    expect(workerAnchor.dataset.xrefType).toBe("interface");
 
     // Exposed=(DedicatedWoker)
     const dedicatedWorkerAnchor = doc.querySelector(
@@ -1321,11 +1321,11 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(dedicatedWorkerAnchor.href).toBe(
       "https://html.spec.whatwg.org/multipage/workers.html#dedicatedworkerglobalscope"
     );
-    expect(dedicatedWorkerAnchor.dataset.type).toBe("interface");
+    expect(dedicatedWorkerAnchor.dataset.xrefType).toBe("interface");
 
     // readonly attribute object bar;
     const objectAnchor = doc.querySelector("#link-test a[href$=idl-object]");
-    expect(objectAnchor.dataset.type).toBe("interface");
+    expect(objectAnchor.dataset.xrefType).toBe("interface");
     expect(objectAnchor.href).toBe(
       "https://heycam.github.io/webidl/#idl-object"
     );
@@ -1511,7 +1511,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(banana.classList).toContain("internalDFN");
 
     expect(docOrShadowMixin.textContent).toBe("NavigatorID");
-    expect(docOrShadowMixin.dataset.type).toBe("interface");
+    expect(docOrShadowMixin.dataset.xrefType).toBe("interface");
     expect(docOrShadowMixin.dataset.linkType).toBe("interface");
     expect(docOrShadowMixin.dataset.idl).toBe("partial");
     expect(docOrShadowMixin.dataset.title).toBe("NavigatorID");
@@ -1520,7 +1520,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     );
 
     expect(requestPartialInterface.textContent).toBe("Request");
-    expect(requestPartialInterface.dataset.type).toBe("interface");
+    expect(requestPartialInterface.dataset.xrefType).toBe("interface");
     expect(requestPartialInterface.dataset.linkType).toBe("interface");
     expect(requestPartialInterface.dataset.idl).toBe("partial");
     expect(requestPartialInterface.dataset.title).toBe("Request");
@@ -1529,7 +1529,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     );
 
     expect(eventInitDict.textContent).toBe("EventInit");
-    expect(eventInitDict.dataset.type).toBe("dictionary");
+    expect(eventInitDict.dataset.xrefType).toBe("dictionary");
     expect(eventInitDict.dataset.linkType).toBe("dictionary");
     expect(eventInitDict.dataset.idl).toBe("partial");
     expect(eventInitDict.dataset.title).toBe("EventInit");
