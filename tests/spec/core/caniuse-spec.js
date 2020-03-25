@@ -39,6 +39,7 @@ describe("Core — Can I Use", () => {
     });
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
+    await new Promise(res => setTimeout(res, 6000));
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
