@@ -29,8 +29,7 @@ function GithubActionReporter(config) {
  */
 function parseFailure(result, locationPrefix) {
   // convert newlines into array and flatten
-  // TODO: Use Arrat.prototype.flatMap when Node on CI is updated.
-  const log = [].concat(...result.log.map(message => message.split("\n")));
+  const log = result.log.flatMap(message => message.split("\n"));
   const { suite, description } = result;
   const message = log[0];
   const location = log[2].split(locationPrefix, 2)[1].replace(/\)$/, "");
