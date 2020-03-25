@@ -50,8 +50,7 @@ jobs:
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         name: install & build
         run: |
-          npm install --ignore-scripts
-          npm run builddeps
+          npm install
           npm run build:w3c
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         run: npm run test:headless
