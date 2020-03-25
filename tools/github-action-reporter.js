@@ -1,3 +1,9 @@
+/**
+ * Custom Karma reporter that creates failure annotations in GitHub PR.
+ */
+
+const { EOL } = require("os");
+
 module.exports = {
   "reporter:respec-github-action": ["type", GithubActionReporter],
 };
@@ -58,8 +64,8 @@ function print(command, message = "", options = {}) {
     .replace(/%2F/g, "/");
   if (optionsString) optionsString = ` ${optionsString}`;
   const msg = escapeData(message);
-  const output = `::${command}${optionsString}::${msg}`;
-  console.log(output);
+  const output = `::${command}${optionsString}::${msg}${EOL}`;
+  process.stdout.write(output);
 }
 
 /** @param {string} s */
