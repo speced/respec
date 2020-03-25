@@ -21,6 +21,7 @@ import {
   showInlineWarning,
   wrapInner,
 } from "./utils.js";
+import { sub } from "./pubsubhub.js";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {
@@ -40,7 +41,6 @@ function requestLookup(conf) {
     } else {
       // Let's go look it up in spec ref...
       const entry = await resolveRef(key);
-      cleanElement(elem);
       if (!entry) {
         showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
         return;
@@ -96,12 +96,6 @@ function requestLookup(conf) {
       }
     }
   };
-}
-
-function cleanElement(elem) {
-  ["data-cite", "data-cite-frag"]
-    .filter(attrName => elem.hasAttribute(attrName))
-    .forEach(attrName => elem.removeAttribute(attrName));
 }
 
 /**
@@ -175,6 +169,8 @@ export async function run(conf) {
       conf.normativeReferences.add(key);
       conf.informativeReferences.delete(key);
     });
+
+  sub("beforesave", cleanup);
 }
 
 /**
@@ -208,4 +204,12 @@ export async function linkInlineCitations(doc, conf = respecConfig) {
 
   const lookupRequests = [...new Set(elems)].map(toLookupRequest);
   return await Promise.all(lookupRequests);
+}
+
+function cleanup(doc) {
+  const attrToRemove = ["data-cite", "data-cite-frag", "data-cite-path"];
+  const elems = doc.querySelectorAll("a[data-cite], dfn[data-cite]");
+  elems.forEach(elem =>
+    attrToRemove.forEach(attr => elem.removeAttribute(attr))
+  );
 }
