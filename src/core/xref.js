@@ -19,7 +19,7 @@ import {
   showInlineError,
   showInlineWarning,
 } from "./utils.js";
-import { pub } from "./pubsubhub.js";
+import { sub, pub } from "./pubsubhub.js";
 
 const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
@@ -63,6 +63,8 @@ export async function run(conf, elems) {
 
   const data = await getData(queryKeys, xref.url);
   addDataCiteToTerms(elems, queryKeys, data, conf);
+
+  sub("beforesave", cleanup);
 }
 
 /**
@@ -442,4 +444,12 @@ function objectHash(obj) {
 function bufferToHexString(buffer) {
   const byteArray = new Uint8Array(buffer);
   return [...byteArray].map(v => v.toString(16).padStart(2, "0")).join("");
+}
+
+function cleanup(doc) {
+  const elems = doc.querySelectorAll("a[data-xref-for], a[data-xref-type]");
+  const attrToRemove = ["data-xref-for", "data-xref-type"];
+  elems.forEach(el => {
+    attrToRemove.forEach(attr => el.removeAttribute(attr));
+  });
 }
