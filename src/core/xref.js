@@ -19,7 +19,7 @@ import {
   showInlineError,
   showInlineWarning,
 } from "./utils.js";
-import { sub, pub } from "./pubsubhub.js";
+import { pub, sub } from "./pubsubhub.js";
 
 const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
