@@ -17,13 +17,13 @@ jobs:
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         name: Cache node modules
         uses: actions/cache@v1
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         run: npm install
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
@@ -40,13 +40,13 @@ jobs:
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         name: Cache node modules
         uses: actions/cache@v1
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         name: install & build
         run: |
@@ -70,13 +70,13 @@ jobs:
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         name: Cache node modules
         uses: actions/cache@v1
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-node-10-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         name: install & build
         run: |
