@@ -23,7 +23,7 @@ describe("Core — Can I Use", () => {
     await doc.respecIsReady;
     const { caniuse } = doc.defaultView.respecConfig;
 
-    expect(caniuse.feature).toBe("BUG");
+    expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.versions).toBe(4);
     expect(caniuse.browsers).toBeUndefined(); // uses server default
   });
@@ -39,7 +39,6 @@ describe("Core — Can I Use", () => {
     });
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
-    await new Promise(res => setTimeout(res, 6000));
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
