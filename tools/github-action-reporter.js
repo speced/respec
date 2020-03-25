@@ -32,10 +32,21 @@ function parseFailure(result, locationPrefix) {
   const log = result.log.flatMap(message => message.split("\n"));
   const { suite, description } = result;
   const message = log[0];
-  const location = log[2].split(locationPrefix, 2)[1].replace(/\)$/, "");
-  const [file, line, col] = location.split(":");
+  const [file, line, col] = parseLocation(log, locationPrefix);
   const test = suite.concat(description);
   return { test, file, line, col, message };
+}
+
+/**
+ * @param {string[]} log
+ * @param {string} locationPrefix
+ */
+function parseLocation(log, locationPrefix) {
+  const locLine = log.find(line => line.includes(locationPrefix));
+  if (!locLine) return [];
+  const location = locLine.split(locationPrefix, 2)[1].replace(/\)$/, "");
+  const [file, line, col] = location.split(":");
+  return [file, line, col];
 }
 
 /** @param {Failure} failure */
@@ -45,7 +56,13 @@ function printFailure(failure) {
     .map((s, i) => `${" ".repeat(i * 2)}${s}`)
     .concat([message])
     .join("\n");
-  print("error", msg, { file, line, col });
+  const options = {};
+  if (file) {
+    options.file = file;
+    if (line) options.line = line;
+    if (col) options.col = col;
+  }
+  print("error", msg, options);
 }
 
 /**
