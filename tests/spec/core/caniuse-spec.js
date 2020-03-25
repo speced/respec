@@ -23,7 +23,7 @@ describe("Core — Can I Use", () => {
     await doc.respecIsReady;
     const { caniuse } = doc.defaultView.respecConfig;
 
-    expect(caniuse.feature).toBe("FUTURE");
+    expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.versions).toBe(4);
     expect(caniuse.browsers).toBeUndefined(); // uses server default
   });
