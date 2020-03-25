@@ -70,7 +70,7 @@ jobs:
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12
       # - if: "!contains(steps.log.outputs.message, 'ci skip')"
       #   name: Cache node modules
       #   uses: actions/cache@v1
