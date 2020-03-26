@@ -127,7 +127,7 @@ function referencesToHTML(id, links) {
       .map(link => `<a href="#${link.id}">${link.title}</a>${" "}`)
       .join("")}</li>`;
 
-  const listItems = [...titleToIDs].map(listItemToHTML);
+  const listItems = [...titleToIDs].map(listItemToHTML).join("");
   return `<ul>${listItems}</ul>`;
 }
 
