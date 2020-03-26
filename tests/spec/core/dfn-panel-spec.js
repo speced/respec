@@ -165,4 +165,46 @@ describe("Core — dfnPanel", () => {
     expect(item2Links[1].hash).toBe("#ref-for-dfn-many-4");
     expect(item2.textContent).toBe("1.1 nested section heading (2) ");
   });
+
+  it("works in exported document", async () => {
+    const rdoc = await makeRSDoc(ops);
+    const doc = await getExportedDoc(rdoc);
+
+    const dfnOne = doc.querySelector("dfn#dfn-one");
+    dfnOne.click();
+    const panel = doc.getElementById("dfn-panel");
+    expect(panel).toBeTruthy();
+
+    const selfLink = panel.querySelector("a.self-link");
+    expect(selfLink.hash).toBe("#dfn-one");
+
+    const referenceHeading = panel.querySelectorAll("b")[1];
+    expect(referenceHeading.textContent).toBe("Referenced in:");
+
+    const referenceListItems = panel.querySelectorAll("ul li");
+    expect(referenceListItems.length).toBe(1);
+
+    const references = panel.querySelectorAll("ul li a");
+    expect(references.length).toBe(1);
+    expect(references[0].textContent).toBe("1. top level heading");
+    expect(references[0].hash).toBe("#ref-for-dfn-one-1");
+  });
 });
+
+async function getExportedDoc(doc) {
+  const dataURL = await new Promise(resolve => {
+    doc.defaultView.require(["core/exporter"], ({ rsDocToDataURL }) =>
+      resolve(rsDocToDataURL("text/html", doc))
+    );
+  });
+
+  return new Promise(resolve => {
+    const ifr = document.createElement("iframe");
+    ifr.addEventListener("load", () => resolve(ifr.contentDocument));
+    ifr.srcdoc = decodeURIComponent(dataURL).replace(
+      "data:text/html;charset=utf-8,",
+      ""
+    );
+    document.body.appendChild(ifr);
+  });
+}
