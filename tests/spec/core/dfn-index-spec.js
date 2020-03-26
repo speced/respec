@@ -4,7 +4,7 @@ import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 describe("Core — dfn-index", () => {
   afterAll(flushIframes);
 
-  xit("adds default heading to section#index", async () => {
+  it("adds default heading to section#index", async () => {
     const body = `<section id="index">
       <p>PASS</p>
     </section>`;
@@ -19,7 +19,7 @@ describe("Core — dfn-index", () => {
     expect(index.firstElementChild).toBe(index.querySelector("h2"));
   });
 
-  xit("doesn't override existing content in section#index", async () => {
+  it("doesn't override existing content in section#index", async () => {
     const body = `<section id="index">
       <h2 id="custom-heading">el índex</h2>
       <p id="custom-paragraph">PASS</p>
