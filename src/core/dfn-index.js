@@ -57,8 +57,8 @@ export async function run(conf) {
  */
 function createExternalTermIndex(toCiteDetails) {
   const data = collectExternalTerms(toCiteDetails);
-  const dataSortedBySpec = [...data.entries()].sort((a, b) =>
-    a[0].localeCompare(b[0])
+  const dataSortedBySpec = [...data.entries()].sort(([specA], [specB]) =>
+    specA.localeCompare(specB)
   );
   return html`<ul class="index">
     ${dataSortedBySpec.map(
