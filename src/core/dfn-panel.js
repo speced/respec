@@ -6,6 +6,7 @@
 // exported docs and we want to add minimal JavaScript to exported docs.
 import { fetchAsset } from "./text-loader.js";
 import { norm } from "./utils.js";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/dfn-panel";
 
@@ -14,15 +15,15 @@ export async function run() {
   style.textContent = await loadStyle();
   document.head.insertBefore(style, document.querySelector("link"));
 
-  document.body.addEventListener("click", initOnClick());
+  init();
+  sub("beforesave", injectIntoExportedDoc);
 }
 
-function initOnClick() {
+function init() {
   /** @type {HTMLElement} */
   let panel;
 
-  /** @param {MouseEvent} event */
-  const clickHandler = event => {
+  document.body.addEventListener("click", event => {
     /** @type {HTMLElement} */
     const el = event.target;
 
@@ -44,8 +45,7 @@ function initOnClick() {
         break;
       }
     }
-  };
-  return clickHandler;
+  });
 }
 
 /** @param {HTMLElement} clickTarget */
@@ -173,4 +173,22 @@ async function loadStyle() {
   } catch {
     return fetchAsset("dfn-panel.css");
   }
+}
+
+function injectIntoExportedDoc(doc) {
+  const fnToSerialize = [
+    init,
+    norm,
+    deriveAction,
+    createPanel,
+    referencesToHTML,
+    getReferenceTitle,
+    displayPanel,
+  ];
+  const fnStr = fnToSerialize.map(fn => fn.toString()).join("\n");
+
+  const script = document.createElement("script");
+  script.id = "respec-dfn-panel";
+  script.textContent = `(() => {\ninit();\n${fnStr}\n})();`;
+  doc.querySelector("body").append(script);
 }
