@@ -160,13 +160,28 @@ describe("Core — dfn-index", () => {
         eventHandlerDict,
         fullyActive,
         iframeElement,
-      ] = [...index.querySelectorAll("[data-spec='HTML'] li")].map(el =>
-        el.textContent.trim()
+      ] = [...index.querySelectorAll("li[data-spec='HTML'] .index-term")].map(
+        el => el.textContent
       );
       expect(iframeAllowAttribute).toMatch(/^allow attribute \(for/);
       expect(eventHandlerDict).toBe("EventHandler");
       expect(fullyActive).toMatch(/^fully active \(for/);
       expect(iframeElement).toBe("iframe element");
+
+      const [abortErrorException, booleanType] = [
+        ...index.querySelectorAll("li[data-spec='WEBIDL'] .index-term"),
+      ].map(el => el.textContent);
+      expect(abortErrorException).toBe("AbortError exception");
+      expect(booleanType).toBe("boolean type");
+    });
+
+    it("formats IDL extended attributes", () => {
+      const extendAttrDefault = index.querySelector(
+        "[data-spec='WEBIDL'] li:nth-child(3) .index-term"
+      );
+      expect(extendAttrDefault.textContent).toBe(
+        "[Default] extended attribute"
+      );
     });
 
     it("suffixes term with a 'for' context", async () => {
