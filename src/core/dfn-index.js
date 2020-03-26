@@ -10,6 +10,7 @@ import { fetchAsset } from "./text-loader.js";
 import { getTermFromElement } from "./xref.js";
 import { hyperHTML as html } from "./import-maps.js";
 import { renderInlineCitation } from "./render-biblio.js";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/dfn-index";
 
@@ -39,6 +40,8 @@ export async function run(conf) {
     ${createExternalTermIndex(toCiteDetails)}
   </section>`;
   index.append(externalTermIndex);
+
+  sub("beforesave", cleanup);
 }
 
 /**
@@ -51,7 +54,7 @@ function createExternalTermIndex(toCiteDetails) {
   );
   return html`<ul class="index">
     ${dataSortedBySpec.map(
-      ([spec, entries]) => html`<li>
+      ([spec, entries]) => html`<li data-spec="${spec}">
         ${renderInlineCitation(spec)} defines the following:
         <ul>
           ${entries
@@ -201,4 +204,11 @@ async function loadStyle() {
   } catch {
     return fetchAsset("dfn-index.css");
   }
+}
+
+/** @param {Document} doc */
+function cleanup(doc) {
+  doc
+    .querySelectorAll("#index-defined-elsewhere li[data-spec]")
+    .forEach(el => el.removeAttribute("data-spec"));
 }
