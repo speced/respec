@@ -106,7 +106,7 @@ describe("Core — dfn-index", () => {
     });
 
     it("doesn't list local terms", () => {
-      const terms = index.querySelectorAll("ul li li");
+      const terms = index.querySelectorAll(".index-term");
       const localTerm = [...terms].find(li => li.textContent === "hello");
       expect(localTerm).toBeUndefined();
     });
