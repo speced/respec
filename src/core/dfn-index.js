@@ -4,7 +4,7 @@
  * reference (external terms).
  */
 
-import { addId } from "./utils.js";
+import { addId, getIntlData } from "./utils.js";
 import { citeDetailsConverter } from "./data-cite.js";
 import { fetchAsset } from "./text-loader.js";
 import { getTermFromElement } from "./xref.js";
@@ -13,6 +13,14 @@ import { renderInlineCitation } from "./render-biblio.js";
 import { sub } from "./pubsubhub.js";
 
 export const name = "core/dfn-index";
+
+const localizationStrings = {
+  en: {
+    heading: "Index",
+    headingExternal: "Terms defined by reference",
+  },
+};
+const l10n = getIntlData(localizationStrings);
 
 /**
  * @typedef {{ term: string, type: string, linkFor: string, elem: HTMLAnchorElement }} Entry
@@ -30,13 +38,13 @@ export async function run(conf) {
 
   index.classList.add("appendix");
   if (!index.querySelector("h2")) {
-    index.prepend(html`<h2>Index</h2>`);
+    index.prepend(html`<h2>${l10n.heading}</h2>`);
   }
 
   const toCiteDetails = citeDetailsConverter(conf);
 
   const externalTermIndex = html`<section id="index-defined-elsewhere">
-    <h3>Terms defined by reference</h3>
+    <h3>${l10n.headingExternal}</h3>
     ${createExternalTermIndex(toCiteDetails)}
   </section>`;
   index.append(externalTermIndex);
