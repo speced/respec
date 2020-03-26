@@ -448,8 +448,10 @@ function bufferToHexString(buffer) {
 }
 
 function cleanup(doc) {
-  const elems = doc.querySelectorAll("a[data-xref-for], a[data-xref-type]");
-  const attrToRemove = ["data-xref-for", "data-xref-type"];
+  const elems = doc.querySelectorAll(
+    "a[data-xref-for], a[data-xref-type], a[data-link-for]"
+  );
+  const attrToRemove = ["data-xref-for", "data-xref-type", "data-link-for"];
   elems.forEach(el => {
     attrToRemove.forEach(attr => el.removeAttribute(attr));
   });
