@@ -14,9 +14,15 @@ export async function run() {
   style.textContent = await loadStyle();
   document.head.insertBefore(style, document.querySelector("link"));
 
+  document.body.addEventListener("click", initOnClick());
+}
+
+function initOnClick() {
   /** @type {HTMLElement} */
   let panel;
-  document.body.addEventListener("click", event => {
+
+  /** @param {MouseEvent} event */
+  const clickHandler = event => {
     /** @type {HTMLElement} */
     const el = event.target;
 
@@ -38,7 +44,8 @@ export async function run() {
         break;
       }
     }
-  });
+  };
+  return clickHandler;
 }
 
 /** @param {HTMLElement} clickTarget */
