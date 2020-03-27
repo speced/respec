@@ -28,6 +28,7 @@
     "boxen": "^4.2.0",
     "chai": "^4.2.0",
     "chokidar": "^3.3.1",
+    "clean-css": "^4.2.3",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",

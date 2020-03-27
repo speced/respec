@@ -7,12 +7,27 @@ const path = require("path");
 const { rollup } = require("rollup");
 const alias = require("rollup-plugin-alias");
 const { string } = require("rollup-plugin-string");
+const CleanCSS = require("clean-css");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 colors.setTheme({
   error: "red",
   info: "white",
 });
+
+function stringCSS() {
+  const minifier = new CleanCSS();
+  return {
+    transform(code, id) {
+      if (!id.endsWith(".css")) return;
+      const { styles } = minifier.minify(code);
+      return {
+        code: `export default ${JSON.stringify(styles)};`,
+        map: { mappings: "" },
+      };
+    },
+  };
+}
 
 /** @type {import("command-line-usage").OptionDefinition[]} */
 const optionList = [
@@ -113,8 +128,9 @@ const Builder = {
             },
           ],
         }),
+        stringCSS(),
         string({
-          include: [/\.css$/, /\.svg$/, /respec-worker\.js$/],
+          include: [/\.svg$/, /respec-worker\.js$/],
         }),
       ],
       onwarn(warning, warn) {
