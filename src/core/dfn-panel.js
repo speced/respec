@@ -177,7 +177,6 @@ async function loadStyle() {
 
 function injectIntoExportedDoc(doc) {
   const fnToSerialize = [
-    init,
     norm,
     deriveAction,
     createPanel,
@@ -189,6 +188,6 @@ function injectIntoExportedDoc(doc) {
 
   const script = document.createElement("script");
   script.id = "respec-dfn-panel";
-  script.textContent = `(() => {\ninit();\n${fnStr}\n})();`;
+  script.textContent = `(() => {\n(${init.toString()})();\n${fnStr}\n})();`;
   doc.querySelector("body").append(script);
 }
