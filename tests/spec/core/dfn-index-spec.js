@@ -6,7 +6,7 @@ describe("Core — dfn-index", () => {
 
   it("adds default heading to section#index", async () => {
     const body = `<section id="index">
-      <p>PASS</p>
+      <p id="pass">PASS</p>
     </section>`;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
@@ -17,6 +17,9 @@ describe("Core — dfn-index", () => {
     expect(index.querySelectorAll("h2").length).toBe(1);
     expect(index.querySelector("h2").textContent).toBe("A. Index");
     expect(index.firstElementChild).toBe(index.querySelector("h2"));
+    expect(index.querySelector("h2").nextElementSibling).toEqual(
+      document.getElementById("pass")
+    );
   });
 
   it("doesn't override existing content in section#index", async () => {
