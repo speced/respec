@@ -26,7 +26,7 @@ export async function run() {
         if (panel) panel.remove();
         const dfn = el.closest("dfn, .index-term");
         panel = createPanel(dfn);
-        displayPanel(dfn, panel);
+        displayPanel(dfn, panel, { x: event.clientX, y: event.clientY });
         break;
       }
       case "dock": {
@@ -136,28 +136,40 @@ function getReferenceTitle(link) {
 /**
  * @param {HTMLElement} dfn
  * @param {HTMLElement} panel
+ * @param {{ x: number, y: number }} clickPosition
  */
-function displayPanel(dfn, panel) {
+function displayPanel(dfn, panel, { x, y }) {
   document.body.appendChild(panel);
+  // distance (px) between edge of panel and the pointing triangle (caret)
+  const MARGIN = 20;
 
-  const dfnRect = dfn.getBoundingClientRect();
-  const panelRect = panel.getBoundingClientRect();
-  const panelWidth = panelRect.right - panelRect.left;
-
-  let top = window.scrollY + dfnRect.top;
-  let left = dfnRect.left + dfnRect.width + 5;
-  if (left + panelWidth > document.body.scrollWidth) {
-    // Reposition, because the panel is overflowing
-    left = dfnRect.left - (panelWidth + 5);
-    if (left < 0) {
-      left = dfnRect.left;
-      top += dfnRect.height;
+  const dfnRects = dfn.getClientRects();
+  // Find the `top` offset when the `dfn` can be spread across multiple lines
+  let closestTop = 0;
+  let minDiff = Infinity;
+  for (const rect of dfnRects) {
+    const { top, bottom } = rect;
+    const diffFromClickY = Math.abs((top + bottom) / 2 - y);
+    if (diffFromClickY < minDiff) {
+      minDiff = diffFromClickY;
+      closestTop = top;
     }
   }
 
-  // Allows ".docked" rule to override the position, unlike `style.left = left`.
+  const top = window.scrollY + closestTop + dfnRects[0].height;
+  const left = x - MARGIN;
   panel.style.setProperty("--left", `${left}px`);
   panel.style.setProperty("--top", `${top}px`);
+
+  // Find if the panel is flowing out of the window
+  const panelRect = panel.getBoundingClientRect();
+  const SCREEN_WIDTH = Math.min(window.innerWidth, window.screen.width);
+  if (panelRect.right > SCREEN_WIDTH) {
+    const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
+    const newCaretOffset = left - newLeft;
+    panel.style.setProperty("--left", `${newLeft}px`);
+    panel.style.setProperty("--caret-offset", `${newCaretOffset}px`);
+  }
 }
 
 async function loadStyle() {

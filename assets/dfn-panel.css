@@ -4,20 +4,36 @@ dfn {
 }
 
 .dfn-panel {
+  --fill: #fff;
   position: absolute;
   left: var(--left); /* set via JS */
   top: var(--top); /* set via JS */
   z-index: 35;
-  height: auto;
-  width: max-content;
-  max-width: 300px;
-  max-height: 500px;
-  overflow: auto;
+  min-width: 300px;
+  max-width: 500px;
   padding: 0.5em 0.75em;
+  margin-top: 0.6em;
   font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
-  background: #dddddd;
+  background: var(--fill);
   color: black;
-  border: outset 0.2em;
+  box-shadow: 0 1em 3em -0.4em rgba(0, 0, 0, 0.3),
+    0 0 1px 1px rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+}
+
+/* Triangle/caret */
+.dfn-panel:not(.docked)::before,
+.dfn-panel:not(.docked)::after {
+  content: "";
+  position: absolute;
+  border: 10px solid transparent;
+  border-top: 0;
+  border-bottom: 9px solid #a2a9b1; /* triangle outline */
+  top: -9px;
+  left: calc(var(--caret-offset, 0px) + 0.75em); /* set via JS */
+}
+.dfn-panel:not(.docked)::after {
+  border-bottom: 10px solid var(--fill); /* triangle fill */
 }
 
 .dfn-panel * {
@@ -29,7 +45,7 @@ dfn {
 }
 
 .dfn-panel ul a[href] {
-  color: black;
+  color: #333;
 }
 
 .dfn-panel a:not(:hover) {
@@ -50,7 +66,7 @@ dfn {
 }
 
 .dfn-panel li {
-  list-style: inside;
+  margin-left: 1em;
 }
 
 .dfn-panel.docked {
@@ -63,4 +79,6 @@ dfn {
   /* 0.75em from padding (x2), 0.5em from left position, 0.2em border (x2) */
   max-width: calc(100vw - 0.75em * 2 - 0.5em - 0.2em * 2);
   max-height: 30vh;
+  overflow: auto;
+  scrollbar-width: thin;
 }
