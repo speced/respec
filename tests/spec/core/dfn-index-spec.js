@@ -18,7 +18,7 @@ describe("Core — dfn-index", () => {
     expect(index.querySelector("h2").textContent).toBe("A. Index");
     expect(index.firstElementChild).toBe(index.querySelector("h2"));
     expect(index.querySelector("h2").nextElementSibling).toEqual(
-      document.getElementById("pass")
+      doc.getElementById("pass")
     );
   });
 
