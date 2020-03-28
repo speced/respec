@@ -2,7 +2,7 @@
 // self link to the selected dfn. Based on Bikeshed's dfn panels at
 // https://github.com/tabatkins/bikeshed/blob/ef44162c2e/bikeshed/dfnpanels.py
 import { fetchAsset } from "./text-loader.js";
-import { html } from "./import-maps.js";
+import { html as hyperHTML } from "./import-maps.js";
 import { norm } from "./utils.js";
 
 export const name = "core/dfn-panel";
@@ -10,9 +10,7 @@ export const name = "core/dfn-panel";
 export async function run() {
   const css = await loadStyle();
   document.head.insertBefore(
-    html`<style>
-      ${css}
-    </style>`,
+    hyperHTML`<style>${css}</style>`,
     document.querySelector("link")
   );
 
@@ -70,7 +68,7 @@ function createPanel(dfn) {
   const links = document.querySelectorAll(`a[href="${href}"]`);
 
   /** @type {HTMLElement} */
-  const panel = html`
+  const panel = hyperHTML`
     <aside class="dfn-panel" id="dfn-panel">
       <b><a class="self-link" href="${href}">Permalink</a></b>
       <b>Referenced in:</b>
@@ -87,9 +85,7 @@ function createPanel(dfn) {
  */
 function referencesToHTML(id, links) {
   if (!links.length) {
-    return html`<ul>
-      <li>Not referenced in this document.</li>
-    </ul>`;
+    return hyperHTML`<ul><li>Not referenced in this document.</li></ul>`;
   }
 
   /** @type {Map<string, string[]>} */
@@ -120,16 +116,12 @@ function referencesToHTML(id, links) {
    * @returns {HTMLLIElement}
    */
   const listItemToHTML = entry =>
-    html`<li>
-      ${toLinkProps(entry).map(
-        link => html`<a href="#${link.id}">${link.title}</a>${" "}`
-      )}
-    </li>`;
+    hyperHTML`<li>${toLinkProps(entry).map(
+      link => hyperHTML`<a href="#${link.id}">${link.title}</a>${" "}`
+    )}</li>`;
 
   const listItems = [...titleToIDs].map(listItemToHTML);
-  return html`<ul>
-    ${listItems}
-  </ul>`;
+  return hyperHTML`<ul>${listItems}</ul>`;
 }
 
 /** @param {HTMLAnchorElement} link */
