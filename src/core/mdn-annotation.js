@@ -87,7 +87,7 @@ function buildBrowserSupportTable(support) {
   function createRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
-    return html` <span class="${classList}">
+    return html`<span class="${classList}">
       <span class="browser-name">${MDN_BROWSERS[browserId]}</span>
       <span class="version">${version ? version : displayStatus}</span>
     </span>`;

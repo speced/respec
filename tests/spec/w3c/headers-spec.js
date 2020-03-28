@@ -16,7 +16,7 @@ describe("W3C — Headers", () => {
   const simpleSpecURL = "spec/core/simple.html";
   const contains = (el, query, string) =>
     [...el.querySelectorAll(query)].filter(child =>
-      child.innerHTML.includes(string)
+      child.textContent.replace(/\s+/g, " ").includes(string)
     );
   describe("prevRecShortname & prevRecURI", () => {
     it("takes prevRecShortname and prevRecURI into account", async () => {
