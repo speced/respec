@@ -7,7 +7,7 @@
 import { pub, sub } from "./pubsubhub.js";
 import { createResourceHint } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 
 export const name = "core/caniuse";
 
@@ -63,37 +63,39 @@ export async function run(conf) {
   const featureURL = new URL(options.feature, "https://caniuse.com/").href;
 
   const caniuseCss = await caniuseCssPromise;
-  document.head.appendChild(hyperHTML`
-    <style class="removeOnSave">${caniuseCss}</style>`);
+  document.head.appendChild(html` <style class="removeOnSave">
+    ${caniuseCss}
+  </style>`);
 
   const headDlElem = document.querySelector(".head dl");
   const contentPromise = (async () => {
     try {
       const apiUrl = options.apiURL || API_URL;
       const stats = await fetchStats(apiUrl, options);
-      return hyperHTML`${{ html: stats }}`;
+      return html`${{ html: stats }}`;
     } catch (err) {
       console.error(err);
       const msg =
         `Couldn't find feature "${options.feature}" on caniuse.com? ` +
         "Please check the feature key on [caniuse.com](https://caniuse.com)";
       pub("error", msg);
-      return hyperHTML`<a href="${featureURL}">caniuse.com</a>`;
+      return html`<a href="${featureURL}">caniuse.com</a>`;
     }
   })();
-  const definitionPair = hyperHTML`
-    <dt class="caniuse-title">Browser support:</dt>
-    <dd class="caniuse-stats">${{
-      any: contentPromise,
-      placeholder: "Fetching data from caniuse.com...",
-    }}</dd>`;
+  const definitionPair = html` <dt class="caniuse-title">Browser support:</dt>
+    <dd class="caniuse-stats">
+      ${{
+        any: contentPromise,
+        placeholder: "Fetching data from caniuse.com...",
+      }}
+    </dd>`;
   headDlElem.append(...definitionPair.childNodes);
   await contentPromise;
 
   // remove from export
   pub("amend-user-config", { caniuse: options.feature });
   sub("beforesave", outputDoc => {
-    hyperHTML.bind(outputDoc.querySelector(".caniuse-stats"))`
+    html.bind(outputDoc.querySelector(".caniuse-stats"))`
       <a href="${featureURL}">caniuse.com</a>`;
   });
 }

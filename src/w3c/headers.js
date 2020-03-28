@@ -88,7 +88,7 @@ import { ISODate, concatDate, htmlJoinAnd } from "../core/utils.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
-import { hyperHTML } from "../core/import-maps.js";
+import { html } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
 
@@ -469,7 +469,13 @@ export function run(conf) {
         htmlJoinAnd(conf.alternateFormats, alt => {
           const lang = alt.hasOwnProperty("lang") && alt.lang ? alt.lang : null;
           const type = alt.hasOwnProperty("type") && alt.type ? alt.type : null;
-          return hyperHTML`<a rel='alternate' href='${alt.uri}' hreflang='${lang}' type='${type}'>${alt.label}</a>`;
+          return html`<a
+            rel="alternate"
+            href="${alt.uri}"
+            hreflang="${lang}"
+            type="${type}"
+            >${alt.label}</a
+          >`;
         })
       );
     },
@@ -519,19 +525,22 @@ export function run(conf) {
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgHTML = htmlJoinAnd(conf.wg, (wg, idx) => {
-      return hyperHTML`the <a href='${conf.wgURI[idx]}'>${wg}</a>`;
+      return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
     });
     const pats = [];
     for (let i = 0, n = conf.wg.length; i < n; i++) {
       pats.push(
-        hyperHTML`a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>public list of any patent disclosures (${conf.wg[i]})</a>`
+        html`a
+          <a href="${conf.wgPatentURI[i]}" rel="disclosure"
+            >public list of any patent disclosures (${conf.wg[i]})</a
+          >`
       );
     }
     conf.wgPatentHTML = htmlJoinAnd(pats);
   } else {
     conf.multipleWGs = false;
     if (conf.wg) {
-      conf.wgHTML = hyperHTML`the <a href='${conf.wgURI}'>${conf.wg}</a>`;
+      conf.wgHTML = html`the <a href="${conf.wgURI}">${conf.wg}</a>`;
     }
   }
   if (conf.specStatus === "PR" && !conf.crEnd) {
@@ -584,7 +593,7 @@ export function run(conf) {
     );
   }
   if (!sotd.classList.contains("override")) {
-    hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
+    html.bind(sotd)`${populateSoTD(conf, sotd)}`;
   }
 
   if (!conf.implementationReportURI && conf.isCR) {

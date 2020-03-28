@@ -38,6 +38,7 @@ const modules = [
   import("../src/core/webidl-index.js"),
   import("../src/core/link-to-dfn.js"),
   import("../src/core/render-biblio.js"),
+  import("../src/core/dfn-index.js"),
   import("../src/core/contrib.js"),
   import("../src/core/fix-headers.js"),
   import("../src/core/structure.js"),

@@ -8,7 +8,7 @@
 
 import { addId, getIntlData } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML as html } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/examples";

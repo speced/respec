@@ -1,7 +1,6 @@
 // @ts-check
-import { hyperHTML } from "../../core/import-maps.js";
+import { html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
-const html = hyperHTML;
 
 export default link => {
   if (!link.key) {
