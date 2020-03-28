@@ -14,12 +14,15 @@ colors.setTheme({
   info: "white",
 });
 
-function string() {
-  const includeFilter = [/\.css$/, /\.svg$/, /respec-worker\.js$/];
+/**
+ * @param {object} opts
+ * @param {RegExp[]} opts.include
+ */
+function string(opts) {
   const minifier = new CleanCSS();
   return {
     transform(code, id) {
-      if (!includeFilter.some(re => re.test(id))) return;
+      if (!opts.include.some(re => re.test(id))) return;
 
       if (id.endsWith(".css")) {
         code = minifier.minify(code).styles;
@@ -132,7 +135,9 @@ const Builder = {
             },
           ],
         }),
-        string(),
+        string({
+          include: [/\.css$/, /\.svg$/, /respec-worker\.js$/],
+        }),
       ],
       onwarn(warning, warn) {
         if (warning.code !== "CIRCULAR_DEPENDENCY") {
