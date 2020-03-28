@@ -6,7 +6,6 @@ const { promises: fsp } = require("fs");
 const path = require("path");
 const { rollup } = require("rollup");
 const alias = require("rollup-plugin-alias");
-const { string } = require("rollup-plugin-string");
 const CleanCSS = require("clean-css");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
@@ -15,14 +14,19 @@ colors.setTheme({
   info: "white",
 });
 
-function stringCSS() {
+function string() {
+  const includeFilter = [/\.css$/, /\.svg$/, /respec-worker\.js$/];
   const minifier = new CleanCSS();
   return {
     transform(code, id) {
-      if (!id.endsWith(".css")) return;
-      const { styles } = minifier.minify(code);
+      if (!includeFilter.some(re => re.test(id))) return;
+
+      if (id.endsWith(".css")) {
+        code = minifier.minify(code).styles;
+      }
+
       return {
-        code: `export default ${JSON.stringify(styles)};`,
+        code: `export default ${JSON.stringify(code)};`,
         map: { mappings: "" },
       };
     },
@@ -128,10 +132,7 @@ const Builder = {
             },
           ],
         }),
-        stringCSS(),
-        string({
-          include: [/\.svg$/, /respec-worker\.js$/],
-        }),
+        string(),
       ],
       onwarn(warning, warn) {
         if (warning.code !== "CIRCULAR_DEPENDENCY") {
