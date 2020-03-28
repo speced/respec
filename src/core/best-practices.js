@@ -31,7 +31,7 @@ export function run() {
   const summaryItems = bpSummary ? document.createElement("ul") : null;
   [...bps].forEach((bp, num) => {
     const id = addId(bp, "bp");
-    const localizedBpName = html` <a class="marker self-link" href="${`#${id}`}"
+    const localizedBpName = html`<a class="marker self-link" href="${`#${id}`}"
       ><bdi lang="${lang}">${l10n.best_practice}${num + 1}</bdi></a
     >`;
 

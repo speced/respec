@@ -63,7 +63,7 @@ export async function run(conf) {
   const featureURL = new URL(options.feature, "https://caniuse.com/").href;
 
   const caniuseCss = await caniuseCssPromise;
-  document.head.appendChild(html` <style class="removeOnSave">
+  document.head.appendChild(html`<style class="removeOnSave">
     ${caniuseCss}
   </style>`);
 
@@ -82,7 +82,7 @@ export async function run(conf) {
       return html`<a href="${featureURL}">caniuse.com</a>`;
     }
   })();
-  const definitionPair = html` <dt class="caniuse-title">Browser support:</dt>
+  const definitionPair = html`<dt class="caniuse-title">Browser support:</dt>
     <dd class="caniuse-stats">
       ${{
         any: contentPromise,

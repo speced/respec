@@ -64,7 +64,7 @@ const downloadLinks = [
 
 function toDownloadLink(details) {
   const { id, href, fileName, title, type } = details;
-  return html` <a
+  return html`<a
     href="${href}"
     id="${id}"
     download="${fileName}"
@@ -78,7 +78,7 @@ function toDownloadLink(details) {
 const saveDialog = {
   async show(button) {
     await document.respecIsReady;
-    const div = html` <div class="respec-save-buttons">
+    const div = html`<div class="respec-save-buttons">
       ${downloadLinks.map(toDownloadLink)}
     </div>`;
     ui.freshModal(l10n.save_snapshot, div, button);

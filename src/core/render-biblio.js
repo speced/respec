@@ -87,7 +87,7 @@ export function run(conf) {
     const refs = type === "Normative" ? norms : informs;
     if (!refs.length) continue;
 
-    const sec = html` <section>
+    const sec = html`<section>
       <h3>
         ${type === "Normative" ? l10n.norm_references : l10n.info_references}
       </h3>
@@ -122,7 +122,7 @@ export function run(conf) {
         a.ref.toLocaleLowerCase().localeCompare(b.ref.toLocaleLowerCase())
       );
 
-    sec.appendChild(html` <dl class="bibliography">
+    sec.appendChild(html`<dl class="bibliography">
       ${refsToShow.map(showRef)}
     </dl>`);
     refSection.appendChild(sec);
