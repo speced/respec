@@ -11,7 +11,7 @@
  */
 
 import { getIntlData, norm, showInlineError } from "./utils.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 export const name = "core/title";
 
 const localizationStrings = {
@@ -28,7 +28,7 @@ const l10n = getIntlData(localizationStrings);
 export function run(conf) {
   /** @type {HTMLElement} */
   const h1Elem =
-    document.querySelector("h1#title") || hyperHTML`<h1 id="title">`;
+    document.querySelector("h1#title") || html`<h1 id="title"></h1>`;
 
   // check existing element is ok to use
   if (h1Elem.isConnected && h1Elem.textContent.trim() === "") {
@@ -62,7 +62,7 @@ function setDocumentTitle(conf, h1Elem) {
 
   if (conf.isPreview && conf.prNumber) {
     const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;
-    const { childNodes } = hyperHTML`
+    const { childNodes } = html`
       Preview of PR <a href="${prUrl}">#${conf.prNumber}</a>:
     `;
     h1Elem.prepend(...childNodes);

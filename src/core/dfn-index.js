@@ -8,7 +8,7 @@ import { addId, getIntlData } from "./utils.js";
 import { citeDetailsConverter } from "./data-cite.js";
 import { fetchAsset } from "./text-loader.js";
 import { getTermFromElement } from "./xref.js";
-import { hyperHTML as html } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { renderInlineCitation } from "./render-biblio.js";
 import { sub } from "./pubsubhub.js";
 

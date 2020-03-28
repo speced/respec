@@ -2,7 +2,7 @@
 // Module dini/conformance
 // Handle the conformance section properly.
 import { getIntlData, htmlJoinAnd } from "../core/utils.js";
-import { hyperHTML as html } from "../core/import-maps.js";
+import { html } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
 import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";
