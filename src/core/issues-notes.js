@@ -13,7 +13,7 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, getIntlData, joinAnd, parents } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
+import { html as hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/issues-notes";

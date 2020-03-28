@@ -1,7 +1,7 @@
 // @ts-check
 import { fetchAndCache } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 
 export const name = "core/mdn-annotation";
 
@@ -53,7 +53,7 @@ function insertMDNBox(node) {
     // If the target ancestor already has a mdnBox inserted, we just use it
     return targetSibling;
   }
-  const mdnBox = hyperHTML`<aside class="mdn before wrapped"></aside>`;
+  const mdnBox = html`<aside class="mdn before wrapped"></aside>`;
   parentNode.insertBefore(mdnBox, targetAncestor);
   return mdnBox;
 }
@@ -63,7 +63,7 @@ function attachMDNDetail(container, mdnSpec) {
   container.innerHTML += `<button onclick="toggleMDNStatus(this.parentNode)" aria-label="Expand MDN details"><b>MDN</b></button>`;
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const href = `${MDN_URL_BASE}${slug}`;
-  const mdnDetail = hyperHTML`
+  const mdnDetail = html`
     <div>
       <a title="${summary}" href="${href}">${mdnSubPath}</a>
     </div>
@@ -77,7 +77,7 @@ function attachMDNBrowserSupport(container, mdnSpec) {
     container.innerHTML += `<p class="nosupportdata">No support data.</p>`;
     return;
   }
-  const supportTable = hyperHTML`<p class="mdnsupport">
+  const supportTable = html`<p class="mdnsupport">
     ${buildBrowserSupportTable(mdnSpec.support)}
   </p>`;
   container.appendChild(supportTable);
@@ -87,11 +87,10 @@ function buildBrowserSupportTable(support) {
   function createRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
-    return hyperHTML`
-      <span class="${classList}">
-        <span class="browser-name">${MDN_BROWSERS[browserId]}</span>
-        <span class="version">${version ? version : displayStatus}</span>
-      </span>`;
+    return html` <span class="${classList}">
+      <span class="browser-name">${MDN_BROWSERS[browserId]}</span>
+      <span class="version">${version ? version : displayStatus}</span>
+    </span>`;
   }
 
   function createRowFromBrowserData(browserId, versionData) {
@@ -149,11 +148,15 @@ export async function run(conf) {
     maxAge
   );
   const mdnCss = await mdnCssPromise;
-  document.head.appendChild(hyperHTML`<style>${mdnCss}</style>`);
-  document.head.appendChild(hyperHTML`<script>
-     function toggleMDNStatus(div) {
-       div.parentNode.classList.toggle('wrapped');
-     }
+  document.head.appendChild(
+    html`<style>
+      ${mdnCss}
+    </style>`
+  );
+  document.head.appendChild(html`<script>
+    function toggleMDNStatus(div) {
+      div.parentNode.classList.toggle("wrapped");
+    }
   </script>`);
   const nodesWithId = document.querySelectorAll("[id]");
   [...nodesWithId]

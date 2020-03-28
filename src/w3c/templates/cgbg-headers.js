@@ -1,5 +1,5 @@
 // @ts-check
-import { hyperHTML as html } from "../../core/import-maps.js";
+import { html } from "../../core/import-maps.js";
 import { l10n } from "./headers.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";

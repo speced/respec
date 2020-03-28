@@ -2,7 +2,7 @@
 // self link to the selected dfn. Based on Bikeshed's dfn panels at
 // https://github.com/tabatkins/bikeshed/blob/ef44162c2e/bikeshed/dfnpanels.py
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
+import { html as hyperHTML } from "./import-maps.js";
 import { norm } from "./utils.js";
 
 export const name = "core/dfn-panel";

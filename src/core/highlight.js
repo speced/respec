@@ -5,7 +5,7 @@
  * Performs syntax highlighting to all pre and code elements.
  */
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML as html } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { msgIdGenerator } from "./utils.js";
 import { workerPromise } from "./worker.js";
 export const name = "core/highlight";
