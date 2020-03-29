@@ -51,7 +51,7 @@ describe("Core — Examples", () => {
     expect(marker.querySelector(".example-title").textContent).toBe(": EX");
     expect(example.getAttribute("title")).toBeNull();
     expect(example.textContent.trim()).toBe(
-      "Example 1: EX\n  \n{\n  CONTENT\n}"
+      "Example 1:  EX\n  \n{\n  CONTENT\n}"
     );
   });
   it("processes children of aside examples", async () => {
@@ -73,7 +73,7 @@ describe("Core — Examples", () => {
     const example = doc.querySelectorAll("code.hljs");
     expect(example.length).toBe(3);
     expect(example[0].textContent).toBe(
-      "// Whitespace before this text should be removed"
+      "// Whitespacea before this text should be removed"
     );
     expect(example[1].textContent).toBe(
       "// this one should also have its whitespace removed"
