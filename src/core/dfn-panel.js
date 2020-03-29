@@ -74,15 +74,13 @@ function createPanel(dfn) {
   const href = dfn.dataset.href || `#${id}`;
   const links = document.querySelectorAll(`a[href="${href}"]`);
 
-  const tempNode = document.createElement("div");
-  tempNode.innerHTML = `
+  return document.createRange().createContextualFragment(`
     <aside class="dfn-panel" id="dfn-panel">
       <b><a class="self-link" href="${href}">Permalink</a></b>
       <b>Referenced in:</b>
       ${referencesToHTML(id, links)}
     </aside>
-  `;
-  return tempNode.querySelector("aside");
+  `);
 }
 
 /**
