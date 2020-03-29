@@ -15,15 +15,14 @@ describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
   /**
-   * @param {Element} child
-   * @param {string} string
+   * @param {Node} node
    */
-  function normalizedIncludes(child, string) {
-    return child.textContent.replace(/\s+/g, " ").includes(string);
+  function collapsedTextContent({ textContent }) {
+    return textContent.replace(/\s+/g, " ");
   }
   function contains(el, query, string) {
     return [...el.querySelectorAll(query)].filter(child =>
-      normalizedIncludes(child, string)
+      collapsedTextContent(child).includes(string)
     );
   }
   describe("prevRecShortname & prevRecURI", () => {
@@ -52,12 +51,9 @@ describe("W3C — Headers", () => {
       expect(doc.querySelector(".head h2").textContent).toContain(
         "W3C Editor's Draft"
       );
-      expect(
-        normalizedIncludes(
-          doc.getElementById("sotd"),
-          "does not imply endorsement by the W3C Membership."
-        )
-      ).toBe(true);
+      expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
+        "does not imply endorsement by the W3C Membership."
+      );
     });
 
     it("indicates as recommended", async () => {
@@ -67,12 +63,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(
-        normalizedIncludes(
-          doc.getElementById("sotd"),
-          "is endorsed by the Director as a W3C Recommendation."
-        )
-      ).toBe(true);
+      expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
+        "is endorsed by the Director as a W3C Recommendation."
+      );
     });
   });
 
