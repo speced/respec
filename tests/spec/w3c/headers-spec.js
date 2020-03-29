@@ -14,10 +14,18 @@ const findContent = string => {
 describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
-  const contains = (el, query, string) =>
-    [...el.querySelectorAll(query)].filter(child =>
-      child.textContent.replace(/\s+/g, " ").includes(string)
+  /**
+   * @param {Element} child
+   * @param {string} string
+   */
+  function normalizedIncludes(child, string) {
+    return child.textContent.replace(/\s+/g, " ").includes(string);
+  }
+  function contains(el, query, string) {
+    return [...el.querySelectorAll(query)].filter(child =>
+      normalizedIncludes(child, string)
     );
+  }
   describe("prevRecShortname & prevRecURI", () => {
     it("takes prevRecShortname and prevRecURI into account", async () => {
       const ops = makeStandardOps();
@@ -44,6 +52,27 @@ describe("W3C — Headers", () => {
       expect(doc.querySelector(".head h2").textContent).toContain(
         "W3C Editor's Draft"
       );
+      expect(
+        normalizedIncludes(
+          doc.getElementById("sotd"),
+          "does not imply endorsement by the W3C Membership."
+        )
+      ).toBe(true);
+    });
+
+    it("indicates as recommended", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      expect(
+        normalizedIncludes(
+          doc.getElementById("sotd"),
+          "is endorsed by the Director as a W3C Recommendation."
+        )
+      ).toBe(true);
     });
   });
 

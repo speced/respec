@@ -108,8 +108,8 @@ export default (conf, opts) => {
                   ? renderImplementationReportURI(conf)
                   : ""}
                 ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-                ${conf.notRec ? renderNotRec(conf) : ""}
-                ${conf.isRec ? renderIsRec() : ""} ${renderDeliverer(conf)}
+                ${conf.isRec ? renderIsRec() : renderNotRec(conf)}
+                ${renderDeliverer(conf)}
                 <p>
                   This document is governed by the
                   <a
@@ -185,8 +185,7 @@ function renderImplementationReportURI(conf) {
   </p>`;
 }
 
-function renderNotRec(conf) {
-  const { anOrA, textStatus } = conf;
+function renderNotRec({ anOrA, textStatus }) {
   return html`<p>
     Publication as ${anOrA} ${textStatus} does not imply endorsement by the W3C
     Membership. This is a draft document and may be updated, replaced or
@@ -196,7 +195,7 @@ function renderNotRec(conf) {
 }
 
 function renderIsRec() {
-  html`<p>
+  return html`<p>
     This document has been reviewed by W3C Members, by software developers, and
     by other W3C groups and interested parties, and is endorsed by the Director
     as a W3C Recommendation. It is a stable document and may be used as
