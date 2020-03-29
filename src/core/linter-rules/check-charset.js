@@ -28,12 +28,7 @@ function linterFunction(_, doc) {
   const metas = doc.querySelectorAll("meta[charset]");
   const val = [];
   for (const meta of metas) {
-    val.push(
-      meta
-        .getAttribute("charset")
-        .trim()
-        .toLowerCase()
-    );
+    val.push(meta.getAttribute("charset").trim().toLowerCase());
   }
   const utfExists = val.includes("utf-8");
 

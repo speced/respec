@@ -1,7 +1,7 @@
 // @ts-check
 import { fetchAndCache } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 
 export const name = "core/mdn-annotation";
 
@@ -53,7 +53,7 @@ function insertMDNBox(node) {
     // If the target ancestor already has a mdnBox inserted, we just use it
     return targetSibling;
   }
-  const mdnBox = hyperHTML`<aside class="mdn before wrapped"></aside>`;
+  const mdnBox = html`<aside class="mdn before wrapped"></aside>`;
   parentNode.insertBefore(mdnBox, targetAncestor);
   return mdnBox;
 }
@@ -63,7 +63,7 @@ function attachMDNDetail(container, mdnSpec) {
   container.innerHTML += `<button onclick="toggleMDNStatus(this.parentNode)" aria-label="Expand MDN details"><b>MDN</b></button>`;
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const href = `${MDN_URL_BASE}${slug}`;
-  const mdnDetail = hyperHTML`
+  const mdnDetail = html`
     <div>
       <a title="${summary}" href="${href}">${mdnSubPath}</a>
     </div>
@@ -77,56 +77,54 @@ function attachMDNBrowserSupport(container, mdnSpec) {
     container.innerHTML += `<p class="nosupportdata">No support data.</p>`;
     return;
   }
-  const supportTable = hyperHTML`<p class="mdnsupport">
-    ${[buildBrowserSupportTable(mdnSpec.support)]}
+  const supportTable = html`<p class="mdnsupport">
+    ${buildBrowserSupportTable(mdnSpec.support)}
   </p>`;
   container.appendChild(supportTable);
 }
 
 function buildBrowserSupportTable(support) {
-  let innerHTML = "";
-  function addMDNBrowserRow(browserId, yesNoUnknown, version) {
+  function createRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
-    const browserRow = `
-      <span class="${classList}">
-        <span class="browser-name">${MDN_BROWSERS[browserId]}</span>
-        <span class="version">${version ? version : displayStatus}</span>
-      </span>`;
-    innerHTML += browserRow;
+    return html`<span class="${classList}">
+      <span class="browser-name">${MDN_BROWSERS[browserId]}</span>
+      <span class="version">${version ? version : displayStatus}</span>
+    </span>`;
   }
 
-  function processBrowserData(browserId, versionData) {
+  function createRowFromBrowserData(browserId, versionData) {
     if (versionData.version_removed) {
-      addMDNBrowserRow(browserId, "No", "");
-      return;
+      return createRow(browserId, "No", "");
     }
     const versionAdded = versionData.version_added;
     if (!versionAdded) {
-      addMDNBrowserRow(browserId, "Unknown", "");
-      return;
+      return createRow(browserId, "Unknown", "");
     }
     if (typeof versionAdded === "boolean") {
-      addMDNBrowserRow(browserId, versionAdded ? "Yes" : "No", "");
+      return createRow(browserId, versionAdded ? "Yes" : "No", "");
     } else {
-      addMDNBrowserRow(browserId, "Yes", `${versionAdded}+`);
+      return createRow(browserId, "Yes", `${versionAdded}+`);
     }
   }
 
+  const rows = [];
+
   Object.keys(MDN_BROWSERS).forEach(browserId => {
     if (!support[browserId]) {
-      addMDNBrowserRow(browserId, "Unknown", "");
+      rows.push(createRow(browserId, "Unknown", ""));
     } else {
       if (Array.isArray(support[browserId])) {
         support[browserId].forEach(b => {
-          processBrowserData(browserId, b);
+          rows.push(createRowFromBrowserData(browserId, b));
         });
       } else {
-        processBrowserData(browserId, support[browserId]);
+        rows.push(createRowFromBrowserData(browserId, support[browserId]));
       }
     }
   });
-  return innerHTML;
+
+  return rows;
 }
 
 export async function run(conf) {
@@ -150,11 +148,15 @@ export async function run(conf) {
     maxAge
   );
   const mdnCss = await mdnCssPromise;
-  document.head.appendChild(hyperHTML`<style>${[mdnCss]}</style>`);
-  document.head.appendChild(hyperHTML`<script>
-     function toggleMDNStatus(div) {
-       div.parentNode.classList.toggle('wrapped');
-     }
+  document.head.appendChild(
+    html`<style>
+      ${mdnCss}
+    </style>`
+  );
+  document.head.appendChild(html`<script>
+    function toggleMDNStatus(div) {
+      div.parentNode.classList.toggle("wrapped");
+    }
   </script>`);
   const nodesWithId = document.querySelectorAll("[id]");
   [...nodesWithId]

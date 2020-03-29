@@ -8,7 +8,7 @@
 
 import { removeCommentNodes, removeReSpec } from "./utils.js";
 import { expose } from "./expose-modules.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 const mimeTypes = new Map([
@@ -77,14 +77,14 @@ function cleanup(cloneDoc) {
     "meta[charset], meta[content*='charset=']"
   );
   if (!metaCharset) {
-    metaCharset = hyperHTML`<meta charset="utf-8">`;
+    metaCharset = html`<meta charset="utf-8" />`;
   }
   insertions.appendChild(metaCharset);
 
   // Add meta generator
   const respecVersion = `ReSpec ${window.respecVersion || "Developer Channel"}`;
-  const metaGenerator = hyperHTML`
-    <meta name="generator" content="${respecVersion}">
+  const metaGenerator = html`
+    <meta name="generator" content="${respecVersion}" />
   `;
 
   insertions.appendChild(metaGenerator);

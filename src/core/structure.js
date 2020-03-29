@@ -10,14 +10,8 @@
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
-import {
-  addId,
-  children,
-  getIntlData,
-  parents,
-  renameElement,
-} from "./utils.js";
-import { hyperHTML } from "./import-maps.js";
+import { addId, getIntlData, parents, renameElement } from "./utils.js";
+import { html } from "./import-maps.js";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
 const headerTags = ["h1", ...lowerHeaderTags];
@@ -71,7 +65,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
     return null;
   }
   /** @type {HTMLElement} */
-  const ol = hyperHTML`<ol class='toc'>`;
+  const ol = html`<ol class="toc"></ol>`;
   for (const section of sections) {
     if (section.isAppendix && !prefix && !appendixMode) {
       lastNonAppendix = index;
@@ -93,7 +87,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
 
     if (!section.isIntro) {
       index += 1;
-      section.header.prepend(hyperHTML`<bdi class='secno'>${secno} </bdi>`);
+      section.header.prepend(html`<bdi class="secno">${secno} </bdi>`);
     }
 
     if (level <= maxTocLevel) {
@@ -123,10 +117,10 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
  * @param {Element} parent
  */
 function getSectionTree(parent, { tocIntroductory = false } = {}) {
-  const sectionElements = children(
-    parent,
-    tocIntroductory ? "section" : "section:not(.introductory)"
-  );
+  /** @type {NodeListOf<HTMLElement>} */
+  const sectionElements = tocIntroductory
+    ? parent.querySelectorAll(":scope > section")
+    : parent.querySelectorAll(":scope > section:not(.introductory)");
   /** @type {Section[]} */
   const sections = [];
 
@@ -158,10 +152,10 @@ function getSectionTree(parent, { tocIntroductory = false } = {}) {
  * @param {string} id
  */
 function createTocListItem(header, id) {
-  const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref"/>`;
+  const anchor = html`<a href="${`#${id}`}" class="tocxref" />`;
   anchor.append(...header.cloneNode(true).childNodes);
   filterHeader(anchor);
-  return hyperHTML`<li class='tocline'>${anchor}</li>`;
+  return html`<li class="tocline">${anchor}</li>`;
 }
 
 /**
@@ -232,8 +226,8 @@ function createTableOfContents(ol) {
   if (!ol) {
     return;
   }
-  const nav = hyperHTML`<nav id="toc">`;
-  const h2 = hyperHTML`<h2 class="introductory">${l10n.toc}</h2>`;
+  const nav = html`<nav id="toc"></nav>`;
+  const h2 = html`<h2 class="introductory">${l10n.toc}</h2>`;
   addId(h2);
   nav.append(h2, ol);
   const ref =
@@ -248,6 +242,8 @@ function createTableOfContents(ol) {
     }
   }
 
-  const link = hyperHTML`<p role='navigation' id='back-to-top'><a href='#title'><abbr title='Back to Top'>&uarr;</abbr></a></p>`;
+  const link = html`<p role="navigation" id="back-to-top">
+    <a href="#title"><abbr title="Back to Top">&uarr;</abbr></a>
+  </p>`;
   document.body.append(link);
 }

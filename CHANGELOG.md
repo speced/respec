@@ -1,5 +1,128 @@
 # Changelog
 
+## [v25.4.0](https://github.com/w3c/respec/tree/v25.4.0) (2020-03-08)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.3.2...v25.4.0)
+
+**Closed issues:**
+
+- Using working group data from w3c [\#2780](https://github.com/w3c/respec/issues/2780)
+- Support accessibility checks via linter  [\#2777](https://github.com/w3c/respec/issues/2777)
+
+**Merged pull requests:**
+
+- chore\(package\): update rollup to version 2.0.2 [\#2783](https://github.com/w3c/respec/pull/2783) ([saschanaz](https://github.com/saschanaz))
+- feat\(core/a11y\): add axe-core integration [\#2779](https://github.com/w3c/respec/pull/2779) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(assets/ui.css\): align first paragraph to warning marker [\#2778](https://github.com/w3c/respec/pull/2778) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v25.3.2](https://github.com/w3c/respec/tree/v25.3.2) (2020-03-04)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.3.1...v25.3.2)
+
+**Merged pull requests:**
+
+- Fix typo [\#2775](https://github.com/w3c/respec/pull/2775) ([acka47](https://github.com/acka47))
+- refactor\(core/utils\): no special behavior on addId [\#2766](https://github.com/w3c/respec/pull/2766) ([saschanaz](https://github.com/saschanaz))
+
+## [v25.3.1](https://github.com/w3c/respec/tree/v25.3.1) (2020-02-25)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.3.0...v25.3.1)
+
+**Closed issues:**
+
+- Conformance section with customized title and content? [\#2768](https://github.com/w3c/respec/issues/2768)
+
+**Merged pull requests:**
+
+- Typo in src/README.md [\#2770](https://github.com/w3c/respec/pull/2770) ([sglaser](https://github.com/sglaser))
+- fix\(core/utils\): Make joinAnd\(\) and htmlJoinAnd\(\) localizable [\#2769](https://github.com/w3c/respec/pull/2769) ([sebastian-meyer](https://github.com/sebastian-meyer))
+- refactor\(core/issues-notes\): separate number getter [\#2765](https://github.com/w3c/respec/pull/2765) ([saschanaz](https://github.com/saschanaz))
+
+## [v25.3.0](https://github.com/w3c/respec/tree/v25.3.0) (2020-02-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.2.1...v25.3.0)
+
+**Closed issues:**
+
+- HTML Entities should be converted when generating XHTML [\#2759](https://github.com/w3c/respec/issues/2759)
+- \<pre\> blocks in a markdown list are not indented correctly [\#2733](https://github.com/w3c/respec/issues/2733)
+- support "levels" [\#2406](https://github.com/w3c/respec/issues/2406)
+- Plan to deprecate EdgeHTML support [\#2374](https://github.com/w3c/respec/issues/2374)
+
+**Merged pull requests:**
+
+- chore\(package\): update deps [\#2764](https://github.com/w3c/respec/pull/2764) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/utils\): remove `children` util [\#2763](https://github.com/w3c/respec/pull/2763) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/webidl-clipboard\): always use navigator.clipboard [\#2762](https://github.com/w3c/respec/pull/2762) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/override-config\): use Object.fromEntries [\#2761](https://github.com/w3c/respec/pull/2761) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/biblio-db\): remove legacy warning [\#2760](https://github.com/w3c/respec/pull/2760) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(w3c/level\): add level configuration [\#2758](https://github.com/w3c/respec/pull/2758) ([janiceshiu](https://github.com/janiceshiu))
+- refactor\(l10n\): use hyperHTML [\#2757](https://github.com/w3c/respec/pull/2757) ([saschanaz](https://github.com/saschanaz))
+- refactor\(w3c/headers\): pass alternatesHTML as options [\#2756](https://github.com/w3c/respec/pull/2756) ([saschanaz](https://github.com/saschanaz))
+- refactor: remove raw HTML insertions [\#2755](https://github.com/w3c/respec/pull/2755) ([saschanaz](https://github.com/saschanaz))
+- refactor\(tools/release\): no need to checkout [\#2754](https://github.com/w3c/respec/pull/2754) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/biblio\): export as a class [\#2752](https://github.com/w3c/respec/pull/2752) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/title\): standardise document and h1 title [\#2750](https://github.com/w3c/respec/pull/2750) ([janiceshiu](https://github.com/janiceshiu))
+- chore\(tools/netlify\): add DINI specs for preview [\#2748](https://github.com/w3c/respec/pull/2748) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v25.2.1](https://github.com/w3c/respec/tree/v25.2.1) (2020-02-14)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.2.0...v25.2.1)
+
+**Closed issues:**
+
+- .hljs-comment, .hljs-quote color does not pass WCAG contrast [\#2737](https://github.com/w3c/respec/issues/2737)
+
+**Merged pull requests:**
+
+- fix\(tools/release\): Windows support [\#2753](https://github.com/w3c/respec/pull/2753) ([saschanaz](https://github.com/saschanaz))
+- fix\(core/xref\): adapt error hint URL to seach query [\#2751](https://github.com/w3c/respec/pull/2751) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/biblio\): improve type support [\#2747](https://github.com/w3c/respec/pull/2747) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor: use Array@flat instead of utils@flatten [\#2746](https://github.com/w3c/respec/pull/2746) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/markdown\): retry using reindent\(\) instead [\#2715](https://github.com/w3c/respec/pull/2715) ([saschanaz](https://github.com/saschanaz))
+
+## [v25.2.0](https://github.com/w3c/respec/tree/v25.2.0) (2020-02-11)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.1.1...v25.2.0)
+
+**Merged pull requests:**
+
+- Add new profile for DINI [\#2739](https://github.com/w3c/respec/pull/2739) ([sebastian-meyer](https://github.com/sebastian-meyer))
+
+## [v25.1.1](https://github.com/w3c/respec/tree/v25.1.1) (2020-02-10)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.1.0...v25.1.1)
+
+**Closed issues:**
+
+- Respec thinks that PR numbers are definitions [\#2731](https://github.com/w3c/respec/issues/2731)
+- Improve styling of anchor tags on focussing upon them [\#2713](https://github.com/w3c/respec/issues/2713)
+- indentation in codeblocks still doesn't work with markdown [\#2700](https://github.com/w3c/respec/issues/2700)
+
+**Merged pull requests:**
+
+- chore\(LICENSE\): Update text to 2015 version [\#2742](https://github.com/w3c/respec/pull/2742) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(package\): update deps [\#2740](https://github.com/w3c/respec/pull/2740) ([marcoscaceres](https://github.com/marcoscaceres))
+- Changed .hljs-comment color [\#2738](https://github.com/w3c/respec/pull/2738) ([Nikhar444](https://github.com/Nikhar444))
+- fix\(core/xref\): remove false spec context from prefilled UI URL [\#2735](https://github.com/w3c/respec/pull/2735) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/xref\): split getting context into functions [\#2734](https://github.com/w3c/respec/pull/2734) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/headers\): construct PR preview URL if `prUrl` is missing [\#2732](https://github.com/w3c/respec/pull/2732) ([sidvishnoi](https://github.com/sidvishnoi))
+- Update puppeteer to the latest version 🚀 [\#2730](https://github.com/w3c/respec/pull/2730) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- chore\(package\): update deps [\#2728](https://github.com/w3c/respec/pull/2728) ([marcoscaceres](https://github.com/marcoscaceres))
+- test\(core/markdown-spec\): reenable custom id test [\#2726](https://github.com/w3c/respec/pull/2726) ([saschanaz](https://github.com/saschanaz))
+- fix: reindent after markdown processing [\#2725](https://github.com/w3c/respec/pull/2725) ([saschanaz](https://github.com/saschanaz))
+- fix\(ui/about-respec\): point to the right URL [\#2723](https://github.com/w3c/respec/pull/2723) ([saschanaz](https://github.com/saschanaz))
+- perf\(core/xref\): remove duplicate cite context to reduce query size [\#2722](https://github.com/w3c/respec/pull/2722) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/data-include\): remove redundant variables [\#2721](https://github.com/w3c/respec/pull/2721) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/utils\): no `arguments` [\#2720](https://github.com/w3c/respec/pull/2720) ([saschanaz](https://github.com/saschanaz))
+- chore\(CHANGELOG\): regenerate v25.0.1..v25.1.0 [\#2719](https://github.com/w3c/respec/pull/2719) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(assets/ui.css\): improve focus styles for export buttons [\#2718](https://github.com/w3c/respec/pull/2718) ([ridhishjain](https://github.com/ridhishjain))
+- chore\(tools/builder\): use IIFE and remove appendBoilerplate [\#2716](https://github.com/w3c/respec/pull/2716) ([sidvishnoi](https://github.com/sidvishnoi))
+- l10n\(core/inlines\): RFC2119 for German specs \(2119de\) [\#2710](https://github.com/w3c/respec/pull/2710) ([sebastian-meyer](https://github.com/sebastian-meyer))
+- chore: add Japanese translation [\#2699](https://github.com/w3c/respec/pull/2699) ([himorin](https://github.com/himorin))
+- Add linter support for named anchors [\#2688](https://github.com/w3c/respec/pull/2688) ([andyfmiller](https://github.com/andyfmiller))
+- refactor: convert definitionMap to CaseInsensitiveMap [\#2682](https://github.com/w3c/respec/pull/2682) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v25.1.0](https://github.com/w3c/respec/tree/v25.1.0) (2020-01-15)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v25.0.4...v25.1.0)
@@ -93,7 +216,6 @@
 **Closed issues:**
 
 - require\('os'\).tmpdir\(\) has been depriciated and should be replaced by another package [\#2673](https://github.com/w3c/respec/issues/2673)
-- Indentation is messed up in markdown code blocks [\#2609](https://github.com/w3c/respec/issues/2609)
 - Merge reqRef feature into core/anchor-expander? [\#2361](https://github.com/w3c/respec/issues/2361)
 - Making copyright configurable for non-W3C specs [\#2243](https://github.com/w3c/respec/issues/2243)
 - Respec2HTML randomly fails to show warnings when using webpack build [\#2227](https://github.com/w3c/respec/issues/2227)
@@ -149,7 +271,23 @@
 
 ## [v24.38.0](https://github.com/w3c/respec/tree/v24.38.0) (2019-12-18)
 
-[Full Changelog](https://github.com/w3c/respec/compare/v24.37.1...v24.38.0)
+[Full Changelog](https://github.com/w3c/respec/compare/v24.37.2...v24.38.0)
+
+**Closed issues:**
+
+- Biblio links should have a `data-link-type="biblio"` [\#2492](https://github.com/w3c/respec/issues/2492)
+- Steal WHATWG/HTML's dfn popup thing [\#1103](https://github.com/w3c/respec/issues/1103)
+
+**Merged pull requests:**
+
+- fix\(core/l10n\): fallback to 'en' for missing l10n keys [\#2646](https://github.com/w3c/respec/pull/2646) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/markdown\): indent idl correctly after a list [\#2643](https://github.com/w3c/respec/pull/2643) ([saschanaz](https://github.com/saschanaz))
+- enhancement\(core/inlines\): add `data-link-type="biblio"` to inline citations [\#2642](https://github.com/w3c/respec/pull/2642) ([ridhishjain](https://github.com/ridhishjain))
+- feat\(core/dfn-panel\): add panel with local dfn references [\#2626](https://github.com/w3c/respec/pull/2626) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v24.37.2](https://github.com/w3c/respec/tree/v24.37.2) (2019-12-17)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v24.37.1...v24.37.2)
 
 **Implemented enhancements:**
 
@@ -160,15 +298,10 @@
 - Remove conf.bugTracker support [\#2632](https://github.com/w3c/respec/issues/2632)
 - Remove unused utils functions [\#2557](https://github.com/w3c/respec/issues/2557)
 - Fix alert icon styling [\#2531](https://github.com/w3c/respec/issues/2531)
-- Biblio links should have a `data-link-type="biblio"` [\#2492](https://github.com/w3c/respec/issues/2492)
 - Best practices should use .advicement class [\#2133](https://github.com/w3c/respec/issues/2133)
-- Steal WHATWG/HTML's dfn popup thing [\#1103](https://github.com/w3c/respec/issues/1103)
 
 **Merged pull requests:**
 
-- fix\(core/l10n\): fallback to 'en' for missing l10n keys [\#2646](https://github.com/w3c/respec/pull/2646) ([sidvishnoi](https://github.com/sidvishnoi))
-- fix\(core/markdown\): indent idl correctly after a list [\#2643](https://github.com/w3c/respec/pull/2643) ([saschanaz](https://github.com/saschanaz))
-- enhancement\(core/inlines\): add `data-link-type="biblio"` to inline citations [\#2642](https://github.com/w3c/respec/pull/2642) ([ridhishjain](https://github.com/ridhishjain))
 - refactor\(core/markdown\): drop paragraph removal [\#2641](https://github.com/w3c/respec/pull/2641) ([saschanaz](https://github.com/saschanaz))
 - chore\(.github\): point OpenCollective in Sponsors [\#2639](https://github.com/w3c/respec/pull/2639) ([saschanaz](https://github.com/saschanaz))
 - chore\(package.json\): update deps [\#2637](https://github.com/w3c/respec/pull/2637) ([saschanaz](https://github.com/saschanaz))
@@ -179,7 +312,6 @@
 - refactor\(w3c/headers\): use htmlJoinAnd for wg\[Patent\]HTML [\#2629](https://github.com/w3c/respec/pull/2629) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
 - Update marked to the latest version 🚀 [\#2628](https://github.com/w3c/respec/pull/2628) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
 - Fixes: \#2614 \(Allow "webidl" css class on pre tags to denote a WebIDL block\) [\#2627](https://github.com/w3c/respec/pull/2627) ([ridhishjain](https://github.com/ridhishjain))
-- feat\(core/dfn-panel\): add panel with local dfn references [\#2626](https://github.com/w3c/respec/pull/2626) ([sidvishnoi](https://github.com/sidvishnoi))
 - refactor\(w3c/conformance\): use htmlJoinAnd [\#2623](https://github.com/w3c/respec/pull/2623) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
 - refactor\(core/utils\): remove unused utils functions [\#2622](https://github.com/w3c/respec/pull/2622) ([ridhishjain](https://github.com/ridhishjain))
 - refactor\(core/utils\): add `htmlJoinAnd` utility [\#2613](https://github.com/w3c/respec/pull/2613) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
@@ -994,6 +1126,7 @@
 **Merged pull requests:**
 
 - fix\(core/mdn-annotation\): Improve user experience [\#2327](https://github.com/w3c/respec/pull/2327) ([Swapnilr1](https://github.com/Swapnilr1))
+- fix\(core/anchor-expander\): clone nodes when expanding an anchor [\#2326](https://github.com/w3c/respec/pull/2326) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v24.21.1](https://github.com/w3c/respec/tree/v24.21.1) (2019-05-02)
 
@@ -1011,7 +1144,6 @@
 
 **Merged pull requests:**
 
-- fix\(core/anchor-expander\): clone nodes when expanding an anchor [\#2326](https://github.com/w3c/respec/pull/2326) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(core/inlines\): match \_ for inlineExpansion [\#2325](https://github.com/w3c/respec/pull/2325) ([marcoscaceres](https://github.com/marcoscaceres))
 - Update webidl2 to the latest version 🚀 [\#2322](https://github.com/w3c/respec/pull/2322) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
 - fix\(core/xref\): prevent crash when query outside section element [\#2320](https://github.com/w3c/respec/pull/2320) ([marcoscaceres](https://github.com/marcoscaceres))
@@ -1365,7 +1497,6 @@
 - fix\(core/data-abbr\): normalize abbreviations [\#2213](https://github.com/w3c/respec/pull/2213) ([devanshbatra04](https://github.com/devanshbatra04))
 - feat\(assets/respec2\): make inline warnings visually pop [\#2209](https://github.com/w3c/respec/pull/2209) ([marcoscaceres](https://github.com/marcoscaceres))
 - SpecHelper: Process body attributes [\#2206](https://github.com/w3c/respec/pull/2206) ([Swapnilr1](https://github.com/Swapnilr1))
-- refactor\(core/override-configuration\): clean comments [\#2203](https://github.com/w3c/respec/pull/2203) ([marcoscaceres](https://github.com/marcoscaceres))
 - \(core/xref\) : xref defaults [\#2188](https://github.com/w3c/respec/pull/2188) ([Swapnilr1](https://github.com/Swapnilr1))
 - Add \<cite\> when data-cite='spec' is used [\#2171](https://github.com/w3c/respec/pull/2171) ([pradeepgangwar](https://github.com/pradeepgangwar))
 
@@ -1380,6 +1511,7 @@
 **Merged pull requests:**
 
 - fix\(core/data-abbr\): generalize implementation [\#2204](https://github.com/w3c/respec/pull/2204) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/override-configuration\): clean comments [\#2203](https://github.com/w3c/respec/pull/2203) ([marcoscaceres](https://github.com/marcoscaceres))
 - refactor\(core/caniuse\): use respec.org API [\#2168](https://github.com/w3c/respec/pull/2168) ([sidvishnoi](https://github.com/sidvishnoi))
 
 ## [v24.7.0](https://github.com/w3c/respec/tree/v24.7.0) (2019-03-26)
@@ -1909,6 +2041,7 @@
 - refactor\(core/issue-notes\): remove jquery [\#1969](https://github.com/w3c/respec/pull/1969) ([devanshbatra04](https://github.com/devanshbatra04))
 - refactor: modularize definitionMap [\#1968](https://github.com/w3c/respec/pull/1968) ([saschanaz](https://github.com/saschanaz))
 - refactor\(core/utils\): remove makeOwnerSwapper\(\) [\#1967](https://github.com/w3c/respec/pull/1967) ([Swapnilr1](https://github.com/Swapnilr1))
+- refactor\(core/structure\): avoid using module level variables nor innerHTML [\#1965](https://github.com/w3c/respec/pull/1965) ([saschanaz](https://github.com/saschanaz))
 - refactor\(core/webidl-index\): Import nonNormativeClasses [\#1963](https://github.com/w3c/respec/pull/1963) ([Johanna-hub](https://github.com/Johanna-hub))
 - fix\(core/utils\): Add non-normative classes [\#1962](https://github.com/w3c/respec/pull/1962) ([Johanna-hub](https://github.com/Johanna-hub))
 
@@ -1929,7 +2062,6 @@
 
 **Merged pull requests:**
 
-- refactor\(core/structure\): avoid using module level variables nor innerHTML [\#1965](https://github.com/w3c/respec/pull/1965) ([saschanaz](https://github.com/saschanaz))
 - chore\(package\): update deps [\#1961](https://github.com/w3c/respec/pull/1961) ([marcoscaceres](https://github.com/marcoscaceres))
 - refactor: avoid using insertBefore\(\) [\#1960](https://github.com/w3c/respec/pull/1960) ([saschanaz](https://github.com/saschanaz))
 - fix\(core/figures\): use childNodes instead of \<figcaption\> [\#1958](https://github.com/w3c/respec/pull/1958) ([saschanaz](https://github.com/saschanaz))

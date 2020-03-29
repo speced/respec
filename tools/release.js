@@ -213,9 +213,8 @@ const Prompts = {
   async askBumpVersion() {
     const rawVersion = await npm("view respec version");
     const version = rawVersion.trim();
-    const commits = await git(
-      "log `git describe --tags --abbrev=0`..HEAD --oneline"
-    );
+    const latestTag = await git("describe --tags --abbrev=0");
+    const commits = await git(`log ${latestTag.trim()}..HEAD --oneline`);
     if (!commits) {
       throw new Error("😢  No commits. Nothing to release.");
     }
@@ -366,12 +365,14 @@ const run = async () => {
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     await npm("run builddeps");
-    for (const name of ["w3c-common", "w3c", "geonovum"]) {
+    for (const name of ["w3c-common", "w3c", "geonovum", "dini"]) {
       await Builder.build({ name });
     }
     console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
+    const nullDevice =
+      process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
     await node(
-      `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../examples/basic.built.html --out /dev/null`,
+      `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../examples/basic.built.html --out ${nullDevice}`,
       { showOutput: true }
     );
     console.log(colors.info(" Build Seems good... ✅"));
@@ -394,9 +395,6 @@ const run = async () => {
     indicators.get("push-to-server").hide();
     console.log(colors.info(" Publishing to npm... 📡"));
     await npm("publish", { showOutput: true });
-    // publishing generates a new build, which we don't want
-    // on develop branch
-    await git("checkout builds");
     if (initialBranch !== MAIN_BRANCH) {
       await Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }

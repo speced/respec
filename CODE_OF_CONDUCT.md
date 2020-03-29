@@ -58,9 +58,7 @@ Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported by contacting one of the [W3C Ombuds](https://www.w3.org/Consortium/pwe/#ombuds)
 or one of the Maintainers:
 
- * [Marcos Caceres](mailto:marcos@marcosc.com)
- * [Shane McCarron](mailto:shane@spec-ops.io)
- * [Tobie Langel](tobie.langel@gmail.com)
+ * [Sid Vishnoi](mailto:sidvishnoi8@gmail.com)
  * [Dominique Hazaël-Massieux](mailto:dom@w3.org)
 
 All complaints will be reviewed and investigated and will result in a response that

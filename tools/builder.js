@@ -6,13 +6,35 @@ const { promises: fsp } = require("fs");
 const path = require("path");
 const { rollup } = require("rollup");
 const alias = require("rollup-plugin-alias");
-const { string } = require("rollup-plugin-string");
+const CleanCSS = require("clean-css");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 colors.setTheme({
   error: "red",
   info: "white",
 });
+
+/**
+ * @param {object} opts
+ * @param {RegExp[]} opts.include
+ */
+function string(opts) {
+  const minifier = new CleanCSS();
+  return {
+    transform(code, id) {
+      if (!opts.include.some(re => re.test(id))) return;
+
+      if (id.endsWith(".css")) {
+        code = minifier.minify(code).styles;
+      }
+
+      return {
+        code: `export default ${JSON.stringify(code)};`,
+        map: { mappings: "" },
+      };
+    },
+  };
+}
 
 /** @type {import("command-line-usage").OptionDefinition[]} */
 const optionList = [

@@ -8,9 +8,8 @@
  * It's a standalone module that can be imported into other modules.
  *
  */
-import { flatten } from "./utils.js";
 import { idb } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
+
 export const name = "core/biblio-db";
 
 /**
@@ -142,36 +141,18 @@ export const biblioDB = {
     if (!data) {
       return;
     }
-    const aliasesAndRefs = {
-      alias: new Set(),
-      reference: new Set(),
-    };
-    Object.keys(data)
-      .filter(key => {
-        if (typeof data[key] === "string") {
-          let msg = `Legacy SpecRef entries are not supported: \`[[${key}]]\`. `;
-          msg +=
-            "Please update it to the new format at [specref repo](https://github.com/tobie/specref/)";
-          pub("error", msg);
-          return false;
-        }
-        return true;
-      })
-      .map(id => Object.assign({ id }, data[id]))
-      .forEach(obj => {
-        if (obj.aliasOf) {
-          aliasesAndRefs.alias.add(obj);
-        } else {
-          aliasesAndRefs.reference.add(obj);
-        }
-      });
-    const promisesToAdd = [...ALLOWED_TYPES]
-      .map(type => {
-        return Array.from(aliasesAndRefs[type]).map(details =>
-          this.add(type, details)
-        );
-      })
-      .reduce(flatten, []);
+    const aliasesAndRefs = { alias: [], reference: [] };
+    for (const id of Object.keys(data)) {
+      const obj = { id, ...data[id] };
+      if (obj.aliasOf) {
+        aliasesAndRefs.alias.push(obj);
+      } else {
+        aliasesAndRefs.reference.push(obj);
+      }
+    }
+    const promisesToAdd = [...ALLOWED_TYPES].flatMap(type => {
+      return aliasesAndRefs[type].map(details => this.add(type, details));
+    });
     await Promise.all(promisesToAdd);
   },
   /**

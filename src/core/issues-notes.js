@@ -13,7 +13,7 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, getIntlData, joinAnd, parents } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
+import { html as hyperHTML } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/issues-notes";
@@ -99,26 +99,19 @@ const l10n = getIntlData(localizationStrings);
  * @param {*} conf
  */
 function handleIssues(ins, ghIssues, conf) {
-  const hasDataNum = !!document.querySelector(".issue[data-number]");
-  let issueNum = 0;
+  const getIssueNumber = createIssueNumberGetter();
   const issueList = document.createElement("ul");
   ins.forEach(inno => {
     const { type, displayType, isFeatureAtRisk } = getIssueType(inno);
     const isIssue = type === "issue";
     const isInline = inno.localName === "span";
     const { number: dataNum } = inno.dataset;
-    /** @type {Partial<Report>} */
     const report = {
       type,
       inline: isInline,
       title: inno.title,
+      number: getIssueNumber(inno),
     };
-    if (isIssue && !isInline && !hasDataNum) {
-      issueNum++;
-      report.number = issueNum;
-    } else if (dataNum) {
-      report.number = Number(dataNum);
-    }
     // wrap
     if (!isInline) {
       const cssClass = isFeatureAtRisk ? `${type} atrisk` : type;
@@ -142,10 +135,10 @@ function handleIssues(ins, ghIssues, conf) {
       /** @type {GitHubIssue} */
       let ghIssue;
       if (isIssue) {
-        if (!hasDataNum) {
-          text += ` ${issueNum}`;
-        } else if (dataNum) {
-          text += ` ${dataNum}`;
+        if (report.number !== undefined) {
+          text += ` ${report.number}`;
+        }
+        if (inno.dataset.hasOwnProperty("number")) {
           const link = linkToIssueTracker(dataNum, conf, { isFeatureAtRisk });
           if (link) {
             title.before(link);
@@ -192,6 +185,23 @@ function handleIssues(ins, ghIssues, conf) {
     pub(report.type, report);
   });
   makeIssueSectionSummary(issueList);
+}
+
+function createIssueNumberGetter() {
+  if (document.querySelector(".issue[data-number]")) {
+    return element => {
+      if (element.dataset.number) {
+        return Number(element.dataset.number);
+      }
+    };
+  }
+
+  let issueNumber = 0;
+  return element => {
+    if (element.classList.contains("issue") && element.localName !== "span") {
+      return ++issueNumber;
+    }
+  };
 }
 
 /**
@@ -242,7 +252,7 @@ function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
 
 /**
  * @param {string} l10nIssue
- * @param {Partial<Report>} report
+ * @param {Report} report
  */
 function createIssueSummaryEntry(l10nIssue, report, id) {
   const issueNumberText = `${l10nIssue} ${report.number}`;
@@ -277,14 +287,6 @@ function makeIssueSectionSummary(issueList) {
   }
 }
 
-function isLight(rgb) {
-  const red = (rgb >> 16) & 0xff;
-  const green = (rgb >> 8) & 0xff;
-  const blue = (rgb >> 0) & 0xff;
-  const illumination = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-  return illumination > 140;
-}
-
 /**
  * @param {GitHubLabel[]} labels
  * @param {string} title
@@ -306,20 +308,23 @@ function createLabelsGroup(labels, title, repoURL) {
   return hyperHTML`<span class="issue-label">: ${title}${labelsGroup}</span>`;
 }
 
+/** @param {string} bgColorHex background color as a hex value without '#' */
+function textColorFromBgColor(bgColorHex) {
+  return parseInt(bgColorHex, 16) > 0xffffff / 2 ? "#000" : "#fff";
+}
+
 /**
  * @param {GitHubLabel} label
  * @param {string} repoURL
  */
 function createLabel(label, repoURL) {
-  const { color, name } = label;
+  const { color: bgColor, name } = label;
   const issuesURL = new URL("./issues/", repoURL);
   issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
-  const rgb = parseInt(color, 16);
-  const textColorClass = isNaN(rgb) || isLight(rgb) ? "light" : "dark";
-  const cssClasses = `respec-gh-label respec-label-${textColorClass}`;
-  const style = `background-color: #${color}`;
+  const color = textColorFromBgColor(bgColor);
+  const style = `background-color: #${bgColor}; color: ${color}`;
   return hyperHTML`<a
-    class="${cssClasses}"
+    class="respec-gh-label"
     style="${style}"
     href="${issuesURL.href}">${name}</a>`;
 }
@@ -368,7 +373,7 @@ export async function run(conf) {
   const css = await cssPromise;
   const { head: headElem } = document;
   headElem.insertBefore(
-    hyperHTML`<style>${[css]}</style>`,
+    hyperHTML`<style>${css}</style>`,
     headElem.querySelector("link")
   );
   handleIssues(issuesAndNotes, ghIssues, conf);

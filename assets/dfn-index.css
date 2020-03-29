@@ -1,0 +1,23 @@
+/*
+@module "core/dfn-index"
+Extends and overrides some styles from `base.css`.
+*/
+ul.index {
+  columns: 30ch;
+  column-gap: 1.5em;
+}
+
+ul.index li {
+  list-style: inherit;
+}
+
+ul.index li span {
+  color: inherit;
+  cursor: pointer;
+  white-space: normal;
+}
+
+ul.index code {
+  color: inherit;
+  font-size: 0.95em;
+}

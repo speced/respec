@@ -3,7 +3,7 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
@@ -21,6 +21,18 @@ function hashString(text) {
   }
   return String(hash);
 }
+
+const localizationStrings = {
+  en: {
+    x_and_y: " and ",
+    x_y_and_z: ", and ",
+  },
+  de: {
+    x_and_y: " und ",
+    x_y_and_z: " und ",
+  },
+};
+const l10n = getIntlData(localizationStrings);
 
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   timeZone: "UTC",
@@ -116,8 +128,10 @@ export function removeReSpec(doc) {
  * @param {HTMLElement|HTMLElement[]} elems
  * @param {String} msg message to show in warning
  * @param {String=} title error message to add on each element
+ * @param {object} [options]
+ * @param {string} [options.details]
  */
-export function showInlineWarning(elems, msg, title) {
+export function showInlineWarning(elems, msg, title, { details } = {}) {
   if (!Array.isArray(elems)) elems = [elems];
   const links = elems
     .map((element, i) => {
@@ -125,7 +139,11 @@ export function showInlineWarning(elems, msg, title) {
       return generateMarkdownLink(element, i);
     })
     .join(", ");
-  pub("warn", `${msg} at: ${links}.`);
+  let message = `${msg} at: ${links}.`;
+  if (details) {
+    message += `\n\n<details>${details}</details>`;
+  }
+  pub("warn", message);
   console.warn(msg, elems);
 }
 
@@ -263,12 +281,13 @@ export function joinAnd(array = [], mapper = item => item, lang = docLang) {
     case 1: // "x"
       return items.toString();
     case 2: // x and y
-      return items.join(" and ");
+      return items.join(l10n.x_and_y);
     default: {
       // x, y, and z
       const str = items.join(", ");
       const lastComma = str.lastIndexOf(",");
-      return `${str.substr(0, lastComma + 1)} and ${str.slice(lastComma + 2)}`;
+      const and = l10n.x_y_and_z;
+      return `${str.substr(0, lastComma)}${and}${str.slice(lastComma + 2)}`;
     }
   }
 }
@@ -401,6 +420,7 @@ export function linkCSS(doc, styles) {
 // with RSv1. It is therefore not tested and not actively supported.
 /**
  * @this {any}
+ * @param {string} content
  * @param {string} [flist]
  */
 export function runTransforms(content, flist, ...funcArgs) {
@@ -483,23 +503,13 @@ export async function fetchAndCache(input, maxAge = 86400000) {
   return response;
 }
 
-// --- COLLECTION/ITERABLE HELPERS ---------------
-/**
- * Spreads one iterable into another.
- *
- * @param {Array} collector
- * @param {any|Array} item
- * @returns {Array}
- */
-export function flatten(collector, item) {
-  const items = !Array.isArray(item)
-    ? [item]
-    : item.slice().reduce(flatten, []);
-  collector.push(...items);
-  return collector;
-}
-
 // --- DOM HELPERS -------------------------------
+
+export function htmlJoinComma(array, mapper = item => item) {
+  const items = array.map(mapper);
+  const joined = items.slice(0, -1).map(item => html`${item}, `);
+  return html`${joined}${items[items.length - 1]}`;
+}
 
 /**
  * Separates each item with proper commas and "and".
@@ -513,10 +523,10 @@ export function htmlJoinAnd(array, mapper = item => item) {
     case 1: // "x"
       return items[0];
     case 2: // x and y
-      return hyperHTML`${items[0]} and ${items[1]}`;
+      return html`${items[0]}${l10n.x_and_y}${items[1]}`;
     default: {
-      const joinedItems = items.slice(0, -1).map(item => hyperHTML`${item}, `);
-      return hyperHTML`${joinedItems}and ${items[items.length - 1]}`;
+      const joined = htmlJoinComma(items.slice(0, -1));
+      return html`${joined}${l10n.x_y_and_z}${items[items.length - 1]}`;
     }
   }
 }
@@ -560,9 +570,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 
   if (!id) {
     id = "generatedID";
-  } else if (pfx === "example") {
-    id = txt;
-  } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
+  } else if (/\.$/.test(id) || !/^[a-z]/i.test(pfx || id)) {
     id = `x${id}`; // trailing . doesn't play well with jQuery
   }
   if (pfx) {
@@ -777,31 +785,26 @@ export function parents(element, selector) {
 }
 
 /**
- * Applies the selector for direct descendants.
- * This is a helper function for browsers without :scope support.
- * Note that this doesn't support comma separated selectors.
+ * Calculates indentation when the element starts after a newline.
+ * The value will be empty if no newline or any non-whitespace exists after one.
  * @param {Element} element
- * @param {string} selector
- * @returns {NodeListOf<HTMLElement>}
+ *
+ * @example `    <div></div>` returns "    " (4 spaces).
  */
-export function children(element, selector) {
-  try {
-    return element.querySelectorAll(`:scope > ${selector}`);
-  } catch {
-    let tempId = "";
-    // We give a temporary id, to overcome lack of ":scope" support in Edge.
-    if (!element.id) {
-      tempId = `temp-${String(Math.random()).substr(2)}`;
-      element.id = tempId;
-    }
-    const query = `#${element.id} > ${selector}`;
-    /** @type {NodeListOf<HTMLElement>} */
-    const elements = element.parentElement.querySelectorAll(query);
-    if (tempId) {
-      element.id = "";
-    }
-    return elements;
+export function getElementIndentation(element) {
+  const { previousSibling } = element;
+  if (!previousSibling || previousSibling.nodeType !== Node.TEXT_NODE) {
+    return "";
   }
+  const index = previousSibling.textContent.lastIndexOf("\n");
+  if (index === -1) {
+    return "";
+  }
+  const slice = previousSibling.textContent.slice(index + 1);
+  if (/\S/.test(slice)) {
+    return "";
+  }
+  return slice;
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
-Atom One Light by Daniel Gamage
+Adapted from Atom One Light by Daniel Gamage for ReSpec, with better color contrast
 Original One Light Syntax theme from https://github.com/atom/one-light-syntax
 base:    #fafafa
 mono-1:  #383a42
@@ -25,7 +25,7 @@ hue-6-2: #c18401
 
 .hljs-comment,
 .hljs-quote {
-  color: #a0a1a7;
+  color: #717277;
   font-style: italic;
 }
 
@@ -40,11 +40,12 @@ hue-6-2: #c18401
 .hljs-selector-tag,
 .hljs-deletion,
 .hljs-subst {
-  color: #e45649;
+  color: #ca4706;
+  font-weight: bold;
 }
 
 .hljs-literal {
-  color: #0184bb;
+  color: #0b76c5;
 }
 
 .hljs-string,
@@ -52,12 +53,12 @@ hue-6-2: #c18401
 .hljs-addition,
 .hljs-attribute,
 .hljs-meta-string {
-  color: #50a14f;
+  color: #42803C;
 }
 
 .hljs-built_in,
 .hljs-class .hljs-title {
-  color: #c18401;
+  color: #9a6a01;
 }
 
 .hljs-attr,
@@ -77,7 +78,7 @@ hue-6-2: #c18401
 .hljs-meta,
 .hljs-selector-id,
 .hljs-title {
-  color: #4078f2;
+  color: #336ae3;
 }
 
 .hljs-emphasis {
