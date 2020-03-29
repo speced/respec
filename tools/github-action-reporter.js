@@ -31,8 +31,7 @@ function parseFailure(result, locationPrefix) {
   // convert newlines into array and flatten
   const log = result.log.flatMap(message => message.split("\n"));
   const { suite, description } = result;
-  const message = log[0];
-  const [file, line, col] = parseLocation(log, locationPrefix);
+  const { message, file, line, col } = parseLog(log, locationPrefix);
   const test = suite.concat(description);
   return { test, file, line, col, message };
 }
@@ -41,12 +40,16 @@ function parseFailure(result, locationPrefix) {
  * @param {string[]} log
  * @param {string} locationPrefix
  */
-function parseLocation(log, locationPrefix) {
-  const locLine = log.find(line => line.includes(locationPrefix));
-  if (!locLine) return [];
+function parseLog(log, locationPrefix) {
+  const locLineIndex = log.findIndex(line => line.includes(locationPrefix));
+  if (locLineIndex === -1) {
+    return { message: log[0] };
+  }
+  const message = log.slice(0, locLineIndex - 1).join("\n");
+  const locLine = log[locLineIndex];
   const location = locLine.split(locationPrefix, 2)[1].replace(/\)$/, "");
   const [file, line, col] = location.split(":");
-  return [file, line, col];
+  return { message, file, line, col };
 }
 
 /** @param {Failure} failure */
