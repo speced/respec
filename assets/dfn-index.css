@@ -17,6 +17,10 @@ ul.index li span {
   white-space: normal;
 }
 
+#index-defined-here ul.index li {
+  font-size: 0.9rem;
+}
+
 ul.index code {
   color: inherit;
   font-size: 0.95em;

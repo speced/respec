@@ -65,7 +65,7 @@ function deriveAction(clickTarget) {
 function createPanel(dfn) {
   const { id } = dfn;
   const href = dfn.dataset.href || `#${id}`;
-  const links = document.querySelectorAll(`a[href="${href}"]`);
+  const links = document.querySelectorAll(`a[href="${href}"]:not(.index-term)`);
 
   /** @type {HTMLElement} */
   const panel = hyperHTML`
