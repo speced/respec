@@ -143,7 +143,7 @@ function renderLocalTerm(term, dfns) {
     <ul>
       ${dfns.map(dfn => {
         const type = getLocalTermType(dfn);
-        const text = getLocalTermSuffix(dfn, type, term);
+        const text = getLocalTermSuffix(dfn, type, term) || "definition of";
         return renderItem(dfn, text);
       })}
     </ul>
