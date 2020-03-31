@@ -39,8 +39,14 @@ describe("Core — dfn-index", () => {
     expect(index.querySelector("p#custom-paragraph").textContent).toBe("PASS");
 
     const subsections = index.querySelectorAll("section");
-    expect(subsections.length).toBe(1);
-    const [externalIndex] = subsections;
+    expect(subsections.length).toBe(2);
+    const [localIndex, externalIndex] = subsections;
+
+    const localIndexHeading = localIndex.querySelector("h3");
+    expect(localIndexHeading.textContent).toContain(
+      "Terms defined by this specification"
+    );
+    expect(localIndexHeading.nextElementSibling.matches("ul.index")).toBeTrue();
 
     const externalIndexHeading = externalIndex.querySelector("h3");
     expect(externalIndexHeading.textContent).toContain(
