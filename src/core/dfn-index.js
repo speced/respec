@@ -1,7 +1,8 @@
 // @ts-check
 /**
- * If a `<section id="index">` exists, it is filled by a list terms defined by
- * reference (external terms).
+ * If a `<section id="index">` exists, it is filled by a list of terms defined
+ * (locally) by current document and a list of terms referenced (external) by
+ * current document.
  */
 
 import { addId, getIntlData, norm } from "./utils.js";
