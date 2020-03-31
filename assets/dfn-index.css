@@ -23,5 +23,14 @@ ul.index li span {
 
 ul.index code {
   color: inherit;
-  font-size: 0.95em;
+}
+
+#index-defined-here .print-only {
+  display: none;
+}
+
+@media print {
+  #index-defined-here .print-only {
+    display: initial;
+  }
 }

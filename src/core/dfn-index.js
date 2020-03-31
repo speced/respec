@@ -67,6 +67,7 @@ export async function run(conf) {
     ${createLocalTermIndex()}
   </section>`;
   index.append(localTermIndex);
+  sub("toc", appendSectionNumbers, { once: true });
 
   const externalTermIndex = html`<section id="index-defined-elsewhere">
     <h3>${l10n.headingExternal}</h3>
@@ -117,7 +118,7 @@ function collectLocalTerms() {
 function renderLocalTerm(term, dfns) {
   const renderItem = (dfn, text, suffix) => {
     const href = `#${dfn.id}`;
-    return html`<li>
+    return html`<li data-id=${dfn.id}>
       <a class="index-term" href="${href}">${{ html: text }}</a> ${suffix
         ? { html: suffix }
         : ""}
@@ -212,6 +213,19 @@ function getLocalTermSuffix(dfn, type, term = "") {
     default:
       return "";
   }
+}
+
+function appendSectionNumbers() {
+  const getSectionNumber = id => {
+    const dfn = document.getElementById(id);
+    const sectionNumberEl = dfn.closest("section").querySelector(".secno");
+    const secNum = `§${sectionNumberEl.textContent.trim()}`;
+    return html`<span class="print-only">${secNum}</span>`;
+  };
+
+  /** @type {NodeListOf<HTMLElement>} */
+  const elems = document.querySelectorAll("#index-defined-here li[data-id]");
+  elems.forEach(el => el.append(getSectionNumber(el.dataset.id)));
 }
 
 /**
