@@ -125,8 +125,9 @@ function renderLocalTerm(term, dfns) {
   const renderItem = (dfn, text, suffix) => {
     const href = `#${dfn.id}`;
     return html`<li>
-      <a class="index-term" href="${href}">${{ html: text }}</a>
-      ${suffix ? { html: suffix } : ""}
+      <a class="index-term" href="${href}">${{ html: text }}</a> ${suffix
+        ? { html: suffix }
+        : ""}
     </li>`;
   };
 
