@@ -115,13 +115,6 @@ function collectLocalTerms() {
  * @returns {HTMLLIElement}
  */
 function renderLocalTerm(term, dfns) {
-  // /** @param {HTMLElement`} dfn */
-  // const getSectionNumber = dfn => {
-  //   const sectionNumberEl = dfn.closest("section").querySelector(".secno");
-  //   const sectionNumber = sectionNumberEl.textContent.trim();
-  //   return `<span class="print-only">§${sectionNumber}</span>`;
-  // };
-
   const renderItem = (dfn, text, suffix) => {
     const href = `#${dfn.id}`;
     return html`<li>
