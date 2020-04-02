@@ -87,6 +87,7 @@ describe("Core — dfn-index", () => {
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
       index = doc.getElementById("index-defined-here");
+      index.querySelectorAll(".print-only").forEach(el => el.remove());
     });
 
     it("doesn't list external terms", () => {
@@ -139,6 +140,17 @@ describe("Core — dfn-index", () => {
       expect(iface).toBe("Foo interface");
       expect(slot).toBe("[[haha]] internal slot for Foo");
       expect(concept).toBe("hello");
+    });
+
+    it("contains section number for print media", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const index = doc.getElementById("index-defined-here");
+
+      const item = index.querySelector("ul.index > li:nth-child(2)");
+      const secNum = item.querySelector(".print-only");
+      expect(secNum.textContent).toBe("§1.");
+      expect(item.textContent.endsWith("§1.")).toBeTrue();
     });
   });
 
