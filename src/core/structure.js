@@ -12,6 +12,7 @@
 
 import { addId, getIntlData, parents, renameElement } from "./utils.js";
 import { html } from "./import-maps.js";
+import { pub } from "./pubsubhub.js";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
 const headerTags = ["h1", ...lowerHeaderTags];
@@ -194,6 +195,9 @@ export function run(conf) {
       createTableOfContents(result);
     }
   }
+
+  // See core/dfn-index
+  pub("toc");
 }
 
 function renameSectionHeaders() {
