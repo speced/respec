@@ -98,14 +98,8 @@ function collectLocalTerms() {
     elemsByTerm.push(elem);
   }
 
-  /** @param {string} a @param {string} b */
-  const sortByTerm = (a, b) => {
-    a = a.slice(a.search(/\w/));
-    b = b.slice(b.search(/\w/));
-    return a.localeCompare(b);
-  };
-  const dataSortedByTerm = [...data].sort(([termA], [termB]) =>
-    sortByTerm(termA, termB)
+  const dataSortedByTerm = [...data].sort(([a], [b]) =>
+    a.slice(a.search(/\w/)).localeCompare(b.slice(b.search(/\w/)))
   );
 
   return dataSortedByTerm;
