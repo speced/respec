@@ -20,6 +20,7 @@ const localizationStrings = {
     heading: "Index",
     headingExternal: "Terms defined by reference",
     headlingLocal: "Terms defined by this specification",
+    dfnOf: "definition of",
   },
 };
 const l10n = getIntlData(localizationStrings);
@@ -137,7 +138,7 @@ function renderLocalTerm(term, dfns) {
     <ul>
       ${dfns.map(dfn => {
         const type = getLocalTermType(dfn);
-        const text = getLocalTermSuffix(dfn, type, term) || "definition of";
+        const text = getLocalTermSuffix(dfn, type, term) || l10n.dfnOf;
         return renderItem(dfn, text);
       })}
     </ul>
