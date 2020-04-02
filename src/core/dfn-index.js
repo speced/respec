@@ -381,4 +381,8 @@ function cleanup(doc) {
   doc
     .querySelectorAll("#index-defined-elsewhere li[data-spec]")
     .forEach(el => el.removeAttribute("data-spec"));
+
+  doc
+    .querySelectorAll("#index-defined-here li[data-id]")
+    .forEach(el => el.removeAttribute("data-id"));
 }
