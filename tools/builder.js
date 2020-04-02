@@ -127,7 +127,7 @@ const Builder = {
       plugins: [
         !debug && require("rollup-plugin-terser").terser(),
         alias({
-          resolve: [".css", ".svg"],
+          resolve: [".css", ".svg", ".js"],
           entries: [
             {
               find: /^text!(.*)/,
@@ -136,7 +136,12 @@ const Builder = {
           ],
         }),
         string({
-          include: [/\.css$/, /\.svg$/, /respec-worker\.js$/],
+          include: [
+            /dfn-panel\.runtime\.js$/,
+            /\.css$/,
+            /\.svg$/,
+            /respec-worker\.js$/,
+          ],
         }),
       ],
       onwarn(warning, warn) {
