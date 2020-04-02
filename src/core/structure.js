@@ -195,6 +195,8 @@ export function run(conf) {
       createTableOfContents(result);
     }
   }
+
+  // See core/dfn-index
   pub("toc");
 }
 

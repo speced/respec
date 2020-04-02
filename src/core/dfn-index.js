@@ -68,13 +68,21 @@ export async function run(conf) {
     ${createLocalTermIndex()}
   </section>`;
   index.append(localTermIndex);
-  sub("toc", appendSectionNumbers, { once: true });
 
   const externalTermIndex = html`<section id="index-defined-elsewhere">
     <h3>${l10n.headingExternal}</h3>
     ${createExternalTermIndex(toCiteDetails)}
   </section>`;
   index.append(externalTermIndex);
+
+  // XXX: This event is used to overcome an edge case with core/structure,
+  // related to a circular dependency in plugin run order. We want
+  // core/structure to run after dfn-index so the #index can be listed in the
+  // TOC, but we also want section numbers in dfn-index. So, we "split"
+  // core/dfn-index in two parts, one that runs before core/structure (using
+  // plugin order in profile) and the other (following) after section numbers
+  // are generated in core/structure (this event).
+  sub("toc", appendSectionNumbers, { once: true });
 
   sub("beforesave", cleanup);
 }
