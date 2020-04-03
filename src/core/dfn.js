@@ -1,6 +1,6 @@
 // @ts-check
 // Module core/dfn
-// - Finds all <dfn> elements and populates conf.definitionMap to identify them.
+// - Finds all <dfn> elements and populates definitionMap to identify them.
 
 import { getDfnTitles, norm } from "./utils.js";
 import { registerDefinition } from "./dfn-map.js";

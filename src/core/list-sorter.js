@@ -1,5 +1,4 @@
 // @ts-check
-import { children } from "./utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/list-sorter";
 
@@ -15,7 +14,7 @@ function makeSorter(direction) {
  * @returns {DocumentFragment}
  */
 export function sortListItems(elem, dir) {
-  const elements = [...children(elem, "li")];
+  const elements = [...elem.querySelectorAll(":scope > li")];
   const sortedElements = elements.sort(makeSorter(dir)).reduce((frag, elem) => {
     frag.appendChild(elem);
     return frag;
@@ -30,7 +29,7 @@ export function sortListItems(elem, dir) {
  * @returns {DocumentFragment}
  */
 export function sortDefinitionTerms(dl, dir) {
-  const elements = [...children(dl, "dt")];
+  const elements = [...dl.querySelectorAll(":scope > dt")];
   const sortedElements = elements.sort(makeSorter(dir)).reduce((frag, elem) => {
     const { nodeType, nodeName } = elem;
     const children = document.createDocumentFragment();

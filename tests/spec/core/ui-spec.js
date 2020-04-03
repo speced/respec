@@ -89,4 +89,40 @@ describe("Core - UI", () => {
       expect(dfnFoo.getAttribute("href")).toBe("#dfn-foo");
     });
   });
+
+  it("shows a list of definitions and labels definitions that are unused and/or exported", async () => {
+    const body = `
+      <p>
+        <dfn>foo</dfn>
+        <dfn data-export="">bar()</dfn>
+        <dfn data-export="">foobar</dfn>
+        <dfn>baz</dfn>
+      </p>
+      <p>References to <a>Foo</a> and <a>foobar</a>.</p>
+    `;
+
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    // open list and wait for it to load
+    const dfnListButton = doc.getElementById("respec-button-definitions");
+    dfnListButton.click();
+    await new Promise(resolve => setTimeout(resolve));
+
+    const dfns = doc.querySelectorAll("ul.respec-dfn-list li");
+    expect(dfns.length).toBe(4);
+
+    const [dfnBar, dfnBaz, dfnFoo, dfnFoobar] = dfns;
+
+    expect(dfnBar.textContent).toContain("exported unused");
+
+    expect(dfnBaz.textContent).toContain("unused");
+    expect(dfnBaz.textContent).not.toContain("exported");
+
+    expect(dfnFoo.textContent).not.toContain("unused");
+    expect(dfnFoo.textContent).not.toContain("exported");
+
+    expect(dfnFoobar.textContent).toContain("exported");
+    expect(dfnFoobar.textContent).not.toContain("unused");
+  });
 });

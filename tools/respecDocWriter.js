@@ -125,11 +125,11 @@ async function generateHTML(page, url) {
     return await page.evaluate(evaluateHTML, version);
   } catch (err) {
     const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${colors.debug(
-      `${`Specification: ${url}\n` +
+      `${
+        `Specification: ${url}\n` +
         `ReSpec version: ${version.join(".")}\n` +
-        "File a bug: https://github.com/w3c/respec/\n"}${
-        err ? `Error: ${err.stack}\n` : ""
-      }`
+        "File a bug: https://github.com/w3c/respec/\n"
+      }${err ? `Error: ${err.stack}\n` : ""}`
     )}`;
     throw new Error(msg);
   }

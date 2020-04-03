@@ -1,14 +1,29 @@
 // @ts-check
 // Module ui/search-specref
 // Search Specref database
-import { l10n, lang } from "../core/l10n.js";
-import { flatten } from "../core/utils.js";
-import { hyperHTML } from "../core/import-maps.js";
+import { getIntlData } from "../core/utils.js";
+import { html } from "../core/import-maps.js";
 import { ui } from "../core/ui.js";
 import { wireReference } from "../core/biblio.js";
 
+const localizationStrings = {
+  en: {
+    search_specref: "Search Specref",
+  },
+  nl: {
+    search_specref: "Doorzoek Specref",
+  },
+  ja: {
+    search_specref: "仕様検索",
+  },
+  de: {
+    search_specref: "Spezifikationen durchsuchen",
+  },
+};
+const l10n = getIntlData(localizationStrings);
+
 const button = ui.addCommand(
-  l10n[lang].search_specref,
+  l10n.search_specref,
   show,
   "Ctrl+Shift+Alt+space",
   "🔎"
@@ -17,8 +32,8 @@ const specrefURL = "https://specref.herokuapp.com/";
 const refSearchURL = `${specrefURL}search-refs`;
 const reveseLookupURL = `${specrefURL}reverse-lookup`;
 const form = document.createElement("form");
-const renderer = hyperHTML.bind(form);
-const resultList = hyperHTML.bind(document.createElement("div"));
+const renderer = html.bind(form);
+const resultList = html.bind(document.createElement("div"));
 
 form.id = "specref-ui";
 
@@ -50,7 +65,7 @@ function renderResults(resultMap, query, timeTaken) {
 }
 
 function toDefinitionPair([key, entry]) {
-  return hyperHTML.wire(entry)`
+  return html.wire(entry)`
     <dt>
       [${key}]
     </dt>
@@ -72,7 +87,7 @@ function resultProcessor({ includeVersions = false } = {}) {
     if (!includeVersions) {
       Array.from(results.values())
         .filter(entry => typeof entry === "object" && "versions" in entry)
-        .reduce(flatten, [])
+        .flat()
         .forEach(version => {
           results.delete(version);
         });
@@ -123,13 +138,13 @@ form.addEventListener("submit", async ev => {
 
 function show() {
   render();
-  ui.freshModal(l10n[lang].search_specref, form, button);
+  ui.freshModal(l10n.search_specref, form, button);
   /** @type {HTMLElement} */
   const input = form.querySelector("input[type=search]");
   input.focus();
 }
 
-const mast = hyperHTML.wire()`
+const mast = html.wire()`
   <header>
     <p>
       An Open-Source, Community-Maintained Database of
@@ -140,6 +155,7 @@ const mast = hyperHTML.wire()`
     <input
       name="searchBox"
       type="search"
+      aria-label="Search"
       autocomplete="off"
       placeholder="Keywords, titles, authors, urls…">
     <button
@@ -169,7 +185,7 @@ function render({ state = "", results, timeTaken, query } = {}) {
     <p class="state" hidden="${!state}">
       ${state}
     </p>
-    <section hidden="${!results}">${
+    <section hidden="${!results}" aria-live="polite">${
     results ? renderResults(results, query, timeTaken) : []
   }</section>
   `;

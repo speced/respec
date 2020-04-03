@@ -10,13 +10,19 @@ const { Builder } = require("./builder");
 const { DEPLOY_PRIME_URL, COMMIT_REF, REVIEW_ID, REPOSITORY_URL } = process.env;
 
 const BUILD_DIR = path.resolve(__dirname, "../builds/");
-const PROFILES = ["w3c", "w3c-common", "geonovum"];
+const PROFILES = ["w3c", "w3c-common", "geonovum", "dini"];
 
-const SPECS = [
-  "https://w3c.github.io/payment-request/",
-  "https://w3c.github.io/gamepad/",
-  "https://w3c.github.io/hr-time/",
-];
+const SPECS = {
+  W3C: [
+    "https://w3c.github.io/payment-request/",
+    "https://w3c.github.io/gamepad/",
+    "https://w3c.github.io/hr-time/",
+  ],
+  DINI: [
+    "https://dini-ag-kim.github.io/oer-service-card/latest/",
+    "https://dini-ag-kim.github.io/hs-oer-lom-profil/latest/",
+  ],
+};
 
 main().catch(error => {
   console.error(error);
@@ -33,12 +39,33 @@ async function main() {
 
 /**
  * @param {string[]} profiles
- * @param {string[]} specs
+ * @param {Record<string, string[]>} specsByProfile
  */
-function buildHTML(profiles, specs) {
-  const prURL = new URL(`pull/${REVIEW_ID}`, REPOSITORY_URL);
+function buildHTML(profiles, specsByProfile) {
+  const prURL = `${REPOSITORY_URL}/pull/${REVIEW_ID}`;
   const title = `ReSpec Build Preview for PR <a href="${prURL}">#${REVIEW_ID}</a>`;
   const fileURL = profile => `${DEPLOY_PRIME_URL}/respec-${profile}.js`;
+
+  const SelectSpec = () => {
+    const OptGroup = (profile, specs) => {
+      return `
+        <optgroup label="${profile}">
+          ${specs
+            .map(spec => `<option value="${spec}">${spec}</option>`)
+            .join("\n")}
+        </optgroup>
+      `;
+    };
+    return `
+      <select name="spec">
+        ${Object.entries(specsByProfile)
+          .map(([profile, specs]) => OptGroup(profile, specs))
+          .join("\n")}
+        <option value="">Add your own</option>
+      </select>
+    `;
+  };
+
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -92,10 +119,7 @@ function buildHTML(profiles, specs) {
       <h3>Commit: ${COMMIT_REF}</h3>
       <fieldset>
         <label for="spec">Spec URL</label>
-        <select name="spec">
-          ${specs.map(spec => `<option value="${spec}">${spec}</option>`)}
-          <option value="">Add your own</option>
-        </select>
+        ${SelectSpec()}
       </fieldset>
       <fieldset>
         <label for="version">Profile</label>

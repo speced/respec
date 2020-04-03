@@ -10,7 +10,7 @@ import {
 
 describe("Core — Can I Use", () => {
   afterAll(flushIframes);
-  const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.json`;
+  const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.html`;
 
   it("uses meaningful defaults", async () => {
     const ops = makeStandardOps({
@@ -98,7 +98,7 @@ describe("Core — Can I Use", () => {
     expect(chromeVersions.length).toBe(2);
 
     const firefoxVersions = firefox.querySelectorAll("ul li.caniuse-cell");
-    expect(firefoxVersions.length).toBe(5);
+    expect(firefoxVersions.length).toBe(4);
 
     const firefoxButton = firefox.querySelector("button");
     expect(firefoxButton.textContent.trim()).toBe("Firefox 61");
@@ -106,16 +106,6 @@ describe("Core — Can I Use", () => {
 
     expect(firefoxVersions[0].textContent.trim()).toBe("60");
     expect(firefoxVersions[0].classList.value).toBe("caniuse-cell n d");
-
-    // test dropdown
-    // let style = getComputedStyle(firefox.querySelector("ul"));
-    // expect(style.getPropertyValue("display")).toBe("none");
-
-    // // BUG: cannot trigger focus:
-    // see: https://github.com/w3c/respec/issues/1642
-    // firefoxButton.focus();
-    // style = getComputedStyle(firefox.querySelector("ul"));
-    // expect(style.getPropertyValue("display")).toBe("block");
   });
 
   it("removes irrelevant config for caniuse feature", async () => {

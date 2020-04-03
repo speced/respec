@@ -9,41 +9,63 @@
 //  This module only really works when you are in an HTTP context, and will most likely
 //  fail if you are editing your documents on your local drive. That is due to security
 //  restrictions in the browser.
+import { getElementIndentation, runTransforms } from "./utils.js";
 import { pub } from "./pubsubhub.js";
-import { runTransforms } from "./utils.js";
 
 export const name = "core/data-include";
 
+/**
+ * @param {string} text
+ * @param {string} indent
+ */
+function indentTextWithoutFirstLine(text, indent) {
+  const lines = text.split("\n");
+  const firstLine = lines.shift();
+  return `${firstLine}\n${lines.map(line => indent + line).join("\n")}`;
+}
+
+/**
+ * @param {HTMLElement} el
+ * @param {string} data
+ * @param {object} options
+ * @param {boolean} options.replace
+ */
+function fillWithText(el, data, { replace }) {
+  const { includeFormat } = el.dataset;
+  let fill = data;
+  if (includeFormat === "markdown") {
+    const indentation = getElementIndentation(el);
+    const indented = indentTextWithoutFirstLine(data, indentation);
+    fill = replace
+      ? indented // use element indentation
+      : `\n\n${indentation}${indented}\n\n${indentation}`;
+  }
+
+  if (includeFormat === "text") {
+    el.textContent = fill;
+  } else {
+    el.innerHTML = fill;
+  }
+
+  if (replace) {
+    el.replaceWith(...el.childNodes);
+  }
+}
+
+/**
+ * @param {string} rawData
+ * @param {string} id
+ * @param {string} url
+ */
 function processResponse(rawData, id, url) {
   /** @type {HTMLElement} */
   const el = document.querySelector(`[data-include-id=${id}]`);
-  const doc = el.ownerDocument;
   const data = runTransforms(rawData, el.dataset.oninclude, url);
   const replace = typeof el.dataset.includeReplace === "string";
-  let replacementNode;
-  switch (el.dataset.includeFormat) {
-    case "text":
-      if (replace) {
-        replacementNode = doc.createTextNode(data);
-        el.replaceWith(replacementNode);
-      } else {
-        el.textContent = data;
-      }
-      break;
-    default:
-      // html, which is just using "innerHTML"
-      el.innerHTML = data;
-      if (replace) {
-        replacementNode = doc.createDocumentFragment();
-        while (el.hasChildNodes()) {
-          replacementNode.append(el.removeChild(el.firstChild));
-        }
-        el.replaceWith(replacementNode);
-      }
-  }
+  fillWithText(el, data, { replace });
   // If still in the dom tree, clean up
-  if (doc.contains(el)) {
-    cleanUp(el);
+  if (!replace) {
+    removeIncludeAttributes(el);
   }
 }
 /**
@@ -51,7 +73,7 @@ function processResponse(rawData, id, url) {
  *
  * @param {Element} el The element to clean up.
  */
-function cleanUp(el) {
+function removeIncludeAttributes(el) {
   [
     "data-include",
     "data-include-format",

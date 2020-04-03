@@ -6,13 +6,35 @@ const { promises: fsp } = require("fs");
 const path = require("path");
 const { rollup } = require("rollup");
 const alias = require("rollup-plugin-alias");
-const { string } = require("rollup-plugin-string");
+const CleanCSS = require("clean-css");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 colors.setTheme({
   error: "red",
   info: "white",
 });
+
+/**
+ * @param {object} opts
+ * @param {RegExp[]} opts.include
+ */
+function string(opts) {
+  const minifier = new CleanCSS();
+  return {
+    transform(code, id) {
+      if (!opts.include.some(re => re.test(id))) return;
+
+      if (id.endsWith(".css")) {
+        code = minifier.minify(code).styles;
+      }
+
+      return {
+        code: `export default ${JSON.stringify(code)};`,
+        map: { mappings: "" },
+      };
+    },
+  };
+}
 
 /** @type {import("command-line-usage").OptionDefinition[]} */
 const optionList = [
@@ -66,30 +88,6 @@ const usageSections = [
   },
 ];
 
-/**
- * Async function that appends the boilerplate to the generated script
- * and writes out the result. It also creates the source map file.
- *
- * @private
- * @param  {String} outPath Where to write the output to.
- * @param  {String} version The version of the script.
- * @return {Promise} Resolves when done writing the files.
- */
-async function appendBoilerplate(outPath, version, name) {
-  const mapPath = `${path.dirname(outPath)}/respec-${name}.js.map`;
-  const [optimizedJs, sourceMap] = await Promise.all([
-    fsp.readFile(outPath, "utf-8"),
-    fsp.readFile(mapPath, "utf-8"),
-  ]);
-  const respecJs = `"use strict";
-window.respecVersion = "${version}";
-${optimizedJs}`;
-  const respecJsMap = sourceMap.replace(`"mappings":"`, `"mappings":";;`);
-  const promiseToWriteJs = fsp.writeFile(outPath, respecJs, "utf-8");
-  const promiseToWriteMap = fsp.writeFile(mapPath, respecJsMap, "utf-8");
-  await Promise.all([promiseToWriteJs, promiseToWriteMap]);
-}
-
 const Builder = {
   /**
    * Async function that gets the current version of ReSpec from package.json
@@ -120,7 +118,7 @@ const Builder = {
     console.log(colors.info(`Generating ${outFile}. Please wait...`));
 
     // optimisation settings
-    const buildVersion = await this.getRespecVersion();
+    const version = await this.getRespecVersion();
     const buildDir = path.resolve(__dirname, "../builds/");
     const workerDir = path.resolve(__dirname, "../worker/");
 
@@ -150,14 +148,14 @@ const Builder = {
     };
     const outputOptions = {
       file: outPath,
-      format: "commonjs",
+      format: "iife",
       sourcemap: true,
+      banner: `window.respecVersion = "${version}";\n`,
     };
 
     const bundle = await rollup(inputOptions);
     await bundle.write(outputOptions);
 
-    await appendBoilerplate(outPath, buildVersion, name);
     // copy respec-worker
     await fsp.copyFile(
       `${workerDir}/respec-worker.js`,

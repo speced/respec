@@ -22,7 +22,7 @@ const copyButton = createButton();
 /**
  * Adds a HTML button that copies WebIDL to the clipboard.
  *
- * @param {HTMLDivElement} idlHeader
+ * @param {HTMLSpanElement} idlHeader
  */
 export function addCopyIDLButton(idlHeader) {
   // There may be multiple <span>s of IDL, so we take everything
@@ -33,28 +33,7 @@ export function addCopyIDLButton(idlHeader) {
   const { textContent: idlText } = idl;
   const button = copyButton.cloneNode(true);
   button.addEventListener("click", () => {
-    clipboardWriteText(idlText);
+    navigator.clipboard.writeText(idlText);
   });
   idlHeader.append(button);
-}
-
-/**
- * Mocks navigator.clipboard.writeText()
- * @param {string} text
- */
-function clipboardWriteText(text) {
-  if (navigator.clipboard) {
-    return navigator.clipboard.writeText(text);
-  }
-  return new Promise(resolve => {
-    document.addEventListener(
-      "copy",
-      ev => {
-        ev.clipboardData.setData("text/plain", text);
-        resolve();
-      },
-      { once: true }
-    );
-    document.execCommand("copy");
-  });
 }

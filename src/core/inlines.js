@@ -8,18 +8,55 @@
 
 import {
   InsensitiveStringSet,
+  getIntlData,
   getTextNodes,
   norm,
   refTypeFromContext,
   showInlineError,
   showInlineWarning,
 } from "./utils.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { idlStringToHtml } from "./inline-idl-parser.js";
 import { renderInlineCitation } from "./render-biblio.js";
 
 export const name = "core/inlines";
 export const rfc2119Usage = {};
+
+const localizationStrings = {
+  en: {
+    rfc2119Keywords() {
+      return new RegExp(
+        [
+          "\\bMUST(?:\\s+NOT)?\\b",
+          "\\bSHOULD(?:\\s+NOT)?\\b",
+          "\\bSHALL(?:\\s+NOT)?\\b",
+          "\\bMAY\\b",
+          "\\b(?:NOT\\s+)?REQUIRED\\b",
+          "\\b(?:NOT\\s+)?RECOMMENDED\\b",
+          "\\bOPTIONAL\\b",
+        ].join("|")
+      );
+    },
+  },
+  de: {
+    rfc2119Keywords() {
+      return new RegExp(
+        [
+          "\\bMUSS\\b",
+          "\\bERFORDERLICH\\b",
+          "\\b(?:NICHT\\s+)?NÖTIG\\b",
+          "\\bDARF(?:\\s+NICHT)?\\b",
+          "\\bVERBOTEN\\b",
+          "\\bSOLL(?:\\s+NICHT)?\\b",
+          "\\b(?:NICHT\\s+)?EMPFOHLEN\\b",
+          "\\bKANN\\b",
+          "\\bOPTIONAL\\b",
+        ].join("|")
+      );
+    },
+  },
+};
+const l10n = getIntlData(localizationStrings);
 
 // Inline `code`
 // TODO: Replace (?!`) at the end with (?:<!`) at the start when Firefox + Safari
@@ -30,16 +67,26 @@ const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
-const inlineElement = /(?:\[\^[A-Za-z]+(?:-[A-Za-z]+)?\^\])/; // Inline [^element^]
+const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
 
 /**
+ * @example [^iframe^] // [^element^]
+ * @example [^iframe/allow^] // [^element/element-attr^]
  * @param {string} matched
  * @return {HTMLElement}
  */
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
-  const html = hyperHTML`<code><a data-xref-type="element">${value}</a></code>`;
-  return html;
+  const [element, attribute] = value.split("/", 2).map(s => s && s.trim());
+  const [xrefType, xrefFor, textContent] = attribute
+    ? ["element-attr", element, attribute]
+    : ["element", null, element];
+  const code = html`<code
+    ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
+      >${textContent}</a
+    ></code
+  >`;
+  return code;
 }
 
 /**
@@ -48,7 +95,7 @@ function inlineElementMatches(matched) {
  */
 function inlineRFC2119Matches(matched) {
   const value = norm(matched);
-  const nodeElement = hyperHTML`<em class="rfc2119" title="${value}">${value}</em>`;
+  const nodeElement = html`<em class="rfc2119" title="${value}">${value}</em>`;
   // remember which ones were used
   rfc2119Usage[value] = true;
   return nodeElement;
@@ -62,12 +109,12 @@ function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
   if (!ref.startsWith("#")) {
-    return hyperHTML`<a data-cite="${ref}"></a>`;
+    return html`<a data-cite="${ref}"></a>`;
   }
   if (document.querySelector(ref)) {
-    return hyperHTML`<a href="${ref}"></a>`;
+    return html`<a href="${ref}"></a>`;
   }
-  const badReference = hyperHTML`<span>${matched}</span>`;
+  const badReference = html`<span>${matched}</span>`;
   showInlineError(
     badReference, // cite element
     `Wasn't able to expand ${matched} as it didn't match any id in the document.`,
@@ -126,7 +173,7 @@ function inlineBibrefMatches(matched, txt, conf) {
 function inlineAbbrMatches(matched, txt, abbrMap) {
   return txt.parentElement.tagName === "ABBR"
     ? matched
-    : hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
+    : html`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
 }
 
 /**
@@ -138,7 +185,7 @@ function inlineVariableMatches(matched) {
   // remove "|" at the beginning and at the end, then split at an optional `:`
   const matches = matched.slice(1, -1).split(":", 2);
   const [varName, type] = matches.map(s => s.trim());
-  return hyperHTML`<var data-type="${type}">${varName}</var>`;
+  return html`<var data-type="${type}">${varName}</var>`;
 }
 
 /**
@@ -159,16 +206,18 @@ function inlineAnchorMatches(matched) {
     : [null, content];
   const processedContent = processInlineContent(text);
   const forContext = isFor ? norm(isFor) : null;
-  return hyperHTML`<a
+  return html`<a
     data-link-for="${forContext}"
     data-xref-for="${forContext}"
     data-lt="${linkingText}"
-    data-link-type="dfn">${processedContent}</a>`;
+    data-link-type="dfn"
+    >${processedContent}</a
+  >`;
 }
 
 function inlineCodeMatches(matched) {
   const clean = matched.slice(1, -1); // Chop ` and `
-  return hyperHTML`<code>${clean}</code>`;
+  return html`<code>${clean}</code>`;
 }
 
 function processInlineContent(text) {
@@ -210,17 +259,7 @@ export function run(conf) {
   const txts = getTextNodes(document.body, exclusions, {
     wsNodes: false, // we don't want nodes with just whitespace
   });
-  const keywords = new RegExp(
-    [
-      "\\bMUST(?:\\s+NOT)?\\b",
-      "\\bSHOULD(?:\\s+NOT)?\\b",
-      "\\bSHALL(?:\\s+NOT)?\\b",
-      "\\bMAY\\b",
-      "\\b(?:NOT\\s+)?REQUIRED\\b",
-      "\\b(?:NOT\\s+)?RECOMMENDED\\b",
-      "\\bOPTIONAL\\b",
-    ].join("|")
-  );
+  const keywords = l10n.rfc2119Keywords();
   const rx = new RegExp(
     `(${[
       keywords.source,

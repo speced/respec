@@ -9,14 +9,14 @@
  * Every custom element must dispatch a CustomEvent 'done' that tells the
  * element has finished its processing, with or without errors.
  *
- * @typedef {{ name: string, element: Function }} CustomElementDfn
+ * @typedef {{ name: string, element: CustomElementConstructor }} CustomElementDfn
  */
 
 import * as changelog from "./rs-changelog.js";
 /** @type {CustomElementDfn[]} */
 const CUSTOM_ELEMENTS = [changelog];
 
-export const name = "core/custom-elements";
+export const name = "core/custom-elements/index";
 
 export async function run() {
   // prepare and register elements

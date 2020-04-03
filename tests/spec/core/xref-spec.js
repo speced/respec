@@ -237,14 +237,14 @@ describe("Core — xref", () => {
   it("shows error if cannot resolve by data-cite", async () => {
     const body = `
       <section data-cite="svg">
-        <p><a id="link">symbol</a> twice in svg spec.</p>
+        <p id="test">[^symbol^] twice in svg spec.</p>
       </section>
     `;
     const config = { xref: ["svg"], localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const link = doc.getElementById("link");
+    const link = doc.querySelector("#test a");
     expect(link.classList).toContain("respec-offending-element");
     expect(link.title).toBe("Error: Linking an ambiguous dfn.");
   });

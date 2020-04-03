@@ -16,7 +16,6 @@ const w3cDefaults = {
     "privsec-section": true,
     "wpt-tests-exist": false,
   },
-  pluralize: true,
   doJsonLd: false,
   license: "w3c-software-doc",
   logos: [
@@ -32,7 +31,6 @@ const w3cDefaults = {
 };
 
 export function run(conf) {
-  if (conf.specStatus === "unofficial") return;
   // assign the defaults
   const lint =
     conf.lint === false
@@ -52,5 +50,5 @@ export function run(conf) {
   // TODO: eventually, we want to remove this.
   // It's here for legacy support of json-ld specs
   // see https://github.com/w3c/respec/issues/2019
-  Object.assign(conf, { definitionMap });
+  Object.assign(conf, { ...Object.fromEntries(definitionMap) });
 }

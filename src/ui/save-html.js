@@ -1,13 +1,29 @@
 // @ts-check
 // Module ui/save-html
 // Saves content to HTML when asked to
-import { l10n, lang } from "../core/l10n.js";
-import { hyperHTML } from "../core/import-maps.js";
+import { getIntlData } from "../core/utils.js";
+import { html } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
 import { rsDocToDataURL } from "../core/exporter.js";
 import { ui } from "../core/ui.js";
 
 export const name = "ui/save-html";
+
+const localizationStrings = {
+  en: {
+    save_snapshot: "Export",
+  },
+  nl: {
+    save_snapshot: "Bewaar Snapshot",
+  },
+  ja: {
+    save_snapshot: "保存する",
+  },
+  de: {
+    save_snapshot: "Exportieren",
+  },
+};
+const l10n = getIntlData(localizationStrings);
 
 // Create and download an EPUB 3 version of the content
 // Using (by default) the EPUB 3 conversion service set up at labs.w3.org/epub-generator
@@ -48,37 +64,31 @@ const downloadLinks = [
 
 function toDownloadLink(details) {
   const { id, href, fileName, title, type } = details;
-  return hyperHTML`
-    <a
-      href="${href}"
-      id="${id}"
-      download="${fileName}"
-      type="${type}"
-      class="respec-save-button"
-      onclick=${() => ui.closeModal()}
-    >${title}</a>`;
+  return html`<a
+    href="${href}"
+    id="${id}"
+    download="${fileName}"
+    type="${type}"
+    class="respec-save-button"
+    onclick=${() => ui.closeModal()}
+    >${title}</a
+  >`;
 }
 
 const saveDialog = {
   async show(button) {
     await document.respecIsReady;
-    const div = hyperHTML`
-      <div class="respec-save-buttons">
-        ${downloadLinks.map(toDownloadLink)}
-      </div>`;
-    ui.freshModal(l10n[lang].save_snapshot, div, button);
+    const div = html`<div class="respec-save-buttons">
+      ${downloadLinks.map(toDownloadLink)}
+    </div>`;
+    ui.freshModal(l10n.save_snapshot, div, button);
   },
 };
 
 const supportsDownload = "download" in HTMLAnchorElement.prototype;
 let button;
 if (supportsDownload) {
-  button = ui.addCommand(
-    l10n[lang].save_snapshot,
-    show,
-    "Ctrl+Shift+Alt+S",
-    "💾"
-  );
+  button = ui.addCommand(l10n.save_snapshot, show, "Ctrl+Shift+Alt+S", "💾");
 }
 
 function show() {

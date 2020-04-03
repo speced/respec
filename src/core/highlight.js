@@ -5,7 +5,7 @@
  * Performs syntax highlighting to all pre and code elements.
  */
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML as html } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { msgIdGenerator } from "./utils.js";
 import { workerPromise } from "./worker.js";
 export const name = "core/highlight";
@@ -16,9 +16,9 @@ const ghCssPromise = loadStyle();
 
 async function loadStyle() {
   try {
-    return (await import("text!../../assets/github.css")).default;
+    return (await import("text!../../assets/highlight.css")).default;
   } catch {
-    return fetchAsset("github.css");
+    return fetchAsset("highlight.css");
   }
 }
 
@@ -103,11 +103,9 @@ export async function run(conf) {
     .map(highlightElement);
   const ghCss = await ghCssPromise;
   document.head.appendChild(
-    html`
-      <style>
-        ${ghCss}
-      </style>
-    `
+    html`<style>
+      ${ghCss}
+    </style>`
   );
   await Promise.all(promisesToHighlight);
 }

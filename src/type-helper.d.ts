@@ -15,6 +15,15 @@ declare module "text!*" {
   export default value;
 }
 
+// See: core/a11y
+interface AxeViolation {
+  id: string;
+  help: string;
+  helpUrl: string;
+  description: string;
+  nodes: { failureSummary: string; element: HTMLElement }[];
+}
+
 declare var respecConfig: any;
 interface Window {
   respecVersion: string;
@@ -39,6 +48,9 @@ interface Window {
   };
   $: JQueryStatic;
   jQuery: JQueryStatic;
+  axe?: {
+    run(context: Node, options: any): Promise<{ violations: AxeViolation[] }>;
+  };
 }
 
 interface Document {
@@ -85,6 +97,20 @@ interface JQuery {
   linkTargets(): import("./core/utils.js").LinkTarget[];
   makeID(pfx?: string, txt?: string, noLC?: boolean): string;
   allTextNodes(exclusions: string[]): Text[];
+}
+
+interface BiblioData {
+  aliasOf?: string;
+  id?: string;
+  title: string;
+  href?: string;
+  authors?: string[];
+}
+interface Conf {
+  informativeReferences: Set<string>;
+  normativeReferences: Set<string>;
+  localBiblio?: Record<string, BiblioData>;
+  biblio: Record<string, BiblioData>;
 }
 
 module "core/xref" {

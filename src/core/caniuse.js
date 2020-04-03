@@ -7,40 +7,28 @@
 import { pub, sub } from "./pubsubhub.js";
 import { createResourceHint } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 
 export const name = "core/caniuse";
 
 const API_URL = "https://respec.org/caniuse/";
 
-// browser name dictionary
-const BROWSERS = new Map([
-  ["and_chr", "Chrome (Android)"],
-  ["and_ff", "Firefox (Android)"],
-  ["and_uc", "UC Browser (Android)"],
-  ["android", "Android"],
-  ["bb", "Blackberry"],
-  ["chrome", "Chrome"],
-  ["edge", "Edge"],
-  ["firefox", "Firefox"],
-  ["ie", "IE"],
-  ["ios_saf", "Safari (iOS)"],
-  ["op_mini", "Opera Mini"],
-  ["op_mob", "Opera Mobile"],
-  ["opera", "Opera"],
-  ["safari", "Safari"],
-  ["samsung", "Samsung Internet"],
-]);
-
-// Keys from https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md
-const supportTitles = new Map([
-  ["y", "Supported."],
-  ["a", "Almost supported (aka Partial support)."],
-  ["n", "No support, or disabled by default."],
-  ["p", "No support, but has Polyfill."],
-  ["u", "Support unknown."],
-  ["x", "Requires prefix to work."],
-  ["d", "Disabled by default (needs to enabled)."],
+const BROWSERS = new Set([
+  "and_chr",
+  "and_ff",
+  "and_uc",
+  "android",
+  "bb",
+  "chrome",
+  "edge",
+  "firefox",
+  "ie",
+  "ios_saf",
+  "op_mini",
+  "op_mob",
+  "opera",
+  "safari",
+  "samsung",
 ]);
 
 if (
@@ -75,37 +63,39 @@ export async function run(conf) {
   const featureURL = new URL(options.feature, "https://caniuse.com/").href;
 
   const caniuseCss = await caniuseCssPromise;
-  document.head.appendChild(hyperHTML`
-    <style class="removeOnSave">${caniuseCss}</style>`);
+  document.head.appendChild(html`<style class="removeOnSave">
+    ${caniuseCss}
+  </style>`);
 
   const headDlElem = document.querySelector(".head dl");
   const contentPromise = (async () => {
     try {
       const apiUrl = options.apiURL || API_URL;
       const stats = await fetchStats(apiUrl, options);
-      return createTableHTML(featureURL, stats);
+      return html`${{ html: stats }}`;
     } catch (err) {
       console.error(err);
       const msg =
         `Couldn't find feature "${options.feature}" on caniuse.com? ` +
         "Please check the feature key on [caniuse.com](https://caniuse.com)";
       pub("error", msg);
-      return hyperHTML`<a href="${featureURL}">caniuse.com</a>`;
+      return html`<a href="${featureURL}">caniuse.com</a>`;
     }
   })();
-  const definitionPair = hyperHTML`
-    <dt class="caniuse-title">Browser support:</dt>
-    <dd class="caniuse-stats">${{
-      any: contentPromise,
-      placeholder: "Fetching data from caniuse.com...",
-    }}</dd>`;
+  const definitionPair = html`<dt class="caniuse-title">Browser support:</dt>
+    <dd class="caniuse-stats">
+      ${{
+        any: contentPromise,
+        placeholder: "Fetching data from caniuse.com...",
+      }}
+    </dd>`;
   headDlElem.append(...definitionPair.childNodes);
   await contentPromise;
 
   // remove from export
   pub("amend-user-config", { caniuse: options.feature });
   sub("beforesave", outputDoc => {
-    hyperHTML.bind(outputDoc.querySelector(".caniuse-stats"))`
+    html.bind(outputDoc.querySelector(".caniuse-stats"))`
       <a href="${featureURL}">caniuse.com</a>`;
   });
 }
@@ -138,7 +128,6 @@ function getNormalizedConf(conf) {
 /**
  * @param {string} apiURL
  * @typedef {Record<string, [string, string[]][]>} ApiResponse
- * @return {Promise<ApiResponse>}
  * @throws {Error} on failure
  */
 async function fetchStats(apiURL, options) {
@@ -149,62 +138,13 @@ async function fetchStats(apiURL, options) {
   if (Array.isArray(browsers)) {
     searchParams.set("browsers", browsers.join(","));
   }
+  searchParams.set("format", "html");
   const url = `${apiURL}?${searchParams.toString()}`;
   const response = await fetch(url);
-  const stats = await response.json();
+  if (!response.ok) {
+    const { status, statusText } = response;
+    throw new Error(`Failed to get caniuse data: (${status}) ${statusText}`);
+  }
+  const stats = await response.text();
   return stats;
-}
-
-/**
- * Get HTML element for the canIUse support table.
- * @param {string} featureURL
- * @param {ApiResponse} stats
- */
-function createTableHTML(featureURL, stats) {
-  // render the support table
-  return hyperHTML`
-    ${Object.entries(stats).map(addBrowser)}
-    <a href="${featureURL}"
-      title="Get details at caniuse.com">More info
-    </a>`;
-}
-
-/**
- * Add a browser and it's support to table.
- * @param {[ string, ApiResponse["browserName"] ]} args
- */
-function addBrowser([browserName, browserData]) {
-  /** @param {string[]} supportKeys */
-  const getSupport = supportKeys => {
-    const titles = supportKeys
-      .filter(key => supportTitles.has(key))
-      .map(key => supportTitles.get(key));
-    return {
-      className: `caniuse-cell ${supportKeys.join(" ")}`,
-      title: titles.join(" "),
-    };
-  };
-
-  /** @param {[string, string[]]} args */
-  const addLatestVersion = ([version, supportKeys]) => {
-    const { className, title } = getSupport(supportKeys);
-    const buttonText = `${BROWSERS.get(browserName) || browserName} ${version}`;
-    return hyperHTML`
-      <button class="${className}" title="${title}">${buttonText}</button>`;
-  };
-
-  /** @param {[string, string[]]} args */
-  const addBrowserVersion = ([version, supportKeys]) => {
-    const { className, title } = getSupport(supportKeys);
-    return hyperHTML`<li class="${className}" title="${title}">${version}</li>`;
-  };
-
-  const [latestVersion, ...olderVersions] = browserData;
-  return hyperHTML`
-    <div class="caniuse-browser">
-      ${addLatestVersion(latestVersion)}
-      <ul>
-        ${olderVersions.map(addBrowserVersion)}
-      </ul>
-    </div>`;
 }

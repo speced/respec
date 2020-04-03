@@ -14,10 +14,17 @@ const findContent = string => {
 describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
-  const contains = (el, query, string) =>
-    [...el.querySelectorAll(query)].filter(child =>
-      child.innerHTML.includes(string)
+  /**
+   * @param {Node} node
+   */
+  function collapsedTextContent({ textContent }) {
+    return textContent.replace(/\s+/g, " ");
+  }
+  function contains(el, query, string) {
+    return [...el.querySelectorAll(query)].filter(child =>
+      collapsedTextContent(child).includes(string)
     );
+  }
   describe("prevRecShortname & prevRecURI", () => {
     it("takes prevRecShortname and prevRecURI into account", async () => {
       const ops = makeStandardOps();
@@ -43,6 +50,21 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect(doc.querySelector(".head h2").textContent).toContain(
         "W3C Editor's Draft"
+      );
+      expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
+        "does not imply endorsement by the W3C Membership."
+      );
+    });
+
+    it("indicates as recommended", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
+        "is endorsed by the Director as a W3C Recommendation."
       );
     });
   });
@@ -557,37 +579,253 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("use existing h1 element", () => {
-    it("uses the <h1>'s value as the document's title", async () => {
+  describe("valid level config", () => {
+    it("updates relevant locations with the level when level is the integer 0", async () => {
       const body = `
+        <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
+      const ops = makeStandardOps(
+        { level: 0, specStatus: "REC", shortName: "abc" },
+        body
+      );
+
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      // html is not escaped
+      expect(h1Elem.childNodes[1].localName).toBe("code");
+      expect(h1Elem.textContent).toBe("Spec Marked Up Level 0");
+      expect(doc.title).toBe("Spec Marked Up Level 0");
+
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[0].textContent).toBe("This version:");
+      expect(terms[0].nextElementSibling.localName).toBe("dd");
+      expect(terms[0].nextElementSibling.textContent).toContain("REC-abc-0");
+      expect(terms[1].textContent).toBe("Latest published version:");
+      expect(terms[1].nextElementSibling.localName).toBe("dd");
+      expect(terms[1].nextElementSibling.textContent).toContain("TR/abc-0/");
+    });
+
+    it("updates relevant locations with the level when level is an integer greater than 0", async () => {
+      const body = `
+      <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
+      const ops = makeStandardOps(
+        { level: 9870, specStatus: "REC", shortName: "xyz" },
+        body
+      );
+
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      // html is not escaped
+      expect(h1Elem.childNodes[1].localName).toBe("code");
+      expect(h1Elem.textContent).toBe("Spec Marked Up Level 9870");
+      expect(doc.title).toBe("Spec Marked Up Level 9870");
+
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[0].textContent).toBe("This version:");
+      expect(terms[0].nextElementSibling.localName).toBe("dd");
+      expect(terms[0].nextElementSibling.textContent).toContain("REC-xyz-9870");
+      expect(terms[1].textContent).toBe("Latest published version:");
+      expect(terms[1].nextElementSibling.localName).toBe("dd");
+      expect(terms[1].nextElementSibling.textContent).toContain("TR/xyz-9870/");
+    });
+  });
+
+  describe("invalid level configs", () => {
+    it("warns the user and does not add the level to the relevant places when level is a string that doesn't convert to an integer", async () => {
+      const body = `
+      <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
+      const ops = makeStandardOps(
+        { level: "a1", specStatus: "REC", shortName: "xxx" },
+        body
+      );
+
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      expect(h1Elem.classList).toContain("respec-offending-element");
+      expect(h1Elem.textContent).toBe("Spec Marked Up");
+
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[0].textContent).toBe("This version:");
+      expect(terms[0].nextElementSibling.localName).toBe("dd");
+      expect(terms[0].nextElementSibling.textContent).toMatch(
+        /REC-xxx-[0-9]{8}/
+      );
+      expect(terms[1].textContent).toBe("Latest published version:");
+      expect(terms[1].nextElementSibling.localName).toBe("dd");
+      expect(terms[1].nextElementSibling.textContent).toContain("TR/xxx/");
+    });
+
+    it("warns the user and does not add the level to the relevant places when level is negative integer", async () => {
+      const ops = makeStandardOps({ level: -2 });
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      expect(h1Elem.classList).toContain("respec-offending-element");
+      expect(h1Elem.textContent).toBe("No Title");
+    });
+
+    it("warns the user and does not add the level to the relevant places when level is null", async () => {
+      const ops = makeStandardOps({ level: null });
+      const doc = await makeRSDoc(ops);
+
+      const h1Elem = doc.querySelector("h1#title");
+      expect(h1Elem.classList).toContain("respec-offending-element");
+      expect(h1Elem.textContent).toBe("No Title");
+    });
+  });
+
+  describe("precedence order of document title when h1#title and <title> elements are present", () => {
+    it('makes h1 always win even when h1#title textContent is ""', async () => {
+      const body = `
+        <title>Doc Title</title>
+        <h1 id='title'></h1>
+        ${makeDefaultBody()}
+      `;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("");
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toBe("");
+      const h1 = doc.querySelector("h1#title");
+      expect(h1).toBeTruthy();
+      expect(h1.textContent).toBe("");
+      expect(h1.classList).toContain("respec-offending-element");
+    });
+
+    it("uses h1#title content and overrides <title> when h1#title has content", async () => {
+      const body = `
+        <title>hi</title>
         <h1 id='title'>
-          This should be <code>pass</code>.
-         </h1>${makeDefaultBody()}`;
+          override!!!
+        </h1>
+        ${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("override!!!");
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toBe("override!!!");
+      const h1 = doc.querySelector("h1#title");
+      expect(h1).toBeTruthy();
+      expect(h1.textContent.trim()).toBe("override!!!");
+    });
+  });
+
+  describe("precedence rules for h1#title is present and <title> is absent", () => {
+    it("always uses h1#title content for all the document's titles", async () => {
+      const body = `
+      <h1 id='title'>This should be <code>pass</code>.</h1>${makeDefaultBody()}`;
       const ops = makeStandardOps({}, body);
       const doc = await makeRSDoc(ops);
       expect(doc.title).toBe("This should be pass.");
+
       const titleElem = doc.querySelector("title");
       expect(titleElem).toBeTruthy();
       expect(titleElem.textContent).toBe("This should be pass.");
+
+      const h1 = doc.querySelector("h1#title");
+      expect(h1).toBeTruthy();
+      expect(h1.innerHTML).toBe("This should be <code>pass</code>.");
     });
 
-    it("uses <h1> if already present", async () => {
+    it("uses h1#title content when h1#title has content", async () => {
       const ops = makeStandardOps();
-      ops.body = `<h1 id='title'><code>pass</code></h1>${makeDefaultBody()}`;
+      ops.body = `
+        <h1 id='title'><code>pass</code></h1>
+        ${makeDefaultBody()}
+      `;
       const doc = await makeRSDoc(ops);
 
       // Title was relocated to head
       const titleInHead = doc.querySelector(".head h1");
-      expect(titleInHead.classList).toContain("p-name");
       expect(titleInHead.id).toBe("title");
 
       // html is not escaped
-      expect(titleInHead.firstChild.tagName).toBe("CODE");
+      expect(titleInHead.firstChild.localName).toBe("code");
       expect(titleInHead.textContent).toBe("pass");
+    });
 
-      // the config title is overridden
-      const { title } = doc.defaultView.respecConfig;
-      expect(title).toBe("pass");
+    it("makes h1 win even when h1#title is only whitespace", async () => {
+      const body = `
+        <h1 id='title'>       </h1>
+        ${makeDefaultBody()}
+      `;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("");
+
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toBe("");
+
+      const h1 = doc.querySelector("h1#title");
+      expect(h1).toBeTruthy();
+      expect(h1.classList).toContain("respec-offending-element");
+    });
+
+    it('makes h1 always win even when h1#title is ""', async () => {
+      const body = `
+      <h1 id='title'></h1>${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("");
+
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toBe("");
+
+      const h1 = doc.querySelector("h1#title");
+      expect(h1).toBeTruthy();
+      expect(h1.textContent).toBe("");
+      expect(h1.classList).toContain("respec-offending-element");
+    });
+  });
+
+  describe("precedence rules for title when h1#title element is not present", () => {
+    it("uses <title> when it contains a non-empty string", async () => {
+      const body = `<title>Title!!!</title>${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("Title!!!");
+
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toBe("Title!!!");
+
+      const h1 = doc.querySelector("h1#title");
+      expect(h1).toBeTruthy();
+      expect(h1.textContent).toBe("Title!!!");
+    });
+
+    it("uses a default title when the document excludes a title", async () => {
+      const ops = makeStandardOps({}, makeDefaultBody());
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("No Title");
+
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toBe("No Title");
+
+      const h1 = doc.querySelector("h1#title");
+      expect(h1.textContent).toBe("No Title");
+    });
+
+    it("uses a default title when <title> contains an empty string", async () => {
+      const body = `<title></title>${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("No Title");
+
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toBe("No Title");
+
+      const h1 = doc.querySelector("h1#title");
+      expect(h1).toBeTruthy();
+      expect(h1.textContent).toBe("No Title");
     });
   });
 
@@ -771,6 +1009,46 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("otherLinks", () => {
+    it("renders otherLinks with value and href", async () => {
+      const otherLinks = [
+        {
+          class: "key-other-link",
+          key: "KEY",
+          data: [{ value: "VALUE", href: "HREF" }],
+        },
+      ];
+      const ops = makeStandardOps({ otherLinks });
+      const doc = await makeRSDoc(ops);
+
+      const dt = doc.querySelector(".head dt.key-other-link");
+      expect(dt.textContent).toBe("KEY:");
+      const dd = dt.nextElementSibling;
+      expect(dd.localName).toBe("dd");
+      expect(dd.querySelector("a").textContent).toBe("VALUE");
+      expect(dd.querySelector("a").getAttribute("href")).toBe("HREF");
+    });
+
+    it("renders otherLinks without href", async () => {
+      const otherLinks = [
+        {
+          class: "key-other-link",
+          key: "KEY",
+          data: [{ value: "VALUE" }],
+        },
+      ];
+      const ops = makeStandardOps({ otherLinks });
+      const doc = await makeRSDoc(ops);
+
+      const dt = doc.querySelector(".head dt.key-other-link");
+      expect(dt.textContent).toBe("KEY:");
+      const dd = dt.nextElementSibling;
+      expect(dd.localName).toBe("dd");
+      expect(dd.textContent.trim()).toBe("VALUE");
+      expect(dd.querySelector("a")).toBeNull();
+    });
+  });
+
   describe("testSuiteURI", () => {
     it("takes testSuiteURI into account", async () => {
       const ops = makeStandardOps();
@@ -910,13 +1188,17 @@ describe("W3C — Headers", () => {
       );
     });
 
-    it("handles additionalCopyrightHolders when text is markup", async () => {
+    it("handles additionalCopyrightHolders when text is markup, is a CGBG spec, and has a valid level", async () => {
       const ops = makeStandardOps({
-        specStatus: "REC",
+        specStatus: "CG-DRAFT",
         additionalCopyrightHolders: "<span class='test'>XXX</span>",
+        level: 99,
       });
 
       const doc = await makeRSDoc(ops);
+      expect(doc.querySelector(".head .copyright").textContent).toContain(
+        "Level 99"
+      );
       expect(doc.querySelector(".head .copyright .test").textContent).toBe(
         "XXX"
       );
@@ -1311,6 +1593,20 @@ describe("W3C — Headers", () => {
         ).length
       ).toBe(1);
     });
+
+    it("handles the spec title in the copyright section correctly when the h1#title has markup", async () => {
+      const body = `<h1 id="title">Spec with <code>markup</code>!</h1>${makeDefaultBody()}`;
+      const props = { specStatus: "BG-FINAL" };
+      const ops = makeStandardOps(props, body);
+      const doc = await makeRSDoc(ops);
+
+      // html is not escaped
+      const elemWithSpecTitle = doc.querySelector(".head .copyright");
+      expect(elemWithSpecTitle.textContent).toContain("Spec with markup!");
+
+      const markupNode = elemWithSpecTitle.querySelector("code");
+      expect(markupNode.textContent).toBe("markup");
+    });
   });
 
   describe("Member-SUBM", () => {
@@ -1605,6 +1901,21 @@ describe("W3C — Headers", () => {
       expect(h1.textContent).toContain("Preview of PR #123:");
       expect(h1.textContent).toContain("Simple Spec");
       expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
+    });
+
+    it("constructs PR URL when prURL is not provided", async () => {
+      const ops = makeStandardOps({ github: "w3c/some-spec" });
+      const doc = await makeRSDoc(
+        ops,
+        "spec/core/simple.html?isPreview=true&prNumber=123"
+      );
+      expect(doc.title).toBe("Preview of PR #123: Simple Spec");
+      const h1 = doc.querySelector("h1#title");
+      expect(h1.textContent).toContain("Preview of PR #123:");
+      expect(h1.textContent).toContain("Simple Spec");
+      expect(h1.querySelector("a").href).toBe(
+        "https://github.com/w3c/some-spec/pull/123"
+      );
     });
 
     it("when only <h1> title is present", async () => {

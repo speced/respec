@@ -9,7 +9,7 @@
 //      - save to GitHub
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
-import { hyperHTML, pluralize } from "./import-maps.js";
+import { html, pluralize } from "./import-maps.js";
 import { fetchAsset } from "./text-loader.js";
 import { markdownToHtml } from "./markdown.js";
 import shortcut from "../../js/shortcut.js";
@@ -45,8 +45,21 @@ function ariaDecorate(elem, ariaMap) {
   });
 }
 
-const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
-const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
+const respecUI = html`<div id="respec-ui" class="removeOnSave" hidden></div>`;
+const menu = html`<ul
+  id="respec-menu"
+  role="menu"
+  aria-labelledby="respec-pill"
+  hidden
+></ul>`;
+const closeButton = html`<button
+  class="close-button"
+  onclick=${() => ui.closeModal()}
+  title="Close"
+>
+  ❌
+</button>`;
+window.addEventListener("load", () => trapFocus(menu));
 let modal;
 let overlay;
 const errors = [];
@@ -56,28 +69,64 @@ const buttons = {};
 sub("start-all", () => document.body.prepend(respecUI), { once: true });
 sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
-const respecPill = hyperHTML`<button id='respec-pill' disabled>ReSpec</button>`;
+const respecPill = html`<button id="respec-pill" disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
 respecPill.addEventListener("click", e => {
   e.stopPropagation();
-  if (menu.hidden) {
-    menu.classList.remove("respec-hidden");
-    menu.classList.add("respec-visible");
-  } else {
-    menu.classList.add("respec-hidden");
-    menu.classList.remove("respec-visible");
-  }
   respecPill.setAttribute("aria-expanded", String(menu.hidden));
-  menu.hidden = !menu.hidden;
+  toggleMenu();
+  menu.querySelector("li:first-child button").focus();
 });
+
 document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
-    menu.classList.remove("respec-visible");
-    menu.classList.add("respec-hidden");
-    menu.hidden = true;
+    toggleMenu();
   }
 });
 respecUI.appendChild(menu);
+
+menu.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !menu.hidden) {
+    respecPill.setAttribute("aria-expanded", String(menu.hidden));
+    toggleMenu();
+    respecPill.focus();
+  }
+});
+
+function toggleMenu() {
+  menu.classList.toggle("respec-hidden");
+  menu.classList.toggle("respec-visible");
+  menu.hidden = !menu.hidden;
+}
+
+// Code adapted from https://hiddedevries.nl/en/blog/2017-01-29-using-javascript-to-trap-focus-in-an-element
+function trapFocus(element) {
+  const focusableEls = element.querySelectorAll(
+    "a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])"
+  );
+  const firstFocusableEl = focusableEls[0];
+  const lastFocusableEl = focusableEls[focusableEls.length - 1];
+  if (firstFocusableEl) {
+    firstFocusableEl.focus();
+  }
+  element.addEventListener("keydown", e => {
+    if (e.key !== "Tab") {
+      return;
+    }
+    // shift + tab
+    if (e.shiftKey) {
+      if (document.activeElement === firstFocusableEl) {
+        lastFocusableEl.focus();
+        e.preventDefault();
+      }
+    }
+    // tab
+    else if (document.activeElement === lastFocusableEl) {
+      firstFocusableEl.focus();
+      e.preventDefault();
+    }
+  });
+}
 
 const ariaMap = new Map([
   ["controls", "respec-menu"],
@@ -102,10 +151,13 @@ function errWarn(msg, arr, butName, title) {
 
 function createWarnButton(butName, arr, title) {
   const buttonId = `respec-pill-${butName}`;
-  const button = hyperHTML`<button id='${buttonId}' class='respec-info-button'>`;
+  const button = html`<button
+    id="${buttonId}"
+    class="respec-info-button"
+  ></button>`;
   button.addEventListener("click", () => {
     button.setAttribute("aria-expanded", "true");
-    const ol = hyperHTML`<ol class='${`respec-${butName}-list`}'></ol>`;
+    const ol = html`<ol class="${`respec-${butName}-list`}"></ol>`;
     for (const err of arr) {
       const fragment = document
         .createRange()
@@ -148,10 +200,14 @@ export const ui = {
   addCommand(label, handler, keyShort, icon) {
     icon = icon || "";
     const id = `respec-button-${label.toLowerCase().replace(/\s+/, "-")}`;
-    const button = hyperHTML`<button id="${id}" class="respec-option" title="${keyShort}">
+    const button = html`<button
+      id="${id}"
+      class="respec-option"
+      title="${keyShort}"
+    >
       <span class="respec-cmd-icon" aria-hidden="true">${icon}</span> ${label}…
     </button>`;
-    const menuItem = hyperHTML`<li role=menuitem>${button}</li>`;
+    const menuItem = html`<li role="menuitem">${button}</li>`;
     menuItem.addEventListener("click", handler);
     menu.appendChild(menuItem);
     if (keyShort) shortcut.add(keyShort, handler);
@@ -178,16 +234,23 @@ export const ui = {
     if (!modal) return;
     modal.remove();
     modal = null;
+    respecPill.focus();
   },
   freshModal(title, content, currentOwner) {
     if (modal) modal.remove();
     if (overlay) overlay.remove();
-    overlay = hyperHTML`<div id='respec-overlay' class='removeOnSave'></div>`;
+    overlay = html`<div id="respec-overlay" class="removeOnSave"></div>`;
     const id = `${currentOwner.id}-modal`;
     const headingId = `${id}-heading`;
-    modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog'>
+    modal = html`<div
+      id="${id}"
+      class="respec-modal removeOnSave"
+      role="dialog"
+      aria-labelledby="${headingId}"
+    >
+      ${closeButton}
       <h3 id="${headingId}">${title}</h3>
-      <div class='inside'>${content}</div>
+      <div class="inside">${content}</div>
     </div>`;
     const ariaMap = new Map([["labelledby", headingId]]);
     ariaDecorate(modal, ariaMap);
@@ -195,6 +258,7 @@ export const ui = {
     overlay.addEventListener("click", () => this.closeModal(currentOwner));
     overlay.classList.toggle("respec-show-overlay");
     modal.hidden = false;
+    trapFocus(modal);
   },
 };
 shortcut.add("Esc", () => ui.closeModal());

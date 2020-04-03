@@ -8,7 +8,6 @@ const modules = [
   // order is significant
   import("../src/core/base-runner.js"),
   import("../src/core/ui.js"),
-  import("../src/core/reindent.js"),
   import("../src/core/location-hash.js"),
   import("../src/core/l10n.js"),
   import("../src/w3c/defaults.js"),
@@ -18,6 +17,9 @@ const modules = [
   import("../src/core/github.js"),
   import("../src/core/data-include.js"),
   import("../src/core/markdown.js"),
+  import("../src/core/reindent.js"),
+  import("../src/core/title.js"),
+  import("../src/w3c/level.js"),
   import("../src/w3c/headers.js"),
   import("../src/w3c/abstract.js"),
   import("../src/core/data-transform.js"),
@@ -36,6 +38,7 @@ const modules = [
   import("../src/core/webidl-index.js"),
   import("../src/core/link-to-dfn.js"),
   import("../src/core/render-biblio.js"),
+  import("../src/core/dfn-index.js"),
   import("../src/core/contrib.js"),
   import("../src/core/fix-headers.js"),
   import("../src/core/structure.js"),
@@ -60,8 +63,9 @@ const modules = [
   import("../src/core/algorithms.js"),
   import("../src/core/anchor-expander.js"),
   import("../src/core/custom-elements/index.js"),
-  /* Linter must be the last thing to run */
+  /* Linters must be the last thing to run */
   import("../src/core/linter.js"),
+  import("../src/core/a11y.js"),
 ];
 
 async function domReady() {

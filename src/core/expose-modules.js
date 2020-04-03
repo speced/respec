@@ -6,7 +6,7 @@ if (!inAmd) {
    * @param {string[]} deps
    * @param {(...modules: any[]) => void} callback
    */
-  const require = function(deps, callback) {
+  const require = function (deps, callback) {
     const modules = deps.map(dep => {
       if (!(dep in window.require.modules)) {
         throw new Error(`Unsupported dependency name: ${dep}`);
