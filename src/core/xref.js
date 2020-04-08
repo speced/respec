@@ -413,7 +413,7 @@ function showErrors({ ambiguous, notFound }) {
   };
 
   for (const { query, elems } of notFound.values()) {
-    const specs = [...new Set(query.specs.flat())].sort();
+    const specs = query.specs ? [...new Set(query.specs.flat())].sort() : [];
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
