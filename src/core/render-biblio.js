@@ -165,14 +165,17 @@ function toRefContent(ref) {
  * Render an inline citation
  *
  * @param {String} ref the inline reference.
+ * @param {String} [linkText] custom link text
  * @returns HTMLElement
  */
-export function renderInlineCitation(ref) {
+export function renderInlineCitation(ref, linkText) {
   const key = ref.replace(/^(!|\?)/, "");
   const href = `#bib-${key.toLowerCase()}`;
-  return html`[<cite
-      ><a class="bibref" href="${href}" data-link-type="biblio">${key}</a></cite
-    >]`;
+  const text = linkText || key;
+  const elem = html`<cite
+    ><a class="bibref" href="${href}" data-link-type="biblio">${text}</a></cite
+  >`;
+  return linkText ? elem : html`[${elem}]`;
 }
 
 /**
