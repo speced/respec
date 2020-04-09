@@ -26,77 +26,78 @@ export const name = "core/data-cite";
 
 const THIS_SPEC = "__SPEC__";
 
-function requestLookup() {
-  return async elem => {
-    const originalKey = elem.dataset.cite;
-    const { key, frag, path } = toCiteDetails(elem);
-    let href = "";
-    let title = "";
-    // This is just referring to this document
-    if (key === THIS_SPEC) {
-      console.log(
-        elem,
-        `The reference "${key}" is resolved into the current document per \`conf.shortName\`.`
-      );
-      href = document.location.href;
-    } else {
-      // Let's go look it up in spec ref...
-      const entry = await resolveRef(key);
-      if (!entry) {
-        showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
-        return;
+/**
+ * @param {HTMLElement} elem
+ */
+async function toLookupRequest(elem) {
+  const originalKey = elem.dataset.cite;
+  const { key, frag, path } = toCiteDetails(elem);
+  let href = "";
+  let title = "";
+  // This is just referring to this document
+  if (key === THIS_SPEC) {
+    console.log(
+      elem,
+      `The reference "${key}" is resolved into the current document per \`conf.shortName\`.`
+    );
+    href = document.location.href;
+  } else {
+    // Let's go look it up in spec ref...
+    const entry = await resolveRef(key);
+    if (!entry) {
+      showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
+      return;
+    }
+    href = entry.href;
+    title = entry.title;
+  }
+  if (path) {
+    // See: https://github.com/w3c/respec/issues/1856#issuecomment-429579475
+    const relPath = path.startsWith("/") ? `.${path}` : path;
+    href = new URL(relPath, href).href;
+  }
+  if (frag) {
+    href = new URL(frag, href).href;
+  }
+  switch (elem.localName) {
+    case "a": {
+      if (elem.textContent === "" && elem.dataset.lt !== "the-empty-string") {
+        elem.textContent = title;
       }
-      href = entry.href;
-      title = entry.title;
-    }
-    if (path) {
-      // See: https://github.com/w3c/respec/issues/1856#issuecomment-429579475
-      const relPath = path.startsWith("/") ? `.${path}` : path;
-      href = new URL(relPath, href).href;
-    }
-    if (frag) {
-      href = new URL(frag, href).href;
-    }
-    switch (elem.localName) {
-      case "a": {
-        if (elem.textContent === "" && elem.dataset.lt !== "the-empty-string") {
-          elem.textContent = title;
-        }
-        elem.href = href;
-        if (!path && !frag) {
-          const cite = document.createElement("cite");
-          elem.replaceWith(cite);
-          cite.append(elem);
-        }
-        break;
+      elem.href = href;
+      if (!path && !frag) {
+        const cite = document.createElement("cite");
+        elem.replaceWith(cite);
+        cite.append(elem);
       }
-      case "dfn": {
-        const anchor = document.createElement("a");
-        anchor.href = href;
-        if (!elem.textContent) {
-          anchor.textContent = title;
-          elem.append(anchor);
-        } else {
-          wrapInner(elem, anchor);
-        }
-        if (!path && !frag) {
-          const cite = document.createElement("cite");
-          cite.append(anchor);
-          elem.append(cite);
-        }
-        if ("export" in elem.dataset) {
-          showInlineError(
-            elem,
-            "Exporting an linked external definition is not allowed. Please remove the `data-export` attribute",
-            "Please remove the `data-export` attribute."
-          );
-          delete elem.dataset.export;
-        }
-        elem.dataset.noExport = "";
-        break;
-      }
+      break;
     }
-  };
+    case "dfn": {
+      const anchor = document.createElement("a");
+      anchor.href = href;
+      if (!elem.textContent) {
+        anchor.textContent = title;
+        elem.append(anchor);
+      } else {
+        wrapInner(elem, anchor);
+      }
+      if (!path && !frag) {
+        const cite = document.createElement("cite");
+        cite.append(anchor);
+        elem.append(cite);
+      }
+      if ("export" in elem.dataset) {
+        showInlineError(
+          elem,
+          "Exporting an linked external definition is not allowed. Please remove the `data-export` attribute",
+          "Please remove the `data-export` attribute."
+        );
+        delete elem.dataset.export;
+      }
+      elem.dataset.noExport = "";
+      break;
+    }
+  }
 }
 
 /**
@@ -180,7 +181,6 @@ export async function run(conf) {
 }
 
 export async function linkInlineCitations() {
-  const toLookupRequest = requestLookup();
   const elems = [
     ...document.querySelectorAll(
       "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
