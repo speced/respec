@@ -183,10 +183,9 @@ export async function run(conf) {
 
 /**
  * @param {Document} doc
- * @param {*} conf
  */
-export async function linkInlineCitations(doc, conf = respecConfig) {
-  const toLookupRequest = requestLookup(conf);
+export async function linkInlineCitations(doc) {
+  const toLookupRequest = requestLookup();
   const elems = [
     ...doc.querySelectorAll(
       "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
