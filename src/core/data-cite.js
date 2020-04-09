@@ -26,9 +26,6 @@ export const name = "core/data-cite";
 
 const THIS_SPEC = "__SPEC__";
 
-/**
- * @param {HTMLElement} elem
- */
 async function toLookupRequest(elem) {
   const originalKey = elem.dataset.cite;
   const { key, frag, path } = toCiteDetails(elem);
