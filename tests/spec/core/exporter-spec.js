@@ -41,6 +41,40 @@ describe("Core - exporter", () => {
     expect(comments.length).toBe(0);
   });
 
+  it("removes temporary element attributes", async () => {
+    const body = `
+      <a
+        id="ANCHOR"
+        data-keep-me="FOO"
+        data-cite="rfc6454#section-3.2"
+        data-xref-type="dfn"
+        >origin</a
+      >
+      <dfn
+        id="DFN"
+        data-keep-me="BAR"
+        data-cite="?rfc6454"
+        data-cite-frag="section-3.2"
+        >origin</dfn
+      >
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await getExportedDoc(ops);
+
+    const anchor = doc.getElementById("ANCHOR");
+    expect(anchor.hasAttribute("data-cite")).toBeFalse();
+    expect(anchor.hasAttribute("data-cite-frag")).toBeFalse();
+    expect(anchor.hasAttribute("data-cite-path")).toBeFalse();
+    expect(anchor.hasAttribute("data-xref-type")).toBeFalse();
+    expect(anchor.hasAttribute("data-keep-me")).toBeTrue();
+
+    const dfn = doc.getElementById("DFN");
+    expect(dfn.hasAttribute("data-cite")).toBeFalse();
+    expect(dfn.hasAttribute("data-cite-frag")).toBeFalse();
+    expect(dfn.hasAttribute("data-cite-path")).toBeFalse();
+    expect(dfn.hasAttribute("data-keep-me")).toBeTrue();
+  });
+
   it("moves the W3C style sheet to be last thing in documents head", async () => {
     const ops = makeStandardOps();
     ops.body = `

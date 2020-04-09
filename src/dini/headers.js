@@ -94,7 +94,7 @@ export function run(conf) {
   );
   conf.publishYear = conf.publishDate.getUTCFullYear();
   conf.publishHumanDate = DINIDate.format(conf.publishDate);
-  const peopCheck = function(it) {
+  const peopCheck = function (it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
     if (it.orcid) {
       try {

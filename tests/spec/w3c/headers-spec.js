@@ -14,10 +14,17 @@ const findContent = string => {
 describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
-  const contains = (el, query, string) =>
-    [...el.querySelectorAll(query)].filter(child =>
-      child.innerHTML.includes(string)
+  /**
+   * @param {Node} node
+   */
+  function collapsedTextContent({ textContent }) {
+    return textContent.replace(/\s+/g, " ");
+  }
+  function contains(el, query, string) {
+    return [...el.querySelectorAll(query)].filter(child =>
+      collapsedTextContent(child).includes(string)
     );
+  }
   describe("prevRecShortname & prevRecURI", () => {
     it("takes prevRecShortname and prevRecURI into account", async () => {
       const ops = makeStandardOps();
@@ -43,6 +50,21 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect(doc.querySelector(".head h2").textContent).toContain(
         "W3C Editor's Draft"
+      );
+      expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
+        "does not imply endorsement by the W3C Membership."
+      );
+    });
+
+    it("indicates as recommended", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
+        "is endorsed by the Director as a W3C Recommendation."
       );
     });
   });

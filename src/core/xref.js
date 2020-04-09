@@ -19,7 +19,7 @@ import {
   showInlineError,
   showInlineWarning,
 } from "./utils.js";
-import { pub } from "./pubsubhub.js";
+import { pub, sub } from "./pubsubhub.js";
 
 const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
@@ -63,6 +63,8 @@ export async function run(conf, elems) {
 
   const data = await getData(queryKeys, xref.url);
   addDataCiteToTerms(elems, queryKeys, data, conf);
+
+  sub("beforesave", cleanup);
 }
 
 /**
@@ -145,7 +147,7 @@ function getRequestEntry(elem) {
 }
 
 /** @param {HTMLElement} elem */
-function getTermFromElement(elem) {
+export function getTermFromElement(elem) {
   const { lt: linkingText } = elem.dataset;
   let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
   term = normalize(term);
@@ -353,11 +355,12 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
  */
 function addDataCite(elem, query, result, conf) {
   const { term } = query;
-  const { uri, shortname: cite, normative, type } = result;
+  const { uri, shortname: cite, normative, type, for: forContext } = result;
 
   const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
   const [citePath, citeFrag] = path.split("#");
   const dataset = { cite, citePath, citeFrag, type };
+  if (forContext) dataset.linkFor = forContext[0];
   Object.assign(elem.dataset, dataset);
 
   addToReferences(elem, cite, normative, term, conf);
@@ -410,7 +413,7 @@ function showErrors({ ambiguous, notFound }) {
   };
 
   for (const { query, elems } of notFound.values()) {
-    const specs = [...new Set(query.specs.flat())].sort();
+    const specs = query.specs ? [...new Set(query.specs.flat())].sort() : [];
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
@@ -442,4 +445,14 @@ function objectHash(obj) {
 function bufferToHexString(buffer) {
   const byteArray = new Uint8Array(buffer);
   return [...byteArray].map(v => v.toString(16).padStart(2, "0")).join("");
+}
+
+function cleanup(doc) {
+  const elems = doc.querySelectorAll(
+    "a[data-xref-for], a[data-xref-type], a[data-link-for]"
+  );
+  const attrToRemove = ["data-xref-for", "data-xref-type", "data-link-for"];
+  elems.forEach(el => {
+    attrToRemove.forEach(attr => el.removeAttribute(attr));
+  });
 }

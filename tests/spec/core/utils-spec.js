@@ -1,7 +1,7 @@
 "use strict";
 
 import * as utils from "../../../src/core/utils.js";
-import { hyperHTML } from "../../../src/core/import-maps.js";
+import { html } from "../../../src/core/import-maps.js";
 
 describe("Core - Utils", () => {
   describe("fetchAndCache", () => {
@@ -394,33 +394,33 @@ describe("Core - Utils", () => {
   describe("htmlJoinAnd", () => {
     it("joins with proper commas and 'and'", () => {
       const div = document.createElement("div");
-      const render = hyperHTML.bind(div);
+      const render = html.bind(div);
 
-      render`${utils.htmlJoinAnd([], item => hyperHTML`<a>${item}</a>`)}`;
+      render`${utils.htmlJoinAnd([], item => html`<a>${item}</a>`)}`;
       expect(div.textContent).toBe("");
       expect(div.getElementsByTagName("a").length).toBe(0);
 
-      render`${utils.htmlJoinAnd(["<x>"], item => hyperHTML`<a>${item}</a>`)}`;
+      render`${utils.htmlJoinAnd(["<x>"], item => html`<a>${item}</a>`)}`;
       expect(div.textContent).toBe("<x>");
       expect(div.getElementsByTagName("a").length).toBe(1);
 
       render`${utils.htmlJoinAnd(
         ["<x>", "<x>"],
-        item => hyperHTML`<a>${item}</a>`
+        item => html`<a>${item}</a>`
       )}`;
       expect(div.textContent).toBe("<x> and <x>");
       expect(div.getElementsByTagName("a").length).toBe(2);
 
       render`${utils.htmlJoinAnd(
         ["<x>", "<x>", "<x>"],
-        item => hyperHTML`<a>${item}</a>`
+        item => html`<a>${item}</a>`
       )}`;
       expect(div.textContent).toBe("<x>, <x>, and <x>");
       expect(div.getElementsByTagName("a").length).toBe(3);
 
       render`${utils.htmlJoinAnd(
         ["<x>", "<x>", "<X>", "<x>"],
-        item => hyperHTML`<a>${item}</a>`
+        item => html`<a>${item}</a>`
       )}`;
       expect(div.textContent).toBe("<x>, <x>, <X>, and <x>");
       expect(div.getElementsByTagName("a").length).toBe(4);
