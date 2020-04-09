@@ -67,6 +67,7 @@ const defaultsReference = Object.freeze({
 
 const endWithDot = endNormalizer(".");
 
+/** @param {Conf} conf */
 export function run(conf) {
   const informs = Array.from(conf.informativeReferences);
   const norms = Array.from(conf.normativeReferences);
@@ -256,6 +257,7 @@ export function wireReference(rawRef, target = "_blank") {
   `;
 }
 
+/** @param {BiblioData|string} ref */
 export function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
   let output = `<cite>${ref.title}</cite>`;
