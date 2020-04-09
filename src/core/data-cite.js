@@ -27,7 +27,6 @@ export const name = "core/data-cite";
 const THIS_SPEC = "__SPEC__";
 
 function requestLookup() {
-  const toCiteDetails = citeDetailsConverter();
   return async elem => {
     const originalKey = elem.dataset.cite;
     const { key, frag, path } = toCiteDetails(elem);
@@ -111,6 +110,9 @@ function makeComponentFinder(component) {
   };
 }
 
+const findFrag = makeComponentFinder("#");
+const findPath = makeComponentFinder("/");
+
 /**
  * @typedef {object} CiteDetails
  * @property {string} key
@@ -118,42 +120,38 @@ function makeComponentFinder(component) {
  * @property {string} frag
  * @property {string} path
  *
- * @return {(elem: HTMLElement) => CiteDetails};
+ * @param {HTMLElement} elem
+ * @return {CiteDetails};
  */
-export function citeDetailsConverter() {
-  const findFrag = makeComponentFinder("#");
-  const findPath = makeComponentFinder("/");
-  return function toCiteDetails(elem) {
-    const { dataset } = elem;
-    const { cite: rawKey, citeFrag, citePath } = dataset;
-    // The key is a fragment, resolve using the shortName as key
-    if (rawKey.startsWith("#") && !citeFrag) {
-      // Closes data-cite not starting with "#"
-      /** @type {HTMLElement} */
-      const closest = elem.parentElement.closest(
-        `[data-cite]:not([data-cite^="#"])`
-      );
-      const { key: parentKey, isNormative: closestIsNormative } = closest
-        ? toCiteDetails(closest)
-        : { key: THIS_SPEC, isNormative: false };
-      dataset.cite = closestIsNormative ? parentKey : `?${parentKey}`;
-      dataset.citeFrag = rawKey.replace("#", ""); // the key is acting as fragment
-      return toCiteDetails(elem);
-    }
-    const frag = citeFrag ? `#${citeFrag}` : findFrag(rawKey);
-    const path = citePath || findPath(rawKey).split("#")[0]; // path is always before "#"
-    const { type } = refTypeFromContext(rawKey, elem);
-    const isNormative = type === "normative";
-    // key is before "/" and "#" but after "!" or "?" (e.g., ?key/path#frag)
-    const hasPrecedingMark = /^[?|!]/.test(rawKey);
-    const key = rawKey.split(/[/|#]/)[0].substring(Number(hasPrecedingMark));
-    const details = { key, isNormative, frag, path };
-    return details;
-  };
+export function toCiteDetails(elem) {
+  const { dataset } = elem;
+  const { cite: rawKey, citeFrag, citePath } = dataset;
+  // The key is a fragment, resolve using the shortName as key
+  if (rawKey.startsWith("#") && !citeFrag) {
+    // Closes data-cite not starting with "#"
+    /** @type {HTMLElement} */
+    const closest = elem.parentElement.closest(
+      `[data-cite]:not([data-cite^="#"])`
+    );
+    const { key: parentKey, isNormative: closestIsNormative } = closest
+      ? toCiteDetails(closest)
+      : { key: THIS_SPEC, isNormative: false };
+    dataset.cite = closestIsNormative ? parentKey : `?${parentKey}`;
+    dataset.citeFrag = rawKey.replace("#", ""); // the key is acting as fragment
+    return toCiteDetails(elem);
+  }
+  const frag = citeFrag ? `#${citeFrag}` : findFrag(rawKey);
+  const path = citePath || findPath(rawKey).split("#")[0]; // path is always before "#"
+  const { type } = refTypeFromContext(rawKey, elem);
+  const isNormative = type === "normative";
+  // key is before "/" and "#" but after "!" or "?" (e.g., ?key/path#frag)
+  const hasPrecedingMark = /^[?|!]/.test(rawKey);
+  const key = rawKey.split(/[/|#]/)[0].substring(Number(hasPrecedingMark));
+  const details = { key, isNormative, frag, path };
+  return details;
 }
 
 export async function run(conf) {
-  const toCiteDetails = citeDetailsConverter();
   const shortNameRegex = new RegExp(
     String.raw`\b${conf.shortName.toLowerCase()}\b`,
     "i"
@@ -191,10 +189,9 @@ export async function linkInlineCitations(doc) {
       "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
     ),
   ];
-  const citeConverter = citeDetailsConverter();
 
   const promisesForMissingEntries = elems
-    .map(citeConverter)
+    .map(toCiteDetails)
     .map(async entry => {
       const result = await resolveRef(entry.key);
       return { entry, result };

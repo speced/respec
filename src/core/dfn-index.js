@@ -6,12 +6,12 @@
  */
 
 import { addId, getIntlData, norm } from "./utils.js";
-import { citeDetailsConverter } from "./data-cite.js";
 import { fetchAsset } from "./text-loader.js";
 import { getTermFromElement } from "./xref.js";
 import { html } from "./import-maps.js";
 import { renderInlineCitation } from "./render-biblio.js";
 import { sub } from "./pubsubhub.js";
+import { toCiteDetails } from "./data-cite.js";
 
 export const name = "core/dfn-index";
 
@@ -61,8 +61,6 @@ export async function run() {
     index.prepend(html`<h2>${l10n.heading}</h2>`);
   }
 
-  const toCiteDetails = citeDetailsConverter();
-
   const localTermIndex = html`<section id="index-defined-here">
     <h3>${l10n.headlingLocal}</h3>
     ${createLocalTermIndex()}
@@ -71,7 +69,7 @@ export async function run() {
 
   const externalTermIndex = html`<section id="index-defined-elsewhere">
     <h3>${l10n.headingExternal}</h3>
-    ${createExternalTermIndex(toCiteDetails)}
+    ${createExternalTermIndex()}
   </section>`;
   index.append(externalTermIndex);
 
@@ -231,11 +229,8 @@ function appendSectionNumbers() {
   elems.forEach(el => el.append(getSectionNumber(el.dataset.id)));
 }
 
-/**
- * @param {ReturnType<typeof citeDetailsConverter>} toCiteDetails
- */
-function createExternalTermIndex(toCiteDetails) {
-  const data = collectExternalTerms(toCiteDetails);
+function createExternalTermIndex() {
+  const data = collectExternalTerms();
   const dataSortedBySpec = [...data.entries()].sort(([specA], [specB]) =>
     specA.localeCompare(specB)
   );
@@ -253,10 +248,7 @@ function createExternalTermIndex(toCiteDetails) {
   </ul>`;
 }
 
-/**
- * @param {ReturnType<typeof citeDetailsConverter>} toCiteDetails
- */
-function collectExternalTerms(toCiteDetails) {
+function collectExternalTerms() {
   /** @type {Set<string>} */
   const uniqueReferences = new Set();
   /** @type {Map<string, Entry[]>} spec => entry[] */
