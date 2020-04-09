@@ -46,7 +46,7 @@ const CODE_TYPES = new Set([
  * @typedef {{ term: string, type: string, linkFor: string, elem: HTMLAnchorElement }} Entry
  */
 
-export async function run(conf) {
+export async function run() {
   const index = document.querySelector("section#index");
   if (!index) {
     return;
@@ -61,7 +61,7 @@ export async function run(conf) {
     index.prepend(html`<h2>${l10n.heading}</h2>`);
   }
 
-  const toCiteDetails = citeDetailsConverter(conf);
+  const toCiteDetails = citeDetailsConverter();
 
   const localTermIndex = html`<section id="index-defined-here">
     <h3>${l10n.headlingLocal}</h3>

@@ -24,15 +24,17 @@ import {
 import { sub } from "./pubsubhub.js";
 export const name = "core/data-cite";
 
-function requestLookup(conf) {
-  const toCiteDetails = citeDetailsConverter(conf);
+const THIS_SPEC = "__SPEC__";
+
+function requestLookup() {
+  const toCiteDetails = citeDetailsConverter();
   return async elem => {
     const originalKey = elem.dataset.cite;
     const { key, frag, path } = toCiteDetails(elem);
     let href = "";
     let title = "";
     // This is just referring to this document
-    if (key.toLowerCase() === conf.shortName.toLowerCase()) {
+    if (key === THIS_SPEC) {
       console.log(
         elem,
         `The reference "${key}" is resolved into the current document per \`conf.shortName\`.`
@@ -118,7 +120,7 @@ function makeComponentFinder(component) {
  *
  * @return {(elem: HTMLElement) => CiteDetails};
  */
-export function citeDetailsConverter(conf) {
+export function citeDetailsConverter() {
   const findFrag = makeComponentFinder("#");
   const findPath = makeComponentFinder("/");
   return function toCiteDetails(elem) {
@@ -133,7 +135,7 @@ export function citeDetailsConverter(conf) {
       );
       const { key: parentKey, isNormative: closestIsNormative } = closest
         ? toCiteDetails(closest)
-        : { key: conf.shortName || "", isNormative: false };
+        : { key: THIS_SPEC, isNormative: false };
       dataset.cite = closestIsNormative ? parentKey : `?${parentKey}`;
       dataset.citeFrag = rawKey.replace("#", ""); // the key is acting as fragment
       return toCiteDetails(elem);
@@ -151,16 +153,22 @@ export function citeDetailsConverter(conf) {
 }
 
 export async function run(conf) {
-  const toCiteDetails = citeDetailsConverter(conf);
+  const toCiteDetails = citeDetailsConverter();
+  const shortNameRegex = new RegExp(
+    String.raw`\b${conf.shortName.toLowerCase()}\b`,
+    "i"
+  );
   /** @type {NodeListOf<HTMLElement>} */
   const cites = document.querySelectorAll("dfn[data-cite], a[data-cite]");
   Array.from(cites)
     .filter(el => el.dataset.cite)
+    .map(el => {
+      el.dataset.cite = el.dataset.cite.replace(shortNameRegex, THIS_SPEC);
+      return el;
+    })
     .map(toCiteDetails)
     // it's not the same spec
-    .filter(({ key }) => {
-      return key.toLowerCase() !== (conf.shortName || "").toLowerCase();
-    })
+    .filter(({ key }) => key !== THIS_SPEC)
     .forEach(({ isNormative, key }) => {
       if (!isNormative && !conf.normativeReferences.has(key)) {
         conf.informativeReferences.add(key);
@@ -184,7 +192,7 @@ export async function linkInlineCitations(doc, conf = respecConfig) {
       "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
     ),
   ];
-  const citeConverter = citeDetailsConverter(conf);
+  const citeConverter = citeDetailsConverter();
 
   const promisesForMissingEntries = elems
     .map(citeConverter)
