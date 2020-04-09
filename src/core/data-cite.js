@@ -179,13 +179,10 @@ export async function run(conf) {
   sub("beforesave", cleanup);
 }
 
-/**
- * @param {Document} doc
- */
-export async function linkInlineCitations(doc) {
+export async function linkInlineCitations() {
   const toLookupRequest = requestLookup();
   const elems = [
-    ...doc.querySelectorAll(
+    ...document.querySelectorAll(
       "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
     ),
   ];
