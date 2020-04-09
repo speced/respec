@@ -83,56 +83,65 @@ export function run(conf) {
 
   refSection.classList.add("appendix");
 
-  for (const type of ["Normative", "Informative"]) {
-    const refs = type === "Normative" ? norms : informs;
-    if (!refs.length) continue;
-
-    const sec = html`<section>
-      <h3>
-        ${type === "Normative" ? l10n.norm_references : l10n.info_references}
-      </h3>
-    </section>`;
-    addId(sec);
-
-    const { goodRefs, badRefs } = refs.map(toRefContent).reduce(
-      (refObjects, ref) => {
-        const refType = ref.refcontent ? "goodRefs" : "badRefs";
-        refObjects[refType].push(ref);
-        return refObjects;
-      },
-      { goodRefs: [], badRefs: [] }
-    );
-
-    const uniqueRefs = [
-      ...goodRefs
-        .reduce((uniqueRefs, ref) => {
-          if (!uniqueRefs.has(ref.refcontent.id)) {
-            // the condition ensures that only the first used [[TERM]]
-            // shows up in #references section
-            uniqueRefs.set(ref.refcontent.id, ref);
-          }
-          return uniqueRefs;
-        }, new Map())
-        .values(),
-    ];
-
-    const refsToShow = uniqueRefs
-      .concat(badRefs)
-      .sort((a, b) =>
-        a.ref.toLocaleLowerCase().localeCompare(b.ref.toLocaleLowerCase())
-      );
-
-    sec.appendChild(html`<dl class="bibliography">
-      ${refsToShow.map(showRef)}
-    </dl>`);
+  if (norms.length) {
+    const sec = createReferencesSection(norms, l10n.norm_references);
     refSection.appendChild(sec);
-
-    const aliases = getAliases(goodRefs);
-    decorateInlineReference(uniqueRefs, aliases);
-    warnBadRefs(badRefs);
+  }
+  if (informs.length) {
+    const sec = createReferencesSection(informs, l10n.info_references);
+    refSection.appendChild(sec);
   }
 
   document.body.appendChild(refSection);
+}
+
+/**
+ * @param {string[]} refs
+ * @param {string} title
+ * @returns {HTMLElement}
+ */
+function createReferencesSection(refs, title) {
+  const { goodRefs, badRefs } = refs.map(toRefContent).reduce(
+    (refObjects, ref) => {
+      const refType = ref.refcontent ? "goodRefs" : "badRefs";
+      refObjects[refType].push(ref);
+      return refObjects;
+    },
+    { goodRefs: [], badRefs: [] }
+  );
+
+  const uniqueRefs = [
+    ...goodRefs
+      .reduce((uniqueRefs, ref) => {
+        if (!uniqueRefs.has(ref.refcontent.id)) {
+          // the condition ensures that only the first used [[TERM]]
+          // shows up in #references section
+          uniqueRefs.set(ref.refcontent.id, ref);
+        }
+        return uniqueRefs;
+      }, new Map())
+      .values(),
+  ];
+
+  const refsToShow = uniqueRefs
+    .concat(badRefs)
+    .sort((a, b) =>
+      a.ref.toLocaleLowerCase().localeCompare(b.ref.toLocaleLowerCase())
+    );
+
+  const sec = html`<section>
+    <h3>${title}</h3>
+    <dl class="bibliography">
+      ${refsToShow.map(showRef)}
+    </dl>
+  </section>`;
+  addId(sec, "", title);
+
+  const aliases = getAliases(goodRefs);
+  decorateInlineReference(uniqueRefs, aliases);
+  warnBadRefs(badRefs);
+
+  return sec;
 }
 
 /**
