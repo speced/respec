@@ -73,6 +73,7 @@ export function run(conf) {
 
   if (!informs.length && !norms.length) return;
 
+  /** @type {HTMLElement} */
   const refSection =
     document.querySelector("section#references") ||
     html`<section id="references"></section>`;
@@ -101,27 +102,8 @@ export function run(conf) {
  * @returns {HTMLElement}
  */
 function createReferencesSection(refs, title) {
-  const { goodRefs, badRefs } = refs.map(toRefContent).reduce(
-    (refObjects, ref) => {
-      const refType = ref.refcontent ? "goodRefs" : "badRefs";
-      refObjects[refType].push(ref);
-      return refObjects;
-    },
-    { goodRefs: [], badRefs: [] }
-  );
-
-  const uniqueRefs = [
-    ...goodRefs
-      .reduce((uniqueRefs, ref) => {
-        if (!uniqueRefs.has(ref.refcontent.id)) {
-          // the condition ensures that only the first used [[TERM]]
-          // shows up in #references section
-          uniqueRefs.set(ref.refcontent.id, ref);
-        }
-        return uniqueRefs;
-      }, new Map())
-      .values(),
-  ];
+  const { goodRefs, badRefs } = groupRefs(refs.map(toRefContent));
+  const uniqueRefs = getUniqueRefs(goodRefs);
 
   const refsToShow = uniqueRefs
     .concat(badRefs)
@@ -148,6 +130,7 @@ function createReferencesSection(refs, title) {
  * returns refcontent and unique key for a reference among its aliases
  * and warns about circular references
  * @param {String} ref
+ * @typedef {ReturnType<typeof toRefContent>} Ref
  */
 function toRefContent(ref) {
   let refcontent = biblio[ref];
@@ -170,6 +153,34 @@ function toRefContent(ref) {
   return { ref, refcontent };
 }
 
+/** @param {Ref[]} refs */
+function groupRefs(refs) {
+  const goodRefs = [];
+  const badRefs = [];
+  for (const ref of refs) {
+    if (ref.refcontent) {
+      goodRefs.push(ref);
+    } else {
+      badRefs.push(ref);
+    }
+  }
+  return { goodRefs, badRefs };
+}
+
+/** @param {Ref[]} refs */
+function getUniqueRefs(refs) {
+  /** @type {Map<string, Ref>} */
+  const uniqueRefs = new Map();
+  for (const ref of refs) {
+    if (!uniqueRefs.has(ref.refcontent.id)) {
+      // the condition ensures that only the first used [[TERM]]
+      // shows up in #references section
+      uniqueRefs.set(ref.refcontent.id, ref);
+    }
+  }
+  return [...uniqueRefs.values()];
+}
+
 /**
  * Render an inline citation
  *
@@ -189,6 +200,7 @@ export function renderInlineCitation(ref, linkText) {
 
 /**
  * renders a reference
+ * @param {Ref} ref
  */
 function showRef({ ref, refcontent }) {
   const refId = `bib-${ref.toLowerCase()}`;
