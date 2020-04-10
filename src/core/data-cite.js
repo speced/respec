@@ -193,21 +193,7 @@ export async function linkInlineCitations() {
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );
 
-  const promisesForMissingEntries = [...elems]
-    .map(toCiteDetails)
-    .map(async entry => {
-      const result = await resolveRef(entry.key);
-      return { entry, result };
-    });
-  const bibEntries = await Promise.all(promisesForMissingEntries);
-
-  const missingBibEntries = bibEntries
-    .filter(({ result }) => result === null)
-    .map(({ entry: { key } }) => key);
-
-  // we now go to network to fetch missing entries
-  const newEntries = await updateFromNetwork(missingBibEntries);
-  if (newEntries) Object.assign(biblio, newEntries);
+  await updateBiblio([...elems]);
 
   for (const elem of elems) {
     const originalKey = elem.dataset.cite;
@@ -218,6 +204,27 @@ export async function linkInlineCitations() {
     } else {
       showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
     }
+  }
+}
+
+/**
+ * fetch and update biblio entries corresponding to given elements
+ * @param {HTMLElement[]} elems
+ */
+async function updateBiblio(elems) {
+  const promisesForBibEntries = elems.map(toCiteDetails).map(async entry => {
+    const result = await resolveRef(entry.key);
+    return { entry, result };
+  });
+  const bibEntries = await Promise.all(promisesForBibEntries);
+
+  const missingBibEntries = bibEntries
+    .filter(({ result }) => result === null)
+    .map(({ entry: { key } }) => key);
+
+  const newEntries = await updateFromNetwork(missingBibEntries);
+  if (newEntries) {
+    Object.assign(biblio, newEntries);
   }
 }
 
