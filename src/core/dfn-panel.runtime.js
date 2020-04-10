@@ -121,11 +121,7 @@ function getReferenceTitle(link) {
   if (!section) return null;
   const heading = section.querySelector("h1, h2, h3, h4, h5, h6");
   if (!heading) return null;
-  return norm(heading.textContent);
-}
-
-function norm(str) {
-  return str.trim().replace(/\s+/g, " ");
+  return heading.innerText.trim();
 }
 
 /**
