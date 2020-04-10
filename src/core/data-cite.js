@@ -26,9 +26,11 @@ export const name = "core/data-cite";
 
 const THIS_SPEC = "__SPEC__";
 
-async function toLookupRequest(elem) {
-  const originalKey = elem.dataset.cite;
-  const { key, frag, path } = toCiteDetails(elem);
+/**
+ * @param {CiteDetails} citeDetails
+ */
+async function getLinkProps(citeDetails) {
+  const { key, frag, path } = citeDetails;
   let href = "";
   let title = "";
   // This is just referring to this document
@@ -38,8 +40,7 @@ async function toLookupRequest(elem) {
     // Let's go look it up in spec ref...
     const entry = await resolveRef(key);
     if (!entry) {
-      showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
-      return;
+      return null;
     }
     href = entry.href;
     title = entry.title;
@@ -52,44 +53,57 @@ async function toLookupRequest(elem) {
   if (frag) {
     href = new URL(frag, href).href;
   }
-  switch (elem.localName) {
-    case "a": {
-      if (elem.textContent === "" && elem.dataset.lt !== "the-empty-string") {
-        elem.textContent = title;
-      }
-      elem.href = href;
-      if (!path && !frag) {
-        const cite = document.createElement("cite");
-        elem.replaceWith(cite);
-        cite.append(elem);
-      }
-      break;
+  return { href, title };
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @param {object} linkProps
+ * @param {string} linkProps.href
+ * @param {string} linkProps.title
+ * @param {CiteDetails} citeDetails
+ */
+function linkElem(elem, linkProps, citeDetails) {
+  const { href, title } = linkProps;
+  const wrapInCiteEl = !citeDetails.path && !citeDetails.frag;
+
+  if (elem.localName === "a") {
+    const anchor = /** @type {HTMLAnchorElement} */ (elem);
+    if (anchor.textContent === "" && anchor.dataset.lt !== "the-empty-string") {
+      anchor.textContent = title;
     }
-    case "dfn": {
-      const anchor = document.createElement("a");
-      anchor.href = href;
-      if (!elem.textContent) {
-        anchor.textContent = title;
-        elem.append(anchor);
-      } else {
-        wrapInner(elem, anchor);
-      }
-      if (!path && !frag) {
-        const cite = document.createElement("cite");
-        cite.append(anchor);
-        elem.append(cite);
-      }
-      if ("export" in elem.dataset) {
-        showInlineError(
-          elem,
-          "Exporting an linked external definition is not allowed. Please remove the `data-export` attribute",
-          "Please remove the `data-export` attribute."
-        );
-        delete elem.dataset.export;
-      }
-      elem.dataset.noExport = "";
-      break;
+    anchor.href = href;
+    if (wrapInCiteEl) {
+      const cite = document.createElement("cite");
+      anchor.replaceWith(cite);
+      cite.append(anchor);
     }
+    return;
+  }
+
+  if (elem.localName === "dfn") {
+    const anchor = document.createElement("a");
+    anchor.href = href;
+    if (!elem.textContent) {
+      anchor.textContent = title;
+      elem.append(anchor);
+    } else {
+      wrapInner(elem, anchor);
+    }
+    if (wrapInCiteEl) {
+      const cite = document.createElement("cite");
+      cite.append(anchor);
+      elem.append(cite);
+    }
+    if ("export" in elem.dataset) {
+      showInlineError(
+        elem,
+        "Exporting an linked external definition is not allowed. Please remove the `data-export` attribute",
+        "Please remove the `data-export` attribute."
+      );
+      delete elem.dataset.export;
+    }
+    elem.dataset.noExport = "";
   }
 }
 
@@ -174,13 +188,12 @@ export async function run(conf) {
 }
 
 export async function linkInlineCitations() {
-  const elems = [
-    ...document.querySelectorAll(
-      "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
-    ),
-  ];
+  /** @type {NodeListOf<HTMLElement>} */
+  const elems = document.querySelectorAll(
+    "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
+  );
 
-  const promisesForMissingEntries = elems
+  const promisesForMissingEntries = [...elems]
     .map(toCiteDetails)
     .map(async entry => {
       const result = await resolveRef(entry.key);
@@ -196,8 +209,16 @@ export async function linkInlineCitations() {
   const newEntries = await updateFromNetwork(missingBibEntries);
   if (newEntries) Object.assign(biblio, newEntries);
 
-  const lookupRequests = [...new Set(elems)].map(toLookupRequest);
-  return await Promise.all(lookupRequests);
+  for (const elem of elems) {
+    const originalKey = elem.dataset.cite;
+    const citeDetails = toCiteDetails(elem);
+    const linkProps = await getLinkProps(citeDetails);
+    if (linkProps) {
+      linkElem(elem, linkProps, citeDetails);
+    } else {
+      showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
+    }
+  }
 }
 
 function cleanup(doc) {
