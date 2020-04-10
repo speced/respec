@@ -33,10 +33,6 @@ async function toLookupRequest(elem) {
   let title = "";
   // This is just referring to this document
   if (key === THIS_SPEC) {
-    console.log(
-      elem,
-      `The reference "${key}" is resolved into the current document per \`conf.shortName\`.`
-    );
     href = document.location.href;
   } else {
     // Let's go look it up in spec ref...
