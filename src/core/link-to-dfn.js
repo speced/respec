@@ -88,7 +88,7 @@ export async function run(conf) {
     showLinkingError(possibleExternalLinks);
   }
 
-  await linkInlineCitations(document, conf);
+  await linkInlineCitations();
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793
   pub("end", "core/link-to-dfn");
