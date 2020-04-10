@@ -26,6 +26,8 @@ function string(opts) {
 
       if (id.endsWith(".css")) {
         code = minifier.minify(code).styles;
+      } else if (id.endsWith(".runtime.js")) {
+        code = `(() => {\n${code}})()`;
       }
 
       return {
