@@ -105,6 +105,10 @@ interface BiblioData {
   title: string;
   href?: string;
   authors?: string[];
+  publisher?: string;
+  date?: string;
+  status?: string;
+  etAl?: boolean;
 }
 interface Conf {
   informativeReferences: Set<string>;
