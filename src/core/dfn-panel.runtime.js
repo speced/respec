@@ -1,3 +1,4 @@
+// @ts-check
 if (document.respecIsReady) {
   document.respecIsReady.then(() => dfnPanel());
 } else {
@@ -8,13 +9,13 @@ function dfnPanel() {
   /** @type {HTMLElement} */
   let panel;
   document.body.addEventListener("click", event => {
-    /** @type {HTMLElement} */
-    const el = event.target;
+    const el = /** @type {HTMLElement} */ (event.target);
 
     const action = deriveAction(el);
     switch (action) {
       case "show": {
         if (panel) panel.remove();
+        /** @type {HTMLElement} */
         const dfn = el.closest("dfn, .index-term");
         panel = createPanel(dfn);
         displayPanel(dfn, panel, { x: event.clientX, y: event.clientY });
@@ -56,6 +57,7 @@ function deriveAction(clickTarget) {
 function createPanel(dfn) {
   const { id } = dfn;
   const href = dfn.dataset.href || `#${id}`;
+  /** @type {NodeListOf<HTMLAnchorElement>} */
   const links = document.querySelectorAll(`a[href="${href}"]:not(.index-term)`);
 
   const tempNode = document.createElement("div");
@@ -71,8 +73,8 @@ function createPanel(dfn) {
 
 /**
  * @param {string} id dfn id
- * @param {NodeListOf<HTMLLinkElement>} links
- * @returns {HTMLUListElement}
+ * @param {NodeListOf<HTMLAnchorElement>} links
+ * @returns {string}
  */
 function referencesToHTML(id, links) {
   if (!links.length) {
@@ -104,7 +106,7 @@ function referencesToHTML(id, links) {
 
   /**
    * @param {[string, string[]]} entry
-   * @returns {HTMLLIElement}
+   * @returns {string}
    */
   const listItemToHTML = entry =>
     `<li>${toLinkProps(entry)
@@ -119,6 +121,7 @@ function referencesToHTML(id, links) {
 function getReferenceTitle(link) {
   const section = link.closest("section");
   if (!section) return null;
+  /** @type {HTMLElement} */
   const heading = section.querySelector("h1, h2, h3, h4, h5, h6");
   if (!heading) return null;
   return heading.innerText.trim();
