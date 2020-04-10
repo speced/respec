@@ -11,6 +11,7 @@ export async function run() {
   document.head.insertBefore(style, document.querySelector("link"));
 
   const script = document.createElement("script");
+  script.id = "respec-dfn-panel";
   script.textContent = await loadScript();
   document.body.append(script);
 }
