@@ -159,6 +159,7 @@ export function toCiteDetails(elem) {
   return details;
 }
 
+/** @param {Conf} conf */
 export async function run(conf) {
   const shortNameRegex = new RegExp(
     String.raw`\b${conf.shortName.toLowerCase()}\b`,
@@ -208,7 +209,7 @@ export async function linkInlineCitations() {
 }
 
 /**
- * fetch and update biblio entries corresponding to given elements
+ * Fetch and update `biblio` with entries corresponding to given elements
  * @param {HTMLElement[]} elems
  */
 async function updateBiblio(elems) {
@@ -228,6 +229,7 @@ async function updateBiblio(elems) {
   }
 }
 
+/** @param {Document} doc */
 function cleanup(doc) {
   const attrToRemove = ["data-cite", "data-cite-frag", "data-cite-path"];
   const elems = doc.querySelectorAll("a[data-cite], dfn[data-cite]");
