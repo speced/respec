@@ -115,6 +115,7 @@ interface Conf {
   normativeReferences: Set<string>;
   localBiblio?: Record<string, BiblioData>;
   biblio: Record<string, BiblioData>;
+  shortName: string;
 }
 
 module "core/xref" {
