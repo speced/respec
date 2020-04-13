@@ -1,9 +1,14 @@
 // @ts-check
-// Automatically adds external references.
-// Looks for the terms which do not have a definition locally on Shepherd API
-// For each returend result, adds `data-cite` attributes to respective elements,
-//   so later they can be handled by core/link-to-dfn.
-// https://github.com/w3c/respec/issues/1662
+/**
+ * @module core/xref
+ *
+ * Automatically adds external references.
+ *
+ * Searches for the terms which do not have a local definition at xref API and
+ * for each query, adds `data-cite` attributes to respective elements.
+ * `core/data-cite` later converts these data-cite attributes to actual links.
+ * https://github.com/w3c/respec/issues/1662
+ */
 /**
  * @typedef {import('core/xref').RequestEntry} RequestEntry
  * @typedef {import('core/xref').Response} Response
