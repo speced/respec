@@ -12,10 +12,12 @@ import {
   wrapInner,
 } from "./utils.js";
 import { THIS_SPEC, toCiteDetails } from "./data-cite.js";
-import { run as addExternalReferences } from "./xref.js";
 import { definitionMap } from "./dfn-map.js";
 
 export const name = "core/link-to-dfn";
+
+/** @type {HTMLElement[]} */
+export const possibleExternalLinks = [];
 
 const localizationStrings = {
   en: {
@@ -51,8 +53,6 @@ const l10n = getIntlData(localizationStrings);
 
 export async function run(conf) {
   const titleToDfns = mapTitleToDfns();
-  /** @type {HTMLElement[]} */
-  const possibleExternalLinks = [];
   /** @type {HTMLAnchorElement[]} */
   const badLinks = [];
 
@@ -63,7 +63,7 @@ export async function run(conf) {
   ) => {
     const linkTargets = getLinkTargets(anchor);
     const foundDfn = linkTargets.some(target => {
-      return findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks);
+      return findLinkTarget(target, anchor, titleToDfns);
     });
     if (!foundDfn && linkTargets.length !== 0) {
       if (anchor.dataset.cite === "") {
@@ -80,16 +80,7 @@ export async function run(conf) {
   // conf.normativeReferences and conf.informativeReferences.
   updateReferences(conf);
 
-  // TODO: this will be run entirely in core/xref
-  if (conf.xref) {
-    possibleExternalLinks.push(...findExplicitExternalLinks());
-    try {
-      await addExternalReferences(conf, possibleExternalLinks);
-    } catch (error) {
-      console.error(error);
-      showLinkingError(possibleExternalLinks);
-    }
-  } else {
+  if (!conf.xref) {
     showLinkingError(possibleExternalLinks);
   }
 }
@@ -142,7 +133,7 @@ function collectDfns(title) {
  * @param {CaseInsensitiveMap} titleToDfns
  * @param {HTMLElement[]} possibleExternalLinks
  */
-function findLinkTarget(target, anchor, titleToDfns, possibleExternalLinks) {
+function findLinkTarget(target, anchor, titleToDfns) {
   const { linkFor } = anchor.dataset;
   if (
     !titleToDfns.has(target.title) ||
@@ -240,29 +231,6 @@ function shouldWrapByCode(elem, term = "") {
     }
   }
   return false;
-}
-
-/**
- * Find additional references that need to be looked up externally.
- * Examples: a[data-cite="spec"], dfn[data-cite="spec"], dfn.externalDFN
- */
-function findExplicitExternalLinks() {
-  /** @type {NodeListOf<HTMLElement>} */
-  const links = document.querySelectorAll(
-    "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
-      "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
-  );
-  /** @type {NodeListOf<HTMLElement>} */
-  const externalDFNs = document.querySelectorAll("dfn.externalDFN");
-  return [...links]
-    .filter(el => {
-      // ignore empties
-      if (el.textContent.trim() === "") return false;
-      /** @type {HTMLElement} */
-      const closest = el.closest("[data-cite]");
-      return !closest || closest.dataset.cite !== "";
-    })
-    .concat(...externalDFNs);
 }
 
 function showLinkingError(elems) {

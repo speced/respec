@@ -20,6 +20,7 @@ import {
   showInlineWarning,
 } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
+import { possibleExternalLinks } from "./link-to-dfn.js";
 
 const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
@@ -38,11 +39,14 @@ if (
 }
 
 /**
- * main external reference driver
  * @param {Object} conf respecConfig
- * @param {HTMLElement[]} elems possibleExternalLinks
  */
-export async function run(conf, elems) {
+export async function run(conf) {
+  if (!conf.xref) {
+    return;
+  }
+
+  const elems = possibleExternalLinks.concat(findExplicitExternalLinks());
   const xref = normalizeConfig(conf.xref);
   if (xref.specs) {
     const bodyCite = document.body.dataset.cite
@@ -65,6 +69,29 @@ export async function run(conf, elems) {
   addDataCiteToTerms(elems, queryKeys, data, conf);
 
   sub("beforesave", cleanup);
+}
+
+/**
+ * Find additional references that need to be looked up externally.
+ * Examples: a[data-cite="spec"], dfn[data-cite="spec"], dfn.externalDFN
+ */
+function findExplicitExternalLinks() {
+  /** @type {NodeListOf<HTMLElement>} */
+  const links = document.querySelectorAll(
+    "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
+      "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
+  );
+  /** @type {NodeListOf<HTMLElement>} */
+  const externalDFNs = document.querySelectorAll("dfn.externalDFN");
+  return [...links]
+    .filter(el => {
+      // ignore empties
+      if (el.textContent.trim() === "") return false;
+      /** @type {HTMLElement} */
+      const closest = el.closest("[data-cite]");
+      return !closest || closest.dataset.cite !== "";
+    })
+    .concat(...externalDFNs);
 }
 
 /**
