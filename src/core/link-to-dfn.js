@@ -78,7 +78,7 @@ export async function run(conf) {
 
   // This needs to run before core/xref adds its data-cite and updates
   // conf.normativeReferences and conf.informativeReferences.
-  await dataCite(conf);
+  dataCite(conf);
 
   // TODO: this will be run entirely in core/xref
   if (conf.xref) {
@@ -276,28 +276,26 @@ function showLinkingError(elems) {
 }
 
 /** @param {Conf} conf */
-async function dataCite(conf) {
-  const shortNameRegex = new RegExp(
+function dataCite(conf) {
+  const shortName = new RegExp(
     String.raw`\b${(conf.shortName || "").toLowerCase()}\b`,
     "i"
   );
+
   /** @type {NodeListOf<HTMLElement>} */
-  const cites = document.querySelectorAll("dfn[data-cite], a[data-cite]");
-  Array.from(cites)
-    .filter(el => el.dataset.cite)
-    .map(el => {
-      el.dataset.cite = el.dataset.cite.replace(shortNameRegex, THIS_SPEC);
-      return el;
-    })
-    .map(toCiteDetails)
-    // it's not the same spec
-    .filter(({ key }) => key !== THIS_SPEC)
-    .forEach(({ isNormative, key }) => {
-      if (!isNormative && !conf.normativeReferences.has(key)) {
-        conf.informativeReferences.add(key);
-        return;
-      }
+  const elems = document.querySelectorAll(
+    "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
+  );
+  for (const elem of elems) {
+    elem.dataset.cite = elem.dataset.cite.replace(shortName, THIS_SPEC);
+    const { key, isNormative } = toCiteDetails(elem);
+    if (key === THIS_SPEC) continue;
+
+    if (!isNormative && !conf.normativeReferences.has(key)) {
+      conf.informativeReferences.add(key);
+    } else {
       conf.normativeReferences.add(key);
       conf.informativeReferences.delete(key);
-    });
+    }
+  }
 }
