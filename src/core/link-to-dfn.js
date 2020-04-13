@@ -131,7 +131,6 @@ function collectDfns(title) {
  * @param {import("./utils.js").LinkTarget} target
  * @param {HTMLAnchorElement} anchor
  * @param {CaseInsensitiveMap} titleToDfns
- * @param {HTMLElement[]} possibleExternalLinks
  */
 function findLinkTarget(target, anchor, titleToDfns) {
   const { linkFor } = anchor.dataset;
