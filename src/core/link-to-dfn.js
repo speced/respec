@@ -11,10 +11,10 @@ import {
   showInlineWarning,
   wrapInner,
 } from "./utils.js";
+import { THIS_SPEC, toCiteDetails } from "./data-cite.js";
 import { run as addExternalReferences } from "./xref.js";
 import { definitionMap } from "./dfn-map.js";
-import { linkInlineCitations } from "./data-cite.js";
-import { pub } from "./pubsubhub.js";
+
 export const name = "core/link-to-dfn";
 
 const localizationStrings = {
@@ -76,6 +76,11 @@ export async function run(conf) {
 
   showLinkingError(badLinks);
 
+  // This needs to run before core/xref adds its data-cite and updates
+  // conf.normativeReferences and conf.informativeReferences.
+  updateReferences(conf);
+
+  // TODO: this will be run entirely in core/xref
   if (conf.xref) {
     possibleExternalLinks.push(...findExplicitExternalLinks());
     try {
@@ -87,11 +92,6 @@ export async function run(conf) {
   } else {
     showLinkingError(possibleExternalLinks);
   }
-
-  await linkInlineCitations(document, conf);
-  // Added message for legacy compat with Aria specs
-  // See https://github.com/w3c/respec/issues/793
-  pub("end", "core/link-to-dfn");
 }
 
 function mapTitleToDfns() {
@@ -287,4 +287,35 @@ function showLinkingError(elems) {
       "Linking error: not matching `<dfn>`"
     );
   });
+}
+
+/**
+ * Update references due to `data-cite` attributes.
+ *
+ * Also, make sure self-citing doesn't cause current document getting added to
+ * bibliographic references section.
+ * @param {Conf} conf
+ */
+function updateReferences(conf) {
+  const shortName = new RegExp(
+    String.raw`\b${(conf.shortName || "").toLowerCase()}\b`,
+    "i"
+  );
+
+  /** @type {NodeListOf<HTMLElement>} */
+  const elems = document.querySelectorAll(
+    "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
+  );
+  for (const elem of elems) {
+    elem.dataset.cite = elem.dataset.cite.replace(shortName, THIS_SPEC);
+    const { key, isNormative } = toCiteDetails(elem);
+    if (key === THIS_SPEC) continue;
+
+    if (!isNormative && !conf.normativeReferences.has(key)) {
+      conf.informativeReferences.add(key);
+    } else {
+      conf.normativeReferences.add(key);
+      conf.informativeReferences.delete(key);
+    }
+  }
 }

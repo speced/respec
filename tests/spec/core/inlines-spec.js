@@ -58,6 +58,26 @@ describe("Core - Inlines", () => {
     );
   });
 
+  it("processes inline cite content with aliasing", async () => {
+    const body = `
+      <section id="test" class="normative">
+        <p>[[html|not JSX]]</p>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+
+    const norm = [...doc.querySelectorAll("#normative-references dt")];
+    expect(norm.map(el => el.textContent)).toEqual(["[html]"]);
+
+    const ref = doc.querySelector("#test p");
+    const link = doc.querySelector("#test cite a");
+    expect(ref.textContent).toBe("not JSX");
+    expect(ref.textContent).toBe(link.textContent);
+    expect(link.getAttribute("href")).toBe("#bib-html");
+    expect(link.dataset.linkType).toBe("biblio");
+  });
+
   it("processes abbr and rfc2119 content", async () => {
     const body = `
       <section id='inlines'>

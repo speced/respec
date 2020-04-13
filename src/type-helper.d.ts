@@ -105,12 +105,17 @@ interface BiblioData {
   title: string;
   href?: string;
   authors?: string[];
+  publisher?: string;
+  date?: string;
+  status?: string;
+  etAl?: boolean;
 }
 interface Conf {
   informativeReferences: Set<string>;
   normativeReferences: Set<string>;
   localBiblio?: Record<string, BiblioData>;
   biblio: Record<string, BiblioData>;
+  shortName: string;
 }
 
 module "core/xref" {

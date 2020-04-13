@@ -64,7 +64,7 @@ const l10n = getIntlData(localizationStrings);
 const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
 const inlineIdlReference = /(?:{{[^}]+}})/; // {{ WebIDLThing }}
 const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
-const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
+const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
@@ -146,12 +146,15 @@ function inlineBibrefMatches(matched, txt, conf) {
   if (ref.startsWith("\\")) {
     return [`[[${ref.slice(1)}]]`];
   }
-  const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
-  const cite = renderInlineCitation(ref);
-  const cleanRef = ref.replace(/^(!|\?)/, "");
+
+  const [spec, linkText] = ref.split("|").map(norm);
+  const { type, illegal } = refTypeFromContext(spec, txt.parentNode);
+  const cite = renderInlineCitation(spec, linkText);
+  const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
+    const citeElem = cite.childNodes[1] || cite;
     showInlineWarning(
-      cite.childNodes[1], // cite element
+      citeElem,
       "Normative references in informative sections are not allowed. " +
         `Remove '!' from the start of the reference \`[[${ref}]]\``
     );
@@ -162,7 +165,7 @@ function inlineBibrefMatches(matched, txt, conf) {
   } else {
     conf.normativeReferences.add(cleanRef);
   }
-  return cite.childNodes;
+  return cite.childNodes[1] ? cite.childNodes : [cite];
 }
 
 /**
