@@ -15,13 +15,13 @@
  * https://github.com/w3c/respec/wiki/data--cite
  */
 import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
+import { pub, sub } from "./pubsubhub.js";
 import {
   refTypeFromContext,
   showInlineError,
   showInlineWarning,
   wrapInner,
 } from "./utils.js";
-import { sub } from "./pubsubhub.js";
 export const name = "core/data-cite";
 
 const THIS_SPEC = "__SPEC__";
@@ -160,9 +160,9 @@ export function toCiteDetails(elem) {
 }
 
 /** @param {Conf} conf */
-export async function run(conf) {
+export async function dataCite(conf) {
   const shortNameRegex = new RegExp(
-    String.raw`\b${conf.shortName.toLowerCase()}\b`,
+    String.raw`\b${(conf.shortName || "").toLowerCase()}\b`,
     "i"
   );
   /** @type {NodeListOf<HTMLElement>} */
@@ -184,11 +184,9 @@ export async function run(conf) {
       conf.normativeReferences.add(key);
       conf.informativeReferences.delete(key);
     });
-
-  sub("beforesave", cleanup);
 }
 
-export async function linkInlineCitations() {
+export async function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
@@ -206,6 +204,15 @@ export async function linkInlineCitations() {
       showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
     }
   }
+
+  sub("beforesave", cleanup);
+
+  // Added message for legacy compat with Aria specs
+  // See https://github.com/w3c/respec/issues/793,
+  //
+  // Why `core/link-to-dfn` and not `core/data-cite`? For backward compatibility
+  // after a refactor (https://github.com/w3c/respec/issues/2830)
+  pub("end", "core/link-to-dfn");
 }
 
 /**

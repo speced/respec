@@ -12,9 +12,9 @@ import {
   wrapInner,
 } from "./utils.js";
 import { run as addExternalReferences } from "./xref.js";
+import { dataCite } from "./data-cite.js";
 import { definitionMap } from "./dfn-map.js";
-import { linkInlineCitations } from "./data-cite.js";
-import { pub } from "./pubsubhub.js";
+
 export const name = "core/link-to-dfn";
 
 const localizationStrings = {
@@ -76,6 +76,11 @@ export async function run(conf) {
 
   showLinkingError(badLinks);
 
+  // This needs to run before core/xref adds its data-cite and updates
+  // conf.normativeReferences and conf.informativeReferences.
+  await dataCite(conf);
+
+  // TODO: this will be run entirely in core/xref
   if (conf.xref) {
     possibleExternalLinks.push(...findExplicitExternalLinks());
     try {
@@ -87,11 +92,6 @@ export async function run(conf) {
   } else {
     showLinkingError(possibleExternalLinks);
   }
-
-  await linkInlineCitations();
-  // Added message for legacy compat with Aria specs
-  // See https://github.com/w3c/respec/issues/793
-  pub("end", "core/link-to-dfn");
 }
 
 function mapTitleToDfns() {
