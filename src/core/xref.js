@@ -51,7 +51,6 @@ export async function run(conf) {
     return;
   }
 
-  const elems = possibleExternalLinks.concat(findExplicitExternalLinks());
   const xref = normalizeConfig(conf.xref);
   if (xref.specs) {
     const bodyCite = document.body.dataset.cite
@@ -60,6 +59,7 @@ export async function run(conf) {
     document.body.dataset.cite = bodyCite.concat(xref.specs).join(" ");
   }
 
+  const elems = possibleExternalLinks.concat(findExplicitExternalLinks());
   if (!elems.length) return;
 
   /** @type {RequestEntry[]} */
