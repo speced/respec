@@ -11,8 +11,8 @@ import {
   showInlineWarning,
   wrapInner,
 } from "./utils.js";
+import { THIS_SPEC, toCiteDetails } from "./data-cite.js";
 import { run as addExternalReferences } from "./xref.js";
-import { dataCite } from "./data-cite.js";
 import { definitionMap } from "./dfn-map.js";
 
 export const name = "core/link-to-dfn";
@@ -273,4 +273,31 @@ function showLinkingError(elems) {
       "Linking error: not matching `<dfn>`"
     );
   });
+}
+
+/** @param {Conf} conf */
+async function dataCite(conf) {
+  const shortNameRegex = new RegExp(
+    String.raw`\b${(conf.shortName || "").toLowerCase()}\b`,
+    "i"
+  );
+  /** @type {NodeListOf<HTMLElement>} */
+  const cites = document.querySelectorAll("dfn[data-cite], a[data-cite]");
+  Array.from(cites)
+    .filter(el => el.dataset.cite)
+    .map(el => {
+      el.dataset.cite = el.dataset.cite.replace(shortNameRegex, THIS_SPEC);
+      return el;
+    })
+    .map(toCiteDetails)
+    // it's not the same spec
+    .filter(({ key }) => key !== THIS_SPEC)
+    .forEach(({ isNormative, key }) => {
+      if (!isNormative && !conf.normativeReferences.has(key)) {
+        conf.informativeReferences.add(key);
+        return;
+      }
+      conf.normativeReferences.add(key);
+      conf.informativeReferences.delete(key);
+    });
 }

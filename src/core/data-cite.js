@@ -24,7 +24,11 @@ import {
 } from "./utils.js";
 export const name = "core/data-cite";
 
-const THIS_SPEC = "__SPEC__";
+/**
+ * An arbitrary constant value used as an alias to current spec's shortname. It
+ * exists to simplify code as passing `conf.shortName` everywhere gets clumsy.
+ */
+export const THIS_SPEC = "__SPEC__";
 
 /**
  * @param {CiteDetails} citeDetails
@@ -157,33 +161,6 @@ export function toCiteDetails(elem) {
   const key = rawKey.split(/[/|#]/)[0].substring(Number(hasPrecedingMark));
   const details = { key, isNormative, frag, path };
   return details;
-}
-
-/** @param {Conf} conf */
-export async function dataCite(conf) {
-  const shortNameRegex = new RegExp(
-    String.raw`\b${(conf.shortName || "").toLowerCase()}\b`,
-    "i"
-  );
-  /** @type {NodeListOf<HTMLElement>} */
-  const cites = document.querySelectorAll("dfn[data-cite], a[data-cite]");
-  Array.from(cites)
-    .filter(el => el.dataset.cite)
-    .map(el => {
-      el.dataset.cite = el.dataset.cite.replace(shortNameRegex, THIS_SPEC);
-      return el;
-    })
-    .map(toCiteDetails)
-    // it's not the same spec
-    .filter(({ key }) => key !== THIS_SPEC)
-    .forEach(({ isNormative, key }) => {
-      if (!isNormative && !conf.normativeReferences.has(key)) {
-        conf.informativeReferences.add(key);
-        return;
-      }
-      conf.normativeReferences.add(key);
-      conf.informativeReferences.delete(key);
-    });
 }
 
 export async function run() {
