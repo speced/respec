@@ -2,17 +2,12 @@
 /**
  * Module core/data-cite
  *
- * Allows citing other specifications using
- * anchor elements. Simply add "data-cite"
- * and key of specification.
+ * Allows citing other specifications using anchor elements. Simply add
+ * "data-cite" and key of specification.
  *
- * This module simply adds the found key
- * to either conf.normativeReferences
- * or to conf.informativeReferences depending on
- * if it starts with a ! or not.
- *
- * Usage:
- * https://github.com/w3c/respec/wiki/data--cite
+ * This module links elements that have `data-cite` attributes by converting
+ * `data-cite` to `href` attributes. `data-cite` attributes are added to markup
+ * directly by the author as well as via other modules like core/xref.
  */
 import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
 import { pub, sub } from "./pubsubhub.js";
