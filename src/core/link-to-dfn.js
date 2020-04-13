@@ -78,7 +78,7 @@ export async function run(conf) {
 
   // This needs to run before core/xref adds its data-cite and updates
   // conf.normativeReferences and conf.informativeReferences.
-  dataCite(conf);
+  updateReferences(conf);
 
   // TODO: this will be run entirely in core/xref
   if (conf.xref) {
@@ -275,8 +275,14 @@ function showLinkingError(elems) {
   });
 }
 
-/** @param {Conf} conf */
-function dataCite(conf) {
+/**
+ * Update references due to `data-cite` attributes.
+ *
+ * Also, make sure self-citing doesn't cause current document getting added to
+ * bibliographic references section.
+ * @param {Conf} conf
+ */
+function updateReferences(conf) {
   const shortName = new RegExp(
     String.raw`\b${(conf.shortName || "").toLowerCase()}\b`,
     "i"
