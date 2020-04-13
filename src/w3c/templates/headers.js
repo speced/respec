@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData } from "../../core/utils.js";
+import { getIntlData, humanDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
@@ -23,6 +23,7 @@ const localizationStrings = {
     former_editors: "Former editors:",
     latest_editors_draft: "Latest editor's draft:",
     latest_published_version: "Latest published version:",
+    modification_date: "edited in place",
     this_version: "This version:",
   },
   ko: {
@@ -114,7 +115,10 @@ export default (conf, options) => {
       ${conf.prependW3C ? "W3C " : ""}${conf.textStatus}
       <time class="dt-published" datetime="${conf.dashDate}"
         >${conf.publishHumanDate}</time
-      >
+      >${conf.modificationDate
+        ? html`, ${l10n.modification_date}${" "}
+          ${inPlaceModificationDate(conf.modificationDate)}`
+        : ""}
     </h2>
     <dl>
       ${!conf.isNoTrack
@@ -231,6 +235,17 @@ export default (conf, options) => {
     <hr title="Separator for header" />
   </div>`;
 };
+
+/**
+ * @param {string} date document in-place edit date as YYYY-MM-DD
+ * @returns {HTMLTimeElement}
+ */
+function inPlaceModificationDate(date) {
+  const modificationHumanDate = humanDate(new Date(date));
+  return html`<time class="dt-modified" datetime="${date}"
+    >${modificationHumanDate}</time
+  >`;
+}
 
 /**
  * @param {string} text
