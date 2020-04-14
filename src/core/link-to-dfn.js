@@ -62,10 +62,14 @@ export async function run(conf) {
     /** @type {HTMLAnchorElement} */ anchor
   ) => {
     const linkTargets = getLinkTargets(anchor);
-    const foundDfn = linkTargets.some(target => {
-      return findLinkTarget(target, anchor, titleToDfns);
-    });
-    if (!foundDfn && linkTargets.length !== 0) {
+    const linkTarget = linkTargets.find(
+      target =>
+        titleToDfns.has(target.title) &&
+        titleToDfns.get(target.title).has(target.for)
+    );
+    if (linkTarget) {
+      useLinkTarget(linkTarget, anchor, titleToDfns);
+    } else if (linkTargets.length !== 0) {
       if (anchor.dataset.cite === "") {
         badLinks.push(anchor);
       } else {
@@ -132,14 +136,8 @@ function collectDfns(title) {
  * @param {HTMLAnchorElement} anchor
  * @param {CaseInsensitiveMap} titleToDfns
  */
-function findLinkTarget(target, anchor, titleToDfns) {
+function useLinkTarget(target, anchor, titleToDfns) {
   const { linkFor } = anchor.dataset;
-  if (
-    !titleToDfns.has(target.title) ||
-    !titleToDfns.get(target.title).get(target.for)
-  ) {
-    return false;
-  }
   const dfn = titleToDfns.get(target.title).get(target.for);
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
@@ -164,7 +162,6 @@ function findLinkTarget(target, anchor, titleToDfns) {
   if (isCode(dfn)) {
     wrapAsCode(anchor, dfn);
   }
-  return true;
 }
 
 /**
