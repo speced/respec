@@ -68,8 +68,8 @@ export async function run(conf) {
         titleToDfns.get(target.title).has(target.for)
     );
     if (linkTarget) {
-      const hasExternalTarget = processAnchor(anchor, linkTarget, titleToDfns);
-      if (hasExternalTarget) {
+      const localMatchFound = processAnchor(anchor, linkTarget, titleToDfns);
+      if (!localMatchFound) {
         possibleExternalLinks.push(anchor);
       }
     } else {
@@ -140,25 +140,22 @@ function collectDfns(title) {
  * @param {CaseInsensitiveMap} titleToDfns
  */
 function processAnchor(anchor, target, titleToDfns) {
-  let hasExternalTarget = false;
+  let localMatchFound = false;
   const { linkFor } = anchor.dataset;
   const dfn = titleToDfns.get(target.title).get(target.for);
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
+    localMatchFound = true;
   } else if (linkFor && !titleToDfns.get(linkFor)) {
-    hasExternalTarget = true;
+    localMatchFound = false;
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
     const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
     anchor.dataset.lt = lt[0] || dfn.textContent;
-    hasExternalTarget = true;
-  } else {
-    if (anchor.dataset.idl === "partial") {
-      hasExternalTarget = true;
-    } else {
-      anchor.href = `#${dfn.id}`;
-      anchor.classList.add("internalDFN");
-    }
+  } else if (anchor.dataset.idl !== "partial") {
+    anchor.href = `#${dfn.id}`;
+    anchor.classList.add("internalDFN");
+    localMatchFound = true;
   }
   if (!anchor.hasAttribute("data-link-type")) {
     anchor.dataset.linkType = "idl" in dfn.dataset ? "idl" : "dfn";
@@ -166,7 +163,7 @@ function processAnchor(anchor, target, titleToDfns) {
   if (isCode(dfn)) {
     wrapAsCode(anchor, dfn);
   }
-  return hasExternalTarget;
+  return localMatchFound;
 }
 
 /**
