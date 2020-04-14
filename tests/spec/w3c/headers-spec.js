@@ -910,6 +910,37 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("modificationDate", () => {
+    it("takes modificationDate into account", async () => {
+      const ops = makeStandardOps({
+        publishDate: "1977-03-15",
+        modificationDate: "2012-12-21",
+      });
+      const doc = await makeRSDoc(ops);
+
+      const [dateStatusEl] = contains(doc, "h2", "15 March 1977");
+      expect(dateStatusEl).toBeDefined();
+
+      const dateModified = dateStatusEl.querySelector(".dt-modified");
+      expect(dateModified).toBeTruthy();
+      expect(dateModified.localName).toBe("time");
+      expect(dateModified.getAttribute("datetime")).toBe("2012-12-21");
+      expect(dateModified.textContent).toBe("21 December 2012");
+
+      const text = dateStatusEl.textContent.trim().replace(/\s+/g, " ");
+      expect(text).toMatch(/15 March 1977, edited in place 21 December 2012$/);
+    });
+
+    it("doesn't add any content if modificationDate is not provided", async () => {
+      const ops = makeStandardOps({ publishDate: "1977-03-15" });
+      const doc = await makeRSDoc(ops);
+
+      const [dateStatusEl] = contains(doc, "h2", "15 March 1977");
+      const text = dateStatusEl.textContent.trim().replace(/\s+/g, " ");
+      expect(text).toMatch(/15 March 1977$/);
+    });
+  });
+
   describe("previousPublishDate & previousMaturity", () => {
     it("recovers given bad date inputs", async () => {
       const { ISODate } = await import("../../../src/core/utils.js");
