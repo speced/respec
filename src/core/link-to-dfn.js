@@ -56,23 +56,30 @@ export async function run(conf) {
   /** @type {HTMLAnchorElement[]} */
   const badLinks = [];
 
-  const localLinkSelector =
-    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)";
-  document.querySelectorAll(localLinkSelector).forEach((
-    /** @type {HTMLAnchorElement} */ anchor
-  ) => {
+  /** @type {NodeListOf<HTMLAnchorElement>} */
+  const localAnchors = document.querySelectorAll(
+    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
+  );
+  for (const anchor of localAnchors) {
     const linkTargets = getLinkTargets(anchor);
-    const foundDfn = linkTargets.some(target => {
-      return findLinkTarget(target, anchor, titleToDfns);
-    });
-    if (!foundDfn && linkTargets.length !== 0) {
+    const linkTarget = linkTargets.find(
+      target =>
+        titleToDfns.has(target.title) &&
+        titleToDfns.get(target.title).has(target.for)
+    );
+    if (linkTarget) {
+      const foundLocalMatch = processAnchor(anchor, linkTarget, titleToDfns);
+      if (!foundLocalMatch) {
+        possibleExternalLinks.push(anchor);
+      }
+    } else {
       if (anchor.dataset.cite === "") {
         badLinks.push(anchor);
       } else {
         possibleExternalLinks.push(anchor);
       }
     }
-  });
+  }
 
   showLinkingError(badLinks);
 
@@ -86,6 +93,7 @@ export async function run(conf) {
 }
 
 function mapTitleToDfns() {
+  /** @type {CaseInsensitiveMap<Map<string, Map<string, HTMLElement>>>} */
   const titleToDfns = new CaseInsensitiveMap();
   for (const key of definitionMap.keys()) {
     const { result, duplicates } = collectDfns(key);
@@ -132,22 +140,16 @@ function collectDfns(title) {
 }
 
 /**
- * @param {import("./utils.js").LinkTarget} target
  * @param {HTMLAnchorElement} anchor
- * @param {CaseInsensitiveMap} titleToDfns
+ * @param {import("./utils.js").LinkTarget} target
+ * @param {ReturnType<typeof mapTitleToDfns>} titleToDfns
  */
-function findLinkTarget(target, anchor, titleToDfns) {
+function processAnchor(anchor, target, titleToDfns) {
+  let noLocalMatch = false;
   const { linkFor, linkType = "" } = anchor.dataset;
-  if (
-    !titleToDfns.has(target.title) ||
-    !titleToDfns.get(target.title).get(target.for)
-  ) {
-    return false;
-  }
+
   const dfnFors = titleToDfns.get(target.title).get(target.for);
-
   let dfn;
-
   // we are going to have to guess, assume is it's for something, it's more likely IDL.
   if (!linkType) {
     dfn = dfnFors.get(target.for === "" ? "dfn" : "idl") || dfnFors.get("idl");
@@ -158,19 +160,17 @@ function findLinkTarget(target, anchor, titleToDfns) {
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
   } else if (linkFor && !titleToDfns.get(linkFor)) {
-    possibleExternalLinks.push(anchor);
+    noLocalMatch = true;
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
     const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
     anchor.dataset.lt = lt[0] || dfn.textContent;
-    possibleExternalLinks.push(anchor);
+    noLocalMatch = true;
+  } else if (anchor.dataset.idl !== "partial") {
+    anchor.href = `#${dfn.id}`;
+    anchor.classList.add("internalDFN");
   } else {
-    if (anchor.dataset.idl === "partial") {
-      possibleExternalLinks.push(anchor);
-    } else {
-      anchor.href = `#${dfn.id}`;
-      anchor.classList.add("internalDFN");
-    }
+    noLocalMatch = true;
   }
   if (!anchor.hasAttribute("data-link-type")) {
     anchor.dataset.linkType = "idl" in dfn.dataset ? "idl" : "dfn";
@@ -178,7 +178,7 @@ function findLinkTarget(target, anchor, titleToDfns) {
   if (isCode(dfn)) {
     wrapAsCode(anchor, dfn);
   }
-  return true;
+  return !noLocalMatch;
 }
 
 /**
