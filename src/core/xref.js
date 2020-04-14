@@ -27,6 +27,8 @@ import {
 import { pub, sub } from "./pubsubhub.js";
 import { possibleExternalLinks } from "./link-to-dfn.js";
 
+export const name = "core/xref";
+
 const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
 };
