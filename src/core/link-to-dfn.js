@@ -56,11 +56,11 @@ export async function run(conf) {
   /** @type {HTMLAnchorElement[]} */
   const badLinks = [];
 
-  const localLinkSelector =
-    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)";
-  document.querySelectorAll(localLinkSelector).forEach((
-    /** @type {HTMLAnchorElement} */ anchor
-  ) => {
+  /** @type {NodeListOf<HTMLAnchorElement>} */
+  const localAnchors = document.querySelectorAll(
+    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
+  );
+  for (const anchor of localAnchors) {
     const linkTargets = getLinkTargets(anchor);
     const linkTarget = linkTargets.find(
       target =>
@@ -76,7 +76,7 @@ export async function run(conf) {
         possibleExternalLinks.push(anchor);
       }
     }
-  });
+  }
 
   showLinkingError(badLinks);
 
