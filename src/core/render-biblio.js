@@ -67,12 +67,14 @@ const defaultsReference = Object.freeze({
 
 const endWithDot = endNormalizer(".");
 
+/** @param {Conf} conf */
 export function run(conf) {
   const informs = Array.from(conf.informativeReferences);
   const norms = Array.from(conf.normativeReferences);
 
   if (!informs.length && !norms.length) return;
 
+  /** @type {HTMLElement} */
   const refSection =
     document.querySelector("section#references") ||
     html`<section id="references"></section>`;
@@ -83,62 +85,53 @@ export function run(conf) {
 
   refSection.classList.add("appendix");
 
-  for (const type of ["Normative", "Informative"]) {
-    const refs = type === "Normative" ? norms : informs;
-    if (!refs.length) continue;
-
-    const sec = html`<section>
-      <h3>
-        ${type === "Normative" ? l10n.norm_references : l10n.info_references}
-      </h3>
-    </section>`;
-    addId(sec);
-
-    const { goodRefs, badRefs } = refs.map(toRefContent).reduce(
-      (refObjects, ref) => {
-        const refType = ref.refcontent ? "goodRefs" : "badRefs";
-        refObjects[refType].push(ref);
-        return refObjects;
-      },
-      { goodRefs: [], badRefs: [] }
-    );
-
-    const uniqueRefs = [
-      ...goodRefs
-        .reduce((uniqueRefs, ref) => {
-          if (!uniqueRefs.has(ref.refcontent.id)) {
-            // the condition ensures that only the first used [[TERM]]
-            // shows up in #references section
-            uniqueRefs.set(ref.refcontent.id, ref);
-          }
-          return uniqueRefs;
-        }, new Map())
-        .values(),
-    ];
-
-    const refsToShow = uniqueRefs
-      .concat(badRefs)
-      .sort((a, b) =>
-        a.ref.toLocaleLowerCase().localeCompare(b.ref.toLocaleLowerCase())
-      );
-
-    sec.appendChild(html`<dl class="bibliography">
-      ${refsToShow.map(showRef)}
-    </dl>`);
+  if (norms.length) {
+    const sec = createReferencesSection(norms, l10n.norm_references);
     refSection.appendChild(sec);
-
-    const aliases = getAliases(goodRefs);
-    decorateInlineReference(uniqueRefs, aliases);
-    warnBadRefs(badRefs);
+  }
+  if (informs.length) {
+    const sec = createReferencesSection(informs, l10n.info_references);
+    refSection.appendChild(sec);
   }
 
   document.body.appendChild(refSection);
 }
 
 /**
+ * @param {string[]} refs
+ * @param {string} title
+ * @returns {HTMLElement}
+ */
+function createReferencesSection(refs, title) {
+  const { goodRefs, badRefs } = groupRefs(refs.map(toRefContent));
+  const uniqueRefs = getUniqueRefs(goodRefs);
+
+  const refsToShow = uniqueRefs
+    .concat(badRefs)
+    .sort((a, b) =>
+      a.ref.toLocaleLowerCase().localeCompare(b.ref.toLocaleLowerCase())
+    );
+
+  const sec = html`<section>
+    <h3>${title}</h3>
+    <dl class="bibliography">
+      ${refsToShow.map(showRef)}
+    </dl>
+  </section>`;
+  addId(sec, "", title);
+
+  const aliases = getAliases(goodRefs);
+  decorateInlineReference(uniqueRefs, aliases);
+  warnBadRefs(badRefs);
+
+  return sec;
+}
+
+/**
  * returns refcontent and unique key for a reference among its aliases
  * and warns about circular references
  * @param {String} ref
+ * @typedef {ReturnType<typeof toRefContent>} Ref
  */
 function toRefContent(ref) {
   let refcontent = biblio[ref];
@@ -161,6 +154,34 @@ function toRefContent(ref) {
   return { ref, refcontent };
 }
 
+/** @param {Ref[]} refs */
+function groupRefs(refs) {
+  const goodRefs = [];
+  const badRefs = [];
+  for (const ref of refs) {
+    if (ref.refcontent) {
+      goodRefs.push(ref);
+    } else {
+      badRefs.push(ref);
+    }
+  }
+  return { goodRefs, badRefs };
+}
+
+/** @param {Ref[]} refs */
+function getUniqueRefs(refs) {
+  /** @type {Map<string, Ref>} */
+  const uniqueRefs = new Map();
+  for (const ref of refs) {
+    if (!uniqueRefs.has(ref.refcontent.id)) {
+      // the condition ensures that only the first used [[TERM]]
+      // shows up in #references section
+      uniqueRefs.set(ref.refcontent.id, ref);
+    }
+  }
+  return [...uniqueRefs.values()];
+}
+
 /**
  * Render an inline citation
  *
@@ -180,6 +201,7 @@ export function renderInlineCitation(ref, linkText) {
 
 /**
  * renders a reference
+ * @param {Ref} ref
  */
 function showRef({ ref, refcontent }) {
   const refId = `bib-${ref.toLowerCase()}`;
@@ -235,6 +257,7 @@ export function wireReference(rawRef, target = "_blank") {
   `;
 }
 
+/** @param {BiblioData|string} ref */
 export function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
   let output = `<cite>${ref.title}</cite>`;
