@@ -141,22 +141,23 @@ function collectDfns(title) {
  * @param {ReturnType<typeof mapTitleToDfns>} titleToDfns
  */
 function processAnchor(anchor, target, titleToDfns) {
-  let foundLocalMatch = false;
+  let noLocalMatch = false;
   const { linkFor } = anchor.dataset;
   const dfn = titleToDfns.get(target.title).get(target.for);
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
-    foundLocalMatch = true;
   } else if (linkFor && !titleToDfns.get(linkFor)) {
-    foundLocalMatch = false;
+    noLocalMatch = true;
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
     const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
     anchor.dataset.lt = lt[0] || dfn.textContent;
+    noLocalMatch = true;
   } else if (anchor.dataset.idl !== "partial") {
     anchor.href = `#${dfn.id}`;
     anchor.classList.add("internalDFN");
-    foundLocalMatch = true;
+  } else {
+    noLocalMatch = true;
   }
   if (!anchor.hasAttribute("data-link-type")) {
     anchor.dataset.linkType = "idl" in dfn.dataset ? "idl" : "dfn";
@@ -164,7 +165,7 @@ function processAnchor(anchor, target, titleToDfns) {
   if (isCode(dfn)) {
     wrapAsCode(anchor, dfn);
   }
-  return foundLocalMatch;
+  return !noLocalMatch;
 }
 
 /**
