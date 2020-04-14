@@ -927,7 +927,7 @@ describe("W3C — Headers", () => {
       expect(dateModified.getAttribute("datetime")).toBe("2012-12-21");
       expect(dateModified.textContent).toBe("21 December 2012");
 
-      const text = dateStatusEl.textContent.trim().replace(/\s+/g, " ");
+      const text = collapsedTextContent(dateStatusEl).trim();
       expect(text).toMatch(/15 March 1977, edited in place 21 December 2012$/);
     });
 
@@ -936,7 +936,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
 
       const [dateStatusEl] = contains(doc, "h2", "15 March 1977");
-      const text = dateStatusEl.textContent.trim().replace(/\s+/g, " ");
+      const text = collapsedTextContent(dateStatusEl).trim();
       expect(text).toMatch(/15 March 1977$/);
     });
   });
