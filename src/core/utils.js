@@ -920,7 +920,7 @@ export class CaseInsensitiveMap extends Map {
   }
   /**
    * @param {String} key
-   * @param {*} value
+   * @param {ValueType} value
    */
   set(key, value) {
     super.set(key.toLowerCase(), value);
