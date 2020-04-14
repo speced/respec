@@ -68,7 +68,10 @@ export async function run(conf) {
         titleToDfns.get(target.title).has(target.for)
     );
     if (linkTarget) {
-      useLinkTarget(linkTarget, anchor, titleToDfns);
+      const hasExternalTarget = processAnchor(anchor, linkTarget, titleToDfns);
+      if (hasExternalTarget) {
+        possibleExternalLinks.push(anchor);
+      }
     } else {
       if (anchor.dataset.cite === "") {
         badLinks.push(anchor);
@@ -132,25 +135,26 @@ function collectDfns(title) {
 }
 
 /**
- * @param {import("./utils.js").LinkTarget} target
  * @param {HTMLAnchorElement} anchor
+ * @param {import("./utils.js").LinkTarget} target
  * @param {CaseInsensitiveMap} titleToDfns
  */
-function useLinkTarget(target, anchor, titleToDfns) {
+function processAnchor(anchor, target, titleToDfns) {
+  let hasExternalTarget = false;
   const { linkFor } = anchor.dataset;
   const dfn = titleToDfns.get(target.title).get(target.for);
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
   } else if (linkFor && !titleToDfns.get(linkFor)) {
-    possibleExternalLinks.push(anchor);
+    hasExternalTarget = true;
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
     const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
     anchor.dataset.lt = lt[0] || dfn.textContent;
-    possibleExternalLinks.push(anchor);
+    hasExternalTarget = true;
   } else {
     if (anchor.dataset.idl === "partial") {
-      possibleExternalLinks.push(anchor);
+      hasExternalTarget = true;
     } else {
       anchor.href = `#${dfn.id}`;
       anchor.classList.add("internalDFN");
@@ -162,6 +166,7 @@ function useLinkTarget(target, anchor, titleToDfns) {
   if (isCode(dfn)) {
     wrapAsCode(anchor, dfn);
   }
+  return hasExternalTarget;
 }
 
 /**
