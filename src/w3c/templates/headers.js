@@ -23,7 +23,7 @@ const localizationStrings = {
     former_editors: "Former editors:",
     latest_editors_draft: "Latest editor's draft:",
     latest_published_version: "Latest published version:",
-    modification_date: "edited in place",
+    edited_in_place: "edited in place",
     this_version: "This version:",
   },
   ko: {
@@ -116,7 +116,7 @@ export default (conf, options) => {
       <time class="dt-published" datetime="${conf.dashDate}"
         >${conf.publishHumanDate}</time
       >${conf.modificationDate
-        ? html`, ${l10n.modification_date}${" "}
+        ? html`, ${l10n.edited_in_place}${" "}
           ${inPlaceModificationDate(conf.modificationDate)}`
         : ""}
     </h2>
