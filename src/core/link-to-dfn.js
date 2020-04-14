@@ -93,6 +93,7 @@ export async function run(conf) {
 }
 
 function mapTitleToDfns() {
+  /** @type {CaseInsensitiveMap<Map<string, HTMLElement>>} */
   const titleToDfns = new CaseInsensitiveMap();
   for (const key of definitionMap.keys()) {
     const { result, duplicates } = collectDfns(key);
@@ -137,7 +138,7 @@ function collectDfns(title) {
 /**
  * @param {HTMLAnchorElement} anchor
  * @param {import("./utils.js").LinkTarget} target
- * @param {CaseInsensitiveMap} titleToDfns
+ * @param {ReturnType<typeof mapTitleToDfns>} titleToDfns
  */
 function processAnchor(anchor, target, titleToDfns) {
   let localMatchFound = false;
