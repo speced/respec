@@ -69,7 +69,7 @@ export async function run(conf) {
     );
     if (linkTarget) {
       useLinkTarget(linkTarget, anchor, titleToDfns);
-    } else if (linkTargets.length !== 0) {
+    } else {
       if (anchor.dataset.cite === "") {
         badLinks.push(anchor);
       } else {
