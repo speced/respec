@@ -363,9 +363,9 @@ const run = async () => {
     await Prompts.askBuildAddCommitMergeTag();
     await npm(`version ${version} -m "v${version}" --no-git-tag-version`);
 
-    // 3. Run the build script (node tools/build-w3c-common.js).
+    // 3. Run the build script (node tools/builder.js).
     await npm("run builddeps");
-    for (const name of ["w3c-common", "w3c", "geonovum", "dini"]) {
+    for (const name of ["w3c", "geonovum", "dini"]) {
       await Builder.build({ name });
     }
     console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
