@@ -16,7 +16,7 @@ async function checkIfFileExists(filePath) {
 }
 
 describe("builder (tool)", () => {
-  for (const profile of ["w3c-common", "w3c", "geonovum"]) {
+  for (const profile of ["w3c", "geonovum"]) {
     const profileFile = path.join(__dirname, `../builds/respec-${profile}.js`);
     const mapFile = path.join(__dirname, `../builds/respec-${profile}.js.map`);
     it(`builds the "${profile}" profile and sourcemap`, async () => {

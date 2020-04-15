@@ -10,7 +10,7 @@ const { Builder } = require("./builder");
 const { DEPLOY_PRIME_URL, COMMIT_REF, REVIEW_ID, REPOSITORY_URL } = process.env;
 
 const BUILD_DIR = path.resolve(__dirname, "../builds/");
-const PROFILES = ["w3c", "w3c-common", "geonovum", "dini"];
+const PROFILES = ["w3c", "geonovum", "dini"];
 
 const SPECS = {
   W3C: [
