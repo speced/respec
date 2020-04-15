@@ -2,13 +2,9 @@
 // Module core/location-hash
 // Resets window.location.hash to jump to the right point in the document
 
-import { pub } from "./pubsubhub.js";
 export const name = "core/location-hash";
 
 export function run() {
-  // Added message for legacy compat with Aria specs
-  // See https://github.com/w3c/respec/issues/793
-  pub("start", "core/location-hash");
   if (!location.hash) {
     return;
   }

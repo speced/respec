@@ -4,7 +4,6 @@
  */
 export const name = "w3c/defaults";
 import { coreDefaults } from "../core/defaults.js";
-import { definitionMap } from "../core/dfn-map.js";
 import linter from "../core/linter.js";
 import { rule as privsecSectionRule } from "../core/linter-rules/privsec-section.js";
 import { rule as wptTestsExist } from "../core/linter-rules/wpt-tests-exist.js";
@@ -46,9 +45,4 @@ export function run(conf) {
     ...conf,
     lint,
   });
-
-  // TODO: eventually, we want to remove this.
-  // It's here for legacy support of json-ld specs
-  // see https://github.com/w3c/respec/issues/2019
-  Object.assign(conf, { ...Object.fromEntries(definitionMap) });
 }
