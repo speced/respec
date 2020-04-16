@@ -61,14 +61,9 @@ export async function run(conf) {
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
   );
   for (const anchor of localAnchors) {
-    const linkTargets = getLinkTargets(anchor);
-    const linkTarget = linkTargets.find(
-      target =>
-        titleToDfns.has(target.title) &&
-        titleToDfns.get(target.title).has(target.for)
-    );
-    if (linkTarget) {
-      const foundLocalMatch = processAnchor(anchor, linkTarget, titleToDfns);
+    const dfn = findLinkTarget(anchor, titleToDfns);
+    if (dfn) {
+      const foundLocalMatch = processAnchor(anchor, dfn, titleToDfns);
       if (!foundLocalMatch) {
         possibleExternalLinks.push(anchor);
       }
@@ -140,23 +135,37 @@ function collectDfns(title) {
 
 /**
  * @param {HTMLAnchorElement} anchor
- * @param {import("./utils.js").LinkTarget} target
  * @param {ReturnType<typeof mapTitleToDfns>} titleToDfns
  */
-function processAnchor(anchor, target, titleToDfns) {
-  let noLocalMatch = false;
-  const { linkFor, linkType = "" } = anchor.dataset;
-
+function findLinkTarget(anchor, titleToDfns) {
+  const linkTargets = getLinkTargets(anchor);
+  const target = linkTargets.find(
+    target =>
+      titleToDfns.has(target.title) &&
+      titleToDfns.get(target.title).has(target.for)
+  );
+  if (!target) return;
   const dfnFors = titleToDfns.get(target.title).get(target.for);
-  let dfn;
+
+  const { linkType = "" } = anchor.dataset;
   // Assumption: if it's for something, it's more likely IDL.
   if (linkType) {
     const type = linkType === "dfn" ? "dfn" : "idl";
-    dfn = dfnFors.get(type);
+    return dfnFors.get(type);
   } else {
     const type = target.for === "" ? "dfn" : "idl";
-    dfn = dfnFors.get(type) || dfnFors.get("idl");
+    return dfnFors.get(type) || dfnFors.get("idl");
   }
+}
+
+/**
+ * @param {HTMLAnchorElement} anchor
+ * @param {HTMLElement} dfn
+ * @param {ReturnType<typeof mapTitleToDfns>} titleToDfns
+ */
+function processAnchor(anchor, dfn, titleToDfns) {
+  let noLocalMatch = false;
+  const { linkFor } = anchor.dataset;
 
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
