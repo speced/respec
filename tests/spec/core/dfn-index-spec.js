@@ -215,6 +215,32 @@ describe("Core — dfn-index", () => {
       const terms = index.querySelectorAll(".index-term");
       const localTerm = [...terms].find(li => li.textContent === "hello");
       expect(localTerm).toBeUndefined();
+
+      const getTermAndType = el => el.textContent.trim().split(/\s\(/)[0];
+      const allTerms = [...terms].map(getTermAndType);
+      expect(allTerms).toEqual([
+        "creating an event",
+        "Event interface",
+        "EventInit",
+        "type attribute",
+        "JSON.stringify",
+        "allow attribute",
+        "EventHandler",
+        "fully active",
+        "iframe element",
+        "responsible document",
+        "Window interface",
+        "ASCII uppercase",
+        "origin",
+        "AbortError exception",
+        "boolean type",
+        "[Default] extended attribute",
+        "DOMString interface",
+        "[Exposed] extended attribute",
+        "[NewObject] extended attribute",
+        "object type",
+        "Promise interface",
+      ]);
     });
 
     it("lists terms grouped by specs", () => {
@@ -236,7 +262,6 @@ describe("Core — dfn-index", () => {
         "WEBIDL",
       ]);
 
-      expect(index.querySelectorAll("ul.index .index-term").length).toBe(21);
       const termsInDom = [...bySpecs[0].querySelectorAll("li")];
       expect(termsInDom.length).toBe(4);
     });
