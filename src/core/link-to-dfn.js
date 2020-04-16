@@ -149,11 +149,13 @@ function processAnchor(anchor, target, titleToDfns) {
 
   const dfnFors = titleToDfns.get(target.title).get(target.for);
   let dfn;
-  // we are going to have to guess, assume is it's for something, it's more likely IDL.
-  if (!linkType) {
-    dfn = dfnFors.get(target.for === "" ? "dfn" : "idl") || dfnFors.get("idl");
+  // Assumption: if it's for something, it's more likely IDL.
+  if (linkType) {
+    const type = linkType === "dfn" ? "dfn" : "idl";
+    dfn = dfnFors.get(type);
   } else {
-    dfn = dfnFors.get(linkType === "dfn" ? "dfn" : "idl");
+    const type = target.for === "" ? "dfn" : "idl";
+    dfn = dfnFors.get(type) || dfnFors.get("idl");
   }
 
   if (dfn.dataset.cite) {
