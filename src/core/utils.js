@@ -903,9 +903,13 @@ function* walkTree(walker) {
   }
 }
 
+/**
+ * @template ValueType
+ * @extends {Map<string, ValueType>}
+ */
 export class CaseInsensitiveMap extends Map {
   /**
-   * @param {Array<[String, HTMLElement]>} [entries]
+   * @param {Array<[string, ValueType]>} [entries]
    */
   constructor(entries = []) {
     super();
@@ -916,7 +920,7 @@ export class CaseInsensitiveMap extends Map {
   }
   /**
    * @param {String} key
-   * @param {*} value
+   * @param {ValueType} value
    */
   set(key, value) {
     super.set(key.toLowerCase(), value);

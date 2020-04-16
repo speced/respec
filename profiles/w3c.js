@@ -35,6 +35,7 @@ const modules = [
   import("../src/core/webidl.js"),
   import("../src/core/biblio.js"),
   import("../src/core/link-to-dfn.js"),
+  import("../src/core/xref.js"),
   import("../src/core/data-cite.js"),
   import("../src/core/webidl-index.js"),
   import("../src/core/render-biblio.js"),

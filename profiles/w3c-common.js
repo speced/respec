@@ -1,5 +1,7 @@
 /**
  * The w3c-common profile is DEPRECATED.
+ * Update (Apr 15, 2020): The w3c-common profile will no longer receive updates.
+ * It is frozen at v25.5.0.
  *
  * The difference between w3c-common and the w3c profile
  * is that this profile includes jQuery to support legacy
@@ -51,6 +53,7 @@ const modules = [
   import("../src/core/webidl.js"),
   import("../src/core/biblio.js"),
   import("../src/core/link-to-dfn.js"),
+  import("../src/core/xref.js"),
   import("../src/core/data-cite.js"),
   import("../src/core/webidl-index.js"),
   import("../src/core/render-biblio.js"),
