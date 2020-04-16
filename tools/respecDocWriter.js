@@ -62,6 +62,8 @@ async function fetchAndWrite(
   whenToHalt,
   { timeout = 300000, disableSandbox = false, debug = false } = {}
 ) {
+  const timer = createTimer(timeout);
+
   const userDataDir = await mkdtemp(`${os.tmpdir()}/respec2html-`);
   const args = disableSandbox ? ["--no-sandbox"] : undefined;
   const browser = await puppeteer.launch({
@@ -90,7 +92,7 @@ async function fetchAndWrite(
       throw new Error(msg);
     }
     await checkIfReSpec(page);
-    const html = await generateHTML(page, url);
+    const html = await generateHTML(page, url, timer);
     const abortOnWarning = whenToHalt.haltOnWarn && haltFlags.warn;
     const abortOnError = whenToHalt.haltOnError && haltFlags.error;
     if (abortOnError || abortOnWarning) {
@@ -117,12 +119,13 @@ async function fetchAndWrite(
 /**
  * @param {import("puppeteer").Page} page
  * @param {string} url
+ * @param {ReturnType<typeof createTimer>} timer
  */
-async function generateHTML(page, url) {
+async function generateHTML(page, url, timer) {
   await page.waitForFunction(() => window.hasOwnProperty("respecVersion"));
   const version = await page.evaluate(getVersion);
   try {
-    return await page.evaluate(evaluateHTML, version);
+    return await page.evaluate(evaluateHTML, version, timer);
   } catch (err) {
     const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${colors.debug(
       `${
@@ -170,9 +173,11 @@ async function isRespec() {
 
 /**
  * @param {number[]} version
+ * @param {ReturnType<typeof createTimer>} timer
  */
-async function evaluateHTML(version) {
-  await document.respecIsReady;
+async function evaluateHTML(version, timer) {
+  await timeout(document.respecIsReady, timer.remaining);
+
   const [major, minor] = version;
   if (major < 20 || (major === 20 && minor < 10)) {
     console.warn(
@@ -197,6 +202,14 @@ async function evaluateHTML(version) {
     const dataURL = rsDocToDataURL("text/html");
     const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
     return decodeURIComponent(encodedString);
+  }
+
+  function timeout(promise, ms) {
+    return new Promise((resolve, reject) => {
+      promise.then(resolve, reject);
+      const msg = `Timeout: document.respecIsReady didn't resolve in ${ms}ms.`;
+      setTimeout(() => reject(msg), ms);
+    });
   }
 }
 
@@ -260,6 +273,16 @@ function makeConsoleMsgHandler(page) {
 
 async function stringifyJSHandle(handle) {
   return await handle.executionContext().evaluate(o => String(o), handle);
+}
+
+function createTimer(duration) {
+  const start = Date.now();
+  return {
+    get remaining() {
+      const spent = Date.now() - start;
+      return Math.max(0, duration - spent);
+    },
+  };
 }
 
 exports.fetchAndWrite = fetchAndWrite;
