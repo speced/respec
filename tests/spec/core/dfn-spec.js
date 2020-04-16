@@ -85,7 +85,7 @@ describe("Core — Definitions", () => {
     const t2 = doc.getElementById("t2");
     expect(t2.querySelector("code")).toBe(null);
     expect(t2.querySelector("a").textContent).toBe("not wrapped in code");
-    expect(t2.querySelector("a").getAttribute("href")).toBe("#idl-def-test");
+    expect(t2.querySelector("a").getAttribute("href")).toBe("#dom-test");
   });
 
   it("processes aliases", async () => {
