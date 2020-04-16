@@ -126,12 +126,12 @@ function collectDfns(title) {
         continue;
       }
     }
+
     const type = "idl" in dfn.dataset || dfnType !== "dfn" ? "idl" : "dfn";
     if (!result.has(dfnFor)) {
-      result.set(dfnFor, new Map([[type, dfn]]));
-    } else {
-      result.get(dfnFor).set(type, dfn);
+      result.set(dfnFor, new Map());
     }
+    result.get(dfnFor).set(type, dfn);
     addId(dfn, "dfn", title);
   }
 
