@@ -236,7 +236,7 @@ describe("Core — dfn-index", () => {
         "WEBIDL",
       ]);
 
-      expect(index.querySelectorAll("ul.index .index-term").length).toBe(21);
+      expect(index.querySelectorAll("ul.index .index-term").length).toBe(22);
       const termsInDom = [...bySpecs[0].querySelectorAll("li")];
       expect(termsInDom.length).toBe(4);
     });
