@@ -211,14 +211,12 @@ describe("Core — dfn-index", () => {
       index = doc.getElementById("index-defined-elsewhere");
     });
 
-    it("doesn't list local terms", () => {
-      const terms = index.querySelectorAll(".index-term");
-      const localTerm = [...terms].find(li => li.textContent === "hello");
-      expect(localTerm).toBeUndefined();
-
+    it("lists only external terms", () => {
       const getTermAndType = el => el.textContent.trim().split(/\s\(/)[0];
-      const allTerms = [...terms].map(getTermAndType);
-      expect(allTerms).toEqual([
+      const terms = [...index.querySelectorAll(".index-term")].map(
+        getTermAndType
+      );
+      expect(terms).toEqual([
         "creating an event",
         "Event interface",
         "EventInit",
