@@ -1,5 +1,7 @@
 /**
  * The w3c-common profile is DEPRECATED.
+ * Update (Apr 15, 2020): The w3c-common profile will no longer receive updates.
+ * It is frozen at v25.5.0.
  *
  * The difference between w3c-common and the w3c profile
  * is that this profile includes jQuery to support legacy
