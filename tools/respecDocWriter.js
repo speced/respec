@@ -176,14 +176,7 @@ async function isRespec() {
  * @param {ReturnType<typeof createTimer>} timer
  */
 async function evaluateHTML(version, timer) {
-  await Promise.race([
-    document.respecIsReady,
-    new Promise((_, reject) => {
-      const timeout = timer.remaining;
-      const msg = `Timeout: document.respecIsReady didn't resolve in ${timeout}ms.`;
-      setTimeout(() => reject(msg), timeout);
-    }),
-  ]);
+  await timeout(document.respecIsReady, timer.remaining);
 
   const [major, minor] = version;
   if (major < 20 || (major === 20 && minor < 10)) {
@@ -209,6 +202,14 @@ async function evaluateHTML(version, timer) {
     const dataURL = rsDocToDataURL("text/html");
     const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
     return decodeURIComponent(encodedString);
+  }
+
+  function timeout(promise, ms) {
+    return new Promise((resolve, reject) => {
+      promise.then(resolve, reject);
+      const msg = `Timeout: document.respecIsReady didn't resolve in ${ms}ms.`;
+      setTimeout(() => reject(msg), ms);
+    });
   }
 }
 
