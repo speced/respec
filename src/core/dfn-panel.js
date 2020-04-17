@@ -10,7 +10,7 @@ export const name = "core/dfn-panel";
 export async function run() {
   const css = await loadStyle();
   document.head.insertBefore(
-    hyperHTML`<style>${css}</style>`,
+    hyperHTML`<style class="removeOnSave">${css}</style>`,
     document.querySelector("link")
   );
 
