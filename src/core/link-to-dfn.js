@@ -89,6 +89,14 @@ export async function run(conf) {
   }
 
   await linkInlineCitations(document, conf);
+
+  // It's here for legacy support of aria and json-ld specs.
+  // See https://github.com/w3c/respec/issues/2019
+  // See https://github.com/w3c/respec/issues/2848
+  Object.assign(conf, {
+    definitionMap: { ...Object.fromEntries(definitionMap) },
+  });
+
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793
   pub("end", "core/link-to-dfn");
