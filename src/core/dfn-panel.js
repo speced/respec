@@ -10,7 +10,7 @@ export const name = "core/dfn-panel";
 export async function run() {
   const css = await loadStyle();
   document.head.insertBefore(
-    hyperHTML`<style>${css}</style>`,
+    hyperHTML`<style id="respec-dfn-panel-css">${css}</style>`,
     document.querySelector("link")
   );
 
@@ -19,6 +19,16 @@ export async function run() {
   document.body.addEventListener("click", event => {
     /** @type {HTMLElement} */
     const el = event.target;
+
+    // This is a horrible workaround for w3c/css-validator not supporting CSS variables.
+    // See https://github.com/w3c/respec/issues/2845
+    // Remove this ASAP 😭😭
+    /** @type {HTMLStyleElement} */
+    const { sheet } = document.getElementById("respec-dfn-panel-css");
+    sheet.insertRule(".dfn-panel { left: var(--left); top: var(--top); }");
+    sheet.insertRule(
+      ".dfn-panel:not(.docked)::before, .dfn-panel:not(.docked)::after { left: var(--caret-offset) }"
+    );
 
     const action = deriveAction(el);
     switch (action) {

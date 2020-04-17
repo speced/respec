@@ -4,17 +4,14 @@ dfn {
 }
 
 .dfn-panel {
-  --fill: #fff;
   position: absolute;
-  left: var(--left); /* set via JS */
-  top: var(--top); /* set via JS */
   z-index: 35;
   min-width: 300px;
   max-width: 500px;
   padding: 0.5em 0.75em;
   margin-top: 0.6em;
   font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
-  background: var(--fill);
+  background: #fff;
   color: black;
   box-shadow: 0 1em 3em -0.4em rgba(0, 0, 0, 0.3),
     0 0 1px 1px rgba(0, 0, 0, 0.05);
@@ -30,10 +27,9 @@ dfn {
   border-top: 0;
   border-bottom: 9px solid #a2a9b1; /* triangle outline */
   top: -9px;
-  left: calc(var(--caret-offset, 0px) + 0.75em); /* set via JS */
 }
 .dfn-panel:not(.docked)::after {
-  border-bottom: 10px solid var(--fill); /* triangle fill */
+  border-bottom: 10px solid #fff; /* triangle fill */
 }
 
 .dfn-panel * {
