@@ -10,7 +10,7 @@ export const name = "core/dfn-panel";
 export async function run() {
   const css = await loadStyle();
   document.head.insertBefore(
-    hyperHTML`<style>${css}</style>`,
+    hyperHTML`<style class="removeOnSave">${css}</style>`,
     document.querySelector("link")
   );
 
@@ -34,8 +34,6 @@ export async function run() {
         break;
       }
       case "hide": {
-        panel.style.left = null;
-        panel.style.top = null;
         panel.remove();
         break;
       }
@@ -72,7 +70,6 @@ function createPanel(dfn) {
   /** @type {HTMLElement} */
   const panel = hyperHTML`
     <aside class="dfn-panel" id="dfn-panel">
-      <span class="caret"></span>
       <b><a class="self-link" href="${href}">Permalink</a></b>
       <b>Referenced in:</b>
       ${referencesToHTML(id, links)}
@@ -161,8 +158,8 @@ function displayPanel(dfn, panel, { x, y }) {
 
   const top = window.scrollY + closestTop + dfnRects[0].height;
   const left = x - MARGIN;
-  panel.style.left = `${left}px`;
-  panel.style.top = `${top}px`;
+  panel.style.setProperty("--left", `${left}px`);
+  panel.style.setProperty("--top", `${top}px`);
 
   // Find if the panel is flowing out of the window
   const panelRect = panel.getBoundingClientRect();
@@ -170,8 +167,8 @@ function displayPanel(dfn, panel, { x, y }) {
   if (panelRect.right > SCREEN_WIDTH) {
     const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
     const newCaretOffset = left - newLeft;
-    panel.style.left = `${newLeft}px`;
-    panel.querySelector(".caret").style.left = `${newCaretOffset}px`;
+    panel.style.setProperty("--left", `${newLeft}px`);
+    panel.style.setProperty("--caret-offset", `${newCaretOffset}px`);
   }
 }
 
