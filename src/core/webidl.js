@@ -342,7 +342,9 @@ function renderWebIDL(idlElement, index) {
     if (parent) {
       elem.dataset.dfnFor = parent.dataset.title;
     }
-    registerDefinition(elem, [title]);
+    if (elem.localName === "dfn") {
+      registerDefinition(elem, [title]);
+    }
   });
   // cross reference
   const closestCite = idlElement.closest("[data-cite], body");
