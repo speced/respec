@@ -17,19 +17,22 @@ dfn {
     0 0 1px 1px rgba(0, 0, 0, 0.05);
   border-radius: 2px;
 }
-
 /* Triangle/caret */
-.dfn-panel:not(.docked)::before,
-.dfn-panel:not(.docked)::after {
+.dfn-panel:not(.docked) > .caret {
+  position: relative;
+  top: -0.25em;
+}
+.dfn-panel:not(.docked) > .caret::before,
+.dfn-panel:not(.docked) > .caret::after {
   content: "";
   position: absolute;
   border: 10px solid transparent;
   border-top: 0;
-  border-bottom: 9px solid #a2a9b1; /* triangle outline */
-  top: -9px;
+  border-bottom: 10px solid #fff;
+  top: 0;
 }
-.dfn-panel:not(.docked)::after {
-  border-bottom: 10px solid #fff; /* triangle fill */
+.dfn-panel:not(.docked) > .caret::before {
+  border-bottom: 10px solid #a2a9b1;
 }
 
 .dfn-panel * {
