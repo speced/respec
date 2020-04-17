@@ -1149,7 +1149,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(linkFromElsewhere.textContent).toBe("Documented.docString");
 
     expect(
-      section.querySelector("#without-link-for a[href='#idl-def-documented']")
+      section.querySelector("#without-link-for a[href='#dom-documented']")
         .textContent
     ).toBe("Documented");
   });
