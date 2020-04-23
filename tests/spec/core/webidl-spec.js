@@ -1337,7 +1337,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         <h2>Test</h2>
         <pre class="idl" id="link-test">
           interface mixin InnerHTMLMixin {
-            [TreatNullAs=EmptyString] attribute DOMString innerHTML;
+            [PutForwards=html] readonly attribute DOMString innerHTML;
           };
         </pre>
       </section>
