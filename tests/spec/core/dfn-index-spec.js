@@ -233,6 +233,7 @@ describe("Core — dfn-index", () => {
         "AbortError exception",
         "boolean type",
         "[Default] extended attribute",
+        "default toJSON operation",
         "DOMString interface",
         "[Exposed] extended attribute",
         "[NewObject] extended attribute",
