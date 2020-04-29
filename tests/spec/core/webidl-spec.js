@@ -1149,7 +1149,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(linkFromElsewhere.textContent).toBe("Documented.docString");
 
     expect(
-      section.querySelector("#without-link-for a[href='#idl-def-documented']")
+      section.querySelector("#without-link-for a[href='#dom-documented']")
         .textContent
     ).toBe("Documented");
   });
@@ -1160,6 +1160,15 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
   });
   it("links `[Default] object toJSON();` automatically to IDL spec", () => {
     const elem = doc.getElementById("AutoLinkToIDLSpec");
+    const [defaultLink, objectLink, toJSONLink] = Array.from(
+      elem.querySelectorAll("[data-title='toJSON'] a")
+    ).map(elem => new URL(elem.href));
+    expect(defaultLink.hash).toBe("#Default");
+    expect(objectLink.hash).toBe("#idl-object");
+    expect(toJSONLink.hash).toBe("#default-tojson-operation");
+  });
+  it("links `[Default] object toJSON();` with data-link-for automatically to IDL spec", () => {
+    const elem = doc.getElementById("AutoLinkToIDLSpecLinkFor");
     const [defaultLink, objectLink, toJSONLink] = Array.from(
       elem.querySelectorAll("[data-title='toJSON'] a")
     ).map(elem => new URL(elem.href));
