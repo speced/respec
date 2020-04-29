@@ -61,14 +61,9 @@ export async function run(conf) {
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
   );
   for (const anchor of localAnchors) {
-    const linkTargets = getLinkTargets(anchor);
-    const linkTarget = linkTargets.find(
-      target =>
-        titleToDfns.has(target.title) &&
-        titleToDfns.get(target.title).has(target.for)
-    );
-    if (linkTarget) {
-      const foundLocalMatch = processAnchor(anchor, linkTarget, titleToDfns);
+    const dfn = findMatchingDfn(anchor, titleToDfns);
+    if (dfn) {
+      const foundLocalMatch = processAnchor(anchor, dfn, titleToDfns);
       if (!foundLocalMatch) {
         possibleExternalLinks.push(anchor);
       }
@@ -136,14 +131,29 @@ function collectDfns(title) {
 }
 
 /**
+ * Find a potentially matching <dfn> for given anchor.
  * @param {HTMLAnchorElement} anchor
- * @param {import("./utils.js").LinkTarget} target
  * @param {ReturnType<typeof mapTitleToDfns>} titleToDfns
  */
-function processAnchor(anchor, target, titleToDfns) {
+function findMatchingDfn(anchor, titleToDfns) {
+  const linkTargets = getLinkTargets(anchor);
+  const target = linkTargets.find(
+    target =>
+      titleToDfns.has(target.title) &&
+      titleToDfns.get(target.title).has(target.for)
+  );
+  if (!target) return;
+  return titleToDfns.get(target.title).get(target.for);
+}
+
+/**
+ * @param {HTMLAnchorElement} anchor
+ * @param {HTMLElement} dfn
+ * @param {ReturnType<typeof mapTitleToDfns>} titleToDfns
+ */
+function processAnchor(anchor, dfn, titleToDfns) {
   let noLocalMatch = false;
   const { linkFor } = anchor.dataset;
-  const dfn = titleToDfns.get(target.title).get(target.for);
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
   } else if (linkFor && !titleToDfns.get(linkFor)) {
