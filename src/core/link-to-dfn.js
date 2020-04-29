@@ -61,7 +61,7 @@ export async function run(conf) {
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
   );
   for (const anchor of localAnchors) {
-    const dfn = findLinkTarget(anchor, titleToDfns);
+    const dfn = findMatchingDfn(anchor, titleToDfns);
     if (dfn) {
       const foundLocalMatch = processAnchor(anchor, dfn, titleToDfns);
       if (!foundLocalMatch) {
@@ -134,10 +134,11 @@ function collectDfns(title) {
 }
 
 /**
+ * Find a potentially matching <dfn> for given anchor.
  * @param {HTMLAnchorElement} anchor
  * @param {ReturnType<typeof mapTitleToDfns>} titleToDfns
  */
-function findLinkTarget(anchor, titleToDfns) {
+function findMatchingDfn(anchor, titleToDfns) {
   const linkTargets = getLinkTargets(anchor);
   const target = linkTargets.find(
     target =>
@@ -166,7 +167,6 @@ function findLinkTarget(anchor, titleToDfns) {
 function processAnchor(anchor, dfn, titleToDfns) {
   let noLocalMatch = false;
   const { linkFor } = anchor.dataset;
-
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
   } else if (linkFor && !titleToDfns.get(linkFor)) {

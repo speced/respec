@@ -342,7 +342,6 @@ function renderWebIDL(idlElement, index) {
     if (parent) {
       elem.dataset.dfnFor = parent.dataset.title;
     }
-    // Only register real definitions
     if (elem.localName === "dfn") {
       registerDefinition(elem, [title]);
     }

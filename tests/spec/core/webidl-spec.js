@@ -1168,6 +1168,15 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(objectLink.hash).toBe("#idl-object");
     expect(toJSONLink.hash).toBe("#default-tojson-operation");
   });
+  it("links `[Default] object toJSON();` with data-link-for automatically to IDL spec", () => {
+    const elem = doc.getElementById("AutoLinkToIDLSpecLinkFor");
+    const [defaultLink, objectLink, toJSONLink] = Array.from(
+      elem.querySelectorAll("[data-title='toJSON'] a")
+    ).map(elem => new URL(elem.href));
+    expect(defaultLink.hash).toBe("#Default");
+    expect(objectLink.hash).toBe("#idl-object");
+    expect(toJSONLink.hash).toBe("#default-tojson-operation");
+  });
   it("allows toJSON() to be defined in spec", () => {
     const elem = doc.getElementById("DefinedToJson");
     const [defaultLink, objectLink, toJSONLink] = Array.from(
@@ -1338,7 +1347,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         <h2>Test</h2>
         <pre class="idl" id="link-test">
           interface mixin InnerHTMLMixin {
-            [TreatNullAs=EmptyString] attribute DOMString innerHTML;
+            [PutForwards=html] readonly attribute DOMString innerHTML;
           };
         </pre>
       </section>
