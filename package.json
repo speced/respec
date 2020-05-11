@@ -21,7 +21,6 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@babel/core": "^7.9.0",
     "@types/clipboard": "^2.0.1",
     "@types/pluralize": "0.0.29",
     "boxen": "^4.2.0",
