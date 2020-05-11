@@ -52,7 +52,6 @@
     "pickRandomsFromList": true,
     "respecConfig": true
   },
-  "//TODO": "remove this when https://github.com/eslint/eslint/pull/13196 is released",
   "ignorePatterns": ["src/core/text-loader.js"],
   "plugins": ["import", "prettier"]
 }
