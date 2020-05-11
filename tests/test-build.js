@@ -13,7 +13,7 @@ async function checkIfFileExists(filePath) {
 }
 
 describe("builder (tool)", () => {
-  jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+  jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
 
   const profiles = ["w3c", "geonovum"];
 
