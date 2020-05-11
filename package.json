@@ -55,7 +55,6 @@
     "karma-verbose-summary-reporter": "0.0.1",
     "marked": "^0.8.2",
     "mocha": "^7.1.1",
-    "moment": "^2.24.0",
     "pluralize": "^8.0.0",
     "prettier": "^2.0.2",
     "rollup": "^2.2.0",
