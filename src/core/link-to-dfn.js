@@ -116,17 +116,19 @@ function collectDfns(title) {
       const oldIsDfn = oldDfn.localName === "dfn";
       const newIsDfn = dfn.localName === "dfn";
       const isSameDfnType = dfnType === oldDfn.dataset.dfnType;
-      if (oldIsDfn && (newIsDfn || isSameDfnType)) {
+      const isSameDfnFor = dfn.dataset.dfnFor === oldDfn.dataset.dfnFor;
+      if (oldIsDfn && newIsDfn && isSameDfnType && isSameDfnFor) {
         duplicates.push(dfn);
         continue;
       }
     }
 
     const type = "idl" in dfn.dataset || dfnType !== "dfn" ? "idl" : "dfn";
-    if (!result.has(dfnFor)) {
-      result.set(dfnFor, new Map());
+    const dfnForNormalized = type === "dfn" ? dfnFor.toLowerCase() : dfnFor;
+    if (!result.has(dfnForNormalized)) {
+      result.set(dfnForNormalized, new Map());
     }
-    result.get(dfnFor).set(type, dfn);
+    result.get(dfnForNormalized).set(type, dfn);
     addId(dfn, "dfn", title);
   }
 
@@ -152,7 +154,7 @@ function findMatchingDfn(anchor, titleToDfns) {
   // Assumption: if it's for something, it's more likely IDL.
   if (linkType) {
     const type = linkType === "dfn" ? "dfn" : "idl";
-    return dfnFors.get(type);
+    return dfnFors.get(type) || dfnFors.get("dfn");
   } else {
     const type = target.for === "" ? "dfn" : "idl";
     return dfnFors.get(type) || dfnFors.get("idl");

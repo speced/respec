@@ -141,7 +141,9 @@ function renderBase(details) {
   // Check if base is a local variable in a section
   const { identifier, renderParent } = details;
   if (renderParent) {
-    return html`<a data-xref-type="_IDL_"><code>${identifier}</code></a>`;
+    return html`<a data-xref-type="_IDL_" data-link-type="idl"
+      ><code>${identifier}</code></a
+    >`;
   }
 }
 
