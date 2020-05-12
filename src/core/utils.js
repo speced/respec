@@ -703,6 +703,7 @@ export function getLinkTargets(elem) {
       result.push({ for: split[0], title: split[1] });
     }
     result.push({ for: linkFor, title });
+    if (!linkForElem) result.push({ for: title, title });
 
     // Finally, we can try to match without link for
     if (linkFor !== "") result.push({ for: "", title });
