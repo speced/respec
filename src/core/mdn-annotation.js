@@ -11,7 +11,8 @@ const BASE_JSON_PATH = "https://w3c.github.io/mdn-spec-links/";
 const MDN_URL_BASE = "https://developer.mozilla.org/en-US/docs/Web/";
 const MDN_BROWSERS = {
   // The browser IDs here must match the ones in the imported JSON data.
-  // See the list of browser IDs at https://goo.gl/iDacWP.
+  // See the list of browser IDs at:
+  // https://github.com/mdn/browser-compat-data/blob/master/schemas/compat-data-schema.md#browser-identifiers.
   chrome: "Chrome",
   chrome_android: "Chrome Android",
   edge: "Edge",
