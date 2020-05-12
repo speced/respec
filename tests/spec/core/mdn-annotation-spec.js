@@ -2,15 +2,44 @@ import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 
 describe("Core - MDN Annotation", () => {
   afterAll(flushIframes);
+
+  const baseJsonPath = `${window.location.origin}/tests/data/mdn-annotation/`;
   let doc;
   beforeAll(async () => {
     const ops = makeStandardOps({
-      mdn: {
-        baseJsonPath: `${window.location.origin}/tests/data/mdn-annotation/`,
-      },
+      mdn: { baseJsonPath },
       shortName: "payment-request",
     });
     doc = await makeRSDoc(ops, "spec/core/mdn-annotation.html");
+  });
+
+  describe("key", () => {
+    const getMdnBox = doc =>
+      doc.getElementById("paymentrequest-interface").previousElementSibling;
+
+    it("does nothing if neither shortName or key are providded", async () => {
+      const ops = makeStandardOps({ mdn: { baseJsonPath }, shortName: null });
+      const doc = await makeRSDoc(ops, "spec/core/mdn-annotation.html");
+      expect(getMdnBox(doc).matches("aside.mdn")).toBeFalse();
+    });
+
+    it("prefers `mdn.key` over shortName", async () => {
+      const ops = makeStandardOps({
+        mdn: { baseJsonPath, key: "payment-request" },
+        shortName: "whatever",
+      });
+      const doc = await makeRSDoc(ops, "spec/core/mdn-annotation.html");
+      expect(getMdnBox(doc).matches("aside.mdn")).toBeTrue();
+    });
+
+    it("supports mdn to be a string", async () => {
+      const ops = makeStandardOps({
+        mdn: "payment-request",
+        shortName: null,
+      });
+      const doc = await makeRSDoc(ops, "spec/core/mdn-annotation.html");
+      expect(getMdnBox(doc).matches("aside.mdn")).toBeTrue();
+    });
   });
 
   it("attaches MDNbox if there exists ID in the spec", () => {
