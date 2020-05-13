@@ -169,8 +169,12 @@ function findMatchingDfn(anchor, titleToDfns) {
 function processAnchor(anchor, dfn, titleToDfns) {
   let noLocalMatch = false;
   const { linkFor } = anchor.dataset;
+  const { dfnFor } = dfn.dataset;
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
+  } else if (linkFor === dfnFor) {
+    anchor.href = `#${dfn.id}`;
+    anchor.classList.add("internalDFN");
   } else if (linkFor && !titleToDfns.get(linkFor)) {
     noLocalMatch = true;
   } else if (dfn.classList.contains("externalDFN")) {
