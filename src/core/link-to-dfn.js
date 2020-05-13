@@ -172,7 +172,7 @@ function processAnchor(anchor, dfn, titleToDfns) {
   const { dfnFor } = dfn.dataset;
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
-  } else if (linkFor === dfnFor) {
+  } else if (linkFor && linkFor === dfnFor) {
     anchor.href = `#${dfn.id}`;
     anchor.classList.add("internalDFN");
   } else if (linkFor && !titleToDfns.get(linkFor)) {
