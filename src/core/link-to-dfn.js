@@ -172,10 +172,7 @@ function processAnchor(anchor, dfn, titleToDfns) {
   const { dfnFor } = dfn.dataset;
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
-  } else if (linkFor && linkFor === dfnFor) {
-    anchor.href = `#${dfn.id}`;
-    anchor.classList.add("internalDFN");
-  } else if (linkFor && !titleToDfns.get(linkFor)) {
+  } else if (linkFor && !titleToDfns.get(linkFor) && linkFor !== dfnFor) {
     noLocalMatch = true;
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
