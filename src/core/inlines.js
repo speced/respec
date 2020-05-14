@@ -95,7 +95,7 @@ function inlineElementMatches(matched) {
  */
 function inlineRFC2119Matches(matched) {
   const value = norm(matched);
-  const nodeElement = html`<em class="rfc2119" title="${value}">${value}</em>`;
+  const nodeElement = html`<em class="rfc2119">${value}</em>`;
   // remember which ones were used
   rfc2119Usage[value] = true;
   return nodeElement;

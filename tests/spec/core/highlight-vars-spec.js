@@ -9,17 +9,18 @@ describe("Core - highlightVars", () => {
   afterAll(flushIframes);
   const testBody = `
     <section id="section1">
-      <p><var id="section1-foo">foo</var></p>
+      <p><var id="section1-foo">a foo</var></p>
       <ol>
         <li><var id="section1-bar">bar</var>
-        <li><var> foo</foo>
+        <li><var>a
+         foo</foo>
       </ol>
     </section>
 
     <section id="section2">
-      <p><var id="section2-foo">foo</var></p>
+      <p><var id="section2-foo">a foo</var></p>
       <ol>
-        <li><var>foo</foo>
+        <li><var>a foo</foo>
         <li><var id="section2-bar">bar</var>
       </ol>
     </section>
