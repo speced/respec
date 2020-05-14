@@ -130,6 +130,34 @@ describe("Core — Link to definitions", () => {
     expect(dfnEnumValue.dataset.dfnFor).toBe("Planet");
   });
 
+  it("links local dfn with external forContext", async () => {
+    const body = `
+      <div id="test">
+        <dfn id="vis-state">Visibility State</dfn> and
+        <dfn id="vis-state-hidden" data-dfn-for="visibility state">hidden</dfn>
+        are defined entirely locally. [= Visibility state =] [= visibility
+        state/hidden =].
+        <dfn id="document-hidden" data-dfn-for="Document">hidden</dfn> is
+        defined here, but Document is external. [= Document/hidden =]
+      </div>
+    `;
+    const config = { xref: ["DOM"] };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const [
+      visibilityState,
+      visibilityStateHidden,
+      documentHidden,
+    ] = doc.querySelectorAll("#test a");
+
+    expect(visibilityState.hash).toBe("#vis-state");
+    expect(visibilityStateHidden.hash).toBe("#vis-state-hidden");
+
+    expect(documentHidden.hash).toBe("#document-hidden");
+    expect(documentHidden.classList).not.toContain("respec-offending-element");
+  });
+
   it("should get ID from the first match", async () => {
     const bodyText = `
       <section>
