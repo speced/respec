@@ -57,6 +57,16 @@ describe("Core — Link to definitions", () => {
         <dfn id="duplicate-definition">Test1</dfn>
         <dfn>Test1</dfn>
         <dfn title="test1">Test1</dfn>
+
+        <div id="type-idl">
+          <dfn data-dfn-type="idl">Test1</dfn>
+          <dfn data-dfn-type="idl">Test1</dfn>
+        </div>
+
+        <div id="type-idl-for-test">
+          <dfn data-dfn-type="idl" data-dfn-for="Test">Test1</dfn>
+          <dfn data-dfn-type="idl" data-dfn-for="Test">Test1</dfn>
+        </div>
       </section>`;
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
@@ -76,6 +86,14 @@ describe("Core — Link to definitions", () => {
     expect(dfn3).toBeTruthy();
     expect(dfn3.classList).toContain("respec-offending-element");
     expect(dfn3.title).toBe("test1");
+
+    const [idlGood, idlDup] = doc.querySelectorAll("#type-idl dfn");
+    expect(idlGood.classList).not.toContain("respec-offending-element");
+    expect(idlDup.classList).toContain("respec-offending-element");
+
+    const [forGood, forDup] = doc.querySelectorAll("#type-idl-for-test dfn");
+    expect(forGood.classList).not.toContain("respec-offending-element");
+    expect(forDup.classList).toContain("respec-offending-element");
   });
 
   it("has data-dfn-for if it's included", async () => {
