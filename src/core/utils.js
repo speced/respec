@@ -131,18 +131,9 @@ export function removeReSpec(doc) {
  * @param {object} [options]
  * @param {string} [options.details]
  */
-export function showInlineWarning(elems, msg, title, { details } = {}) {
+export function showInlineWarning(elems, msg, title, options = {}) {
   if (!Array.isArray(elems)) elems = [elems];
-  const links = elems
-    .map((element, i) => {
-      markAsOffending(element, msg, title);
-      return generateMarkdownLink(element, i);
-    })
-    .join(", ");
-  let message = `${msg} at: ${links}.`;
-  if (details) {
-    message += `\n\n<details>${details}</details>`;
-  }
+  const message = getErrorMessage(elems, msg, title, options);
   pub("warn", message);
   console.warn(msg, elems);
 }
@@ -155,8 +146,21 @@ export function showInlineWarning(elems, msg, title, { details } = {}) {
  * @param {object} [options]
  * @param {string} [options.details]
  */
-export function showInlineError(elems, msg, title, { details } = {}) {
+export function showInlineError(elems, msg, title, options = {}) {
   if (!Array.isArray(elems)) elems = [elems];
+  const message = getErrorMessage(elems, msg, title, options);
+  pub("error", message);
+  console.error(msg, elems);
+}
+
+/**
+ * @param {HTMLElement[]} elems
+ * @param {String} msg
+ * @param {String} title
+ * @param {object} [options]
+ * @param {string} [options.details]
+ */
+function getErrorMessage(elems, msg, title, { details }) {
   const links = elems
     .map((element, i) => {
       markAsOffending(element, msg, title);
@@ -167,8 +171,7 @@ export function showInlineError(elems, msg, title, { details } = {}) {
   if (details) {
     message += `\n\n<details>${details}</details>`;
   }
-  pub("error", message);
-  console.error(msg, elems);
+  return message;
 }
 
 /**
