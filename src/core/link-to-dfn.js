@@ -88,7 +88,7 @@ export async function run(conf) {
 }
 
 function mapTitleToDfns() {
-  /** @type {CaseInsensitiveMap<Map<string, HTMLElement>>} */
+  /** @type {CaseInsensitiveMap<Map<string, Map<string, HTMLElement>>>} */
   const titleToDfns = new CaseInsensitiveMap();
   for (const key of definitionMap.keys()) {
     const { result, duplicates } = collectDfns(key);
@@ -104,26 +104,31 @@ function mapTitleToDfns() {
  * @param {string} title
  */
 function collectDfns(title) {
-  /** @type {Map<string, HTMLElement>} */
+  /** @type {Map<string, Map<string, HTMLElement>>} */
   const result = new Map();
   const duplicates = [];
   for (const dfn of definitionMap.get(title)) {
-    const { dfnFor = "" } = dfn.dataset;
-    if (result.has(dfnFor)) {
+    const { dfnFor = "", dfnType = "dfn" } = dfn.dataset;
+    // check for potential duplicate definition
+    if (result.has(dfnFor) && result.get(dfnFor).has(dfnType)) {
+      const oldDfn = result.get(dfnFor).get(dfnType);
       // We want <dfn> definitions to take precedence over
       // definitions from WebIDL. WebIDL definitions wind
       // up as <span>s instead of <dfn>.
-      const oldIsDfn = result.get(dfnFor).localName === "dfn";
+      const oldIsDfn = oldDfn.localName === "dfn";
       const newIsDfn = dfn.localName === "dfn";
-      if (oldIsDfn) {
-        if (!newIsDfn) {
-          // Don't overwrite <dfn> definitions.
-          continue;
-        }
+      const isSameDfnType = dfn.dataset.dfnType === oldDfn.dataset.dfnType;
+      const isSameDfnFor = dfn.dataset.dfnFor === oldDfn.dataset.dfnFor;
+      if (oldIsDfn && newIsDfn && isSameDfnType && isSameDfnFor) {
         duplicates.push(dfn);
+        continue;
       }
     }
-    result.set(dfnFor, dfn);
+    const type = "idl" in dfn.dataset || dfnType !== "dfn" ? "idl" : "dfn";
+    if (!result.has(dfnFor)) {
+      result.set(dfnFor, new Map());
+    }
+    result.get(dfnFor).set(type, dfn);
     addId(dfn, "dfn", title);
   }
 
@@ -143,7 +148,17 @@ function findMatchingDfn(anchor, titleToDfns) {
       titleToDfns.get(target.title).has(target.for)
   );
   if (!target) return;
-  return titleToDfns.get(target.title).get(target.for);
+
+  const dfnsByType = titleToDfns.get(target.title).get(target.for);
+  const { linkType = "" } = anchor.dataset;
+  if (linkType) {
+    const type = linkType === "dfn" ? "dfn" : "idl";
+    return dfnsByType.get(type) || dfnsByType.get("dfn");
+  } else {
+    // Assumption: if it's for something, it's more likely IDL.
+    const type = target.for === "" ? "dfn" : "idl";
+    return dfnsByType.get(type) || dfnsByType.get("idl");
+  }
 }
 
 /**
