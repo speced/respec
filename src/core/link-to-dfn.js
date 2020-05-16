@@ -150,13 +150,13 @@ function findMatchingDfn(anchor, titleToDfns) {
   if (!target) return;
 
   const dfnsByType = titleToDfns.get(target.title).get(target.for);
-  const { linkType = "" } = anchor.dataset;
+  const { linkType } = anchor.dataset;
   if (linkType) {
     const type = linkType === "dfn" ? "dfn" : "idl";
     return dfnsByType.get(type) || dfnsByType.get("dfn");
   } else {
     // Assumption: if it's for something, it's more likely IDL.
-    const type = target.for === "" ? "dfn" : "idl";
+    const type = target.for ? "idl" : "dfn";
     return dfnsByType.get(type) || dfnsByType.get("idl");
   }
 }
