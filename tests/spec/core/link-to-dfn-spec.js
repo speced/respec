@@ -112,6 +112,29 @@ describe("Core — Link to definitions", () => {
     expect(dfn.dataset.dfnFor).toBe("Foo");
   });
 
+  it("uses data-dfn-type in linking", async () => {
+    const body = `
+      <section>
+        <dfn id="dfn-card" data-dfn-type="dfn">Card</dfn> is a concept.
+        <dfn id="idl-card" data-dfn-type="idl">Card</dfn> is an IDL interface.
+        <div id="dfn-links">
+          [= Card =] <a>Card</a> <a data-link-type="dfn">card</a>
+        </div>
+        <div id="idl-links">{{ Card }} <a data-link-type="idl">Card</a></div>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const conceptLinks = doc.querySelectorAll("#dfn-links a");
+    expect([...conceptLinks].map(a => a.hash)).toEqual(
+      Array(3).fill("#dfn-card")
+    );
+
+    const idlLinks = doc.querySelectorAll("#idl-links a");
+    expect([...idlLinks].map(a => a.hash)).toEqual(Array(2).fill("#idl-card"));
+  });
+
   it("has empty data-dfn-for on top level things", async () => {
     const bodyText = `
       <section data-dfn-for="HyperStar" data-link-for="HyperStar">
