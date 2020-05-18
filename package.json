@@ -79,8 +79,7 @@
     "start": "node ./tools/dev-server.js",
     "test:build": "jasmine --random=false ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
-    "test:karma": "npm run karma",
-    "postinstall": "opencollective-postinstall"
+    "test:karma": "npm run karma"
   },
   "dependencies": {
     "colors": "^1.4.0",
@@ -88,8 +87,6 @@
     "command-line-usage": "^6.1.0",
     "epipebomb": "^1.0.0",
     "loading-indicator": "^2.0.0",
-    "opencollective": "^1.0.3",
-    "opencollective-postinstall": "^2.0.2",
     "prompt": "^1.0.0",
     "puppeteer": "^2.1.1",
     "snyk": "^1.319.1"
