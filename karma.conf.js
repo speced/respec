@@ -118,23 +118,6 @@ module.exports = function (config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
-    // See "detectBrowsers"
-    // browsers: ["Chrome", "Safari", "Firefox"],
-    customLaunchers: {
-      FirefoxPref: {
-        base: "Firefox",
-        prefs: {
-          "javascript.options.dynamicImport": true,
-        },
-      },
-      FirefoxHeadlessPref: {
-        base: "FirefoxHeadless",
-        prefs: {
-          "javascript.options.dynamicImport": true,
-        },
-      },
-    },
-
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false,
