@@ -8,6 +8,8 @@
     "worker": true
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  // TODO: Remove this when https://github.com/eslint/eslint/pull/13196
+  "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2020
@@ -52,6 +54,5 @@
     "pickRandomsFromList": true,
     "respecConfig": true
   },
-  "ignorePatterns": ["src/core/text-loader.js"],
   "plugins": ["import", "prettier"]
 }
