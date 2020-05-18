@@ -134,11 +134,6 @@ module.exports = function (config) {
       args: ["--grep", config.grep || ""],
     },
   };
-  if (process.env.TRAVIS) {
-    process.env.CHROME_BIN = require("puppeteer").executablePath();
-    options.autoWatch = false;
-    options.concurrency = 1;
-  }
   if (process.env.BROWSERS) {
     options.browsers = process.env.BROWSERS.split(" ");
   }
