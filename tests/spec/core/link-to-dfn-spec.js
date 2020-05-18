@@ -57,6 +57,7 @@ describe("Core — Link to definitions", () => {
         <dfn id="duplicate-definition">Test1</dfn>
         <dfn>Test1</dfn>
         <dfn title="test1">Test1</dfn>
+        <dfn data-dfn-type="dfn">Test1</dfn>
 
         <div id="type-idl">
           <dfn data-dfn-type="idl">Test1</dfn>
@@ -86,6 +87,9 @@ describe("Core — Link to definitions", () => {
     expect(dfn3).toBeTruthy();
     expect(dfn3.classList).toContain("respec-offending-element");
     expect(dfn3.title).toBe("test1");
+
+    const dfn4 = dfnList[4];
+    expect(dfn4.classList).toContain("respec-offending-element");
 
     const [idlGood, idlDup] = doc.querySelectorAll("#type-idl dfn");
     expect(idlGood.classList).not.toContain("respec-offending-element");
