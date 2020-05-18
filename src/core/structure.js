@@ -77,7 +77,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
       : appendixMode
       ? alphabet.charAt(index - lastNonAppendix)
       : prefix + index;
-    const level = (secno.match(/\./g)||[]).length + 1;
+    const level = secno.split(".").length;
     if (level === 1) {
       secno += ".";
       // if this is a top level item, insert
