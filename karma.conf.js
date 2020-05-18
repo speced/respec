@@ -8,20 +8,7 @@ module.exports = function (config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ["jasmine", "detectBrowsers"],
-
-    // configuration
-    detectBrowsers: {
-      enabled: !config.browsers.length,
-      usePhantomJS: false,
-      postDetection(browsers) {
-        return (
-          browsers
-            // Remove IE
-            .filter(browser => browser !== "IE")
-        );
-      },
-    },
+    frameworks: ["jasmine"],
 
     // list of files / patterns to load in the browser
     files: [
@@ -170,7 +157,6 @@ module.exports = function (config) {
     options.concurrency = 1;
   }
   if (process.env.BROWSERS) {
-    options.detectBrowsers.enabled = false;
     options.browsers = process.env.BROWSERS.split(" ");
   }
 
