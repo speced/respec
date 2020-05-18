@@ -49,7 +49,6 @@
     "karma-opera-launcher": "^1.0.0",
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "2.0.2",
-    "karma-verbose-summary-reporter": "0.0.1",
     "marked": "^0.8.2",
     "pluralize": "^8.0.0",
     "prettier": "^2.0.2",
