@@ -29,7 +29,7 @@ jobs:
           path: ./node_modules
           key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        run: npm install
+        run: npm ci
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         run: npm run lint
 
@@ -54,7 +54,7 @@ jobs:
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         name: install & build
         run: |
-          npm install
+          npm ci
           npm run build:w3c
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         run: npm run test:headless
@@ -83,7 +83,7 @@ jobs:
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         name: install & build
         run: |
-          npm install
+          npm ci
           npm run build:w3c & npm run build:geonovum
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
         run: npm run test:karma
