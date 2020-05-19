@@ -14,12 +14,12 @@ const PROFILES = ["w3c", "geonovum", "dini"];
 
 const SPECS = {
   W3C: [
+    "https://w3c.github.io/badging/",
     "https://w3c.github.io/gamepad/",
     "https://w3c.github.io/hr-time/",
     "https://w3c.github.io/payment-request/",
     "https://w3c.github.io/trace-context/",
     "https://w3c.github.io/web-share/",
-    "https://w3c.github.io/badging/",
   ],
   DINI: [
     "https://dini-ag-kim.github.io/oer-service-card/latest/",
