@@ -53,6 +53,10 @@ const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
 
 class Renderer extends marked.Renderer {
+  constructor() {
+    super();
+  }
+
   code(code, language, isEscaped) {
     // regex to check whether the language is webidl
     if (/(^webidl$)/i.test(language)) {
