@@ -99,7 +99,6 @@ describe("Core — Definitions", () => {
     const doc = await makeRSDoc(ops);
     const dfn = doc.querySelector("dfn[data-lt]");
     expect(dfn.dataset.lt).toBe("text|text 1|text 2|text 3");
-    expect(dfn.dataset.dfnType).toBe("dfn");
   });
 
   it("allows linking via data-local-lt", async () => {
