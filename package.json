@@ -21,6 +21,7 @@
     "Robin Berjon"
   ],
   "devDependencies": {
+    "@types/marked": "^0.7.4",
     "@types/pluralize": "0.0.29",
     "babel-eslint": "^10.1.0",
     "boxen": "^4.2.0",
