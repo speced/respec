@@ -9,7 +9,6 @@ const testURLs = [
 ];
 const colors = require("colors");
 const { exec } = require("child_process");
-const moment = require("moment");
 
 const handler = require("serve-handler");
 const http = require("http");
@@ -67,8 +66,9 @@ async function runRespec2html() {
 }
 
 function debug(msg) {
+  const currentTime = new Date().toLocaleTimeString("en-US");
   // eslint-disable-next-line no-console
-  console.log(colors.grey(moment().format("LTS")) + colors.cyan(` ${msg}`));
+  console.log(`${colors.grey(currentTime)} ${colors.cyan(msg)}`);
 }
 
 async function run() {

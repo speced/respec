@@ -235,6 +235,9 @@ function getDfns(name, parent, originalName, type) {
   // Definitions that have a name and [data-dfn-for] that exactly match the
   // IDL entity:
   const dfns = dfnForArray.filter(dfn => {
+    // This is explicitly marked as a concept, so we can't use it
+    if (dfn.dataset.dfnType === "dfn") return false;
+
     /** @type {HTMLElement} */
     const closestDfnFor = dfn.closest(`[data-dfn-for]`);
     return closestDfnFor && closestDfnFor.dataset.dfnFor === parent;
