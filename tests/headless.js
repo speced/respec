@@ -68,7 +68,7 @@ async function runRespec2html() {
 function debug(msg) {
   const currentTime = new Date().toLocaleTimeString("en-US");
   // eslint-disable-next-line no-console
-  console.log(colors.grey(currentTime) + colors.cyan(` ${msg}`));
+  console.log(`${colors.grey(currentTime)} ${colors.cyan(msg)}`);
 }
 
 async function run() {
