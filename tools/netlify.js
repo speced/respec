@@ -19,6 +19,7 @@ const SPECS = {
     "https://w3c.github.io/payment-request/",
     "https://w3c.github.io/trace-context/",
     "https://w3c.github.io/web-share/",
+    "https://w3c.github.io/badging/",
   ],
   DINI: [
     "https://dini-ag-kim.github.io/oer-service-card/latest/",
