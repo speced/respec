@@ -6,12 +6,16 @@ on:
       - gh-pages
   pull_request: {}
 
+env:
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+  PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+
 jobs:
   lint:
     name: Check linting issues
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - id: log
         run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
@@ -34,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - id: log
         run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
@@ -63,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - id: log
         run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
       - if: "!contains(steps.log.outputs.message, 'ci skip')"
