@@ -16,22 +16,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - id: log
-        run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        name: Cache node modules
+      - name: Cache node modules
         uses: actions/cache@v1
         with:
           path: ./node_modules
           key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        run: npm ci
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        run: npm run lint
+      - run: npm ci
+      - run: npm run lint
 
   test-headless:
     name: Headless Tests
@@ -39,25 +33,19 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v2
-      - id: log
-        run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        name: Cache node modules
+      - name: Cache node modules
         uses: actions/cache@v1
         with:
           path: ./node_modules
           key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        name: install & build
+      - name: install & build
         run: |
           npm ci
           npm run build:w3c
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        run: npm run test:headless
+      - run: npm run test:headless
 
   test-karma:
     name: Karma Unit Tests (${{ matrix.browser }})
@@ -68,24 +56,18 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v2
-      - id: log
-        run: echo "::set-output name=message::$(git log --no-merges -1 --oneline)"
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        name: Cache node modules
+      - name: Cache node modules
         uses: actions/cache@v1
         with:
           path: ./node_modules
           key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        name: install & build
+      - name: install & build
         run: |
           npm ci
           npm run build:w3c & npm run build:geonovum
-      - if: "!contains(steps.log.outputs.message, 'ci skip')"
-        run: npm run test:karma
+      - run: npm run test:karma
         env:
           BROWSERS: ${{ matrix.browser }}
