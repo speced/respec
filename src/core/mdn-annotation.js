@@ -11,7 +11,8 @@ const BASE_JSON_PATH = "https://w3c.github.io/mdn-spec-links/";
 const MDN_URL_BASE = "https://developer.mozilla.org/en-US/docs/Web/";
 const MDN_BROWSERS = {
   // The browser IDs here must match the ones in the imported JSON data.
-  // See the list of browser IDs at https://goo.gl/iDacWP.
+  // See the list of browser IDs at:
+  // https://github.com/mdn/browser-compat-data/blob/master/schemas/compat-data-schema.md#browser-identifiers.
   chrome: "Chrome",
   chrome_android: "Chrome Android",
   edge: "Edge",
@@ -128,23 +129,24 @@ function buildBrowserSupportTable(support) {
 }
 
 export async function run(conf) {
-  const { shortName, mdn } = conf;
-  if (!shortName || !mdn) {
-    // Nothing to do if shortName is not provided
+  const mdnKey = getMdnKey(conf);
+  if (!mdnKey) {
     return;
   }
+
+  const { mdn } = conf;
   const maxAge = mdn.maxAge || 60 * 60 * 24 * 1000;
   const specMapUrl = mdn.specMapUrl || SPEC_MAP_URL;
   const baseJsonPath = mdn.baseJsonPath || BASE_JSON_PATH;
   const specMap = await fetchAndCacheJson(specMapUrl, maxAge);
   const hasSpecJson = Object.values(specMap).some(
-    jsonName => jsonName === `${shortName}.json`
+    jsonName => jsonName === `${mdnKey}.json`
   );
   if (!hasSpecJson) {
     return;
   }
   const mdnSpecJson = await fetchAndCacheJson(
-    `${baseJsonPath}/${shortName}.json`,
+    `${baseJsonPath}/${mdnKey}.json`,
     maxAge
   );
   const mdnCss = await mdnCssPromise;
@@ -179,4 +181,11 @@ export async function run(conf) {
         })
         .forEach(mdnDiv => mdnBox.appendChild(mdnDiv));
     });
+}
+
+function getMdnKey(conf) {
+  const { shortName, mdn } = conf;
+  if (!mdn) return;
+  if (typeof mdn === "string") return mdn;
+  return mdn.key || shortName;
 }

@@ -57,6 +57,17 @@ describe("Core — Link to definitions", () => {
         <dfn id="duplicate-definition">Test1</dfn>
         <dfn>Test1</dfn>
         <dfn title="test1">Test1</dfn>
+        <dfn data-dfn-type="dfn">Test1</dfn>
+
+        <div id="type-idl">
+          <dfn data-dfn-type="idl">Test1</dfn>
+          <dfn data-dfn-type="idl">Test1</dfn>
+        </div>
+
+        <div id="type-idl-for-test">
+          <dfn data-dfn-type="idl" data-dfn-for="Test">Test1</dfn>
+          <dfn data-dfn-type="idl" data-dfn-for="Test">Test1</dfn>
+        </div>
       </section>`;
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
@@ -76,6 +87,17 @@ describe("Core — Link to definitions", () => {
     expect(dfn3).toBeTruthy();
     expect(dfn3.classList).toContain("respec-offending-element");
     expect(dfn3.title).toBe("test1");
+
+    const dfn4 = dfnList[4];
+    expect(dfn4.classList).toContain("respec-offending-element");
+
+    const [idlGood, idlDup] = doc.querySelectorAll("#type-idl dfn");
+    expect(idlGood.classList).not.toContain("respec-offending-element");
+    expect(idlDup.classList).toContain("respec-offending-element");
+
+    const [forGood, forDup] = doc.querySelectorAll("#type-idl-for-test dfn");
+    expect(forGood.classList).not.toContain("respec-offending-element");
+    expect(forDup.classList).toContain("respec-offending-element");
   });
 
   it("has data-dfn-for if it's included", async () => {
@@ -88,6 +110,29 @@ describe("Core — Link to definitions", () => {
     const doc = await makeRSDoc(ops);
     const [dfn] = doc.getElementsByTagName("dfn");
     expect(dfn.dataset.dfnFor).toBe("Foo");
+  });
+
+  it("uses data-dfn-type in linking", async () => {
+    const body = `
+      <section>
+        <dfn id="dfn-card" data-dfn-type="dfn">Card</dfn> is a concept.
+        <dfn id="idl-card" data-dfn-type="idl">Card</dfn> is an IDL interface.
+        <div id="dfn-links">
+          [= Card =] <a>Card</a> <a data-link-type="dfn">card</a>
+        </div>
+        <div id="idl-links">{{ Card }} <a data-link-type="idl">Card</a></div>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const conceptLinks = doc.querySelectorAll("#dfn-links a");
+    expect([...conceptLinks].map(a => a.hash)).toEqual(
+      Array(3).fill("#dfn-card")
+    );
+
+    const idlLinks = doc.querySelectorAll("#idl-links a");
+    expect([...idlLinks].map(a => a.hash)).toEqual(Array(2).fill("#idl-card"));
   });
 
   it("has empty data-dfn-for on top level things", async () => {
@@ -128,6 +173,34 @@ describe("Core — Link to definitions", () => {
     expect(dfnMethod.dataset.dfnFor).toBe("HyperStar");
     expect(dfnEnum.dataset.dfnFor).toBe("");
     expect(dfnEnumValue.dataset.dfnFor).toBe("Planet");
+  });
+
+  it("links local dfn with external forContext", async () => {
+    const body = `
+      <div id="test">
+        <dfn id="vis-state">Visibility State</dfn> and
+        <dfn id="vis-state-hidden" data-dfn-for="visibility state">hidden</dfn>
+        are defined entirely locally. [= Visibility state =] [= visibility
+        state/hidden =].
+        <dfn id="document-hidden" data-dfn-for="Document">hidden</dfn> is
+        defined here, but Document is external. [= Document/hidden =]
+      </div>
+    `;
+    const config = { xref: ["DOM"] };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const [
+      visibilityState,
+      visibilityStateHidden,
+      documentHidden,
+    ] = doc.querySelectorAll("#test a");
+
+    expect(visibilityState.hash).toBe("#vis-state");
+    expect(visibilityStateHidden.hash).toBe("#vis-state-hidden");
+
+    expect(documentHidden.hash).toBe("#document-hidden");
+    expect(documentHidden.classList).not.toContain("respec-offending-element");
   });
 
   it("should get ID from the first match", async () => {

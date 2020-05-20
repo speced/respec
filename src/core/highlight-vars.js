@@ -8,6 +8,7 @@
  * on export.
  */
 import { fetchAsset } from "./text-loader.js";
+import { norm } from "./utils.js";
 import { sub } from "./pubsubhub.js";
 
 export const name = "core/highlight-vars";
@@ -81,13 +82,13 @@ function getHighlightColor(target) {
 }
 
 function highlightVars(varElem) {
-  const textContent = varElem.textContent.trim();
+  const textContent = norm(varElem.textContent);
   const parent = varElem.closest("section");
   const highlightColor = getHighlightColor(varElem);
 
   const varsToHighlight = [...parent.querySelectorAll("var")].filter(
     el =>
-      el.textContent.trim() === textContent && el.closest("section") === parent
+      norm(el.textContent) === textContent && el.closest("section") === parent
   );
 
   // update availability of highlight color
