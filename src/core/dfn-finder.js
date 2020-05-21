@@ -2,7 +2,7 @@
 import { definitionMap, registerDefinition } from "./dfn-map.js";
 import { showInlineError, wrapInner } from "./utils.js";
 
-export const topLevelEntities = new Set([
+const topLevelEntities = new Set([
   "callback interface",
   "callback",
   "dictionary",
