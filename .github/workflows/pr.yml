@@ -54,14 +54,7 @@ jobs:
 
   test-karma:
     name: Karma Unit Tests (${{ matrix.browser }})
-    strategy:
-      matrix:
-        os: ubuntu-latest
-        browser: [ChromeHeadless, FirefoxHeadless]
-        include:
-          os: macos-latest
-          browser: Safari
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-latest
     needs: lint
     steps:
       - uses: actions/checkout@v2
@@ -80,6 +73,7 @@ jobs:
       - run: npm run test:unit
         env:
           BROWSERS: ${{ matrix.browser }}
+      - run: sudo safaridriver --enable
       - run: npm run test:integration
         env:
-          BROWSERS: ${{ matrix.browser }}
+          BROWSERS: Safari
