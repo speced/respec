@@ -328,6 +328,7 @@ function renderWebIDL(idlElement, index) {
     // Skip this <pre> and move on to the next one.
     return [];
   }
+  addDataDfnFor(idlElement, parse);
   // we add "idl" as the canonical match, so both "webidl" and "idl" work
   idlElement.classList.add("def", "idl");
   const highlights = webidl2.write(parse, { templates });
@@ -358,6 +359,38 @@ function renderWebIDL(idlElement, index) {
   addIDLHeader(idlElement);
   return parse;
 }
+
+/**
+ * Add data-dfn-for to the closest section if not present already.
+ * @param {HTMLPreElement} idlElement
+ * @param {ReturnType<typeof webidl2.parse>} parse
+ */
+function addDataDfnFor(idlElement, parse) {
+  const closestSection = idlElement.closest("section");
+  if (closestSection.hasAttribute("data-dfn-for")) return;
+
+  const topLevelEntities = ["dictionary", "interface", "callback interface"];
+
+  const dfnFors = [];
+  for (const { tokens } of parse) {
+    if (topLevelEntities.includes(tokens.base.type)) {
+      const dfnFor = tokens.name.value;
+      dfnFors.push(dfnFor);
+    }
+  }
+  if (dfnFors.length === 1) {
+    closestSection.dataset.dfnFor = dfnFors[0];
+  } else if (!dfnFors.length) {
+    return;
+  } else {
+    closestSection.dataset.dfnFor = "";
+    const options = dfnFors.map(dfnFor => `"${dfnFor}"`).join(", ");
+    const title = "Ambiguous data-dfn-for attribute";
+    const message = `${title}. Sections describing top-level IDL entities (${topLevelEntities}) require a \`data-dfn-attribute\`. Please add a \`data-dfn-for\` attribute with one of following values: ${options}`;
+    showInlineError(closestSection, message, title);
+  }
+}
+
 /**
  * Adds a "WebIDL" decorative header/permalink to a block of WebIDL.
  * @param {HTMLPreElement} pre
