@@ -381,11 +381,11 @@ function addDataDfnFor(idlElement, parse) {
   } else if (!dfnFors.length) {
     return;
   } else {
-    // closestSection.dataset.dfnFor = "";
-    const options = dfnFors.map(dfnFor => `"${dfnFor}"`).join(", ");
-    const title = "Ambiguous data-dfn-for attribute";
-    const message = `${title}. Sections describing top-level IDL entities (${topLevelEntities}) require a \`data-dfn-attribute\`. Please add a \`data-dfn-for\` attribute with one of following values: ${options}`;
-    showInlineError(closestSection, message, title);
+    const title = "data-dfn-for attribute not found";
+    const message = `${title}. Please add a \`data-dfn-for\` attribute`;
+    const topLevelStr = [...topLevelEntities].join(", ");
+    const details = `Sections describing top-level IDL entities (${topLevelStr}) require a \`data-dfn-attribute\``;
+    showInlineError(closestSection, message, title, { details });
   }
 }
 
