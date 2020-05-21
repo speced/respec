@@ -51,8 +51,12 @@ jobs:
     name: Karma Unit Tests (${{ matrix.browser }})
     strategy:
       matrix:
-        browser: [ChromeHeadless, FirefoxHeadless, Safari]
-    runs-on: macos-latest
+        os: ubuntu-latest
+        browser: [ChromeHeadless, FirefoxHeadless]
+        include:
+          os: macos-latest
+          browser: Safari
+    runs-on: ${{ matrix.os }}
     needs: lint
     steps:
       - uses: actions/checkout@v2
