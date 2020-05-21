@@ -379,6 +379,7 @@ function addDataDfnFor(idlElement, parse) {
   if (dfnFors.length === 1) {
     closestSection.dataset.dfnFor = dfnFors[0];
   }
+  // TODO: make linker support multiple dfnFors
 }
 
 /**
