@@ -90,6 +90,11 @@
     "puppeteer": "^3.1.0",
     "snyk": "^1.321.0"
   },
+  "files": [
+    "builds/",
+    "tools/respec2html.js",
+    "tools/respecDocWriter.js"
+  ],
   "prettier": {
     "trailingComma": "es5",
     "arrowParens": "avoid"
