@@ -367,7 +367,7 @@ function renderWebIDL(idlElement, index) {
  */
 function addDataDfnFor(idlElement, parse) {
   const closestSection = idlElement.closest("section");
-  if (closestSection.hasAttribute("data-dfn-for")) return;
+  if (!closestSection || closestSection.hasAttribute("data-dfn-for")) return;
 
   const dfnFors = [];
   for (const { tokens } of parse) {
