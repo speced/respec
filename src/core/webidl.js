@@ -376,7 +376,9 @@ function addDataDfnFor(idlElement, parse) {
       dfnFors.push(dfnFor);
     }
   }
-  closestSection.dataset.dfnFor = dfnFors.join(" ");
+  if (dfnFors.length === 1) {
+    closestSection.dataset.dfnFor = dfnFors[0];
+  }
 }
 
 /**
