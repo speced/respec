@@ -58,6 +58,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.3.0",
     "serve": "^11.3.0",
+    "snyk": "^1.323.1",
     "typescript": "^3.9.2",
     "webidl2": "^23.12.1"
   },
@@ -87,8 +88,7 @@
     "colors": "^1.4.0",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.1.0",
-    "puppeteer": "^3.1.0",
-    "snyk": "^1.321.0"
+    "puppeteer": "^3.1.0"
   },
   "files": [
     "builds/",
