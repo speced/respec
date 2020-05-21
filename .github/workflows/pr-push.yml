@@ -8,7 +8,7 @@ on:
 
 env:
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
-  PUPPETEER_EXECUTABLE_PATH: /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
+  PUPPETEER_EXECUTABLE_PATH: /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 
 jobs:
   lint:
