@@ -13,7 +13,7 @@ env:
 jobs:
   lint:
     name: Check linting issues
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -29,7 +29,7 @@ jobs:
 
   test-headless:
     name: Headless Tests
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs: lint
     steps:
       - uses: actions/checkout@v2
@@ -52,7 +52,7 @@ jobs:
     strategy:
       matrix:
         browser: [ChromeHeadless, FirefoxHeadless]
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs: lint
     steps:
       - uses: actions/checkout@v2
