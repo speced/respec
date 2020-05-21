@@ -21,6 +21,7 @@ jobs:
     name: Check linting issues
     runs-on: macos-latest
     steps:
+      - run: which google-chrome
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
