@@ -10,7 +10,7 @@ import {
   showInlineWarning,
   xmlEscape,
 } from "./utils.js";
-import { decorateDfn, findDfn } from "./dfn-finder.js";
+import { decorateDfn, findDfn, topLevelEntities } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";
 import { fetchAsset } from "./text-loader.js";
@@ -369,11 +369,9 @@ function addDataDfnFor(idlElement, parse) {
   const closestSection = idlElement.closest("section");
   if (closestSection.hasAttribute("data-dfn-for")) return;
 
-  const topLevelEntities = ["dictionary", "interface", "callback interface"];
-
   const dfnFors = [];
   for (const { tokens } of parse) {
-    if (topLevelEntities.includes(tokens.base.type)) {
+    if (topLevelEntities.has(tokens.base.type)) {
       const dfnFor = tokens.name.value;
       dfnFors.push(dfnFor);
     }
