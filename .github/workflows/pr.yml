@@ -42,6 +42,18 @@ jobs:
           npm ci
           npm run build:w3c
       - run: npm run test:headless
+      - name: Calculate size and update on server
+        run: |
+          timestamp=$(git show --no-patch --pretty='%cd' --date='format:%s')
+          gzip --keep --force builds/respec-w3c.js
+          file_size=$(stat -c%s "builds/respec-w3c.js")
+          gzip_file_size=$(stat -c%s "builds/respec-w3c.js.gz")
+          curl --fail -L -X PUT "https://5a9320ad.ngrok.io/respec/size" \
+            -H "Authorization: $RESPEC_SECRET" \
+            -d "size=$file_size" -d "gzipSize=$gzip_file_size "\
+            -d "sha=$GITHUB_SHA" -d "timestamp=$timestamp"
+        env:
+          RESPEC_SECRET: ${{ secrets.RESPEC_SECRET }}
 
   test-karma:
     name: Karma Unit Tests (${{ matrix.browser }})
