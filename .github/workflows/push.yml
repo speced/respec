@@ -5,6 +5,10 @@ on:
       - develop
       - gh-pages
 
+env:
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+  PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+
 jobs:
   test-headless:
     name: Headless Tests
