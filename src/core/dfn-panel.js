@@ -16,10 +16,11 @@ export async function run() {
 
   /** @type {HTMLElement} */
   const elems = document.querySelectorAll("dfn, .index-term");
+  const panels = document.createDocumentFragment();
   for (const el of elems) {
-    const panel = createPanel(el);
-    document.body.append(panel);
+    panels.append(createPanel(el));
   }
+  document.body.append(panels);
 
   /** @type {HTMLElement} */
   let panel;
