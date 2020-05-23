@@ -1,9 +1,9 @@
 name: Node CI (legacy)
 on:
-  pull_request: {}
   push:
     branches:
       - w3c-common
+  pull_request: {}
 
 env:
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
