@@ -8,20 +8,7 @@ module.exports = function (config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ["jasmine", "detectBrowsers"],
-
-    // configuration
-    detectBrowsers: {
-      enabled: !config.browsers.length,
-      usePhantomJS: false,
-      postDetection(browsers) {
-        return (
-          browsers
-            // Remove IE
-            .filter(browser => browser !== "IE")
-        );
-      },
-    },
+    frameworks: ["jasmine"],
 
     // list of files / patterns to load in the browser
     files: [
@@ -131,23 +118,6 @@ module.exports = function (config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
-    // See "detectBrowsers"
-    // browsers: ["Chrome", "Safari", "Firefox"],
-    customLaunchers: {
-      FirefoxPref: {
-        base: "Firefox",
-        prefs: {
-          "javascript.options.dynamicImport": true,
-        },
-      },
-      FirefoxHeadlessPref: {
-        base: "FirefoxHeadless",
-        prefs: {
-          "javascript.options.dynamicImport": true,
-        },
-      },
-    },
-
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false,
@@ -164,13 +134,7 @@ module.exports = function (config) {
       args: ["--grep", config.grep || ""],
     },
   };
-  if (process.env.TRAVIS) {
-    process.env.CHROME_BIN = require("puppeteer").executablePath();
-    options.autoWatch = false;
-    options.concurrency = 1;
-  }
   if (process.env.BROWSERS) {
-    options.detectBrowsers.enabled = false;
     options.browsers = process.env.BROWSERS.split(" ");
   }
 
