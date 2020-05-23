@@ -171,7 +171,7 @@ describe("Core - Structure", () => {
       "1.1.1.1.1 FIVE"
     );
   });
-  
+
   it("should correctly put all headings until maxTocLevel in ToC", async () => {
     const times = (n, fn) =>
       Array.from({ length: n }, (_, i) => fn(i)).join("\n");
