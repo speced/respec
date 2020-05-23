@@ -19,7 +19,7 @@ describe("Core — dfnPanel", () => {
   `;
   const ops = makeStandardOps(null, body);
 
-  xdescribe("dfnPanel state", () => {
+  describe("dfnPanel state", () => {
     const dfnId = "dfn-many";
 
     it("opens panel on dfn click", async () => {
