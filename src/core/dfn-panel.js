@@ -31,6 +31,7 @@ export async function run() {
     const action = deriveAction(el);
     switch (action) {
       case "show": {
+        if (panel) hidePanel(panel);
         const dfn = el.closest("dfn, .index-term");
         panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
         displayPanel(dfn, panel, { x: event.clientX, y: event.clientY });
@@ -43,8 +44,7 @@ export async function run() {
         break;
       }
       case "hide": {
-        panel.hidden = true;
-        panel.classList.remove("docked");
+        hidePanel(panel);
         break;
       }
     }
@@ -69,6 +69,12 @@ function deriveAction(clickTarget) {
     return "hide";
   }
   return null;
+}
+
+/** @param {HTMLElement} clickTarget */
+function hidePanel(panel) {
+  panel.hidden = true;
+  panel.classList.remove("docked");
 }
 
 /** @param {HTMLElement} dfn */
@@ -151,9 +157,6 @@ function getReferenceTitle(link) {
  * @param {{ x: number, y: number }} clickPosition
  */
 function displayPanel(dfn, panel, { x, y }) {
-  for (const el of document.querySelectorAll(".dfn-panel")) {
-    el.hidden = true;
-  }
   panel.hidden = false;
   // distance (px) between edge of panel and the pointing triangle (caret)
   const MARGIN = 20;
