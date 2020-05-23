@@ -1165,7 +1165,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     ).map(elem => new URL(elem.href));
     expect(defaultLink.hash).toBe("#Default");
     expect(objectLink.hash).toBe("#idl-object");
-    expect(toJSONLink.hash).toBe("#default-tojson-operation");
+    expect(toJSONLink.hash).toBe("#default-tojson-steps");
   });
   it("allows toJSON() to be defined in spec", () => {
     const elem = doc.getElementById("DefinedToJson");
