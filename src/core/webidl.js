@@ -157,7 +157,7 @@ function defineIdlName(escaped, data, parent) {
     data.name === "toJSON" &&
     data.extAttrs.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
-    return html`<a data-link-type="dfn" data-lt="default toJSON operation"
+    return html`<a data-link-type="dfn" data-lt="default toJSON steps"
       >${escaped}</a
     >`;
   }
