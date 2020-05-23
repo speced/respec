@@ -171,6 +171,25 @@ describe("Core - Structure", () => {
       "1.1.1.1.1 FIVE"
     );
   });
+  
+  it("should correctly put all headings until maxTocLevel in ToC", async () => {
+    const times = (n, fn) =>
+      Array.from({ length: n }, (_, i) => fn(i)).join("\n");
+    const body = `
+      ${makeDefaultBody()}
+      ${times(9, () => `<section><h2>pass</h2></section>`)}
+      <section>
+        <h2>pass</h2>
+        ${times(10, i => `<section><h2>test ${i + 1}</h2></section>`)}
+      </section>
+    `;
+    const ops = makeStandardOps({ maxTocLevel: 2 }, body);
+    const doc = await makeRSDoc(ops);
+
+    expect(doc.getElementById("test-10")).toBeTruthy();
+    expect(doc.querySelector("#toc")).toBeTruthy();
+    expect(doc.querySelector("#toc a[href='#test-10']")).toBeTruthy();
+  });
 
   it("gives the toc's heading an id", async () => {
     const ops = {
