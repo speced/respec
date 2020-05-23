@@ -5,7 +5,7 @@ const iframes = [];
  * @return {Promise<Document>}
  */
 export function makeRSDoc(opts, src, style = "") {
-  opts = { profile: "w3c", ...opts };
+  opts = { profile: "w3c-common", ...opts };
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
@@ -149,9 +149,9 @@ export function pickRandomsFromList(list, howMany) {
   }, []);
 }
 
-export function makeBasicConfig(profile = "w3c") {
+export function makeBasicConfig(profile = "w3c-common") {
   switch (profile) {
-    case "w3c":
+    case "w3c-common":
       return {
         editors: [
           {

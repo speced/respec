@@ -19,7 +19,7 @@ const optionList = [
     name: "profile",
     alias: "p",
     description: "Name of profile to build.",
-    defaultValue: "w3c",
+    defaultValue: "w3c-common",
     multiple: false,
     type: String,
   },
