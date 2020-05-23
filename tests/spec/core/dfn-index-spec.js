@@ -360,8 +360,8 @@ describe("Core — dfn-index", () => {
 
       expect(doc.getElementById("dfn-panel")).toBeFalsy();
       term.click();
-      const panel = doc.getElementById("dfn-panel");
-      expect(panel).toBeTruthy();
+      const panel = doc.getElementById(`dfn-panel-for-${term.id}`);
+      expect(panel.classList).not.toContain("hidden");
       expect(panel.querySelector("a.self-link").href).toBe(
         "https://dom.spec.whatwg.org/#event"
       );

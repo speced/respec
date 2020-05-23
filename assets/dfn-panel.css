@@ -84,3 +84,7 @@ dfn {
   max-height: 30vh;
   overflow: auto;
 }
+
+.dfn-panel.hidden {
+  display: none;
+}
