@@ -80,7 +80,7 @@ function createPanel(dfn) {
   const panel = hyperHTML`
     <aside class="dfn-panel hidden removeOnSave" id="${panelId}">
       <span class="caret"></span>
-      <b><a class="self-link dfn-panel-link" href="${href}">Permalink</a></b>
+      <b><a class="self-link" href="${href}">Permalink</a></b>
       <b>Referenced in:</b>
       ${referencesToHTML(id, links)}
     </aside>
@@ -127,10 +127,7 @@ function referencesToHTML(id, links) {
    */
   const listItemToHTML = entry =>
     hyperHTML`<li>${toLinkProps(entry).map(
-      link =>
-        hyperHTML`<a class="dfn-panel-link" href="#${link.id}">${
-          link.title
-        }</a>${" "}`
+      link => hyperHTML`<a href="#${link.id}">${link.title}</a>${" "}`
     )}</li>`;
 
   const listItems = [...titleToIDs].map(listItemToHTML);
