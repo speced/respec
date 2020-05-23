@@ -358,10 +358,10 @@ describe("Core — dfn-index", () => {
       expect(term.textContent).toBe("Event interface");
       expect(term.id).toBe("index-term-event-interface");
 
-      expect(doc.getElementById("dfn-panel")).toBeFalsy();
-      term.click();
       const panel = doc.getElementById(`dfn-panel-for-${term.id}`);
-      expect(panel.classList).not.toContain("hidden");
+      expect(panel.hidden).toBeTrue();
+      term.click();
+      expect(panel.hidden).toBeFalse();
       expect(panel.querySelector("a.self-link").href).toBe(
         "https://dom.spec.whatwg.org/#event"
       );

@@ -25,10 +25,10 @@ describe("Core — dfnPanel", () => {
     it("opens panel on dfn click", async () => {
       const doc = await makeRSDoc(ops);
       const panel = doc.getElementById(getPanelId(dfnId));
-      expect(panel.classList).toContain("hidden");
+      expect(panel.hidden).toBeTrue();
       const dfn = doc.getElementById(dfnId);
       dfn.click();
-      expect(panel.classList).not.toContain("hidden");
+      expect(panel.hidden).toBeFalse();
       expect(panel.classList).not.toContain("docked");
     });
 
@@ -36,27 +36,27 @@ describe("Core — dfnPanel", () => {
       const doc = await makeRSDoc(ops);
       doc.getElementById(dfnId).click();
       const panel = doc.getElementById(getPanelId(dfnId));
-      expect(panel.classList).not.toContain("hidden");
+      expect(panel.hidden).toBeFalse();
       doc.body.click();
-      expect(panel.classList).toContain("hidden");
+      expect(panel.hidden).toBeTrue();
     });
 
     it("closes open panel on self link click", async () => {
       const doc = await makeRSDoc(ops);
       const panel = doc.getElementById(getPanelId(dfnId));
       doc.getElementById(dfnId).click();
-      expect(panel.classList).not.toContain("hidden");
+      expect(panel.hidden).toBeFalse();
       panel.querySelector("a.self-link").click();
-      expect(panel.classList).toContain("hidden");
+      expect(panel.hidden).toBeTrue();
     });
 
     it("does not close panel on panel click", async () => {
       const doc = await makeRSDoc(ops);
       doc.getElementById(dfnId).click();
       const panel = doc.getElementById(getPanelId(dfnId));
-      expect(panel.classList).not.toContain("hidden");
+      expect(panel.hidden).toBeFalse();
       panel.click();
-      expect(panel.classList).not.toContain("hidden");
+      expect(panel.hidden).toBeFalse();
     });
 
     it("docks open panel on reference click", async () => {
@@ -76,7 +76,7 @@ describe("Core — dfnPanel", () => {
       expect(panel.classList).toContain("docked");
 
       panel.click();
-      expect(panel.classList).toContain("hidden");
+      expect(panel.hidden).toBeTrue();
     });
 
     it("opens a new panel if another dfn is clicked", async () => {
@@ -89,13 +89,13 @@ describe("Core — dfnPanel", () => {
       const [dfnMany, dfnOne] = doc.querySelectorAll("dfn");
 
       dfnMany.click();
-      expect(panelDfnMany.classList).not.toContain("hidden");
+      expect(panelDfnMany.hidden).toBeFalse();
       expect(panelDfnMany.querySelector("a.self-link").hash).toBe("#dfn-many");
 
       dfnOne.click();
-      expect(panelDfnMany.classList).toContain("hidden");
-      expect(panelDfnOne.classList).not.toContain("hidden");
-      expect(doc.querySelectorAll(".dfn-panel:not(.hidden)").length).toBe(1);
+      expect(panelDfnMany.hidden).toBeTrue();
+      expect(panelDfnOne.hidden).toBeFalse();
+      expect(doc.querySelectorAll(".dfn-panel:not([hidden])").length).toBe(1);
       expect(panelDfnOne.querySelector("a.self-link").hash).toBe("#dfn-one");
     });
   });

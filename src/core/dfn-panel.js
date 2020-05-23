@@ -42,7 +42,8 @@ export async function run() {
         break;
       }
       case "hide": {
-        panel.classList.add("hidden");
+        panel.hidden = true;
+        panel.classList.remove("docked");
         break;
       }
     }
@@ -63,7 +64,7 @@ function deriveAction(clickTarget) {
     const panel = clickTarget.closest(".dfn-panel");
     return panel.classList.contains("docked") ? "hide" : null;
   }
-  if (document.querySelector(".dfn-panel:not(.hidden)")) {
+  if (document.querySelector(".dfn-panel:not([hidden])")) {
     return "hide";
   }
   return null;
@@ -78,7 +79,7 @@ function createPanel(dfn) {
   const panelId = `dfn-panel-for-${dfn.id}`;
   /** @type {HTMLElement} */
   const panel = hyperHTML`
-    <aside class="dfn-panel hidden removeOnSave" id="${panelId}">
+    <aside class="dfn-panel removeOnSave" id="${panelId}" hidden>
       <span class="caret"></span>
       <b><a class="self-link" href="${href}">Permalink</a></b>
       <b>Referenced in:</b>
@@ -150,9 +151,9 @@ function getReferenceTitle(link) {
  */
 function displayPanel(dfn, panel, { x, y }) {
   for (const el of document.querySelectorAll(".dfn-panel")) {
-    el.classList.add("hidden");
+    el.hidden = true;
   }
-  panel.classList.remove("hidden");
+  panel.hidden = false;
   // distance (px) between edge of panel and the pointing triangle (caret)
   const MARGIN = 20;
 
