@@ -46,7 +46,7 @@ jobs:
       - name: install & build
         run: |
           npm ci
-          npm run build:w3c-common & npm run build:geonovum
+          npm run build:w3c-with-jquery & npm run build:geonovum
       - run: npm run test:karma
         env:
           BROWSERS: ${{ matrix.browser }}
