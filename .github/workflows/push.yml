@@ -39,7 +39,7 @@ jobs:
             -d "size=$file_size" -d "gzipSize=$gzip_file_size "\
             -d "sha=$GITHUB_SHA" -d "timestamp=$timestamp"
         env:
-          RESPEC_SECRET: ${{ secrets.RESPEC_SECRET }}
+          RESPEC_SECRET: ${{ secrets.RESPEC_GH_ACTION_SECRET }}
 
   test-karma:
     name: Karma Unit Tests (Chrome)
