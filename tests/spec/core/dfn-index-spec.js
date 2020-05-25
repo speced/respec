@@ -378,11 +378,11 @@ describe("Core — dfn-index", () => {
     });
 
     it("associates different id to each term", async () => {
-      const termsInDom = index.querySelectorAll(
+      const termsInEcma = index.querySelectorAll(
         "[data-spec='ECMASCRIPT'] li span"
       );
-      expect(termsInDom.length).toBe(3);
-      const [, parsing1, parsing2] = termsInDom;
+      expect(termsInEcma.length).toBe(3);
+      const [, parsing1, parsing2] = termsInEcma;
       expect(parsing1.id).toBe("index-term-parsing");
       expect(parsing2.id).toBe("index-term-parsing-0");
     });
