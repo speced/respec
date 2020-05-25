@@ -52,7 +52,7 @@
     "pluralize": "^8.0.0",
     "prettier": "^2.0.5",
     "prompt": "^1.0.0",
-    "rollup": "^2.10.4",
+    "rollup": "^2.10.9",
     "rollup-plugin-alias": "^2.2.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
