@@ -200,6 +200,10 @@ describe("Core — dfn-index", () => {
           </li>
           <li><a>JSON.stringify</a></li>
         </ul>
+        <ul class="test" data-testid="possible-duplicate-id">
+        <li><a data-cite="ECMASCRIPT#sec-json.parse">parsing</a></li>
+        <li><a data-cite="ECMASCRIPT#sec-15.12.2">parsing</a></li>
+        </ul>
       </section>
       <section id="index"></section>`;
 
@@ -222,6 +226,8 @@ describe("Core — dfn-index", () => {
         "EventInit",
         "type attribute",
         "JSON.stringify",
+        "parsing",
+        "parsing",
         "allow attribute",
         "EventHandler",
         "fully active",
@@ -369,6 +375,16 @@ describe("Core — dfn-index", () => {
       const reference = panel.querySelector("ul li a");
       expect(reference.textContent).toBe("1. TEST");
       expect(reference.hash).toBe("#ref-for-index-term-event-interface-1");
+    });
+
+    it("associates different id to each term", async () => {
+      const termsInDom = index.querySelectorAll(
+        "[data-spec='ECMASCRIPT'] li span"
+      );
+      expect(termsInDom.length).toBe(3);
+      const [, parsing1, parsing2] = termsInDom;
+      expect(parsing1.id).toBe("index-term-parsing");
+      expect(parsing2.id).toBe("index-term-parsing-0");
     });
   });
 });
