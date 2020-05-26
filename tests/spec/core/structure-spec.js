@@ -175,6 +175,9 @@ describe("Core - Structure", () => {
   it("should correctly put all headings until maxTocLevel in ToC", async () => {
     const times = (n, fn) =>
       Array.from({ length: n }, (_, i) => fn(i)).join("\n");
+    // The first 9 sections are just placeholders. In 10th section (10.x), we
+    // add 10 subsections, so ToC goes till `10.10`, and section number for the
+    // last heading is "10.10" and a depth of 2.
     const body = `
       ${makeDefaultBody()}
       ${times(9, () => `<section><h2>pass</h2></section>`)}
