@@ -77,10 +77,13 @@ const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
  */
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
-  const [element, attribute] = value.split("/", 2).map(s => s && s.trim());
+  const [element, attribute] = value
+    .replace("\\/", "%%")
+    .split("/", 2)
+    .map(s => s && s.trim().replace("%%", "/"));
   const [xrefType, xrefFor, textContent] = attribute
     ? ["element-attr", element, attribute]
-    : ["element", null, element];
+    : ["element|element-attr", null, element];
   const code = html`<code
     ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
       >${textContent}</a
@@ -200,7 +203,10 @@ function inlineVariableMatches(matched) {
  */
 function inlineAnchorMatches(matched) {
   matched = matched.slice(2, -2); // Chop [= =]
-  const parts = matched.split("/", 2).map(s => s.trim());
+  const parts = matched
+    .replace("\\/", "%%")
+    .split("/", 2)
+    .map(s => s.trim().replace("%%", "/"));
   const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
   const [linkingText, text] = content.includes("|")
     ? content.split("|", 2).map(s => s.trim())
