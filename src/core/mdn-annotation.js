@@ -111,9 +111,9 @@ function buildBrowserSupportTable(support) {
   }
 
   return Object.keys(MDN_BROWSERS).map(browserId => {
-    return !support[browserId]
-      ? createRow(browserId, "Unknown", "")
-      : createRowFromBrowserData(browserId, support[browserId]);
+    return support[browserId]
+      ? createRowFromBrowserData(browserId, support[browserId])
+      : createRow(browserId, "Unknown", "");
   });
 }
 
