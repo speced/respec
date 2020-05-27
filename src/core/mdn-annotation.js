@@ -117,13 +117,7 @@ function buildBrowserSupportTable(support) {
     if (!support[browserId]) {
       rows.push(createRow(browserId, "Unknown", ""));
     } else {
-      if (Array.isArray(support[browserId])) {
-        support[browserId].forEach(b => {
-          rows.push(createRowFromBrowserData(browserId, b));
-        });
-      } else {
-        rows.push(createRowFromBrowserData(browserId, support[browserId]));
-      }
+      rows.push(createRowFromBrowserData(browserId, support[browserId]));
     }
   });
 
