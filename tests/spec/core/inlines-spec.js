@@ -420,6 +420,21 @@ describe("Core - Inlines", () => {
     expect(iterationBreak.hash).toBe("#iteration-break");
   });
 
+  it("allows escaping `/` in [= concept =] and [^ element-attr ^] links", async () => {
+    const body = `<section id="test">
+      <dfn>foo/bar</dfn> [= foo\\/bar =]
+      [=multipart\\/form-data encoding algorithm=]
+      [^application\\/x-www-form-urlencoded^]
+    </section>`;
+    const ops = makeStandardOps({ xref: ["HTML"] }, body);
+    const doc = await makeRSDoc(ops);
+
+    const [localLink, conceptLink, attrLink] = doc.querySelectorAll("#test a");
+    expect(localLink.hash).toBe("#dfn-foo-bar");
+    expect(conceptLink.hash).toBe("#multipart/form-data-encoding-algorithm");
+    expect(attrLink.hash).toBe("#attr-fs-enctype-urlencoded");
+  });
+
   it("processes {{ forContext/term }} IDL", async () => {
     const body = `
       <section>
