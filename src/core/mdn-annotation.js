@@ -111,17 +111,13 @@ function buildBrowserSupportTable(support) {
     }
   }
 
-  const rows = [];
-
-  Object.keys(MDN_BROWSERS).forEach(browserId => {
+  return Object.keys(MDN_BROWSERS).map(browserId => {
     if (!support[browserId]) {
-      rows.push(createRow(browserId, "Unknown", ""));
+      return createRow(browserId, "Unknown", "");
     } else {
-      rows.push(createRowFromBrowserData(browserId, support[browserId]));
+      return createRowFromBrowserData(browserId, support[browserId]);
     }
   });
-
-  return rows;
 }
 
 export async function run(conf) {
