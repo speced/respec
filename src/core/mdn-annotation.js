@@ -43,13 +43,13 @@ async function loadStyle() {
 
 function insertMDNBox(node) {
   const targetAncestor = node.closest("section");
-  const { previousElementSibling: targetSibling, parentNode } = targetAncestor;
+  const { previousElementSibling: targetSibling } = targetAncestor;
   if (targetSibling && targetSibling.classList.contains("mdn")) {
     // If the target ancestor already has a mdnBox inserted, we just use it
     return targetSibling;
   }
   const mdnBox = html`<aside class="mdn before wrapped"></aside>`;
-  parentNode.insertBefore(mdnBox, targetAncestor);
+  targetAncestor.before(mdnBox);
   return mdnBox;
 }
 
