@@ -137,27 +137,17 @@ export async function run(conf) {
       div.parentNode.classList.toggle("wrapped");
     }
   </script>`);
-  const nodesWithId = document.querySelectorAll("[id]");
-  [...nodesWithId]
-    .filter(node => {
-      const unlikelyTagNames = ["STYLE", "SCRIPT", "BODY"];
-      return (
-        unlikelyTagNames.indexOf(node.tagName) === -1 &&
-        mdnSpecJson[node.id] &&
-        Array.isArray(mdnSpecJson[node.id])
-      );
-    })
-    .forEach(node => {
-      const mdnSpecArray = mdnSpecJson[node.id];
-      const mdnBox = insertMDNBox(node);
-      mdnSpecArray
-        .map(spec => {
-          const mdnDiv = document.createElement("div");
-          attachMDNDetail(mdnDiv, spec);
-          return mdnDiv;
-        })
-        .forEach(mdnDiv => mdnBox.appendChild(mdnDiv));
-    });
+  findElements(mdnSpecJson).forEach(elem => {
+    const mdnSpecArray = mdnSpecJson[elem.id];
+    const mdnBox = insertMDNBox(elem);
+    mdnSpecArray
+      .map(spec => {
+        const mdnDiv = document.createElement("div");
+        attachMDNDetail(mdnDiv, spec);
+        return mdnDiv;
+      })
+      .forEach(mdnDiv => mdnBox.appendChild(mdnDiv));
+  });
 }
 
 function getMdnKey(conf) {
@@ -193,4 +183,14 @@ async function getMdnData(key, mdnConf) {
     return;
   }
   return await res.json();
+}
+
+/**
+ * Find elements that can have an annotation box attached.
+ * @param {MdnData} data
+ */
+function findElements(data) {
+  /** @type {NodeListOf<HTMLElement>} */
+  const elemsWithId = document.body.querySelectorAll("[id]:not(script)");
+  return [...elemsWithId].filter(({ id }) => Array.isArray(data[id]));
 }
