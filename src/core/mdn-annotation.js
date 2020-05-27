@@ -7,7 +7,6 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/mdn-annotation";
 
 const BASE_JSON_PATH = "https://w3c.github.io/mdn-spec-links/";
-const SPEC_MAP_URL = `${BASE_JSON_PATH}SPECMAP.json`;
 const MDN_URL_BASE = "https://developer.mozilla.org/en-US/docs/Web/";
 const MDN_BROWSERS = {
   // The browser IDs here must match the ones in the imported JSON data.
@@ -186,18 +185,16 @@ function getMdnKey(conf) {
  */
 async function getMdnData(key, mdnConf) {
   const {
-    specMapUrl = SPEC_MAP_URL,
     baseJsonPath = BASE_JSON_PATH,
     maxAge = 60 * 60 * 24 * 1000,
   } = mdnConf;
-  const specMap = await fetchAndCache(specMapUrl, maxAge).then(r => r.json());
-  const hasSpecJson = Object.values(specMap).some(v => v === `${key}.json`);
-  if (!hasSpecJson) {
+  const url = new URL(`${key}.json`, baseJsonPath).href;
+  const res = await fetchAndCache(url, maxAge);
+  if (res.status === 404) {
     const msg = `Could not find MDN data associated with key "${key}".`;
     const hint = "Please add a valid key to `respecConfig.mdn`";
     pub("error", `${msg} ${hint}`);
     return;
   }
-  const url = new URL(`${key}.json`, baseJsonPath).href;
-  return await fetchAndCache(url, maxAge).then(r => r.json());
+  return await res.json();
 }
