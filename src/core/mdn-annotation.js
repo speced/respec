@@ -82,6 +82,7 @@ function buildBrowserSupportTable(support) {
    * @param {string | keyof MDN_BROWSERS} browserId
    * @param {"Yes" | "No" | "Unknown"} yesNoUnknown
    * @param {string} version
+   * @returns {HTMLElement}
    */
   function createRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
