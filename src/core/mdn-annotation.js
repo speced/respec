@@ -124,9 +124,8 @@ function buildBrowserSupportTable(support) {
 
 export async function run(conf) {
   const mdnKey = getMdnKey(conf);
-  if (!mdnKey) {
-    return;
-  }
+  if (!mdnKey) return;
+
   const mdnSpecJson = await getMdnData(mdnKey, conf.mdn);
   if (!mdnSpecJson) return;
 
