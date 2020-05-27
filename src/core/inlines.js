@@ -78,17 +78,11 @@ const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
   const [element, attribute] = splitBySlash(value, 2);
-  const [xrefFor, textContent] = attribute
-    ? [element, attribute]
-    : [null, element];
-  const xrefType = [];
-  if (attribute || value.includes("\\/")) {
-    xrefType.push("element-attr");
-  } else if (!attribute) {
-    xrefType.push("element");
-  }
+  const [xrefType, xrefFor, textContent] = attribute
+    ? ["element-attr", element, attribute]
+    : ["element|element-attr", null, element];
   const code = html`<code
-    ><a data-xref-type="${xrefType.join("|")}" data-xref-for="${xrefFor}"
+    ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
       >${textContent}</a
     ></code
   >`;
