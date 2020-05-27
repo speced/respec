@@ -2,11 +2,10 @@
 import { fetchAndCache } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
 import { html } from "./import-maps.js";
+import { pub } from "./pubsubhub.js";
 
 export const name = "core/mdn-annotation";
 
-const SPEC_MAP_URL =
-  "https://raw.githubusercontent.com/w3c/mdn-spec-links/master/SPECMAP.json";
 const BASE_JSON_PATH = "https://w3c.github.io/mdn-spec-links/";
 const MDN_URL_BASE = "https://developer.mozilla.org/en-US/docs/Web/";
 const MDN_BROWSERS = {
@@ -40,11 +39,6 @@ async function loadStyle() {
   } catch {
     return fetchAsset("mdn-annotation.css");
   }
-}
-
-function fetchAndCacheJson(url, maxAge) {
-  if (!url) return {};
-  return fetchAndCache(url, maxAge).then(r => r.json());
 }
 
 function insertMDNBox(node) {
@@ -133,22 +127,9 @@ export async function run(conf) {
   if (!mdnKey) {
     return;
   }
+  const mdnSpecJson = await getMdnData(mdnKey, conf.mdn);
+  if (!mdnSpecJson) return;
 
-  const { mdn } = conf;
-  const maxAge = mdn.maxAge || 60 * 60 * 24 * 1000;
-  const specMapUrl = mdn.specMapUrl || SPEC_MAP_URL;
-  const baseJsonPath = mdn.baseJsonPath || BASE_JSON_PATH;
-  const specMap = await fetchAndCacheJson(specMapUrl, maxAge);
-  const hasSpecJson = Object.values(specMap).some(
-    jsonName => jsonName === `${mdnKey}.json`
-  );
-  if (!hasSpecJson) {
-    return;
-  }
-  const mdnSpecJson = await fetchAndCacheJson(
-    `${baseJsonPath}/${mdnKey}.json`,
-    maxAge
-  );
   const mdnCss = await mdnCssPromise;
   document.head.appendChild(
     html`<style>
@@ -188,4 +169,32 @@ function getMdnKey(conf) {
   if (!mdn) return;
   if (typeof mdn === "string") return mdn;
   return mdn.key || shortName;
+}
+
+/**
+ * @param {string} key MDN key
+ * @param {object} mdnConf
+ * @param {string} [mdnConf.specMapUrl]
+ * @param {string} [mdnConf.baseJsonPath]
+ * @param {number} [mdnConf.maxAge]
+ *
+ * @typedef {Record<keyof MDN_BROWSERS, { version_added: string }>} MdnSupportEntry
+ * @typedef {{ name: string, title: string, summary: string, support: MdnSupportEntry }} MdnEntry
+ * @typedef {Record<string, MdnEntry[]>} MdnData
+ * @returns {Promise<MdnData|undefined>}
+ */
+async function getMdnData(key, mdnConf) {
+  const {
+    baseJsonPath = BASE_JSON_PATH,
+    maxAge = 60 * 60 * 24 * 1000,
+  } = mdnConf;
+  const url = new URL(`${key}.json`, baseJsonPath).href;
+  const res = await fetchAndCache(url, maxAge);
+  if (res.status === 404) {
+    const msg = `Could not find MDN data associated with key "${key}".`;
+    const hint = "Please add a valid key to `respecConfig.mdn`";
+    pub("error", `${msg} ${hint}`);
+    return;
+  }
+  return await res.json();
 }
