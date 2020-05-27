@@ -180,7 +180,7 @@ function getMdnKey(conf) {
  *
  * @typedef {Record<keyof MDN_BROWSERS, { version_added: string }>} MdnSupportEntry
  * @typedef {{ name: string, title: string, summary: string, support: MdnSupportEntry }} MdnEntry
- * @typedef { Record<string, MdnEntry[]>} MdnData
+ * @typedef {Record<string, MdnEntry[]>} MdnData
  * @returns {Promise<MdnData|undefined>}
  */
 async function getMdnData(key, mdnConf) {
