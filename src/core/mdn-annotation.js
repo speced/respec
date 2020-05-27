@@ -101,11 +101,10 @@ function buildBrowserSupportTable(support) {
       return createRow(browserId, "No", "");
     }
     const versionAdded = versionData.version_added;
-    if (!versionAdded) {
-      return createRow(browserId, "Unknown", "");
-    }
     if (typeof versionAdded === "boolean") {
       return createRow(browserId, versionAdded ? "Yes" : "No", "");
+    } else if (!versionAdded) {
+      return createRow(browserId, "Unknown", "");
     } else {
       return createRow(browserId, "Yes", `${versionAdded}+`);
     }
