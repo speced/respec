@@ -42,11 +42,6 @@ async function loadStyle() {
   }
 }
 
-function fetchAndCacheJson(url, maxAge) {
-  if (!url) return {};
-  return fetchAndCache(url, maxAge).then(r => r.json());
-}
-
 function insertMDNBox(node) {
   const targetAncestor = node.closest("section");
   const { previousElementSibling: targetSibling, parentNode } = targetAncestor;
@@ -133,22 +128,7 @@ export async function run(conf) {
   if (!mdnKey) {
     return;
   }
-
-  const { mdn } = conf;
-  const maxAge = mdn.maxAge || 60 * 60 * 24 * 1000;
-  const specMapUrl = mdn.specMapUrl || SPEC_MAP_URL;
-  const baseJsonPath = mdn.baseJsonPath || BASE_JSON_PATH;
-  const specMap = await fetchAndCacheJson(specMapUrl, maxAge);
-  const hasSpecJson = Object.values(specMap).some(
-    jsonName => jsonName === `${mdnKey}.json`
-  );
-  if (!hasSpecJson) {
-    return;
-  }
-  const mdnSpecJson = await fetchAndCacheJson(
-    `${baseJsonPath}/${mdnKey}.json`,
-    maxAge
-  );
+  const mdnSpecJson = await getMdnData(mdnKey, conf.mdn);
   const mdnCss = await mdnCssPromise;
   document.head.appendChild(
     html`<style>
@@ -188,4 +168,29 @@ function getMdnKey(conf) {
   if (!mdn) return;
   if (typeof mdn === "string") return mdn;
   return mdn.key || shortName;
+}
+
+/**
+ * @param {string} key MDN key
+ * @param {object} mdnConf
+ * @param {string} [mdnConf.specMapUrl]
+ * @param {string} [mdnConf.baseJsonPath]
+ * @param {number} [mdnConf.maxAge]
+ *
+ * @typedef {{ [browser in keyof MDN_BROWSERS]: { version_added: string } }} MdnSupportEntry
+ * @typedef {{ name: string, title: string, summary: string, support: MdnSupportEntry }} MdnEntry
+ * @typedef {{ [id: string]: MdnEntry[] }} MdnData
+ * @returns {Promise<MdnData|undefined>}
+ */
+async function getMdnData(key, mdnConf) {
+  const {
+    specMapUrl = SPEC_MAP_URL,
+    baseJsonPath = BASE_JSON_PATH,
+    maxAge = 60 * 60 * 24 * 1000,
+  } = mdnConf;
+  const specMap = await fetchAndCache(specMapUrl, maxAge).then(r => r.json());
+  const hasSpecJson = Object.values(specMap).some(v => v === `${key}.json`);
+  if (!hasSpecJson) return;
+  const url = `${baseJsonPath}/${key}.json`;
+  return await fetchAndCache(url, maxAge).then(r => r.json());
 }
