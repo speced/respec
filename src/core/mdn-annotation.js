@@ -129,6 +129,8 @@ export async function run(conf) {
     return;
   }
   const mdnSpecJson = await getMdnData(mdnKey, conf.mdn);
+  if (!mdnSpecJson) return;
+
   const mdnCss = await mdnCssPromise;
   document.head.appendChild(
     html`<style>
