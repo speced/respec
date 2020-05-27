@@ -80,7 +80,7 @@ function inlineElementMatches(matched) {
   const [element, attribute] = splitBySlash(value, 2);
   const [xrefType, xrefFor, textContent] = attribute
     ? ["element-attr", element, attribute]
-    : ["element|element-attr", null, element];
+    : ["element", null, element];
   const code = html`<code
     ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
       >${textContent}</a
