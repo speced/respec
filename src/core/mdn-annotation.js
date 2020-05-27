@@ -78,6 +78,11 @@ function attachMDNBrowserSupport(container, mdnSpec) {
 
 /** @param {MdnEntry['support']} support */
 function buildBrowserSupportTable(support) {
+  /**
+   * @param {string | keyof MDN_BROWSERS} browserId
+   * @param {"Yes" | "No" | "Unknown"} yesNoUnknown
+   * @param {string} [version]
+   */
   function createRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
@@ -87,6 +92,10 @@ function buildBrowserSupportTable(support) {
     </span>`;
   }
 
+  /**
+   * @param {string | keyof MDN_BROWSERS} browserId
+   * @param {VersionDetails} versionData
+   */
   function createRowFromBrowserData(browserId, versionData) {
     if (versionData.version_removed) {
       return createRow(browserId, "No", "");
@@ -166,7 +175,8 @@ function getMdnKey(conf) {
  * @param {string} [mdnConf.baseJsonPath]
  * @param {number} [mdnConf.maxAge]
  *
- * @typedef {Record<keyof MDN_BROWSERS, { version_added: string }>} MdnSupportEntry
+ * @typedef {{ version_added: string|boolean|null, version_removed?: string }} VersionDetails
+ * @typedef {Record<string | keyof MDN_BROWSERS, VersionDetails>} MdnSupportEntry
  * @typedef {{ name: string, title: string, summary: string, support: MdnSupportEntry }} MdnEntry
  * @typedef {Record<string, MdnEntry[]>} MdnData
  * @returns {Promise<MdnData|undefined>}
