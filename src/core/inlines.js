@@ -81,11 +81,17 @@ function inlineElementMatches(matched) {
     .replace("\\/", "%%")
     .split("/", 2)
     .map(s => s && s.trim().replace("%%", "/"));
-  const [xrefType, xrefFor, textContent] = attribute
-    ? ["element-attr", element, attribute]
-    : ["element|element-attr", null, element];
+  const [xrefFor, textContent] = attribute
+    ? [element, attribute]
+    : [null, element];
+  const xrefType = [];
+  if (attribute || value.includes("\\/")) {
+    xrefType.push("element-attr");
+  } else if (!attribute) {
+    xrefType.push("element");
+  }
   const code = html`<code
-    ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
+    ><a data-xref-type="${xrefType.join("|")}" data-xref-for="${xrefFor}"
       >${textContent}</a
     ></code
   >`;
