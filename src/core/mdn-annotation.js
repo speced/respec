@@ -6,9 +6,8 @@ import { pub } from "./pubsubhub.js";
 
 export const name = "core/mdn-annotation";
 
-const SPEC_MAP_URL =
-  "https://raw.githubusercontent.com/w3c/mdn-spec-links/master/SPECMAP.json";
 const BASE_JSON_PATH = "https://w3c.github.io/mdn-spec-links/";
+const SPEC_MAP_URL = `${BASE_JSON_PATH}SPECMAP.json`;
 const MDN_URL_BASE = "https://developer.mozilla.org/en-US/docs/Web/";
 const MDN_BROWSERS = {
   // The browser IDs here must match the ones in the imported JSON data.
