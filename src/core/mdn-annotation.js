@@ -76,6 +76,7 @@ function attachMDNBrowserSupport(container, mdnSpec) {
   container.appendChild(supportTable);
 }
 
+/** @param {MdnEntry['support']} support */
 function buildBrowserSupportTable(support) {
   function createRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
@@ -150,6 +151,7 @@ export async function run(conf) {
   });
 }
 
+/** @returns {string} */
 function getMdnKey(conf) {
   const { shortName, mdn } = conf;
   if (!mdn) return;
