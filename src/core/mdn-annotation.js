@@ -31,8 +31,6 @@ const MDN_BROWSERS = {
   webview_android: "WebView Android",
 };
 
-const mdnCssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/mdn-annotation.css")).default;
@@ -129,12 +127,11 @@ export async function run(conf) {
   const mdnSpecJson = await getMdnData(mdnKey, conf.mdn);
   if (!mdnSpecJson) return;
 
-  const mdnCss = await mdnCssPromise;
-  document.head.appendChild(
-    html`<style>
-      ${mdnCss}
-    </style>`
-  );
+  const style = document.createElement("style");
+  style.textContent = await loadStyle();
+  style.classList.add("removeOnSave");
+  document.head.append(style);
+
   document.head.appendChild(html`<script>
     function toggleMDNStatus(div) {
       div.parentNode.classList.toggle("wrapped");
