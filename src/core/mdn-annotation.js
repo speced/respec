@@ -2,6 +2,7 @@
 import { fetchAndCache } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
 import { html } from "./import-maps.js";
+import { pub } from "./pubsubhub.js";
 
 export const name = "core/mdn-annotation";
 
@@ -192,7 +193,12 @@ async function getMdnData(key, mdnConf) {
   } = mdnConf;
   const specMap = await fetchAndCache(specMapUrl, maxAge).then(r => r.json());
   const hasSpecJson = Object.values(specMap).some(v => v === `${key}.json`);
-  if (!hasSpecJson) return;
+  if (!hasSpecJson) {
+    const msg = `Could not find MDN data associated with key "${key}".`;
+    const hint = "Please add a valid key to `respecConfig.mdn`";
+    pub("error", `${msg} ${hint}`);
+    return;
+  }
   const url = `${baseJsonPath}/${key}.json`;
   return await fetchAndCache(url, maxAge).then(r => r.json());
 }
