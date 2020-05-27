@@ -199,6 +199,6 @@ async function getMdnData(key, mdnConf) {
     pub("error", `${msg} ${hint}`);
     return;
   }
-  const url = `${baseJsonPath}/${key}.json`;
+  const url = new URL(`${key}.json`, baseJsonPath).href;
   return await fetchAndCache(url, maxAge).then(r => r.json());
 }
