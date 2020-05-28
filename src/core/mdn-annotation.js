@@ -111,13 +111,12 @@ function buildBrowserSupportTable(support) {
     }
   }
 
-  const rows = Object.keys(MDN_BROWSERS).map(browserId => {
-    return support[browserId]
-      ? createRowFromBrowserData(browserId, support[browserId])
-      : createRow(browserId, "Unknown", "");
-  });
   return html`<table>
-    ${rows}
+    ${Object.keys(MDN_BROWSERS).map(browserId => {
+      return support[browserId]
+        ? createRowFromBrowserData(browserId, support[browserId])
+        : createRow(browserId, "Unknown", "");
+    })}
   </table>`;
 }
 
