@@ -58,12 +58,7 @@ function insertMDNBox(node) {
 function attachMDNDetail(container, mdnSpec) {
   const { slug, summary, support } = mdnSpec;
   container.append(
-    html`<button
-      onclick="toggleMDNStatus(this.parentNode)"
-      aria-label="Expand MDN details"
-    >
-      <b>MDN</b>
-    </button>`
+    html`<button aria-label="Expand MDN details"><b>MDN</b></button>`
   );
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const href = `${MDN_URL_BASE}${slug}`;
@@ -130,11 +125,6 @@ export async function run(conf) {
   style.classList.add("removeOnSave");
   document.head.append(style);
 
-  document.head.appendChild(html`<script>
-    function toggleMDNStatus(div) {
-      div.parentNode.classList.toggle("wrapped");
-    }
-  </script>`);
   findElements(mdnSpecJson).forEach(elem => {
     const mdnSpecArray = mdnSpecJson[elem.id];
     const mdnBox = insertMDNBox(elem);
@@ -145,6 +135,13 @@ export async function run(conf) {
         return mdnDiv;
       })
       .forEach(mdnDiv => mdnBox.appendChild(mdnDiv));
+  });
+
+  document.addEventListener("click", ({ target }) => {
+    const elem = target instanceof HTMLElement && target.closest(".mdn button");
+    if (!elem) return;
+    const mdnBox = elem.closest(".mdn");
+    mdnBox.classList.toggle("wrapped");
   });
 }
 
