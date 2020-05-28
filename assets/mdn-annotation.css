@@ -64,25 +64,6 @@
   margin: 0;
 }
 
-.mdnsupport > span {
-  display: table-row;
-  padding: 0.2em 0;
-  padding-top: 0.2em;
-  font-size: 9.6px;
-}
-
-.mdnsupport > span > span {
-  display: table-cell;
-  padding: 0 0.5em;
-  vertical-align: top;
-  line-height: 1.5em;
-}
-
-.mdnsupport > span > span:last-child {
-  text-align: right;
-  padding: 0;
-}
-
 .mdn tr::before {
   content: "";
   display: table-cell;
