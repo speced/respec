@@ -63,21 +63,19 @@ function attachMDNDetail(container, mdnSpec) {
   const mdnDetail = html`
     <div>
       <a title="${summary}" href="${href}">${mdnSubPath}</a>
+      ${attachMDNBrowserSupport(mdnSpec)}
     </div>
   `;
-  attachMDNBrowserSupport(mdnDetail, mdnSpec);
   container.appendChild(mdnDetail);
 }
 
-function attachMDNBrowserSupport(container, mdnSpec) {
+function attachMDNBrowserSupport(mdnSpec) {
   if (!mdnSpec.support) {
-    container.innerHTML += `<p class="nosupportdata">No support data.</p>`;
-    return;
+    return html`<p class="nosupportdata">No support data.</p>`;
   }
-  const supportTable = html`<p class="mdnsupport">
+  return html`<p class="mdnsupport">
     ${buildBrowserSupportTable(mdnSpec.support)}
   </p>`;
-  container.appendChild(supportTable);
 }
 
 /** @param {MdnEntry['support']} support */
