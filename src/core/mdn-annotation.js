@@ -57,7 +57,14 @@ function insertMDNBox(node) {
  */
 function attachMDNDetail(container, mdnSpec) {
   const { slug, summary, support } = mdnSpec;
-  container.innerHTML += `<button onclick="toggleMDNStatus(this.parentNode)" aria-label="Expand MDN details"><b>MDN</b></button>`;
+  container.append(
+    html`<button
+      onclick="toggleMDNStatus(this.parentNode)"
+      aria-label="Expand MDN details"
+    >
+      <b>MDN</b>
+    </button>`
+  );
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const href = `${MDN_URL_BASE}${slug}`;
   const mdnDetail = html`<div>
