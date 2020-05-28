@@ -142,25 +142,6 @@
   margin: 0;
 }
 
-.mdn :link {
-  color: #0000ee;
-}
-
-.mdn :visited {
-  color: #551a8b;
-}
-
-.mdn :link:active,
-:visited:active {
-  color: #ff0000;
-}
-
-.mdn :link,
-:visited {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
 .mdn.wrapped > div > div {
   display: none;
 }
