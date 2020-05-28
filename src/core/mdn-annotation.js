@@ -56,26 +56,19 @@ function insertMDNBox(node) {
  * @param {MdnEntry} mdnSpec
  */
 function attachMDNDetail(container, mdnSpec) {
-  const { slug, summary } = mdnSpec;
+  const { slug, summary, support } = mdnSpec;
   container.innerHTML += `<button onclick="toggleMDNStatus(this.parentNode)" aria-label="Expand MDN details"><b>MDN</b></button>`;
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const href = `${MDN_URL_BASE}${slug}`;
-  const mdnDetail = html`
-    <div>
-      <a title="${summary}" href="${href}">${mdnSubPath}</a>
-      ${attachMDNBrowserSupport(mdnSpec)}
-    </div>
-  `;
+  const mdnDetail = html`<div>
+    <a title="${summary}" href="${href}">${mdnSubPath}</a>
+    ${support
+      ? html`<p class="mdnsupport">
+          ${buildBrowserSupportTable(support)}
+        </p>`
+      : html`<p class="nosupportdata">No support data.</p>`}
+  </div> `;
   container.appendChild(mdnDetail);
-}
-
-function attachMDNBrowserSupport(mdnSpec) {
-  if (!mdnSpec.support) {
-    return html`<p class="nosupportdata">No support data.</p>`;
-  }
-  return html`<p class="mdnsupport">
-    ${buildBrowserSupportTable(mdnSpec.support)}
-  </p>`;
 }
 
 /** @param {MdnEntry['support']} support */
