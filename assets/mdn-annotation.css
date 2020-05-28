@@ -9,6 +9,8 @@
   padding: 7px 5px 5px 6px;
   min-width: 140px;
   box-shadow: 0 0 3px #999;
+  margin-top: 3em;
+  min-width: 0px;
 }
 
 .mdn button {
@@ -149,10 +151,6 @@ p + .mdn {
   margin-top: -45px;
 }
 
-.mdn.before {
-  margin-top: 3em;
-}
-
 h2 + .mdn {
   margin: -48px 0 0 0;
 }
@@ -194,10 +192,6 @@ h6 + .mdn {
 :visited {
   text-decoration: underline;
   cursor: pointer;
-}
-
-.mdn.wrapped {
-  min-width: 0px;
 }
 
 .mdn.wrapped > div > div {
