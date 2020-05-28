@@ -138,39 +138,6 @@
   background-image: url(https://resources.whatwg.org/browser-logos/android-webview.png);
 }
 
-.mdn.wrapped div:nth-child(n + 3) {
-  display: none;
-}
-
-.mdn div:nth-child(n + 3) > b {
-  color: #eee;
-  background-color: #eee;
-}
-
-p + .mdn {
-  margin-top: -45px;
-}
-
-h2 + .mdn {
-  margin: -48px 0 0 0;
-}
-
-h3 + .mdn {
-  margin: -46px 0 0 0;
-}
-
-h4 + .mdn {
-  margin: -42px 0 0 0;
-}
-
-h5 + .mdn {
-  margin: -40px 0 0 0;
-}
-
-h6 + .mdn {
-  margin: -40px 0 0 0;
-}
-
 .mdn div {
   margin: 0;
 }
