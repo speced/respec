@@ -39,8 +39,12 @@ async function loadStyle() {
   }
 }
 
+/**
+ * @param {HTMLElement} node
+ */
 function insertMDNBox(node) {
   const targetAncestor = node.closest("section");
+  if (!targetAncestor) return;
   const { previousElementSibling: targetSibling } = targetAncestor;
   if (targetSibling && targetSibling.classList.contains("mdn")) {
     // If the target ancestor already has a mdnBox inserted, we just use it
@@ -128,6 +132,7 @@ export async function run(conf) {
   findElements(mdnSpecJson).forEach(elem => {
     const mdnSpecArray = mdnSpecJson[elem.id];
     const mdnBox = insertMDNBox(elem);
+    if (!mdnBox) return;
     mdnSpecArray
       .map(spec => {
         const mdnDiv = document.createElement("div");
