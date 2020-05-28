@@ -38,6 +38,12 @@
   padding: 3px;
 }
 
+.mdn a {
+  display: inline-block;
+  padding: 0.4em 0.4em 0;
+  word-break: break-all;
+}
+
 .mdn > div > div {
   display: inline-block;
   margin-left: 5px;
