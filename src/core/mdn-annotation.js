@@ -63,9 +63,7 @@ function attachMDNDetail(container, mdnSpec) {
   const mdnDetail = html`<div>
     <a title="${summary}" href="${href}">${mdnSubPath}</a>
     ${support
-      ? html`<p class="mdnsupport">
-          ${buildBrowserSupportTable(support)}
-        </p>`
+      ? html`<p class="mdnsupport">${buildBrowserSupportTable(support)}</p>`
       : html`<p class="nosupportdata">No support data.</p>`}
   </div> `;
   container.appendChild(mdnDetail);
