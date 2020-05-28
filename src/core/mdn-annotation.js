@@ -50,7 +50,7 @@ function insertMDNBox(node) {
     // If the target ancestor already has a mdnBox inserted, we just use it
     return targetSibling;
   }
-  const mdnBox = html`<aside class="mdn before wrapped"></aside>`;
+  const mdnBox = html`<aside class="mdn"></aside>`;
   targetAncestor.before(mdnBox);
   return mdnBox;
 }
