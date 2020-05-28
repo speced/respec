@@ -50,11 +50,6 @@
   padding-bottom: 8px;
 }
 
-.mdnsupport {
-  display: table;
-  margin-top: 4px;
-}
-
 .mdnsupport > span {
   display: table-row;
   padding: 0.2em 0;
