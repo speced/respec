@@ -98,43 +98,43 @@
   font-weight: bold;
 }
 
-.mdnsupport > .chrome::before,
-.mdnsupport > .chrome_android::before {
+.mdnsupport .chrome::before,
+.mdnsupport .chrome_android::before {
   background-image: url(https://resources.whatwg.org/browser-logos/chrome.svg);
 }
 
-.mdnsupport > .edge::before,
-.mdnsupport > .edge_mobile::before {
+.mdnsupport .edge::before,
+.mdnsupport .edge_mobile::before {
   background-image: url(https://resources.whatwg.org/browser-logos/edge.svg);
 }
 
-.mdnsupport > .firefox::before,
-.mdnsupport > .firefox_android::before {
+.mdnsupport .firefox::before,
+.mdnsupport .firefox_android::before {
   background-image: url(https://resources.whatwg.org/browser-logos/firefox.png);
 }
 
-.mdnsupport > .ie::before {
+.mdnsupport .ie::before {
   background-image: url(https://resources.whatwg.org/browser-logos/ie.png);
 }
 
-.mdnsupport > .opera::before,
-.mdnsupport > .opera_android::before {
+.mdnsupport .opera::before,
+.mdnsupport .opera_android::before {
   background-image: url(https://resources.whatwg.org/browser-logos/opera.svg);
 }
 
-.mdnsupport > .safari::before {
+.mdnsupport .safari::before {
   background-image: url(https://resources.whatwg.org/browser-logos/safari.png);
 }
 
-.mdnsupport > .safari_ios::before {
+.mdnsupport .safari_ios::before {
   background-image: url(https://resources.whatwg.org/browser-logos/safari-ios.svg);
 }
 
-.mdnsupport > .samsunginternet_android::before {
+.mdnsupport .samsunginternet_android::before {
   background-image: url(https://resources.whatwg.org/browser-logos/samsung.svg);
 }
 
-.mdnsupport > .webview_android::before {
+.mdnsupport .webview_android::before {
   background-image: url(https://resources.whatwg.org/browser-logos/android-webview.png);
 }
 
