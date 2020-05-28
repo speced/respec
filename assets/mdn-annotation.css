@@ -1,16 +1,16 @@
 .mdn {
-  display: block;
-  font: 12px sans-serif;
+  font-size: 0.75em;
   position: absolute;
-  z-index: 9;
   right: 0.3em;
-  background-color: #eee;
-  margin: -26px 0 0 0;
-  padding: 7px 5px 5px 6px;
-  min-width: 140px;
-  box-shadow: 0 0 3px #999;
+  min-width: 0;
   margin-top: 3em;
-  min-width: 0px;
+}
+
+.mdn details {
+  width: 100%;
+  margin: 1px 0;
+  position: relative;
+  z-index: 10;
 }
 
 .mdn details[open] {
