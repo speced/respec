@@ -56,22 +56,21 @@ function insertMDNBox(node) {
 }
 
 /**
- * @param {HTMLElement} container
  * @param {MdnEntry} mdnSpec
+ * @returns {HTMLDetailsElement}
  */
-function attachMDNDetail(container, mdnSpec) {
+function attachMDNDetail(mdnSpec) {
   const { name, slug, summary, support } = mdnSpec;
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const href = `${MDN_URL_BASE}${slug}`;
   const label = `Expand MDN details for ${name}`;
-  const mdnDetail = html`<details>
+  return html`<details>
     <summary aria-label="${label}"><span>MDN</span></summary>
     <a title="${summary}" href="${href}">${mdnSubPath}</a>
     ${support
       ? html`<p class="mdnsupport">${buildBrowserSupportTable(support)}</p>`
       : html`<p class="nosupportdata">No support data.</p>`}
   </details>`;
-  container.appendChild(mdnDetail);
 }
 
 /** @param {MdnEntry['support']} support */
@@ -132,13 +131,7 @@ export async function run(conf) {
     const mdnSpecArray = mdnSpecJson[elem.id];
     const mdnBox = insertMDNBox(elem);
     if (!mdnBox) return;
-    mdnSpecArray
-      .map(spec => {
-        const mdnDiv = document.createElement("div");
-        attachMDNDetail(mdnDiv, spec);
-        return mdnDiv;
-      })
-      .forEach(mdnDiv => mdnBox.appendChild(mdnDiv));
+    mdnSpecArray.forEach(spec => mdnBox.append(attachMDNDetail(spec)));
   });
 }
 
