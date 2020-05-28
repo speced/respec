@@ -51,6 +51,10 @@ function insertMDNBox(node) {
   return mdnBox;
 }
 
+/**
+ * @param {HTMLElement} container
+ * @param {MdnEntry} mdnSpec
+ */
 function attachMDNDetail(container, mdnSpec) {
   const { slug, summary } = mdnSpec;
   container.innerHTML += `<button onclick="toggleMDNStatus(this.parentNode)" aria-label="Expand MDN details"><b>MDN</b></button>`;
@@ -165,7 +169,7 @@ function getMdnKey(conf) {
  *
  * @typedef {{ version_added: string|boolean|null, version_removed?: string }} VersionDetails
  * @typedef {Record<string | keyof MDN_BROWSERS, VersionDetails>} MdnSupportEntry
- * @typedef {{ name: string, title: string, summary: string, support: MdnSupportEntry }} MdnEntry
+ * @typedef {{ name: string, title: string, slug: string, summary: string, support: MdnSupportEntry }} MdnEntry
  * @typedef {Record<string, MdnEntry[]>} MdnData
  * @returns {Promise<MdnData|undefined>}
  */
