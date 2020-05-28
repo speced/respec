@@ -65,7 +65,7 @@ function attachMDNDetail(container, mdnSpec) {
     ${support
       ? html`<p class="mdnsupport">${buildBrowserSupportTable(support)}</p>`
       : html`<p class="nosupportdata">No support data.</p>`}
-  </div> `;
+  </div>`;
   container.appendChild(mdnDetail);
 }
 
