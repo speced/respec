@@ -13,23 +13,29 @@
   min-width: 0px;
 }
 
-.mdn button {
-  cursor: pointer;
-  border: none;
-  color: #000;
-  background: transparent;
-  margin: -8px;
-  outline: none;
+.mdn details[open] {
+  min-width: 25ch;
+  max-width: 32ch;
+  background: #fff;
+  box-shadow: 0 1em 3em -0.4em rgba(0, 0, 0, 0.3),
+    0 0 1px 1px rgba(0, 0, 0, 0.05);
+  padding-bottom: 0.4em;
+  border-radius: 2px;
+  z-index: 11;
+  margin-bottom: 0.4em;
 }
 
-.mdn b {
+.mdn summary {
+  text-align: right;
+  cursor: default;
+}
+
+.mdn summary span {
+  font-family: zillaslab, Palatino, "Palatino Linotype", serif;
   color: #fff;
   background-color: #000;
-  font-weight: normal;
-  font-family: zillaslab, Palatino, "Palatino Linotype", serif;
-  padding: 2px 3px 0px 3px;
-  line-height: 1.3em;
-  vertical-align: top;
+  display: inline-block;
+  padding: 3px;
 }
 
 .mdn > div > div {
