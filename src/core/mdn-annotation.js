@@ -132,12 +132,14 @@ export async function run(conf) {
   style.classList.add("removeOnSave");
   document.head.append(style);
 
-  findElements(mdnSpecJson).forEach(elem => {
+  for (const elem of findElements(mdnSpecJson)) {
     const mdnSpecArray = mdnSpecJson[elem.id];
     const mdnBox = insertMDNBox(elem);
-    if (!mdnBox) return;
-    mdnSpecArray.forEach(spec => mdnBox.append(attachMDNDetail(spec)));
-  });
+    if (!mdnBox) continue;
+    for (const spec of mdnSpecArray) {
+      mdnBox.append(attachMDNDetail(spec));
+    }
+  }
 }
 
 /** @returns {string} */
