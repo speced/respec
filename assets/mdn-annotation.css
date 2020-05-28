@@ -37,7 +37,6 @@
   margin-left: 5px;
 }
 
-
 .nosupportdata {
   font-style: italic;
   margin-top: 4px;
@@ -136,20 +135,4 @@
 
 .mdnsupport .webview_android::before {
   background-image: url(https://resources.whatwg.org/browser-logos/android-webview.png);
-}
-
-.mdn div {
-  margin: 0;
-}
-
-.mdn.wrapped > div > div {
-  display: none;
-}
-
-.mdn:hover {
-  z-index: 11;
-}
-
-.mdn:focus-within {
-  z-index: 11;
 }
