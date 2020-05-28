@@ -74,24 +74,6 @@
   padding: 0;
 }
 
-.mdnsupport > span.no {
-  color: #cccccc;
-  filter: grayscale(100%);
-}
-
-.mdnsupport > span.unknown {
-  color: #cccccc;
-  filter: grayscale(100%);
-}
-
-.mdnsupport > span.no::before {
-  opacity: 0.5;
-}
-
-.mdnsupport > span.unknown::before {
-  opacity: 0.5;
-}
-
 .mdn tr::before {
   content: "";
   display: table-cell;
@@ -99,6 +81,17 @@
   height: 1.5em;
   background: no-repeat center center / contain;
   font-size: 0.75em;
+}
+
+.mdn .no,
+.mdn .unknown {
+  color: #cccccc;
+  filter: grayscale(100%);
+}
+
+.mdn .no::before,
+.mdn .unknown::before {
+  opacity: 0.5;
 }
 
 .mdn .chrome::before,
