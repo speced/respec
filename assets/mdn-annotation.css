@@ -43,6 +43,20 @@
   margin-left: 5px;
 }
 
+.mdn table {
+  width: calc(100% - (0.4em * 2));
+  margin: 0.4em 0.4em 0;
+  font-size: 0.9em;
+}
+
+.mdn td {
+  border: none;
+}
+
+.mdn td:nth-child(2) {
+  text-align: right;
+}
+
 .nosupportdata {
   font-style: italic;
   margin-top: 4px;
