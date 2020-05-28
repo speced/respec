@@ -68,7 +68,7 @@ function attachMDNDetail(mdnSpec) {
     <summary aria-label="${label}"><span>MDN</span></summary>
     <a title="${summary}" href="${href}">${mdnSubPath}</a>
     ${support
-      ? html`<p class="mdnsupport">${buildBrowserSupportTable(support)}</p>`
+      ? buildBrowserSupportTable(support)
       : html`<p class="nosupportdata">No support data.</p>`}
   </details>`;
 }
