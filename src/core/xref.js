@@ -390,11 +390,8 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
 function addDataCite(elem, query, result, conf) {
   const { term, specs = [] } = query;
   const { uri, shortname, spec, normative, type, for: forContext } = result;
-  let cite = shortname;
   // if authored spec context had `result.spec`, use it instead of shortname
-  if (specs.flat().includes(spec)) {
-    cite = spec;
-  }
+  const cite = specs.flat().includes(spec) ? spec : shortname;
   const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
   const [citePath, citeFrag] = path.split("#");
   const dataset = { cite, citePath, citeFrag, type };
