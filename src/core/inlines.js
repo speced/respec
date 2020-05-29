@@ -77,7 +77,7 @@ const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
  */
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
-  const [element, attribute] = splitBySlash(value, 2);
+  const [element, attribute] = value.split("/", 2).map(s => s && s.trim());
   const [xrefType, xrefFor, textContent] = attribute
     ? ["element-attr", element, attribute]
     : ["element", null, element];
