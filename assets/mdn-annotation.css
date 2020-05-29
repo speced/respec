@@ -46,11 +46,6 @@
   word-break: break-all;
 }
 
-.mdn a,
-.mdn p {
-  padding: 0.4em 0.4em 0;
-}
-
 .mdn p {
   margin: 0;
 }
