@@ -11,6 +11,9 @@
   margin: 1px 0;
   position: relative;
   z-index: 10;
+  box-sizing: border-box;
+  padding: 0.4em;
+  padding-top: 0;
 }
 
 .mdn details[open] {
@@ -19,7 +22,6 @@
   background: #fff;
   box-shadow: 0 1em 3em -0.4em rgba(0, 0, 0, 0.3),
     0 0 1px 1px rgba(0, 0, 0, 0.05);
-  padding-bottom: 0.4em;
   border-radius: 2px;
   z-index: 11;
   margin-bottom: 0.4em;
@@ -28,6 +30,7 @@
 .mdn summary {
   text-align: right;
   cursor: default;
+  margin-right: -0.4em;
 }
 
 .mdn summary span {
@@ -40,13 +43,11 @@
 
 .mdn a {
   display: inline-block;
-  padding: 0.4em 0.4em 0;
   word-break: break-all;
 }
 
 .mdn table {
-  width: calc(100% - (0.4em * 2));
-  margin: 0.4em 0.4em 0;
+  width: 100%;
   font-size: 0.9em;
 }
 
@@ -60,7 +61,6 @@
 
 .mdn .nosupportdata {
   font-style: italic;
-  padding: 0.4em;
   margin: 0;
 }
 
