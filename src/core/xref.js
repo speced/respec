@@ -392,7 +392,7 @@ function addDataCite(elem, query, result, conf) {
   const { uri, shortname, spec, normative, type, for: forContext } = result;
   let cite = shortname;
   // if authored spec context had `result.spec`, use it instead of shortname
-  if (query.specs && query.specs.some(specs => specs.includes(spec))) {
+  if (query.specs && query.specs.flat().includes(spec)) {
     cite = spec;
   }
   const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
