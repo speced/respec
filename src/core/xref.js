@@ -392,8 +392,9 @@ function addDataCite(elem, query, result, conf) {
   const { uri, shortname, spec, normative, type, for: forContext } = result;
   // if authored spec context had `result.spec`, use it instead of shortname
   const cite = specs.flat().includes(spec) ? spec : shortname;
-  const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
-  const [citePath, citeFrag] = path.split("#");
+  const url = new URL(uri, "https://example.org");
+  const { pathname: citePath } = url;
+  const citeFrag = url.hash.slice(1);
   const dataset = { cite, citePath, citeFrag, type };
   if (forContext) dataset.linkFor = forContext[0];
   Object.assign(elem.dataset, dataset);
