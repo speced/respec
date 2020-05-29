@@ -31,8 +31,6 @@ const MDN_BROWSERS = {
   webview_android: "WebView Android",
 };
 
-const mdnCssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/mdn-annotation.css")).default;
@@ -41,129 +39,110 @@ async function loadStyle() {
   }
 }
 
+/**
+ * @param {HTMLElement} node
+ */
 function insertMDNBox(node) {
   const targetAncestor = node.closest("section");
-  const { previousElementSibling: targetSibling, parentNode } = targetAncestor;
+  if (!targetAncestor) return;
+  const { previousElementSibling: targetSibling } = targetAncestor;
   if (targetSibling && targetSibling.classList.contains("mdn")) {
     // If the target ancestor already has a mdnBox inserted, we just use it
     return targetSibling;
   }
-  const mdnBox = html`<aside class="mdn before wrapped"></aside>`;
-  parentNode.insertBefore(mdnBox, targetAncestor);
+  const mdnBox = html`<aside class="mdn"></aside>`;
+  targetAncestor.before(mdnBox);
   return mdnBox;
 }
 
-function attachMDNDetail(container, mdnSpec) {
-  const { slug, summary } = mdnSpec;
-  container.innerHTML += `<button onclick="toggleMDNStatus(this.parentNode)" aria-label="Expand MDN details"><b>MDN</b></button>`;
+/**
+ * @param {MdnEntry} mdnSpec
+ * @returns {HTMLDetailsElement}
+ */
+function attachMDNDetail(mdnSpec) {
+  const { name, slug, summary, support } = mdnSpec;
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const href = `${MDN_URL_BASE}${slug}`;
-  const mdnDetail = html`
-    <div>
-      <a title="${summary}" href="${href}">${mdnSubPath}</a>
-    </div>
-  `;
-  attachMDNBrowserSupport(mdnDetail, mdnSpec);
-  container.appendChild(mdnDetail);
+  const label = `Expand MDN details for ${name}`;
+  return html`<details>
+    <summary aria-label="${label}"><span>MDN</span></summary>
+    <a title="${summary}" href="${href}">${mdnSubPath}</a>
+    ${support
+      ? buildBrowserSupportTable(support)
+      : html`<p class="nosupportdata">No support data.</p>`}
+  </details>`;
 }
 
-function attachMDNBrowserSupport(container, mdnSpec) {
-  if (!mdnSpec.support) {
-    container.innerHTML += `<p class="nosupportdata">No support data.</p>`;
-    return;
-  }
-  const supportTable = html`<p class="mdnsupport">
-    ${buildBrowserSupportTable(mdnSpec.support)}
-  </p>`;
-  container.appendChild(supportTable);
-}
-
+/**
+ * @param {MdnEntry['support']} support
+ * @returns {HTMLTableElement}
+ */
 function buildBrowserSupportTable(support) {
+  /**
+   * @param {string | keyof MDN_BROWSERS} browserId
+   * @param {"Yes" | "No" | "Unknown"} yesNoUnknown
+   * @param {string} version
+   * @returns {HTMLTableRowElement}
+   */
   function createRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
-    return html`<span class="${classList}">
-      <span class="browser-name">${MDN_BROWSERS[browserId]}</span>
-      <span class="version">${version ? version : displayStatus}</span>
-    </span>`;
+    return html`<tr class="${classList}">
+      <td>${MDN_BROWSERS[browserId]}</td>
+      <td>${version ? version : displayStatus}</td>
+    </tr>`;
   }
 
+  /**
+   * @param {string | keyof MDN_BROWSERS} browserId
+   * @param {VersionDetails} versionData
+   */
   function createRowFromBrowserData(browserId, versionData) {
     if (versionData.version_removed) {
       return createRow(browserId, "No", "");
     }
     const versionAdded = versionData.version_added;
-    if (!versionAdded) {
-      return createRow(browserId, "Unknown", "");
-    }
     if (typeof versionAdded === "boolean") {
       return createRow(browserId, versionAdded ? "Yes" : "No", "");
+    } else if (!versionAdded) {
+      return createRow(browserId, "Unknown", "");
     } else {
       return createRow(browserId, "Yes", `${versionAdded}+`);
     }
   }
 
-  const rows = [];
-
-  Object.keys(MDN_BROWSERS).forEach(browserId => {
-    if (!support[browserId]) {
-      rows.push(createRow(browserId, "Unknown", ""));
-    } else {
-      if (Array.isArray(support[browserId])) {
-        support[browserId].forEach(b => {
-          rows.push(createRowFromBrowserData(browserId, b));
-        });
-      } else {
-        rows.push(createRowFromBrowserData(browserId, support[browserId]));
-      }
-    }
-  });
-
-  return rows;
+  return html`<table>
+    ${Object.keys(MDN_BROWSERS).map(browserId => {
+      return support[browserId]
+        ? createRowFromBrowserData(browserId, support[browserId])
+        : createRow(browserId, "Unknown", "");
+    })}
+  </table>`;
 }
 
 export async function run(conf) {
   const mdnKey = getMdnKey(conf);
-  if (!mdnKey) {
-    return;
-  }
+  if (!mdnKey) return;
+
   const mdnSpecJson = await getMdnData(mdnKey, conf.mdn);
   if (!mdnSpecJson) return;
 
-  const mdnCss = await mdnCssPromise;
-  document.head.appendChild(
-    html`<style>
-      ${mdnCss}
-    </style>`
-  );
-  document.head.appendChild(html`<script>
-    function toggleMDNStatus(div) {
-      div.parentNode.classList.toggle("wrapped");
+  const style = document.createElement("style");
+  style.textContent = await loadStyle();
+  style.classList.add("removeOnSave");
+  document.head.append(style);
+
+  for (const elem of findElements(mdnSpecJson)) {
+    const mdnSpecArray = mdnSpecJson[elem.id];
+    const mdnBox = insertMDNBox(elem);
+    if (!mdnBox) continue;
+    for (const spec of mdnSpecArray) {
+      mdnBox.append(attachMDNDetail(spec));
     }
-  </script>`);
-  const nodesWithId = document.querySelectorAll("[id]");
-  [...nodesWithId]
-    .filter(node => {
-      const unlikelyTagNames = ["STYLE", "SCRIPT", "BODY"];
-      return (
-        unlikelyTagNames.indexOf(node.tagName) === -1 &&
-        mdnSpecJson[node.id] &&
-        Array.isArray(mdnSpecJson[node.id])
-      );
-    })
-    .forEach(node => {
-      const mdnSpecArray = mdnSpecJson[node.id];
-      const mdnBox = insertMDNBox(node);
-      mdnSpecArray
-        .map(spec => {
-          const mdnDiv = document.createElement("div");
-          attachMDNDetail(mdnDiv, spec);
-          return mdnDiv;
-        })
-        .forEach(mdnDiv => mdnBox.appendChild(mdnDiv));
-    });
+  }
 }
 
+/** @returns {string} */
 function getMdnKey(conf) {
   const { shortName, mdn } = conf;
   if (!mdn) return;
@@ -178,8 +157,9 @@ function getMdnKey(conf) {
  * @param {string} [mdnConf.baseJsonPath]
  * @param {number} [mdnConf.maxAge]
  *
- * @typedef {Record<keyof MDN_BROWSERS, { version_added: string }>} MdnSupportEntry
- * @typedef {{ name: string, title: string, summary: string, support: MdnSupportEntry }} MdnEntry
+ * @typedef {{ version_added: string|boolean|null, version_removed?: string }} VersionDetails
+ * @typedef {Record<string | keyof MDN_BROWSERS, VersionDetails>} MdnSupportEntry
+ * @typedef {{ name: string, title: string, slug: string, summary: string, support: MdnSupportEntry }} MdnEntry
  * @typedef {Record<string, MdnEntry[]>} MdnData
  * @returns {Promise<MdnData|undefined>}
  */
@@ -197,4 +177,14 @@ async function getMdnData(key, mdnConf) {
     return;
   }
   return await res.json();
+}
+
+/**
+ * Find elements that can have an annotation box attached.
+ * @param {MdnData} data
+ */
+function findElements(data) {
+  /** @type {NodeListOf<HTMLElement>} */
+  const elemsWithId = document.body.querySelectorAll("[id]:not(script)");
+  return [...elemsWithId].filter(({ id }) => Array.isArray(data[id]));
 }
