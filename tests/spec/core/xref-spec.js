@@ -508,6 +508,18 @@ describe("Core — xref", () => {
     expect(five.href).toBe(expectedLink2);
   });
 
+  it("gives inline spec context least priority", async () => {
+    const body = `
+      <section id="test" data-cite="INFRA">
+        [= list =] [[html]]
+      </section>`;
+    const ops = makeStandardOps({ xref: true }, body);
+    const doc = await makeRSDoc(ops);
+
+    const listLink = doc.querySelector("#test a");
+    expect(listLink.href).toBe("https://infra.spec.whatwg.org/#list");
+  });
+
   it("adds normative and informative references", async () => {
     const body = `
       <section class="informative" id="test">
