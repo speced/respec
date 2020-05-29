@@ -70,7 +70,7 @@
           "version_added": false
         }
       },
-      "engines": [],
+      "engines": ["blink", "gecko", "webkit"],
       "title": "PaymentRequest"
     }
   ],
@@ -200,7 +200,7 @@
           "version_added": false
         }
       },
-      "engines": ["blink", "gecko", "webkit"],
+      "engines": [],
       "title": "PaymentRequest.prototype.id"
     }
   ],
