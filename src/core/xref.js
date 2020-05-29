@@ -200,8 +200,19 @@ function getSpecContext(elem) {
   /** @type {HTMLElement} */
   let dataciteElem = elem.closest("[data-cite]");
 
+  // Traverse up towards the root element, adding levels of lower priority specs
+  while (dataciteElem) {
+    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
+    const cites = cite.split(/\s+/).filter(s => s);
+    if (cites.length) {
+      specs.push(cites);
+    }
+    if (dataciteElem === elem) break;
+    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
+  }
+
   // If element itself contains data-cite, we don't take inline context into
-  // account. The inline bibref context has highest priority, if available.
+  // account. The inline bibref context has lowest priority, if available.
   if (dataciteElem !== elem) {
     const closestSection = elem.closest("section");
     /** @type {Iterable<HTMLElement>} */
@@ -212,17 +223,6 @@ function getSpecContext(elem) {
     if (inlineRefs.length) {
       specs.push(inlineRefs);
     }
-  }
-
-  // Traverse up towards the root element, adding levels of lower priority specs
-  while (dataciteElem) {
-    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
-    const cites = cite.split(/\s+/).filter(s => s);
-    if (cites.length) {
-      specs.push(cites);
-    }
-    if (dataciteElem === elem) break;
-    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
   }
 
   const uniqueSpecContext = dedupeSpecContext(specs);
