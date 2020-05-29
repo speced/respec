@@ -200,7 +200,7 @@ function inlineVariableMatches(matched) {
  */
 function inlineAnchorMatches(matched) {
   matched = matched.slice(2, -2); // Chop [= =]
-  const parts = matched.split("/", 2).map(s => s.trim());
+  const parts = splitBySlash(matched, 2);
   const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
   const [linkingText, text] = content.includes("|")
     ? content.split("|", 2).map(s => s.trim())
@@ -319,4 +319,18 @@ export function run(conf) {
     }
     txt.replaceWith(df);
   }
+}
+
+/**
+ * Split a string by slash (`/`) unless it's escaped by a backslash (`\`)
+ * @param {string} str
+ *
+ * TODO: Use negative lookbehind (`str.split(/(?<!\\)\//)`) when supported.
+ * https://github.com/w3c/respec/issues/2869
+ */
+function splitBySlash(str, limit = Infinity) {
+  return str
+    .replace("\\/", "%%")
+    .split("/", limit)
+    .map(s => s && s.trim().replace("%%", "/"));
 }
