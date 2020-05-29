@@ -40,8 +40,23 @@
 
 .mdn a {
   display: inline-block;
-  padding: 0.4em 0.4em 0;
   word-break: break-all;
+}
+
+.mdn a,
+.mdn p {
+  padding: 0.4em 0.4em 0;
+}
+
+.mdn p {
+  margin: 0;
+}
+
+.mdn .engines-all {
+  color: #058b00;
+}
+.mdn .engines-some {
+  color: #b00;
 }
 
 .mdn table {
