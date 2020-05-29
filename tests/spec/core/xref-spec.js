@@ -319,6 +319,22 @@ describe("Core — xref", () => {
     expect(linkLocal2.classList).toContain("respec-offending-element");
   });
 
+  it("uses data-cite as authored in spec context", async () => {
+    const body = `<section id="test">
+      <p data-cite="css-syntax-3">[=CSS/parsing=]</p>
+      <p data-cite="css-color">[=sRGB=]</p>
+    </section>`;
+    const localBiblio = { "css-color": { aliasOf: "css-color-3" } };
+    const ops = makeStandardOps({ localBiblio }, body);
+    const doc = await makeRSDoc(ops);
+
+    const [specLink, shortnameLink] = doc.querySelectorAll("#test a");
+    expect(specLink.hash).toBe(
+      "#css-parse-something-according-to-a-css-grammar"
+    );
+    expect(shortnameLink.hash).toBe("#sRGB");
+  });
+
   it("treats terms as local if empty data-cite on parent", async () => {
     const body = `
       <section data-cite="" id="test">
