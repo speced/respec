@@ -86,6 +86,7 @@ describe("Core - MDN Annotation", () => {
     } = doc.getElementById("dom-paymentrequest-id");
     const iconBad = poorSupportedMdnPanel.querySelector("details summary span");
     expect(iconBad.title).toMatch(/less than two current/);
+    expect(iconBad.textContent).toBe("🚫");
     const textBad = poorSupportedMdnPanel.querySelector("details p");
     expect(textBad.classList).toContain("engines-some");
 
@@ -96,6 +97,7 @@ describe("Core - MDN Annotation", () => {
       "details summary span"
     );
     expect(iconGood.title).toMatch(/all current engines/);
+    expect(iconGood.textContent).toBe("✅");
     const textGood = goodSupportedMdnPanel.querySelector("details p");
     expect(textGood.classList).toContain("engines-all");
   });
