@@ -63,11 +63,9 @@ describe("Core - MDN Annotation", () => {
       "paymentrequest-interface"
     );
     const { previousElementSibling } = paymentInterfaceSection;
-    const mdnSupport = previousElementSibling.querySelector("p.mdnsupport");
+    const mdnSupport = previousElementSibling.querySelector("table");
     expect(mdnSupport).toBeTruthy();
-    const browserRows = previousElementSibling.querySelectorAll(
-      "p.mdnsupport > span"
-    );
+    const browserRows = previousElementSibling.querySelectorAll("table > tr");
     expect(browserRows.length).toBeGreaterThan(0);
   });
 
@@ -76,11 +74,9 @@ describe("Core - MDN Annotation", () => {
       "paymentrequest-interface"
     );
     const { previousElementSibling } = paymentInterfaceSection;
-    const firstBrowserRow = previousElementSibling.querySelector(
-      "p.mdnsupport > span"
-    );
+    const firstBrowserRow = previousElementSibling.querySelector("table > tr");
     expect(firstBrowserRow.classList).toContain("chrome");
-    const versionSpan = firstBrowserRow.querySelector("span.version");
+    const versionSpan = firstBrowserRow.querySelector("td:nth-child(2)");
     expect(versionSpan.textContent).toBe("61+");
   });
 

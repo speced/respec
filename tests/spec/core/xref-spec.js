@@ -50,15 +50,11 @@ describe("Core — xref", () => {
       href: "https://www.w3.org/TR/css-layout-api-1/",
       id: "css-layout-api-1",
     },
-    "css-snappoints": {
-      href: "https://www.w3.org/TR/css-snappoints-1/",
-    },
-    "css-scroll-snap": {
-      href: "https://drafts.csswg.org/css-scroll-snap-1/",
-    },
+    "css-scroll-snap": { href: "https://drafts.csswg.org/css-scroll-snap-1/" },
     "referrer-policy": {
       href: "https://www.w3.org/TR/referrer-policy/",
     },
+    "css-syntax": { aliasOf: "css-syntax-3" },
     "css-scoping": { aliasOf: "css-scoping-1" },
     "css-scoping-1": { href: "https://drafts.csswg.org/css-scoping-1/" },
     "local-1": { id: "local-1", href: "https://example.com/" },
@@ -203,9 +199,7 @@ describe("Core — xref", () => {
 
   it("uses data-cite to disambiguate", async () => {
     const body = `
-      <section id="links" data-cite="css-snappoints">
-        <p><a>intended direction</a> is defined 1 time in css-scroll-snap and 1 time in css-snappoints.
-          It uses parent's data-cite (css-snappoints).</p>
+      <section id="links" data-cite="html">
         <p>Looks up <a data-cite="infra">ASCII uppercase</a> in infra.</p>
         <p>As <a data-cite="infra">ASCII upcasing</a> doesn't exist in INFRA,
           it resolves to spec only.</p>
@@ -221,12 +215,9 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const [link1, link2, link3] = [...doc.querySelectorAll("#links a")];
-    expect(link1.href).toBe(
-      "https://www.w3.org/TR/css-snappoints-1/#intended-direction"
-    );
-    expect(link2.href).toBe(expectedLinks.get("uppercase"));
-    expect(link3.href).toBe("https://infra.spec.whatwg.org/");
+    const [link1, link2] = [...doc.querySelectorAll("#links a")];
+    expect(link1.href).toBe(expectedLinks.get("uppercase"));
+    expect(link2.href).toBe("https://infra.spec.whatwg.org/");
 
     const [dfn1, dfn2, dfn3] = [...doc.querySelectorAll("#dfns dfn a")];
     expect(dfn1.href).toBe(expectedLinks.get("event handler"));
@@ -253,28 +244,26 @@ describe("Core — xref", () => {
     // https://github.com/w3c/respec/pull/1750
     const body = `
       <section id="test">
-        <p data-cite="css-scroll-snap"><a id="one">intended direction</a></p>
-        <p data-cite="css-snappoints"><a id="two">intended direction</a></p>
-        <p data-cite="css-snappoints">
-          <a id="three" data-cite="css-scroll-snap">intended direction</a> (overrides parent)
-          <a id="four">intended direction</a> (uses parent's data-cite - css-snappoints)
+        <p data-cite="css-values"><a id="one">ident</a></p>
+        <p data-cite="css-syntax"><a id="two">ident</a></p>
+        <p data-cite="css-syntax">
+          <a id="three" data-cite="css-values">ident</a> (overrides parent)
+          <a id="four">ident</a> (uses parent's data-cite - css-syntax)
         </p>
-        <p><a id="five" data-cite="NOT-FOUND">intended direction</a></p>
+        <p><a id="five" data-cite="NOT-FOUND">ident</a></p>
       </section>
     `;
     const config = { xref: true, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const scrollSnapLink =
-      "https://drafts.csswg.org/css-scroll-snap-1/#intended-direction";
-    const snappointsLink =
-      "https://www.w3.org/TR/css-snappoints-1/#intended-direction";
+    const cssValuesLink = "https://www.w3.org/TR/css-values-3/#css-identifier";
+    const cssSyntaxLink = "https://www.w3.org/TR/css-syntax-3/#identifier";
 
-    expect(doc.getElementById("one").href).toBe(scrollSnapLink);
-    expect(doc.getElementById("two").href).toBe(snappointsLink);
-    expect(doc.getElementById("three").href).toBe(scrollSnapLink);
-    expect(doc.getElementById("four").href).toBe(snappointsLink);
+    expect(doc.getElementById("one").href).toBe(cssValuesLink);
+    expect(doc.getElementById("two").href).toBe(cssSyntaxLink);
+    expect(doc.getElementById("three").href).toBe(cssValuesLink);
+    expect(doc.getElementById("four").href).toBe(cssSyntaxLink);
 
     const five = doc.getElementById("five");
     expect(five.href).toBe("");
@@ -517,6 +506,18 @@ describe("Core — xref", () => {
     expect(four.href).toBe(expectedLink1);
     const five = doc.getElementById("five");
     expect(five.href).toBe(expectedLink2);
+  });
+
+  it("gives inline spec context least priority", async () => {
+    const body = `
+      <section id="test" data-cite="INFRA">
+        [= list =] [[html]]
+      </section>`;
+    const ops = makeStandardOps({ xref: true }, body);
+    const doc = await makeRSDoc(ops);
+
+    const listLink = doc.querySelector("#test a");
+    expect(listLink.href).toBe("https://infra.spec.whatwg.org/#list");
   });
 
   it("adds normative and informative references", async () => {
