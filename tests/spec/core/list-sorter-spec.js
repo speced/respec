@@ -66,6 +66,13 @@ describe("Core — list-sorter", () => {
         <dt>3</dt>
         <dt>1</dt>
       </dl>
+      <ul id="whitespace" data-sort="ascending">
+        <li>F</li>
+        <li> Z</li>
+        <li> <dfn>a</dfn></li>
+        <li>B </li>
+        <li>B</li>
+      </ul>
     `;
     const ops = makeStandardOps(null, body);
     doc = await makeRSDoc(ops);
@@ -99,6 +106,13 @@ describe("Core — list-sorter", () => {
       const last = list.querySelector("li:last-of-type");
       expect(first.textContent).toBe("z");
       expect(last.firstChild.textContent.startsWith("A")).toBe(true);
+    });
+
+    it("ignores surrounding whitespace while sorting", () => {
+      const listItems = [...doc.querySelectorAll("ul#whitespace li")].map(
+        el => el.textContent
+      );
+      expect(listItems).toEqual([" a", "B ", "B", "F", " Z"]);
     });
   });
   describe("Definition lists", () => {
