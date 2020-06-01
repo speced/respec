@@ -5,7 +5,7 @@ export const name = "core/list-sorter";
 function makeSorter(direction) {
   const order = direction === "ascending" ? 1 : -1;
   return ({ textContent: a }, { textContent: b }) => {
-    return order * a.localeCompare(b);
+    return order * a.trim().localeCompare(b.trim());
   };
 }
 /**
