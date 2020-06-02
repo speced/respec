@@ -15,7 +15,9 @@ export async function run() {
   );
 
   /** @type {HTMLElement} */
-  const elems = document.querySelectorAll("dfn, .index-term");
+  const elems = document.querySelectorAll(
+    "dfn, #index-defined-elsewhere .index-term"
+  );
   const panels = document.createDocumentFragment();
   for (const el of elems) {
     panels.append(createPanel(el));
