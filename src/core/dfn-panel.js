@@ -37,7 +37,7 @@ function createPanel(dfn) {
   const panelId = `dfn-panel-for-${dfn.id}`;
   /** @type {HTMLElement} */
   const panel = hyperHTML`
-    <aside class="dfn-panel removeOnSave" id="${panelId}" hidden>
+    <aside class="dfn-panel" id="${panelId}" hidden>
       <span class="caret"></span>
       <b><a class="self-link" href="${href}">Permalink</a></b>
       <b>Referenced in:</b>
