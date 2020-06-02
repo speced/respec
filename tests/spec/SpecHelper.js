@@ -57,7 +57,10 @@ export function makeRSDoc(opts, src, style = "") {
   });
 }
 
-/** @param {Document} doc */
+/**
+ * @param {Document} doc
+ * @returns {Promise<Document>}
+ */
 export async function getExportedDoc(doc) {
   const dataURL = await new Promise(resolve => {
     doc.defaultView.require(["core/exporter"], ({ rsDocToDataURL }) =>
