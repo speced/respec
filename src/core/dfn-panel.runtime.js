@@ -21,10 +21,7 @@ function dfnPanel() {
         /** @type {HTMLElement} */
         const dfn = el.closest("dfn, .index-term");
         panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
-        displayPanel(dfn, panel, {
-          x: event.clientX,
-          y: event.clientY,
-        });
+        displayPanel(dfn, panel, { x: event.clientX, y: event.clientY });
         break;
       }
       case "dock": {
