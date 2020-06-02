@@ -15,6 +15,14 @@ export async function run() {
   );
 
   /** @type {HTMLElement} */
+  const elems = document.querySelectorAll("dfn, .index-term");
+  const panels = document.createDocumentFragment();
+  for (const el of elems) {
+    panels.append(createPanel(el));
+  }
+  document.body.append(panels);
+
+  /** @type {HTMLElement} */
   let panel;
   document.body.addEventListener("click", event => {
     /** @type {HTMLElement} */
@@ -23,9 +31,9 @@ export async function run() {
     const action = deriveAction(el);
     switch (action) {
       case "show": {
-        if (panel) panel.remove();
+        if (panel) hidePanel(panel);
         const dfn = el.closest("dfn, .index-term");
-        panel = createPanel(dfn);
+        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
         displayPanel(dfn, panel, { x: event.clientX, y: event.clientY });
         break;
       }
@@ -36,7 +44,7 @@ export async function run() {
         break;
       }
       case "hide": {
-        panel.remove();
+        hidePanel(panel);
         break;
       }
     }
@@ -49,18 +57,24 @@ function deriveAction(clickTarget) {
   if (clickTarget.closest("dfn, .index-term")) {
     return hitALink ? null : "show";
   }
-  if (clickTarget.closest("#dfn-panel")) {
+  if (clickTarget.closest(".dfn-panel")) {
     if (hitALink) {
       const clickedSelfLink = clickTarget.classList.contains("self-link");
       return clickedSelfLink ? "hide" : "dock";
     }
-    const panel = clickTarget.closest("#dfn-panel");
+    const panel = clickTarget.closest(".dfn-panel");
     return panel.classList.contains("docked") ? "hide" : null;
   }
-  if (document.getElementById("dfn-panel")) {
+  if (document.querySelector(".dfn-panel:not([hidden])")) {
     return "hide";
   }
   return null;
+}
+
+/** @param {HTMLElement} clickTarget */
+function hidePanel(panel) {
+  panel.hidden = true;
+  panel.classList.remove("docked");
 }
 
 /** @param {HTMLElement} dfn */
@@ -69,9 +83,10 @@ function createPanel(dfn) {
   const href = dfn.dataset.href || `#${id}`;
   const links = document.querySelectorAll(`a[href="${href}"]:not(.index-term)`);
 
+  const panelId = `dfn-panel-for-${dfn.id}`;
   /** @type {HTMLElement} */
   const panel = hyperHTML`
-    <aside class="dfn-panel" id="dfn-panel">
+    <aside class="dfn-panel removeOnSave" id="${panelId}" hidden>
       <span class="caret"></span>
       <b><a class="self-link" href="${href}">Permalink</a></b>
       <b>Referenced in:</b>
@@ -142,7 +157,7 @@ function getReferenceTitle(link) {
  * @param {{ x: number, y: number }} clickPosition
  */
 function displayPanel(dfn, panel, { x, y }) {
-  document.body.appendChild(panel);
+  panel.hidden = false;
   // distance (px) between edge of panel and the pointing triangle (caret)
   const MARGIN = 20;
 
