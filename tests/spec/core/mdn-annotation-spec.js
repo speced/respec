@@ -80,6 +80,28 @@ describe("Core - MDN Annotation", () => {
     expect(versionSpan.textContent).toBe("61+");
   });
 
+  it("displays engine support summary", () => {
+    const {
+      previousElementSibling: poorSupportedMdnPanel,
+    } = doc.getElementById("dom-paymentrequest-id");
+    const iconBad = poorSupportedMdnPanel.querySelector("details summary span");
+    expect(iconBad.title).toMatch(/less than two current/);
+    expect(iconBad.textContent).toBe("🚫");
+    const textBad = poorSupportedMdnPanel.querySelector("details p");
+    expect(textBad.classList).toContain("engines-some");
+
+    const {
+      previousElementSibling: goodSupportedMdnPanel,
+    } = doc.getElementById("paymentrequest-interface");
+    const iconGood = goodSupportedMdnPanel.querySelector(
+      "details summary span"
+    );
+    expect(iconGood.title).toMatch(/all current engines/);
+    expect(iconGood.textContent).toBe("✅");
+    const textGood = goodSupportedMdnPanel.querySelector("details p");
+    expect(textGood.classList).toContain("engines-all");
+  });
+
   it("doesn't attach MDNbox if ID is not in the spec", () => {
     const {
       previousElementSibling: { classList },

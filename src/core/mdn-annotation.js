@@ -1,5 +1,5 @@
 // @ts-check
-import { fetchAndCache } from "./utils.js";
+import { fetchAndCache, getIntlData } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
@@ -31,6 +31,14 @@ const MDN_BROWSERS = {
   webview_android: "WebView Android",
 };
 
+const localizationStrings = {
+  en: {
+    inAllEngines: "This feature is in all current engines.",
+    inSomeEngines: "This feature is in less than two current engines.",
+  },
+};
+const l10n = getIntlData(localizationStrings);
+
 async function loadStyle() {
   try {
     return (await import("text!../../assets/mdn-annotation.css")).default;
@@ -60,13 +68,15 @@ function insertMDNBox(node) {
  * @returns {HTMLDetailsElement}
  */
 function attachMDNDetail(mdnSpec) {
-  const { name, slug, summary, support } = mdnSpec;
+  const { name, slug, summary, support, engines } = mdnSpec;
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const href = `${MDN_URL_BASE}${slug}`;
   const label = `Expand MDN details for ${name}`;
+  const engineSupport = getEngineSupportIcons(engines);
   return html`<details>
-    <summary aria-label="${label}"><span>MDN</span></summary>
+    <summary aria-label="${label}">${engineSupport}<span>MDN</span></summary>
     <a title="${summary}" href="${href}">${mdnSubPath}</a>
+    ${getEngineSupport(engines)}
     ${support
       ? buildBrowserSupportTable(support)
       : html`<p class="nosupportdata">No support data.</p>`}
@@ -159,7 +169,7 @@ function getMdnKey(conf) {
  *
  * @typedef {{ version_added: string|boolean|null, version_removed?: string }} VersionDetails
  * @typedef {Record<string | keyof MDN_BROWSERS, VersionDetails>} MdnSupportEntry
- * @typedef {{ name: string, title: string, slug: string, summary: string, support: MdnSupportEntry }} MdnEntry
+ * @typedef {{ name: string, title: string, slug: string, summary: string, support: MdnSupportEntry, engines: string[] }} MdnEntry
  * @typedef {Record<string, MdnEntry[]>} MdnData
  * @returns {Promise<MdnData|undefined>}
  */
@@ -187,4 +197,30 @@ function findElements(data) {
   /** @type {NodeListOf<HTMLElement>} */
   const elemsWithId = document.body.querySelectorAll("[id]:not(script)");
   return [...elemsWithId].filter(({ id }) => Array.isArray(data[id]));
+}
+
+/**
+ * @param {MdnEntry['engines']} engines
+ * @returns {HTMLSpanElement|undefined}
+ */
+function getEngineSupportIcons(engines) {
+  if (engines.length === 3) {
+    return html`<span title="${l10n.inAllEngines}">✅</span>`;
+  }
+  if (engines.length < 2) {
+    return html`<span title="${l10n.inSomeEngines}">🚫</span>`;
+  }
+}
+
+/**
+ * @param {MdnEntry['engines']} engines
+ * @returns {HTMLParagraphElement|undefined}
+ */
+function getEngineSupport(engines) {
+  if (engines.length === 3) {
+    return html`<p class="engines-all">${l10n.inAllEngines}</p>`;
+  }
+  if (engines.length < 2) {
+    return html`<p class="engines-some">${l10n.inSomeEngines}</p>`;
+  }
 }

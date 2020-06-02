@@ -46,6 +46,17 @@
   word-break: break-all;
 }
 
+.mdn p {
+  margin: 0;
+}
+
+.mdn .engines-all {
+  color: #058b00;
+}
+.mdn .engines-some {
+  color: #b00;
+}
+
 .mdn table {
   width: 100%;
   font-size: 0.9em;
