@@ -1,6 +1,6 @@
 // @ts-check
 if (document.respecIsReady) {
-  document.respecIsReady.then(() => dfnPanel());
+  document.respecIsReady.then(dfnPanel);
 } else {
   dfnPanel();
 }
