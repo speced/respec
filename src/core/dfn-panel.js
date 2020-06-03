@@ -1,7 +1,7 @@
 // Constructs "dfn panels" which show all the local references to a dfn and a
 // self link to the selected dfn. Based on Bikeshed's dfn panels at
 // https://github.com/tabatkins/bikeshed/blob/ef44162c2e/bikeshed/dfnpanels.py
-import { fetchAsset } from "./text-loader.js";
+import { fetchAsset, fetchBase } from "./text-loader.js";
 import { html as hyperHTML } from "./import-maps.js";
 import { norm } from "./utils.js";
 
@@ -10,7 +10,7 @@ export const name = "core/dfn-panel";
 export async function run() {
   const css = await loadStyle();
   document.head.insertBefore(
-    hyperHTML`<style class="removeOnSave">${css}</style>`,
+    hyperHTML`<style>${css}</style>`,
     document.querySelector("link")
   );
 
@@ -24,59 +24,10 @@ export async function run() {
   }
   document.body.append(panels);
 
-  /** @type {HTMLElement} */
-  let panel;
-  document.body.addEventListener("click", event => {
-    /** @type {HTMLElement} */
-    const el = event.target;
-
-    const action = deriveAction(el);
-    switch (action) {
-      case "show": {
-        if (panel) hidePanel(panel);
-        const dfn = el.closest("dfn, .index-term");
-        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
-        displayPanel(dfn, panel, { x: event.clientX, y: event.clientY });
-        break;
-      }
-      case "dock": {
-        panel.style.left = null;
-        panel.style.top = null;
-        panel.classList.add("docked");
-        break;
-      }
-      case "hide": {
-        hidePanel(panel);
-        break;
-      }
-    }
-  });
-}
-
-/** @param {HTMLElement} clickTarget */
-function deriveAction(clickTarget) {
-  const hitALink = !!clickTarget.closest("a");
-  if (clickTarget.closest("dfn, .index-term")) {
-    return hitALink ? null : "show";
-  }
-  if (clickTarget.closest(".dfn-panel")) {
-    if (hitALink) {
-      const clickedSelfLink = clickTarget.classList.contains("self-link");
-      return clickedSelfLink ? "hide" : "dock";
-    }
-    const panel = clickTarget.closest(".dfn-panel");
-    return panel.classList.contains("docked") ? "hide" : null;
-  }
-  if (document.querySelector(".dfn-panel:not([hidden])")) {
-    return "hide";
-  }
-  return null;
-}
-
-/** @param {HTMLElement} clickTarget */
-function hidePanel(panel) {
-  panel.hidden = true;
-  panel.classList.remove("docked");
+  const script = document.createElement("script");
+  script.id = "respec-dfn-panel";
+  script.textContent = await loadScript();
+  document.body.append(script);
 }
 
 /** @param {HTMLElement} dfn */
@@ -88,7 +39,7 @@ function createPanel(dfn) {
   const panelId = `dfn-panel-for-${dfn.id}`;
   /** @type {HTMLElement} */
   const panel = hyperHTML`
-    <aside class="dfn-panel removeOnSave" id="${panelId}" hidden>
+    <aside class="dfn-panel" id="${panelId}" hidden>
       <span class="caret"></span>
       <b><a class="self-link" href="${href}">Permalink</a></b>
       <b>Referenced in:</b>
@@ -153,49 +104,18 @@ function getReferenceTitle(link) {
   return norm(heading.textContent);
 }
 
-/**
- * @param {HTMLElement} dfn
- * @param {HTMLElement} panel
- * @param {{ x: number, y: number }} clickPosition
- */
-function displayPanel(dfn, panel, { x, y }) {
-  panel.hidden = false;
-  // distance (px) between edge of panel and the pointing triangle (caret)
-  const MARGIN = 20;
-
-  const dfnRects = dfn.getClientRects();
-  // Find the `top` offset when the `dfn` can be spread across multiple lines
-  let closestTop = 0;
-  let minDiff = Infinity;
-  for (const rect of dfnRects) {
-    const { top, bottom } = rect;
-    const diffFromClickY = Math.abs((top + bottom) / 2 - y);
-    if (diffFromClickY < minDiff) {
-      minDiff = diffFromClickY;
-      closestTop = top;
-    }
-  }
-
-  const top = window.scrollY + closestTop + dfnRects[0].height;
-  const left = x - MARGIN;
-  panel.style.left = `${left}px`;
-  panel.style.top = `${top}px`;
-
-  // Find if the panel is flowing out of the window
-  const panelRect = panel.getBoundingClientRect();
-  const SCREEN_WIDTH = Math.min(window.innerWidth, window.screen.width);
-  if (panelRect.right > SCREEN_WIDTH) {
-    const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
-    const newCaretOffset = left - newLeft;
-    panel.style.left = `${newLeft}px`;
-    panel.querySelector(".caret").style.left = `${newCaretOffset}px`;
-  }
-}
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/dfn-panel.css")).default;
   } catch {
     return fetchAsset("dfn-panel.css");
+  }
+}
+
+async function loadScript() {
+  try {
+    return (await import("text!./dfn-panel.runtime.js")).default;
+  } catch {
+    return fetchBase("./src/core/dfn-panel.runtime.js");
   }
 }
