@@ -13,7 +13,7 @@ describe("Core — dfnPanel", () => {
   const body = `
     <section>
       <h2>top level heading</h2>
-      <p><dfn>many</dfn>, <dfn>one</dfn>, <dfn>zero</dfn> references.</p>
+      <p><dfn data-export>many</dfn>, <dfn>one</dfn>, <dfn>zero</dfn> references.</p>
       <p>[=many=] [=many=] [=one=]</p>
       <section>
         <h3>nested section heading</h3>
@@ -132,7 +132,7 @@ describe("Core — dfnPanel", () => {
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-one");
 
-    const referenceHeading = panel.querySelectorAll("b")[1];
+    const referenceHeading = panel.querySelector("h2");
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
     const referenceListItems = panel.querySelectorAll("ul li");
@@ -154,7 +154,7 @@ describe("Core — dfnPanel", () => {
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-many");
 
-    const referenceHeading = panel.querySelectorAll("b")[1];
+    const referenceHeading = panel.querySelector("h2");
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
     const referenceListItems = panel.querySelectorAll("ul li");
@@ -180,6 +180,19 @@ describe("Core — dfnPanel", () => {
     expect(item2.textContent.trim()).toBe("1.1 nested section heading (2)");
   });
 
+  it("renders a marker on exported definitions", async () => {
+    const doc = await makeRSDoc(ops);
+
+    const panelDnExported = doc.getElementById(getPanelId("dfn-many"));
+    const marker = panelDnExported.querySelector(".dfn-exported");
+    expect(marker).toBeTruthy();
+    expect(marker.textContent).toBe("exported");
+    expect(marker.previousElementSibling.textContent).toBe("Permalink");
+
+    const panelDfnNotExported = doc.getElementById(getPanelId("dfn-one"));
+    expect(panelDfnNotExported.querySelector(".dfn-exported")).toBeFalsy();
+  });
+
   it("works in exported document", async () => {
     const rdoc = await makeRSDoc(ops);
     const doc = await getExportedDoc(rdoc);
@@ -197,7 +210,7 @@ describe("Core — dfnPanel", () => {
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-one");
 
-    const referenceHeading = panel.querySelectorAll("b")[1];
+    const referenceHeading = panel.querySelector("h2");
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
     const referenceListItems = panel.querySelectorAll("ul li");

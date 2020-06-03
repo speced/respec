@@ -45,12 +45,25 @@ function createPanel(dfn) {
   const panel = html`
     <aside class="dfn-panel" id="${panelId}" hidden>
       <span class="caret"></span>
-      <b><a class="self-link" href="${href}">Permalink</a></b>
-      <b>Referenced in:</b>
+      <div>
+        <a class="self-link" href="${href}">Permalink</a>
+        ${dfnExportedMarker(dfn)}
+      </div>
+      <h2>Referenced in:</h2>
       ${referencesToHTML(id, links)}
     </aside>
   `;
   return panel;
+}
+
+/** @param {HTMLElement} dfn */
+function dfnExportedMarker(dfn) {
+  if (!dfn.matches("dfn[data-export]")) return null;
+  return html`<span
+    class="dfn-exported"
+    title="Definition can be referenced by other specifications"
+    >exported</span
+  >`;
 }
 
 /**
