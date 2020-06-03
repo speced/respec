@@ -169,7 +169,7 @@ describe("Core — dfnPanel", () => {
     expect(item1Links[1].hash).toBe("#ref-for-dfn-many-2");
     expect(item1Links[2].textContent).toBe("(3)");
     expect(item1Links[2].hash).toBe("#ref-for-dfn-many-5");
-    expect(item1.textContent).toBe("1. top level heading (2) (3) ");
+    expect(item1.textContent.trim()).toBe("1. top level heading (2) (3)");
 
     const item2Links = item2.querySelectorAll("a");
     expect(item2Links.length).toBe(2);
@@ -177,7 +177,7 @@ describe("Core — dfnPanel", () => {
     expect(item2Links[0].hash).toBe("#ref-for-dfn-many-3");
     expect(item2Links[1].textContent).toBe("(2)");
     expect(item2Links[1].hash).toBe("#ref-for-dfn-many-4");
-    expect(item2.textContent).toBe("1.1 nested section heading (2) ");
+    expect(item2.textContent.trim()).toBe("1.1 nested section heading (2)");
   });
 
   it("works in exported document", async () => {
