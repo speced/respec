@@ -43,12 +43,19 @@ dfn {
   margin: 0;
 }
 
-.dfn-panel > b {
-  display: block;
+.dfn-panel h2 {
+  color: #000;
+  font-weight: bold;
+  font-size: inherit;
+  margin-top: 0.25em;
 }
 
 .dfn-panel ul a[href] {
   color: #333;
+}
+
+.dfn-panel a.self-link {
+  font-weight: bold;
 }
 
 .dfn-panel a:not(:hover) {
@@ -58,10 +65,6 @@ dfn {
 
 .dfn-panel a[href]:hover {
   border-bottom-width: 1px;
-}
-
-.dfn-panel > b + b {
-  margin-top: 0.25em;
 }
 
 .dfn-panel ul {

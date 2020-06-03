@@ -45,8 +45,8 @@ function createPanel(dfn) {
   const panel = html`
     <aside class="dfn-panel" id="${panelId}" hidden>
       <span class="caret"></span>
-      <b><a class="self-link" href="${href}">Permalink</a></b>
-      <b>Referenced in:</b>
+      <div><a class="self-link" href="${href}">Permalink</a></div>
+      <h2>Referenced in:</h2>
       ${referencesToHTML(id, links)}
     </aside>
   `;
