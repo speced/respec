@@ -19,7 +19,7 @@ export async function run() {
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
-    "dfn, #index-defined-elsewhere .index-term"
+    "dfn[id], #index-defined-elsewhere .index-term"
   );
   const panels = document.createDocumentFragment();
   for (const el of elems) {
