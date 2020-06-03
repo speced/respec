@@ -48,7 +48,7 @@ function createPanel(dfn) {
       <div>
         <a class="self-link" href="${href}">Permalink</a>
         ${dfn.matches("dfn[data-export]")
-          ? html`<span class="dfn-exported">exported</span>`
+          ? html`<span class="dfn-exported" title="Definition can be referenced by other specifications">exported</span>`
           : null}
       </div>
       <h2>Referenced in:</h2>
