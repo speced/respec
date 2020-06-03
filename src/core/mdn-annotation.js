@@ -200,7 +200,7 @@ function findElements(data) {
 
 /**
  * @param {MdnEntry['engines']} engines
- * @returns {HTMLSpanElement|undefined}
+ * @returns {HTMLSpanElement}
  */
 function getEngineSupportIcons(engines) {
   if (engines.length === 3) {
@@ -209,6 +209,7 @@ function getEngineSupportIcons(engines) {
   if (engines.length < 2) {
     return html`<span title="${l10n.inSomeEngines}">🚫</span>`;
   }
+  return html`<span>&emsp;</span>`;
 }
 
 /**
