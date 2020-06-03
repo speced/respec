@@ -139,7 +139,6 @@ export async function run(conf) {
 
   const style = document.createElement("style");
   style.textContent = await loadStyle();
-  style.classList.add("removeOnSave");
   document.head.append(style);
 
   for (const elem of findElements(mdnSpecJson)) {
