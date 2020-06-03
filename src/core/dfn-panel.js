@@ -1,3 +1,4 @@
+// @ts-check
 // Constructs "dfn panels" which show all the local references to a dfn and a
 // self link to the selected dfn. Based on Bikeshed's dfn panels at
 // https://github.com/tabatkins/bikeshed/blob/ef44162c2e/bikeshed/dfnpanels.py
@@ -16,7 +17,7 @@ export async function run() {
     document.querySelector("link")
   );
 
-  /** @type {HTMLElement} */
+  /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
     "dfn, #index-defined-elsewhere .index-term"
   );
@@ -36,6 +37,7 @@ export async function run() {
 function createPanel(dfn) {
   const { id } = dfn;
   const href = dfn.dataset.href || `#${id}`;
+  /** @type {NodeListOf<HTMLAnchorElement>} */
   const links = document.querySelectorAll(`a[href="${href}"]:not(.index-term)`);
 
   const panelId = `dfn-panel-for-${dfn.id}`;
@@ -53,7 +55,7 @@ function createPanel(dfn) {
 
 /**
  * @param {string} id dfn id
- * @param {NodeListOf<HTMLLinkElement>} links
+ * @param {NodeListOf<HTMLAnchorElement>} links
  * @returns {HTMLUListElement}
  */
 function referencesToHTML(id, links) {
