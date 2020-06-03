@@ -13,7 +13,7 @@ describe("Core — dfnPanel", () => {
   const body = `
     <section>
       <h2>top level heading</h2>
-      <p><dfn>many</dfn>, <dfn>one</dfn>, <dfn>zero</dfn> references.</p>
+      <p><dfn data-export>many</dfn>, <dfn>one</dfn>, <dfn>zero</dfn> references.</p>
       <p>[=many=] [=many=] [=one=]</p>
       <section>
         <h3>nested section heading</h3>
@@ -178,6 +178,19 @@ describe("Core — dfnPanel", () => {
     expect(item2Links[1].textContent).toBe("(2)");
     expect(item2Links[1].hash).toBe("#ref-for-dfn-many-4");
     expect(item2.textContent.trim()).toBe("1.1 nested section heading (2)");
+  });
+
+  it("renders a marker on exported definitions", async () => {
+    const doc = await makeRSDoc(ops);
+
+    const panelDnExported = doc.getElementById(getPanelId("dfn-many"));
+    const marker = panelDnExported.querySelector(".dfn-exported");
+    expect(marker).toBeTruthy();
+    expect(marker.textContent).toBe("exported");
+    expect(marker.previousElementSibling.textContent).toBe("Permalink");
+
+    const panelDfnNotExported = doc.getElementById(getPanelId("dfn-one"));
+    expect(panelDfnNotExported.querySelector(".dfn-exported")).toBeFalsy();
   });
 
   it("works in exported document", async () => {

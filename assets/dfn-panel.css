@@ -58,6 +58,18 @@ dfn {
   font-weight: bold;
 }
 
+.dfn-panel .dfn-exported {
+  float: right;
+  padding: 0.1em;
+  border-radius: 0.2em;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 90%;
+  background: #d1edfd;
+  color: #040b1c;
+  box-shadow: 0 0 0 0.125em #1ca5f940;
+}
+
 .dfn-panel a:not(:hover) {
   text-decoration: none !important;
   border-bottom: none !important;

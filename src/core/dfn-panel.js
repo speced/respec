@@ -45,7 +45,12 @@ function createPanel(dfn) {
   const panel = html`
     <aside class="dfn-panel" id="${panelId}" hidden>
       <span class="caret"></span>
-      <div><a class="self-link" href="${href}">Permalink</a></div>
+      <div>
+        <a class="self-link" href="${href}">Permalink</a>
+        ${dfn.matches("dfn[data-export]")
+          ? html`<span class="dfn-exported">exported</span>`
+          : null}
+      </div>
       <h2>Referenced in:</h2>
       ${referencesToHTML(id, links)}
     </aside>
