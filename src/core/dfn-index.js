@@ -72,6 +72,9 @@ export async function run() {
     ${createExternalTermIndex()}
   </section>`;
   index.append(externalTermIndex);
+  for (const el of externalTermIndex.querySelectorAll(".index-term")) {
+    addId(el, "index-term");
+  }
 
   // XXX: This event is used to overcome an edge case with core/structure,
   // related to a circular dependency in plugin run order. We want
@@ -290,7 +293,6 @@ function renderExternalTermEntry(entry) {
   const el = html`<li>
     <span class="index-term" data-href="${elem.href}">${{ html: text }}</span>
   </li>`;
-  addId(el.querySelector("span"), "index-term");
   return el;
 }
 

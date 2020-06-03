@@ -200,6 +200,10 @@ describe("Core — dfn-index", () => {
           </li>
           <li><a>JSON.stringify</a></li>
         </ul>
+        <ul class="test" data-testid="possible-duplicate-id">
+        <li><a data-cite="ECMASCRIPT#sec-json.parse">parsing</a></li>
+        <li><a data-cite="ECMASCRIPT#sec-15.12.2">parsing</a></li>
+        </ul>
       </section>
       <section id="index"></section>`;
 
@@ -222,6 +226,8 @@ describe("Core — dfn-index", () => {
         "EventInit",
         "type attribute",
         "JSON.stringify",
+        "parsing",
+        "parsing",
         "allow attribute",
         "EventHandler",
         "fully active",
@@ -358,10 +364,10 @@ describe("Core — dfn-index", () => {
       expect(term.textContent).toBe("Event interface");
       expect(term.id).toBe("index-term-event-interface");
 
-      expect(doc.getElementById("dfn-panel")).toBeFalsy();
+      const panel = doc.getElementById(`dfn-panel-for-${term.id}`);
+      expect(panel.hidden).toBeTrue();
       term.click();
-      const panel = doc.getElementById("dfn-panel");
-      expect(panel).toBeTruthy();
+      expect(panel.hidden).toBeFalse();
       expect(panel.querySelector("a.self-link").href).toBe(
         "https://dom.spec.whatwg.org/#event"
       );
@@ -369,6 +375,16 @@ describe("Core — dfn-index", () => {
       const reference = panel.querySelector("ul li a");
       expect(reference.textContent).toBe("1. TEST");
       expect(reference.hash).toBe("#ref-for-index-term-event-interface-1");
+    });
+
+    it("associates different id to each term", async () => {
+      const termsInEcma = index.querySelectorAll(
+        "[data-spec='ECMASCRIPT'] li span"
+      );
+      expect(termsInEcma.length).toBe(3);
+      const [, parsing1, parsing2] = termsInEcma;
+      expect(parsing1.id).toBe("index-term-parsing");
+      expect(parsing2.id).toBe("index-term-parsing-0");
     });
   });
 });

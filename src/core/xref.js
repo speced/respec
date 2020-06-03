@@ -200,8 +200,19 @@ function getSpecContext(elem) {
   /** @type {HTMLElement} */
   let dataciteElem = elem.closest("[data-cite]");
 
+  // Traverse up towards the root element, adding levels of lower priority specs
+  while (dataciteElem) {
+    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
+    const cites = cite.split(/\s+/).filter(s => s);
+    if (cites.length) {
+      specs.push(cites);
+    }
+    if (dataciteElem === elem) break;
+    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
+  }
+
   // If element itself contains data-cite, we don't take inline context into
-  // account. The inline bibref context has highest priority, if available.
+  // account. The inline bibref context has lowest priority, if available.
   if (dataciteElem !== elem) {
     const closestSection = elem.closest("section");
     /** @type {Iterable<HTMLElement>} */
@@ -212,17 +223,6 @@ function getSpecContext(elem) {
     if (inlineRefs.length) {
       specs.push(inlineRefs);
     }
-  }
-
-  // Traverse up towards the root element, adding levels of lower priority specs
-  while (dataciteElem) {
-    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
-    const cites = cite.split(/\s+/).filter(s => s);
-    if (cites.length) {
-      specs.push(cites);
-    }
-    if (dataciteElem === elem) break;
-    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
   }
 
   const uniqueSpecContext = dedupeSpecContext(specs);
@@ -388,11 +388,13 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
  * @param {any} conf
  */
 function addDataCite(elem, query, result, conf) {
-  const { term } = query;
-  const { uri, shortname: cite, normative, type, for: forContext } = result;
-
-  const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
-  const [citePath, citeFrag] = path.split("#");
+  const { term, specs = [] } = query;
+  const { uri, shortname, spec, normative, type, for: forContext } = result;
+  // if authored spec context had `result.spec`, use it instead of shortname
+  const cite = specs.flat().includes(spec) ? spec : shortname;
+  const url = new URL(uri, "https://example.org");
+  const { pathname: citePath } = url;
+  const citeFrag = url.hash.slice(1);
   const dataset = { cite, citePath, citeFrag, type };
   if (forContext) dataset.linkFor = forContext[0];
   Object.assign(elem.dataset, dataset);
