@@ -174,6 +174,5 @@ describe("Core — Highlight", () => {
     const lastCode = secondPre.querySelector("code:last-child");
     expect(lastCode.textContent).toContain("Header: Test5");
     expect(lastCode.classList).toContain("http");
-    expect(lastCode.querySelector("code span[class*=hljs-]")).toBeTruthy();
   });
 });
