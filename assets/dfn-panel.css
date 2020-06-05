@@ -43,10 +43,9 @@ dfn {
   margin: 0;
 }
 
-.dfn-panel h2 {
+.dfn-panel b {
+  display: block;
   color: #000;
-  font-weight: bold;
-  font-size: inherit;
   margin-top: 0.25em;
 }
 
