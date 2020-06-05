@@ -132,7 +132,7 @@ describe("Core — dfnPanel", () => {
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-one");
 
-    const referenceHeading = panel.querySelector("h2");
+    const referenceHeading = panel.querySelector("b");
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
     const referenceListItems = panel.querySelectorAll("ul li");
@@ -154,7 +154,7 @@ describe("Core — dfnPanel", () => {
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-many");
 
-    const referenceHeading = panel.querySelector("h2");
+    const referenceHeading = panel.querySelector("b");
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
     const referenceListItems = panel.querySelectorAll("ul li");
@@ -210,7 +210,7 @@ describe("Core — dfnPanel", () => {
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-one");
 
-    const referenceHeading = panel.querySelector("h2");
+    const referenceHeading = panel.querySelector("b");
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
     const referenceListItems = panel.querySelectorAll("ul li");
