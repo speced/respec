@@ -74,7 +74,7 @@ function attachMDNDetail(mdnSpec) {
   const label = `Expand MDN details for ${name}`;
   const engineSupport = getEngineSupportIcons(engines);
   return html`<details>
-    <summary aria-label="${label}">${engineSupport}<span>MDN</span></summary>
+    <summary aria-label="${label}"><span>MDN</span>${engineSupport}</summary>
     <a title="${summary}" href="${href}">${mdnSubPath}</a>
     ${getEngineSupport(engines)}
     ${support
