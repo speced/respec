@@ -23,8 +23,8 @@ dfn {
 }
 /* Triangle/caret */
 .dfn-panel:not(.docked) > .caret {
-  position: relative;
-  top: -0.25em;
+  position: absolute;
+  top: -9px;
 }
 .dfn-panel:not(.docked) > .caret::before,
 .dfn-panel:not(.docked) > .caret::after {
@@ -36,17 +36,16 @@ dfn {
   top: 0;
 }
 .dfn-panel:not(.docked) > .caret::before {
-  border-bottom: 10px solid #a2a9b1;
+  border-bottom: 9px solid #a2a9b1;
 }
 
 .dfn-panel * {
   margin: 0;
 }
 
-.dfn-panel h2 {
+.dfn-panel b {
+  display: block;
   color: #000;
-  font-weight: bold;
-  font-size: inherit;
   margin-top: 0.25em;
 }
 

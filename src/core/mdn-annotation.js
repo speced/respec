@@ -74,7 +74,7 @@ function attachMDNDetail(mdnSpec) {
   const label = `Expand MDN details for ${name}`;
   const engineSupport = getEngineSupportIcons(engines);
   return html`<details>
-    <summary aria-label="${label}">${engineSupport}<span>MDN</span></summary>
+    <summary aria-label="${label}"><span>MDN</span>${engineSupport}</summary>
     <a title="${summary}" href="${href}">${mdnSubPath}</a>
     ${getEngineSupport(engines)}
     ${support
@@ -200,7 +200,7 @@ function findElements(data) {
 
 /**
  * @param {MdnEntry['engines']} engines
- * @returns {HTMLSpanElement|undefined}
+ * @returns {HTMLSpanElement}
  */
 function getEngineSupportIcons(engines) {
   if (engines.length === 3) {
@@ -209,6 +209,7 @@ function getEngineSupportIcons(engines) {
   if (engines.length < 2) {
     return html`<span title="${l10n.inSomeEngines}">🚫</span>`;
   }
+  return html`<span>&emsp;</span>`;
 }
 
 /**

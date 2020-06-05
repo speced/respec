@@ -49,7 +49,7 @@ function createPanel(dfn) {
         <a class="self-link" href="${href}">Permalink</a>
         ${dfnExportedMarker(dfn)}
       </div>
-      <h2>Referenced in:</h2>
+      <b>Referenced in:</b>
       ${referencesToHTML(id, links)}
     </aside>
   `;
