@@ -1,7 +1,4 @@
-#!/usr/bin/env mocha
 /* eslint-env node */
-
-"use strict";
 const fs = require("fs");
 const { promisify } = require("util");
 const readFile = promisify(fs.readFile);
@@ -16,11 +13,20 @@ async function checkIfFileExists(filePath) {
 }
 
 describe("builder (tool)", () => {
-  for (const profile of ["w3c-common", "w3c", "geonovum"]) {
+  jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
+
+  const profiles = ["w3c", "geonovum"];
+
+  beforeAll(async () => {
+    await Promise.all(
+      profiles.map(profile => Builder.build({ name: profile }))
+    );
+  });
+
+  for (const profile of profiles) {
     const profileFile = path.join(__dirname, `../builds/respec-${profile}.js`);
     const mapFile = path.join(__dirname, `../builds/respec-${profile}.js.map`);
     it(`builds the "${profile}" profile and sourcemap`, async () => {
-      await Builder.build({ name: profile });
       expect(await checkIfFileExists(profileFile)).to.equal(true);
       expect(await checkIfFileExists(mapFile)).to.equal(true);
     });

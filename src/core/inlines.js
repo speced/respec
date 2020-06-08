@@ -64,7 +64,7 @@ const l10n = getIntlData(localizationStrings);
 const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
 const inlineIdlReference = /(?:{{[^}]+}})/; // {{ WebIDLThing }}
 const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
-const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
+const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
@@ -95,7 +95,7 @@ function inlineElementMatches(matched) {
  */
 function inlineRFC2119Matches(matched) {
   const value = norm(matched);
-  const nodeElement = html`<em class="rfc2119" title="${value}">${value}</em>`;
+  const nodeElement = html`<em class="rfc2119">${value}</em>`;
   // remember which ones were used
   rfc2119Usage[value] = true;
   return nodeElement;
@@ -146,12 +146,15 @@ function inlineBibrefMatches(matched, txt, conf) {
   if (ref.startsWith("\\")) {
     return [`[[${ref.slice(1)}]]`];
   }
-  const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
-  const cite = renderInlineCitation(ref);
-  const cleanRef = ref.replace(/^(!|\?)/, "");
+
+  const [spec, linkText] = ref.split("|").map(norm);
+  const { type, illegal } = refTypeFromContext(spec, txt.parentNode);
+  const cite = renderInlineCitation(spec, linkText);
+  const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
+    const citeElem = cite.childNodes[1] || cite;
     showInlineWarning(
-      cite.childNodes[1], // cite element
+      citeElem,
       "Normative references in informative sections are not allowed. " +
         `Remove '!' from the start of the reference \`[[${ref}]]\``
     );
@@ -162,7 +165,7 @@ function inlineBibrefMatches(matched, txt, conf) {
   } else {
     conf.normativeReferences.add(cleanRef);
   }
-  return cite.childNodes;
+  return cite.childNodes[1] ? cite.childNodes : [cite];
 }
 
 /**
@@ -197,7 +200,7 @@ function inlineVariableMatches(matched) {
  */
 function inlineAnchorMatches(matched) {
   matched = matched.slice(2, -2); // Chop [= =]
-  const parts = matched.split("/", 2).map(s => s.trim());
+  const parts = splitBySlash(matched, 2);
   const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
   const [linkingText, text] = content.includes("|")
     ? content.split("|", 2).map(s => s.trim())
@@ -205,6 +208,7 @@ function inlineAnchorMatches(matched) {
   const processedContent = processInlineContent(text);
   const forContext = isFor ? norm(isFor) : null;
   return html`<a
+    data-link-type="dfn"
     data-link-for="${forContext}"
     data-xref-for="${forContext}"
     data-lt="${linkingText}"
@@ -315,4 +319,18 @@ export function run(conf) {
     }
     txt.replaceWith(df);
   }
+}
+
+/**
+ * Split a string by slash (`/`) unless it's escaped by a backslash (`\`)
+ * @param {string} str
+ *
+ * TODO: Use negative lookbehind (`str.split(/(?<!\\)\//)`) when supported.
+ * https://github.com/w3c/respec/issues/2869
+ */
+function splitBySlash(str, limit = Infinity) {
+  return str
+    .replace("\\/", "%%")
+    .split("/", limit)
+    .map(s => s && s.trim().replace("%%", "/"));
 }

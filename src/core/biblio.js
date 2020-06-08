@@ -26,6 +26,8 @@ const link = createResourceHint({
 });
 document.head.appendChild(link);
 let doneResolver;
+
+/** @type {Promise<Conf['biblio']>} */
 const done = new Promise(resolve => {
   doneResolver = resolve;
 });
@@ -49,6 +51,7 @@ export async function updateFromNetwork(
   if ((!options.forceUpdate && !response.ok) || response.status !== 200) {
     return null;
   }
+  /** @type {Conf['biblio']} */
   const data = await response.json();
   try {
     await biblioDB.addAll(data);
@@ -60,6 +63,7 @@ export async function updateFromNetwork(
 
 /**
  * @param {string} key
+ * @returns {Promise<BiblioData>}
  */
 export async function resolveRef(key) {
   const biblio = await done;

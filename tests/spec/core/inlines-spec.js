@@ -58,6 +58,26 @@ describe("Core - Inlines", () => {
     );
   });
 
+  it("processes inline cite content with aliasing", async () => {
+    const body = `
+      <section id="test" class="normative">
+        <p>[[html|not JSX]]</p>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+
+    const norm = [...doc.querySelectorAll("#normative-references dt")];
+    expect(norm.map(el => el.textContent)).toEqual(["[html]"]);
+
+    const ref = doc.querySelector("#test p");
+    const link = doc.querySelector("#test cite a");
+    expect(ref.textContent).toBe("not JSX");
+    expect(ref.textContent).toBe(link.textContent);
+    expect(link.getAttribute("href")).toBe("#bib-html");
+    expect(link.dataset.linkType).toBe("biblio");
+  });
+
   it("processes abbr and rfc2119 content", async () => {
     const body = `
       <section id='inlines'>
@@ -398,6 +418,19 @@ describe("Core - Inlines", () => {
     expect(codePoint.hash).toBe("#code-point");
     expect(iterationBreak.textContent).toBe("break out of iteration");
     expect(iterationBreak.hash).toBe("#iteration-break");
+  });
+
+  it("allows escaping `/` in [= concept =] links", async () => {
+    const body = `<section id="test">
+      <dfn>foo/bar</dfn> [= foo\\/bar =]
+      [=multipart\\/form-data encoding algorithm=]
+    </section>`;
+    const ops = makeStandardOps({ xref: ["HTML"] }, body);
+    const doc = await makeRSDoc(ops);
+
+    const [localLink, conceptLink] = doc.querySelectorAll("#test a");
+    expect(localLink.hash).toBe("#dfn-foo-bar");
+    expect(conceptLink.hash).toBe("#multipart/form-data-encoding-algorithm");
   });
 
   it("processes {{ forContext/term }} IDL", async () => {

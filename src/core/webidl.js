@@ -157,7 +157,7 @@ function defineIdlName(escaped, data, parent) {
     data.name === "toJSON" &&
     data.extAttrs.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
-    return html`<a data-link-type="dfn" data-lt="default toJSON operation"
+    return html`<a data-link-type="dfn" data-lt="default toJSON steps"
       >${escaped}</a
     >`;
   }
@@ -342,7 +342,9 @@ function renderWebIDL(idlElement, index) {
     if (parent) {
       elem.dataset.dfnFor = parent.dataset.title;
     }
-    registerDefinition(elem, [title]);
+    if (elem.localName === "dfn") {
+      registerDefinition(elem, [title]);
+    }
   });
   // cross reference
   const closestCite = idlElement.closest("[data-cite], body");

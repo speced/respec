@@ -78,7 +78,10 @@ function labelDfnIfExported(dfn) {
  * @param {HTMLElement} dfn a definition
  */
 function labelDfnIfUnused(dfn) {
-  const isUsed = document.querySelector(`a[href^="#${dfn.id}"]`);
+  // find an <a> that is not inside a `.dfn-panel` and references this <dfn>
+  const isUsed = document.querySelector(
+    `:not(.dfn-panel) > :not(li) > a[href^="#${dfn.id}"]`
+  );
   if (!isUsed) {
     return html`<span class="dfn-status unused">unused</span>`;
   }

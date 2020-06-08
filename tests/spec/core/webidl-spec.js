@@ -1149,7 +1149,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(linkFromElsewhere.textContent).toBe("Documented.docString");
 
     expect(
-      section.querySelector("#without-link-for a[href='#idl-def-documented']")
+      section.querySelector("#without-link-for a[href='#dom-documented']")
         .textContent
     ).toBe("Documented");
   });
@@ -1165,7 +1165,16 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     ).map(elem => new URL(elem.href));
     expect(defaultLink.hash).toBe("#Default");
     expect(objectLink.hash).toBe("#idl-object");
-    expect(toJSONLink.hash).toBe("#default-tojson-operation");
+    expect(toJSONLink.hash).toBe("#default-tojson-steps");
+  });
+  it("links `[Default] object toJSON();` with data-link-for automatically to IDL spec", () => {
+    const elem = doc.getElementById("AutoLinkToIDLSpecLinkFor");
+    const [defaultLink, objectLink, toJSONLink] = Array.from(
+      elem.querySelectorAll("[data-title='toJSON'] a")
+    ).map(elem => new URL(elem.href));
+    expect(defaultLink.hash).toBe("#Default");
+    expect(objectLink.hash).toBe("#idl-object");
+    expect(toJSONLink.hash).toBe("#default-tojson-steps");
   });
   it("allows toJSON() to be defined in spec", () => {
     const elem = doc.getElementById("DefinedToJson");
@@ -1337,7 +1346,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         <h2>Test</h2>
         <pre class="idl" id="link-test">
           interface mixin InnerHTMLMixin {
-            [TreatNullAs=EmptyString] attribute DOMString innerHTML;
+            [PutForwards=html] readonly attribute DOMString innerHTML;
           };
         </pre>
       </section>

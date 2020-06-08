@@ -85,7 +85,7 @@ describe("Core — Definitions", () => {
     const t2 = doc.getElementById("t2");
     expect(t2.querySelector("code")).toBe(null);
     expect(t2.querySelector("a").textContent).toBe("not wrapped in code");
-    expect(t2.querySelector("a").getAttribute("href")).toBe("#idl-def-test");
+    expect(t2.querySelector("a").getAttribute("href")).toBe("#dom-test");
   });
 
   it("processes aliases", async () => {
@@ -99,7 +99,6 @@ describe("Core — Definitions", () => {
     const doc = await makeRSDoc(ops);
     const dfn = doc.querySelector("dfn[data-lt]");
     expect(dfn.dataset.lt).toBe("text|text 1|text 2|text 3");
-    expect(dfn.dataset.dfnType).toBe("dfn");
   });
 
   it("allows linking via data-local-lt", async () => {

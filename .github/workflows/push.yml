@@ -1,0 +1,63 @@
+name: Node CI (push)
+on:
+  push:
+    branches:
+      - develop
+      - gh-pages
+
+env:
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+  PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+
+jobs:
+  test-headless:
+    name: Headless Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
+      - name: install & build
+        run: |
+          npm ci
+          npm run build:w3c
+      - run: npm run test:headless
+      - name: Calculate size and update on server
+        run: |
+          timestamp=$(git show --no-patch --pretty='%cd' --date='format:%s')
+          gzip --keep --force builds/respec-w3c.js
+          file_size=$(stat -c%s "builds/respec-w3c.js")
+          gzip_file_size=$(stat -c%s "builds/respec-w3c.js.gz")
+          curl --fail -L -X PUT "https://respec.org/respec/size" \
+            -H "Authorization: $RESPEC_SECRET" \
+            -d "size=$file_size" -d "gzipSize=$gzip_file_size "\
+            -d "sha=$GITHUB_SHA" -d "timestamp=$timestamp"
+        env:
+          RESPEC_SECRET: ${{ secrets.RESPEC_GH_ACTION_SECRET }}
+
+  test-karma:
+    name: Karma Unit Tests (Chrome)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
+      - name: install & build
+        run: |
+          npm ci
+          npm run build:w3c & npm run build:geonovum
+      - run: npm run test:karma
+        env:
+          BROWSERS: ChromeHeadless

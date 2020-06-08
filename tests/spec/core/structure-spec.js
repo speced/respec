@@ -172,6 +172,28 @@ describe("Core - Structure", () => {
     );
   });
 
+  it("should correctly put all headings until maxTocLevel in ToC", async () => {
+    const times = (n, fn) =>
+      Array.from({ length: n }, (_, i) => fn(i)).join("\n");
+    // The first 9 sections are just placeholders. In 10th section (10.x), we
+    // add 10 subsections, so ToC goes till `10.10`, and section number for the
+    // last heading is "10.10" and a depth of 2.
+    const body = `
+      ${makeDefaultBody()}
+      ${times(9, () => `<section><h2>pass</h2></section>`)}
+      <section>
+        <h2>pass</h2>
+        ${times(10, i => `<section><h2>test ${i + 1}</h2></section>`)}
+      </section>
+    `;
+    const ops = makeStandardOps({ maxTocLevel: 2 }, body);
+    const doc = await makeRSDoc(ops);
+
+    expect(doc.getElementById("test-10")).toBeTruthy();
+    expect(doc.querySelector("#toc")).toBeTruthy();
+    expect(doc.querySelector("#toc a[href='#test-10']")).toBeTruthy();
+  });
+
   it("gives the toc's heading an id", async () => {
     const ops = {
       config: makeBasicConfig(),

@@ -12,6 +12,7 @@
 
 import { addId, getIntlData, parents, renameElement } from "./utils.js";
 import { html } from "./import-maps.js";
+import { pub } from "./pubsubhub.js";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
 const headerTags = ["h1", ...lowerHeaderTags];
@@ -76,7 +77,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
       : appendixMode
       ? alphabet.charAt(index - lastNonAppendix)
       : prefix + index;
-    const level = Math.ceil(secno.length / 2);
+    const level = secno.split(".").length;
     if (level === 1) {
       secno += ".";
       // if this is a top level item, insert
@@ -194,6 +195,9 @@ export function run(conf) {
       createTableOfContents(result);
     }
   }
+
+  // See core/dfn-index
+  pub("toc");
 }
 
 function renameSectionHeaders() {

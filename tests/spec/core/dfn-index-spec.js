@@ -39,8 +39,14 @@ describe("Core — dfn-index", () => {
     expect(index.querySelector("p#custom-paragraph").textContent).toBe("PASS");
 
     const subsections = index.querySelectorAll("section");
-    expect(subsections.length).toBe(1);
-    const [externalIndex] = subsections;
+    expect(subsections.length).toBe(2);
+    const [localIndex, externalIndex] = subsections;
+
+    const localIndexHeading = localIndex.querySelector("h3");
+    expect(localIndexHeading.textContent).toContain(
+      "Terms defined by this specification"
+    );
+    expect(localIndexHeading.nextElementSibling.matches("ul.index")).toBeTrue();
 
     const externalIndexHeading = externalIndex.querySelector("h3");
     expect(externalIndexHeading.textContent).toContain(
@@ -49,6 +55,103 @@ describe("Core — dfn-index", () => {
     expect(
       externalIndexHeading.nextElementSibling.matches("ul.index")
     ).toBeTrue();
+  });
+
+  describe("Local Terms Index", () => {
+    const body = `<section id="content">
+        <h2>Whatever</h2>
+        <p class="test">
+          <dfn data-cite="HTML/webappapis.html#eventhandler">EventHandler</dfn>
+        </p>
+        <p class="test"><dfn>hello</dfn> <dfn>bar</dfn></p>
+        <div class="test" data-dfn-for="Foo">
+          <pre class="idl" data-cite="WEBIDL">
+            [Exposed=Window]
+            interface Foo {
+              constructor();
+              attribute DOMString bar;
+              void doTheFoo();
+            };
+          </pre>
+          <p><dfn>[[\\haha]]</dfn> is an internal slot.</p>
+          <p>The <dfn>constructor()</dfn> creates a Foo instance.</p>
+          <p>The <dfn>bar</dfn> attribute, returns 🍺.</p>
+          <p>The <dfn>doTheFoo()</dfn> method, returns nothing.</p>
+        </div>
+      </section>
+      <section id="index"></section>`;
+
+    /** @type {HTMLElement} */
+    let index;
+    beforeAll(async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      index = doc.getElementById("index-defined-here");
+      index.querySelectorAll(".print-only").forEach(el => el.remove());
+    });
+
+    it("doesn't list external terms", () => {
+      const terms = index.querySelectorAll("li");
+      const externalTerms = [...terms]
+        .map(term => term.textContent.trim())
+        .filter(term => term.match(/EventHandler|DOMString|Window|Exposed/));
+      expect(externalTerms).toEqual([]);
+    });
+
+    it("lists terms in sorted order", () => {
+      const terms = [...index.querySelectorAll("ul.index > li")].map(
+        term => term.textContent.trim().split(/\s/)[0]
+      );
+      expect(terms).toEqual([
+        "bar",
+        "constructor()",
+        "doTheFoo()",
+        "Foo",
+        "[[haha]]",
+        "hello",
+      ]);
+    });
+
+    it("links unique terms directly", () => {
+      const item = index.querySelector("ul.index > li:nth-child(2)");
+      expect(item.textContent.trim()).toEqual("constructor() for Foo");
+      expect(item.querySelector("li")).toBeNull();
+      const anchor = item.querySelector(":scope > a");
+      expect(anchor.hash).toBe("#dom-foo-constructor");
+    });
+
+    it("links non-unique terms by their types", () => {
+      const item = index.querySelector("ul.index > li:nth-child(1)");
+      const subItems = item.querySelectorAll("li");
+      expect(subItems.length).toBe(2);
+      const [defnOf, attrOfFoo] = subItems;
+      expect(defnOf.textContent.trim()).toBe("definition of");
+      expect(defnOf.querySelector("a").hash).toBe("#dfn-bar");
+      expect(attrOfFoo.textContent.trim()).toBe("attribute for Foo");
+      expect(attrOfFoo.querySelector("a").hash).toBe("#dom-foo-bar");
+    });
+
+    it("adds type info and context", () => {
+      const [, ctor, method, iface, slot, concept] = [
+        ...index.querySelectorAll("ul.index > li"),
+      ].map(el => el.textContent.trim());
+      expect(ctor).toBe("constructor() for Foo");
+      expect(method).toBe("doTheFoo() method for Foo");
+      expect(iface).toBe("Foo interface");
+      expect(slot).toBe("[[haha]] internal slot for Foo");
+      expect(concept).toBe("hello");
+    });
+
+    it("contains section number for print media", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const index = doc.getElementById("index-defined-here");
+
+      const item = index.querySelector("ul.index > li:nth-child(2)");
+      const secNum = item.querySelector(".print-only");
+      expect(secNum.textContent).toBe("§1.");
+      expect(item.textContent.endsWith("§1.")).toBeTrue();
+    });
   });
 
   describe("External Terms Index", () => {
@@ -97,6 +200,10 @@ describe("Core — dfn-index", () => {
           </li>
           <li><a>JSON.stringify</a></li>
         </ul>
+        <ul class="test" data-testid="possible-duplicate-id">
+        <li><a data-cite="ECMASCRIPT#sec-json.parse">parsing</a></li>
+        <li><a data-cite="ECMASCRIPT#sec-15.12.2">parsing</a></li>
+        </ul>
       </section>
       <section id="index"></section>`;
 
@@ -108,10 +215,37 @@ describe("Core — dfn-index", () => {
       index = doc.getElementById("index-defined-elsewhere");
     });
 
-    it("doesn't list local terms", () => {
-      const terms = index.querySelectorAll(".index-term");
-      const localTerm = [...terms].find(li => li.textContent === "hello");
-      expect(localTerm).toBeUndefined();
+    it("lists only external terms", () => {
+      const getTermAndType = el => el.textContent.trim().split(/\s\(/)[0];
+      const terms = [...index.querySelectorAll(".index-term")].map(
+        getTermAndType
+      );
+      expect(terms).toEqual([
+        "creating an event",
+        "Event interface",
+        "EventInit",
+        "type attribute",
+        "JSON.stringify",
+        "parsing",
+        "parsing",
+        "allow attribute",
+        "EventHandler",
+        "fully active",
+        "iframe element",
+        "responsible document",
+        "Window interface",
+        "ASCII uppercase",
+        "origin",
+        "AbortError exception",
+        "boolean type",
+        "[Default] extended attribute",
+        "default toJSON steps",
+        "DOMString interface",
+        "[Exposed] extended attribute",
+        "[NewObject] extended attribute",
+        "object type",
+        "Promise interface",
+      ]);
     });
 
     it("lists terms grouped by specs", () => {
@@ -133,7 +267,6 @@ describe("Core — dfn-index", () => {
         "WEBIDL",
       ]);
 
-      expect(index.querySelectorAll("ul.index .index-term").length).toBe(21);
       const termsInDom = [...bySpecs[0].querySelectorAll("li")];
       expect(termsInDom.length).toBe(4);
     });
@@ -231,10 +364,10 @@ describe("Core — dfn-index", () => {
       expect(term.textContent).toBe("Event interface");
       expect(term.id).toBe("index-term-event-interface");
 
-      expect(doc.getElementById("dfn-panel")).toBeFalsy();
+      const panel = doc.getElementById(`dfn-panel-for-${term.id}`);
+      expect(panel.hidden).toBeTrue();
       term.click();
-      const panel = doc.getElementById("dfn-panel");
-      expect(panel).toBeTruthy();
+      expect(panel.hidden).toBeFalse();
       expect(panel.querySelector("a.self-link").href).toBe(
         "https://dom.spec.whatwg.org/#event"
       );
@@ -242,6 +375,16 @@ describe("Core — dfn-index", () => {
       const reference = panel.querySelector("ul li a");
       expect(reference.textContent).toBe("1. TEST");
       expect(reference.hash).toBe("#ref-for-index-term-event-interface-1");
+    });
+
+    it("associates different id to each term", async () => {
+      const termsInEcma = index.querySelectorAll(
+        "[data-spec='ECMASCRIPT'] li span"
+      );
+      expect(termsInEcma.length).toBe(3);
+      const [, parsing1, parsing2] = termsInEcma;
+      expect(parsing1.id).toBe("index-term-parsing");
+      expect(parsing2.id).toBe("index-term-parsing-0");
     });
   });
 });

@@ -14,10 +14,17 @@ const findContent = string => {
 describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
-  const contains = (el, query, string) =>
-    [...el.querySelectorAll(query)].filter(child =>
-      child.textContent.replace(/\s+/g, " ").includes(string)
+  /**
+   * @param {Node} node
+   */
+  function collapsedTextContent({ textContent }) {
+    return textContent.replace(/\s+/g, " ");
+  }
+  function contains(el, query, string) {
+    return [...el.querySelectorAll(query)].filter(child =>
+      collapsedTextContent(child).includes(string)
     );
+  }
   describe("prevRecShortname & prevRecURI", () => {
     it("takes prevRecShortname and prevRecURI into account", async () => {
       const ops = makeStandardOps();
@@ -43,6 +50,21 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect(doc.querySelector(".head h2").textContent).toContain(
         "W3C Editor's Draft"
+      );
+      expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
+        "does not imply endorsement by the W3C Membership."
+      );
+    });
+
+    it("indicates as recommended", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
+        "is endorsed by the Director as a W3C Recommendation."
       );
     });
   });
@@ -885,6 +907,37 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(contains(doc, "h2", "15 March 1977").length).toBe(1);
+    });
+  });
+
+  describe("modificationDate", () => {
+    it("takes modificationDate into account", async () => {
+      const ops = makeStandardOps({
+        publishDate: "1977-03-15",
+        modificationDate: "2012-12-21",
+      });
+      const doc = await makeRSDoc(ops);
+
+      const [dateStatusEl] = contains(doc, "h2", "15 March 1977");
+      expect(dateStatusEl).toBeDefined();
+
+      const dateModified = dateStatusEl.querySelector(".dt-modified");
+      expect(dateModified).toBeTruthy();
+      expect(dateModified.localName).toBe("time");
+      expect(dateModified.getAttribute("datetime")).toBe("2012-12-21");
+      expect(dateModified.textContent).toBe("21 December 2012");
+
+      const text = collapsedTextContent(dateStatusEl).trim();
+      expect(text).toMatch(/15 March 1977, edited in place 21 December 2012$/);
+    });
+
+    it("doesn't add any content if modificationDate is not provided", async () => {
+      const ops = makeStandardOps({ publishDate: "1977-03-15" });
+      const doc = await makeRSDoc(ops);
+
+      const [dateStatusEl] = contains(doc, "h2", "15 March 1977");
+      const text = collapsedTextContent(dateStatusEl).trim();
+      expect(text).toMatch(/15 March 1977$/);
     });
   });
 
