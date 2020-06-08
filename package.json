@@ -54,7 +54,7 @@
     "rollup": "^2.15.0",
     "rollup-plugin-alias": "^2.2.0",
     "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-minify-html-literals": "^1.2.2",
+    "rollup-plugin-minify-html-literals": "^1.2.3",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^6.1.0",
     "serve": "^11.3.2",
