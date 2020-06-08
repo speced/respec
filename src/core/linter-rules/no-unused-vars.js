@@ -14,7 +14,8 @@ const name = "no-unused-vars";
 const meta = {
   en: {
     description: "All declared variables must be used at least once.",
-    howToFix: "Change the tag to something other than `<var>`.",
+    howToFix:
+      "Change the tag to something other than `<var>` or add a `data-ignore-unused` attribute.",
     help: "See developer console.",
   },
 };
@@ -45,9 +46,9 @@ function linterFunction(_, doc) {
       elems.push(varElem);
     }
 
-    for (const elems of varUsage.values()) {
-      if (elems.length === 1) {
-        offendingElements.push(elems[0]);
+    for (const vars of varUsage.values()) {
+      if (vars.length === 1 && !vars[0].hasAttribute("data-ignore-unused")) {
+        offendingElements.push(vars[0]);
       }
     }
   }
