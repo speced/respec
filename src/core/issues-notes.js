@@ -119,9 +119,8 @@ function handleIssues(ins, ghIssues, conf) {
       const div = html`<div class="${cssClass}" role="${ariaRole}"></div>`;
       const title = document.createElement("span");
       const className = `${type}-title marker`;
-      const titleParent = html`<div role="heading" class="${className}">
-        ${title}
-      </div>`;
+      // prettier-ignore
+      const titleParent = html`<div role="heading" class="${className}">${title}</div>`;
       addId(titleParent, "h", type);
       let text = displayType;
       if (inno.id) {
