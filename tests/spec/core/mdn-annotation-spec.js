@@ -84,7 +84,9 @@ describe("Core - MDN Annotation", () => {
     const {
       previousElementSibling: poorSupportedMdnPanel,
     } = doc.getElementById("dom-paymentrequest-id");
-    const iconBad = poorSupportedMdnPanel.querySelector("details summary span");
+    const iconBad = poorSupportedMdnPanel.querySelector(
+      "details summary span:nth-child(2)"
+    );
     expect(iconBad.title).toMatch(/less than two current/);
     expect(iconBad.textContent).toBe("🚫");
     const textBad = poorSupportedMdnPanel.querySelector("details p");
@@ -94,7 +96,7 @@ describe("Core - MDN Annotation", () => {
       previousElementSibling: goodSupportedMdnPanel,
     } = doc.getElementById("paymentrequest-interface");
     const iconGood = goodSupportedMdnPanel.querySelector(
-      "details summary span"
+      "details summary span:nth-child(2)"
     );
     expect(iconGood.title).toMatch(/all current engines/);
     expect(iconGood.textContent).toBe("✅");
