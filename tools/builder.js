@@ -132,7 +132,7 @@ const Builder = {
           require("rollup-plugin-minify-html-literals").default({
             options: {
               shouldMinify({ tag = "" }) {
-                return /^(hyperhtml|html|render)/i.test(tag);
+                return /^(html|render)/i.test(tag);
               },
               minifyOptions: {
                 removeAttributeQuotes: false,
