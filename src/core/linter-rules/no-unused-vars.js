@@ -13,9 +13,9 @@ const name = "no-unused-vars";
 
 const meta = {
   en: {
-    description: "All declared variables must be used at least once.",
+    description: "Variable was defined, but never used.",
     howToFix:
-      "Change the tag to something other than `<var>` or add a `data-ignore-unused` attribute.",
+      "Add a `data-ignore-unused` attribute to the `<var>`, or consider using `<em>`/ `<code>`.",
     help: "See developer console.",
   },
 };
