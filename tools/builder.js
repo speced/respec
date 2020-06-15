@@ -26,6 +26,8 @@ function string(opts) {
 
       if (id.endsWith(".css")) {
         code = minifier.minify(code).styles;
+      } else if (id.endsWith(".runtime.js")) {
+        code = `(() => {\n${code}})()`;
       }
 
       return {
@@ -127,7 +129,7 @@ const Builder = {
       plugins: [
         !debug && require("rollup-plugin-terser").terser(),
         alias({
-          resolve: [".css", ".svg"],
+          resolve: [".css", ".svg", ".js"],
           entries: [
             {
               find: /^text!(.*)/,
@@ -136,7 +138,7 @@ const Builder = {
           ],
         }),
         string({
-          include: [/\.css$/, /\.svg$/, /respec-worker\.js$/],
+          include: [/\.runtime\.js$/, /\.css$/, /\.svg$/, /respec-worker\.js$/],
         }),
       ],
       onwarn(warning, warn) {

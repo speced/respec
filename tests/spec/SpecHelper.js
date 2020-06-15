@@ -57,6 +57,29 @@ export function makeRSDoc(opts, src, style = "") {
   });
 }
 
+/**
+ * @param {Document} doc
+ * @returns {Promise<Document>}
+ */
+export async function getExportedDoc(doc) {
+  const dataURL = await new Promise(resolve => {
+    doc.defaultView.require(["core/exporter"], ({ rsDocToDataURL }) =>
+      resolve(rsDocToDataURL("text/html", doc))
+    );
+  });
+
+  return new Promise(resolve => {
+    const ifr = document.createElement("iframe");
+    ifr.addEventListener("load", () => resolve(ifr.contentDocument));
+    ifr.srcdoc = decodeURIComponent(dataURL).replace(
+      "data:text/html;charset=utf-8,",
+      ""
+    );
+    document.body.appendChild(ifr);
+    iframes.push(ifr);
+  });
+}
+
 function decorateDocument(doc, opts) {
   function intoAttributes(element, key) {
     element.setAttribute(key, this[key]);

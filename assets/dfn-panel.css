@@ -23,8 +23,8 @@ dfn {
 }
 /* Triangle/caret */
 .dfn-panel:not(.docked) > .caret {
-  position: relative;
-  top: -0.25em;
+  position: absolute;
+  top: -9px;
 }
 .dfn-panel:not(.docked) > .caret::before,
 .dfn-panel:not(.docked) > .caret::after {
@@ -36,19 +36,37 @@ dfn {
   top: 0;
 }
 .dfn-panel:not(.docked) > .caret::before {
-  border-bottom: 10px solid #a2a9b1;
+  border-bottom: 9px solid #a2a9b1;
 }
 
 .dfn-panel * {
   margin: 0;
 }
 
-.dfn-panel > b {
+.dfn-panel b {
   display: block;
+  color: #000;
+  margin-top: 0.25em;
 }
 
 .dfn-panel ul a[href] {
   color: #333;
+}
+
+.dfn-panel a.self-link {
+  font-weight: bold;
+}
+
+.dfn-panel .dfn-exported {
+  float: right;
+  padding: 0.1em;
+  border-radius: 0.2em;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 90%;
+  background: #d1edfd;
+  color: #040b1c;
+  box-shadow: 0 0 0 0.125em #1ca5f940;
 }
 
 .dfn-panel a:not(:hover) {
@@ -60,10 +78,6 @@ dfn {
   border-bottom-width: 1px;
 }
 
-.dfn-panel > b + b {
-  margin-top: 0.25em;
-}
-
 .dfn-panel ul {
   padding: 0;
 }
@@ -73,7 +87,6 @@ dfn {
 }
 
 .dfn-panel.docked {
-  display: inline-block;
   position: fixed;
   left: 0.5em;
   top: unset;
