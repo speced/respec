@@ -89,7 +89,4 @@ export function run(conf) {
         'Please add a `<section id="conformance">`.'
     );
   }
-  // Added message for legacy compat with Aria specs
-  // See https://github.com/w3c/respec/issues/793
-  pub("end", name);
 }
