@@ -25,13 +25,6 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
-// Create and download an EPUB 3.2 version of the content
-// Using the EPUB 3.2 conversion service set up at labs.w3.org/r2epub
-// For more details on that service, see https://github.com/iherman/respec2epub
-const epubURL = new URL("https://labs.w3.org/r2epub/");
-epubURL.searchParams.append("respec", "true");
-epubURL.searchParams.append("url", document.location.href);
-
 const downloadLinks = [
   {
     id: "respec-save-as-html",
@@ -56,7 +49,15 @@ const downloadLinks = [
     fileName: "spec.epub",
     title: "EPUB 3",
     type: "application/epub+zip",
-    href: epubURL.href,
+    get href() {
+      // Create and download an EPUB 3.2 version of the content
+      // Using the EPUB 3.2 conversion service set up at labs.w3.org/r2epub
+      // For more details on that service, see https://github.com/iherman/respec2epub
+      const epubURL = new URL("https://labs.w3.org/r2epub/");
+      epubURL.searchParams.append("respec", "true");
+      epubURL.searchParams.append("url", document.location.href);
+      return epubURL.href;
+    },
   },
 ];
 
