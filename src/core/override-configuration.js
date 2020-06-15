@@ -10,9 +10,7 @@ import { pub, sub } from "./pubsubhub.js";
 export const name = "core/override-configuration";
 
 function overrideConfig(config) {
-  // For legacy reasons, we still support both ";" and "&"
-  const searchQuery = document.location.search.replace(/;/g, "&");
-  const params = new URLSearchParams(searchQuery);
+  const params = new URLSearchParams(document.location.search);
   const overrideEntries = Array.from(params)
     .filter(([key, value]) => !!key && !!value)
     .map(([codedKey, codedValue]) => {
