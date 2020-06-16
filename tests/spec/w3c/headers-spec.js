@@ -1129,6 +1129,35 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("latestVersion", () => {
+    it("adds a latest published version link", async () => {
+      const ops = makeStandardOps({ shortName: "foo", specStatus: "ED" });
+      const doc = await makeRSDoc(ops);
+
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      expect(latestVersion).toBeTruthy();
+      const latestVersionEl = latestVersion.nextElementSibling;
+      expect(latestVersionEl.localName).toBe("dd");
+      const latestVersionLink = latestVersionEl.querySelector("a");
+      expect(latestVersionLink.href).toBe("https://www.w3.org/TR/foo/");
+      expect(latestVersionLink.textContent).toBe("https://www.w3.org/TR/foo/");
+    });
+
+    it("allows skipping latest published version link in initial ED", async () => {
+      const ops = makeStandardOps({ specStatus: "ED", publishedURI: null });
+      const doc = await makeRSDoc(ops);
+
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      expect(latestVersion).toBeUndefined();
+    });
+  });
+
   describe("prevED", () => {
     it("takes prevED into account", async () => {
       const ops = makeStandardOps();

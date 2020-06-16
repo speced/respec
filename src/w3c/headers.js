@@ -325,6 +325,10 @@ export function run(conf) {
       conf.publishDate
     )}`;
   }
+  if (conf.publishedURI === null && conf.specStatus === "ED") {
+    conf.latestVersion = null;
+  }
+
   if (conf.previousPublishDate) {
     if (!conf.previousMaturity && !conf.isTagFinding) {
       pub("error", "`previousPublishDate` is set, but not `previousMaturity`.");
