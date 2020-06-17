@@ -14,8 +14,7 @@ const name = "no-unused-vars";
 const meta = {
   en: {
     description: "Variable was defined, but never used.",
-    howToFix:
-      "Add a `data-ignore-unused` attribute to the `<var>`, or consider using `<em>`/ `<code>`.",
+    howToFix: "Add a `data-ignore-unused` attribute to the `<var>`.",
     help: "See developer console.",
   },
 };
