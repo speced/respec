@@ -19,11 +19,6 @@ describe("Core Linter Rule - 'no-unused-vars'", () => {
     doc.body.innerHTML = `
       <section>
         <p><var>varA</var></p>
-        <div>
-          <ul class="algorithm">
-            <li><var>varB</var></li>
-          </ul>
-        </div>
         <section>
           <p><var>varC</var></p>
         </section>
@@ -37,18 +32,22 @@ describe("Core Linter Rule - 'no-unused-vars'", () => {
   it("complains on unused vars", async () => {
     doc.body.innerHTML = `
       <section>
-        <p><var>varA</var>  is unused</p>
+        <p><var>A</var>  is unused</p>
+        <p><var>B</var></p>
+        <p><var>Z</var> is unused</p>
         <ul class="algorithm">
-          <li><var>varB</var> is unused</li>
-          <li><var>varC</var></li>
-          <li><var>varC</var></li>
+          <li><var>B</var></li>
+          <li><var>C</var> is unused</li>
+          <li><var>D</var></li>
+          <li><var>D</var></li>
         </ul>
         <section>
-          <p><var>varD</var></p>
+          <p><var>E</var></p>
           <ul class="algorithm">
-            <li><var>varE</var></li>
-            <li><var>varF</var></li>
-            <li><var>varF</var></li>
+            <li><var>F</var></li>
+            <li><var>G</var></li>
+            <li><var>G</var></li>
+            <li><var>Z</var> is unused even though it's used in grandparent</li>
           </ul>
         </section>
       </section>
@@ -56,9 +55,9 @@ describe("Core Linter Rule - 'no-unused-vars'", () => {
 
     const result = await rule.lint(config, doc);
     expect(result.name).toBe("no-unused-vars");
-    expect(result.occurrences).toBe(4);
     const unusedVars = result.offendingElements.map(v => v.textContent);
-    expect(unusedVars).toEqual(["varA", "varB", "varD", "varE"]);
+    expect(unusedVars).toEqual(["A", "Z", "C", "E", "F", "Z"]);
+    expect(result.occurrences).toBe(6);
   });
 
   it("ignores unused vars with data-ignore-unused", async () => {
