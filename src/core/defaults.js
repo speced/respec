@@ -28,7 +28,7 @@ export const coreDefaults = {
   lint: {
     "no-headingless-sections": true,
     "no-http-props": true,
-    "no-unused-vars": true,
+    "no-unused-vars": false,
     "check-punctuation": false,
     "local-refs-exist": true,
     "check-internal-slots": false,
