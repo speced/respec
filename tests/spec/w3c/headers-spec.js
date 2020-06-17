@@ -1147,7 +1147,7 @@ describe("W3C — Headers", () => {
     });
 
     it("allows skipping latest published version link in initial ED", async () => {
-      const ops = makeStandardOps({ specStatus: "ED", publishedURI: null });
+      const ops = makeStandardOps({ specStatus: "ED", latestVersion: null });
       const doc = await makeRSDoc(ops);
 
       const terms = [...doc.querySelectorAll("dt")];

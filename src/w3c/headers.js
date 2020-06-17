@@ -317,16 +317,15 @@ export function run(conf) {
       conf.maturity
     }-${conf.shortName}-${concatDate(conf.publishDate)}/`;
   if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
-  if (conf.isRegular)
+  const skipLatestVersion =
+    conf.specStatus === "ED" && conf.latestVersion === null;
+  if (conf.isRegular && !skipLatestVersion)
     conf.latestVersion = `https://www.w3.org/${publishSpace}/${conf.shortName}/`;
   if (conf.isTagFinding) {
     conf.latestVersion = `https://www.w3.org/2001/tag/doc/${conf.shortName}`;
     conf.thisVersion = `${conf.latestVersion}-${ISODate.format(
       conf.publishDate
     )}`;
-  }
-  if (conf.publishedURI === null && conf.specStatus === "ED") {
-    conf.latestVersion = null;
   }
 
   if (conf.previousPublishDate) {
