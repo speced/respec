@@ -30,9 +30,28 @@ const lang = defaultLang in meta ? defaultLang : "en";
 function linterFunction(_, doc) {
   const offendingElements = [];
 
+  /**
+   * Check if a <section> contains a `".algorithm"`
+   *
+   * The selector matches:
+   * ``` html
+   * <section><ul class="algorithm"></ul></section>
+   * ```
+   * The selector does not match:
+   * ``` html
+   * <section><div><ul class="algorithm"></ul></div></section>
+   * <section><section><ul class="algorithm"></ul></section></section>
+   * ```
+   * @param {HTMLElement} section
+   */
+  const sectionContainsAlgorithm = section =>
+    !!section.querySelector(":scope > :not(section) ~ .algorithm");
+
   for (const section of doc.querySelectorAll("section")) {
+    if (!sectionContainsAlgorithm(section)) continue;
+
     /**
-     * <var> in this section, but excluding those in child sections
+     * `<var>` in this section, but excluding those in child sections.
      * @type {NodeListOf<HTMLElement>}
      */
     const varElems = section.querySelectorAll(":scope > :not(section) var");
