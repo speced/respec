@@ -327,7 +327,6 @@ export function run(conf) {
       conf.publishDate
     )}`;
   }
-
   if (conf.previousPublishDate) {
     if (!conf.previousMaturity && !conf.isTagFinding) {
       pub("error", "`previousPublishDate` is set, but not `previousMaturity`.");
