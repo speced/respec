@@ -10,13 +10,13 @@
  * directly by the author as well as via other modules like core/xref.
  */
 import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
-import { pub, sub } from "./pubsubhub.js";
 import {
   refTypeFromContext,
   showInlineError,
   showInlineWarning,
   wrapInner,
 } from "./utils.js";
+import { sub } from "./pubsubhub.js";
 export const name = "core/data-cite";
 
 /**
@@ -178,13 +178,6 @@ export async function run() {
   }
 
   sub("beforesave", cleanup);
-
-  // Added message for legacy compat with Aria specs
-  // See https://github.com/w3c/respec/issues/793,
-  //
-  // Why `core/link-to-dfn` and not `core/data-cite`? For backward compatibility
-  // after a refactor (https://github.com/w3c/respec/issues/2830)
-  pub("end", "core/link-to-dfn");
 }
 
 /**

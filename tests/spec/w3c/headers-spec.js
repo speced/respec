@@ -1129,6 +1129,40 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("latestVersion", () => {
+    it("adds a latest published version link", async () => {
+      const ops = makeStandardOps({ shortName: "foo", specStatus: "ED" });
+      const doc = await makeRSDoc(ops);
+
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      expect(latestVersion).toBeTruthy();
+      const latestVersionEl = latestVersion.nextElementSibling;
+      expect(latestVersionEl.localName).toBe("dd");
+      const latestVersionLink = latestVersionEl.querySelector("a");
+      expect(latestVersionLink.href).toBe("https://www.w3.org/TR/foo/");
+      expect(latestVersionLink.textContent).toBe("https://www.w3.org/TR/foo/");
+    });
+
+    it("allows skipping latest published version link in initial ED", async () => {
+      const ops = makeStandardOps({ specStatus: "ED", latestVersion: null });
+      const doc = await makeRSDoc(ops);
+
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      expect(latestVersion).toBeTruthy();
+      const latestVersionEl = latestVersion.nextElementSibling;
+      expect(latestVersionEl.localName).toBe("dd");
+      const latestVersionLink = latestVersionEl.querySelector("a");
+      expect(latestVersionLink).toBeNull();
+      expect(latestVersionEl.textContent.trim()).toBe("none");
+    });
+  });
+
   describe("prevED", () => {
     it("takes prevED into account", async () => {
       const ops = makeStandardOps();
@@ -1857,6 +1891,13 @@ describe("W3C — Headers", () => {
   });
 
   describe("logos", () => {
+    it("does not add any default logo when spec is unofficial", async () => {
+      const ops = makeStandardOps({ specStatus: "unofficial" });
+      const doc = await makeRSDoc(ops);
+      const logos = doc.querySelectorAll("a.logo");
+      expect(logos.length).toBe(0);
+    });
+
     it("adds allows multiple logos when spec is unofficial", async () => {
       const ops = makeStandardOps();
       const logos = [
@@ -1873,7 +1914,7 @@ describe("W3C — Headers", () => {
       ];
       Object.assign(ops.config, { logos, specStatus: "unofficial" });
       const doc = await makeRSDoc(ops);
-      const elems = doc.querySelectorAll("img#logo1, img#logo2");
+      const elems = doc.querySelectorAll("a.logo");
       expect(elems.length).toBe(2);
     });
 
