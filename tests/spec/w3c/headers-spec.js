@@ -1857,6 +1857,13 @@ describe("W3C — Headers", () => {
   });
 
   describe("logos", () => {
+    it("does not add any default logo when spec is unofficial", async () => {
+      const ops = makeStandardOps({ specStatus: "unofficial" });
+      const doc = await makeRSDoc(ops);
+      const logos = doc.querySelectorAll("a.logo");
+      expect(logos.length).toBe(0);
+    });
+
     it("adds allows multiple logos when spec is unofficial", async () => {
       const ops = makeStandardOps();
       const logos = [
@@ -1873,7 +1880,7 @@ describe("W3C — Headers", () => {
       ];
       Object.assign(ops.config, { logos, specStatus: "unofficial" });
       const doc = await makeRSDoc(ops);
-      const elems = doc.querySelectorAll("img#logo1, img#logo2");
+      const elems = doc.querySelectorAll("a.logo");
       expect(elems.length).toBe(2);
     });
 
