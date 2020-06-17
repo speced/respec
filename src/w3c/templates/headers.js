@@ -129,12 +129,14 @@ export default (conf, options) => {
                 >${conf.thisVersion}</a
               >
             </dd>
-            ${conf.latestVersion
-              ? html`<dt>${l10n.latest_published_version}</dt>
-                  <dd>
-                    <a href="${conf.latestVersion}">${conf.latestVersion}</a>
-                  </dd>`
-              : ""}
+            <dt>${l10n.latest_published_version}</dt>
+            <dd>
+              ${conf.latestVersion
+                ? html`<a href="${conf.latestVersion}"
+                    >${conf.latestVersion}</a
+                  >`
+                : "none"}
+            </dd>
           `
         : ""}
       ${conf.edDraftURI

@@ -1154,7 +1154,12 @@ describe("W3C — Headers", () => {
       const latestVersion = terms.find(
         el => el.textContent.trim() === "Latest published version:"
       );
-      expect(latestVersion).toBeUndefined();
+      expect(latestVersion).toBeTruthy();
+      const latestVersionEl = latestVersion.nextElementSibling;
+      expect(latestVersionEl.localName).toBe("dd");
+      const latestVersionLink = latestVersionEl.querySelector("a");
+      expect(latestVersionLink).toBeNull();
+      expect(latestVersionEl.textContent.trim()).toBe("none");
     });
   });
 
