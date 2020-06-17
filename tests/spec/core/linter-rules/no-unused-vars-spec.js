@@ -42,9 +42,9 @@ describe("Core Linter Rule - 'no-unused-vars'", () => {
           <li><var>D</var></li>
         </ul>
         <section>
-          <p><var>E</var></p>
+          <p><var>E</var> is unused</p>
           <ul class="algorithm">
-            <li><var>F</var></li>
+            <li><var>F</var> is unused</li>
             <li><var>G</var></li>
             <li><var>G</var></li>
             <li><var>Z</var> is unused even though it's used in grandparent</li>
