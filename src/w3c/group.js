@@ -20,7 +20,7 @@ export async function run(conf) {
   const usedSupersededOptions = supersededOptions.filter(opt => conf[opt]);
   if (usedSupersededOptions.length) {
     const outdatedOptionsStr = joinAnd(usedSupersededOptions, s => `\`${s}\``);
-    const msg = `Configuration options ${outdatedOptionsStr} are superseded by \`group\`. Please remove them from \`respecConfig\`.`;
+    const msg = `Configuration options ${outdatedOptionsStr} are superseded by \`group\` and will be overridden by ReSpec. Please remove them from \`respecConfig\`.`;
     pub("warn", msg);
   }
 
