@@ -24,8 +24,24 @@ export async function run(conf) {
     pub("warn", msg);
   }
 
-  const groupDetails = await getGroupDetails(conf.group);
+  const { group } = conf;
+  const groupDetails = Array.isArray(group)
+    ? await getMultipleGroupDetails(group)
+    : await getGroupDetails(group);
   Object.assign(conf, groupDetails);
+}
+
+/** @param {string[]} groups */
+async function getMultipleGroupDetails(groups) {
+  const details = await Promise.all(groups.map(getGroupDetails));
+  /** @type {{ [key in keyof GroupDetails]: GroupDetails[key][] }} */
+  const result = { wg: [], wgId: [], wgURI: [], wgPatentURI: [] };
+  for (const groupDetails of details.filter(o => o)) {
+    for (const key of Object.keys(result)) {
+      result[key].push(groupDetails[key]);
+    }
+  }
+  return result;
 }
 
 /**
