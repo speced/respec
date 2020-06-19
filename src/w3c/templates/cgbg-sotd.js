@@ -1,6 +1,6 @@
 // @ts-check
+import { l10n, renderPublicList } from "./sotd.js";
 import { html } from "../../core/import-maps.js";
-import { l10n } from "./sotd.js";
 
 export default (conf, opts) => {
   return html`
@@ -54,25 +54,7 @@ export default (conf, opts) => {
       >.
     </p>
     ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-    ${conf.wgPublicList
-      ? html`<p>
-          If you wish to make comments regarding this document, please send them
-          to
-          <a href="${opts.mailToWGPublicListWithSubject}"
-            >${conf.wgPublicList}@w3.org</a
-          >
-          (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
-          <a
-            href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
-            >archives</a
-          >)${conf.subjectPrefix
-            ? html`
-                with <code>${conf.subjectPrefix}</code> at the start of your
-                email's subject
-              `
-            : ""}.
-        </p>`
-      : ""}
+    ${conf.wgPublicList ? renderPublicList(conf, opts) : ""}
     ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
     ${opts.additionalSections}
   `;
