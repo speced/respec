@@ -60,13 +60,6 @@ async function getGroupDetails(group) {
     return { wg, wgId, wgURI, wgPatentURI };
   }
 
-  if (res.status === 404) {
-    const text = await res.text();
-    pub("error", `Invalid value for \`respecConfig.group\`. ${text}`);
-  } else {
-    pub("error", `Failed to fetch group details (HTTP: ${res.status})`);
-  }
-
   let message = `Failed to fetch group details (HTTP: ${res.status})`;
   if (res.status === 404) {
     const msg = `No group with name \`"${group}"\` found.`;
