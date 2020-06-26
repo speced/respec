@@ -48,7 +48,7 @@ describe("W3C — Group", () => {
     expect(conf.wgURI).not.toBe(inputConf.wgURI);
   });
 
-  it("fails if invalid group name is specified", async () => {
+  it("fails if group name is not known, even if it looks right", async () => {
     const conf = await getGroupConf({ group: ["404", "webapps"] });
     expect(conf.wg).toEqual(["Web Applications Working Group"]);
     expect(conf.wgId).toEqual([114929]);
