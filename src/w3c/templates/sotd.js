@@ -230,7 +230,7 @@ function renderDeliverer(conf) {
   const wontBeRec = recNotExpected
     ? "The group does not expect this document to become a W3C Recommendation."
     : "";
-  return html`<p data-deliverer="${isNote ? wgId : null}">
+  return html`<p data-deliverer="${isNote || isIGNote ? wgId : null}">
     ${producers} ${wontBeRec}
     ${!isNote && !isIGNote
       ? html`
@@ -308,26 +308,30 @@ function noteForMemberSubmission(conf) {
 
 function noteForTeamSubmission(conf, opts) {
   return html`
-    <p>
-      If you wish to make comments regarding this document, please send them to
-      <a href="${opts.mailToWGPublicListWithSubject}"
-        >${conf.wgPublicList}@w3.org</a
-      >
-      (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
-      <a href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
-        >archives</a
-      >)${conf.subjectPrefix
-        ? html`
-            with <code>${conf.subjectPrefix}</code> at the start of your email's
-            subject
-          `
-        : ""}.
-    </p>
+    ${renderPublicList(conf, opts)}
     <p>
       Please consult the complete
       <a href="https://www.w3.org/TeamSubmission/">list of Team Submissions</a>.
     </p>
   `;
+}
+
+export function renderPublicList(conf, opts) {
+  const {
+    mailToWGPublicListWithSubject,
+    mailToWGPublicListSubscription,
+  } = opts;
+  const { wgPublicList, subjectPrefix } = conf;
+  const archivesURL = `https://lists.w3.org/Archives/Public/${wgPublicList}/`;
+  return html`<p>
+    If you wish to make comments regarding this document, please send them to
+    <a href="${mailToWGPublicListWithSubject}">${wgPublicList}@w3.org</a>
+    (<a href="${mailToWGPublicListSubscription}">subscribe</a>,
+    <a href="${archivesURL}">archives</a>)${subjectPrefix
+      ? html` with <code>${subjectPrefix}</code> at the start of your email's
+          subject`
+      : ""}.
+  </p>`;
 }
 
 function linkToWorkingGroup(conf) {
