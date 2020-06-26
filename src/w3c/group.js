@@ -66,4 +66,13 @@ async function getGroupDetails(group) {
   } else {
     pub("error", `Failed to fetch group details (HTTP: ${res.status})`);
   }
+
+  let message = `Failed to fetch group details (HTTP: ${res.status})`;
+  if (res.status === 404) {
+    const msg = `No group with name \`"${group}"\` found.`;
+    const hint =
+      "Please add a [valid group name](https://github.com/w3c/respec/wiki/group) to `respecConfig.group`.";
+    message = `${msg} ${hint}`;
+  }
+  pub("error", message);
 }
