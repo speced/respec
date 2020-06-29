@@ -269,5 +269,6 @@ describe("Core — Link to definitions", () => {
 
     const testLink = doc.getElementById("test");
     expect(testLink.classList).not.toContain("respec-offending-element");
+    expect(testLink.href).toBe("https://example.com/#is-red");
   });
 });
