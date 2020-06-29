@@ -253,7 +253,7 @@ describe("Core — Link to definitions", () => {
 
   it("links to external spec with current spec as prefix", async () => {
     const body = `
-      <a id="test" data-cite="tomato-sauce#dfn-stats-object">PASS</a>
+      <a id="test" data-cite="tomato-sauce#is-red">PASS</a>
     `;
     const conf = {
       shortName: "tomato",
