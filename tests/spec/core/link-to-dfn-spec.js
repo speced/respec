@@ -250,4 +250,25 @@ describe("Core — Link to definitions", () => {
       doc.querySelectorAll("#links a[href='#dfn-test-string']").length
     ).toBe(3);
   });
+
+  it("links to external spec with current spec as prefix", async () => {
+    const body = `
+      <a id="test" data-cite="tomato-sauce#is-red">PASS</a>
+    `;
+    const conf = {
+      shortName: "tomato",
+      localBiblio: {
+        "tomato-sauce": {
+          title: "A spec to ketchup",
+          href: "https://example.com",
+        },
+      },
+    };
+    const ops = makeStandardOps(conf, body);
+    const doc = await makeRSDoc(ops);
+
+    const testLink = doc.getElementById("test");
+    expect(testLink.classList).not.toContain("respec-offending-element");
+    expect(testLink.href).toBe("https://example.com/#is-red");
+  });
 });
