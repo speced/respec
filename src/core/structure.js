@@ -187,6 +187,7 @@ export function run(conf) {
 
   // makeTOC
   if (!conf.noTOC) {
+    skipFromToC();
     const sectionTree = getSectionTree(document.body, {
       tocIntroductory: conf.tocIntroductory,
     });
@@ -221,6 +222,30 @@ function getNonintroductorySectionHeaders() {
   return [...document.querySelectorAll(headerSelector)].filter(
     elem => !elem.closest("section.introductory")
   );
+}
+
+/**
+ * For all sections having `data-max-toc=N`, make sure all their child sections
+ * do not end up in ToC.
+ */
+function skipFromToC() {
+  /** @type {NodeListOf<HTMLElement>} */
+  const sections = document.querySelectorAll("section[data-max-toc]");
+  for (const section of sections) {
+    const maxToc = parseInt(section.dataset.maxToc, 10) + 1;
+    if (maxToc < 0 || maxToc > 6) {
+      continue; // TODO: pub(error)
+    }
+    // With `data-max-toc=0`, only current section gets into ToC.
+    // With `data-max-toc=1`, we skip all ":scope > section > section" from ToC
+    // i.e., at §1, we will keep §1.1 but not §1.1.1
+    const sectionToSkipFromToC = section.querySelectorAll(
+      `:scope > ${Array.from({ length: maxToc }, () => "section").join(" > ")}`
+    );
+    for (const el of sectionToSkipFromToC) {
+      el.classList.add("notoc");
+    }
+  }
 }
 
 /**
