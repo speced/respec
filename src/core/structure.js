@@ -231,8 +231,7 @@ function getNonintroductorySectionHeaders() {
 }
 
 /**
- * For all sections having `data-max-toc=N`, make sure all their child sections
- * do not end up in ToC.
+ * Skip descendent sections from appearing in ToC using data-max-toc.
  */
 function skipFromToC() {
   /** @type {NodeListOf<HTMLElement>} */
