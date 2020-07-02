@@ -239,7 +239,7 @@ function skipFromToC() {
   for (const section of sections) {
     const maxToc = parseInt(section.dataset.maxToc, 10);
     if (maxToc < 0 || maxToc > 6 || Number.isNaN(maxToc)) {
-      const msg = "data-max-toc must be a number between 0-6 inclusive";
+      const msg = "`data-max-toc` must have a value between 0-6 (inclusive).";
       showInlineError(section, msg, msg);
       continue;
     }
