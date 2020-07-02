@@ -10,7 +10,13 @@
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
-import { addId, getIntlData, parents, renameElement } from "./utils.js";
+import {
+  addId,
+  getIntlData,
+  parents,
+  renameElement,
+  showInlineError,
+} from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -232,13 +238,22 @@ function skipFromToC() {
   /** @type {NodeListOf<HTMLElement>} */
   const sections = document.querySelectorAll("section[data-max-toc]");
   for (const section of sections) {
-    const maxToc = parseInt(section.dataset.maxToc, 10) + 1;
-    if (maxToc < 0 || maxToc > 6) {
-      continue; // TODO: pub(error)
+    const maxToc = parseInt(section.dataset.maxToc, 10);
+    if (maxToc < 0 || maxToc > 6 || Number.isNaN(maxToc)) {
+      const msg = "data-max-toc must be a number between 0-6 inclusive";
+      showInlineError(section, msg, msg);
+      continue;
     }
-    // With `data-max-toc=0`, only current section gets into ToC.
-    // With `data-max-toc=1`, we skip all ":scope > section > section" from ToC
+
+    // `data-max-toc=0` is equivalent to adding a ".notoc" to current section.
+    if (maxToc === 0) {
+      section.classList.add("notoc");
+      continue;
+    }
+
+    // When `data-max-toc=2`, we skip all ":scope > section > section" from ToC
     // i.e., at §1, we will keep §1.1 but not §1.1.1
+    // Similarly, `data-max-toc=1` will keep $1, but not $1.1
     const sectionToSkipFromToC = section.querySelectorAll(
       `:scope > ${Array.from({ length: maxToc }, () => "section").join(" > ")}`
     );
