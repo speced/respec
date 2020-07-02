@@ -252,7 +252,7 @@ function skipFromToC() {
 
     // When `data-max-toc=2`, we skip all ":scope > section > section" from ToC
     // i.e., at §1, we will keep §1.1 but not §1.1.1
-    // Similarly, `data-max-toc=1` will keep $1, but not $1.1
+    // Similarly, `data-max-toc=1` will keep §1, but not §1.1
     const sectionToSkipFromToC = section.querySelectorAll(
       `:scope > ${Array.from({ length: maxToc }, () => "section").join(" > ")}`
     );
