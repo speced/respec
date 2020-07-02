@@ -58,6 +58,29 @@ class Renderer extends marked.Renderer {
     if (/(^webidl$)/i.test(language)) {
       return `<pre class="idl">${code}</pre>`;
     }
+
+    // Extract the first comment containing "@example" as title, and treat this
+    // code block as an "example" if such comment exists.
+    const firstNonEmptyLine = code.split("\n", 3).find(s => s.trim());
+    const commentRegex = /^(\/\/|\/\*|<!--|#)\s*@example:?/;
+    if (firstNonEmptyLine && commentRegex.test(firstNonEmptyLine)) {
+      code = code.replace(`${firstNonEmptyLine}\n`, "");
+
+      const titleValue = firstNonEmptyLine
+        .replace(commentRegex, "")
+        .replace(/(\*\/|-->)$/, "")
+        .trim();
+      const title = `title="${titleValue}"`;
+
+      const html = super.code(code, language, isEscaped);
+      const htmlWithoutPre = html
+        .replace(/^<pre[^>]*>/, "")
+        .replace(/<\/pre>\n$/, "");
+
+      const className = `example ${language}`;
+      return `<pre ${title} class="${className}">${htmlWithoutPre}</pre>`;
+    }
+
     return super.code(code, language, isEscaped);
   }
 
