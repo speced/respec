@@ -10,7 +10,13 @@
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
-import { addId, getIntlData, parents, renameElement } from "./utils.js";
+import {
+  addId,
+  getIntlData,
+  parents,
+  renameElement,
+  showInlineError,
+} from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -187,6 +193,7 @@ export function run(conf) {
 
   // makeTOC
   if (!conf.noTOC) {
+    skipFromToC();
     const sectionTree = getSectionTree(document.body, {
       tocIntroductory: conf.tocIntroductory,
     });
@@ -221,6 +228,38 @@ function getNonintroductorySectionHeaders() {
   return [...document.querySelectorAll(headerSelector)].filter(
     elem => !elem.closest("section.introductory")
   );
+}
+
+/**
+ * Skip descendent sections from appearing in ToC using data-max-toc.
+ */
+function skipFromToC() {
+  /** @type {NodeListOf<HTMLElement>} */
+  const sections = document.querySelectorAll("section[data-max-toc]");
+  for (const section of sections) {
+    const maxToc = parseInt(section.dataset.maxToc, 10);
+    if (maxToc < 0 || maxToc > 6 || Number.isNaN(maxToc)) {
+      const msg = "`data-max-toc` must have a value between 0-6 (inclusive).";
+      showInlineError(section, msg, msg);
+      continue;
+    }
+
+    // `data-max-toc=0` is equivalent to adding a ".notoc" to current section.
+    if (maxToc === 0) {
+      section.classList.add("notoc");
+      continue;
+    }
+
+    // When `data-max-toc=2`, we skip all ":scope > section > section" from ToC
+    // i.e., at §1, we will keep §1.1 but not §1.1.1
+    // Similarly, `data-max-toc=1` will keep §1, but not §1.1
+    const sectionToSkipFromToC = section.querySelectorAll(
+      `:scope > ${Array.from({ length: maxToc }, () => "section").join(" > ")}`
+    );
+    for (const el of sectionToSkipFromToC) {
+      el.classList.add("notoc");
+    }
+  }
 }
 
 /**
