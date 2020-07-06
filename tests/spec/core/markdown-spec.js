@@ -514,76 +514,24 @@ function getAnswer() {
       expect(example).toBeFalsy();
     });
 
-    it("adds example class if code contains @example comment", async () => {
+    it("treats as example if example metadata exists", async () => {
       const body = `
         <section data-format="markdown" id="test">
-        \`\`\`js
-        // @example
+        \`\`\`js "example": "the title"
         console.log("hey!!");
         \`\`\`
         </section>
       `;
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
-      const pre = doc.querySelector("#test pre");
 
-      const example = pre.closest(".example");
+      const example = doc.querySelector("#test .example");
       expect(example).toBeTruthy();
-      expect(example.textContent).not.toContain("@example");
-    });
-
-    it("adds example title if @example comment with title exists", async () => {
-      const body = `
-        <section data-format="markdown" id="test">
-        \`\`\`js
-        // @example: JS like comments
-        console.log("hey!!");
-        \`\`\`
-
-        \`\`\`html
-        <!-- @example: HTML like comments -->
-        <div></div>
-        \`\`\`
-
-        \`\`\`css
-        /* @example: CSS like comments */
-        .body { color: black }
-        \`\`\`
-
-        \`\`\`bash
-        # @example: Bash like comments
-        echo hey
-        \`\`\`
-        </section>
-      `;
-      const ops = makeStandardOps(null, body);
-      const doc = await makeRSDoc(ops);
-
-      const examples = doc.querySelectorAll("#test .example");
-      // expect(examples.length).toBe(4);
-      const [js, html, css, bash] = examples;
-
-      expect(js.querySelector(".example-title").textContent).toContain(
-        "JS like comments"
-      );
-      expect(js.querySelector("pre > code.hljs .hljs-comment")).toBeFalsy();
-
-      expect(html.querySelector(".example-title").textContent).toContain(
-        "HTML like comments"
-      );
-      expect(js.querySelector("pre > code.hljs .hljs-comment")).toBeFalsy();
-
-      expect(css.querySelector(".example-title").textContent).toContain(
-        "CSS like comments"
-      );
-      expect(js.querySelector("pre > code.hljs .hljs-comment")).toBeFalsy();
-
-      expect(bash.querySelector(".example-title").textContent).toContain(
-        "Bash like comments"
-      );
-      expect(js.querySelector("pre > code.hljs .hljs-comment")).toBeFalsy();
-
-      expect(doc.getElementById("test").textContent).not.toContain("@example");
+      const title = example.querySelector(".example-title");
+      expect(title).toBeTruthy();
+      expect(title.textContent).toContain("the title");
+      expect(example.querySelector("pre").classList).toContain("js");
+      expect(example.querySelector("pre > code.hljs")).toBeTruthy();
     });
   });
 

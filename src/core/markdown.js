@@ -53,35 +53,43 @@ const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
 
 class Renderer extends marked.Renderer {
-  code(code, language, isEscaped) {
+  code(code, infoString, isEscaped) {
+    const { language, example } = Renderer.parseInfoString(infoString);
+
     // regex to check whether the language is webidl
     if (/(^webidl$)/i.test(language)) {
       return `<pre class="idl">${code}</pre>`;
     }
 
-    // Extract the first comment containing "@example" as title, and treat this
-    // code block as an "example" if such comment exists.
-    const firstNonEmptyLine = code.split("\n", 3).find(s => s.trim());
-    const commentRegex = /^(\/\/|\/\*|<!--|#)\s*@example:?/;
-    if (firstNonEmptyLine && commentRegex.test(firstNonEmptyLine)) {
-      code = code.replace(`${firstNonEmptyLine}\n`, "");
+    const html = super.code(code, language, isEscaped);
+    if (!example) return html;
+    return html.replace(
+      /^<pre[^>]*>/,
+      `<pre title="${example}" class="${language} example">`
+    );
+  }
 
-      const titleValue = firstNonEmptyLine
-        .replace(commentRegex, "")
-        .replace(/(\*\/|-->)$/, "")
-        .trim();
-      const title = `title="${titleValue}"`;
-
-      const html = super.code(code, language, isEscaped);
-      const htmlWithoutPre = html
-        .replace(/^<pre[^>]*>/, "")
-        .replace(/<\/pre>\n$/, "");
-
-      const className = `example ${language}`;
-      return `<pre ${title} class="${className}">${htmlWithoutPre}</pre>`;
+  /**
+   * @param {string} infoString
+   */
+  static parseInfoString(infoString) {
+    const firstSpace = infoString.search(/\s/);
+    if (firstSpace === -1) {
+      return { language: infoString };
     }
 
-    return super.code(code, language, isEscaped);
+    const language = infoString.slice(0, firstSpace);
+    const metaDataStr = infoString.slice(firstSpace + 1);
+    let metaData;
+    if (metaDataStr) {
+      try {
+        metaData = JSON.parse(`{ ${metaDataStr} }`);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    return { language, ...metaData };
   }
 
   heading(text, level, raw, slugger) {
