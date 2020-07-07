@@ -54,7 +54,7 @@ const ampEntity = /&amp;/gm;
 
 class Renderer extends marked.Renderer {
   code(code, infoString, isEscaped) {
-    const { language, example } = Renderer.parseInfoString(infoString);
+    const { language, ...metaData } = Renderer.parseInfoString(infoString);
 
     // regex to check whether the language is webidl
     if (/(^webidl$)/i.test(language)) {
@@ -62,10 +62,13 @@ class Renderer extends marked.Renderer {
     }
 
     const html = super.code(code, language, isEscaped);
-    if (!example) return html;
+    const { example, illegalExample } = metaData;
+    if (!example && !illegalExample) return html;
+    const title = example || illegalExample;
+    const className = `${language} ${example ? "example" : "illegal-example"}`;
     return html.replace(
       /^<pre[^>]*>/,
-      `<pre title="${example}" class="${language} example">`
+      `<pre title="${title}" class="${className}">`
     );
   }
 
