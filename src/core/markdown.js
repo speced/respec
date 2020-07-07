@@ -62,8 +62,10 @@ class Renderer extends marked.Renderer {
     }
 
     const html = super.code(code, language, isEscaped);
+
     const { example, illegalExample } = metaData;
     if (!example && !illegalExample) return html;
+
     const title = example || illegalExample;
     const className = `${language} ${example ? "example" : "illegal-example"}`;
     return html.replace(
