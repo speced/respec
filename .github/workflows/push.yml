@@ -33,10 +33,10 @@ jobs:
           timestamp=$(git show --no-patch --pretty='%cd' --date='format:%s')
           npx brrr builds/respec-w3c.js -o builds
           file_size=$(stat -c%s "builds/respec-w3c.js")
-          gzip_file_size=$(stat -c%s "builds/respec-w3c.js.br")
+          xfer_file_size=$(stat -c%s "builds/respec-w3c.js.br")
           curl --fail -L -X PUT "https://respec.org/respec/size" \
             -H "Authorization: $RESPEC_SECRET" \
-            -d "size=$file_size" -d "gzipSize=$gzip_file_size "\
+            -d "size=$file_size" -d "xferSize=$xfer_file_size "\
             -d "sha=$GITHUB_SHA" -d "timestamp=$timestamp"
         env:
           RESPEC_SECRET: ${{ secrets.RESPEC_GH_ACTION_SECRET }}
