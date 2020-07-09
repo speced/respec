@@ -497,6 +497,44 @@ function getAnswer() {
     });
   });
 
+  describe("triple-backtick code blocks", () => {
+    it("treats code blocks as regular pre-element", async () => {
+      const body = `
+        <section data-format="markdown" id="test">
+        \`\`\`js
+        console.log("hey!!");
+        \`\`\`
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const pre = doc.querySelector("#test pre");
+
+      const example = pre.closest(".example");
+      expect(example).toBeFalsy();
+    });
+
+    it("treats as example if example metadata exists", async () => {
+      const body = `
+        <section data-format="markdown" id="test">
+        \`\`\`html "example": "the title"
+        <div>&lt;soup</div>
+        \`\`\`
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+
+      const example = doc.querySelector("#test .example");
+      expect(example).toBeTruthy();
+      const title = example.querySelector(".example-title");
+      expect(title).toBeTruthy();
+      expect(title.textContent).toContain("the title");
+      expect(example.querySelector("pre").classList).toContain("html");
+      expect(example.querySelector("pre > code.hljs")).toBeTruthy();
+    });
+  });
+
   describe("Markdown-inside-block backward compatibility", () => {
     it("parses indented <pre> after a list", async () => {
       const idl = `dictionary Indented {\n  any shouldBeIndented;\n};`;
