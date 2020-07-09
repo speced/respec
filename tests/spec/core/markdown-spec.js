@@ -530,7 +530,7 @@ function getAnswer() {
       const title = example.querySelector(".example-title");
       expect(title).toBeTruthy();
       expect(title.textContent).toContain("the title");
-      expect(example.querySelector("pre").classList).toContain("js");
+      expect(example.querySelector("pre").classList).toContain("html");
       expect(example.querySelector("pre > code.hljs")).toBeTruthy();
     });
   });
