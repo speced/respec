@@ -279,7 +279,6 @@ function structure(fragment, doc) {
  */
 function restructure(elem) {
   const structuredInternals = structure(elem, elem.ownerDocument);
-  elem.setAttribute("aria-busy", "true");
   if (
     structuredInternals.firstElementChild.localName === "section" &&
     elem.localName === "section"
@@ -291,7 +290,6 @@ function restructure(elem) {
     elem.textContent = "";
   }
   elem.appendChild(structuredInternals);
-  elem.setAttribute("aria-busy", "false");
 }
 
 /**
