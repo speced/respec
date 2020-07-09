@@ -68,10 +68,7 @@ class Renderer extends marked.Renderer {
 
     const title = example || illegalExample;
     const className = `${language} ${example ? "example" : "illegal-example"}`;
-    return html.replace(
-      /^<pre[^>]*>/,
-      `<pre title="${title}" class="${className}">`
-    );
+    return html.replace("<pre>", `<pre title="${title}" class="${className}">`);
   }
 
   /**
