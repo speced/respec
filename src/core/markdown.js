@@ -274,6 +274,27 @@ function structure(fragment, doc) {
 }
 
 /**
+ * Re-structure DOM around elem whose markdown has been processed.
+ * @param {Element} elem
+ */
+function restructure(elem) {
+  const structuredInternals = structure(elem, elem.ownerDocument);
+  elem.setAttribute("aria-busy", "true");
+  if (
+    structuredInternals.firstElementChild.localName === "section" &&
+    elem.localName === "section"
+  ) {
+    const section = structuredInternals.firstElementChild;
+    section.remove();
+    elem.append(...section.childNodes);
+  } else {
+    elem.textContent = "";
+  }
+  elem.appendChild(structuredInternals);
+  elem.setAttribute("aria-busy", "false");
+}
+
+/**
  * @param {Iterable<Element>} elements
  */
 function substituteWithTextNodes(elements) {
@@ -296,29 +317,9 @@ export function run(conf) {
   }
   // Only has markdown-format sections
   if (!isMDFormat) {
-    processMDSections(document.body)
-      .map(elem => {
-        const structuredInternals = structure(elem, elem.ownerDocument);
-        return {
-          structuredInternals,
-          elem,
-        };
-      })
-      .forEach(({ elem, structuredInternals }) => {
-        elem.setAttribute("aria-busy", "true");
-        if (
-          structuredInternals.firstElementChild.localName === "section" &&
-          elem.localName === "section"
-        ) {
-          const section = structuredInternals.firstElementChild;
-          section.remove();
-          elem.append(...section.childNodes);
-        } else {
-          elem.textContent = "";
-        }
-        elem.appendChild(structuredInternals);
-        elem.setAttribute("aria-busy", "false");
-      });
+    for (const processedElem of processMDSections(document.body)) {
+      restructure(processedElem);
+    }
     return;
   }
   // We transplant the UI to do the markdown processing
