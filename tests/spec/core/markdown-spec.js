@@ -517,8 +517,8 @@ function getAnswer() {
     it("treats as example if example metadata exists", async () => {
       const body = `
         <section data-format="markdown" id="test">
-        \`\`\`js "example": "the title"
-        console.log("hey!!");
+        \`\`\`html "example": "the title"
+        <div>&lt;soup</div>
         \`\`\`
         </section>
       `;
