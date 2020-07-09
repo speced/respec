@@ -277,7 +277,7 @@ function structure(fragment, doc) {
  * Re-structure DOM around elem whose markdown has been processed.
  * @param {Element} elem
  */
-function restructure(elem) {
+export function restructure(elem) {
   const structuredInternals = structure(elem, elem.ownerDocument);
   if (
     structuredInternals.firstElementChild.localName === "section" &&

@@ -9,20 +9,11 @@
 //  This module only really works when you are in an HTTP context, and will most likely
 //  fail if you are editing your documents on your local drive. That is due to security
 //  restrictions in the browser.
-import { getElementIndentation, runTransforms } from "./utils.js";
+import { markdownToHtml, restructure } from "./markdown.js";
 import { pub } from "./pubsubhub.js";
+import { runTransforms } from "./utils.js";
 
 export const name = "core/data-include";
-
-/**
- * @param {string} text
- * @param {string} indent
- */
-function indentTextWithoutFirstLine(text, indent) {
-  const lines = text.split("\n");
-  const firstLine = lines.shift();
-  return `${firstLine}\n${lines.map(line => indent + line).join("\n")}`;
-}
 
 /**
  * @param {HTMLElement} el
@@ -34,17 +25,17 @@ function fillWithText(el, data, { replace }) {
   const { includeFormat } = el.dataset;
   let fill = data;
   if (includeFormat === "markdown") {
-    const indentation = getElementIndentation(el);
-    const indented = indentTextWithoutFirstLine(data, indentation);
-    fill = replace
-      ? indented // use element indentation
-      : `\n\n${indentation}${indented}\n\n${indentation}`;
+    fill = markdownToHtml(fill);
   }
 
   if (includeFormat === "text") {
     el.textContent = fill;
   } else {
     el.innerHTML = fill;
+  }
+
+  if (includeFormat === "markdown") {
+    restructure(el);
   }
 
   if (replace) {
