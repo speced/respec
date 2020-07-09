@@ -5,6 +5,7 @@ import {
   makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
+  makeStandardOps,
 } from "../SpecHelper.js";
 
 describe("Core — Data Include", () => {
@@ -178,6 +179,45 @@ describe("Core — Data Include", () => {
       expect(li.parentElement.parentElement.localName).toBe("section");
       // Shouldn't break other sections
       expect(doc.getElementById("abstract")).toBeTruthy();
+    });
+
+    it("processes markdown with unescaped html code blocks", async () => {
+      const includeBody = `
+        ## Test
+
+        A paragraph.
+
+        \`\`\`html
+        <!DOCTYPE html>
+        <html lang="en">
+          <body>
+            <div class="note">note</div>
+          </body>
+        </html>
+        \`\`\`
+      `;
+      const body = `<section
+        id="includes"
+        data-include-format="markdown"
+        data-include="${generateDataUrl(includeBody)}"
+      ></section>`;
+
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+
+      const h2 = doc.querySelector("#includes > h2");
+      expect(h2).toBeTruthy();
+      expect(h2.textContent).toContain("Test");
+
+      const p = doc.querySelector("#includes > p");
+      expect(p).toBeTruthy();
+      expect(p.textContent).toBe("A paragraph.");
+
+      const pre = doc.querySelector("#includes > pre");
+      expect(pre.querySelector("code").classList).toContain("html");
+      expect(pre.textContent).toContain("<!DOCTYPE html>");
+
+      expect(doc.querySelector("#includes .note")).toBeFalsy();
     });
   });
 });
