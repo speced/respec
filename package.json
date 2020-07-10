@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "25.11.0",
+  "version": "25.12.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -8,8 +8,10 @@
     "npm": ">=5"
   },
   "bin": {
+    "respec": "./tools/respec2html.js",
     "respec2html": "./tools/respec2html.js"
   },
+  "main": "./tools/respecDocWriter.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/w3c/respec.git"
@@ -28,13 +30,13 @@
     "chokidar": "^3.4.0",
     "clean-css": "^4.2.3",
     "epipebomb": "^1.0.0",
-    "eslint": "^7.3.0",
+    "eslint": "^7.4.0",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jasmine": "^4.1.1",
     "eslint-plugin-prettier": "^3.1.4",
     "highlight.js": "^10.1.1",
-    "hyperhtml": "^2.32.2",
+    "hyperhtml": "^2.33.0",
     "idb": "^5.0.4",
     "jasmine": "^3.5.0",
     "jquery": "^3.5.1",
@@ -51,14 +53,14 @@
     "pluralize": "^8.0.0",
     "prettier": "^2.0.5",
     "prompt": "^1.0.0",
-    "rollup": "^2.18.0",
+    "rollup": "^2.21.0",
     "rollup-plugin-alias": "^2.2.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^6.1.0",
     "serve": "^11.3.2",
-    "snyk": "^1.346.0",
-    "typescript": "^3.9.5",
+    "snyk": "^1.361.3",
+    "typescript": "^3.9.6",
     "webidl2": "^23.12.1"
   },
   "scripts": {
@@ -87,7 +89,7 @@
     "colors": "^1.4.0",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.1.0",
-    "puppeteer": "^4.0.0"
+    "puppeteer": "^5.0.0"
   },
   "files": [
     "builds/",

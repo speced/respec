@@ -172,6 +172,77 @@ describe("Core - Structure", () => {
     );
   });
 
+  describe("data-max-toc", () => {
+    it("skips current section from ToC with data-max-toc=0", async () => {
+      const body = `
+        <section><h2>PASS</h2></section>
+        <section data-max-toc="0">
+          <h2>SKIPPED</h2>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+
+      const toc = doc.getElementById("toc");
+      expect(toc.querySelectorAll(":scope > ol > li").length).toBe(1);
+      const tocItem = toc.querySelector(":scope > ol > li");
+      expect(tocItem.textContent.trim()).toContain("PASS");
+      expect(tocItem.textContent.trim()).not.toContain("SKIPPED");
+    });
+
+    it("skips descendent sections from ToC", async () => {
+      const body = `
+        <section data-max-toc="2">
+          <h2>PASS 1</h2>
+          <section>
+            <h2>PASS 2</h2>
+            <section>
+              <h2>SKIPPED</h2>
+            </section>
+          </section>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const toc = doc.getElementById("toc");
+
+      const level1Item = toc.querySelector(":scope > ol > li");
+      expect(level1Item).toBeTruthy();
+      expect(level1Item.textContent).toContain("1. PASS 1");
+
+      const level2Item = toc.querySelector(":scope > ol > li > ol > li");
+      expect(level2Item).toBeTruthy();
+      expect(level2Item.textContent).toContain("1.1 PASS 2");
+
+      const level3Item = toc.querySelector(":scope > ol > li > ol > li li");
+      expect(level3Item).toBeFalsy();
+      expect(toc.textContent).not.toContain("SKIPPED");
+      expect(toc.textContent).not.toContain("1.1.1");
+    });
+
+    it("ignores data-max-toc if not in valid range", async () => {
+      const body = `
+        <section id="test" data-max-toc="7">
+          <h2>PASS 0</h2>
+          <section>
+            <h2>PASS 1</h2>
+            <section>
+              <h2>PASS 2</h2>
+            </section>
+          </section>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const toc = doc.getElementById("toc");
+
+      expect(toc.querySelectorAll(":scope .toc").length).toBe(3);
+      expect(doc.getElementById("test").classList).toContain(
+        "respec-offending-element"
+      );
+    });
+  });
+
   it("should correctly put all headings until maxTocLevel in ToC", async () => {
     const times = (n, fn) =>
       Array.from({ length: n }, (_, i) => fn(i)).join("\n");
