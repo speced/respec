@@ -32,14 +32,9 @@ function toRunnable(plug) {
         if (plug.Plugin) {
           await new plug.Plugin(config).run();
           resolve();
-        } else if (plug.run.length <= 1) {
+        } else if (plug.run) {
           await plug.run(config);
           resolve();
-        } else {
-          console.warn(
-            `Plugin ${name} uses a deprecated callback signature. Return a Promise instead. Read more at: https://github.com/w3c/respec/wiki/Developers-Guide#plugins`
-          );
-          plug.run(config, document, resolve);
         }
       } catch (err) {
         reject(err);
