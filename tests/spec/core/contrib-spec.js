@@ -20,7 +20,7 @@ describe("Core — Contributors", () => {
     const doc = await makeRSDoc(ops);
     const contributors = doc.querySelector("#gh-contributors");
     expect(contributors.textContent).toBe(
-      "Bobby Tables, buzz_aldrin, and Neil Armstrong"
+      "Bobby Tables, buzz_aldrin, and Neil Armstrong."
     );
   });
 

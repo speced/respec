@@ -88,5 +88,5 @@ function toHTML(contributors, element) {
   }
 
   const names = sortedContributors.map(user => user.name || user.login);
-  element.textContent = joinAnd(names);
+  element.textContent = `${joinAnd(names)}.`;
 }
