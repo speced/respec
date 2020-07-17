@@ -313,7 +313,7 @@ describe("Core - Utils", () => {
       const intl = getIntlData(localizationStrings, "ko");
       expect(intl.foo).toBe("KO Foo");
 
-      const intlEn = getIntlData(localizationStrings, "en");
+      const intlEn = getIntlData(localizationStrings, "EN");
       expect(intlEn.foo).toBe("EN Foo");
     });
 
@@ -428,7 +428,6 @@ describe("Core - Utils", () => {
   });
 
   describe("DOM utils", () => {
-    // migrated from core/jquery-enhanced
     describe("getTextNodes", () => {
       it("finds all the text nodes", () => {
         const node = document.createElement("div");

@@ -331,7 +331,7 @@ function resolveLanguageAlias(lang) {
  * @returns {T[keyof T]}
  */
 export function getIntlData(localizationStrings, lang = docLang) {
-  lang = resolveLanguageAlias(lang);
+  lang = resolveLanguageAlias(lang.toLowerCase());
   // Proxy return type is a known bug:
   // https://github.com/Microsoft/TypeScript/issues/20846
   // @ts-ignore
