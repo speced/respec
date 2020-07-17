@@ -428,7 +428,6 @@ describe("Core - Utils", () => {
   });
 
   describe("DOM utils", () => {
-    // migrated from core/jquery-enhanced
     describe("getTextNodes", () => {
       it("finds all the text nodes", () => {
         const node = document.createElement("div");
