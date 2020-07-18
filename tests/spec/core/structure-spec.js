@@ -347,4 +347,27 @@ describe("Core - Structure", () => {
     expect(links[1].hash).toBe("#zwei");
     expect(links[1].textContent).toBe("2. TWO");
   });
+
+  it("generates correct appendix numbers", async () => {
+    // Choosing 53 as 53/26 gives us 3 different sequences of appendix
+    // numbers: A,B,C... AA,AB,AC... BA,BB,BC..
+    const appendixCount = 53;
+
+    const body = Array.from(
+      { length: appendixCount },
+      (_, i) => `<section class="appendix"><h2>${i + 1}</h2></section>`
+    ).join("\n");
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const toc = doc.getElementById("toc");
+    const sectionNumbers = toc.querySelectorAll(".secno");
+    expect(sectionNumbers.length).toBe(appendixCount);
+    expect(sectionNumbers[0].textContent.trim()).toBe("A.");
+    expect(sectionNumbers[1].textContent.trim()).toBe("B.");
+    expect(sectionNumbers[25].textContent.trim()).toBe("Z.");
+    expect(sectionNumbers[26].textContent.trim()).toBe("AA.");
+    expect(sectionNumbers[27].textContent.trim()).toBe("AB.");
+    expect(sectionNumbers[52].textContent.trim()).toBe("BA.");
+  });
 });
