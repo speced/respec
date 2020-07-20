@@ -449,7 +449,7 @@ function showErrors({ ambiguous, notFound }) {
   };
 
   const howToFix = howToCiteURL =>
-    "[Learn more about this error](https://respec.org/docs/#errors-faq)" +
+    "[Learn more about this error](https://respec.org/docs/#error-term-not-found)" +
     ` or see [how to cite to resolve the error](${howToCiteURL})`;
 
   for (const { query, elems } of notFound.values()) {
