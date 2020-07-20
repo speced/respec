@@ -3,7 +3,7 @@ on:
   workflow_dispatch: {}
   push:
     branches:
-      - refs/tags/*
+      - gh-pages
 
 jobs:
   changelog:
@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: develop
       - uses: actions/setup-ruby@v1
       - run: gem install github_changelog_generator
       - run: github_changelog_generator -u w3c -p respec --no-unreleased
