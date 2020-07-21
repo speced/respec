@@ -16,7 +16,7 @@ assignees: ""
 
 **What happened (e.g., it crashed)?:**
 
-**But what I was expecting?:**
+**Expected behavior (e.g., it shouldn't crash):**
 
 **Optional, steps to reproduce:**
 
