@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "25.12.0",
+  "version": "25.12.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -27,10 +27,10 @@
     "@types/pluralize": "0.0.29",
     "boxen": "^4.2.0",
     "chai": "^4.2.0",
-    "chokidar": "^3.4.0",
+    "chokidar": "^3.4.1",
     "clean-css": "^4.2.3",
     "epipebomb": "^1.0.0",
-    "eslint": "^7.4.0",
+    "eslint": "^7.5.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jasmine": "^4.1.1",
@@ -49,18 +49,18 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
     "loading-indicator": "^2.0.0",
-    "marked": "^1.1.0",
+    "marked": "^1.1.1",
     "pluralize": "^8.0.0",
     "prettier": "^2.0.5",
     "prompt": "^1.0.0",
-    "rollup": "^2.21.0",
+    "rollup": "^2.22.1",
     "rollup-plugin-alias": "^2.2.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^6.1.0",
     "serve": "^11.3.2",
-    "snyk": "^1.361.3",
-    "typescript": "^3.9.6",
+    "snyk": "^1.363.0",
+    "typescript": "^3.9.7",
     "webidl2": "^23.12.1"
   },
   "scripts": {
@@ -89,7 +89,7 @@
     "colors": "^1.4.0",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.1.0",
-    "puppeteer": "^5.0.0"
+    "puppeteer": "^5.2.0"
   },
   "files": [
     "builds/",

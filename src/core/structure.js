@@ -2,8 +2,6 @@
 // Module core/structure
 //  Handles producing the ToC and numbering sections across the document.
 
-// LIMITATION:
-//  At this point we don't support having more than 26 appendices.
 // CONFIGURATION:
 //  - noTOC: if set to true, no TOC is generated and sections are not numbered
 //  - tocIntroductory: if set to true, the introductory material is listed in the TOC
@@ -23,7 +21,6 @@ import { pub } from "./pubsubhub.js";
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
 const headerTags = ["h1", ...lowerHeaderTags];
 
-const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
 
 const localizationStrings = {
@@ -81,7 +78,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
     let secno = section.isIntro
       ? ""
       : appendixMode
-      ? alphabet.charAt(index - lastNonAppendix)
+      ? appendixNumber(index - lastNonAppendix + 1)
       : prefix + index;
     const level = secno.split(".").length;
     if (level === 1) {
@@ -110,6 +107,21 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
     }
   }
   return ol;
+}
+
+/**
+ * Convert a number to spreadsheet like column name.
+ * For example, 1=A, 26=Z, 27=AA, 28=AB and so on..
+ * @param {number} num
+ */
+function appendixNumber(num) {
+  let s = "";
+  while (num > 0) {
+    num -= 1;
+    s = String.fromCharCode(65 + (num % 26)) + s;
+    num = Math.floor(num / 26);
+  }
+  return s;
 }
 
 /**
