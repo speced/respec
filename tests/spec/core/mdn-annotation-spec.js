@@ -87,7 +87,7 @@ describe("Core - MDN Annotation", () => {
     const iconBad = poorSupportedMdnPanel.querySelector(
       "details summary span:nth-child(2)"
     );
-    expect(iconBad.title).toMatch(/less than two current/);
+    expect(iconBad.title).toContain("has limited support");
     expect(iconBad.textContent).toBe("🚫");
     const textBad = poorSupportedMdnPanel.querySelector("details p");
     expect(textBad.classList).toContain("engines-some");
@@ -98,7 +98,7 @@ describe("Core - MDN Annotation", () => {
     const iconGood = goodSupportedMdnPanel.querySelector(
       "details summary span:nth-child(2)"
     );
-    expect(iconGood.title).toMatch(/all current engines/);
+    expect(iconGood.title).toContain("all major engines");
     expect(iconGood.textContent).toBe("✅");
     const textGood = goodSupportedMdnPanel.querySelector("details p");
     expect(textGood.classList).toContain("engines-all");
