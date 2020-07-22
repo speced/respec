@@ -22,9 +22,9 @@ describe("Core - Utils", () => {
         expect(cache).toBeTruthy();
         const cachedResponse = await cache.match(url);
         expect(cachedResponse).toBeTruthy();
-        const expires = new Date(
-          cachedResponse.headers.get("Expires")
-        ).valueOf();
+        const expiresHeader = cachedResponse.headers.get("Expires");
+        expect(expiresHeader).toBe(new Date(expiresHeader).toISOString());
+        const expires = new Date(expiresHeader).valueOf();
         expect(expires).toBeGreaterThan(Date.now());
         // default is 86400000, but we give a little leeway (~1 day)
         expect(expires).toBeGreaterThan(Date.now() + 86000000);
