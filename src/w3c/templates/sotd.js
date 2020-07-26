@@ -1,6 +1,7 @@
 // @ts-check
 import { getIntlData } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
+import { pub } from "../../core/pubsubhub.js";
 
 const localizationStrings = {
   en: {
@@ -230,9 +231,18 @@ function renderDeliverer(conf) {
   const wontBeRec = recNotExpected
     ? "The group does not expect this document to become a W3C Recommendation."
     : "";
+  if (!charterDisclosureURI && !wgPatentURI) {
+    pub(
+      "error",
+      "Document is missing patent disclosure information. Please associate this document " +
+        "with a W3C group by using the [`group`](https://respec.org/docs/#group) " +
+        "configuration option."
+    );
+    return;
+  }
   return html`<p data-deliverer="${isNote || isIGNote ? wgId : null}">
     ${producers} ${wontBeRec}
-    ${!isNote && !isIGNote
+    ${!isNote && !isIGNote && !charterDisclosureURI
       ? html`
           ${multipleWGs
             ? html` W3C maintains ${wgPatentHTML} `
@@ -257,7 +267,7 @@ function renderDeliverer(conf) {
           >.
         `
       : ""}
-    ${isIGNote
+    ${isIGNote || charterDisclosureURI
       ? html`
           The disclosure obligations of the Participants of this group are
           described in the
