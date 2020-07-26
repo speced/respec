@@ -64,7 +64,8 @@ async function getGroupDetails(group) {
   if (res.status === 404) {
     const msg = `No group with name \`"${group}"\` found.`;
     const hint =
-      "Please add a [valid group name](https://github.com/w3c/respec/wiki/group) to `respecConfig.group`.";
+      "See [supported group names](https://respec.org/w3c/groups/) to use with the " +
+      "[`group`](https://github.com/w3c/respec/wiki/group) configuration option.";
     message = `${msg} ${hint}`;
   }
   pub("error", message);
