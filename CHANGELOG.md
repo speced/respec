@@ -1,5 +1,27 @@
 # Changelog
 
+## [v25.12.1](https://github.com/w3c/respec/tree/v25.12.1) (2020-07-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.12.0...v25.12.1)
+
+**Closed issues:**
+
+- Support different casing of language tags [\#3021](https://github.com/w3c/respec/issues/3021)
+
+**Merged pull requests:**
+
+- chore: update dependencies [\#3029](https://github.com/w3c/respec/pull/3029) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore: update issue templates [\#3028](https://github.com/w3c/respec/pull/3028) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(ci/changelog\): generate on push to gh-pages [\#3026](https://github.com/w3c/respec/pull/3026) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/xref\): add link to detailed error resolution [\#3025](https://github.com/w3c/respec/pull/3025) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/structure\): support more than 26 appendices [\#3024](https://github.com/w3c/respec/pull/3024) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore: no longer build jQuery dependency [\#3023](https://github.com/w3c/respec/pull/3023) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/utils\): case-insensitively match l10n language [\#3022](https://github.com/w3c/respec/pull/3022) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore: bump lodash from 4.17.15 to 4.17.19 [\#3018](https://github.com/w3c/respec/pull/3018) ([dependabot[bot]](https://github.com/apps/dependabot))
+- refactor\(core/base-runner\): remove redundant canMeasure checks [\#3015](https://github.com/w3c/respec/pull/3015) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/base-runner\): remove legacy plugin support [\#3014](https://github.com/w3c/respec/pull/3014) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3013](https://github.com/w3c/respec/pull/3013) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v25.12.0](https://github.com/w3c/respec/tree/v25.12.0) (2020-07-10)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v25.11.0...v25.12.0)
@@ -32,6 +54,8 @@
 - feat\(package\): better Node.js support [\#2990](https://github.com/w3c/respec/pull/2990) ([sidvishnoi](https://github.com/sidvishnoi))
 - feat\(core/markdown\): treat markdown code snippets as 'example' [\#2989](https://github.com/w3c/respec/pull/2989) ([sidvishnoi](https://github.com/sidvishnoi))
 - feat\(core/structure\): use data-max-toc to limit ToC per section [\#2988](https://github.com/w3c/respec/pull/2988) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/link-to-dfn\): make current-spec regex more conservative [\#2985](https://github.com/w3c/respec/pull/2985) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(README\): remove greenkeeper badge, add respec.org status [\#2980](https://github.com/w3c/respec/pull/2980) ([sidvishnoi](https://github.com/sidvishnoi))
 
 ## [v25.11.0](https://github.com/w3c/respec/tree/v25.11.0) (2020-06-26)
 
@@ -49,7 +73,6 @@
 
 **Merged pull requests:**
 
-- chore\(README\): remove greenkeeper badge, add respec.org status [\#2980](https://github.com/w3c/respec/pull/2980) ([sidvishnoi](https://github.com/sidvishnoi))
 - chore: update dependencies [\#2978](https://github.com/w3c/respec/pull/2978) ([sidvishnoi](https://github.com/sidvishnoi))
 - refactor\(w3c/templates\): de-duplicate publicList template [\#2972](https://github.com/w3c/respec/pull/2972) ([sidvishnoi](https://github.com/sidvishnoi))
 - chore\(CHANGELOG\): regenerate v25.8.0...v25.10.0 [\#2971](https://github.com/w3c/respec/pull/2971) ([sidvishnoi](https://github.com/sidvishnoi))
@@ -70,7 +93,6 @@
 
 **Merged pull requests:**
 
-- fix\(core/link-to-dfn\): make current-spec regex more conservative [\#2985](https://github.com/w3c/respec/pull/2985) ([sidvishnoi](https://github.com/sidvishnoi))
 - fix\(w3c/headers\): allow skipping latest published version in ED [\#2968](https://github.com/w3c/respec/pull/2968) ([sidvishnoi](https://github.com/sidvishnoi))
 - fix\(w3c/defaults\): do not add W3C logo in unofficial specs [\#2967](https://github.com/w3c/respec/pull/2967) ([sidvishnoi](https://github.com/sidvishnoi))
 - fix\(ui/save-html\): use new epub service [\#2965](https://github.com/w3c/respec/pull/2965) ([sidvishnoi](https://github.com/sidvishnoi))
@@ -180,7 +202,6 @@
 - chore\(ci\): use npm ci instead of npm i [\#2872](https://github.com/w3c/respec/pull/2872) ([sidvishnoi](https://github.com/sidvishnoi))
 - chore\(ci\): update checkout to v2 [\#2871](https://github.com/w3c/respec/pull/2871) ([sidvishnoi](https://github.com/sidvishnoi))
 - refactor\(core/utils\): de-duplicate code in showInlineError [\#2870](https://github.com/w3c/respec/pull/2870) ([sidvishnoi](https://github.com/sidvishnoi))
-- chore: remove unnecessary dependencies [\#2863](https://github.com/w3c/respec/pull/2863) ([sidvishnoi](https://github.com/sidvishnoi))
 
 ## [v25.7.1](https://github.com/w3c/respec/tree/v25.7.1) (2020-05-15)
 
@@ -206,6 +227,7 @@
 **Merged pull requests:**
 
 - feat\(core/mdn-annotation\): allow providing custom key [\#2864](https://github.com/w3c/respec/pull/2864) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore: remove unnecessary dependencies [\#2863](https://github.com/w3c/respec/pull/2863) ([sidvishnoi](https://github.com/sidvishnoi))
 - fix\(core/inlines\): remove unnecessary title from RFC2119 matches [\#2862](https://github.com/w3c/respec/pull/2862) ([sidvishnoi](https://github.com/sidvishnoi))
 - \[Snyk\] Fix for 1 vulnerabilities [\#2858](https://github.com/w3c/respec/pull/2858) ([snyk-bot](https://github.com/snyk-bot))
 - refactor\(core/link-to-dfn\): extract findMatchingDfn function [\#2853](https://github.com/w3c/respec/pull/2853) ([sidvishnoi](https://github.com/sidvishnoi))
@@ -633,7 +655,6 @@
 - Fixes: \#2614 \(Allow "webidl" css class on pre tags to denote a WebIDL block\) [\#2627](https://github.com/w3c/respec/pull/2627) ([ridhishjain](https://github.com/ridhishjain))
 - refactor\(w3c/conformance\): use htmlJoinAnd [\#2623](https://github.com/w3c/respec/pull/2623) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
 - refactor\(core/utils\): remove unused utils functions [\#2622](https://github.com/w3c/respec/pull/2622) ([ridhishjain](https://github.com/ridhishjain))
-- refactor\(core/utils\): add `htmlJoinAnd` utility [\#2613](https://github.com/w3c/respec/pull/2613) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
 
 ## [v24.37.1](https://github.com/w3c/respec/tree/v24.37.1) (2019-12-10)
 
@@ -667,6 +688,7 @@
 **Merged pull requests:**
 
 - enhancement\(core/dfn\): add support for `data-local-lt` [\#2616](https://github.com/w3c/respec/pull/2616) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor: remove requirejs dependency [\#2598](https://github.com/w3c/respec/pull/2598) ([saschanaz](https://github.com/saschanaz))
 
 ## [v24.36.0](https://github.com/w3c/respec/tree/v24.36.0) (2019-12-09)
 
@@ -683,12 +705,12 @@
 
 **Merged pull requests:**
 
+- refactor\(core/utils\): add `htmlJoinAnd` utility [\#2613](https://github.com/w3c/respec/pull/2613) ([SuyashSalampuria](https://github.com/SuyashSalampuria))
 - chore\(package\): update dependencies [\#2612](https://github.com/w3c/respec/pull/2612) ([saschanaz](https://github.com/saschanaz))
 - fix\(core/markdown\): more forgiving WebIDL language tag [\#2611](https://github.com/w3c/respec/pull/2611) ([janiceshiu](https://github.com/janiceshiu))
 - fix\(core/markdown\): syntax highlight in fenced blocks [\#2608](https://github.com/w3c/respec/pull/2608) ([sidvishnoi](https://github.com/sidvishnoi))
 - chore\(tools/dev-server\): cleanup builds directory on exit [\#2604](https://github.com/w3c/respec/pull/2604) ([sidvishnoi](https://github.com/sidvishnoi))
 - refactor: prefer inline HTML over bind\(\) [\#2599](https://github.com/w3c/respec/pull/2599) ([saschanaz](https://github.com/saschanaz))
-- refactor: remove requirejs dependency [\#2598](https://github.com/w3c/respec/pull/2598) ([saschanaz](https://github.com/saschanaz))
 - refactor\(core/github\): provide a more flexible apiBase [\#2594](https://github.com/w3c/respec/pull/2594) ([sidvishnoi](https://github.com/sidvishnoi))
 - feat\(linter-rules/tests-exist\): confirm that tests exist in WPT [\#2593](https://github.com/w3c/respec/pull/2593) ([sidvishnoi](https://github.com/sidvishnoi))
 
@@ -702,6 +724,7 @@
 
 **Merged pull requests:**
 
+- refactor\(core/data-tests\): refactor into smaller functions [\#2592](https://github.com/w3c/respec/pull/2592) ([sidvishnoi](https://github.com/sidvishnoi))
 - enhancement\(core/markdown\): support backticks for webidl [\#2591](https://github.com/w3c/respec/pull/2591) ([sidvishnoi](https://github.com/sidvishnoi))
 
 ## [v24.35.2](https://github.com/w3c/respec/tree/v24.35.2) (2019-11-27)
@@ -719,7 +742,6 @@
 - Link to GitHub commits wrong [\#2582](https://github.com/w3c/respec/issues/2582)
 - Use rollup dev server or watcher [\#2559](https://github.com/w3c/respec/issues/2559)
 - Use GitHub v4 API [\#1519](https://github.com/w3c/respec/issues/1519)
-- Test suite linter should check if test files exist [\#1381](https://github.com/w3c/respec/issues/1381)
 
 **Merged pull requests:**
 
@@ -739,7 +761,6 @@
 
 **Merged pull requests:**
 
-- refactor\(core/data-tests\): refactor into smaller functions [\#2592](https://github.com/w3c/respec/pull/2592) ([sidvishnoi](https://github.com/sidvishnoi))
 - feat\(w3c/seo\): Improve JSON-LD export of citations [\#2585](https://github.com/w3c/respec/pull/2585) ([wetneb](https://github.com/wetneb))
 - Add conformance section to starter.html. [\#2583](https://github.com/w3c/respec/pull/2583) ([wetneb](https://github.com/wetneb))
 - chore\(CHANGELOG\): regenerate [\#2581](https://github.com/w3c/respec/pull/2581) ([sidvishnoi](https://github.com/sidvishnoi))
@@ -832,6 +853,8 @@
 - chore\(package\): update deps [\#2550](https://github.com/w3c/respec/pull/2550) ([marcoscaceres](https://github.com/marcoscaceres))
 - Update puppeteer to the latest version 🚀 [\#2549](https://github.com/w3c/respec/pull/2549) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
 - chore: fix some nits [\#2547](https://github.com/w3c/respec/pull/2547) ([saschanaz](https://github.com/saschanaz))
+- fix\(assets/mdn-annotation.css\): link to svgs to fix 404 opera and samsung icons [\#2544](https://github.com/w3c/respec/pull/2544) ([janiceshiu](https://github.com/janiceshiu))
+- chore: use @ts-check in all src files [\#2543](https://github.com/w3c/respec/pull/2543) ([NotWoods](https://github.com/NotWoods))
 
 ## [v24.34.0](https://github.com/w3c/respec/tree/v24.34.0) (2019-10-14)
 
@@ -845,8 +868,6 @@
 **Merged pull requests:**
 
 - chore\(package\): update deps [\#2545](https://github.com/w3c/respec/pull/2545) ([marcoscaceres](https://github.com/marcoscaceres))
-- fix\(assets/mdn-annotation.css\): link to svgs to fix 404 opera and samsung icons [\#2544](https://github.com/w3c/respec/pull/2544) ([janiceshiu](https://github.com/janiceshiu))
-- chore: use @ts-check in all src files [\#2543](https://github.com/w3c/respec/pull/2543) ([NotWoods](https://github.com/NotWoods))
 - refactor: use Map and spread operator [\#2542](https://github.com/w3c/respec/pull/2542) ([saschanaz](https://github.com/saschanaz))
 - fix\(assets/issues-notes\): fix warning icon styling [\#2539](https://github.com/w3c/respec/pull/2539) ([dbass2](https://github.com/dbass2))
 - refactor\(core/issues-notes\): use respec.org based GitHub API [\#2538](https://github.com/w3c/respec/pull/2538) ([sidvishnoi](https://github.com/sidvishnoi))
@@ -1148,7 +1169,6 @@
 - xref: fallback to parent data-cite while searching [\#2428](https://github.com/w3c/respec/issues/2428)
 - tests/xref: make it easy to update test files [\#2427](https://github.com/w3c/respec/issues/2427)
 - An in-range update of webpack is breaking the build 🚨 [\#2425](https://github.com/w3c/respec/issues/2425)
-- Make \[Exposed=...\] mandatory on all interfaces and namespaces  [\#1370](https://github.com/w3c/respec/issues/1370)
 
 **Merged pull requests:**
 
@@ -1477,11 +1497,6 @@
 
 [Full Changelog](https://github.com/w3c/respec/compare/v24.20.0...v24.21.0)
 
-**Merged pull requests:**
-
-- fix\(core/utils\): treat introductory matter as non-normative [\#2116](https://github.com/w3c/respec/pull/2116) ([marcoscaceres](https://github.com/marcoscaceres))
-- feat\(core/mdn-annotation\): allow MDN annotations [\#2110](https://github.com/w3c/respec/pull/2110) ([EvsChen](https://github.com/EvsChen))
-
 ## [v24.20.0](https://github.com/w3c/respec/tree/v24.20.0) (2019-04-24)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v24.19.0...v24.20.0)
@@ -1757,6 +1772,7 @@
 **Merged pull requests:**
 
 - Update serve to the latest version 🚀 [\#2226](https://github.com/w3c/respec/pull/2226) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- feat\(core/inlines\): Auto-expand inline references [\#2222](https://github.com/w3c/respec/pull/2222) ([Swapnilr1](https://github.com/Swapnilr1))
 
 ## [v24.9.1](https://github.com/w3c/respec/tree/v24.9.1) (2019-04-02)
 
@@ -1811,13 +1827,13 @@
 
 **Merged pull requests:**
 
-- feat\(core/inlines\): Auto-expand inline references [\#2222](https://github.com/w3c/respec/pull/2222) ([Swapnilr1](https://github.com/Swapnilr1))
 - chore\(package\): update deps [\#2220](https://github.com/w3c/respec/pull/2220) ([marcoscaceres](https://github.com/marcoscaceres))
 - refactor\(w3c/templates\): remove some redundants  [\#2218](https://github.com/w3c/respec/pull/2218) ([saschanaz](https://github.com/saschanaz))
 - fix\(core/data-abbr\): normalize abbreviations [\#2213](https://github.com/w3c/respec/pull/2213) ([devanshbatra04](https://github.com/devanshbatra04))
 - feat\(assets/respec2\): make inline warnings visually pop [\#2209](https://github.com/w3c/respec/pull/2209) ([marcoscaceres](https://github.com/marcoscaceres))
 - SpecHelper: Process body attributes [\#2206](https://github.com/w3c/respec/pull/2206) ([Swapnilr1](https://github.com/Swapnilr1))
 - \(core/xref\) : xref defaults [\#2188](https://github.com/w3c/respec/pull/2188) ([Swapnilr1](https://github.com/Swapnilr1))
+- Add \<cite\> when data-cite='spec' is used [\#2171](https://github.com/w3c/respec/pull/2171) ([pradeepgangwar](https://github.com/pradeepgangwar))
 
 ## [v24.7.1](https://github.com/w3c/respec/tree/v24.7.1) (2019-03-28)
 
@@ -1946,13 +1962,13 @@
 
 **Merged pull requests:**
 
-- Add \<cite\> when data-cite='spec' is used [\#2171](https://github.com/w3c/respec/pull/2171) ([pradeepgangwar](https://github.com/pradeepgangwar))
 - feat\(core/xref\): Use respec.org for xref API  [\#2158](https://github.com/w3c/respec/pull/2158) ([sidvishnoi](https://github.com/sidvishnoi))
 - feat\(core/xref\): collect similar errors [\#2157](https://github.com/w3c/respec/pull/2157) ([sidvishnoi](https://github.com/sidvishnoi))
 - fix copy-paste button visibility in spec print [\#2156](https://github.com/w3c/respec/pull/2156) ([ThobyV](https://github.com/ThobyV))
 - refactor\(core/inlines.js\): split target code into sub functions [\#2151](https://github.com/w3c/respec/pull/2151) ([himanish-star](https://github.com/himanish-star))
 - Hide copy paste button while printing [\#2150](https://github.com/w3c/respec/pull/2150) ([pradeepgangwar](https://github.com/pradeepgangwar))
 - feat\(tools/builder\): add debug mode [\#2149](https://github.com/w3c/respec/pull/2149) ([saschanaz](https://github.com/saschanaz))
+- fix\(w3c/conformance\): always emit an end event [\#2148](https://github.com/w3c/respec/pull/2148) ([saschanaz](https://github.com/saschanaz))
 - Adding @ts-check [\#2146](https://github.com/w3c/respec/pull/2146) ([isunitha98selvan](https://github.com/isunitha98selvan))
 
 ## [v24.4.5](https://github.com/w3c/respec/tree/v24.4.5) (2019-03-12)
@@ -1966,10 +1982,6 @@
 **Closed issues:**
 
 - Add package-lock.json to .gitignore [\#2145](https://github.com/w3c/respec/issues/2145)
-
-**Merged pull requests:**
-
-- fix\(w3c/conformance\): always emit an end event [\#2148](https://github.com/w3c/respec/pull/2148) ([saschanaz](https://github.com/saschanaz))
 
 ## [v24.4.4](https://github.com/w3c/respec/tree/v24.4.4) (2019-03-06)
 
@@ -2002,6 +2014,7 @@
 
 - test\(xref-spec\): fix webauthn url [\#2138](https://github.com/w3c/respec/pull/2138) ([saschanaz](https://github.com/saschanaz))
 - fix\(assets/issue-notes\): don't uppercase boxed titles [\#2136](https://github.com/w3c/respec/pull/2136) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/figures\): localize module [\#2135](https://github.com/w3c/respec/pull/2135) ([ThobyV](https://github.com/ThobyV))
 - fix\(core/highlight\): wrap pre content's in code, per HTML spec [\#2132](https://github.com/w3c/respec/pull/2132) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v24.4.2](https://github.com/w3c/respec/tree/v24.4.2) (2019-03-01)
@@ -2019,7 +2032,6 @@
 **Merged pull requests:**
 
 - Remove w3c hardcoding [\#2129](https://github.com/w3c/respec/pull/2129) ([isunitha98selvan](https://github.com/isunitha98selvan))
-- fix\(assets/bp.css\): style best practices consistently [\#2083](https://github.com/w3c/respec/pull/2083) ([Johanna-hub](https://github.com/Johanna-hub))
 
 ## [v24.4.1](https://github.com/w3c/respec/tree/v24.4.1) (2019-02-28)
 
@@ -2032,10 +2044,10 @@
 
 **Merged pull requests:**
 
-- refactor\(core/figures\): localize module [\#2135](https://github.com/w3c/respec/pull/2135) ([ThobyV](https://github.com/ThobyV))
 -  add localization strings for module examples.js [\#2128](https://github.com/w3c/respec/pull/2128) ([ThobyV](https://github.com/ThobyV))
 - chore\(package\): revert to cli branch [\#2125](https://github.com/w3c/respec/pull/2125) ([saschanaz](https://github.com/saschanaz))
 - Pull request to add localization strings and tests for module render-biblio. [\#2123](https://github.com/w3c/respec/pull/2123) ([ThobyV](https://github.com/ThobyV))
+- fix\(assets/bp.css\): style best practices consistently [\#2083](https://github.com/w3c/respec/pull/2083) ([Johanna-hub](https://github.com/Johanna-hub))
 
 ## [v24.4.0](https://github.com/w3c/respec/tree/v24.4.0) (2019-02-23)
 
@@ -2052,7 +2064,6 @@
 - Part 4 - fix: spec lacking conformance section are informative [\#2122](https://github.com/w3c/respec/pull/2122) ([marcoscaceres](https://github.com/marcoscaceres))
 - Part 3.1 -  refactor: import biblio in modules [\#2121](https://github.com/w3c/respec/pull/2121) ([marcoscaceres](https://github.com/marcoscaceres))
 - Part 2 - feat\(core/biblio\): export const biblio [\#2119](https://github.com/w3c/respec/pull/2119) ([marcoscaceres](https://github.com/marcoscaceres))
-- Part 1 - refactor: use textContent instead of innerText [\#2118](https://github.com/w3c/respec/pull/2118) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(core/structure\): add nbsp after § [\#2117](https://github.com/w3c/respec/pull/2117) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(core/issue-notes\) Improve GitHub issue labels [\#2091](https://github.com/w3c/respec/pull/2091) ([pradeepgangwar](https://github.com/pradeepgangwar))
 
@@ -2070,6 +2081,8 @@
 
 **Merged pull requests:**
 
+- Part 1 - refactor: use textContent instead of innerText [\#2118](https://github.com/w3c/respec/pull/2118) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/utils\): treat introductory matter as non-normative [\#2116](https://github.com/w3c/respec/pull/2116) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(package\): hljs cli now in main branch [\#2115](https://github.com/w3c/respec/pull/2115) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v24.3.3](https://github.com/w3c/respec/tree/v24.3.3) (2019-02-19)
@@ -2087,6 +2100,7 @@
 
 **Merged pull requests:**
 
+- feat\(core/mdn-annotation\): allow MDN annotations [\#2110](https://github.com/w3c/respec/pull/2110) ([EvsChen](https://github.com/EvsChen))
 - chore\(package\): don't snyk during prepare [\#2107](https://github.com/w3c/respec/pull/2107) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(core/reindent\): export module's name [\#2106](https://github.com/w3c/respec/pull/2106) ([marcoscaceres](https://github.com/marcoscaceres))
 - Update mocha to the latest version 🚀 [\#2105](https://github.com/w3c/respec/pull/2105) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
@@ -2134,7 +2148,6 @@
 **Merged pull requests:**
 
 - fix: reindent only pre elements [\#2082](https://github.com/w3c/respec/pull/2082) ([saschanaz](https://github.com/saschanaz))
-- chore\(package\): update deps [\#2079](https://github.com/w3c/respec/pull/2079) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v24.3.0](https://github.com/w3c/respec/tree/v24.3.0) (2019-02-07)
 
@@ -2158,6 +2171,7 @@
 **Merged pull requests:**
 
 - style: apply spaced-comment eslint rule [\#2080](https://github.com/w3c/respec/pull/2080) ([saschanaz](https://github.com/saschanaz))
+- chore\(package\): update deps [\#2079](https://github.com/w3c/respec/pull/2079) ([marcoscaceres](https://github.com/marcoscaceres))
 - refactor\(core/linter-rules\): add ts-check [\#2077](https://github.com/w3c/respec/pull/2077) ([saschanaz](https://github.com/saschanaz))
 - test: fix eslint not globbing correctly on Linux [\#2076](https://github.com/w3c/respec/pull/2076) ([saschanaz](https://github.com/saschanaz))
 - feat\(core/linter-rules\): added linter for checking charset is utf-8 [\#2075](https://github.com/w3c/respec/pull/2075) ([CodHeK](https://github.com/CodHeK))
@@ -2205,7 +2219,6 @@
 - Update karma to the latest version 🚀 [\#2044](https://github.com/w3c/respec/pull/2044) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
 - fix\(core/caniuse\): Add emojis for status in print stylesheet [\#2043](https://github.com/w3c/respec/pull/2043) ([CodHeK](https://github.com/CodHeK))
 - fix\(core/data-tests\): Remove duplicates [\#2040](https://github.com/w3c/respec/pull/2040) ([Johanna-hub](https://github.com/Johanna-hub))
-- fix\(core/examples\): Correct href links [\#2039](https://github.com/w3c/respec/pull/2039) ([Johanna-hub](https://github.com/Johanna-hub))
 
 ## [v24.2.3](https://github.com/w3c/respec/tree/v24.2.3) (2019-01-21)
 
@@ -2230,6 +2243,7 @@
 
 **Merged pull requests:**
 
+- fix\(core/examples\): Correct href links [\#2039](https://github.com/w3c/respec/pull/2039) ([Johanna-hub](https://github.com/Johanna-hub))
 - \[Snyk\] Fix for 1 vulnerable dependencies [\#2037](https://github.com/w3c/respec/pull/2037) ([snyk-bot](https://github.com/snyk-bot))
 - Greenkeeper/karma safaritechpreview launcher 2.0.2 [\#2036](https://github.com/w3c/respec/pull/2036) ([marcoscaceres](https://github.com/marcoscaceres))
 
@@ -2292,7 +2306,6 @@
 
 - fix: add a symlink for sourcemap [\#2011](https://github.com/w3c/respec/pull/2011) ([saschanaz](https://github.com/saschanaz))
 - Added CSS for assertions [\#2009](https://github.com/w3c/respec/pull/2009) ([Swapnilr1](https://github.com/Swapnilr1))
-- refactor: put assets into /assets [\#2007](https://github.com/w3c/respec/pull/2007) ([saschanaz](https://github.com/saschanaz))
 
 ## [v24.1.0](https://github.com/w3c/respec/tree/v24.1.0) (2019-01-07)
 
@@ -2306,7 +2319,6 @@
 
 - chore\(package\): update deps [\#2002](https://github.com/w3c/respec/pull/2002) ([marcoscaceres](https://github.com/marcoscaceres))
 - linter rule for internal slots [\#1982](https://github.com/w3c/respec/pull/1982) ([saurabhmittal16](https://github.com/saurabhmittal16))
-- refactor\(core/tests\): remove jQuery from core/issues-notes and w3c/headers-spec [\#1979](https://github.com/w3c/respec/pull/1979) ([devanshbatra04](https://github.com/devanshbatra04))
 
 ## [v24.0.0](https://github.com/w3c/respec/tree/v24.0.0) (2019-01-05)
 
@@ -2336,6 +2348,7 @@
 
 **Merged pull requests:**
 
+- refactor: put assets into /assets [\#2007](https://github.com/w3c/respec/pull/2007) ([saschanaz](https://github.com/saschanaz))
 - test\(core/link-to-dfn\): ensure data-lt is preferred [\#2001](https://github.com/w3c/respec/pull/2001) ([saschanaz](https://github.com/saschanaz))
 - fix\(core/github\): link GitHub at-risk issues [\#2000](https://github.com/w3c/respec/pull/2000) ([saschanaz](https://github.com/saschanaz))
 - refactor\(core/data-cite\): reword console output [\#1999](https://github.com/w3c/respec/pull/1999) ([marcoscaceres](https://github.com/marcoscaceres))
@@ -2351,6 +2364,7 @@
 - refactor\(tests/spec/core\): use getElementById [\#1983](https://github.com/w3c/respec/pull/1983) ([saschanaz](https://github.com/saschanaz))
 - BREAKING CHANGE: migrate to webpack [\#1981](https://github.com/w3c/respec/pull/1981) ([saschanaz](https://github.com/saschanaz))
 - refactor: remove dynamic require\(\) [\#1980](https://github.com/w3c/respec/pull/1980) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/tests\): remove jQuery from core/issues-notes and w3c/headers-spec [\#1979](https://github.com/w3c/respec/pull/1979) ([devanshbatra04](https://github.com/devanshbatra04))
 - refactor\(tests/test-main\): remove redundant lines [\#1978](https://github.com/w3c/respec/pull/1978) ([saschanaz](https://github.com/saschanaz))
 - refactor\(tests/spec\): remove jQuery [\#1977](https://github.com/w3c/respec/pull/1977) ([devanshbatra04](https://github.com/devanshbatra04))
 - feat\(core/pluralize\): add singularize capability [\#1974](https://github.com/w3c/respec/pull/1974) ([devanshbatra04](https://github.com/devanshbatra04))
@@ -2562,10 +2576,6 @@
 ## [v23.4.0](https://github.com/w3c/respec/tree/v23.4.0) (2018-10-14)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v23.3.0...v23.4.0)
-
-**Implemented enhancements:**
-
-- Reuse cb\(\) for requestIdleCallback [\#1363](https://github.com/w3c/respec/issues/1363)
 
 **Fixed bugs:**
 
@@ -2836,7 +2846,6 @@
 - fix\(core/webidl\): only set pre id when needed [\#1796](https://github.com/w3c/respec/pull/1796) ([marcoscaceres](https://github.com/marcoscaceres))
 - feat\(core/xref\): cache results [\#1758](https://github.com/w3c/respec/pull/1758) ([sidvishnoi](https://github.com/sidvishnoi))
 - feat\(w3c/templates/sotd\): prefer github [\#1740](https://github.com/w3c/respec/pull/1740) ([marcoscaceres](https://github.com/marcoscaceres))
-- fix\(core/biblio\): prevent SpecRef request if there are no refs [\#1734](https://github.com/w3c/respec/pull/1734) ([sidvishnoi](https://github.com/sidvishnoi))
 
 ## [v22.3.5](https://github.com/w3c/respec/tree/v22.3.5) (2018-08-07)
 
@@ -2961,6 +2970,7 @@
 - refactor\(core/pluralize\): separate pluralization from data-lt [\#1739](https://github.com/w3c/respec/pull/1739) ([sidvishnoi](https://github.com/sidvishnoi))
 - fix\(core/webidl\): extra space between optional and identifier [\#1738](https://github.com/w3c/respec/pull/1738) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(core/webidl\): normalize enum value ids [\#1735](https://github.com/w3c/respec/pull/1735) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/biblio\): prevent SpecRef request if there are no refs [\#1734](https://github.com/w3c/respec/pull/1734) ([sidvishnoi](https://github.com/sidvishnoi))
 - feat\(core/xref\): support external dfn [\#1733](https://github.com/w3c/respec/pull/1733) ([sidvishnoi](https://github.com/sidvishnoi))
 - fix\(core/xref\): use empty data-cite for local references [\#1732](https://github.com/w3c/respec/pull/1732) ([sidvishnoi](https://github.com/sidvishnoi))
 
@@ -3102,7 +3112,6 @@
 **Merged pull requests:**
 
 - feat\(core/dfn\): add automatic pluralization support for \<dfn\> [\#1682](https://github.com/w3c/respec/pull/1682) ([sidvishnoi](https://github.com/sidvishnoi))
-- BREAKING CHANGE: Remove deprecated things [\#1681](https://github.com/w3c/respec/pull/1681) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v20.11.2](https://github.com/w3c/respec/tree/v20.11.2) (2018-05-25)
 
@@ -3126,7 +3135,7 @@
 
 **Merged pull requests:**
 
-- fix: link-to-dfn module may report a TypeError [\#1673](https://github.com/w3c/respec/pull/1673) ([sidvishnoi](https://github.com/sidvishnoi))
+- BREAKING CHANGE: Remove deprecated things [\#1681](https://github.com/w3c/respec/pull/1681) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(tools/respecDocWriter\): support Puppeteer 1.4 error reporting [\#1671](https://github.com/w3c/respec/pull/1671) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v20.11.0](https://github.com/w3c/respec/tree/v20.11.0) (2018-05-14)
@@ -3140,6 +3149,7 @@
 
 **Merged pull requests:**
 
+- fix: link-to-dfn module may report a TypeError [\#1673](https://github.com/w3c/respec/pull/1673) ([sidvishnoi](https://github.com/sidvishnoi))
 - Fix temp ID syntax in list sorter [\#1665](https://github.com/w3c/respec/pull/1665) ([tidoust](https://github.com/tidoust))
 - \(feat/lint\) Warns about href's that link to nonexistent id's in a spec [\#1664](https://github.com/w3c/respec/pull/1664) ([sidvishnoi](https://github.com/sidvishnoi))
 - Update var highlight colors [\#1663](https://github.com/w3c/respec/pull/1663) ([sidvishnoi](https://github.com/sidvishnoi))
@@ -3207,9 +3217,7 @@
 - Remove IDL legacy things [\#1638](https://github.com/w3c/respec/pull/1638) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(w3c/headers\): implementationReportURI CR only [\#1634](https://github.com/w3c/respec/pull/1634) ([marcoscaceres](https://github.com/marcoscaceres))
 - Fix: caniuse layout and click issues on mobile [\#1627](https://github.com/w3c/respec/pull/1627) ([sidvishnoi](https://github.com/sidvishnoi))
-- feat\(w3c/headers\): warn about old WPT URL [\#1622](https://github.com/w3c/respec/pull/1622) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(core/caniuse\): export as "caniuse.com" [\#1619](https://github.com/w3c/respec/pull/1619) ([sidvishnoi](https://github.com/sidvishnoi))
-- feat\(core/linter-rules/punctuation\): Log offending elements [\#1617](https://github.com/w3c/respec/pull/1617) ([shikhar-scs](https://github.com/shikhar-scs))
 - feat\(core/highlight-vars\): highlight vars in algos [\#1588](https://github.com/w3c/respec/pull/1588) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v20.9.0](https://github.com/w3c/respec/tree/v20.9.0) (2018-04-26)
@@ -3240,6 +3248,8 @@
 
 - feat: support personal github tokens for testing [\#1630](https://github.com/w3c/respec/pull/1630) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(core/issue-notes\): give issues a unique ID [\#1629](https://github.com/w3c/respec/pull/1629) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(w3c/headers\): warn about old WPT URL [\#1622](https://github.com/w3c/respec/pull/1622) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/linter-rules/punctuation\): Log offending elements [\#1617](https://github.com/w3c/respec/pull/1617) ([shikhar-scs](https://github.com/shikhar-scs))
 - feat\(core/images\): add natural width and height to images\(\#923\) [\#1616](https://github.com/w3c/respec/pull/1616) ([himanish-star](https://github.com/himanish-star))
 
 ## [v20.7.2](https://github.com/w3c/respec/tree/v20.7.2) (2018-04-17)
@@ -3290,7 +3300,6 @@
 - test\(headless\): reduce tested specs [\#1608](https://github.com/w3c/respec/pull/1608) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(tools/respecDocWriter\): stringify JSHandle objects from console [\#1607](https://github.com/w3c/respec/pull/1607) ([saschanaz](https://github.com/saschanaz))
 - feat\(core/utils\): Utils fetch and cache [\#1602](https://github.com/w3c/respec/pull/1602) ([marcoscaceres](https://github.com/marcoscaceres))
-- feat\(core/issues-notes\): show github labels [\#1583](https://github.com/w3c/respec/pull/1583) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v20.5.1](https://github.com/w3c/respec/tree/v20.5.1) (2018-04-03)
 
@@ -3368,6 +3377,7 @@
 **Merged pull requests:**
 
 - fix: restore whitespace between status and date [\#1591](https://github.com/w3c/respec/pull/1591) ([deniak](https://github.com/deniak))
+- feat\(core/issues-notes\): show github labels [\#1583](https://github.com/w3c/respec/pull/1583) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v20.2.1](https://github.com/w3c/respec/tree/v20.2.1) (2018-03-21)
 
@@ -3507,7 +3517,6 @@
 - chore\(deps\): update hyperhtml [\#1531](https://github.com/w3c/respec/pull/1531) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(w3c/jsonld\): make async, used description [\#1528](https://github.com/w3c/respec/pull/1528) ([marcoscaceres](https://github.com/marcoscaceres))
 - jsonld uses undefined "xsd" namespace [\#1527](https://github.com/w3c/respec/pull/1527) ([gkellogg](https://github.com/gkellogg))
-- fix\(tools/respec2html\): resolve src to file URL [\#1524](https://github.com/w3c/respec/pull/1524) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v20.0.0](https://github.com/w3c/respec/tree/v20.0.0) (2018-02-22)
 
@@ -3521,6 +3530,7 @@
 
 - BREAKING CHANGE: Remove RDFa support. [\#1526](https://github.com/w3c/respec/pull/1526) ([gkellogg](https://github.com/gkellogg))
 - refactor\(w3c/headers\): use w3c defaults [\#1525](https://github.com/w3c/respec/pull/1525) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(tools/respec2html\): resolve src to file URL [\#1524](https://github.com/w3c/respec/pull/1524) ([marcoscaceres](https://github.com/marcoscaceres))
 - chore\(package\): updates puppeteer + marked [\#1523](https://github.com/w3c/respec/pull/1523) ([marcoscaceres](https://github.com/marcoscaceres))
 - chore\(.gitignore\): use globs [\#1518](https://github.com/w3c/respec/pull/1518) ([saschanaz](https://github.com/saschanaz))
 - JSON-LD SEO support [\#1517](https://github.com/w3c/respec/pull/1517) ([gkellogg](https://github.com/gkellogg))
@@ -3564,6 +3574,7 @@
 **Merged pull requests:**
 
 - Link to duplicate dfns [\#1477](https://github.com/w3c/respec/pull/1477) ([himanish-star](https://github.com/himanish-star))
+- workaround: add git commit hash [\#1464](https://github.com/w3c/respec/pull/1464) ([saschanaz](https://github.com/saschanaz))
 
 ## [v19.3.0](https://github.com/w3c/respec/tree/v19.3.0) (2018-02-13)
 
@@ -3613,6 +3624,7 @@
 - Forked repositories cannot run karma tests on Travis? [\#1462](https://github.com/w3c/respec/issues/1462)
 - marked stripping "\*" from pre [\#1389](https://github.com/w3c/respec/issues/1389)
 - Github links should include link to pull requests [\#1373](https://github.com/w3c/respec/issues/1373)
+- Make \[Exposed=...\] mandatory on all interfaces and namespaces  [\#1370](https://github.com/w3c/respec/issues/1370)
 - Add missing aria-spec [\#906](https://github.com/w3c/respec/issues/906)
 - Better handling for when specref goes down [\#828](https://github.com/w3c/respec/issues/828)
 
@@ -3655,7 +3667,6 @@
 - Migrate to ES2017 async functions [\#1471](https://github.com/w3c/respec/pull/1471) ([saschanaz](https://github.com/saschanaz))
 - feat: support interface mixins [\#1468](https://github.com/w3c/respec/pull/1468) ([saschanaz](https://github.com/saschanaz))
 - chore\(package\): update webidl2.js to version 10.2.0 [\#1465](https://github.com/w3c/respec/pull/1465) ([saschanaz](https://github.com/saschanaz))
-- workaround: add git commit hash [\#1464](https://github.com/w3c/respec/pull/1464) ([saschanaz](https://github.com/saschanaz))
 - fix: roll back to uglify-es 3.2.2 [\#1461](https://github.com/w3c/respec/pull/1461) ([saschanaz](https://github.com/saschanaz))
 - Fix Nightmare API use [\#1460](https://github.com/w3c/respec/pull/1460) ([saschanaz](https://github.com/saschanaz))
 
@@ -3685,7 +3696,6 @@
 - Update http-server to the latest version 🚀 [\#1452](https://github.com/w3c/respec/pull/1452) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
 - Cleanup various things [\#1451](https://github.com/w3c/respec/pull/1451) ([marcoscaceres](https://github.com/marcoscaceres))
 - Update karma to the latest version 🚀 [\#1449](https://github.com/w3c/respec/pull/1449) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
-- Update fs-extra to the latest version 🚀 [\#1442](https://github.com/w3c/respec/pull/1442) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
 
 ## [v19.0.1](https://github.com/w3c/respec/tree/v19.0.1) (2017-12-19)
 
@@ -3709,6 +3719,7 @@
 
 - Improve patent text on notes [\#1446](https://github.com/w3c/respec/pull/1446) ([marcoscaceres](https://github.com/marcoscaceres))
 - chore\(package\): update deps [\#1444](https://github.com/w3c/respec/pull/1444) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update fs-extra to the latest version 🚀 [\#1442](https://github.com/w3c/respec/pull/1442) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
 - chore\(package\): update deps [\#1436](https://github.com/w3c/respec/pull/1436) ([marcoscaceres](https://github.com/marcoscaceres))
 - fix\(package\): update hyperhtml to version 2.1.2 [\#1434](https://github.com/w3c/respec/pull/1434) ([marcoscaceres](https://github.com/marcoscaceres))
 - Remove more jquery [\#1432](https://github.com/w3c/respec/pull/1432) ([marcoscaceres](https://github.com/marcoscaceres))
@@ -3868,6 +3879,7 @@
 
 - case-insensitive sorting of references [\#1396](https://github.com/w3c/respec/issues/1396)
 - Custom logos: width and height swapped in Firefox 56.0.1 [\#1391](https://github.com/w3c/respec/issues/1391)
+- Test suite linter should check if test files exist [\#1381](https://github.com/w3c/respec/issues/1381)
 - Says Note but Pubrules rejects [\#653](https://github.com/w3c/respec/issues/653)
 
 **Merged pull requests:**
@@ -3965,6 +3977,10 @@
 ## [v15.8.3](https://github.com/w3c/respec/tree/v15.8.3) (2017-08-14)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v15.8.2...v15.8.3)
+
+**Implemented enhancements:**
+
+- Reuse cb\(\) for requestIdleCallback [\#1363](https://github.com/w3c/respec/issues/1363)
 
 **Fixed bugs:**
 
@@ -4193,7 +4209,6 @@
 
 - chore\(travis\): try reducing concurreny [\#1306](https://github.com/w3c/respec/pull/1306) ([marcoscaceres](https://github.com/marcoscaceres))
 - Perftime [\#1304](https://github.com/w3c/respec/pull/1304) ([marcoscaceres](https://github.com/marcoscaceres))
-- refactor\(core/utils\): a few simplifications [\#1303](https://github.com/w3c/respec/pull/1303) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v15.0.2](https://github.com/w3c/respec/tree/v15.0.2) (2017-06-29)
 
@@ -4217,6 +4232,7 @@
 
 **Merged pull requests:**
 
+- refactor\(core/utils\): a few simplifications [\#1303](https://github.com/w3c/respec/pull/1303) ([marcoscaceres](https://github.com/marcoscaceres))
 - BREAKING CHANGE\(core/webidl\): deprecate serializers [\#1300](https://github.com/w3c/respec/pull/1300) ([marcoscaceres](https://github.com/marcoscaceres))
 - Moar es6 conversions... [\#1299](https://github.com/w3c/respec/pull/1299) ([marcoscaceres](https://github.com/marcoscaceres))
 
@@ -4486,7 +4502,6 @@
 
 - Going faster than browsers in corporate environments \(e.g., Firefox ESR\) [\#1159](https://github.com/w3c/respec/issues/1159)
 - npm deprecation warning [\#1148](https://github.com/w3c/respec/issues/1148)
-- Retire shiv module [\#775](https://github.com/w3c/respec/issues/775)
 - Unnecessary complexity of plugins [\#669](https://github.com/w3c/respec/issues/669)
 - toExecPromise\(\) should become its own module [\#615](https://github.com/w3c/respec/issues/615)
 - Problem with sequence parametrized types with multiple types [\#457](https://github.com/w3c/respec/issues/457)
@@ -4506,10 +4521,6 @@
 **Fixed bugs:**
 
 - data-cite with a missing spec identifier crashes plugin [\#1198](https://github.com/w3c/respec/issues/1198)
-
-**Closed issues:**
-
-- Greenkeeper no longer working [\#1192](https://github.com/w3c/respec/issues/1192)
 
 **Merged pull requests:**
 
@@ -4702,6 +4713,10 @@
 
 [Full Changelog](https://github.com/w3c/respec/compare/v11.4.3...v11.4.4)
 
+**Closed issues:**
+
+- Greenkeeper no longer working [\#1192](https://github.com/w3c/respec/issues/1192)
+
 **Merged pull requests:**
 
 - only request comments on wgPublicList if it exists [\#1195](https://github.com/w3c/respec/pull/1195) ([chaals](https://github.com/chaals))
@@ -4826,6 +4841,7 @@
 - fix\(tests/headless\): don't double build respec [\#1156](https://github.com/w3c/respec/pull/1156) ([marcoscaceres](https://github.com/marcoscaceres))
 - test\(.travis.yml\): try tests up to 3 times [\#1155](https://github.com/w3c/respec/pull/1155) ([marcoscaceres](https://github.com/marcoscaceres))
 - Moar es6 [\#1154](https://github.com/w3c/respec/pull/1154) ([marcoscaceres](https://github.com/marcoscaceres))
+- Moar es6 [\#1153](https://github.com/w3c/respec/pull/1153) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v11.1.0](https://github.com/w3c/respec/tree/v11.1.0) (2017-03-13)
 
@@ -4841,7 +4857,6 @@
 
 **Merged pull requests:**
 
-- Moar es6 [\#1153](https://github.com/w3c/respec/pull/1153) ([marcoscaceres](https://github.com/marcoscaceres))
 - l10n: use l10n strings instead of English words [\#1149](https://github.com/w3c/respec/pull/1149) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v11.0.0](https://github.com/w3c/respec/tree/v11.0.0) (2017-03-10)
@@ -4905,10 +4920,6 @@
 
 - Run "npm run hb:build" before building [\#1127](https://github.com/w3c/respec/issues/1127)
 
-**Closed issues:**
-
-- document.body is null in respect-w3c-common:14:10169 [\#1123](https://github.com/w3c/respec/issues/1123)
-
 ## [v10.5.10](https://github.com/w3c/respec/tree/v10.5.10) (2017-03-03)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v10.5.9...v10.5.10)
@@ -4916,6 +4927,10 @@
 **Fixed bugs:**
 
 - White screen -- sometimes [\#1113](https://github.com/w3c/respec/issues/1113)
+
+**Closed issues:**
+
+- document.body is null in respect-w3c-common:14:10169 [\#1123](https://github.com/w3c/respec/issues/1123)
 
 **Merged pull requests:**
 
@@ -5285,7 +5300,6 @@
 **Merged pull requests:**
 
 - perf\(core/include-config\): add script after end-all [\#1062](https://github.com/w3c/respec/pull/1062) ([marcoscaceres](https://github.com/marcoscaceres))
-- Feat\(save-html\): remove XHTML 1.0 save support [\#762](https://github.com/w3c/respec/pull/762) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v8.9.0](https://github.com/w3c/respec/tree/v8.9.0) (2017-02-01)
 
@@ -5397,6 +5411,7 @@
 
 - feat\(webidl-contiguous\): link method\(\) and enum "" [\#1023](https://github.com/w3c/respec/pull/1023) ([marcoscaceres](https://github.com/marcoscaceres))
 - Update snyk to version 1.23.3 🚀 [\#1022](https://github.com/w3c/respec/pull/1022) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.23.0 🚀 [\#1014](https://github.com/w3c/respec/pull/1014) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
 
 ## [v8.2.0](https://github.com/w3c/respec/tree/v8.2.0) (2017-01-09)
 
@@ -5423,7 +5438,6 @@
 - refactor: convert various modules to ES6 [\#1021](https://github.com/w3c/respec/pull/1021) ([marcoscaceres](https://github.com/marcoscaceres))
 - Update snyk to version 1.23.2 🚀 [\#1019](https://github.com/w3c/respec/pull/1019) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
 - Update snyk to version 1.23.1 🚀 [\#1015](https://github.com/w3c/respec/pull/1015) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
-- Update snyk to version 1.23.0 🚀 [\#1014](https://github.com/w3c/respec/pull/1014) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
 - feat\(data-cite\): add support for data-cite attribute [\#1008](https://github.com/w3c/respec/pull/1008) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v8.0.1](https://github.com/w3c/respec/tree/v8.0.1) (2017-01-03)
@@ -5456,7 +5470,6 @@
 **Merged pull requests:**
 
 - Unjquery data-include [\#1004](https://github.com/w3c/respec/pull/1004) ([marcoscaceres](https://github.com/marcoscaceres))
-- feat\(highlight\): add JSON support [\#1003](https://github.com/w3c/respec/pull/1003) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v7.3.1](https://github.com/w3c/respec/tree/v7.3.1) (2016-12-23)
 
@@ -5465,6 +5478,10 @@
 ## [v7.3.0](https://github.com/w3c/respec/tree/v7.3.0) (2016-12-23)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v7.2.3...v7.3.0)
+
+**Merged pull requests:**
+
+- feat\(highlight\): add JSON support [\#1003](https://github.com/w3c/respec/pull/1003) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v7.2.3](https://github.com/w3c/respec/tree/v7.2.3) (2016-12-23)
 
@@ -5785,7 +5802,6 @@
 
 - feat: use ol in ToC \(closes \#835\) [\#909](https://github.com/w3c/respec/pull/909) ([marcoscaceres](https://github.com/marcoscaceres))
 - Update snyk to version 1.18.0 🚀 [\#908](https://github.com/w3c/respec/pull/908) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
-- fix: generalize nodejs location \(closes \#899\) [\#902](https://github.com/w3c/respec/pull/902) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v4.3.4](https://github.com/w3c/respec/tree/v4.3.4) (2016-08-04)
 
@@ -5802,6 +5818,10 @@
 **Implemented enhancements:**
 
 - Build scripts hardcode location of node [\#899](https://github.com/w3c/respec/issues/899)
+
+**Merged pull requests:**
+
+- fix: generalize nodejs location \(closes \#899\) [\#902](https://github.com/w3c/respec/pull/902) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v4.3.2](https://github.com/w3c/respec/tree/v4.3.2) (2016-08-02)
 
@@ -6004,6 +6024,7 @@
 
 - nightmare@2.5.0 breaks build 🚨 [\#800](https://github.com/w3c/respec/pull/800) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
 - Fix\(ui,utils\): firstElementChild not in Edge \(closes \#798\) [\#799](https://github.com/w3c/respec/pull/799) ([marcoscaceres](https://github.com/marcoscaceres))
+- Fix\(legacy\): Add messages for Aria/WebPayment specs \(closes \#793\) [\#795](https://github.com/w3c/respec/pull/795) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v3.2.131](https://github.com/w3c/respec/tree/v3.2.131) (2016-05-27)
 
@@ -6028,7 +6049,6 @@
 
 **Merged pull requests:**
 
-- Fix\(legacy\): Add messages for Aria/WebPayment specs \(closes \#793\) [\#795](https://github.com/w3c/respec/pull/795) ([marcoscaceres](https://github.com/marcoscaceres))
 - Fix\(save-html\) Space after \( when saving\(closes \#786\) [\#794](https://github.com/w3c/respec/pull/794) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v3.2.128](https://github.com/w3c/respec/tree/v3.2.128) (2016-05-26)
@@ -6086,6 +6106,7 @@
 
 **Closed issues:**
 
+- Retire shiv module [\#775](https://github.com/w3c/respec/issues/775)
 - "Back to Top" target link [\#771](https://github.com/w3c/respec/issues/771)
 
 **Merged pull requests:**
@@ -6126,6 +6147,7 @@
 
 - Feat\(domReady\): update requirejs domReady [\#765](https://github.com/w3c/respec/pull/765) ([marcoscaceres](https://github.com/marcoscaceres))
 - Feat\(text\): update requirejs text.js \(closes \#763\) [\#764](https://github.com/w3c/respec/pull/764) ([marcoscaceres](https://github.com/marcoscaceres))
+- Feat\(save-html\): remove XHTML 1.0 save support [\#762](https://github.com/w3c/respec/pull/762) ([marcoscaceres](https://github.com/marcoscaceres))
 - Feat\(markdown\): teach markdown how to highlight code [\#759](https://github.com/w3c/respec/pull/759) ([marcoscaceres](https://github.com/marcoscaceres))
 - Fix\(respec2.css\): Override code highlighter background [\#758](https://github.com/w3c/respec/pull/758) ([marcoscaceres](https://github.com/marcoscaceres))
 - Fix\(utils\): correctly calculate leftPad [\#757](https://github.com/w3c/respec/pull/757) ([marcoscaceres](https://github.com/marcoscaceres))
@@ -6349,6 +6371,7 @@
 
 **Implemented enhancements:**
 
+- release.js needs to be aware of new .map files  [\#585](https://github.com/w3c/respec/issues/585)
 - Support maplike declarations [\#361](https://github.com/w3c/respec/issues/361)
 
 **Fixed bugs:**
@@ -6443,10 +6466,6 @@
 ## [v3.2.103](https://github.com/w3c/respec/tree/v3.2.103) (2016-03-02)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v3.2.102...v3.2.103)
-
-**Implemented enhancements:**
-
-- release.js needs to be aware of new .map files  [\#585](https://github.com/w3c/respec/issues/585)
 
 **Fixed bugs:**
 
@@ -6582,7 +6601,9 @@
 - Add support for FrozenArray in WebIDL oldschool [\#524](https://github.com/w3c/respec/pull/524) ([dontcallmedom](https://github.com/dontcallmedom))
 - Fix bug linked to using bind\(this\) in phantomjs [\#523](https://github.com/w3c/respec/pull/523) ([dontcallmedom](https://github.com/dontcallmedom))
 - A comma was missing before the first 'extras' in the header [\#519](https://github.com/w3c/respec/pull/519) ([iherman](https://github.com/iherman))
+- Default to new doc+software license \(closes \#505\) [\#506](https://github.com/w3c/respec/pull/506) ([marcoscaceres](https://github.com/marcoscaceres))
 - Use navigation role for TOC [\#499](https://github.com/w3c/respec/pull/499) ([marcoscaceres](https://github.com/marcoscaceres))
+- Including body and title of GitHub issues. [\#443](https://github.com/w3c/respec/pull/443) ([tobie](https://github.com/tobie))
 - Update Jasmine External Link [\#442](https://github.com/w3c/respec/pull/442) ([ajsb85](https://github.com/ajsb85))
 
 ## [v3.2.78](https://github.com/w3c/respec/tree/v3.2.78) (2015-11-09)
@@ -6623,10 +6644,6 @@
 **Implemented enhancements:**
 
 - Additional author information [\#507](https://github.com/w3c/respec/issues/507)
-
-**Merged pull requests:**
-
-- Default to new doc+software license \(closes \#505\) [\#506](https://github.com/w3c/respec/pull/506) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v3.2.74](https://github.com/w3c/respec/tree/v3.2.74) (2015-09-18)
 
@@ -6788,7 +6805,6 @@
 
 **Merged pull requests:**
 
-- Including body and title of GitHub issues. [\#443](https://github.com/w3c/respec/pull/443) ([tobie](https://github.com/tobie))
 - Add support for WebIDL RHS identifier list. [\#440](https://github.com/w3c/respec/pull/440) ([tobie](https://github.com/tobie))
 
 ## [v3.2.53](https://github.com/w3c/respec/tree/v3.2.53) (2015-05-13)
@@ -7183,6 +7199,7 @@
 
 - Always use https for W3C stylesheets and logo [\#242](https://github.com/w3c/respec/pull/242) ([lanthaler](https://github.com/lanthaler))
 - Added test for local aliases [\#239](https://github.com/w3c/respec/pull/239) ([ylafon](https://github.com/ylafon))
+- add docs for noLegacyStyle flag [\#238](https://github.com/w3c/respec/pull/238) ([anssiko](https://github.com/anssiko))
 - Fix for locally defined aliases not working [\#235](https://github.com/w3c/respec/pull/235) ([ylafon](https://github.com/ylafon))
 - Update legacy.js [\#234](https://github.com/w3c/respec/pull/234) ([htInEdin](https://github.com/htInEdin))
 
@@ -7209,7 +7226,6 @@
 
 **Merged pull requests:**
 
-- add docs for noLegacyStyle flag [\#238](https://github.com/w3c/respec/pull/238) ([anssiko](https://github.com/anssiko))
 - Second pass at using an API for spec references. [\#223](https://github.com/w3c/respec/pull/223) ([tobie](https://github.com/tobie))
 
 ## [v3.1.57](https://github.com/w3c/respec/tree/v3.1.57) (2013-05-21)
@@ -7232,7 +7248,6 @@
 
 - Rely on a calls to an API for spec references rather than bundling the whole ref file. [\#222](https://github.com/w3c/respec/pull/222) ([tobie](https://github.com/tobie))
 - Previous versions \(closes \#215\) [\#217](https://github.com/w3c/respec/pull/217) ([marcoscaceres](https://github.com/marcoscaceres))
-- \[WebStorage\] PR published 9-Apr-2013 [\#212](https://github.com/w3c/respec/pull/212) ([AFBarstow](https://github.com/AFBarstow))
 
 ## [v3.1.55](https://github.com/w3c/respec/tree/v3.1.55) (2013-05-06)
 
@@ -7255,6 +7270,7 @@
 **Merged pull requests:**
 
 - Removed duplicate entries, used aliasOf instead \(closes \#213\) [\#214](https://github.com/w3c/respec/pull/214) ([marcoscaceres](https://github.com/marcoscaceres))
+- \[WebStorage\] PR published 9-Apr-2013 [\#212](https://github.com/w3c/respec/pull/212) ([AFBarstow](https://github.com/AFBarstow))
 - adding RFC2557 reference [\#211](https://github.com/w3c/respec/pull/211) ([efullea](https://github.com/efullea))
 - more RFC entries. [\#210](https://github.com/w3c/respec/pull/210) ([ylafon](https://github.com/ylafon))
 - Update biblio.js [\#209](https://github.com/w3c/respec/pull/209) ([g13e](https://github.com/g13e))
@@ -7417,6 +7433,7 @@
 - Update refs [\#136](https://github.com/w3c/respec/pull/136) ([tobie](https://github.com/tobie))
 - Update js/w3c/headers.js [\#135](https://github.com/w3c/respec/pull/135) ([plinss](https://github.com/plinss))
 - Add support for 'scheme' config variable: if defined, loads external res... [\#134](https://github.com/w3c/respec/pull/134) ([anssiko](https://github.com/anssiko))
+- Update bibref/biblio.js [\#132](https://github.com/w3c/respec/pull/132) ([g13e](https://github.com/g13e))
 - Update data-merge documentation. [\#131](https://github.com/w3c/respec/pull/131) ([anssiko](https://github.com/anssiko))
 
 ## [v3.1.41](https://github.com/w3c/respec/tree/v3.1.41) (2013-01-23)
@@ -7439,7 +7456,6 @@
 
 **Merged pull requests:**
 
-- Update bibref/biblio.js [\#132](https://github.com/w3c/respec/pull/132) ([g13e](https://github.com/g13e))
 - support for WebIDL "serializer" syntax [\#127](https://github.com/w3c/respec/pull/127) ([dontcallmedom](https://github.com/dontcallmedom))
 - update publication date for xmlsec publications [\#126](https://github.com/w3c/respec/pull/126) ([fhirsch](https://github.com/fhirsch))
 - Add CSSOM. [\#125](https://github.com/w3c/respec/pull/125) ([tobie](https://github.com/tobie))
