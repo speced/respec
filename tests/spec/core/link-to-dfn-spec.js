@@ -135,6 +135,27 @@ describe("Core — Link to definitions", () => {
     expect([...idlLinks].map(a => a.hash)).toEqual(Array(2).fill("#idl-card"));
   });
 
+  it("treats internal slots as idl", async () => {
+    const body = `
+      <section id="test">
+        <dfn data-dfn-for="MyEvent">[[\\aSlot]]</dfn>
+        <dfn>MyEvent</dfn>
+        <p id="link-slots">
+          <span>{{ MyEvent/[[aSlot]] }}</span>
+          <span>{{ MyEvent.[[aSlot]] }}</span>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const dfn = doc.querySelector("#test dfn");
+    const links = doc.querySelectorAll("#link-slots span a:last-child");
+    const href = `#${dfn.id}`;
+    expect(links[0].hash).toBe(href);
+    expect(links[1].hash).toBe(href);
+  });
+
   it("has empty data-dfn-for on top level things", async () => {
     const bodyText = `
       <section data-dfn-for="HyperStar" data-link-for="HyperStar">
