@@ -17,6 +17,9 @@ const localizationStrings = {
   de: {
     title: "Definitionen durchsuchen",
   },
+  zh: {
+    title: "搜索定义",
+  },
 };
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 const l10n = localizationStrings[lang];

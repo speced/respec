@@ -22,6 +22,9 @@ const localizationStrings = {
   de: {
     informative: "Dieser Abschnitt ist nicht normativ.",
   },
+  zh: {
+    informative: "本章节不包含规范性内容。",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

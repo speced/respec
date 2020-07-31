@@ -23,6 +23,10 @@ const localizationStrings = {
     definition_list: "Definitionen",
     list_of_definitions: "Liste der Definitionen",
   },
+  zh: {
+    definition_list: "定义",
+    list_of_definitions: "文档中的定义",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
