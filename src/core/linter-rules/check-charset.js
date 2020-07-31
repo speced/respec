@@ -13,6 +13,10 @@ const meta = {
     description: `Document must only contain one \`<meta>\` tag with charset set to 'utf-8'`,
     howToFix: `Add this line in your document \`<head>\` section - \`<meta charset="utf-8">\` or set charset to "utf-8" if not set already.`,
   },
+  zh: {
+    description: `文档只能包含一个 charset 属性为 utf-8 的 \`<meta>\` 标签`,
+    howToFix: `将此行添加到文档的 \`<head>\` 部分—— \`<meta charset="utf-8">\` 或将 charset 设置为 utf-8（如果尚未设置）。`,
+  },
 };
 
 // Fall back to english, if language is missing

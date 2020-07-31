@@ -38,6 +38,8 @@ const localizationStrings = {
     this_version: "현재 버전:",
   },
   zh: {
+    author: "作者：",
+    authors: "作者：",
     editor: "编辑：",
     editors: "编辑：",
     former_editor: "原编辑：",

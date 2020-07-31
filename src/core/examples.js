@@ -32,6 +32,9 @@ const localizationStrings = {
   de: {
     example: "Beispiel",
   },
+  zh: {
+    example: "例",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

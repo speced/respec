@@ -33,6 +33,11 @@ const localizationStrings = {
       return html` bis ${date} `;
     },
   },
+  zh: {
+    until(date) {
+      return html` 直到 ${date} `;
+    },
+  },
 };
 
 const lang = defaultLang in localizationStrings ? defaultLang : "en";

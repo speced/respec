@@ -13,6 +13,10 @@ const meta = {
     description: "Insecure URLs are not allowed in `respecConfig`.",
     howToFix: "Please change the following properties to 'https://': ",
   },
+  zh: {
+    description: "`respecConfig` 中不允许使用不安全的URL.",
+    howToFix: "请将以下属性更改为 https://：",
+  },
 };
 
 // Fall back to english, if language is missing

@@ -20,6 +20,10 @@ const meta = {
       "Voeg een `h2-6` toe aan de conflicterende sectie of gebruik een `<div>`.",
     help: "Zie de developer console.",
   },
+  zh: {
+    description: "所有章节（section）都必须以 `h2-6` 元素开头。",
+    howToFix: "将 `h2-6` 添加到有问题的章节或使用 `<div>`。",
+  },
 };
 
 // Fall back to english, if language is missing
