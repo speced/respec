@@ -48,6 +48,15 @@ const localizationStrings = {
     duplicateTitle:
       "Das Dokument enthält mehrere Definitionen dieses Eintrags.",
   },
+  zh: {
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `'${title}' 的重复定义`;
+    },
+    duplicateTitle: "在文档中有重复的定义。",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
