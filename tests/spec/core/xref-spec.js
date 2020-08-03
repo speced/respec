@@ -62,86 +62,6 @@ describe("Core — xref", () => {
     "local-3": { id: "local-3", href: "https://example.com/" },
     "local-4": { id: "local-4", href: "https://example.com/" },
   };
-  const expectedLinks = new Map([
-    [
-      "event handler",
-      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers",
-    ],
-    ["list", "https://infra.spec.whatwg.org/#list"],
-    [
-      "sw-fetch",
-      "https://www.w3.org/TR/service-workers-1/#service-worker-global-scope-fetch-event",
-    ],
-    ["uppercase", "https://infra.spec.whatwg.org/#ascii-uppercase"],
-    ["url parser", "https://url.spec.whatwg.org/#concept-url-parser"],
-    ["dictionary", "https://heycam.github.io/webidl/#dfn-dictionary"],
-    ["alphanumeric", "https://infra.spec.whatwg.org/#ascii-alphanumeric"],
-    ["exception", "https://heycam.github.io/webidl/#dfn-exception"],
-    [
-      "Window",
-      "https://html.spec.whatwg.org/multipage/window-object.html#window",
-    ],
-    ["Window.event", "https://dom.spec.whatwg.org/#dom-window-event"],
-    [
-      "PermissionStatus.[[query]]",
-      "https://www.w3.org/TR/permissions/#dom-permissionstatus-query-slot",
-    ],
-    ["PermissionStatus", "https://www.w3.org/TR/permissions/#permissionstatus"],
-    [
-      "EventTarget.addEventListener",
-      "https://dom.spec.whatwg.org/#dom-eventtarget-addeventlistener",
-    ],
-    ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
-    [
-      "Credential.[[type]]",
-      "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot",
-    ],
-    ["Credential", "https://www.w3.org/TR/credential-management-1/#credential"],
-    [
-      "Credential.[[CollectFromCredentialStore]]",
-      "https://www.w3.org/TR/credential-management-1/#dom-credential-collectfromcredentialstore-slot",
-    ],
-    [
-      "PublicKeyCredential.[[type]]",
-      "https://www.w3.org/TR/webauthn-1/#dom-publickeycredential-type-slot",
-    ],
-    [
-      "PublicKeyCredential",
-      "https://www.w3.org/TR/webauthn-1/#publickeycredential",
-    ],
-    [
-      "TextDecoderOptions",
-      "https://encoding.spec.whatwg.org/#textdecoderoptions",
-    ],
-    [
-      `TextDecoderOptions["fatal"]`,
-      "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal",
-    ],
-    ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
-    [
-      "allowedFeatures",
-      "https://www.w3.org/TR/feature-policy-1/#dom-featurepolicy-allowedfeatures",
-    ],
-    ["ChildNode", "https://dom.spec.whatwg.org/#childnode"],
-    ["ChildNode.after", "https://dom.spec.whatwg.org/#dom-childnode-after"],
-    ["URLSearchParams", "https://url.spec.whatwg.org/#urlsearchparams"],
-    [
-      "URLSearchParams.append",
-      "https://url.spec.whatwg.org/#dom-urlsearchparams-append",
-    ],
-    [
-      "ServiceWorkerUpdateViaCache.imports",
-      "https://www.w3.org/TR/service-workers-1/#dom-serviceworkerupdateviacache-imports",
-    ],
-    [
-      "blob",
-      "https://xhr.spec.whatwg.org/#dom-xmlhttprequestresponsetype-blob",
-    ],
-    [
-      "ChildDisplayType.block",
-      "https://www.w3.org/TR/css-layout-api-1/#dom-childdisplaytype-block",
-    ],
-  ]);
 
   it("does nothing if xref is not enabled", async () => {
     const body = `<a id="external-link">event handler</a>`;
@@ -164,11 +84,13 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link = doc.querySelector("#external-link a");
-    expect(link.href).toBe(expectedLinks.get("event handler"));
+    expect(link.href).toBe(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
     expect(link.classList.contains("respec-offending-element")).toBeFalsy();
 
     const dfn = doc.querySelector("#external-dfn dfn a");
-    expect(dfn.href).toBe(expectedLinks.get("url parser"));
+    expect(dfn.href).toBe("https://url.spec.whatwg.org/#concept-url-parser");
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
   });
 
@@ -216,12 +138,14 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const [link1, link2] = [...doc.querySelectorAll("#links a")];
-    expect(link1.href).toBe(expectedLinks.get("uppercase"));
+    expect(link1.href).toBe("https://infra.spec.whatwg.org/#ascii-uppercase");
     expect(link2.href).toBe("https://infra.spec.whatwg.org/");
 
     const [dfn1, dfn2, dfn3] = [...doc.querySelectorAll("#dfns dfn a")];
-    expect(dfn1.href).toBe(expectedLinks.get("event handler"));
-    expect(dfn2.href).toBe(expectedLinks.get("list"));
+    expect(dfn1.href).toBe(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
+    expect(dfn2.href).toBe("https://infra.spec.whatwg.org/#list");
     expect(dfn3.href).toBe("https://html.spec.whatwg.org/multipage/");
   });
 
@@ -296,10 +220,14 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link1 = doc.getElementById("link1");
-    expect(link1.href).toEqual(expectedLinks.get("event handler"));
+    expect(link1.href).toEqual(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
 
     const link2 = doc.getElementById("link2");
-    expect(link2.href).toEqual(expectedLinks.get("event handler"));
+    expect(link2.href).toEqual(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
 
     const link3 = doc.getElementById("link3");
     expect(link3.href).toEqual("https://fetch.spec.whatwg.org/");
@@ -358,13 +286,17 @@ describe("Core — xref", () => {
       "https://html.spec.whatwg.org/multipage/#hello"
     );
     const externalDfn1 = doc.querySelector("#external-dfn-1 a");
-    expect(externalDfn1.href).toBe(expectedLinks.get("dictionary"));
+    expect(externalDfn1.href).toBe(
+      "https://heycam.github.io/webidl/#dfn-dictionary"
+    );
     const externalDfn2 = doc.querySelector("#external-dfn-2 a");
-    expect(externalDfn2.href).toBe(expectedLinks.get("list"));
+    expect(externalDfn2.href).toBe("https://infra.spec.whatwg.org/#list");
     const localLink1 = doc.querySelector("#local-link-1 a");
     expect(localLink1.getAttribute("href")).toBe("#dfn-local-one");
     const externalLink1 = doc.querySelector("#external-link-1 a");
-    expect(externalLink1.href).toBe(expectedLinks.get("url parser"));
+    expect(externalLink1.href).toBe(
+      "https://url.spec.whatwg.org/#concept-url-parser"
+    );
 
     const offendingElements = doc.querySelectorAll(
       "#test .respec-offending-element"
@@ -398,15 +330,19 @@ describe("Core — xref", () => {
       "https://html.spec.whatwg.org/multipage/#world"
     );
     const externalDfn1 = doc.querySelector("#external-dfn-1 a");
-    expect(externalDfn1.href).toBe(expectedLinks.get("url parser"));
+    expect(externalDfn1.href).toBe(
+      "https://url.spec.whatwg.org/#concept-url-parser"
+    );
     const externalDfn2 = doc.querySelector("#external-dfn-2 a");
-    expect(externalDfn2.href).toBe(expectedLinks.get("list"));
+    expect(externalDfn2.href).toBe("https://infra.spec.whatwg.org/#list");
     const localLink1 = doc.querySelector("#local-link-1 a");
     expect(localLink1.getAttribute("href")).toBe("#dfn-local-one");
     const localLink2 = doc.querySelector("#local-link-2 a");
     expect(localLink2.getAttribute("href")).toBe("#dfn-local-one");
     const externalLink1 = doc.querySelector("#external-link-1 a");
-    expect(externalLink1.href).toBe(expectedLinks.get("event handler"));
+    expect(externalLink1.href).toBe(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
 
     const offendingElements = doc.querySelectorAll(
       "#test .respec-offending-element"
@@ -431,12 +367,16 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link = doc.querySelector("#test1 a");
-    expect(link.getAttribute("href")).toBe(expectedLinks.get("list"));
+    expect(link.getAttribute("href")).toBe(
+      "https://infra.spec.whatwg.org/#list"
+    );
 
     const links = [...doc.querySelectorAll("#test2 a")];
     expect(links.length).toBe(4);
     for (const link of links) {
-      expect(link.href).toBe(expectedLinks.get("event handler"));
+      expect(link.href).toBe(
+        "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+      );
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
   });
@@ -465,14 +405,18 @@ describe("Core — xref", () => {
     const links = [...doc.querySelectorAll("#test a")];
     expect(links.length).toBe(6);
     for (const link of links) {
-      expect(link.href).toBe(expectedLinks.get("event handler"));
+      expect(link.href).toBe(
+        "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+      );
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
 
     const test2Links = [...doc.querySelectorAll("#test2 a")];
     expect(test2Links.length).toBe(3);
     for (const link of test2Links) {
-      expect(link.href).toBe(expectedLinks.get("event handler"));
+      expect(link.href).toBe(
+        "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+      );
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
   });
@@ -580,23 +524,33 @@ describe("Core — xref", () => {
     const valid1 = doc.getElementById("valid1");
     expect(valid1.href).toBe("https://example.com/#fake-inform-1");
     const valid1n = doc.getElementById("valid1n");
-    expect(valid1n.href).toBe(expectedLinks.get("list"));
+    expect(valid1n.href).toBe("https://infra.spec.whatwg.org/#list");
     const valid2 = doc.getElementById("valid2");
     expect(valid2.href).toBe("https://example.com/#fake-inform-2");
     const valid2n = doc.getElementById("valid2n");
-    expect(valid2n.href).toBe(expectedLinks.get("event handler"));
+    expect(valid2n.href).toBe(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
     const valid3 = doc.getElementById("valid3");
     expect(valid3.href).toBe("https://example.com/#fake-inform-3");
     const valid3n = doc.getElementById("valid3n");
-    expect(valid3n.href).toBe(expectedLinks.get("dictionary"));
+    expect(valid3n.href).toBe(
+      "https://heycam.github.io/webidl/#dfn-dictionary"
+    );
     const valid4 = doc.getElementById("valid4");
     expect(valid4.href).toBe("https://example.com/#fake-inform-4");
     const valid4n = doc.getElementById("valid4n");
-    expect(valid4n.href).toBe(expectedLinks.get("alphanumeric"));
+    expect(valid4n.href).toBe(
+      "https://infra.spec.whatwg.org/#ascii-alphanumeric"
+    );
     const valid5n = doc.getElementById("valid5n");
-    expect(valid5n.href).toBe(expectedLinks.get("url parser"));
+    expect(valid5n.href).toBe(
+      "https://url.spec.whatwg.org/#concept-url-parser"
+    );
     const valid6n = doc.getElementById("valid6n");
-    expect(valid6n.href).toBe(expectedLinks.get("url parser"));
+    expect(valid6n.href).toBe(
+      "https://url.spec.whatwg.org/#concept-url-parser"
+    );
 
     const badLink = doc.getElementById("invalid");
     expect(badLink.href).toBe(
@@ -666,8 +620,12 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const [windowLink, eventTargetLink] = doc.querySelectorAll("#link1 a");
-      expect(windowLink.href).toBe(expectedLinks.get("Window"));
-      expect(eventTargetLink.href).toBe(expectedLinks.get("EventTarget"));
+      expect(windowLink.href).toBe(
+        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+      );
+      expect(eventTargetLink.href).toBe(
+        "https://dom.spec.whatwg.org/#eventtarget"
+      );
       expect(eventTargetLink.firstElementChild.localName).toBe("code");
 
       const link2 = doc.querySelector("#link2 a");
@@ -676,7 +634,7 @@ describe("Core — xref", () => {
       expect(link2.firstElementChild.localName).toBe("code");
 
       const link3 = doc.querySelector("#link3 a");
-      expect(link3.href).toBe(expectedLinks.get("EventTarget"));
+      expect(link3.href).toBe("https://dom.spec.whatwg.org/#eventtarget");
       expect(link3.textContent).toBe("EventTarget");
       expect(link3.firstElementChild.localName).toBe("code");
     });
@@ -694,9 +652,9 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const [link1a, link1b] = [...doc.querySelectorAll("#link1 a")];
-      expect(link1a.href).toBe(expectedLinks.get("EventTarget"));
+      expect(link1a.href).toBe("https://dom.spec.whatwg.org/#eventtarget");
       expect(link1b.href).toBe(
-        expectedLinks.get("EventTarget.addEventListener")
+        "https://dom.spec.whatwg.org/#dom-eventtarget-addeventlistener"
       );
       expect(link1a.firstElementChild.localName).toBe("code");
       expect(link1b.firstElementChild.localName).toBe("code");
@@ -706,14 +664,18 @@ describe("Core — xref", () => {
       expect(vars1[1].textContent).toBe("callback");
 
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
-      expect(link2a.href).toBe(expectedLinks.get("ChildNode"));
+      expect(link2a.href).toBe("https://dom.spec.whatwg.org/#childnode");
       expect(link2a.firstElementChild.localName).toBe("code");
-      expect(link2b.href).toBe(expectedLinks.get("ChildNode.after"));
+      expect(link2b.href).toBe(
+        "https://dom.spec.whatwg.org/#dom-childnode-after"
+      );
       expect(link2b.firstElementChild.localName).toBe("code");
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
-      expect(link3a.href).toBe(expectedLinks.get("URLSearchParams"));
-      expect(link3b.href).toBe(expectedLinks.get("URLSearchParams.append"));
+      expect(link3a.href).toBe("https://url.spec.whatwg.org/#urlsearchparams");
+      expect(link3b.href).toBe(
+        "https://url.spec.whatwg.org/#dom-urlsearchparams-append"
+      );
       expect(link3a.firstElementChild.localName).toBe("code");
       expect(link3b.firstElementChild.localName).toBe("code");
     });
@@ -735,31 +697,41 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const [link1a, link1b] = [...doc.querySelectorAll("#link1 a")];
-      expect(link1a.href).toBe(expectedLinks.get("Window"));
-      expect(link1b.href).toBe(expectedLinks.get("Window.event"));
+      expect(link1a.href).toBe(
+        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+      );
+      expect(link1b.href).toBe("https://dom.spec.whatwg.org/#dom-window-event");
       expect(link1a.firstElementChild.localName).toBe("code");
       expect(link1b.firstElementChild.localName).toBe("code");
 
       // the base "Credential" is used to disambiguate as "forContext"
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
-      expect(link2a.href).toBe(expectedLinks.get("Credential"));
-      expect(link2b.href).toBe(expectedLinks.get("Credential.[[type]]"));
+      expect(link2a.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#credential"
+      );
+      expect(link2b.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot"
+      );
       expect(link2a.firstElementChild.localName).toBe("code");
       expect(link2b.firstElementChild.localName).toBe("code");
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
-      expect(link3a.href).toBe(expectedLinks.get("PublicKeyCredential"));
+      expect(link3a.href).toBe(
+        "https://www.w3.org/TR/webauthn-1/#publickeycredential"
+      );
       expect(link3b.href).toBe(
-        expectedLinks.get("PublicKeyCredential.[[type]]")
+        "https://www.w3.org/TR/webauthn-1/#dom-publickeycredential-type-slot"
       );
       expect(link3a.firstElementChild.localName).toBe("code");
       expect(link3b.firstElementChild.localName).toBe("code");
 
       // "TextDecoderOptions" is dictionary and "fatal" is dict-member
       const [link4a, link4b] = [...doc.querySelectorAll("#link4 a")];
-      expect(link4a.href).toBe(expectedLinks.get("TextDecoderOptions"));
+      expect(link4a.href).toBe(
+        "https://encoding.spec.whatwg.org/#textdecoderoptions"
+      );
       expect(link4b.href).toBe(
-        expectedLinks.get(`TextDecoderOptions["fatal"]`)
+        "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal"
       );
       expect(link4a.firstElementChild.localName).toBe("code");
       expect(link4b.firstElementChild.localName).toBe("code");
@@ -784,8 +756,12 @@ describe("Core — xref", () => {
 
       // the base "Credential" is used as "forContext" for [[type]]
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
-      expect(link2a.href).toBe(expectedLinks.get("Credential"));
-      expect(link2b.href).toBe(expectedLinks.get("Credential.[[type]]"));
+      expect(link2a.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#credential"
+      );
+      expect(link2b.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot"
+      );
       expect(link2a.firstElementChild.localName).toBe("code");
       expect(link2b.firstElementChild.localName).toBe("code");
     });
@@ -886,8 +862,12 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const externalLinks = [...doc.querySelectorAll("#link-external a")];
-      expect(externalLinks[0].href).toBe(expectedLinks.get("Window"));
-      expect(externalLinks[1].href).toBe(expectedLinks.get("Window.event"));
+      expect(externalLinks[0].href).toBe(
+        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+      );
+      expect(externalLinks[1].href).toBe(
+        "https://dom.spec.whatwg.org/#dom-window-event"
+      );
 
       const paymentAddressLinks = [...doc.querySelectorAll("#link-internal a")];
       expect(paymentAddressLinks[0].getAttribute("href")).toBe(
@@ -1024,7 +1004,7 @@ describe("Core — xref", () => {
     expectAsync(cache.keys()).toBeResolvedTo([]);
     const preCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
     expect(preCacheDoc.getElementById("link").href).toBe(
-      expectedLinks.get("dictionary")
+      "https://heycam.github.io/webidl/#dfn-dictionary"
     );
     expectAsync(cache.keys()).toBeResolvedTo([
       keys.get("dictionary"),
@@ -1034,7 +1014,7 @@ describe("Core — xref", () => {
     // no new data was requested from server, cache shoudln't change
     const postCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
     expect(postCacheDoc.getElementById("link").href).toBe(
-      expectedLinks.get("dictionary")
+      "https://heycam.github.io/webidl/#dfn-dictionary"
     );
     expectAsync(cache.keys()).toBeResolvedTo([
       keys.get("dictionary"),
@@ -1050,10 +1030,10 @@ describe("Core — xref", () => {
     `;
     const updatedCacheDoc = await makeRSDoc(makeStandardOps(config, body2));
     expect(updatedCacheDoc.getElementById("link-1").href).toBe(
-      expectedLinks.get("dictionary")
+      "https://heycam.github.io/webidl/#dfn-dictionary"
     );
     expect(updatedCacheDoc.getElementById("link-2").href).toBe(
-      expectedLinks.get("url parser")
+      "https://url.spec.whatwg.org/#concept-url-parser"
     );
     expectAsync(cache.keys()).toBeResolvedTo([
       keys.get("dictionary"),
