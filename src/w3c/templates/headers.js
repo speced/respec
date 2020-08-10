@@ -25,6 +25,12 @@ const localizationStrings = {
     latest_published_version: "Latest published version:",
     edited_in_place: "edited in place",
     this_version: "This version:",
+    test_suite: "Test suite:",
+    implementation_report: "Implementation report:",
+    prev_editor_draft: "Previous editor's draft:",
+    prev_version: "Previous version:",
+    prev_recommendation: "Previous Recommendation:",
+    latest_recommendation: "Latest Recommendation:",
   },
   ko: {
     author: "저자:",
@@ -149,13 +155,13 @@ export default (conf, options) => {
         : ""}
       ${conf.testSuiteURI
         ? html`
-            <dt>Test suite:</dt>
+            <dt>${l10n.test_suite}</dt>
             <dd><a href="${conf.testSuiteURI}">${conf.testSuiteURI}</a></dd>
           `
         : ""}
       ${conf.implementationReportURI
         ? html`
-            <dt>Implementation report:</dt>
+            <dt>${l10n.implementation_report}</dt>
             <dd>
               <a href="${conf.implementationReportURI}"
                 >${conf.implementationReportURI}</a
@@ -165,13 +171,13 @@ export default (conf, options) => {
         : ""}
       ${conf.isED && conf.prevED
         ? html`
-            <dt>Previous editor's draft:</dt>
+            <dt>${l10n.prev_editor_draft}</dt>
             <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
           `
         : ""}
       ${conf.showPreviousVersion
         ? html`
-            <dt>Previous version:</dt>
+            <dt>${l10n.prev_version}</dt>
             <dd><a href="${conf.prevVersion}">${conf.prevVersion}</a></dd>
           `
         : ""}
@@ -179,11 +185,11 @@ export default (conf, options) => {
         ? ""
         : conf.isRec
         ? html`
-            <dt>Previous Recommendation:</dt>
+            <dt>${l10n.prev_recommendation}</dt>
             <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
           `
         : html`
-            <dt>Latest Recommendation:</dt>
+            <dt>${l10n.latest_recommendation}</dt>
             <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
           `}
       <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
