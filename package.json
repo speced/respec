@@ -27,7 +27,7 @@
     "@types/pluralize": "0.0.29",
     "boxen": "^4.2.0",
     "chai": "^4.2.0",
-    "chokidar": "^3.4.1",
+    "chokidar": "^3.4.2",
     "clean-css": "^4.2.3",
     "epipebomb": "^1.0.0",
     "eslint": "^7.6.0",
