@@ -1001,12 +1001,12 @@ describe("Core — xref", () => {
         <p><a id="link">dictionary</a><p>
       </section>`;
 
-    expectAsync(cache.keys()).toBeResolvedTo([]);
+    await expectAsync(cache.keys()).toBeResolvedTo([]);
     const preCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
     expect(preCacheDoc.getElementById("link").href).toBe(
       "https://heycam.github.io/webidl/#dfn-dictionary"
     );
-    expectAsync(cache.keys()).toBeResolvedTo([
+    await expectAsync(cache.keys()).toBeResolvedTo([
       keys.get("dictionary"),
       "__LAST_VERSION_CHECK__",
     ]);
@@ -1016,7 +1016,7 @@ describe("Core — xref", () => {
     expect(postCacheDoc.getElementById("link").href).toBe(
       "https://heycam.github.io/webidl/#dfn-dictionary"
     );
-    expectAsync(cache.keys()).toBeResolvedTo([
+    await expectAsync(cache.keys()).toBeResolvedTo([
       keys.get("dictionary"),
       "__LAST_VERSION_CHECK__",
     ]);
@@ -1035,7 +1035,7 @@ describe("Core — xref", () => {
     expect(updatedCacheDoc.getElementById("link-2").href).toBe(
       "https://url.spec.whatwg.org/#concept-url-parser"
     );
-    expectAsync(cache.keys()).toBeResolvedTo([
+    await expectAsync(cache.keys()).toBeResolvedTo([
       keys.get("dictionary"),
       "__LAST_VERSION_CHECK__",
       keys.get("url parser"),
