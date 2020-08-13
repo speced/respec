@@ -298,7 +298,8 @@ describe("W3C — Headers", () => {
       expect(
         doc.querySelectorAll(
           "a.orcid[href='https://orcid.org/0000-0002-1694-233X']"
-        ).toHaveSize(2);
+        )
+      ).toHaveSize(2);
       expect(doc.querySelectorAll("a.orcid")).toHaveSize(2);
     });
 
@@ -1595,7 +1596,8 @@ describe("W3C — Headers", () => {
       expect(
         c.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
-        ).toHaveSize(1);
+        )
+      ).toHaveSize(1);
       expect(doc.querySelector(".head h2").textContent).toContain(
         "Draft Community Group Report"
       );
@@ -1605,7 +1607,8 @@ describe("W3C — Headers", () => {
       expect(
         sotd.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
-        ).toHaveSize(1);
+        )
+      ).toHaveSize(1);
       expect(contains(sotd, "a", "WGLIST")).toHaveSize(1);
       expect(contains(sotd, "a", "WGLIST")[0].getAttribute("href")).toBe(
         "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
@@ -1632,7 +1635,8 @@ describe("W3C — Headers", () => {
       expect(
         doc.querySelectorAll(
           ".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']"
-        ).toHaveSize(1);
+        )
+      ).toHaveSize(1);
       expect(doc.querySelector(".head h2").textContent).toContain(
         "Final Business Group Report"
       );
@@ -1651,7 +1655,8 @@ describe("W3C — Headers", () => {
       expect(
         sotd.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/final/']"
-        ).toHaveSize(1);
+        )
+      ).toHaveSize(1);
     });
 
     it("handles the spec title in the copyright section correctly when the h1#title has markup", async () => {
