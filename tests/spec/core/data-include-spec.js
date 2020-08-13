@@ -87,7 +87,7 @@ describe("Core — Data Include", () => {
     const h2 = doc.querySelector("#includes > h2");
     expect(h2).toBeTruthy();
     expect(h2.textContent).toBe("1. PASS");
-    expect(doc.querySelectorAll("*[data-include]").length).toBe(0);
+    expect(doc.querySelectorAll("*[data-include]")).toHaveSize(0);
   });
 
   it("processes single line markdown text", async () => {

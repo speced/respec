@@ -41,7 +41,7 @@ describe("Core — Link to definitions", () => {
     expect(hasCode.firstElementChild.localName).toBe("code");
     expect(hasCode.textContent).toBe("Request");
     const codeWrapMethods = doc.body.querySelectorAll("#codeWrapMethod a code");
-    expect(codeWrapMethods.length).toBe(4);
+    expect(codeWrapMethods).toHaveSize(4);
     const noCodeWrap = doc.body.querySelector("#noCodeWrap a");
     expect(noCodeWrap).toBeTruthy();
     expect(noCodeWrap.getAttribute("href")).toBe("#dom-request");
@@ -268,8 +268,8 @@ describe("Core — Link to definitions", () => {
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
     expect(
-      doc.querySelectorAll("#links a[href='#dfn-test-string']").length
-    ).toBe(3);
+      doc.querySelectorAll("#links a[href='#dfn-test-string']")
+    ).toHaveSize(3);
   });
 
   it("links to external spec with current spec as prefix", async () => {

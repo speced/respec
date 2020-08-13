@@ -301,7 +301,7 @@ describe("Core — xref", () => {
     const offendingElements = doc.querySelectorAll(
       "#test .respec-offending-element"
     );
-    expect(offendingElements.length).toBe(0);
+    expect(offendingElements).toHaveSize(0);
   });
 
   it("ignores terms if local dfn exists", async () => {
@@ -347,7 +347,7 @@ describe("Core — xref", () => {
     const offendingElements = doc.querySelectorAll(
       "#test .respec-offending-element"
     );
-    expect(offendingElements.length).toBe(0);
+    expect(offendingElements).toHaveSize(0);
   });
 
   it("takes data-lt into account", async () => {
@@ -372,7 +372,7 @@ describe("Core — xref", () => {
     );
 
     const links = [...doc.querySelectorAll("#test2 a")];
-    expect(links.length).toBe(4);
+    expect(links).toHaveSize(4);
     for (const link of links) {
       expect(link.href).toBe(
         "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
@@ -403,7 +403,7 @@ describe("Core — xref", () => {
     const dfn = doc.querySelector("#test dfn");
     expect(dfn.id).toBe("dfn-event-handler");
     const links = [...doc.querySelectorAll("#test a")];
-    expect(links.length).toBe(6);
+    expect(links).toHaveSize(6);
     for (const link of links) {
       expect(link.href).toBe(
         "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
@@ -412,7 +412,7 @@ describe("Core — xref", () => {
     }
 
     const test2Links = [...doc.querySelectorAll("#test2 a")];
-    expect(test2Links.length).toBe(3);
+    expect(test2Links).toHaveSize(3);
     for (const link of test2Links) {
       expect(link.href).toBe(
         "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
@@ -460,7 +460,7 @@ describe("Core — xref", () => {
     const three = doc.getElementById("three");
     expect(three.href).toBe("");
     expect(three.classList).toContain("respec-offending-element");
-    expect(doc.querySelectorAll(".respec-offending-element").length).toBe(1);
+    expect(doc.querySelectorAll(".respec-offending-element")).toHaveSize(1);
 
     const four = doc.getElementById("four");
     expect(four.href).toBe(expectedLink1);
@@ -562,7 +562,7 @@ describe("Core — xref", () => {
     );
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
-    expect(normRefs.length).toBe(1); // excludes `css-values` of `#invalid`
+    expect(normRefs).toHaveSize(1); // excludes `css-values` of `#invalid`
     expect(normRefs.map(r => r.textContent)).toEqual(["[URL]"]);
 
     const informRefs = [...doc.querySelectorAll("#informative-references dt")];
@@ -659,7 +659,7 @@ describe("Core — xref", () => {
       expect(link1a.firstElementChild.localName).toBe("code");
       expect(link1b.firstElementChild.localName).toBe("code");
       const vars1 = [...doc.querySelectorAll("#link1 var")];
-      expect(vars1.length).toBe(2);
+      expect(vars1).toHaveSize(2);
       expect(vars1[0].textContent).toBe("type");
       expect(vars1[1].textContent).toBe("callback");
 

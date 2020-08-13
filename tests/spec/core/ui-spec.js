@@ -80,7 +80,7 @@ describe("Core - UI", () => {
       await new Promise(resolve => setTimeout(resolve));
 
       const dfns = doc.querySelectorAll("ul.respec-dfn-list li a");
-      expect(dfns.length).toBe(2);
+      expect(dfns).toHaveSize(2);
 
       const [dfnBar, dfnFoo] = dfns;
       expect(dfnBar.textContent.trim()).toBe("bar()");
@@ -110,7 +110,7 @@ describe("Core - UI", () => {
     await new Promise(resolve => setTimeout(resolve));
 
     const dfns = doc.querySelectorAll("ul.respec-dfn-list li");
-    expect(dfns.length).toBe(4);
+    expect(dfns).toHaveSize(4);
 
     const [dfnBar, dfnBaz, dfnFoo, dfnFoobar] = dfns;
 

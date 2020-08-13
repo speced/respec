@@ -67,7 +67,7 @@ describe("Core - Structure", () => {
     const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
     expect(toc.querySelector("ol > li a").textContent).toBe("1. ONE");
-    expect(toc.querySelectorAll("li").length).toBe(16);
+    expect(toc.querySelectorAll("li")).toHaveSize(16);
     expect(toc.querySelector("ol:first-of-type").childElementCount).toBe(4);
     expect(toc.querySelector("a[href='#six']").textContent).toBe(
       "1.1.1.1.1.1 SIX"
@@ -106,12 +106,12 @@ describe("Core - Structure", () => {
     const doc = await makeRSDoc(ops);
 
     const informativeRefs = doc.querySelectorAll("#informative-references dt");
-    expect(informativeRefs.length).toBe(1);
+    expect(informativeRefs).toHaveSize(1);
     const [informativeRef] = informativeRefs;
     expect(informativeRef.textContent).toBe("[informative]");
 
     const normativeRefs = doc.querySelectorAll("#normative-references dt");
-    expect(normativeRefs.length).toBe(1);
+    expect(normativeRefs).toHaveSize(1);
     const [normativeRef1] = normativeRefs;
     expect(normativeRef1.textContent).toBe("[normative]");
   });
@@ -136,12 +136,12 @@ describe("Core - Structure", () => {
     const doc = await makeRSDoc(ops);
     const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
-    expect(toc.querySelectorAll(":scope > ol > li").length).toBe(7);
-    expect(toc.querySelectorAll("li").length).toBe(19);
+    expect(toc.querySelectorAll(":scope > ol > li")).toHaveSize(7);
+    expect(toc.querySelectorAll("li")).toHaveSize(19);
     expect(toc.querySelector("ol > li").textContent).toBe("Abstract");
     expect(
-      toc.querySelectorAll(":scope > ol > li a[href='#intro']").length
-    ).toBe(1);
+      toc.querySelectorAll(":scope > ol > li a[href='#intro']")
+    ).toHaveSize(1);
   });
 
   it("should limit ToC depth with maxTocLevel", async () => {
@@ -153,8 +153,8 @@ describe("Core - Structure", () => {
     const doc = await makeRSDoc(ops);
     const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
-    expect(doc.querySelectorAll("#toc > ol > li").length).toBe(4);
-    expect(toc.querySelectorAll("li").length).toBe(12);
+    expect(doc.querySelectorAll("#toc > ol > li")).toHaveSize(4);
+    expect(toc.querySelectorAll("li")).toHaveSize(12);
     expect(doc.querySelector("#toc > ol > li > a").textContent).toBe("1. ONE");
     expect(toc.querySelector("a[href='#four']").textContent).toBe(
       "1.1.1.1 FOUR"
@@ -184,7 +184,7 @@ describe("Core - Structure", () => {
       const doc = await makeRSDoc(ops);
 
       const toc = doc.getElementById("toc");
-      expect(toc.querySelectorAll(":scope > ol > li").length).toBe(1);
+      expect(toc.querySelectorAll(":scope > ol > li")).toHaveSize(1);
       const tocItem = toc.querySelector(":scope > ol > li");
       expect(tocItem.textContent.trim()).toContain("PASS");
       expect(tocItem.textContent.trim()).not.toContain("SKIPPED");
@@ -236,7 +236,7 @@ describe("Core - Structure", () => {
       const doc = await makeRSDoc(ops);
       const toc = doc.getElementById("toc");
 
-      expect(toc.querySelectorAll(":scope .toc").length).toBe(3);
+      expect(toc.querySelectorAll(":scope .toc")).toHaveSize(3);
       expect(doc.getElementById("test").classList).toContain(
         "respec-offending-element"
       );
@@ -362,7 +362,7 @@ describe("Core - Structure", () => {
 
     const toc = doc.getElementById("toc");
     const sectionNumbers = toc.querySelectorAll(".secno");
-    expect(sectionNumbers.length).toBe(appendixCount);
+    expect(sectionNumbers).toHaveSize(appendixCount);
     expect(sectionNumbers[0].textContent.trim()).toBe("A.");
     expect(sectionNumbers[1].textContent.trim()).toBe("B.");
     expect(sectionNumbers[25].textContent.trim()).toBe("Z.");
