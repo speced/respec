@@ -9,7 +9,7 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { Err, getIntlData, showInlineWarning } from "./utils.js";
+import { Err, getIntlData } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 const localizationStrings = {
@@ -141,13 +141,11 @@ function handleDuplicates(testURLs, elem) {
     (link, i, self) => self.indexOf(link) !== i
   );
   if (duplicates.length) {
-    showInlineWarning(
-      elem,
-      `Duplicate tests found`,
-      `To fix, remove duplicates from "data-tests": ${duplicates
-        .map(url => new URL(url).pathname)
-        .join(", ")}`
-    );
+    const msg = `Duplicate tests found`;
+    const hint = `To fix, remove duplicates from "data-tests": ${duplicates
+      .map(url => new URL(url).pathname)
+      .join(", ")}`;
+    pub("warn", new Err(msg, name, { hint, elements: [elem] }));
   }
 }
 

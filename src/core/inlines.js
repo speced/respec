@@ -7,16 +7,16 @@
 // throughout the document, [[REFERENCES]]/[[!REFERENCES]], {{ IDL }} and RFC2119 keywords.
 
 import {
+  Err,
   InsensitiveStringSet,
   getIntlData,
   getTextNodes,
   norm,
   refTypeFromContext,
-  showInlineError,
-  showInlineWarning,
 } from "./utils.js";
 import { html } from "./import-maps.js";
 import { idlStringToHtml } from "./inline-idl-parser.js";
+import { pub } from "./pubsubhub.js";
 import { renderInlineCitation } from "./render-biblio.js";
 
 export const name = "core/inlines";
@@ -115,11 +115,9 @@ function inlineRefMatches(matched) {
     return html`<a href="${ref}"></a>`;
   }
   const badReference = html`<span>${matched}</span>`;
-  showInlineError(
-    badReference, // cite element
-    `Wasn't able to expand ${matched} as it didn't match any id in the document.`,
-    `Please make sure there is element with id ${ref} in the document.`
-  );
+  const msg = `Wasn't able to expand ${matched} as it didn't match any id in the document.`;
+  const hint = `Please make sure there is element with id ${ref} in the document.`;
+  pub("error", new Err(msg, name, { hint, elements: [badReference] }));
   return badReference;
 }
 
@@ -153,11 +151,10 @@ function inlineBibrefMatches(matched, txt, conf) {
   const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
     const citeElem = cite.childNodes[1] || cite;
-    showInlineWarning(
-      citeElem,
+    const msg =
       "Normative references in informative sections are not allowed. " +
-        `Remove '!' from the start of the reference \`[[${ref}]]\``
-    );
+      `Remove '!' from the start of the reference \`[[${ref}]]\``;
+    pub("warn", new Err(msg, name, { elements: [citeElem] }));
   }
 
   if (type === "informative" && !illegal) {

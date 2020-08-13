@@ -4,16 +4,12 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import {
-  addHashId,
-  showInlineError,
-  showInlineWarning,
-  xmlEscape,
-} from "./utils.js";
+import { Err, addHashId, xmlEscape } from "./utils.js";
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";
 import { fetchAsset } from "./text-loader.js";
+import { pub } from "./pubsubhub.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";
@@ -184,7 +180,7 @@ function defineIdlName(escaped, data, parent) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
     const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
-    showInlineWarning(unlinkedAnchor, msg, "");
+    pub("warn", new Err(msg, name, { elements: [unlinkedAnchor] }));
   }
   return unlinkedAnchor;
 }
@@ -319,12 +315,13 @@ function renderWebIDL(idlElement, index) {
       sourceName: String(index),
     });
   } catch (e) {
-    showInlineError(
-      idlElement,
-      `Failed to parse WebIDL: ${e.bareMessage}.`,
-      e.bareMessage,
-      { details: `<pre>${e.context}</pre>` }
-    );
+    const msg = `Failed to parse WebIDL: ${e.bareMessage}.`;
+    const err = new Err(msg, name, {
+      title: e.bareMessage,
+      details: `<pre>${e.context}</pre>`,
+      elements: [idlElement],
+    });
+    pub("error", err);
     // Skip this <pre> and move on to the next one.
     return [];
   }
@@ -407,12 +404,13 @@ export async function run() {
       details += `Try fixing as:
       <pre>${escaped}</pre>`;
     }
-    showInlineError(
-      idls[validation.sourceName],
-      `WebIDL validation error: ${validation.bareMessage}`,
-      validation.bareMessage,
-      { details }
-    );
+    const msg = `WebIDL validation error: ${validation.bareMessage}`;
+    const err = new Err(msg, name, {
+      details,
+      elements: idls[validation.sourceName],
+      title: validation.bareMessage,
+    });
+    pub("error", err);
   }
   document.normalize();
 }

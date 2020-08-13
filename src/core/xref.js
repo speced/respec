@@ -21,8 +21,6 @@ import {
   createResourceHint,
   nonNormativeSelector,
   norm as normalize,
-  showInlineError,
-  showInlineWarning,
 } from "./utils.js";
 import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import { pub, sub } from "./pubsubhub.js";
@@ -434,7 +432,7 @@ function addToReferences(elem, cite, normative, term, conf) {
     `Adding an informative reference to "${term}" from "${cite}" ` +
     "in a normative section";
   const title = "Error: Informative reference in normative section";
-  showInlineWarning(elem, msg, title);
+  pub("warn", new Err(msg, name, { title, elements: [elem] }));
 }
 
 /** @param {Errors} errors */
@@ -459,7 +457,8 @@ function showErrors({ ambiguous, notFound }) {
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
     const hint = howToFix(formUrl);
     const msg = `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}. ${hint}`;
-    showInlineError(elems, msg, "Error: No matching dfn found.");
+    const title = "Error: No matching dfn found.";
+    pub("error", new Err(msg, name, { title, elements: elems }));
   }
 
   for (const { query, elems, results } of ambiguous.values()) {
@@ -469,7 +468,8 @@ function showErrors({ ambiguous, notFound }) {
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const hint = howToFix(formUrl);
     const msg = `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ${hint}`;
-    showInlineError(elems, msg, "Error: Linking an ambiguous dfn.");
+    const title = "Error: Linking an ambiguous dfn.";
+    pub("error", new Err(msg, name, { title, elements: elems }));
   }
 }
 

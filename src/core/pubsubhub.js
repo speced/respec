@@ -79,6 +79,7 @@ sub("error", err => {
 });
 
 sub("warn", err => {
+  err.isWarning = true;
   console.warn(err, Object.fromEntries(Object.entries(err)));
 });
 

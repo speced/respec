@@ -4,15 +4,15 @@
 // to the matching definitions.
 import {
   CaseInsensitiveMap,
+  Err,
   addId,
   getIntlData,
   getLinkTargets,
-  showInlineError,
-  showInlineWarning,
   wrapInner,
 } from "./utils.js";
 import { THIS_SPEC, toCiteDetails } from "./data-cite.js";
 import { definitionMap } from "./dfn-map.js";
+import { pub } from "./pubsubhub.js";
 
 export const name = "core/link-to-dfn";
 
@@ -103,7 +103,11 @@ function mapTitleToDfns() {
     const { result, duplicates } = collectDfns(key);
     titleToDfns.set(key, result);
     if (duplicates.length > 0) {
-      showInlineError(duplicates, l10n.duplicateMsg(key), l10n.duplicateTitle);
+      const err = new Err(l10n.duplicateMsg(key), name, {
+        title: l10n.duplicateTitle,
+        elements: duplicates,
+      });
+      pub("error", err);
     }
   }
   return titleToDfns;
@@ -270,11 +274,9 @@ function shouldWrapByCode(elem, term = "") {
 
 function showLinkingError(elems) {
   elems.forEach(elem => {
-    showInlineWarning(
-      elem,
-      `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``,
-      "Linking error: not matching `<dfn>`"
-    );
+    const msg = `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``;
+    const title = "Linking error: not matching `<dfn>`";
+    pub("warn", new Err(msg, name, { title, elements: [elem] }));
   });
 }
 

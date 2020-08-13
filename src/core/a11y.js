@@ -4,7 +4,7 @@
  * Lints for accessibility issues using axe-core package.
  */
 
-import { Err, showInlineWarning } from "./utils.js";
+import { Err } from "./utils.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/a11y";
@@ -44,7 +44,7 @@ export async function run(conf) {
     for (const [failureSummary, elements] of groupedBySummary) {
       const hints = formatHintsAsMarkdown(failureSummary);
       const details = `\n\n${description}.\n\n${hints}. ([Learn more](${helpUrl}))`;
-      showInlineWarning(elements, title, title, { details });
+      pub("warn", new Err(title, name, { details, elements }));
     }
   }
 }

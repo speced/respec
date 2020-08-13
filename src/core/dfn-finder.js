@@ -1,6 +1,7 @@
 // @ts-check
+import { Err, wrapInner } from "./utils.js";
 import { definitionMap, registerDefinition } from "./dfn-map.js";
-import { showInlineError, wrapInner } from "./utils.js";
+import { pub } from "./pubsubhub.js";
 
 const topLevelEntities = new Set([
   "callback interface",
@@ -164,7 +165,8 @@ function findNormalDfn(defn, parent, ...names) {
       const msg = `WebIDL identifier \`${name}\` ${
         parent ? `for \`${parent}\`` : ""
       } is defined multiple times`;
-      showInlineError(dfns, msg, "Duplicate definition.");
+      const title = "Duplicate definition.";
+      pub("error", new Err(msg, name, { title, elements: dfns }));
     }
     if (dfns.length) {
       return dfns[0];

@@ -9,14 +9,10 @@
  * `data-cite` to `href` attributes. `data-cite` attributes are added to markup
  * directly by the author as well as via other modules like core/xref.
  */
+import { Err, refTypeFromContext, wrapInner } from "./utils.js";
 import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
-import {
-  refTypeFromContext,
-  showInlineError,
-  showInlineWarning,
-  wrapInner,
-} from "./utils.js";
-import { sub } from "./pubsubhub.js";
+import { pub, sub } from "./pubsubhub.js";
+
 export const name = "core/data-cite";
 
 /**
@@ -95,11 +91,10 @@ function linkElem(elem, linkProps, citeDetails) {
       elem.append(cite);
     }
     if ("export" in elem.dataset) {
-      showInlineError(
-        elem,
-        "Exporting an linked external definition is not allowed. Please remove the `data-export` attribute",
-        "Please remove the `data-export` attribute."
-      );
+      const msg =
+        "Exporting an linked external definition is not allowed. Please remove the `data-export` attribute";
+      const hint = "Please remove the `data-export` attribute.";
+      pub("error", new Err(msg, name, { hint, elements: [elem] }));
       delete elem.dataset.export;
     }
     elem.dataset.noExport = "";
@@ -173,7 +168,8 @@ export async function run() {
     if (linkProps) {
       linkElem(elem, linkProps, citeDetails);
     } else {
-      showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
+      const msg = `Couldn't find a match for "${originalKey}"`;
+      pub("warn", new Err(msg, name, { elements: [elem] }));
     }
   }
 

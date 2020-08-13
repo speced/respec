@@ -10,8 +10,9 @@
  *
  */
 
-import { getIntlData, norm, showInlineError } from "./utils.js";
+import { Err, getIntlData, norm } from "./utils.js";
 import { html } from "./import-maps.js";
+import { pub } from "./pubsubhub.js";
 export const name = "core/title";
 
 const localizationStrings = {
@@ -40,8 +41,8 @@ export function run(conf) {
       "To fix this, please give your document a `<title>`. " +
       "If you need special markup in the document's title, " +
       'please use a `<h1 id="title">`.';
-    const msgTitle = "Document is missing a title";
-    showInlineError(h1Elem, msg, msgTitle);
+    const title = "Document is missing a title";
+    pub("error", new Err(msg, name, { title, elements: [h1Elem] }));
   }
 
   // Decorate the spec title

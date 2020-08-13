@@ -4,14 +4,9 @@
 // Adds width and height to images, if they are missing.
 // Generates a Table of Figures wherever there is a #tof element.
 
-import {
-  addId,
-  getIntlData,
-  renameElement,
-  showInlineWarning,
-  wrapInner,
-} from "./utils.js";
+import { Err, addId, getIntlData, renameElement, wrapInner } from "./utils.js";
 import { html } from "./import-maps.js";
+import { pub } from "./pubsubhub.js";
 
 export const name = "core/figures";
 
@@ -79,7 +74,8 @@ function collectFigures() {
       decorateFigure(fig, caption, i);
       tof.push(getTableOfFiguresListItem(fig.id, caption));
     } else {
-      showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
+      const msg = "Found a `<figure>` without a `<figcaption>`";
+      pub("warn", new Err(msg, name, { elements: [fig], isWarning: true }));
     }
   });
   return tof;
