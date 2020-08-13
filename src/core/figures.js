@@ -75,7 +75,7 @@ function collectFigures() {
       tof.push(getTableOfFiguresListItem(fig.id, caption));
     } else {
       const msg = "Found a `<figure>` without a `<figcaption>`";
-      pub("warn", new Err(msg, name, { elements: [fig], isWarning: true }));
+      pub("warn", new Err(msg, name, { elements: [fig] }));
     }
   });
   return tof;

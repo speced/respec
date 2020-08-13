@@ -68,7 +68,7 @@ export function run() {
   } else if (bpSummary) {
     const message =
       "Using best practices summary (#bp-summary) but no best practices found.";
-    pub("warn", new Err(message, name, { isWarning: true }));
+    pub("warn", new Err(message, name));
     bpSummary.remove();
   }
 }

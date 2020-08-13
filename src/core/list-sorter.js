@@ -75,8 +75,7 @@ export function run() {
       }
       default: {
         const msg = `ReSpec can't sort ${elem.localName} elements.`;
-        const err = new Err(msg, name, { isWarning: true, elements: [elem] });
-        pub("warning", err);
+        pub("warn", new Err(msg, name, { elements: [elem] }));
       }
     }
     if (sortedElems) {

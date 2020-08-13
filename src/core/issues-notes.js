@@ -155,7 +155,7 @@ function handleIssues(ins, ghIssues, conf) {
           ghIssue = ghIssues.get(dataNum);
           if (!ghIssue) {
             const msg = `Failed to fetch issue number ${dataNum}`;
-            pub("warning", new Err(msg, name, { isWarning: true }));
+            pub("warn", new Err(msg, name));
           }
           if (ghIssue && !report.title) {
             report.title = ghIssue.title;
