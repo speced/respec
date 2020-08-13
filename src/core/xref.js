@@ -16,14 +16,15 @@
  * @typedef {Map<string, { elems: HTMLElement[], results: SearchResultEntry[], query: RequestEntry }>} ErrorCollection
  * @typedef {{ ambiguous: ErrorCollection, notFound: ErrorCollection }} Errors
  */
-import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import {
+  Err,
   createResourceHint,
   nonNormativeSelector,
   norm as normalize,
   showInlineError,
   showInlineWarning,
 } from "./utils.js";
+import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import { pub, sub } from "./pubsubhub.js";
 import { possibleExternalLinks } from "./link-to-dfn.js";
 
@@ -139,11 +140,10 @@ function normalizeConfig(xref) {
         }
       }
       break;
-    default:
-      pub(
-        "error",
-        `Invalid value for \`xref\` configuration option. Received: "${xref}".`
-      );
+    default: {
+      const msg = `Invalid value for \`xref\` configuration option. Received: "${xref}".`;
+      pub("error", new Err(msg, name));
+    }
   }
   return config;
 
@@ -154,7 +154,7 @@ function normalizeConfig(xref) {
     const msg =
       `Invalid profile "${profile}" in \`respecConfig.xref\`. ` +
       `Please use one of the supported profiles: ${supportedProfiles}.`;
-    pub("error", msg);
+    pub("error", new Err(msg, name));
   }
 }
 

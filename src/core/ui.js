@@ -11,7 +11,6 @@
 //  - once we have something decent, merge, ship as 3.2.0
 import { html, pluralize } from "./import-maps.js";
 import { fetchAsset } from "./text-loader.js";
-import { markdownToHtml } from "./markdown.js";
 import shortcut from "../../js/shortcut.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
@@ -136,8 +135,15 @@ const ariaMap = new Map([
 ]);
 ariaDecorate(respecPill, ariaMap);
 
-function errWarn(msg, arr, butName, title) {
-  arr.push(msg);
+/**
+ *
+ * @param {import('./utils.js').Err} err
+ * @param {import('./utils.js').Err[]} arr
+ * @param {"error" | "warning"} butName
+ * @param {string} title
+ */
+function errWarn(err, arr, butName, title) {
+  arr.push(err);
   if (!buttons.hasOwnProperty(butName)) {
     buttons[butName] = createWarnButton(butName, arr, title);
     respecUI.appendChild(buttons[butName]);
@@ -149,6 +155,9 @@ function errWarn(msg, arr, butName, title) {
   ariaDecorate(button, ariaMap);
 }
 
+/**
+ * @param {import('./utils.js').Err[]} arr
+ */
 function createWarnButton(butName, arr, title) {
   const buttonId = `respec-pill-${butName}`;
   const button = html`<button
@@ -161,7 +170,7 @@ function createWarnButton(butName, arr, title) {
     for (const err of arr) {
       const fragment = document
         .createRange()
-        .createContextualFragment(markdownToHtml(err));
+        .createContextualFragment(err.toHTML());
       const li = document.createElement("li");
       // if it's only a single element, just copy the contents into li
       if (fragment.firstElementChild === fragment.lastElementChild) {
@@ -213,8 +222,8 @@ export const ui = {
     if (keyShort) shortcut.add(keyShort, handler);
     return button;
   },
-  error(msg) {
-    errWarn(msg, errors, "error", "ReSpec Errors");
+  error(err) {
+    errWarn(err, errors, "error", "ReSpec Errors");
   },
   warning(msg) {
     errWarn(msg, warnings, "warning", "ReSpec Warnings");
@@ -269,5 +278,5 @@ shortcut.add("Ctrl+Alt+Shift+W", () => {
   if (buttons.warning) buttons.warning.click();
 });
 window.respecUI = ui;
-sub("error", details => ui.error(details));
+sub("error", err => ui.error(err));
 sub("warn", details => ui.warning(details));

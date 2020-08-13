@@ -10,6 +10,7 @@
 // 2.  It allows referencing requirements by their ID simply using an empty <a>
 //     element with its href pointing to the requirement it should be referencing
 //     and a class of "reqRef".
+import { Err } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -32,7 +33,7 @@ export function run() {
     } else {
       txt = `Req. not found '${id}'`;
       const msg = `Requirement not found in element \`a.reqRef\`: ${id}`;
-      pub("error", msg);
+      pub("error", new Err(msg, name));
       console.warn(msg, ref);
     }
     ref.textContent = txt;

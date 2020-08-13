@@ -4,6 +4,7 @@
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
 import { html } from "./import-maps.js";
+import { markdownToHtml } from "./markdown.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
@@ -947,5 +948,56 @@ export class CaseInsensitiveMap extends Map {
    */
   delete(key) {
     return super.delete(key.toLowerCase());
+  }
+}
+
+export class Err extends Error {
+  /**
+   * @param {string} message
+   * @param {string} plugin Name of plugin that caused the error.
+   * @param {object} [options]
+   * @param {boolean} [options.isWarning]
+   * @param {string} [options.title]
+   * @param {string} [options.hint]
+   * @param {HTMLElement[]} [options.elements]
+   * @param {string} [options.details]
+   */
+  constructor(message, plugin, options = {}) {
+    super(message);
+    this.name = options.isWarning ? "ReSpecWarning" : "ReSpecError";
+    this.plugin = plugin;
+
+    if (options.elements) {
+      options.elements.forEach(elem =>
+        markAsOffending(elem, this.message, this.title)
+      );
+    }
+
+    // 😢 TS complains https://github.com/microsoft/TypeScript/issues/26792
+    // Object.assign(this, options);
+    options.title && (this.title = options.title);
+    options.hint && (this.hint = options.hint);
+    options.elements && (this.elements = options.elements);
+    options.details && (this.details = options.details);
+  }
+
+  toHTML() {
+    const plugin = this.plugin ? `(${this.plugin}): ` : "";
+    const hint = this.hint ? ` ${this.hint}.` : "";
+
+    let elements = "";
+    if (Array.isArray(this.elements)) {
+      const occurences = this.elements.map((elem, i) => {
+        return generateMarkdownLink(elem, i);
+      });
+      elements = ` Occurred at: ${joinAnd(occurences)}.`;
+    }
+
+    const details = this.details
+      ? `\n\n<details>\n${this.details || "\n"}\n</details>\n`
+      : "";
+
+    const text = `${plugin}${this.message}${hint}${elements}${details}`;
+    return markdownToHtml(text);
   }
 }

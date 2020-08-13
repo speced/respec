@@ -5,7 +5,7 @@
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
 import { pub, sub } from "./pubsubhub.js";
-import { createResourceHint } from "./utils.js";
+import { createResourceHint, Err } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
 import { html } from "./import-maps.js";
 
@@ -74,11 +74,11 @@ export async function run(conf) {
       const stats = await fetchStats(apiUrl, options);
       return html`${{ html: stats }}`;
     } catch (err) {
-      console.error(err);
-      const msg =
-        `Couldn't find feature "${options.feature}" on caniuse.com? ` +
+      const msg = `Couldn't find feature "${options.feature}" on caniuse.com.`;
+      const hint =
         "Please check the feature key on [caniuse.com](https://caniuse.com)";
-      pub("error", msg);
+      pub("error", new Err(msg, name, { hint }));
+      console.error(err);
       return html`<a href="${featureURL}">caniuse.com</a>`;
     }
   })();

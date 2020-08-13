@@ -5,7 +5,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { getIntlData } from "../core/utils.js";
+import { Err, getIntlData } from "../core/utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github";
 
@@ -15,7 +15,7 @@ let rejectGithubPromise;
 export const github = new Promise((resolve, reject) => {
   resolveGithubPromise = resolve;
   rejectGithubPromise = message => {
-    pub("error", message);
+    pub("error", new Err(message, name));
     reject(new Error(message));
   };
 });

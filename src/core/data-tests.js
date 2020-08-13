@@ -9,7 +9,7 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { getIntlData, showInlineWarning } from "./utils.js";
+import { getIntlData, showInlineWarning, Err } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 const localizationStrings = {
@@ -103,7 +103,7 @@ export function run(conf) {
     return;
   }
   if (!conf.testSuiteURI) {
-    pub("error", l10n.missing_test_suite_uri);
+    pub("error", new Err(l10n.missing_test_suite_uri, name));
     return;
   }
 

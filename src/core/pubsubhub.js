@@ -75,11 +75,11 @@ export function unsub({ topic, cb }) {
 }
 
 sub("error", err => {
-  console.error(err, err.stack);
+  console.error(err, Object.fromEntries(Object.entries(err)));
 });
 
-sub("warn", str => {
-  console.warn(str);
+sub("warn", err => {
+  console.warn(err, Object.fromEntries(Object.entries(err)));
 });
 
 expose(name, { sub });

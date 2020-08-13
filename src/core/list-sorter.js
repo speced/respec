@@ -1,4 +1,5 @@
 // @ts-check
+import { Err } from "./utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/list-sorter";
 
@@ -72,8 +73,11 @@ export function run() {
         sortedElems = sortListItems(list, dir);
         break;
       }
-      default:
-        pub("warning", `ReSpec can't sort ${elem.localName} elements.`);
+      default: {
+        const msg = `ReSpec can't sort ${elem.localName} elements.`;
+        const err = new Err(msg, name, { isWarning: true, elements: [elem] });
+        pub("warning", err);
+      }
     }
     if (sortedElems) {
       const range = document.createRange();

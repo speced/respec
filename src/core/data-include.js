@@ -9,9 +9,9 @@
 //  This module only really works when you are in an HTTP context, and will most likely
 //  fail if you are editing your documents on your local drive. That is due to security
 //  restrictions in the browser.
+import { Err, runTransforms } from "./utils.js";
 import { markdownToHtml, restructure } from "./markdown.js";
 import { pub } from "./pubsubhub.js";
-import { runTransforms } from "./utils.js";
 
 export const name = "core/data-include";
 
@@ -90,9 +90,9 @@ export async function run() {
       const text = await response.text();
       processResponse(text, id, url);
     } catch (err) {
-      const msg = `\`data-include\` failed: \`${url}\` (${err.message}). See console for details.`;
-      console.error("data-include failed for element: ", el, err);
-      pub("error", msg);
+      const msg = `\`data-include\` failed: \`${url}\` (${err.message}).`;
+      pub("error", new Err(msg, name, { elements: [el] }));
+      console.error(err);
     }
   });
   await Promise.all(promisesToInclude);
