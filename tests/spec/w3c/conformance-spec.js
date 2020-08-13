@@ -23,11 +23,11 @@ describe("W3C — Conformance", () => {
     };
     const doc = await makeRSDoc(ops);
     const conformance = doc.getElementById("conformance");
-    expect(conformance.querySelectorAll("h2").length).toBe(1);
+    expect(conformance.querySelectorAll("h2")).toHaveSize(1);
     expect(conformance.querySelector("h2").textContent).toMatch(
       /\d+\.\s+Conformance/
     );
-    expect(conformance.querySelectorAll("p").length).toBe(3);
+    expect(conformance.querySelectorAll("p")).toHaveSize(3);
     expect(conformance.querySelector("p:first-of-type").textContent).toContain(
       "non-normative"
     );
@@ -47,7 +47,7 @@ describe("W3C — Conformance", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelectorAll("#conformance .rfc2119").length).toBe(3);
+    expect(doc.querySelectorAll("#conformance .rfc2119")).toHaveSize(3);
   });
 
   it("omits the 2119 reference when there are no terms", async () => {
@@ -61,7 +61,7 @@ describe("W3C — Conformance", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelectorAll("#conformance .rfc2119").length).toBe(0);
+    expect(doc.querySelectorAll("#conformance .rfc2119")).toHaveSize(0);
   });
 
   it("allows conformance section to be completely overridden via .override css class", async () => {
@@ -78,9 +78,9 @@ describe("W3C — Conformance", () => {
     const doc = await makeRSDoc(makeStandardOps({}, body));
     const conformance = doc.querySelector("#conformance");
 
-    expect(conformance.querySelectorAll(".rfc2119").length).toBe(0);
-    expect(conformance.querySelectorAll("h2").length).toBe(1);
-    expect(conformance.querySelectorAll("p").length).toBe(1);
+    expect(conformance.querySelectorAll(".rfc2119")).toHaveSize(0);
+    expect(conformance.querySelectorAll("h2")).toHaveSize(1);
+    expect(conformance.querySelectorAll("p")).toHaveSize(1);
     expect(conformance.querySelector("h2").textContent).toContain(
       "Overridden heading"
     );
