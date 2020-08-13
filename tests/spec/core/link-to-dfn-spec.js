@@ -41,7 +41,7 @@ describe("Core — Link to definitions", () => {
     expect(hasCode.firstElementChild.localName).toBe("code");
     expect(hasCode.textContent).toBe("Request");
     const codeWrapMethods = doc.body.querySelectorAll("#codeWrapMethod a code");
-    expect(codeWrapMethods.length).toBe(4);
+    expect(codeWrapMethods).toHaveSize(4);
     const noCodeWrap = doc.body.querySelector("#noCodeWrap a");
     expect(noCodeWrap).toBeTruthy();
     expect(noCodeWrap.getAttribute("href")).toBe("#dom-request");
@@ -133,6 +133,27 @@ describe("Core — Link to definitions", () => {
 
     const idlLinks = doc.querySelectorAll("#idl-links a");
     expect([...idlLinks].map(a => a.hash)).toEqual(Array(2).fill("#idl-card"));
+  });
+
+  it("treats internal slots as idl", async () => {
+    const body = `
+      <section id="test">
+        <dfn data-dfn-for="MyEvent">[[\\aSlot]]</dfn>
+        <dfn>MyEvent</dfn>
+        <p id="link-slots">
+          <span>{{ MyEvent/[[aSlot]] }}</span>
+          <span>{{ MyEvent.[[aSlot]] }}</span>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const dfn = doc.querySelector("#test dfn");
+    const links = doc.querySelectorAll("#link-slots span a:last-child");
+    const href = `#${dfn.id}`;
+    expect(links[0].hash).toBe(href);
+    expect(links[1].hash).toBe(href);
   });
 
   it("has empty data-dfn-for on top level things", async () => {
@@ -247,7 +268,28 @@ describe("Core — Link to definitions", () => {
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
     expect(
-      doc.querySelectorAll("#links a[href='#dfn-test-string']").length
-    ).toBe(3);
+      doc.querySelectorAll("#links a[href='#dfn-test-string']")
+    ).toHaveSize(3);
+  });
+
+  it("links to external spec with current spec as prefix", async () => {
+    const body = `
+      <a id="test" data-cite="tomato-sauce#is-red">PASS</a>
+    `;
+    const conf = {
+      shortName: "tomato",
+      localBiblio: {
+        "tomato-sauce": {
+          title: "A spec to ketchup",
+          href: "https://example.com",
+        },
+      },
+    };
+    const ops = makeStandardOps(conf, body);
+    const doc = await makeRSDoc(ops);
+
+    const testLink = doc.getElementById("test");
+    expect(testLink.classList).not.toContain("respec-offending-element");
+    expect(testLink.href).toBe("https://example.com/#is-red");
   });
 });

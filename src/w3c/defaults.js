@@ -10,6 +10,14 @@ import { rule as wptTestsExist } from "../core/linter-rules/wpt-tests-exist.js";
 
 linter.register(privsecSectionRule, wptTestsExist);
 
+const w3cLogo = {
+  src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+  alt: "W3C",
+  height: 48,
+  width: 72,
+  url: "https://www.w3.org/",
+};
+
 const w3cDefaults = {
   lint: {
     "privsec-section": true,
@@ -17,15 +25,7 @@ const w3cDefaults = {
   },
   doJsonLd: false,
   license: "w3c-software-doc",
-  logos: [
-    {
-      src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
-      alt: "W3C",
-      height: 48,
-      width: 72,
-      url: "https://www.w3.org/",
-    },
-  ],
+  logos: [],
   xref: true,
 };
 
@@ -39,6 +39,10 @@ export function run(conf) {
           ...w3cDefaults.lint,
           ...conf.lint,
         };
+
+  if (conf.specStatus && conf.specStatus.toLowerCase() !== "unofficial") {
+    w3cDefaults.logos.push(w3cLogo);
+  }
   Object.assign(conf, {
     ...coreDefaults,
     ...w3cDefaults,

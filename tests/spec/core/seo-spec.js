@@ -19,9 +19,8 @@ describe("Core — Seo", () => {
     await doc.respecIsReady;
     await new Promise(resolve => {
       const check = () => {
-        const hasMetaDesc = doc.querySelectorAll("meta[name=description]")
-          .length;
-        expect(hasMetaDesc).toBe(0);
+        const hasMetaDesc = doc.querySelectorAll("meta[name=description]");
+        expect(hasMetaDesc).toHaveSize(0);
         resolve();
       };
       window.requestIdleCallback ? window.requestIdleCallback(check) : check();

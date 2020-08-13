@@ -79,6 +79,6 @@ describe("Core — Best Practices", () => {
     expect(bps.querySelector("h3").textContent).toContain(
       "Best Practices Summary"
     );
-    expect(bps.querySelectorAll("ul li").length).toBe(3);
+    expect(bps.querySelectorAll("ul li")).toHaveSize(3);
   });
 });

@@ -34,6 +34,13 @@ const localizationStrings = {
     tests: "Tests",
     test: "Test",
   },
+  zh: {
+    missing_test_suite_uri:
+      "本规范中包含测试，但在 ReSpec 配置中缺少 '" +
+      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)'。",
+    tests: "测试",
+    test: "测试",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

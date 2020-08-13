@@ -91,14 +91,14 @@ describe("Core — Can I Use", () => {
     expect(moreInfoLink.textContent.trim()).toBe("More info");
 
     const browsers = stats.querySelectorAll(".caniuse-browser");
-    expect(browsers.length).toBe(2); // not 3, as there is no data for "opera"
+    expect(browsers).toHaveSize(2); // not 3, as there is no data for "opera"
     const [firefox, chrome] = browsers;
 
     const chromeVersions = chrome.querySelectorAll("ul li.caniuse-cell");
-    expect(chromeVersions.length).toBe(2);
+    expect(chromeVersions).toHaveSize(2);
 
     const firefoxVersions = firefox.querySelectorAll("ul li.caniuse-cell");
-    expect(firefoxVersions.length).toBe(4);
+    expect(firefoxVersions).toHaveSize(4);
 
     const firefoxButton = firefox.querySelector("button");
     expect(firefoxButton.textContent.trim()).toBe("Firefox 61");

@@ -22,9 +22,9 @@ describe("Core - Utils", () => {
         expect(cache).toBeTruthy();
         const cachedResponse = await cache.match(url);
         expect(cachedResponse).toBeTruthy();
-        const expires = new Date(
-          cachedResponse.headers.get("Expires")
-        ).valueOf();
+        const expiresHeader = cachedResponse.headers.get("Expires");
+        expect(expiresHeader).toBe(new Date(expiresHeader).toISOString());
+        const expires = new Date(expiresHeader).valueOf();
         expect(expires).toBeGreaterThan(Date.now());
         // default is 86400000, but we give a little leeway (~1 day)
         expect(expires).toBeGreaterThan(Date.now() + 86000000);
@@ -228,13 +228,13 @@ describe("Core - Utils", () => {
   describe("linkCSS", () => {
     it("adds a link element", () => {
       utils.linkCSS(document, "BOGUS");
-      expect(document.querySelectorAll("link[href='BOGUS']").length).toBe(1);
+      expect(document.querySelectorAll("link[href='BOGUS']")).toHaveSize(1);
       document.querySelector("link[href='BOGUS']").remove();
     });
 
     it("adds several link elements", () => {
       utils.linkCSS(document, ["BOGUS", "BOGUS", "BOGUS"]);
-      expect(document.querySelectorAll("link[href='BOGUS']").length).toBe(3);
+      expect(document.querySelectorAll("link[href='BOGUS']")).toHaveSize(3);
       document
         .querySelectorAll("link[href='BOGUS']")
         .forEach(element => element.remove());
@@ -313,7 +313,7 @@ describe("Core - Utils", () => {
       const intl = getIntlData(localizationStrings, "ko");
       expect(intl.foo).toBe("KO Foo");
 
-      const intlEn = getIntlData(localizationStrings, "en");
+      const intlEn = getIntlData(localizationStrings, "EN");
       expect(intlEn.foo).toBe("EN Foo");
     });
 
@@ -398,37 +398,36 @@ describe("Core - Utils", () => {
 
       render`${utils.htmlJoinAnd([], item => html`<a>${item}</a>`)}`;
       expect(div.textContent).toBe("");
-      expect(div.getElementsByTagName("a").length).toBe(0);
+      expect(div.getElementsByTagName("a")).toHaveSize(0);
 
       render`${utils.htmlJoinAnd(["<x>"], item => html`<a>${item}</a>`)}`;
       expect(div.textContent).toBe("<x>");
-      expect(div.getElementsByTagName("a").length).toBe(1);
+      expect(div.getElementsByTagName("a")).toHaveSize(1);
 
       render`${utils.htmlJoinAnd(
         ["<x>", "<x>"],
         item => html`<a>${item}</a>`
       )}`;
       expect(div.textContent).toBe("<x> and <x>");
-      expect(div.getElementsByTagName("a").length).toBe(2);
+      expect(div.getElementsByTagName("a")).toHaveSize(2);
 
       render`${utils.htmlJoinAnd(
         ["<x>", "<x>", "<x>"],
         item => html`<a>${item}</a>`
       )}`;
       expect(div.textContent).toBe("<x>, <x>, and <x>");
-      expect(div.getElementsByTagName("a").length).toBe(3);
+      expect(div.getElementsByTagName("a")).toHaveSize(3);
 
       render`${utils.htmlJoinAnd(
         ["<x>", "<x>", "<X>", "<x>"],
         item => html`<a>${item}</a>`
       )}`;
       expect(div.textContent).toBe("<x>, <x>, <X>, and <x>");
-      expect(div.getElementsByTagName("a").length).toBe(4);
+      expect(div.getElementsByTagName("a")).toHaveSize(4);
     });
   });
 
   describe("DOM utils", () => {
-    // migrated from core/jquery-enhanced
     describe("getTextNodes", () => {
       it("finds all the text nodes", () => {
         const node = document.createElement("div");
@@ -436,7 +435,7 @@ describe("Core - Utils", () => {
           "<div>aa<span>bb<div class='exclude'>ignore me</div></span><p>cc<i>dd</i></p><pre>nope</pre></div>";
 
         const textNodes = utils.getTextNodes(node, ["pre", ".exclude"]);
-        expect(textNodes.length).toBe(4);
+        expect(textNodes).toHaveSize(4);
         const str = textNodes.map(tn => tn.nodeValue).join("");
         expect(str).toBe("aabbccdd");
       });
@@ -446,7 +445,7 @@ describe("Core - Utils", () => {
           " <exclude> </exclude> <exclude>\t \n</exclude>include me";
 
         const textNodes = utils.getTextNodes(node, [], "");
-        expect(textNodes.length).toBe(1);
+        expect(textNodes).toHaveSize(1);
         expect(textNodes[0].nodeValue).toBe("include me");
       });
     });

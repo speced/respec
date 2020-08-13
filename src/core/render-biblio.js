@@ -38,6 +38,11 @@ const localizationStrings = {
     norm_references: "Normen und Spezifikationen",
     references: "Referenzen",
   },
+  zh: {
+    info_references: "非规范性引用",
+    norm_references: "规范性引用",
+    references: "参考文献",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

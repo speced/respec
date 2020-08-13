@@ -15,10 +15,6 @@ const template = {
 
 export default [
   {
-    input: "js/deps/jquery.js",
-    ...template
-  },
-  {
     input: "js/deps/pluralize.js",
     ...template
   }

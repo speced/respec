@@ -14,8 +14,8 @@ describe("Core — Informative", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const sec = doc.querySelector("div.informative, section.informative");
-    expect(sec.querySelectorAll("p").length).toBe(1);
-    expect(sec.querySelectorAll("p em").length).toBe(1);
+    expect(sec.querySelectorAll("p")).toHaveSize(1);
+    expect(sec.querySelectorAll("p em")).toHaveSize(1);
     expect(sec.querySelector("p em").textContent).toBe(
       "This section is non-normative."
     );

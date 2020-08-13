@@ -28,9 +28,6 @@ const localizationStrings = {
     note: "Note",
     warning: "Warning",
   },
-  zh: {
-    note: "注",
-  },
   ja: {
     note: "注",
     editors_note: "編者注",
@@ -62,6 +59,15 @@ const localizationStrings = {
     no_issues_in_spec: "Diese Spezifikation enthält keine offenen Fragen.",
     note: "Hinweis",
     warning: "Warnung",
+  },
+  zh: {
+    editors_note: "编者注",
+    feature_at_risk: "（有可能变动的特性）Issue",
+    issue: "Issue",
+    issue_summary: "Issue 总结",
+    no_issues_in_spec: "本规范中未列出任何 issue。",
+    note: "注",
+    warning: "警告",
   },
 };
 

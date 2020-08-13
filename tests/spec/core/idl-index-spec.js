@@ -267,7 +267,7 @@ dictionary Bar {
     expect(idlIndex).not.toBe(null);
     const pre = idlIndex.querySelector("pre");
 
-    expect(pre.querySelectorAll(".idlHeader").length).toBe(1);
+    expect(pre.querySelectorAll(".idlHeader")).toHaveSize(1);
     const idlHeader = pre.querySelector(".idlHeader");
     expect(idlHeader.querySelector("a.self-link").getAttribute("href")).toBe(
       "#actual-idl-index"
@@ -295,7 +295,7 @@ dictionary Bar {
     const header = doc.querySelector("#idl-index > h2");
     expect(header).not.toBe(null);
     expect(header.textContent).toBe("1. PASS");
-    expect(doc.querySelectorAll("#idl-index > h2").length).toBe(1);
+    expect(doc.querySelectorAll("#idl-index > h2")).toHaveSize(1);
   });
 
   it("doesn't include ids in the cloned indexed", async () => {
@@ -319,6 +319,6 @@ dictionary Bar {
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("#idl-index pre");
-    expect(pre.querySelectorAll("*[id]").length).toBe(0);
+    expect(pre.querySelectorAll("*[id]")).toHaveSize(0);
   });
 });

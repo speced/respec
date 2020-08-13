@@ -448,14 +448,17 @@ function showErrors({ ambiguous, notFound }) {
     return url;
   };
 
+  const howToFix = howToCiteURL =>
+    "[Learn more about this error](https://respec.org/docs/#error-term-not-found)" +
+    ` or see [how to cite to resolve the error](${howToCiteURL})`;
+
   for (const { query, elems } of notFound.values()) {
     const specs = query.specs ? [...new Set(query.specs.flat())].sort() : [];
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
-    const msg =
-      `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}. ` +
-      `See [how to cite to resolve the error](${formUrl})`;
+    const hint = howToFix(formUrl);
+    const msg = `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}. ${hint}`;
     showInlineError(elems, msg, "Error: No matching dfn found.");
   }
 
@@ -464,9 +467,8 @@ function showErrors({ ambiguous, notFound }) {
     const specsString = specs.map(s => `**${s}**`).join(", ");
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
-    const msg =
-      `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ` +
-      `See [how to cite to resolve the error](${formUrl})`;
+    const hint = howToFix(formUrl);
+    const msg = `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ${hint}`;
     showInlineError(elems, msg, "Error: Linking an ambiguous dfn.");
   }
 }
