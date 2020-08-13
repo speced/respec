@@ -2,22 +2,22 @@
 import { html } from "../../core/import-maps.js";
 import { showInlineWarning } from "../../core/utils.js";
 
-export default obj => {
+export default function showLogo(logo) {
   /** @type {HTMLAnchorElement} */
-  const a = html`<a href="${obj.url || ""}" class="logo"></a>`;
-  if (!obj.alt) {
+  const a = html`<a href="${logo.url || ""}" class="logo"></a>`;
+  if (!logo.alt) {
     showInlineWarning(a, "Found spec logo without an `alt` attribute");
   }
   /** @type {HTMLImageElement} */
   const img = html`<img
-    id="${obj.id}"
-    alt="${obj.alt}"
-    width="${obj.width}"
-    height="${obj.height}"
+    id="${logo.id}"
+    alt="${logo.alt}"
+    width="${logo.width}"
+    height="${logo.height}"
   />`;
   // avoid triggering 404 requests from dynamically generated
   // hyperHTML attribute values
-  img.src = obj.src;
+  img.src = logo.src;
   a.append(img);
   return a;
-};
+}
