@@ -4,8 +4,8 @@
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
+import { Err, createResourceHint } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
-import { createResourceHint, Err } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
 import { html } from "./import-maps.js";
 

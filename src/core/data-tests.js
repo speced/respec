@@ -9,7 +9,7 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { getIntlData, showInlineWarning, Err } from "./utils.js";
+import { Err, getIntlData, showInlineWarning } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 const localizationStrings = {
