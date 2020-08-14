@@ -2,7 +2,7 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import { Err, addId, getIntlData } from "./utils.js";
+import { RsError, addId, getIntlData } from "./utils.js";
 import { biblio } from "./biblio.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
@@ -146,7 +146,7 @@ function toRefContent(ref) {
     if (circular.has(refcontent.aliasOf)) {
       refcontent = null;
       const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
-      pub("error", new Err(msg, name));
+      pub("error", new RsError(msg, name));
     } else {
       key = refcontent.aliasOf;
       refcontent = biblio[key];
@@ -332,7 +332,7 @@ function warnBadRefs(badRefs) {
       ),
     ].filter(({ textContent: t }) => t.toLowerCase() === ref.toLowerCase());
     const msg = `Bad reference: [\`${ref}\`] (appears ${badrefs.length} times)`;
-    pub("error", new Err(msg, name));
+    pub("error", new RsError(msg, name));
     console.warn("Bad references: ", badrefs);
   });
 }

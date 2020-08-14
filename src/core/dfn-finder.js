@@ -1,5 +1,5 @@
 // @ts-check
-import { Err, wrapInner } from "./utils.js";
+import { RsError, wrapInner } from "./utils.js";
 import { definitionMap, registerDefinition } from "./dfn-map.js";
 import { pub } from "./pubsubhub.js";
 
@@ -166,7 +166,7 @@ function findNormalDfn(defn, parent, ...names) {
         parent ? `for \`${parent}\`` : ""
       } is defined multiple times`;
       const title = "Duplicate definition.";
-      pub("error", new Err(msg, name, { title, elements: dfns }));
+      pub("error", new RsError(msg, name, { title, elements: dfns }));
     }
     if (dfns.length) {
       return dfns[0];

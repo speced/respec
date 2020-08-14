@@ -1,7 +1,7 @@
 // @ts-check
 // Module w3c/conformance
 // Handle the conformance section properly.
-import { Err, getIntlData, htmlJoinAnd } from "../core/utils.js";
+import { RsError, getIntlData, htmlJoinAnd } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
 import { renderInlineCitation } from "../core/render-biblio.js";
@@ -86,6 +86,6 @@ export function run(conf) {
     const msg =
       "Document uses RFC2119 keywords but lacks a conformance section. ";
     const hint = 'Please add a `<section id="conformance">`.';
-    pub("warn", new Err(msg, name, { hint }));
+    pub("warn", new RsError(msg, name, { hint }));
   }
 }

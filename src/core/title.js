@@ -10,7 +10,7 @@
  *
  */
 
-import { Err, getIntlData, norm } from "./utils.js";
+import { RsError, getIntlData, norm } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/title";
@@ -42,7 +42,7 @@ export function run(conf) {
       "If you need special markup in the document's title, " +
       'please use a `<h1 id="title">`.';
     const title = "Document is missing a title";
-    pub("error", new Err(msg, name, { title, elements: [h1Elem] }));
+    pub("error", new RsError(msg, name, { title, elements: [h1Elem] }));
   }
 
   // Decorate the spec title

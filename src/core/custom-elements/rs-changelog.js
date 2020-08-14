@@ -7,7 +7,7 @@
  *
  * @typedef {{message: string, hash: string}} Commit
  */
-import { Err } from "../utils.js";
+import { RsError } from "../utils.js";
 import { github } from "../github.js";
 import { html } from "../import-maps.js";
 import { pub } from "../pubsubhub.js";
@@ -36,7 +36,8 @@ export const element = class ChangelogElement extends HTMLElement {
         any: fetchCommits(from, to, filter)
           .then(commits => toHTML(commits))
           .catch(error => {
-            pub("error", new Err(error.message, name, { elements: [this] }));
+            const err = new RsError(error.message, name, { elements: [this] });
+            pub("error", err);
           })
           .finally(() => {
             this.dispatchEvent(new CustomEvent("done"));

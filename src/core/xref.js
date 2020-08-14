@@ -17,7 +17,7 @@
  * @typedef {{ ambiguous: ErrorCollection, notFound: ErrorCollection }} Errors
  */
 import {
-  Err,
+  RsError,
   createResourceHint,
   nonNormativeSelector,
   norm as normalize,
@@ -140,7 +140,7 @@ function normalizeConfig(xref) {
       break;
     default: {
       const msg = `Invalid value for \`xref\` configuration option. Received: "${xref}".`;
-      pub("error", new Err(msg, name));
+      pub("error", new RsError(msg, name));
     }
   }
   return config;
@@ -152,7 +152,7 @@ function normalizeConfig(xref) {
     const msg =
       `Invalid profile "${profile}" in \`respecConfig.xref\`. ` +
       `Please use one of the supported profiles: ${supportedProfiles}.`;
-    pub("error", new Err(msg, name));
+    pub("error", new RsError(msg, name));
   }
 }
 
@@ -432,7 +432,7 @@ function addToReferences(elem, cite, normative, term, conf) {
     `Adding an informative reference to "${term}" from "${cite}" ` +
     "in a normative section";
   const title = "Error: Informative reference in normative section";
-  pub("warn", new Err(msg, name, { title, elements: [elem] }));
+  pub("warn", new RsError(msg, name, { title, elements: [elem] }));
 }
 
 /** @param {Errors} errors */
@@ -458,7 +458,7 @@ function showErrors({ ambiguous, notFound }) {
     const hint = howToFix(formUrl);
     const msg = `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}.`;
     const title = "Error: No matching dfn found.";
-    pub("error", new Err(msg, name, { title, elements: elems, hint }));
+    pub("error", new RsError(msg, name, { title, elements: elems, hint }));
   }
 
   for (const { query, elems, results } of ambiguous.values()) {
@@ -469,7 +469,7 @@ function showErrors({ ambiguous, notFound }) {
     const hint = howToFix(formUrl);
     const msg = `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous.`;
     const title = "Error: Linking an ambiguous dfn.";
-    pub("error", new Err(msg, name, { title, elements: elems, hint }));
+    pub("error", new RsError(msg, name, { title, elements: elems, hint }));
   }
 }
 

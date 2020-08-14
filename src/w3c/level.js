@@ -5,7 +5,7 @@
  * Levels should be integers >= 0.
  */
 
-import { Err, getIntlData } from "../core/utils.js";
+import { RsError, getIntlData } from "../core/utils.js";
 import { pub } from "../core/pubsubhub.js";
 
 export const name = "w3c/level";
@@ -27,7 +27,7 @@ export function run(conf) {
   if (!Number.isInteger(level) || level < 0) {
     const msg = `The \`level\` configuration option must be a number greater or equal to 0. It is currently set to \`${level}\``;
     const title = "Invalid level config.";
-    pub("error", new Err(msg, name, { title, elements: [h1Elem] }));
+    pub("error", new RsError(msg, name, { title, elements: [h1Elem] }));
     return;
   }
 

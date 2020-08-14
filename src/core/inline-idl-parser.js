@@ -2,7 +2,7 @@
 // Parses an inline IDL string (`{{ idl string }}`)
 //  and renders its components as HTML
 
-import { Err, htmlJoinComma } from "./utils.js";
+import { RsError, htmlJoinComma } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}} {{ double }}
@@ -267,7 +267,7 @@ export function idlStringToHtml(str) {
   } catch (error) {
     const el = html`<span>{{ ${str} }}</span>`;
     const title = "Error: Invalid inline IDL string";
-    pub("error", new Err(error.message, name, { title, elements: [el] }));
+    pub("error", new RsError(error.message, name, { title, elements: [el] }));
     return el;
   }
   const render = html(document.createDocumentFragment());

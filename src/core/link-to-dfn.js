@@ -4,7 +4,7 @@
 // to the matching definitions.
 import {
   CaseInsensitiveMap,
-  Err,
+  RsError,
   addId,
   getIntlData,
   getLinkTargets,
@@ -103,7 +103,7 @@ function mapTitleToDfns() {
     const { result, duplicates } = collectDfns(key);
     titleToDfns.set(key, result);
     if (duplicates.length > 0) {
-      const err = new Err(l10n.duplicateMsg(key), name, {
+      const err = new RsError(l10n.duplicateMsg(key), name, {
         title: l10n.duplicateTitle,
         elements: duplicates,
       });
@@ -276,7 +276,7 @@ function showLinkingError(elems) {
   elems.forEach(elem => {
     const msg = `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``;
     const title = "Linking error: not matching `<dfn>`";
-    pub("warn", new Err(msg, name, { title, elements: [elem] }));
+    pub("warn", new RsError(msg, name, { title, elements: [elem] }));
   });
 }
 

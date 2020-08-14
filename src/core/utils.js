@@ -382,7 +382,7 @@ export function runTransforms(content, flist, ...funcArgs) {
         } catch (e) {
           const msg = `call to \`${meth}()\` failed with: ${e}.`;
           const hint = "See developer console for stack trace.";
-          pub("warn", new Err(msg, "utils/runTransforms", { hint }));
+          pub("warn", new RsError(msg, "utils/runTransforms", { hint }));
           console.error(e);
         }
       }
@@ -891,7 +891,7 @@ export class CaseInsensitiveMap extends Map {
   }
 }
 
-export class Err extends Error {
+export class RsError extends Error {
   /**
    * @param {string} message
    * @param {string} plugin Name of plugin that caused the error.

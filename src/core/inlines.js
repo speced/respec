@@ -7,8 +7,8 @@
 // throughout the document, [[REFERENCES]]/[[!REFERENCES]], {{ IDL }} and RFC2119 keywords.
 
 import {
-  Err,
   InsensitiveStringSet,
+  RsError,
   getIntlData,
   getTextNodes,
   norm,
@@ -117,7 +117,7 @@ function inlineRefMatches(matched) {
   const badReference = html`<span>${matched}</span>`;
   const msg = `Wasn't able to expand ${matched} as it didn't match any id in the document.`;
   const hint = `Please make sure there is element with id ${ref} in the document.`;
-  pub("error", new Err(msg, name, { hint, elements: [badReference] }));
+  pub("error", new RsError(msg, name, { hint, elements: [badReference] }));
   return badReference;
 }
 
@@ -154,7 +154,7 @@ function inlineBibrefMatches(matched, txt, conf) {
     const msg =
       "Normative references in informative sections are not allowed. " +
       `Remove '!' from the start of the reference \`[[${ref}]]\``;
-    pub("warn", new Err(msg, name, { elements: [citeElem] }));
+    pub("warn", new RsError(msg, name, { elements: [citeElem] }));
   }
 
   if (type === "informative" && !illegal) {

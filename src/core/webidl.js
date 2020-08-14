@@ -4,7 +4,7 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import { Err, addHashId, xmlEscape } from "./utils.js";
+import { RsError, addHashId, xmlEscape } from "./utils.js";
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";
@@ -180,7 +180,7 @@ function defineIdlName(escaped, data, parent) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
     const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
-    pub("warn", new Err(msg, name, { elements: [unlinkedAnchor] }));
+    pub("warn", new RsError(msg, name, { elements: [unlinkedAnchor] }));
   }
   return unlinkedAnchor;
 }
@@ -316,7 +316,7 @@ function renderWebIDL(idlElement, index) {
     });
   } catch (e) {
     const msg = `Failed to parse WebIDL: ${e.bareMessage}.`;
-    const err = new Err(msg, name, {
+    const err = new RsError(msg, name, {
       title: e.bareMessage,
       details: `<pre>${e.context}</pre>`,
       elements: [idlElement],
@@ -405,7 +405,7 @@ export async function run() {
       <pre>${escaped}</pre>`;
     }
     const msg = `WebIDL validation error: ${validation.bareMessage}`;
-    const err = new Err(msg, name, {
+    const err = new RsError(msg, name, {
       details,
       elements: [idls[validation.sourceName]],
       title: validation.bareMessage,

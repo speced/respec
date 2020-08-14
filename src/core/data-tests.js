@@ -9,7 +9,7 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { Err, getIntlData } from "./utils.js";
+import { RsError, getIntlData } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 const localizationStrings = {
@@ -103,7 +103,7 @@ export function run(conf) {
     return;
   }
   if (!conf.testSuiteURI) {
-    pub("error", new Err(l10n.missing_test_suite_uri, name));
+    pub("error", new RsError(l10n.missing_test_suite_uri, name));
     return;
   }
 
@@ -127,7 +127,7 @@ function toTestURLs(tests, testSuiteURI) {
         return new URL(test, testSuiteURI).href;
       } catch {
         const msg = `Bad URI: ${test}`;
-        pub("warn", new Err(msg, name));
+        pub("warn", new RsError(msg, name));
       }
     })
     .filter(href => href);
@@ -146,7 +146,7 @@ function handleDuplicates(testURLs, elem) {
     const hint = `To fix, remove duplicates from "data-tests": ${duplicates
       .map(url => new URL(url).pathname)
       .join(", ")}`;
-    pub("warn", new Err(msg, name, { hint, elements: [elem] }));
+    pub("warn", new RsError(msg, name, { hint, elements: [elem] }));
   }
 }
 

@@ -5,7 +5,7 @@
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
 import {
-  Err,
+  RsError,
   createResourceHint,
   linkCSS,
   toKeyValuePairs,
@@ -110,7 +110,7 @@ export function run(conf) {
   if (!conf.specStatus) {
     const msg = "`respecConfig.specStatus` missing. Defaulting to 'GN-BASIS'.";
     conf.specStatus = "GN-BASIS";
-    pub("warn", new Err(msg, name));
+    pub("warn", new RsError(msg, name));
   }
 
   if (document.body.querySelector("figure.scalable")) {

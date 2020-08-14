@@ -4,7 +4,7 @@
 // in the content of elements with key identifiers:
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
-import { Err, fetchAndCache, joinAnd } from "./utils.js";
+import { RsError, fetchAndCache, joinAnd } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/contrib";
@@ -19,7 +19,7 @@ export async function run(conf) {
     const msg =
       "Requested list of contributors from GitHub, but " +
       "[`github`](https://github.com/w3c/respec/wiki/github) configuration option is not set.";
-    pub("error", new Err(msg, name));
+    pub("error", new RsError(msg, name));
     return;
   }
 
@@ -61,7 +61,7 @@ async function showContributors(editors, apiURL) {
       );
     } catch (error) {
       const msg = "Error loading contributors from GitHub.";
-      pub("error", new Err(msg, name));
+      pub("error", new RsError(msg, name));
       console.error(error);
       return null;
     }

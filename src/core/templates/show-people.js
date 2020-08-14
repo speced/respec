@@ -1,5 +1,5 @@
 // @ts-check
-import { Err, humanDate, toShortIsoDate } from "../../core/utils.js";
+import { RsError, humanDate, toShortIsoDate } from "../../core/utils.js";
 import { lang as defaultLang } from "../../core/l10n.js";
 import { html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
@@ -150,7 +150,7 @@ export default function showPeople(persons = []) {
       if (!isValidDate) {
         const msg = "The date is invalid. The expected format is YYYY-MM-DD.";
         const title = "Invalid date";
-        pub("error", new Err(msg, name, { title, elements: [timeElem] }));
+        pub("error", new RsError(msg, name, { title, elements: [timeElem] }));
       }
       timeElem.dateTime = toShortIsoDate(retiredDate);
       contents.push(html` - ${l10n.until(timeElem)} `);

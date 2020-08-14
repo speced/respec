@@ -11,7 +11,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { Err, addId, getIntlData, joinAnd, parents } from "./utils.js";
+import { RsError, addId, getIntlData, joinAnd, parents } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
@@ -155,7 +155,7 @@ function handleIssues(ins, ghIssues, conf) {
           ghIssue = ghIssues.get(dataNum);
           if (!ghIssue) {
             const msg = `Failed to fetch issue number ${dataNum}`;
-            pub("warn", new Err(msg, name));
+            pub("warn", new RsError(msg, name));
           }
           if (ghIssue && !report.title) {
             report.title = ghIssue.title;
@@ -361,7 +361,7 @@ async function fetchAndStoreGithubIssues(github) {
   const response = await fetch(url.href);
   if (!response.ok) {
     const msg = `Error fetching issues from GitHub. (HTTP Status ${response.status}).`;
-    pub("error", new Err(msg, name));
+    pub("error", new RsError(msg, name));
     return new Map();
   }
 

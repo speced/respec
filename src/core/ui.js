@@ -137,8 +137,8 @@ ariaDecorate(respecPill, ariaMap);
 
 /**
  *
- * @param {import('./utils.js').Err} err
- * @param {import('./utils.js').Err[]} arr
+ * @param {import('./utils.js').RsError} err
+ * @param {import('./utils.js').RsError[]} arr
  * @param {"error" | "warning"} butName
  * @param {string} title
  */
@@ -156,7 +156,7 @@ function errWarn(err, arr, butName, title) {
 }
 
 /**
- * @param {import('./utils.js').Err[]} arr
+ * @param {import('./utils.js').RsError[]} arr
  */
 function createWarnButton(butName, arr, title) {
   const buttonId = `respec-pill-${butName}`;

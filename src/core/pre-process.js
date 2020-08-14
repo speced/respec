@@ -9,7 +9,7 @@
  *      want to be using a new module with your own profile
  */
 import { pub, sub } from "./pubsubhub.js";
-import { Err } from "./utils.js";
+import { RsError } from "./utils.js";
 
 export const name = "core/pre-process";
 
@@ -28,7 +28,7 @@ sub(
           const isFunction = typeof f === "function";
           if (!isFunction) {
             const msg = "Every item in `preProcess` must be a JS function.";
-            pub("error", new Err(msg, name));
+            pub("error", new RsError(msg, name));
           }
           return isFunction;
         })
@@ -38,7 +38,7 @@ sub(
           } catch (err) {
             const msg = `Function ${f.name} threw an error during \`preProcess\`.`;
             const hint = "See developer console.";
-            pub("error", new Err(msg, name, { hint }));
+            pub("error", new RsError(msg, name, { hint }));
             console.error(err);
           }
         });

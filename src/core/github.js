@@ -5,7 +5,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { Err, getIntlData } from "../core/utils.js";
+import { RsError, getIntlData } from "../core/utils.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/github";
 
@@ -15,7 +15,7 @@ let rejectGithubPromise;
 export const github = new Promise((resolve, reject) => {
   resolveGithubPromise = resolve;
   rejectGithubPromise = message => {
-    pub("error", new Err(message, name));
+    pub("error", new RsError(message, name));
     reject(new Error(message));
   };
 });
@@ -135,7 +135,7 @@ export async function run(conf) {
       githubAPI = conf.githubAPI;
     } else {
       const msg = "`respecConfig.githubAPI` should not be added manually.";
-      pub("warn", new Err(msg, name));
+      pub("warn", new RsError(msg, name));
     }
   }
   const normalizedGHObj = {

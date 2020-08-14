@@ -3,7 +3,7 @@
 // Handles the marking up of best practices, and can generate a summary of all of them.
 // The summary is generated if there is a section in the document with ID bp-summary.
 // Best practices are marked up with span.practicelab.
-import { Err, addId, getIntlData, makeSafeCopy } from "./utils.js";
+import { RsError, addId, getIntlData, makeSafeCopy } from "./utils.js";
 import { lang as defaultLang } from "../core/l10n.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
@@ -68,7 +68,7 @@ export function run() {
   } else if (bpSummary) {
     const message =
       "Using best practices summary (#bp-summary) but no best practices found.";
-    pub("warn", new Err(message, name));
+    pub("warn", new RsError(message, name));
     bpSummary.remove();
   }
 }

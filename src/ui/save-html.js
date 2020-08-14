@@ -1,7 +1,7 @@
 // @ts-check
 // Module ui/save-html
 // Saves content to HTML when asked to
-import { Err, getIntlData } from "../core/utils.js";
+import { RsError, getIntlData } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
 import { rsDocToDataURL } from "../core/exporter.js";
@@ -106,6 +106,6 @@ export function exportDocument(_, mimeType) {
   const msg =
     "Exporting via ui/save-html module's `exportDocument()` is deprecated and will be removed.";
   const hint = "Use core/exporter `rsDocToDataURL()` instead.";
-  pub("warn", new Err(msg, name, { hint }));
+  pub("warn", new RsError(msg, name, { hint }));
   return rsDocToDataURL(mimeType);
 }

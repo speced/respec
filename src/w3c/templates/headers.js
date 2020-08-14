@@ -1,5 +1,5 @@
 // @ts-check
-import { Err, getIntlData, humanDate } from "../../core/utils.js";
+import { RsError, getIntlData, humanDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "../../core/templates/show-link.js";
@@ -276,7 +276,7 @@ function renderCopyright(conf) {
   if (conf.hasOwnProperty("overrideCopyright")) {
     const msg = "The `overrideCopyright` configuration option is deprecated.";
     const hint = 'Please use `<p class="copyright">` instead.';
-    pub("warn", new Err(msg, name, { hint }));
+    pub("warn", new RsError(msg, name, { hint }));
   }
   return conf.isUnofficial
     ? conf.additionalCopyrightHolders
