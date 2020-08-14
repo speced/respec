@@ -407,7 +407,7 @@ export async function run() {
     const msg = `WebIDL validation error: ${validation.bareMessage}`;
     const err = new Err(msg, name, {
       details,
-      elements: idls[validation.sourceName],
+      elements: [idls[validation.sourceName]],
       title: validation.bareMessage,
     });
     pub("error", err);
