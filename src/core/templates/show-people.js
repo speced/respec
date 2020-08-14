@@ -63,6 +63,27 @@ const orcidIcon = html`<svg
   />
 </svg>`;
 
+/**
+ * @typedef {object} Person
+ * @property {string} [Person.name]
+ * @property {string} [Person.company]
+ * @property {string|number} [Person.w3cid]
+ * @property {string} [Person.mailto]
+ * @property {string} [Person.url]
+ * @property {string} [Person.orcid]
+ * @property {string} [Person.company]
+ * @property {string} [Person.companyURL]
+ * @property {string} [Person.note]
+ * @property {string} [Person.retiredDate]
+ * @property {PersonExtras} [Person.extras]
+ *
+ * @typedef {object} PersonExtras
+ * @property {string} PersonExtras.name
+ * @property {string} [PersonExtras.class]
+ * @property {string} [PersonExtras.href]
+ *
+ * @param {Person[]} persons
+ */
 export default function showPeople(persons = []) {
   const l10n = localizationStrings[lang];
   return persons.map(getItem);
