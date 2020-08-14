@@ -222,11 +222,11 @@ export const ui = {
     if (keyShort) shortcut.add(keyShort, handler);
     return button;
   },
-  error(err) {
-    errWarn(err, errors, "error", "ReSpec Errors");
+  error(rsError) {
+    errWarn(rsError, errors, "error", "ReSpec Errors");
   },
-  warning(msg) {
-    errWarn(msg, warnings, "warning", "ReSpec Warnings");
+  warning(rsError) {
+    errWarn(rsError, warnings, "warning", "ReSpec Warnings");
   },
   closeModal(owner) {
     if (overlay) {
