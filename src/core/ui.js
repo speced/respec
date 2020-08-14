@@ -170,7 +170,7 @@ function createWarnButton(butName, arr, title) {
     for (const err of arr) {
       const fragment = document
         .createRange()
-        .createContextualFragment(err.toHTML());
+        .createContextualFragment(err.toHTML ? err.toHTML() : err.toString());
       const li = document.createElement("li");
       // if it's only a single element, just copy the contents into li
       if (fragment.firstElementChild === fragment.lastElementChild) {
