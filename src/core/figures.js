@@ -80,7 +80,7 @@ function collectFigures() {
       decorateFigure(fig, caption, i);
       tof.push(getTableOfFiguresListItem(fig.id, caption));
     } else {
-      const msg = "Found a `<figure>` without a `<figcaption>`";
+      const msg = "Found a `<figure>` without a `<figcaption>`.";
       pub("warn", new RsError(msg, name, { elements: [fig] }));
     }
   });

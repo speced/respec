@@ -154,7 +154,7 @@ function handleIssues(ins, ghIssues, conf) {
           title.classList.add("issue-number");
           ghIssue = ghIssues.get(dataNum);
           if (!ghIssue) {
-            const msg = `Failed to fetch issue number ${dataNum}`;
+            const msg = `Failed to fetch issue number ${dataNum}.`;
             pub("warn", new RsError(msg, name));
           }
           if (ghIssue && !report.title) {

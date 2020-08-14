@@ -91,8 +91,7 @@ function linkElem(elem, linkProps, citeDetails) {
       elem.append(cite);
     }
     if ("export" in elem.dataset) {
-      const msg =
-        "Exporting an linked external definition is not allowed. Please remove the `data-export` attribute";
+      const msg = "Exporting an linked external definition is not allowed.";
       const hint = "Please remove the `data-export` attribute.";
       pub("error", new RsError(msg, name, { hint, elements: [elem] }));
       delete elem.dataset.export;

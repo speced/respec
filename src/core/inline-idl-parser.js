@@ -266,7 +266,7 @@ export function idlStringToHtml(str) {
     results = parseInlineIDL(str);
   } catch (error) {
     const el = html`<span>{{ ${str} }}</span>`;
-    const title = "Error: Invalid inline IDL string";
+    const title = "Error: Invalid inline IDL string.";
     pub("error", new RsError(error.message, name, { title, elements: [el] }));
     return el;
   }

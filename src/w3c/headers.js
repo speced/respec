@@ -236,9 +236,9 @@ export function run(conf) {
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
   if (["cc-by"].includes(conf.license)) {
-    let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
-    msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
-    pub("error", new RsError(msg, name));
+    const msg = `You cannot use license "\`${conf.license}\`" with W3C Specs.`;
+    const hint = `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
+    pub("error", new RsError(msg, name, { hint }));
   }
   conf.licenseInfo = licenses[conf.license];
   conf.isCGBG = cgbg.includes(conf.specStatus);
@@ -261,10 +261,11 @@ export function run(conf) {
       pathname.startsWith("/w3c/web-platform-tests/")
     ) {
       const msg =
-        "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
-        "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
-        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/${conf.shortName} ).`;
-      pub("warn", new RsError(msg, name));
+        "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. ";
+      const hint =
+        "Please update your [`testSuiteURI`](https://respec.org/docs/#testSuiteURI) to point to the " +
+        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/tree/master/${conf.shortName} ).`;
+      pub("warn", new RsError(msg, name, { hint }));
     }
   }
   if (!conf.subtitle) conf.subtitle = "";
@@ -589,10 +590,9 @@ export function run(conf) {
         conf.maturity == "WD" &&
         conf.specStatus !== "FPWD-NOTE";
   if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
-    const msg =
-      `Document configured as [\`noRecTrack\`](https://github.com/w3c/respec/wiki/noRecTrack), but its status ("${conf.specStatus}") puts it on the W3C Rec Track.` +
-      ` Status cannot be any of: ${recTrackStatus.join(", ")}.`;
-    pub("error", new RsError(msg, name));
+    const msg = `Document configured as [\`noRecTrack\`](https://github.com/w3c/respec/wiki/noRecTrack), but its status ("${conf.specStatus}") puts it on the W3C Rec Track.`;
+    const hint = `Status cannot be any of: ${recTrackStatus.join(", ")}.`;
+    pub("error", new RsError(msg, name, { hint }));
   }
   if (conf.isIGNote && !conf.charterDisclosureURI) {
     const msg =

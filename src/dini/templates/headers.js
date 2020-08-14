@@ -160,8 +160,8 @@ function renderCopyright(conf) {
     return existingCopyright;
   }
   if (conf.hasOwnProperty("overrideCopyright")) {
-    const hint = 'Please use `<p class="copyright">` instead.';
     const msg = "The `overrideCopyright` configuration option is deprecated.";
+    const hint = 'Please use `<p class="copyright">` instead.';
     pub("warn", new RsError(msg, name, { hint }));
   }
   return conf.overrideCopyright

@@ -28,8 +28,7 @@ export async function run(conf) {
           document.location.href
         ).href;
       } else {
-        const msg =
-          "Canonical URI set to edDraft, but no edDraftURI is set in configuration";
+        const msg = `Canonical URI set to edDraft, but no edDraftURI is set in configuration`;
         pub("warn", new RsError(msg, name));
         conf.canonicalURI = null;
       }
@@ -38,8 +37,7 @@ export async function run(conf) {
       if (trLatestUri) {
         conf.canonicalURI = trLatestUri;
       } else {
-        const msg =
-          "Canonical URI set to TR, but no shortName is set in configuration";
+        const msg = `Canonical URI set to TR, but no shortName is set in configuration`;
         pub("warn", new RsError(msg, name));
         conf.canonicalURI = null;
       }

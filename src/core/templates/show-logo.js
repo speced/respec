@@ -18,7 +18,7 @@ export default function showLogo(logo) {
   /** @type {HTMLAnchorElement} */
   const a = html`<a href="${logo.url || ""}" class="logo"></a>`;
   if (!logo.alt) {
-    const msg = "Found spec logo without an `alt` attribute";
+    const msg = "Found spec logo without an `alt` attribute.";
     pub("warn", new RsError(msg, name, { elements: [a] }));
   }
   /** @type {HTMLImageElement} */

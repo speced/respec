@@ -61,12 +61,12 @@ async function getGroupDetails(group) {
   }
 
   let message = `Failed to fetch group details (HTTP: ${res.status})`;
+  let hint;
   if (res.status === 404) {
-    const msg = `No group with name \`"${group}"\` found.`;
-    const hint =
+    message = `No group with name \`"${group}"\` found.`;
+    hint =
       "See [supported group names](https://respec.org/w3c/groups/) to use with the " +
-      "[`group`](https://github.com/w3c/respec/wiki/group) configuration option.";
-    message = `${msg} ${hint}`;
+      "[`group`](https://respec.org/docs/#group) configuration option.";
   }
-  pub("error", new RsError(message, name));
+  pub("error", new RsError(message, name, { hint }));
 }
