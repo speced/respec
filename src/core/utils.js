@@ -915,18 +915,18 @@ export class Err extends Error {
     this.name = options.isWarning ? "ReSpecWarning" : "ReSpecError";
     this.plugin = plugin;
 
-    if (options.elements) {
-      options.elements.forEach(elem =>
-        markAsOffending(elem, this.message, this.title)
-      );
-    }
-
     // 😢 TS complains https://github.com/microsoft/TypeScript/issues/26792
     // Object.assign(this, options);
     options.title && (this.title = options.title);
     options.hint && (this.hint = options.hint);
     options.elements && (this.elements = options.elements);
     options.details && (this.details = options.details);
+
+    if (options.elements) {
+      options.elements.forEach(elem =>
+        markAsOffending(elem, this.message, this.title)
+      );
+    }
   }
 
   toHTML() {
