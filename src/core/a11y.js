@@ -79,7 +79,8 @@ async function getViolations(opts) {
     const result = await axe.run(document, options);
     return result.violations;
   } catch (error) {
-    pub("error", "Error while looking for a11y issues.");
+    const msg = "Error while looking for a11y issues.";
+    pub("error", new Err(msg, name));
     console.error(error);
     return [];
   }

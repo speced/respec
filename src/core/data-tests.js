@@ -126,7 +126,8 @@ function toTestURLs(tests, testSuiteURI) {
       try {
         return new URL(test, testSuiteURI).href;
       } catch {
-        pub("warn", `Bad URI: ${test}`);
+        const msg = `Bad URI: ${test}`;
+        pub("warn", new Err(msg, name));
       }
     })
     .filter(href => href);

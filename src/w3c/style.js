@@ -5,7 +5,12 @@
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
-import { createResourceHint, linkCSS, toKeyValuePairs } from "../core/utils.js";
+import {
+  Err,
+  createResourceHint,
+  linkCSS,
+  toKeyValuePairs,
+} from "../core/utils.js";
 import { pub, sub } from "../core/pubsubhub.js";
 export const name = "w3c/style";
 function attachFixupScript(doc, version) {
@@ -115,9 +120,9 @@ function styleMover(linkURL) {
 
 export function run(conf) {
   if (!conf.specStatus) {
-    const warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
+    const msg = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
     conf.specStatus = "base";
-    pub("warn", warn);
+    pub("warn", new Err(msg, name));
   }
 
   let styleFile = "W3C-";

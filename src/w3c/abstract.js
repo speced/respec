@@ -1,8 +1,9 @@
 // @ts-check
 // Module w3c/abstract
 // Handle the abstract section properly.
-import { getIntlData } from "../core/utils.js";
+import { Err, getIntlData } from "../core/utils.js";
 import { pub } from "../core/pubsubhub.js";
+
 export const name = "w3c/abstract";
 
 const localizationStrings = {
@@ -33,7 +34,8 @@ const l10n = getIntlData(localizationStrings);
 export async function run() {
   const abs = document.getElementById("abstract");
   if (!abs) {
-    pub("error", `Document must have one element with \`id="abstract"`);
+    const msg = 'Document must have one element with `id="abstract"`.';
+    pub("error", new Err(msg, name));
     return;
   }
   abs.classList.add("introductory");

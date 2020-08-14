@@ -1,7 +1,7 @@
 // @ts-check
 // Module dini/conformance
 // Handle the conformance section properly.
-import { getIntlData, htmlJoinAnd } from "../core/utils.js";
+import { Err, getIntlData, htmlJoinAnd } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
 import { renderInlineCitation } from "../core/render-biblio.js";
@@ -83,10 +83,9 @@ export function run(conf) {
   }
   // Warn when there are RFC2119/RFC8174 keywords, but not conformance section
   if (!conformance && Object.keys(rfc2119Usage).length) {
-    pub(
-      "warn",
-      "Document uses RFC2119 keywords but lacks a conformance section. " +
-        'Please add a `<section id="conformance">`.'
-    );
+    const msg =
+      "Document uses RFC2119 keywords but lacks a conformance section.";
+    const hint = 'Please add a `<section id="conformance">`.';
+    pub("warn", new Err(msg, name, { hint }));
   }
 }

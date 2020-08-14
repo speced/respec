@@ -2,6 +2,7 @@
 // Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
+import { Err } from "../core/utils.js";
 import { pub } from "../core/pubsubhub.js";
 import { resolveRef } from "../core/biblio.js";
 export const name = "w3c/seo";
@@ -27,11 +28,9 @@ export async function run(conf) {
           document.location.href
         ).href;
       } else {
-        pub(
-          "warn",
-          "Canonical URI set to edDraft, " +
-            "but no edDraftURI is set in configuration"
-        );
+        const msg =
+          "Canonical URI set to edDraft, but no edDraftURI is set in configuration";
+        pub("warn", new Err(msg, name));
         conf.canonicalURI = null;
       }
       break;
@@ -39,11 +38,9 @@ export async function run(conf) {
       if (trLatestUri) {
         conf.canonicalURI = trLatestUri;
       } else {
-        pub(
-          "warn",
-          "Canonical URI set to TR, but " +
-            "no shortName is set in configuration"
-        );
+        const msg =
+          "Canonical URI set to TR, but no shortName is set in configuration";
+        pub("warn", new Err(msg, name));
         conf.canonicalURI = null;
       }
       break;
@@ -55,7 +52,8 @@ export async function run(conf) {
             document.location.href
           ).href;
         } catch (err) {
-          pub("warn", `CanonicalURI is an invalid URL: ${err.message}`);
+          const msg = `CanonicalURI is an invalid URL: ${err.message}`;
+          pub("warn", new Err(msg, name));
           conf.canonicalURI = null;
         }
       } else if (trLatestUri) {

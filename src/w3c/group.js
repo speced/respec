@@ -6,7 +6,7 @@
  * `wgURI`, and `wgPatentURI` options.
  */
 
-import { fetchAndCache, joinAnd } from "../core/utils.js";
+import { Err, fetchAndCache, joinAnd } from "../core/utils.js";
 import { pub } from "../core/pubsubhub.js";
 
 export const name = "w3c/group";
@@ -22,7 +22,7 @@ export async function run(conf) {
     const outdatedOptionsStr = joinAnd(usedSupersededOptions, s => `\`${s}\``);
     const msg = `Configuration options ${outdatedOptionsStr} are superseded by \`group\` and will be overridden by ReSpec.`;
     const hint = "Please remove them from `respecConfig`.";
-    pub("warn", `${msg} ${hint}`);
+    pub("warn", new Err(msg, name, { hint }));
   }
 
   const { group } = conf;
@@ -68,5 +68,5 @@ async function getGroupDetails(group) {
       "[`group`](https://github.com/w3c/respec/wiki/group) configuration option.";
     message = `${msg} ${hint}`;
   }
-  pub("error", message);
+  pub("error", new Err(message, name));
 }

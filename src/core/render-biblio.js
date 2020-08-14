@@ -332,7 +332,7 @@ function warnBadRefs(badRefs) {
       ),
     ].filter(({ textContent: t }) => t.toLowerCase() === ref.toLowerCase());
     const msg = `Bad reference: [\`${ref}\`] (appears ${badrefs.length} times)`;
-    pub("error", msg);
+    pub("error", new Err(msg, name));
     console.warn("Bad references: ", badrefs);
   });
 }

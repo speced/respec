@@ -1,6 +1,9 @@
 // @ts-check
+import { Err } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
-import { showInlineWarning } from "../../core/utils.js";
+import { pub } from "../../core/pubsubhub.js";
+
+const name = "core/templates/show-logo";
 
 /**
  * @param {object} logo
@@ -15,7 +18,8 @@ export default function showLogo(logo) {
   /** @type {HTMLAnchorElement} */
   const a = html`<a href="${logo.url || ""}" class="logo"></a>`;
   if (!logo.alt) {
-    showInlineWarning(a, "Found spec logo without an `alt` attribute");
+    const msg = "Found spec logo without an `alt` attribute";
+    pub("warn", new Err(msg, name, { elements: [a] }));
   }
   /** @type {HTMLImageElement} */
   const img = html`<img

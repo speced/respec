@@ -439,10 +439,9 @@ export function runTransforms(content, flist, ...funcArgs) {
         try {
           content = method.apply(this, args);
         } catch (e) {
-          pub(
-            "warn",
-            `call to \`${meth}()\` failed with: ${e}. See error console for stack trace.`
-          );
+          const msg = `call to \`${meth}()\` failed with: ${e}.`;
+          const hint = "See developer console for stack trace.";
+          pub("warn", new Err(msg, "utils/runTransforms", { hint }));
           console.error(e);
         }
       }

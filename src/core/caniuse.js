@@ -115,11 +115,10 @@ function getNormalizedConf(conf) {
     const invalidBrowsers = browsers.filter(browser => !BROWSERS.has(browser));
     if (invalidBrowsers.length) {
       const names = invalidBrowsers.map(b => `"\`${b}\`"`).join(", ");
-      pub(
-        "warn",
+      const msg =
         `Ignoring invalid browser(s): ${names} in ` +
-          "[`respecConfig.caniuse.browsers`](https://github.com/w3c/respec/wiki/caniuse)"
-      );
+        "[`respecConfig.caniuse.browsers`](https://github.com/w3c/respec/wiki/caniuse)";
+      pub("warn", new Err(msg, name));
     }
   }
   return caniuseConf;

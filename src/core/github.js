@@ -135,7 +135,7 @@ export async function run(conf) {
       githubAPI = conf.githubAPI;
     } else {
       const msg = "`respecConfig.githubAPI` should not be added manually.";
-      pub("warn", msg);
+      pub("warn", new Err(msg, name));
     }
   }
   const normalizedGHObj = {
