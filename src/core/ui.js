@@ -278,5 +278,5 @@ shortcut.add("Ctrl+Alt+Shift+W", () => {
   if (buttons.warning) buttons.warning.click();
 });
 window.respecUI = ui;
-sub("error", err => ui.error(err));
-sub("warn", details => ui.warning(details));
+sub("error", rsError => ui.error(rsError));
+sub("warn", rsError => ui.warning(rsError));

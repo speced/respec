@@ -74,13 +74,13 @@ export function unsub({ topic, cb }) {
   return callbacks.delete(cb);
 }
 
-sub("error", err => {
-  console.error(err, Object.fromEntries(Object.entries(err)));
+sub("error", rsError => {
+  console.error(rsError, Object.fromEntries(Object.entries(rsError)));
 });
 
-sub("warn", err => {
-  err.isWarning = true;
-  console.warn(err, Object.fromEntries(Object.entries(err)));
+sub("warn", rsError => {
+  rsError.isWarning = true;
+  console.warn(rsError, Object.fromEntries(Object.entries(rsError)));
 });
 
 expose(name, { sub });
