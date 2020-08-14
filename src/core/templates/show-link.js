@@ -2,6 +2,12 @@
 import { html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
 
+/**
+ * @param {object} link
+ * @param {string} link.key
+ * @param {string} [link.class]
+ * @param {LinkData[]} [link.data]
+ */
 export default function showLink(link) {
   if (!link.key) {
     const msg =
@@ -16,6 +22,13 @@ export default function showLink(link) {
   `;
 }
 
+/**
+ * @typedef {object} LinkData
+ * @property {string} [LinkData.class]
+ * @property {string} [LinkData.href]
+ * @property {string} [LinkData.value]
+ * @param {LinkData} data
+ */
 function showLinkData(data) {
   return html`<dd class="${data.class ? data.class : null}">
     ${data.href
