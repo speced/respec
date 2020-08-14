@@ -456,9 +456,9 @@ function showErrors({ ambiguous, notFound }) {
     const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
     const hint = howToFix(formUrl);
-    const msg = `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}. ${hint}`;
+    const msg = `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}.`;
     const title = "Error: No matching dfn found.";
-    pub("error", new Err(msg, name, { title, elements: elems }));
+    pub("error", new Err(msg, name, { title, elements: elems, hint }));
   }
 
   for (const { query, elems, results } of ambiguous.values()) {
@@ -467,9 +467,9 @@ function showErrors({ ambiguous, notFound }) {
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const hint = howToFix(formUrl);
-    const msg = `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ${hint}`;
+    const msg = `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous.`;
     const title = "Error: Linking an ambiguous dfn.";
-    pub("error", new Err(msg, name, { title, elements: elems }));
+    pub("error", new Err(msg, name, { title, elements: elems, hint }));
   }
 }
 
