@@ -2,9 +2,9 @@
 import { getIntlData } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
-import showLink from "./show-link.js";
-import showLogo from "./show-logo.js";
-import showPeople from "./show-people.js";
+import showLink from "../../core/templates/show-link.js";
+import showLogo from "../../core/templates/show-logo.js";
+import showPeople from "../../core/templates/show-people.js";
 
 const ccLicense = "https://creativecommons.org/licenses/by/4.0/legalcode";
 
