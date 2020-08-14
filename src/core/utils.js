@@ -140,14 +140,6 @@ function markAsOffending(elem, msg, title) {
   }
 }
 
-/**
- * @param {Element} element
- * @param {number} i
- */
-function generateMarkdownLink(element, i) {
-  return `[${i + 1}](#${element.id})`;
-}
-
 export class IDBKeyVal {
   /**
    * @param {import("idb").IDBPDatabase} idb
@@ -932,20 +924,22 @@ export class Err extends Error {
   toHTML() {
     const plugin = this.plugin ? `(${this.plugin}): ` : "";
     const hint = this.hint ? ` ${this.hint}.` : "";
-
-    let elements = "";
-    if (Array.isArray(this.elements)) {
-      const occurences = this.elements.map((elem, i) => {
-        return generateMarkdownLink(elem, i);
-      });
-      elements = ` Occurred at: ${joinAnd(occurences)}.`;
-    }
-
+    const elements = Array.isArray(this.elements)
+      ? ` Occurred at: ${joinAnd(this.elements.map(generateMarkdownLink))}.`
+      : "";
     const details = this.details
-      ? `\n\n<details>\n${this.details || "\n"}\n</details>\n`
+      ? `\n\n<details>\n${this.details}\n</details>\n`
       : "";
 
     const text = `${plugin}${this.message}${hint}${elements}${details}`;
     return markdownToHtml(text);
   }
+}
+
+/**
+ * @param {Element} element
+ * @param {number} i
+ */
+function generateMarkdownLink(element, i) {
+  return `[${i + 1}](#${element.id})`;
 }
