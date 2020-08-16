@@ -18,7 +18,7 @@ describe("Core — Definitions", () => {
     const doc = await makeRSDoc(ops);
     const sec = doc.getElementById("dfn");
     expect(sec.querySelector("dfn").id).toBe("dfn-text");
-    expect(sec.querySelector("a").getAttribute("href")).toBe("#dfn-text");
+    expect(sec.querySelector("a").getAttribute("href")).toBe("#dfn-texted");
   });
 
   it("makes links <code> when their definitions are <code>", async () => {
@@ -64,7 +64,7 @@ describe("Core — Definitions", () => {
     expect(Object.keys(test1.dataset)).not.toContain("lt");
 
     const test2 = doc.getElementById("test2");
-    expect(test2.dataset.lt).toBeTruthy();
+    expect(test2.dataset.lt).toBeFalsy();
     expect(test2.dataset.lt).toBe("I'm an lt|test");
   });
 
