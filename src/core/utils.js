@@ -896,11 +896,11 @@ export class RsError extends Error {
    * @param {string} message
    * @param {string} plugin Name of plugin that caused the error.
    * @param {object} [options]
-   * @param {boolean} [options.isWarning]
-   * @param {string} [options.title]
-   * @param {string} [options.hint]
-   * @param {HTMLElement[]} [options.elements]
-   * @param {string} [options.details]
+   * @param {boolean} [options.isWarning] Is it an error, or warning?
+   * @param {string} [options.hint] How to solve the error?
+   * @param {HTMLElement[]} [options.elements] Offending elements.
+   * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
+   * @param {string} [options.details] Any further details/context.
    */
   constructor(message, plugin, options = {}) {
     super(message);
