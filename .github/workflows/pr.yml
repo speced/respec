@@ -64,6 +64,7 @@ jobs:
         run: |
           npm ci
           npm run build:w3c & npm run build:geonovum
+          echo "::add-matcher::.github/karma-jasmine-problem-matcher.json"
       - run: npm run test:karma
         env:
           BROWSERS: ${{ matrix.browser }}

@@ -1,0 +1,22 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "karma-jasmine",
+      "pattern": [
+        {
+          "regexp": "\\s+(Expected .+)",
+          "message": 1
+        },
+        {
+          "regexp": "^\\s+at <Jasmine>$"
+        },
+        {
+          "regexp": "^\\s+at .+\\((tests\\/[^:]+):(\\d+):(\\d+)\\)$",
+          "file": 1,
+          "line": 2,
+          "column": 3
+        }
+      ]
+    }
+  ]
+}
