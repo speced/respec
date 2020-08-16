@@ -43,8 +43,8 @@ async function writeTo(outPath, data) {
 /**
  * Fetches a ReSpec "src" URL, and writes the processed static HTML to an "out" path.
  * @param {string} src A URL or filepath that is the ReSpec source.
- * @param {string|null|""} out A path to write to. If null, goes to stdout. If "", then don't write, just return value.
- * @param {object} [whenToHalt] allowing execution to stop without writing.
+ * @param {string | null | ""} out A path to write to. If null, goes to stdout. If "", then don't write, just return value.
+ * @param {object} [whenToHalt] Allowing execution to stop without writing.
  * @param {boolean} [whenToHalt.haltOnError] Do not write if a ReSpec processing has an error.
  * @param {boolean} [whenToHalt.haltOnWarn] Do not write if a ReSpec processing has a warning.
  * @param {object} [options]
