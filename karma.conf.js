@@ -138,11 +138,5 @@ module.exports = function (config) {
     options.browsers = process.env.BROWSERS.split(" ");
   }
 
-  if (process.env.GITHUB_WORKFLOW) {
-    const localPlugins = [require("./tools/github-action-reporter.js")];
-    options.reporters.push("respec-github-action");
-    options.plugins = ["karma-*"].concat(localPlugins);
-  }
-
   config.set(options);
 };
