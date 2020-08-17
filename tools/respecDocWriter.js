@@ -41,25 +41,22 @@ async function writeTo(outPath, data) {
 }
 
 /**
- * Fetches a ReSpec "src" URL, processes via NightmareJS and writes it to an
- * "out" path within a given "timeout".
- *
- * @public
- * @param  {String} src         A URL that is the ReSpec source.
- * @param  {String|null|""} out A path to write to. If null, goes to stdout.
- *                              If "", then don't write, just return value.
- * @param  {Object} whenToHalt  Object with two bool props (haltOnWarn,
- *                              haltOnError), allowing execution to stop
- *                              if either occurs.
- * @param  {Number} timeout     Optional. Milliseconds before NightmareJS
- *                              should timeout.
- * @return {Promise}            Resolves with HTML when done writing.
- *                              Rejects on errors.
+ * Fetches a ReSpec "src" URL, and writes the processed static HTML to an "out" path.
+ * @param {string} src A URL or filepath that is the ReSpec source.
+ * @param {string | null | ""} out A path to write to. If null, goes to stdout. If "", then don't write, just return value.
+ * @param {object} [whenToHalt] Allowing execution to stop without writing.
+ * @param {boolean} [whenToHalt.haltOnError] Do not write if a ReSpec processing has an error.
+ * @param {boolean} [whenToHalt.haltOnWarn] Do not write if a ReSpec processing has a warning.
+ * @param {object} [options]
+ * @param {number} [options.timeout] Milliseconds before processing should timeout.
+ * @param {boolean} [options.disableSandbox] See https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox
+ * @param {boolean} [options.debug] Show the Chromium window with devtools open for debugging.
+ * @return {Promise<string>} Resolves with HTML when done writing. Rejects on errors.
  */
 async function fetchAndWrite(
   src,
   out,
-  whenToHalt,
+  whenToHalt = {},
   { timeout = 300000, disableSandbox = false, debug = false } = {}
 ) {
   const timer = createTimer(timeout);
