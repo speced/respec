@@ -292,7 +292,7 @@ describe("Core - Markdown", () => {
       interface Foo {
         constructor();
         attribute DOMString bar;
-        void doTheFoo();
+        undefined doTheFoo();
       };
       \`\`\`
 
