@@ -65,11 +65,11 @@ async function fetchAndWrite(
     debug = false,
     onError = error =>
       console.error(
-        colors.error(`😱 ReSpec error: ${colors.debug(error.message)}`)
+        colors.error(`💥 ReSpec error: ${colors.debug(error.message)}`)
       ),
     onWarning = warning =>
       console.warn(
-        colors.warn(`🚨 ReSpec warning: ${colors.debug(warning.message)}`)
+        colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
       ),
   } = {}
 ) {
