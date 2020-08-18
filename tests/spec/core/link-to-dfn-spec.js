@@ -164,7 +164,7 @@ describe("Core — Link to definitions", () => {
           interface HyperStar {
             constructor();
             attribute DOMString attr;
-            void meth();
+            undefined meth();
           };
           enum Planet {
             "tiny",
