@@ -127,6 +127,7 @@ const templates = {
  */
 function defineIdlName(escaped, data, parent) {
   const parentName = parent ? parent.name : "";
+  const pluginName = name;
   const { name } = getNameAndId(data, parentName);
   const dfn = findDfn(data, name, {
     parent: parentName,
@@ -180,7 +181,7 @@ function defineIdlName(escaped, data, parent) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
     const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
-    pub("warn", new RsError(msg, name, { elements: [unlinkedAnchor] }));
+    pub("warn", new RsError(msg, pluginName, { elements: [unlinkedAnchor] }));
   }
   return unlinkedAnchor;
 }
