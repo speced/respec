@@ -51,13 +51,27 @@ async function writeTo(outPath, data) {
  * @param {number} [options.timeout] Milliseconds before processing should timeout.
  * @param {boolean} [options.disableSandbox] See https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox
  * @param {boolean} [options.debug] Show the Chromium window with devtools open for debugging.
+ * @param {(error: RsError) => void} [options.onError] What to do if a ReSpec processing has an error. Logs to stderr by default.
+ * @param {(warning: RsError) => void} [options.onWarning] What to do if a ReSpec processing has a warning. Logs to stderr by default.
  * @return {Promise<string>} Resolves with HTML when done writing. Rejects on errors.
  */
 async function fetchAndWrite(
   src,
   out,
   whenToHalt = {},
-  { timeout = 300000, disableSandbox = false, debug = false } = {}
+  {
+    timeout = 300000,
+    disableSandbox = false,
+    debug = false,
+    onError = error =>
+      console.error(
+        colors.error(`💥 ReSpec error: ${colors.debug(error.message)}`)
+      ),
+    onWarning = warning =>
+      console.warn(
+        colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
+      ),
+  } = {}
 ) {
   const timer = createTimer(timeout);
 
@@ -75,7 +89,7 @@ async function fetchAndWrite(
       error: false,
       warn: false,
     };
-    handleConsoleMessages(haltFlags);
+    handleConsoleMessages(haltFlags, onError, onWarning);
     const url = new URL(src);
     const response = await page.goto(url, { timeout });
     if (
@@ -221,18 +235,18 @@ function getVersion() {
  *
  * @param  {import("puppeteer").Page} page Instance of page to listen on.
  * @return {Function}
+ * @typedef {{ message: string }} RsError
  */
 function makeConsoleMsgHandler(page) {
   /**
-   * Specifies what to do when the browser emits "error" and "warn" console
-   * messages.
-   *
-   * @param  {Object} whenToHalt Object with two bool props (haltOnWarn,
-   *                             haltOnError), allowing execution to stop
-   *                             if either occurs.
-   * @return {Void}
+   * Specifies what to do when the browser emits "error" and "warn" console messages.
+   * @param {object} haltFlags
+   * @param {boolean} [haltFlags.error]
+   * @param {boolean} [haltFlags.warn]
+   * @param {(error: RsError) => void} onError
+   * @param {(error: RsError) => void} onWarning
    */
-  return function handleConsoleMessages(haltFlags) {
+  return function handleConsoleMessages(haltFlags, onError, onWarning) {
     page.on("console", async message => {
       const args = await Promise.all(message.args().map(stringifyJSHandle));
       const msgText = message.text();
@@ -249,10 +263,9 @@ function makeConsoleMsgHandler(page) {
         // https://github.com/GoogleChrome/puppeteer/issues/1939
         return;
       }
-      const output = `ReSpec ${type}: ${colors.debug(text)}`;
       switch (type) {
         case "error":
-          console.error(colors.error(`😱 ${output}`));
+          onError({ message: text });
           haltFlags.error = true;
           break;
         case "warning":
@@ -260,7 +273,7 @@ function makeConsoleMsgHandler(page) {
           if (/document\.respecDone/.test(text)) {
             return;
           }
-          console.warn(colors.warn(`🚨 ${output}`));
+          onWarning({ message: text });
           haltFlags.warn = true;
           break;
       }
