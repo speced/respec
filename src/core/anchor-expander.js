@@ -48,7 +48,7 @@ export function run() {
         a.textContent = a.getAttribute("href");
         const msg = "ReSpec doesn't support expanding this kind of reference.";
         const title = `Can't expand "#${id}".`;
-        pub("error", new RsError(msg, name, { title }));
+        pub("error", new RsError(msg, name, { title, elements: [a] }));
       }
     }
     localize(matchingElement, a);
