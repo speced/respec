@@ -19,6 +19,9 @@ const localizationStrings = {
   de: {
     search_specref: "Spezifikationen durchsuchen",
   },
+  zh: {
+    search_specref: "搜索 Specref",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

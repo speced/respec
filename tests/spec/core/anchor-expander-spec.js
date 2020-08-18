@@ -38,7 +38,7 @@ describe("Core - anchor-expander", () => {
     const anchors = doc.querySelectorAll(
       "#no-header  a.respec-offending-element"
     );
-    expect(anchors.length).toBe(2);
+    expect(anchors).toHaveSize(2);
     expect(
       [...anchors].every(({ textContent }) => textContent === "#no-header")
     ).toBeTruthy();

@@ -17,7 +17,7 @@ describe("Core — Definition finder", () => {
         <pre class="idl">
           [Exposed=Window]
           interface Foo {
-            void bar();
+            undefined bar();
           };
         </pre>
         <dfn data-dfn-for="Foo" data-lt="bar()">bar</dfn>
@@ -44,8 +44,8 @@ describe("Core — Definition finder", () => {
         <pre class="idl">
           [Exposed=Window]
           interface Foo {
-            void bar();
-            void baz();
+            undefined bar();
+            undefined baz();
           };
         </pre>
         <dfn id="bar">bar</dfn>

@@ -25,7 +25,7 @@ describe("Core - exporter", () => {
     const doc = await getExportedDoc(ops);
 
     expect(doc.getElementById("this-should-be-removed")).toBeFalsy();
-    expect(doc.querySelectorAll(".removeOnSave").length).toBe(0);
+    expect(doc.querySelectorAll(".removeOnSave")).toHaveSize(0);
   });
 
   it("removes all comments", async () => {
@@ -38,7 +38,7 @@ describe("Core - exporter", () => {
     while (walker.nextNode()) {
       comments.push(walker.currentNode);
     }
-    expect(comments.length).toBe(0);
+    expect(comments).toHaveSize(0);
   });
 
   it("removes temporary element attributes", async () => {

@@ -24,14 +24,14 @@ describe("Core — a11y", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
-    expect(offendingElements.length).toBe(0);
+    expect(offendingElements).toHaveSize(0);
   });
 
   it("does nothing if disabled", async () => {
     const ops = makeStandardOps({ a11y: false }, body);
     const doc = await makeRSDoc(ops);
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
-    expect(offendingElements.length).toBe(0);
+    expect(offendingElements).toHaveSize(0);
   });
 
   it("runs default tests if enabled", async () => {
@@ -39,7 +39,7 @@ describe("Core — a11y", () => {
     const doc = await makeRSDoc(ops);
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
 
-    expect(offendingElements.length).toBe(1);
+    expect(offendingElements).toHaveSize(1);
     expect(offendingElements[0].id).toBe("image-alt-1");
     expect(offendingElements[0].title).toContain("a11y/image-alt");
   });
@@ -52,7 +52,7 @@ describe("Core — a11y", () => {
     const doc = await makeRSDoc(ops);
 
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
-    expect(offendingElements.length).toBe(2);
+    expect(offendingElements).toHaveSize(2);
     expect(offendingElements[0].id).toContain("a11y-landmark-one-main");
     expect(offendingElements[0].localName).toBe("html");
     expect(offendingElements[1].id).toBe("image-alt-1");
@@ -69,7 +69,7 @@ describe("Core — a11y", () => {
     const doc = await makeRSDoc(ops);
 
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
-    expect(offendingElements.length).toBe(1);
+    expect(offendingElements).toHaveSize(1);
     expect(offendingElements[0].id).toContain("a11y-landmark-one-main");
     expect(offendingElements[0].localName).toBe("html");
   });

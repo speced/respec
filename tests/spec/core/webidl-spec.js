@@ -83,7 +83,7 @@ describe("Core - WebIDL", () => {
           [Constructor(sequence&lt;DOMString> methodData), SecureContext]
           interface LinkingTest {
             readonly attribute DOMString? aBoolAttribute;
-            Promise&lt;void> returnsPromise(unsigned long long argument);
+            Promise&lt;undefined> returnsPromise(unsigned long long argument);
           };
           </pre>
           <p data-dfn=for="LinkingTest">
@@ -97,7 +97,7 @@ describe("Core - WebIDL", () => {
       const idl = doc.querySelector("#linkToIDLSpec pre");
       // [Constructor(sequence<DOMString> methodData), SecureContext]
       const sequences = idl.querySelectorAll(`a[href$="#idl-sequence"]`);
-      expect(sequences.length).toBe(1);
+      expect(sequences).toHaveSize(1);
       const sequence = sequences[0];
 
       // sequence<DOMString>
@@ -111,17 +111,19 @@ describe("Core - WebIDL", () => {
         "#idl-DOMString"
       );
 
-      // Promise&lt;void> returnsPromise(unsigned long long argument);
-      const [promiseLink, voidLink, unsignedLongLink] = idl.querySelectorAll(
-        "*[data-title='returnsPromise'] a"
-      );
+      // Promise&lt;undefined> returnsPromise(unsigned long long argument);
+      const [
+        promiseLink,
+        undefinedLink,
+        unsignedLongLink,
+      ] = idl.querySelectorAll("*[data-title='returnsPromise'] a");
       // Promise
       expect(promiseLink.textContent).toBe("Promise");
       expect(promiseLink.href.endsWith("#idl-promise")).toBe(true);
 
-      // void type of promise
-      expect(voidLink.textContent).toBe("void");
-      expect(voidLink.href.endsWith("#idl-void")).toBe(true);
+      // undefined type of promise
+      expect(undefinedLink.textContent).toBe("undefined");
+      expect(undefinedLink.href.endsWith("#idl-undefined")).toBe(true);
 
       // unsigned long long argument
       expect(unsignedLongLink.textContent).toBe("unsigned long long");
@@ -254,8 +256,8 @@ describe("Core - WebIDL", () => {
     let text = "interface SuperStar {};";
     expect(target.textContent).toBe(text);
     expect(
-      doc.getElementById("if-basic").querySelectorAll(".idlInterface").length
-    ).toBe(1);
+      doc.getElementById("if-basic").querySelectorAll(".idlInterface")
+    ).toHaveSize(1);
     expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
 
     target = doc.getElementById("if-extended-attribute");
@@ -329,17 +331,15 @@ describe("Core - WebIDL", () => {
       "interface SuperStar {};";
     expect(target.textContent).toBe(text);
     const ctors = target.getElementsByClassName("extAttr");
-    expect(ctors.length).toBe(3);
+    expect(ctors).toHaveSize(3);
     const ctor = ctors[2];
     expect(ctor.querySelector("a").textContent).toBe("Constructor");
     const params = [...ctor.getElementsByClassName("idlType")];
-    expect(params.length).toBe(3);
-    expect(params.filter(p => p.textContent.includes("sequence")).length).toBe(
+    expect(params).toHaveSize(3);
+    expect(params.filter(p => p.textContent.includes("sequence"))).toHaveSize(
       1
     );
-    expect(params.filter(p => p.textContent.includes("Promise")).length).toBe(
-      1
-    );
+    expect(params.filter(p => p.textContent.includes("Promise"))).toHaveSize(1);
     expect(params[0].textContent).toBe("boolean");
 
     target = doc.getElementById("ctor-noea");
@@ -390,7 +390,7 @@ describe("Core - WebIDL", () => {
       pre.querySelector("a[href=\\#dom-deathstar-constructor]")
     ).toBeTruthy();
     const links = doc.querySelectorAll("#linkMe a");
-    expect(links.length).toBe(4);
+    expect(links).toHaveSize(4);
     for (const link of links) {
       expect(link.getAttribute("href")).toBe("#dom-superstar-constructor");
       expect(link.querySelector("code")).toBeTruthy();
@@ -418,7 +418,7 @@ describe("Core - WebIDL", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const links = doc.querySelectorAll("#linkMe a");
-    expect(links.length).toBe(2);
+    expect(links).toHaveSize(2);
     expect(links[0].getAttribute("href")).toBe("#dom-superstar-constructor");
     expect(links[1].getAttribute("href")).toBe(
       "#dom-superstar-constructor!overload-1"
@@ -436,14 +436,14 @@ describe("Core - WebIDL", () => {
       "interface SuperStar {};";
     expect(target.textContent).toBe(text);
     const ctors = target.getElementsByClassName("extAttr");
-    expect(ctors.length).toBe(3);
+    expect(ctors).toHaveSize(3);
     const ctor = ctors[2];
     expect(ctor.textContent).toBe(
       "NamedConstructor=Sun(boolean bar, Date foo)"
     );
     const params = [...ctor.getElementsByClassName("idlType")];
-    expect(params.length).toBe(2);
-    expect(params.filter(p => p.textContent.includes("Date")).length).toBe(1);
+    expect(params).toHaveSize(2);
+    expect(params.filter(p => p.textContent.includes("Date"))).toHaveSize(1);
     expect(params[0].textContent).toBe("boolean");
   });
 
@@ -490,11 +490,11 @@ describe("Core - WebIDL", () => {
       "};";
     expect(target.textContent).toBe(text);
     const consts = [...target.getElementsByClassName("idlConst")];
-    expect(consts.length).toBe(17);
+    expect(consts).toHaveSize(17);
     const const1 = target.querySelector(".idlConst");
     expect(const1.querySelector(".idlType").textContent).toBe(" boolean");
     expect(const1.querySelector(".idlName").textContent).toBe("test");
-    expect(consts[consts.length - 1].querySelectorAll(".extAttr").length).toBe(
+    expect(consts[consts.length - 1].querySelectorAll(".extAttr")).toHaveSize(
       1
     );
 
@@ -553,7 +553,7 @@ describe("Core - WebIDL", () => {
 };`;
     expect(target.textContent).toBe(text);
     const attrs = [...target.getElementsByClassName("idlAttribute")];
-    expect(attrs.length).toBe(9);
+    expect(attrs).toHaveSize(9);
     const at = attrs[0];
     expect(at.querySelector(".idlType").textContent).toBe(" DOMString");
     expect(at.querySelector(".idlName").textContent).toBe("regular");
@@ -657,9 +657,9 @@ describe("Core - WebIDL", () => {
     target.querySelector(".idlHeader").remove();
     const text = `interface MethBasic {
   // 1
-  void basic();
+  undefined basic();
   // 2
-  [Something] void ext();
+  [Something] undefined ext();
   // 3
   unsigned long long ull(short s, short n);
   // 3.5
@@ -669,9 +669,9 @@ describe("Core - WebIDL", () => {
   // 6
   getter float withName ();
   // 7
-  setter void ();
+  setter undefined ();
   // 8
-  setter void named ();
+  setter undefined named ();
   // 9
   static Promise<RTCCertificate>  generateCertificate(AlgorithmIdentifier keygenAlgorithm);
   // 10
@@ -680,17 +680,17 @@ describe("Core - WebIDL", () => {
   stringifier DOMString ();
   // 12
   stringifier;
-  Promise<void> complete(optional PaymentComplete result = "unknown");
-  Promise<void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
+  Promise<undefined> complete(optional PaymentComplete result = "unknown");
+  Promise<undefined> another(optional  /*trivia*/  PaymentComplete result = "unknown");
   Performance performance();
 };`;
     expect(target.textContent).toBe(text);
     const methods = [...target.getElementsByClassName("idlMethod")];
-    expect(methods.length).toBe(15);
-    expect(target.getElementsByClassName("idlName").length).toBe(11);
+    expect(methods).toHaveSize(15);
+    expect(target.getElementsByClassName("idlName")).toHaveSize(11);
     const first = methods[0];
     expect(first.querySelector(".idlType").textContent).toBe(
-      "\n  // 1\n  void"
+      "\n  // 1\n  undefined"
     );
     expect(first.querySelector(".idlName").textContent).toBe("basic");
 
@@ -730,9 +730,9 @@ describe("Core - WebIDL", () => {
 
   it("should handle iterable-like interface member declarations", () => {
     const elem = doc.getElementById("iterable-like");
-    expect(elem.getElementsByClassName("idlIterable").length).toBe(2);
-    expect(elem.getElementsByClassName("idlMaplike").length).toBe(1);
-    expect(elem.getElementsByClassName("idlSetlike").length).toBe(1);
+    expect(elem.getElementsByClassName("idlIterable")).toHaveSize(2);
+    expect(elem.getElementsByClassName("idlMaplike")).toHaveSize(1);
+    expect(elem.getElementsByClassName("idlSetlike")).toHaveSize(1);
   });
 
   it("outputs map/set-like interface member declarations", () => {
@@ -770,7 +770,7 @@ interface ReadOnlySetLike {
       "  \n" +
       "};";
     expect(target.textContent).toBe(text);
-    expect(target.getElementsByClassName("idlSectionComment").length).toBe(1);
+    expect(target.getElementsByClassName("idlSectionComment")).toHaveSize(1);
   });
 
   it("should handle dictionaries", () => {
@@ -779,7 +779,7 @@ interface ReadOnlySetLike {
     target.querySelector(".idlHeader").remove();
     let text = "dictionary SuperStar {};";
     expect(target.textContent).toBe(text);
-    expect(target.querySelectorAll(".idlDictionary").length).toBe(1);
+    expect(target.querySelectorAll(".idlDictionary")).toHaveSize(1);
     expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
 
     target = doc.getElementById("dict-inherit");
@@ -818,7 +818,7 @@ interface ReadOnlySetLike {
       "};";
     expect(target.textContent).toBe(text);
     const members = target.querySelectorAll(".idlMember");
-    expect(members.length).toBe(9);
+    expect(members).toHaveSize(9);
     const member = members[0];
     expect(member.querySelector(".idlType").textContent).toBe(
       "\n  // 1\n  DOMString"
@@ -883,7 +883,7 @@ partial dictionary AnotherThing {
   it("uniquely links to enum values", () => {
     const target = doc.getElementById("multipleEnums");
     const idlLinks = target.querySelectorAll("a[data-link-for]");
-    expect(idlLinks.length).toBe(2);
+    expect(idlLinks).toHaveSize(2);
     const [a1, a2] = idlLinks;
     expect(a1.getAttribute("href")).toBe("#dom-test1-enum");
     expect(a2.getAttribute("href")).toBe("#dom-test2-enum");
@@ -935,7 +935,7 @@ enum EnumBasic {
       expect(target.textContent).toBe(text);
       expect(target.querySelector(".idlEnum")).toBeTruthy();
       expect(target.querySelector(".idlID").textContent).toBe("EnumBasic");
-      expect(target.querySelectorAll(".idlEnumItem").length).toBe(4);
+      expect(target.querySelectorAll(".idlEnumItem")).toHaveSize(4);
       expect(target.querySelector(".idlEnumItem").textContent).toBe('"one"');
       expect(
         target.querySelector("a[href='#dom-enumbasic-white-space']")
@@ -984,7 +984,7 @@ enum EnumBasic {
     const expected = `
 [Constructor(X x, optional Y y, /*trivia*/ Z y)]
 interface Foo {
-  void foo(X x, optional Y y, /*trivia*/ optional Z z);
+  undefined foo(X x, optional Y y, /*trivia*/ optional Z z);
 };
 callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     `.trim();
@@ -993,18 +993,18 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     idlElem.querySelector(".idlHeader").remove();
     expect(idlElem.textContent).toBe(expected);
     const trivaComments = idlElem.querySelectorAll("span.idlSectionComment");
-    expect(trivaComments.length).toBe(3);
+    expect(trivaComments).toHaveSize(3);
   });
 
   it("should handle callbacks", () => {
     let target = doc.getElementById("cb-basic");
     // Remove the header, as we are not interested in it.
     target.querySelector(".idlHeader").remove();
-    let text = "callback SuperStar = void();";
+    let text = "callback SuperStar = undefined();";
     expect(target.textContent).toBe(text);
-    expect(target.getElementsByClassName("idlCallback").length).toBe(1);
+    expect(target.getElementsByClassName("idlCallback")).toHaveSize(1);
     expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
-    expect(target.querySelector(".idlType").textContent).toBe(" void");
+    expect(target.querySelector(".idlType").textContent).toBe(" undefined");
 
     target = doc.getElementById("cb-less-basic");
     // Remove the header, as we are not interested in it.
@@ -1015,7 +1015,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       " unsigned long long?"
     );
     let prm = target.querySelectorAll(".idlParamName");
-    expect(prm.length).toBe(1);
+    expect(prm).toHaveSize(1);
     expect(target.querySelectorAll(".idlType")[1].textContent).toBe(" any");
     expect(prm[0].textContent).toBe("value");
 
@@ -1030,10 +1030,10 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     target = doc.getElementById("cb-mult-args");
     // Remove the header, as we are not interested in it.
     target.querySelector(".idlHeader").remove();
-    text = "callback SortCallback = void (any a, any b);";
+    text = "callback SortCallback = undefined (any a, any b);";
     expect(target.textContent).toBe(text);
     prm = target.querySelectorAll(".idlParamName");
-    expect(prm.length).toBe(2);
+    expect(prm).toHaveSize(2);
     const idlTypes = target.getElementsByClassName("idlType");
     expect(idlTypes[1].textContent).toBe("any");
     expect(prm[0].textContent).toBe("a");
@@ -1047,7 +1047,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     target.querySelector(".idlHeader").remove();
     let text = "typedef DOMString string;";
     expect(target.textContent).toBe(text);
-    expect(target.querySelectorAll(".idlTypedef").length).toBe(1);
+    expect(target.querySelectorAll(".idlTypedef")).toHaveSize(1);
     expect(target.querySelector(".idlID").textContent).toBe("string");
     expect(target.querySelector(".idlType").textContent).toBe(" DOMString");
 
@@ -1091,7 +1091,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     target.querySelector(".idlHeader").remove();
     let text = "Window includes Breakable;";
     expect(target.textContent).toBe(text);
-    expect(target.getElementsByClassName("idlIncludes").length).toBe(1);
+    expect(target.getElementsByClassName("idlIncludes")).toHaveSize(1);
 
     target = doc.getElementById("incl-less-basic");
     // Remove the header, as we are not interested in it.
@@ -1126,8 +1126,8 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const selfDefinedAttr = target.querySelectorAll(
       ".idlAttribute dfn.idlName"
     );
-    expect(selfDefinedAttr.length).toBe(1);
-    expect(selfDefinedAttr[0].getElementsByTagName("a").length).toBe(0);
+    expect(selfDefinedAttr).toHaveSize(1);
+    expect(selfDefinedAttr[0].getElementsByTagName("a")).toHaveSize(0);
     expect(selfDefinedAttr[0].textContent).toBe("notDefined");
     expect(
       section.querySelector(
@@ -1197,12 +1197,12 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const linksToTheFoo = doc.querySelectorAll(
       "#coded-things a[href='#dom-codedthings-dothefoo']"
     );
-    expect(linksToTheFoo.length).toBe(4);
+    expect(linksToTheFoo).toHaveSize(4);
 
     const linkToBarBarAttr = doc.querySelectorAll(
       "#coded-things a[href='#dom-codedthings-barbar']"
     );
-    expect(linkToBarBarAttr.length).toBe(2);
+    expect(linkToBarBarAttr).toHaveSize(2);
   });
   it("sets the IDL type for each type of IDL token", async () => {
     const body = `
@@ -1210,7 +1210,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         <pre class="idl">
           interface InterfaceType {
             readonly attribute DOMString attributeType;
-            void operationType();
+            undefined operationType();
           };
           dictionary DictionaryType {
             DOMString fieldType;
@@ -1362,10 +1362,10 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         <pre class="idl">
           [Exposed=Window]
           interface Banana {
-            void nana();
-            void doTheFoo(DOMString req1, DOMString req2, optional DOMString optional3, optional DOMString optional4, DOMString... variadicArg);
+            undefined nana();
+            undefined doTheFoo(DOMString req1, DOMString req2, optional DOMString optional3, optional DOMString optional4, DOMString... variadicArg);
             readonly attribute boolean isFruit;
-            void selfDefined(DOMString arg1, optional DOMString arg2, DOMString ...variadic);
+            undefined selfDefined(DOMString arg1, optional DOMString arg2, DOMString ...variadic);
           };
         </pre>
         <p id="p" data-dfn-for="Banana">
@@ -1459,7 +1459,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       <section>
         <pre class="idl">
           partial interface Banana {
-            void nana();
+            undefined nana();
           };
         </pre>
         <p id="p">
@@ -1652,7 +1652,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         <pre class="idl">
           [Exposed=Window]
           interface Moka {
-            void eat(optional Bread bread);
+            undefined eat(optional Bread bread);
           };
         </pre>
       </section>
@@ -1680,7 +1680,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     target.querySelector(".idlHeader").remove();
     const text = "dictionary Test {};";
     expect(target.textContent).toBe(text);
-    expect(target.querySelectorAll(".idlDictionary").length).toBe(1);
+    expect(target.querySelectorAll(".idlDictionary")).toHaveSize(1);
     expect(target.querySelector(".idlID").textContent).toBe("Test");
   });
 });

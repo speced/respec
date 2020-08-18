@@ -163,19 +163,19 @@ describe("W3C — Bibliographic References", () => {
     const doc = await makeRSDoc(ops);
 
     const refsDom = [...doc.querySelectorAll("p#refs-dom cite a")];
-    expect(refsDom.length).toBe(4);
+    expect(refsDom).toHaveSize(4);
     expect(
       refsDom.every(a => a.getAttribute("href") === "#bib-dom4")
     ).toBeTruthy();
 
     const refsCssom = [...doc.querySelectorAll("p#refs-cssom cite a")];
-    expect(refsCssom.length).toBe(3);
+    expect(refsCssom).toHaveSize(3);
     expect(
       refsCssom.every(a => a.getAttribute("href") === "#bib-cssom-view")
     ).toBeTruthy();
 
     const nr = [...doc.querySelectorAll("#normative-references dt")];
-    expect(nr.length).toBe(3);
+    expect(nr).toHaveSize(3);
     expect(nr[0].textContent).toBe("[CSSOM-VIEW]");
     expect(nr[1].textContent).toBe("[DOM4]"); // first appearing [[TERM]] is used
     expect(nr[2].textContent).toBe("[LOCAL]");
@@ -198,11 +198,11 @@ describe("W3C — Bibliographic References", () => {
   });
 
   it("makes sure that normative references win irrespective of case", () => {
-    expect(doc.querySelectorAll("#bib-dom").length).toBe(1);
+    expect(doc.querySelectorAll("#bib-dom")).toHaveSize(1);
     const domRef = doc.getElementById("bib-dom");
     expect(domRef.closest("section").id).toBe("normative-references");
 
-    expect(doc.querySelectorAll("#bib-fetch").length).toBe(1);
+    expect(doc.querySelectorAll("#bib-fetch")).toHaveSize(1);
     const fetchRef = doc.getElementById("bib-fetch");
     expect(fetchRef.closest("section").id).toBe("normative-references");
     expect(fetchRef.textContent.trim()).toBe("[fetch]");
@@ -227,12 +227,12 @@ describe("W3C — Bibliographic References", () => {
     const doc = await makeRSDoc(ops);
 
     const links = [...doc.querySelectorAll("#test a")];
-    expect(links.length).toBe(4);
+    expect(links).toHaveSize(4);
     expect(
       links.every(a => a.getAttribute("href") === "#bib-dom")
     ).toBeTruthy();
     const refs = doc.querySelectorAll("#references dt");
-    expect(refs.length).toBe(1);
+    expect(refs).toHaveSize(1);
     expect(refs[0].textContent).toBe("[dom]");
   });
 
@@ -247,12 +247,12 @@ describe("W3C — Bibliographic References", () => {
     const doc = await makeRSDoc(ops);
 
     const links = [...doc.querySelectorAll("#test a")];
-    expect(links.length).toBe(4);
+    expect(links).toHaveSize(4);
     expect(
       links.every(a => a.getAttribute("href") === "#bib-dom")
     ).toBeTruthy();
     const refs = doc.querySelectorAll("#references dt");
-    expect(refs.length).toBe(1);
+    expect(refs).toHaveSize(1);
     expect(refs[0].textContent).toBe("[dom]");
   });
 });

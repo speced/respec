@@ -134,8 +134,8 @@ describe("W3C — Headers", () => {
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
-        expect(contains(doc, "dt", "Editors:").length).toBe(0);
-        expect(contains(doc, "dt", "Former editor:").length).toBe(1);
+        expect(contains(doc, "dt", "Editors:")).toHaveSize(0);
+        expect(contains(doc, "dt", "Former editor:")).toHaveSize(1);
       });
       it("relocates single editor with retiredDate member to multiple formerEditors", async () => {
         const ops = makeStandardOps();
@@ -157,7 +157,7 @@ describe("W3C — Headers", () => {
         const doc = await makeRSDoc(ops);
         const dtFormerEditors = contains(doc, "dt", "Former editors:");
         const dtEditors = contains(doc, "dt", "Editors:");
-        expect(dtEditors.length).toBe(0);
+        expect(dtEditors).toHaveSize(0);
         const dd = dtFormerEditors[0].nextElementSibling;
         expect(dd.textContent).toBe("FORMER EDITOR 1");
         expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
@@ -181,7 +181,7 @@ describe("W3C — Headers", () => {
         const doc = await makeRSDoc(ops);
         const dtFormerEditors = contains(doc, "dt", "Former editors:");
         const dtEditors = contains(doc, "dt", "Editors:");
-        expect(dtEditors.length).toBe(0);
+        expect(dtEditors).toHaveSize(0);
         const dd = dtFormerEditors[0].nextElementSibling;
         expect(dd.textContent).toContain("FORMER EDITOR 1");
         expect(dd.querySelector("time").dateTime).toBe("2020-03-02");
@@ -215,8 +215,8 @@ describe("W3C — Headers", () => {
         const dtFormerEditors = contains(doc, "dt", "Former editors:");
         const dtEditors = contains(doc, "dt", "Editors:");
         const dtEditor = contains(doc, "dt", "Editor:");
-        expect(dtEditor.length).toBe(1);
-        expect(dtEditors.length).toBe(0);
+        expect(dtEditor).toHaveSize(1);
+        expect(dtEditors).toHaveSize(0);
         const dd = dtFormerEditors[0].nextElementSibling;
         expect(dd.textContent).toContain("FORMER EDITOR 1");
         expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
@@ -247,19 +247,19 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "dt", "Editors:").length).toBe(0);
-      expect(contains(doc, "dt", "Editor:").length).toBe(1);
+      expect(contains(doc, "dt", "Editors:")).toHaveSize(0);
+      expect(contains(doc, "dt", "Editor:")).toHaveSize(1);
       const dd = doc.querySelectorAll("dd")[5];
-      expect(dd.querySelectorAll("a[href='http://COMPANY']").length).toBe(1);
+      expect(dd.querySelectorAll("a[href='http://COMPANY']")).toHaveSize(1);
       expect(dd.querySelector("a[href='http://COMPANY']").textContent).toBe(
         "COMPANY"
       );
-      expect(dd.querySelectorAll("a[href='mailto:EMAIL']").length).toBe(1);
+      expect(dd.querySelectorAll("a[href='mailto:EMAIL']")).toHaveSize(1);
       expect(dd.querySelector("a[href='mailto:EMAIL']").textContent).toBe(
         "NAME"
       );
       // if `mailto` is specified in People, `url` won't be used
-      expect(dd.querySelectorAll("a[href='http://URI']").length).toBe(0);
+      expect(dd.querySelectorAll("a[href='http://URI']")).toHaveSize(0);
       expect(dd.dataset.editorId).toBe("1234");
       expect(dd.textContent).toContain("(NOTE)");
       expect(
@@ -298,9 +298,9 @@ describe("W3C — Headers", () => {
       expect(
         doc.querySelectorAll(
           "a.orcid[href='https://orcid.org/0000-0002-1694-233X']"
-        ).length
-      ).toBe(2);
-      expect(doc.querySelectorAll("a.orcid").length).toBe(2);
+        )
+      ).toHaveSize(2);
+      expect(doc.querySelectorAll("a.orcid")).toHaveSize(2);
     });
 
     it("takes multiple editors into account", async () => {
@@ -320,8 +320,8 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const dtEditors = contains(doc, "dt", "Editors:");
       const dtEditor = contains(doc, "dt", "Editor:");
-      expect(dtEditors.length).toBe(1);
-      expect(dtEditor.length).toBe(0);
+      expect(dtEditors).toHaveSize(1);
+      expect(dtEditor).toHaveSize(0);
       const dd = dtEditors[0].nextElementSibling;
       expect(dd.textContent).toBe("NAME1");
       expect(dd.nextElementSibling.textContent).toBe("NAME2");
@@ -460,16 +460,16 @@ describe("W3C — Headers", () => {
       );
 
       const editorCompany = editor.querySelectorAll("a[href='http://COMPANY']");
-      expect(editorCompany.length).toBe(1);
+      expect(editorCompany).toHaveSize(1);
       expect(editorCompany[0].textContent).toBe("COMPANY");
 
       const editorEmail = editor.querySelectorAll("a[href='mailto:EMAIL']");
-      expect(editorEmail.length).toBe(1);
+      expect(editorEmail).toHaveSize(1);
       expect(editorEmail[0].textContent).toBe("NAME");
 
       // if `mailto` is specified in People, `url` won't be used
       const editorUrl = editor.querySelectorAll("a[href='http://URI']");
-      expect(editorUrl.length).toBe(0);
+      expect(editorUrl).toHaveSize(0);
 
       const { editorId } = editor.dataset;
       expect(editorId).toBe("1234");
@@ -547,8 +547,8 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const dtAuthors = contains(doc, "dt", "Authors:");
       const dtAuthor = contains(doc, "dt", "Author:");
-      expect(dtAuthors.length).toBe(0);
-      expect(dtAuthor.length).toBe(1);
+      expect(dtAuthors).toHaveSize(0);
+      expect(dtAuthor).toHaveSize(1);
       const dd = dtAuthor[0].nextElementSibling;
       expect(dd.textContent).toBe("NAME1");
     });
@@ -568,8 +568,8 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "dt", "Authors:").length).toBe(1);
-      expect(contains(doc, "dt", "Author:").length).toBe(0);
+      expect(contains(doc, "dt", "Authors:")).toHaveSize(1);
+      expect(contains(doc, "dt", "Author:")).toHaveSize(0);
       expect(contains(doc, "dt", "Authors:")[0].nextSibling.textContent).toBe(
         "NAME1"
       );
@@ -846,7 +846,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
 
       const subTitleElements = doc.querySelectorAll("h2#subtitle");
-      expect(subTitleElements.length).toBe(1);
+      expect(subTitleElements).toHaveSize(1);
 
       const { subtitle } = doc.defaultView.respecConfig;
       expect(subtitle).toBe("pass");
@@ -906,7 +906,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "h2", "15 March 1977").length).toBe(1);
+      expect(contains(doc, "h2", "15 March 1977")).toHaveSize(1);
     });
   });
 
@@ -1010,7 +1010,7 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       const licenses = doc.querySelectorAll("div.head a[rel=license]");
-      expect(licenses.length).toBe(1);
+      expect(licenses).toHaveSize(1);
       expect(licenses[0].tagName).toBe("A");
       expect(licenses[0].href).toBe(
         "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
@@ -1281,7 +1281,7 @@ describe("W3C — Headers", () => {
     const copyright = doc.querySelector(".head p.copyright");
     expect(copyright).toBeTruthy();
     expect(copyright.textContent.trim()).toBe("No copyright intended.");
-    expect(doc.querySelectorAll(".copyright").length).toBe(1);
+    expect(doc.querySelectorAll(".copyright")).toHaveSize(1);
   });
 
   it("it allows custom copyright for different kinds of documents", async () => {
@@ -1296,7 +1296,7 @@ describe("W3C — Headers", () => {
       const copyright = doc.querySelector(".head p.copyright");
       expect(copyright).toBeTruthy();
       expect(copyright.textContent.trim()).toBe("No copyright intended.");
-      expect(doc.querySelectorAll(".copyright").length).toBe(1);
+      expect(doc.querySelectorAll(".copyright")).toHaveSize(1);
     }
   });
 
@@ -1308,8 +1308,8 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelectorAll(".head .copyright").length).toBe(0);
-      expect(doc.querySelectorAll(".head .copyright2").length).toBe(1);
+      expect(doc.querySelectorAll(".head .copyright")).toHaveSize(0);
+      expect(doc.querySelectorAll(".head .copyright2")).toHaveSize(1);
       expect(doc.querySelector(".head .copyright2", doc).textContent).toBe(
         "XXX"
       );
@@ -1426,12 +1426,12 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
       const sotd = doc.getElementById("sotd");
-      expect(contains(sotd, "p", "CUSTOM PARAGRAPH").length).toBe(1);
-      expect(contains(sotd, "a", "WGNAME").length).toBe(1);
+      expect(contains(sotd, "p", "CUSTOM PARAGRAPH")).toHaveSize(1);
+      expect(contains(sotd, "a", "WGNAME")).toHaveSize(1);
       expect(contains(sotd, "a", "WGNAME")[0].getAttribute("href")).toBe(
         "WGURI"
       );
-      expect(contains(sotd, "a", "WGLIST").length).toBe(1);
+      expect(contains(sotd, "a", "WGLIST")).toHaveSize(1);
       expect(contains(sotd, "a", "WGLIST")[0].getAttribute("href")).toBe(
         "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
       );
@@ -1454,8 +1454,8 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd");
-      expect(contains(sotd, "a", "WGNAME1").length).toBe(2);
-      expect(contains(sotd, "a", "WGNAME2").length).toBe(2);
+      expect(contains(sotd, "a", "WGNAME1")).toHaveSize(2);
+      expect(contains(sotd, "a", "WGNAME2")).toHaveSize(2);
       expect(contains(sotd, "a", "WGNAME1")[0].getAttribute("href")).toBe(
         "WGURI1"
       );
@@ -1468,8 +1468,8 @@ describe("W3C — Headers", () => {
       expect(contains(sotd, "a", "WGNAME2")[1].getAttribute("href")).toBe(
         "WGPATENT2"
       );
-      expect(contains(sotd, "a", "disclosures").length).toBe(2);
-      expect(contains(sotd, "a", "WGLIST").length).toBe(1);
+      expect(contains(sotd, "a", "disclosures")).toHaveSize(2);
+      expect(contains(sotd, "a", "WGLIST")).toHaveSize(1);
     });
 
     it("does not emit working group link without conf.wg", async () => {
@@ -1499,7 +1499,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "Proposed Edited Recommendation");
-      expect(f.length).toBe(3);
+      expect(f).toHaveSize(3);
       const questionnaires = doc
         .getElementById("sotd")
         .querySelector(
@@ -1524,8 +1524,8 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops, simpleSpecURL);
       const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "CUSTOM PARAGRAPH");
-      expect(f.length).toBe(1);
-      expect(contains(f[0].previousElementSibling, "a", "WGLIST").length).toBe(
+      expect(f).toHaveSize(1);
+      expect(contains(f[0].previousElementSibling, "a", "WGLIST")).toHaveSize(
         1
       );
     });
@@ -1591,25 +1591,25 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       const c = doc.querySelector(".head .copyright");
-      expect(c.querySelectorAll("a[href='http://WG']").length).toBe(1);
-      expect(contains(c, "a", "WGNAME").length).toBe(1);
+      expect(c.querySelectorAll("a[href='http://WG']")).toHaveSize(1);
+      expect(contains(c, "a", "WGNAME")).toHaveSize(1);
       expect(
         c.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
-        ).length
-      ).toBe(1);
+        )
+      ).toHaveSize(1);
       expect(doc.querySelector(".head h2").textContent).toContain(
         "Draft Community Group Report"
       );
       const sotd = doc.getElementById("sotd");
-      expect(sotd.querySelectorAll("a[href='http://WG']").length).toBe(1);
-      expect(contains(sotd, "a", "WGNAME").length).toBe(1);
+      expect(sotd.querySelectorAll("a[href='http://WG']")).toHaveSize(1);
+      expect(contains(sotd, "a", "WGNAME")).toHaveSize(1);
       expect(
         sotd.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
-        ).length
-      ).toBe(1);
-      expect(contains(sotd, "a", "WGLIST").length).toBe(1);
+        )
+      ).toHaveSize(1);
+      expect(contains(sotd, "a", "WGLIST")).toHaveSize(1);
       expect(contains(sotd, "a", "WGLIST")[0].getAttribute("href")).toBe(
         "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
       );
@@ -1635,8 +1635,8 @@ describe("W3C — Headers", () => {
       expect(
         doc.querySelectorAll(
           ".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']"
-        ).length
-      ).toBe(1);
+        )
+      ).toHaveSize(1);
       expect(doc.querySelector(".head h2").textContent).toContain(
         "Final Business Group Report"
       );
@@ -1650,13 +1650,13 @@ describe("W3C — Headers", () => {
         "http://LATEST"
       );
       const sotd = doc.getElementById("sotd");
-      expect(sotd.querySelectorAll("a[href='http://WG']").length).toBe(1);
-      expect(contains(sotd, "a", "WGNAME").length).toBe(1);
+      expect(sotd.querySelectorAll("a[href='http://WG']")).toHaveSize(1);
+      expect(contains(sotd, "a", "WGNAME")).toHaveSize(1);
       expect(
         sotd.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/final/']"
-        ).length
-      ).toBe(1);
+        )
+      ).toHaveSize(1);
     });
 
     it("handles the spec title in the copyright section correctly when the h1#title has markup", async () => {
@@ -1688,7 +1688,7 @@ describe("W3C — Headers", () => {
       doc = await makeRSDoc(ops);
     });
     it("shouldn't expose a Previous version link for Member submissions", async () => {
-      expect(contains(doc, "dt", "Previous version:").length).toBe(0);
+      expect(contains(doc, "dt", "Previous version:")).toHaveSize(0);
     });
     it("displays the Member Submission logo for Member submissions", async () => {
       const img = doc.querySelector(
@@ -1785,7 +1785,7 @@ describe("W3C — Headers", () => {
 
       const ol = doc.getElementById("ol");
       expect(ol).toBeTruthy();
-      expect(ol.querySelectorAll("li").length).toBe(2);
+      expect(ol.querySelectorAll("li")).toHaveSize(2);
       const firstSection = doc.getElementById("first-sub-section");
 
       expect(sotd.lastElementChild).not.toBe(firstSection);
@@ -1800,7 +1800,7 @@ describe("W3C — Headers", () => {
       expect(p3.nextElementSibling).toBe(lastSection);
 
       // There should only be one thing in the ToC
-      expect(doc.querySelectorAll("#toc li").length).toBe(1);
+      expect(doc.querySelectorAll("#toc li")).toHaveSize(1);
       // and it should say "PASS"
       expect(doc.querySelector("#toc li bdi").nextSibling.textContent).toBe(
         "PASS"
@@ -1895,7 +1895,7 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps({ specStatus: "unofficial" });
       const doc = await makeRSDoc(ops);
       const logos = doc.querySelectorAll("a.logo");
-      expect(logos.length).toBe(0);
+      expect(logos).toHaveSize(0);
     });
 
     it("adds allows multiple logos when spec is unofficial", async () => {
@@ -1915,7 +1915,7 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, { logos, specStatus: "unofficial" });
       const doc = await makeRSDoc(ops);
       const elems = doc.querySelectorAll("a.logo");
-      expect(elems.length).toBe(2);
+      expect(elems).toHaveSize(2);
     });
 
     it("adds logos defined by configuration", async () => {
@@ -1948,7 +1948,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       // get logos
       const logosAnchors = doc.querySelectorAll(".logo");
-      expect(logos.length).toBe(3);
+      expect(logos).toHaveSize(3);
       logosAnchors.forEach((anchor, i) => {
         const logo = logos[i];
         const img = anchor.querySelector("img");
