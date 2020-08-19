@@ -85,7 +85,9 @@ async function fetchAndWrite(
     const abortOnWarning = whenToHalt.haltOnWarn && haltFlags.warn;
     const abortOnError = whenToHalt.haltOnError && haltFlags.error;
     if (abortOnError || abortOnWarning) {
-      process.exit(1);
+      throw new Error(
+        `${abortOnError ? "Errors" : "Warnings"} found during processing.`
+      );
     }
     await write(out, html);
     // Race condition: Wait before page close for all console messages to be logged
