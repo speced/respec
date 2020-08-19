@@ -55,6 +55,10 @@ interface Window {
 
 interface Document {
   respecIsReady: Promise<void>;
+  respec: {
+    readonly version: string;
+    readonly ready: Document["respecIsReady"];
+  };
   createNodeIterator<T>(
     root: Node,
     whatToShow?: number,
