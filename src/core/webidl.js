@@ -13,6 +13,7 @@ import { pub } from "./pubsubhub.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";
+const pluginName = name;
 
 const operationNames = {};
 const idlPartials = {};
@@ -127,7 +128,6 @@ const templates = {
  */
 function defineIdlName(escaped, data, parent) {
   const parentName = parent ? parent.name : "";
-  const pluginName = name;
   const { name } = getNameAndId(data, parentName);
   const dfn = findDfn(data, name, {
     parent: parentName,
@@ -317,7 +317,7 @@ function renderWebIDL(idlElement, index) {
     });
   } catch (e) {
     const msg = `Failed to parse WebIDL: ${e.bareMessage}.`;
-    const err = new RsError(msg, name, {
+    const err = new RsError(msg, pluginName, {
       title: e.bareMessage,
       details: `<pre>${e.context}</pre>`,
       elements: [idlElement],
@@ -406,7 +406,7 @@ export async function run() {
       <pre>${escaped}</pre>`;
     }
     const msg = `WebIDL validation error: ${validation.bareMessage}`;
-    const err = new RsError(msg, name, {
+    const err = new RsError(msg, pluginName, {
       details,
       elements: [idls[validation.sourceName]],
       title: validation.bareMessage,
