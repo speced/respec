@@ -1,7 +1,6 @@
 "use strict";
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
-import { expect } from "chai";
 
 describe("core/respec - document.respec", () => {
   afterAll(flushIframes);
