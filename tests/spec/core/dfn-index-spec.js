@@ -70,7 +70,7 @@ describe("Core — dfn-index", () => {
             interface Foo {
               constructor();
               attribute DOMString bar;
-              void doTheFoo();
+              undefined doTheFoo();
             };
           </pre>
           <p><dfn>[[\\haha]]</dfn> is an internal slot.</p>
