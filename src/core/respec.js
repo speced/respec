@@ -20,5 +20,5 @@ class ReSpec {
 
 export function init() {
   const respec = new ReSpec();
-  Object.defineProperty(document, "respec", { get: () => respec });
+  Object.defineProperty(document, "respec", { value: respec });
 }
