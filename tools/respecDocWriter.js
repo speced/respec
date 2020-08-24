@@ -62,12 +62,10 @@ async function fetchAndWrite(
   });
   try {
     const page = await browser.newPage();
-    const handleConsoleMessages = makeConsoleMsgHandler(page);
-    const haltFlags = {
-      error: false,
-      warn: false,
-    };
-    handleConsoleMessages(haltFlags, onError, onWarning);
+
+    const haltFlags = { error: false, warn: false };
+    handleConsoleMessages(page, haltFlags, onError, onWarning);
+
     const url = new URL(src);
     const response = await page.goto(url, { timeout });
     if (
@@ -202,59 +200,54 @@ function getVersion() {
   }
   return window.respecVersion.split(".").map(str => parseInt(str, 10));
 }
-/**
- * Handles messages from the browser's Console API.
- *
- * @param  {import("puppeteer").Page} page Instance of page to listen on.
- * @return {Function}
- * @typedef {{ message: string }} RsError
- */
-function makeConsoleMsgHandler(page) {
-  /**
-   * Specifies what to do when the browser emits "error" and "warn" console messages.
-   * @param {object} haltFlags
-   * @param {boolean} [haltFlags.error]
-   * @param {boolean} [haltFlags.warn]
-   * @param {(error: RsError) => void} onError
-   * @param {(error: RsError) => void} onWarning
-   */
-  return function handleConsoleMessages(haltFlags, onError, onWarning) {
-    page.on("console", async message => {
-      const args = await Promise.all(message.args().map(stringifyJSHandle));
-      const msgText = message.text();
-      const text = args.filter(msg => msg !== "undefined").join(" ");
-      const type = message.type();
-      if (
-        (type === "error" || type === "warning") &&
-        msgText && // browser errors have text
-        !message.args().length // browser errors/warnings have no arguments
-      ) {
-        // Since Puppeteer 1.4 reports _all_ errors, including CORS
-        // violations and slow preloads. Unfortunately, there is no way to distinguish
-        // these errors from other errors, so using this ugly hack.
-        // https://github.com/GoogleChrome/puppeteer/issues/1939
-        return;
-      }
-      switch (type) {
-        case "error":
-          onError({ message: text });
-          haltFlags.error = true;
-          break;
-        case "warning":
-          // Ignore polling of respecDone
-          if (/document\.respecDone/.test(text)) {
-            return;
-          }
-          onWarning({ message: text });
-          haltFlags.warn = true;
-          break;
-      }
-    });
-  };
-}
 
-async function stringifyJSHandle(handle) {
-  return await handle.executionContext().evaluate(o => String(o), handle);
+/**
+ * Specifies what to do when the browser emits "error" and "warn" console messages.
+ * @param  {import("puppeteer").Page} page Instance of page to listen on.
+ * @param {object} haltFlags
+ * @param {boolean} [haltFlags.error]
+ * @param {boolean} [haltFlags.warn]
+ * @typedef {{ message: string }} RsError
+ * @param {(error: RsError) => void} onError
+ * @param {(error: RsError) => void} onWarning
+ */
+function handleConsoleMessages(page, haltFlags, onError, onWarning) {
+  /** @param {import('puppeteer').JSHandle<any>} handle */
+  async function stringifyJSHandle(handle) {
+    return await handle.executionContext().evaluate(o => String(o), handle);
+  }
+
+  page.on("console", async message => {
+    const args = await Promise.all(message.args().map(stringifyJSHandle));
+    const msgText = message.text();
+    const text = args.filter(msg => msg !== "undefined").join(" ");
+    const type = message.type();
+    if (
+      (type === "error" || type === "warning") &&
+      msgText && // browser errors have text
+      !message.args().length // browser errors/warnings have no arguments
+    ) {
+      // Since Puppeteer 1.4 reports _all_ errors, including CORS
+      // violations and slow preloads. Unfortunately, there is no way to distinguish
+      // these errors from other errors, so using this ugly hack.
+      // https://github.com/GoogleChrome/puppeteer/issues/1939
+      return;
+    }
+    switch (type) {
+      case "error":
+        onError({ message: text });
+        haltFlags.error = true;
+        break;
+      case "warning":
+        // Ignore polling of respecDone
+        if (/document\.respecDone/.test(text)) {
+          return;
+        }
+        onWarning({ message: text });
+        haltFlags.warn = true;
+        break;
+    }
+  });
 }
 
 function createTimer(duration) {
