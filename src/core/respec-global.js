@@ -6,7 +6,7 @@
  *  - ready: an alias to `document.respecIsReady`.
  */
 
-export const name = "core/respec";
+export const name = "core/respec-global";
 
 class ReSpec {
   get version() {

@@ -2,7 +2,7 @@
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 
-describe("core/respec - document.respec", () => {
+describe("Core — Respec Global - document.respec", () => {
   afterAll(flushIframes);
 
   it("gives access to ReSpec script version", async () => {
