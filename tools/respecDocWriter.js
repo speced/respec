@@ -19,28 +19,6 @@ colors.setTheme({
 });
 
 /**
- * Writes "data" to a particular outPath as UTF-8.
- * @private
- * @param  {String} outPath The relative or absolute path to write to.
- * @param  {String} data    The data to write.
- * @return {Promise}        Resolves when writing is done.
- */
-async function writeTo(outPath, data) {
-  let newFilePath = "";
-  if (path.isAbsolute(outPath)) {
-    newFilePath = outPath;
-  } else {
-    newFilePath = path.resolve(process.cwd(), outPath);
-  }
-  try {
-    await writeFile(newFilePath, data, "utf-8");
-  } catch (err) {
-    console.error(err, err.stack);
-    process.exit(1);
-  }
-}
-
-/**
  * Fetches a ReSpec "src" URL, and writes the processed static HTML to an "out" path.
  * @param {string} src A URL or filepath that is the ReSpec source.
  * @param {string | null | ""} out A path to write to. If null, goes to stdout. If "", then don't write, just return value.
@@ -107,17 +85,11 @@ async function fetchAndWrite(
     const abortOnWarning = whenToHalt.haltOnWarn && haltFlags.warn;
     const abortOnError = whenToHalt.haltOnError && haltFlags.error;
     if (abortOnError || abortOnWarning) {
-      process.exit(1);
+      throw new Error(
+        `${abortOnError ? "Errors" : "Warnings"} found during processing.`
+      );
     }
-    switch (out) {
-      case null:
-        process.stdout.write(html);
-        break;
-      case "":
-        break;
-      default:
-        await writeTo(out, html);
-    }
+    await write(out, html);
     // Race condition: Wait before page close for all console messages to be logged
     await new Promise(resolve => setTimeout(resolve, 1000));
     await page.close();
@@ -293,6 +265,26 @@ function createTimer(duration) {
       return Math.max(0, duration - spent);
     },
   };
+}
+
+/**
+ * @param {string | null | ""} destination
+ * @param {string} html
+ */
+async function write(destination, html) {
+  switch (destination) {
+    case "":
+      break;
+    case null:
+      process.stdout.write(html);
+      break;
+    default: {
+      const newFilePath = path.isAbsolute(destination)
+        ? destination
+        : path.resolve(process.cwd(), destination);
+      await writeFile(newFilePath, html, "utf-8");
+    }
+  }
 }
 
 exports.fetchAndWrite = fetchAndWrite;
