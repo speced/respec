@@ -60,7 +60,7 @@
     "rollup-plugin-terser": "^7.0.0",
     "serve": "^11.3.2",
     "snyk": "^1.377.2",
-    "typescript": "^3.9.7",
+    "typescript": "^4.0.2",
     "webidl2": "^23.13.0"
   },
   "scripts": {
