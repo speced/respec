@@ -4,7 +4,7 @@
 import "./include-config.js";
 import "./override-configuration.js";
 import "./respec-ready.js";
-import { init as initReSpecGlobal } from "./respec.js";
+import { init as initReSpecGlobal } from "./respec-global.js";
 import { done as postProcessDone } from "./post-process.js";
 import { done as preProcessDone } from "./pre-process.js";
 import { pub } from "./pubsubhub.js";
