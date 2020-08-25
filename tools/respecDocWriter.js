@@ -157,7 +157,10 @@ async function isRespec() {
  * @param {ReturnType<typeof createTimer>} timer
  */
 async function evaluateHTML(version, timer) {
-  await timeout(document.respecIsReady, timer.remaining);
+  await timeout(
+    document.respec ? document.respec.ready : document.respecIsReady,
+    timer.remaining
+  );
 
   const [major, minor] = version;
   if (major < 20 || (major === 20 && minor < 10)) {
