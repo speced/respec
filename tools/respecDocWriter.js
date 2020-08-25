@@ -191,7 +191,7 @@ async function evaluateHTML(version, timer) {
   function timeout(promise, ms) {
     return new Promise((resolve, reject) => {
       promise.then(resolve, reject);
-      const msg = `Timeout: document.respecIsReady didn't resolve in ${ms}ms.`;
+      const msg = `Timeout: document.respec.ready didn't resolve in ${ms}ms.`;
       setTimeout(() => reject(msg), ms);
     });
   }

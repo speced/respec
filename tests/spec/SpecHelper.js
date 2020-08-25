@@ -17,8 +17,8 @@ export function makeRSDoc(opts, src, style = "") {
       if (src) {
         decorateDocument(doc, opts);
       }
-      if (doc.respecIsReady) {
-        await doc.respecIsReady;
+      if (doc.respec) {
+        await doc.respec.ready;
         resolve(doc);
       }
       window.addEventListener("message", function msgHandler(ev) {

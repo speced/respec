@@ -20,7 +20,7 @@ describe("Core — Can I Use", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
@@ -38,7 +38,7 @@ describe("Core — Can I Use", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
@@ -49,7 +49,7 @@ describe("Core — Can I Use", () => {
   it("does nothing if caniuse is not enabled", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse).toBeFalsy();
@@ -65,7 +65,7 @@ describe("Core — Can I Use", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
 
     const link = doc.querySelector(".caniuse-stats a");
     expect(link.textContent).toBe("caniuse.com");
@@ -82,7 +82,7 @@ describe("Core — Can I Use", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
 
     const stats = doc.querySelector(".caniuse-stats");
 
@@ -125,7 +125,7 @@ describe("Core — Can I Use", () => {
       apiURL: `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`,
     };
     const doc = await makeRSDoc(opsWithCaniuse);
-    await doc.respecIsReady;
+    await doc.respec.ready;
 
     const text = doc.getElementById("initialUserConfig").textContent;
     expect(JSON.parse(text)).toEqual(expectedObj);

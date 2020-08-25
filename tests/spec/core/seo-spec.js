@@ -16,7 +16,7 @@ describe("Core — Seo", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
     await new Promise(resolve => {
       const check = () => {
         const hasMetaDesc = doc.querySelectorAll("meta[name=description]");
@@ -37,7 +37,7 @@ describe("Core — Seo", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
     await new Promise(resolve => {
       const check = () => {
         const hasMetaDesc = doc.querySelectorAll("meta[name=description]")
