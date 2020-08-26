@@ -19,7 +19,7 @@ colors.setTheme({
  * @param {RegExp[]} opts.include
  */
 function string(opts) {
-  const minifier = new CleanCSS();
+  const minifier = new CleanCSS({ format: "keep-breaks" });
   return {
     transform(code, id) {
       if (!opts.include.some(re => re.test(id))) return;
