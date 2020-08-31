@@ -160,8 +160,8 @@ const status2text = {
 };
 const status2long = {
   ...status2text,
-  "CR": "Candidate Recommendation Snapshot",
-  "CRD": "Candidate Recommendation Draft",
+  CR: "Candidate Recommendation Snapshot",
+  CRD: "Candidate Recommendation Draft",
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
@@ -306,9 +306,21 @@ export function run(conf) {
   conf.isTagFinding =
     conf.specStatus === "finding" || conf.specStatus === "draft-finding";
 
-
-  if (conf.isRecTrack && (!conf.github && !conf.otherLinks.find(linkGroup => linkGroup.data.find(l => l.href && l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/))))) {
-      pub("error", "Rec-track documents needs to link to github issues from their head; consider setting config option `github`");
+  if (
+    conf.isRecTrack &&
+    !conf.github &&
+    !conf.otherLinks.find(linkGroup =>
+      linkGroup.data.find(
+        l =>
+          l.href &&
+          l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/)
+      )
+    )
+  ) {
+    pub(
+      "error",
+      "Rec-track documents needs to link to github issues from their head; consider setting config option `github`"
+    );
   }
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
@@ -447,7 +459,7 @@ export function run(conf) {
   conf.prependW3C = !conf.isUnofficial;
   conf.isED = conf.specStatus === "ED";
   conf.isCR = conf.specStatus === "CR" || conf.specStatus === "CRD";
-  conf.isCRDraft = conf.specStatus === "CRD"
+  conf.isCRDraft = conf.specStatus === "CRD";
   conf.isPR = conf.specStatus === "PR";
   conf.isPER = conf.specStatus === "PER";
   conf.isMO = conf.specStatus === "MO";
@@ -583,18 +595,37 @@ export function run(conf) {
   conf.humanPEREnd = W3CDate.format(conf.perEnd);
 
   const revisionTypes = ["addition", "correction"];
-  if (conf.specStatus === "REC" && conf.revisionTypes && conf.revisionTypes.length > 0) {
+  if (
+    conf.specStatus === "REC" &&
+    conf.revisionTypes &&
+    conf.revisionTypes.length > 0
+  ) {
     let unknown;
-    if (unknown = conf.revisionTypes.find(x => !revisionTypes.includes(x))) {
-      pub("error", `\`specStatus\` is "REC" with unknown revision type '${unknown}'`);
+    if ((unknown = conf.revisionTypes.find(x => !revisionTypes.includes(x)))) {
+      pub(
+        "error",
+        `\`specStatus\` is "REC" with unknown revision type '${unknown}'`
+      );
     }
     if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
-      pub("error", `\`specStatus\` is "REC" with proposed additions but the Rec is not marked as a allowing new features.`);
+      pub(
+        "error",
+        `\`specStatus\` is "REC" with proposed additions but the Rec is not marked as a allowing new features.`
+      );
     }
   }
 
-  if (conf.specStatus === "REC" && conf.updateableRec && conf.revisionTypes && conf.revisionTypes.length > 0 && !conf.revisedRecEnd) {
-    pub("error", `\`specStatus\` is "REC" with proposed corrections or additions but no \`revisedRecEnd\` is specified.`);
+  if (
+    conf.specStatus === "REC" &&
+    conf.updateableRec &&
+    conf.revisionTypes &&
+    conf.revisionTypes.length > 0 &&
+    !conf.revisedRecEnd
+  ) {
+    pub(
+      "error",
+      `\`specStatus\` is "REC" with proposed corrections or additions but no \`revisedRecEnd\` is specified.`
+    );
   }
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
   conf.humanRevisedRecEnd = W3CDate.format(conf.revisedRecEnd);

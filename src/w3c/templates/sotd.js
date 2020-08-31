@@ -121,15 +121,23 @@ function renderIsNoTrack(conf, opts) {
 
 function renderNotRec(conf) {
   let statusExplanation = "";
-  let updatePolicy = "This document may be updated, replaced or obsoleted at any time. It is inappropriate to cite this document as other than work in progress. ";
+  let updatePolicy =
+    "This document may be updated, replaced or obsoleted at any time. It is inappropriate to cite this document as other than work in progress. ";
   let reviewPolicy = "";
   if (conf.specStatus === "CRD") {
-    statusExplanation = "A Candidate Recommendation Draft integrates changes from the previous Candidate Recommendation that the Working Group intends to include in a subsequent Candidate Recommendation Snapshot.";
+    statusExplanation =
+      "A Candidate Recommendation Draft integrates changes from the previous Candidate Recommendation that the Working Group intends to include in a subsequent Candidate Recommendation Snapshot.";
     if (conf.lsMode) {
-      updatePolicy = "This document is maintained and updated at any time. Some parts of this document are work in progress. ";
+      updatePolicy =
+        "This document is maintained and updated at any time. Some parts of this document are work in progress. ";
     }
   } else if (conf.specStatus === "CR") {
-    statusExplanation = html`A Candidate Recommendation Snapshot has received <a href='https://www.w3.org/2020/Process-20200915/#dfn-wide-review'>wide review</a> and is intended to gather <a href="${conf.implementationReportURI}">implementation experience</a>.`;
+    statusExplanation = html`A Candidate Recommendation Snapshot has received
+      <a href="https://www.w3.org/2020/Process-20200915/#dfn-wide-review"
+        >wide review</a
+      >
+      and is intended to gather
+      <a href="${conf.implementationReportURI}">implementation experience</a>.`;
     updatePolicy = "";
     if (conf.lsMode) {
       reviewPolicy = `Comments are welcome at any time but most especially before ${conf.humanCREnd}.`;
@@ -138,41 +146,41 @@ function renderNotRec(conf) {
     }
   } else if (conf.isPR) {
     if (conf.updateableRec) {
-      updatePolicy += html`Future updates to this Recommendation may incorporate <a href='https://www.w3.org/2020/Process-20200915/#revised-rec-features'>new features</a>.`;
+      updatePolicy += html`Future updates to this Recommendation may incorporate
+        <a href="https://www.w3.org/2020/Process-20200915/#revised-rec-features"
+          >new features</a
+        >.`;
     }
-    reviewPolicy = html`
-      The W3C Membership and other interested
-      parties are invited to review the document and
-      send comments through ${conf.humanPREnd}. Advisory
-      Committee Representatives should consult their
-      <a
-      href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
-      >WBS questionnaires</a
-      >. Note that substantive technical comments
-      were expected during the Candidate
-      Recommendation review period that ended
-      ${conf.humanCREnd}.`;
+    reviewPolicy = html` The W3C Membership and other interested parties are
+      invited to review the document and send comments through
+      ${conf.humanPREnd}. Advisory Committee Representatives should consult
+      their
+      <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
+        >WBS questionnaires</a
+      >. Note that substantive technical comments were expected during the
+      Candidate Recommendation review period that ended ${conf.humanCREnd}.`;
   } else if (conf.isPER) {
-    reviewPolicy = html`
-     W3C Advisory Committee Members are invited to
-     send formal review comments on this Proposed
-     Edited Recommendation to the W3C Team until
-     ${conf.humanPEREnd}. Members of the Advisory
-     Committee will find the appropriate review
-     form for this document by consulting their
-     list of current
-     <a
-     href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
-     >WBS questionnaires</a
-     >.`;
+    reviewPolicy = html` W3C Advisory Committee Members are invited to send
+      formal review comments on this Proposed Edited Recommendation to the W3C
+      Team until ${conf.humanPEREnd}. Members of the Advisory Committee will
+      find the appropriate review form for this document by consulting their
+      list of current
+      <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
+        >WBS questionnaires</a
+      >.`;
   }
   return html`<p>
-    Publication as ${conf.anOrA} ${conf.textStatus} does not imply endorsement by the W3C
-  Membership. ${statusExplanation} ${updatePolicy}</p>
+      Publication as ${conf.anOrA} ${conf.textStatus} does not imply endorsement
+      by the W3C Membership. ${statusExplanation} ${updatePolicy}
+    </p>
     <p>${reviewPolicy}</p>`;
 }
 
-function renderIsRec({updateableRec, revisionTypes = [], humanRevisedRecEnd}) {
+function renderIsRec({
+  updateableRec,
+  revisionTypes = [],
+  humanRevisedRecEnd,
+}) {
   let reviewTarget;
   if (revisionTypes.includes("addition")) {
     reviewTarget = "additions";
@@ -181,27 +189,39 @@ function renderIsRec({updateableRec, revisionTypes = [], humanRevisedRecEnd}) {
     reviewTarget = "corrections";
   }
   return html`<p>
-    A W3C Recommendation is a specification that, after extensive
-    consensus-building, has received the endorsement of the W3C and its
-    Members. W3C recommends the wide deployment of this specification as a
-    standard for the Web.
-    ${updateableRec ? html`Future updates to this Recommendation may incorporate <a href='https://www.w3.org/2020/Process-20200915/#revised-rec-features'>new features</a>.` : ''}
-  </p>
-  ${revisionTypes.includes("addition") ?
-    html`<p class="addition">Proposed additions are marked in the document.</p>` : ""
-  }
-  ${revisionTypes.includes("correction") ?
-    html`<p class="correction">Proposed corrections are marked in the document.</p>` : ""
-  }
-  ${reviewTarget ? html`<p>
-    The W3C Membership and other interested parties are invited to review
-    the proposed ${reviewTarget} and send comments
-    through ${humanRevisedRecEnd}. Advisory Committee Representatives should consult
-    their
-    <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires">WBS questionnaires</a>.
-</p>` : ""
-  }
-`;
+      A W3C Recommendation is a specification that, after extensive
+      consensus-building, has received the endorsement of the W3C and its
+      Members. W3C recommends the wide deployment of this specification as a
+      standard for the Web.
+      ${updateableRec
+        ? html`Future updates to this Recommendation may incorporate
+            <a
+              href="https://www.w3.org/2020/Process-20200915/#revised-rec-features"
+              >new features</a
+            >.`
+        : ""}
+    </p>
+    ${revisionTypes.includes("addition")
+      ? html`<p class="addition">
+          Proposed additions are marked in the document.
+        </p>`
+      : ""}
+    ${revisionTypes.includes("correction")
+      ? html`<p class="correction">
+          Proposed corrections are marked in the document.
+        </p>`
+      : ""}
+    ${reviewTarget
+      ? html`<p>
+          The W3C Membership and other interested parties are invited to review
+          the proposed ${reviewTarget} and send comments through
+          ${humanRevisedRecEnd}. Advisory Committee Representatives should
+          consult their
+          <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
+            >WBS questionnaires</a
+          >.
+        </p>`
+      : ""} `;
 }
 
 function renderDeliverer(conf) {
@@ -340,12 +360,19 @@ function linkToWorkingGroup(conf) {
   if (conf.isRec && conf.revisionTypes && conf.revisionTypes.length) {
     if (conf.revisionTypes.includes("addition")) {
       if (conf.revisionTypes.includes("correction")) {
-        proposedChanges = html`It includes <a href="https://www.w3.org/2020/Process-20200915/#proposed-changes">proposed changes</a>, introducing substantive changes and new features since the previous Recommentation.`;
+        proposedChanges = html`It includes
+          <a href="https://www.w3.org/2020/Process-20200915/#proposed-changes"
+            >proposed changes</a
+          >, introducing substantive changes and new features since the previous
+          Recommentation.`;
       } else {
-        proposedChanges = html`It includes <a href='https://www.w3.org/2020/Process-20200915/#proposed-addition'>proposed additions</a>, introducing new features since the previous Recommentation.`;
+        proposedChanges = html`It includes
+          <a href="https://www.w3.org/2020/Process-20200915/#proposed-addition"
+            >proposed additions</a
+          >, introducing new features since the previous Recommentation.`;
       }
-  } else if (conf.revisionTypes.includes("correction")) {
-    proposedChanges = html`It includes <a href='https://www.w3.org/2020/Process-20200915/#proposed-correction">proposed corrections</a>.`;
+    } else if (conf.revisionTypes.includes("correction")) {
+      proposedChanges = html`It includes <a href='https://www.w3.org/2020/Process-20200915/#proposed-correction">proposed corrections</a>.`;
     }
   }
   return html`<p>
