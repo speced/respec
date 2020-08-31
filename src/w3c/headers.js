@@ -119,6 +119,7 @@ const status2rdf = {
   WD: "w3p:WD",
   LC: "w3p:LastCall",
   CR: "w3p:CR",
+  CRD: "w3p:CRD",
   PR: "w3p:PR",
   REC: "w3p:REC",
   PER: "w3p:PER",
@@ -143,6 +144,7 @@ const status2text = {
   FPLC: "First Public and Last Call Working Draft",
   LC: "Last Call Working Draft",
   CR: "Candidate Recommendation",
+  CRD: "Candidate Recommendation",
   PR: "Proposed Recommendation",
   PER: "Proposed Edited Recommendation",
   REC: "Recommendation",
@@ -158,11 +160,13 @@ const status2text = {
 };
 const status2long = {
   ...status2text,
+  "CR": "Candidate Recommendation Snapshot",
+  "CRD": "Candidate Recommendation Draft",
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
 const maybeRecTrack = ["FPWD", "WD"];
-const recTrackStatus = ["FPLC", "LC", "CR", "PR", "PER", "REC"];
+const recTrackStatus = ["FPLC", "LC", "CR", "CRD", "PR", "PER", "REC"];
 const noTrackStatus = [
   "base",
   "BG-DRAFT",
@@ -437,7 +441,8 @@ export function run(conf) {
     pub("error", "Recommendations must have an errata link.");
   conf.prependW3C = !conf.isUnofficial;
   conf.isED = conf.specStatus === "ED";
-  conf.isCR = conf.specStatus === "CR";
+  conf.isCR = conf.specStatus === "CR" || conf.specStatus === "CRD";
+  conf.isCRDraft = conf.specStatus === "CRD"
   conf.isPR = conf.specStatus === "PR";
   conf.isPER = conf.specStatus === "PER";
   conf.isMO = conf.specStatus === "MO";
