@@ -305,6 +305,11 @@ export function run(conf) {
   conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
   conf.isTagFinding =
     conf.specStatus === "finding" || conf.specStatus === "draft-finding";
+
+
+  if (conf.isRecTrack && (!conf.github && !conf.otherLinks.find(linkGroup => linkGroup.data.find(l => l.href && l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/))))) {
+      pub("error", "Rec-track documents needs to link to github issues from their head; consider setting config option `github`");
+  }
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
     if (conf.specStatus === "ED")
@@ -576,6 +581,24 @@ export function run(conf) {
   }
   conf.perEnd = validateDateAndRecover(conf, "perEnd");
   conf.humanPEREnd = W3CDate.format(conf.perEnd);
+
+  const revisionTypes = ["addition", "correction"];
+  if (conf.specStatus === "REC" && conf.revisionTypes && conf.revisionTypes.length > 0) {
+    let unknown;
+    if (unknown = conf.revisionTypes.find(x => !revisionTypes.includes(x))) {
+      pub("error", `\`specStatus\` is "REC" with unknown revision type '${unknown}'`);
+    }
+    if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
+      pub("error", `\`specStatus\` is "REC" with proposed additions but the Rec is not marked as a allowing new features.`);
+    }
+  }
+
+  if (conf.specStatus === "REC" && conf.updateableRec && conf.revisionTypes && conf.revisionTypes.length > 0 && !conf.revisedRecEnd) {
+    pub("error", `\`specStatus\` is "REC" with proposed corrections or additions but no \`revisedRecEnd\` is specified.`);
+  }
+  conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
+  conf.humanRevisedRecEnd = W3CDate.format(conf.revisedRecEnd);
+
   conf.recNotExpected =
     conf.noRecTrack || conf.recNotExpected
       ? true

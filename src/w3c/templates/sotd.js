@@ -172,16 +172,36 @@ function renderNotRec(conf) {
     <p>${reviewPolicy}</p>`;
 }
 
-function renderIsRec() {
+function renderIsRec({updateableRec, revisionTypes = [], humanRevisedRecEnd}) {
+  let reviewTarget;
+  if (revisionTypes.includes("addition")) {
+    reviewTarget = "additions";
+  }
+  if (revisionTypes.includes("correction") && !reviewTarget) {
+    reviewTarget = "corrections";
+  }
   return html`<p>
-    This document has been reviewed by W3C Members, by software developers, and
-    by other W3C groups and interested parties, and is endorsed by the Director
-    as a W3C Recommendation. It is a stable document and may be used as
-    reference material or cited from another document. W3C's role in making the
-    Recommendation is to draw attention to the specification and to promote its
-    widespread deployment. This enhances the functionality and interoperability
-    of the Web.
-  </p>`;
+    A W3C Recommendation is a specification that, after extensive
+    consensus-building, has received the endorsement of the W3C and its
+    Members. W3C recommends the wide deployment of this specification as a
+    standard for the Web.
+    ${updateableRec ? html`Future updates to this Recommendation may incorporate <a href='https://www.w3.org/2020/Process-20200915/#revised-rec-features'>new features</a>.` : ''}
+  </p>
+  ${revisionTypes.includes("addition") ?
+    html`<p class="addition">Proposed additions are marked in the document.</p>` : ""
+  }
+  ${revisionTypes.includes("correction") ?
+    html`<p class="correction">Proposed corrections are marked in the document.</p>` : ""
+  }
+  ${reviewTarget ? html`<p>
+    The W3C Membership and other interested parties are invited to review
+    the proposed ${reviewTarget} and send comments
+    through ${humanRevisedRecEnd}. Advisory Committee Representatives should consult
+    their
+    <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires">WBS questionnaires</a>.
+</p>` : ""
+  }
+`;
 }
 
 function renderDeliverer(conf) {
@@ -316,9 +336,21 @@ function linkToWorkingGroup(conf) {
   if (!conf.wg) {
     return;
   }
+  let proposedChanges = "";
+  if (conf.isRec && conf.revisionTypes && conf.revisionTypes.length) {
+    if (conf.revisionTypes.includes("addition")) {
+      if (conf.revisionTypes.includes("correction")) {
+        proposedChanges = html`It includes <a href="https://www.w3.org/2020/Process-20200915/#proposed-changes">proposed changes</a>, introducing substantive changes and new features since the previous Recommentation.`;
+      } else {
+        proposedChanges = html`It includes <a href='https://www.w3.org/2020/Process-20200915/#proposed-addition'>proposed additions</a>, introducing new features since the previous Recommentation.`;
+      }
+  } else if (conf.revisionTypes.includes("correction")) {
+    proposedChanges = html`It includes <a href='https://www.w3.org/2020/Process-20200915/#proposed-correction">proposed corrections</a>.`;
+    }
+  }
   return html`<p>
     This document was published by ${conf.wgHTML} as ${conf.anOrA}
-    ${conf.longStatus}.
+    ${conf.longStatus}. ${proposedChanges}
     ${conf.notYetRec
       ? "This document is intended to become a W3C Recommendation."
       : ""}
