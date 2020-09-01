@@ -309,11 +309,14 @@ export function run(conf) {
   if (
     conf.isRecTrack &&
     !conf.github &&
-    !conf.otherLinks.find(linkGroup =>
-      linkGroup.data.find(
-        l =>
-          l.href &&
-          l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/)
+    !(
+      conf.otherLinks &&
+      conf.otherLinks.find(linkGroup =>
+        linkGroup.data.find(
+          l =>
+            l.href &&
+            l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/)
+        )
       )
     )
   ) {
