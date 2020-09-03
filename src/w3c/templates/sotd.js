@@ -234,14 +234,19 @@ function renderDeliverer(conf) {
     wgPatentHTML,
     wgPatentURI,
     charterDisclosureURI,
+    wgPatentPolicy,
   } = conf;
 
   const producers = !isIGNote
     ? html`
         This document was produced by ${multipleWGs ? "groups" : "a group"}
         operating under the
-        <a href="https://www.w3.org/Consortium/Patent-Policy/"
-          >W3C Patent Policy</a
+        <a
+          href="${wgPatentPolicy === "PP2017"
+            ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
+            : "https://www.w3.org/Consortium/Patent-Policy/"}"
+          >${wgPatentPolicy === "PP2017" ? "1 August 2017 " : ""}W3C Patent
+          Policy</a
         >.
       `
     : "";

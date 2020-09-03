@@ -471,6 +471,15 @@ export function run(conf) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
+  if (
+    conf.wgPatentPolicy &&
+    !["PP2017", "PP2020"].includes(conf.wgPatentPolicy)
+  ) {
+    pub(
+      "error",
+      "`wgPatentPolicy` config option must be either 'PP2017' or 'PP2020'."
+    );
+  }
   if (conf.hasOwnProperty("wgPatentURI") && !Array.isArray(conf.wgPatentURI)) {
     Object.defineProperty(conf, "wgId", {
       get() {
