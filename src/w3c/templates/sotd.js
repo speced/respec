@@ -171,8 +171,7 @@ function renderNotRec(conf) {
   }
   return html`<p>
       Publication as ${conf.anOrA} ${conf.textStatus} does not imply endorsement
-      by the W3C Membership. ${statusExplanation} ${updatePolicy}
-    </p>
+      by the W3C Membership. ${statusExplanation}</p> ${updatePolicy ? html`<p>${updatePolicy}</p>` : ""}
     <p>${reviewPolicy}</p>`;
 }
 
