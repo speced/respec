@@ -171,14 +171,16 @@ function renderNotRec(conf) {
   }
   return html`<p>
       Publication as ${conf.anOrA} ${conf.textStatus} does not imply endorsement
-      by the W3C Membership. ${statusExplanation}</p> ${updatePolicy ? html`<p>${updatePolicy}</p>` : ""}
+      by the W3C Membership. ${statusExplanation}
+    </p>
+    ${updatePolicy ? html`<p>${updatePolicy}</p>` : ""}
     <p>${reviewPolicy}</p>`;
 }
 
 function renderIsRec({
   updateableRec,
   revisionTypes = [],
-  humanRevisedRecEnd
+  humanRevisedRecEnd,
 }) {
   let reviewTarget;
   if (revisionTypes.includes("addition")) {
@@ -376,7 +378,10 @@ function linkToWorkingGroup(conf) {
           >, introducing new features since the previous Recommentation.`;
       }
     } else if (conf.revisionTypes.includes("correction")) {
-      proposedChanges = html`It includes <a href="https://www.w3.org/2020/Process-20200915/#proposed-correction">proposed corrections</a>.`;
+      proposedChanges = html`It includes
+        <a href="https://www.w3.org/2020/Process-20200915/#proposed-correction"
+          >proposed corrections</a
+        >.`;
     }
   }
   return html`<p>
