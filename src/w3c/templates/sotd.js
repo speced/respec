@@ -376,7 +376,7 @@ function linkToWorkingGroup(conf) {
           >, introducing new features since the previous Recommentation.`;
       }
     } else if (conf.revisionTypes.includes("correction")) {
-      proposedChanges = html`It includes <a href='https://www.w3.org/2020/Process-20200915/#proposed-correction">proposed corrections</a>.`;
+      proposedChanges = html`It includes <a href="https://www.w3.org/2020/Process-20200915/#proposed-correction">proposed corrections</a>.`;
     }
   }
   return html`<p>
