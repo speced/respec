@@ -306,20 +306,7 @@ export function run(conf) {
   conf.isTagFinding =
     conf.specStatus === "finding" || conf.specStatus === "draft-finding";
 
-  if (
-    conf.isRecTrack &&
-    !conf.github &&
-    !(
-      conf.otherLinks &&
-      conf.otherLinks.find(linkGroup =>
-        linkGroup.data.find(
-          l =>
-            l.href &&
-            l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/)
-        )
-      )
-    )
-  ) {
+  if (conf.isRecTrack && !hasGitHubIssuesLink(conf)) {
     pub(
       "error",
       "Rec-track documents needs to link to github issues from their head; consider setting config option `github`"
@@ -791,4 +778,18 @@ function normalizeOrcid(orcid) {
  */
 function isElement(node) {
   return node.nodeType === Node.ELEMENT_NODE;
+}
+
+function hasGitHubIssuesLink(conf) {
+  return (
+    conf.github ||
+    (conf.otherLinks &&
+      conf.otherLinks.find(linkGroup =>
+        linkGroup.data.find(
+          l =>
+            l.href &&
+            l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/)
+        )
+      ))
+  );
 }
