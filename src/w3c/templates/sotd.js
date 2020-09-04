@@ -178,7 +178,7 @@ function renderNotRec(conf) {
 function renderIsRec({
   updateableRec,
   revisionTypes = [],
-  humanRevisedRecEnd,
+  humanRevisedRecEnd
 }) {
   let reviewTarget;
   if (revisionTypes.includes("addition")) {
@@ -195,7 +195,7 @@ function renderIsRec({
       ${updateableRec
         ? html`Future updates to this Recommendation may incorporate
             <a
-              href="https://www.w3.org/2020/Process-20200915/#revised-rec-features"
+              href="https://www.w3.org/2020/Process-20200915/#allow-new-features"
               >new features</a
             >.`
         : ""}
