@@ -146,7 +146,7 @@ function renderNotRec(conf) {
     }
   } else if (conf.isPR) {
     if (conf.updateableRec) {
-      updatePolicy += html`Future updates to this Recommendation may incorporate
+      updatePolicy += html`Future updates to this specification may incorporate
         <a href="https://www.w3.org/2020/Process-20200915/#revised-rec-features"
           >new features</a
         >.`;
