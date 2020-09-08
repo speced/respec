@@ -309,7 +309,7 @@ export function run(conf) {
   if (conf.isRecTrack && !hasGitHubIssuesLink(conf)) {
     pub(
       "error",
-      "Rec-track documents needs to link to github issues from their head; consider setting config option `github`"
+      "Rec-track documents must link to Github issues from their head. Please use the [`github`](https://respec.org/docs/#github) configuration option."
     );
   }
   if (!conf.edDraftURI) {
