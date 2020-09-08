@@ -68,10 +68,10 @@ function createResourceHints() {
       as: "style",
     },
   ];
-  const resourceHints = opts.map(createResourceHint).reduce((frag, link) => {
-    frag.appendChild(link);
-    return frag;
-  }, document.createDocumentFragment());
+  const resourceHints = document.createDocumentFragment();
+  for (const link of opts.map(createResourceHint){
+    resourceHints.appendChild(link);
+  };
   return resourceHints;
 }
 // Collect elements for insertion (document fragment)
