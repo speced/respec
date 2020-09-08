@@ -182,7 +182,7 @@ function renderIsRec({
   revisionTypes = [],
   humanRevisedRecEnd,
 }) {
-  let reviewTarget;
+  let reviewTarget = "";
   if (revisionTypes.includes("addition")) {
     reviewTarget = "additions";
   }
