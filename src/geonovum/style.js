@@ -49,9 +49,7 @@ function createStyle(css_name) {
 }
 
 function createResourceHints() {
-  /**
-   * @type ResourceHintOption[]
-   * */
+  /** @type ResourceHintOption[] */
   const opts = [
     {
       hint: "preconnect", // for W3C fixup.js
