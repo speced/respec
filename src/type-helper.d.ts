@@ -126,7 +126,7 @@ type ResourceHintOption = {
   /**
    * The type of hint.
    **/
-  hint?: "preconnect" | "preload" | "dns-prefetch" | "prerender";
+  hint: "preconnect" | "preload" | "dns-prefetch" | "prerender";
   /**
    * The URL for the resource or origin.
    **/
