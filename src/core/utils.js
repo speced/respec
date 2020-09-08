@@ -41,31 +41,6 @@ export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   day: "2-digit",
 });
 
-const resourceHints = new Set([
-  "dns-prefetch",
-  "preconnect",
-  "preload",
-  "prerender",
-]);
-
-const fetchDestinations = new Set([
-  "document",
-  "embed",
-  "font",
-  "image",
-  "manifest",
-  "media",
-  "object",
-  "report",
-  "script",
-  "serviceworker",
-  "sharedworker",
-  "style",
-  "worker",
-  "xslt",
-  "",
-]);
-
 // CSS selector for matching elements that are non-normative
 export const nonNormativeSelector =
   ".informative, .note, .issue, .example, .ednote, .practice, .introductory";
@@ -73,22 +48,11 @@ export const nonNormativeSelector =
 /**
  * Creates a link element that represents a resource hint.
  *
- * @param {Object} opts Configure the resource hint.
- * @param {String} opts.hint The type of hint (see resourceHints).
- * @param {String} opts.href The URL for the resource or origin.
- * @param {String} [opts.corsMode] Optional, the CORS mode to use (see HTML spec).
- * @param {String} [opts.as] Optional, fetch destination type (see fetchDestinations).
- * @param {boolean} [opts.dontRemove] If the hint should remain in the spec after processing.
+ * @param {ResourceHintOption} opts Configure the resource hint.
  * @return {HTMLLinkElement} A link element ready to use.
  */
 export function createResourceHint(opts) {
-  if (!opts || typeof opts !== "object") {
-    throw new TypeError("Missing options");
-  }
-  if (!resourceHints.has(opts.hint)) {
-    throw new TypeError("Invalid resources hint");
-  }
-  const url = new URL(opts.href, location.href);
+  const url = new URL(opts.href, document.baseURI);
   const linkElem = document.createElement("link");
   let { href } = url;
   linkElem.rel = opts.hint;
@@ -101,10 +65,7 @@ export function createResourceHint(opts) {
       }
       break;
     case "preload":
-      if ("as" in opts && typeof opts.as === "string") {
-        if (!fetchDestinations.has(opts.as)) {
-          console.warn(`Unknown request destination: ${opts.as}`);
-        }
+      if ("as" in opts) {
         linkElem.setAttribute("as", opts.as);
       }
       break;

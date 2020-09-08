@@ -49,7 +49,10 @@ function createStyle(css_name) {
 }
 
 function createResourceHints() {
-  const resourceHints = [
+  /**
+   * @type ResourceHintOption[]
+   * */
+  const opts = [
     {
       hint: "preconnect", // for W3C fixup.js
       href: "https://www.w3.org",
@@ -73,12 +76,11 @@ function createResourceHints() {
       href: "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.svg",
       as: "image",
     },
-  ]
-    .map(createResourceHint)
-    .reduce((frag, link) => {
-      frag.appendChild(link);
-      return frag;
-    }, document.createDocumentFragment());
+  ];
+  const resourceHints = opts.map(createResourceHint).reduce((frag, link) => {
+    frag.appendChild(link);
+    return frag;
+  }, document.createDocumentFragment());
   return resourceHints;
 }
 
