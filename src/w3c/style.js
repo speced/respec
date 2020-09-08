@@ -66,9 +66,7 @@ function selectStyleVersion(styleVersion) {
 }
 
 function createResourceHints() {
-  /**
-   * @type ResourceHintOption[]
-   */
+  /** @type ResourceHintOption[]  */
   const opts = [
     {
       hint: "preconnect", // for W3C styles and scripts.
