@@ -362,7 +362,7 @@ function linkToWorkingGroup(conf) {
   if (!conf.wg) {
     return;
   }
-  let proposedChanges = "";
+  let proposedChanges = null;
   if (conf.isRec && conf.revisionTypes && conf.revisionTypes.length) {
     if (conf.revisionTypes.includes("addition")) {
       if (conf.revisionTypes.includes("correction")) {
