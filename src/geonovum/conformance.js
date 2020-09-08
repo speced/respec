@@ -16,9 +16,7 @@ function processConformance(conformance) {
       diagrammen, voorbeelden, en noten in dit document niet normatief. Verder
       is alles in dit document normatief.
     </p>
-    <p>
-      Informatief en normatief.
-    </p>
+    <p>Informatief en normatief.</p>
   `;
   conformance.prepend(...content.childNodes);
 }
