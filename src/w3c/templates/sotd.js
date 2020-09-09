@@ -130,15 +130,15 @@ export default (conf, opts) => {
 function renderPreview(conf) {
   const { prUrl, prNumber, edDraftURI } = conf;
   return html`<details class="annoying-warning" open="">
-    <summary
-      >This is a
+    <summary>
+      This is a
       preview${prUrl && prNumber
         ? html`
             of pull request
             <a href="${prUrl}">#${prNumber}</a>
           `
-        : ""}</summary
-    >
+        : ""}
+    </summary>
     <p>
       Do not attempt to implement this version of the specification. Do not
       reference this version as authoritative in any way.

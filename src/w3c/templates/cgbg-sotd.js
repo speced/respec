@@ -7,15 +7,15 @@ export default (conf, opts) => {
     <h2>${l10n.sotd}</h2>
     ${conf.isPreview
       ? html`<details class="annoying-warning" open="">
-          <summary
-            >This is a
+          <summary>
+            This is a
             preview${conf.prUrl && conf.prNumber
               ? html`
                   of pull request
                   <a href="${conf.prUrl}">#${conf.prNumber}</a>
                 `
-              : ""}</summary
-          >
+              : ""}
+          </summary>
           <p>
             Do not attempt to implement this version of the specification. Do
             not reference this version as authoritative in any way.

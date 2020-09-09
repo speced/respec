@@ -214,9 +214,7 @@ export default (conf, options) => {
         : ""}
       ${conf.authors
         ? html`
-            <dt>
-              ${conf.multipleAuthors ? l10n.authors : l10n.author}
-            </dt>
+            <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
             ${showPeople(conf.authors)}
           `
         : ""}
