@@ -19,28 +19,6 @@ colors.setTheme({
 });
 
 /**
- * Writes "data" to a particular outPath as UTF-8.
- * @private
- * @param  {String} outPath The relative or absolute path to write to.
- * @param  {String} data    The data to write.
- * @return {Promise}        Resolves when writing is done.
- */
-async function writeTo(outPath, data) {
-  let newFilePath = "";
-  if (path.isAbsolute(outPath)) {
-    newFilePath = outPath;
-  } else {
-    newFilePath = path.resolve(process.cwd(), outPath);
-  }
-  try {
-    await writeFile(newFilePath, data, "utf-8");
-  } catch (err) {
-    console.error(err, err.stack);
-    process.exit(1);
-  }
-}
-
-/**
  * Fetches a ReSpec "src" URL, and writes the processed static HTML to an "out" path.
  * @param {string} src A URL or filepath that is the ReSpec source.
  * @param {string | null | ""} out A path to write to. If null, goes to stdout. If "", then don't write, just return value.
@@ -84,12 +62,10 @@ async function fetchAndWrite(
   });
   try {
     const page = await browser.newPage();
-    const handleConsoleMessages = makeConsoleMsgHandler(page);
-    const haltFlags = {
-      error: false,
-      warn: false,
-    };
-    handleConsoleMessages(haltFlags, onError, onWarning);
+
+    const haltFlags = { error: false, warn: false };
+    handleConsoleMessages(page, haltFlags, onError, onWarning);
+
     const url = new URL(src);
     const response = await page.goto(url, { timeout });
     if (
@@ -107,17 +83,11 @@ async function fetchAndWrite(
     const abortOnWarning = whenToHalt.haltOnWarn && haltFlags.warn;
     const abortOnError = whenToHalt.haltOnError && haltFlags.error;
     if (abortOnError || abortOnWarning) {
-      process.exit(1);
+      throw new Error(
+        `${abortOnError ? "Errors" : "Warnings"} found during processing.`
+      );
     }
-    switch (out) {
-      case null:
-        process.stdout.write(html);
-        break;
-      case "":
-        break;
-      default:
-        await writeTo(out, html);
-    }
+    await write(out, html);
     // Race condition: Wait before page close for all console messages to be logged
     await new Promise(resolve => setTimeout(resolve, 1000));
     await page.close();
@@ -230,59 +200,54 @@ function getVersion() {
   }
   return window.respecVersion.split(".").map(str => parseInt(str, 10));
 }
-/**
- * Handles messages from the browser's Console API.
- *
- * @param  {import("puppeteer").Page} page Instance of page to listen on.
- * @return {Function}
- * @typedef {{ message: string }} RsError
- */
-function makeConsoleMsgHandler(page) {
-  /**
-   * Specifies what to do when the browser emits "error" and "warn" console messages.
-   * @param {object} haltFlags
-   * @param {boolean} [haltFlags.error]
-   * @param {boolean} [haltFlags.warn]
-   * @param {(error: RsError) => void} onError
-   * @param {(error: RsError) => void} onWarning
-   */
-  return function handleConsoleMessages(haltFlags, onError, onWarning) {
-    page.on("console", async message => {
-      const args = await Promise.all(message.args().map(stringifyJSHandle));
-      const msgText = message.text();
-      const text = args.filter(msg => msg !== "undefined").join(" ");
-      const type = message.type();
-      if (
-        (type === "error" || type === "warning") &&
-        msgText && // browser errors have text
-        !message.args().length // browser errors/warnings have no arguments
-      ) {
-        // Since Puppeteer 1.4 reports _all_ errors, including CORS
-        // violations and slow preloads. Unfortunately, there is no way to distinguish
-        // these errors from other errors, so using this ugly hack.
-        // https://github.com/GoogleChrome/puppeteer/issues/1939
-        return;
-      }
-      switch (type) {
-        case "error":
-          onError({ message: text });
-          haltFlags.error = true;
-          break;
-        case "warning":
-          // Ignore polling of respecDone
-          if (/document\.respecDone/.test(text)) {
-            return;
-          }
-          onWarning({ message: text });
-          haltFlags.warn = true;
-          break;
-      }
-    });
-  };
-}
 
-async function stringifyJSHandle(handle) {
-  return await handle.executionContext().evaluate(o => String(o), handle);
+/**
+ * Specifies what to do when the browser emits "error" and "warn" console messages.
+ * @param  {import("puppeteer").Page} page Instance of page to listen on.
+ * @param {object} haltFlags
+ * @param {boolean} [haltFlags.error]
+ * @param {boolean} [haltFlags.warn]
+ * @typedef {{ message: string }} RsError
+ * @param {(error: RsError) => void} onError
+ * @param {(error: RsError) => void} onWarning
+ */
+function handleConsoleMessages(page, haltFlags, onError, onWarning) {
+  /** @param {import('puppeteer').JSHandle<any>} handle */
+  async function stringifyJSHandle(handle) {
+    return await handle.executionContext().evaluate(o => String(o), handle);
+  }
+
+  page.on("console", async message => {
+    const args = await Promise.all(message.args().map(stringifyJSHandle));
+    const msgText = message.text();
+    const text = args.filter(msg => msg !== "undefined").join(" ");
+    const type = message.type();
+    if (
+      (type === "error" || type === "warning") &&
+      msgText && // browser errors have text
+      !message.args().length // browser errors/warnings have no arguments
+    ) {
+      // Since Puppeteer 1.4 reports _all_ errors, including CORS
+      // violations and slow preloads. Unfortunately, there is no way to distinguish
+      // these errors from other errors, so using this ugly hack.
+      // https://github.com/GoogleChrome/puppeteer/issues/1939
+      return;
+    }
+    switch (type) {
+      case "error":
+        onError({ message: text });
+        haltFlags.error = true;
+        break;
+      case "warning":
+        // Ignore polling of respecDone
+        if (/document\.respecDone/.test(text)) {
+          return;
+        }
+        onWarning({ message: text });
+        haltFlags.warn = true;
+        break;
+    }
+  });
 }
 
 function createTimer(duration) {
@@ -293,6 +258,26 @@ function createTimer(duration) {
       return Math.max(0, duration - spent);
     },
   };
+}
+
+/**
+ * @param {string | null | ""} destination
+ * @param {string} html
+ */
+async function write(destination, html) {
+  switch (destination) {
+    case "":
+      break;
+    case null:
+      process.stdout.write(html);
+      break;
+    default: {
+      const newFilePath = path.isAbsolute(destination)
+        ? destination
+        : path.resolve(process.cwd(), destination);
+      await writeFile(newFilePath, html, "utf-8");
+    }
+  }
 }
 
 exports.fetchAndWrite = fetchAndWrite;

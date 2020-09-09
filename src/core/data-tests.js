@@ -85,9 +85,7 @@ function toListItem(href) {
 
   const testList = html`
     <li>
-      <a href="${href}">
-        ${testFileName}
-      </a>
+      <a href="${href}">${testFileName}</a>
       ${emojiList}
     </li>
   `;
@@ -157,9 +155,7 @@ function toHTML(testURLs) {
   const uniqueList = [...new Set(testURLs)];
   const details = html`
     <details class="respec-tests-details removeOnSave">
-      <summary>
-        tests: ${uniqueList.length}
-      </summary>
+      <summary>tests: ${uniqueList.length}</summary>
       <ul>
         ${uniqueList.map(toListItem)}
       </ul>

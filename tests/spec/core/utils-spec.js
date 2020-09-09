@@ -85,37 +85,6 @@ describe("Core - Utils", () => {
       });
       expect(link instanceof HTMLLinkElement).toBe(true);
     });
-    it("throws given invalid opts", () => {
-      expect(() => {
-        utils.createResourceHint();
-      }).toThrow();
-
-      expect(() => {
-        utils.createResourceHint(null);
-      }).toThrow();
-
-      expect(() => {
-        utils.createResourceHint("throw");
-      }).toThrow();
-
-      expect(() => {
-        utils.createResourceHint({
-          href: "https://example.com",
-          hint: "preconnect",
-        });
-      }).not.toThrow();
-    });
-    it("throws given an unknown hint", () => {
-      expect(() => {
-        utils.createResourceHint({ hint: null });
-      }).toThrow();
-      expect(() => {
-        utils.createResourceHint({ hint: "not a real hint" });
-      }).toThrow();
-      expect(() => {
-        utils.createResourceHint({ hint: "preconnect" });
-      }).not.toThrow();
-    });
     it("throws given an invalid URL", () => {
       expect(() => {
         utils.createResourceHint({

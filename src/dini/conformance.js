@@ -68,9 +68,7 @@ function processConformance(conformance, conf) {
   const plural = terms.length > 1;
   const content = html`
     <h2>${l10n.conformance}</h2>
-    <p>
-      ${l10n.normativity}
-    </p>
+    <p>${l10n.normativity}</p>
     ${terms.length ? l10n.keywordInterpretation(keywords, plural) : null}
   `;
   conformance.prepend(...content.childNodes);
