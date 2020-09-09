@@ -16,7 +16,7 @@ const W3C_GROUPS_API = "https://respec.org/w3c/groups/";
 export async function run(conf) {
   if (!conf.group) return;
 
-  const supersededOptions = ["wg", "wgURI", "wgId", "wgPatentURI"];
+  const supersededOptions = ["wg", "wgURI", "wgId", "wgPatentURI", "wgPatentPolicy"];
   const usedSupersededOptions = supersededOptions.filter(opt => conf[opt]);
   if (usedSupersededOptions.length) {
     const outdatedOptionsStr = joinAnd(usedSupersededOptions, s => `\`${s}\``);
@@ -36,7 +36,7 @@ export async function run(conf) {
 async function getMultipleGroupDetails(groups) {
   const details = await Promise.all(groups.map(getGroupDetails));
   /** @type {{ [key in keyof GroupDetails]: GroupDetails[key][] }} */
-  const result = { wg: [], wgId: [], wgURI: [], wgPatentURI: [] };
+  const result = { wg: [], wgId: [], wgURI: [], wgPatentURI: [], wgPatentPolicy: [] };
   for (const groupDetails of details.filter(o => o)) {
     for (const key of Object.keys(result)) {
       result[key].push(groupDetails[key]);
@@ -56,8 +56,8 @@ async function getGroupDetails(group) {
 
   if (res.ok) {
     const json = await res.json();
-    const { id: wgId, name: wg, URI: wgURI, patentURI: wgPatentURI } = json;
-    return { wg, wgId, wgURI, wgPatentURI };
+    const { id: wgId, name: wg, URI: wgURI, patentURI: wgPatentURI, patentPolicy: wgPatentPolicy } = json;
+    return { wg, wgId, wgURI, wgPatentURI, wgPatentPolicy };
   }
 
   let message = `Failed to fetch group details (HTTP: ${res.status})`;
