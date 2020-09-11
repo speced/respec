@@ -127,7 +127,7 @@ export default (conf, opts) => {
   `;
 };
 
-function renderPreview(conf) {
+export function renderPreview(conf) {
   const { prUrl, prNumber, edDraftURI } = conf;
   return html`<details class="annoying-warning" open="">
     <summary>

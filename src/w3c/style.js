@@ -66,7 +66,8 @@ function selectStyleVersion(styleVersion) {
 }
 
 function createResourceHints() {
-  const resourceHints = [
+  /** @type ResourceHintOption[]  */
+  const opts = [
     {
       hint: "preconnect", // for W3C styles and scripts.
       href: "https://www.w3.org",
@@ -86,12 +87,11 @@ function createResourceHints() {
       href: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
       as: "image",
     },
-  ]
-    .map(createResourceHint)
-    .reduce((frag, link) => {
-      frag.appendChild(link);
-      return frag;
-    }, document.createDocumentFragment());
+  ];
+  const resourceHints = document.createDocumentFragment();
+  for (const link of opts.map(createResourceHint)) {
+    resourceHints.appendChild(link);
+  }
   return resourceHints;
 }
 // Collect elements for insertion (document fragment)
