@@ -12,6 +12,7 @@ import { createResourceHint } from "./utils.js";
 import { expose } from "./expose-modules.js";
 import { fetchBase } from "./text-loader.js";
 // Opportunistically preload syntax highlighter
+/** @type ResourceHintOption */
 const hint = {
   hint: "preload",
   href: "https://www.w3.org/Tools/respec/respec-highlight",
