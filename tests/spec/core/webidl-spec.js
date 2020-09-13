@@ -121,7 +121,7 @@ describe("Core - WebIDL", () => {
 
       // void type of promise
       expect(voidLink.textContent).toBe("void");
-      expect(voidLink.href.endsWith("#idl-void")).toBe(true);
+      expect(voidLink.href.endsWith("#idl-void")).toBe(false);
 
       // unsigned long long argument
       expect(unsignedLongLink.textContent).toBe("unsigned long long");
