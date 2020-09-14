@@ -38,7 +38,6 @@ const modules = [
   import("../src/geonovum/conformance.js"),
   import("../src/ui/save-html.js"),
   import("../src/ui/search-specref.js"),
-  import("../src/ui/dfn-list.js"),
   import("../src/ui/about-respec.js"),
   import("../src/core/seo.js"),
   import("../src/core/highlight.js"),
