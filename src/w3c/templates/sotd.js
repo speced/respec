@@ -156,7 +156,7 @@ function renderIsUnofficial(opts) {
   const { additionalContent } = opts;
   return html`
     <p>
-      This document is draft of a potential specification. It has no official
+      This document is a draft of a potential specification. It has no official
       standing of any kind and does not represent the support or consensus of
       any standards organization.
     </p>
