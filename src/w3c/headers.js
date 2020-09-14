@@ -599,11 +599,11 @@ export function run(conf) {
     conf.revisionTypes &&
     conf.revisionTypes.length > 0
   ) {
-    let unknown;
-    if ((unknown = conf.revisionTypes.find(x => !revisionTypes.includes(x)))) {
+    const unknownRevisionType = conf.revisionTypes.find(x => !revisionTypes.includes(x));
+    if (unknownRevisionType) {
       pub(
         "error",
-        `\`specStatus\` is "REC" with unknown revision type '${unknown}'`
+        `\`specStatus\` is "REC" with unknown revision type '${unknownRevisionType}'`
       );
     }
     if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
