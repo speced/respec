@@ -54,18 +54,18 @@ describe("Core - UI", () => {
     const doc = await makeRSDoc(makeStandardOps());
     const ui = doc.defaultView.respecUI;
 
-    expect(doc.getElementById("respec-pill-warning")).toBeNull();
+    expect(doc.getElementById("respec-pill-warning")).not.toBeNull();
 
     ui.warning("test 1");
     const button = doc.getElementById("respec-pill-warning");
 
     expect(button).toBeTruthy();
-    expect(button.textContent).toBe("1");
-    expect(button.getAttribute("aria-label")).toBe("1 ReSpec Warning");
-
-    ui.warning("test 2");
     expect(button.textContent).toBe("2");
     expect(button.getAttribute("aria-label")).toBe("2 ReSpec Warnings");
+
+    ui.warning("test 2");
+    expect(button.textContent).toBe("3");
+    expect(button.getAttribute("aria-label")).toBe("3 ReSpec Warnings");
   });
 
   describe("ui/dfn-list", () => {

@@ -14,6 +14,9 @@
  */
 
 "use strict";
+
+import { pub } from "../src/core/pubsubhub.js";
+
 // In case everything else fails, we want the error
 window.addEventListener("error", ev => {
   console.error(ev.error, ev.message, ev);
@@ -96,6 +99,8 @@ async function domReady() {
   try {
     ui.show();
     await domReady();
+    const msg = `"respec-w3c-common" profile has been deprecated in favor of the "respec-w3c" profile and will not receive any future updates, including the support for W3C 2020 process. [Please migrate to "respec-w3c" profile.](https://github.com/w3c/respec/wiki/respec-w3c-common-migration-guide)`;
+    pub("warn", msg);
     await runner.runAll(plugins);
   } finally {
     ui.enable();
