@@ -306,6 +306,12 @@ function noteForMemberSubmission(conf) {
   const teamComment = `https://www.w3.org/Submission/${conf.publishDate.getUTCFullYear()}/${
     conf.submissionCommentNumber
   }/Comment/`;
+
+  const patentPolicyURL =
+    conf.wgPatentPolicy === "PP2017"
+      ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
+      : "https://www.w3.org/Consortium/Patent-Policy/";
+
   return html`<p>
     By publishing this document, W3C acknowledges that the
     <a href="${conf.thisVersion}">Submitting Members</a> have made a formal
@@ -321,7 +327,7 @@ function noteForMemberSubmission(conf) {
     <a href="https://www.w3.org/Consortium/Prospectus/Joining">
       W3C Membership</a
     >. Please consult the requirements associated with Member Submissions of
-    <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-submissions"
+    <a href="${patentPolicyURL}#sec-submissions"
       >section 3.3 of the W3C Patent Policy</a
     >. Please consult the complete
     <a href="https://www.w3.org/Submission"
