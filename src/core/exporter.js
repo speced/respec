@@ -101,9 +101,6 @@ function prettify(cloneDoc) {
   cloneDoc.querySelectorAll("head > *").forEach(el => {
     el.outerHTML = `\n${el.outerHTML}`;
   });
-  cloneDoc.querySelectorAll(":root > *").forEach(el => {
-    el.outerHTML = `\n${el.outerHTML}\n`;
-  });
 }
 
 expose("core/exporter", { rsDocToDataURL });
