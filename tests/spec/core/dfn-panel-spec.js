@@ -100,7 +100,7 @@ describe("Core — dfnPanel", () => {
       dfnOne.click();
       expect(panelDfnMany.hidden).toBeTrue();
       expect(panelDfnOne.hidden).toBeFalse();
-      expect(doc.querySelectorAll(".dfn-panel:not([hidden])").length).toBe(1);
+      expect(doc.querySelectorAll(".dfn-panel:not([hidden])")).toHaveSize(1);
       expect(panelDfnOne.querySelector("a.self-link").hash).toBe("#dfn-one");
     });
   });
@@ -136,10 +136,10 @@ describe("Core — dfnPanel", () => {
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
     const referenceListItems = panel.querySelectorAll("ul li");
-    expect(referenceListItems.length).toBe(1);
+    expect(referenceListItems).toHaveSize(1);
 
     const references = panel.querySelectorAll("ul li a");
-    expect(references.length).toBe(1);
+    expect(references).toHaveSize(1);
     expect(references[0].textContent).toBe("1. top level heading");
     expect(references[0].hash).toBe("#ref-for-dfn-one-1");
   });
@@ -158,11 +158,11 @@ describe("Core — dfnPanel", () => {
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
     const referenceListItems = panel.querySelectorAll("ul li");
-    expect(referenceListItems.length).toBe(2);
+    expect(referenceListItems).toHaveSize(2);
     const [item1, item2] = referenceListItems;
 
     const item1Links = item1.querySelectorAll("a");
-    expect(item1Links.length).toBe(3);
+    expect(item1Links).toHaveSize(3);
     expect(item1Links[0].textContent).toBe("1. top level heading");
     expect(item1Links[0].hash).toBe("#ref-for-dfn-many-1");
     expect(item1Links[1].textContent).toBe("(2)");
@@ -172,7 +172,7 @@ describe("Core — dfnPanel", () => {
     expect(item1.textContent.trim()).toBe("1. top level heading (2) (3)");
 
     const item2Links = item2.querySelectorAll("a");
-    expect(item2Links.length).toBe(2);
+    expect(item2Links).toHaveSize(2);
     expect(item2Links[0].textContent).toBe("1.1 nested section heading");
     expect(item2Links[0].hash).toBe("#ref-for-dfn-many-3");
     expect(item2Links[1].textContent).toBe("(2)");
@@ -214,10 +214,10 @@ describe("Core — dfnPanel", () => {
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
     const referenceListItems = panel.querySelectorAll("ul li");
-    expect(referenceListItems.length).toBe(1);
+    expect(referenceListItems).toHaveSize(1);
 
     const references = panel.querySelectorAll("ul li a");
-    expect(references.length).toBe(1);
+    expect(references).toHaveSize(1);
     expect(references[0].textContent).toBe("1. top level heading");
     expect(references[0].hash).toBe("#ref-for-dfn-one-1");
   });

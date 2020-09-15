@@ -68,9 +68,7 @@ function processConformance(conformance, conf) {
   const plural = terms.length > 1;
   const content = html`
     <h2>${l10n.conformance}</h2>
-    <p>
-      ${l10n.normativity}
-    </p>
+    <p>${l10n.normativity}</p>
     ${terms.length ? l10n.keywordInterpretation(keywords, plural) : null}
   `;
   conformance.prepend(...content.childNodes);
@@ -89,7 +87,4 @@ export function run(conf) {
         'Please add a `<section id="conformance">`.'
     );
   }
-  // Added message for legacy compat with Aria specs
-  // See https://github.com/w3c/respec/issues/793
-  pub("end", name);
 }

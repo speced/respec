@@ -48,6 +48,15 @@ const localizationStrings = {
     duplicateTitle:
       "Das Dokument enthält mehrere Definitionen dieses Eintrags.",
   },
+  zh: {
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `'${title}' 的重复定义`;
+    },
+    duplicateTitle: "在文档中有重复的定义。",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
@@ -278,7 +287,7 @@ function showLinkingError(elems) {
  */
 function updateReferences(conf) {
   const shortName = new RegExp(
-    String.raw`\b${(conf.shortName || "").toLowerCase()}\b`,
+    String.raw`\b${(conf.shortName || "").toLowerCase()}([^-])\b`,
     "i"
   );
 
@@ -287,7 +296,7 @@ function updateReferences(conf) {
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );
   for (const elem of elems) {
-    elem.dataset.cite = elem.dataset.cite.replace(shortName, THIS_SPEC);
+    elem.dataset.cite = elem.dataset.cite.replace(shortName, `${THIS_SPEC}$1`);
     const { key, isNormative } = toCiteDetails(elem);
     if (key === THIS_SPEC) continue;
 

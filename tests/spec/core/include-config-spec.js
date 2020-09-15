@@ -34,7 +34,7 @@ describe("Core — Include config as JSON", () => {
     );
     expect(conf.foo).toBe("bar");
     expect(conf.bar).toBe(123);
-    expect(conf.baz.length).toBe(3);
+    expect(conf.baz).toHaveSize(3);
     expect(conf.baz).toEqual([1, 2, 3]);
   });
   it("should have the same content for the config and the script's text", async () => {

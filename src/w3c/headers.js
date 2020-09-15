@@ -119,6 +119,7 @@ const status2rdf = {
   WD: "w3p:WD",
   LC: "w3p:LastCall",
   CR: "w3p:CR",
+  CRD: "w3p:CRD",
   PR: "w3p:PR",
   REC: "w3p:REC",
   PER: "w3p:PER",
@@ -143,6 +144,7 @@ const status2text = {
   FPLC: "First Public and Last Call Working Draft",
   LC: "Last Call Working Draft",
   CR: "Candidate Recommendation",
+  CRD: "Candidate Recommendation",
   PR: "Proposed Recommendation",
   PER: "Proposed Edited Recommendation",
   REC: "Recommendation",
@@ -158,11 +160,13 @@ const status2text = {
 };
 const status2long = {
   ...status2text,
+  CR: "Candidate Recommendation Snapshot",
+  CRD: "Candidate Recommendation Draft",
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
 const maybeRecTrack = ["FPWD", "WD"];
-const recTrackStatus = ["FPLC", "LC", "CR", "PR", "PER", "REC"];
+const recTrackStatus = ["FPLC", "LC", "CR", "CRD", "PR", "PER", "REC"];
 const noTrackStatus = [
   "base",
   "BG-DRAFT",
@@ -301,6 +305,13 @@ export function run(conf) {
   conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
   conf.isTagFinding =
     conf.specStatus === "finding" || conf.specStatus === "draft-finding";
+
+  if (conf.isRecTrack && !hasGitHubIssuesLink(conf)) {
+    pub(
+      "error",
+      "Rec-track documents must link to Github issues from their head. Please use the [`github`](https://respec.org/docs/#github) configuration option."
+    );
+  }
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
     if (conf.specStatus === "ED")
@@ -317,7 +328,9 @@ export function run(conf) {
       conf.maturity
     }-${conf.shortName}-${concatDate(conf.publishDate)}/`;
   if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
-  if (conf.isRegular)
+  const skipLatestVersion =
+    conf.specStatus === "ED" && conf.latestVersion === null;
+  if (conf.isRegular && !skipLatestVersion)
     conf.latestVersion = `https://www.w3.org/${publishSpace}/${conf.shortName}/`;
   if (conf.isTagFinding) {
     conf.latestVersion = `https://www.w3.org/2001/tag/doc/${conf.shortName}`;
@@ -435,7 +448,8 @@ export function run(conf) {
     pub("error", "Recommendations must have an errata link.");
   conf.prependW3C = !conf.isUnofficial;
   conf.isED = conf.specStatus === "ED";
-  conf.isCR = conf.specStatus === "CR";
+  conf.isCR = conf.specStatus === "CR" || conf.specStatus === "CRD";
+  conf.isCRDraft = conf.specStatus === "CRD";
   conf.isPR = conf.specStatus === "PR";
   conf.isPER = conf.specStatus === "PER";
   conf.isMO = conf.specStatus === "MO";
@@ -444,6 +458,15 @@ export function run(conf) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
+  if (
+    conf.wgPatentPolicy &&
+    !["PP2017", "PP2020"].includes(conf.wgPatentPolicy)
+  ) {
+    pub(
+      "error",
+      "`wgPatentPolicy` config option must be either 'PP2017' or 'PP2020'."
+    );
+  }
   if (conf.hasOwnProperty("wgPatentURI") && !Array.isArray(conf.wgPatentURI)) {
     Object.defineProperty(conf, "wgId", {
       get() {
@@ -569,6 +592,45 @@ export function run(conf) {
   }
   conf.perEnd = validateDateAndRecover(conf, "perEnd");
   conf.humanPEREnd = W3CDate.format(conf.perEnd);
+
+  const revisionTypes = ["addition", "correction"];
+  if (
+    conf.specStatus === "REC" &&
+    conf.revisionTypes &&
+    conf.revisionTypes.length > 0
+  ) {
+    const unknownRevisionType = conf.revisionTypes.find(
+      x => !revisionTypes.includes(x)
+    );
+    if (unknownRevisionType) {
+      pub(
+        "error",
+        `\`specStatus\` is "REC" with unknown revision type '${unknownRevisionType}'`
+      );
+    }
+    if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
+      pub(
+        "error",
+        `\`specStatus\` is "REC" with proposed additions but the Rec is not marked as a allowing new features.`
+      );
+    }
+  }
+
+  if (
+    conf.specStatus === "REC" &&
+    conf.updateableRec &&
+    conf.revisionTypes &&
+    conf.revisionTypes.length > 0 &&
+    !conf.revisedRecEnd
+  ) {
+    pub(
+      "error",
+      `\`specStatus\` is "REC" with proposed corrections or additions but no \`revisedRecEnd\` is specified.`
+    );
+  }
+  conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
+  conf.humanRevisedRecEnd = W3CDate.format(conf.revisedRecEnd);
+
   conf.recNotExpected =
     conf.noRecTrack || conf.recNotExpected
       ? true
@@ -718,4 +780,18 @@ function normalizeOrcid(orcid) {
  */
 function isElement(node) {
   return node.nodeType === Node.ELEMENT_NODE;
+}
+
+function hasGitHubIssuesLink(conf) {
+  return (
+    conf.github ||
+    (conf.otherLinks &&
+      conf.otherLinks.find(linkGroup =>
+        linkGroup.data.find(
+          l =>
+            l.href &&
+            l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/)
+        )
+      ))
+  );
 }

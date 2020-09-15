@@ -34,6 +34,13 @@ const localizationStrings = {
     tests: "Tests",
     test: "Test",
   },
+  zh: {
+    missing_test_suite_uri:
+      "本规范中包含测试，但在 ReSpec 配置中缺少 '" +
+      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)'。",
+    tests: "测试",
+    test: "测试",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);
@@ -78,9 +85,7 @@ function toListItem(href) {
 
   const testList = html`
     <li>
-      <a href="${href}">
-        ${testFileName}
-      </a>
+      <a href="${href}">${testFileName}</a>
       ${emojiList}
     </li>
   `;
@@ -151,9 +156,7 @@ function toHTML(testURLs) {
   const uniqueList = [...new Set(testURLs)];
   const details = html`
     <details class="respec-tests-details removeOnSave">
-      <summary>
-        tests: ${uniqueList.length}
-      </summary>
+      <summary>tests: ${uniqueList.length}</summary>
       <ul>
         ${uniqueList.map(toListItem)}
       </ul>

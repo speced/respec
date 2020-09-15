@@ -55,6 +55,10 @@ interface Window {
 
 interface Document {
   respecIsReady: Promise<void>;
+  respec: {
+    readonly version: string;
+    readonly ready: Document["respecIsReady"];
+  };
   createNodeIterator<T>(
     root: Node,
     whatToShow?: number,
@@ -67,8 +71,8 @@ interface Document {
   ): TreeWalker<T>;
 }
 
-interface NodeIterator<T extends Node> {}
-interface TreeWalker<T extends Node> {}
+interface NodeIterator<T extends Node> { }
+interface TreeWalker<T extends Node> { }
 
 interface Node {
   cloneNode<T extends Node = this>(deep?: boolean): T;
@@ -116,6 +120,29 @@ interface Conf {
   localBiblio?: Record<string, BiblioData>;
   biblio: Record<string, BiblioData>;
   shortName: string;
+}
+
+type ResourceHintOption = {
+  /**
+   * The type of hint.
+   **/
+  hint: "preconnect" | "preload" | "dns-prefetch" | "prerender";
+  /**
+   * The URL for the resource or origin.
+   **/
+  href: string;
+  /**
+   * the CORS mode to use (see HTML spec).
+   */
+  corsMode?: "anonymous" | "use-credentials";
+  /**
+   * fetch destination type.
+   */
+  as?: "script" | "style" | "image";
+  /**
+   * If the hint should remain in the spec after processing.
+   */
+  dontRemove?: boolean;
 }
 
 module "core/xref" {
