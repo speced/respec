@@ -238,14 +238,16 @@ function renderDeliverer(conf) {
     wgPatentPolicy,
   } = conf;
 
+  const patentPolicyURL =
+    wgPatentPolicy === "PP2017"
+      ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
+      : "https://www.w3.org/Consortium/Patent-Policy/";
+
   const producers = !isIGNote
     ? html`
         This document was produced by ${multipleWGs ? "groups" : "a group"}
         operating under the
-        <a
-          href="${wgPatentPolicy === "PP2017"
-            ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
-            : "https://www.w3.org/Consortium/Patent-Policy/"}"
+        <a href="${patentPolicyURL}"
           >${wgPatentPolicy === "PP2017" ? "1 August 2017 " : ""}W3C Patent
           Policy</a
         >.
@@ -272,11 +274,9 @@ function renderDeliverer(conf) {
             : "the group; that page also includes"}
           instructions for disclosing a patent. An individual who has actual
           knowledge of a patent which the individual believes contains
-          <a href="https://www.w3.org/Consortium/Patent-Policy/#def-essential"
-            >Essential Claim(s)</a
-          >
+          <a href="${patentPolicyURL}#def-essential">Essential Claim(s)</a>
           must disclose the information in accordance with
-          <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Disclosure"
+          <a href="${patentPolicyURL}#sec-Disclosure"
             >section 6 of the W3C Patent Policy</a
           >.
         `
