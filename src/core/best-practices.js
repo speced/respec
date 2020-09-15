@@ -40,11 +40,7 @@ export function run() {
 
     // Make the summary items, if we have a summary
     if (summaryItems) {
-      const li = html`
-        <li>
-          ${localizedBpName}: ${makeSafeCopy(bp)}
-        </li>
-      `;
+      const li = html`<li>${localizedBpName}: ${makeSafeCopy(bp)}</li>`;
       summaryItems.appendChild(li);
     }
 

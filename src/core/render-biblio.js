@@ -119,9 +119,7 @@ function createReferencesSection(refs, title) {
 
   const sec = html`<section>
     <h3>${title}</h3>
-    <dl class="bibliography">
-      ${refsToShow.map(showRef)}
-    </dl>
+    <dl class="bibliography">${refsToShow.map(showRef)}</dl>
   </section>`;
   addId(sec, "", title);
 

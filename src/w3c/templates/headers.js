@@ -2,9 +2,9 @@
 import { getIntlData, humanDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import { pub } from "../../core/pubsubhub.js";
-import showLink from "./show-link.js";
-import showLogo from "./show-logo.js";
-import showPeople from "./show-people.js";
+import showLink from "../../core/templates/show-link.js";
+import showLogo from "../../core/templates/show-logo.js";
+import showPeople from "../../core/templates/show-people.js";
 
 const ccLicense = "https://creativecommons.org/licenses/by/4.0/";
 const w3cLicense = "https://www.w3.org/Consortium/Legal/copyright-documents";
@@ -53,6 +53,12 @@ const localizationStrings = {
     latest_editors_draft: "最新编辑草稿：",
     latest_published_version: "最新发布版本：",
     this_version: "本版本：",
+    test_suite: "测试套件：",
+    implementation_report: "实现报告：",
+    prev_editor_draft: "上一版编辑草稿：",
+    prev_version: "上一版：",
+    prev_recommendation: "上一版正式推荐标准：",
+    latest_recommendation: "最新发布的正式推荐标准：",
   },
   ja: {
     author: "著者：",
@@ -64,6 +70,8 @@ const localizationStrings = {
     latest_editors_draft: "最新の編集用草案：",
     latest_published_version: "最新バージョン：",
     this_version: "このバージョン：",
+    test_suite: "テストスイート：",
+    implementation_report: "実装レポート：",
   },
   nl: {
     author: "Auteur:",
@@ -128,6 +136,7 @@ export default (conf, options) => {
           ${inPlaceModificationDate(conf.modificationDate)}`
         : ""}
     </h2>
+    ${conf.isCR ? html`<h3>${conf.isCRDraft ? "Draft" : "Snapshot"}</h3>` : ""}
     <dl>
       ${!conf.isNoTrack
         ? html`
@@ -206,9 +215,7 @@ export default (conf, options) => {
         : ""}
       ${conf.authors
         ? html`
-            <dt>
-              ${conf.multipleAuthors ? l10n.authors : l10n.author}
-            </dt>
+            <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
             ${showPeople(conf.authors)}
           `
         : ""}

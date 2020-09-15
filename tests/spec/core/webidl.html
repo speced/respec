@@ -21,7 +21,7 @@
   <h2><dfn>ExampleInterface</dfn> interface</h2>
   <pre class="idl no-link-warnings">
   interface ExampleInterface {
-    void exampleMethod();
+    undefined exampleMethod();
     readonly attribute USVString url;
   };
   </pre>
@@ -62,7 +62,7 @@
     [Constructor(sequence&lt;DOMString> methodData), SecureContext]
     interface LinkingTest {
       readonly attribute DOMString? aBoolAttribute;
-      Promise&lt;void>            returnsPromise(unsigned long long argument);
+      Promise&lt;undefined>            returnsPromise(unsigned long long argument);
     };
     </pre>
     </section>
@@ -82,17 +82,17 @@
       <h2>More linking</h2>
       <pre class="idl no-link-warnings">
       interface ParenthesisTest {
-          void basic();
-          void noParens();
-          [Something] void ext();
+          undefined basic();
+          undefined noParens();
+          [Something] undefined ext();
           unsigned long long ull(short s);
           unsigned long long ull(long s);
           getter float withName ();
-          setter void named ();
-          void dataLtOverride();
-          void fullyQualified();
-          void fullyQualifiedNoParens();
-          void doTheFoo();
+          setter undefined named ();
+          undefined dataLtOverride();
+          undefined fullyQualified();
+          undefined fullyQualifiedNoParens();
+          undefined doTheFoo();
       };
       </pre>
       <pre class="idl" id="similar-names">
@@ -408,9 +408,9 @@
       <pre id='meth-basic' class='idl'>
         interface MethBasic {
           // 1
-          void basic();
+          undefined basic();
           // 2
-          [Something] void ext();
+          [Something] undefined ext();
           // 3
           unsigned long long ull(short s, short n);
           // 3.5
@@ -420,9 +420,9 @@
           // 6
           getter float withName ();
           // 7
-          setter void ();
+          setter undefined ();
           // 8
-          setter void named ();
+          setter undefined named ();
           // 9
           static Promise&lt;RTCCertificate>  generateCertificate(AlgorithmIdentifier keygenAlgorithm);
           // 10
@@ -431,8 +431,8 @@
           stringifier DOMString ();
           // 12
           stringifier;
-          Promise&lt;void> complete(optional PaymentComplete result = "unknown");
-          Promise&lt;void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
+          Promise&lt;undefined> complete(optional PaymentComplete result = "unknown");
+          Promise&lt;undefined> another(optional  /*trivia*/  PaymentComplete result = "unknown");
           Performance performance();
         };
       </pre>
@@ -617,7 +617,7 @@
         Basic callback.
       </p>
       <pre id='cb-basic' class='idl'>
-        callback SuperStar = void();
+        callback SuperStar = undefined();
       </pre>
       <p>
         Less basic callback.
@@ -629,7 +629,7 @@
         Callback with multiple arguments.
       </p>
       <pre id='cb-mult-args' class='idl'>
-        callback SortCallback = void (any a, any b);
+        callback SortCallback = undefined (any a, any b);
       </pre>
       <p id="cb-less-basic-doc"><dfn>CbLessBasic</dfn></p>
       <!--
@@ -738,7 +738,7 @@
         interface DefinedToJson {
           readonly attribute DOMString country;
           [Default] object toJSON();
-          void toWhatever();
+          undefined toWhatever();
         };
       </pre>
       <section>
@@ -751,7 +751,7 @@
       <pre class="idl" id="optional-trivia">
         [Constructor(X x, optional Y y, /*trivia*/ Z y)]
         interface Foo {
-          void foo(X x, optional Y y, /*trivia*/ optional Z z);
+          undefined foo(X x, optional Y y, /*trivia*/ optional Z z);
         };
         callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       </pre>
@@ -762,7 +762,7 @@
         interface CodedThings {
           attribute DOMString definedElsewhere;
           attribute Bar barBar;
-          void doTheFoo();
+          undefined doTheFoo();
         };
         </pre>
         <dfn>doTheFoo()</dfn>
@@ -785,7 +785,7 @@
         <pre class="idl">
           interface InterfaceType {
             readonly attribute DOMString attributeType;
-            void operationType();
+            undefined operationType();
           };
           dictionary DictionaryType {
             DOMString fieldType;

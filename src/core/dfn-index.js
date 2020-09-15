@@ -324,7 +324,7 @@ const TYPE_TERMS = new Set([
   "double",
   "unrestricted double",
   // Following are not primitive types, but aren't interfaces either.
-  "void",
+  "undefined",
   "any",
   "object",
   "symbol",

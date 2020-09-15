@@ -83,7 +83,7 @@ describe("Core - WebIDL", () => {
           [Constructor(sequence&lt;DOMString> methodData), SecureContext]
           interface LinkingTest {
             readonly attribute DOMString? aBoolAttribute;
-            Promise&lt;void> returnsPromise(unsigned long long argument);
+            Promise&lt;undefined> returnsPromise(unsigned long long argument);
           };
           </pre>
           <p data-dfn=for="LinkingTest">
@@ -111,17 +111,19 @@ describe("Core - WebIDL", () => {
         "#idl-DOMString"
       );
 
-      // Promise&lt;void> returnsPromise(unsigned long long argument);
-      const [promiseLink, voidLink, unsignedLongLink] = idl.querySelectorAll(
-        "*[data-title='returnsPromise'] a"
-      );
+      // Promise&lt;undefined> returnsPromise(unsigned long long argument);
+      const [
+        promiseLink,
+        undefinedLink,
+        unsignedLongLink,
+      ] = idl.querySelectorAll("*[data-title='returnsPromise'] a");
       // Promise
       expect(promiseLink.textContent).toBe("Promise");
       expect(promiseLink.href.endsWith("#idl-promise")).toBe(true);
 
-      // void type of promise
-      expect(voidLink.textContent).toBe("void");
-      expect(voidLink.href.endsWith("#idl-void")).toBe(true);
+      // undefined type of promise
+      expect(undefinedLink.textContent).toBe("undefined");
+      expect(undefinedLink.href.endsWith("#idl-undefined")).toBe(true);
 
       // unsigned long long argument
       expect(unsignedLongLink.textContent).toBe("unsigned long long");
@@ -655,9 +657,9 @@ describe("Core - WebIDL", () => {
     target.querySelector(".idlHeader").remove();
     const text = `interface MethBasic {
   // 1
-  void basic();
+  undefined basic();
   // 2
-  [Something] void ext();
+  [Something] undefined ext();
   // 3
   unsigned long long ull(short s, short n);
   // 3.5
@@ -667,9 +669,9 @@ describe("Core - WebIDL", () => {
   // 6
   getter float withName ();
   // 7
-  setter void ();
+  setter undefined ();
   // 8
-  setter void named ();
+  setter undefined named ();
   // 9
   static Promise<RTCCertificate>  generateCertificate(AlgorithmIdentifier keygenAlgorithm);
   // 10
@@ -678,8 +680,8 @@ describe("Core - WebIDL", () => {
   stringifier DOMString ();
   // 12
   stringifier;
-  Promise<void> complete(optional PaymentComplete result = "unknown");
-  Promise<void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
+  Promise<undefined> complete(optional PaymentComplete result = "unknown");
+  Promise<undefined> another(optional  /*trivia*/  PaymentComplete result = "unknown");
   Performance performance();
 };`;
     expect(target.textContent).toBe(text);
@@ -688,7 +690,7 @@ describe("Core - WebIDL", () => {
     expect(target.getElementsByClassName("idlName")).toHaveSize(11);
     const first = methods[0];
     expect(first.querySelector(".idlType").textContent).toBe(
-      "\n  // 1\n  void"
+      "\n  // 1\n  undefined"
     );
     expect(first.querySelector(".idlName").textContent).toBe("basic");
 
@@ -982,7 +984,7 @@ enum EnumBasic {
     const expected = `
 [Constructor(X x, optional Y y, /*trivia*/ Z y)]
 interface Foo {
-  void foo(X x, optional Y y, /*trivia*/ optional Z z);
+  undefined foo(X x, optional Y y, /*trivia*/ optional Z z);
 };
 callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     `.trim();
@@ -998,11 +1000,11 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     let target = doc.getElementById("cb-basic");
     // Remove the header, as we are not interested in it.
     target.querySelector(".idlHeader").remove();
-    let text = "callback SuperStar = void();";
+    let text = "callback SuperStar = undefined();";
     expect(target.textContent).toBe(text);
     expect(target.getElementsByClassName("idlCallback")).toHaveSize(1);
     expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
-    expect(target.querySelector(".idlType").textContent).toBe(" void");
+    expect(target.querySelector(".idlType").textContent).toBe(" undefined");
 
     target = doc.getElementById("cb-less-basic");
     // Remove the header, as we are not interested in it.
@@ -1028,7 +1030,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     target = doc.getElementById("cb-mult-args");
     // Remove the header, as we are not interested in it.
     target.querySelector(".idlHeader").remove();
-    text = "callback SortCallback = void (any a, any b);";
+    text = "callback SortCallback = undefined (any a, any b);";
     expect(target.textContent).toBe(text);
     prm = target.querySelectorAll(".idlParamName");
     expect(prm).toHaveSize(2);
@@ -1208,7 +1210,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         <pre class="idl">
           interface InterfaceType {
             readonly attribute DOMString attributeType;
-            void operationType();
+            undefined operationType();
           };
           dictionary DictionaryType {
             DOMString fieldType;
@@ -1360,10 +1362,10 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         <pre class="idl">
           [Exposed=Window]
           interface Banana {
-            void nana();
-            void doTheFoo(DOMString req1, DOMString req2, optional DOMString optional3, optional DOMString optional4, DOMString... variadicArg);
+            undefined nana();
+            undefined doTheFoo(DOMString req1, DOMString req2, optional DOMString optional3, optional DOMString optional4, DOMString... variadicArg);
             readonly attribute boolean isFruit;
-            void selfDefined(DOMString arg1, optional DOMString arg2, DOMString ...variadic);
+            undefined selfDefined(DOMString arg1, optional DOMString arg2, DOMString ...variadic);
           };
         </pre>
         <p id="p" data-dfn-for="Banana">
@@ -1457,7 +1459,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       <section>
         <pre class="idl">
           partial interface Banana {
-            void nana();
+            undefined nana();
           };
         </pre>
         <p id="p">
@@ -1650,7 +1652,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         <pre class="idl">
           [Exposed=Window]
           interface Moka {
-            void eat(optional Bread bread);
+            undefined eat(optional Bread bread);
           };
         </pre>
       </section>
