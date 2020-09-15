@@ -599,7 +599,9 @@ export function run(conf) {
     conf.revisionTypes &&
     conf.revisionTypes.length > 0
   ) {
-    const unknownRevisionType = conf.revisionTypes.find(x => !revisionTypes.includes(x));
+    const unknownRevisionType = conf.revisionTypes.find(
+      x => !revisionTypes.includes(x)
+    );
     if (unknownRevisionType) {
       pub(
         "error",
