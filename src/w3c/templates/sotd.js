@@ -127,7 +127,7 @@ function renderNotRec(conf) {
   if (conf.specStatus === "CRD") {
     statusExplanation =
       "A Candidate Recommendation Draft integrates changes from the previous Candidate Recommendation that the Working Group intends to include in a subsequent Candidate Recommendation Snapshot.";
-    if (conf.lsMode) {
+    if (conf.pubMode === "LS") {
       updatePolicy =
         "This document is maintained and updated at any time. Some parts of this document are work in progress. ";
     }
@@ -139,7 +139,7 @@ function renderNotRec(conf) {
       and is intended to gather
       <a href="${conf.implementationReportURI}">implementation experience</a>.`;
     updatePolicy = "";
-    if (conf.lsMode) {
+    if (conf.pubMode === "LS") {
       reviewPolicy = `Comments are welcome at any time but most especially before ${conf.humanCREnd}.`;
     } else {
       reviewPolicy = `This Candidate Recommendation is not expected to advance to Proposed Recommendation any earlier than ${conf.humanCREnd}.`;
