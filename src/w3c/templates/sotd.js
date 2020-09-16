@@ -127,7 +127,7 @@ function renderNotRec(conf) {
   if (conf.specStatus === "CRD") {
     statusExplanation =
       "A Candidate Recommendation Draft integrates changes from the previous Candidate Recommendation that the Working Group intends to include in a subsequent Candidate Recommendation Snapshot.";
-    if (conf.lsMode) {
+    if (conf.pubMode === "LS") {
       updatePolicy =
         "This document is maintained and updated at any time. Some parts of this document are work in progress. ";
     }
@@ -139,7 +139,7 @@ function renderNotRec(conf) {
       and is intended to gather
       <a href="${conf.implementationReportURI}">implementation experience</a>.`;
     updatePolicy = "";
-    if (conf.lsMode) {
+    if (conf.pubMode === "LS") {
       reviewPolicy = `Comments are welcome at any time but most especially before ${conf.humanCREnd}.`;
     } else {
       reviewPolicy = `This Candidate Recommendation is not expected to advance to Proposed Recommendation any earlier than ${conf.humanCREnd}.`;
@@ -238,14 +238,16 @@ function renderDeliverer(conf) {
     wgPatentPolicy,
   } = conf;
 
+  const patentPolicyURL =
+    wgPatentPolicy === "PP2017"
+      ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
+      : "https://www.w3.org/Consortium/Patent-Policy/";
+
   const producers = !isIGNote
     ? html`
         This document was produced by ${multipleWGs ? "groups" : "a group"}
         operating under the
-        <a
-          href="${wgPatentPolicy === "PP2017"
-            ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
-            : "https://www.w3.org/Consortium/Patent-Policy/"}"
+        <a href="${patentPolicyURL}"
           >${wgPatentPolicy === "PP2017" ? "1 August 2017 " : ""}W3C Patent
           Policy</a
         >.
@@ -272,11 +274,9 @@ function renderDeliverer(conf) {
             : "the group; that page also includes"}
           instructions for disclosing a patent. An individual who has actual
           knowledge of a patent which the individual believes contains
-          <a href="https://www.w3.org/Consortium/Patent-Policy/#def-essential"
-            >Essential Claim(s)</a
-          >
+          <a href="${patentPolicyURL}#def-essential">Essential Claim(s)</a>
           must disclose the information in accordance with
-          <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Disclosure"
+          <a href="${patentPolicyURL}#sec-Disclosure"
             >section 6 of the W3C Patent Policy</a
           >.
         `
@@ -306,6 +306,12 @@ function noteForMemberSubmission(conf) {
   const teamComment = `https://www.w3.org/Submission/${conf.publishDate.getUTCFullYear()}/${
     conf.submissionCommentNumber
   }/Comment/`;
+
+  const patentPolicyURL =
+    conf.wgPatentPolicy === "PP2017"
+      ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
+      : "https://www.w3.org/Consortium/Patent-Policy/";
+
   return html`<p>
     By publishing this document, W3C acknowledges that the
     <a href="${conf.thisVersion}">Submitting Members</a> have made a formal
@@ -321,7 +327,7 @@ function noteForMemberSubmission(conf) {
     <a href="https://www.w3.org/Consortium/Prospectus/Joining">
       W3C Membership</a
     >. Please consult the requirements associated with Member Submissions of
-    <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-submissions"
+    <a href="${patentPolicyURL}#sec-submissions"
       >section 3.3 of the W3C Patent Policy</a
     >. Please consult the complete
     <a href="https://www.w3.org/Submission"
