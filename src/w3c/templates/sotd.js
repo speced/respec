@@ -238,14 +238,16 @@ function renderDeliverer(conf) {
     wgPatentPolicy,
   } = conf;
 
+  const patentPolicyURL =
+    wgPatentPolicy === "PP2017"
+      ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
+      : "https://www.w3.org/Consortium/Patent-Policy/";
+
   const producers = !isIGNote
     ? html`
         This document was produced by ${multipleWGs ? "groups" : "a group"}
         operating under the
-        <a
-          href="${wgPatentPolicy === "PP2017"
-            ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
-            : "https://www.w3.org/Consortium/Patent-Policy/"}"
+        <a href="${patentPolicyURL}"
           >${wgPatentPolicy === "PP2017" ? "1 August 2017 " : ""}W3C Patent
           Policy</a
         >.
@@ -272,11 +274,9 @@ function renderDeliverer(conf) {
             : "the group; that page also includes"}
           instructions for disclosing a patent. An individual who has actual
           knowledge of a patent which the individual believes contains
-          <a href="https://www.w3.org/Consortium/Patent-Policy/#def-essential"
-            >Essential Claim(s)</a
-          >
+          <a href="${patentPolicyURL}#def-essential">Essential Claim(s)</a>
           must disclose the information in accordance with
-          <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Disclosure"
+          <a href="${patentPolicyURL}#sec-Disclosure"
             >section 6 of the W3C Patent Policy</a
           >.
         `
@@ -306,6 +306,12 @@ function noteForMemberSubmission(conf) {
   const teamComment = `https://www.w3.org/Submission/${conf.publishDate.getUTCFullYear()}/${
     conf.submissionCommentNumber
   }/Comment/`;
+
+  const patentPolicyURL =
+    conf.wgPatentPolicy === "PP2017"
+      ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
+      : "https://www.w3.org/Consortium/Patent-Policy/";
+
   return html`<p>
     By publishing this document, W3C acknowledges that the
     <a href="${conf.thisVersion}">Submitting Members</a> have made a formal
@@ -321,7 +327,7 @@ function noteForMemberSubmission(conf) {
     <a href="https://www.w3.org/Consortium/Prospectus/Joining">
       W3C Membership</a
     >. Please consult the requirements associated with Member Submissions of
-    <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-submissions"
+    <a href="${patentPolicyURL}#sec-submissions"
       >section 3.3 of the W3C Patent Policy</a
     >. Please consult the complete
     <a href="https://www.w3.org/Submission"
