@@ -121,8 +121,15 @@ function renderIsNoTrack(conf, opts) {
 
 function renderNotRec(conf) {
   let statusExplanation = "";
-  let updatePolicy =
-    "This document may be updated, replaced or obsoleted at any time. It is inappropriate to cite this document as other than work in progress. ";
+  let updatePolicy = html`This is a draft document and may be updated, replaced
+  or obsoleted by other documents at any time. It is inappropriate to cite this
+  document as other than work in progress.
+  ${conf.updateableRec
+    ? html`Future updates to this specification may incorporate
+        <a href="https://www.w3.org/2020/Process-20200915/#revised-rec-features"
+          >new features</a
+        >.`
+    : ""}`;
   let reviewPolicy = "";
   if (conf.specStatus === "CRD") {
     statusExplanation =
@@ -138,19 +145,19 @@ function renderNotRec(conf) {
       >
       and is intended to gather
       <a href="${conf.implementationReportURI}">implementation experience</a>.`;
-    updatePolicy = "";
+    updatePolicy = html`${conf.updateableRec
+      ? html`Future updates to this specification may incorporate
+          <a
+            href="https://www.w3.org/2020/Process-20200915/#revised-rec-features"
+            >new features</a
+          >.`
+      : ""}`;
     if (conf.pubMode === "LS") {
       reviewPolicy = `Comments are welcome at any time but most especially before ${conf.humanCREnd}.`;
     } else {
       reviewPolicy = `This Candidate Recommendation is not expected to advance to Proposed Recommendation any earlier than ${conf.humanCREnd}.`;
     }
   } else if (conf.isPR) {
-    if (conf.updateableRec) {
-      updatePolicy += html`Future updates to this specification may incorporate
-        <a href="https://www.w3.org/2020/Process-20200915/#revised-rec-features"
-          >new features</a
-        >.`;
-    }
     reviewPolicy = html` The W3C Membership and other interested parties are
       invited to review the document and send comments through
       ${conf.humanPREnd}. Advisory Committee Representatives should consult
