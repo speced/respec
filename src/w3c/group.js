@@ -78,13 +78,13 @@ async function getGroupDetails(group) {
     return { wg, wgId, wgURI, wgPatentURI, wgPatentPolicy };
   }
 
-  let message = `Failed to fetch group details (HTTP: ${res.status})`;
+  const text = await res.text();
+  let message = `Failed to fetch group details (HTTP: ${res.status}). ${text}`;
   if (res.status === 404) {
-    const msg = `No group with name \`"${group}"\` found.`;
     const hint =
       "See [supported group names](https://respec.org/w3c/groups/) to use with the " +
-      "[`group`](https://github.com/w3c/respec/wiki/group) configuration option.";
-    message = `${msg} ${hint}`;
+      "[`group`](https://respec.org/docs/#group) configuration option.";
+    message += ` ${hint}`;
   }
   pub("error", message);
 }
