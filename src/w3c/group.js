@@ -12,20 +12,23 @@ import { pub } from "../core/pubsubhub.js";
 export const name = "w3c/group";
 
 const W3C_GROUPS_API = "https://respec.org/w3c/groups/";
+const LEGACY_OPTIONS = ["wg", "wgURI", "wgId", "wgPatentURI", "wgPatentPolicy"];
 
 export async function run(conf) {
-  if (!conf.group) return;
+  const usedLegacyOptions = LEGACY_OPTIONS.filter(opt => conf[opt]);
 
-  const supersededOptions = [
-    "wg",
-    "wgURI",
-    "wgId",
-    "wgPatentURI",
-    "wgPatentPolicy",
-  ];
-  const usedSupersededOptions = supersededOptions.filter(opt => conf[opt]);
-  if (usedSupersededOptions.length) {
-    const outdatedOptionsStr = joinAnd(usedSupersededOptions, s => `\`${s}\``);
+  if (!conf.group) {
+    if (usedLegacyOptions.length) {
+      const outdatedOptionsStr = joinAnd(LEGACY_OPTIONS, s => `\`${s}\``);
+      const msg = `Configuration options ${outdatedOptionsStr} are deprecated.`;
+      const hint = `Please use the [\`group\`](https://respec.org/docs/#group) option instead.`;
+      pub("warn", `${msg} ${hint}`);
+    }
+    return;
+  }
+
+  if (usedLegacyOptions.length) {
+    const outdatedOptionsStr = joinAnd(usedLegacyOptions, s => `\`${s}\``);
     const msg = `Configuration options ${outdatedOptionsStr} are superseded by \`group\` and will be overridden by ReSpec.`;
     const hint = "Please remove them from `respecConfig`.";
     pub("warn", `${msg} ${hint}`);
