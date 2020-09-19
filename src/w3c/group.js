@@ -63,8 +63,13 @@ async function getMultipleGroupDetails(groups) {
  * @returns {Promise<GroupDetails|undefined>}
  */
 async function getGroupDetails(group) {
-  const url = new URL(group, W3C_GROUPS_API).href;
-  const res = await fetchAndCache(url);
+  let type = "";
+  let shortname = group;
+  if (group.includes("/")) {
+    [type, shortname] = group.split("/", 2);
+  }
+  const url = new URL(`${shortname}/${type}`, W3C_GROUPS_API);
+  const res = await fetchAndCache(url.href);
 
   if (res.ok) {
     const json = await res.json();

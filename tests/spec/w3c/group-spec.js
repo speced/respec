@@ -57,4 +57,14 @@ describe("W3C — Group", () => {
     ]);
     expect(conf.wgURI).toEqual(["https://www.w3.org/2019/webapps/"]);
   });
+
+  it("fails if multiple groups exist with same shortname", async () => {
+    const conf = await getGroupConf({ group: "wot" });
+    expect(conf.wg).toBeFalsy();
+  });
+
+  it("allows specifying group type to disambiguate", async () => {
+    const conf = await getGroupConf({ group: "wg/wot" });
+    expect(conf.wg).toBe("Web of Things Working Group");
+  });
 });
