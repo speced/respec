@@ -138,6 +138,7 @@ export default (conf, options) => {
           ${inPlaceModificationDate(conf.modificationDate)}`
         : ""}
     </h2>
+    ${conf.isCR ? html`<h3>${conf.isCRDraft ? "Draft" : "Snapshot"}</h3>` : ""}
     <dl>
       ${!conf.isNoTrack
         ? html`
