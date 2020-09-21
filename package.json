@@ -51,7 +51,7 @@
     "loading-indicator": "^2.0.0",
     "marked": "^1.1.1",
     "pluralize": "^8.0.0",
-    "prettier": "^2.1.1",
+    "prettier": "^2.1.2",
     "prompt": "^1.0.0",
     "rollup": "^2.26.11",
     "rollup-plugin-alias": "^2.2.0",
