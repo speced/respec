@@ -64,7 +64,7 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
-        "is endorsed by the Director as a W3C Recommendation."
+        "has received the endorsement of the W3C and its Members. W3C recommends the wide deployment of this specification as a standard for the Web."
       );
     });
   });
@@ -301,6 +301,7 @@ describe("W3C — Headers", () => {
         )
       ).toHaveSize(2);
       expect(doc.querySelectorAll("a.orcid")).toHaveSize(2);
+      expect(doc.querySelectorAll("a.orcid svg")).toHaveSize(2);
     });
 
     it("takes multiple editors into account", async () => {
