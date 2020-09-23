@@ -4,7 +4,7 @@ on:
     branches:
       - develop
       - gh-pages
-    paths:
+    paths-ignore:
       - "**"
       - "!**.js"
       - "!**.json"

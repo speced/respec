@@ -1,7 +1,7 @@
 name: Node CI (PR)
 on:
   pull_request:
-    paths:
+    paths-ignore:
       - "**"
       - "!**.js"
       - "!**.json"
