@@ -2,6 +2,8 @@
 
 ## [v25.16.4](https://github.com/w3c/respec/tree/v25.16.4) (2020-09-22)
 
+I must not trigger GitHub actions.
+
 [Full Changelog](https://github.com/w3c/respec/compare/v25.16.3...v25.16.4)
 
 **Closed issues:**
