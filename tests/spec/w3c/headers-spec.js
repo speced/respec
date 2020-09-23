@@ -301,6 +301,7 @@ describe("W3C — Headers", () => {
         )
       ).toHaveSize(2);
       expect(doc.querySelectorAll("a.orcid")).toHaveSize(2);
+      expect(doc.querySelectorAll("a.orcid svg")).toHaveSize(2);
     });
 
     it("takes multiple editors into account", async () => {
