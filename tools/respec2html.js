@@ -79,7 +79,7 @@ const optionList = [
   },
   {
     default: false,
-    description: "Enable debugging and show Chrome's DevTools.",
+    description: "Log processing status to stdout.",
     name: "verbose",
     type: Boolean,
   },
