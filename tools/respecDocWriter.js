@@ -29,6 +29,7 @@ colors.setTheme({
  * @param {number} [options.timeout] Milliseconds before processing should timeout.
  * @param {boolean} [options.disableSandbox] See https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox
  * @param {boolean} [options.debug] Show the Chromium window with devtools open for debugging.
+ * @param {boolean} [options.verbose] Log processing status to stdout.
  * @param {(error: RsError) => void} [options.onError] What to do if a ReSpec processing has an error. Logs to stderr by default.
  * @param {(warning: RsError) => void} [options.onWarning] What to do if a ReSpec processing has a warning. Logs to stderr by default.
  * @return {Promise<string>} Resolves with HTML when done writing. Rejects on errors.
@@ -40,6 +41,7 @@ async function fetchAndWrite(
   {
     timeout = 300000,
     disableSandbox = false,
+    verbose = false,
     debug = false,
     onError = error =>
       console.error(
@@ -53,8 +55,14 @@ async function fetchAndWrite(
 ) {
   const timer = createTimer(timeout);
 
+  const log =
+    verbose && out !== null
+      ? msg => console.log(`[Timeout: ${timer.remaining}ms] ${msg}`)
+      : () => {};
+
   const userDataDir = await mkdtemp(`${os.tmpdir()}/respec2html-`);
   const args = disableSandbox ? ["--no-sandbox"] : undefined;
+  log("Launching browser");
   const browser = await puppeteer.launch({
     userDataDir,
     args,
@@ -67,6 +75,7 @@ async function fetchAndWrite(
     handleConsoleMessages(page, haltFlags, onError, onWarning);
 
     const url = new URL(src);
+    log(`Navigating to ${url}`);
     const response = await page.goto(url, { timeout });
     if (
       !response.ok() &&
@@ -78,8 +87,11 @@ async function fetchAndWrite(
       const msg = `${warn} ${colors.debug(debugURL)}`;
       throw new Error(msg);
     }
+    log(`Navigation complete.`);
     await checkIfReSpec(page);
+    log("Processing ReSpec document...");
     const html = await generateHTML(page, url, timer);
+    log("Processed document.");
     const abortOnWarning = whenToHalt.haltOnWarn && haltFlags.warn;
     const abortOnError = whenToHalt.haltOnError && haltFlags.error;
     if (abortOnError || abortOnWarning) {
@@ -91,6 +103,7 @@ async function fetchAndWrite(
     // Race condition: Wait before page close for all console messages to be logged
     await new Promise(resolve => setTimeout(resolve, 1000));
     await page.close();
+    log("Done.");
     return html;
   } finally {
     await browser.close();
