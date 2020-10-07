@@ -77,6 +77,12 @@ const optionList = [
     name: "debug",
     type: Boolean,
   },
+  {
+    default: false,
+    description: "Log processing status to stdout.",
+    name: "verbose",
+    type: Boolean,
+  },
 ];
 
 const usageSections = [
@@ -137,6 +143,7 @@ const usageSections = [
       timeout: parsedArgs.timeout * 1000,
       disableSandbox: parsedArgs["disable-sandbox"],
       debug: parsedArgs.debug,
+      verbose: parsedArgs.verbose,
     });
   } catch (err) {
     console.error(colors.error(err.stack));
