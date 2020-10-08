@@ -73,23 +73,20 @@ function dfnExportedMarker(dfn) {
 function idlMarker(dfn, links) {
   if (!dfn.hasAttribute("data-idl")) return null;
 
-  let idlFragmentId;
   for (const anchor of links) {
     /** @type {HTMLElement} */
     const parentIdlBlock = anchor.closest("pre.idl");
-    if (parentIdlBlock) {
-      idlFragmentId = parentIdlBlock.id;
-      break;
+    if (parentIdlBlock && parentIdlBlock.id) {
+      const href = `#${parentIdlBlock.id}`;
+      return html`<a
+        href="${href}"
+        class="marker idl-block"
+        title="Jump to IDL declaration"
+        >IDL{}</a
+      >`;
     }
   }
-
-  if (!idlFragmentId) return null;
-  return html`<a
-    href="#${idlFragmentId}"
-    class="marker idl-block"
-    title="Jump to defining IDL block"
-    >IDL{}</a
-  >`;
+  return null;
 }
 
 /**
