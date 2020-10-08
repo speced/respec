@@ -53,20 +53,32 @@ dfn {
   color: #333;
 }
 
-.dfn-panel a.self-link {
-  font-weight: bold;
+.dfn-panel > div {
+  display: flex;
+  gap: 0.5em;
 }
 
-.dfn-panel .dfn-exported {
-  float: right;
+.dfn-panel a.self-link {
+  font-weight: bold;
+  margin-right: auto;
+}
+
+.dfn-panel .marker {
   padding: 0.1em;
   border-radius: 0.2em;
   text-align: center;
   white-space: nowrap;
   font-size: 90%;
-  background: #d1edfd;
   color: #040b1c;
+}
+
+.dfn-panel .marker.dfn-exported {
+  background: #d1edfd;
   box-shadow: 0 0 0 0.125em #1ca5f940;
+}
+.dfn-panel .marker.idl-block {
+  background: #f8ddaa;
+  box-shadow: 0 0 0 0.125em #c8870b4d;
 }
 
 .dfn-panel a:not(:hover) {
