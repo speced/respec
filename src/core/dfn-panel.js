@@ -74,7 +74,6 @@ function idlMarker(dfn, links) {
   if (!dfn.hasAttribute("data-idl")) return null;
 
   for (const anchor of links) {
-    /** @type {HTMLElement} */
     const parentIdlBlock = anchor.closest("pre.idl");
     if (parentIdlBlock && parentIdlBlock.id) {
       const href = `#${parentIdlBlock.id}`;
