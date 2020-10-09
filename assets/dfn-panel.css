@@ -55,7 +55,6 @@ dfn {
 
 .dfn-panel > div {
   display: flex;
-  gap: 0.5em;
 }
 
 .dfn-panel a.self-link {
@@ -65,6 +64,7 @@ dfn {
 
 .dfn-panel .marker {
   padding: 0.1em;
+  margin-left: 0.5em;
   border-radius: 0.2em;
   text-align: center;
   white-space: nowrap;
