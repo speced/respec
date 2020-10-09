@@ -77,8 +77,8 @@ dfn {
   box-shadow: 0 0 0 0.125em #1ca5f940;
 }
 .dfn-panel .marker.idl-block {
-  background: #f8ddaa;
-  box-shadow: 0 0 0 0.125em #c8870b4d;
+  background: #8ccbf2;
+  box-shadow: 0 0 0 0.125em #0670b161;
 }
 
 .dfn-panel a:not(:hover) {
