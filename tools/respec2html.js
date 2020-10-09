@@ -1,9 +1,6 @@
 #!/usr/bin/env node
-
-/* jshint node: true, browser: false */
 "use strict";
 const colors = require("colors");
-const fetchAndWrite = require("./respecDocWriter").fetchAndWrite;
 colors.setTheme({
   data: "grey",
   debug: "cyan",
@@ -16,6 +13,9 @@ colors.setTheme({
   verbose: "cyan",
   warn: "yellow",
 });
+const convertToHTML = require("./respecDocWriter");
+const { writeFile } = require("fs").promises;
+const path = require("path");
 
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
@@ -133,21 +133,62 @@ const usageSections = [
     return process.exit(0);
   }
   const src = new URL(parsedArgs.src, `file://${process.cwd()}/`).href;
-  const whenToHalt = {
-    haltOnError: parsedArgs.haltonerror,
-    haltOnWarn: parsedArgs.haltonwarn,
-  };
   const out = parsedArgs.out;
+
   try {
-    await fetchAndWrite(src, out, whenToHalt, {
+    const { html, errors, warnings } = await convertToHTML(src, {
       timeout: parsedArgs.timeout * 1000,
+      onError(error) {
+        console.error(
+          colors.error(`💥 ReSpec error: ${colors.debug(error.message)}`)
+        );
+      },
+      onWarning(warning) {
+        console.warn(
+          colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
+        );
+      },
       disableSandbox: parsedArgs["disable-sandbox"],
-      debug: parsedArgs.debug,
-      verbose: parsedArgs.verbose,
+      devtools: parsedArgs.debug,
+      verbose: parsedArgs.verbose && out !== "stdout",
     });
+
+    const exitOnError = errors.length && parsedArgs.haltonerror;
+    const exitOnWarning = warnings.length && parsedArgs.haltonwarn;
+    if (exitOnError || exitOnWarning) {
+      const msg = `\n${
+        exitOnError ? "Errors" : "Warnings"
+      } found during processing.`;
+      console.error(colors.error(msg));
+      process.exit(2);
+    }
+
+    await write(out, html);
   } catch (err) {
     console.error(colors.error(err.stack));
     return process.exit(1);
   }
   process.exit(0);
 })();
+
+/**
+ * @param {string | "stdout" | null | "" | undefined} destination
+ * @param {string} html
+ */
+async function write(destination, html) {
+  switch (destination) {
+    case "":
+    case null:
+    case undefined:
+      break;
+    case "stdout":
+      process.stdout.write(html);
+      break;
+    default: {
+      const newFilePath = path.isAbsolute(destination)
+        ? destination
+        : path.resolve(process.cwd(), destination);
+      await writeFile(newFilePath, html, "utf-8");
+    }
+  }
+}
