@@ -217,7 +217,7 @@ describe("Core — dfnPanel", () => {
 
     const marker = panelDfnIdl.querySelector(".marker.idl-block");
     expect(marker).toBeTruthy();
-    expect(marker.textContent).toBe("IDL{}");
+    expect(marker.textContent).toBe("IDL");
     expect(marker.hash).toBe("#test-webidl-block");
 
     const panelDfnNotIdl = doc.getElementById(getPanelId("test-dfn-no-idl"));

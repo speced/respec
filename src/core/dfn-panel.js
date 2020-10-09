@@ -82,7 +82,7 @@ function idlMarker(dfn, links) {
         href="${href}"
         class="marker idl-block"
         title="Jump to IDL declaration"
-        >IDL{}</a
+        >IDL</a
       >`;
     }
   }
