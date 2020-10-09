@@ -184,13 +184,44 @@ describe("Core — dfnPanel", () => {
     const doc = await makeRSDoc(ops);
 
     const panelDnExported = doc.getElementById(getPanelId("dfn-many"));
-    const marker = panelDnExported.querySelector(".dfn-exported");
+    expect(panelDnExported.querySelectorAll(".marker")).toHaveSize(1);
+    const marker = panelDnExported.querySelector(".marker.dfn-exported");
     expect(marker).toBeTruthy();
     expect(marker.textContent).toBe("exported");
     expect(marker.previousElementSibling.textContent).toBe("Permalink");
 
     const panelDfnNotExported = doc.getElementById(getPanelId("dfn-one"));
     expect(panelDfnNotExported.querySelector(".dfn-exported")).toBeFalsy();
+  });
+
+  it("renders a link to jump to IDL block", async () => {
+    const body = `
+      <section data-dfn-for="Foo">
+        <h2><dfn>Foo</dfn> interface</h2>
+        <pre class="idl" id="test-webidl-block">
+        [Exposed=Window]
+        interface Foo {
+          constructor();
+          attribute DOMString bar;
+        };
+        </pre>
+        <dfn id="test-dfn-idl">bar</dfn>
+        <dfn id="test-dfn-no-idl">baz</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const panelDfnIdl = doc.getElementById(getPanelId("test-dfn-idl"));
+    expect(panelDfnIdl.querySelectorAll(".marker")).toHaveSize(2);
+
+    const marker = panelDfnIdl.querySelector(".marker.idl-block");
+    expect(marker).toBeTruthy();
+    expect(marker.textContent).toBe("IDL");
+    expect(marker.hash).toBe("#test-webidl-block");
+
+    const panelDfnNotIdl = doc.getElementById(getPanelId("test-dfn-no-idl"));
+    expect(panelDfnNotIdl.querySelectorAll(".marker")).toHaveSize(0);
   });
 
   it("works in exported document", async () => {

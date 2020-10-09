@@ -47,7 +47,7 @@ function createPanel(dfn) {
       <span class="caret"></span>
       <div>
         <a class="self-link" href="${href}">Permalink</a>
-        ${dfnExportedMarker(dfn)}
+        ${dfnExportedMarker(dfn)} ${idlMarker(dfn, links)}
       </div>
       <b>Referenced in:</b>
       ${referencesToHTML(id, links)}
@@ -60,10 +60,33 @@ function createPanel(dfn) {
 function dfnExportedMarker(dfn) {
   if (!dfn.matches("dfn[data-export]")) return null;
   return html`<span
-    class="dfn-exported"
+    class="marker dfn-exported"
     title="Definition can be referenced by other specifications"
     >exported</span
   >`;
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {NodeListOf<HTMLAnchorElement>} links
+ */
+function idlMarker(dfn, links) {
+  if (!dfn.hasAttribute("data-idl")) return null;
+
+  for (const anchor of links) {
+    if (anchor.dataset.linkType !== dfn.dataset.dfnType) continue;
+    const parentIdlBlock = anchor.closest("pre.idl");
+    if (parentIdlBlock && parentIdlBlock.id) {
+      const href = `#${parentIdlBlock.id}`;
+      return html`<a
+        href="${href}"
+        class="marker idl-block"
+        title="Jump to IDL declaration"
+        >IDL</a
+      >`;
+    }
+  }
+  return null;
 }
 
 /**

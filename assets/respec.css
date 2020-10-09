@@ -172,14 +172,13 @@ table.simple {
   margin-bottom: 0;
 }
 
-#issue-summary > ul,
-.respec-dfn-list {
+#issue-summary > ul {
   column-count: 2;
 }
 
-#issue-summary li,
-.respec-dfn-list li {
+#issue-summary li {
   list-style: none;
+  display: inline-block;
 }
 
 details.respec-tests-details {
