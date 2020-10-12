@@ -154,11 +154,9 @@ const usageSections = [
     const exitOnError = errors.length && parsedArgs.haltonerror;
     const exitOnWarning = warnings.length && parsedArgs.haltonwarn;
     if (exitOnError || exitOnWarning) {
-      const msg = `\n${
-        exitOnError ? "Errors" : "Warnings"
-      } found during processing.`;
-      console.error(colors.error(msg));
-      process.exit(2);
+      throw new Error(
+        `\n${exitOnError ? "Errors" : "Warnings"} found during processing.`
+      );
     }
 
     await write(out, html);
