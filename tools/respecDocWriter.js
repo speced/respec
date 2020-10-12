@@ -115,11 +115,15 @@ async function convertToHTML(src, options = {}) {
  * @return {Promise<string>} Resolves with HTML when done writing. Rejects on errors.
  */
 async function fetchAndWrite(src, out, whenToHalt = {}, options = {}) {
-  console.warn(
-    "`fetchAndWrite` is deprecated and will be removed in a future version. Please use `convertToHTML` instead."
-  );
   const colors = require("colors");
   colors.setTheme({ debug: "cyan", error: "red", warn: "yellow" });
+
+  console.warn(
+    colors.warn(
+      "DEPRECATION WARNING: `fetchAndWrite` is deprecated and will be removed in a future version. Please use `convertToHTML` instead."
+    )
+  );
+
   const opts = {
     onError(error) {
       console.error(
