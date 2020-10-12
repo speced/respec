@@ -338,7 +338,6 @@ async function write(destination, html) {
   }
 }
 
-module.exports = convertToHTML;
 exports.convertToHTML = convertToHTML;
 exports.fetchAndWrite = fetchAndWrite;
 exports.write = write;
