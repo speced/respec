@@ -155,7 +155,7 @@ const usageSections = [
     const exitOnWarning = warnings.length && parsedArgs.haltonwarn;
     if (exitOnError || exitOnWarning) {
       throw new Error(
-        `\n${exitOnError ? "Errors" : "Warnings"} found during processing.`
+        `${exitOnError ? "Errors" : "Warnings"} found during processing.`
       );
     }
 
