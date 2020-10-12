@@ -13,9 +13,7 @@ colors.setTheme({
   verbose: "cyan",
   warn: "yellow",
 });
-const convertToHTML = require("./respecDocWriter");
-const { writeFile } = require("fs").promises;
-const path = require("path");
+const { convertToHTML, write } = require("./respecDocWriter");
 
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
@@ -170,25 +168,3 @@ const usageSections = [
   }
   process.exit(0);
 })();
-
-/**
- * @param {string | "stdout" | null | "" | undefined} destination
- * @param {string} html
- */
-async function write(destination, html) {
-  switch (destination) {
-    case "":
-    case null:
-    case undefined:
-      break;
-    case "stdout":
-      process.stdout.write(html);
-      break;
-    default: {
-      const newFilePath = path.isAbsolute(destination)
-        ? destination
-        : path.resolve(process.cwd(), destination);
-      await writeFile(newFilePath, html, "utf-8");
-    }
-  }
-}
