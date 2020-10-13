@@ -20,19 +20,13 @@ const { tmpdir } = require("os");
  * @return {Promise<{ html: string, errors: RsError[], warnings: RsError[] }>}
  * @throws {Error} If failed to process.
  */
-async function convertToHTML(src, options = {}) {
+async function convertToHTML(src, options = { onError() {}, onWarning() {} }) {
   const {
     timeout = 300000,
     verbose = false,
     disableSandbox = false,
     devtools = false,
   } = options;
-  if (typeof options.onError !== "function") {
-    options.onError = () => {};
-  }
-  if (typeof options.onWarning !== "function") {
-    options.onWarning = () => {};
-  }
 
   const timer = createTimer(timeout);
 
