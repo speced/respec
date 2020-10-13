@@ -112,22 +112,19 @@ async function fetchAndWrite(src, out, whenToHalt = {}, options = {}) {
   const colors = require("colors");
   colors.setTheme({ debug: "cyan", error: "red", warn: "yellow" });
 
-  console.warn(
-    colors.warn(
-      "DEPRECATION WARNING: `fetchAndWrite` is deprecated and will be removed in a future version. Please use `convertToHTML` instead."
-    )
+  const showError = error => console.error(colors.error(error));
+  const showWarning = warning => console.warn(colors.warn(warning));
+
+  showWarning(
+    "DEPRECATION WARNING: `fetchAndWrite` is deprecated and will be removed in a future version. Please use `convertToHTML` instead."
   );
 
   const opts = {
     onError(error) {
-      console.error(
-        colors.error(`💥 ReSpec error: ${colors.debug(error.message)}`)
-      );
+      showError(`💥 ReSpec error: ${colors.debug(error.message)}`);
     },
     onWarning(warning) {
-      console.warn(
-        colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
-      );
+      showWarning(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`);
     },
     ...options,
     devtools: options.debug,
