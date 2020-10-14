@@ -13,7 +13,7 @@ colors.setTheme({
   verbose: "cyan",
   warn: "yellow",
 });
-const { convertToHTML, write } = require("./respecDocWriter");
+const { toHTML, write } = require("./respecDocWriter");
 
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
@@ -134,7 +134,7 @@ const usageSections = [
   const out = parsedArgs.out;
 
   try {
-    const { html, errors, warnings } = await convertToHTML(src, {
+    const { html, errors, warnings } = await toHTML(src, {
       timeout: parsedArgs.timeout * 1000,
       onError(error) {
         console.error(

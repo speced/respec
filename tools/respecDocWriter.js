@@ -1,6 +1,5 @@
 /**
- * Exports convertToHTML() method, allowing programmatic control of the
- * spec generator.
+ * Exports toHTML() method, allowing programmatic control of the spec generator.
  */
 const puppeteer = require("puppeteer");
 const path = require("path");
@@ -20,7 +19,7 @@ const { tmpdir } = require("os");
  * @return {Promise<{ html: string, errors: RsError[], warnings: RsError[] }>}
  * @throws {Error} If failed to process.
  */
-async function convertToHTML(src, options = { onError() {}, onWarning() {} }) {
+async function toHTML(src, options = { onError() {}, onWarning() {} }) {
   const {
     timeout = 300000,
     verbose = false,
@@ -93,7 +92,7 @@ async function convertToHTML(src, options = { onError() {}, onWarning() {} }) {
 
 /**
  * Fetches a ReSpec "src" URL, and writes the processed static HTML to an "out" path.
- * @deprecated Please use `convertToHTML` instead.
+ * @deprecated Please use `toHTML` instead.
  * @param {string} src A URL or filepath that is the ReSpec source.
  * @param {string | null | ""} out A path to write to. If null, goes to stdout. If "", then don't write, just return value.
  * @param {object} [whenToHalt] Allowing execution to stop without writing.
@@ -116,7 +115,7 @@ async function fetchAndWrite(src, out, whenToHalt = {}, options = {}) {
   const showWarning = warning => console.warn(colors.warn(warning));
 
   showWarning(
-    "DEPRECATION WARNING: `fetchAndWrite` is deprecated and will be removed in a future version. Please use `convertToHTML` instead."
+    "DEPRECATION WARNING: `fetchAndWrite` is deprecated and will be removed in a future version. Please use `toHTML` instead."
   );
 
   const opts = {
@@ -129,7 +128,7 @@ async function fetchAndWrite(src, out, whenToHalt = {}, options = {}) {
     ...options,
     devtools: options.debug,
   };
-  const { html, errors, warnings } = await convertToHTML(src, opts);
+  const { html, errors, warnings } = await toHTML(src, opts);
 
   const abortOnWarning = whenToHalt.haltOnWarn && warnings.length;
   const abortOnError = whenToHalt.haltOnError && errors.length;
@@ -333,6 +332,6 @@ async function write(destination, html) {
   }
 }
 
-exports.convertToHTML = convertToHTML;
+exports.toHTML = toHTML;
 exports.fetchAndWrite = fetchAndWrite;
 exports.write = write;
