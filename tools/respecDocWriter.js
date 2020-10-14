@@ -6,6 +6,8 @@ const path = require("path");
 const { mkdtemp, writeFile } = require("fs").promises;
 const { tmpdir } = require("os");
 
+const noop = () => {};
+
 /**
  * Fetches a ReSpec "src" URL, and writes the processed static HTML to an "out" path.
  * @param {string} src A URL or filepath that is the ReSpec source.
@@ -19,19 +21,25 @@ const { tmpdir } = require("os");
  * @return {Promise<{ html: string, errors: RsError[], warnings: RsError[] }>}
  * @throws {Error} If failed to process.
  */
-async function toHTML(src, options = { onError() {}, onWarning() {} }) {
+async function toHTML(src, options = {}) {
   const {
     timeout = 300000,
     verbose = false,
     disableSandbox = false,
     devtools = false,
   } = options;
+  if (typeof options.onError !== "function") {
+    options.onError = noop;
+  }
+  if (typeof options.onWarning !== "function") {
+    options.onWarning = noop;
+  }
 
   const timer = createTimer(timeout);
 
   const log = verbose
     ? msg => console.log(`[Timeout: ${timer.remaining}ms] ${msg}`)
-    : () => {};
+    : noop;
 
   /** @type {RsError[]} */
   const errors = [];
