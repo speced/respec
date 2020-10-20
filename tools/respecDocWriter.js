@@ -63,7 +63,7 @@ async function toHTML(src, options = {}) {
 
   try {
     const page = await browser.newPage();
-    handleConsoleMessages(page, onError, onWarning);
+    handleConsoleMessages(page, {}, onError, onWarning);
 
     const url = new URL(src);
     log(`Navigating to ${url}`);
