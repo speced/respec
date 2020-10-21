@@ -63,7 +63,7 @@ async function toHTML(src, options = {}) {
 
   try {
     const page = await browser.newPage();
-    handleConsoleMessages(page, onError, onWarning);
+    handleConsoleMessages(page, {}, onError, onWarning);
 
     const url = new URL(src);
     log(`Navigating to ${url}`);
@@ -174,7 +174,7 @@ async function getVersion(page) {
 async function checkIfReSpec(page) {
   const isRespecDoc = await page.evaluate(isRespec);
   if (!isRespecDoc) {
-    const msg = `🕵️‍♀️  That doesn't seem to be a ReSpec document. Please check manually: ${page.url}`;
+    const msg = `🕵️‍♀️  That doesn't seem to be a ReSpec document. Please check manually: ${page.url()}`;
     throw new Error(msg);
   }
   return isRespecDoc;
