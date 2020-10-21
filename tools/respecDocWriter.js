@@ -63,7 +63,7 @@ async function toHTML(src, options = {}) {
 
   try {
     const page = await browser.newPage();
-    handleConsoleMessages(page, {}, onError, onWarning);
+    handleConsoleMessages(page, onError, onWarning);
 
     const url = new URL(src);
     log(`Navigating to ${url}`);
@@ -261,14 +261,11 @@ async function evaluateHTML(version, timer) {
 /**
  * Specifies what to do when the browser emits "error" and "warn" console messages.
  * @param  {import("puppeteer").Page} page Instance of page to listen on.
- * @param {object} haltFlags
- * @param {boolean} [haltFlags.error]
- * @param {boolean} [haltFlags.warn]
  * @typedef {{ message: string }} RsError
  * @param {(error: RsError) => void} onError
  * @param {(error: RsError) => void} onWarning
  */
-function handleConsoleMessages(page, haltFlags, onError, onWarning) {
+function handleConsoleMessages(page, onError, onWarning) {
   /** @param {import('puppeteer').JSHandle<any>} handle */
   async function stringifyJSHandle(handle) {
     return await handle.executionContext().evaluate(o => String(o), handle);
@@ -292,17 +289,9 @@ function handleConsoleMessages(page, haltFlags, onError, onWarning) {
     }
     switch (type) {
       case "error":
-        onError({ message: text });
-        haltFlags.error = true;
-        break;
+        return onError({ message: text });
       case "warning":
-        // Ignore polling of respecDone
-        if (/document\.respecDone/.test(text)) {
-          return;
-        }
-        onWarning({ message: text });
-        haltFlags.warn = true;
-        break;
+        return onWarning({ message: text });
     }
   });
 }
