@@ -49,7 +49,7 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
     "loading-indicator": "^2.0.0",
-    "marked": "^1.2.0",
+    "marked": "^1.2.2",
     "pluralize": "^8.0.0",
     "prettier": "^2.1.2",
     "prompt": "^1.0.0",
