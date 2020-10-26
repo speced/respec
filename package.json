@@ -59,7 +59,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^11.3.2",
-    "snyk": "^1.415.0",
+    "snyk": "^1.420.1",
     "typescript": "^4.0.3",
     "webidl2": "^23.13.0"
   },
