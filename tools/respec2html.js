@@ -1,9 +1,6 @@
 #!/usr/bin/env node
-
-/* jshint node: true, browser: false */
 "use strict";
 const colors = require("colors");
-const fetchAndWrite = require("./respecDocWriter").fetchAndWrite;
 colors.setTheme({
   data: "grey",
   debug: "cyan",
@@ -16,6 +13,7 @@ colors.setTheme({
   verbose: "cyan",
   warn: "yellow",
 });
+const { toHTML, write } = require("./respecDocWriter");
 
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
@@ -77,6 +75,12 @@ const optionList = [
     name: "debug",
     type: Boolean,
   },
+  {
+    default: false,
+    description: "Log processing status to stdout.",
+    name: "verbose",
+    type: Boolean,
+  },
 ];
 
 const usageSections = [
@@ -127,17 +131,35 @@ const usageSections = [
     return process.exit(0);
   }
   const src = new URL(parsedArgs.src, `file://${process.cwd()}/`).href;
-  const whenToHalt = {
-    haltOnError: parsedArgs.haltonerror,
-    haltOnWarn: parsedArgs.haltonwarn,
-  };
   const out = parsedArgs.out;
+
   try {
-    await fetchAndWrite(src, out, whenToHalt, {
+    const { html, errors, warnings } = await toHTML(src, {
       timeout: parsedArgs.timeout * 1000,
+      onError(error) {
+        console.error(
+          colors.error(`💥 ReSpec error: ${colors.debug(error.message)}`)
+        );
+      },
+      onWarning(warning) {
+        console.warn(
+          colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
+        );
+      },
       disableSandbox: parsedArgs["disable-sandbox"],
-      debug: parsedArgs.debug,
+      devtools: parsedArgs.debug,
+      verbose: parsedArgs.verbose && out !== "stdout",
     });
+
+    const exitOnError = errors.length && parsedArgs.haltonerror;
+    const exitOnWarning = warnings.length && parsedArgs.haltonwarn;
+    if (exitOnError || exitOnWarning) {
+      throw new Error(
+        `${exitOnError ? "Errors" : "Warnings"} found during processing.`
+      );
+    }
+
+    await write(out, html);
   } catch (err) {
     console.error(colors.error(err.stack));
     return process.exit(1);

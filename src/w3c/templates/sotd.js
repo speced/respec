@@ -126,7 +126,7 @@ function renderNotRec(conf) {
   document as other than work in progress.
   ${conf.updateableRec
     ? html`Future updates to this specification may incorporate
-        <a href="https://www.w3.org/2020/Process-20200915/#revised-rec-features"
+        <a href="https://www.w3.org/2020/Process-20200915/#allow-new-features"
           >new features</a
         >.`
     : ""}`;
@@ -147,8 +147,7 @@ function renderNotRec(conf) {
       <a href="${conf.implementationReportURI}">implementation experience</a>.`;
     updatePolicy = html`${conf.updateableRec
       ? html`Future updates to this specification may incorporate
-          <a
-            href="https://www.w3.org/2020/Process-20200915/#revised-rec-features"
+          <a href="https://www.w3.org/2020/Process-20200915/#allow-new-features"
             >new features</a
           >.`
       : ""}`;
