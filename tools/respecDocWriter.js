@@ -221,7 +221,10 @@ async function generateHTML(page, timer, version, url) {
  * @param {ReturnType<typeof createTimer>} timer
  */
 async function evaluateHTML(version, timer) {
-  await timeout(document.respecIsReady, timer.remaining);
+  await timeout(
+    document.respec ? document.respec.ready : document.respecIsReady,
+    timer.remaining
+  );
 
   const [major, minor] = version;
   if (major < 20 || (major === 20 && minor < 10)) {
@@ -252,7 +255,7 @@ async function evaluateHTML(version, timer) {
   function timeout(promise, ms) {
     return new Promise((resolve, reject) => {
       promise.then(resolve, reject);
-      const msg = `Timeout: document.respecIsReady didn't resolve in ${ms}ms.`;
+      const msg = `Timeout: document.respec.ready didn't resolve in ${ms}ms.`;
       setTimeout(() => reject(msg), ms);
     });
   }

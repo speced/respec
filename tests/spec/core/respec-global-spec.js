@@ -18,8 +18,6 @@ describe("Core — Respec Global - document.respec", () => {
 
     expect(doc.hasOwnProperty("respec")).toBeTrue();
     expect(doc.respec.ready).toBeInstanceOf(doc.defaultView.Promise);
-    await expectAsync(doc.respec.ready).toBeResolvedTo(
-      jasmine.objectContaining({ shortName: ops.config.shortName })
-    );
+    await expectAsync(doc.respec.ready).toBeResolvedTo(undefined);
   });
 });

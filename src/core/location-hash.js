@@ -8,7 +8,7 @@ export function run() {
   if (!location.hash) {
     return;
   }
-  document.respecIsReady.then(() => {
+  document.respec.ready.then(() => {
     let hash = decodeURIComponent(location.hash).substr(1);
     const hasLink = document.getElementById(hash);
     const isLegacyFrag = /\W/.test(hash);
