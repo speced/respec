@@ -128,7 +128,7 @@ export default (conf, options) => {
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
     <h2>
-      ${conf.prependW3C ? "W3C " : ""}${conf.isCR ? ${conf.longStatus} : ${conf.textStatus}}
+      ${conf.prependW3C ? "W3C " : ""}${conf.isCR ? `${conf.longStatus}` : `${conf.textStatus}`}
       <time class="dt-published" datetime="${conf.dashDate}"
         >${conf.publishHumanDate}</time
       >${conf.modificationDate
