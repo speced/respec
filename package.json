@@ -88,7 +88,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "command-line-args": "^5.1.1",
-    "command-line-usage": "^6.1.0",
+    "command-line-usage": "^6.1.1",
     "puppeteer": "^5.4.1"
   },
   "files": [
