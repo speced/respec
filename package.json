@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "25.18.1",
+  "version": "25.18.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -8,8 +8,8 @@
     "npm": ">=5"
   },
   "bin": {
-    "respec": "./tools/respec2html.js",
-    "respec2html": "./tools/respec2html.js"
+    "respec": "tools/respec2html.js",
+    "respec2html": "tools/respec2html.js"
   },
   "main": "./tools/respecDocWriter.js",
   "repository": {
