@@ -1,5 +1,15 @@
 # Changelog
 
+## [v25.18.1](https://github.com/w3c/respec/tree/v25.18.1) (2020-10-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.18.0...v25.18.1)
+
+**Merged pull requests:**
+
+- chore\(tools/respecDocWriter\): remove unused code [\#3174](https://github.com/w3c/respec/pull/3174) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(tools/respecDocWriter\): fix regressions [\#3173](https://github.com/w3c/respec/pull/3173) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3172](https://github.com/w3c/respec/pull/3172) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v25.18.0](https://github.com/w3c/respec/tree/v25.18.0) (2020-10-20)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v25.17.0...v25.18.0)

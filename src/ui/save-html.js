@@ -79,7 +79,7 @@ function toDownloadLink(details) {
 
 const saveDialog = {
   async show(button) {
-    await document.respecIsReady;
+    await document.respec.ready;
     const div = html`<div class="respec-save-buttons">
       ${downloadLinks.map(toDownloadLink)}
     </div>`;
