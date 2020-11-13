@@ -1,10 +1,6 @@
 "use strict";
 
-import {
-  flushIframes,
-  makeStandardOps,
-  makeRSDoc,
-} from "../SpecHelper.js";
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 
 describe("Core — Definition finder", () => {
   afterAll(flushIframes);
