@@ -2,8 +2,7 @@
 
 import {
   flushIframes,
-  makeBasicConfig,
-  makeDefaultBody,
+  makeStandardOps,
   makeRSDoc,
 } from "../SpecHelper.js";
 
@@ -23,10 +22,7 @@ describe("Core — Definition finder", () => {
         <dfn data-dfn-for="Foo" data-lt="bar()">bar</dfn>
         <dfn>Foo</dfn>
       </section>`;
-    const ops = {
-      config: makeBasicConfig(),
-      body: makeDefaultBody() + bodyText,
-    };
+    const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
     const [barDfn, fooDfn] = doc.getElementsByTagName("dfn");
     expect(barDfn.dataset.lt).toBe("bar()");
@@ -51,10 +47,7 @@ describe("Core — Definition finder", () => {
         <dfn id="bar">bar</dfn>
         <dfn id="baz">baz()</dfn>
       </section>`;
-    const ops = {
-      config: makeBasicConfig(),
-      body: makeDefaultBody() + bodyText,
-    };
+    const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
     const bar = doc.getElementById("bar");
     expect(bar.dataset.localLt).toBe("Foo.bar|Foo.bar()|bar");
@@ -78,10 +71,7 @@ describe("Core — Definition finder", () => {
         <dfn id="bar">bar</dfn>
         <dfn id="baz">baz()</dfn>
       </section>`;
-    const ops = {
-      config: makeBasicConfig(),
-      body: makeDefaultBody() + bodyText,
-    };
+    const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
     const bar = doc.getElementById("bar");
     expect(bar.dataset.localLt).toBe("Foo.bar|Foo.bar()|bar");
