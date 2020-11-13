@@ -97,9 +97,11 @@ function generateMethodNamesWithArgs(operationName, argsAst) {
   operationNames.push(requiredOperation);
   const optionalOps = optional.map((_, index) => {
     const optionalArgs = optional.slice(0, index + 1).join(", ");
-    const result = `${operationName}(${requiredArgs}${
-      optionalArgs ? `, ${optionalArgs}` : ""
-    })`;
+    const args =
+      requiredArgs && optionalArgs
+        ? `${requiredArgs}, ${optionalArgs}`
+        : requiredArgs || optionalArgs || "";
+    const result = `${operationName}(${args})`;
     return result;
   });
   operationNames.push(...optionalOps);
