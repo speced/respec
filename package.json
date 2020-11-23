@@ -101,7 +101,7 @@
     "arrowParens": "avoid"
   },
   "snyk": true,
-  "collective": {
+  "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/respec"
   }
