@@ -54,10 +54,11 @@ interface Window {
 }
 
 interface Document {
+  /** @deprecated in favour of `document.respec.ready` */
   respecIsReady: Promise<void>;
   respec: {
     readonly version: string;
-    readonly ready: Document["respecIsReady"];
+    readonly ready: Promise<void>;
   };
   createNodeIterator<T>(
     root: Node,

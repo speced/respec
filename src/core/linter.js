@@ -79,7 +79,7 @@ export function run(conf) {
   }
   // return early, continue processing other things
   (async () => {
-    await document.respecIsReady;
+    await document.respec.ready;
     try {
       await linter.lint(conf, document);
     } catch (err) {
