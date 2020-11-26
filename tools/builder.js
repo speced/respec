@@ -128,7 +128,7 @@ const Builder = {
     const inputOptions = {
       input: require.resolve(`../profiles/${name}.js`),
       plugins: [
-        !debug && terser({ mangle: { properties: true } }),
+        !debug && terser({ mangle: { properties: { undeclared: true } } }),
         alias({
           resolve: [".css", ".svg", ".js"],
           entries: [
