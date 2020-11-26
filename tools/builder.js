@@ -6,6 +6,7 @@ const { promises: fsp } = require("fs");
 const path = require("path");
 const { rollup } = require("rollup");
 const alias = require("rollup-plugin-alias");
+const { terser } = require("rollup-plugin-terser");
 const CleanCSS = require("clean-css");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
@@ -127,7 +128,7 @@ const Builder = {
     const inputOptions = {
       input: require.resolve(`../profiles/${name}.js`),
       plugins: [
-        !debug && require("rollup-plugin-terser").terser(),
+        !debug && terser({ mangle: { properties: true } }),
         alias({
           resolve: [".css", ".svg", ".js"],
           entries: [
