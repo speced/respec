@@ -23,7 +23,7 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@types/marked": "^1.1.0",
+    "@types/marked": "^1.2.0",
     "@types/pluralize": "0.0.29",
     "boxen": "^4.2.0",
     "chai": "^4.2.0",
