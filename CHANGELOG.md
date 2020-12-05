@@ -1,5 +1,40 @@
 # Changelog
 
+## [v25.18.4](https://github.com/w3c/respec/tree/v25.18.4) (2020-11-23)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.18.3...v25.18.4)
+
+**Fixed bugs:**
+
+- respec.org returns a 503 Service Unavailable [\#3207](https://github.com/w3c/respec/issues/3207)
+
+**Merged pull requests:**
+
+- fix\(core/dfn-finder\): Properly handle optional arguments in data-lt [\#3208](https://github.com/w3c/respec/pull/3208) ([tidoust](https://github.com/tidoust))
+
+## [v25.18.3](https://github.com/w3c/respec/tree/v25.18.3) (2020-11-09)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.18.2...v25.18.3)
+
+**Merged pull requests:**
+
+- chore: update dependencies [\#3205](https://github.com/w3c/respec/pull/3205) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v25.18.2](https://github.com/w3c/respec/tree/v25.18.2) (2020-11-09)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.18.1...v25.18.2)
+
+**Closed issues:**
+
+- Change all http links to https in ReSpec Documentation [\#3179](https://github.com/w3c/respec/issues/3179)
+
+**Merged pull requests:**
+
+- fix\(w3c/headers\): show CR type in \<h2\> [\#3199](https://github.com/w3c/respec/pull/3199) ([deniak](https://github.com/deniak))
+- chore: update dependencies [\#3198](https://github.com/w3c/respec/pull/3198) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3175](https://github.com/w3c/respec/pull/3175) ([github-actions[bot]](https://github.com/apps/github-actions))
+- chore: deprecate respecIsReady in favor of respec.ready [\#3090](https://github.com/w3c/respec/pull/3090) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v25.18.1](https://github.com/w3c/respec/tree/v25.18.1) (2020-10-21)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v25.18.0...v25.18.1)
