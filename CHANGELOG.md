@@ -1,5 +1,28 @@
 # Changelog
 
+## [v26.0.0](https://github.com/w3c/respec/tree/v26.0.0) (2020-12-05)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v25.18.4...v26.0.0)
+
+**Fixed bugs:**
+
+- Weird data-lt attribute for IDL methods with one optional param? [\#3200](https://github.com/w3c/respec/issues/3200)
+
+**Closed issues:**
+
+- .advisement box is inconsistent with other boxes [\#3233](https://github.com/w3c/respec/issues/3233)
+- Drop bits that talk about jQuery in documentation [\#3228](https://github.com/w3c/respec/issues/3228)
+
+**Merged pull requests:**
+
+- chore: update dependencies [\#3240](https://github.com/w3c/respec/pull/3240) ([sidvishnoi](https://github.com/sidvishnoi))
+- BREAKING CHANGE: remove menu keyboard shortcuts [\#3237](https://github.com/w3c/respec/pull/3237) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(deps\): remove unused highlight.js [\#3235](https://github.com/w3c/respec/pull/3235) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(package.json\): use funding option [\#3226](https://github.com/w3c/respec/pull/3226) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(ci/changelog\): update create-pull-request to v3 [\#3225](https://github.com/w3c/respec/pull/3225) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore: update dependencies [\#3224](https://github.com/w3c/respec/pull/3224) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3218](https://github.com/w3c/respec/pull/3218) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v25.18.4](https://github.com/w3c/respec/tree/v25.18.4) (2020-11-23)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v25.18.3...v25.18.4)
