@@ -25,7 +25,7 @@ export function run() {
       dfn.dataset.dfnType &&
       dfn.dataset.dfnType !== "dfn" &&
       !dfn.dataset.cite &&
-      !dfn.dataset.noexport
+      !dfn.dataset.noExport
     ) {
       dfn.dataset.export = "";
     }
