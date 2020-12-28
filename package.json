@@ -51,7 +51,7 @@
     "marked": "^1.2.5",
     "pluralize": "^8.0.0",
     "prettier": "^2.2.1",
-    "prompt": "^1.0.0",
+    "prompt": "^1.1.0",
     "rollup": "^2.34.1",
     "rollup-plugin-alias": "^2.2.0",
     "rollup-plugin-commonjs": "^10.1.0",
