@@ -44,7 +44,7 @@ export function run(conf) {
   }
   // Pieter Hering, Logius
   // splitMDsections is a Logius specific config property 
-  if ((isMDFormat || hasMDSections) && conf.markdownSplitH1sections) {
+  if ((isMDFormat || hasMDSections) && conf.nl_markdownSplitH1sections) {
     splitH1sections("[data-format=markdown]:not(body)");
     // const newBody = splitH1sections("[data-format=markdown]:not(body)");
     // document.body.replaceWith(newBody);

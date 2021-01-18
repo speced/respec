@@ -10,17 +10,17 @@ const modules = [
   import("../src/core/ui.js"),
   import("../src/core/location-hash.js"),
   import("../src/core/l10n.js"),
-  import("../src/logius/defaults.js"), // doing
+  import("../src/logius/defaults.js"), // done, for now
   import("../src/core/style.js"),
-  import("../src/logius/style.js"), // doing
+  import("../src/logius/style.js"), // done for now, still some wip
   import("../src/w3c/l10n.js"), // solved handhaaf w3c versie ipv geonovum
   import("../src/core/github.js"),
   import("../src/core/data-include.js"),
-  import("../src/logius/splitmarkdownheaders.js"),
+  import("../src/logius/splitmarkdownheaders.js"), // todo check
   import("../src/core/markdown.js"),
-  import("../src/logius/fix-md-elements.js"),
-  import("../src/core/reindent.js"), // geonovum line 3
-  import("../src/logius/releasetitle.js"), // new doing
+  import("../src/logius/fix-md-elements.js"), // todo check
+  import("../src/core/reindent.js"), // nothing changed but this module is in geonovum profile at line 3
+  //import("../src/logius/releasetitle.js"), // todo an idea to add release tag to title
   import("../src/core/title.js"),
   import("../src/w3c/level.js"), // todo check if this must be skipped
   import("../src/w3c/group.js"), // todo check if this must be skipped
@@ -29,7 +29,7 @@ const modules = [
   import("../src/core/data-transform.js"),
   import("../src/core/data-abbr.js"),
   import("../src/logius/inlines.js"), // todo geonovum, only copied nl section
-  import("../src/w3c/conformance.js"), // solved handhaaf w3c ipv  geonovum
+  import("../src/logius/conformance.js"), // merged geonovum variant into w3c version
   import("../src/core/dfn.js"),
   import("../src/core/pluralize.js"),
   import("../src/core/examples.js"),

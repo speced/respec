@@ -7,7 +7,7 @@
     Logius's testpage
   </title>
   <link rel="shortcut icon" type="image/x-icon" href="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/logius.ico" />
-  <style type="text/css">
+  <!-- <style type="text/css">
     table {
       border-collapse: collapse;
     }
@@ -34,15 +34,16 @@
       padding: 8px;
     }
 
-  </style>
+  </style> -->
 
-  <script src='../profiles/logius.js' async class='remove'></script>
+  <script src='https://publicatie.centrumvoorstandaarden.nl/respec/builds/respec-logius.js' async class='remove'></script>
   <script class='remove'>
     var respecConfig = {
-      specStatus: "CV",
+      specStatus: "WV",
       specType: "ST",
       subtitle: "Subtitle",
       shortName: "API-Design-Rules",
+
       editors: [{
           name: "Pieter Hering",
           mailto: "api@digikoppeling.nl",          
@@ -76,9 +77,9 @@
         }
       ],
       github: "https://github.com/Logius-standaarden/API-Design-Rules",
-      //testSuiteURI: "https://github.com/Logius-standaarden/API-Design-Rules",
-      //implementationReportURI: "https://github.com/Logius-standaarden/API-Design-Rules",
-      //level: 4,
+      testSuiteURI: "https://github.com/Logius-standaarden/API-Design-Rules",
+      implementationReportURI: "https://github.com/Logius-standaarden/API-Design-Rules",
+      level: 4,
       highlightVars: true,
       xref: "web-platform",
       caniuse: {
@@ -112,7 +113,7 @@
         },
       ],
       pubDomain: "adr",
-      nl_markdownSplitH1sections: true,
+      nl_markdownSplitH1sections: false,
       nl_organisationName: "Logius",
       nl_organisationPrefix: "LS-",
       nl_markdownTableClass: "logius",
@@ -130,6 +131,7 @@
         url: "https://www.logius.nl/standaarden",
       },
       preProcess: [mdAddFigure],
+      //format: "markdown",
     };
 
     function mdAddFigure(config, document) {

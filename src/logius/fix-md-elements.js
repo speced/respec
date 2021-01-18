@@ -11,6 +11,7 @@ export function run(conf) {
 }
 // todo check if algorithm is correct!
 function addClassTables(conf) {
+  // todo do nothing if this config is not set?
   if (!conf.nl_markdownTableClass) {
     conf.nl_markdownTableClass = "simple";
   }

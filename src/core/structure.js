@@ -2,6 +2,7 @@
 // Module core/structure
 //  Handles producing the ToC and numbering sections across the document.
 
+
 // CONFIGURATION:
 //  - noTOC: if set to true, no TOC is generated and sections are not numbered
 //  - tocIntroductory: if set to true, the introductory material is listed in the TOC

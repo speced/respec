@@ -156,7 +156,7 @@ const status2long = {
 
 const noTrackStatus = []; // empty? or only "GN-BASIS"?
 // Thijs Brentjens: default licenses for Geonovum to version 4.0
-// todo make hard pathes flexible
+// todo make fixed, static urls flexible
 const licenses = {
   cc0: {
     name: "Creative Commons 0 Public Domain Dedication",
@@ -179,7 +179,7 @@ const licenses = {
   },
 };
 
-// todo check hard path
+// todo check fixed, static url
 function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   const date = conf[prop] ? new Date(conf[prop]) : new Date(fallbackDate);
   // if date is valid
@@ -220,7 +220,7 @@ export function run(conf) {
   // Deal with all current GN specStatusses the same. This is mostly seen in the links in the header for Last editor's draft etc
   // conf.isRegular = conf.specStatus !== "GN-BASIS";
   conf.isRegular = true;
-  conf.isOfficial = conf.specStatus === "GN-DEF";
+  conf.isOfficial = conf.specStatus === "GN-DEF" || conf.specStatus === "DEF";
 
   if (!conf.specStatus) {
     pub("error", "Missing required configuration: `specStatus`");
@@ -229,8 +229,8 @@ export function run(conf) {
     pub("error", "Missing required configuration: `shortName`");
   }
 
-  // inserted froem w3c
-  // todo check pathes
+  // inserted from w3c or skip this part
+  // todo check fixed, static urls
   if (conf.testSuiteURI) {
     const url = new URL(conf.testSuiteURI, location.href);
     const { host, pathname } = url;
@@ -245,6 +245,7 @@ export function run(conf) {
       pub("warn", msg);
     }
   }
+  // end insertion from w3c
 
   conf.title = document.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
@@ -257,7 +258,7 @@ export function run(conf) {
   conf.publishHumanDate = NLRespecDate.format(conf.publishDate);
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
 
-  // todo path
+  // todo fixed, static url
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
     // Thijs Brentjens: deal with editors draft links based on Github URIs
@@ -268,22 +269,29 @@ export function run(conf) {
       const githubParts = conf.github.split("github.com/")[1].split("/");
       conf.edDraftURI = `https://${githubParts[0]}.github.io/${githubParts[1]}`;
     }
-    // todo no 'ED' status in this version
+    // todo no clear 'ED' status in this version
     if (conf.specStatus === "ED")
       pub("warn", "Editor's Drafts should set edDraftURI.");
   }
   // Version URLs
   // Thijs Brentjens: changed this to Geonovum specific format. See https://github.com/Geonovum/respec/issues/126
-  // todo path
+  if (!conf.nl_organisationPublishURL) {
+    conf.nl_organisationPublishURL = "https://docs.geostandaarden.nl/";
+  } else {
+    if (!conf.nl_organisationPublishURL.endsWith("/"))
+      conf.nl_organisationPublishURL += "/";
+  }
+
+  const specStatus = conf.specStatus.includes("GN")
+    ? conf.specStatus.substr(3).toLowerCase()
+    : conf.specStatus.toLowerCase();
   if (
     conf.isRegular &&
     conf.specStatus !== "GN-WV" &&
     conf.specStatus !== "WV"
   ) {
-    conf.thisVersion = `https://docs.geostandaarden.nl/${conf.pubDomain
-      }/${conf.specStatus
-        .substr(3)
-        .toLowerCase()}-${conf.specType.toLowerCase()}-${conf.shortName
+    conf.thisVersion = `${conf.nl_organisationPublishURL}/${conf.pubDomain
+      }/${specStatus}-${conf.specType.toLowerCase()}-${conf.shortName
       }-${concatDate(conf.publishDate)}/`;
   } else {
     conf.thisVersion = conf.edDraftURI;
@@ -293,7 +301,7 @@ export function run(conf) {
   // todo
   if (conf.isRegular && conf.hasBeenPublished)
     // Thijs Brentjens: see
-    conf.latestVersion = `https://docs.geostandaarden.nl/${conf.pubDomain}/${conf.shortName}/`;
+    conf.latestVersion = `${conf.nl_organisationPublishURL}/${conf.pubDomain}/${conf.shortName}/`;
 
   // Thijs Brentjens: support previousMaturity as previousStatus
   if (conf.previousMaturity && !conf.previousStatus)
@@ -306,7 +314,10 @@ export function run(conf) {
       conf,
       "previousPublishDate"
     );
-    const prevStatus = conf.previousStatus.substr(3).toLowerCase();
+    const prevStatus = conf.previousStatus.includes("GN")
+      ? conf.previousStatus.substr(3).toLowerCase()
+      : conf.previousStatus.toLowerCase();
+
     // Thijs Brentjens: default to current spectype
     // TODO: should the prev-/spectype always be in the WP URL too?
     let prevType = "";
@@ -316,8 +327,7 @@ export function run(conf) {
       prevType = conf.specType.toLowerCase();
     }
     conf.prevVersion = `None${conf.previousPublishDate}`;
-    // todo
-    conf.prevVersion = `https://docs.geostandaarden.nl/${conf.pubDomain
+    conf.prevVersion = `${conf.nl_organisationPublishURL}/${conf.pubDomain
       }/${prevStatus}-${prevType}-${conf.shortName}-${concatDate(
         conf.previousPublishDate
       )}/`;

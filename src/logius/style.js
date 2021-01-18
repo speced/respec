@@ -43,15 +43,21 @@ function createMetaViewport() {
   return meta;
 }
 
-// todo: this is a bit tricky to solve, since we cannot determine conf  here
-// todo: we can use RespecConfig however
+// get base.css from pubdomain if present else W3c
+function getBaseStyleURI() {
+  let baseStyle = respecConfig.nl_organisationStylesURL
+    ? respecConfig.nl_organisationStylesURL
+    : "https://www.w3.org/StyleSheets/TR/2016/";
+  if (!baseStyle.endsWith("/")) baseStyle += "/";
+  return `${baseStyle}/base.css`;
+}
+
 function createBaseStyle() {
   const link = document.createElement("link");
 
+
   link.rel = "stylesheet";
-  // todo
-  // link.href = "https://www.w3.org/StyleSheets/TR/2016/base.css";
-  link.href = "https://publicatie.centrumvoorstandaarden.nl/respec/style/base.css";
+  link.href = getBaseStyleURI();
   link.classList.add("removeOnSave");
   return link;
 }
@@ -73,8 +79,6 @@ function selectStyleVersion(styleVersion) {
 
 function createResourceHints() {
   /** @type ResourceHintOption[]  */
-  // todo cannot make use of conf but want to avoid hard pathes
-  // todo solve use respecConfig instead
   const opts = [
     {
       hint: "preconnect", // for W3C styles and scripts.
@@ -87,9 +91,8 @@ function createResourceHints() {
     // },
     {
       hint: "preload", // all specs include on base.css.
-      //href: "https://www.w3.org/StyleSheets/TR/2016/base.css",
-      // todo: just for testing
-      href: "https://publicatie.centrumvoorstandaarden.nl/respec/style/base.css",
+      // href: "https://www.w3.org/StyleSheets/TR/2016/base.css",
+      href: getBaseStyleURI(),
       as: "style",
     },
     // {
@@ -98,7 +101,6 @@ function createResourceHints() {
     //   as: "image",
     // },
   ];
-
 
   const resourceHints = document.createDocumentFragment();
   for (const link of opts.map(createResourceHint)) {
@@ -125,31 +127,24 @@ function styleMover(linkURL) {
   };
 }
 
-function getStyleBasePath(conf) {
-  // todo check if path has ends with '/' 
-
-  if (!conf.nl_organisationStylesPath) {
-    // defaulting to Geonovum
-    conf.nl_organisationStylesPath = "https://tools.geostandaarden.nl/respec/style/";
-    pub(
-      "warn",
-      `respecConfig.nl_organisationStylesPath missing. Defaulting to '${conf.nl_organisationStylesPath}'.`
-    );
-  }
-  return conf.nl_organisationStylesPath;
-}
-
 export function run(conf) {
   if (!conf.specStatus) {
     const warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
     conf.specStatus = "base";
     pub("warn", warn);
   }
-
+  if (!conf.nl_organisationStylesURL) {
+    // defaulting to Geonovum
+    conf.nl_organisationStylesURL = "https://tools.geostandaarden.nl/respec/style/";
+    // override nl_organisationPrefix 
+    conf.nl_organisationPrefix = "GN-";
+    pub("warn", `respecConfig.nl_organisationStylesURL missing. Defaulting to '${conf.nl_organisationStylesURL}'.`);
+    pub("warn", "`respecConfig.nl_organisationPrefix` missing. Defaulting to 'GN-'.");
+  }
   if (!conf.nl_organisationPrefix) {
     // default to geonovum
     conf.nl_organisationPrefix = "GN-";
-    const warn = "`respecConfig.nl_organisationPrefix` missing. Defaulting to 'GN-'.";
+    pub("warn", "`respecConfig.nl_organisationPrefix` missing. Defaulting to 'GN-'.");
   }
 
   let styleFile = conf.nl_organisationPrefix;
@@ -162,7 +157,7 @@ export function run(conf) {
     // case "GN-DRAFT":
     //   styleFile = conf.specStatus.toLowerCase();
     //   break;
-    case "WV": //Werkversie
+    case "WV": // Werkversie
     case "GN-WV":
       styleFile += "WV.css";
       break;
@@ -214,9 +209,12 @@ export function run(conf) {
   // const finalVersionPath = version ? `${version}/` : "";
   const finalVersionPath = "";
 
-  getStyleBasePath(conf);
-
-  const finalStyleURL = `${conf.nl_organisationStylesPath}${finalVersionPath}${styleFile}`;
+  if (!conf.nl_organisationStylesURL) {
+    // defaulting to Geonovum
+    conf.nl_organisationStylesURL = "https://tools.geostandaarden.nl/respec/style/";
+    pub("warn", `respecConfig.nl_organisationStylesURL missing. Defaulting to '${conf.nl_organisationStylesURL}'.`);
+  }
+  const finalStyleURL = `${conf.nl_organisationStylesURL}${finalVersionPath}${styleFile}`;
   // (`using ${finalStyleURL}`);
   linkCSS(document, finalStyleURL);
   // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.

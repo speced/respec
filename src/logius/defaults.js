@@ -51,7 +51,7 @@ const licenses = new Map([
     },
   ],
 ]);
-// todo: check on overides ?
+// todo: check on overrides ?
 const nlRespecDefaults = {
   lint: {
     "no-headingless-sections": false,
@@ -79,8 +79,8 @@ function addLogoData(conf) {
       src: "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.svg",
       alt: "Geonovum",
       id: "Geonovum",
-      height: 77,
-      width: 44,
+      height: 67,
+      width: 132,
       url: "https://www.geonovum.nl/",
     });
   } else {
