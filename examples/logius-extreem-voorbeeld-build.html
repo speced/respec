@@ -6,7 +6,8 @@
   <title>
     Logius's testpage
   </title>
-  <link rel="shortcut icon" type="image/x-icon" href="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/logius.ico" />
+  <link rel="shortcut icon" type="image/x-icon"
+    href="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/logius.ico" />
   <style type="text/css">
     table {
       border-collapse: collapse;
@@ -18,17 +19,20 @@
       text-align: left;
       padding: 8px;
     }
+
     table.logius {
       border-collapse: collapse;
       border: 2px solid #154273;
-      
+
     }
 
-      .logius thead{
-        background-color: #154273;
-        color: white;
-      }
-    .logius td, th  {
+    .logius thead {
+      background-color: #154273;
+      color: white;
+    }
+
+    .logius td,
+    th {
       border: 2px solid #154273;
       text-align: left;
       padding: 8px;
@@ -45,7 +49,7 @@
       shortName: "API-Design-Rules",
       editors: [{
           name: "Pieter Hering",
-          mailto: "api@digikoppeling.nl",          
+          mailto: "api@digikoppeling.nl",
           company: "Logius",
           companyURL: "https://logius.nl/standaarden",
         },
@@ -54,7 +58,11 @@
           url: "https://logius.nl/standaarden",
           retiredDate: "2020-12-31",
           note: "The Greatest",
-          extras: [{name:"<-Opschepper!", class:"advisement", href:"https://logius.nl"},],
+          extras: [{
+            name: "<-Opschepper!",
+            class: "advisement",
+            href: "https://logius.nl"
+          }, ],
         }
       ],
       formerEditors: [{
@@ -100,7 +108,7 @@
       tocIntroductory: true,
       addSectionLinks: true,
       a11y: false,
-      isPreview : true,
+      isPreview: true,
       maxTocLevel: 3,
       alternateFormats: [{
           label: "html",
@@ -111,12 +119,16 @@
           uri: "https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.pdf",
         },
       ],
-      nl_markdownSplitH1sections: false,
+      nl_markdownSplitH1sections: true,
+      nl_github: {
+        issueBase: "https://github.com/Geonovum/KP-APIs/issues",
+        revision: "https://github.com/Logius-standaarden/API-Design-Rules/commits",
+        pullrequests: "https://github.com/Logius-standaarden/API-Design-Rules/pulls"
+      },
       nl_organisationName: "Logius",
       nl_organisationPrefix: "LS-",
       nl_markdownTableClass: "logius",
       nl_markdownEmbedImageInFigure: true,
-      nl_organisationPublishURL: "https://publicatie.centrumvoorstandaarden.nl",
       nl_organisationStylesURL: "https://publicatie.centrumvoorstandaarden.nl/respec/style/",
       //nl_organisationStylesURL: "http://localhost:8081/respec/style/",
       nl_logo: {
@@ -182,16 +194,16 @@
 
     lalala UA en PoS en ADR
     <p>Commits since "CR":</p>
-<!-- <rs-changelog from="CR"></rs-changelog> -->
+    <!-- <rs-changelog from="CR"></rs-changelog> -->
 
-<p>All commits between "CR" tag and a commit "5b1a9da":</p>
-<rs-changelog from="v0.0.1"></rs-changelog>
+    <p>All commits between "CR" tag and a commit "5b1a9da":</p>
+    <rs-changelog from="v0.0.1"></rs-changelog>
 
-<p>
-  Show commits since "CR", but filter the commits to be shown using a function
-  called `respecChangelogFilter` which is defined globally:
-</p>
-<!-- <rs-changelog from="CR" filter="respecChangelogFilter"></rs-changelog> -->
+    <p>
+      Show commits since "CR", but filter the commits to be shown using a function
+      called `respecChangelogFilter` which is defined globally:
+    </p>
+    <!-- <rs-changelog from="CR" filter="respecChangelogFilter"></rs-changelog> -->
   </section>
   <section id="xreftest">
     <h1>test met xref!</h1>

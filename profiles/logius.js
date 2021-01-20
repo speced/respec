@@ -15,6 +15,7 @@ const modules = [
   import("../src/logius/style.js"), // done for now, still some wip
   import("../src/w3c/l10n.js"), // solved handhaaf w3c versie ipv geonovum
   import("../src/core/github.js"),
+  import("../src/logius/github.js"), // try to revert some props
   import("../src/core/data-include.js"),
   import("../src/logius/splitmarkdownheaders.js"), // todo check
   import("../src/core/markdown.js"),

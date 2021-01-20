@@ -1,14 +1,42 @@
 // @ts-check
 /**
- * this module fixes some peculiarities in core/github
+ * this module fixes some peculiarities in core/github for the Dutch context
  *
  */
-
-xport const name = "logius/github";
+export const name = "logius/github";
 
 export function run(conf) {
-  console.log(conf.github);
+  // override respec github settings if present
+  conf.otherLinks
+    .filter(item => item.key === "Doe mee") // todo: using the Dutch expression as a filter
+    .forEach(element => {
+      element.data.forEach(element => {
+        switch (element.value) {
+          case "Dien een melding in":
+            if (conf.nl_github.issueBase) {
+              element.href = conf.nl_github.issueBase;
+            }
+            break;
+          case "Revisiehistorie":
+            if (conf.nl_github.revision) {
+              element.href = conf.nl_github.revision;
+            };
+            break;
+          case "Pull requests":
+            if (conf.nl_github.pullrequests) {
+              element.href = conf.nl_github.pullrequests;
+            };
+            break;
+        }
+      });
+    });
 
-  // const branch = conf.github.branch || "gh-pages";
-  // const issueBase
+  if (conf.nl_github.issueBase) {
+    conf.issueBase = conf.nl_github.issueBase;
+  }
+  // todo: check if this is correct
+  if (conf.nl_github.revision) {
+    conf.github.branch = conf.nl_github.revision;
+  }
+
 }
