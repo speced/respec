@@ -601,19 +601,20 @@ function populateSoTD(conf, sotd) {
       return operationalCommittee;
     },
     get emailComments() {
-      if (!conf.emailComments) {
+      if (!conf.nl_emailcomments && !conf.emailcomments) {
         switch (conf.nl_organisationName.toLowerCase()) {
           case "logius": // Logius
-            conf.emailComments = "api@logius.nl";
+            conf.nl_emailcomments = "api@logius.nl";
             break;
           case "geonovum":
           default:
             // Geonovum
-            conf.emailComments = "geo-standaarden@geonovum.nl";
+            conf.nl_emailcomments = "geo-standaarden@geonovum.nl";
+            conf.emailcomments = "geo-standaarden@geonovum.nl";
             break;
         }
       }
-      return `${conf.emailComments}`;
+      return `${conf.nl_emailcomments}`;
     },
     get emailCommentsMailto() {
       return `mailto:${this.emailComments}`;
