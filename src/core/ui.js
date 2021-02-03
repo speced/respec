@@ -11,7 +11,7 @@
 //  - once we have something decent, merge, ship as 3.2.0
 import { html, pluralize } from "./import-maps.js";
 import { fetchAsset } from "./text-loader.js";
-import shortcut from "../../js/shortcut.js";
+import { markdownToHtml } from "./markdown.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
 
@@ -206,20 +206,18 @@ export const ui = {
   enable() {
     respecPill.removeAttribute("disabled");
   },
-  addCommand(label, handler, keyShort, icon) {
+  /**
+   * @param {string} _keyShort shortcut key. unused - kept for backward compatibility.
+   */
+  addCommand(label, handler, _keyShort, icon) {
     icon = icon || "";
     const id = `respec-button-${label.toLowerCase().replace(/\s+/, "-")}`;
-    const button = html`<button
-      id="${id}"
-      class="respec-option"
-      title="${keyShort}"
-    >
+    const button = html`<button id="${id}" class="respec-option">
       <span class="respec-cmd-icon" aria-hidden="true">${icon}</span> ${label}…
     </button>`;
     const menuItem = html`<li role="menuitem">${button}</li>`;
     menuItem.addEventListener("click", handler);
     menu.appendChild(menuItem);
-    if (keyShort) shortcut.add(keyShort, handler);
     return button;
   },
   error(rsError) {
@@ -270,12 +268,10 @@ export const ui = {
     trapFocus(modal);
   },
 };
-shortcut.add("Esc", () => ui.closeModal());
-shortcut.add("Ctrl+Alt+Shift+E", () => {
-  if (buttons.error) buttons.error.click();
-});
-shortcut.add("Ctrl+Alt+Shift+W", () => {
-  if (buttons.warning) buttons.warning.click();
+document.addEventListener("keydown", ev => {
+  if (ev.key === "Escape") {
+    ui.closeModal();
+  }
 });
 window.respecUI = ui;
 sub("error", rsError => ui.error(rsError));
