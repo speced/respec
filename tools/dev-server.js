@@ -89,7 +89,7 @@ process.on("exit", () => {
 });
 
 printWelcomeMessage(args);
-buildAndTest();
+karmaServer.on("browsers_ready", buildAndTest);
 
 function registerStdinHandler() {
   // https://stackoverflow.com/a/12506613
