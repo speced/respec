@@ -23,7 +23,7 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@types/marked": "^1.2.1",
+    "@types/marked": "^1.2.2",
     "@types/pluralize": "0.0.29",
     "boxen": "^5.0.0",
     "chai": "^4.2.0",
@@ -48,7 +48,7 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
     "loading-indicator": "^2.0.0",
-    "marked": "^1.2.5",
+    "marked": "^1.2.8",
     "pluralize": "^8.0.0",
     "prettier": "^2.2.1",
     "prompt": "^1.1.0",
