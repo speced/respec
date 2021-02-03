@@ -17,16 +17,11 @@ export function run() {
       dfn.dataset.dfnType = "idl";
     }
 
-    // per https://tabatkins.github.io/bikeshed/#dfn-export
-    // a dfn typed with something else than dfn
-    // and not marked with noexport is to be exported
-    // We also skip "imported" definitions via data-cite
-    if (
-      dfn.dataset.dfnType &&
-      dfn.dataset.dfnType !== "dfn" &&
-      !dfn.dataset.cite &&
-      !dfn.dataset.noExport
-    ) {
+    // Per https://tabatkins.github.io/bikeshed/#dfn-export, a dfn with dfnType
+    // other than dfn and not marked with data-no-export is to be exported.
+    // We also skip "imported" definitions via data-cite.
+    const ds = dfn.dataset;
+    if (ds.dfnType && ds.dfnType !== "dfn" && !ds.cite && !ds.noExport) {
       dfn.dataset.export = "";
     }
 
