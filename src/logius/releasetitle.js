@@ -36,7 +36,7 @@ export async function run(conf) {
   conf.releaseversion = "";
   if (
     (conf.specStatus == "DEF" || conf.specStatus == "GN-DEF") &&
-    conf.specType == "ST"
+    (conf.specType == "ST" || conf.specType == "BP" || conf.specType == "HR")
   ) {
     // this is just a test to retrieve the release tag
     await setRelease(conf);
