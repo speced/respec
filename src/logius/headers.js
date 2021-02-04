@@ -290,18 +290,20 @@ export function run(conf) {
     conf.specStatus !== "GN-WV" &&
     conf.specStatus !== "WV"
   ) {
-    conf.thisVersion = `${conf.nl_organisationPublishURL}/${conf.pubDomain
-      }/${specStatus}-${conf.specType.toLowerCase()}-${conf.shortName
-      }-${concatDate(conf.publishDate)}/`;
+    conf.thisVersion = `${conf.nl_organisationPublishURL}${
+      conf.pubDomain
+    }/${specStatus}-${conf.specType.toLowerCase()}-${
+      conf.shortName
+    }-${concatDate(conf.publishDate)}/`;
   } else {
     conf.thisVersion = conf.edDraftURI;
   }
 
   // Only show latestVersion if a publishDate has been set. see issue https://github.com/Geonovum/respec/issues/93
-  // todo
+  // todo check path generation
   if (conf.isRegular && conf.hasBeenPublished)
     // Thijs Brentjens: see
-    conf.latestVersion = `${conf.nl_organisationPublishURL}/${conf.pubDomain}/${conf.shortName}/`;
+    conf.latestVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${conf.shortName}/`;
 
   // Thijs Brentjens: support previousMaturity as previousStatus
   if (conf.previousMaturity && !conf.previousStatus)
@@ -327,10 +329,11 @@ export function run(conf) {
       prevType = conf.specType.toLowerCase();
     }
     conf.prevVersion = `None${conf.previousPublishDate}`;
-    conf.prevVersion = `${conf.nl_organisationPublishURL}/${conf.pubDomain
-      }/${prevStatus}-${prevType}-${conf.shortName}-${concatDate(
-        conf.previousPublishDate
-      )}/`;
+    conf.prevVersion = `${conf.nl_organisationPublishURL}${
+      conf.pubDomain
+    }/${prevStatus}-${prevType}-${conf.shortName}-${concatDate(
+      conf.previousPublishDate
+    )}/`;
   }
 
   const peopCheck = function (it) {
@@ -485,7 +488,7 @@ export function run(conf) {
     for (let i = 0, n = conf.wg.length; i < n; i++) {
       pats.push(
         `a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>` +
-        `public list of any patent disclosures  (${conf.wg[i]})</a>`
+          `public list of any patent disclosures  (${conf.wg[i]})</a>`
       );
     }
     conf.wgPatentHTML = htmlJoinAnd(pats);
@@ -651,7 +654,7 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
     pub(
       "warn",
       "ReSpec does not support automated SotD generation for TAG findings, " +
-      "please add the prerequisite content in the 'sotd' section"
+        "please add the prerequisite content in the 'sotd' section"
     );
   }
   return {

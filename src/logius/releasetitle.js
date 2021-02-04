@@ -1,37 +1,46 @@
 /**
- * This module retrieves the tag_name of the latest release of the Github repo 
- * and append this to the document title 
+ * This module retrieves the tag_name of the latest release of the Github repo
+ * and appends this to the document title
  */
-
+import { pub } from "../core/pubsubhub.js";
 export const name = "core/releasetitle";
 
-// todo handle the case when a tag_name release and/or tag_name is not available
-// todo get the correct hithub repo from config
-// todo (optional) handle a conf.release parameter
-// todo check iif this works for gitlab as well
-async function getReleasename() {
-  let url = 'https://api.github.com/repos/centrumvoorstandaarden/Test-Digikoppeling_Architectuur/releases/latest';
-  try {
-      let res = await fetch(url);
-      return await res.json();
-  } catch (error) {
-      console.log(error);
+
+// todo check if this works for gitlab as well
+async function getReleasename(conf) {
+  const o = { tag_name: "" };
+  if (!conf.github) {
+    pub("warn", "cannot retrieve release tag: respecConf.github not set;");
+    return o;
   }
+
+  const url = `https://api.github.com/repos/${conf.github.fullName}/releases/latest`;
+  try {
+    const res = await fetch(url);
+    return await res.json();
+  } catch (error) {
+    pub("warn", `failed to retrieve release tag: '${error}'`);
+  }
+  return o;
 }
 
 async function setRelease(conf) {
-  let release = await getReleasename();
+  let release = await getReleasename(conf);
   conf.releaseversion = release.tag_name;
 }
 
-// todo act on conf.specStatus == "DEF" only
 export async function run(conf) {
-  conf.releaseversion ="init";
-  if ( (conf.specStatus == "DEF" || conf.specStatus == "GN-DEF") &&  conf.specType == "ST") {
-    // this is just a test to retrieve the release tag 
+  if (!conf.nl_addReleaseTagTitle) {
+    return;
+  }
+  conf.releaseversion = "";
+  if (
+    (conf.specStatus == "DEF" || conf.specStatus == "GN-DEF") &&
+    conf.specType == "ST"
+  ) {
+    // this is just a test to retrieve the release tag
     await setRelease(conf);
     document.title = `${document.title} ${conf.releaseversion}`;
     conf.title = `${conf.title} ${conf.releaseversion}`;
   }
-
 }

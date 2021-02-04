@@ -43,10 +43,15 @@
   <script src='../builds/respec-logius.js' async class='remove'></script>
   <script class='remove'>
     var respecConfig = {
-      specStatus: "WV",
+      specStatus: "DEF",
       specType: "ST",
       subtitle: "Subtitle",
       shortName: "API-Design-Rules",
+      publishDate: "2020-09-20",
+      previousPublishDate: "2007-01-31",
+      // Zie https://github.com/w3c/respec/wiki/previousMaturity. Dit moet een
+      // A YYYY-MM-DD date. When a previousPublishDate is specified, this is typically required as well in order to generate the "Previous Version"
+      previousMaturity: "WV",
       editors: [{
           name: "Pieter Hering",
           mailto: "api@digikoppeling.nl",
@@ -94,6 +99,7 @@
         browsers: ["chrome", "safari", "firefox", "edge", "ie"],
       },
       // mdn: true,
+      pubDomain: "dk",
       mdn: "payment-request",
       highlightVars: true,
       nl_emailcomments: "digikoppeling@logius.nl",
@@ -119,6 +125,7 @@
           uri: "https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.pdf",
         },
       ],
+      nl_addReleaseTagTitle: true,
       nl_markdownSplitH1sections: true,
       nl_github: {
         issueBase: "https://github.com/Geonovum/KP-APIs/issues",
