@@ -78,9 +78,8 @@ sub("error", rsError => {
   console.error(rsError, Object.fromEntries(Object.entries(rsError)));
 });
 
-sub("warn", rsError => {
-  rsError.isWarning = true;
-  console.warn(rsError, Object.fromEntries(Object.entries(rsError)));
+sub("warn", rsWarning => {
+  console.warn(rsWarning, Object.fromEntries(Object.entries(rsWarning)));
 });
 
 expose(name, { sub });
