@@ -11,7 +11,6 @@
 //  - once we have something decent, merge, ship as 3.2.0
 import { html, pluralize } from "./import-maps.js";
 import { fetchAsset } from "./text-loader.js";
-import { markdownToHtml } from "./markdown.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
 

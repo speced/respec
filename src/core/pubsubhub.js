@@ -1,6 +1,6 @@
 // @ts-check
-import { expose } from "./expose-modules.js";
 import { RsError } from "./utils.js";
+import { expose } from "./expose-modules.js";
 
 /**
  * Module core/pubsubhub
