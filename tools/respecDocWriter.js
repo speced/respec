@@ -277,9 +277,7 @@ function handleConsoleMessages(page, onError, onWarning) {
         return JSON.stringify({ message: String(obj) });
       } else {
         // Ideally: `obj instanceof RsError` and `RsError instanceof Error`.
-        // Serialize message separately as Error.message is non-enumerable.
-        const err = { message: obj.message, ...obj };
-        return JSON.stringify(err);
+        return JSON.stringify(obj);
       }
     }, handle);
   }

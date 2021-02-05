@@ -865,6 +865,11 @@ export class RsError extends Error {
    */
   constructor(message, plugin, options = {}) {
     super(message);
+    // Make "message" an enumerable property so it can be serialized easily.
+    Object.defineProperty(this, "message", {
+      enumerable: true,
+      value: message,
+    });
     this.name = options.isWarning ? "ReSpecWarning" : "ReSpecError";
     this.plugin = plugin;
 
