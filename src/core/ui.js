@@ -139,8 +139,9 @@ ariaDecorate(respecPill, ariaMap);
 
 /**
  *
- * @param {import('./utils.js').RsError} err
- * @param {import('./utils.js').RsError[]} arr
+ * @typedef {import('./utils.js').RsError} RsError
+ * @param {RsError} err
+ * @param {RsError[]} arr
  * @param {"error" | "warning"} butName
  * @param {string} title
  */
@@ -158,7 +159,7 @@ function errWarn(err, arr, butName, title) {
 }
 
 /**
- * @param {import('./utils.js').RsError[]} arr
+ * @param {RsError[]} arr
  */
 function createWarnButton(butName, arr, title) {
   const buttonId = `respec-pill-${butName}`;
@@ -279,9 +280,7 @@ window.respecUI = ui;
 sub("error", rsError => ui.error(rsError));
 sub("warn", rsError => ui.warning(rsError));
 
-/**
- * @param {string|import("./utils.js").RsError} err
- */
+/** @param {RsError} err */
 function rsErrorToHTML(err) {
   if (typeof err === "string") {
     return err;
