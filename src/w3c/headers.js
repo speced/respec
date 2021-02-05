@@ -310,10 +310,9 @@ export function run(conf) {
     conf.specStatus === "finding" || conf.specStatus === "draft-finding";
 
   if (conf.isRecTrack && !hasGitHubIssuesLink(conf)) {
-    pub(
-      "error",
-      "Rec-track documents must link to Github issues from their head. Please use the [`github`](https://respec.org/docs/#github) configuration option."
-    );
+    const msg = `Rec-track documents must link to Github issues from their head.`;
+    const hint = `Please use the [\`github\`](https://respec.org/docs/#github) configuration option.`;
+    pub("error", new RsError(msg, name, { hint }));
   }
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
@@ -477,10 +476,8 @@ export function run(conf) {
     conf.wgPatentPolicy &&
     !["PP2017", "PP2020"].includes(conf.wgPatentPolicy)
   ) {
-    pub(
-      "error",
-      "`wgPatentPolicy` config option must be either 'PP2017' or 'PP2020'."
-    );
+    const msg = `\`wgPatentPolicy\` config option must be either 'PP2017' or 'PP2020'.`;
+    pub("error", new RsError(msg, name));
   }
   if (conf.hasOwnProperty("wgPatentURI") && !Array.isArray(conf.wgPatentURI)) {
     Object.defineProperty(conf, "wgId", {
@@ -615,16 +612,12 @@ export function run(conf) {
       x => !revisionTypes.includes(x)
     );
     if (unknownRevisionType) {
-      pub(
-        "error",
-        `\`specStatus\` is "REC" with unknown revision type '${unknownRevisionType}'`
-      );
+      const msg = `\`specStatus\` is "REC" with unknown revision type '${unknownRevisionType}'`;
+      pub("error", new RsError(msg, name));
     }
     if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
-      pub(
-        "error",
-        `\`specStatus\` is "REC" with proposed additions but the Rec is not marked as a allowing new features.`
-      );
+      const msg = `\`specStatus\` is "REC" with proposed additions but the Rec is not marked as a allowing new features.`;
+      pub("error", new RsError(msg, name));
     }
   }
 
@@ -635,10 +628,8 @@ export function run(conf) {
     conf.revisionTypes.length > 0 &&
     !conf.revisedRecEnd
   ) {
-    pub(
-      "error",
-      `\`specStatus\` is "REC" with proposed corrections or additions but no \`revisedRecEnd\` is specified.`
-    );
+    const msg = `\`specStatus\` is "REC" with proposed corrections or additions but no \`revisedRecEnd\` is specified.`;
+    pub("error", new RsError(msg, name));
   }
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
   conf.humanRevisedRecEnd = W3CDate.format(conf.revisedRecEnd);

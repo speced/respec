@@ -22,7 +22,7 @@ export async function run(conf) {
       const outdatedOptionsStr = joinAnd(LEGACY_OPTIONS, s => `\`${s}\``);
       const msg = `Configuration options ${outdatedOptionsStr} are deprecated.`;
       const hint = `Please use the [\`group\`](https://respec.org/docs/#group) option instead.`;
-      pub("warn", `${msg} ${hint}`);
+      pub("warn", new RsError(msg, name, { hint }));
     }
     return;
   }

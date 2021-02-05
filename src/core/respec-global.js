@@ -9,6 +9,7 @@
  * backward compatibility. It is now an alias to `document.respec.ready`.
  */
 import { pub, sub } from "./pubsubhub.js";
+import { RsError } from "../core/utils.js";
 
 export const name = "core/respec-global";
 
@@ -40,7 +41,7 @@ export function init() {
         const msg =
           "`document.respecIsReady` is deprecated and will be removed in a future release.";
         const hint = "Use `document.respec.ready` instead.";
-        pub("warn", `${msg} ${hint}`);
+        pub("warn", new RsError(msg, name, { hint }));
         respecIsReadyWarningShown = true;
       }
       return document.respec.ready;
