@@ -4,7 +4,7 @@
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
-import { RsError, createResourceHint } from "./utils.js";
+import { createResourceHint, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
 import { fetchAsset } from "./text-loader.js";
 import { html } from "./import-maps.js";
@@ -77,7 +77,7 @@ export async function run(conf) {
       const msg = `Couldn't find feature "${options.feature}" on caniuse.com.`;
       const hint =
         "Please check the feature key on [caniuse.com](https://caniuse.com)";
-      pub("error", new RsError(msg, name, { hint }));
+      showError(msg, name, { hint });
       console.error(err);
       return html`<a href="${featureURL}">caniuse.com</a>`;
     }
@@ -118,7 +118,7 @@ function getNormalizedConf(conf) {
       const msg =
         `Ignoring invalid browser(s): ${names} in ` +
         "[`respecConfig.caniuse.browsers`](https://github.com/w3c/respec/wiki/caniuse)";
-      pub("warn", new RsError(msg, name));
+      showWarning(msg, name);
     }
   }
   return caniuseConf;

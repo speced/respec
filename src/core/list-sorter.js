@@ -1,6 +1,6 @@
 // @ts-check
-import { RsError } from "./utils.js";
-import { pub } from "./pubsubhub.js";
+import { showWarning } from "./utils.js";
+
 export const name = "core/list-sorter";
 
 function makeSorter(direction) {
@@ -75,7 +75,7 @@ export function run() {
       }
       default: {
         const msg = `ReSpec can't sort ${elem.localName} elements.`;
-        pub("warn", new RsError(msg, name, { elements: [elem] }));
+        showWarning(msg, name, { elements: [elem] });
       }
     }
     if (sortedElems) {

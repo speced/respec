@@ -16,15 +16,16 @@
  * @typedef {Map<string, { elems: HTMLElement[], results: SearchResultEntry[], query: RequestEntry }>} ErrorCollection
  * @typedef {{ ambiguous: ErrorCollection, notFound: ErrorCollection }} Errors
  */
+import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import {
-  RsError,
   createResourceHint,
   nonNormativeSelector,
   norm as normalize,
+  showError,
+  showWarning,
 } from "./utils.js";
-import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
-import { pub, sub } from "./pubsubhub.js";
 import { possibleExternalLinks } from "./link-to-dfn.js";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/xref";
 
@@ -140,7 +141,7 @@ function normalizeConfig(xref) {
       break;
     default: {
       const msg = `Invalid value for \`xref\` configuration option. Received: "${xref}".`;
-      pub("error", new RsError(msg, name));
+      showError(msg, name);
     }
   }
   return config;
@@ -152,7 +153,7 @@ function normalizeConfig(xref) {
     const msg =
       `Invalid profile "${profile}" in \`respecConfig.xref\`. ` +
       `Please use one of the supported profiles: ${supportedProfiles}.`;
-    pub("error", new RsError(msg, name));
+    showError(msg, name);
   }
 }
 
@@ -432,7 +433,7 @@ function addToReferences(elem, cite, normative, term, conf) {
     `Adding an informative reference to "${term}" from "${cite}" ` +
     "in a normative section";
   const title = "Error: Informative reference in normative section";
-  pub("warn", new RsError(msg, name, { title, elements: [elem] }));
+  showWarning(msg, name, { title, elements: [elem] });
 }
 
 /** @param {Errors} errors */
@@ -458,7 +459,7 @@ function showErrors({ ambiguous, notFound }) {
     const hint = howToFix(formUrl);
     const msg = `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}.`;
     const title = "Error: No matching dfn found.";
-    pub("error", new RsError(msg, name, { title, elements: elems, hint }));
+    showError(msg, name, { title, elements: elems, hint });
   }
 
   for (const { query, elems, results } of ambiguous.values()) {
@@ -469,7 +470,7 @@ function showErrors({ ambiguous, notFound }) {
     const hint = howToFix(formUrl);
     const msg = `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous.`;
     const title = "Error: Linking an ambiguous dfn.";
-    pub("error", new RsError(msg, name, { title, elements: elems, hint }));
+    showError(msg, name, { title, elements: elems, hint });
   }
 }
 

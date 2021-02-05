@@ -8,15 +8,15 @@
 
 import {
   InsensitiveStringSet,
-  RsError,
   getIntlData,
   getTextNodes,
   norm,
   refTypeFromContext,
+  showError,
+  showWarning,
 } from "./utils.js";
 import { html } from "./import-maps.js";
 import { idlStringToHtml } from "./inline-idl-parser.js";
-import { pub } from "./pubsubhub.js";
 import { renderInlineCitation } from "./render-biblio.js";
 
 export const name = "core/inlines";
@@ -117,7 +117,7 @@ function inlineRefMatches(matched) {
   const badReference = html`<span>${matched}</span>`;
   const msg = `Wasn't able to expand ${matched} as it didn't match any id in the document.`;
   const hint = `Please make sure there is element with id ${ref} in the document.`;
-  pub("error", new RsError(msg, name, { hint, elements: [badReference] }));
+  showError(msg, name, { hint, elements: [badReference] });
   return badReference;
 }
 
@@ -154,7 +154,7 @@ function inlineBibrefMatches(matched, txt, conf) {
     const msg =
       "Normative references in informative sections are not allowed. " +
       `Remove '!' from the start of the reference \`[[${ref}]]\``;
-    pub("warn", new RsError(msg, name, { elements: [citeElem] }));
+    showWarning(msg, name, { elements: [citeElem] });
   }
 
   if (type === "informative" && !illegal) {

@@ -4,9 +4,8 @@
  * Warns about nonexistent web platform tests.
  */
 import LinterRule from "../LinterRule.js";
-import { RsError } from "../utils.js";
 import { lang as defaultLang } from "../l10n.js";
-import { pub } from "../pubsubhub.js";
+import { showWarning } from "../utils.js";
 
 const name = "wpt-tests-exist";
 
@@ -86,7 +85,7 @@ async function getFilesInWPT(testSuiteURI, githubAPIBase) {
     }
   } catch (error) {
     const msg = "Failed to parse WPT directory from testSuiteURI";
-    pub("warn", new RsError(msg, `linter/${name}`));
+    showWarning(msg, `linter/${name}`);
     console.error(error);
     return null;
   }
@@ -100,7 +99,7 @@ async function getFilesInWPT(testSuiteURI, githubAPIBase) {
     const msg =
       "Failed to fetch files from WPT repository. " +
       `Request failed with error: ${error} (${response.status})`;
-    pub("warn", new RsError(msg, `linter/${name}`));
+    showWarning(msg, `linter/${name}`);
     return null;
   }
   /** @type {{ entries: string[] }} */

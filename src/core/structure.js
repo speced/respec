@@ -9,11 +9,11 @@
 //  - maxTocLevel: only generate a TOC so many levels deep
 
 import {
-  RsError,
   addId,
   getIntlData,
   parents,
   renameElement,
+  showError,
 } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
@@ -252,7 +252,7 @@ function skipFromToC() {
     const maxToc = parseInt(section.dataset.maxToc, 10);
     if (maxToc < 0 || maxToc > 6 || Number.isNaN(maxToc)) {
       const msg = "`data-max-toc` must have a value between 0-6 (inclusive).";
-      pub("error", new RsError(msg, name, { elements: [section] }));
+      showError(msg, name, { elements: [section] });
       continue;
     }
 

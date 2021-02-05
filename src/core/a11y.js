@@ -4,8 +4,7 @@
  * Lints for accessibility issues using axe-core package.
  */
 
-import { RsError } from "./utils.js";
-import { pub } from "./pubsubhub.js";
+import { showError, showWarning } from "./utils.js";
 
 export const name = "core/a11y";
 
@@ -44,7 +43,7 @@ export async function run(conf) {
     for (const [failureSummary, elements] of groupedBySummary) {
       const hints = formatHintsAsMarkdown(failureSummary);
       const details = `\n\n${description}.\n\n${hints}. ([Learn more](${helpUrl}))`;
-      pub("warn", new RsError(title, name, { details, elements }));
+      showWarning(title, name, { details, elements });
     }
   }
 }
@@ -70,7 +69,7 @@ async function getViolations(opts) {
     axe = await importAxe();
   } catch (error) {
     const msg = "Failed to load a11y linter.";
-    pub("error", new RsError(msg, name));
+    showError(msg, name);
     console.error(error);
     return [];
   }
@@ -80,7 +79,7 @@ async function getViolations(opts) {
     return result.violations;
   } catch (error) {
     const msg = "Error while looking for a11y issues.";
-    pub("error", new RsError(msg, name));
+    showError(msg, name);
     console.error(error);
     return [];
   }

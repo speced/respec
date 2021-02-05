@@ -1,7 +1,6 @@
 // @ts-check
 // expands empty anchors based on their context
-import { RsError, makeSafeCopy, norm } from "./utils.js";
-import { pub } from "./pubsubhub.js";
+import { makeSafeCopy, norm, showError } from "./utils.js";
 
 export const name = "core/anchor-expander";
 
@@ -18,7 +17,7 @@ export function run() {
       a.textContent = a.getAttribute("href");
       const msg = `Couldn't expand inline reference. The id "${id}" is not in the document.`;
       const title = `No matching id in document: ${id}.`;
-      pub("error", new RsError(msg, name, { title, elements: [a] }));
+      showError(msg, name, { title, elements: [a] });
       continue;
     }
     switch (matchingElement.localName) {
@@ -48,7 +47,7 @@ export function run() {
         a.textContent = a.getAttribute("href");
         const msg = "ReSpec doesn't support expanding this kind of reference.";
         const title = `Can't expand "#${id}".`;
-        pub("error", new RsError(msg, name, { title, elements: [a] }));
+        showError(msg, name, { title, elements: [a] });
       }
     }
     localize(matchingElement, a);
@@ -62,7 +61,7 @@ function processBox(matchingElement, id, a) {
     a.textContent = a.getAttribute("href");
     const msg = `Found matching element "${id}", but it has no title or marker.`;
     const title = "Missing title.";
-    pub("error", new RsError(msg, name, { title, elements: [a] }));
+    showError(msg, name, { title, elements: [a] });
     return;
   }
   const copy = makeSafeCopy(selfLink);
@@ -76,7 +75,7 @@ function processFigure(matchingElement, id, a) {
     a.textContent = a.getAttribute("href");
     const msg = `Found matching figure "${id}", but figure is lacking a \`<figcaption>\`.`;
     const title = "Missing figcaption in referenced figure.";
-    pub("error", new RsError(msg, name, { title, elements: [a] }));
+    showError(msg, name, { title, elements: [a] });
     return;
   }
   // remove the figure's title
@@ -100,7 +99,7 @@ function processSection(matchingElement, id, a) {
     const msg =
       "Found matching section, but the section was lacking a heading element.";
     const title = `No matching id in document: "${id}".`;
-    pub("error", new RsError(msg, name, { title, elements: [a] }));
+    showError(msg, name, { title, elements: [a] });
     return;
   }
   processHeading(heading, a);

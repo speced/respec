@@ -1,7 +1,6 @@
 // @ts-check
-import { RsError } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
-import { pub } from "../../core/pubsubhub.js";
+import { showWarning } from "../../core/utils.js";
 
 const name = "core/templates/show-logo";
 
@@ -19,7 +18,7 @@ export default function showLogo(logo) {
   const a = html`<a href="${logo.url || ""}" class="logo"></a>`;
   if (!logo.alt) {
     const msg = "Found spec logo without an `alt` attribute.";
-    pub("warn", new RsError(msg, name, { elements: [a] }));
+    showWarning(msg, name, { elements: [a] });
   }
   /** @type {HTMLImageElement} */
   const img = html`<img

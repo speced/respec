@@ -42,7 +42,7 @@
 //      - "cc-by-sa"
 //      - "cc-by"
 //      - "cc0"
-import { ISODate, RsError } from "../core/utils.js";
+import { ISODate, showError } from "../core/utils.js";
 import headersTmpl from "./templates/headers.js";
 import { pub } from "../core/pubsubhub.js";
 
@@ -75,7 +75,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   const msg =
     `[\`${prop}\`](https://github.com/w3c/respec/wiki/${prop}) ` +
     `is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
-  pub("error", new RsError(msg, name));
+  showError(msg, name);
   return new Date(ISODate.format(new Date()));
 }
 
@@ -84,7 +84,7 @@ export function run(conf) {
   conf.isBasic = conf.specStatus === "base";
   if (!conf.specStatus) {
     const msg = "Missing required configuration: `specStatus`";
-    pub("error", new RsError(msg, name));
+    showError(msg, name);
   }
   conf.title = document.title || "Kein Titel";
   if (!conf.subtitle) conf.subtitle = "";
@@ -98,14 +98,14 @@ export function run(conf) {
   const peopCheck = function (it) {
     if (!it.name) {
       const msg = "All authors and editors must have a name.";
-      pub("error", new RsError(msg, name));
+      showError(msg, name);
     }
     if (it.orcid) {
       try {
         it.orcid = normalizeOrcid(it.orcid);
       } catch (e) {
         const msg = `"${it.orcid}" is not an ORCID. ${e.message}`;
-        pub("error", new RsError(msg, name));
+        showError(msg, name);
         // A failed orcid link could link to something outside of orcid,
         // which would be misleading.
         delete it.orcid;
@@ -126,7 +126,7 @@ export function run(conf) {
   }
   if (!conf.editors || conf.editors.length === 0) {
     const msg = "At least one editor is required";
-    pub("error", new RsError(msg, name));
+    showError(msg, name);
   }
   if (conf.formerEditors.length) {
     conf.formerEditors.forEach(peopCheck);
@@ -140,7 +140,7 @@ export function run(conf) {
   (conf.alternateFormats || []).forEach(it => {
     if (!it.uri || !it.label) {
       const msg = "All alternate formats must have a uri and a label.";
-      pub("error", new RsError(msg, name));
+      showError(msg, name);
     }
   });
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)

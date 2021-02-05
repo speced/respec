@@ -1,7 +1,6 @@
 // @ts-check
-import { RsError } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
-import { pub } from "../../core/pubsubhub.js";
+import { showWarning } from "../../core/utils.js";
 
 const name = "core/templates/show-link";
 
@@ -15,7 +14,7 @@ export default function showLink(link) {
   if (!link.key) {
     const msg =
       "Found a link without `key` attribute in the configuration. See dev console.";
-    pub("warn", new RsError(msg, name));
+    showWarning(msg, name);
     console.warn(msg, link);
     return;
   }

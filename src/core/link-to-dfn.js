@@ -4,15 +4,15 @@
 // to the matching definitions.
 import {
   CaseInsensitiveMap,
-  RsError,
   addId,
   getIntlData,
   getLinkTargets,
+  showError,
+  showWarning,
   wrapInner,
 } from "./utils.js";
 import { THIS_SPEC, toCiteDetails } from "./data-cite.js";
 import { definitionMap } from "./dfn-map.js";
-import { pub } from "./pubsubhub.js";
 
 export const name = "core/link-to-dfn";
 
@@ -103,11 +103,10 @@ function mapTitleToDfns() {
     const { result, duplicates } = collectDfns(key);
     titleToDfns.set(key, result);
     if (duplicates.length > 0) {
-      const err = new RsError(l10n.duplicateMsg(key), name, {
+      showError(l10n.duplicateMsg(key), name, {
         title: l10n.duplicateTitle,
         elements: duplicates,
       });
-      pub("error", err);
     }
   }
   return titleToDfns;
@@ -276,7 +275,7 @@ function showLinkingError(elems) {
   elems.forEach(elem => {
     const msg = `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``;
     const title = "Linking error: not matching `<dfn>`";
-    pub("warn", new RsError(msg, name, { title, elements: [elem] }));
+    showWarning(msg, name, { title, elements: [elem] });
   });
 }
 

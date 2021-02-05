@@ -1,6 +1,6 @@
 // @ts-check
-import { RsError } from "./utils.js";
 import { expose } from "./expose-modules.js";
+import { showError } from "./utils.js";
 
 /**
  * Module core/pubsubhub
@@ -22,7 +22,7 @@ export function pub(topic, ...data) {
     } catch (err) {
       const msg = `Error when calling function ${cb.name}.`;
       const hint = "See developer console.";
-      pub("error", new RsError(msg, name, { hint }));
+      showError(msg, name, { hint });
       console.error(err);
     }
   });

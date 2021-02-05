@@ -5,14 +5,13 @@
 // Generates a Table of Figures wherever there is a #tof element.
 
 import {
-  RsError,
   addId,
   getIntlData,
   renameElement,
+  showWarning,
   wrapInner,
 } from "./utils.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
 
 export const name = "core/figures";
 
@@ -81,7 +80,7 @@ function collectFigures() {
       tof.push(getTableOfFiguresListItem(fig.id, caption));
     } else {
       const msg = "Found a `<figure>` without a `<figcaption>`.";
-      pub("warn", new RsError(msg, name, { elements: [fig] }));
+      showWarning(msg, name, { elements: [fig] });
     }
   });
   return tof;

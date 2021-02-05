@@ -343,7 +343,7 @@ export function runTransforms(content, flist, ...funcArgs) {
         } catch (e) {
           const msg = `call to \`${meth}()\` failed with: ${e}.`;
           const hint = "See developer console for stack trace.";
-          pub("warn", new RsError(msg, "utils/runTransforms", { hint }));
+          showWarning(msg, "utils/runTransforms", { hint });
           console.error(e);
         }
       }
@@ -895,6 +895,34 @@ export class RsError extends Error {
     const text = `${plugin}${this.message}${hint}${elements}${details}`;
     return markdownToHtml(text);
   }
+}
+
+/**
+ * @param {string} message
+ * @param {string} pluginName Name of plugin that caused the error.
+ * @param {object} [options]
+ * @param {string} [options.hint] How to solve the error?
+ * @param {HTMLElement[]} [options.elements] Offending elements.
+ * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
+ * @param {string} [options.details] Any further details/context.
+ */
+export function showError(message, pluginName, options = {}) {
+  const opts = { ...options, isWarning: false };
+  pub("error", new RsError(message, pluginName, opts));
+}
+
+/**
+ * @param {string} message
+ * @param {string} pluginName Name of plugin that caused the error.
+ * @param {object} [options]
+ * @param {string} [options.hint] How to solve the error?
+ * @param {HTMLElement[]} [options.elements] Offending elements.
+ * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
+ * @param {string} [options.details] Any further details/context.
+ */
+export function showWarning(message, pluginName, options = {}) {
+  const opts = { ...options, isWarning: true };
+  pub("warn", new RsError(message, pluginName, opts));
 }
 
 /**

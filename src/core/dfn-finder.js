@@ -1,7 +1,6 @@
 // @ts-check
-import { RsError, wrapInner } from "./utils.js";
 import { definitionMap, registerDefinition } from "./dfn-map.js";
-import { pub } from "./pubsubhub.js";
+import { showError, wrapInner } from "./utils.js";
 
 const topLevelEntities = new Set([
   "callback interface",
@@ -164,7 +163,7 @@ function findNormalDfn(defn, parent, ...names) {
         parent ? `for \`${parent}\`` : ""
       } is defined multiple times`;
       const title = "Duplicate definition.";
-      pub("error", new RsError(msg, name, { title, elements: dfns }));
+      showError(msg, name, { title, elements: dfns });
     }
     if (dfns.length) {
       return dfns[0];

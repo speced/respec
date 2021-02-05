@@ -8,8 +8,8 @@
  * This module also adds the legacy `document.respecIsReady` property for
  * backward compatibility. It is now an alias to `document.respec.ready`.
  */
-import { pub, sub } from "./pubsubhub.js";
-import { RsError } from "../core/utils.js";
+import { showWarning } from "../core/utils.js";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/respec-global";
 
@@ -41,7 +41,7 @@ export function init() {
         const msg =
           "`document.respecIsReady` is deprecated and will be removed in a future release.";
         const hint = "Use `document.respec.ready` instead.";
-        pub("warn", new RsError(msg, name, { hint }));
+        showWarning(msg, name, { hint });
         respecIsReadyWarningShown = true;
       }
       return document.respec.ready;

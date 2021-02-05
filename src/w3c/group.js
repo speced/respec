@@ -6,8 +6,12 @@
  * `wgURI`, and `wgPatentURI` options.
  */
 
-import { RsError, fetchAndCache, joinAnd } from "../core/utils.js";
-import { pub } from "../core/pubsubhub.js";
+import {
+  fetchAndCache,
+  joinAnd,
+  showError,
+  showWarning,
+} from "../core/utils.js";
 
 export const name = "w3c/group";
 
@@ -22,7 +26,7 @@ export async function run(conf) {
       const outdatedOptionsStr = joinAnd(LEGACY_OPTIONS, s => `\`${s}\``);
       const msg = `Configuration options ${outdatedOptionsStr} are deprecated.`;
       const hint = `Please use the [\`group\`](https://respec.org/docs/#group) option instead.`;
-      pub("warn", new RsError(msg, name, { hint }));
+      showWarning(msg, name, { hint });
     }
     return;
   }
@@ -31,7 +35,7 @@ export async function run(conf) {
     const outdatedOptionsStr = joinAnd(usedLegacyOptions, s => `\`${s}\``);
     const msg = `Configuration options ${outdatedOptionsStr} are superseded by \`group\` and will be overridden by ReSpec.`;
     const hint = "Please remove them from `respecConfig`.";
-    pub("warn", new RsError(msg, name, { hint }));
+    showWarning(msg, name, { hint });
   }
 
   const { group } = conf;
@@ -93,5 +97,5 @@ async function getGroupDetails(group) {
       ? "See [supported group names](https://respec.org/w3c/groups/) to use with the " +
         "[`group`](https://respec.org/docs/#group) configuration option."
       : undefined;
-  pub("error", new RsError(message, name, { hint }));
+  showError(message, name, { hint });
 }

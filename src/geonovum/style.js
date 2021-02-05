@@ -5,12 +5,12 @@
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
 import {
-  RsError,
   createResourceHint,
   linkCSS,
+  showWarning,
   toKeyValuePairs,
 } from "../core/utils.js";
-import { pub, sub } from "../core/pubsubhub.js";
+import { sub } from "../core/pubsubhub.js";
 export const name = "geonovum/style";
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
@@ -110,7 +110,7 @@ export function run(conf) {
   if (!conf.specStatus) {
     const msg = "`respecConfig.specStatus` missing. Defaulting to 'GN-BASIS'.";
     conf.specStatus = "GN-BASIS";
-    pub("warn", new RsError(msg, name));
+    showWarning(msg, name);
   }
 
   if (document.body.querySelector("figure.scalable")) {

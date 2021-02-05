@@ -4,8 +4,8 @@
  *
  * Core linter module. Exports a linter object.
  */
-import { RsError } from "./utils.js";
-import { pub } from "./pubsubhub.js";
+import { showWarning } from "./utils.js";
+
 export const name = "core/linter";
 
 /** @type {WeakMap<Linter, { rules: Set<import("./LinterRule").default> }>} */
@@ -69,8 +69,7 @@ async function toLinterWarning(resultPromise) {
     : `${description} (Count: ${occurrences})`;
   const plugin = `${name}/${linterName}`;
   const hint = `${howToFix} ${help}`;
-  const err = new RsError(msg, plugin, { hint, elements: offendingElements });
-  pub("warn", err);
+  showWarning(msg, plugin, { hint, elements: offendingElements });
 }
 
 export function run(conf) {
