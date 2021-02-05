@@ -11,7 +11,10 @@
 //  - once we have something decent, merge, ship as 3.2.0
 import { html, pluralize } from "./import-maps.js";
 import { fetchAsset } from "./text-loader.js";
+import { joinAnd } from "./utils.js";
+import { markdownToHtml } from "./markdown.js";
 import { sub } from "./pubsubhub.js";
+
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
@@ -169,7 +172,7 @@ function createWarnButton(butName, arr, title) {
     for (const err of arr) {
       const fragment = document
         .createRange()
-        .createContextualFragment(err.toHTML ? err.toHTML() : err.toString());
+        .createContextualFragment(rsErrorToHTML(err));
       const li = document.createElement("li");
       // if it's only a single element, just copy the contents into li
       if (fragment.firstElementChild === fragment.lastElementChild) {
@@ -275,3 +278,32 @@ document.addEventListener("keydown", ev => {
 window.respecUI = ui;
 sub("error", rsError => ui.error(rsError));
 sub("warn", rsError => ui.warning(rsError));
+
+/**
+ * @param {string|import("./utils.js").RsError} err
+ */
+function rsErrorToHTML(err) {
+  if (typeof err === "string") {
+    return err;
+  }
+
+  const plugin = err.plugin ? `(${err.plugin}): ` : "";
+  const hint = err.hint ? ` ${err.hint}.` : "";
+  const elements = Array.isArray(err.elements)
+    ? ` Occurred at: ${joinAnd(err.elements.map(generateMarkdownLink))}.`
+    : "";
+  const details = err.details
+    ? `\n\n<details>\n${err.details}\n</details>\n`
+    : "";
+
+  const text = `${plugin}${err.message}${hint}${elements}${details}`;
+  return markdownToHtml(text);
+}
+
+/**
+ * @param {Element} element
+ * @param {number} i
+ */
+function generateMarkdownLink(element, i) {
+  return `[${i + 1}](#${element.id})`;
+}

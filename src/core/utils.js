@@ -4,8 +4,8 @@
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
 import { html } from "./import-maps.js";
-import { markdownToHtml } from "./markdown.js";
 import { pub } from "./pubsubhub.js";
+
 export const name = "core/utils";
 
 const dashes = /-/g;
@@ -881,20 +881,6 @@ export class RsError extends Error {
       );
     }
   }
-
-  toHTML() {
-    const plugin = this.plugin ? `(${this.plugin}): ` : "";
-    const hint = this.hint ? ` ${this.hint}.` : "";
-    const elements = Array.isArray(this.elements)
-      ? ` Occurred at: ${joinAnd(this.elements.map(generateMarkdownLink))}.`
-      : "";
-    const details = this.details
-      ? `\n\n<details>\n${this.details}\n</details>\n`
-      : "";
-
-    const text = `${plugin}${this.message}${hint}${elements}${details}`;
-    return markdownToHtml(text);
-  }
 }
 
 /**
@@ -923,12 +909,4 @@ export function showError(message, pluginName, options = {}) {
 export function showWarning(message, pluginName, options = {}) {
   const opts = { ...options, isWarning: true };
   pub("warn", new RsError(message, pluginName, opts));
-}
-
-/**
- * @param {Element} element
- * @param {number} i
- */
-function generateMarkdownLink(element, i) {
-  return `[${i + 1}](#${element.id})`;
 }
