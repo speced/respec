@@ -853,10 +853,9 @@ export class CaseInsensitiveMap extends Map {
 
 export class RespecError extends Error {
   /**
-   * @typedef { Parameters<typeof showError>} RsErrorInputs
-   * @param {RsErrorInputs[0]} message
-   * @param {RsErrorInputs[1]} plugin
-   * @param {RsErrorInputs[2] & { isWarning: boolean }} options
+   * @param {Parameters<typeof showError>[0]} message
+   * @param {Parameters<typeof showError>[1]} plugin
+   * @param {Parameters<typeof showError>[2] & { isWarning: boolean }} options
    */
   constructor(message, plugin, options) {
     super(message);
