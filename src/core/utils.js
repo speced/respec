@@ -851,7 +851,7 @@ export class CaseInsensitiveMap extends Map {
   }
 }
 
-export class RsError extends Error {
+export class RespecError extends Error {
   /**
    * @typedef { Parameters<typeof showError>} RsErrorInputs
    * @param {RsErrorInputs[0]} message
@@ -894,7 +894,7 @@ export class RsError extends Error {
  */
 export function showError(message, pluginName, options = {}) {
   const opts = { ...options, isWarning: false };
-  pub("error", new RsError(message, pluginName, opts));
+  pub("error", new RespecError(message, pluginName, opts));
 }
 
 /**
@@ -908,5 +908,5 @@ export function showError(message, pluginName, options = {}) {
  */
 export function showWarning(message, pluginName, options = {}) {
   const opts = { ...options, isWarning: true };
-  pub("warn", new RsError(message, pluginName, opts));
+  pub("warn", new RespecError(message, pluginName, opts));
 }
