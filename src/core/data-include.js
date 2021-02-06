@@ -90,8 +90,8 @@ export async function run() {
       processResponse(text, id, url);
     } catch (err) {
       const msg = `\`data-include\` failed: \`${url}\` (${err.message}).`;
+      console.error(msg, el, err);
       showError(msg, name, { elements: [el] });
-      console.error(err);
     }
   });
   await Promise.all(promisesToInclude);

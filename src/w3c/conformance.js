@@ -80,8 +80,7 @@ export function run(conf) {
   }
   // Warn when there are RFC2119/RFC8174 keywords, but not conformance section
   if (!conformance && Object.keys(rfc2119Usage).length) {
-    const msg =
-      "Document uses RFC2119 keywords but lacks a conformance section. ";
+    const msg = `Document uses RFC2119 keywords but lacks a conformance section.`;
     const hint = 'Please add a `<section id="conformance">`.';
     showWarning(msg, name, { hint });
   }

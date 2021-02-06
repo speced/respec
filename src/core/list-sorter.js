@@ -1,6 +1,5 @@
 // @ts-check
 import { showWarning } from "./utils.js";
-
 export const name = "core/list-sorter";
 
 function makeSorter(direction) {

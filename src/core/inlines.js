@@ -151,10 +151,9 @@ function inlineBibrefMatches(matched, txt, conf) {
   const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
     const citeElem = cite.childNodes[1] || cite;
-    const msg =
-      "Normative references in informative sections are not allowed. " +
-      `Remove '!' from the start of the reference \`[[${ref}]]\``;
-    showWarning(msg, name, { elements: [citeElem] });
+    const msg = `Normative references in informative sections are not allowed. `;
+    const hint = `Remove '!' from the start of the reference \`[[${ref}]]\``;
+    showWarning(msg, name, { elements: [citeElem], hint });
   }
 
   if (type === "informative" && !illegal) {

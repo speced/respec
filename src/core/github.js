@@ -6,7 +6,6 @@
  */
 
 import { getIntlData, showError, showWarning } from "../core/utils.js";
-
 export const name = "core/github";
 
 let resolveGithubPromise;

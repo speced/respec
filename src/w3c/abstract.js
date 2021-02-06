@@ -2,7 +2,6 @@
 // Module w3c/abstract
 // Handle the abstract section properly.
 import { getIntlData, showError } from "../core/utils.js";
-
 export const name = "w3c/abstract";
 
 const localizationStrings = {

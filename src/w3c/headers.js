@@ -723,9 +723,8 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
     additionalContent.appendChild(sotdClone.firstChild);
   }
   if (isTagFinding && !additionalContent.hasChildNodes()) {
-    const msg =
-      "ReSpec does not support automated SotD generation for TAG findings.";
-    const hint = "Please add the prerequisite content in the 'sotd' section.";
+    const msg = `ReSpec does not support automated SotD generation for TAG findings.`;
+    const hint = `Please add the prerequisite content in the 'sotd' section.`;
     showWarning(msg, name, { hint });
   }
   return {

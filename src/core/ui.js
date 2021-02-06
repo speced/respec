@@ -14,7 +14,6 @@ import { fetchAsset } from "./text-loader.js";
 import { joinAnd } from "./utils.js";
 import { markdownToHtml } from "./markdown.js";
 import { sub } from "./pubsubhub.js";
-
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
@@ -137,14 +136,6 @@ const ariaMap = new Map([
 ]);
 ariaDecorate(respecPill, ariaMap);
 
-/**
- *
- * @typedef {import('./utils.js').RsError} RsError
- * @param {RsError} err
- * @param {RsError[]} arr
- * @param {"error" | "warning"} butName
- * @param {string} title
- */
 function errWarn(err, arr, butName, title) {
   arr.push(err);
   if (!buttons.hasOwnProperty(butName)) {
@@ -158,9 +149,6 @@ function errWarn(err, arr, butName, title) {
   ariaDecorate(button, ariaMap);
 }
 
-/**
- * @param {RsError[]} arr
- */
 function createWarnButton(butName, arr, title) {
   const buttonId = `respec-pill-${butName}`;
   const button = html`<button
@@ -277,10 +265,10 @@ document.addEventListener("keydown", ev => {
   }
 });
 window.respecUI = ui;
-sub("error", rsError => ui.error(rsError));
-sub("warn", rsError => ui.warning(rsError));
+sub("error", details => ui.error(details));
+sub("warn", details => ui.warning(details));
 
-/** @param {RsError} err */
+/** @param {import("./utils.js").RsError | string} err */
 function rsErrorToHTML(err) {
   if (typeof err === "string") {
     return err;

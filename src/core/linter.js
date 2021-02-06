@@ -5,7 +5,6 @@
  * Core linter module. Exports a linter object.
  */
 import { showWarning } from "./utils.js";
-
 export const name = "core/linter";
 
 /** @type {WeakMap<Linter, { rules: Set<import("./LinterRule").default> }>} */

@@ -5,7 +5,6 @@
 import { lang as docLang } from "./l10n.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
-
 export const name = "core/utils";
 
 const dashes = /-/g;
@@ -852,18 +851,14 @@ export class CaseInsensitiveMap extends Map {
   }
 }
 
-export class RsError extends Error {
+class RsError extends Error {
   /**
-   * @param {string} message
-   * @param {string} plugin Name of plugin that caused the error.
-   * @param {object} [options]
-   * @param {boolean} [options.isWarning] Is it an error, or warning?
-   * @param {string} [options.hint] How to solve the error?
-   * @param {HTMLElement[]} [options.elements] Offending elements.
-   * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
-   * @param {string} [options.details] Any further details/context.
+   * @typedef { Parameters<typeof showError>} RsErrorInputs
+   * @param {RsErrorInputs[0]} message
+   * @param {RsErrorInputs[1]} plugin
+   * @param {RsErrorInputs[2] & { isWarning: boolean }} options
    */
-  constructor(message, plugin, options = {}) {
+  constructor(message, plugin, options) {
     super(message);
     // Make "message" an enumerable property so it can be serialized easily.
     Object.defineProperty(this, "message", {

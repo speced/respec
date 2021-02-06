@@ -17,7 +17,6 @@ import {
   wrapInner,
 } from "./utils.js";
 import { sub } from "./pubsubhub.js";
-
 export const name = "core/data-cite";
 
 /**

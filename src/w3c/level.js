@@ -6,7 +6,6 @@
  */
 
 import { getIntlData, showError } from "../core/utils.js";
-
 export const name = "w3c/level";
 
 const localizationStrings = {

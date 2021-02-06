@@ -4,7 +4,6 @@
 
 import { htmlJoinComma, showError } from "./utils.js";
 import { html } from "./import-maps.js";
-
 const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}} {{ double }}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;

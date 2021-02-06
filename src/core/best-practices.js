@@ -61,9 +61,8 @@ export function run() {
       bpSummary.appendChild(summaryItems);
     }
   } else if (bpSummary) {
-    const message =
-      "Using best practices summary (#bp-summary) but no best practices found.";
-    showWarning(message, name);
+    const msg = `Using best practices summary (#bp-summary) but no best practices found.`;
+    showWarning(msg, name);
     bpSummary.remove();
   }
 }

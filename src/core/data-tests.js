@@ -11,7 +11,6 @@
  */
 import { getIntlData, showError, showWarning } from "./utils.js";
 import { html } from "./import-maps.js";
-
 const localizationStrings = {
   en: {
     missing_test_suite_uri:

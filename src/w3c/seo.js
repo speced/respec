@@ -4,7 +4,6 @@
 // e.g. set the canonical URL for the document if configured
 import { resolveRef } from "../core/biblio.js";
 import { showWarning } from "../core/utils.js";
-
 export const name = "w3c/seo";
 export async function run(conf) {
   // Don't include a canonical URL for documents
