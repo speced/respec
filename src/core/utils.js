@@ -851,7 +851,7 @@ export class CaseInsensitiveMap extends Map {
   }
 }
 
-class RsError extends Error {
+export class RsError extends Error {
   /**
    * @typedef { Parameters<typeof showError>} RsErrorInputs
    * @param {RsErrorInputs[0]} message
