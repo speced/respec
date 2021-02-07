@@ -282,6 +282,10 @@ export function run(conf) {
       conf.nl_organisationPublishURL += "/";
   }
 
+  // pieter added subdomain
+  const subdomain = conf.pubSubDomain ? `${conf.pubSubDomain}/` : ``;
+
+
   const specStatus = conf.specStatus.includes("GN")
     ? conf.specStatus.substr(3).toLowerCase()
     : conf.specStatus.toLowerCase();
@@ -292,7 +296,7 @@ export function run(conf) {
   ) {
     conf.thisVersion = `${conf.nl_organisationPublishURL}${
       conf.pubDomain
-    }/${specStatus}-${conf.specType.toLowerCase()}-${
+    }/${subdomain}${specStatus}-${conf.specType.toLowerCase()}-${
       conf.shortName
     }-${concatDate(conf.publishDate)}/`;
   } else {
@@ -331,7 +335,7 @@ export function run(conf) {
     conf.prevVersion = `None${conf.previousPublishDate}`;
     conf.prevVersion = `${conf.nl_organisationPublishURL}${
       conf.pubDomain
-    }/${prevStatus}-${prevType}-${conf.shortName}-${concatDate(
+    }/${subdomain}${prevStatus}-${prevType}-${conf.shortName}-${concatDate(
       conf.previousPublishDate
     )}/`;
   }
