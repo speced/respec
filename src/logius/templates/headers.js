@@ -143,8 +143,8 @@ export default (conf, options) => {
       ${!conf.isNoTrack
         ? html`
             <dt>${l10n.this_version}</dt>
-            <dd>
-              <a class="u-url" href="${conf.thisVersion}"
+            <dd class="status">
+              <a class="u-url status" href="${conf.thisVersion}"
                 >${conf.thisVersion}</a
               >
             </dd>

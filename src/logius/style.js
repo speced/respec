@@ -139,7 +139,7 @@ export function run(conf) {
     // override nl_organisationPrefix 
     conf.nl_organisationPrefix = "GN-";
     pub("warn", `respecConfig.nl_organisationStylesURL missing. Defaulting to '${conf.nl_organisationStylesURL}'.`);
-    pub("warn", "`respecConfig.nl_organisationPrefix` missing. Defaulting to 'GN-'.");
+    pub("warn", `respecConfig.nl_organisationPrefix missing. Defaulting to 'GN-.'`);
   }
   if (!conf.nl_organisationPrefix) {
     // default to geonovum

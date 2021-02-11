@@ -1,4 +1,7 @@
 // @ts-check
+
+import { pub } from "../core/pubsubhub.js";
+
 /**
  * this module fixes some peculiarities in core/github for the Dutch context
  *
@@ -6,6 +9,11 @@
 export const name = "logius/github";
 
 export function run(conf) {
+
+  if (!conf.nl_github) {
+    pub("warn", "respecConfig.nl_github not set"); 
+    return;
+  }
   // override respec github settings if present
   conf.otherLinks
     .filter(item => item.key === "Doe mee") // todo: using the Dutch expression as a filter
