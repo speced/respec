@@ -8,7 +8,6 @@ on:
       - "!**.css"
       - "!**.html"
       - "!.github/workflows/**"
-      - "!.snyk"
 
 env:
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1

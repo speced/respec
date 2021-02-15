@@ -58,7 +58,6 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^11.3.2",
-    "snyk": "^1.440.5",
     "typescript": "^4.1.3",
     "webidl2": "^23.13.0"
   },
@@ -70,15 +69,12 @@
     "build:w3c": "node ./tools/builder.js --profile=w3c",
     "build:dini-debug": "node run build:dini -- --debug",
     "build:dini": "node ./tools/builder.js --profile=dini",
-    "build": "snyk protect",
     "builddeps": "rollup -c js/deps/rollup.config.js",
     "karma": "karma start --single-run",
     "lint": "tsc -p src/jsconfig.json && eslint .",
-    "prepare": "npm run snyk-protect && npm run builddeps",
+    "prepare": "npm run builddeps",
     "release": "node ./tools/release.js",
     "server": "serve",
-    "snyk-protect": "snyk protect",
-    "snyk": "snyk",
     "start": "node ./tools/dev-server.js",
     "test:build": "jasmine --random=false ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
@@ -99,7 +95,6 @@
     "trailingComma": "es5",
     "arrowParens": "avoid"
   },
-  "snyk": true,
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/respec"
