@@ -76,8 +76,6 @@ describe("Core — list-sorter", () => {
     </section>`;
     const ops = makeStandardOps(null, body);
     doc = await makeRSDoc(ops);
-
-    console.log(doc.getElementById("test").outerHTML);
   });
   describe("Ordered and unordered lists", () => {
     it("sorts ordered lists in ascending order", () => {

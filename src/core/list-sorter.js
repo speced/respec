@@ -1,11 +1,12 @@
 // @ts-check
+import { lang } from "../core/l10n.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/list-sorter";
 
 function makeSorter(direction) {
   const order = direction === "ascending" ? 1 : -1;
   return ({ textContent: a }, { textContent: b }) => {
-    return order * a.trim().localeCompare(b.trim());
+    return order * a.trim().localeCompare(b.trim(), lang);
   };
 }
 /**
