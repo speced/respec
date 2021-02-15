@@ -430,10 +430,8 @@ function addToReferences(elem, cite, normative, term, conf) {
     return;
   }
 
-  const msg =
-    `Adding an informative reference to "${term}" from "${cite}" ` +
-    "in a normative section";
-  const title = "Error: Informative reference in normative section";
+  const msg = `Normative reference to "${term}" found but term is defined informatively in "${cite}"`;
+  const title = "Error: Normative reference to informative term";
   showInlineWarning(elem, msg, title);
 }
 
