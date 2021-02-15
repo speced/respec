@@ -26,7 +26,7 @@
     "@types/marked": "^1.2.2",
     "@types/pluralize": "0.0.29",
     "boxen": "^5.0.0",
-    "chai": "^4.2.0",
+    "chai": "^4.3.0",
     "chokidar": "^3.5.1",
     "clean-css": "^5.0.1",
     "epipebomb": "^1.0.0",
