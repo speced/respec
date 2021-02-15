@@ -235,7 +235,7 @@ function appendSectionNumbers() {
 function createExternalTermIndex() {
   const data = collectExternalTerms();
   const dataSortedBySpec = [...data.entries()].sort(([specA], [specB]) =>
-    specA.localeCompare(specB)
+    specA.localeCompare(specB, "en")
   );
   return html`<ul class="index">
     ${dataSortedBySpec.map(
@@ -243,7 +243,7 @@ function createExternalTermIndex() {
         ${renderInlineCitation(spec)} defines the following:
         <ul>
           ${entries
-            .sort((a, b) => a.term.localeCompare(b.term))
+            .sort((a, b) => a.term.localeCompare(b.term, "en"))
             .map(renderExternalTermEntry)}
         </ul>
       </li>`
