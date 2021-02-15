@@ -558,7 +558,7 @@ describe("Core — xref", () => {
     );
     expect(badLink.classList).toContain("respec-offending-element");
     expect(badLink.title).toBe(
-      "Error: Informative reference in normative section"
+      "Error: Normative reference to informative term"
     );
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
