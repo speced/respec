@@ -108,7 +108,7 @@ function collectLocalTerms() {
   }
 
   const dataSortedByTerm = [...data].sort(([a], [b]) =>
-    a.slice(a.search(/\w/)).localeCompare(b.slice(b.search(/\w/)))
+    a.slice(a.search(/\w/)).localeCompare(b.slice(b.search(/\w/)), "en")
   );
 
   return dataSortedByTerm;
