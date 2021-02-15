@@ -6,7 +6,7 @@ describe("Core — list-sorter", () => {
   afterAll(flushIframes);
   let doc;
   beforeAll(async () => {
-    const body = `<section id="test">
+    const body = `
       <ol data-sort=ascending>
         <li>F</li>
         <li>Z</li>
@@ -73,7 +73,7 @@ describe("Core — list-sorter", () => {
         <li>B </li>
         <li>B</li>
       </ul>
-    </section>`;
+    `;
     const ops = makeStandardOps(null, body);
     doc = await makeRSDoc(ops);
   });
