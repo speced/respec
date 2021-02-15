@@ -49,7 +49,6 @@ jobs:
         run: |
           npm ci
           npm run build:w3c & npm run build:geonovum
-      - run: locale
       - run: npm run test:karma
         env:
           BROWSERS: ${{ matrix.browser }}
