@@ -114,6 +114,10 @@ function processHeading(heading, a) {
   a.append(...children);
   if (hadSelfLink) a.prepend("§\u00A0");
   a.classList.add("sec-ref");
+  // Trim stray whitespace of the last text node (see bug #3265).
+  if (a.lastChild.nodeType === Node.TEXT_NODE) {
+    a.lastChild.textContent = a.lastChild.textContent.trimEnd();
+  }
 }
 
 function localize(matchingElement, newElement) {
