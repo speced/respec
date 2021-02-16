@@ -6,7 +6,7 @@ describe("W3C — Defaults", () => {
   afterAll(flushIframes);
   it("sets sensible defaults for w3c specs", async () => {
     const ops = {
-      config: { editors: [{ name: "foo" }] },
+      config: { editors: [{ name: "foo" }], specStatus: "base" },
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);

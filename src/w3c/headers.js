@@ -186,29 +186,42 @@ const noTrackStatus = [
 ];
 const cgbg = ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"];
 const precededByAn = ["ED", "IG-NOTE"];
-const licenses = {
-  cc0: {
-    name: "Creative Commons 0 Public Domain Dedication",
-    short: "CC0",
-    url: "https://creativecommons.org/publicdomain/zero/1.0/",
-  },
-  "w3c-software": {
-    name: "W3C Software Notice and License",
-    short: "W3C Software",
-    url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
-  },
-  "w3c-software-doc": {
-    name: "W3C Software and Document Notice and License",
-    short: "W3C Software and Document",
-    url:
-      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
-  },
-  "cc-by": {
-    name: "Creative Commons Attribution 4.0 International Public License",
-    short: "CC-BY",
-    url: "https://creativecommons.org/licenses/by/4.0/legalcode",
-  },
-};
+const licenses = new Map([
+  [
+    "cc0",
+    {
+      name: "Creative Commons 0 Public Domain Dedication",
+      short: "CC0",
+      url: "https://creativecommons.org/publicdomain/zero/1.0/",
+    },
+  ],
+  [
+    "w3c-software",
+    {
+      name: "W3C Software Notice and License",
+      short: "W3C Software",
+      url:
+        "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
+    },
+  ],
+  [
+    "w3c-software-doc",
+    {
+      name: "W3C Software and Document Notice and License",
+      short: "W3C Software and Document",
+      url:
+        "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+    },
+  ],
+  [
+    "cc-by",
+    {
+      name: "Creative Commons Attribution 4.0 International Public License",
+      short: "CC-BY",
+      url: "https://creativecommons.org/licenses/by/4.0/legalcode",
+    },
+  ],
+]);
 
 const baseLogo = Object.freeze({
   id: "",
@@ -243,14 +256,29 @@ export function run(conf) {
   if (conf.isUnofficial && !Array.isArray(conf.logos)) {
     conf.logos = [];
   }
+  if (conf.isUnofficial) {
+    if (conf.license && !licenses.has(conf.license)) {
+      const msg = `The \`license\` configuration option has an invalid value: "\`${conf.license}\`". Defaulting to "cc-by".`;
+      const licensesKeys = [...licenses.keys()]
+        .map(key => `\`${key}\``)
+        .join(", ");
+      const hint = `Please explicitly set \`license\` to one of: ${licensesKeys}`;
+      showError(msg, name, { hint });
+      conf.license = "cc-by";
+    }
+    // default it to cc-by
+    if (conf.license === undefined) {
+      conf.license = "cc-by";
+    }
+  }
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-  if (["cc-by"].includes(conf.license)) {
+  if (!conf.isUnofficial && ["cc-by"].includes(conf.license)) {
     const msg = `You cannot use license "\`${conf.license}\`" with W3C Specs.`;
-    const hint = `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
+    const hint = `Please set \`license\` to "w3c-software-doc" instead`;
     showError(msg, name, { hint });
   }
-  conf.licenseInfo = licenses[conf.license];
+  conf.licenseInfo = licenses.get(conf.license);
   conf.isCGBG = cgbg.includes(conf.specStatus);
   conf.isCGFinal = conf.isCGBG && conf.specStatus.endsWith("G-FINAL");
   conf.isBasic = conf.specStatus === "base";
@@ -385,7 +413,7 @@ export function run(conf) {
       !conf.isNoTrack &&
       !conf.isSubmission
     ) {
-      const msg = "Document on track but no previous version.";
+      const msg = "Document on track but no previous version";
       const hint =
         "Add `previousMaturity`, and `previousPublishDate` to ReSpec's config.";
       showError(msg, name, { hint });
