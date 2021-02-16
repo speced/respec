@@ -1023,7 +1023,7 @@ describe("W3C — Headers", () => {
       ops.config = {
         shortName: "whatever",
         specStatus: "unofficial",
-        licenses: "not a thing",
+        license: "not a thing",
         editors: [{ name: "foo" }],
       };
       const doc = await makeRSDoc(ops);
