@@ -21,11 +21,11 @@ import {
   createResourceHint,
   nonNormativeSelector,
   norm as normalize,
-  showInlineError,
-  showInlineWarning,
+  showError,
+  showWarning,
 } from "./utils.js";
-import { pub, sub } from "./pubsubhub.js";
 import { possibleExternalLinks } from "./link-to-dfn.js";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/xref";
 
@@ -139,11 +139,10 @@ function normalizeConfig(xref) {
         }
       }
       break;
-    default:
-      pub(
-        "error",
-        `Invalid value for \`xref\` configuration option. Received: "${xref}".`
-      );
+    default: {
+      const msg = `Invalid value for \`xref\` configuration option. Received: "${xref}".`;
+      showError(msg, name);
+    }
   }
   return config;
 
@@ -154,7 +153,7 @@ function normalizeConfig(xref) {
     const msg =
       `Invalid profile "${profile}" in \`respecConfig.xref\`. ` +
       `Please use one of the supported profiles: ${supportedProfiles}.`;
-    pub("error", msg);
+    showError(msg, name);
   }
 }
 
@@ -432,7 +431,7 @@ function addToReferences(elem, cite, normative, term, conf) {
 
   const msg = `Normative reference to "${term}" found but term is defined informatively in "${cite}"`;
   const title = "Error: Normative reference to informative term";
-  showInlineWarning(elem, msg, title);
+  showWarning(msg, name, { title, elements: [elem] });
 }
 
 /** @param {Errors} errors */
@@ -456,8 +455,9 @@ function showErrors({ ambiguous, notFound }) {
     const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
     const hint = howToFix(formUrl);
-    const msg = `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}. ${hint}`;
-    showInlineError(elems, msg, "Error: No matching dfn found.");
+    const msg = `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}.`;
+    const title = "Error: No matching dfn found.";
+    showError(msg, name, { title, elements: elems, hint });
   }
 
   for (const { query, elems, results } of ambiguous.values()) {
@@ -466,8 +466,9 @@ function showErrors({ ambiguous, notFound }) {
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const hint = howToFix(formUrl);
-    const msg = `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ${hint}`;
-    showInlineError(elems, msg, "Error: Linking an ambiguous dfn.");
+    const msg = `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous.`;
+    const title = "Error: Linking an ambiguous dfn.";
+    showError(msg, name, { title, elements: elems, hint });
   }
 }
 

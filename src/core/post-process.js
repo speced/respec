@@ -9,7 +9,8 @@
  *      want to be using a new module with your own profile.
  *  - afterEnd: final thing that is called.
  */
-import { pub, sub } from "./pubsubhub.js";
+import { showError } from "./utils.js";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/post-process";
 
@@ -27,7 +28,8 @@ sub(
         .filter(f => {
           const isFunction = typeof f === "function";
           if (!isFunction) {
-            pub("error", "Every item in `postProcess` must be a JS function.");
+            const msg = "Every item in `postProcess` must be a JS function.";
+            showError(msg, name);
           }
           return isFunction;
         })
@@ -35,10 +37,9 @@ sub(
           try {
             return await f(config, document);
           } catch (err) {
-            pub(
-              "error",
-              `Function ${f.name} threw an error during \`postProcess\`. See developer console.`
-            );
+            const msg = `Function ${f.name} threw an error during \`postProcess\`.`;
+            const hint = "See developer console.";
+            showError(msg, name, { hint });
             console.error(err);
           }
         });

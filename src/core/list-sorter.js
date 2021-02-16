@@ -1,5 +1,5 @@
 // @ts-check
-import { pub } from "./pubsubhub.js";
+import { showWarning } from "./utils.js";
 export const name = "core/list-sorter";
 
 function makeSorter(direction) {
@@ -72,8 +72,10 @@ export function run() {
         sortedElems = sortListItems(list, dir);
         break;
       }
-      default:
-        pub("warning", `ReSpec can't sort ${elem.localName} elements.`);
+      default: {
+        const msg = `ReSpec can't sort ${elem.localName} elements.`;
+        showWarning(msg, name, { elements: [elem] });
+      }
     }
     if (sortedElems) {
       const range = document.createRange();

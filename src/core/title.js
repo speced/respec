@@ -10,7 +10,7 @@
  *
  */
 
-import { getIntlData, norm, showInlineError } from "./utils.js";
+import { getIntlData, norm, showError } from "./utils.js";
 import { html } from "./import-maps.js";
 export const name = "core/title";
 
@@ -40,8 +40,8 @@ export function run(conf) {
       "To fix this, please give your document a `<title>`. " +
       "If you need special markup in the document's title, " +
       'please use a `<h1 id="title">`.';
-    const msgTitle = "Document is missing a title";
-    showInlineError(h1Elem, msg, msgTitle);
+    const title = "Document is missing a title";
+    showError(msg, name, { title, elements: [h1Elem] });
   }
 
   // Decorate the spec title

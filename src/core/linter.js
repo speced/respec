@@ -4,8 +4,7 @@
  *
  * Core linter module. Exports a linter object.
  */
-import { pub } from "./pubsubhub.js";
-import { showInlineWarning } from "./utils.js";
+import { showWarning } from "./utils.js";
 export const name = "core/linter";
 
 /** @type {WeakMap<Linter, { rules: Set<import("./LinterRule").default> }>} */
@@ -60,16 +59,16 @@ async function toLinterWarning(resultPromise) {
     description,
     help,
     howToFix,
-    name,
+    name: linterName,
     occurrences,
     offendingElements,
   } = output;
-  const message = `Linter (${name}): ${description} ${howToFix} ${help}`;
-  if (offendingElements.length) {
-    showInlineWarning(offendingElements, `${message} Occured`);
-  } else {
-    pub("warn", `${message} (Count: ${occurrences})`);
-  }
+  const msg = offendingElements.length
+    ? description
+    : `${description} (Count: ${occurrences})`;
+  const plugin = `${name}/${linterName}`;
+  const hint = `${howToFix} ${help}`;
+  showWarning(msg, plugin, { hint, elements: offendingElements });
 }
 
 export function run(conf) {

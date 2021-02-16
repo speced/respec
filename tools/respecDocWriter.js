@@ -271,13 +271,21 @@ async function evaluateHTML(version, timer) {
 function handleConsoleMessages(page, onError, onWarning) {
   /** @param {import('puppeteer').JSHandle<any>} handle */
   async function stringifyJSHandle(handle) {
-    return await handle.executionContext().evaluate(o => String(o), handle);
+    return await handle.executionContext().evaluate(obj => {
+      if (typeof obj === "string") {
+        // Old ReSpec versions might report errors as strings.
+        return JSON.stringify({ message: String(obj) });
+      } else {
+        // Ideally: `obj instanceof RsError` and `RsError instanceof Error`.
+        return JSON.stringify(obj);
+      }
+    }, handle);
   }
 
   page.on("console", async message => {
     const args = await Promise.all(message.args().map(stringifyJSHandle));
     const msgText = message.text();
-    const text = args.filter(msg => msg !== "undefined").join(" ");
+    const text = args.filter(msg => msg !== "undefined")[0] || "";
     const type = message.type();
     if (
       (type === "error" || type === "warning") &&
@@ -292,9 +300,9 @@ function handleConsoleMessages(page, onError, onWarning) {
     }
     switch (type) {
       case "error":
-        return onError({ message: text });
+        return onError(JSON.parse(text));
       case "warning":
-        return onWarning({ message: text });
+        return onWarning(JSON.parse(text));
     }
   });
 }
