@@ -91,7 +91,7 @@ describe("Core - anchor-expander", () => {
       </section>
       <section>
         <h2>Some other section</section>
-        <p id="expansion">[[[#myid]]]</a></p>
+        <p id="expansion">[[[#myid]]]</p>
         <p id="expansion2"><a href="#myid" dir="ltr" lang=""></a></p>
       </section>
     `;
@@ -103,5 +103,34 @@ describe("Core - anchor-expander", () => {
     const secondExpansion = doc.querySelector("#expansion2 a");
     expect(secondExpansion.dir).toBe("ltr");
     expect(secondExpansion.lang).toBe("");
+  });
+
+  it("it removes trailing whitespace when expanding headers", async () => {
+    const body = `
+      <section lang="ar" class="introductory">
+        <h2 id="someid">
+          This
+          <code>is</code>
+          a test
+        </h2>
+      </section>
+      <section>
+        <h2>Some other section</section>
+        <p id="expansion1">[[[#someid]]].</p>
+        <p id="expansion2"><a href="#someid"></a>!</p>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+
+    const p1 = doc.getElementById("expansion1");
+    const { textContent: text1 } = p1.querySelector("a").lastChild;
+    expect(text1.endsWith("a test")).toBeTrue();
+    expect(p1.textContent.endsWith("a test.")).toBeTrue();
+
+    const p2 = doc.getElementById("expansion2");
+    const { textContent: text2 } = p2.querySelector("a").lastChild;
+    expect(text2.endsWith("a test")).toBeTrue();
+    expect(p2.textContent.endsWith("a test!")).toBeTrue();
   });
 });
