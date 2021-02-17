@@ -24,7 +24,10 @@ export async function runAll(plugs) {
   runnables.forEach(
     plug => !plug.name && console.warn("Plugin lacks name:", plug)
   );
+  respecConfig.state = {};
+  await executePreparePass(runnables, respecConfig);
   await executeRunPass(runnables, respecConfig);
+  respecConfig.state = {};
   pub("plugins-done", respecConfig);
 
   await postProcess(respecConfig);
@@ -36,6 +39,16 @@ export async function runAll(plugs) {
 
 function isRunnableModule(plug) {
   return plug && (plug.run || plug.Plugin);
+}
+
+async function executePreparePass(runnables, config) {
+  for (const plug of runnables.filter(p => p.prepare)) {
+    try {
+      await plug.prepare(config);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
 
 async function executeRunPass(runnables, config) {
