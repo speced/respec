@@ -1,11 +1,11 @@
 // @ts-check
 // Module core/base-runner
 // The module in charge of running the whole processing pipeline.
-import "./include-config.js";
-import "./override-configuration.js";
+import { run as includeConfig } from "./include-config.js";
 import { init as initReSpecGlobal } from "./respec-global.js";
-import { done as postProcessDone } from "./post-process.js";
-import { done as preProcessDone } from "./pre-process.js";
+import { run as overrideConfig } from "./override-configuration.js";
+import { run as postProcess } from "./post-process.js";
+import { run as preProcess } from "./pre-process.js";
 import { pub } from "./pubsubhub.js";
 import { removeReSpec } from "./utils.js";
 
@@ -52,8 +52,10 @@ export async function runAll(plugs) {
   initReSpecGlobal();
 
   pub("start-all", respecConfig);
+  includeConfig(respecConfig);
+  overrideConfig(respecConfig);
   performance.mark(`${name}-start`);
-  await preProcessDone;
+  await preProcess(respecConfig);
   const runnables = plugs.filter(isRunnableModule).map(toRunnable);
   for (const task of runnables) {
     try {
@@ -63,7 +65,7 @@ export async function runAll(plugs) {
     }
   }
   pub("plugins-done", respecConfig);
-  await postProcessDone;
+  await postProcess(respecConfig);
   pub("end-all");
   removeReSpec(document);
   performance.mark(`${name}-end`);
