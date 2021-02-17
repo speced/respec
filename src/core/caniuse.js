@@ -4,8 +4,8 @@
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
-import { createResourceHint, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
+import { showError, showWarning } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
 import { html } from "./import-maps.js";
 
@@ -54,15 +54,11 @@ export async function prepare(conf) {
     ${caniuseCss}
   </style>`);
 
-  if (
-    !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
-  ) {
-    const link = createResourceHint({
-      hint: "preconnect",
-      href: "https://respec.org",
-    });
-    document.head.appendChild(link);
-  }
+  const apiUrl = options.apiURL || API_URL;
+  // Initiate a fetch, but do not wait. Try to fill the cache early instead.
+  conf.state[name] = {
+    fetchPromise: fetchStats(apiUrl, options),
+  };
 }
 
 export async function run(conf) {
@@ -74,8 +70,7 @@ export async function run(conf) {
   const headDlElem = document.querySelector(".head dl");
   const contentPromise = (async () => {
     try {
-      const apiUrl = options.apiURL || API_URL;
-      const stats = await fetchStats(apiUrl, options);
+      const stats = await conf.state[name].fetchPromise;
       return html`${{ html: stats }}`;
     } catch (err) {
       const msg = `Couldn't find feature "${options.feature}" on caniuse.com.`;
