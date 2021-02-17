@@ -290,11 +290,7 @@ function renderCopyright(conf) {
   if (conf.isUnofficial && conf.licenseInfo) {
     return html`<p class="copyright">
       This document is licensed under a
-      ${linkLicense(
-        conf.licenseInfo.name,
-        conf.licenseInfo.url,
-        "subfoot"
-      )}
+      ${linkLicense(conf.licenseInfo.name, conf.licenseInfo.url, "subfoot")}
       (${conf.licenseInfo.short}).
     </p>`;
   }
