@@ -1018,13 +1018,12 @@ describe("W3C — Headers", () => {
     });
 
     it("falls back to cc-by when license is unknown and spec status is unofficial", async () => {
-      const ops = makeStandardOps();
-      ops.config = {
+      const ops = makeStandardOps({
         shortName: "whatever",
         specStatus: "unofficial",
         license: "not a thing",
         editors: [{ name: "foo" }],
-      };
+      });
       const doc = await makeRSDoc(ops);
       const licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses).toHaveSize(1);
@@ -1035,13 +1034,12 @@ describe("W3C — Headers", () => {
     });
 
     it("includes the W3C Software and Document Notice and License (w3c-software-doc)", async () => {
-      const ops = makeStandardOps();
-      ops.config = {
+      const ops = makeStandardOps({
         specStatus: "FPWD",
         license: "w3c-software-doc",
         shortName: "whatever",
         editors: [{ name: "foo" }],
-      };
+      });
       const doc = await makeRSDoc(ops);
       const licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses).toHaveSize(1);
@@ -1051,12 +1049,10 @@ describe("W3C — Headers", () => {
     });
 
     it("supports the W3C Document Notice and License (w3c-software)", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
+      const ops = makeStandardOps({
         specStatus: "unofficial",
         license: "w3c-software",
-      };
-      Object.assign(ops.config, newProps);
+      });
       const doc = await makeRSDoc(ops);
       const licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses).toHaveSize(1);
@@ -1066,13 +1062,12 @@ describe("W3C — Headers", () => {
     });
 
     it("supports cc0 when spec status is unofficial", async () => {
-      const ops = makeStandardOps();
-      ops.config = {
+      const ops = makeStandardOps({
         specStatus: "unofficial",
         license: "cc0",
         shortName: "whatever",
         editors: [{ name: "foo" }],
-      };
+      });
       const doc = await makeRSDoc(ops);
       const licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses).toHaveSize(1);
@@ -1083,14 +1078,15 @@ describe("W3C — Headers", () => {
     });
 
     it("makes sure that p.copyright wins", async () => {
-      const ops = makeStandardOps();
-      ops.body += "<p class='copyright'>pass</p>";
-      ops.config = {
+      const config = {
         specStatus: "unofficial",
         license: "cc0",
         shortName: "whatever",
         editors: [{ name: "foo" }],
       };
+      const body = "<p class='copyright'>pass</p>";
+      const ops = makeStandardOps(config, body);
+
       const doc = await makeRSDoc(ops);
       const copyright = doc.querySelectorAll("div.head p.copyright");
       expect(copyright).toHaveSize(1);
