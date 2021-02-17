@@ -13,11 +13,20 @@ import { sub } from "./pubsubhub.js";
 
 export const name = "core/respec-global";
 
-class ReSpec {
+class ReSpec extends EventTarget {
   constructor() {
+    super();
     /** @type {Promise<void>} */
     this._respecDonePromise = new Promise(resolve => {
       sub("end-all", resolve, { once: true });
+    });
+    sub("error", rsError => {
+      console.error(rsError, Object.fromEntries(Object.entries(rsError)));
+      this.dispatchEvent(new CustomEvent("error", { detail: rsError }));
+    });
+    sub("warn", rsError => {
+      console.warn(rsError, Object.fromEntries(Object.entries(rsError)));
+      this.dispatchEvent(new CustomEvent("warning", { detail: rsError }));
     });
   }
 
@@ -33,6 +42,7 @@ class ReSpec {
 export function init() {
   const respec = new ReSpec();
   Object.defineProperty(document, "respec", { value: respec });
+  document.dispatchEvent(new CustomEvent("respec-start"));
 
   let respecIsReadyWarningShown = false;
   Object.defineProperty(document, "respecIsReady", {

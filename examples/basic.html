@@ -19,6 +19,10 @@
         testSuiteURI: "https://w3c-test.org/some-API/",
         implementationReportURI: "https://w3c.github.io/test-results/some-API",
       };
+      // document.addEventListener("respec-start", () => {
+      //   document.respec.addEventListener("error", ({ detail: error }) => console.error(error));
+      //   document.respec.addEventListener("warning", ({ detail: error }) => console.warn(error));
+      // });
     </script>
   </head>
   <body>
@@ -39,7 +43,7 @@
       <p>
         This section has a CSS class "<code>introductory</code>", which means
         it will not appear in the <abbr title="Table of Contents">TOC</abbr>.
-        Example Link to Section <a href="#logo"></a>.
+        Example Link to Section <a href="#logo"></a>
       </p>
     </section>
     <section class="informative" id="intro">
@@ -60,7 +64,7 @@
       [Exposed=Window]
       interface Foo {
         constructor();
-        attribute DOMString bar;
+        attribute DOMStrinag bar;
         undefined doTheFoo();
       };
       </pre>

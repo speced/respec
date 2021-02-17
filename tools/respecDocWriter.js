@@ -20,6 +20,15 @@ const noop = () => {};
  * @param {boolean} [options.devtools] Show the Chromium window with devtools open for debugging.
  * @return {Promise<{ html: string, errors: RsError[], warnings: RsError[] }>}
  * @throws {Error} If failed to process.
+ *
+ * @typedef {object} RsError
+ * @property {string} message
+ * @property {string} [plugin]
+ * @property {string} [name]
+ * @property {string} [hint]
+ * @property {string} [details]
+ * @property {string} [title]
+ * @property {any[]} [elements]
  */
 async function toHTML(src, options = {}) {
   const {
@@ -68,19 +77,26 @@ async function toHTML(src, options = {}) {
     const version = await getVersion(url, browser, timer);
     log(`Navigation complete.`);
     log(`Using ReSpec v${version.join(".")}`);
+    const isLegacyError = isLegacyErrorVersion(version);
 
     const page = await browser.newPage();
-    handleConsoleMessages(page, onError, onWarning);
+    if (isLegacyError) {
+      handleConsoleMessages(page, onError, onWarning);
+    } else {
+      // TODO
+    }
 
     log("Processing ReSpec document...");
     await page.goto(url.href, { timeout: timer.remaining });
     await page.waitForFunction(() => !!document.getElementById("respec-ui"));
 
     const html = await generateHTML(page, timer, version, url);
-    log("Processed document.");
 
-    // Race condition: Wait before page close for all console messages to be logged
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    if (isLegacyError) {
+      // Race condition: Wait before page close for all console messages to be logged
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    log("Processed document.");
     await page.close();
     log("Done.");
 
@@ -180,6 +196,14 @@ async function getVersion(url, browser, timer) {
 }
 
 /**
+ * @param {ReSpecVersion} version
+ */
+function isLegacyErrorVersion(version) {
+  const [major, minor] = version;
+  return !(major > 26 && minor > 0);
+}
+
+/**
  * @param {import("puppeteer").Page} page
  */
 async function checkIfReSpec(page) {
@@ -275,7 +299,6 @@ async function evaluateHTML(version, timer) {
 /**
  * Specifies what to do when the browser emits "error" and "warn" console messages.
  * @param  {import("puppeteer").Page} page Instance of page to listen on.
- * @typedef {{ message: string }} RsError
  * @param {(error: RsError) => void} onError
  * @param {(error: RsError) => void} onWarning
  */

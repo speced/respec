@@ -12,6 +12,9 @@
           url: "https://your-site.com",
         }],
         github: "https://github.com/w3c/some-API/",
+        lint: {
+          "check-punctuation": true,
+        },
       };
     </script>
   </head>
@@ -29,15 +32,14 @@
     <section data-dfn-for="Foo">
       <h2><dfn>Foo</dfn> interface</h2>
       <pre class="idl">
-      [Exposed=Window]
       interface Foo {
         constructor();
-        attribute DOMString bar;
+        attribute DOMStringa bar;
         undefined doTheFoo();
       };
       </pre>
-      <p>The <a>Foo</a> interface is nice. Lets you do stuff.</p>
-      <p>The <dfn>Foo.constructor()</dfn> creates a Foo instance.</p>
+      <p>The <a>Foo</a> interface is nice. Lets you do stuff</p>
+      <p>The <dfn>Foo.constructor()</dfn> creates a Foo instance</p>
       <p>The <dfn>bar</dfn> attribute, returns 🍺.</p>
       <p>The <dfn>doTheFoo()</dfn> method, returns nothing.</p>
       <pre class="js example" title="Usage example">
@@ -49,4 +51,3 @@
     </section>
   </body>
 </html>
-

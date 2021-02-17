@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 const colors = require("colors");
+const marked = require("marked");
 colors.setTheme({
   data: "grey",
   debug: "cyan",
@@ -18,6 +19,7 @@ const { toHTML, write } = require("./respecDocWriter");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 // Command line output
+/** @type {commandLineArgs.OptionDefinition[]} */
 const optionList = [
   {
     alias: "h",
@@ -81,6 +83,12 @@ const optionList = [
     name: "verbose",
     type: Boolean,
   },
+  {
+    defaultValue: "pretty",
+    description: "Format for errors and warnings.",
+    name: "format",
+    type: String,
+  },
 ];
 
 const usageSections = [
@@ -132,20 +140,13 @@ const usageSections = [
   }
   const src = new URL(parsedArgs.src, `file://${process.cwd()}/`).href;
   const out = parsedArgs.out;
+  const logError = getFormatter(parsedArgs.format);
 
   try {
     const { html, errors, warnings } = await toHTML(src, {
       timeout: parsedArgs.timeout * 1000,
-      onError(error) {
-        console.error(
-          colors.error(`💥 ReSpec error: ${colors.debug(error.message)}`)
-        );
-      },
-      onWarning(warning) {
-        console.warn(
-          colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
-        );
-      },
+      onError: logError,
+      onWarning: logError,
       disableSandbox: parsedArgs["disable-sandbox"],
       devtools: parsedArgs.debug,
       verbose: parsedArgs.verbose && out !== "stdout",
@@ -165,4 +166,77 @@ const usageSections = [
     return process.exit(1);
   }
   process.exit(0);
-})();
+})().catch(err => {
+  console.error(err);
+  process.exit(1);
+});
+
+class Renderer extends marked.Renderer {
+  strong(text) {
+    return colors.bold(text);
+  }
+  em(text) {
+    return colors.italic(text);
+  }
+  codespan(text) {
+    return colors.underline(text);
+  }
+  paragraph(text) {
+    return text;
+  }
+  link(href, _title, text) {
+    return colors.blue(`[${text}](${colors.dim.underline(href)})`);
+  }
+}
+
+/** @param {string} str */
+function markdown(str) {
+  return marked(str, { smartypants: true, renderer: new Renderer() });
+}
+
+/** @param {string} format */
+function getFormatter(format) {
+  const jsonFields = ["name", "message", "plugin", "elements", "hint"];
+
+  switch (format) {
+    case "pretty":
+      return rsError => prettyPrintRespecError(rsError, true);
+    case "pretty:short":
+      return rsError => prettyPrintRespecError(rsError, false);
+    case "json":
+      return rsError => console.error(JSON.stringify(rsError, jsonFields, 2));
+    case "json:short":
+      return rsError => console.error(JSON.stringify(rsError, jsonFields));
+    case "simple":
+      colors.disable();
+      return rsError => prettyPrintRespecError(rsError, false);
+    default:
+      throw new Error(`Unknown --format=${format}`);
+  }
+}
+
+/**
+ * @param {Record<string, string | string[]>} rsError
+ * @param {boolean} detailed
+ */
+function prettyPrintRespecError(rsError, detailed) {
+  /** @type {(title: string, value: string) => void} */
+  const print = (title, value) => {
+    if (!value || !detailed) return;
+    console.error(colors.bold(`${title}:`.padStart(7)), markdown(value));
+  };
+
+  const isWarning = rsError.name === "ReSpecWarning";
+  const header = isWarning
+    ? colors.bgYellow.black.bold("[WARNING]")
+    : colors.bgRed.white.bold("[ERROR]");
+  const message = isWarning
+    ? colors.yellow(markdown(rsError.message))
+    : colors.red(markdown(rsError.message));
+
+  console.group(header, message);
+  print("Count", rsError.elements && String(rsError.elements.length));
+  print("Plugin", rsError.plugin);
+  print("Hint", rsError.hint);
+  console.groupEnd();
+}
