@@ -405,7 +405,7 @@ function linkToWorkingGroup(conf) {
   </p>`;
 }
 
-function linkToCommunity(conf, opts) {
+export function linkToCommunity(conf, opts) {
   if (!conf.github && !conf.wgPublicList) {
     return;
   }
@@ -425,14 +425,13 @@ function linkToCommunity(conf, opts) {
           <a href="${opts.mailToWGPublicListWithSubject}"
             >${conf.wgPublicList}@w3.org</a
           >
-          (<a
+          (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
+          <a
             href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
             >archives</a
           >)${conf.subjectPrefix
-            ? html`
-                with <code>${conf.subjectPrefix}</code> at the start of your
-                email's subject
-              `
+            ? html` with <code>${conf.subjectPrefix}</code> at the start of your
+                email's subject`
             : ""}.
         `
       : ""}
