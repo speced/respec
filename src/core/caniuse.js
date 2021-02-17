@@ -31,18 +31,6 @@ const BROWSERS = new Set([
   "samsung",
 ]);
 
-if (
-  !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
-) {
-  const link = createResourceHint({
-    hint: "preconnect",
-    href: "https://respec.org",
-  });
-  document.head.appendChild(link);
-}
-
-const caniuseCssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/caniuse.css")).default;
@@ -51,7 +39,7 @@ async function loadStyle() {
   }
 }
 
-export async function run(conf) {
+export async function prepare(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
   }
@@ -60,12 +48,28 @@ export async function run(conf) {
   if (!options.feature) {
     return; // no feature to show
   }
-  const featureURL = new URL(options.feature, "https://caniuse.com/").href;
 
-  const caniuseCss = await caniuseCssPromise;
+  const caniuseCss = await loadStyle();
   document.head.appendChild(html`<style class="removeOnSave">
     ${caniuseCss}
   </style>`);
+
+  if (
+    !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
+  ) {
+    const link = createResourceHint({
+      hint: "preconnect",
+      href: "https://respec.org",
+    });
+    document.head.appendChild(link);
+  }
+}
+
+export async function run(conf) {
+  const options = conf.caniuse;
+  if (!options?.feature) return;
+
+  const featureURL = new URL(options.feature, "https://caniuse.com/").href;
 
   const headDlElem = document.querySelector(".head dl");
   const contentPromise = (async () => {
