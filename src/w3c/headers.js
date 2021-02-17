@@ -262,7 +262,7 @@ export function run(conf) {
       const licensesKeys = [...licenses.keys()]
         .map(key => `\`${key}\``)
         .join(", ");
-      const hint = `Please explicitly set \`license\` to one of: ${licensesKeys}`;
+      const hint = `Please explicitly set \`license\` to one of: ${licensesKeys}.`;
       showError(msg, name, { hint });
       conf.license = "cc-by";
     }
@@ -275,7 +275,7 @@ export function run(conf) {
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
   if (!conf.isUnofficial && ["cc-by"].includes(conf.license)) {
     const msg = `You cannot use license "\`${conf.license}\`" with W3C Specs.`;
-    const hint = `Please set \`license\` to "w3c-software-doc" instead`;
+    const hint = `Please set \`license\` to "w3c-software-doc" instead.`;
     showError(msg, name, { hint });
   }
   conf.licenseInfo = licenses.get(conf.license);
@@ -413,9 +413,10 @@ export function run(conf) {
       !conf.isNoTrack &&
       !conf.isSubmission
     ) {
-      const msg = "Document on track but no previous version";
+      const msg = "Document on track but no previous version.";
       const hint =
-        "Add `previousMaturity`, and `previousPublishDate` to ReSpec's config.";
+        "Add [`previousMaturity`](https://respec.org/docs/#previousMaturity) " +
+        "and [`previousPublishDate`](https://respec.org/docs/#previousPublishDate) to ReSpec's config.";
       showError(msg, name, { hint });
     }
     if (!conf.prevVersion) conf.prevVersion = "";
@@ -424,8 +425,11 @@ export function run(conf) {
     conf.prevRecURI = `https://www.w3.org/TR/${conf.prevRecShortname}`;
   const peopCheck = function (it) {
     if (!it.name) {
-      const msg = "All authors and editors must have a name.";
-      showError(msg, name);
+      const msg = "All authors and editors must have a `name` property.";
+      const hint =
+        "See [Person](https://respec.org/docs/#person) configuration for available options.";
+
+      showError(msg, name, { hint });
     }
     if (it.orcid) {
       try {
@@ -492,7 +496,9 @@ export function run(conf) {
   conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
   if (conf.isRec && !conf.errata) {
     const msg = "Recommendations must have an errata link.";
-    showError(msg, name);
+    const hint =
+      "Add an [`errata`](https://respec.org/docs/#errata) URL to your respecConfig.";
+    showError(msg, name, { hint });
   }
   conf.prependW3C = !conf.isUnofficial;
   conf.isED = conf.specStatus === "ED";
@@ -510,8 +516,10 @@ export function run(conf) {
     conf.wgPatentPolicy &&
     !["PP2017", "PP2020"].includes(conf.wgPatentPolicy)
   ) {
-    const msg = `\`wgPatentPolicy\` config option must be either 'PP2017' or 'PP2020'.`;
-    showError(msg, name);
+    const msg =
+      "Invalid [`wgPatentPolicy`](https://respec.org/docs#wgPatentPolicy) value.";
+    const hint = 'Please use `"PP2017"` or `"PP2020"`.';
+    showError(msg, name, { hint });
   }
   if (conf.hasOwnProperty("wgPatentURI") && !Array.isArray(conf.wgPatentURI)) {
     Object.defineProperty(conf, "wgId", {
