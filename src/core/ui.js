@@ -275,7 +275,7 @@ function rsErrorToHTML(err) {
   }
 
   const plugin = err.plugin ? `(${err.plugin}): ` : "";
-  const hint = err.hint ? ` ${err.hint}.` : "";
+  const hint = err.hint ? ` ${err.hint}` : "";
   const elements = Array.isArray(err.elements)
     ? ` Occurred at: ${joinAnd(err.elements.map(generateMarkdownLink))}.`
     : "";
