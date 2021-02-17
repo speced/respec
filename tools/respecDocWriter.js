@@ -62,28 +62,20 @@ async function toHTML(src, options = {}) {
   const browser = await puppeteer.launch({ userDataDir, args, devtools });
 
   try {
+    const url = new URL(src);
+    log(`Navigating to ${url}`);
+
+    const version = await getVersion(url, browser, timer);
+    log(`Navigation complete.`);
+    log(`Using ReSpec v${version.join(".")}`);
+
     const page = await browser.newPage();
     handleConsoleMessages(page, onError, onWarning);
 
-    const url = new URL(src);
-    log(`Navigating to ${url}`);
-    const response = await page.goto(url.href, { timeout: timer.remaining });
-    if (
-      !response.ok() &&
-      response.status() /* workaround: 0 means ok for local files */
-    ) {
-      // don't show params, as they can contain the API key!
-      const debugURL = `${url.origin}${url.pathname}`;
-      const msg = `📡 HTTP Error ${response.status()}: ${debugURL}`;
-      throw new Error(msg);
-    }
-    log(`Navigation complete.`);
-
-    await checkIfReSpec(page);
-    const version = await getVersion(page);
-    log(`Using ReSpec v${version.join(".")}`);
-
     log("Processing ReSpec document...");
+    await page.goto(url.href, { timeout: timer.remaining });
+    await page.waitForFunction(() => !!document.getElementById("respec-ui"));
+
     const html = await generateHTML(page, timer, version, url);
     log("Processed document.");
 
@@ -154,18 +146,37 @@ async function fetchAndWrite(src, out, whenToHalt = {}, options = {}) {
 }
 
 /**
- * @param {import("puppeteer").Page} page
+ * @param {URL} url
+ * @param {puppeteer.Browser} browser
+ * @param {ReturnType<typeof createTimer>} timer
  * @typedef {[major: number, minor: number, patch: number]} ReSpecVersion
  * @returns {Promise<ReSpecVersion>}
  */
-async function getVersion(page) {
-  await page.waitForFunction(() => window.hasOwnProperty("respecVersion"));
-  return await page.evaluate(() => {
-    if (/^\D/.test(window.respecVersion)) {
-      return [123456789, 0, 0];
+async function getVersion(url, browser, timer) {
+  const page = await browser.newPage();
+  try {
+    const response = await page.goto(url.href, { timeout: timer.remaining });
+    if (
+      !response.ok() &&
+      response.status() /* workaround: 0 means ok for local files */
+    ) {
+      // don't show params, as they can contain the API key!
+      const debugURL = `${url.origin}${url.pathname}`;
+      const msg = `📡 HTTP Error ${response.status()}: ${debugURL}`;
+      throw new Error(msg);
     }
-    return window.respecVersion.split(".").map(str => parseInt(str, 10));
-  });
+    await checkIfReSpec(page);
+
+    await page.waitForFunction(() => window.hasOwnProperty("respecVersion"));
+    return await page.evaluate(() => {
+      if (/^\D/.test(window.respecVersion)) {
+        return [123456789, 0, 0];
+      }
+      return window.respecVersion.split(".").map(str => parseInt(str, 10));
+    });
+  } finally {
+    await page.close();
+  }
 }
 
 /**
