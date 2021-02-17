@@ -12,8 +12,8 @@ import {
   getTextNodes,
   norm,
   refTypeFromContext,
-  showInlineError,
-  showInlineWarning,
+  showError,
+  showWarning,
 } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { idlStringToHtml } from "../core/inline-idl-parser.js";
@@ -132,11 +132,9 @@ function inlineRefMatches(matched) {
     return html`<a href="${ref}"></a>`;
   }
   const badReference = html`<span>${matched}</span>`;
-  showInlineError(
-    badReference, // cite element
-    `Wasn't able to expand ${matched} as it didn't match any id in the document.`,
-    `Please make sure there is element with id ${ref} in the document.`
-  );
+  const msg = `Wasn't able to expand ${matched} as it didn't match any id in the document.`;
+  const hint = `Please make sure there is element with id ${ref} in the document.`;
+  showError(msg, name, { hint, elements: [badReference] });
   return badReference;
 }
 
@@ -170,11 +168,9 @@ function inlineBibrefMatches(matched, txt, conf) {
   const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
     const citeElem = cite.childNodes[1] || cite;
-    showInlineWarning(
-      citeElem,
-      "Normative references in informative sections are not allowed. " +
-      `Remove '!' from the start of the reference \`[[${ref}]]\``
-    );
+    const msg = `Normative references in informative sections are not allowed. `;
+    const hint = `Remove '!' from the start of the reference \`[[${ref}]]\``;
+    showWarning(msg, name, { elements: [citeElem], hint });
   }
 
   if (type === "informative" && !illegal) {

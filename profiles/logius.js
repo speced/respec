@@ -34,7 +34,8 @@ const modules = [
   import("../src/core/dfn.js"),
   import("../src/core/pluralize.js"),
   import("../src/core/examples.js"),
-  import("../src/core/issues-notes.js"),
+  // import("../src/core/issues-notes.js"),
+  import("../src/logius/issues-notes.js"),
   // todo insert requirements ?
   import("../src/core/best-practices.js"),
   import("../src/core/figures.js"),

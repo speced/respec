@@ -90,7 +90,13 @@
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
 
 /* pieter hering start synced with w3c version */
-import { ISODate, concatDate, htmlJoinAnd } from "../core/utils.js";
+import {
+  ISODate,
+  concatDate,
+  htmlJoinAnd,
+  showError,
+  showWarning,
+} from "../core/utils.js";
 import headersTmpl from "./templates/headers.js";
 import { html } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
@@ -190,7 +196,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   const msg =
     `[\`${prop}\`](https://github.com/w3c/respec/wiki/${prop}) ` +
     `is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
-  pub("error", msg);
+  showError(msg, name);
   return new Date(ISODate.format(new Date()));
 }
 
@@ -204,7 +210,9 @@ export function run(conf) {
   }
   conf.specStatus = conf.specStatus ? conf.specStatus.toUpperCase() : "";
   if (!conf.specType) {
-    pub("warn", "SpecType is not defined");
+    const msg = `SpecType is not defined`;
+    const hint = `set config.specType to see https://github.com/centrumvoorstandaarden/respec/wiki/specType`;
+    showWarning(msg, name, { hint });
   }
   conf.specType = conf.specType ? conf.specType.toUpperCase() : "";
 
@@ -223,10 +231,12 @@ export function run(conf) {
   conf.isOfficial = conf.specStatus === "GN-DEF" || conf.specStatus === "DEF";
 
   if (!conf.specStatus) {
-    pub("error", "Missing required configuration: `specStatus`");
+    const msg = "Missing required configuration: `specStatus`";
+    showError(msg, name);
   }
   if (conf.isRegular && !conf.shortName) {
-    pub("error", "Missing required configuration: `shortName`");
+    const msg = "Missing required configuration: `shortName`";
+    showError(msg, name);
   }
 
   // inserted from w3c or skip this part
@@ -239,10 +249,11 @@ export function run(conf) {
       pathname.startsWith("/w3c/web-platform-tests/")
     ) {
       const msg =
-        "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
-        "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
-        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/${conf.shortName} ).`;
-      pub("warn", msg);
+        "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. ";
+      const hint =
+        "Please update your [`testSuiteURI`](https://respec.org/docs/#testSuiteURI) to point to the " +
+        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/tree/master/${conf.shortName} ).`;
+      showWarning(msg, name, { hint });
     }
   }
   // end insertion from w3c
@@ -270,8 +281,10 @@ export function run(conf) {
       conf.edDraftURI = `https://${githubParts[0]}.github.io/${githubParts[1]}`;
     }
     // todo no clear 'ED' status in this version
-    if (conf.specStatus === "ED")
-      pub("warn", "Editor's Drafts should set edDraftURI.");
+    if (conf.specStatus === "ED") {
+      const msg = "Editor's Drafts should set edDraftURI.";
+      showWarning(msg, name);
+    }
   }
   // Version URLs
   // Thijs Brentjens: changed this to Geonovum specific format. See https://github.com/Geonovum/respec/issues/126
@@ -294,11 +307,9 @@ export function run(conf) {
     conf.specStatus !== "GN-WV" &&
     conf.specStatus !== "WV"
   ) {
-    conf.thisVersion = `${conf.nl_organisationPublishURL}${
-      conf.pubDomain
-    }/${subdomain}${specStatus}-${conf.specType.toLowerCase()}-${
-      conf.shortName
-    }-${concatDate(conf.publishDate)}/`;
+    conf.thisVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain
+      }/${subdomain}${specStatus}-${conf.specType.toLowerCase()}-${conf.shortName
+      }-${concatDate(conf.publishDate)}/`;
   } else {
     conf.thisVersion = conf.edDraftURI;
   }
@@ -333,15 +344,19 @@ export function run(conf) {
       prevType = conf.specType.toLowerCase();
     }
     conf.prevVersion = `None${conf.previousPublishDate}`;
-    conf.prevVersion = `${conf.nl_organisationPublishURL}${
-      conf.pubDomain
-    }/${subdomain}${prevStatus}-${prevType}-${conf.shortName}-${concatDate(
-      conf.previousPublishDate
-    )}/`;
+    conf.prevVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain
+      }/${subdomain}${prevStatus}-${prevType}-${conf.shortName}-${concatDate(
+        conf.previousPublishDate
+      )}/`;
   }
 
   const peopCheck = function (it) {
-    if (!it.name) pub("error", "All authors and editors must have a name.");
+    if (!it.name) {
+      const msg = "All authors and editors must have a `name` property.";
+      const hint =
+        "See [Person](https://respec.org/docs/#person) configuration for available options.";
+      showError(msg, name, { hint });
+    }
   };
   if (conf.editors) {
     conf.editors.forEach(peopCheck);
@@ -353,7 +368,8 @@ export function run(conf) {
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
   (conf.alternateFormats || []).forEach(it => {
     if (!it.uri || !it.label) {
-      pub("error", "All alternate formats must have a uri and a label.");
+      const msg = "All alternate formats must have a uri and a label.";
+      showError(msg, name);
     }
   });
   conf.multipleAlternates =
@@ -492,7 +508,7 @@ export function run(conf) {
     for (let i = 0, n = conf.wg.length; i < n; i++) {
       pats.push(
         `a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>` +
-          `public list of any patent disclosures  (${conf.wg[i]})</a>`
+        `public list of any patent disclosures  (${conf.wg[i]})</a>`
       );
     }
     conf.wgPatentHTML = htmlJoinAnd(pats);
@@ -517,13 +533,15 @@ export function run(conf) {
   conf.humanCREnd = NLRespecDate.format(conf.crEnd);
 
   if (conf.specStatus === "PR" && !conf.prEnd) {
-    pub("error", `\`specStatus\` is "PR" but no \`prEnd\` is specified.`);
+    const msg = `\`specStatus\` is "PR" but no \`prEnd\` is specified.`;
+    showError(msg, name);
   }
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
   conf.humanPREnd = NLRespecDate.format(conf.prEnd);
 
   if (conf.specStatus === "PER" && !conf.perEnd) {
-    pub("error", "Status is PER but no perEnd is specified");
+    const msg = "Status is PER but no perEnd is specified";
+    showError(msg, name);
   }
   conf.perEnd = validateDateAndRecover(conf, "perEnd");
   conf.humanPEREnd = NLRespecDate.format(conf.perEnd);
@@ -658,7 +676,7 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
     pub(
       "warn",
       "ReSpec does not support automated SotD generation for TAG findings, " +
-        "please add the prerequisite content in the 'sotd' section"
+      "please add the prerequisite content in the 'sotd' section"
     );
   }
   return {

@@ -1,7 +1,6 @@
 // @ts-check
 
-import { pub } from "../core/pubsubhub.js";
-
+import { showWarning } from "../core/utils.js";
 /**
  * this module fixes some peculiarities in core/github for the Dutch context
  *
@@ -9,9 +8,11 @@ import { pub } from "../core/pubsubhub.js";
 export const name = "logius/github";
 
 export function run(conf) {
-
   if (!conf.nl_github) {
-    pub("warn", "respecConfig.nl_github not set"); 
+    const msg = "respecConfig.nl_github not set. Using";
+    const hint =
+      "add nl_github: { issuebase: ..., revision: ..., pullrequests: ... }";
+    showWarning(msg, name, { hint });
     return;
   }
   // override respec github settings if present
@@ -28,23 +29,25 @@ export function run(conf) {
           case "Revisiehistorie":
             if (conf.nl_github.revision) {
               element.href = conf.nl_github.revision;
-            };
+            }
             break;
           case "Pull requests":
             if (conf.nl_github.pullrequests) {
               element.href = conf.nl_github.pullrequests;
-            };
+            }
             break;
         }
       });
     });
 
   if (conf.nl_github.issueBase) {
+    if (!conf.nl_github.issueBase.endsWith("/")) {
+      conf.nl_github.issueBase += "/";
+    }
     conf.issueBase = conf.nl_github.issueBase;
   }
   // todo: check if this is correct
   if (conf.nl_github.revision) {
     conf.github.branch = conf.nl_github.revision;
   }
-
 }

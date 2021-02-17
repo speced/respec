@@ -2,7 +2,8 @@
  * This module retrieves the tag_name of the latest release of the Github repo
  * and appends this to the document title
  */
-import { pub } from "../core/pubsubhub.js";
+// import { pub } from "../core/pubsubhub.js";
+import { showError, showWarning } from "../core/utils.js";
 export const name = "core/releasetitle";
 
 
@@ -10,7 +11,8 @@ export const name = "core/releasetitle";
 async function getReleasename(conf) {
   const o = { tag_name: "" };
   if (!conf.github) {
-    pub("warn", "cannot retrieve release tag: respecConf.github not set;");
+    const msg = "cannot retrieve release tag: respecConf.github not set;";
+    showWarning(msg, name);
     return o;
   }
 
@@ -19,7 +21,8 @@ async function getReleasename(conf) {
     const res = await fetch(url);
     return await res.json();
   } catch (error) {
-    pub("warn", `failed to retrieve release tag: '${error}'`);
+    const msg = `failed to retrieve release tag: '${error}'`;
+    showError(msg, name);
   }
   return o;
 }

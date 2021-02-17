@@ -2,7 +2,9 @@
 // Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
-import { pub } from "../core/pubsubhub.js";
+
+//import { pub } from "../core/pubsubhub.js";
+import { showWarning } from "../core/utils.js";
 import { resolveRef } from "../core/biblio.js";
 export const name = "w3c/seo";
 export async function run(conf) {
@@ -55,7 +57,8 @@ export async function run(conf) {
             document.location.href
           ).href;
         } catch (err) {
-          pub("warn", `CanonicalURI is an invalid URL: ${err.message}`);
+          const msg = `CanonicalURI is an invalid URL: ${err.message}`;
+          showWarning(msg, name);
           conf.canonicalURI = null;
         }
       } else if (trLatestUri) {
