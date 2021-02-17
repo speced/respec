@@ -1001,21 +1001,97 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("license - w3c-software-doc", () => {
-    it("includes the W3C Software and Document Notice and License (w3c-software-doc)", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "FPWD",
-        license: "w3c-software-doc",
-      };
-      Object.assign(ops.config, newProps);
+  describe("license configuration", () => {
+    it("defaults to cc-by when spec status is unofficial", async () => {
+      const ops = makeStandardOps({
+        shortName: "whatever",
+        specStatus: "unofficial",
+      });
+
       const doc = await makeRSDoc(ops);
       const licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses).toHaveSize(1);
       expect(licenses[0].tagName).toBe("A");
       expect(licenses[0].href).toBe(
+        "https://creativecommons.org/licenses/by/4.0/legalcode"
+      );
+    });
+
+    it("falls back to cc-by when license is unknown and spec status is unofficial", async () => {
+      const ops = makeStandardOps({
+        shortName: "whatever",
+        specStatus: "unofficial",
+        license: "not a thing",
+        editors: [{ name: "foo" }],
+      });
+      const doc = await makeRSDoc(ops);
+      const licenses = doc.querySelectorAll("div.head a[rel=license]");
+      expect(licenses).toHaveSize(1);
+      expect(licenses[0].tagName).toBe("A");
+      expect(licenses[0].href).toBe(
+        "https://creativecommons.org/licenses/by/4.0/legalcode"
+      );
+    });
+
+    it("includes the W3C Software and Document Notice and License (w3c-software-doc)", async () => {
+      const ops = makeStandardOps({
+        specStatus: "FPWD",
+        license: "w3c-software-doc",
+        shortName: "whatever",
+        editors: [{ name: "foo" }],
+      });
+      const doc = await makeRSDoc(ops);
+      const licenses = doc.querySelectorAll("div.head a[rel=license]");
+      expect(licenses).toHaveSize(1);
+      expect(licenses[0].href).toBe(
         "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
       );
+    });
+
+    it("supports the W3C Document Notice and License (w3c-software)", async () => {
+      const ops = makeStandardOps({
+        specStatus: "unofficial",
+        license: "w3c-software",
+      });
+      const doc = await makeRSDoc(ops);
+      const licenses = doc.querySelectorAll("div.head a[rel=license]");
+      expect(licenses).toHaveSize(1);
+      expect(licenses[0].href).toBe(
+        "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231"
+      );
+    });
+
+    it("supports cc0 when spec status is unofficial", async () => {
+      const ops = makeStandardOps({
+        specStatus: "unofficial",
+        license: "cc0",
+        shortName: "whatever",
+        editors: [{ name: "foo" }],
+      });
+      const doc = await makeRSDoc(ops);
+      const licenses = doc.querySelectorAll("div.head a[rel=license]");
+      expect(licenses).toHaveSize(1);
+      expect(licenses[0].tagName).toBe("A");
+      expect(licenses[0].href).toBe(
+        "https://creativecommons.org/publicdomain/zero/1.0/"
+      );
+    });
+
+    it("makes sure that p.copyright wins", async () => {
+      const config = {
+        specStatus: "unofficial",
+        license: "cc0",
+        shortName: "whatever",
+        editors: [{ name: "foo" }],
+      };
+      const body = "<p class='copyright'>pass</p>";
+      const ops = makeStandardOps(config, body);
+
+      const doc = await makeRSDoc(ops);
+      const copyright = doc.querySelectorAll("div.head p.copyright");
+      expect(copyright).toHaveSize(1);
+      expect(copyright[0].tagName).toBe("P");
+      expect(copyright[0].textContent).toBe("pass");
     });
   });
 
@@ -1239,18 +1315,6 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect(doc.querySelector(".head .copyright").textContent).toMatch(
         /XXX\s+&\s+the\s+Contributors\s+to\s+the/
-      );
-    });
-    it("takes additionalCopyrightHolders into account when spec is unofficial", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "unofficial",
-        additionalCopyrightHolders: "XXX",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(doc.querySelector(".head .copyright").textContent.trim()).toBe(
-        "XXX"
       );
     });
 

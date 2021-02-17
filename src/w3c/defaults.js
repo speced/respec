@@ -24,7 +24,6 @@ const w3cDefaults = {
     "wpt-tests-exist": false,
   },
   doJsonLd: false,
-  license: "w3c-software-doc",
   logos: [],
   xref: true,
 };
@@ -42,7 +41,11 @@ export function run(conf) {
 
   if (conf.specStatus && conf.specStatus.toLowerCase() !== "unofficial") {
     w3cDefaults.logos.push(w3cLogo);
+    if (!conf.hasOwnProperty("license")) {
+      w3cDefaults.license = "w3c-software-doc";
+    }
   }
+
   Object.assign(conf, {
     ...coreDefaults,
     ...w3cDefaults,
