@@ -11,43 +11,6 @@ import { removeReSpec } from "./utils.js";
 
 export const name = "core/base-runner";
 
-function toRunnable(plug) {
-  const name = plug.name || "";
-  if (!name) {
-    console.warn("Plugin lacks name:", plug);
-  }
-  return config => {
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async (resolve, reject) => {
-      const timerId = setTimeout(() => {
-        const msg = `Plugin ${name} took too long.`;
-        console.error(msg, plug);
-        reject(new Error(msg));
-      }, 15000);
-      performance.mark(`${name}-start`);
-      try {
-        if (plug.Plugin) {
-          await new plug.Plugin(config).run();
-          resolve();
-        } else if (plug.run) {
-          await plug.run(config);
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      } finally {
-        clearTimeout(timerId);
-      }
-      performance.mark(`${name}-end`);
-      performance.measure(name, `${name}-start`, `${name}-end`);
-    });
-  };
-}
-
-function isRunnableModule(plug) {
-  return plug && (plug.run || plug.Plugin);
-}
-
 export async function runAll(plugs) {
   initReSpecGlobal();
 
@@ -56,18 +19,57 @@ export async function runAll(plugs) {
   overrideConfig(respecConfig);
   performance.mark(`${name}-start`);
   await preProcess(respecConfig);
-  const runnables = plugs.filter(isRunnableModule).map(toRunnable);
-  for (const task of runnables) {
-    try {
-      await task(respecConfig);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+
+  const runnables = plugs.filter(p => isRunnableModule(p));
+  runnables.forEach(
+    plug => !plug.name && console.warn("Plugin lacks name:", plug)
+  );
+  await executeRunPass(runnables, respecConfig);
   pub("plugins-done", respecConfig);
+
   await postProcess(respecConfig);
   pub("end-all");
   removeReSpec(document);
   performance.mark(`${name}-end`);
   performance.measure(name, `${name}-start`, `${name}-end`);
+}
+
+function isRunnableModule(plug) {
+  return plug && (plug.run || plug.Plugin);
+}
+
+async function executeRunPass(runnables, config) {
+  for (const plug of runnables) {
+    const name = plug.name || "";
+
+    try {
+      // eslint-disable-next-line no-async-promise-executor
+      await new Promise(async (resolve, reject) => {
+        const timerId = setTimeout(() => {
+          const msg = `Plugin ${name} took too long.`;
+          console.error(msg, plug);
+          reject(new Error(msg));
+        }, 15000);
+
+        performance.mark(`${name}-start`);
+        try {
+          if (plug.Plugin) {
+            await new plug.Plugin(config).run();
+            resolve();
+          } else if (plug.run) {
+            await plug.run(config);
+            resolve();
+          }
+        } catch (err) {
+          reject(err);
+        } finally {
+          clearTimeout(timerId);
+          performance.mark(`${name}-end`);
+          performance.measure(name, `${name}-start`, `${name}-end`);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
