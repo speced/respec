@@ -291,7 +291,7 @@ function renderCopyright(conf) {
     return html`<p class="copyright">
       This document is licensed under a
       ${linkLicense(
-        `${conf.licenseInfo.name}`,
+        conf.licenseInfo.name,
         conf.licenseInfo.url,
         "subfoot"
       )}

@@ -1003,12 +1003,11 @@ describe("W3C — Headers", () => {
 
   describe("license configuration", () => {
     it("defaults to cc-by when spec status is unofficial", async () => {
-      const ops = makeStandardOps();
-      ops.config = {
+      const ops = makeStandardOps({
         shortName: "whatever",
         specStatus: "unofficial",
-        editors: [{ name: "foo" }],
-      };
+      });
+
       const doc = await makeRSDoc(ops);
       const licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses).toHaveSize(1);
