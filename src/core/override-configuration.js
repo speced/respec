@@ -5,11 +5,11 @@
 // tweaks to a document before generating the snapshot, without mucking with the source.
 // For example, you can change the status and date by appending:
 //      ?specStatus=LC&publishDate=2012-03-15
-import { pub, sub } from "./pubsubhub.js";
+import { pub } from "./pubsubhub.js";
 
 export const name = "core/override-configuration";
 
-function overrideConfig(config) {
+export function run(config) {
   const params = new URLSearchParams(document.location.search);
   const overrideEntries = Array.from(params)
     .filter(([key, value]) => !!key && !!value)
@@ -28,4 +28,3 @@ function overrideConfig(config) {
   Object.assign(config, overrideProps);
   pub("amend-user-config", overrideProps);
 }
-sub("start-all", overrideConfig, { once: true });

@@ -151,11 +151,11 @@ describe("Core — xref", () => {
 
   it("shows error if cannot resolve by data-cite", async () => {
     const body = `
-      <section data-cite="svg">
-        <p id="test">[^symbol^] twice in svg spec.</p>
+      <section data-cite="html">
+        <p id="test"><a>script</a> twice in HTML spec.</p>
       </section>
     `;
-    const config = { xref: ["svg"], localBiblio };
+    const config = { xref: ["HTML"], localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -425,20 +425,20 @@ describe("Core — xref", () => {
     const body = `
       <section id="test">
         <section>
-        <p>Uses [[css-scoping]] to create context for <a id="one">shadow root</a></p>
+        <p>Uses [[svg]] to create context for <a id="one">style</a></p>
         </section>
         <section>
-          <p>Uses [[dom]] to create context for <a id="two">shadow root</a></p>
+          <p>Uses [[html]] to create context for <a id="two">style</a></p>
         </section>
         <section>
-          <p>Uses [[dom]] and [[css-scoping]] to create context for
-            <a id="three">shadow root</a>. It fails as it's defined in both.
+          <p>Uses [[html]] and [[svg]] to create context for
+            <a id="three">style</a>. It fails as it's defined in both.
           </p>
         </section>
         <section>
           <p>But data-cite on element itself wins.
-            <a id="four">shadow root</a> uses [[css-scoping]],
-            whereas <a data-cite="dom" id="five">shadow root</a> uses dom.
+            <a id="four">style</a> uses [[svg]],
+            whereas <a data-cite="html" id="five">style</a> uses html.
           </p>
         </section>
       </section>
@@ -449,8 +449,8 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = "https://drafts.csswg.org/css-scoping-1/#shadow-root";
-    const expectedLink2 = "https://dom.spec.whatwg.org/#concept-shadow-root";
+    const expectedLink1 = `https://www.w3.org/TR/SVG/styling.html#elementdef-style`;
+    const expectedLink2 = `https://html.spec.whatwg.org/multipage/semantics.html#the-style-element`;
 
     const one = doc.getElementById("one");
     expect(one.href).toBe(expectedLink1);
@@ -558,7 +558,7 @@ describe("Core — xref", () => {
     );
     expect(badLink.classList).toContain("respec-offending-element");
     expect(badLink.title).toBe(
-      "Error: Informative reference in normative section"
+      "Error: Normative reference to informative term"
     );
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];

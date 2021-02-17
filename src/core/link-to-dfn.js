@@ -7,8 +7,8 @@ import {
   addId,
   getIntlData,
   getLinkTargets,
-  showInlineError,
-  showInlineWarning,
+  showError,
+  showWarning,
   wrapInner,
 } from "./utils.js";
 import { THIS_SPEC, toCiteDetails } from "./data-cite.js";
@@ -103,7 +103,10 @@ function mapTitleToDfns() {
     const { result, duplicates } = collectDfns(key);
     titleToDfns.set(key, result);
     if (duplicates.length > 0) {
-      showInlineError(duplicates, l10n.duplicateMsg(key), l10n.duplicateTitle);
+      showError(l10n.duplicateMsg(key), name, {
+        title: l10n.duplicateTitle,
+        elements: duplicates,
+      });
     }
   }
   return titleToDfns;
@@ -270,11 +273,9 @@ function shouldWrapByCode(elem, term = "") {
 
 function showLinkingError(elems) {
   elems.forEach(elem => {
-    showInlineWarning(
-      elem,
-      `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``,
-      "Linking error: not matching `<dfn>`"
-    );
+    const msg = `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``;
+    const title = "Linking error: not matching `<dfn>`";
+    showWarning(msg, name, { title, elements: [elem] });
   });
 }
 

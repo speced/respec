@@ -1001,21 +1001,97 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("license - w3c-software-doc", () => {
-    it("includes the W3C Software and Document Notice and License (w3c-software-doc)", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "FPWD",
-        license: "w3c-software-doc",
-      };
-      Object.assign(ops.config, newProps);
+  describe("license configuration", () => {
+    it("defaults to cc-by when spec status is unofficial", async () => {
+      const ops = makeStandardOps({
+        shortName: "whatever",
+        specStatus: "unofficial",
+      });
+
       const doc = await makeRSDoc(ops);
       const licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses).toHaveSize(1);
       expect(licenses[0].tagName).toBe("A");
       expect(licenses[0].href).toBe(
+        "https://creativecommons.org/licenses/by/4.0/legalcode"
+      );
+    });
+
+    it("falls back to cc-by when license is unknown and spec status is unofficial", async () => {
+      const ops = makeStandardOps({
+        shortName: "whatever",
+        specStatus: "unofficial",
+        license: "not a thing",
+        editors: [{ name: "foo" }],
+      });
+      const doc = await makeRSDoc(ops);
+      const licenses = doc.querySelectorAll("div.head a[rel=license]");
+      expect(licenses).toHaveSize(1);
+      expect(licenses[0].tagName).toBe("A");
+      expect(licenses[0].href).toBe(
+        "https://creativecommons.org/licenses/by/4.0/legalcode"
+      );
+    });
+
+    it("includes the W3C Software and Document Notice and License (w3c-software-doc)", async () => {
+      const ops = makeStandardOps({
+        specStatus: "FPWD",
+        license: "w3c-software-doc",
+        shortName: "whatever",
+        editors: [{ name: "foo" }],
+      });
+      const doc = await makeRSDoc(ops);
+      const licenses = doc.querySelectorAll("div.head a[rel=license]");
+      expect(licenses).toHaveSize(1);
+      expect(licenses[0].href).toBe(
         "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
       );
+    });
+
+    it("supports the W3C Document Notice and License (w3c-software)", async () => {
+      const ops = makeStandardOps({
+        specStatus: "unofficial",
+        license: "w3c-software",
+      });
+      const doc = await makeRSDoc(ops);
+      const licenses = doc.querySelectorAll("div.head a[rel=license]");
+      expect(licenses).toHaveSize(1);
+      expect(licenses[0].href).toBe(
+        "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231"
+      );
+    });
+
+    it("supports cc0 when spec status is unofficial", async () => {
+      const ops = makeStandardOps({
+        specStatus: "unofficial",
+        license: "cc0",
+        shortName: "whatever",
+        editors: [{ name: "foo" }],
+      });
+      const doc = await makeRSDoc(ops);
+      const licenses = doc.querySelectorAll("div.head a[rel=license]");
+      expect(licenses).toHaveSize(1);
+      expect(licenses[0].tagName).toBe("A");
+      expect(licenses[0].href).toBe(
+        "https://creativecommons.org/publicdomain/zero/1.0/"
+      );
+    });
+
+    it("makes sure that p.copyright wins", async () => {
+      const config = {
+        specStatus: "unofficial",
+        license: "cc0",
+        shortName: "whatever",
+        editors: [{ name: "foo" }],
+      };
+      const body = "<p class='copyright'>pass</p>";
+      const ops = makeStandardOps(config, body);
+
+      const doc = await makeRSDoc(ops);
+      const copyright = doc.querySelectorAll("div.head p.copyright");
+      expect(copyright).toHaveSize(1);
+      expect(copyright[0].tagName).toBe("P");
+      expect(copyright[0].textContent).toBe("pass");
     });
   });
 
@@ -1239,18 +1315,6 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect(doc.querySelector(".head .copyright").textContent).toMatch(
         /XXX\s+&\s+the\s+Contributors\s+to\s+the/
-      );
-    });
-    it("takes additionalCopyrightHolders into account when spec is unofficial", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "unofficial",
-        additionalCopyrightHolders: "XXX",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(doc.querySelector(".head .copyright").textContent.trim()).toBe(
-        "XXX"
       );
     });
 
@@ -1610,6 +1674,60 @@ describe("W3C — Headers", () => {
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
         )
       ).toHaveSize(1);
+      expect(contains(sotd, "a", "WGLIST")).toHaveSize(1);
+      expect(contains(sotd, "a", "WGLIST")[0].getAttribute("href")).toBe(
+        "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
+      );
+      expect(contains(sotd, "a", "subscribe")[0].getAttribute("href")).toBe(
+        "mailto:WGLIST-request@w3.org?subject=subscribe"
+      );
+      expect(contains(sotd, "a", "archives")[0].getAttribute("href")).toBe(
+        "https://lists.w3.org/Archives/Public/WGLIST/"
+      );
+    });
+
+    it("handles CG-DRAFT status with just github preferred", async () => {
+      const ops = makeStandardOps({
+        specStatus: "CG-DRAFT",
+        group: "maps4html",
+        github: "Maps4HTML/MapML",
+        editors: [{ name: "test" }],
+      });
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      // Link to github
+      expect(
+        sotd.querySelectorAll(
+          "a[href='https://github.com/Maps4HTML/MapML/issues/']"
+        )
+      ).toHaveSize(1);
+      expect(contains(sotd, "a", "GitHub Issues")).toHaveSize(1);
+      // No Mailiing list
+      expect(sotd.querySelector("a[href^=mailto]")).toBeNull();
+    });
+
+    it("handles CG-DRAFT status with github and mailing list", async () => {
+      const ops = makeStandardOps({
+        specStatus: "CG-DRAFT",
+        group: "maps4html",
+        wgPublicList: "WGLIST",
+        subjectPrefix: "[The Prefix]",
+        github: "Maps4HTML/MapML",
+        editors: [{ name: "test" }],
+      });
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      // Link to github
+      expect(
+        sotd.querySelectorAll(
+          "a[href='https://github.com/Maps4HTML/MapML/issues/']"
+        )
+      ).toHaveSize(1);
+      expect(contains(sotd, "a", "GitHub Issues")).toHaveSize(1);
+      // Mailiing list
+      expect(contains(sotd, "a", "Maps For HTML Community Group")).toHaveSize(
+        1
+      );
       expect(contains(sotd, "a", "WGLIST")).toHaveSize(1);
       expect(contains(sotd, "a", "WGLIST")[0].getAttribute("href")).toBe(
         "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"

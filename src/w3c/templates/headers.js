@@ -1,12 +1,13 @@
 // @ts-check
-import { getIntlData, humanDate } from "../../core/utils.js";
+import { getIntlData, humanDate, showWarning } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
-import { pub } from "../../core/pubsubhub.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
 
-const ccLicense = "https://creativecommons.org/licenses/by/4.0/";
+const name = "w3c/templates/headers";
+
+const ccLicense = "https://creativecommons.org/licenses/by/4.0/legalcode";
 const w3cLicense = "https://www.w3.org/Consortium/Legal/copyright-documents";
 const legalDisclaimer =
   "https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer";
@@ -280,27 +281,20 @@ function renderCopyright(conf) {
     return existingCopyright;
   }
   if (conf.hasOwnProperty("overrideCopyright")) {
-    const msg =
-      "The `overrideCopyright` configuration option is deprecated. " +
-      'Please use `<p class="copyright">` instead.';
-    pub("warn", msg);
+    const msg = "The `overrideCopyright` configuration option is deprecated.";
+    const hint =
+      'Please add a `<p class="copyright">` element directly to your document instead';
+    showWarning(msg, name, { hint });
+    return html`${[conf.overrideCopyright]}`;
   }
-  return conf.isUnofficial
-    ? conf.additionalCopyrightHolders
-      ? html`<p class="copyright">${[conf.additionalCopyrightHolders]}</p>`
-      : conf.overrideCopyright
-      ? [conf.overrideCopyright]
-      : html`<p class="copyright">
-          This document is licensed under a
-          ${linkLicense(
-            "Creative Commons Attribution 4.0 License",
-            ccLicense,
-            "subfoot"
-          )}.
-        </p>`
-    : conf.overrideCopyright
-    ? [conf.overrideCopyright]
-    : renderOfficialCopyright(conf);
+  if (conf.isUnofficial && conf.licenseInfo) {
+    return html`<p class="copyright">
+      This document is licensed under a
+      ${linkLicense(conf.licenseInfo.name, conf.licenseInfo.url, "subfoot")}
+      (${conf.licenseInfo.short}).
+    </p>`;
+  }
+  return renderOfficialCopyright(conf);
 }
 
 function renderOfficialCopyright(conf) {

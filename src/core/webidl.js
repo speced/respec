@@ -4,12 +4,7 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import {
-  addHashId,
-  showInlineError,
-  showInlineWarning,
-  xmlEscape,
-} from "./utils.js";
+import { addHashId, showError, showWarning, xmlEscape } from "./utils.js";
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";
@@ -17,6 +12,7 @@ import { fetchAsset } from "./text-loader.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";
+const pluginName = name;
 
 const operationNames = {};
 const idlPartials = {};
@@ -184,7 +180,7 @@ function defineIdlName(escaped, data, parent) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
     const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
-    showInlineWarning(unlinkedAnchor, msg, "");
+    showWarning(msg, pluginName, { elements: [unlinkedAnchor] });
   }
   return unlinkedAnchor;
 }
@@ -319,12 +315,12 @@ function renderWebIDL(idlElement, index) {
       sourceName: String(index),
     });
   } catch (e) {
-    showInlineError(
-      idlElement,
-      `Failed to parse WebIDL: ${e.bareMessage}.`,
-      e.bareMessage,
-      { details: `<pre>${e.context}</pre>` }
-    );
+    const msg = `Failed to parse WebIDL: ${e.bareMessage}.`;
+    showError(msg, pluginName, {
+      title: e.bareMessage,
+      details: `<pre>${e.context}</pre>`,
+      elements: [idlElement],
+    });
     // Skip this <pre> and move on to the next one.
     return [];
   }
@@ -407,12 +403,12 @@ export async function run() {
       details += `Try fixing as:
       <pre>${escaped}</pre>`;
     }
-    showInlineError(
-      idls[validation.sourceName],
-      `WebIDL validation error: ${validation.bareMessage}`,
-      validation.bareMessage,
-      { details }
-    );
+    const msg = `WebIDL validation error: ${validation.bareMessage}`;
+    showError(msg, pluginName, {
+      details,
+      elements: [idls[validation.sourceName]],
+      title: validation.bareMessage,
+    });
   }
   document.normalize();
 }

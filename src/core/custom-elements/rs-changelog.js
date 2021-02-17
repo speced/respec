@@ -9,7 +9,7 @@
  */
 import { github } from "../github.js";
 import { html } from "../import-maps.js";
-import { showInlineError } from "../utils.js";
+import { showError } from "../utils.js";
 
 export const name = "rs-changelog";
 
@@ -34,7 +34,7 @@ export const element = class ChangelogElement extends HTMLElement {
       ${{
         any: fetchCommits(from, to, filter)
           .then(commits => toHTML(commits))
-          .catch(error => showInlineError(this, error.message, error.message))
+          .catch(error => showError(error.message, name, { elements: [this] }))
           .finally(() => {
             this.dispatchEvent(new CustomEvent("done"));
           }),

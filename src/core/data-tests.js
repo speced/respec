@@ -9,9 +9,8 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { getIntlData, showInlineWarning } from "./utils.js";
+import { getIntlData, showError, showWarning } from "./utils.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
 const localizationStrings = {
   en: {
     missing_test_suite_uri:
@@ -101,7 +100,7 @@ export function run(conf) {
     return;
   }
   if (!conf.testSuiteURI) {
-    pub("error", l10n.missing_test_suite_uri);
+    showError(l10n.missing_test_suite_uri, name);
     return;
   }
 
@@ -124,7 +123,8 @@ function toTestURLs(tests, testSuiteURI) {
       try {
         return new URL(test, testSuiteURI).href;
       } catch {
-        pub("warn", `Bad URI: ${test}`);
+        const msg = `Bad URI: ${test}`;
+        showWarning(msg, name);
       }
     })
     .filter(href => href);
@@ -139,13 +139,11 @@ function handleDuplicates(testURLs, elem) {
     (link, i, self) => self.indexOf(link) !== i
   );
   if (duplicates.length) {
-    showInlineWarning(
-      elem,
-      `Duplicate tests found`,
-      `To fix, remove duplicates from "data-tests": ${duplicates
-        .map(url => new URL(url).pathname)
-        .join(", ")}`
-    );
+    const msg = `Duplicate tests found`;
+    const hint = `To fix, remove duplicates from "data-tests": ${duplicates
+      .map(url => new URL(url).pathname)
+      .join(", ")}`;
+    showWarning(msg, name, { hint, elements: [elem] });
   }
 }
 
