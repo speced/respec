@@ -12,8 +12,8 @@
 import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
 import {
   refTypeFromContext,
-  showInlineError,
-  showInlineWarning,
+  showError,
+  showWarning,
   wrapInner,
 } from "./utils.js";
 import { sub } from "./pubsubhub.js";
@@ -95,11 +95,9 @@ function linkElem(elem, linkProps, citeDetails) {
       elem.append(cite);
     }
     if ("export" in elem.dataset) {
-      showInlineError(
-        elem,
-        "Exporting an linked external definition is not allowed. Please remove the `data-export` attribute",
-        "Please remove the `data-export` attribute."
-      );
+      const msg = "Exporting an linked external definition is not allowed.";
+      const hint = "Please remove the `data-export` attribute.";
+      showError(msg, name, { hint, elements: [elem] });
       delete elem.dataset.export;
     }
     elem.dataset.noExport = "";
@@ -173,7 +171,8 @@ export async function run() {
     if (linkProps) {
       linkElem(elem, linkProps, citeDetails);
     } else {
-      showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
+      const msg = `Couldn't find a match for "${originalKey}"`;
+      showWarning(msg, name, { elements: [elem] });
     }
   }
 

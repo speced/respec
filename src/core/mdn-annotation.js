@@ -1,8 +1,7 @@
 // @ts-check
-import { fetchAndCache, getIntlData } from "./utils.js";
+import { fetchAndCache, getIntlData, showError } from "./utils.js";
 import { fetchAsset } from "./text-loader.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
 
 export const name = "core/mdn-annotation";
 
@@ -186,7 +185,7 @@ async function getMdnData(key, mdnConf) {
   if (res.status === 404) {
     const msg = `Could not find MDN data associated with key "${key}".`;
     const hint = "Please add a valid key to `respecConfig.mdn`";
-    pub("error", `${msg} ${hint}`);
+    showError(msg, name, { hint });
     return;
   }
   return await res.json();

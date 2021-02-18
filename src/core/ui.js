@@ -11,6 +11,7 @@
 //  - once we have something decent, merge, ship as 3.2.0
 import { html, pluralize } from "./import-maps.js";
 import { fetchAsset } from "./text-loader.js";
+import { joinAnd } from "./utils.js";
 import { markdownToHtml } from "./markdown.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
@@ -135,8 +136,8 @@ const ariaMap = new Map([
 ]);
 ariaDecorate(respecPill, ariaMap);
 
-function errWarn(msg, arr, butName, title) {
-  arr.push(msg);
+function errWarn(err, arr, butName, title) {
+  arr.push(err);
   if (!buttons.hasOwnProperty(butName)) {
     buttons[butName] = createWarnButton(butName, arr, title);
     respecUI.appendChild(buttons[butName]);
@@ -160,7 +161,7 @@ function createWarnButton(butName, arr, title) {
     for (const err of arr) {
       const fragment = document
         .createRange()
-        .createContextualFragment(markdownToHtml(err));
+        .createContextualFragment(rsErrorToHTML(err));
       const li = document.createElement("li");
       // if it's only a single element, just copy the contents into li
       if (fragment.firstElementChild === fragment.lastElementChild) {
@@ -210,11 +211,11 @@ export const ui = {
     menu.appendChild(menuItem);
     return button;
   },
-  error(msg) {
-    errWarn(msg, errors, "error", "ReSpec Errors");
+  error(rsError) {
+    errWarn(rsError, errors, "error", "ReSpec Errors");
   },
-  warning(msg) {
-    errWarn(msg, warnings, "warning", "ReSpec Warnings");
+  warning(rsError) {
+    errWarn(rsError, warnings, "warning", "ReSpec Warnings");
   },
   closeModal(owner) {
     if (overlay) {
@@ -266,3 +267,29 @@ document.addEventListener("keydown", ev => {
 window.respecUI = ui;
 sub("error", details => ui.error(details));
 sub("warn", details => ui.warning(details));
+
+function rsErrorToHTML(err) {
+  if (typeof err === "string") {
+    return err;
+  }
+
+  const plugin = err.plugin ? `(${err.plugin}): ` : "";
+  const hint = err.hint ? ` ${err.hint}` : "";
+  const elements = Array.isArray(err.elements)
+    ? ` Occurred at: ${joinAnd(err.elements.map(generateMarkdownLink))}.`
+    : "";
+  const details = err.details
+    ? `\n\n<details>\n${err.details}\n</details>\n`
+    : "";
+
+  const text = `${plugin}${err.message}${hint}${elements}${details}`;
+  return markdownToHtml(text);
+}
+
+/**
+ * @param {Element} element
+ * @param {number} i
+ */
+function generateMarkdownLink(element, i) {
+  return `[${i + 1}](#${element.id})`;
+}

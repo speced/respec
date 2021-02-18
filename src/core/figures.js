@@ -8,7 +8,7 @@ import {
   addId,
   getIntlData,
   renameElement,
-  showInlineWarning,
+  showWarning,
   wrapInner,
 } from "./utils.js";
 import { html } from "./import-maps.js";
@@ -79,7 +79,8 @@ function collectFigures() {
       decorateFigure(fig, caption, i);
       tof.push(getTableOfFiguresListItem(fig.id, caption));
     } else {
-      showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
+      const msg = "Found a `<figure>` without a `<figcaption>`.";
+      showWarning(msg, name, { elements: [fig] });
     }
   });
   return tof;
