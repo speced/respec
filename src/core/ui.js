@@ -268,7 +268,6 @@ window.respecUI = ui;
 sub("error", details => ui.error(details));
 sub("warn", details => ui.warning(details));
 
-/** @param {import("./utils.js").RespecError | string} err */
 function rsErrorToHTML(err) {
   if (typeof err === "string") {
     return err;
