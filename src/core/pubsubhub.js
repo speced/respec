@@ -75,11 +75,11 @@ export function unsub({ topic, cb }) {
 }
 
 sub("error", rsError => {
-  console.error(rsError, Object.fromEntries(Object.entries(rsError)));
+  console.error(rsError, rsError.toJSON());
 });
 
 sub("warn", rsWarning => {
-  console.warn(rsWarning, Object.fromEntries(Object.entries(rsWarning)));
+  console.warn(rsWarning, rsWarning.toJSON());
 });
 
 expose(name, { sub });

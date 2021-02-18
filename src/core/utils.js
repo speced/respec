@@ -859,26 +859,20 @@ export class RespecError extends Error {
    */
   constructor(message, plugin, options) {
     super(message);
-    // Make "message" an enumerable property so it can be serialized easily.
-    Object.defineProperty(this, "message", {
-      enumerable: true,
-      value: message,
-    });
-    this.name = options.isWarning ? "ReSpecWarning" : "ReSpecError";
-    this.plugin = plugin;
-
-    // 😢 TS complains https://github.com/microsoft/TypeScript/issues/26792
-    // Object.assign(this, options);
-    options.title && (this.title = options.title);
-    options.hint && (this.hint = options.hint);
-    options.elements && (this.elements = options.elements);
-    options.details && (this.details = options.details);
-
+    const name = options.isWarning ? "ReSpecWarning" : "ReSpecError";
+    Object.assign(this, { message, plugin, name, ...options });
     if (options.elements) {
       options.elements.forEach(elem =>
-        markAsOffending(elem, this.message, this.title)
+        markAsOffending(elem, message, options.title)
       );
     }
+  }
+
+  toJSON() {
+    const { message, name, stack } = this;
+    // @ts-expect-error https://github.com/microsoft/TypeScript/issues/26792
+    const { plugin, hint, elements, title, details } = this;
+    return { message, name, plugin, hint, elements, title, details, stack };
   }
 }
 
