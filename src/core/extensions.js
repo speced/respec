@@ -29,6 +29,12 @@ export function setupExtensions(corePlugins, conf) {
   }
 
   const allPlugins = [];
+
+  if (extMap.has("before-all")) {
+    allPlugins.push(...extMap.get("before-all"));
+    extMap.delete("before-all");
+  }
+
   for (const corePlugin of corePlugins) {
     const beforeHookName = corePlugin.hooks?.find(s => s.startsWith("before-"));
     if (beforeHookName && extMap.has(beforeHookName)) {
@@ -43,6 +49,11 @@ export function setupExtensions(corePlugins, conf) {
       allPlugins.push(...extMap.get(afterHookName));
       extMap.delete(afterHookName);
     }
+  }
+
+  if (extMap.has("after-all")) {
+    allPlugins.push(...extMap.get("after-all"));
+    extMap.delete("after-all");
   }
 
   // remaining extensions have no corresponding hooks.
