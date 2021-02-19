@@ -7,13 +7,44 @@
  *
  * @typedef {{message: string, hash: string}} Commit
  */
-import { github } from "../github.js";
 import { html } from "../import-maps.js";
 import { showError } from "../utils.js";
 
-export const name = "rs-changelog";
+export const name = "core/custom-elements/rs-changelog";
+const customElementName = "rs-changelog";
 
-export const element = class ChangelogElement extends HTMLElement {
+export async function run(conf) {
+  /** @type {NodeListOf<HTMLElement>} */
+  const elems = document.querySelectorAll(customElementName);
+  if (!elems.length) return;
+
+  const github = conf.github;
+  if (!github) {
+    const msg = "`respecConfig.github` is not set.";
+    return showError(msg, name);
+  }
+
+  const { apiBase, fullName, repoURL } = github;
+  elems.forEach(el => {
+    Object.assign(el.dataset, { apiBase, fullName, repoURL });
+  });
+
+  customElements.define(customElementName, ChangelogElement);
+
+  const readyPromises = [...elems].map(
+    el => new Promise(res => el.addEventListener("done", res, { once: true }))
+  );
+  await Promise.all(readyPromises);
+
+  // Cleanup
+  elems.forEach(el => {
+    delete el.dataset.apiBase;
+    delete el.dataset.fullName;
+    delete el.dataset.repoURL;
+  });
+}
+
+class ChangelogElement extends HTMLElement {
   constructor() {
     super();
     this.props = {
@@ -24,16 +55,22 @@ export const element = class ChangelogElement extends HTMLElement {
         typeof window[this.getAttribute("filter")] === "function"
           ? window[this.getAttribute("filter")]
           : () => true,
+      // props handled by ReSpec
+      github: {
+        apiBase: this.dataset.apiBase,
+        fullName: this.dataset.fullName,
+        repoURL: this.dataset.repoURL,
+      },
     };
   }
 
   connectedCallback() {
-    const { from, to, filter } = this.props;
+    const { from, to, filter, github } = this.props;
     html.bind(this)`
       <ul>
       ${{
-        any: fetchCommits(from, to, filter)
-          .then(commits => toHTML(commits))
+        any: fetchCommits(from, to, filter, github)
+          .then(commits => toHTML(commits, github))
           .catch(error => showError(error.message, name, { elements: [this] }))
           .finally(() => {
             this.dispatchEvent(new CustomEvent("done"));
@@ -43,16 +80,12 @@ export const element = class ChangelogElement extends HTMLElement {
       </ul>
     `;
   }
-};
+}
 
-async function fetchCommits(from, to, filter) {
+async function fetchCommits(from, to, filter, gh) {
   /** @type {Commit[]} */
   let commits;
   try {
-    const gh = await github;
-    if (!gh) {
-      throw new Error("`respecConfig.github` is not set");
-    }
     const url = new URL("commits", `${gh.apiBase}/${gh.fullName}/`);
     url.searchParams.set("from", from);
     url.searchParams.set("to", to);
@@ -76,8 +109,8 @@ async function fetchCommits(from, to, filter) {
   return commits;
 }
 
-async function toHTML(commits) {
-  const { repoURL } = await github;
+async function toHTML(commits, github) {
+  const { repoURL } = github;
   return commits.map(commit => {
     const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
     const commitURL = `${repoURL}commit/${commit.hash}`;
