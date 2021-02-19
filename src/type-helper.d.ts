@@ -115,12 +115,20 @@ interface BiblioData {
   status?: string;
   etAl?: boolean;
 }
+
+interface Extension {
+  on: string;
+  name: string;
+  run(conf: Conf, utils: Record<string, Function>): Promise<void>;
+}
+
 interface Conf {
   informativeReferences: Set<string>;
   normativeReferences: Set<string>;
   localBiblio?: Record<string, BiblioData>;
   biblio: Record<string, BiblioData>;
   shortName: string;
+  extensions?: Extension[];
 }
 
 type ResourceHintOption = {
