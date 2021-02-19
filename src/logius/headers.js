@@ -103,7 +103,7 @@ import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
 /* pieter hering end synced with w3c version */
 
-// Thijs Brentjens: customize in the geonovum/templates directory
+// Thijs Brentjens: customize in the logius/templates directory
 // (see above)
 
 export const name = "logius/headers";
@@ -120,7 +120,7 @@ const NLRespecDate = new Intl.DateTimeFormat(["nl"], {
 const status2maturity = {};
 
 // Thijs Brentjens: added Geonovum statusses
-// https://github.com/Geonovum/respec/wiki/specStatus
+// https://github.com/Logius-standaarden/respec/wiki/specStatus
 // pieter hering inserted generic names and added two statuses
 const status2text = {
   "GN-WV": "Werkversie",
@@ -139,7 +139,7 @@ const status2text = {
 };
 
 // Thijs Brentjens: added Geonovum types
-// https://github.com/Geonovum/respec/wiki/specType
+// https://github.com/Logius-standaarden/respec/wiki/specType
 // pieter hering inserted generic names and added two statuses
 const type2text = {
   NO: "Norm",
@@ -211,7 +211,7 @@ export function run(conf) {
   conf.specStatus = conf.specStatus ? conf.specStatus.toUpperCase() : "";
   if (!conf.specType) {
     const msg = `SpecType is not defined`;
-    const hint = `set config.specType to see https://github.com/centrumvoorstandaarden/respec/wiki/specType`;
+    const hint = `set config.specType to see https://github.com/Logius-standaarden/respec/wiki/specType`;
     showWarning(msg, name, { hint });
   }
   conf.specType = conf.specType ? conf.specType.toUpperCase() : "";
@@ -275,7 +275,7 @@ export function run(conf) {
     // Thijs Brentjens: deal with editors draft links based on Github URIs
     if (conf.github) {
       // parse the org and repo name to construct a github.io URI if a github URI is provided
-      // https://github.com/Geonovum/respec/issues/141
+      // https://github.com/Logius-standaarden/respec/issues/141
       // https://github.com/{org}/{repo} should be rewritten to https://{org}.github.io/{repo}/
       const githubParts = conf.github.split("github.com/")[1].split("/");
       conf.edDraftURI = `https://${githubParts[0]}.github.io/${githubParts[1]}`;
@@ -410,7 +410,7 @@ export function run(conf) {
   // Thijs Brentjens: only show if prevVersion is available
   // todo check GN STATUSES in templates
   if (!conf.prevVersion) conf.showPreviousVersion = false;
-  // Thijs: get specStatus from Geonovum list https://github.com/Geonovum/respec/wiki/specStatus
+  // Thijs: get specStatus from Geonovum list https://github.com/Logius-standaarden/respec/wiki/specStatus
   // Pieter: added generic checks
   conf.isDEF = conf.specStatus === "GN-DEF" || conf.specStatus === "DEF";
   conf.isWV = conf.specStatus === "GN-WV" || conf.specStatus === "WV";
