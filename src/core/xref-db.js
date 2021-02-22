@@ -87,7 +87,8 @@ export async function cacheXrefData(queries, results) {
     const cache = await getIdbCache();
     const tx = cache.transaction(STORE_NAME, "readwrite");
     for (const query of queries) {
-      tx.objectStore(STORE_NAME).add({ query, result: results.get(query.id) });
+      const result = results.get(query.id);
+      tx.objectStore(STORE_NAME).add({ query, result });
     }
     await tx.done;
   } catch (e) {
