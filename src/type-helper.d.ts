@@ -147,6 +147,8 @@ type ResourceHintOption = {
 };
 
 module "core/xref" {
+  import { IDBPDatabase, DBSchema } from "idb";
+
   export interface RequestEntry {
     term: string;
     id: string;
@@ -170,6 +172,16 @@ module "core/xref" {
     };
     query?: RequestEntry[];
   }
+
+  interface XrefDBScheme extends DBSchema {
+    xrefs: {
+      key: string;
+      value: { query: RequestEntry; result: SearchResultEntry[] };
+      indexes: { byTerm: string };
+    };
+  }
+
+  export type XrefDatabase = IDBPDatabase<XrefDBScheme>;
 }
 
 enum W3CGroupType {
