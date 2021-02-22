@@ -6,25 +6,13 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
-import { IDBKeyVal } from "../../../src/core/utils.js";
-import { openDB } from "../../../node_modules/idb/build/esm/index.js";
+import { clearXrefData } from "../../../src/core/xref-db.js";
 
 describe("Core — xref", () => {
   afterAll(flushIframes);
 
-  let cache;
-  beforeAll(async () => {
-    const idb = await openDB("xref", 1, {
-      upgrade(db) {
-        db.createObjectStore("xrefs");
-      },
-    });
-    cache = new IDBKeyVal(idb, "xrefs");
-  });
-
   beforeEach(async () => {
-    // clear idb cache before each
-    await cache.clear();
+    await clearXrefData();
   });
 
   const localBiblio = {
@@ -987,59 +975,6 @@ describe("Core — xref", () => {
         jasmine.arrayWithExactContents(["XHR", "SVG"])
       );
     });
-  });
-
-  it("caches results and uses cached results when available", async () => {
-    const config = { xref: true, localBiblio };
-    const keys = new Map([
-      ["dictionary", "7a82727efd37620ec8b50cac9dca75d1b1f08d94"],
-      ["url parser", "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"],
-    ]);
-
-    const body1 = `
-      <section>
-        <p><a id="link">dictionary</a><p>
-      </section>`;
-
-    await expectAsync(cache.keys()).toBeResolvedTo([]);
-    const preCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
-    expect(preCacheDoc.getElementById("link").href).toBe(
-      "https://heycam.github.io/webidl/#dfn-dictionary"
-    );
-    await expectAsync(cache.keys()).toBeResolvedTo([
-      keys.get("dictionary"),
-      "__LAST_VERSION_CHECK__",
-    ]);
-
-    // no new data was requested from server, cache shoudln't change
-    const postCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
-    expect(postCacheDoc.getElementById("link").href).toBe(
-      "https://heycam.github.io/webidl/#dfn-dictionary"
-    );
-    await expectAsync(cache.keys()).toBeResolvedTo([
-      keys.get("dictionary"),
-      "__LAST_VERSION_CHECK__",
-    ]);
-
-    // new data was requested from server, cache should change
-    const body2 = `
-      <section>
-        <p><a id="link-1">dictionary</a><p>
-        <p><a id="link-2">URL parser</a><p>
-      </section>
-    `;
-    const updatedCacheDoc = await makeRSDoc(makeStandardOps(config, body2));
-    expect(updatedCacheDoc.getElementById("link-1").href).toBe(
-      "https://heycam.github.io/webidl/#dfn-dictionary"
-    );
-    expect(updatedCacheDoc.getElementById("link-2").href).toBe(
-      "https://url.spec.whatwg.org/#concept-url-parser"
-    );
-    await expectAsync(cache.keys()).toBeResolvedTo([
-      keys.get("dictionary"),
-      "__LAST_VERSION_CHECK__",
-      keys.get("url parser"),
-    ]);
   });
 
   it("respects requests to not perform an xref lookup", async () => {
