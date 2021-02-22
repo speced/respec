@@ -78,8 +78,6 @@ const localizationStrings = {
   },
 };
 
-const cssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/issues-notes.css")).default;
@@ -385,7 +383,7 @@ export async function run(conf) {
     return; // nothing to do.
   }
   const ghIssues = await fetchAndStoreGithubIssues(conf.github);
-  const css = await cssPromise;
+  const css = await loadStyle();
   const { head: headElem } = document;
   headElem.insertBefore(
     html`<style>

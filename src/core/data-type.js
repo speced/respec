@@ -9,8 +9,6 @@ import { fetchAsset } from "./text-loader.js";
 
 export const name = "core/data-type";
 
-const tooltipStylePromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/datatype.css")).default;
@@ -25,7 +23,7 @@ export async function run(conf) {
   }
 
   const style = document.createElement("style");
-  style.textContent = await tooltipStylePromise;
+  style.textContent = await loadStyle();
   document.head.appendChild(style);
 
   let section = null;

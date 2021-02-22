@@ -13,8 +13,6 @@ import { sub } from "./pubsubhub.js";
 
 export const name = "core/highlight-vars";
 
-const hlVarsPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/var.css")).default;
@@ -28,7 +26,7 @@ export async function run(conf) {
     return;
   }
   const styleElement = document.createElement("style");
-  styleElement.textContent = await hlVarsPromise;
+  styleElement.textContent = await loadStyle();
   styleElement.classList.add("removeOnSave");
   document.head.appendChild(styleElement);
 

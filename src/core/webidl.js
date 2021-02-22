@@ -367,8 +367,6 @@ export function addIDLHeader(pre) {
   addCopyIDLButton(header);
 }
 
-const cssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/webidl.css")).default;
@@ -386,7 +384,7 @@ export async function run() {
     const link = document.querySelector("head link");
     if (link) {
       const style = document.createElement("style");
-      style.textContent = await cssPromise;
+      style.textContent = await loadStyle();
       link.before(style);
     }
   }

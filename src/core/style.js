@@ -12,9 +12,6 @@
 import { fetchAsset } from "./text-loader.js";
 export const name = "core/style";
 
-// Opportunistically inserts the style, with the chance to reduce some FOUC
-const styleElement = insertStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/respec.css")).default;
@@ -31,8 +28,13 @@ async function insertStyle() {
   return styleElement;
 }
 
-export async function run(conf) {
-  if (conf.noReSpecCSS) {
-    (await styleElement).remove();
+export async function prepare(conf) {
+  if (!conf.noReSpecCSS) {
+    // Insert style early to reduce FOUC
+    await insertStyle();
   }
+}
+
+export async function run(_conf) {
+  /** nothing to do */
 }

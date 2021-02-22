@@ -7,8 +7,6 @@ import { fetchAsset } from "./text-loader.js";
 
 export const name = "core/algorithms";
 
-const cssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/algorithms.css")).default;
@@ -24,7 +22,7 @@ export async function run() {
     .forEach(li => li.classList.add("assert"));
   if (document.querySelector(".assert")) {
     const style = document.createElement("style");
-    style.textContent = await cssPromise;
+    style.textContent = await loadStyle();
     document.head.appendChild(style);
   }
 }

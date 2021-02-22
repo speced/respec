@@ -18,13 +18,16 @@ export const name = "core/biblio";
 
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
-// Opportunistically dns-prefetch to bibref server, as we don't know yet
-// if we will actually need to download references yet.
-const link = createResourceHint({
-  hint: "dns-prefetch",
-  href: bibrefsURL.origin,
-});
-document.head.appendChild(link);
+export async function prepare() {
+  // Opportunistically dns-prefetch to bibref server, as we don't know yet
+  // if we will actually need to download references yet.
+  const link = createResourceHint({
+    hint: "dns-prefetch",
+    href: bibrefsURL.origin,
+  });
+  document.head.appendChild(link);
+}
+
 let doneResolver;
 
 /** @type {Promise<Conf['biblio']>} */

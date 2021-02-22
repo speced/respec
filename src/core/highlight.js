@@ -12,8 +12,6 @@ export const name = "core/highlight";
 
 const nextMsgId = msgIdGenerator("highlight");
 
-const ghCssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/highlight.css")).default;
@@ -101,7 +99,7 @@ export async function run(conf) {
   const promisesToHighlight = highlightables
     .filter(elem => elem.textContent.trim())
     .map(highlightElement);
-  const ghCss = await ghCssPromise;
+  const ghCss = await loadStyle();
   document.head.appendChild(
     html`<style>
       ${ghCss}
