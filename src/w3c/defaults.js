@@ -3,6 +3,8 @@
  * Sets the defaults for W3C specs
  */
 export const name = "w3c/defaults";
+import { bgStatus, cgStatus, cgbgStatus } from "./headers.js";
+import { docLink, showError } from "../core/utils.js";
 import { coreDefaults } from "../core/defaults.js";
 import linter from "../core/linter.js";
 import { rule as privsecSectionRule } from "../core/linter-rules/privsec-section.js";
@@ -52,4 +54,53 @@ export function run(conf) {
     ...conf,
     lint,
   });
+
+  if (conf.groupType && conf.specStatus) {
+    validateStatusForGroup(conf);
+  }
+}
+
+function validateStatusForGroup(conf) {
+  const { specStatus, groupType } = conf;
+  switch (groupType) {
+    case "cg": {
+      if (![...cgbgStatus, "unofficial"].includes(specStatus)) {
+        const msg = `W3C Community Group documents can't use \`"${specStatus}"\` for the ${docLink(
+          "specStatus"
+        )} configuration option. Please use one of: ${toMDCode(
+          cgStatus
+        )}. Automatically falling back to \`"CG-DRAFT"\`.`;
+        showError(msg, name);
+        conf.specStatus = "CG-DRAFT";
+      }
+      break;
+    }
+    case "bg": {
+      if (![...bgStatus, "unofficial"].includes(specStatus)) {
+        const msg = `W3C Business Group documents can't use \`"${specStatus}"\` for the ${docLink(
+          "specStatus"
+        )} configuration option. Please use one of: ${toMDCode(
+          bgStatus
+        )}. Automatically falling back to \`"BG-DRAFT"\`.`;
+        showError(msg, name);
+        conf.specStatus = "BG-DRAFT";
+      }
+      break;
+    }
+    case "wg": {
+      if (!cgbgStatus.includes(specStatus)) {
+        const msg = `Invalid value for ${docLink(
+          "specStatus"
+        )} a W3C Working Group document. Please see ${docLink(
+          "specStatus"
+        )} for appropriate values.`;
+        showError(msg, name);
+      }
+      break;
+    }
+  }
+}
+
+function toMDCode(list) {
+  return list.map(item => `\`"${item}"\``).join(", ");
 }

@@ -171,3 +171,5 @@ module "core/xref" {
     query?: RequestEntry[];
   }
 }
+
+enum W3CGroupType {"cg", "bg", "wg", "" }
