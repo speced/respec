@@ -6,149 +6,121 @@ const karma = require("karma");
 const serve = require("serve-handler");
 const colors = require("colors");
 const boxen = require("boxen");
-const commandLineArgs = require("command-line-args");
+const sade = require("sade");
 const serveConfig = require("../serve.json");
 const { Builder } = require("./builder");
 
 const KARMA_PORT = 9876;
 const SERVE_PORT = 5000;
 
-/** @type {import("command-line-args").OptionDefinition[]} */
-const optionList = [
-  {
-    name: "profile",
-    alias: "p",
-    description: "Name of profile to build.",
-    defaultValue: "w3c",
-    multiple: false,
-    type: String,
-  },
-  {
-    name: "interactive",
-    alias: "i",
-    description: "Run in interactive mode",
-    defaultValue: false,
-    type: Boolean,
-  },
-  {
-    name: "browsers",
-    description: "Browsers for Karma unit tests",
-    defaultOption: undefined,
-    multiple: true,
-    type: String,
-  },
-  {
-    name: "grep",
-    description: "Run specific tests using karma --grep",
-    defaultOption: undefined,
-    type: String,
-  },
-];
+sade("./tools/dev-server.js", true)
+  .option("-p, --profile", "Name of profile to build.", "w3c")
+  .option("-i, --interactive", "Run in interactive mode.", false)
+  .option("--browsers", "Browsers for Karma unit tests")
+  .option("--grep", "Run specific tests using karma --grep")
+  .action(opts => run(opts))
+  .parse(process.argv);
 
-let args;
-try {
-  args = commandLineArgs(optionList);
-} catch (err) {
-  console.error(colors.error(err.message));
-  process.exit(127);
-}
+function run(args) {
+  let isActive = false;
 
-let isActive = false;
-
-const karmaConfig = karma.config.parseConfig(
-  path.join(__dirname, "../karma.conf.js"),
-  {
-    browsers: args.browsers,
-    autoWatch: false,
-    port: KARMA_PORT,
-    logLevel: karma.constants.LOG_WARN,
-    client: {
-      args: ["--grep", args.grep || ""],
-    },
-    mochaReporter: { ignoreSkipped: true },
-  }
-);
-const karmaServer = new karma.Server(karmaConfig);
-karmaServer.start();
-
-const devServer = createServer((req, res) => serve(req, res, serveConfig));
-devServer.listen(SERVE_PORT);
-devServer.on("error", onError);
-
-if (args.interactive) {
-  registerStdinHandler();
-} else {
-  const paths = ["./src", "./tests/spec"];
-  const watcher = chokidar.watch(paths, { ignoreInitial: true });
-  watcher.on("all", onFileChange);
-  watcher.on("error", onError);
-}
-
-process.on("exit", () => {
-  execSync("git checkout -- builds", { stdio: "inherit" });
-});
-
-printWelcomeMessage(args);
-karmaServer.on("browsers_ready", buildAndTest);
-
-function registerStdinHandler() {
-  // https://stackoverflow.com/a/12506613
-  const stdin = process.stdin;
-  stdin.setRawMode(true);
-  stdin.resume();
-  stdin.setEncoding("utf8");
-
-  stdin.on("data", async key => {
-    if (isActive) {
-      // do nothing if already active
-      return process.stdout.write(key);
+  const karmaConfig = karma.config.parseConfig(
+    path.join(__dirname, "../karma.conf.js"),
+    {
+      browsers: args.browsers,
+      autoWatch: false,
+      port: KARMA_PORT,
+      logLevel: karma.constants.LOG_WARN,
+      client: {
+        args: ["--grep", args.grep || ""],
+      },
+      mochaReporter: { ignoreSkipped: true },
     }
+  );
+  const karmaServer = new karma.Server(karmaConfig);
+  const devServer = createServer((req, res) => serve(req, res, serveConfig));
+  devServer.on("error", onError);
 
-    switch (key) {
-      case "\u0003": //  ctrl-c (end of text)
-      case "q": {
-        return karma.stopper.stop(karmaConfig, code => {
-          setTimeout(() => process.exit(code), 0);
-        });
+  if (args.interactive) {
+    registerStdinHandler();
+  } else {
+    const paths = ["./src", "./tests/spec"];
+    const watcher = chokidar.watch(paths, { ignoreInitial: true });
+    watcher.on("all", onFileChange);
+    watcher.on("error", onError);
+  }
+
+  process.on("exit", () => {
+    execSync("git checkout -- builds", { stdio: "inherit" });
+  });
+
+  printWelcomeMessage(args);
+
+  karmaServer.start();
+  devServer.listen(SERVE_PORT);
+  karmaServer.on("browsers_ready", () =>
+    buildAndTest({ profile: args.profile })
+  );
+
+  function registerStdinHandler() {
+    // https://stackoverflow.com/a/12506613
+    const stdin = process.stdin;
+    stdin.setRawMode(true);
+    stdin.resume();
+    stdin.setEncoding("utf8");
+
+    stdin.on("data", async key => {
+      if (isActive) {
+        // do nothing if already active
+        return process.stdout.write(key);
       }
-      case "t":
-        return await buildAndTest();
-      case "T":
-        return await buildAndTest({ preventBuild: true });
-      case "h":
-        return printWelcomeMessage(args);
-      default:
-        process.stdout.write(key);
-    }
-  });
-}
 
-async function onFileChange(_event, file) {
-  const preventBuild = file.startsWith("tests");
-  await buildAndTest({ preventBuild });
-}
-
-async function buildAndTest(options = {}) {
-  const { preventBuild = false } = options;
-  if (isActive) return;
-  try {
-    isActive = true;
-    if (!preventBuild) {
-      await Builder.build({ name: args.profile, debug: true });
-    }
-    karma.runner.run(karmaConfig, () => {});
-  } catch (err) {
-    console.error(colors.error(err.stack));
-  } finally {
-    isActive = false;
+      switch (key) {
+        case "\u0003": //  ctrl-c (end of text)
+        case "q": {
+          return karma.stopper.stop(karmaConfig, code => {
+            setTimeout(() => process.exit(code), 0);
+          });
+        }
+        case "t":
+          return await buildAndTest();
+        case "T":
+          return await buildAndTest({ preventBuild: true });
+        case "h":
+          return printWelcomeMessage(args);
+        default:
+          process.stdout.write(key);
+      }
+    });
   }
-}
 
-function onError(err) {
-  console.error(colors.error(err.stack));
-  karma.stopper.stop(karmaConfig, () => {
-    process.exit(1);
-  });
+  async function buildAndTest(options = {}) {
+    const { preventBuild = false } = options;
+    if (isActive) return;
+    try {
+      isActive = true;
+      if (!preventBuild) {
+        await Builder.build({ name: args.profile, debug: true });
+      }
+      karma.runner.run(karmaConfig, () => {});
+    } catch (err) {
+      console.error(colors.error(err.stack));
+    } finally {
+      isActive = false;
+    }
+  }
+
+  function onError(err) {
+    console.error(colors.error(err.stack));
+    karma.stopper.stop(karmaConfig, () => {
+      process.exit(1);
+    });
+  }
+
+  async function onFileChange(_event, file) {
+    const preventBuild = file.startsWith("tests");
+    await buildAndTest({ preventBuild });
+  }
 }
 
 function printWelcomeMessage(args) {
