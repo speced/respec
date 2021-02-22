@@ -72,8 +72,8 @@ interface Document {
   ): TreeWalker<T>;
 }
 
-interface NodeIterator<T extends Node> { }
-interface TreeWalker<T extends Node> { }
+interface NodeIterator<T extends Node> {}
+interface TreeWalker<T extends Node> {}
 
 interface Node {
   cloneNode<T extends Node = this>(deep?: boolean): T;
@@ -144,7 +144,7 @@ type ResourceHintOption = {
    * If the hint should remain in the spec after processing.
    */
   dontRemove?: boolean;
-}
+};
 
 module "core/xref" {
   export interface RequestEntry {
@@ -172,4 +172,10 @@ module "core/xref" {
   }
 }
 
-enum W3CGroupType {"cg", "bg", "wg", "" }
+enum W3CGroupType {
+  "bg",
+  "cg",
+  "ig",
+  "wg",
+  "",
+}
