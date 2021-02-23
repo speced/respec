@@ -41,7 +41,7 @@ async function runRespec2html() {
   // Incrementally spawn processes and add them to process counter.
   const executables = testURLs.map(url => {
     const disableSandbox = process.env.TRAVIS ? " --disable-sandbox" : "";
-    const cmd = `node ./tools/respec2html.js -e${disableSandbox} --timeout 30 --src ${url}`;
+    const cmd = `node ./tools/respec2html.js ${url} -e${disableSandbox} --timeout 30`;
     return toExecutable(cmd);
   });
   let testCount = 1;
