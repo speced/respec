@@ -43,4 +43,32 @@ describe("Core — Respec Global - document.respec", () => {
 
     expect(doc.respec.errors).toHaveSize(0);
   });
+
+  it("dispatches error and warning events", async () => {
+    const config = { lint: { "broken-refs-exist": true } };
+    const body = `
+      <div id="sotd"></div>
+      <p><a id="test-warning" href="#non-existent">FAIL</a></p>
+      <div id="warning-collector"></div>
+      <script>
+        document.addEventListener("respec-start", () => {
+          document.respec.addEventListener("warning", ev => {
+            const collector = document.getElementById("warning-collector");
+            const warningEl = document.createElement("p");
+            warningEl.textContent = ev.detail.plugin;
+            collector.append(warningEl);
+          });
+        });
+      </script>
+    `;
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const warningCollector = doc.getElementById("warning-collector");
+    expect(warningCollector).toBeTruthy();
+    expect(warningCollector.querySelectorAll("p")).toHaveSize(1);
+    expect(warningCollector.querySelector("p").textContent).toBe(
+      "core/linter/local-refs-exist"
+    );
+  });
 });
