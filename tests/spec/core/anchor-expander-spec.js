@@ -158,7 +158,7 @@ describe("Core - anchor-expander", () => {
       const span = p.querySelector("span");
       expect(span).toBeTruthy();
       expect(span.textContent.trim()).toEqual("MediaDevices");
-      expect(span.attributes.length).toEqual(0);
+      expect(span.attributes).toHaveSize(0);
     }
   });
 });
