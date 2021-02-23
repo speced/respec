@@ -133,4 +133,32 @@ describe("Core - anchor-expander", () => {
     expect(text2.endsWith("a test")).toBeTrue();
     expect(p2.textContent.endsWith("a test!")).toBeTrue();
   });
+
+  it("it converts nested anchors inside heading/sections expansions into spans", async () => {
+    const body = `
+      <section id="sectionid">
+        <h2 id="someid">
+          Some {{MediaDevices}}
+        </h2>
+        <pre class="idl">
+          [Exposed=Window]
+          interface MediaDevices {};
+        </pre>
+        <p id="exp1">[[[#someid]]].</p>
+        <p id="exp2"><a href="#someid"></a>!</p>
+        <p id="exp3"><a href="#sectionid"></a></p>
+        <p id="exp4">[[[#sectionid]]]</p>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    for (const exp of ["exp1", "exp2", "exp3", "exp4"]) {
+      const p = doc.getElementById(exp);
+      expect(p.querySelector("a a")).toBeNull();
+      const span = p.querySelector("span");
+      expect(span).toBeTruthy();
+      expect(span.textContent.trim()).toEqual("MediaDevices");
+      expect(span.attributes).toHaveSize(0);
+    }
+  });
 });
