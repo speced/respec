@@ -222,7 +222,7 @@ interface Bar {
     const doc = await makeRSDoc(ops);
     const { textContent } = doc.getElementById("idl-index");
     expect(textContent).toContain(
-      "This specification doesn't normative declare any Web IDL."
+      "This specification doesn't normatively declare any Web IDL."
     );
   });
 

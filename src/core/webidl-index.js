@@ -40,7 +40,7 @@ export function run() {
   ).filter(idl => !idl.closest(nonNormativeSelector));
 
   if (idlIndex.length === 0) {
-    const text = "This specification doesn't normative declare any Web IDL.";
+    const text = "This specification doesn't normatively declare any Web IDL.";
     idlIndexSec.append(text);
     return;
   }
