@@ -90,7 +90,7 @@ function validateStatusForGroup(conf) {
       break;
     }
     case "wg": {
-      if (!cgbgStatus.includes(specStatus)) {
+      if (cgbgStatus.includes(specStatus)) {
         const msg = `Invalid value for ${docLink(
           "specStatus"
         )} a W3C Working Group document. Please see ${docLink(
