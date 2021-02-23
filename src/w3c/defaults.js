@@ -90,13 +90,14 @@ function validateStatusForGroup(conf) {
       break;
     }
     case "wg": {
-      if (!cgbgStatus.includes(specStatus)) {
-        const msg = `Invalid value for ${docLink(
+      if (cgbgStatus.includes(specStatus)) {
+        const msg = `W3C Working Group documents can't use \`"${specStatus}"\` for the ${docLink(
           "specStatus"
-        )} a W3C Working Group document. Please see ${docLink(
+        )} configuration option.`;
+        const hint = `Please see ${docLink(
           "specStatus"
-        )} for appropriate values.`;
-        showError(msg, name);
+        )} for appropriate values for this type of group.`;
+        showError(msg, name, { hint });
       }
       break;
     }
