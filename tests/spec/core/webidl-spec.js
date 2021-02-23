@@ -18,6 +18,24 @@ describe("Core - WebIDL", () => {
   });
 
   describe("IDL block", () => {
+    it("wraps inner IDL in a code element", async () => {
+      const body = `
+        <pre class="idl">
+          dictionary Foo {};
+        </pre>
+        <pre class="webidl">
+          dictionary Bar {};
+        </pre>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const [code1, code2] = doc.querySelectorAll("pre > code");
+      expect(code1).toBeTruthy();
+      expect(code1.textContent).toContain("dictionary Foo {};");
+      expect(code2).toBeTruthy();
+      expect(code2.textContent).toContain("dictionary Bar {};");
+    });
+
     it("it uniquely identifies each IDL block", async () => {
       const body = `
         <pre class="idl">
