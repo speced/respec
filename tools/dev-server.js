@@ -16,18 +16,20 @@ const SERVE_PORT = 5000;
 sade("./tools/dev-server.js", true)
   .option("-p, --profile", "Name of profile to build.", "w3c")
   .option("-i, --interactive", "Run in interactive mode.", false)
-  .option("--browsers", "Browsers for Karma unit tests")
+  .option(
+    "--browsers",
+    'Browsers for Karma unit tests, space seperated (e.g., "Chrome Firefox")'
+  )
   .option("--grep", "Run specific tests using karma --grep")
   .action(opts => run(opts))
   .parse(process.argv);
 
 function run(args) {
   let isActive = false;
-
   const karmaConfig = karma.config.parseConfig(
     path.join(__dirname, "../karma.conf.js"),
     {
-      browsers: args.browsers,
+      browsers: args.browsers?.split(/\s/) || [],
       autoWatch: false,
       port: KARMA_PORT,
       logLevel: karma.constants.LOG_WARN,
