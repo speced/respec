@@ -4,7 +4,13 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import { addHashId, showError, showWarning, wrapInner, xmlEscape } from "./utils.js";
+import {
+  addHashId,
+  showError,
+  showWarning,
+  wrapInner,
+  xmlEscape,
+} from "./utils.js";
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";

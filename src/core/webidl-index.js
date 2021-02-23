@@ -64,7 +64,7 @@ export function run() {
     });
   // Remove duplicate IDs
   pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
-  
+
   // Add our own IDL header
   idlIndexSec.appendChild(pre);
   wrapInner(pre, document.createElement("code"));
