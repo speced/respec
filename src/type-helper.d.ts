@@ -189,5 +189,4 @@ enum W3CGroupType {
   "cg",
   "ig",
   "wg",
-  "",
 }

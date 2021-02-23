@@ -253,15 +253,18 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf) {
+  if (!conf.specStatus) {
+    const msg = `Missing required configuration: ${docLink("specStatus")}.`;
+    const hint = `Please select an appropriate status from ${docLink(
+      "specStatus"
+    )} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
+    showError(msg, name, { hint });
+  }
   conf.isUnofficial = conf.specStatus === "unofficial";
   if (conf.isUnofficial && !Array.isArray(conf.logos)) {
     conf.logos = [];
   }
   if (conf.isUnofficial) {
-    if (!conf.specStatus) {
-      const msg = `Missing required configuration: ${docLink("specStatus")}`;
-      showError(msg, name);
-    }
     if (conf.license && !licenses.has(conf.license)) {
       const msg = `The ${docLink(
         "license"

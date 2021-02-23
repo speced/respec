@@ -67,10 +67,11 @@ function validateStatusForGroup(conf) {
       if (![...cgbgStatus, "unofficial"].includes(specStatus)) {
         const msg = `W3C Community Group documents can't use \`"${specStatus}"\` for the ${docLink(
           "specStatus"
-        )} configuration option. Please use one of: ${toMDCode(
+        )} configuration option.`;
+        const hint = `Please use one of: ${toMDCode(
           cgStatus
         )}. Automatically falling back to \`"CG-DRAFT"\`.`;
-        showError(msg, name);
+        showError(msg, name, { hint });
         conf.specStatus = "CG-DRAFT";
       }
       break;
@@ -79,10 +80,11 @@ function validateStatusForGroup(conf) {
       if (![...bgStatus, "unofficial"].includes(specStatus)) {
         const msg = `W3C Business Group documents can't use \`"${specStatus}"\` for the ${docLink(
           "specStatus"
-        )} configuration option. Please use one of: ${toMDCode(
+        )} configuration option.`;
+        const hint = `Please use one of: ${toMDCode(
           bgStatus
         )}. Automatically falling back to \`"BG-DRAFT"\`.`;
-        showError(msg, name);
+        showError(msg, name, { hint });
         conf.specStatus = "BG-DRAFT";
       }
       break;
