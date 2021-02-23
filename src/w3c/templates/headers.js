@@ -221,7 +221,7 @@ export default (conf, options) => {
             ${showPeople(conf.authors)}
           `
         : ""}
-      ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
+      ${conf.otherLinks ? conf.otherLinks.map(link => showLink(link)) : ""}
     </dl>
     ${conf.errata
       ? html`<p>
