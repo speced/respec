@@ -20,4 +20,27 @@ describe("Core — Respec Global - document.respec", () => {
     expect(doc.respec.ready).toBeInstanceOf(doc.defaultView.Promise);
     await expectAsync(doc.respec.ready).toBeResolvedTo(undefined);
   });
+
+  it("has an array of errors and warnings", async () => {
+    const config = { lint: { "broken-refs-exist": true } };
+    const body = `
+      <div id="sotd"></div>
+      <p><a id="test-warning" href="#non-existent">FAIL</a></p>
+    `;
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    expect(doc.respec.errors).toBeInstanceOf(doc.defaultView.Array);
+    expect(doc.respec.warnings).toBeInstanceOf(doc.defaultView.Array);
+
+    expect(doc.respec.warnings).toHaveSize(1);
+    const warning = doc.respec.warnings[0];
+    expect(warning.name).toBe("ReSpecWarning");
+    expect(warning.message).toMatch(/Broken local reference/);
+    expect(warning.elements).toHaveSize(1);
+    expect(warning.elements[0].textContent).toBe("FAIL");
+    expect(warning.elements[0].hash).toBe("#non-existent");
+
+    expect(doc.respec.errors).toHaveSize(0);
+  });
 });
