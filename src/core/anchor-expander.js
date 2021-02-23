@@ -1,6 +1,6 @@
 // @ts-check
 // expands empty anchors based on their context
-import { makeSafeCopy, norm, showError } from "./utils.js";
+import { makeSafeCopy, norm, renameElement, showError } from "./utils.js";
 
 export const name = "core/anchor-expander";
 
@@ -118,6 +118,14 @@ function processHeading(heading, a) {
   if (a.lastChild.nodeType === Node.TEXT_NODE) {
     a.lastChild.textContent = a.lastChild.textContent.trimEnd();
   }
+  // Replace all inner anchors for span elements (see bug #3136)
+  a.querySelectorAll("a").forEach(a => {
+    const span = renameElement(a, "span");
+    // Remove the old attributes
+    for (const attr of [...span.attributes]) {
+      span.removeAttributeNode(attr);
+    }
+  });
 }
 
 function localize(matchingElement, newElement) {
