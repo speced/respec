@@ -32,7 +32,12 @@ const cli = sade("respec [source] [destination]", true)
       "# Halt on errors or warning."
     )}`
   )
-  .example("--src http://example.com/spec.html --out spec.html");
+  .example("--src http://example.com/spec.html --out spec.html")
+  .example(
+    `--localhost index.html out.html ${colors.dim(
+      "# Generate file using a local web server."
+    )}`
+  );
 
 cli
   // For backward compatibility
