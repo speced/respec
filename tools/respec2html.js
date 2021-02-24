@@ -7,7 +7,15 @@ const serveStatic = require("serve-static");
 const serve = serveStatic("./");
 const server = http.createServer((req, res) => {
   const finalhandler = require("finalhandler");
-  serve(req, res, finalhandler);
+  serve(
+    req,
+    res,
+    finalhandler(req, res, {
+      onerror(err) {
+        console.error(err.stack);
+      },
+    })
+  );
 });
 const path = require("path");
 
