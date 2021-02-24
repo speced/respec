@@ -266,7 +266,11 @@ export function run(conf) {
     document.lastModified
   );
   conf.publishYear = conf.publishDate.getUTCFullYear();
-  conf.publishHumanDate = NLRespecDate.format(conf.publishDate);
+
+  // pieter added: override date with LastModified date when specStatus =="WV" 
+  conf.publishHumanDate = NLRespecDate.format(
+    conf.specStatus != "WV" ? conf.publishDate : new Date(document.lastModified)
+  );
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
 
   // todo fixed, static url
@@ -305,7 +309,9 @@ export function run(conf) {
   if (
     conf.isRegular &&
     conf.specStatus !== "GN-WV" &&
-    conf.specStatus !== "WV"
+    conf.specStatus !== "WV" &&
+    // pieter added: only link to publication server when specStatus == "DEF
+    conf.specStatus == "DEF"
   ) {
     conf.thisVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain
       }/${subdomain}${specStatus}-${conf.specType.toLowerCase()}-${conf.shortName
