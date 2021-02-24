@@ -234,10 +234,6 @@ aside.example .marker > a.self-link {
   color: inherit;
 }
 
-.example pre {
-  background-color: rgba(0, 0, 0, .03);
-}
-
 h2 > a.self-link,
 h3 > a.self-link,
 h4 > a.self-link,
