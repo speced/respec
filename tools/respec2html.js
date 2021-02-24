@@ -3,18 +3,36 @@ const sade = require("sade");
 const colors = require("colors");
 const { toHTML, write } = require("./respecDocWriter");
 
-colors.setTheme({
-  data: "grey",
-  debug: "cyan",
-  error: "red",
-  help: "cyan",
-  important: "red",
-  info: "green",
-  input: "grey",
-  prompt: "grey",
-  verbose: "cyan",
-  warn: "yellow",
-});
+class Logger {
+  constructor(verbose) {
+    this.verbose = verbose;
+  }
+
+  info(message, timeRemaining) {
+    if (!this.verbose) return;
+    const header = colors.bgWhite.black.bold("[INFO]");
+    const time = colors.dim(`[Timeout: ${timeRemaining}ms]`);
+    console.log(header, time, message);
+  }
+
+  error(rsError) {
+    const header = colors.bgRed.white.bold("[ERROR]");
+    const message = colors.red(rsError.message);
+    console.error(header, message);
+  }
+
+  warn(rsError) {
+    const header = colors.gYellow.black.bold("[WARNING]");
+    const message = colors.yellow(rsError.message);
+    console.warn(header, message);
+  }
+
+  fatal(error) {
+    const header = colors.bgRed.white.bold("[FATAL]");
+    const message = colors.red(error.stack || error);
+    console.error(header, message);
+  }
+}
 
 const cli = sade("respec [source] [destination]", true)
   .describe("Converts a ReSpec source file to HTML and writes to destination.")
@@ -48,40 +66,31 @@ cli
 cli.action((source, destination, opts) => {
   source = source || opts.src;
   destination = destination || opts.out;
+
+  const logger = new Logger(opts.verbose && destination !== "stdout");
+
   if (!source) {
-    console.error(colors.error("A source is required."));
+    logger.fatal("A source is required.");
     cli.help();
     process.exit(1);
   }
 
-  return run(source, destination, opts).catch(err => {
-    console.error(colors.error(err.stack));
+  return run(source, destination, opts, logger).catch(err => {
+    logger.fatal(err);
     process.exit(1);
   });
 });
 
 cli.parse(process.argv);
 
-async function run(source, destination, options) {
+async function run(source, destination, options, logger) {
   const src = new URL(source, `file://${process.cwd()}/`).href;
 
   const { html, errors, warnings } = await toHTML(src, {
     timeout: options.timeout * 1000,
-    onError(error) {
-      console.error(
-        colors.error(`💥 ReSpec error: ${colors.debug(error.message)}`)
-      );
-    },
-    onWarning(warning) {
-      console.warn(
-        colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
-      );
-    },
-    onProgress(msg, timeRemaining) {
-      if (options.verbose && destination !== "stdout") {
-        console.log(`[Timeout: ${timeRemaining}ms]`, msg);
-      }
-    },
+    onError: logger.error.bind(logger),
+    onWarning: logger.warn.bind(logger),
+    onProgress: logger.info.bind(logger),
     disableSandbox: options["disable-sandbox"],
     devtools: options.devtools,
   });
