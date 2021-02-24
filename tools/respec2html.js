@@ -77,9 +77,13 @@ async function run(source, destination, options) {
         colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
       );
     },
+    onProgress(msg, timeRemaining) {
+      if (options.verbose && destination !== "stdout") {
+        console.log(`[Timeout: ${timeRemaining}ms]`, msg);
+      }
+    },
     disableSandbox: options["disable-sandbox"],
     devtools: options.devtools,
-    verbose: options.verbose && destination !== "stdout",
   });
 
   const exitOnError = errors.length && options.haltonerror;
