@@ -2,6 +2,11 @@
 const sade = require("sade");
 const colors = require("colors");
 const { toHTML, write } = require("./respecDocWriter");
+const http = require("http");
+const express = require("express");
+const app = express();
+const server = http.createServer(app);
+const path = require("path");
 
 colors.setTheme({
   data: "grey",
@@ -43,7 +48,8 @@ cli
   .option("-w, --haltonwarn", "Abort if ReSpec generates warnings.", false)
   .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
   .option("--devtools", "Enable debugging and show Chrome's DevTools.", false)
-  .option("--verbose", "Log processing status to stdout.", false);
+  .option("--verbose", "Log processing status to stdout.", false)
+  .option("--localhost", "Spin up a local server to peform processing.", false);
 
 cli.action((source, destination, opts) => {
   source = source || opts.src;
@@ -62,9 +68,31 @@ cli.action((source, destination, opts) => {
 
 cli.parse(process.argv);
 
-async function run(source, destination, options) {
-  const src = new URL(source, `file://${process.cwd()}/`).href;
+async function startServer(source) {
+  if (path.isAbsolute(source) || /^(\w+:\/\/)/.test(source.trim())) {
+    throw new Error(
+      `💥 Invalid path for use with --localhost. Only relative paths allowed. ${colors.debug(
+        "Please ensure your ReSpec document and its local resources (e.g., data-includes) " +
+          "are accessible from the current working directory.\n"
+      )}`
+    );
+  }
+  const PORT = 3000;
+  app.use(express.static("./"));
+  await new Promise(resolve => {
+    app.listen(PORT, () => {
+      console.log(colors.info(`Server listening on port: ${PORT}`));
+      resolve();
+    });
+  });
+  return new URL(source, `http://localhost:${PORT}/`).href;
+}
 
+async function run(source, destination, options) {
+  const src = options.localhost
+    ? await startServer(source)
+    : new URL(source, `file://${process.cwd()}/`).href;
+  console.log(colors.info(`Processing resource: ${src}. Please wait...`));
   const { html, errors, warnings } = await toHTML(src, {
     timeout: options.timeout * 1000,
     onError(error) {
@@ -91,4 +119,8 @@ async function run(source, destination, options) {
   }
 
   await write(destination, html);
+  server.close(() => {
+    console.log(colors.info("Server stopped."));
+    process.exit(0);
+  });
 }

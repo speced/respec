@@ -82,6 +82,7 @@
   },
   "dependencies": {
     "colors": "^1.4.0",
+    "express": "^4.17.1",
     "puppeteer": "^7.1.0",
     "sade": "^1.7.4"
   },
