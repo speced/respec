@@ -53,6 +53,7 @@ class Logger {
   }
 
   _formatMarkdown(str) {
+    if (typeof str !== "string") return str;
     return marked(str, { smartypants: true, renderer: new Renderer() });
   }
 }
