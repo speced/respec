@@ -49,7 +49,8 @@ cli
   .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
   .option("--devtools", "Enable debugging and show Chrome's DevTools.", false)
   .option("--verbose", "Log processing status to stdout.", false)
-  .option("--localhost", "Spin up a local server to peform processing.", false);
+  .option("--localhost", "Spin up a local server to peform processing.", false)
+  .option("--port", "Port override for localhost.", 3000);
 
 cli.action((source, destination, opts) => {
   source = source || opts.src;
@@ -60,6 +61,10 @@ cli.action((source, destination, opts) => {
     process.exit(1);
   }
 
+  if (opts.port && isNaN(parseInt(opts.port, 10))) {
+    throw new Error("Invalid port number.");
+  }
+
   return run(source, destination, opts).catch(err => {
     console.error(colors.error(err.stack));
     process.exit(1);
@@ -68,7 +73,7 @@ cli.action((source, destination, opts) => {
 
 cli.parse(process.argv);
 
-async function startServer(source) {
+async function startServer(source, { port }) {
   if (path.isAbsolute(source) || /^(\w+:\/\/)/.test(source.trim())) {
     throw new Error(
       `💥 Invalid path for use with --localhost. Only relative paths allowed. ${colors.debug(
@@ -77,20 +82,19 @@ async function startServer(source) {
       )}`
     );
   }
-  const PORT = 3000;
   app.use(express.static("./"));
   await new Promise(resolve => {
-    app.listen(PORT, () => {
-      console.log(colors.info(`Server listening on port: ${PORT}`));
+    app.listen(port, () => {
+      console.log(colors.info(`Server listening on port: ${port}`));
       resolve();
     });
   });
-  return new URL(source, `http://localhost:${PORT}/`).href;
+  return new URL(source, `http://localhost:${port}/`).href;
 }
 
 async function run(source, destination, options) {
   const src = options.localhost
-    ? await startServer(source)
+    ? await startServer(source, options)
     : new URL(source, `file://${process.cwd()}/`).href;
   console.log(colors.info(`Processing resource: ${src}. Please wait...`));
   const { html, errors, warnings } = await toHTML(src, {
