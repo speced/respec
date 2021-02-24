@@ -1,7 +1,26 @@
 #!/usr/bin/env node
 const sade = require("sade");
 const colors = require("colors");
+const marked = require("marked");
 const { toHTML, write } = require("./respecDocWriter");
+
+class Renderer extends marked.Renderer {
+  strong(text) {
+    return colors.bold(text);
+  }
+  em(text) {
+    return colors.italic(text);
+  }
+  codespan(text) {
+    return colors.underline(text);
+  }
+  paragraph(text) {
+    return text;
+  }
+  link(href, _title, text) {
+    return colors.blue(`[${text}](${colors.dim.underline(href)})`);
+  }
+}
 
 class Logger {
   constructor(verbose) {
@@ -17,13 +36,13 @@ class Logger {
 
   error(rsError) {
     const header = colors.bgRed.white.bold("[ERROR]");
-    const message = colors.red(rsError.message);
+    const message = colors.red(this._formatMarkdown(rsError.message));
     console.error(header, message);
   }
 
   warn(rsError) {
     const header = colors.gYellow.black.bold("[WARNING]");
-    const message = colors.yellow(rsError.message);
+    const message = colors.yellow(this._formatMarkdown(rsError.message));
     console.warn(header, message);
   }
 
@@ -31,6 +50,10 @@ class Logger {
     const header = colors.bgRed.white.bold("[FATAL]");
     const message = colors.red(error.stack || error);
     console.error(header, message);
+  }
+
+  _formatMarkdown(str) {
+    return marked(str, { smartypants: true, renderer: new Renderer() });
   }
 }
 

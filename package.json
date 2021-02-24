@@ -48,7 +48,6 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
     "loading-indicator": "^2.0.0",
-    "marked": "^2.0.0",
     "pluralize": "^8.0.0",
     "prettier": "^2.2.1",
     "prompt": "^1.1.0",
@@ -82,6 +81,7 @@
   },
   "dependencies": {
     "colors": "^1.4.0",
+    "marked": "^2.0.0",
     "puppeteer": "^7.1.0",
     "sade": "^1.7.4"
   },
