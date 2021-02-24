@@ -37,13 +37,25 @@ class Logger {
   error(rsError) {
     const header = colors.bgRed.white.bold("[ERROR]");
     const message = colors.red(this._formatMarkdown(rsError.message));
-    console.error(header, message);
+    if (rsError.plugin) {
+      console.group(header, message);
+      this._printDetails(rsError);
+      console.groupEnd();
+    } else {
+      console.error(header, message);
+    }
   }
 
   warn(rsError) {
     const header = colors.bgYellow.black.bold("[WARNING]");
     const message = colors.yellow(this._formatMarkdown(rsError.message));
-    console.warn(header, message);
+    if (rsError.plugin) {
+      console.group(header, message);
+      this._printDetails(rsError);
+      console.groupEnd();
+    } else {
+      console.warn(header, message);
+    }
   }
 
   fatal(error) {
@@ -55,6 +67,18 @@ class Logger {
   _formatMarkdown(str) {
     if (typeof str !== "string") return str;
     return marked(str, { smartypants: true, renderer: new Renderer() });
+  }
+
+  _printDetails(rsError) {
+    const print = (title, value) => {
+      if (!value) return;
+      const padWidth = "Plugin".length + 1; // "Plugin" is the longest title
+      const paddedTitle = `${title}:`.padStart(padWidth);
+      console.error(colors.bold(paddedTitle), this._formatMarkdown(value));
+    };
+    print("Count", rsError.elements && String(rsError.elements.length));
+    print("Plugin", rsError.plugin);
+    print("Hint", rsError.hint);
   }
 }
 
