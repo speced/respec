@@ -18,7 +18,7 @@ class Renderer extends marked.Renderer {
     return text;
   }
   link(href, _title, text) {
-    return colors.blue(`[${text}](${colors.dim.underline(href)})`);
+    return `[${text}](${colors.blue.dim.underline(href)})`;
   }
 }
 
