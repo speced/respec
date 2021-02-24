@@ -307,7 +307,6 @@ function getDefnName(defn) {
   }
 }
 
-
 /**
  * @param {Element} idlElement
  * @param {number} index
