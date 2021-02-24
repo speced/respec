@@ -37,24 +37,18 @@ class Logger {
   error(rsError) {
     const header = colors.bgRed.white.bold("[ERROR]");
     const message = colors.red(this._formatMarkdown(rsError.message));
+    console.error(header, message);
     if (rsError.plugin) {
-      console.group(header, message);
       this._printDetails(rsError);
-      console.groupEnd();
-    } else {
-      console.error(header, message);
     }
   }
 
   warn(rsError) {
     const header = colors.bgYellow.black.bold("[WARNING]");
     const message = colors.yellow(this._formatMarkdown(rsError.message));
+    console.warn(header, message);
     if (rsError.plugin) {
-      console.group(header, message);
       this._printDetails(rsError);
-      console.groupEnd();
-    } else {
-      console.warn(header, message);
     }
   }
 
@@ -74,7 +68,7 @@ class Logger {
       if (!value) return;
       const padWidth = "Plugin".length + 1; // "Plugin" is the longest title
       const paddedTitle = `${title}:`.padStart(padWidth);
-      console.error(colors.bold(paddedTitle), this._formatMarkdown(value));
+      console.error(" ", colors.bold(paddedTitle), this._formatMarkdown(value));
     };
     print("Count", rsError.elements && String(rsError.elements.length));
     print("Plugin", rsError.plugin);
