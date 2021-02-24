@@ -835,3 +835,12 @@ export function showWarning(message, pluginName, options = {}) {
   const opts = { ...options, isWarning: true };
   pub("warn", new RespecError(message, pluginName, opts));
 }
+
+/**
+ * Creates a quick markdown link to a property in the docs.
+ *
+ * @param {string} prop ReSpec configuration property to link to in docs.
+ */
+export function docLink(prop) {
+  return `[\`${prop}\`](https://respec.org/docs/#${prop})`;
+}

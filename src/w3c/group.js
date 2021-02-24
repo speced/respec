@@ -55,6 +55,7 @@ async function getMultipleGroupDetails(groups) {
     wgURI: [],
     wgPatentURI: [],
     wgPatentPolicy: [],
+    groupType: [],
   };
   for (const groupDetails of details.filter(o => o)) {
     for (const key of Object.keys(result)) {
@@ -66,7 +67,7 @@ async function getMultipleGroupDetails(groups) {
 
 /**
  * @param {string} group
- * @typedef {{ wgId: number, wg: string, wgURI: string, wgPatentURI: string, wgPatentPolicy: string }} GroupDetails
+ * @typedef {{ wgId: number, wg: string, wgURI: string, wgPatentURI: string, wgPatentPolicy: string, groupType: W3CGroupType }} GroupDetails
  * @returns {Promise<GroupDetails|undefined>}
  */
 async function getGroupDetails(group) {
@@ -77,7 +78,6 @@ async function getGroupDetails(group) {
   }
   const url = new URL(`${shortname}/${type}`, W3C_GROUPS_API);
   const res = await fetchAndCache(url.href);
-
   if (res.ok) {
     const json = await res.json();
     const {
@@ -86,8 +86,9 @@ async function getGroupDetails(group) {
       URI: wgURI,
       patentURI: wgPatentURI,
       patentPolicy: wgPatentPolicy,
+      type: groupType,
     } = json;
-    return { wg, wgId, wgURI, wgPatentURI, wgPatentPolicy };
+    return { wg, wgId, wgURI, wgPatentURI, wgPatentPolicy, groupType };
   }
 
   const text = await res.text();
