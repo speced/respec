@@ -3,9 +3,12 @@ const sade = require("sade");
 const colors = require("colors");
 const { toHTML, write } = require("./respecDocWriter");
 const http = require("http");
-const express = require("express");
-const app = express();
-const server = http.createServer(app);
+const serveStatic = require("serve-static");
+const serve = serveStatic("./");
+const server = http.createServer((req, res) => {
+  const finalhandler = require("finalhandler");
+  serve(req, res, finalhandler);
+});
 const path = require("path");
 
 colors.setTheme({
@@ -87,9 +90,8 @@ async function startServer(source, { port }) {
       )}`
     );
   }
-  app.use(express.static("./"));
   await new Promise(resolve => {
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log(colors.info(`Server listening on port: ${port}`));
       resolve();
     });
