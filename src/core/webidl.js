@@ -232,8 +232,8 @@ function getNameAndId(defn, parent = "") {
 
 function resolveNameAndId(defn, parent) {
   let name = getDefnName(defn);
-  // For getters, setters, etc. "annonymous-getter",
-  const prefix = defn.special && defn.name === "" ? "annonymous-" : "";
+  // For getters, setters, etc. "anonymous-getter",
+  const prefix = defn.special && defn.name === "" ? "anonymous-" : "";
   let idlId = getIdlId(prefix + name, parent);
   switch (defn.type) {
     // Top-level entities with linkable members.
@@ -301,16 +301,12 @@ function getDefnName(defn) {
     case "enum-value":
       return defn.value;
     case "operation":
-      return defn.special ? getSpecialName(defn) : defn.name;
+      return defn.name || defn.special;
     default:
       return defn.name || defn.type;
   }
 }
 
-function getSpecialName(defn) {
-  if (defn.name) return defn.name;
-  return `${defn.special}`;
-}
 
 /**
  * @param {Element} idlElement

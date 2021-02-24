@@ -651,10 +651,10 @@ describe("Core - WebIDL", () => {
     expect(setterNamed.querySelector(".idlName").textContent).toBe("named");
   });
 
-  it("correctly id's and links annonymous special operations", async () => {
+  it("correctly id's and links anonymous special operations", async () => {
     const body = `
       <section data-dfn-for="Bar">
-        <h2>Annonymous special operations</h2>
+        <h2>Anonymous special operations</h2>
         <pre class="idl">
           [Exposed=Window]
           interface Bar {
@@ -672,12 +672,12 @@ describe("Core - WebIDL", () => {
     const doc = await makeRSDoc(ops);
 
     // Correct ids
-    expect(doc.getElementById("idl-def-bar-annonymous-getter")).toBeTruthy();
-    expect(doc.getElementById("idl-def-bar-annonymous-setter")).toBeTruthy();
+    expect(doc.getElementById("idl-def-bar-anonymous-getter")).toBeTruthy();
+    expect(doc.getElementById("idl-def-bar-anonymous-setter")).toBeTruthy();
     expect(
-      doc.getElementById("idl-def-bar-annonymous-stringifier")
+      doc.getElementById("idl-def-bar-anonymous-stringifier")
     ).toBeTruthy();
-    expect(doc.getElementById("idl-def-bar-annonymous-deleter")).toBeTruthy();
+    expect(doc.getElementById("idl-def-bar-anonymous-deleter")).toBeTruthy();
 
     // Definitions
     expect(doc.getElementById("dom-bar-getter")).toBeTruthy();
@@ -686,14 +686,14 @@ describe("Core - WebIDL", () => {
     expect(doc.getElementById("dom-bar-deleter")).toBeTruthy();
 
     // links
-    const getterLink = doc.querySelector("#idl-def-bar-annonymous-getter > a");
+    const getterLink = doc.querySelector("#idl-def-bar-anonymous-getter > a");
     expect(getterLink.getAttribute("href")).toEqual("#dom-bar-getter");
 
-    const setterLink = doc.querySelector("#idl-def-bar-annonymous-setter > a");
+    const setterLink = doc.querySelector("#idl-def-bar-anonymous-setter > a");
     expect(setterLink.getAttribute("href")).toEqual("#dom-bar-setter");
 
     const stringifierLink = doc.querySelector(
-      "#idl-def-bar-annonymous-stringifier > a"
+      "#idl-def-bar-anonymous-stringifier > a"
     );
     expect(stringifierLink.getAttribute("href")).toEqual(
       "#dom-bar-stringifier"
