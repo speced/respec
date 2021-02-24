@@ -41,7 +41,7 @@ class Logger {
   }
 
   warn(rsError) {
-    const header = colors.gYellow.black.bold("[WARNING]");
+    const header = colors.bgYellow.black.bold("[WARNING]");
     const message = colors.yellow(this._formatMarkdown(rsError.message));
     console.warn(header, message);
   }
