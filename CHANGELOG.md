@@ -1,5 +1,46 @@
 # Changelog
 
+## [v26.0.1](https://github.com/w3c/respec/tree/v26.0.1) (2021-02-18)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.0.0...v26.0.1)
+
+**Implemented enhancements:**
+
+- Comment filing in SOTD does not match W3M practice [\#1636](https://github.com/w3c/respec/issues/1636)
+
+**Fixed bugs:**
+
+- Extra whitespace around internal reference links [\#3265](https://github.com/w3c/respec/issues/3265)
+- Unofficial specs using CC-BY [\#3064](https://github.com/w3c/respec/issues/3064)
+
+**Closed issues:**
+
+- Support `event` as a `dfn-type` [\#3197](https://github.com/w3c/respec/issues/3197)
+- Proposal: improving error reporting [\#3035](https://github.com/w3c/respec/issues/3035)
+- Proposal: add a `prepare\(\)` pass before `run\(\)` pass [\#2981](https://github.com/w3c/respec/issues/2981)
+- Make sure cg-headers is tested [\#1284](https://github.com/w3c/respec/issues/1284)
+
+**Merged pull requests:**
+
+- refactor\(core/utils\): serialize RespecError using toJSON\(\) [\#3315](https://github.com/w3c/respec/pull/3315) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/sotd\): allow CGs to prefer github coms [\#3314](https://github.com/w3c/respec/pull/3314) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(examples/starter.html\): user newer syntax/features [\#3313](https://github.com/w3c/respec/pull/3313) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core\): run global plugins like regular plugins [\#3312](https://github.com/w3c/respec/pull/3312) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/base-runner\): add a prepare pass [\#3311](https://github.com/w3c/respec/pull/3311) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c\): improve license + unofficial status support [\#3310](https://github.com/w3c/respec/pull/3310) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(anchor-expander\): trailing ws when expanding headers [\#3309](https://github.com/w3c/respec/pull/3309) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps\): update dependencies [\#3308](https://github.com/w3c/respec/pull/3308) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(ci\): manually set locale to workaround Firefox bug [\#3307](https://github.com/w3c/respec/pull/3307) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore: remove snyk [\#3299](https://github.com/w3c/respec/pull/3299) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(deps\): update dependencies [\#3291](https://github.com/w3c/respec/pull/3291) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(deps\): update dependencies [\#3287](https://github.com/w3c/respec/pull/3287) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore: gitignore vscode settings [\#3286](https://github.com/w3c/respec/pull/3286) ([sidvishnoi](https://github.com/sidvishnoi))
+- tests\(xref\): update test data [\#3285](https://github.com/w3c/respec/pull/3285) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/dfn\): mark non-dfn definitions as exported by default [\#3245](https://github.com/w3c/respec/pull/3245) ([dontcallmedom](https://github.com/dontcallmedom))
+- fix\(core/xref\): clarify msg for normative/informative ref mismatch [\#3244](https://github.com/w3c/respec/pull/3244) ([tidoust](https://github.com/tidoust))
+- chore\(CHANGELOG\): regenerate [\#3241](https://github.com/w3c/respec/pull/3241) ([github-actions[bot]](https://github.com/apps/github-actions))
+- refactor\(\*\): make errors consistent [\#3062](https://github.com/w3c/respec/pull/3062) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v26.0.0](https://github.com/w3c/respec/tree/v26.0.0) (2020-12-05)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v25.18.4...v26.0.0)

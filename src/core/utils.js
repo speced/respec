@@ -100,74 +100,6 @@ function markAsOffending(elem, msg, title) {
   }
 }
 
-export class IDBKeyVal {
-  /**
-   * @param {import("idb").IDBPDatabase} idb
-   * @param {string} storeName
-   */
-  constructor(idb, storeName) {
-    this.idb = idb;
-    this.storeName = storeName;
-  }
-
-  /** @param {string} key */
-  async get(key) {
-    return await this.idb
-      .transaction(this.storeName)
-      .objectStore(this.storeName)
-      .get(key);
-  }
-
-  /**
-   * @param {string[]} keys
-   */
-  async getMany(keys) {
-    const keySet = new Set(keys);
-    /** @type {Map<string, any>} */
-    const results = new Map();
-    let cursor = await this.idb.transaction(this.storeName).store.openCursor();
-    while (cursor) {
-      if (keySet.has(cursor.key)) {
-        results.set(cursor.key, cursor.value);
-      }
-      cursor = await cursor.continue();
-    }
-    return results;
-  }
-
-  /**
-   * @param {string} key
-   * @param {any} value
-   */
-  async set(key, value) {
-    const tx = this.idb.transaction(this.storeName, "readwrite");
-    tx.objectStore(this.storeName).put(value, key);
-    return await tx.done;
-  }
-
-  async addMany(entries) {
-    const tx = this.idb.transaction(this.storeName, "readwrite");
-    for (const [key, value] of entries) {
-      tx.objectStore(this.storeName).put(value, key);
-    }
-    return await tx.done;
-  }
-
-  async clear() {
-    const tx = this.idb.transaction(this.storeName, "readwrite");
-    tx.objectStore(this.storeName).clear();
-    return await tx.done;
-  }
-
-  async keys() {
-    const tx = this.idb.transaction(this.storeName);
-    /** @type {Promise<string[]>} */
-    const keys = tx.objectStore(this.storeName).getAllKeys();
-    await tx.done;
-    return keys;
-  }
-}
-
 // STRING HELPERS
 // Takes an array and returns a string that separates each of its items with the proper commas and
 // "and". The second argument is a mapping function that can convert the items before they are
@@ -902,4 +834,13 @@ export function showError(message, pluginName, options = {}) {
 export function showWarning(message, pluginName, options = {}) {
   const opts = { ...options, isWarning: true };
   pub("warn", new RespecError(message, pluginName, opts));
+}
+
+/**
+ * Creates a quick markdown link to a property in the docs.
+ *
+ * @param {string} prop ReSpec configuration property to link to in docs.
+ */
+export function docLink(prop) {
+  return `[\`${prop}\`](https://respec.org/docs/#${prop})`;
 }

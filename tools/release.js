@@ -369,12 +369,10 @@ const run = async () => {
       await Builder.build({ name });
     }
     console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
-    const nullDevice =
-      process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
-    await node(
-      `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../examples/basic.built.html --out ${nullDevice}`,
-      { showOutput: true }
-    );
+    const source = `file:///${__dirname}/../examples/basic.built.html`;
+    await node(`./tools/respec2html.js ${source} -e --timeout 30`, {
+      showOutput: true,
+    });
     console.log(colors.info(" Build Seems good... ✅"));
 
     // 4. Commit your changes
