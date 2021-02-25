@@ -47,7 +47,8 @@ class ReSpec extends EventTarget {
 export function init() {
   const respec = new ReSpec();
   Object.defineProperty(document, "respec", { value: respec });
-  document.dispatchEvent(new CustomEvent("respec-start"));
+  // Internal. Do not use.
+  document.dispatchEvent(new CustomEvent("__private_respec_start__"));
 
   let respecIsReadyWarningShown = false;
   Object.defineProperty(document, "respecIsReady", {

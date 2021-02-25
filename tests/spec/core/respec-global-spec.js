@@ -51,7 +51,7 @@ describe("Core — Respec Global - document.respec", () => {
       <p><a id="test-warning" href="#non-existent">FAIL</a></p>
       <div id="warning-collector"></div>
       <script>
-        document.addEventListener("respec-start", () => {
+        document.addEventListener("__private_respec_start__", () => {
           document.respec.addEventListener("warning", ev => {
             const collector = document.getElementById("warning-collector");
             const warningEl = document.createElement("p");
