@@ -60,6 +60,12 @@ cli.action((source, destination, opts) => {
   });
 });
 
+// https://github.com/lukeed/sade/issues/28#issuecomment-516104013
+cli._version = () => {
+  const { version } = require("../package.json");
+  console.log(version);
+};
+
 cli.parse(process.argv);
 
 async function run(source, destination, options) {
