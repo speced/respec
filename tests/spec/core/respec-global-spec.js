@@ -36,10 +36,10 @@ describe("Core — Respec Global - document.respec", () => {
     expect(doc.respec.warnings).toHaveSize(1);
     const warning = doc.respec.warnings[0];
     expect(warning.name).toBe("ReSpecWarning");
+    expect(warning.plugin).toBe("core/linter/local-refs-exist");
     expect(warning.message).toMatch(/Broken local reference/);
     expect(warning.elements).toHaveSize(1);
     expect(warning.elements[0].textContent).toBe("FAIL");
-    expect(warning.elements[0].hash).toBe("#non-existent");
 
     expect(doc.respec.errors).toHaveSize(0);
   });
