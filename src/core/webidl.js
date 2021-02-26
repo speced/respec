@@ -84,6 +84,7 @@ const templates = {
   },
   nameless(escaped, { data, parent }) {
     switch (data.type) {
+      case "operation":
       case "constructor":
         return defineIdlName(escaped, data, parent);
       default:
@@ -231,7 +232,9 @@ function getNameAndId(defn, parent = "") {
 
 function resolveNameAndId(defn, parent) {
   let name = getDefnName(defn);
-  let idlId = getIdlId(name, parent);
+  // For getters, setters, etc. "anonymous-getter",
+  const prefix = defn.special && defn.name === "" ? "anonymous-" : "";
+  let idlId = getIdlId(prefix + name, parent);
   switch (defn.type) {
     // Top-level entities with linkable members.
     case "callback interface":
@@ -298,7 +301,7 @@ function getDefnName(defn) {
     case "enum-value":
       return defn.value;
     case "operation":
-      return defn.name;
+      return defn.name || defn.special;
     default:
       return defn.name || defn.type;
   }
