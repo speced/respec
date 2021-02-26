@@ -74,12 +74,4 @@ export function unsub({ topic, cb }) {
   return callbacks.delete(cb);
 }
 
-sub("error", rsError => {
-  console.error(rsError, rsError.toJSON());
-});
-
-sub("warn", rsWarning => {
-  console.warn(rsWarning, rsWarning.toJSON());
-});
-
 expose(name, { sub });
