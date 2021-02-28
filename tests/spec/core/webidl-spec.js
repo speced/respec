@@ -669,6 +669,58 @@ describe("Core - WebIDL", () => {
     expect(setterNamed.querySelector(".idlName").textContent).toBe("named");
   });
 
+  it("correctly id's and links anonymous special operations", async () => {
+    const body = `
+      <section data-dfn-for="Bar">
+        <h2>Anonymous special operations</h2>
+        <pre class="idl">
+          [Exposed=Window]
+          interface Bar {
+            getter DOMString ();
+            setter DOMString ();
+            stringifier DOMString ();
+            deleter DOMString ();
+          };
+        </pre>
+        <p>
+          <dfn>getter</dfn> <dfn>setter()</dfn> <dfn>stringifier()</dfn>
+        </p>
+      </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    // Correct ids
+    expect(doc.getElementById("idl-def-bar-anonymous-getter")).toBeTruthy();
+    expect(doc.getElementById("idl-def-bar-anonymous-setter")).toBeTruthy();
+    expect(
+      doc.getElementById("idl-def-bar-anonymous-stringifier")
+    ).toBeTruthy();
+    expect(doc.getElementById("idl-def-bar-anonymous-deleter")).toBeTruthy();
+
+    // Definitions
+    expect(doc.getElementById("dom-bar-getter")).toBeTruthy();
+    expect(doc.getElementById("dom-bar-setter")).toBeTruthy();
+    expect(doc.getElementById("dom-bar-stringifier")).toBeTruthy();
+    expect(doc.getElementById("dom-bar-deleter")).toBeTruthy();
+
+    // links
+    const getterLink = doc.querySelector("#idl-def-bar-anonymous-getter > a");
+    expect(getterLink.getAttribute("href")).toEqual("#dom-bar-getter");
+
+    const setterLink = doc.querySelector("#idl-def-bar-anonymous-setter > a");
+    expect(setterLink.getAttribute("href")).toEqual("#dom-bar-setter");
+
+    const stringifierLink = doc.querySelector(
+      "#idl-def-bar-anonymous-stringifier > a"
+    );
+    expect(stringifierLink.getAttribute("href")).toEqual(
+      "#dom-bar-stringifier"
+    );
+
+    // The deleter is automatically defined in the IDL block
+    expect(doc.querySelector("pre.idl dfn#dom-bar-deleter")).toBeTruthy();
+  });
+
   it("should handle operations", () => {
     const target = doc.getElementById("meth-basic");
     // Remove the header, as we are not interested in it.
@@ -1207,7 +1259,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
   });
   it("puts code elements around both IDL definitions and links", () => {
     const things = [
-      ...document.querySelectorAll("#coded-things > a, #coded-things > dfn"),
+      ...doc.querySelectorAll("#coded-things > a, #coded-things > dfn"),
     ];
     expect(things.every(elem => elem.parentElement.localName === "code")).toBe(
       true
