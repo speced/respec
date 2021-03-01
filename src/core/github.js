@@ -21,9 +21,9 @@ export const github = new Promise((resolve, reject) => {
 
 const localizationStrings = {
   en: {
-    file_a_bug: "File a bug",
-    participate: "Participate",
-    commit_history: "Commit history",
+    file_a_bug: "File a bug:",
+    participate: "Participate:",
+    commit_history: "Commit history:",
   },
   ko: {
     participate: "참여",
@@ -38,19 +38,19 @@ const localizationStrings = {
     commit_history: "変更履歴",
   },
   nl: {
-    commit_history: "Revisiehistorie",
-    file_a_bug: "Dien een melding in",
-    participate: "Doe mee",
+    commit_history: "Revisiehistorie:",
+    file_a_bug: "Dien een melding in:",
+    participate: "Doe mee:",
   },
   es: {
-    commit_history: "Historia de cambios",
-    file_a_bug: "Nota un bug",
-    participate: "Participe",
+    commit_history: "Historia de cambios:",
+    file_a_bug: "Nota un bug:",
+    participate: "Participe:",
   },
   de: {
-    file_a_bug: "Fehler melden",
-    participate: "Mitmachen",
-    commit_history: "Revisionen",
+    file_a_bug: "Fehler melden:",
+    participate: "Mitmachen:",
+    commit_history: "Revisionen:",
   },
 };
 const l10n = getIntlData(localizationStrings);
