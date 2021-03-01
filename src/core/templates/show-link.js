@@ -20,9 +20,7 @@ export default function showLink(link) {
   }
   return html`
     <dt class="${link.class ? link.class : null}">${link.key}</dt>
-    ${link.data
-      ? link.data.map(data => showLinkData(data))
-      : showLinkData(link)}
+    ${link.data ? link.data.map(showLinkData) : showLinkData(link)}
   `;
 }
 

@@ -133,7 +133,7 @@ export default conf => {
             ${showPeople(conf.authors)}
           `
         : ""}
-      ${conf.otherLinks ? conf.otherLinks.map(link => showLink(link)) : ""}
+      ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
     </dl>
     ${renderCopyright(conf)}
     <hr />

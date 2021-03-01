@@ -98,7 +98,7 @@ export default (conf, options) => {
             ${showPeople(conf.authors)}
           `
         : ""}
-      ${conf.otherLinks ? conf.otherLinks.map(link => showLink(link)) : ""}
+      ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
     </dl>
     ${conf.alternateFormats
       ? html`<p>
