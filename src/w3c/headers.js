@@ -87,6 +87,7 @@
 import {
   ISODate,
   concatDate,
+  docLink,
   htmlJoinAnd,
   showError,
   showWarning,
@@ -173,18 +174,18 @@ const status2long = {
 };
 const maybeRecTrack = ["FPWD", "WD"];
 const recTrackStatus = ["FPLC", "LC", "CR", "CRD", "PR", "PER", "REC"];
+export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
+export const bgStatus = ["BG-DRAFT", "BG-FINAL"];
+export const cgbgStatus = [...cgStatus, ...bgStatus];
 const noTrackStatus = [
   "base",
-  "BG-DRAFT",
-  "BG-FINAL",
-  "CG-DRAFT",
-  "CG-FINAL",
+  ...cgStatus,
+  ...bgStatus,
   "draft-finding",
   "finding",
   "MO",
   "unofficial",
 ];
-const cgbg = ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"];
 const precededByAn = ["ED", "IG-NOTE"];
 const licenses = new Map([
   [
@@ -252,17 +253,30 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf) {
+  if (!conf.specStatus) {
+    const msg = `Missing required configuration: ${docLink("specStatus")}.`;
+    const hint = `Please select an appropriate status from ${docLink(
+      "specStatus"
+    )} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
+    showError(msg, name, { hint });
+  }
   conf.isUnofficial = conf.specStatus === "unofficial";
   if (conf.isUnofficial && !Array.isArray(conf.logos)) {
     conf.logos = [];
   }
   if (conf.isUnofficial) {
     if (conf.license && !licenses.has(conf.license)) {
-      const msg = `The \`license\` configuration option has an invalid value: "\`${conf.license}\`". Defaulting to "cc-by".`;
+      const msg = `The ${docLink(
+        "license"
+      )} configuration option has an invalid value: "\`${
+        conf.license
+      }\`". Defaulting to "cc-by".`;
       const licensesKeys = [...licenses.keys()]
-        .map(key => `\`${key}\``)
+        .map(key => `\`"${key}"\``)
         .join(", ");
-      const hint = `Please explicitly set \`license\` to one of: ${licensesKeys}.`;
+      const hint = `Please explicitly set ${docLink(
+        "license"
+      )} to one of: ${licensesKeys}.`;
       showError(msg, name, { hint });
       conf.license = "cc-by";
     }
@@ -271,22 +285,22 @@ export function run(conf) {
       conf.license = "cc-by";
     }
   }
+
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
   if (!conf.isUnofficial && ["cc-by"].includes(conf.license)) {
     const msg = `You cannot use license "\`${conf.license}\`" with W3C Specs.`;
-    const hint = `Please set \`license\` to "w3c-software-doc" instead.`;
+    const hint = `Please set ${docLink(
+      "license"
+    )} to "w3c-software-doc" instead.`;
     showError(msg, name, { hint });
   }
   conf.licenseInfo = licenses.get(conf.license);
-  conf.isCGBG = cgbg.includes(conf.specStatus);
+  conf.isCGBG = cgbgStatus.includes(conf.specStatus);
   conf.isCGFinal = conf.isCGBG && conf.specStatus.endsWith("G-FINAL");
   conf.isBasic = conf.specStatus === "base";
   conf.isRegular = !conf.isCGBG && !conf.isBasic;
-  if (!conf.specStatus) {
-    const msg = "Missing required configuration: `specStatus`";
-    showError(msg, name);
-  }
+
   if (conf.isRegular && !conf.shortName) {
     const msg = "Missing required configuration: `shortName`";
     showError(msg, name);
@@ -301,7 +315,7 @@ export function run(conf) {
       const msg =
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. ";
       const hint =
-        "Please update your [`testSuiteURI`](https://respec.org/docs/#testSuiteURI) to point to the " +
+        `Please update your ${docLink("testSuiteURI")} to point to the ` +
         `new tests repository (e.g., https://github.com/web-platform-tests/wpt/tree/master/${conf.shortName} ).`;
       showWarning(msg, name, { hint });
     }
