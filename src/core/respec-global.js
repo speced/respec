@@ -19,6 +19,18 @@ class ReSpec {
     this._respecDonePromise = new Promise(resolve => {
       sub("end-all", resolve, { once: true });
     });
+
+    this.errors = [];
+    this.warnings = [];
+
+    sub("error", rsError => {
+      console.error(rsError, rsError.toJSON());
+      this.errors.push(rsError);
+    });
+    sub("warn", rsError => {
+      console.warn(rsError, rsError.toJSON());
+      this.warnings.push(rsError);
+    });
   }
 
   get version() {
