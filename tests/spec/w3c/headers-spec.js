@@ -1122,7 +1122,7 @@ describe("W3C — Headers", () => {
       const otherLinks = [
         {
           class: "key-other-link",
-          key: "KEY",
+          key: "KEY:",
           data: [{ value: "VALUE", href: "HREF" }],
         },
       ];
@@ -1141,7 +1141,7 @@ describe("W3C — Headers", () => {
       const otherLinks = [
         {
           class: "key-other-link",
-          key: "KEY",
+          key: "KEY:",
           data: [{ value: "VALUE" }],
         },
       ];
