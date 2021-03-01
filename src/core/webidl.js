@@ -4,7 +4,13 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import { addHashId, showError, showWarning, xmlEscape } from "./utils.js";
+import {
+  addHashId,
+  showError,
+  showWarning,
+  wrapInner,
+  xmlEscape,
+} from "./utils.js";
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";
@@ -331,6 +337,7 @@ function renderWebIDL(idlElement, index) {
   idlElement.classList.add("def", "idl");
   const highlights = webidl2.write(parse, { templates });
   html.bind(idlElement)`${highlights}`;
+  wrapInner(idlElement, document.createElement("code"));
   idlElement.querySelectorAll("[data-idl]").forEach(elem => {
     if (elem.dataset.dfnFor) {
       return;
