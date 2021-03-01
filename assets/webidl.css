@@ -5,6 +5,10 @@ pre.idl {
   position: relative;
 }
 
+pre.idl > code {
+  color: black;
+}
+
 @media print {
   pre.idl {
     white-space: pre-wrap;
