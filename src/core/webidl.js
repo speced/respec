@@ -405,7 +405,7 @@ export async function run() {
 
   const validations = webidl2.validate(astArray);
   for (const validation of validations) {
-    let details = `<pre>${validation.context}</pre>`;
+    let details = `<pre>${xmlEscape(validation.context)}</pre>`;
     if (validation.autofix) {
       validation.autofix();
       const idlToFix = webidl2.write(astArray[validation.sourceName]);
