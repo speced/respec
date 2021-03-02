@@ -82,7 +82,7 @@
   },
   "dependencies": {
     "colors": "^1.4.0",
-    "puppeteer": "^7.1.0",
+    "puppeteer": "^8.0.0",
     "sade": "^1.7.4"
   },
   "files": [
