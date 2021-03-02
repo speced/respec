@@ -1772,7 +1772,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     // There are two errors, one for "void" not being a thing anymore
     // and one for void not being xref'ed
     expect(errors).toHaveSize(2);
-    const error = errors.find(err => /^WebIDL/.test(err.message));
+    const error = errors.find(err => err.plugin === "core/webidl");
     expect(error.details).toContain("Promise&lt;void&gt;");
   });
 });
