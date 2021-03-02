@@ -1750,7 +1750,29 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     target.querySelector(".idlHeader").remove();
     const text = "dictionary Test {};";
     expect(target.textContent).toBe(text);
+
     expect(target.querySelectorAll(".idlDictionary")).toHaveSize(1);
     expect(target.querySelector(".idlID").textContent).toBe("Test");
+  });
+  it("correctly XML escapes IDL errors", async () => {
+    const body = `
+    <section id="sotd">
+      <h2>.</h2>
+      <p>.</p>
+      <pre class="idl">
+      [Exposed=Window]
+      interface Foo {
+        Promise&lt;void&gt; doTheFoo();
+      };
+      </pre>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const { errors } = doc.respec;
+    // There are two errors, one for "void" not being a thing anymore
+    // and one for void not being xref'ed
+    expect(errors).toHaveSize(2);
+    const error = errors.find(err => err.plugin === "core/webidl");
+    expect(error.details).toContain("Promise&lt;void&gt;");
   });
 });
