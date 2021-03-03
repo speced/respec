@@ -1,23 +1,11 @@
 #!/usr/bin/env node
+const path = require("path");
+const http = require("http");
+const serveStatic = require("serve-static");
+const finalhandler = require("finalhandler");
 const sade = require("sade");
 const colors = require("colors");
 const { toHTML, write } = require("./respecDocWriter");
-const http = require("http");
-const serveStatic = require("serve-static");
-const serve = serveStatic("./");
-const server = http.createServer((req, res) => {
-  const finalhandler = require("finalhandler");
-  serve(
-    req,
-    res,
-    finalhandler(req, res, {
-      onerror(err) {
-        console.error(err.stack);
-      },
-    })
-  );
-});
-const path = require("path");
 
 class Logger {
   /** @param {boolean} verbose */
@@ -51,6 +39,46 @@ class Logger {
   /** @param {Error | string} error */
   fatal(error) {
     console.error(colors.red(error.stack || error));
+  }
+}
+
+class StaticServer {
+  /**
+   * @param {number} port
+   * @param {string} source
+   */
+  constructor(port, source) {
+    if (path.isAbsolute(source) || /^(\w+:\/\/)/.test(source.trim())) {
+      const msg = `Invalid path for use with --localhost. Only relative paths allowed.`;
+      const hint =
+        "Please ensure your ReSpec document and its local resources" +
+        " (e.g., data-includes) are accessible from the current working directory.";
+      throw new Error(`${msg} ${hint}`);
+    }
+
+    if (port && isNaN(parseInt(port, 10))) {
+      throw new Error("Invalid port number.");
+    }
+
+    this.port = port;
+    this.source = source;
+
+    const serve = serveStatic(process.cwd());
+    this.server = http.createServer((req, res) => {
+      serve(req, res, finalhandler(req, res));
+    });
+  }
+
+  get url() {
+    return new URL(this.source, `http://localhost:${this.port}/`);
+  }
+
+  async start() {
+    await new Promise(resolve => this.server.listen(this.port, resolve));
+  }
+
+  async stop() {
+    await new Promise(resolve => this.server.close(resolve));
   }
 }
 
@@ -101,10 +129,6 @@ cli.action((source, destination, opts) => {
     process.exit(1);
   }
 
-  if (opts.port && isNaN(parseInt(opts.port, 10))) {
-    throw new Error("Invalid port number.");
-  }
-
   return run(source, destination, opts, log).catch(err => {
     log.fatal(err);
     process.exit(1);
@@ -119,24 +143,6 @@ cli._version = () => {
 
 cli.parse(process.argv);
 
-async function startServer(source, { port }) {
-  if (path.isAbsolute(source) || /^(\w+:\/\/)/.test(source.trim())) {
-    throw new Error(
-      `💥 Invalid path for use with --localhost. Only relative paths allowed. ${colors.debug(
-        "Please ensure your ReSpec document and its local resources (e.g., data-includes) " +
-          "are accessible from the current working directory.\n"
-      )}`
-    );
-  }
-  await new Promise(resolve => {
-    server.listen(port, () => {
-      console.log(colors.info(`Server listening on port: ${port}`));
-      resolve();
-    });
-  });
-  return new URL(source, `http://localhost:${port}/`).href;
-}
-
 /**
  * @param {string} source
  * @param {string|undefined} destination
@@ -144,10 +150,16 @@ async function startServer(source, { port }) {
  * @param {Logger} log
  */
 async function run(source, destination, options, log) {
+  let staticServer;
+  if (options.localhost) {
+    staticServer = new StaticServer(options.port, source);
+    await staticServer.start();
+  }
   const src = options.localhost
-    ? await startServer(source, options)
+    ? staticServer.url.href
     : new URL(source, `file://${process.cwd()}/`).href;
-  console.log(colors.info(`Processing resource: ${src}. Please wait...`));
+  log.info(`Processing resource: ${src} ...`, options.timeout * 1000);
+
   const { html, errors, warnings } = await toHTML(src, {
     timeout: options.timeout * 1000,
     onError: log.error.bind(log),
@@ -166,8 +178,6 @@ async function run(source, destination, options, log) {
   }
 
   await write(destination, html);
-  server.close(() => {
-    console.log(colors.info("Server stopped."));
-    process.exit(0);
-  });
+
+  if (staticServer) await staticServer.stop();
 }
