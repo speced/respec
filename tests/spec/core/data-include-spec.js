@@ -120,11 +120,11 @@ describe("Core — Data Include", () => {
 
 1. Rose
 
-  Blue rose is blue
+   Blue rose is blue
 
-  Red rose is red
+   Red rose is red
 
-  Rose of the wasteland is violet
+   Rose of the wasteland is violet
     `);
     it("processes multiline markdown text", async () => {
       const ops = {
