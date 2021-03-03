@@ -36,7 +36,7 @@ export function findDfn(defn, name, { parent = "" } = {}) {
 }
 
 /**
- * @param {string} type
+ * @param {{ type: string, arguments: any[] }} idlAst
  * @param {string} parent
  * @param {string} name
  */
