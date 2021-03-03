@@ -135,19 +135,18 @@ describe("Core — Data Include", () => {
         body: `
           <section id="abstract"></section>
 
-          <section id="test" data-include="${include}" data-include-format="markdown"></section>
+          <section data-include="${include}" data-include-format="markdown"></section>
         `,
       };
       ops.abstract = null;
 
       const doc = await makeRSDoc(ops);
-      const li = doc.querySelector("section#test li");
+      const li = doc.querySelector("section li");
       expect(li).toBeTruthy();
-      expect(li.textContent).toBe("Rose");
-      const [p1, p2, p3] = [...doc.querySelectorAll("#test p")];
-      expect(p1.textContent).toContain("Blue");
-      expect(p2.textContent).toContain("Red");
-      expect(p3.textContent).toContain("wasteland");
+      expect(li.textContent).toContain("Rose");
+      expect(li.textContent).toContain("Blue");
+      expect(li.textContent).toContain("Red");
+      expect(li.textContent).toContain("wasteland");
       // Shouldn't break other sections
       expect(doc.getElementById("abstract")).toBeTruthy();
     });
@@ -161,7 +160,7 @@ describe("Core — Data Include", () => {
         body: `
           <section id="abstract"></section>
 
-          <section id="test">
+          <section>
 
           <div data-include="${include}" data-include-format="markdown" data-include-replace></div>
 
@@ -171,13 +170,12 @@ describe("Core — Data Include", () => {
       ops.abstract = null;
 
       const doc = await makeRSDoc(ops);
-      const li = doc.querySelector("section#test li");
+      const li = doc.querySelector("section li");
       expect(li).toBeTruthy();
-      expect(li.textContent).toBe("Rose");
-      const [p1, p2, p3] = [...doc.querySelectorAll("#test p")];
-      expect(p1.textContent).toContain("Blue");
-      expect(p2.textContent).toContain("Red");
-      expect(p3.textContent).toContain("wasteland");
+      expect(li.textContent).toContain("Rose");
+      expect(li.textContent).toContain("Blue");
+      expect(li.textContent).toContain("Red");
+      expect(li.textContent).toContain("wasteland");
       expect(li.parentElement.parentElement.localName).toBe("section");
       // Shouldn't break other sections
       expect(doc.getElementById("abstract")).toBeTruthy();
