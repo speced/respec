@@ -233,7 +233,7 @@ function wrapAsCode(anchor, dfn) {
   // only add code to IDL when the definition matches
   const term = anchor.textContent.trim();
   const isIDL = dfn.dataset.hasOwnProperty("idl");
-  const needsCode = shouldWrapByCode(anchor) || shouldWrapByCode(dfn, term);
+  const needsCode = shouldWrapByCode(anchor) && shouldWrapByCode(dfn, term);
   if (!isIDL || needsCode) {
     wrapInner(anchor, document.createElement("code"));
   }
@@ -246,7 +246,7 @@ function wrapAsCode(anchor, dfn) {
 function shouldWrapByCode(elem, term = "") {
   switch (elem.localName) {
     case "a":
-      if (elem.querySelector("code")) {
+      if (!elem.querySelector("code")) {
         return true;
       }
       break;

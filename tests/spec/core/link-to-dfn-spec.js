@@ -292,4 +292,25 @@ describe("Core — Link to definitions", () => {
     expect(testLink.classList).not.toContain("respec-offending-element");
     expect(testLink.href).toBe("https://example.com/#is-red");
   });
+
+  it("doesn't nest code elements when linking to a IDL definition", async () => {
+    const body = `
+    <section>
+      <h2 id="header">
+        Some {{MediaDevices}}
+      </h2>
+      <pre class="idl">
+        [Exposed=Window]
+        interface MediaDevices {};
+      </pre>
+    </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+
+    const codeElem = doc.querySelector("#header a > code");
+
+    expect(codeElem.textContent).toEqual("MediaDevices");
+    expect(codeElem.querySelector("code")).toBeNull();
+  });
 });

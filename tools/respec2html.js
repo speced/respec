@@ -19,18 +19,40 @@ const server = http.createServer((req, res) => {
 });
 const path = require("path");
 
-colors.setTheme({
-  data: "grey",
-  debug: "cyan",
-  error: "red",
-  help: "cyan",
-  important: "red",
-  info: "green",
-  input: "grey",
-  prompt: "grey",
-  verbose: "cyan",
-  warn: "yellow",
-});
+class Logger {
+  /** @param {boolean} verbose */
+  constructor(verbose) {
+    this.verbose = verbose;
+  }
+
+  /**
+   * @param {string} message
+   * @param {number} timeRemaining
+   */
+  info(message, timeRemaining) {
+    if (!this.verbose) return;
+    console.log(`[Timeout: ${timeRemaining}ms] ${message}`);
+  }
+
+  /** @param {{ message: string }} rsError */
+  error(rsError) {
+    console.error(
+      colors.red(`💥 ReSpec error: ${colors.cyan(rsError.message)}`)
+    );
+  }
+
+  /** @param {{ message: string }} rsError */
+  warn(rsError) {
+    console.warn(
+      colors.yellow(`⚠️ ReSpec warning: ${colors.cyan(rsError.message)}`)
+    );
+  }
+
+  /** @param {Error | string} error */
+  fatal(error) {
+    console.error(colors.red(error.stack || error));
+  }
+}
 
 const cli = sade("respec [source] [destination]", true)
   .describe("Converts a ReSpec source file to HTML and writes to destination.")
@@ -71,8 +93,10 @@ cli
 cli.action((source, destination, opts) => {
   source = source || opts.src;
   destination = destination || opts.out;
+  const log = new Logger(opts.verbose && destination !== "stdout");
+
   if (!source) {
-    console.error(colors.error("A source is required."));
+    log.fatal("A source is required.");
     cli.help();
     process.exit(1);
   }
@@ -81,11 +105,17 @@ cli.action((source, destination, opts) => {
     throw new Error("Invalid port number.");
   }
 
-  return run(source, destination, opts).catch(err => {
-    console.error(colors.error(err.stack));
+  return run(source, destination, opts, log).catch(err => {
+    log.fatal(err);
     process.exit(1);
   });
 });
+
+// https://github.com/lukeed/sade/issues/28#issuecomment-516104013
+cli._version = () => {
+  const { version } = require("../package.json");
+  console.log(version);
+};
 
 cli.parse(process.argv);
 
@@ -107,26 +137,24 @@ async function startServer(source, { port }) {
   return new URL(source, `http://localhost:${port}/`).href;
 }
 
-async function run(source, destination, options) {
+/**
+ * @param {string} source
+ * @param {string|undefined} destination
+ * @param {Record<string, string|number|boolean>} options
+ * @param {Logger} log
+ */
+async function run(source, destination, options, log) {
   const src = options.localhost
     ? await startServer(source, options)
     : new URL(source, `file://${process.cwd()}/`).href;
   console.log(colors.info(`Processing resource: ${src}. Please wait...`));
   const { html, errors, warnings } = await toHTML(src, {
     timeout: options.timeout * 1000,
-    onError(error) {
-      console.error(
-        colors.error(`💥 ReSpec error: ${colors.debug(error.message)}`)
-      );
-    },
-    onWarning(warning) {
-      console.warn(
-        colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
-      );
-    },
+    onError: log.error.bind(log),
+    onWarning: log.warn.bind(log),
+    onProgress: log.info.bind(log),
     disableSandbox: options["disable-sandbox"],
     devtools: options.devtools,
-    verbose: options.verbose && destination !== "stdout",
   });
 
   const exitOnError = errors.length && options.haltonerror;

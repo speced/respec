@@ -15,7 +15,7 @@ const noop = () => {};
  * @param {number} [options.timeout] Milliseconds before processing should timeout.
  * @param {(error: RsError) => void} [options.onError] What to do if a ReSpec processing has an error. Does nothing by default.
  * @param {(warning: RsError) => void} [options.onWarning] What to do if a ReSpec processing has a warning. Does nothing by default.
- * @param {boolean} [options.verbose] Log processing status to stdout.
+ * @param {(msg: string, timeRemaining: number) => void} [options.onProgress]
  * @param {boolean} [options.disableSandbox] See https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox
  * @param {boolean} [options.devtools] Show the Chromium window with devtools open for debugging.
  * @return {Promise<{ html: string, errors: RsError[], warnings: RsError[] }>}
@@ -24,7 +24,6 @@ const noop = () => {};
 async function toHTML(src, options = {}) {
   const {
     timeout = 300000,
-    verbose = false,
     disableSandbox = false,
     devtools = false,
   } = options;
@@ -34,12 +33,12 @@ async function toHTML(src, options = {}) {
   if (typeof options.onWarning !== "function") {
     options.onWarning = noop;
   }
+  if (typeof options.onProgress !== "function") {
+    options.onProgress = noop;
+  }
 
+  const log = msg => options.onProgress(msg, timer.remaining);
   const timer = createTimer(timeout);
-
-  const log = verbose
-    ? msg => console.log(`[Timeout: ${timer.remaining}ms] ${msg}`)
-    : noop;
 
   /** @type {RsError[]} */
   const errors = [];

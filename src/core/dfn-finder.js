@@ -257,8 +257,9 @@ function getDfns(name, parent, originalName, type) {
 /**
  * @return {string}
  */
-function getDataType(idlStruct) {
+function getDataType(idlStruct = {}) {
   const { idlType, generic, union } = idlStruct;
+  if (idlType === undefined) return "";
   if (typeof idlType === "string") return idlType;
   if (generic) return generic;
   // join on "|" handles for "unsigned short" etc.
