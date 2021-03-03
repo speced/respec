@@ -74,7 +74,10 @@ class StaticServer {
   }
 
   async start() {
-    await new Promise(resolve => this.server.listen(this.port, resolve));
+    await new Promise((resolve, reject) => {
+      this.server.listen(this.port, resolve);
+      this.server.on("error", reject);
+    });
   }
 
   async stop() {
