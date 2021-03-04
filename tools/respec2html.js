@@ -118,8 +118,8 @@ cli
   .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
   .option("--devtools", "Enable debugging and show Chrome's DevTools.", false)
   .option("--verbose", "Log processing status to stdout.", false)
-  .option("--localhost", "Spin up a local server to peform processing.", false)
-  .option("--port", "Port override for localhost.", 3000);
+  .option("--localhost", "Spin up a local server to perform processing.", false)
+  .option("--port", "Port override for --localhost.", 3000);
 
 cli.action((source, destination, opts) => {
   source = source || opts.src;
