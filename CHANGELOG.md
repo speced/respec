@@ -1,5 +1,35 @@
 # Changelog
 
+## [v26.1.0](https://github.com/w3c/respec/tree/v26.1.0) (2021-03-02)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.0.2...v26.1.0)
+
+**Implemented enhancements:**
+
+- Make it possible to test errors and warning [\#1084](https://github.com/w3c/respec/issues/1084)
+
+**Fixed bugs:**
+
+- HTML in WebIDL error details is not escaped [\#3253](https://github.com/w3c/respec/issues/3253)
+- Colons in the specification metadata block [\#3041](https://github.com/w3c/respec/issues/3041)
+- Support linking to stringifier [\#982](https://github.com/w3c/respec/issues/982)
+
+**Closed issues:**
+
+- Wrap IDL code with \<pre\>\<code\> [\#3189](https://github.com/w3c/respec/issues/3189)
+
+**Merged pull requests:**
+
+- feat\(core/respec-global\): collect errors and warnings [\#3348](https://github.com/w3c/respec/pull/3348) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(tools/respec2html\): add a Logger class for logs [\#3347](https://github.com/w3c/respec/pull/3347) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(tools/respec2html\): add --version flag [\#3343](https://github.com/w3c/respec/pull/3343) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3341](https://github.com/w3c/respec/pull/3341) ([github-actions[bot]](https://github.com/apps/github-actions))
+- fix\(webidl\): wrap idl in a code element [\#3336](https://github.com/w3c/respec/pull/3336) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/webidl\): support linking special operations [\#3335](https://github.com/w3c/respec/pull/3335) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(templates/show-link\): localize colons usage [\#3334](https://github.com/w3c/respec/pull/3334) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/link-to-dfn\): prevent nesting code elements [\#3332](https://github.com/w3c/respec/pull/3332) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webidl\): xml escape WebIDL error details [\#3328](https://github.com/w3c/respec/pull/3328) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v26.0.2](https://github.com/w3c/respec/tree/v26.0.2) (2021-02-24)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.0.1...v26.0.2)
