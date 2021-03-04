@@ -1,168 +1,122 @@
 #!/usr/bin/env node
-"use strict";
+const sade = require("sade");
 const colors = require("colors");
-colors.setTheme({
-  data: "grey",
-  debug: "cyan",
-  error: "red",
-  help: "cyan",
-  important: "red",
-  info: "green",
-  input: "grey",
-  prompt: "grey",
-  verbose: "cyan",
-  warn: "yellow",
-});
 const { toHTML, write } = require("./respecDocWriter");
 
-const commandLineArgs = require("command-line-args");
-const getUsage = require("command-line-usage");
-// Command line output
-const optionList = [
-  {
-    alias: "h",
-    defaultValue: false,
-    description: "Display this usage guide.",
-    name: "help",
-    type: Boolean,
-  },
-  {
-    alias: "s",
-    defaultOption: true,
-    description: "URL to ReSpec source file.",
-    multiple: false,
-    name: "src",
-    type: String,
-  },
-  {
-    alias: "o",
-    defaultOption: false,
-    description: "Path to output file. When omitted, just stdout.",
-    multiple: false,
-    name: "out",
-    type: String,
-  },
-  {
-    alias: "t",
-    defaultValue: 10,
-    description: "How long to wait before timing out (in seconds).",
-    name: "timeout",
-    type: Number,
-  },
-  {
-    alias: "e",
-    default: false,
-    description: "Abort if the spec has any errors.",
-    name: "haltonerror",
-    type: Boolean,
-  },
-  {
-    alias: "w",
-    default: false,
-    description: "Abort if ReSpec generates warnings.",
-    name: "haltonwarn",
-    type: Boolean,
-  },
-  {
-    default: false,
-    description: "Disable Chromium sandboxing if needed.",
-    name: "disable-sandbox",
-    type: Boolean,
-  },
-  {
-    default: false,
-    description: "Enable debugging and show Chrome's DevTools.",
-    name: "debug",
-    type: Boolean,
-  },
-  {
-    default: false,
-    description: "Log processing status to stdout.",
-    name: "verbose",
-    type: Boolean,
-  },
-];
-
-const usageSections = [
-  {
-    header: "respec2html",
-    content: "Converts a ReSpec source file to HTML and prints to std out.",
-  },
-  {
-    header: "Options",
-    optionList,
-  },
-  {
-    header: "Examples",
-    content: [
-      {
-        desc: "1. Output to a file. ",
-        example:
-          "$ ./respec2html.js --src http://example.com/spec.html --out spec.html",
-      },
-      {
-        desc: "2. Halt on errors or warning ",
-        example:
-          "$ ./respec2html.js -e -w --src http://example.com/spec.html --out spec.html",
-      },
-    ],
-  },
-  {
-    content: "Project home: {underline https://github.com/w3c/respec}",
-    raw: true,
-  },
-];
-
-(async function run() {
-  let parsedArgs;
-  try {
-    parsedArgs = commandLineArgs(optionList);
-  } catch (err) {
-    console.info(getUsage(usageSections));
-    console.error(colors.error(err.message));
-    return process.exit(127);
+class Logger {
+  /** @param {boolean} verbose */
+  constructor(verbose) {
+    this.verbose = verbose;
   }
-  if (!parsedArgs.src) {
-    console.info(getUsage(usageSections));
-    return process.exit(2);
-  }
-  if (parsedArgs.help) {
-    console.info(getUsage(usageSections));
-    return process.exit(0);
-  }
-  const src = new URL(parsedArgs.src, `file://${process.cwd()}/`).href;
-  const out = parsedArgs.out;
 
-  try {
-    const { html, errors, warnings } = await toHTML(src, {
-      timeout: parsedArgs.timeout * 1000,
-      onError(error) {
-        console.error(
-          colors.error(`💥 ReSpec error: ${colors.debug(error.message)}`)
-        );
-      },
-      onWarning(warning) {
-        console.warn(
-          colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
-        );
-      },
-      disableSandbox: parsedArgs["disable-sandbox"],
-      devtools: parsedArgs.debug,
-      verbose: parsedArgs.verbose && out !== "stdout",
-    });
-
-    const exitOnError = errors.length && parsedArgs.haltonerror;
-    const exitOnWarning = warnings.length && parsedArgs.haltonwarn;
-    if (exitOnError || exitOnWarning) {
-      throw new Error(
-        `${exitOnError ? "Errors" : "Warnings"} found during processing.`
-      );
-    }
-
-    await write(out, html);
-  } catch (err) {
-    console.error(colors.error(err.stack));
-    return process.exit(1);
+  /**
+   * @param {string} message
+   * @param {number} timeRemaining
+   */
+  info(message, timeRemaining) {
+    if (!this.verbose) return;
+    console.log(`[Timeout: ${timeRemaining}ms] ${message}`);
   }
-  process.exit(0);
-})();
+
+  /** @param {{ message: string }} rsError */
+  error(rsError) {
+    console.error(
+      colors.red(`💥 ReSpec error: ${colors.cyan(rsError.message)}`)
+    );
+  }
+
+  /** @param {{ message: string }} rsError */
+  warn(rsError) {
+    console.warn(
+      colors.yellow(`⚠️ ReSpec warning: ${colors.cyan(rsError.message)}`)
+    );
+  }
+
+  /** @param {Error | string} error */
+  fatal(error) {
+    console.error(colors.red(error.stack || error));
+  }
+}
+
+const cli = sade("respec [source] [destination]", true)
+  .describe("Converts a ReSpec source file to HTML and writes to destination.")
+  .example(`input.html output.html ${colors.dim("# Output to a file.")}`)
+  .example(
+    `http://example.com/spec.html stdout ${colors.dim("# Output to stdout.")}`
+  )
+  .example(
+    `http://example.com/spec.html output.html -e -w ${colors.dim(
+      "# Halt on errors or warning."
+    )}`
+  )
+  .example("--src http://example.com/spec.html --out spec.html");
+
+cli
+  // For backward compatibility
+  .option("-s, --src", "URL to ReSpec source file.")
+  // For backward compatibility
+  .option("-o, --out", "Path to output file.")
+  .option(
+    "-t, --timeout",
+    "How long to wait before timing out (in seconds).",
+    10
+  )
+  .option("-e, --haltonerror", "Abort if the spec has any errors.", false)
+  .option("-w, --haltonwarn", "Abort if ReSpec generates warnings.", false)
+  .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
+  .option("--devtools", "Enable debugging and show Chrome's DevTools.", false)
+  .option("--verbose", "Log processing status to stdout.", false);
+
+cli.action((source, destination, opts) => {
+  source = source || opts.src;
+  destination = destination || opts.out;
+  const log = new Logger(opts.verbose && destination !== "stdout");
+
+  if (!source) {
+    log.fatal("A source is required.");
+    cli.help();
+    process.exit(1);
+  }
+
+  return run(source, destination, opts, log).catch(err => {
+    log.fatal(err);
+    process.exit(1);
+  });
+});
+
+// https://github.com/lukeed/sade/issues/28#issuecomment-516104013
+cli._version = () => {
+  const { version } = require("../package.json");
+  console.log(version);
+};
+
+cli.parse(process.argv);
+
+/**
+ * @param {string} source
+ * @param {string|undefined} destination
+ * @param {Record<string, string|number|boolean>} options
+ * @param {Logger} log
+ */
+async function run(source, destination, options, log) {
+  const src = new URL(source, `file://${process.cwd()}/`).href;
+
+  const { html, errors, warnings } = await toHTML(src, {
+    timeout: options.timeout * 1000,
+    onError: log.error.bind(log),
+    onWarning: log.warn.bind(log),
+    onProgress: log.info.bind(log),
+    disableSandbox: options["disable-sandbox"],
+    devtools: options.devtools,
+  });
+
+  const exitOnError = errors.length && options.haltonerror;
+  const exitOnWarning = warnings.length && options.haltonwarn;
+  if (exitOnError || exitOnWarning) {
+    throw new Error(
+      `${exitOnError ? "Errors" : "Warnings"} found during processing.`
+    );
+  }
+
+  await write(destination, html);
+}

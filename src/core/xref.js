@@ -300,7 +300,7 @@ async function getData(queryKeys, apiUrl) {
   const fetchedResults = await fetchFromNetwork(termsToLook, apiUrl);
   if (fetchedResults.size) {
     // add data to cache
-    await cacheXrefData(fetchedResults);
+    await cacheXrefData(uniqueQueryKeys, fetchedResults);
   }
 
   return new Map([...resultsFromCache, ...fetchedResults]);

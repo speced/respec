@@ -301,7 +301,7 @@ describe("Core - Markdown", () => {
       \`\`\`
 
       \`\`\`
-      IDK what I am
+      IDK what I'am
       \`\`\`
     `;
     const ops = makeStandardOps({ format: "markdown" }, body);
