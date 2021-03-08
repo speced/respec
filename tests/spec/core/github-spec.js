@@ -92,14 +92,14 @@ describe("Core - Github", () => {
       );
       expect(participate).toBeTruthy();
       const fileABug = Array.from(doc.querySelectorAll("dd")).find(
-        elem => elem.textContent.trim() === "Dien een melding in:"
+        elem => elem.textContent.trim() === "Dien een melding in"
       );
       expect(fileABug).toBeTruthy();
       expect(fileABug.querySelector("a").href).toBe(
         "https://github.com/w3c/respec/issues/"
       );
       const commitHistory = Array.from(doc.querySelectorAll("dd")).find(
-        elem => elem.textContent.trim() === "Revisiehistorie:"
+        elem => elem.textContent.trim() === "Revisiehistorie"
       );
       expect(commitHistory).toBeTruthy();
       const ghLink = Array.from(doc.querySelectorAll("dd")).find(
