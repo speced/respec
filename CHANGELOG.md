@@ -1,5 +1,18 @@
 # Changelog
 
+## [v26.1.1](https://github.com/w3c/respec/tree/v26.1.1) (2021-03-04)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.1.0...v26.1.1)
+
+**Fixed bugs:**
+
+- Anonymous IDL operations cause id collision [\#1911](https://github.com/w3c/respec/issues/1911)
+
+**Merged pull requests:**
+
+- chore\(package\): update deps [\#3358](https://github.com/w3c/respec/pull/3358) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): regenerate [\#3356](https://github.com/w3c/respec/pull/3356) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v26.1.0](https://github.com/w3c/respec/tree/v26.1.0) (2021-03-02)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.0.2...v26.1.0)
