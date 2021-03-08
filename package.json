@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "26.1.2",
+  "version": "26.2.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -23,12 +23,12 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@types/marked": "^1.2.2",
+    "@types/marked": "^2.0.0",
     "@types/pluralize": "0.0.29",
     "boxen": "^5.0.0",
-    "chai": "^4.3.1",
+    "chai": "^4.3.3",
     "chokidar": "^3.5.1",
-    "clean-css": "^5.1.0",
+    "clean-css": "^5.1.1",
     "epipebomb": "^1.0.0",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
@@ -58,7 +58,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^11.3.2",
-    "typescript": "^4.2.2",
+    "typescript": "^4.2.3",
     "webidl2": "^23.13.1"
   },
   "scripts": {
@@ -82,8 +82,10 @@
   },
   "dependencies": {
     "colors": "^1.4.0",
+    "finalhandler": "^1.1.2",
     "puppeteer": "^8.0.0",
-    "sade": "^1.7.4"
+    "sade": "^1.7.4",
+    "serve-static": "^1.14.1"
   },
   "files": [
     "builds/",
