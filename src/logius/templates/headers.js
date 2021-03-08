@@ -82,6 +82,9 @@ const localizationStrings = {
     latest_editors_draft: "Laatste werkversie:",
     latest_published_version: "Laatst gepubliceerde versie:",
     this_version: "Deze versie:",
+    prev_version: "Vorige versie",
+    former_editor: "Voormalig redacteur",
+    former_editors: "Voormalige redacteurs",
   },
   es: {
     author: "Autor:",
