@@ -23,12 +23,12 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@types/marked": "^1.2.2",
+    "@types/marked": "^2.0.0",
     "@types/pluralize": "0.0.29",
     "boxen": "^5.0.0",
-    "chai": "^4.3.1",
+    "chai": "^4.3.3",
     "chokidar": "^3.5.1",
-    "clean-css": "^5.1.0",
+    "clean-css": "^5.1.1",
     "epipebomb": "^1.0.0",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
@@ -58,7 +58,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^11.3.2",
-    "typescript": "^4.2.2",
+    "typescript": "^4.2.3",
     "webidl2": "^23.13.1"
   },
   "scripts": {
