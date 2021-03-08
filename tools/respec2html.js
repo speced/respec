@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+const path = require("path");
+const http = require("http");
+const serveStatic = require("serve-static");
+const finalhandler = require("finalhandler");
 const sade = require("sade");
 const colors = require("colors");
 const { toHTML, write } = require("./respecDocWriter");
@@ -38,6 +42,49 @@ class Logger {
   }
 }
 
+class StaticServer {
+  /**
+   * @param {number} port
+   * @param {string} source
+   */
+  constructor(port, source) {
+    if (path.isAbsolute(source) || /^(\w+:\/\/)/.test(source.trim())) {
+      const msg = `Invalid path for use with --localhost. Only relative paths allowed.`;
+      const hint =
+        "Please ensure your ReSpec document and its local resources" +
+        " (e.g., data-includes) are accessible from the current working directory.";
+      throw new Error(`${msg} ${hint}`);
+    }
+
+    if (port && isNaN(parseInt(port, 10))) {
+      throw new Error("Invalid port number.");
+    }
+
+    this.port = port;
+    this.source = source;
+
+    const serve = serveStatic(process.cwd());
+    this.server = http.createServer((req, res) => {
+      serve(req, res, finalhandler(req, res));
+    });
+  }
+
+  get url() {
+    return new URL(this.source, `http://localhost:${this.port}/`);
+  }
+
+  async start() {
+    await new Promise((resolve, reject) => {
+      this.server.listen(this.port, resolve);
+      this.server.on("error", reject);
+    });
+  }
+
+  async stop() {
+    await new Promise(resolve => this.server.close(resolve));
+  }
+}
+
 const cli = sade("respec [source] [destination]", true)
   .describe("Converts a ReSpec source file to HTML and writes to destination.")
   .example(`input.html output.html ${colors.dim("# Output to a file.")}`)
@@ -49,7 +96,12 @@ const cli = sade("respec [source] [destination]", true)
       "# Halt on errors or warning."
     )}`
   )
-  .example("--src http://example.com/spec.html --out spec.html");
+  .example("--src http://example.com/spec.html --out spec.html")
+  .example(
+    `--localhost index.html out.html ${colors.dim(
+      "# Generate file using a local web server."
+    )}`
+  );
 
 cli
   // For backward compatibility
@@ -65,7 +117,9 @@ cli
   .option("-w, --haltonwarn", "Abort if ReSpec generates warnings.", false)
   .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
   .option("--devtools", "Enable debugging and show Chrome's DevTools.", false)
-  .option("--verbose", "Log processing status to stdout.", false);
+  .option("--verbose", "Log processing status to stdout.", false)
+  .option("--localhost", "Spin up a local server to perform processing.", false)
+  .option("--port", "Port override for --localhost.", 3000);
 
 cli.action((source, destination, opts) => {
   source = source || opts.src;
@@ -99,7 +153,15 @@ cli.parse(process.argv);
  * @param {Logger} log
  */
 async function run(source, destination, options, log) {
-  const src = new URL(source, `file://${process.cwd()}/`).href;
+  let staticServer;
+  if (options.localhost) {
+    staticServer = new StaticServer(options.port, source);
+    await staticServer.start();
+  }
+  const src = options.localhost
+    ? staticServer.url.href
+    : new URL(source, `file://${process.cwd()}/`).href;
+  log.info(`Processing resource: ${src} ...`, options.timeout * 1000);
 
   const { html, errors, warnings } = await toHTML(src, {
     timeout: options.timeout * 1000,
@@ -119,4 +181,6 @@ async function run(source, destination, options, log) {
   }
 
   await write(destination, html);
+
+  if (staticServer) await staticServer.stop();
 }
