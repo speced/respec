@@ -4,7 +4,13 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import { addHashId, showError, showWarning, xmlEscape } from "./utils.js";
+import {
+  addHashId,
+  showError,
+  showWarning,
+  wrapInner,
+  xmlEscape,
+} from "./utils.js";
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";
@@ -84,6 +90,7 @@ const templates = {
   },
   nameless(escaped, { data, parent }) {
     switch (data.type) {
+      case "operation":
       case "constructor":
         return defineIdlName(escaped, data, parent);
       default:
@@ -231,7 +238,9 @@ function getNameAndId(defn, parent = "") {
 
 function resolveNameAndId(defn, parent) {
   let name = getDefnName(defn);
-  let idlId = getIdlId(name, parent);
+  // For getters, setters, etc. "anonymous-getter",
+  const prefix = defn.special && defn.name === "" ? "anonymous-" : "";
+  let idlId = getIdlId(prefix + name, parent);
   switch (defn.type) {
     // Top-level entities with linkable members.
     case "callback interface":
@@ -298,7 +307,7 @@ function getDefnName(defn) {
     case "enum-value":
       return defn.value;
     case "operation":
-      return defn.name;
+      return defn.name || defn.special;
     default:
       return defn.name || defn.type;
   }
@@ -328,6 +337,7 @@ function renderWebIDL(idlElement, index) {
   idlElement.classList.add("def", "idl");
   const highlights = webidl2.write(parse, { templates });
   html.bind(idlElement)`${highlights}`;
+  wrapInner(idlElement, document.createElement("code"));
   idlElement.querySelectorAll("[data-idl]").forEach(elem => {
     if (elem.dataset.dfnFor) {
       return;
@@ -394,7 +404,7 @@ export async function run() {
 
   const validations = webidl2.validate(astArray);
   for (const validation of validations) {
-    let details = `<pre>${validation.context}</pre>`;
+    let details = `<pre>${xmlEscape(validation.context)}</pre>`;
     if (validation.autofix) {
       validation.autofix();
       const idlToFix = webidl2.write(astArray[validation.sourceName]);

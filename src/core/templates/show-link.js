@@ -19,7 +19,7 @@ export default function showLink(link) {
     return;
   }
   return html`
-    <dt class="${link.class ? link.class : null}">${link.key}:</dt>
+    <dt class="${link.class ? link.class : null}">${link.key}</dt>
     ${link.data ? link.data.map(showLinkData) : showLinkData(link)}
   `;
 }
