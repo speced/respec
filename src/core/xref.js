@@ -33,16 +33,22 @@ const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
 };
 
-export const API_URL = "https://respec.org/xref/";
-
-if (
-  !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
-) {
-  const link = createResourceHint({
-    hint: "preconnect",
-    href: "https://respec.org",
-  });
-  document.head.appendChild(link);
+export function prepare(conf) {
+  const apiBase = new URL(conf.RESPEC_API_BASE);
+  if (
+    !document.querySelector(`link[rel='preconnect'][href='${apiBase.origin}']`)
+  ) {
+    const link = createResourceHint({
+      hint: "preconnect",
+      href: apiBase.href,
+    });
+    document.head.appendChild(link);
+  }
+  // INTERNAL: conf.xref.url is for testing only. Also, testing server doesn't
+  // support a trailing slash.
+  conf.state[name].apiBase = conf.xref?.url
+    ? new URL(conf.xref.url)
+    : new URL("xref/", apiBase);
 }
 
 /**
@@ -72,7 +78,8 @@ export async function run(conf) {
     queryKeys.push({ ...entry, id });
   }
 
-  const data = await getData(queryKeys, xref.url);
+  const xrefApiBase = conf.state[name].apiBase;
+  const data = await getData(queryKeys, xrefApiBase);
   addDataCiteToTerms(elems, queryKeys, data, conf);
 
   sub("beforesave", cleanup);
@@ -105,11 +112,7 @@ function findExplicitExternalLinks() {
  * converts conf.xref to object with url and spec properties
  */
 function normalizeConfig(xref) {
-  const defaults = {
-    url: API_URL,
-    specs: null,
-  };
-
+  const defaults = { specs: null };
   const config = Object.assign({}, defaults);
 
   const type = Array.isArray(xref) ? "array" : typeof xref;
@@ -283,21 +286,21 @@ function getTypeContext(elem, isIDL) {
 
 /**
  * @param {RequestEntry[]} queryKeys
- * @param {string} apiUrl
+ * @param {URL} xrefApiBase
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
-async function getData(queryKeys, apiUrl) {
+async function getData(queryKeys, xrefApiBase) {
   const uniqueIds = new Set();
   const uniqueQueryKeys = queryKeys.filter(key => {
     return uniqueIds.has(key.id) ? false : uniqueIds.add(key.id) && true;
   });
 
-  const resultsFromCache = await resolveXrefCache(uniqueQueryKeys);
+  const resultsFromCache = await resolveXrefCache(uniqueQueryKeys, xrefApiBase);
 
   const termsToLook = uniqueQueryKeys.filter(
     key => !resultsFromCache.get(key.id)
   );
-  const fetchedResults = await fetchFromNetwork(termsToLook, apiUrl);
+  const fetchedResults = await fetchFromNetwork(termsToLook, xrefApiBase);
   if (fetchedResults.size) {
     // add data to cache
     await cacheXrefData(uniqueQueryKeys, fetchedResults);
@@ -308,7 +311,7 @@ async function getData(queryKeys, apiUrl) {
 
 /**
  * @param {RequestEntry[]} keys
- * @param {string} url
+ * @param {URL} url
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
 async function fetchFromNetwork(keys, url) {
@@ -377,7 +380,7 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
     }
   }
 
-  showErrors(errors);
+  showErrors(errors, conf.state[name].apiBase);
 }
 
 /**
@@ -434,10 +437,13 @@ function addToReferences(elem, cite, normative, term, conf) {
   showWarning(msg, name, { title, elements: [elem] });
 }
 
-/** @param {Errors} errors */
-function showErrors({ ambiguous, notFound }) {
+/**
+ * @param {Errors} errors
+ * @param {string} formBaseURL
+ */
+function showErrors({ ambiguous, notFound }, formBaseURL) {
   const getPrefilledFormURL = (term, query, specs = []) => {
-    const url = new URL(API_URL);
+    const url = new URL(formBaseURL);
     url.searchParams.set("term", term);
     if (query.for) url.searchParams.set("for", query.for);
     url.searchParams.set("types", query.types.join(","));

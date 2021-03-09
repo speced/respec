@@ -1,5 +1,4 @@
 // @ts-check
-import { API_URL } from "./xref.js";
 import { idb } from "./import-maps.js";
 
 /**
@@ -24,12 +23,15 @@ async function getIdbCache() {
   return db;
 }
 
-/** @param {RequestEntry[]} queries */
-export async function resolveXrefCache(queries) {
+/**
+ * @param {RequestEntry[]} queries
+ * @param {URL} xrefApiBase
+ */
+export async function resolveXrefCache(queries, xrefApiBase) {
   /** @type {Map<string, SearchResultEntry[]>} */
   const cachedData = new Map();
 
-  const bustCache = await shouldBustCache();
+  const bustCache = await shouldBustCache(xrefApiBase);
   if (bustCache) {
     await clearXrefData();
     return cachedData;
@@ -55,8 +57,9 @@ export async function resolveXrefCache(queries) {
  * Get last updated timestamp from server and bust cache based on that. This
  * way, we prevent dirty/erroneous/stale data being kept on a client (which is
  * possible if we use a `MAX_AGE` based caching strategy).
+ * @param {URL} xrefApiBase
  */
-async function shouldBustCache() {
+async function shouldBustCache(xrefApiBase) {
   const key = "XREF:LAST_VERSION_CHECK";
   const lastChecked = parseInt(localStorage.getItem(key), 10);
   const now = Date.now();
@@ -70,7 +73,7 @@ async function shouldBustCache() {
     return false;
   }
 
-  const url = new URL("meta/version", API_URL).href;
+  const url = new URL("meta/version", xrefApiBase).href;
   const res = await fetch(url);
   if (!res.ok) return false;
   const lastUpdated = await res.text();

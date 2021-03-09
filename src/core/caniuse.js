@@ -11,8 +11,6 @@ import { html } from "./import-maps.js";
 
 export const name = "core/caniuse";
 
-const API_URL = "https://respec.org/caniuse/";
-
 const BROWSERS = new Set([
   "and_chr",
   "and_ff",
@@ -54,7 +52,7 @@ export async function prepare(conf) {
     ${caniuseCss}
   </style>`);
 
-  const apiUrl = options.apiURL || API_URL;
+  const apiUrl = new URL("caniuse", conf.RESPEC_API_BASE).href;
   // Initiate a fetch, but do not wait. Try to fill the cache early instead.
   conf.state[name] = {
     fetchPromise: fetchStats(apiUrl, options),

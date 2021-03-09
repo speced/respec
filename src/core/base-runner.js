@@ -1,6 +1,7 @@
 // @ts-check
 // Module core/base-runner
 // The module in charge of running the whole processing pipeline.
+import { coreDefaults } from "./defaults.js";
 import { run as includeConfig } from "./include-config.js";
 import { init as initReSpecGlobal } from "./respec-global.js";
 import { run as overrideConfig } from "./override-configuration.js";
@@ -15,6 +16,7 @@ export async function runAll(plugs) {
   initReSpecGlobal();
 
   pub("start-all", respecConfig);
+  Object.assign(respecConfig, coreDefaults);
   includeConfig(respecConfig);
   overrideConfig(respecConfig);
   performance.mark(`${name}-start`);
@@ -43,6 +45,7 @@ function isRunnableModule(plug) {
 
 async function executePreparePass(runnables, config) {
   for (const plug of runnables.filter(p => p.prepare)) {
+    config.state[plug.name] = {};
     try {
       await plug.prepare(config);
     } catch (err) {

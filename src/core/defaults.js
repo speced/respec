@@ -39,4 +39,6 @@ export const coreDefaults = {
   specStatus: "base",
   highlightVars: true,
   addSectionLinks: true,
+  // RESPEC_API_BASE: "https://respec.org/",
+  RESPEC_API_BASE: "http://localhost:8000/",
 };

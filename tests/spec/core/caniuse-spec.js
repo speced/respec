@@ -10,13 +10,13 @@ import {
 
 describe("Core — Can I Use", () => {
   afterAll(flushIframes);
-  const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.html`;
+  const RESPEC_API_BASE = `${window.location.origin}/tests/data/caniuse/FEATURE/`;
 
   it("uses meaningful defaults", async () => {
     const ops = makeStandardOps({
+      RESPEC_API_BASE,
       caniuse: {
         feature: "FEATURE",
-        apiURL,
       },
     });
     const doc = await makeRSDoc(ops);
@@ -30,11 +30,11 @@ describe("Core — Can I Use", () => {
 
   it("allows overriding defaults", async () => {
     const ops = makeStandardOps({
+      RESPEC_API_BASE,
       caniuse: {
         feature: "FEATURE",
         versions: 10,
         browsers: ["firefox", "chrome"],
-        apiURL,
       },
     });
     const doc = await makeRSDoc(ops);
@@ -74,9 +74,9 @@ describe("Core — Can I Use", () => {
 
   it("shows caniuse browser support table", async () => {
     const ops = makeStandardOps({
+      RESPEC_API_BASE,
       caniuse: {
         feature: "FEATURE",
-        apiURL,
         browsers: ["firefox", "chrome", "opera"],
         versions: 5,
       },
