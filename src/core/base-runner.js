@@ -43,6 +43,7 @@ function isRunnableModule(plug) {
 
 async function executePreparePass(runnables, config) {
   for (const plug of runnables.filter(p => p.prepare)) {
+    config.state[plug.name] = {};
     try {
       await plug.prepare(config);
     } catch (err) {

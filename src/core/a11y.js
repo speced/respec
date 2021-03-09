@@ -19,13 +19,11 @@ export async function prepare(conf) {
   if (!conf.a11y) {
     return;
   }
-  conf.state[name] = {
-    axeImportPromise: importAxe().catch(error => {
-      const msg = `Failed to load a11y linter. ${error.msg}`;
-      showError(msg, name);
-      return null;
-    }),
-  };
+  conf.state[name].axeImportPromise = importAxe().catch(error => {
+    const msg = `Failed to load a11y linter. ${error.msg}`;
+    showError(msg, name);
+    return null;
+  });
 }
 
 export async function run(conf) {
