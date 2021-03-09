@@ -13,22 +13,22 @@ import { sub } from "./pubsubhub.js";
 
 export const name = "core/highlight-vars";
 
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/var.css")).default;
-  } catch {
-    return fetchAsset("var.css");
+export async function prepare(conf) {
+  if (!conf.highlightVars) {
+    return;
   }
+
+  const style = document.createElement("style");
+  style.id = "respec-css-highlight-vars";
+  style.textContent = await loadStyle();
+  style.classList.add("removeOnSave");
+  document.head.appendChild(style);
 }
 
 export async function run(conf) {
   if (!conf.highlightVars) {
     return;
   }
-  const styleElement = document.createElement("style");
-  styleElement.textContent = await loadStyle();
-  styleElement.classList.add("removeOnSave");
-  document.head.appendChild(styleElement);
 
   document
     .querySelectorAll("var")
@@ -38,6 +38,14 @@ export async function run(conf) {
   sub("beforesave", outputDoc => {
     outputDoc.querySelectorAll("var.respec-hl").forEach(removeHighlight);
   });
+}
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/var.css")).default;
+  } catch {
+    return fetchAsset("var.css");
+  }
 }
 
 function highlightListener(ev) {

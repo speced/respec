@@ -375,22 +375,24 @@ async function fetchAndStoreGithubIssues(github) {
   return new Map(Object.entries(issues));
 }
 
+export async function prepare() {
+  document.head.insertBefore(
+    html`<style id="respec-css-issues-notes">
+      ${await loadStyle()}
+    </style>`,
+    document.head.querySelector("link")
+  );
+}
+
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
   const issuesAndNotes = document.querySelectorAll(query);
   if (!issuesAndNotes.length) {
+    document.getElementById("respec-css-issues-notes").remove();
     return; // nothing to do.
   }
   const ghIssues = await fetchAndStoreGithubIssues(conf.github);
-  const css = await loadStyle();
-  const { head: headElem } = document;
-  headElem.insertBefore(
-    html`<style>
-      ${css}
-    </style>`,
-    headElem.querySelector("link")
-  );
   handleIssues(issuesAndNotes, ghIssues, conf);
   const ednotes = document.querySelectorAll(".ednote");
   ednotes.forEach(ednote => {
