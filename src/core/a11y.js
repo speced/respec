@@ -15,13 +15,30 @@ const DISABLED_RULES = [
   "region",
 ];
 
+export async function prepare(conf) {
+  if (!conf.a11y) {
+    return;
+  }
+  conf.state[name] = {
+    axeImportPromise: importAxe().catch(error => {
+      const msg = `Failed to load a11y linter. ${error.msg}`;
+      showError(msg, name);
+      return null;
+    }),
+  };
+}
+
 export async function run(conf) {
   if (!conf.a11y) {
     return;
   }
 
+  /** @type {typeof window.axe} */
+  const axe = await conf.state[name].axeImportPromise;
+  if (axe === null) return;
+
   const options = conf.a11y === true ? {} : conf.a11y;
-  const violations = await getViolations(options);
+  const violations = await getViolations(axe, options);
   for (const violation of violations) {
     /**
      * We're grouping by failureSummary as it contains hints to fix the issue.
@@ -49,9 +66,10 @@ export async function run(conf) {
 }
 
 /**
+ * @param {typeof window.axe} axe
  * @param {object} opts Options as described at https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#options-parameter
  */
-async function getViolations(opts) {
+async function getViolations(axe, opts) {
   const { rules, ...otherOptions } = opts;
   const options = {
     rules: {
@@ -63,16 +81,6 @@ async function getViolations(opts) {
     resultTypes: ["violations"],
     reporter: "v1", // v1 includes a `failureSummary`
   };
-
-  let axe;
-  try {
-    axe = await importAxe();
-  } catch (error) {
-    const msg = "Failed to load a11y linter.";
-    showError(msg, name);
-    console.error(error);
-    return [];
-  }
 
   try {
     const result = await axe.run(document, options);
