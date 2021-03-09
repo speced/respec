@@ -50,10 +50,10 @@ button.caniuse-cell {
   margin-top: 1px;
 }
 
-.caniuse-stats a {
+.caniuse-stats a[href] {
   white-space: nowrap;
   align-self: center;
-  margin-left: .5em;
+  margin-left: 0.5em;
 }
 
 /* a browser version */
