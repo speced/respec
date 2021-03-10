@@ -24,10 +24,9 @@ export async function runAll(plugs) {
   runnables.forEach(
     plug => !plug.name && console.warn("Plugin lacks name:", plug)
   );
-  respecConfig.state = {};
-  await executePreparePass(runnables, respecConfig);
-  await executeRunPass(runnables, respecConfig);
-  respecConfig.state = {};
+  const state = {};
+  await executePreparePass(runnables, respecConfig, state);
+  await executeRunPass(runnables, respecConfig, state);
   pub("plugins-done", respecConfig);
 
   await postProcess(respecConfig);
@@ -41,17 +40,18 @@ function isRunnableModule(plug) {
   return plug && (plug.run || plug.Plugin);
 }
 
-async function executePreparePass(runnables, config) {
+async function executePreparePass(runnables, config, state) {
   for (const plug of runnables.filter(p => p.prepare)) {
+    state[plug.name] = {};
     try {
-      await plug.prepare(config);
+      await plug.prepare(config, state);
     } catch (err) {
       console.error(err);
     }
   }
 }
 
-async function executeRunPass(runnables, config) {
+async function executeRunPass(runnables, config, state) {
   for (const plug of runnables) {
     const name = plug.name || "";
 
@@ -67,10 +67,10 @@ async function executeRunPass(runnables, config) {
         performance.mark(`${name}-start`);
         try {
           if (plug.Plugin) {
-            await new plug.Plugin(config).run();
+            await new plug.Plugin(config, state).run();
             resolve();
           } else if (plug.run) {
-            await plug.run(config);
+            await plug.run(config, state);
             resolve();
           }
         } catch (err) {
