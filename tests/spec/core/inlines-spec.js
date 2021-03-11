@@ -336,7 +336,7 @@ describe("Core - Inlines", () => {
     expect(iframeAllowAnchor.textContent).toBe("allow");
     expect(iframeAllowAnchor.hash).toBe("#attr-iframe-allow");
     const inputModeAnchor = doc.querySelector("#test3 a");
-    expect(inputModeAnchor.textContent).toBe(`text`);
+    expect(inputModeAnchor.textContent).toBe("text");
     expect(inputModeAnchor.hash).toBe("#attr-inputmode-keyword-text");
   });
 
