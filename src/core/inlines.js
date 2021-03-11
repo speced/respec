@@ -81,10 +81,9 @@ function inlineElementMatches(matched) {
     .split("/", 3)
     .map(s => s && s.trim())
     .filter(s => !!s);
-  const [xrefType, xrefFor, textContent, linkingText] = (() => {
+  const [xrefType, xrefFor, textContent] = (() => {
     if (attrValue) {
-      const text = `${element} ${attribute} "${attrValue}"`;
-      return ["attr-value", `${element}/${attribute}`, text, attrValue];
+      return ["attr-value", `${element}/${attribute}`, attrValue];
     } else if (attribute) {
       return ["element-attr", element, attribute];
     } else {
@@ -92,10 +91,7 @@ function inlineElementMatches(matched) {
     }
   })();
   return html`<code
-    ><a
-      data-xref-type="${xrefType}"
-      data-xref-for="${xrefFor}"
-      data-lt="${linkingText}"
+    ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
       >${textContent}</a
     ></code
   >`;
