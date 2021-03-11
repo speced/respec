@@ -1,5 +1,15 @@
 # Changelog
 
+## [v26.3.0](https://github.com/w3c/respec/tree/v26.3.0) (2021-03-11)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.2.0...v26.3.0)
+
+**Merged pull requests:**
+
+- feat\(core/inlines\): support attr-value type for elements [\#3374](https://github.com/w3c/respec/pull/3374) ([sidvishnoi](https://github.com/sidvishnoi))
+- styles\(caniuse\): align styles with caniuse.com [\#3371](https://github.com/w3c/respec/pull/3371) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3370](https://github.com/w3c/respec/pull/3370) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v26.2.0](https://github.com/w3c/respec/tree/v26.2.0) (2021-03-08)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.1.2...v26.2.0)
