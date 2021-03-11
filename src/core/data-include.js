@@ -21,19 +21,19 @@ export const name = "core/data-include";
  * @param {boolean} options.replace
  */
 function fillWithText(el, data, { replace }) {
-  const { includeFormat } = el.dataset;
+  const { format } = el.dataset;
   let fill = data;
-  if (includeFormat === "markdown") {
+  if (format === "markdown") {
     fill = markdownToHtml(fill);
   }
 
-  if (includeFormat === "text") {
+  if (format === "text") {
     el.textContent = fill;
   } else {
     el.innerHTML = fill;
   }
 
-  if (includeFormat === "markdown") {
+  if (format === "markdown") {
     restructure(el);
   }
 
