@@ -12,7 +12,7 @@ import { removeReSpec } from "./utils.js";
 export const name = "core/base-runner";
 const canMeasure = performance.mark && performance.measure;
 
-function toRunnable(plug) {
+function toRunnable(plug) {https://github.com/w3c/respec/tree/w3c:ci/safari
   const name = plug.name || "";
   if (!name) {
     console.warn("Plugin lacks name:", plug);
@@ -81,3 +81,32 @@ export async function runAll(plugs) {
     performance.measure(name, `${name}-start`, `${name}-end`);
   }
 }
+Given a .git/config like this:
+
+#
+# This is the config file, and
+# a '#' or ';' character indicates
+# a comment
+#
+
+; core variables
+[core]
+        ; Don't trust file modes
+        filemode = false
+
+; Our diff algorithm
+[diff]
+        external = /usr/local/bin/diff-wrapper
+        renames = true
+
+; Proxy settings
+[core]
+        gitproxy=proxy-command for kernel.org
+        gitproxy=default-proxy ; for all the rest
+
+; HTTP
+[http]
+        sslVerify
+[http "https://weak.example.com"]
+        sslVerify = false
+        cookieFile = /tmp/cookie.txt
