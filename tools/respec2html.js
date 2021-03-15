@@ -43,7 +43,10 @@ class Logger {
     console.error(header, time, message);
   }
 
-  /** @param {{ message: string }} rsError */
+  /**
+   * @typedef {import("./respecDocWriter.js").RsError} RsError
+   * @param {RsError} rsError
+   */
   error(rsError) {
     const header = colors.bgRed.white.bold("[ERROR]");
     const message = colors.red(this._formatMarkdown(rsError.message));
@@ -53,7 +56,7 @@ class Logger {
     }
   }
 
-  /** @param {{ message: string }} rsError */
+  /** @param {RsError} rsError */
   warn(rsError) {
     const header = colors.bgYellow.black.bold("[WARNING]");
     const message = colors.yellow(this._formatMarkdown(rsError.message));
@@ -64,7 +67,6 @@ class Logger {
   }
 
   /** @param {Error | string} error */
-
   fatal(error) {
     const header = colors.bgRed.white.bold("[FATAL]");
     const message = colors.red(error.stack || error);
@@ -76,8 +78,7 @@ class Logger {
     return marked(str, { smartypants: true, renderer: new Renderer() });
   }
 
-  /** @param {{ message: string }} rsError */
-
+  /** @param {RsError} rsError */
   _printDetails(rsError) {
     const print = (title, value) => {
       if (!value) return;
