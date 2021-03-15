@@ -21,7 +21,7 @@ class Logger {
     if (!this.verbose) return;
     const header = colors.dim.bgWhite.black.bold("[INFO]");
     const time = colors.dim(`[Timeout: ${timeRemaining}ms]`);
-    console.log(header, time, message);
+    console.error(header, time, message);
   }
 
   /** @param {{ message: string }} rsError */
@@ -35,7 +35,7 @@ class Logger {
   warn(rsError) {
     const header = colors.bgYellow.black.bold("[WARNING]");
     const message = colors.yellow(rsError.message);
-    console.warn(header, message);
+    console.error(header, message);
   }
 
   /** @param {Error | string} error */
@@ -128,7 +128,7 @@ cli
 cli.action((source, destination, opts) => {
   source = source || opts.src;
   destination = destination || opts.out;
-  const log = new Logger(opts.verbose && destination !== "stdout");
+  const log = new Logger(opts.verbose);
 
   if (!source) {
     log.fatal("A source is required.");
