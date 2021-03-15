@@ -326,6 +326,7 @@ describe("Core - Inlines", () => {
       <section>
         <p id="test">[^body^]</p>
         <p id="test2">[^iframe/allow^]</p>
+        <p id="test3">[^ html-global/inputmode/text ^]</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps({ xref: ["HTML"] }, body));
@@ -334,6 +335,9 @@ describe("Core - Inlines", () => {
     const iframeAllowAnchor = doc.querySelector("#test2 a");
     expect(iframeAllowAnchor.textContent).toBe("allow");
     expect(iframeAllowAnchor.hash).toBe("#attr-iframe-allow");
+    const inputModeAnchor = doc.querySelector("#test3 a");
+    expect(inputModeAnchor.textContent).toBe("text");
+    expect(inputModeAnchor.hash).toBe("#attr-inputmode-keyword-text");
   });
 
   it("processes [= BikeShed style inline links =]", async () => {
