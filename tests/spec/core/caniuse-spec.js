@@ -10,7 +10,7 @@ import {
 
 describe("Core — Can I Use", () => {
   afterAll(flushIframes);
-  const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.html`;
+  const apiURL = `${window.location.origin}/tests/data/caniuse/`;
 
   it("uses meaningful defaults", async () => {
     const ops = makeStandardOps({
@@ -24,7 +24,6 @@ describe("Core — Can I Use", () => {
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
-    expect(caniuse.versions).toBe(4);
     expect(caniuse.browsers).toBeUndefined(); // uses server default
   });
 
@@ -32,7 +31,6 @@ describe("Core — Can I Use", () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
-        versions: 10,
         browsers: ["firefox", "chrome"],
         apiURL,
       },
@@ -43,7 +41,6 @@ describe("Core — Can I Use", () => {
 
     expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.browsers).toEqual(["firefox", "chrome"]);
-    expect(caniuse.versions).toBe(10);
   });
 
   it("does nothing if caniuse is not enabled", async () => {
@@ -76,9 +73,8 @@ describe("Core — Can I Use", () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
-        apiURL,
         browsers: ["firefox", "chrome", "opera"],
-        versions: 5,
+        apiURL,
       },
     });
     const doc = await makeRSDoc(ops);
@@ -122,7 +118,7 @@ describe("Core — Can I Use", () => {
     opsWithCaniuse.config.publishDate = "1999-12-11";
     opsWithCaniuse.config.caniuse = {
       feature: "FEATURE",
-      apiURL: `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`,
+      apiURL,
     };
     const doc = await makeRSDoc(opsWithCaniuse);
     await doc.respec.ready;
