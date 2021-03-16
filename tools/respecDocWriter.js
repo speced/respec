@@ -261,9 +261,23 @@ async function evaluateHTML(version, timer) {
 }
 
 /**
+ * @typedef {object} RsErrorBasic
+ * @property {string} RsErrorBasic.message
+ *
+ * @typedef {object} ReSpecError
+ * @property {string} ReSpecError.message
+ * @property {string} ReSpecError.plugin
+ * @property {string} [ReSpecError.hint]
+ * @property {HTMLElement[]} [ReSpecError.elements]
+ * @property {string} [ReSpecError.title]
+ * @property {string} [ReSpecError.details]
+ *
+ * @typedef {RsErrorBasic | ReSpecError} RsError
+ */
+
+/**
  * Specifies what to do when the browser emits "error" and "warn" console messages.
  * @param  {import("puppeteer").Page} page Instance of page to listen on.
- * @typedef {{ message: string }} RsError
  * @param {(error: RsError) => void} onError
  * @param {(error: RsError) => void} onWarning
  */
