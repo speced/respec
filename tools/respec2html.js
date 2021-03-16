@@ -5,7 +5,26 @@ const serveStatic = require("serve-static");
 const finalhandler = require("finalhandler");
 const sade = require("sade");
 const colors = require("colors");
+const marked = require("marked");
 const { toHTML, write } = require("./respecDocWriter");
+
+class Renderer extends marked.Renderer {
+  strong(text) {
+    return colors.bold(text);
+  }
+  em(text) {
+    return colors.italic(text);
+  }
+  codespan(text) {
+    return colors.underline(text);
+  }
+  paragraph(text) {
+    return text;
+  }
+  link(href, _title, text) {
+    return `[${text}](${colors.blue.dim.underline(href)})`;
+  }
+}
 
 class Logger {
   /** @param {boolean} verbose */
@@ -19,26 +38,35 @@ class Logger {
    */
   info(message, timeRemaining) {
     if (!this.verbose) return;
-    console.log(`[Timeout: ${timeRemaining}ms] ${message}`);
+    const header = colors.dim.bgWhite.black.bold("[INFO]");
+    const time = colors.dim(`[Timeout: ${timeRemaining}ms]`);
+    console.error(header, time, message);
   }
 
   /** @param {{ message: string }} rsError */
   error(rsError) {
-    console.error(
-      colors.red(`💥 ReSpec error: ${colors.cyan(rsError.message)}`)
-    );
+    const header = colors.bgRed.white.bold("[ERROR]");
+    const message = colors.red(this._formatMarkdown(rsError.message));
+    console.error(header, message);
   }
 
   /** @param {{ message: string }} rsError */
   warn(rsError) {
-    console.warn(
-      colors.yellow(`⚠️ ReSpec warning: ${colors.cyan(rsError.message)}`)
-    );
+    const header = colors.bgYellow.black.bold("[WARNING]");
+    const message = colors.yellow(this._formatMarkdown(rsError.message));
+    console.error(header, message);
   }
 
   /** @param {Error | string} error */
   fatal(error) {
-    console.error(colors.red(error.stack || error));
+    const header = colors.bgRed.white.bold("[FATAL]");
+    const message = colors.red(error.stack || error);
+    console.error(header, message);
+  }
+
+  _formatMarkdown(str) {
+    if (typeof str !== "string") return str;
+    return marked(str, { smartypants: true, renderer: new Renderer() });
   }
 }
 
@@ -124,7 +152,7 @@ cli
 cli.action((source, destination, opts) => {
   source = source || opts.src;
   destination = destination || opts.out;
-  const log = new Logger(opts.verbose && destination !== "stdout");
+  const log = new Logger(opts.verbose);
 
   if (!source) {
     log.fatal("A source is required.");
