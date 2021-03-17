@@ -288,7 +288,7 @@ function showLinkingError(elems) {
  */
 function updateReferences(conf) {
   const shortName = new RegExp(
-    String.raw`\b${(conf.shortName || "").toLowerCase()}([^-])\b`,
+    String.raw`^${(conf.shortName || "").toLowerCase()}([^-])\b`,
     "i"
   );
 
