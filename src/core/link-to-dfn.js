@@ -11,8 +11,8 @@ import {
   showWarning,
   wrapInner,
 } from "./utils.js";
-import { THIS_SPEC, toCiteDetails } from "./data-cite.js";
 import { definitionMap } from "./dfn-map.js";
+import { toCiteDetails } from "./data-cite.js";
 
 export const name = "core/link-to-dfn";
 
@@ -287,19 +287,14 @@ function showLinkingError(elems) {
  * @param {Conf} conf
  */
 function updateReferences(conf) {
-  const shortName = new RegExp(
-    String.raw`^${(conf.shortName || "").toLowerCase()}([^-])\b`,
-    "i"
-  );
-
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );
   for (const elem of elems) {
-    elem.dataset.cite = elem.dataset.cite.replace(shortName, `${THIS_SPEC}$1`);
     const { key, isNormative } = toCiteDetails(elem);
-    if (key === THIS_SPEC) continue;
+    // self cite, so skip
+    if (key === conf.shortName) continue;
 
     if (!isNormative && !conf.normativeReferences.has(key)) {
       conf.informativeReferences.add(key);
