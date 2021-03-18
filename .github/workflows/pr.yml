@@ -60,8 +60,8 @@ jobs:
         browser: [ChromeHeadless, FirefoxHeadless]
         os: [ubuntu-latest]
         include:
-          browser: Safari
-          os: macos-latest
+          - browser: Safari
+            os: macos-latest
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
