@@ -61,8 +61,8 @@ jobs:
         include:
           - browser: Safari
             os: macos-latest
-    needs: lint
     runs-on: ${{ matrix.os }}
+    needs: lint
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
