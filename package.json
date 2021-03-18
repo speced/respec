@@ -47,7 +47,7 @@
     "karma-jasmine": "^4.0.1",
     "karma-jasmine-html-reporter": "^1.5.4",
     "karma-mocha-reporter": "^2.2.5",
-    "karma-safari-launcher": "^1.0.0",
+    "karma-safari-launcher": "github:RLovelett/karma-safari-launcher#safari-webdriver",
     "loading-indicator": "^2.0.0",
     "pluralize": "^8.0.0",
     "prettier": "^2.2.1",
