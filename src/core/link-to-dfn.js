@@ -287,17 +287,17 @@ function showLinkingError(elems) {
  * @param {Conf} conf
  */
 function updateReferences(conf) {
-  const shortName = new RegExp(
-    String.raw`^${(conf.shortName || "").toLowerCase()}([^-])\b`,
-    "i"
-  );
+  const shortName = conf?.shortName.toLowerCase() || "";
+
+  // Matches spec/path#frag (note optional ?! in start of data-cite)
+  const regex = new RegExp(String.raw`^([?!])?${shortName}\b([#\/?]?)`, "i");
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );
   for (const elem of elems) {
-    elem.dataset.cite = elem.dataset.cite.replace(shortName, `${THIS_SPEC}$1`);
+    elem.dataset.cite = elem.dataset.cite.replace(regex, `${THIS_SPEC}$1`);
     const { key, isNormative } = toCiteDetails(elem);
     if (key === THIS_SPEC) continue;
 
