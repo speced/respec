@@ -288,7 +288,6 @@ function showLinkingError(elems) {
  */
 function updateReferences(conf) {
   const shortName = conf.shortName?.toLowerCase() || "";
-
   // https://regex101.com/r/rsZyIJ/4
   const regex = new RegExp(String.raw`^([?!])?${shortName}\b([^-])`, "i");
 
