@@ -290,14 +290,14 @@ function updateReferences(conf) {
   const shortName = conf?.shortName.toLowerCase() || "";
 
   // Matches spec/path#frag (note optional ?! in start of data-cite)
-  const regex = new RegExp(String.raw`^([?!])?${shortName}\b([#\/?]?)`, "i");
+  const regex = new RegExp(String.raw`^([?!])?${shortName}([#\/?]?)`, "i");
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );
   for (const elem of elems) {
-    elem.dataset.cite = elem.dataset.cite.replace(regex, `${THIS_SPEC}$1`);
+    elem.dataset.cite = elem.dataset.cite.replace(regex, `$1${THIS_SPEC}$2`);
     const { key, isNormative } = toCiteDetails(elem);
     if (key === THIS_SPEC) continue;
 
