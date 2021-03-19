@@ -287,7 +287,7 @@ function showLinkingError(elems) {
  * @param {Conf} conf
  */
 function updateReferences(conf) {
-  const shortName = conf?.shortName.toLowerCase() || "";
+  const shortName = conf.shortName?.toLowerCase() || "";
 
   // Matches spec/path#frag (note optional ?! in start of data-cite)
   const regex = new RegExp(String.raw`^([?!])?${shortName}([#\/?]?)`, "i");
