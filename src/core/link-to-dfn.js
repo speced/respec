@@ -287,7 +287,7 @@ function showLinkingError(elems) {
  * @param {Conf} conf
  */
 function updateReferences(conf) {
-  const shortName = conf.shortName?.toLowerCase() || "";
+  const { shortName = "" } = conf;
   // https://regex101.com/r/rsZyIJ/5
   const regex = new RegExp(String.raw`^([?!])?${shortName}\b([^-])`, "i");
 
