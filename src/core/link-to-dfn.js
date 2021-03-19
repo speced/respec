@@ -288,6 +288,7 @@ function showLinkingError(elems) {
  */
 function updateReferences(conf) {
   const { shortName = "" } = conf;
+  // Match shortName in a data-cite (with optional leading ?!), while skipping shortName as prefix.
   // https://regex101.com/r/rsZyIJ/5
   const regex = new RegExp(String.raw`^([?!])?${shortName}\b([^-])`, "i");
 
