@@ -288,7 +288,7 @@ function showLinkingError(elems) {
  */
 function updateReferences(conf) {
   const shortName = conf.shortName?.toLowerCase() || "";
-  // https://regex101.com/r/rsZyIJ/4
+  // https://regex101.com/r/rsZyIJ/5
   const regex = new RegExp(String.raw`^([?!])?${shortName}\b([^-])`, "i");
 
   /** @type {NodeListOf<HTMLElement>} */
