@@ -81,6 +81,21 @@ async function sendHighlightRequest(code, languages) {
   });
 }
 
+async function loadHighlighter() {
+  const action = "highlight-load";
+  const highlightScript = `https://www.w3.org/Tools/respec/respec-highlight`;
+
+  const worker = await workerPromise;
+  await new Promise(resolve => {
+    worker.postMessage({ action, highlightScript });
+    worker.addEventListener(
+      "message",
+      ev => ev.data.action === action && resolve(),
+      { once: true }
+    );
+  });
+}
+
 export async function run(conf) {
   // Nothing to highlight
   if (conf.noHighlightCSS) return;
@@ -98,6 +113,8 @@ export async function run(conf) {
   if (!highlightables.length) {
     return;
   }
+  await loadHighlighter();
+
   const promisesToHighlight = highlightables
     .filter(elem => elem.textContent.trim())
     .map(highlightElement);
