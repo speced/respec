@@ -1,18 +1,14 @@
+// ReSpec Worker v1.0.0
+"use strict";
+try {
+  importScripts("https://www.w3.org/Tools/respec/respec-highlight");
+} catch (err) {
+  console.error("Network error loading highlighter", err);
+}
+
 self.addEventListener("message", ({ data: originalData }) => {
   const data = Object.assign({}, originalData);
   switch (data.action) {
-    case "highlight-load": {
-      const { highlightScript } = data;
-      try {
-        importScripts(highlightScript); // add `hljs` to WorkerGlobalScope
-        if (!self.hljs) {
-          console.error(`Invalid highlighter script.`);
-        }
-      } catch (err) {
-        console.error("Network error loading highlighter", err);
-      }
-      break;
-    }
     case "highlight-load-lang": {
       const { langURL, propName, lang } = data;
       importScripts(langURL);
