@@ -3,7 +3,6 @@
     "browser": true,
     "es6": true,
     "node": true,
-    "jquery": true,
     "amd": true,
     "worker": true
   },

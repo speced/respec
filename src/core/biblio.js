@@ -4,7 +4,6 @@
 // Configuration:
 //  - localBiblio: override or supplement the official biblio with your own.
 
-/* jshint jquery: true */
 import { biblioDB } from "./biblio-db.js";
 import { createResourceHint } from "./utils.js";
 

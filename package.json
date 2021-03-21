@@ -65,7 +65,6 @@
     "build:geonovum-debug": "npm run build:geonovum -- --debug",
     "build:geonovum": "node ./tools/builder.js geonovum",
     "build:w3c-debug": "npm run build:w3c -- --debug",
-    "build:w3c-with-jquery": "node ./tools/builder.js w3c-common",
     "build:w3c": "node ./tools/builder.js w3c",
     "build:dini-debug": "node run build:dini -- --debug",
     "build:dini": "node ./tools/builder.js dini",
