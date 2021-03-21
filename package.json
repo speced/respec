@@ -76,7 +76,7 @@
     "start": "node ./tools/dev-server.js",
     "test:build": "jasmine --random=false ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
-    "test:karma": "npm run karma"
+    "test:karma": "karma start --single-run"
   },
   "dependencies": {
     "colors": "^1.4.0",
