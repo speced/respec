@@ -6,7 +6,7 @@ const colors = require("colors");
 const { promises: fsp } = require("fs");
 const path = require("path");
 const { rollup } = require("rollup");
-const alias = require("rollup-plugin-alias");
+const alias = require("@rollup/plugin-alias");
 const CleanCSS = require("clean-css");
 
 colors.setTheme({
