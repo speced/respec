@@ -54,7 +54,7 @@ jobs:
         run: |
           npx -q brrr builds/respec-w3c.js -o builds
           gzip -k builds/respec-w3c.js
-          stat -c "%s|%n" builds/respec-w3c.js* | column -ts'|'
+          stat -c "%6s  %n" builds/respec-w3c.js*
       - run: npm run test:headless
 
   test-karma:
