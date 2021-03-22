@@ -52,7 +52,7 @@ jobs:
           npm run build:w3c
       - name: Size of respec-w3c
         run: |
-          npx brrr builds/respec-w3c.js -o builds
+          npx -q brrr builds/respec-w3c.js -o builds
           gzip -k builds/respec-w3c.js
           stat -c "%s|%n" builds/respec-w3c.js* | column -ts'|'
       - run: npm run test:headless
