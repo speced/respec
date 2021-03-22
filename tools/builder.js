@@ -69,8 +69,6 @@ const Builder = {
 
     // optimisation settings
     const version = await this.getRespecVersion();
-    const buildDir = path.resolve(__dirname, "../builds/");
-    const workerDir = path.resolve(__dirname, "../worker/");
 
     const inputOptions = {
       input: require.resolve(`../profiles/${name}.js`),
@@ -105,12 +103,6 @@ const Builder = {
 
     const bundle = await rollup(inputOptions);
     await bundle.write(outputOptions);
-
-    // copy respec-worker
-    await fsp.copyFile(
-      `${workerDir}/respec-worker.js`,
-      `${buildDir}/respec-worker.js`
-    );
   },
 };
 
