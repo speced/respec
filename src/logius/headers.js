@@ -300,7 +300,7 @@ export function run(conf) {
   }
 
   // pieter added subdomain
-  const subdomain = conf.pubSubDomain ? `${conf.pubSubDomain}/` : ``;
+  const subdomain = conf.shortName ? `${conf.shortName}/` : ``;
 
   const specStatus = conf.specStatus.includes("GN")
     ? conf.specStatus.substr(3).toLowerCase()
