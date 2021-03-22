@@ -329,9 +329,9 @@ export function run(conf) {
   if (conf.previousMaturity && !conf.previousStatus)
     conf.previousStatus = conf.previousMaturity;
   // Thijs Brentjens: default to current specStatus if previousStatus is not provided
-  if (conf.previousPublishDate && !conf.previousStatus)
+  if ((conf.previousPublishDate || conf.previousPublishVersion) && !conf.previousStatus)
     conf.previousStatus = conf.specStatus;
-  if (conf.previousPublishDate && conf.previousStatus) {
+  if ((conf.previousPublishDate || conf.previousPublishVersion) && conf.previousStatus) {
     conf.previousPublishDate = validateDateAndRecover(
       conf,
       "previousPublishDate"
@@ -349,7 +349,7 @@ export function run(conf) {
       prevType = conf.specType.toLowerCase();
     }
     conf.prevVersion = `None${conf.previousPublishDate}`;
-    if (!conf.previousPublishVersion) {
+    if (!conf.previousPublishVersion ) {
       // eslint-disable-next-line prettier/prettier
       conf.prevVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${subdomain}${prevStatus}-${prevType}-${conf.shortName}-${concatDate(conf.previousPublishDate)}/`;
     } else {
