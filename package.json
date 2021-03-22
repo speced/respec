@@ -23,6 +23,9 @@
     "Robin Berjon"
   ],
   "devDependencies": {
+    "@rollup/plugin-alias": "^3.1.2",
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "@types/marked": "^2.0.0",
     "@types/pluralize": "0.0.29",
     "boxen": "^5.0.0",
@@ -52,9 +55,6 @@
     "prettier": "^2.2.1",
     "prompt": "^1.1.0",
     "rollup": "^2.41.2",
-    "rollup-plugin-alias": "^2.2.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^11.3.2",
     "typescript": "^4.2.3",
