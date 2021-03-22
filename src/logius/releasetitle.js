@@ -28,8 +28,13 @@ async function getReleasename(conf) {
 }
 
 async function setRelease(conf) {
-  let release = await getReleasename(conf);
-  conf.releaseversion = release.tag_name;
+  console.log(conf.publishVersion);
+  if (!conf.publishVersion) {
+    const release = await getReleasename(conf);
+    conf.releaseversion = release.tag_name;
+  } else {
+    conf.releaseversion = conf.publishVersion;
+  }
 }
 
 export async function run(conf) {

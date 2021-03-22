@@ -224,7 +224,7 @@ export function run(conf) {
 
   conf.licenseInfo = licenses[conf.license];
   conf.isBasic = conf.specStatus === "base";
-  // Thijs Brentjens: TODO: for a GN-BASIS document, is it neceassry to deal differently with URIs? Especially for "Laatst gepubliceerde versie"
+  // Thijs Brentjens: TODO: for a GN-BASIS document, is it necesary to deal differently with URIs? Especially for "Laatst gepubliceerde versie"
   // Deal with all current GN specStatusses the same. This is mostly seen in the links in the header for Last editor's draft etc
   // conf.isRegular = conf.specStatus !== "GN-BASIS";
   conf.isRegular = true;
@@ -267,7 +267,7 @@ export function run(conf) {
   );
   conf.publishYear = conf.publishDate.getUTCFullYear();
 
-  // pieter added: override date with LastModified date when specStatus =="WV" 
+  // pieter added: override date with LastModified date when specStatus =="WV"
   conf.publishHumanDate = NLRespecDate.format(
     conf.specStatus != "WV" ? conf.publishDate : new Date(document.lastModified)
   );
@@ -302,20 +302,19 @@ export function run(conf) {
   // pieter added subdomain
   const subdomain = conf.pubSubDomain ? `${conf.pubSubDomain}/` : ``;
 
-
   const specStatus = conf.specStatus.includes("GN")
     ? conf.specStatus.substr(3).toLowerCase()
     : conf.specStatus.toLowerCase();
-  if (
-    conf.isRegular &&
-    conf.specStatus !== "GN-WV" &&
-    conf.specStatus !== "WV" &&
-    // pieter added: only link to publication server when specStatus == "DEF
-    conf.specStatus == "DEF"
-  ) {
-    conf.thisVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain
-      }/${subdomain}${specStatus}-${conf.specType.toLowerCase()}-${conf.shortName
-      }-${concatDate(conf.publishDate)}/`;
+  // eslint-disable-next-line prettier/prettier
+  if (conf.isRegular && conf.specStatus !== "GN-WV" && conf.specStatus !== "WV" && conf.specStatus == "DEF") // pieter added: only link to publication server when specStatus == "DEF
+  {
+    if (!conf.publishVersion) {
+      // eslint-disable-next-line prettier/prettier
+      conf.thisVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${subdomain}${specStatus}-${conf.specType.toLowerCase()}-${conf.shortName}-${concatDate(conf.publishDate)}/`;
+    } else {
+       // Logius specific
+      conf.thisVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${subdomain}${conf.publishVersion}`;
+    }
   } else {
     conf.thisVersion = conf.edDraftURI;
   }
@@ -350,10 +349,13 @@ export function run(conf) {
       prevType = conf.specType.toLowerCase();
     }
     conf.prevVersion = `None${conf.previousPublishDate}`;
-    conf.prevVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain
-      }/${subdomain}${prevStatus}-${prevType}-${conf.shortName}-${concatDate(
-        conf.previousPublishDate
-      )}/`;
+    if (!conf.previousPublishVersion) {
+      // eslint-disable-next-line prettier/prettier
+      conf.prevVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${subdomain}${prevStatus}-${prevType}-${conf.shortName}-${concatDate(conf.previousPublishDate)}/`;
+    } else {
+      // eslint-disable-next-line prettier/prettier
+      conf.prevVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${subdomain}${conf.previousPublishVersion}/`;
+    }
   }
 
   const peopCheck = function (it) {

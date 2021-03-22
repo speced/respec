@@ -6,7 +6,7 @@
   <title>
     Logius's testpage
   </title>
-  <script src='../profiles/logius.js' async class='remove'></script>
+  <script src='https://publicatie.centrumvoorstandaarden.nl/respec/builds/respec-logius.js' async class='remove'></script>
   <link rel="shortcut icon" type="image/x-icon" href="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/logius.ico" />
   <script class='remove'>
     var respecConfig = {
@@ -17,13 +17,10 @@
 
       publishDate: "2020-09-20",
       previousPublishDate: "2007-01-31",
-
-      publishVersion: "1.7",
-      previousPublishVersion: "1.6.5",
       // Zie https://github.com/w3c/respec/wiki/previousMaturity. Dit moet een
       // A YYYY-MM-DD date. When a previousPublishDate is specified, this is typically required as well in order to generate the "Previous Version"
       previousMaturity: "DEF",
-      prevRecURI: "lalalalal",
+
       editors: [{
           name: "Pieter Hering",
           mailto: "api@digikoppeling.nl",          
@@ -68,7 +65,6 @@
       nl_organisationName: "Logius",
       nl_organisationPrefix: "LS-",
       nl_markdownTableClass: "simple",
-      nl_markdownCodeClass: "code",
       nl_markdownEmbedImageInFigure: true,
       nl_organisationStylesURL: "https://publicatie.centrumvoorstandaarden.nl/respec/style/",
       // nl_organisationStylesURL: "http://localhost:8081/respec/style/",
@@ -93,49 +89,14 @@
     }
 
   </script>
-  <link rel="stylesheet" type="text/css" href="./media/style.css">
 </head>
 
 <body>
   <section id='abstract'></section>
-  <!-- <section id='sotd' style="display: none"> -->
   <section id='sotd'></section>
-  <section class="introductory" id="overview">
-    <h2 id="title">
-      <!-- if <h1> than overrules <title> in <head> -->
-      Overview
-    </h2>
-  </section>
-  <section class="informative" id="intro">
-    <h2>
-      Introduction
-    </h2>
-    <p>
-      This section has a CSS class "<code>informative</code>", so it is
-      listed in the TOC. ReSpec will list this reference as non-normative
-      since this is an informative section [[DOM]].
-    </p>
-
- </section>
-  <section data-format="markdown" data-include="dk_doel_document.md" data-oninclude="include"></section>
-
-  <!-- <section id="tof" class="informative appendix"></section> -->
-  <section id='conformance'>
-    <!-- This section is filled automatically by ReSpec. -->
-  </section>
-
-  <section id="tof">
-    <!-- This section is filled with figures automatically by ReSpec. -->
-  </section>
-
-  <section id="toc">
-    <!-- This section is filled with content automatically by ReSpec. -->
-  </section>
-
-  <section id="index">
-    <!-- This section is filled with content automatically by ReSpec. -->
-  </section>
-
+  <!-- <section id='fout' data-format="markdown" data-include="Inrichtingsprincipes.md"></section> -->
+  <section id='fout' data-format="markdown" data-include="Inrichting.md"></section>
+  <section id='tof'></section>
 </body>
 
 </html>

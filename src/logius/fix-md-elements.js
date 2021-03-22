@@ -7,6 +7,7 @@ export const name = "logius/fix-md-elements";
 export function run(conf) {
   addClassTables(conf);
   addFigureImg(conf);
+  addClassCode(conf);
 }
 // todo check if algorithm is correct!
 function addClassTables(conf) {
@@ -63,6 +64,21 @@ function addFigureImg(conf) {
           img.parentNode.insertBefore(figure, img);
           img.remove();
         }
+      })
+  );
+}
+
+// todo check if algorithm is correct!
+function addClassCode(conf) {
+  // todo do nothing if this config is not set?
+  if (!conf.nl_markdownCodeClass) {
+    return;
+  }
+  [...document.querySelectorAll("[data-format=markdown]:not(body)")].forEach(
+    section =>
+      section.querySelectorAll("code").forEach(code => {
+        // table.classList.add("complex");
+        code.classList.add(conf.nl_markdownCodeClass);
       })
   );
 }

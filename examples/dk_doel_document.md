@@ -18,7 +18,7 @@ issue: <div class="issue" data-number="359"></div>
 
 ![Logius](figure-logius.svg "Logius Logo")
 
-De *Architectuur Digikoppeling* is tot stand gekomen in samenwerking met leden van het Technisch Overleg Digikoppeling en andere belanghebbenden.
+De *Architectuur Digikoppeling* is tot stand gekomen in samenwerking met leden van het `Technisch Overleg Digikoppeling` en andere belanghebbenden.
 
 De *Architectuur Digikoppeling* is mede gebaseerd op:
 
