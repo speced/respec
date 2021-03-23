@@ -25,19 +25,30 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
-      # - uses: actions/setup-node@v1
-      #   with:
-      #     node-version: 12
-      # - name: Cache node modules
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
-      # # - name: Get current size
-      #   id: current-size
-      #   run: |
-      #     npm ci
-      #     npm run build:w3c
-      #     gzip -k builds/respec-w3c.js
-      #     stat -c "%6s  %n" builds/respec-w3c.js*
-      #     git clean -fd && git checkout -- .
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
+      - name: Get current size
+        id: current-size
+        run: |
+          npm ci
+          npm run build:w3c
+          gzip -k builds/respec-w3c.js
+          stat -c "%6s  %n" builds/respec-w3c.js*
+          git clean -fd && git checkout -- .
+      - name: Get base size
+        id: base-size
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+          git checkout ${{ github.base_ref }}
+          npm ci
+          npm run build:w3c
+          gzip -k builds/respec-w3c.js
+          stat -c "%6s  %n" builds/respec-w3c.js*
+          git clean -fd && git checkout -- .
+          git checkout ${{ github.ref }}
