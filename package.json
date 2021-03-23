@@ -42,13 +42,11 @@
     "hyperhtml": "^2.34.0",
     "idb": "^6.0.0",
     "jasmine": "^3.7.0",
-    "jquery": "^3.6.0",
     "karma": "^6.2.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-firefox-launcher": "^2.1.0",
     "karma-jasmine": "^4.0.1",
     "karma-jasmine-html-reporter": "^1.5.4",
-    "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
     "loading-indicator": "^2.0.0",
@@ -65,7 +63,6 @@
     "build:geonovum-debug": "npm run build:geonovum -- --debug",
     "build:geonovum": "node ./tools/builder.js geonovum",
     "build:w3c-debug": "npm run build:w3c -- --debug",
-    "build:w3c-with-jquery": "node ./tools/builder.js w3c-common",
     "build:w3c": "node ./tools/builder.js w3c",
     "build:dini-debug": "node run build:dini -- --debug",
     "build:dini": "node ./tools/builder.js dini",
@@ -78,7 +75,7 @@
     "start": "node ./tools/dev-server.js",
     "test:build": "jasmine --random=false ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
-    "test:karma": "npm run karma"
+    "test:karma": "karma start --single-run"
   },
   "dependencies": {
     "colors": "^1.4.0",
