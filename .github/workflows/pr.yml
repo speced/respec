@@ -51,4 +51,4 @@ jobs:
           gzip -k builds/respec-w3c.js
           stat -c "%6s  %n" builds/respec-w3c.js*
           git clean -fd && git checkout -- .
-          git checkout ${{ github.ref }}
+          git checkout -
