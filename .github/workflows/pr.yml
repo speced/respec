@@ -21,10 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Dump GitHub context
-        run: echo "$GITHUB_CONTEXT"
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
       - uses: actions/setup-node@v1
         with:
           node-version: 12
@@ -44,7 +40,7 @@ jobs:
       - name: Get base size
         id: base-size
         run: |
-          git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+          git fetch --depth=1 origin +refs/heads/${{ github.base_ref }}
           git checkout ${{ github.base_ref }}
           npm ci
           npm run build:w3c
