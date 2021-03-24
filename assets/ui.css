@@ -1,7 +1,7 @@
 .respec-modal .close-button {
   position: absolute;
   z-index: inherit;
-  padding: .2em;
+  padding: 0.2em;
   font-weight: bold;
   cursor: pointer;
   margin-left: 5px;
@@ -328,107 +328,13 @@
   left: 127px;
 }
 
-#specref-ui {
-  margin: 0 2%;
-  margin-bottom: 0.5cm;
-}
-
-#specref-ui header {
-  font-size: 0.7em;
-  background-color: #eee;
-  text-align: center;
-  padding: 0.2cm;
-  margin-bottom: 0.5cm;
-  border-radius: 0 0 0.2cm 0.2cm;
-}
-
-#specref-ui header h1 {
-  padding: 0;
-  margin: 0;
-  color: black;
-}
-
-#specref-ui p {
-  padding: 0;
-  margin: 0;
-  font-size: 0.8em;
-  text-align: center;
-}
-
-#specref-ui p.state {
-  margin: 1cm;
-}
-
-#specref-ui .searchcomponent {
-  font-size: 16px;
-  display: grid;
-  grid-template-columns: auto 2cm;
-}
-#specref-ui .searchcomponent:focus {
-}
-
-#specref-ui input,
-#specref-ui button {
-  border: 0;
-  padding: 6px 12px;
-}
-
-#specref-ui label {
-  font-size: 0.6em;
-  grid-column-end: 3;
-  text-align: right;
-  grid-column-start: 1;
-}
-
-#specref-ui input[type="search"] {
-  -webkit-appearance: none;
-  font-size: 16px;
-  border-radius: 0.1cm 0 0 0.1cm;
-  border: 1px solid rgb(204, 204, 204);
-}
-
-#specref-ui button[type="submit"] {
-  color: white;
-  border-radius: 0 0.1cm 0.1cm 0;
-  background-color: rgb(51, 122, 183);
-}
-
-#specref-ui button[type="submit"]:hover {
-  background-color: #286090;
-  border-color: #204d74;
-}
-
-#specref-ui .result-stats {
-  margin: 0;
-  padding: 0;
-  color: rgb(128, 128, 128);
-  font-size: 0.7em;
-  font-weight: bold;
-}
-
-#specref-ui .specref-results {
-  font-size: 0.8em;
-}
-
-#specref-ui .specref-results dd + dt {
-  margin-top: 0.51cm;
-}
-
-#specref-ui .specref-results a {
-  text-transform: capitalize;
-}
-#specref-ui .specref-results .authors {
-  display: block;
-  color: #006621;
-}
-
 @media print {
   #respec-ui {
     display: none;
   }
 }
 
-#xref-ui {
+.respec-iframe {
   width: 100%;
   min-height: 550px;
   height: 100%;
@@ -438,11 +344,11 @@
   border: 0;
 }
 
-#xref-ui:not(.ready) {
+.respec-iframe:not(.ready) {
   background: url("https://respec.org/xref/loader.gif") no-repeat center;
 }
 
-#xref-ui + a[href] {
+.respec-iframe + a[href] {
   font-size: 0.9rem;
   float: right;
   margin: 0 0.5em 0.5em;

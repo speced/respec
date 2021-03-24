@@ -10,9 +10,6 @@ import { createResourceHint } from "./utils.js";
 /** @type {Conf['biblio']} */
 export const biblio = {};
 
-// for backward compatibity
-export { wireReference, stringifyReference } from "./render-biblio.js";
-
 export const name = "core/biblio";
 
 const bibrefsURL = new URL("https://api.specref.org/bibrefs?refs=");
