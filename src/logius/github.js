@@ -15,9 +15,10 @@ export function run(conf) {
     showWarning(msg, name, { hint });
     return;
   }
-  // override respec github settings if present
+  // pieter added: override respec github settings if present
+  // this fix is very stupid, but do not know a better alternative
   conf.otherLinks
-    .filter(item => item.key === "Doe mee") // todo: using the Dutch expression as a filter
+    .filter(item => item.key === "Doe mee:" || item.key === "Participate:") // todo: using the Dutch expression as a filter
     .forEach(element => {
       element.data.forEach(element => {
         switch (element.value) {
