@@ -24,7 +24,7 @@ function insertStyle() {
   return styleElement;
 }
 
-export async function run(conf) {
+export function run(conf) {
   if (conf.noReSpecCSS) {
     styleElement.remove();
   }

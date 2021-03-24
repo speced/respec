@@ -63,7 +63,7 @@ function makeTitle(elem, num, report) {
   </div>`;
 }
 
-export async function run() {
+export function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"

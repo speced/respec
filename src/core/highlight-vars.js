@@ -13,7 +13,7 @@ import { sub } from "./pubsubhub.js";
 
 export const name = "core/highlight-vars";
 
-export async function run(conf) {
+export function run(conf) {
   if (!conf.highlightVars) {
     return;
   }

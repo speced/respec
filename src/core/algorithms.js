@@ -6,7 +6,7 @@ import css from "../styles/algorithms.css.js";
 
 export const name = "core/algorithms";
 
-export async function run() {
+export function run() {
   const elements = Array.from(document.querySelectorAll("ol.algorithm li"));
   elements
     .filter(li => li.textContent.trim().startsWith("Assert: "))

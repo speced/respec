@@ -31,7 +31,7 @@ const BROWSERS = new Set([
   "samsung",
 ]);
 
-export async function prepare(conf) {
+export function prepare(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
   }

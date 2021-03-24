@@ -46,14 +46,14 @@ const CODE_TYPES = new Set([
  * @typedef {{ term: string, type: string, linkFor: string, elem: HTMLAnchorElement }} Entry
  */
 
-export async function run() {
+export function run() {
   const index = document.querySelector("section#index");
   if (!index) {
     return;
   }
 
   const styleEl = document.createElement("style");
-  styleEl.textContent = await css;
+  styleEl.textContent = css;
   document.head.appendChild(styleEl);
 
   index.classList.add("appendix");

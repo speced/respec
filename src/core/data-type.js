@@ -9,7 +9,7 @@ import css from "../styles/datatype.css.js";
 
 export const name = "core/data-type";
 
-export async function run(conf) {
+export function run(conf) {
   if (!conf.highlightVars) {
     return;
   }
