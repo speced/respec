@@ -65,7 +65,7 @@ describe("W3C — Bibliographic References", () => {
   const ops = makeStandardOps({ localBiblio }, body);
 
   afterAll(flushIframes);
-  const bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");
+  const bibRefsURL = new URL("https://api.specref.org/bibrefs");
 
   let doc;
   let specRefOk;

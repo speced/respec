@@ -31,7 +31,7 @@ const button = ui.addCommand(
   "Ctrl+Shift+Alt+space",
   "🔎"
 );
-const specrefURL = "https://specref.herokuapp.com/";
+const specrefURL = "https://specref.org/";
 const refSearchURL = `${specrefURL}search-refs`;
 const reveseLookupURL = `${specrefURL}reverse-lookup`;
 const form = document.createElement("form");
