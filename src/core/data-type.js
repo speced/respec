@@ -9,24 +9,18 @@ import { fetchAsset } from "./text-loader.js";
 
 export const name = "core/data-type";
 
-const tooltipStylePromise = loadStyle();
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/datatype.css")).default;
-  } catch {
-    return fetchAsset("datatype.css");
-  }
+export async function prepare(conf) {
+  if (!conf.highlightVars) return;
+  const style = document.createElement("style");
+  style.id = "respec-css-data-type";
+  style.textContent = await loadStyle();
+  document.head.appendChild(style);
 }
 
 export async function run(conf) {
   if (!conf.highlightVars) {
     return;
   }
-
-  const style = document.createElement("style");
-  style.textContent = await tooltipStylePromise;
-  document.head.appendChild(style);
 
   let section = null;
   const varMap = new Map();
@@ -44,5 +38,13 @@ export async function run(conf) {
     }
     const type = varMap.get(varElem.textContent.trim());
     if (type) varElem.dataset.type = type;
+  }
+}
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/datatype.css")).default;
+  } catch {
+    return fetchAsset("datatype.css");
   }
 }

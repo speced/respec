@@ -35,14 +35,16 @@ const profiles = {
 
 export const API_URL = "https://respec.org/xref/";
 
-if (
-  !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
-) {
-  const link = createResourceHint({
-    hint: "preconnect",
-    href: "https://respec.org",
-  });
-  document.head.appendChild(link);
+export function prepare() {
+  if (
+    !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
+  ) {
+    const link = createResourceHint({
+      hint: "preconnect",
+      href: "https://respec.org",
+    });
+    document.head.appendChild(link);
+  }
 }
 
 /**

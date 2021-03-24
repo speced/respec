@@ -39,8 +39,6 @@ const localizationStrings = {
 
 const l10n = getIntlData(localizationStrings);
 
-const cssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/examples.css")).default;
@@ -80,7 +78,7 @@ export async function run() {
   );
   if (!examples.length) return;
 
-  const css = await cssPromise;
+  const css = await loadStyle();
   document.head.insertBefore(
     html`<style>
       ${css}

@@ -3,7 +3,6 @@
 // renders the biblio data pre-processed in core/biblio
 
 import { addId, getIntlData, showError } from "./utils.js";
-import { biblio } from "./biblio.js";
 import { html } from "./import-maps.js";
 
 export const name = "core/render-biblio";
@@ -73,6 +72,8 @@ const endWithDot = endNormalizer(".");
 
 /** @param {Conf} conf */
 export function run(conf) {
+  /** @type {Conf["biblio"]} */
+  const biblio = conf.state["core/biblio"].biblio;
   const informs = Array.from(conf.informativeReferences);
   const norms = Array.from(conf.normativeReferences);
 
@@ -90,11 +91,11 @@ export function run(conf) {
   refSection.classList.add("appendix");
 
   if (norms.length) {
-    const sec = createReferencesSection(norms, l10n.norm_references);
+    const sec = createReferencesSection(biblio, norms, l10n.norm_references);
     refSection.appendChild(sec);
   }
   if (informs.length) {
-    const sec = createReferencesSection(informs, l10n.info_references);
+    const sec = createReferencesSection(biblio, informs, l10n.info_references);
     refSection.appendChild(sec);
   }
 
@@ -102,12 +103,15 @@ export function run(conf) {
 }
 
 /**
+ * @param {Conf["biblio"]} biblio
  * @param {string[]} refs
  * @param {string} title
  * @returns {HTMLElement}
  */
-function createReferencesSection(refs, title) {
-  const { goodRefs, badRefs } = groupRefs(refs.map(toRefContent));
+function createReferencesSection(biblio, refs, title) {
+  const { goodRefs, badRefs } = groupRefs(
+    refs.map(ref => toRefContent(biblio, ref))
+  );
   const uniqueRefs = getUniqueRefs(goodRefs);
 
   const refsToShow = uniqueRefs
@@ -132,10 +136,11 @@ function createReferencesSection(refs, title) {
 /**
  * returns refcontent and unique key for a reference among its aliases
  * and warns about circular references
+ * @param {Conf["biblio"]} biblio
  * @param {String} ref
  * @typedef {ReturnType<typeof toRefContent>} Ref
  */
-function toRefContent(ref) {
+function toRefContent(biblio, ref) {
   let refcontent = biblio[ref];
   let key = ref;
   const circular = new Set([key]);

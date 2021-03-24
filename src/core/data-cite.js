@@ -9,13 +9,13 @@
  * `data-cite` to `href` attributes. `data-cite` attributes are added to markup
  * directly by the author as well as via other modules like core/xref.
  */
-import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
 import {
   refTypeFromContext,
   showError,
   showWarning,
   wrapInner,
 } from "./utils.js";
+import { resolveRef, updateFromNetwork } from "./biblio.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/data-cite";
 
@@ -26,9 +26,10 @@ export const name = "core/data-cite";
 export const THIS_SPEC = "__SPEC__";
 
 /**
+ * @param {Conf["biblio"]} biblio
  * @param {CiteDetails} citeDetails
  */
-async function getLinkProps(citeDetails) {
+function getLinkProps(biblio, citeDetails) {
   const { key, frag, path } = citeDetails;
   let href = "";
   let title = "";
@@ -37,7 +38,7 @@ async function getLinkProps(citeDetails) {
     href = document.location.href;
   } else {
     // Let's go look it up in spec ref...
-    const entry = await resolveRef(key);
+    const entry = resolveRef(biblio, key);
     if (!entry) {
       return null;
     }
@@ -156,18 +157,20 @@ export function toCiteDetails(elem) {
   return details;
 }
 
-export async function run() {
+export async function run(conf) {
+  /** @type {Conf["biblio"]} */
+  const biblio = conf.state["core/biblio"].biblio;
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );
 
-  await updateBiblio([...elems]);
+  await updateBiblio(biblio, [...elems]);
 
   for (const elem of elems) {
     const originalKey = elem.dataset.cite;
     const citeDetails = toCiteDetails(elem);
-    const linkProps = await getLinkProps(citeDetails);
+    const linkProps = getLinkProps(biblio, citeDetails);
     if (linkProps) {
       linkElem(elem, linkProps, citeDetails);
     } else {
@@ -181,14 +184,14 @@ export async function run() {
 
 /**
  * Fetch and update `biblio` with entries corresponding to given elements
+ * @param {Conf["biblio"]} biblio
  * @param {HTMLElement[]} elems
  */
-async function updateBiblio(elems) {
-  const promisesForBibEntries = elems.map(toCiteDetails).map(async entry => {
-    const result = await resolveRef(entry.key);
+async function updateBiblio(biblio, elems) {
+  const bibEntries = elems.map(toCiteDetails).map(entry => {
+    const result = resolveRef(biblio, entry.key);
     return { entry, result };
   });
-  const bibEntries = await Promise.all(promisesForBibEntries);
 
   const missingBibEntries = bibEntries
     .filter(({ result }) => result === null)

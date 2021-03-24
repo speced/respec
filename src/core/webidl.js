@@ -377,8 +377,6 @@ export function addIDLHeader(pre) {
   addCopyIDLButton(header);
 }
 
-const cssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/webidl.css")).default;
@@ -387,18 +385,19 @@ async function loadStyle() {
   }
 }
 
+export async function prepare() {
+  document.querySelector("head link, head :last-child").before(
+    html`<style id="respec-css-webidl">
+      ${await loadStyle()}
+    </style>`
+  );
+}
+
 export async function run() {
   const idls = document.querySelectorAll("pre.idl, pre.webidl");
   if (!idls.length) {
+    document.getElementById("respec-css-webidl").remove();
     return;
-  }
-  if (!document.querySelector(".idl:not(pre), .webidl:not(pre)")) {
-    const link = document.querySelector("head link");
-    if (link) {
-      const style = document.createElement("style");
-      style.textContent = await cssPromise;
-      link.before(style);
-    }
   }
 
   const astArray = [...idls].map(renderWebIDL);

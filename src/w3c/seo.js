@@ -69,6 +69,9 @@ export async function run(conf) {
 }
 
 async function addJSONLDInfo(conf, doc) {
+  /** @type {Conf["biblio"]} */
+  const biblio = conf.state["core/biblio"].biblio;
+
   // Content for JSON
   const type = ["TechArticle"];
   if (conf.rdfStatus) type.push(conf.rdfStatus);
@@ -133,9 +136,7 @@ async function addJSONLDInfo(conf, doc) {
     ...conf.normativeReferences,
     ...conf.informativeReferences,
   ];
-  const citationContents = await Promise.all(
-    citationIds.map(ref => resolveRef(ref))
-  );
+  const citationContents = citationIds.map(ref => resolveRef(biblio, ref));
   jsonld.citation = citationContents
     .filter(ref => typeof ref === "object")
     .map(addRef);

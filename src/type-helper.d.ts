@@ -111,6 +111,7 @@ interface Conf {
   localBiblio?: Record<string, BiblioData>;
   biblio: Record<string, BiblioData>;
   shortName: string;
+  state: Record<string, Record<string, any>>;
 }
 
 type ResourceHintOption = {

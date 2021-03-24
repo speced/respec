@@ -7,9 +7,6 @@
 import { biblioDB } from "./biblio-db.js";
 import { createResourceHint } from "./utils.js";
 
-/** @type {Conf['biblio']} */
-export const biblio = {};
-
 // for backward compatibity
 export { wireReference, stringifyReference } from "./render-biblio.js";
 
@@ -17,19 +14,20 @@ export const name = "core/biblio";
 
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
-// Opportunistically dns-prefetch to bibref server, as we don't know yet
-// if we will actually need to download references yet.
-const link = createResourceHint({
-  hint: "dns-prefetch",
-  href: bibrefsURL.origin,
-});
-document.head.appendChild(link);
-let doneResolver;
+export async function prepare(conf) {
+  // Opportunistically dns-prefetch to bibref server, as we don't know yet
+  // if we will actually need to download references yet.
+  const link = createResourceHint({
+    hint: "dns-prefetch",
+    href: bibrefsURL.origin,
+  });
+  document.head.appendChild(link);
 
-/** @type {Promise<Conf['biblio']>} */
-const done = new Promise(resolve => {
-  doneResolver = resolve;
-});
+  conf.state[name] = {
+    /** @type {Conf['biblio']} */
+    biblio: {},
+  };
+}
 
 export async function updateFromNetwork(
   refs,
@@ -61,17 +59,17 @@ export async function updateFromNetwork(
 }
 
 /**
+ * @param {Conf['biblio']} biblio
  * @param {string} key
- * @returns {Promise<BiblioData>}
+ * @returns {BiblioData}
  */
-export async function resolveRef(key) {
-  const biblio = await done;
+export function resolveRef(biblio, key) {
   if (!biblio.hasOwnProperty(key)) {
     return null;
   }
   const entry = biblio[key];
   if (entry.aliasOf) {
-    return await resolveRef(entry.aliasOf);
+    return resolveRef(biblio, entry.aliasOf);
   }
   return entry;
 }
@@ -129,12 +127,11 @@ export class Plugin {
   }
 
   async run() {
-    const finish = () => {
-      doneResolver(this.conf.biblio);
-    };
     if (!this.conf.localBiblio) {
       this.conf.localBiblio = {};
     }
+    /** @type {Conf["biblio"]} */
+    const biblio = this.conf.state[name].biblio;
     this.conf.biblio = biblio;
     const localAliases = Object.keys(this.conf.localBiblio)
       .filter(key => this.conf.localBiblio[key].hasOwnProperty("aliasOf"))
@@ -168,6 +165,5 @@ export class Plugin {
       Object.assign(biblio, data);
     }
     Object.assign(biblio, this.conf.localBiblio);
-    finish();
   }
 }

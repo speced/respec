@@ -12,8 +12,6 @@ export const name = "core/highlight";
 
 const nextMsgId = msgIdGenerator("highlight");
 
-const ghCssPromise = loadStyle();
-
 async function loadStyle() {
   try {
     return (await import("text!../../assets/highlight.css")).default;
@@ -81,6 +79,15 @@ async function sendHighlightRequest(code, languages) {
   });
 }
 
+export async function prepare(conf) {
+  if (conf.noHighlightCSS) return;
+
+  const style = html`<style id="respec-css-highlight">
+    ${await loadStyle()}
+  </style>`;
+  document.head.appendChild(style);
+}
+
 export async function run(conf) {
   // Nothing to highlight
   if (conf.noHighlightCSS) return;
@@ -96,16 +103,12 @@ export async function run(conf) {
   );
   // Nothing to highlight
   if (!highlightables.length) {
+    document.getElementById("respec-css-highlight").remove();
     return;
   }
   const promisesToHighlight = highlightables
     .filter(elem => elem.textContent.trim())
     .map(highlightElement);
-  const ghCss = await ghCssPromise;
-  document.head.appendChild(
-    html`<style>
-      ${ghCss}
-    </style>`
-  );
+
   await Promise.all(promisesToHighlight);
 }
