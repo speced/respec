@@ -6,7 +6,7 @@
  */
 
 import { addId, getIntlData, norm } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/dfn-index.css.js";
 import { getTermFromElement } from "./xref.js";
 import { html } from "./import-maps.js";
 import { renderInlineCitation } from "./render-biblio.js";
@@ -53,7 +53,7 @@ export async function run() {
   }
 
   const styleEl = document.createElement("style");
-  styleEl.textContent = await loadStyle();
+  styleEl.textContent = await css;
   document.head.appendChild(styleEl);
 
   index.classList.add("appendix");
@@ -360,14 +360,6 @@ function getTermText(entry) {
   }
 
   return text;
-}
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/dfn-index.css")).default;
-  } catch {
-    return fetchAsset("dfn-index.css");
-  }
 }
 
 /** @param {Document} doc */

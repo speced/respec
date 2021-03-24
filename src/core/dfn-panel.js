@@ -2,14 +2,14 @@
 // Constructs "dfn panels" which show all the local references to a dfn and a
 // self link to the selected dfn. Based on Bikeshed's dfn panels at
 // https://github.com/tabatkins/bikeshed/blob/ef44162c2e/bikeshed/dfnpanels.py
-import { fetchAsset, fetchBase } from "./text-loader.js";
+import css from "../styles/dfn-panel.css.js";
+import { fetchBase } from "./text-loader.js";
 import { html } from "./import-maps.js";
 import { norm } from "./utils.js";
 
 export const name = "core/dfn-panel";
 
 export async function run() {
-  const css = await loadStyle();
   document.head.insertBefore(
     html`<style>
       ${css}
@@ -146,14 +146,6 @@ function getReferenceTitle(link) {
   const heading = section.querySelector("h1, h2, h3, h4, h5, h6");
   if (!heading) return null;
   return norm(heading.textContent);
-}
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/dfn-panel.css")).default;
-  } catch {
-    return fetchAsset("dfn-panel.css");
-  }
 }
 
 async function loadScript() {

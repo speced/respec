@@ -6,7 +6,7 @@
  */
 import { pub, sub } from "./pubsubhub.js";
 import { showError, showWarning } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/caniuse.css.js";
 import { html } from "./import-maps.js";
 
 export const name = "core/caniuse";
@@ -31,14 +31,6 @@ const BROWSERS = new Set([
   "samsung",
 ]);
 
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/caniuse.css")).default;
-  } catch {
-    return fetchAsset("caniuse.css");
-  }
-}
-
 export async function prepare(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
@@ -49,9 +41,8 @@ export async function prepare(conf) {
     return; // no feature to show
   }
 
-  const caniuseCss = await loadStyle();
   document.head.appendChild(html`<style class="removeOnSave">
-    ${caniuseCss}
+    ${css}
   </style>`);
 
   const apiUrl = options.apiURL || API_URL;

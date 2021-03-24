@@ -7,7 +7,7 @@
 // be used by a containing shell to extract all examples.
 
 import { addId, getIntlData } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/examples.css.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -38,16 +38,6 @@ const localizationStrings = {
 };
 
 const l10n = getIntlData(localizationStrings);
-
-const cssPromise = loadStyle();
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/examples.css")).default;
-  } catch {
-    return fetchAsset("examples.css");
-  }
-}
 
 /**
  * @typedef {object} Report
@@ -80,7 +70,6 @@ export async function run() {
   );
   if (!examples.length) return;
 
-  const css = await cssPromise;
   document.head.insertBefore(
     html`<style>
       ${css}
