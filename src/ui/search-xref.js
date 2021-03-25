@@ -29,7 +29,7 @@ const button = ui.addCommand(l10n.title, show, "Ctrl+Shift+Alt+x", "📚");
 function show() {
   const onLoad = e => e.target.classList.add("ready");
   const xrefSearchUI = html`
-    <iframe class="respec-iframe" src="${URL}" onload=${onLoad}></iframe>
+    <iframe class="respec-iframe" src="${URL}" onload="${onLoad}"></iframe>
     <a href="${URL}" target="_blank">Open Search UI in a new tab</a>
   `;
   ui.freshModal(l10n.title, xrefSearchUI, button);
