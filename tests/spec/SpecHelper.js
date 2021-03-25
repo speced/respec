@@ -49,7 +49,7 @@ export function makeRSDoc(opts, src, style = "") {
     } else {
       const doc = document.implementation.createHTMLDocument();
       decorateDocument(doc, opts);
-      ifr.srcdoc = doc.documentElement.outerHTML;
+      ifr.srcdoc = `<!DOCTYPE html>${doc.documentElement.outerHTML}`;
     }
     // trigger load
     document.body.appendChild(ifr);
