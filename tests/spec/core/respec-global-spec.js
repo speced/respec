@@ -48,10 +48,16 @@ describe("Core — Respec Global - document.respec", () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
 
-    const exportedDoc = await doc.respec.toHTML();
-    expect(typeof exportedDoc).toBe("string");
+    const html = await doc.respec.toHTML();
+    expect(typeof html).toBe("string");
 
     const regex = new RegExp(`^<!DOCTYPE html>\\s*<html.+lang="en"`);
-    expect(exportedDoc.slice(0, 40)).toMatch(regex);
+    expect(html.slice(0, 40)).toMatch(regex);
+
+    const exportedDoc = new DOMParser().parseFromString(html, "text/html");
+    // <meta name=generator> is added in exported docs only.
+    const generator = exportedDoc.querySelector("meta[name=generator]");
+    expect(generator).toBeTruthy();
+    expect(generator.content).toContain("ReSpec");
   });
 });
