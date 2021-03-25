@@ -43,4 +43,15 @@ describe("Core — Respec Global - document.respec", () => {
 
     expect(doc.respec.errors).toHaveSize(0);
   });
+
+  it("returns exported html with toHTML()", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops);
+
+    const exportedDoc = await doc.respec.toHTML();
+    expect(typeof exportedDoc).toBe("string");
+    expect(exportedDoc.slice(0, 50)).toMatch(
+      /^<!DOCTYPE html>\s*<html lang="en"/
+    );
+  });
 });
