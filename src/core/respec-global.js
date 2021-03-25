@@ -43,7 +43,7 @@ class ReSpec {
   }
 
   async toHTML() {
-    return `<!DOCTYPE html>${serialize("html", document)}`;
+    return serialize("html", document);
   }
 }
 

@@ -50,8 +50,7 @@ describe("Core — Respec Global - document.respec", () => {
 
     const exportedDoc = await doc.respec.toHTML();
     expect(typeof exportedDoc).toBe("string");
-    expect(exportedDoc.slice(0, 50)).toMatch(
-      /^<!DOCTYPE html>\s*<html lang="en"/
-    );
+    const regex = new RegExp(`^${doc.doctype || ""}\\s*<html lang="en"`);
+    expect(exportedDoc).toMatch(regex);
   });
 });
