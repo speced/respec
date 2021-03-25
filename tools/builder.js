@@ -1,18 +1,14 @@
 #!/usr/bin/env node
-
 "use strict";
 const sade = require("sade");
 const colors = require("colors");
-const { promises: fsp } = require("fs");
+const { readFileSync } = require("fs");
 const path = require("path");
-const { rollup } = require("rollup");
+const rollup = require("rollup");
 const alias = require("@rollup/plugin-alias");
 const CleanCSS = require("clean-css");
 
-colors.setTheme({
-  error: "red",
-  info: "white",
-});
+const rel = p => path.relative(process.cwd(), p);
 
 /**
  * @param {object} opts
@@ -42,46 +38,30 @@ const Builder = {
   /**
    * Async function that gets the current version of ReSpec from package.json
    *
-   * @returns {Promise<String>} The version string.
+   * @returns {string} The version string.
    */
-  getRespecVersion: async () => {
+  getRespecVersion: () => {
     const packagePath = path.join(__dirname, "../package.json");
-    const content = await fsp.readFile(packagePath, "utf-8");
+    const content = readFileSync(packagePath, "utf-8");
     return JSON.parse(content).version;
   },
 
-  /**
-   * Async function runs Requirejs' optimizer to generate the output.
-   *
-   * using a custom configuration.
-   * @param {object} options
-   * @param {string} options.name
-   * @param {boolean} options.debug
-   */
-  async build({ name, debug }) {
+  _getOptions(name, { debug }) {
     if (!name) {
       throw new TypeError("name is required");
     }
     const buildPath = path.join(__dirname, "../builds");
     const outFile = `respec-${name}.js`;
     const outPath = path.join(buildPath, outFile);
-    console.log(colors.info(`Generating ${outFile}. Please wait...`));
+    const version = this.getRespecVersion();
 
-    // optimisation settings
-    const version = await this.getRespecVersion();
-
+    /** @type {import("rollup").InputOptions} */
     const inputOptions = {
       input: require.resolve(`../profiles/${name}.js`),
       plugins: [
         !debug && require("rollup-plugin-terser").terser(),
         alias({
-          resolve: [".css", ".svg", ".js"],
-          entries: [
-            {
-              find: /^text!(.*)/,
-              replacement: "./$1",
-            },
-          ],
+          entries: [{ find: /^text!(.*)/, replacement: "./$1" }],
         }),
         string({
           include: [/\.runtime\.js$/, /\.css$/, /\.svg$/, /respec-worker\.js$/],
@@ -94,6 +74,8 @@ const Builder = {
       },
       inlineDynamicImports: true,
     };
+
+    /** @type {import("rollup").OutputOptions} */
     const outputOptions = {
       file: outPath,
       format: "iife",
@@ -101,8 +83,46 @@ const Builder = {
       banner: `window.respecVersion = "${version}";\n`,
     };
 
-    const bundle = await rollup(inputOptions);
+    return { inputOptions, outputOptions };
+  },
+
+  /**
+   * Async function runs Requirejs' optimizer to generate the output.
+   *
+   * using a custom configuration.
+   * @param {object} options
+   * @param {string} options.name
+   * @param {boolean} options.debug
+   */
+  async build({ name, debug }) {
+    const { inputOptions, outputOptions } = this._getOptions(name, { debug });
+    console.log(`Building ${rel(inputOptions.input)}. Please wait...`);
+    const bundle = await rollup.rollup(inputOptions);
     await bundle.write(outputOptions);
+    console.log(`  Wrote ${rel(outputOptions.file)}.`);
+  },
+
+  watch({ name, debug }) {
+    const { inputOptions, outputOptions } = this._getOptions(name, { debug });
+    const watcher = rollup.watch({ ...inputOptions, output: outputOptions });
+    watcher.on("event", async ev => {
+      switch (ev.code) {
+        case "BUNDLE_START":
+          console.log(`Building ${rel(ev.input)}. Please wait...`);
+          break;
+        case "BUNDLE_END":
+          console.log(
+            `  Wrote ${rel(ev.output[0])} in ${ev.duration}ms.`,
+            "Watching for file changes..."
+          );
+          await ev.result.close();
+          break;
+        case "ERROR":
+          console.log(ev.error);
+          break;
+      }
+    });
+    return watcher;
   },
 };
 
@@ -117,11 +137,16 @@ if (require.main === module) {
       `w3c --debug ${colors.dim("# Build W3C profile without optimizations.")}`
     )
     .option("-d, --debug", "Disable optimization to ease debugging", false)
+    .option("-w, --watch", "Automatically re-build on file changes", false)
     .action(async (profile, opts) => {
+      if (opts.watch) {
+        Builder.watch({ name: profile, debug: opts.debug });
+        return;
+      }
       try {
         await Builder.build({ name: profile, debug: opts.debug });
       } catch (err) {
-        console.error(colors.error(err.stack));
+        console.error(colors.red(err.stack));
         return process.exit(1);
       }
     })
