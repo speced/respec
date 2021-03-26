@@ -203,6 +203,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 export function run(conf) {
   // Thijs Brentjens: TODO: decide by default unofficial?
   // conf.isUnofficial = conf.specStatus === "unofficial";
+  
   conf.isUnofficial = true;
   if (!conf.logos) {
     // conf.isUnofficial

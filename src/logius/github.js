@@ -17,36 +17,35 @@ export function run(conf) {
   }
   // pieter added: override respec github settings if present
   // this fix is very stupid, but do not know a better alternative
-  conf.otherLinks
-    .filter(item => item.key === "Doe mee:" || item.key === "Participate:") // todo: using the Dutch expression as a filter
-    .forEach(element => {
-      element.data.forEach(element => {
-        switch (element.value) {
-          case "Dien een melding in":
-            if (conf.nl_github.issueBase) {
-              element.href = conf.nl_github.issueBase;
-            }
-            break;
-          case "Revisiehistorie":
-            if (conf.nl_github.revision) {
-              element.href = conf.nl_github.revision;
-            }
-            break;
-          case "Pull requests":
-            if (conf.nl_github.pullrequests) {
-              element.href = conf.nl_github.pullrequests;
-            }
-            break;
-        }
-      });
-    });
 
   if (conf.nl_github.issueBase) {
     if (!conf.nl_github.issueBase.endsWith("/")) {
       conf.nl_github.issueBase += "/";
     }
+
+  }
+  if (conf.nl_github.issueBase) {
+    if (!conf.nl_github.issueBase.endsWith("/")) {
+      conf.nl_github.issueBase += "/";
+    }
+    conf.otherLinks[0].data[1].href = conf.nl_github.issueBase;
     conf.issueBase = conf.nl_github.issueBase;
   }
+  if (conf.nl_github.revision) {
+    if (!conf.nl_github.revision.endsWith("/")) {
+      conf.nl_github.revision += "/";
+    }
+    conf.otherLinks[0].data[2].href = conf.nl_github.revision;
+  }
+  if (conf.nl_github.pullrequests) {
+    if (!conf.nl_github.pullrequests.endsWith("/")) {
+      conf.nl_github.pullrequests += "/";
+    }
+    conf.otherLinks[0].data[3].href = conf.nl_github.pullrequests;
+  }
+
+
+
   // todo: check if this is correct
   if (conf.nl_github.revision) {
     conf.github.branch = conf.nl_github.revision;

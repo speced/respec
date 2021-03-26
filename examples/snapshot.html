@@ -188,6 +188,8 @@ dfn {
     }
 
   </script>
+  
+<link rel="stylesheet" type="text/css" href="./media/style.css">
 
 <style id="respec-mainstyle">
 /*****************************************************************
@@ -551,9 +553,9 @@ ul.index code {
     "name": "World Wide Web Consortium",
     "url": "https://www.w3.org/"
   },
-  "discussionUrl": "https://github.com/Geonovum/KP-APIs/issues",
+  "discussionUrl": "https://github.com/Geonovum/KP-APIs/issues/",
   "alternativeHeadline": "",
-  "isBasedOn": "https://publicatie.centrumvoorstandaarden.nl/dk/watisdk/wv-hr-API-Design-Rules-20070131/",
+  "isBasedOn": "https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/1.6.5/",
   "editor": [
     {
       "type": "Person",
@@ -674,7 +676,9 @@ var[data-type]:hover::before {
   "shortName": "API-Design-Rules",
   "publishDate": "2020-09-20",
   "previousPublishDate": "2007-01-31",
-  "previousMaturity": "WV",
+  "publishVersion": "1.7",
+  "previousPublishVersion": "1.6.5",
+  "previousMaturity": "DEF",
   "editors": [
     {
       "name": "Pieter Hering",
@@ -714,15 +718,16 @@ var[data-type]:hover::before {
   "pubSubDomain": "watisdk",
   "nl_markdownSplitH1sections": false,
   "nl_github": {
-    "issueBase": "https://github.com/Geonovum/KP-APIs/issues",
-    "revision": "https://github.com/Logius-standaarden/API-Design-Rules/commits",
-    "pullrequests": "https://github.com/Logius-standaarden/API-Design-Rules/pulls"
+    "issueBase": "https://github.com/Geonovum/KP-APIs/issues/",
+    "revision": "https://github.com/Logius-standaarden/API-Design-Rules/commits/",
+    "pullrequests": "https://github.com/Logius-standaarden/API-Design-Rules/pulls/"
   },
   "nl_organisationName": "Logius",
   "nl_organisationPrefix": "LS-",
   "nl_markdownTableClass": "simple",
+  "nl_markdownCodeClass": "code",
   "nl_markdownEmbedImageInFigure": true,
-  "nl_organisationStylesURL": "http://localhost:8081/respec/style/",
+  "nl_organisationStylesURL": "https://publicatie.centrumvoorstandaarden.nl/respec/style/",
   "nl_organisationPublishURL": "https://publicatie.centrumvoorstandaarden.nl/",
   "nl_logo": {
     "src": "https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/figure-logius.svg",
@@ -735,7 +740,7 @@ var[data-type]:hover::before {
   "publishISODate": "2020-09-20T00:00:00.000Z",
   "generatedSubtitle": "Vastgestelde versie 20 september 2020"
 }</script>
-<link rel="stylesheet" href="http://localhost:8081/respec/style/LS-EO.css"></head>
+<link rel="stylesheet" href="https://publicatie.centrumvoorstandaarden.nl/respec/style/LS-VG.css"></head>
 
 <body class="h-entry"><div class="head">
     <a class="logo" href="https://www.logius.nl/standaarden"><img id="Logius" alt="Logius" src="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/figure-logius.svg" width="44" height="77"></a> <h1 id="title" class="title">Logius's testpage</h1>
@@ -747,7 +752,7 @@ var[data-type]:hover::before {
     </h2>
     <dl>
       <dt>Deze versie:</dt><dd class="status">
-              <a class="u-url status" href="https://publicatie.centrumvoorstandaarden.nl/dk/watisdk/def-hr-API-Design-Rules-20200920/">https://publicatie.centrumvoorstandaarden.nl/dk/watisdk/def-hr-API-Design-Rules-20200920/</a>
+              <a class="u-url status" href="https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/1.7">https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/1.7</a>
             </dd><dt>Laatst gepubliceerde versie:</dt><dd>
               <a href="https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/">https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/</a>
             </dd>
@@ -755,7 +760,7 @@ var[data-type]:hover::before {
       <dt>Test suite:</dt><dd><a href="https://github.com/Logius-standaarden/API-Design-Rules">https://github.com/Logius-standaarden/API-Design-Rules</a></dd>
       
       
-      <dt>Previous version:</dt><dd><a href="https://publicatie.centrumvoorstandaarden.nl/dk/watisdk/wv-hr-API-Design-Rules-20070131/">https://publicatie.centrumvoorstandaarden.nl/dk/watisdk/wv-hr-API-Design-Rules-20070131/</a></dd>
+      <dt>Vorige versie</dt><dd><a href="https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/1.6.5/">https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/1.6.5/</a></dd>
       
       <dt>Redacteurs:</dt>
       <dd class="p-author h-card vcard"><a class="ed_mailto u-email email p-name" href="mailto:api@digikoppeling.nl">Pieter Hering</a>
@@ -766,11 +771,11 @@ var[data-type]:hover::before {
       <dt>Doe mee:</dt><dd>
     <a href="https://github.com/Logius-standaarden/API-Design-Rules/">GitHub Logius-standaarden/API-Design-Rules</a>
   </dd><dd>
-    <a href="https://github.com/Geonovum/KP-APIs/issues">Dien een melding in</a>
+    <a href="https://github.com/Geonovum/KP-APIs/issues/">Dien een melding in</a>
   </dd><dd>
-    <a href="https://github.com/Logius-standaarden/API-Design-Rules/commits">Revisiehistorie</a>
+    <a href="https://github.com/Logius-standaarden/API-Design-Rules/commits/">Revisiehistorie</a>
   </dd><dd>
-    <a href="https://github.com/Logius-standaarden/API-Design-Rules/pulls">Pull requests</a>
+    <a href="https://github.com/Logius-standaarden/API-Design-Rules/pulls/">Pull requests</a>
   </dd>
     </dl>
     
@@ -809,7 +814,8 @@ var[data-type]:hover::before {
 
  </section>
   <section data-format="markdown" data-oninclude="include" id="doel-van-dit-document-en-leeswijzer"><h2 id="x2-doel-van-dit-document-en-leeswijzer"><bdi class="secno">2. </bdi>Doel van dit document en leeswijzer<a class="self-link" aria-label="§" href="#doel-van-dit-document-en-leeswijzer"></a></h2><section id="inleiding"><h3 id="x2-1-inleiding"><bdi class="secno">2.1 </bdi>Inleiding<a class="self-link" aria-label="§" href="#inleiding"></a></h3><p>Digikoppeling is een MUST standaard voor <em class="rfc2119">MOET</em> <em class="rfc2119">ZOU</em> <em class="rfc2119">MOETEN</em> berichtuitwisseling [<cite><a class="bibref" data-link-type="biblio" href="#bib-html" title="HTML Standard">HTML</a></cite>] waarmee overheden op een veilige manier gegevens met elkaar kunnen uitwisselen.</p></section><section id="doel"><h3 id="x2-2-doel"><bdi class="secno">2.2 </bdi>Doel<a class="self-link" aria-label="§" href="#doel"></a></h3><p>De <em>Architectuur Digikoppeling</em> definieert de kaders – de gehanteerde principes en voorschriften - waarbinnen de berichtenuitwisseling op basis van Digikoppeling plaatsvindt en beschrijft de rol van intermediairs in de keten van berichtuitwisseling.</p></section><section id="nog-een-toevoeging"><h3 id="x2-3-nog-een-toevoeging"><bdi class="secno">2.3 </bdi>nog een toevoeging<a class="self-link" aria-label="§" href="#nog-een-toevoeging"></a></h3><p>lalalal
-issue: </p><div class="issue" id="issue-container-number-363"><div role="heading" class="issue-title marker" id="h-issue" aria-level="4"><a href="https://github.com/Geonovum/KP-APIs/issues363"><span class="issue-number">Issue 363</span></a></div><div class=""></div></div><p></p><section id="verantwoording"><h4 id="x2-3-1-verantwoording"><bdi class="secno">2.3.1 </bdi>Verantwoording<a class="self-link" aria-label="§" href="#verantwoording"></a></h4><p><figure id="figure-logius"><img src="figure-logius.svg" alt="Logius" title="Logius Logo" width="44" height="77"><figcaption>Figuur <bdi class="figno">1</bdi> <span class="fig-title">Logius</span></figcaption></figure></p><p>De <em>Architectuur Digikoppeling</em> is tot stand gekomen in samenwerking met leden van het Technisch Overleg Digikoppeling en andere belanghebbenden.</p><p>De <em>Architectuur Digikoppeling</em> is mede gebaseerd op:</p><ul>
+issue: </p><div class="issue" id="issue-container-number-359"><div role="heading" class="issue-title marker" id="h-issue" aria-level="4"><a href="https://github.com/Geonovum/KP-APIs/issues/359"><span class="issue-number">Issue 359</span></a><span class="issue-label">: API-15 too restrictive</span></div><p>Rule API-15 states that PKIoverheid are to be used (MUST?) for access restricted APIs.<br>
+That would be too limitative in many use cases, and conflicts the section on End-user and client authentication in the security extension.</p></div><p></p><section id="verantwoording"><h4 id="x2-3-1-verantwoording"><bdi class="secno">2.3.1 </bdi>Verantwoording<a class="self-link" aria-label="§" href="#verantwoording"></a></h4><p><figure id="figure-logius"><img src="figure-logius.svg" alt="Logius" title="Logius Logo" width="44" height="77"><figcaption>Figuur <bdi class="figno">1</bdi> <span class="fig-title">Logius</span></figcaption></figure></p><p>De <em>Architectuur Digikoppeling</em> is tot stand gekomen in samenwerking met leden van het <code class="code">Technisch Overleg Digikoppeling</code> en andere belanghebbenden.</p><p>De <em>Architectuur Digikoppeling</em> is mede gebaseerd op:</p><ul>
 <li><p>De <em>Digikoppeling-koppelvlakstandaarden.</em> Onderdelen uit deze documenten zijn hier samengevat om voor de lezer duidelijk te maken.</p>
 </li>
 <li><p>Het <em>hoofdstuk over de Digikoppeling</em> keten bevat elementen <em>uit De Architectuurschets</em>, de context voor gegevensuitwisseling binnen de overheid in algemene zin en voor Digikoppeling in het bijzonder. <em>De Architectuurschets</em> is een tijdelijk product; de essentiële elementen van <em>De Architectuurschets</em> worden opgenomen in het <em>NORA Katern Verbinden</em>.</p>
