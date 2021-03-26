@@ -85,9 +85,7 @@ module.exports = config => {
   }
 
   if (process.env.GITHUB_WORKFLOW) {
-    const localPlugins = [
-      require.resolve("../tools/github-action-reporter.js"),
-    ];
+    const localPlugins = [require.resolve("./tools/github-action-reporter.js")];
     options.reporters.push("respec-github-action");
     options.plugins = ["karma-*"].concat(localPlugins);
   }
