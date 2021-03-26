@@ -1,12 +1,16 @@
 /* eslint-env node */
-const { readFile, lstat } = require("fs").promises;
+const { readFile, access } = require("fs/promises");
+const { F_OK } = require("fs").constants;
 const path = require("path");
-const expect = require("chai").expect;
 const { Builder } = require("../tools/builder");
 
 async function fileExists(filePath) {
-  const stats = await lstat(filePath);
-  return stats.fileExists();
+  try {
+    await access(filePath, F_OK);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 describe("builder (tool)", () => {
@@ -24,12 +28,12 @@ describe("builder (tool)", () => {
     const profileFile = path.join(__dirname, `../builds/respec-${profile}.js`);
     const mapFile = path.join(__dirname, `../builds/respec-${profile}.js.map`);
     it(`builds the "${profile}" profile and sourcemap`, async () => {
-      expect(await fileExists(profileFile)).to.equal(true);
-      expect(await fileExists(mapFile)).to.equal(true);
+      await expectAsync(fileExists(profileFile)).toBeResolvedTo(true);
+      await expectAsync(fileExists(mapFile)).toBeResolvedTo(true);
     });
     it(`includes sourcemap link for "${profile}"`, async () => {
       const source = await readFile(profileFile, "utf-8");
-      expect(source.includes(`${profile}.js.map`)).to.equal(true);
+      expect(source.includes(`${profile}.js.map`)).toBeTrue();
     });
   }
 });
