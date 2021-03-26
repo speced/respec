@@ -1,6 +1,7 @@
 /* eslint-env node */
 const { readFile, access } = require("fs/promises");
 const { F_OK } = require("fs").constants;
+const { execSync } = require("child_process");
 const path = require("path");
 const { Builder } = require("../tools/builder");
 
@@ -17,6 +18,7 @@ describe("builder (tool)", () => {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
 
   const profiles = ["w3c", "geonovum"];
+  const rootDir = path.join(__dirname, "..");
 
   beforeAll(async () => {
     await Promise.all(
@@ -24,9 +26,13 @@ describe("builder (tool)", () => {
     );
   });
 
+  afterAll(() => {
+    execSync("git checkout -- builds", { cwd: rootDir });
+  });
+
   for (const profile of profiles) {
-    const profileFile = path.join(__dirname, `../builds/respec-${profile}.js`);
-    const mapFile = path.join(__dirname, `../builds/respec-${profile}.js.map`);
+    const profileFile = path.join(rootDir, `builds/respec-${profile}.js`);
+    const mapFile = path.join(rootDir, `builds/respec-${profile}.js.map`);
     it(`builds the "${profile}" profile and sourcemap`, async () => {
       await expectAsync(fileExists(profileFile)).toBeResolvedTo(true);
       await expectAsync(fileExists(mapFile)).toBeResolvedTo(true);
