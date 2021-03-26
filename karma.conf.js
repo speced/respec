@@ -77,7 +77,6 @@ module.exports = config => {
       // @ts-expect-error
       args: ["--grep", config.grep || ""],
     },
-    browsers: ["ChromeHeadless"],
   };
 
   if (process.env.BROWSERS) {
