@@ -23,7 +23,7 @@ module.exports = config => {
         included: false,
       },
       {
-        pattern: "tests/data/**/*",
+        pattern: "tests/@(data|support-files)/**/*",
         included: false,
       },
       {
@@ -40,6 +40,7 @@ module.exports = config => {
       },
       {
         pattern: "tests/spec/**/*-spec.js",
+        included: false,
         type: "module",
       },
     ],
