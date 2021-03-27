@@ -1,6 +1,8 @@
 /* eslint-env node */
-const { readFile, access } = require("fs/promises");
-const { F_OK } = require("fs").constants;
+const {
+  constants: { F_OK },
+  promises: { readFile, access },
+} = require("fs");
 const { execSync } = require("child_process");
 const path = require("path");
 const { Builder } = require("../tools/builder");
