@@ -51,6 +51,7 @@ jobs:
           npm ci
           npm run build:w3c
       - run: npm run test:headless
+      - run: npm run test:build
 
   test-karma:
     name: Karma Unit Tests (${{ matrix.browser }})
