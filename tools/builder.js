@@ -7,7 +7,6 @@ const { promises: fsp } = require("fs");
 const path = require("path");
 const { rollup } = require("rollup");
 const alias = require("@rollup/plugin-alias");
-const minifyHTML = require("rollup-plugin-minify-html-literals").default;
 
 colors.setTheme({
   error: "red",
@@ -83,17 +82,18 @@ const Builder = {
         string({
           include: [/\.runtime\.js$/, /\.svg$/, /respec-worker\.js$/],
         }),
-        minifyHTML({
-          include: [/\.css\.js$/],
-          options: {
-            minifyOptions: {
-              minifyCSS: { format: "keep-breaks" },
+        !debug &&
+          require("rollup-plugin-minify-html-literals").default({
+            include: [/\.css\.js$/],
+            options: {
+              minifyOptions: {
+                minifyCSS: { format: "keep-breaks" },
+              },
+              // disable html`` minification
+              shouldMinify: () => false,
+              shouldMinifyCSS: ({ tag }) => !debug && tag === "css",
             },
-            // disable html`` minification
-            shouldMinify: () => false,
-            shouldMinifyCSS: ({ tag }) => !debug && tag === "css",
-          },
-        }),
+          }),
       ],
       onwarn(warning, warn) {
         if (warning.code !== "CIRCULAR_DEPENDENCY") {
