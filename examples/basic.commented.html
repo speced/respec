@@ -1,0 +1,117 @@
+<!DOCTYPE html><!-- respec-sourcemap#examples/basic.html:1 -->
+<html><!-- respec-sourcemap#examples/basic.html:2 -->
+  <head><!-- respec-sourcemap#examples/basic.html:3 -->
+    <meta charset='utf-8'><!-- respec-sourcemap#examples/basic.html:4 -->
+    <title>
+      Replace me with a real title
+    </title><!-- respec-sourcemap#examples/basic.html:7 -->
+    <script src='../builds/respec-w3c.js' async class='remove'></script><!-- respec-sourcemap#examples/basic.html:8 -->
+    <script class='remove'>
+      var respecConfig = {
+        specStatus: "ED",
+        subtitle: "Subtitle",
+        shortName: "shortname-api",
+        editors: [{
+          name: "Your Name",
+          url: "https://your-site.com",
+        }],
+        github: "https://github.com/w3c/some-API/",
+        lint: { "check-punctuation": true },
+        implementationReportURI: "https://w3c.github.io/test-results/some-API",
+      };
+    </script><!-- respec-sourcemap#examples/basic.html:22 -->
+  </head><!-- respec-sourcemap#examples/basic.html:23 -->
+  <body><!-- respec-sourcemap#examples/basic.html:24 -->
+    <section id='abstract'><!-- respec-sourcemap#examples/basic.html:25 -->
+      <p><!-- respec-sourcemap#examples/basic.html:26 -->
+        This is required.<!-- respec-sourcemap#examples/basic.html:27 -->
+      </p><!-- respec-sourcemap#examples/basic.html:28 -->
+    </section><!-- respec-sourcemap#examples/basic.html:29 -->
+    <section id='sotd'><!-- respec-sourcemap#examples/basic.html:30 -->
+      <p><!-- respec-sourcemap#examples/basic.html:31 -->
+        This is required.<!-- respec-sourcemap#examples/basic.html:32 -->
+      </p><!-- respec-sourcemap#examples/basic.html:33 -->
+    </section><!-- respec-sourcemap#examples/basic.html:34 -->
+    <section class="introductory" id="overview"><!-- respec-sourcemap#examples/basic.html:35 -->
+      <h2><!-- respec-sourcemap#examples/basic.html:36 -->
+        Overview<!-- respec-sourcemap#examples/basic.html:37 -->
+      </h2><!-- respec-sourcemap#examples/basic.html:38 -->
+      <p><!-- respec-sourcemap#examples/basic.html:39 -->
+        This section has a CSS class "<code>introductory</code>", which means<!-- respec-sourcemap#examples/basic.html:40 -->
+        it will not appear in the <abbr title="Table of Contents">TOC</abbr>.<!-- respec-sourcemap#examples/basic.html:41 -->
+        Example Link to Section.<!-- respec-sourcemap#examples/basic.html:42 -->
+      </p><!-- respec-sourcemap#examples/basic.html:43 -->
+    </section><!-- respec-sourcemap#examples/basic.html:44 -->
+    <section class="informative" id="intro"><!-- respec-sourcemap#examples/basic.html:45 -->
+      <h2><!-- respec-sourcemap#examples/basic.html:46 -->
+        Introduction<!-- respec-sourcemap#examples/basic.html:47 -->
+      </h2><!-- respec-sourcemap#examples/basic.html:48 -->
+      <p><!-- respec-sourcemap#examples/basic.html:49 -->
+        This section has a CSS class "<code>informative</code>", so it is<!-- respec-sourcemap#examples/basic.html:50 -->
+        listed in the TOC. ReSpec will list this reference as non-normative<!-- respec-sourcemap#examples/basic.html:51 -->
+        since this is an informative section [[DOM]].<!-- respec-sourcemap#examples/basic.html:52 -->
+      </p><!-- respec-sourcemap#examples/basic.html:53 -->
+    </section><!-- respec-sourcemap#examples/basic.html:54 -->
+    <section data-dfn-for="Foo"><!-- respec-sourcemap#examples/basic.html:55 -->
+      <h2><!-- respec-sourcemap#examples/basic.html:56 -->
+        <dfn>Foo</dfn> interface<!-- respec-sourcemap#examples/basic.html:57 -->
+      </h2><!-- respec-sourcemap#examples/basic.html:58 -->
+      <pre class="idl"><!-- respec-sourcemap#examples/basic.html:59 -->
+      [Exposed Window]<!-- respec-sourcemap#examples/basic.html:60 -->
+      interface Foo {<!-- respec-sourcemap#examples/basic.html:61 -->
+        constructor();<!-- respec-sourcemap#examples/basic.html:62 -->
+        attribute DOMString bar;<!-- respec-sourcemap#examples/basic.html:63 -->
+        undefined doTheFoo();<!-- respec-sourcemap#examples/basic.html:64 -->
+      };<!-- respec-sourcemap#examples/basic.html:65 -->
+      </pre><!-- respec-sourcemap#examples/basic.html:66 -->
+      <p><!-- respec-sourcemap#examples/basic.html:67 -->
+        The <a>Foo</a> interface is nice. Lets you do stuff.<!-- respec-sourcemap#examples/basic.html:68 -->
+      </p><!-- respec-sourcemap#examples/basic.html:69 -->
+      <p><!-- respec-sourcemap#examples/basic.html:70 -->
+        The <dfn>Foo.constructor()</dfn> creates a Foo instance<!-- respec-sourcemap#examples/basic.html:71 -->
+      </p><!-- respec-sourcemap#examples/basic.html:72 -->
+      <p><!-- respec-sourcemap#examples/basic.html:73 -->
+        The <dfn>bar</dfn> attribute, returns 🍺.<!-- respec-sourcemap#examples/basic.html:74 -->
+      </p><!-- respec-sourcemap#examples/basic.html:75 -->
+      <p><!-- respec-sourcemap#examples/basic.html:76 -->
+        The <dfn>doTheFoo()</dfn> method, returns nothing<!-- respec-sourcemap#examples/basic.html:77 -->
+      </p><!-- respec-sourcemap#examples/basic.html:78 -->
+      <p><!-- respec-sourcemap#examples/basic.html:79 -->
+        ReSpec will list this reference as normative [[ECMASCRIPT]].<!-- respec-sourcemap#examples/basic.html:80 -->
+      </p><!-- respec-sourcemap#examples/basic.html:81 -->
+      <p><!-- respec-sourcemap#examples/basic.html:82 -->
+        This is an example of a non-normative reference in a normative section<!-- respec-sourcemap#examples/basic.html:83 -->
+        [[?HTML]]<!-- respec-sourcemap#examples/basic.html:84 -->
+      </p><!-- respec-sourcemap#examples/basic.html:85 -->
+      <pre class="js example" title="Usage example"><!-- respec-sourcemap#examples/basic.html:86 -->
+        const foo = new Foo();<!-- respec-sourcemap#examples/basic.html:87 -->
+        if (foo.bar === "my bar") {<!-- respec-sourcemap#examples/basic.html:88 -->
+          foo.doTheBar();<!-- respec-sourcemap#examples/basic.html:89 -->
+        }<!-- respec-sourcemap#examples/basic.html:90 -->
+      </pre><!-- respec-sourcemap#examples/basic.html:91 -->
+    </section><!-- respec-sourcemap#examples/basic.html:92 -->
+    <section id="logo"><!-- respec-sourcemap#examples/basic.html:93 -->
+      <h2><!-- respec-sourcemap#examples/basic.html:94 -->
+        Figure<!-- respec-sourcemap#examples/basic.html:95 -->
+      </h2><!-- respec-sourcemap#examples/basic.html:96 -->
+      <figure id="figure"><!-- respec-sourcemap#examples/basic.html:97 -->
+        <img src="figure.svg" alt="W3C Logo"><!-- respec-sourcemap#examples/basic.html:98 -->
+        <figcaption><!-- respec-sourcemap#examples/basic.html:99 -->
+          The W3C logo<!-- respec-sourcemap#examples/basic.html:100 -->
+        </figcaption><!-- respec-sourcemap#examples/basic.html:101 -->
+      </figure><!-- respec-sourcemap#examples/basic.html:102 -->
+      <p><!-- respec-sourcemap#examples/basic.html:103 -->
+        Link to <a href="#figure"></a>.<!-- respec-sourcemap#examples/basic.html:104 -->
+      </p><!-- respec-sourcemap#examples/basic.html:105 -->
+    </section><!-- respec-sourcemap#examples/basic.html:106 -->
+    <section id="idl-index" class="appendix"><!-- respec-sourcemap#examples/basic.html:107 -->
+      <h2><!-- respec-sourcemap#examples/basic.html:108 -->
+        IDL Index<!-- respec-sourcemap#examples/basic.html:109 -->
+      </h2><!-- respec-sourcemap#examples/basic.html:110 -->
+      <p><!-- respec-sourcemap#examples/basic.html:111 -->
+        All the Web IDL in this specification is collected in this section.<!-- respec-sourcemap#examples/basic.html:112 -->
+      </p><!-- respec-sourcemap#examples/basic.html:113 -->
+    </section><!-- respec-sourcemap#examples/basic.html:114 -->
+    <section id="tof" class="informative appendix"></section><!-- respec-sourcemap#examples/basic.html:115 -->
+  </body><!-- respec-sourcemap#examples/basic.html:116 -->
+</html><!-- respec-sourcemap#examples/basic.html:117 -->

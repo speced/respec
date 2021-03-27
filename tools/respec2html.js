@@ -86,7 +86,7 @@ class Logger {
       const paddedTitle = `${title}:`.padStart(padWidth);
       console.error(" ", colors.bold(paddedTitle), this._formatMarkdown(value));
     };
-    print("Count", rsError.elements && String(rsError.elements.length));
+    print("Line", rsError.location && rsError.location.join(", "));
     print("Plugin", rsError.plugin);
     print("Hint", rsError.hint);
   }

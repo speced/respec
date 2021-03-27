@@ -290,6 +290,29 @@ function handleConsoleMessages(page, onError, onWarning) {
         return JSON.stringify({ message: String(obj) });
       } else {
         // Ideally: `obj instanceof RsError` and `RsError instanceof Error`.
+        if (obj.elements) {
+          /** @type {HTMLElement[]} */
+          const elems = obj.elements;
+          const regex = /respec-sourcemap#(.+)/;
+          /** @param {Node} [node] */
+          const hasComment = node => {
+            if (!node || node.nodeType !== Node.COMMENT_NODE) return false;
+            return regex.test(node.textContent);
+          };
+          /** @param {Node} node  */
+          const match = node => node.textContent.match(regex)[1].trim();
+          const location = elems.map(el => {
+            if (hasComment(el.firstChild)) {
+              return match(el.firstChild);
+            }
+            if (hasComment(el.nextSibling)) {
+              return match(el.nextSibling);
+            }
+            return 0;
+          });
+          const result = { ...JSON.parse(JSON.stringify(obj)), location };
+          return JSON.stringify(result);
+        }
         return JSON.stringify(obj);
       }
     }, handle);
