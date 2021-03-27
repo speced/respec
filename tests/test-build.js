@@ -39,7 +39,7 @@ describe("builder (tool)", () => {
     });
     it(`includes sourcemap link for "${profile}"`, async () => {
       const source = await readFile(profileFile, "utf-8");
-      expect(source.includes(`${profile}.js.map`)).toBeTrue();
+      expect(source).toContain(`${profile}.js.map`);
     });
   }
 });
