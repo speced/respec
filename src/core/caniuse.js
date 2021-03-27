@@ -39,7 +39,7 @@ async function loadStyle() {
   }
 }
 
-export async function prepare(conf) {
+export async function prepare(conf, state) {
   if (!conf.caniuse) {
     return; // nothing to do.
   }
@@ -56,12 +56,10 @@ export async function prepare(conf) {
 
   const apiUrl = options.apiURL || API_URL;
   // Initiate a fetch, but do not wait. Try to fill the cache early instead.
-  conf.state[name] = {
-    fetchPromise: fetchStats(apiUrl, options),
-  };
+  state[name].fetchPromise = fetchStats(apiUrl, options);
 }
 
-export async function run(conf) {
+export async function run(conf, state) {
   const options = conf.caniuse;
   if (!options?.feature) return;
 
@@ -70,7 +68,7 @@ export async function run(conf) {
   const headDlElem = document.querySelector(".head dl");
   const contentPromise = (async () => {
     try {
-      const stats = await conf.state[name].fetchPromise;
+      const stats = await state[name].fetchPromise;
       return html`${{ html: stats }}`;
     } catch (err) {
       const msg = `Couldn't find feature "${options.feature}" on caniuse.com.`;
