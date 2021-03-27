@@ -5,7 +5,7 @@ import { lang as defaultLang } from "../core/l10n.js";
 import { html } from "../core/import-maps.js";
 import { ui } from "../core/ui.js";
 
-const XREF_URL = "https://respec.org/xref/";
+const URL = "https://respec.org/xref/";
 
 const localizationStrings = {
   en: {
@@ -29,8 +29,8 @@ const button = ui.addCommand(l10n.title, show, "Ctrl+Shift+Alt+x", "📚");
 function show() {
   const onLoad = e => e.target.classList.add("ready");
   const xrefSearchUI = html`
-    <iframe id="xref-ui" src="${XREF_URL}" onload=${onLoad}></iframe>
-    <a href="${XREF_URL}" target="_blank">Open Search UI in a new tab</a>
+    <iframe class="respec-iframe" src="${URL}" onload="${onLoad}"></iframe>
+    <a href="${URL}" target="_blank">Open Search UI in a new tab</a>
   `;
   ui.freshModal(l10n.title, xrefSearchUI, button);
 }
