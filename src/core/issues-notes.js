@@ -19,7 +19,7 @@ import {
   showError,
   showWarning,
 } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/issues-notes.css.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -77,16 +77,6 @@ const localizationStrings = {
     warning: "警告",
   },
 };
-
-const cssPromise = loadStyle();
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/issues-notes.css")).default;
-  } catch {
-    return fetchAsset("issues-notes.css");
-  }
-}
 
 const l10n = getIntlData(localizationStrings);
 
@@ -385,7 +375,6 @@ export async function run(conf) {
     return; // nothing to do.
   }
   const ghIssues = await fetchAndStoreGithubIssues(conf.github);
-  const css = await cssPromise;
   const { head: headElem } = document;
   headElem.insertBefore(
     html`<style>

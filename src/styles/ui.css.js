@@ -1,3 +1,8 @@
+const css = String.raw;
+
+// Prettier ignore only to keep code indented from level 0.
+// prettier-ignore
+export default css`
 .respec-modal .close-button {
   position: absolute;
   z-index: inherit;
@@ -354,3 +359,4 @@
   margin: 0 0.5em 0.5em;
   border-bottom-width: 1px;
 }
+`;

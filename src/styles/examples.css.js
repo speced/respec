@@ -1,4 +1,9 @@
 /* --- EXAMPLES --- */
+const css = String.raw;
+
+// Prettier ignore only to keep code indented from level 0.
+// prettier-ignore
+export default css`
 span.example-title {
   text-transform: none;
 }
@@ -41,3 +46,4 @@ aside.example div.example span.example-title {
 .example pre {
   background-color: rgba(0, 0, 0, 0.03);
 }
+`;

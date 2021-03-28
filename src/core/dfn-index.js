@@ -6,7 +6,7 @@
  */
 
 import { addId, getIntlData, norm } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/dfn-index.css.js";
 import { getTermFromElement } from "./xref.js";
 import { html } from "./import-maps.js";
 import { renderInlineCitation } from "./render-biblio.js";
@@ -46,14 +46,14 @@ const CODE_TYPES = new Set([
  * @typedef {{ term: string, type: string, linkFor: string, elem: HTMLAnchorElement }} Entry
  */
 
-export async function run() {
+export function run() {
   const index = document.querySelector("section#index");
   if (!index) {
     return;
   }
 
   const styleEl = document.createElement("style");
-  styleEl.textContent = await loadStyle();
+  styleEl.textContent = css;
   document.head.appendChild(styleEl);
 
   index.classList.add("appendix");
@@ -360,14 +360,6 @@ function getTermText(entry) {
   }
 
   return text;
-}
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/dfn-index.css")).default;
-  } catch {
-    return fetchAsset("dfn-index.css");
-  }
 }
 
 /** @param {Document} doc */
