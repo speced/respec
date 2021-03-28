@@ -11,7 +11,7 @@ module.exports = config => {
         included: false,
       },
       {
-        pattern: "@(src|assets|js)/**/*.*",
+        pattern: "@(src|js)/**/*",
         included: false,
       },
       {
