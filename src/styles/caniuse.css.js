@@ -1,4 +1,9 @@
 /* container for stats */
+const css = String.raw;
+
+// Prettier ignore only to keep code indented from level 0.
+// prettier-ignore
+export default css`
 .caniuse-stats {
   display: flex;
   flex-wrap: wrap;
@@ -125,3 +130,4 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 .caniuse-stats .caniuse-browser:hover > ul {
   display: block;
 }
+`;
