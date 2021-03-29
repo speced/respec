@@ -29,7 +29,7 @@ describe("builder (tool)", () => {
   });
 
   afterAll(() => {
-    execSync("git checkout -- builds", { cwd: rootDir });
+    execSync("git restore builds", { cwd: rootDir });
   });
 
   for (const profile of profiles) {
