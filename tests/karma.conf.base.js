@@ -1,9 +1,12 @@
 // @ts-check
+/* eslint-env node */
+const path = require("path");
+
 /** @param {import("karma").Config} config */
 module.exports = config => {
   /** @type {import("karma").ConfigOptions} */
   const options = {
-    basePath: "./",
+    basePath: path.join(__dirname, ".."),
     frameworks: ["jasmine"],
     files: [
       {
@@ -34,15 +37,6 @@ module.exports = config => {
         pattern: "tests/test-main.js",
         type: "module",
       },
-      {
-        pattern: "tests/spec/SpecHelper.js",
-        type: "module",
-      },
-      {
-        pattern: "tests/spec/**/*-spec.js",
-        included: false,
-        type: "module",
-      },
     ],
     exclude: ["**/*.swp", "*.swp", ".DS_Store"],
 
@@ -55,6 +49,7 @@ module.exports = config => {
       "/builds/": "/base/builds/",
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",
+      "/unit/": "/base/tests/unit/",
       "/deps/": "/base/js/deps/",
       "/js/deps/": "/base/js/deps/",
       "/base/deps/": "/base/js/deps/",
@@ -67,7 +62,7 @@ module.exports = config => {
     port: 9876,
     colors: true,
 
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_WARN,
     autoWatch: true,
     singleRun: false,
     concurrency: 1,
@@ -85,10 +80,12 @@ module.exports = config => {
   }
 
   if (process.env.GITHUB_WORKFLOW) {
-    const localPlugins = [require.resolve("./tools/github-action-reporter.js")];
+    const localPlugins = [
+      require.resolve("../tools/github-action-reporter.js"),
+    ];
     options.reporters.push("respec-github-action");
     options.plugins = ["karma-*"].concat(localPlugins);
   }
 
-  config.set(options);
+  return options;
 };

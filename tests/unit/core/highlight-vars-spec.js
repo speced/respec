@@ -1,13 +1,14 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
-
-// TODO: add tests:
-// - right colors are applied
+import { flushIframes, makePluginDoc } from "../SpecHelper.js";
 
 describe("Core - highlightVars", () => {
   afterAll(flushIframes);
-  const testBody = `
+
+  const plugins = ["/src/core/highlight-vars.js"];
+  const config = { highlightVars: true };
+
+  const body = `
     <section id="section1">
       <p><var id="section1-foo">a foo</var></p>
       <ol>
@@ -34,9 +35,10 @@ describe("Core - highlightVars", () => {
     </section>
     `;
 
+  const makeDoc = () => makePluginDoc(plugins, config, { body });
+
   it("toggles highlight class on click", async () => {
-    const ops = makeStandardOps({ highlightVars: true }, testBody);
-    const doc = await makeRSDoc(ops);
+    const doc = await makeDoc();
     const elemVar = doc.getElementById("section1-foo");
 
     elemVar.click(); // enable
@@ -49,8 +51,7 @@ describe("Core - highlightVars", () => {
   });
 
   it("removes highlight when clicked outside", async () => {
-    const ops = makeStandardOps({ highlightVars: true }, testBody);
-    const doc = await makeRSDoc(ops);
+    const doc = await makeDoc();
 
     const elemVar = doc.getElementById("section1-bar");
 
@@ -60,8 +61,7 @@ describe("Core - highlightVars", () => {
   });
 
   it("highlights variables only in current section", async () => {
-    const ops = makeStandardOps({ highlightVars: true }, testBody);
-    const doc = await makeRSDoc(ops);
+    const doc = await makeDoc();
 
     doc.getElementById("section1-foo").click();
     const highlightedSec1 = doc.querySelectorAll("#section1 var.respec-hl");
@@ -75,8 +75,7 @@ describe("Core - highlightVars", () => {
   });
 
   it("doesn't overmatch outside its own section's vars", async () => {
-    const ops = makeStandardOps({ highlightVars: true }, testBody);
-    const doc = await makeRSDoc(ops);
+    const doc = await makeDoc();
     expect(doc.querySelector("var.respec-hl")).toBeNull();
     doc.getElementById("level-1").click();
     expect(doc.querySelector("#level-1-1.respec-hl")).toBeTruthy();
