@@ -2,10 +2,9 @@
 <html>
   <head>
     <meta charset='utf-8'>
-    <title>Replace me with a real title</title>
-    <script class='remove' src='/builds/respec-w3c.js'></script>
+    <title>Highlight tester</title>
     <script class='remove'>
-      async function loadSolidity() {
+      async function loadHighlighter() {
         const worker = await new Promise(resolve => {
           require(["core/worker"], ({ worker }) => resolve(worker));
         });
@@ -25,8 +24,8 @@
         });
       }
       var respecConfig = {
-        preProcess: [loadSolidity],
-        specStatus: "ED",
+        preProcess: [loadHighlighter],
+        specStatus: "base",
         editors: [
           {
             name: "Your Name",
@@ -39,14 +38,6 @@
   </head>
   <body>
     <section id='abstract'>
-      <p>
-        This is required.
-      </p>
-    </section>
-    <section id='sotd'>
-      <p>
-        This is required.
-      </p>
       <pre class="example testlang">
         funkyFunction
       </pre>
