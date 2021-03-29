@@ -17,26 +17,23 @@ class KarmaServer {
   /**
    * @param {string} configFile
    * @param {string} [browser]
-   * @param {string} [grep]
    */
-  constructor(configFile, browser, grep) {
-    this._configFile = configFile;
-    this._browsers = browser ? [browser] : undefined;
-    this._grep = grep;
+  constructor(configFile, browser, grep = "") {
+    const browsers = browser ? [browser] : [];
+    this._karmaConfig = karma.config.parseConfig(configFile, {
+      browsers,
+      autoWatch: false,
+      port: KARMA_PORT,
+      logLevel: karma.constants.LOG_INFO,
+      client: {
+        args: ["--grep", grep || ""],
+      },
+      mochaReporter: { ignoreSkipped: true },
+    });
     this._isActive = null;
   }
 
   start() {
-    this._karmaConfig = karma.config.parseConfig(this._configFile, {
-      browsers: this._browsers,
-      autoWatch: false,
-      port: KARMA_PORT,
-      logLevel: karma.constants.LOG_WARN,
-      client: {
-        args: ["--grep", this._grep || ""],
-      },
-      mochaReporter: { ignoreSkipped: true },
-    });
     this.karmaServer = new karma.Server(this._karmaConfig);
     this.karmaServer.start();
     return new Promise(resolve =>
@@ -44,11 +41,9 @@ class KarmaServer {
     );
   }
 
-  async stop() {
+  stop() {
     return new Promise(resolve =>
-      karma.stopper.stop(this._karmaConfig, code =>
-        setTimeout(() => resolve(code), 0)
-      )
+      karma.stopper.stop(this._karmaConfig, resolve)
     );
   }
 
