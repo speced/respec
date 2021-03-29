@@ -1,3 +1,8 @@
+const css = String.raw;
+
+// Prettier ignore only to keep code indented from level 0.
+// prettier-ignore
+export default css`
 var {
   position: relative;
   cursor: pointer;
@@ -43,3 +48,4 @@ var[data-type]:hover::after,
 var[data-type]:hover::before {
   opacity: 1;
 }
+`;

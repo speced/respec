@@ -4,23 +4,13 @@
  *
  * Performs syntax highlighting to all pre and code elements.
  */
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/highlight.css.js";
 import { html } from "./import-maps.js";
 import { msgIdGenerator } from "./utils.js";
 import { workerPromise } from "./worker.js";
 export const name = "core/highlight";
 
 const nextMsgId = msgIdGenerator("highlight");
-
-const ghCssPromise = loadStyle();
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/highlight.css")).default;
-  } catch {
-    return fetchAsset("highlight.css");
-  }
-}
 
 function getLanguageHint(classList) {
   return Array.from(classList)
@@ -101,10 +91,9 @@ export async function run(conf) {
   const promisesToHighlight = highlightables
     .filter(elem => elem.textContent.trim())
     .map(highlightElement);
-  const ghCss = await ghCssPromise;
   document.head.appendChild(
     html`<style>
-      ${ghCss}
+      ${css}
     </style>`
   );
   await Promise.all(promisesToHighlight);

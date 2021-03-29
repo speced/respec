@@ -14,7 +14,7 @@ import {
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/webidl.css.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";
@@ -377,16 +377,6 @@ export function addIDLHeader(pre) {
   addCopyIDLButton(header);
 }
 
-const cssPromise = loadStyle();
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/webidl.css")).default;
-  } catch {
-    return fetchAsset("webidl.css");
-  }
-}
-
 export async function run() {
   const idls = document.querySelectorAll("pre.idl, pre.webidl");
   if (!idls.length) {
@@ -396,7 +386,7 @@ export async function run() {
     const link = document.querySelector("head link");
     if (link) {
       const style = document.createElement("style");
-      style.textContent = await cssPromise;
+      style.textContent = css;
       link.before(style);
     }
   }

@@ -1,6 +1,9 @@
-/*****************************************************************
- * ReSpec specific CSS
- *****************************************************************/
+/* ReSpec specific CSS */
+const css = String.raw;
+
+// Prettier ignore only to keep code indented from level 0.
+// prettier-ignore
+export default css`
 @keyframes pop {
   0% {
     transform: scale(1, 1);
@@ -283,3 +286,4 @@ h6 > a.self-link::before {
     display: none;
   }
 }
+`;

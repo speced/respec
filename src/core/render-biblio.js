@@ -59,16 +59,6 @@ const REF_STATUSES = new Map([
   ["WG-NOTE", "W3C Working Group Note"],
 ]);
 
-const defaultsReference = Object.freeze({
-  authors: [],
-  date: "",
-  href: "",
-  publisher: "",
-  status: "",
-  title: "",
-  etAl: false,
-});
-
 const endWithDot = endNormalizer(".");
 
 /** @param {Conf} conf */
@@ -229,38 +219,8 @@ function endNormalizer(endStr) {
   };
 }
 
-export function wireReference(rawRef, target = "_blank") {
-  if (typeof rawRef !== "object") {
-    throw new TypeError("Only modern object references are allowed");
-  }
-  const ref = Object.assign({}, defaultsReference, rawRef);
-  const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
-  const status = REF_STATUSES.get(ref.status) || ref.status;
-  return html.wire(ref)`
-    <cite>
-      <a
-        href="${ref.href}"
-        target="${target}"
-        rel="noopener noreferrer">
-        ${ref.title.trim()}</a>.
-    </cite>
-    <span class="authors">
-      ${endWithDot(authors)}
-    </span>
-    <span class="publisher">
-      ${endWithDot(ref.publisher)}
-    </span>
-    <span class="pubDate">
-      ${endWithDot(ref.date)}
-    </span>
-    <span class="pubStatus">
-      ${endWithDot(status)}
-    </span>
-  `;
-}
-
 /** @param {BiblioData|string} ref */
-export function stringifyReference(ref) {
+function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
   let output = `<cite>${ref.title}</cite>`;
 

@@ -1,3 +1,8 @@
+const css = String.raw;
+
+// Prettier ignore only to keep code indented from level 0.
+// prettier-ignore
+export default css`
 .mdn {
   font-size: 0.75em;
   position: absolute;
@@ -134,3 +139,4 @@
 .mdn .webview_android::before {
   background-image: url(https://resources.whatwg.org/browser-logos/android-webview.png);
 }
+`;

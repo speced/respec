@@ -12,6 +12,8 @@ var respecConfig = {
   wgPublicList: "none",
   wgPatentURI: "https://XXX",
   edDraftURI: "https://darobin.github.com/respec",
+  wgPatentPolicy: "PP2020",
+  github: "w3c/respec",
 };
 </script>
 <section id='abstract'>
@@ -33,6 +35,7 @@ var respecConfig = {
 <section data-dfn-for="Test">
   <h2><dfn>Test</dfn> interface</h2>
   <pre class="idl">
+    [Exposed=Window]
     interface Test {
       undefined foo();
     };

@@ -6,7 +6,6 @@ const { readFileSync } = require("fs");
 const path = require("path");
 const rollup = require("rollup");
 const alias = require("@rollup/plugin-alias");
-const CleanCSS = require("clean-css");
 
 const rel = p => path.relative(process.cwd(), p);
 
@@ -15,14 +14,11 @@ const rel = p => path.relative(process.cwd(), p);
  * @param {RegExp[]} opts.include
  */
 function string(opts) {
-  const minifier = new CleanCSS({ format: "keep-breaks" });
   return {
     transform(code, id) {
       if (!opts.include.some(re => re.test(id))) return;
 
-      if (id.endsWith(".css")) {
-        code = minifier.minify(code).styles;
-      } else if (id.endsWith(".runtime.js")) {
+      if (id.endsWith(".runtime.js")) {
         code = `(() => {\n${code}})()`;
       }
 
@@ -64,8 +60,20 @@ const Builder = {
           entries: [{ find: /^text!(.*)/, replacement: "./$1" }],
         }),
         string({
-          include: [/\.runtime\.js$/, /\.css$/, /\.svg$/, /respec-worker\.js$/],
+          include: [/\.runtime\.js$/, /\.svg$/, /respec-worker\.js$/],
         }),
+        !debug &&
+          require("rollup-plugin-minify-html-literals").default({
+            include: [/\.css\.js$/],
+            options: {
+              minifyOptions: {
+                minifyCSS: { format: "keep-breaks" },
+              },
+              // disable html`` minification
+              shouldMinify: () => false,
+              shouldMinifyCSS: ({ tag }) => !debug && tag === "css",
+            },
+          }),
       ],
       onwarn(warning, warn) {
         if (warning.code !== "CIRCULAR_DEPENDENCY") {
