@@ -1,5 +1,23 @@
 # Changelog
 
+## [v26.4.0](https://github.com/w3c/respec/tree/v26.4.0) (2021-03-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.3.0...v26.4.0)
+
+**Fixed bugs:**
+
+- The browser support feature shows incorrect data [\#3213](https://github.com/w3c/respec/issues/3213)
+
+**Merged pull requests:**
+
+- fix\(core/link-to-dfn\): make shortName matching stricter [\#3389](https://github.com/w3c/respec/pull/3389) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(conformance\): use datatracker for IETF urls [\#3388](https://github.com/w3c/respec/pull/3388) ([dontcallmedom](https://github.com/dontcallmedom))
+- feat\(tools/respec2html\): provide more detailed logs [\#3387](https://github.com/w3c/respec/pull/3387) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(tools/respec2html\): make logs prettier [\#3386](https://github.com/w3c/respec/pull/3386) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(deps\): update dependencies [\#3385](https://github.com/w3c/respec/pull/3385) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/xref\): missing . in error message [\#3380](https://github.com/w3c/respec/pull/3380) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): regenerate [\#3375](https://github.com/w3c/respec/pull/3375) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v26.3.0](https://github.com/w3c/respec/tree/v26.3.0) (2021-03-11)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.2.0...v26.3.0)

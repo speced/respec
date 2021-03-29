@@ -1,7 +1,6 @@
 // @ts-check
 // Module core/ui
 // Handles the ReSpec UI
-/* jshint laxcomma:true */
 // XXX TODO
 //  - look at other UI things to add
 //      - list issues
@@ -10,7 +9,7 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 import { html, pluralize } from "./import-maps.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/ui.css.js";
 import { joinAnd } from "./utils.js";
 import { markdownToHtml } from "./markdown.js";
 import { sub } from "./pubsubhub.js";
@@ -19,18 +18,10 @@ export const name = "core/ui";
 // Opportunistically inserts the style, with the chance to reduce some FOUC
 insertStyle();
 
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/ui.css")).default;
-  } catch {
-    return fetchAsset("ui.css");
-  }
-}
-
-async function insertStyle() {
+function insertStyle() {
   const styleElement = document.createElement("style");
   styleElement.id = "respec-ui-styles";
-  styleElement.textContent = await loadStyle();
+  styleElement.textContent = css;
   styleElement.classList.add("removeOnSave");
   document.head.appendChild(styleElement);
   return styleElement;

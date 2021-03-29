@@ -6,8 +6,7 @@ const colors = require("colors");
 const { promises: fsp } = require("fs");
 const path = require("path");
 const { rollup } = require("rollup");
-const alias = require("rollup-plugin-alias");
-const CleanCSS = require("clean-css");
+const alias = require("@rollup/plugin-alias");
 
 colors.setTheme({
   error: "red",
@@ -19,14 +18,11 @@ colors.setTheme({
  * @param {RegExp[]} opts.include
  */
 function string(opts) {
-  const minifier = new CleanCSS({ format: "keep-breaks" });
   return {
     transform(code, id) {
       if (!opts.include.some(re => re.test(id))) return;
 
-      if (id.endsWith(".css")) {
-        code = minifier.minify(code).styles;
-      } else if (id.endsWith(".runtime.js")) {
+      if (id.endsWith(".runtime.js")) {
         code = `(() => {\n${code}})()`;
       }
 
@@ -69,8 +65,6 @@ const Builder = {
 
     // optimisation settings
     const version = await this.getRespecVersion();
-    const buildDir = path.resolve(__dirname, "../builds/");
-    const workerDir = path.resolve(__dirname, "../worker/");
 
     const inputOptions = {
       input: require.resolve(`../profiles/${name}.js`),
@@ -86,8 +80,20 @@ const Builder = {
           ],
         }),
         string({
-          include: [/\.runtime\.js$/, /\.css$/, /\.svg$/, /respec-worker\.js$/],
+          include: [/\.runtime\.js$/, /\.svg$/, /respec-worker\.js$/],
         }),
+        !debug &&
+          require("rollup-plugin-minify-html-literals").default({
+            include: [/\.css\.js$/],
+            options: {
+              minifyOptions: {
+                minifyCSS: { format: "keep-breaks" },
+              },
+              // disable html`` minification
+              shouldMinify: () => false,
+              shouldMinifyCSS: ({ tag }) => !debug && tag === "css",
+            },
+          }),
       ],
       onwarn(warning, warn) {
         if (warning.code !== "CIRCULAR_DEPENDENCY") {
@@ -105,12 +111,6 @@ const Builder = {
 
     const bundle = await rollup(inputOptions);
     await bundle.write(outputOptions);
-
-    // copy respec-worker
-    await fsp.copyFile(
-      `${workerDir}/respec-worker.js`,
-      `${buildDir}/respec-worker.js`
-    );
   },
 };
 

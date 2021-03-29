@@ -46,8 +46,6 @@ interface Window {
     (deps: string[], callback: (...modules: any[]) => void): void;
     modules: { [dep: string]: any };
   };
-  $: JQueryStatic;
-  jQuery: JQueryStatic;
   axe?: {
     run(context: Node, options: any): Promise<{ violations: AxeViolation[] }>;
   };
@@ -94,14 +92,6 @@ declare namespace Intl {
 
     format(items: Iterable<string>): string;
   }
-}
-
-interface JQuery {
-  renameElement(name: string): JQuery<any>;
-  getDfnTitles(): string[];
-  linkTargets(): import("./core/utils.js").LinkTarget[];
-  makeID(pfx?: string, txt?: string, noLC?: boolean): string;
-  allTextNodes(exclusions: string[]): Text[];
 }
 
 interface BiblioData {
