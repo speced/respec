@@ -224,6 +224,8 @@ const licenses = new Map([
   ],
 ]);
 
+const patentPolicies = ["PP2017", "PP2020"];
+
 const baseLogo = Object.freeze({
   id: "",
   alt: "",
@@ -526,15 +528,8 @@ export function run(conf) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
-  if (
-    conf.wgPatentPolicy &&
-    !["PP2017", "PP2020"].includes(conf.wgPatentPolicy)
-  ) {
-    const msg =
-      "Invalid [`wgPatentPolicy`](https://respec.org/docs#wgPatentPolicy) value.";
-    const hint = 'Please use `"PP2017"` or `"PP2020"`.';
-    showError(msg, name, { hint });
-  }
+  validatePatentPolicies(conf);
+
   if (conf.hasOwnProperty("wgPatentURI") && !Array.isArray(conf.wgPatentURI)) {
     Object.defineProperty(conf, "wgId", {
       get() {
@@ -728,6 +723,32 @@ export function run(conf) {
     publishISODate: conf.publishISODate,
     generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
   });
+}
+
+function validatePatentPolicies(conf) {
+  if (!conf.hasOwnProperty("wgPatentPolicy")) return;
+
+  const policies = new Set([].concat(conf.wgPatentPolicy));
+  if (
+    policies.size &&
+    ![...policies].every(policy => patentPolicies.includes(policy))
+  ) {
+    const msg = `Invalid [\`wgPatentPolicy\`](https://respec.org/docs#wgPatentPolicy) value: "${conf.wgPatentPolicy}".`;
+    const hint = `Please use one of: ${patentPolicies
+      .map(p => `\`${p}\``)
+      .join(", ")} .`;
+    showError(msg, name, { hint });
+  }
+  if (policies.size !== 1) {
+    const msg =
+      "When collaborating across multiple groups, they must use the same patent policy.";
+    const hint = `Please check the patent policies of each group. The patent policies were: ${[
+      ...policies,
+    ].join(", ")}.`;
+    showError(msg, name, { hint });
+  }
+  // We take the first policy
+  conf.wgPatentPolicy = [...policies][0];
 }
 
 /**
