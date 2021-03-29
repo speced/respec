@@ -1409,6 +1409,43 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("wgPatentPolicy", () => {
+    it("supports wgPatentPolicy as string", async () => {
+      const ops = makeStandardOps({
+        wgPatentPolicy: "PP2020",
+      });
+      const doc = await makeRSDoc(ops, simpleSpecURL);
+      expect(doc.respec.errors).toHaveSize(0);
+      const patentPolicyLink = doc.querySelector(
+        "#sotd a[href='https://www.w3.org/Consortium/Patent-Policy/']"
+      );
+      expect(patentPolicyLink).toBeTruthy();
+    });
+
+    it("supports wgPatentPolicy as an array", async () => {
+      const ops = makeStandardOps({
+        wgPatentPolicy: ["PP2020", "PP2020"],
+      });
+      const doc = await makeRSDoc(ops, simpleSpecURL);
+      expect(doc.respec.errors).toHaveSize(0);
+      const patentPolicyLink = doc.querySelector(
+        "#sotd a[href='https://www.w3.org/Consortium/Patent-Policy/']"
+      );
+      expect(patentPolicyLink).toBeTruthy();
+    });
+
+    it("errors when patent policies don't match", async () => {
+      const ops = makeStandardOps({
+        wgPatentPolicy: ["PP2017", "PP2020"],
+      });
+      const doc = await makeRSDoc(ops, simpleSpecURL);
+      expect(doc.respec.errors).toHaveSize(1);
+      const [error] = doc.respec.errors;
+      expect(error.plugin).toBe("w3c/headers");
+      expect(error.message).toContain("must use the same patent policy");
+    });
+  });
+
   describe("wgId, data-deliverer, and isNote", () => {
     it("derives the wgId from wgPatentURI and adds data-deliverer", async () => {
       const ops = makeStandardOps();
