@@ -528,7 +528,7 @@ export function run(conf) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
-  verifyPatentPolicies(conf);
+  validatePatentPolicies(conf);
 
   if (conf.hasOwnProperty("wgPatentURI") && !Array.isArray(conf.wgPatentURI)) {
     Object.defineProperty(conf, "wgId", {
@@ -725,7 +725,7 @@ export function run(conf) {
   });
 }
 
-function verifyPatentPolicies(conf) {
+function validatePatentPolicies(conf) {
   if (!conf.hasOwnProperty("wgPatentPolicy")) return;
 
   const policies = new Set([].concat(conf.wgPatentPolicy));
