@@ -1,4 +1,9 @@
 /* --- ISSUES/NOTES --- */
+const css = String.raw;
+
+// Prettier ignore only to keep code indented from level 0.
+// prettier-ignore
+export default css`
 .issue-label {
     text-transform: initial;
 }
@@ -52,3 +57,4 @@ input.task-list-item-checkbox {
   border: none;
   display: inline-block;
 }
+`;
