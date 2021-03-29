@@ -51,7 +51,9 @@ class KarmaServer {
     if (this._isActive) return;
     this._isActive = true;
     karma.runner.run(this._karmaConfig, () => {});
-    await new Promise(res => this.karmaServer.once("run_complete", res));
+    await new Promise(resolve =>
+      this.karmaServer.once("run_complete", resolve)
+    );
     this._isActive = false;
   }
 }
