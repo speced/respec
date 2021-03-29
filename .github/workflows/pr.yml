@@ -73,6 +73,9 @@ jobs:
         run: |
           npm ci
           npm run build:w3c & npm run build:geonovum
-      - run: npm test
+      - run: npm run test:unit
+        env:
+          BROWSERS: ${{ matrix.browser }}
+      - run: npm run test:integration
         env:
           BROWSERS: ${{ matrix.browser }}
