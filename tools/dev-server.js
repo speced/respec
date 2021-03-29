@@ -26,7 +26,7 @@ class KarmaServer {
       port: KARMA_PORT,
       logLevel: karma.constants.LOG_INFO,
       client: {
-        args: ["--grep", grep || ""],
+        args: ["--grep", grep],
       },
       mochaReporter: { ignoreSkipped: true },
     });
