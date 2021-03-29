@@ -5,7 +5,7 @@
     <title>
       Replace me with a real title
     </title>
-    <script src='../profiles/w3c.js' async class='remove'></script>
+    <script src='../builds/respec-w3c.js' async class='remove'></script>
     <script class='remove'>
       var respecConfig = {
         specStatus: "ED",
@@ -16,7 +16,7 @@
           url: "https://your-site.com",
         }],
         github: "https://github.com/w3c/some-API/",
-        testSuiteURI: "https://w3c-test.org/some-API/",
+        lint: { "check-punctuation": true },
         implementationReportURI: "https://w3c.github.io/test-results/some-API",
       };
     </script>
@@ -39,7 +39,7 @@
       <p>
         This section has a CSS class "<code>introductory</code>", which means
         it will not appear in the <abbr title="Table of Contents">TOC</abbr>.
-        Example Link to Section <a href="#logo"></a>.
+        Example Link to Section.
       </p>
     </section>
     <section class="informative" id="intro">
@@ -57,7 +57,7 @@
         <dfn>Foo</dfn> interface
       </h2>
       <pre class="idl">
-      [Exposed=Window]
+      [Exposed Window]
       interface Foo {
         constructor();
         attribute DOMString bar;
@@ -68,13 +68,13 @@
         The <a>Foo</a> interface is nice. Lets you do stuff.
       </p>
       <p>
-        The <dfn>Foo.constructor()</dfn> creates a Foo instance.
+        The <dfn>Foo.constructor()</dfn> creates a Foo instance
       </p>
       <p>
         The <dfn>bar</dfn> attribute, returns 🍺.
       </p>
       <p>
-        The <dfn>doTheFoo()</dfn> method, returns nothing.
+        The <dfn>doTheFoo()</dfn> method, returns nothing
       </p>
       <p>
         ReSpec will list this reference as normative [[ECMASCRIPT]].
@@ -101,7 +101,7 @@
         </figcaption>
       </figure>
       <p>
-        Link to <a href="#figure"></a>
+        Link to <a href="#figure"></a>.
       </p>
     </section>
     <section id="idl-index" class="appendix">
