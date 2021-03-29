@@ -240,7 +240,7 @@ async function evaluateHTML(version, timer) {
       });
     });
     return exportDocument("html", "text/html");
-  } else {
+  } else if (!document.respec || !document.respec.toHTML) {
     const { rsDocToDataURL } = await new Promise((resolve, reject) => {
       require(["core/exporter"], resolve, err => {
         reject(new Error(err.message));
@@ -249,6 +249,8 @@ async function evaluateHTML(version, timer) {
     const dataURL = rsDocToDataURL("text/html");
     const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
     return decodeURIComponent(encodedString);
+  } else {
+    return await document.respec.toHTML();
   }
 
   function timeout(promise, ms) {
