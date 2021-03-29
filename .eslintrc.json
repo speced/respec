@@ -1,10 +1,9 @@
 {
+  "ignorePatterns": ["builds/**", "js/**"],
   "env": {
     "browser": true,
     "es6": true,
     "node": true,
-    "jquery": true,
-    "amd": true,
     "worker": true
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
@@ -43,13 +42,6 @@
     "spaced-comment": ["error", "always", { "block": { "balanced": true } }]
   },
   "globals": {
-    "flushIframes": true,
-    "hyperHTML": true,
-    "makeBasicConfig": true,
-    "makeDefaultBody": true,
-    "makeRSDoc": true,
-    "makeStandardOps": true,
-    "pickRandomsFromList": true,
     "respecConfig": true
   },
   "plugins": ["import", "prettier"]
