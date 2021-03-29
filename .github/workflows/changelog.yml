@@ -13,7 +13,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: develop
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
       - run: gem install github_changelog_generator
       - run: github_changelog_generator -u w3c -p respec --no-unreleased
         env:
