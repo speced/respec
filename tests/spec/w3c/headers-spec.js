@@ -1409,7 +1409,7 @@ describe("W3C — Headers", () => {
     });
   });
 
-  fdescribe("wgPatentPolicy", () => {
+  describe("wgPatentPolicy", () => {
     it("supports wgPatentPolicy as string", async () => {
       const ops = makeStandardOps({
         wgPatentPolicy: "PP2020",
