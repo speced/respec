@@ -13,34 +13,66 @@ const { Builder } = require("./builder");
 const KARMA_PORT = 9876;
 const SERVE_PORT = 5000;
 
+class KarmaServer {
+  /**
+   * @param {string} configFile
+   * @param {string} [browser]
+   */
+  constructor(configFile, browser, grep = "") {
+    const browsers = browser ? [browser] : [];
+    this._karmaConfig = karma.config.parseConfig(configFile, {
+      browsers,
+      autoWatch: false,
+      port: KARMA_PORT,
+      logLevel: karma.constants.LOG_INFO,
+      client: {
+        args: ["--grep", grep],
+      },
+      mochaReporter: { ignoreSkipped: true },
+    });
+    this._isActive = null;
+  }
+
+  start() {
+    this.karmaServer = new karma.Server(this._karmaConfig);
+    this.karmaServer.start();
+    return new Promise(resolve =>
+      this.karmaServer.once("browsers_ready", resolve)
+    );
+  }
+
+  stop() {
+    return new Promise(resolve =>
+      karma.stopper.stop(this._karmaConfig, resolve)
+    );
+  }
+
+  async run() {
+    if (this._isActive) return;
+    this._isActive = true;
+    karma.runner.run(this._karmaConfig, () => {});
+    await new Promise(resolve =>
+      this.karmaServer.once("run_complete", resolve)
+    );
+    this._isActive = false;
+  }
+}
+
 sade("./tools/dev-server.js", true)
   .option("-p, --profile", "Name of profile to build.", "w3c")
   .option("-i, --interactive", "Run in interactive mode.", false)
-  .option(
-    "--browser",
-    'Browser for Karma unit tests (e.g., "Chrome"). Multiple allowed.'
-  )
+  .option("--browser", 'Browser for Karma unit tests (e.g., "Chrome").')
   .option("--grep", "Run specific tests using karma --grep")
   .action(opts => run(opts))
   .parse(process.argv);
 
-function run(args) {
+async function run(args) {
   let isActive = false;
-  const karmaConfig = karma.config.parseConfig(
+  const karmaServer = new KarmaServer(
     path.join(__dirname, "../karma.conf.js"),
-    {
-      browsers:
-        typeof args.browser === "string" ? [args.browser] : args.browser,
-      autoWatch: false,
-      port: KARMA_PORT,
-      logLevel: karma.constants.LOG_WARN,
-      client: {
-        args: ["--grep", args.grep || ""],
-      },
-      mochaReporter: { ignoreSkipped: true },
-    }
+    args.browser,
+    args.grep
   );
-  const karmaServer = new karma.Server(karmaConfig);
   const devServer = createServer((req, res) => serve(req, res, serveConfig));
   devServer.on("error", onError);
 
@@ -59,11 +91,9 @@ function run(args) {
 
   printWelcomeMessage(args);
 
-  karmaServer.start();
+  await karmaServer.start();
   devServer.listen(SERVE_PORT);
-  karmaServer.on("browsers_ready", () =>
-    buildAndTest({ profile: args.profile })
-  );
+  await buildAndTest({ profile: args.profile });
 
   function registerStdinHandler() {
     // https://stackoverflow.com/a/12506613
@@ -80,11 +110,9 @@ function run(args) {
 
       switch (key) {
         case "\u0003": //  ctrl-c (end of text)
-        case "q": {
-          return karma.stopper.stop(karmaConfig, code => {
-            setTimeout(() => process.exit(code), 0);
-          });
-        }
+        case "q":
+          await karmaServer.stop();
+          return process.exit(0);
         case "t":
           return await buildAndTest();
         case "T":
@@ -105,7 +133,7 @@ function run(args) {
       if (!preventBuild) {
         await Builder.build({ name: args.profile, debug: true });
       }
-      karma.runner.run(karmaConfig, () => {});
+      await karmaServer.run();
     } catch (err) {
       console.error(colors.error(err.stack));
     } finally {
@@ -113,11 +141,10 @@ function run(args) {
     }
   }
 
-  function onError(err) {
+  async function onError(err) {
     console.error(colors.error(err.stack));
-    karma.stopper.stop(karmaConfig, () => {
-      process.exit(1);
-    });
+    await karmaServer.stop();
+    process.exit(1);
   }
 
   async function onFileChange(_event, file) {
