@@ -1,5 +1,4 @@
 // ReSpec Worker v1.0.0
-"use strict";
 try {
   importScripts("https://www.w3.org/Tools/respec/respec-highlight");
 } catch (err) {
