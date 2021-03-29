@@ -1468,7 +1468,6 @@ describe("W3C — Headers", () => {
       expect(error2.plugin).toBe("w3c/headers");
       expect(error2.message).toContain("must use the same patent policy");
     });
-
   });
 
   describe("wgId, data-deliverer, and isNote", () => {
