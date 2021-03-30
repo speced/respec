@@ -4,19 +4,21 @@ const iframes = [];
 /**
  * Create a doc for unit tests.
  * @param {string[]} plugins Paths of plugins to load and run. Example: `/src/core/algorithms.js`
- * @param {object} config JSON-serializable respecConfig object.
+ * @param {object} [options]
+ * @param {object} [options.config] JSON-serializable respecConfig object.
+ * @param {string|null} [options.head]
+ * @param {string} [options.body]
  * @return {Promise<Document>}
  */
 export function makePluginDoc(
   plugins,
-  config = {},
-  { head = `<meta charset="UTF-8" />`, body = "" } = {}
+  { config = {}, head = "", body = "" } = {}
 ) {
   return getDoc(`
     <!DOCTYPE html>
     <html lang="en">
       <head>
-        ${head}
+        ${head !== null ? `<meta charset="UTF-8" />${head}` : ""}
         <script>
           var respecConfig = ${JSON.stringify(config || {}, null, 2)};
         </script>

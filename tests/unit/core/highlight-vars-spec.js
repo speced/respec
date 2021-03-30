@@ -35,7 +35,7 @@ describe("Core - highlightVars", () => {
     </section>
     `;
 
-  const makeDoc = () => makePluginDoc(plugins, config, { body });
+  const makeDoc = () => makePluginDoc(plugins, { config, body });
 
   it("toggles highlight class on click", async () => {
     const doc = await makeDoc();
