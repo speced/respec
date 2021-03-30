@@ -21,15 +21,16 @@ export function makePluginDoc(
           var respecConfig = ${JSON.stringify(config || {}, null, 2)};
         </script>
         <script type="module">
-          const plugins = ${JSON.stringify(plugins)};
-          const allPlugins = ["/src/core/base-runner.js"]
-            .concat(plugins)
-            .map(p => "/base" + p);
-          Promise.all(allPlugins.map(plug => import(plug)))
-            .then(([baseRunner, ...importedPlugins]) =>
-              baseRunner.runAll(importedPlugins)
-            )
-            .catch(err => {
+          async function run(plugins) {
+            const allPlugins = ["/src/core/base-runner.js"]
+              .concat(plugins)
+              .map(p => "/base" + p);
+            try {
+              const [baseRunner, ...plugs] = await Promise.all(
+                allPlugins.map(plug => import(plug))
+              );
+              await baseRunner.runAll(plugs);
+            } catch (err) {
               console.error(err);
               if (document.respec) {
                 document.respec.errors.push(err);
@@ -38,7 +39,9 @@ export function makePluginDoc(
                   value: { ready: Promise.reject(err) },
                 });
               }
-            });
+            }
+          }
+          run(${JSON.stringify(plugins)});
         </script>
       </head>
       <body>${body}</body>
