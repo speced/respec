@@ -69,11 +69,11 @@ describe("Core - WebIDL", () => {
     });
   });
 
-  describe("records", () => {
-    it("handles record types", async () => {
+  describe("dictionaries", () => {
+    it("handles dictionary", async () => {
       const body = `
-        <section id="records">
-          <h2>Testing records</h2>
+        <section id="dictionaries">
+          <h2>Testing dictionaries</h2>
           <pre class="idl">
             dictionary Foo {
               record&lt;DOMString, USVString> pass;
@@ -83,7 +83,7 @@ describe("Core - WebIDL", () => {
       `;
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
-      const idl = doc.querySelector("#records pre");
+      const idl = doc.querySelector("#dictionaries pre");
       expect(idl).toBeTruthy(idl);
       expect(idl.querySelector(".idlType:first-child").textContent).toBe(
         "\n  record<DOMString, USVString>"
@@ -98,8 +98,9 @@ describe("Core - WebIDL", () => {
         <section id="linkToIDLSpec">
           <h2>Linking to WebIDL spec</h2>
           <pre class="idl">
-          [Constructor(sequence&lt;DOMString> methodData), SecureContext]
+          [SecureContext, Exposed=Window]
           interface LinkingTest {
+            constructor(sequence&lt;DOMString> methodData);
             readonly attribute DOMString? aBoolAttribute;
             Promise&lt;undefined> returnsPromise(unsigned long long argument);
           };
@@ -113,7 +114,8 @@ describe("Core - WebIDL", () => {
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
       const idl = doc.querySelector("#linkToIDLSpec pre");
-      // [Constructor(sequence<DOMString> methodData), SecureContext]
+
+      // sequence
       const sequences = idl.querySelectorAll(`a[href$="#idl-sequence"]`);
       expect(sequences).toHaveSize(1);
       const sequence = sequences[0];
@@ -271,7 +273,12 @@ describe("Core - WebIDL", () => {
   it("should handle interfaces", () => {
     let target = doc.getElementById("if-basic");
     target.querySelector(".idlHeader").remove();
-    let text = "interface SuperStar {};";
+    let text = `
+[Something, Exposed=Window]
+interface SuperStar {
+  constructor();
+};
+    `.trim();
     expect(target.textContent).toBe(text);
     expect(
       doc.getElementById("if-basic").querySelectorAll(".idlInterface")
@@ -280,11 +287,10 @@ describe("Core - WebIDL", () => {
 
     target = doc.getElementById("if-extended-attribute");
     target.querySelector(".idlHeader").remove();
-    text = `[Something, Constructor()] ${text}`;
     expect(target.textContent).toBe(text);
     const extAttrs = target.querySelectorAll(".extAttr");
     expect(extAttrs[0].textContent).toBe("Something");
-    expect(extAttrs[1].textContent).toBe("Constructor()");
+    expect(extAttrs[1].textContent).toBe("Exposed=Window");
 
     target = doc.getElementById("if-identifier-list");
     target.querySelector(".idlHeader").remove();
@@ -296,7 +302,7 @@ describe("Core - WebIDL", () => {
 
     target = doc.getElementById("if-inheritance");
     target.querySelector(".idlHeader").remove();
-    text = "interface SuperStar : HyperStar {};";
+    text = "[Exposed=Window] interface SuperStar : HyperStar {};";
     expect(target.textContent).toBe(text);
     expect(target.querySelector(".idlSuperclass").textContent).toBe(
       "HyperStar"
@@ -338,33 +344,46 @@ describe("Core - WebIDL", () => {
     );
   });
 
-  it("should handle constructors", () => {
-    let target = doc.getElementById("ctor-basic");
-    // Remove the header, as we are not interested in it.
+  it("handles constructors", async () => {
+    const body = `
+      <pre id='ctor-basic' class='idl'>
+        [Exposed=Window]
+        interface SuperStar {
+          constructor();
+          constructor(boolean bar, sequence&lt;double> foo);
+        };
+      </pre>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const text = `
+[Exposed=Window]
+interface SuperStar {
+  constructor();
+  constructor(boolean bar, sequence<double> foo);
+};
+    `.trim();
+    const target = doc.getElementById("ctor-basic");
     target.querySelector(".idlHeader").remove();
-    let text =
-      "[Something,\n" +
-      " Constructor,\n" +
-      " Constructor(boolean bar, sequence<double> foo, Promise<double> blah)]\n" +
-      "interface SuperStar {};";
     expect(target.textContent).toBe(text);
-    const ctors = target.getElementsByClassName("extAttr");
-    expect(ctors).toHaveSize(3);
-    const ctor = ctors[2];
-    expect(ctor.querySelector("a").textContent).toBe("Constructor");
-    const params = [...ctor.getElementsByClassName("idlType")];
-    expect(params).toHaveSize(3);
+    const ctors = doc.querySelectorAll("span.idlConstructor");
+    expect(ctors).toHaveSize(2);
+
+    // constructor();
+    const ctor0 = ctors[0];
+    expect(ctor0.querySelector("dfn").textContent).toBe("constructor");
+    expect(ctor0.getElementsByClassName("idlType")).toHaveSize(0);
+
+    // constructor(boolean bar, sequence<double> foo);
+    const ctor1 = ctors[1];
+    expect(ctor1.querySelector("dfn").textContent).toBe("constructor");
+    const params = [...ctor1.getElementsByClassName("idlType")];
+    expect(params).toHaveSize(2);
     expect(params.filter(p => p.textContent.includes("sequence"))).toHaveSize(
       1
     );
-    expect(params.filter(p => p.textContent.includes("Promise"))).toHaveSize(1);
     expect(params[0].textContent).toBe("boolean");
-
-    target = doc.getElementById("ctor-noea");
-    // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
-    text = "[Constructor] interface SuperStar {};";
-    expect(target.textContent).toBe(text);
   });
 
   it("should handle constructor operations", async () => {
@@ -443,21 +462,31 @@ describe("Core - WebIDL", () => {
     );
   });
 
-  it("should handle named constructors", () => {
+  it("handles LegacyFactoryFunction", async () => {
+    const body = `
+    <pre class="idl" id="namedctor-basic">
+      [LegacyFactoryFunction=Sun(),
+      LegacyFactoryFunction=Sun(boolean bar, Date foo),
+      Exposed=Window]
+      interface SuperStar {};
+    </pre>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
     const target = doc.getElementById("namedctor-basic");
-    // Remove the header, as we are not interested in it.
     target.querySelector(".idlHeader").remove();
-    const text =
-      "[Something,\n" +
-      " NamedConstructor=Sun(),\n" +
-      " NamedConstructor=Sun(boolean bar, Date foo)]\n" +
-      "interface SuperStar {};";
+    const text = `
+[LegacyFactoryFunction=Sun(),
+LegacyFactoryFunction=Sun(boolean bar, Date foo),
+Exposed=Window]
+interface SuperStar {};
+`.trim();
     expect(target.textContent).toBe(text);
     const ctors = target.getElementsByClassName("extAttr");
     expect(ctors).toHaveSize(3);
-    const ctor = ctors[2];
+    const ctor = ctors[1];
     expect(ctor.textContent).toBe(
-      "NamedConstructor=Sun(boolean bar, Date foo)"
+      "LegacyFactoryFunction=Sun(boolean bar, Date foo)"
     );
     const params = [...ctor.getElementsByClassName("idlType")];
     expect(params).toHaveSize(2);
@@ -470,6 +499,7 @@ describe("Core - WebIDL", () => {
     // Remove the header, as we are not interested in it.
     target.querySelector(".idlHeader").remove();
     const text =
+      "[Exposed=Window]\n" +
       "interface ConstTest {\n" +
       "  // 1\n" +
       "  const boolean test = true;\n" +
@@ -545,11 +575,12 @@ describe("Core - WebIDL", () => {
     ).toBeTruthy();
   });
 
-  it("should handle attributes", () => {
+  it("handles attributes", () => {
     const target = doc.getElementById("attr-basic");
     // Remove the header, as we are not interested in it.
     target.querySelector(".idlHeader").remove();
-    const text = `interface AttrBasic {
+    const text = `[Exposed=Window]
+interface AttrBasic {
   // 1
   attribute DOMString regular;
   // 2
@@ -725,7 +756,8 @@ describe("Core - WebIDL", () => {
     const target = doc.getElementById("meth-basic");
     // Remove the header, as we are not interested in it.
     target.querySelector(".idlHeader").remove();
-    const text = `interface MethBasic {
+    const text = `[Exposed=Window]
+interface MethBasic {
   // 1
   undefined basic();
   // 2
@@ -811,35 +843,60 @@ describe("Core - WebIDL", () => {
     pre.querySelector(".idlHeader").remove();
     const { textContent } = pre;
     const expected = `
+[Exposed=Window]
 interface MapLikeInterface {
   maplike<MapLikeInterface, MapLikeInterface>;
 };
+[Exposed=Window]
 interface ReadOnlyMapLike {
   readonly maplike<ReadOnlyMapLike, ReadOnlyMapLike>;
 };
+[Exposed=Window]
 interface SetLikeInterface {
   setlike<SetLikeInterface>;
 };
+[Exposed=Window]
 interface ReadOnlySetLike {
   readonly setlike<ReadOnlySetLike>;
-};`.trim();
+};
+    `.trim();
     expect(textContent).toBe(expected);
   });
 
-  it("should handle comments", () => {
+  it("handles comments", async () => {
+    const body = `
+    <pre id="comments-basic" class='idl'>
+    [Exposed=Window]
+    interface SuperStar {
+      // This is a comment
+      // over two lines.
+      /* This one
+         has
+         three. */
+      <!-- this is an HTML comment that will be ignored -->
+    };
+    </pre>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
     const target = doc.getElementById("comments-basic");
     // Remove the header, as we are not interested in it.
     target.querySelector(".idlHeader").remove();
     const text =
-      "interface SuperStar {\n" +
-      "  // This is a comment\n" +
-      "  // over two lines.\n" +
-      "  /* This one\n" +
-      "     has\n" +
-      "     three. */\n" +
-      "  \n" +
-      "};";
-    expect(target.textContent).toBe(text);
+      // eslint-disable-next-line prettier/prettier
+      // eslint-disable-next-line prefer-template
+      `
+[Exposed=Window]
+interface SuperStar {
+  // This is a comment
+  // over two lines.
+  /* This one
+     has
+     three. */` +
+      // eslint-disable-next-line no-useless-escape
+      "\n  \n" +
+      `};`;
+    expect(target.textContent).toBe(text.trim());
     expect(target.getElementsByClassName("idlSectionComment")).toHaveSize(1);
   });
 
@@ -1052,8 +1109,9 @@ enum EnumBasic {
 
   it("handles optional and trivia", () => {
     const expected = `
-[Constructor(X x, optional Y y, /*trivia*/ Z y)]
+[Exposed=Window]
 interface Foo {
+  constructor(X x, optional Y y, /*trivia*/ Z y);
   undefined foo(X x, optional Y y, /*trivia*/ optional Z z);
 };
 callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
