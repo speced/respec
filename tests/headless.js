@@ -27,11 +27,22 @@ describe("Headless (examples)", () => {
     );
     await expectAsync(exe.run()).toBeResolved();
   });
+
+  it("uses local respec version with --use-local", async () => {
+    const exe = toExecutable(
+      toCommand(`http://localhost:${port}/examples/basic.built.html`, {
+        useLocal: true,
+      })
+    );
+    const logs = await exe.run();
+    expect(logs).toContain("Intercepted");
+  });
 });
 
-function toCommand(src) {
+function toCommand(src, { useLocal = false } = {}) {
   const command = `node ./tools/respec2html.js ${src}`;
-  const options = ["-e", `--timeout ${timeout}`];
+  const options = ["-e", `--timeout ${timeout}`, "--verbose"];
+  if (useLocal) options.push("--use-local");
   return `${command} ${options.join(" ")}`;
 }
 
@@ -41,15 +52,14 @@ function toExecutable(cmd) {
       return cmd;
     },
     run() {
+      const env = { ...process.env, FORCE_COLOR: "0" };
       return new Promise((resolve, reject) => {
-        const childProcess = exec(cmd, (err, data) => {
+        exec(cmd, { env }, (err, _stdout, stderr) => {
           if (err) {
             return reject(err);
           }
-          resolve(data);
+          resolve(stderr);
         });
-        childProcess.stdout.pipe(process.stdout);
-        childProcess.stderr.pipe(process.stderr);
       });
     },
   };
