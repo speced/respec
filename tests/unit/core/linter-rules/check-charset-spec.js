@@ -22,7 +22,7 @@ describe("Core Linter Rule - 'check-charset'", () => {
   });
 
   it("checks if meta[charset] is present or not", async () => {
-    const results = await getWarnings(null);
+    const results = await getWarnings("");
     expect(results).toHaveSize(1);
   });
 
@@ -42,7 +42,7 @@ describe("Core Linter Rule - 'check-charset'", () => {
   });
 
   it("doesn't check if disabled", async () => {
-    const results = await getWarnings(null, true);
+    const results = await getWarnings("", true);
     expect(results).toHaveSize(0);
   });
 });
