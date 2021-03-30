@@ -36,7 +36,7 @@ export function rsDocToDataURL(mimeType, doc = document) {
   return `data:${mimeType};charset=utf-8,${encodedString}`;
 }
 
-function serialize(format, doc) {
+export function serialize(format, doc) {
   const cloneDoc = doc.cloneNode(true);
   cleanup(cloneDoc);
   let result = "";
