@@ -95,12 +95,9 @@ const Builder = {
   },
 
   /**
-   * Async function runs Requirejs' optimizer to generate the output.
-   *
-   * using a custom configuration.
    * @param {object} options
-   * @param {string} options.name
-   * @param {boolean} options.debug
+   * @param {string} options.name Name of the profile (in `/profiles` dierctory) to build.
+   * @param {boolean} options.debug Don't run minifiers if true.
    */
   async build({ name, debug }) {
     const { inputOptions, outputOptions } = this._getOptions(name, { debug });
