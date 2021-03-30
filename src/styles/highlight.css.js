@@ -15,6 +15,11 @@ hue-6:   #986801
 hue-6-2: #c18401
 */
 
+const css = String.raw;
+
+// Prettier ignore only to keep code indented from level 0.
+// prettier-ignore
+export default css`
 .hljs {
   display: block;
   overflow-x: auto;
@@ -92,3 +97,4 @@ hue-6-2: #c18401
 .hljs-link {
   text-decoration: underline;
 }
+`;

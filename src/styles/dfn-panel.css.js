@@ -3,6 +3,11 @@
  * TODO: Revert changes due to https://github.com/w3c/respec/pull/2888 when
  * https://github.com/w3c/css-validator/pull/111 is fixed.
  */
+const css = String.raw;
+
+// Prettier ignore only to keep code indented from level 0.
+// prettier-ignore
+export default css`
 dfn {
   cursor: pointer;
 }
@@ -109,3 +114,4 @@ dfn {
   max-height: 30vh;
   overflow: auto;
 }
+`;

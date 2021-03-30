@@ -23,7 +23,9 @@ import {
   showError,
   showWarning,
 } from "../core/utils.js";
-import { fetchAsset } from "../core/text-loader.js";
+// import { fetchAsset } from "../core/text-loader.js";
+import css from "../styles/issues-notes.css.js";
+
 import { html } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
 
@@ -82,15 +84,15 @@ const localizationStrings = {
   },
 };
 
-const cssPromise = loadStyle();
+// const cssPromise = loadStyle();
 
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/issues-notes.css")).default;
-  } catch {
-    return fetchAsset("issues-notes.css");
-  }
-}
+// async function loadStyle() {
+//   try {
+//     return (await import("text!../../assets/issues-notes.css")).default;
+//   } catch {
+//     return fetchAsset("issues-notes.css");
+//   }
+// }
 
 const l10n = getIntlData(localizationStrings);
 
@@ -398,7 +400,7 @@ export async function run(conf) {
     return; // nothing to do.
   }
   const ghIssues = await fetchAndStoreGithubIssues(conf.github, conf);
-  const css = await cssPromise;
+  // const css = await cssPromise;
   const { head: headElem } = document;
   headElem.insertBefore(
     html`<style>

@@ -1,6 +1,6 @@
 // @ts-check
 import { fetchAndCache, getIntlData, showError } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/mdn-annotation.css.js";
 import { html } from "./import-maps.js";
 
 export const name = "core/mdn-annotation";
@@ -41,14 +41,6 @@ const localizationStrings = {
   },
 };
 const l10n = getIntlData(localizationStrings);
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/mdn-annotation.css")).default;
-  } catch {
-    return fetchAsset("mdn-annotation.css");
-  }
-}
 
 /**
  * @param {HTMLElement} node
@@ -141,7 +133,7 @@ export async function run(conf) {
   if (!mdnSpecJson) return;
 
   const style = document.createElement("style");
-  style.textContent = await loadStyle();
+  style.textContent = css;
   document.head.append(style);
 
   for (const elem of findElements(mdnSpecJson)) {
