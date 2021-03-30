@@ -1,5 +1,28 @@
 # Changelog
 
+## [v26.4.1](https://github.com/w3c/respec/tree/v26.4.1) (2021-03-29)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.4.0...v26.4.1)
+
+**Fixed bugs:**
+
+- "group" option still complains about patent policy [\#3399](https://github.com/w3c/respec/issues/3399)
+
+**Merged pull requests:**
+
+- fix\(w3c/headers\): handle multiple patent policies [\#3411](https://github.com/w3c/respec/pull/3411) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(tools/dev-server\): add promisified KarmaServer [\#3410](https://github.com/w3c/respec/pull/3410) ([sidvishnoi](https://github.com/sidvishnoi))
+- tests\(build\): fix fileExists check, remove chai, run in CI [\#3408](https://github.com/w3c/respec/pull/3408) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(karma.conf.js\): cleanup [\#3407](https://github.com/w3c/respec/pull/3407) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(ui/search-specref\): embed iframe from respec.org [\#3405](https://github.com/w3c/respec/pull/3405) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/biblio\): use specref.org API endpoint [\#3404](https://github.com/w3c/respec/pull/3404) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(styles\): convert css files to js [\#3402](https://github.com/w3c/respec/pull/3402) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore: remove unused files, config and packges [\#3400](https://github.com/w3c/respec/pull/3400) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(deps\): update dependencies [\#3397](https://github.com/w3c/respec/pull/3397) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(deps-dev\): use updated rollup plugins [\#3392](https://github.com/w3c/respec/pull/3392) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3391](https://github.com/w3c/respec/pull/3391) ([github-actions[bot]](https://github.com/apps/github-actions))
+- refactor: build respec-highlight alongside respec-worker [\#3390](https://github.com/w3c/respec/pull/3390) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v26.4.0](https://github.com/w3c/respec/tree/v26.4.0) (2021-03-21)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.3.0...v26.4.0)

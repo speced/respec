@@ -726,7 +726,7 @@ export function run(conf) {
 }
 
 function validatePatentPolicies(conf) {
-  if (!conf.hasOwnProperty("wgPatentPolicy")) return;
+  if (!conf.wgPatentPolicy) return;
 
   const policies = new Set([].concat(conf.wgPatentPolicy));
   if (
