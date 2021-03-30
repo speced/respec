@@ -12,7 +12,7 @@ export function makePluginDoc(
   config = {},
   { head = `<meta charset="UTF-8" />`, body = "" } = {}
 ) {
-  const html = `
+  return getDoc(`
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -46,33 +46,19 @@ export function makePluginDoc(
       </head>
       <body>${body}</body>
     </html>
-  `;
+  `);
+}
 
+/**
+ * @param {string} html
+ * @return {Promise<Document>}
+ */
+function getDoc(html) {
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
-    const timeoutId = setTimeout(() => {
-      reject(new Error(`Timed out waiting for document.respec.ready.`));
-    }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
-    ifr.addEventListener("load", async () => {
-      const doc = ifr.contentDocument;
-      if (doc.respec) {
-        await doc.respec.ready;
-        resolve(doc);
-      }
-      window.addEventListener("message", function msgHandler(ev) {
-        if (
-          !doc ||
-          !ev.source ||
-          doc !== ev.source.document ||
-          ev.data.topic !== "end-all"
-        ) {
-          return;
-        }
-        window.removeEventListener("message", msgHandler);
-        resolve(doc);
-        clearTimeout(timeoutId);
-      });
-    });
+    ifr.addEventListener("load", () =>
+      waitReady(ifr).then(resolve).catch(reject)
+    );
     ifr.style.display = "none";
     const doc = new DOMParser().parseFromString(html, "text/html");
     ifr.srcdoc = doc.documentElement.outerHTML;
@@ -80,6 +66,34 @@ export function makePluginDoc(
     // trigger load
     document.body.appendChild(ifr);
     iframes.push(ifr);
+  });
+}
+
+/**
+ * @param {HTMLIFrameElement} iframe
+ * @return {Promise<Document>}
+ */
+async function waitReady(iframe) {
+  const timeoutId = setTimeout(() => {
+    throw new Error(`Timed out waiting for document.respec.ready.`);
+  }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
+
+  const doc = iframe.contentDocument;
+  if (doc.respec) {
+    await doc.respec.ready;
+    clearTimeout(timeoutId);
+    return doc;
+  }
+
+  return await new Promise(res => {
+    window.addEventListener("message", function msgHandler(ev) {
+      if (!doc || !ev.source || doc !== ev.source.document) return;
+      if (ev.data.topic === "end-all") {
+        window.removeEventListener("message", msgHandler);
+        clearTimeout(timeoutId);
+        res(doc);
+      }
+    });
   });
 }
 
