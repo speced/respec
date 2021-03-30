@@ -51,7 +51,7 @@ export function makePluginDoc(
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
     const timeoutId = setTimeout(() => {
-      reject(new Error(`Timed out waiting.`));
+      reject(new Error(`Timed out waiting for document.respec.ready.`));
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
