@@ -74,7 +74,7 @@
     "server": "serve",
     "start": "node ./tools/dev-server.js",
     "test:build": "jasmine --random=false ./tests/test-build.js",
-    "test:headless": "node ./tests/headless.js",
+    "test:headless": "jasmine --random=false ./tests/headless.js",
     "test:karma": "karma start --single-run"
   },
   "dependencies": {
