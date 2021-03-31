@@ -72,7 +72,7 @@ export async function run(conf) {
       return html`<a href="${featureURL}">caniuse.com</a>`;
     }
   })();
-  const definitionPair = html`<dt class="caniuse-title">Browser support:</dt>
+  const definitionPair = html`<dt class="caniuse-title">Browsers support:</dt>
     <dd class="caniuse-stats">
       ${{
         any: contentPromise,
