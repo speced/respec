@@ -8,15 +8,14 @@ env:
 
 jobs:
   build:
-    name: Build respec-w3c
+    name: Build W3C profile
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: Cache node modules
-        uses: actions/cache@v1
+      - uses: actions/cache@v1
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
@@ -47,8 +46,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: Cache node modules
-        uses: actions/cache@v1
+      - uses: actions/cache@v1
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
@@ -58,8 +56,8 @@ jobs:
           name: builds
           path: ./builds/
       - run: git status
-      - run: node ./tools/respec2html ${{ matrix.source }} live.html -t 30 --verbose
-      - run: node ./tools/respec2html ${{ matrix.source }} now.html -t 30 --verbose --use-local
+      - run: node ./tools/respec2html ${{ matrix.source }} before.html -t 30 --verbose
+      - run: node ./tools/respec2html ${{ matrix.source }} after.html -t 30 --verbose --use-local
       - name: Install git-delta # prettier git diff
         run: |
           set -v
@@ -70,5 +68,5 @@ jobs:
       - name: git diff
         run: |
           set -o pipefail
-          git diff --exit-code --no-index live.html now.html | delta --diff-so-fancy
+          git diff --exit-code --no-index before.html after.html | delta --diff-so-fancy
           exit $?
