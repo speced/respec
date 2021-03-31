@@ -60,4 +60,7 @@ jobs:
       - run: git status
       - run: node ./tools/respec2html ${{ matrix.source }} live.html -t 30 --verbose
       - run: node ./tools/respec2html ${{ matrix.source }} now.html -t 30 --verbose --use-local
+      - run: cargo install git-delta # prettier git diff
       - run: git diff --no-index live.html now.html --exit-code
+        env:
+          PAGER: delta
