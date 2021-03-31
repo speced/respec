@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "26.4.1",
+  "version": "26.5.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -67,7 +67,6 @@
     "build:dini-debug": "node run build:dini -- --debug",
     "build:dini": "node ./tools/builder.js dini",
     "builddeps": "rollup -c js/deps/rollup.config.js && rollup -c worker/rollup.config.js",
-    "karma": "karma start --single-run",
     "lint": "tsc -p src/jsconfig.json && eslint .",
     "prepare": "npm run builddeps",
     "release": "node ./tools/release.js",
@@ -75,7 +74,9 @@
     "start": "node ./tools/dev-server.js",
     "test:build": "jasmine --random=false ./tests/test-build.js",
     "test:headless": "jasmine --random=false ./tests/headless.js",
-    "test:karma": "karma start --single-run"
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "karma start ./tests/unit/karma.conf.js --single-run",
+    "test:integration": "karma start ./tests/spec/karma.conf.js --single-run"
   },
   "dependencies": {
     "colors": "^1.4.0",

@@ -67,6 +67,6 @@ jobs:
         run: |
           npm ci
           npm run build:w3c & npm run build:geonovum
-      - run: npm run test:karma
+      - run: npm test
         env:
           BROWSERS: ChromeHeadless
