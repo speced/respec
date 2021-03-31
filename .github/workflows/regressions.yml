@@ -60,7 +60,15 @@ jobs:
       - run: git status
       - run: node ./tools/respec2html ${{ matrix.source }} live.html -t 30 --verbose
       - run: node ./tools/respec2html ${{ matrix.source }} now.html -t 30 --verbose --use-local
-      - run: cargo install git-delta # prettier git diff
-      - run: git diff --no-index live.html now.html --exit-code
-        env:
-          PAGER: delta
+      - name: Install git-delta # prettier git diff
+        run: |
+          set -v
+          wget -q -O delta.tar.gz https://github.com/dandavison/delta/releases/download/0.7.1/delta-0.7.1-x86_64-unknown-linux-gnu.tar.gz
+          mkdir -p delta
+          tar xzf delta.tar.gz -C delta/ --strip-components=1
+          echo "$(pwd)/delta/" >> $GITHUB_PATH
+      - name: git diff
+        run: |
+          set -o pipefail
+          git diff --exit-code --no-index live.html now.html | delta --diff-so-fancy
+          exit $?
