@@ -58,13 +58,7 @@ jobs:
       - run: git status
       - run: node ./tools/respec2html ${{ matrix.source }} before.html -t 30 --verbose
       - run: node ./tools/respec2html ${{ matrix.source }} after.html -t 30 --verbose --use-local
-      - name: Install git-delta # prettier git diff
-        run: |
-          set -v
-          wget -q -O delta.tar.gz https://github.com/dandavison/delta/releases/download/0.7.1/delta-0.7.1-x86_64-unknown-linux-gnu.tar.gz
-          mkdir -p delta
-          tar xzf delta.tar.gz -C delta/ --strip-components=1
-          echo "$(pwd)/delta/" >> $GITHUB_PATH
+      - uses: sidvishnoi/git-delta-action@main
       - name: git diff
         run: |
           set -o pipefail
