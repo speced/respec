@@ -60,7 +60,7 @@ jobs:
       - run: git status
       - run: node ./tools/respec2html ${{ matrix.source }} before.html -t 30 --verbose
       - run: node ./tools/respec2html ${{ matrix.source }} after.html -t 30 --verbose --use-local
-      - uses: sidvishnoi/git-delta-action@main
+      - uses: sidvishnoi/git-delta@v1
       - name: git diff
         run: |
           set -o pipefail
