@@ -1,5 +1,7 @@
 name: Regressions
-on: workflow_dispatch
+on:
+  workflow_dispatch: {}
+  pull_request: {}
 
 env:
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
