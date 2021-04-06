@@ -6,19 +6,19 @@ const iframes = [];
  * @param {string[]} plugins Paths of plugins to load and run. Example: `/src/core/algorithms.js`
  * @param {object} [options]
  * @param {object} [options.config] JSON-serializable respecConfig object.
- * @param {string|null} [options.head]
+ * @param {string} [options.head]
  * @param {string} [options.body]
  * @return {Promise<Document>}
  */
 export function makePluginDoc(
   plugins,
-  { config = {}, head = "", body = "" } = {}
+  { config = {}, head = `<meta charset="UTF-8" />`, body = "" } = {}
 ) {
   return getDoc(`
     <!DOCTYPE html>
     <html lang="en">
       <head>
-        ${head !== null ? `<meta charset="UTF-8" />${head}` : ""}
+        ${head}
         <script>
           var respecConfig = ${JSON.stringify(config || {}, null, 2)};
         </script>
