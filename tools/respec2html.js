@@ -163,6 +163,11 @@ cli
     "How long to wait before timing out (in seconds).",
     10
   )
+  .option(
+    "--use-local",
+    "Use locally installed ReSpec instead of the one in document.",
+    false
+  )
   .option("-e, --haltonerror", "Abort if the spec has any errors.", false)
   .option("-w, --haltonwarn", "Abort if ReSpec generates warnings.", false)
   .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
@@ -215,6 +220,7 @@ async function run(source, destination, options, log) {
 
   const { html, errors, warnings } = await toHTML(src, {
     timeout: options.timeout * 1000,
+    useLocal: options["use-local"],
     onError: log.error.bind(log),
     onWarning: log.warn.bind(log),
     onProgress: log.info.bind(log),
