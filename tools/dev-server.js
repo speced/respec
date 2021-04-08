@@ -1,3 +1,15 @@
+/**
+ * This tools lets one effectively run:
+ *  $ npm run build:w3c
+ *  $ npm run server
+ *  $ npm run test:unit
+ *  $ npm run test:integration
+ * with ability to:
+ *  - build/test when a file changes
+ *  - build/test on a single keypress (interactive mode)
+ *  - cleanup builds/ directory after use.
+ */
+
 const path = require("path");
 const { execSync } = require("child_process");
 const { createServer } = require("http");
@@ -10,21 +22,26 @@ const sade = require("sade");
 const serveConfig = require("../serve.json");
 const { Builder } = require("./builder");
 
-const KARMA_PORT = 9876;
+const KARMA_PORT_UNIT_TESTS = 9876;
+const KARMA_PORT_INTEGRATION_TESTS = 9877;
 const SERVE_PORT = 5000;
+const TESTS_DIR = path.join(__dirname, "..", "tests");
 
 class KarmaServer {
   /**
    * @param {string} configFile
+   * @param {number} port
+   * @param {string} label
    * @param {string} [browser]
    */
-  constructor(configFile, browser, grep = "") {
-    const browsers = browser ? [browser] : [];
+  constructor(configFile, port, label, browser, grep = "") {
+    this._label = label;
+    const browsers = browser ? [browser] : undefined;
     this._karmaConfig = karma.config.parseConfig(configFile, {
       browsers,
+      port,
       autoWatch: false,
-      port: KARMA_PORT,
-      logLevel: karma.constants.LOG_INFO,
+      logLevel: karma.constants.LOG_WARN,
       client: {
         args: ["--grep", grep],
       },
@@ -49,6 +66,9 @@ class KarmaServer {
 
   async run() {
     if (this._isActive) return;
+
+    process.stdout.write(boxen(`Running ${this._label}`, { dimBorder: true }));
+
     this._isActive = true;
     karma.runner.run(this._karmaConfig, () => {});
     await new Promise(resolve =>
@@ -68,8 +88,17 @@ sade("./tools/dev-server.js", true)
 
 async function run(args) {
   let isActive = false;
-  const karmaServer = new KarmaServer(
-    path.join(__dirname, "../karma.conf.js"),
+  const unitTestServer = new KarmaServer(
+    path.join(TESTS_DIR, "unit/karma.conf.js"),
+    KARMA_PORT_UNIT_TESTS,
+    "Unit Tests",
+    args.browser,
+    args.grep
+  );
+  const integrationTestServer = new KarmaServer(
+    path.join(TESTS_DIR, "spec/karma.conf.js"),
+    KARMA_PORT_INTEGRATION_TESTS,
+    "Integration Tests",
     args.browser,
     args.grep
   );
@@ -79,7 +108,7 @@ async function run(args) {
   if (args.interactive) {
     registerStdinHandler();
   } else {
-    const paths = ["./src", "./tests/spec"];
+    const paths = ["./src", "./tests/spec", "./tests/unit"];
     const watcher = chokidar.watch(paths, { ignoreInitial: true });
     watcher.on("all", onFileChange);
     watcher.on("error", onError);
@@ -91,7 +120,8 @@ async function run(args) {
 
   printWelcomeMessage(args);
 
-  await karmaServer.start();
+  await unitTestServer.start();
+  await integrationTestServer.start();
   devServer.listen(SERVE_PORT);
   await buildAndTest({ profile: args.profile });
 
@@ -111,7 +141,8 @@ async function run(args) {
       switch (key) {
         case "\u0003": //  ctrl-c (end of text)
         case "q":
-          await karmaServer.stop();
+          await unitTestServer.stop();
+          await integrationTestServer.stop();
           return process.exit(0);
         case "t":
           return await buildAndTest();
@@ -126,14 +157,19 @@ async function run(args) {
   }
 
   async function buildAndTest(options = {}) {
-    const { preventBuild = false } = options;
+    const {
+      preventBuild = false,
+      unitTests = true,
+      integrationTests = true,
+    } = options;
     if (isActive) return;
     try {
       isActive = true;
       if (!preventBuild) {
         await Builder.build({ name: args.profile, debug: true });
       }
-      await karmaServer.run();
+      if (unitTests) await unitTestServer.run();
+      if (integrationTests) await integrationTestServer.run();
     } catch (err) {
       console.error(colors.error(err.stack));
     } finally {
@@ -143,20 +179,30 @@ async function run(args) {
 
   async function onError(err) {
     console.error(colors.error(err.stack));
-    await karmaServer.stop();
+    await unitTestServer.stop();
+    await integrationTestServer.stop();
     process.exit(1);
   }
 
   async function onFileChange(_event, file) {
     const preventBuild = file.startsWith("tests");
-    await buildAndTest({ preventBuild });
+    const unitTests =
+      !file.startsWith("tests") || file.startsWith("tests/unit");
+    const integrationTests =
+      !file.startsWith("tests") || file.startsWith("tests/spec");
+
+    await buildAndTest({ preventBuild, unitTests, integrationTests });
   }
 }
 
 function printWelcomeMessage(args) {
   const messages = [
     ["dev server", `http://localhost:${SERVE_PORT}`],
-    ["karma server", `http://localhost:${KARMA_PORT}`],
+    ["karma (unit tests)", `http://localhost:${KARMA_PORT_UNIT_TESTS}`],
+    [
+      "karma (integration tests)",
+      `http://localhost:${KARMA_PORT_INTEGRATION_TESTS}`,
+    ],
     [
       "file watcher",
       `${args.interactive ? "NOT " : ""}watching for changes...`,
@@ -171,13 +217,14 @@ function printWelcomeMessage(args) {
 
   const message = messages
     .map(([title, text]) => {
-      return colors.white.bold(`${title}:`.padEnd(18)) + colors.white(text);
+      return colors.white.bold(`${title}:`.padEnd(30)) + colors.white(text);
     })
     .join("\n");
 
   const boxOptions = {
     padding: 1,
     borderColor: "green",
+    borderStyle: "bold",
     backgroundColor: "black",
   };
   console.log(boxen(message, boxOptions));
