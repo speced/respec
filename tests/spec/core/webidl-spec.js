@@ -3,7 +3,7 @@
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 import { clearXrefData } from "../../../src/core/xref-db.js";
 
-fdescribe("Core - WebIDL", () => {
+describe("Core - WebIDL", () => {
   afterAll(flushIframes);
   /** @type {Document} */
   let doc;
