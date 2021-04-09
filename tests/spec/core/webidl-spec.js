@@ -3,7 +3,7 @@
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 import { clearXrefData } from "../../../src/core/xref-db.js";
 
-describe("Core - WebIDL", () => {
+fdescribe("Core - WebIDL", () => {
   afterAll(flushIframes);
   /** @type {Document} */
   let doc;
@@ -70,25 +70,103 @@ describe("Core - WebIDL", () => {
   });
 
   describe("dictionaries", () => {
-    it("handles dictionary", async () => {
-      const body = `
-        <section id="dictionaries">
-          <h2>Testing dictionaries</h2>
-          <pre class="idl">
-            dictionary Foo {
-              record&lt;DOMString, USVString> pass;
-            };
-          </pre>
-        </section>
-      `;
-      const ops = makeStandardOps(null, body);
-      const doc = await makeRSDoc(ops);
-      const idl = doc.querySelector("#dictionaries pre");
-      expect(idl).toBeTruthy(idl);
-      expect(idl.querySelector(".idlType:first-child").textContent).toBe(
-        "\n  record<DOMString, USVString>"
+    it("handles dictionaries", () => {
+      let target = doc.querySelector("#dict-basic > code");
+      let text = "dictionary SuperStar {};";
+      expect(target.textContent).toBe(text);
+      expect(target.querySelectorAll(".idlDictionary")).toHaveSize(1);
+      expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
+
+      target = doc.querySelector("#dict-inherit > code");
+      text = "dictionary SuperStar : HyperStar {};";
+      expect(target.textContent).toBe(text);
+      expect(target.querySelector(".idlSuperclass").textContent).toBe(
+        "HyperStar"
       );
-      expect(idl.querySelector(".idlMember .idlName").textContent).toBe("pass");
+
+      target = doc.querySelector("#dict-fields > code");
+      text =
+        "dictionary SuperStar {\n" +
+        "  // 1\n" +
+        "  DOMString value;\n" +
+        "  // 2\n" +
+        "  DOMString? nullable;\n" +
+        "  // 3\n" +
+        "  [Something]float ext;\n" +
+        "  // 4\n" +
+        "  unsigned long long longLong;\n" +
+        "\n" +
+        "  // 5\n" +
+        "  boolean test = true;\n" +
+        "  // 6\n" +
+        "  byte little = 2;\n" +
+        "  // 7\n" +
+        "  byte big = Infinity;\n" +
+        "  // 8\n" +
+        "  byte cheese = NaN;\n" +
+        "  // 9\n" +
+        '  DOMString blah = "blah blah";\n' +
+        "};";
+      expect(target.textContent).toBe(text);
+      const members = target.querySelectorAll(".idlMember");
+      expect(members).toHaveSize(9);
+      const member = members[0];
+      expect(member.querySelector(".idlType").textContent).toBe(
+        "\n  // 1\n  DOMString"
+      );
+      expect(member.querySelector(".idlName").textContent).toBe("value");
+
+      target = doc.querySelector("#dict-required-fields > code");
+      text =
+        "dictionary SuperStar {\n" +
+        "  required DOMString value;\n" +
+        "  DOMString optValue;\n" +
+        "};";
+      expect(target.textContent).toBe(text);
+
+      // Links and IDs.
+      const dictDocTest = doc
+        .getElementById("dict-doc")
+        .querySelector(".idlDictionary");
+      expect(dictDocTest.querySelector("a.idlID").getAttribute("href")).toBe(
+        "#dom-dictdoctest"
+      );
+      expect(dictDocTest.getAttribute("id")).toBe("idl-def-dictdoctest");
+      const mems = [...dictDocTest.querySelectorAll(".idlMember")];
+      const dictDocField = mems.find(m =>
+        m.textContent.includes("dictDocField")
+      );
+      expect(dictDocField.querySelector("a.idlName").getAttribute("href")).toBe(
+        "#dom-dictdoctest-dictdocfield"
+      );
+      expect(
+        mems
+          .find(m => m.textContent.includes("otherField"))
+          .querySelector("a.idlName")
+          .getAttribute("href")
+      ).toBe("#dom-dictdoctest-otherfield");
+      expect(dictDocField.getAttribute("id")).toBe(
+        "idl-def-dictdoctest-dictdocfield"
+      );
+      const warningLink = mems
+        .find(m => m.textContent.includes("undocField"))
+        .querySelector("dfn.idlName");
+      expect(warningLink).toBeTruthy();
+    });
+
+    it("handles multiple dictionaries", async () => {
+      const idl = doc.querySelector("#multiple-dictionaries code");
+      const expected = `
+dictionary OneThing {
+  int x;
+};
+
+
+partial dictionary AnotherThing {
+  int y;
+};`.trim();
+      expect(idl.textContent).toBe(expected);
+      expect(idl.querySelector(".idlSectionComment")).toBeNull();
     });
   });
 
@@ -271,8 +349,7 @@ describe("Core - WebIDL", () => {
     expect(aElem.textContent).toBe("noParens");
   });
   it("should handle interfaces", () => {
-    let target = doc.getElementById("if-basic");
-    target.querySelector(".idlHeader").remove();
+    let target = doc.querySelector("#if-basic > code");
     let text = `
 [Something, Exposed=Window]
 interface SuperStar {
@@ -285,50 +362,43 @@ interface SuperStar {
     ).toHaveSize(1);
     expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
 
-    target = doc.getElementById("if-extended-attribute");
-    target.querySelector(".idlHeader").remove();
+    target = doc.querySelector("#if-extended-attribute > code");
     expect(target.textContent).toBe(text);
     const extAttrs = target.querySelectorAll(".extAttr");
     expect(extAttrs[0].textContent).toBe("Something");
     expect(extAttrs[1].textContent).toBe("Exposed=Window");
 
-    target = doc.getElementById("if-identifier-list");
-    target.querySelector(".idlHeader").remove();
+    target = doc.querySelector("#if-identifier-list > code");
     text = "[Global=Window, Exposed=(Window,Worker)] interface SuperStar {};";
     const rhs = target.querySelectorAll(".extAttr");
     expect(target.textContent).toBe(text);
     expect(rhs[0].textContent).toBe("Global=Window");
     expect(rhs[1].textContent).toBe("Exposed=(Window,Worker)");
 
-    target = doc.getElementById("if-inheritance");
-    target.querySelector(".idlHeader").remove();
+    target = doc.querySelector("#if-inheritance > code");
     text = "[Exposed=Window] interface SuperStar : HyperStar {};";
     expect(target.textContent).toBe(text);
     expect(target.querySelector(".idlSuperclass").textContent).toBe(
       "HyperStar"
     );
 
-    target = doc.getElementById("if-partial");
-    target.querySelector(".idlHeader").remove();
+    target = doc.querySelector("#if-partial > code");
     text = "partial interface SuperStar {};";
     expect(target.textContent).toBe(text);
 
-    target = doc.getElementById("if-callback");
-    target.querySelector(".idlHeader").remove();
+    target = doc.querySelector("#if-callback > code");
     text = "callback interface SuperStar {};";
     expect(target.textContent).toBe(text);
 
-    target = doc.getElementById("if-mixin");
-    target.querySelector(".idlHeader").remove();
+    target = doc.querySelector("#if-mixin > code");
     text = "interface mixin SuperStar {};";
     expect(target.textContent).toBe(text);
 
-    target = doc.getElementById("if-partial-mixin");
-    target.querySelector(".idlHeader").remove();
+    target = doc.querySelector("#if-partial-mixin > code");
     text = "partial interface mixin SuperStar {};";
     expect(target.textContent).toBe(text);
 
-    target = doc.getElementById("if-doc");
+    target = doc.querySelector("#if-doc > code");
     const interfaces = target.querySelectorAll(".idlInterface");
     expect(interfaces[0].querySelector("a.idlID").getAttribute("href")).toBe(
       "#dom-docinterface"
@@ -364,8 +434,7 @@ interface SuperStar {
   constructor(boolean bar, sequence<double> foo);
 };
     `.trim();
-    const target = doc.getElementById("ctor-basic");
-    target.querySelector(".idlHeader").remove();
+    const target = doc.querySelector("#ctor-basic > code");
     expect(target.textContent).toBe(text);
     const ctors = doc.querySelectorAll("span.idlConstructor");
     expect(ctors).toHaveSize(2);
@@ -473,8 +542,7 @@ interface SuperStar {
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const target = doc.getElementById("namedctor-basic");
-    target.querySelector(".idlHeader").remove();
+    const target = doc.querySelector("#namedctor-basic > code");
     const text = `
 [LegacyFactoryFunction=Sun(),
 LegacyFactoryFunction=Sun(boolean bar, Date foo),
@@ -495,9 +563,8 @@ interface SuperStar {};
   });
 
   it("should handle constants", () => {
-    const target = doc.getElementById("const-basic");
+    const target = doc.querySelector("#const-basic > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     const text =
       "[Exposed=Window]\n" +
       "interface ConstTest {\n" +
@@ -576,9 +643,8 @@ interface SuperStar {};
   });
 
   it("handles attributes", () => {
-    const target = doc.getElementById("attr-basic");
+    const target = doc.querySelector("#attr-basic > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     const text = `[Exposed=Window]
 interface AttrBasic {
   // 1
@@ -753,9 +819,8 @@ interface AttrBasic {
   });
 
   it("should handle operations", () => {
-    const target = doc.getElementById("meth-basic");
+    const target = doc.querySelector("#meth-basic > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     const text = `[Exposed=Window]
 interface MethBasic {
   // 1
@@ -879,9 +944,8 @@ interface ReadOnlySetLike {
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const target = doc.getElementById("comments-basic");
+    const target = doc.querySelector("#comments-basic > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     const text =
       // eslint-disable-next-line prettier/prettier
       // eslint-disable-next-line prefer-template
@@ -900,115 +964,8 @@ interface SuperStar {
     expect(target.getElementsByClassName("idlSectionComment")).toHaveSize(1);
   });
 
-  it("should handle dictionaries", () => {
-    let target = doc.getElementById("dict-basic");
-    // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
-    let text = "dictionary SuperStar {};";
-    expect(target.textContent).toBe(text);
-    expect(target.querySelectorAll(".idlDictionary")).toHaveSize(1);
-    expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
-
-    target = doc.getElementById("dict-inherit");
-    // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
-    text = "dictionary SuperStar : HyperStar {};";
-    expect(target.textContent).toBe(text);
-    expect(target.querySelector(".idlSuperclass").textContent).toBe(
-      "HyperStar"
-    );
-
-    target = doc.getElementById("dict-fields");
-    // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
-    text =
-      "dictionary SuperStar {\n" +
-      "  // 1\n" +
-      "  DOMString value;\n" +
-      "  // 2\n" +
-      "  DOMString? nullable;\n" +
-      "  // 3\n" +
-      "  [Something]float ext;\n" +
-      "  // 4\n" +
-      "  unsigned long long longLong;\n" +
-      "\n" +
-      "  // 5\n" +
-      "  boolean test = true;\n" +
-      "  // 6\n" +
-      "  byte little = 2;\n" +
-      "  // 7\n" +
-      "  byte big = Infinity;\n" +
-      "  // 8\n" +
-      "  byte cheese = NaN;\n" +
-      "  // 9\n" +
-      '  DOMString blah = "blah blah";\n' +
-      "};";
-    expect(target.textContent).toBe(text);
-    const members = target.querySelectorAll(".idlMember");
-    expect(members).toHaveSize(9);
-    const member = members[0];
-    expect(member.querySelector(".idlType").textContent).toBe(
-      "\n  // 1\n  DOMString"
-    );
-    expect(member.querySelector(".idlName").textContent).toBe("value");
-
-    target = doc.getElementById("dict-required-fields");
-    // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
-    text =
-      "dictionary SuperStar {\n" +
-      "  required DOMString value;\n" +
-      "  DOMString optValue;\n" +
-      "};";
-    expect(target.textContent).toBe(text);
-
-    // Links and IDs.
-    const dictDocTest = doc
-      .getElementById("dict-doc")
-      .querySelector(".idlDictionary");
-    expect(dictDocTest.querySelector("a.idlID").getAttribute("href")).toBe(
-      "#dom-dictdoctest"
-    );
-    expect(dictDocTest.getAttribute("id")).toBe("idl-def-dictdoctest");
-    const mems = [...dictDocTest.querySelectorAll(".idlMember")];
-    const dictDocField = mems.find(m => m.textContent.includes("dictDocField"));
-    expect(dictDocField.querySelector("a.idlName").getAttribute("href")).toBe(
-      "#dom-dictdoctest-dictdocfield"
-    );
-    expect(
-      mems
-        .find(m => m.textContent.includes("otherField"))
-        .querySelector("a.idlName")
-        .getAttribute("href")
-    ).toBe("#dom-dictdoctest-otherfield");
-    expect(dictDocField.getAttribute("id")).toBe(
-      "idl-def-dictdoctest-dictdocfield"
-    );
-    const warningLink = mems
-      .find(m => m.textContent.includes("undocField"))
-      .querySelector("dfn.idlName");
-    expect(warningLink).toBeTruthy();
-  });
-
-  it("handles multiple dictionaries", async () => {
-    const idl = doc.getElementById("multiple-dictionaries");
-    // Remove the header, as we are not interested in it.
-    idl.querySelector(".idlHeader").remove();
-    const expected = `
-dictionary OneThing {
-  int x;
-};
-
-
-partial dictionary AnotherThing {
-  int y;
-};`.trim();
-    expect(idl.textContent).toBe(expected);
-    expect(idl.querySelector(".idlSectionComment")).toBeNull();
-  });
-
   it("uniquely links to enum values", () => {
-    const target = doc.getElementById("multipleEnums");
+    const target = doc.querySelector("#multipleEnums");
     const idlLinks = target.querySelectorAll("a[data-link-for]");
     expect(idlLinks).toHaveSize(2);
     const [a1, a2] = idlLinks;
@@ -1044,9 +1001,7 @@ partial dictionary AnotherThing {
       `;
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
-      const target = doc.getElementById("enum-basic");
-      // Remove the header, as we are not interested in it.
-      target.querySelector(".idlHeader").remove();
+      const target = doc.querySelector("#enum-basic > code");
       const text = `
 enum EnumBasic {
   // 1
@@ -1125,18 +1080,16 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
   });
 
   it("should handle callbacks", () => {
-    let target = doc.getElementById("cb-basic");
+    let target = doc.querySelector("#cb-basic > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     let text = "callback SuperStar = undefined();";
     expect(target.textContent).toBe(text);
     expect(target.getElementsByClassName("idlCallback")).toHaveSize(1);
     expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
     expect(target.querySelector(".idlType").textContent).toBe(" undefined");
 
-    target = doc.getElementById("cb-less-basic");
+    target = doc.querySelector("#cb-less-basic > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     text = "callback CbLessBasic = unsigned long long?(optional any value);";
     expect(target.textContent).toBe(text);
     expect(target.querySelector(".idlType").textContent).toBe(
@@ -1155,9 +1108,8 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       "idl-def-cblessbasic"
     );
 
-    target = doc.getElementById("cb-mult-args");
+    target = doc.querySelector("#cb-mult-args > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     text = "callback SortCallback = undefined (any a, any b);";
     expect(target.textContent).toBe(text);
     prm = target.querySelectorAll(".idlParamName");
@@ -1170,18 +1122,16 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
   });
 
   it("should handle typedefs", () => {
-    let target = doc.getElementById("td-basic");
+    let target = doc.querySelector("#td-basic > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     let text = "typedef DOMString string;";
     expect(target.textContent).toBe(text);
     expect(target.querySelectorAll(".idlTypedef")).toHaveSize(1);
     expect(target.querySelector(".idlID").textContent).toBe("string");
     expect(target.querySelector(".idlType").textContent).toBe(" DOMString");
 
-    target = doc.getElementById("td-less-basic");
+    target = doc.querySelector("#td-less-basic > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     text = "typedef unsigned long long? tdLessBasic;";
     expect(target.textContent).toBe(text);
 
@@ -1191,46 +1141,41 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     );
     expect(target.querySelector(".idlTypedef").id).toBe("idl-def-tdlessbasic");
 
-    target = doc.getElementById("td-extended-attribute");
+    target = doc.querySelector("#td-extended-attribute > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     text =
       "typedef ([Clamp] unsigned long or ConstrainULongRange) ConstrainULong;";
     expect(target.textContent).toBe(text);
 
-    target = doc.getElementById("td-union-extended-attribute");
+    target = doc.querySelector("#td-union-extended-attribute > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     text =
       "typedef [Clamp] (unsigned long or ConstrainULongRange) ConstrainULong2;";
     expect(target.textContent).toBe(text);
 
-    target = doc.getElementById("td-trivia");
+    target = doc.querySelector("#td-trivia > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     text =
       "/* test1 */ typedef /* test2 */ [Clamp] /* test3 */ (/* test4 */ unsigned long /* test5 */ or /* test6 */ ConstrainULongRange /* test7 */ ) /* test8 */ ConstrainULong3 /* test9 */;";
     expect(target.textContent).toBe(text);
   });
 
   it("should handle includes", () => {
-    let target = doc.getElementById("incl-basic");
+    let target = doc.querySelector("#incl-basic > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
-    let text = "Window includes Breakable;";
+    let text = "Window includes Document;";
     expect(target.textContent).toBe(text);
     expect(target.getElementsByClassName("idlIncludes")).toHaveSize(1);
 
-    target = doc.getElementById("incl-less-basic");
+    target = doc.querySelector("#incl-less-basic > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     text = `[Something]${text}`;
     expect(target.textContent).toBe(text);
   });
 
   it("should link documentation", () => {
     const section = doc.getElementById("documentation");
-    const target = doc.getElementById("doc-iface");
+    const target = doc.querySelector("#doc-iface > code");
 
     expect(
       target.querySelector("a.idlName[href='#dom-documented-docstring']")
@@ -1336,6 +1281,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const body = `
       <section id="idl-dfn-types">
         <pre class="idl">
+          [Exposed=Window]
           interface InterfaceType {
             readonly attribute DOMString attributeType;
             undefined operationType();
@@ -1803,9 +1749,8 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const target = doc.getElementById("dict-webidl");
+    const target = doc.querySelector("#dict-webidl > code");
     // Remove the header, as we are not interested in it.
-    target.querySelector(".idlHeader").remove();
     const text = "dictionary Test {};";
     expect(target.textContent).toBe(text);
 
