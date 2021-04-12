@@ -28,7 +28,7 @@
     "@rollup/plugin-node-resolve": "^11.2.1",
     "@types/marked": "^2.0.0",
     "@types/pluralize": "0.0.29",
-    "boxen": "^5.0.0",
+    "boxen": "^5.0.1",
     "chokidar": "^3.5.1",
     "clean-css": "^5.1.2",
     "epipebomb": "^1.0.0",
