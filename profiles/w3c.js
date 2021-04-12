@@ -72,6 +72,7 @@ const modules = [
   import("../src/core/linter-rules/no-headingless-sections.js"),
   import("../src/core/linter-rules/no-unused-vars.js"),
   import("../src/core/linter-rules/privsec-section.js"),
+  import("../src/core/linter-rules/wpt-tests-exist.js"),
   import("../src/core/linter.js"),
   import("../src/core/a11y.js"),
 ];

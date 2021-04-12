@@ -6,10 +6,6 @@ export const name = "w3c/defaults";
 import { bgStatus, cgStatus, cgbgStatus } from "./headers.js";
 import { docLink, showError } from "../core/utils.js";
 import { coreDefaults } from "../core/defaults.js";
-import linter from "../core/linter.js";
-import { rule as wptTestsExist } from "../core/linter-rules/wpt-tests-exist.js";
-
-linter.register(wptTestsExist);
 
 const w3cLogo = {
   src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",

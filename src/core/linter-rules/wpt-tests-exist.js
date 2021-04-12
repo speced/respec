@@ -3,29 +3,24 @@
  * Linter rule "wpt-tests-exist".
  * Warns about nonexistent web platform tests.
  */
-import LinterRule from "../LinterRule.js";
-import { lang as defaultLang } from "../l10n.js";
-import { showWarning } from "../utils.js";
+import { getIntlData, showWarning } from "../utils.js";
 
-const name = "wpt-tests-exist";
+const ruleName = "wpt-tests-exist";
+export const name = "core/linter-rules/wpt-tests-exist";
 
-const meta = {
+const localizationStrings = {
   en: {
-    description: "Non-existent Web Platform Tests",
-    howToFix: "Please fix the tests mentioned.",
-    help: "See developer console.",
+    msg: "Non-existent Web Platform Tests",
+    hint: "Please fix the tests mentioned.",
   },
 };
+const l10n = getIntlData(localizationStrings);
 
-const lang = defaultLang in meta ? defaultLang : "en";
+export async function run(conf) {
+  if (!conf.lint?.[ruleName]) {
+    return;
+  }
 
-/**
- * Runs linter rule.
- * @param {Object} conf The ReSpec config.
- * @param  {Document} doc The document to be checked.
- * @return {Promise<import("../LinterRule").LinterResult>}
- */
-async function linterFunction(conf, doc) {
   const filesInWPT = await getFilesInWPT(conf.testSuiteURI, conf.githubAPI);
   if (!filesInWPT) {
     return;
@@ -35,7 +30,7 @@ async function linterFunction(conf, doc) {
   const offendingTests = new Set();
 
   /** @type {NodeListOf<HTMLElement>} */
-  const elems = doc.querySelectorAll("[data-tests]");
+  const elems = document.querySelectorAll("[data-tests]");
   const testables = [...elems].filter(elem => elem.dataset.tests);
 
   for (const elem of testables) {
@@ -56,16 +51,11 @@ async function linterFunction(conf, doc) {
   }
 
   const missingTests = [...offendingTests].map(test => `\`${test}\``);
-  return {
-    name,
-    offendingElements,
-    occurrences: offendingElements.length,
-    ...meta[lang],
-    description: `${meta[lang].description}: ${missingTests.join(", ")}.`,
-  };
+  showWarning(`${l10n.msg}: ${missingTests.join(", ")}.`, name, {
+    hint: l10n.hint,
+    elements: offendingElements,
+  });
 }
-
-export const rule = new LinterRule(name, linterFunction);
 
 /**
  * @param {string} testSuiteURI
