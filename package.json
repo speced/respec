@@ -57,7 +57,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^11.3.2",
     "typescript": "^4.2.3",
-    "webidl2": "^23.13.1"
+    "webidl2": "^24.0.0"
   },
   "scripts": {
     "build:geonovum-debug": "npm run build:geonovum -- --debug",
