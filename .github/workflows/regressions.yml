@@ -28,7 +28,7 @@ jobs:
             builds/respec-w3c.js*
             builds/respec-worker.js*
             builds/respec-highlight.js*
-          retention-days: 3
+          retention-days: 1
 
   test:
     name: Diff ${{ matrix.source }}
