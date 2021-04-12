@@ -6,9 +6,8 @@ export const name = "core/defaults";
 
 import linter from "./linter.js";
 import { rule as noHttpPropsRule } from "./linter-rules/no-http-props.js";
-import { rule as privsecSection } from "./linter-rules/privsec-section.js";
 
-linter.register(noHttpPropsRule, privsecSection);
+linter.register(noHttpPropsRule);
 
 export const coreDefaults = {
   lint: {

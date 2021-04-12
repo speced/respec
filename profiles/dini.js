@@ -55,6 +55,7 @@ const modules = [
   import("../src/core/linter-rules/local-refs-exist.js"),
   import("../src/core/linter-rules/no-headingless-sections.js"),
   import("../src/core/linter-rules/no-unused-vars.js"),
+  import("../src/core/linter-rules/privsec-section.js"),
   import("../src/core/linter.js"),
 ];
 
