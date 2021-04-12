@@ -3,7 +3,6 @@
  * Sets the core defaults
  */
 export const name = "core/defaults";
-import { rule as checkInternalSlots } from "./linter-rules/check-internal-slots.js";
 import { rule as checkPunctuation } from "./linter-rules/check-punctuation.js";
 import linter from "./linter.js";
 import { rule as localRefsExist } from "./linter-rules/local-refs-exist.js";
@@ -18,7 +17,6 @@ linter.register(
   noUnusedVars,
   checkPunctuation,
   localRefsExist,
-  checkInternalSlots,
   privsecSection
 );
 
