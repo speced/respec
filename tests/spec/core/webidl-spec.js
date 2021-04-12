@@ -72,15 +72,15 @@ describe("Core - WebIDL", () => {
   describe("records", () => {
     it("handles record types", async () => {
       const body = `
-          <section id="records">
-            <h2>Testing records</h2>
-            <pre class="idl">
-              dictionary Foo {
-                record&lt;DOMString, USVString> pass;
-              };
-            </pre>
-          </section>
-        `;
+        <section id="records">
+          <h2>Testing records</h2>
+          <pre class="idl">
+            dictionary Foo {
+              record&lt;DOMString, USVString> pass;
+            };
+          </pre>
+        </section>
+      `;
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
       const idl = doc.querySelector("#records pre");
