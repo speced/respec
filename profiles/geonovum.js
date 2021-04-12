@@ -51,6 +51,7 @@ const modules = [
   import("../src/core/linter-rules/check-charset.js"),
   import("../src/core/linter-rules/check-punctuation.js"),
   import("../src/core/linter-rules/local-refs-exist.js"),
+  import("../src/core/linter-rules/no-headingless-sections.js"),
   import("../src/core/linter.js"),
 ];
 

@@ -69,6 +69,7 @@ const modules = [
   import("../src/core/linter-rules/check-punctuation.js"),
   import("../src/core/linter-rules/check-internal-slots.js"),
   import("../src/core/linter-rules/local-refs-exist.js"),
+  import("../src/core/linter-rules/no-headingless-sections.js"),
   import("../src/core/linter.js"),
   import("../src/core/a11y.js"),
 ];
