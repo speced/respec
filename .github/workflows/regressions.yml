@@ -40,6 +40,9 @@ jobs:
           - https://w3c.github.io/manifest/
           - https://w3c.github.io/payment-request/
           - https://w3c.github.io/trace-context/
+          - https://w3c.github.io/screen-wake-lock/
+          - https://w3c.github.io/push-api/
+          - https://w3c.github.io/geolocation-api/
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
