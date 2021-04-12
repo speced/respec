@@ -69,6 +69,29 @@ describe("Core - WebIDL", () => {
     });
   });
 
+  describe("records", () => {
+    it("handles record types", async () => {
+      const body = `
+          <section id="records">
+            <h2>Testing records</h2>
+            <pre class="idl">
+              dictionary Foo {
+                record&lt;DOMString, USVString> pass;
+              };
+            </pre>
+          </section>
+        `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const idl = doc.querySelector("#records pre");
+      expect(idl).toBeTruthy(idl);
+      expect(idl.querySelector(".idlType:first-child").textContent).toBe(
+        "\n  record<DOMString, USVString>"
+      );
+      expect(idl.querySelector(".idlMember .idlName").textContent).toBe("pass");
+    });
+  });
+
   describe("dictionaries", () => {
     it("handles dictionaries", () => {
       let target = doc.querySelector("#dict-basic > code");
