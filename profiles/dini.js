@@ -51,6 +51,7 @@ const modules = [
   import("../src/core/custom-elements/index.js"),
   /* Linter must be the last thing to run */
   import("../src/core/linter-rules/check-charset.js"),
+  import("../src/core/linter-rules/check-punctuation.js"),
   import("../src/core/linter.js"),
 ];
 
