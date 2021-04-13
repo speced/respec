@@ -84,7 +84,9 @@ sade("./tools/dev-server.js", true)
   .option("--browser", 'Browser for Karma unit tests (e.g., "Chrome").')
   .option("--grep", "Run specific tests using karma --grep")
   .action(opts => run(opts))
-  .parse(process.argv);
+  .parse(process.argv, {
+    unknown: flag => console.error(`Unknown option: ${flag}`),
+  });
 
 async function run(args) {
   let isActive = false;
