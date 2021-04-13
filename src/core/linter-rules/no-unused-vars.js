@@ -5,28 +5,24 @@
  * Checks that an variable is used if declared (the first use is treated as
  * declaration).
  */
-import LinterRule from "../LinterRule.js";
-import { lang as defaultLang } from "../l10n.js";
-import { norm } from "../utils.js";
+import { getIntlData, norm, showWarning } from "../utils.js";
 
-const name = "no-unused-vars";
+const ruleName = "no-unused-vars";
+export const name = "core/linter-rules/no-unused-vars";
 
-const meta = {
+const localizationStrings = {
   en: {
-    description: "Variable was defined, but never used.",
-    howToFix: "Add a `data-ignore-unused` attribute to the `<var>`.",
-    help: "See developer console.",
+    msg: "Variable was defined, but never used.",
+    hint: "Add a `data-ignore-unused` attribute to the `<var>`.",
   },
 };
-// Fall back to english, if language is missing
-const lang = defaultLang in meta ? defaultLang : "en";
+const l10n = getIntlData(localizationStrings);
 
-/**
- * @param {*} _
- * @param {Document} doc
- * @return {import("../LinterRule").LinterResult}
- */
-function linterFunction(_, doc) {
+export function run(conf) {
+  if (!conf.lint?.[ruleName]) {
+    return;
+  }
+
   const offendingElements = [];
 
   /**
@@ -48,7 +44,7 @@ function linterFunction(_, doc) {
       ":scope > :not(section) ~ .algorithm, :scope > :not(section) .algorithm"
     );
 
-  for (const section of doc.querySelectorAll("section")) {
+  for (const section of document.querySelectorAll("section")) {
     if (!sectionContainsAlgorithm(section)) continue;
 
     /**
@@ -73,14 +69,10 @@ function linterFunction(_, doc) {
     }
   }
 
-  if (!offendingElements.length) {
-    return;
+  if (offendingElements.length) {
+    showWarning(l10n.msg, name, {
+      hint: l10n.hint,
+      elements: offendingElements,
+    });
   }
-  return {
-    name,
-    offendingElements,
-    occurrences: offendingElements.length,
-    ...meta[lang],
-  };
 }
-export const rule = new LinterRule(name, linterFunction);
