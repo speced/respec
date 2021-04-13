@@ -74,7 +74,6 @@ const modules = [
   import("../src/core/linter-rules/privsec-section.js"),
   import("../src/core/linter-rules/wpt-tests-exist.js"),
   import("../src/core/linter-rules/no-http-props.js"),
-  import("../src/core/linter.js"),
   import("../src/core/a11y.js"),
 ];
 
