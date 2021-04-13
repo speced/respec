@@ -1,47 +1,42 @@
 // @ts-check
 /**
- * Linter rule "check-punctuation". Makes sure the there are no punctuations missing at the end of a <p>
- *   in the ReSpec config.
+ * Linter rule "check-punctuation". Makes sure the there are no punctuations missing at the end of a <p>.
  */
-import LinterRule from "../LinterRule.js";
-import { lang as defaultLang } from "../l10n.js";
+import { getIntlData, showWarning } from "../utils.js";
 
-const name = "check-punctuation";
+const ruleName = "check-punctuation";
+export const name = "core/linter-rules/check-punctuation";
+
 const punctuationMarks = [".", ":", "!", "?"];
 const humanMarks = punctuationMarks.map(mark => `"${mark}"`).join(", ");
-const meta = {
+
+const localizationStrings = {
   en: {
-    description: "`p` elements should end with a punctuation mark.",
-    howToFix: `Please make sure \`p\` elements end with one of: ${humanMarks}.`,
+    msg: "`p` elements should end with a punctuation mark.",
+    hint: `Please make sure \`p\` elements end with one of: ${humanMarks}.`,
   },
 };
-// Fall back to english, if language is missing
-const lang = defaultLang in meta ? defaultLang : "en";
+const l10n = getIntlData(localizationStrings);
 
-/**
- * Runs linter rule.
- *
- * @param {Object} _ The ReSpec config.
- * @param  {Document} doc The document to be checked.
- * @return {import("../../core/LinterRule").LinterResult}
- */
-function lintingFunction(_, doc) {
+export function run(conf) {
+  if (!conf.lint?.[ruleName]) {
+    return;
+  }
+
   // Check string ends with one of ., !, ?, :, ], or is empty.
   const punctuatingRegExp = new RegExp(
     `[${punctuationMarks.join("")}\\]]$|^ *$`,
     "m"
   );
-  const offendingElements = [
-    ...doc.querySelectorAll("p:not(#back-to-top)"),
-  ].filter(elem => !punctuatingRegExp.test(elem.textContent.trim()));
+
+  /** @type {NodeListOf<HTMLParagraphElement>} */
+  const elems = document.querySelectorAll("p:not(#back-to-top)");
+  const offendingElements = [...elems].filter(
+    elem => !punctuatingRegExp.test(elem.textContent.trim())
+  );
+
   if (!offendingElements.length) {
     return;
   }
-  return {
-    name,
-    offendingElements,
-    occurrences: offendingElements.length,
-    ...meta[lang],
-  };
+  showWarning(l10n.msg, name, { hint: l10n.hint, elements: offendingElements });
 }
-export const rule = new LinterRule(name, lintingFunction);

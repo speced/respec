@@ -1,23 +1,20 @@
 "use strict";
 
-import { rule } from "../../../../src/core/linter-rules/check-internal-slots.js";
+import { makePluginDoc } from "../../SpecHelper.js";
 
 describe("Core Linter Rule - 'check-internal-slots'", () => {
-  const ruleName = "check-internal-slots";
-  const config = {
-    lint: { [ruleName]: true },
-  };
-  const doc = document.implementation.createHTMLDocument("test doc");
-  beforeEach(() => {
-    // Make sure every unordered test get an empty document
-    // See: https://github.com/w3c/respec/pull/1495
-    while (doc.body.firstChild) {
-      doc.body.removeChild(doc.body.firstChild);
-    }
-  });
+  const modules = [`/src/core/linter-rules/check-internal-slots.js`];
+
+  async function getWarnings(body) {
+    const config = { lint: { "check-internal-slots": true } };
+    const doc = await makePluginDoc(modules, { config, body });
+    return doc.respec.warnings.filter(
+      warning => warning.plugin === "core/linter-rules/check-internal-slots"
+    );
+  }
 
   it("returns an error when there is no '.' between var and an internal slot", async () => {
-    doc.body.innerHTML = `
+    const body = `
       <var>bar</var><a>[[foo]]</a>
       <var>bar</var>.<a>[foo]</a>
       <var>bar</var>.<a>foo</a>
@@ -28,19 +25,20 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
       <var>[[foo]]</var>.<a>bar</a>
       <var>bar</var>.<a>[[f oo]]</a>
     `;
-    const result = await rule.lint(config, doc);
-    expect(result.name).toBe(ruleName);
-    // first fails the isPrevVar check, rest are ok tho weird...
-    expect(result.occurrences).toBe(1);
+    const warnings = await getWarnings(body);
+    expect(warnings).toHaveSize(1);
 
-    const offendingElement = result.offendingElements[0];
+    // first fails the isPrevVar check, rest are ok tho weird...
+    expect(warnings[0].elements).toHaveSize(1);
+
+    const offendingElement = warnings[0].elements[0];
     const { previousSibling } = offendingElement;
     // offending element's previous element won't have '.'
     expect(previousSibling.textContent).not.toBe(".");
   });
 
   it("doesn't generates an error for general internal slot and var usage", async () => {
-    doc.body.innerHTML = `
+    const body = `
       <var>bar</var>.<a>[[foo]]</a>
       <var>foo</var>.<a>[[BarFoo]]</a>
       <var></var>.<a>[[foo]]</a>
@@ -50,9 +48,9 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
       <var>bar</var>..<a>[[foo]]</a>
       <var>bar</var> . <a>[[foo]]</a>
       <var>bar</var> <a>[[foo]]</a>
-     
+
     `;
-    const result = await rule.lint(config, doc);
-    expect(result).toBeUndefined();
+    const warnings = await getWarnings(body);
+    expect(warnings).toHaveSize(0);
   });
 });
