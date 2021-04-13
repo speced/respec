@@ -4,11 +4,6 @@
  */
 export const name = "core/defaults";
 
-import linter from "./linter.js";
-import { rule as noHttpPropsRule } from "./linter-rules/no-http-props.js";
-
-linter.register(noHttpPropsRule);
-
 export const coreDefaults = {
   lint: {
     "no-headingless-sections": true,
