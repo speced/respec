@@ -199,7 +199,12 @@ cli._version = () => {
   console.log(version);
 };
 
-cli.parse(process.argv);
+cli.parse(process.argv, {
+  unknown(flag) {
+    new Logger().fatal(`Unknown option: ${flag}`);
+    process.exit(1);
+  },
+});
 
 /**
  * @param {string} source

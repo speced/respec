@@ -155,5 +155,7 @@ if (require.main === module) {
         return process.exit(1);
       }
     })
-    .parse(process.argv);
+    .parse(process.argv, {
+      unknown: flag => console.error(`Unknown option: ${flag}`),
+    });
 }
