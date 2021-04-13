@@ -120,11 +120,9 @@ async function run(args) {
     execSync("git checkout -- builds", { stdio: "inherit" });
   });
 
-  printWelcomeMessage(args);
-
-  await unitTestServer.start();
-  await integrationTestServer.start();
   devServer.listen(SERVE_PORT);
+  printWelcomeMessage(args);
+  await Promise.all([unitTestServer.start(), integrationTestServer.start()]);
   await buildAndTest({ profile: args.profile });
 
   function registerStdinHandler() {
