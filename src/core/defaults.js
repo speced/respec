@@ -3,7 +3,7 @@
  * Sets the core defaults
  */
 export const name = "core/defaults";
-import { rule as checkPunctuation } from "./linter-rules/check-punctuation.js";
+
 import linter from "./linter.js";
 import { rule as localRefsExist } from "./linter-rules/local-refs-exist.js";
 import { rule as noHeadinglessSectionsRule } from "./linter-rules/no-headingless-sections.js";
@@ -15,7 +15,6 @@ linter.register(
   noHttpPropsRule,
   noHeadinglessSectionsRule,
   noUnusedVars,
-  checkPunctuation,
   localRefsExist,
   privsecSection
 );
