@@ -92,107 +92,6 @@ describe("Core - WebIDL", () => {
     });
   });
 
-  describe("dictionaries", () => {
-    it("handles dictionaries", () => {
-      let target = doc.querySelector("#dict-basic > code");
-      let text = "dictionary SuperStar {};";
-      expect(target.textContent).toBe(text);
-      expect(target.querySelectorAll(".idlDictionary")).toHaveSize(1);
-      expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
-
-      target = doc.querySelector("#dict-inherit > code");
-      text = "dictionary SuperStar : HyperStar {};";
-      expect(target.textContent).toBe(text);
-      expect(target.querySelector(".idlSuperclass").textContent).toBe(
-        "HyperStar"
-      );
-
-      target = doc.querySelector("#dict-fields > code");
-      text =
-        "dictionary SuperStar {\n" +
-        "  // 1\n" +
-        "  DOMString value;\n" +
-        "  // 2\n" +
-        "  DOMString? nullable;\n" +
-        "  // 3\n" +
-        "  [Something]float ext;\n" +
-        "  // 4\n" +
-        "  unsigned long long longLong;\n" +
-        "\n" +
-        "  // 5\n" +
-        "  boolean test = true;\n" +
-        "  // 6\n" +
-        "  byte little = 2;\n" +
-        "  // 7\n" +
-        "  byte big = Infinity;\n" +
-        "  // 8\n" +
-        "  byte cheese = NaN;\n" +
-        "  // 9\n" +
-        '  DOMString blah = "blah blah";\n' +
-        "};";
-      expect(target.textContent).toBe(text);
-      const members = target.querySelectorAll(".idlMember");
-      expect(members).toHaveSize(9);
-      const member = members[0];
-      expect(member.querySelector(".idlType").textContent).toBe(
-        "\n  // 1\n  DOMString"
-      );
-      expect(member.querySelector(".idlName").textContent).toBe("value");
-
-      target = doc.querySelector("#dict-required-fields > code");
-      text =
-        "dictionary SuperStar {\n" +
-        "  required DOMString value;\n" +
-        "  DOMString optValue;\n" +
-        "};";
-      expect(target.textContent).toBe(text);
-
-      // Links and IDs.
-      const dictDocTest = doc
-        .getElementById("dict-doc")
-        .querySelector(".idlDictionary");
-      expect(dictDocTest.querySelector("a.idlID").getAttribute("href")).toBe(
-        "#dom-dictdoctest"
-      );
-      expect(dictDocTest.getAttribute("id")).toBe("idl-def-dictdoctest");
-      const mems = [...dictDocTest.querySelectorAll(".idlMember")];
-      const dictDocField = mems.find(m =>
-        m.textContent.includes("dictDocField")
-      );
-      expect(dictDocField.querySelector("a.idlName").getAttribute("href")).toBe(
-        "#dom-dictdoctest-dictdocfield"
-      );
-      expect(
-        mems
-          .find(m => m.textContent.includes("otherField"))
-          .querySelector("a.idlName")
-          .getAttribute("href")
-      ).toBe("#dom-dictdoctest-otherfield");
-      expect(dictDocField.getAttribute("id")).toBe(
-        "idl-def-dictdoctest-dictdocfield"
-      );
-      const warningLink = mems
-        .find(m => m.textContent.includes("undocField"))
-        .querySelector("dfn.idlName");
-      expect(warningLink).toBeTruthy();
-    });
-
-    it("handles multiple dictionaries", async () => {
-      const idl = doc.querySelector("#multiple-dictionaries code");
-      const expected = `
-dictionary OneThing {
-  int x;
-};
-
-
-partial dictionary AnotherThing {
-  int y;
-};`.trim();
-      expect(idl.textContent).toBe(expected);
-      expect(idl.querySelector(".idlSectionComment")).toBeNull();
-    });
-  });
-
   describe("linking", () => {
     it("links standardized IDL types to WebIDL spec", async () => {
       const body = `
@@ -996,6 +895,103 @@ interface SuperStar {
     expect(a2.getAttribute("href")).toBe("#dom-test2-enum");
     expect(doc.getElementById("dom-test1-enum")).toBeTruthy();
     expect(doc.getElementById("dom-test2-enum")).toBeTruthy();
+  });
+
+  it("handles dictionaries", () => {
+    let target = doc.querySelector("#dict-basic > code");
+    let text = "dictionary SuperStar {};";
+    expect(target.textContent).toBe(text);
+    expect(target.querySelectorAll(".idlDictionary")).toHaveSize(1);
+    expect(target.querySelector(".idlID").textContent).toBe("SuperStar");
+
+    target = doc.querySelector("#dict-inherit > code");
+    text = "dictionary SuperStar : HyperStar {};";
+    expect(target.textContent).toBe(text);
+    expect(target.querySelector(".idlSuperclass").textContent).toBe(
+      "HyperStar"
+    );
+
+    target = doc.querySelector("#dict-fields > code");
+    text =
+      "dictionary SuperStar {\n" +
+      "  // 1\n" +
+      "  DOMString value;\n" +
+      "  // 2\n" +
+      "  DOMString? nullable;\n" +
+      "  // 3\n" +
+      "  [Something]float ext;\n" +
+      "  // 4\n" +
+      "  unsigned long long longLong;\n" +
+      "\n" +
+      "  // 5\n" +
+      "  boolean test = true;\n" +
+      "  // 6\n" +
+      "  byte little = 2;\n" +
+      "  // 7\n" +
+      "  byte big = Infinity;\n" +
+      "  // 8\n" +
+      "  byte cheese = NaN;\n" +
+      "  // 9\n" +
+      '  DOMString blah = "blah blah";\n' +
+      "};";
+    expect(target.textContent).toBe(text);
+    const members = target.querySelectorAll(".idlMember");
+    expect(members).toHaveSize(9);
+    const member = members[0];
+    expect(member.querySelector(".idlType").textContent).toBe(
+      "\n  // 1\n  DOMString"
+    );
+    expect(member.querySelector(".idlName").textContent).toBe("value");
+
+    target = doc.querySelector("#dict-required-fields > code");
+    text =
+      "dictionary SuperStar {\n" +
+      "  required DOMString value;\n" +
+      "  DOMString optValue;\n" +
+      "};";
+    expect(target.textContent).toBe(text);
+
+    // Links and IDs.
+    const dictDocTest = doc
+      .getElementById("dict-doc")
+      .querySelector(".idlDictionary");
+    expect(dictDocTest.querySelector("a.idlID").getAttribute("href")).toBe(
+      "#dom-dictdoctest"
+    );
+    expect(dictDocTest.getAttribute("id")).toBe("idl-def-dictdoctest");
+    const mems = [...dictDocTest.querySelectorAll(".idlMember")];
+    const dictDocField = mems.find(m => m.textContent.includes("dictDocField"));
+    expect(dictDocField.querySelector("a.idlName").getAttribute("href")).toBe(
+      "#dom-dictdoctest-dictdocfield"
+    );
+    expect(
+      mems
+        .find(m => m.textContent.includes("otherField"))
+        .querySelector("a.idlName")
+        .getAttribute("href")
+    ).toBe("#dom-dictdoctest-otherfield");
+    expect(dictDocField.getAttribute("id")).toBe(
+      "idl-def-dictdoctest-dictdocfield"
+    );
+    const warningLink = mems
+      .find(m => m.textContent.includes("undocField"))
+      .querySelector("dfn.idlName");
+    expect(warningLink).toBeTruthy();
+  });
+
+  it("handles multiple dictionaries", async () => {
+    const idl = doc.querySelector("#multiple-dictionaries code");
+    const expected = `
+dictionary OneThing {
+int x;
+};
+
+
+partial dictionary AnotherThing {
+int y;
+};`.trim();
+    expect(idl.textContent).toBe(expected);
+    expect(idl.querySelector(".idlSectionComment")).toBeNull();
   });
 
   describe("enums", () => {
