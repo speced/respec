@@ -5,7 +5,7 @@
   "description": "A technical specification pre-processor.",
   "engines": {
     "node": ">=14",
-    "npm": ">=6"
+    "npm": ">=7"
   },
   "bin": {
     "respec": "tools/respec2html.js",
