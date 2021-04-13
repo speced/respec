@@ -983,12 +983,12 @@ interface SuperStar {
     const idl = doc.querySelector("#multiple-dictionaries code");
     const expected = `
 dictionary OneThing {
-int x;
+  int x;
 };
 
 
 partial dictionary AnotherThing {
-int y;
+  int y;
 };`.trim();
     expect(idl.textContent).toBe(expected);
     expect(idl.querySelector(".idlSectionComment")).toBeNull();
