@@ -84,7 +84,9 @@ sade("./tools/dev-server.js", true)
   .option("--browser", 'Browser for Karma unit tests (e.g., "Chrome").')
   .option("--grep", "Run specific tests using karma --grep")
   .action(opts => run(opts))
-  .parse(process.argv);
+  .parse(process.argv, {
+    unknown: flag => console.error(`Unknown option: ${flag}`),
+  });
 
 async function run(args) {
   let isActive = false;
@@ -118,11 +120,9 @@ async function run(args) {
     execSync("git checkout -- builds", { stdio: "inherit" });
   });
 
-  printWelcomeMessage(args);
-
-  await unitTestServer.start();
-  await integrationTestServer.start();
   devServer.listen(SERVE_PORT);
+  printWelcomeMessage(args);
+  await Promise.all([unitTestServer.start(), integrationTestServer.start()]);
   await buildAndTest({ profile: args.profile });
 
   function registerStdinHandler() {
