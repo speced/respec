@@ -80,7 +80,6 @@ jobs:
       - run: npm run test:unit
         env:
           BROWSERS: ${{ matrix.browser }}
-      - run: sudo safaridriver --enable
       - run: npm run test:integration
         env:
           BROWSERS: ${{ matrix.browser }}
