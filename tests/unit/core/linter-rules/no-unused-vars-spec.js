@@ -1,22 +1,20 @@
 "use strict";
 
-import { rule } from "../../../../src/core/linter-rules/no-unused-vars.js";
+import { makePluginDoc } from "../../SpecHelper.js";
 
 describe("Core Linter Rule - 'no-unused-vars'", () => {
-  const config = {
-    lint: { "no-unused-vars": true },
-  };
-  const doc = document.implementation.createHTMLDocument("test doc");
-  beforeEach(() => {
-    // Make sure every unordered test get an empty document
-    // See: https://github.com/w3c/respec/pull/1495
-    while (doc.body.firstChild) {
-      doc.body.removeChild(doc.body.firstChild);
-    }
-  });
+  const modules = [`/src/core/linter-rules/no-unused-vars.js`];
+
+  async function getWarnings(body) {
+    const config = { lint: { "no-unused-vars": true } };
+    const doc = await makePluginDoc(modules, { config, body });
+    return doc.respec.warnings.filter(
+      warning => warning.plugin === "core/linter-rules/no-unused-vars"
+    );
+  }
 
   it("skips sections without .algorithm", async () => {
-    doc.body.innerHTML = `
+    const body = `
       <section>
         <p><var>varA</var></p>
         <section>
@@ -25,12 +23,12 @@ describe("Core Linter Rule - 'no-unused-vars'", () => {
       </section>
     `;
 
-    const result = await rule.lint(config, doc);
-    expect(result).toBeUndefined();
+    const warnings = await getWarnings(body);
+    expect(warnings).toHaveSize(0);
   });
 
   it("complains on unused vars", async () => {
-    doc.body.innerHTML = `
+    const body = `
       <section>
         <p><var>A</var>  is unused</p>
         <p><var>B</var></p>
@@ -53,15 +51,16 @@ describe("Core Linter Rule - 'no-unused-vars'", () => {
       </section>
     `;
 
-    const result = await rule.lint(config, doc);
-    expect(result.name).toBe("no-unused-vars");
-    const unusedVars = result.offendingElements.map(v => v.textContent);
+    const warnings = await getWarnings(body);
+    expect(warnings).toHaveSize(1);
+
+    const [{ elements }] = warnings;
+    const unusedVars = elements.map(v => v.textContent);
     expect(unusedVars).toEqual(["A", "Z", "C", "E", "F", "Z"]);
-    expect(result.occurrences).toBe(6);
   });
 
   it("ignores unused vars with data-ignore-unused", async () => {
-    doc.body.innerHTML = `
+    const body = `
       <section>
         <p><var data-ignore-unused>varA</var>  is unused</p>
         <ul class="algorithm">
@@ -73,10 +72,9 @@ describe("Core Linter Rule - 'no-unused-vars'", () => {
       </section>
     `;
 
-    const result = await rule.lint(config, doc);
-    expect(result.name).toBe("no-unused-vars");
-    expect(result.occurrences).toBe(1);
-    const unusedVars = result.offendingElements.map(v => v.textContent);
+    const [warning] = await getWarnings(body);
+    expect(warning.elements).toHaveSize(1);
+    const unusedVars = warning.elements.map(v => v.textContent);
     expect(unusedVars).toEqual(["varB"]);
   });
 });
