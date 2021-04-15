@@ -171,14 +171,14 @@ async function run(args) {
       if (unitTests) await unitTestServer.run();
       if (integrationTests) await integrationTestServer.run();
     } catch (err) {
-      console.error(colors.error(err.stack));
+      console.error(colors.red(err.stack));
     } finally {
       isActive = false;
     }
   }
 
   async function onError(err) {
-    console.error(colors.error(err.stack));
+    console.error(colors.red(err.stack));
     await unitTestServer.stop();
     await integrationTestServer.stop();
     process.exit(1);
