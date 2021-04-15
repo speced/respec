@@ -140,7 +140,7 @@ describe("Core — dfnPanel", () => {
 
     const references = panel.querySelectorAll("ul li a");
     expect(references).toHaveSize(1);
-    expect(references[0].textContent).toBe("1. top level heading");
+    expect(references[0].textContent).toBe("§ 1. top level heading");
     expect(references[0].hash).toBe("#ref-for-dfn-one-1");
   });
 
@@ -163,21 +163,21 @@ describe("Core — dfnPanel", () => {
 
     const item1Links = item1.querySelectorAll("a");
     expect(item1Links).toHaveSize(3);
-    expect(item1Links[0].textContent).toBe("1. top level heading");
+    expect(item1Links[0].textContent).toBe("§ 1. top level heading");
     expect(item1Links[0].hash).toBe("#ref-for-dfn-many-1");
     expect(item1Links[1].textContent).toBe("(2)");
     expect(item1Links[1].hash).toBe("#ref-for-dfn-many-2");
     expect(item1Links[2].textContent).toBe("(3)");
     expect(item1Links[2].hash).toBe("#ref-for-dfn-many-5");
-    expect(item1.textContent.trim()).toBe("1. top level heading (2) (3)");
+    expect(item1.textContent.trim()).toBe("§ 1. top level heading (2) (3)");
 
     const item2Links = item2.querySelectorAll("a");
     expect(item2Links).toHaveSize(2);
-    expect(item2Links[0].textContent).toBe("1.1 nested section heading");
+    expect(item2Links[0].textContent).toBe("§ 1.1 nested section heading");
     expect(item2Links[0].hash).toBe("#ref-for-dfn-many-3");
     expect(item2Links[1].textContent).toBe("(2)");
     expect(item2Links[1].hash).toBe("#ref-for-dfn-many-4");
-    expect(item2.textContent.trim()).toBe("1.1 nested section heading (2)");
+    expect(item2.textContent.trim()).toBe("§ 1.1 nested section heading (2)");
   });
 
   it("renders a marker on exported definitions", async () => {
@@ -249,7 +249,7 @@ describe("Core — dfnPanel", () => {
 
     const references = panel.querySelectorAll("ul li a");
     expect(references).toHaveSize(1);
-    expect(references[0].textContent).toBe("1. top level heading");
+    expect(references[0].textContent).toBe("§ 1. top level heading");
     expect(references[0].hash).toBe("#ref-for-dfn-one-1");
   });
 });

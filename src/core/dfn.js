@@ -17,6 +17,12 @@ export function run() {
       dfn.dataset.dfnType = "idl";
     }
 
+    // Make it possible to reach dfns by tabbing on keyboard
+    // allowing keyboard actions as needed.
+    dfn.tabIndex = 0;
+    const definition = dfn.textContent === '""' ? "the empty string" : norm(dfn.textContent);
+    dfn.title = `${definition}. Activate for what links to the definition of "${definition}"`;
+
     // Per https://tabatkins.github.io/bikeshed/#dfn-export, a dfn with dfnType
     // other than dfn and not marked with data-no-export is to be exported.
     // We also skip "imported" definitions via data-cite.

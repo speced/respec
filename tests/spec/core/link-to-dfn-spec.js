@@ -86,7 +86,9 @@ describe("Core — Link to definitions", () => {
     const dfn3 = dfnList[3];
     expect(dfn3).toBeTruthy();
     expect(dfn3.classList).toContain("respec-offending-element");
-    expect(dfn3.title).toBe("test1");
+    expect(dfn3.title).toBe(
+      'Test1. Activate for what links to the definition of "Test1"'
+    );
 
     const dfn4 = dfnList[4];
     expect(dfn4.classList).toContain("respec-offending-element");

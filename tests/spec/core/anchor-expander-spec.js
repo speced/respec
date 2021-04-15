@@ -78,7 +78,9 @@ describe("Core - anchor-expander", () => {
     expect(doc.querySelector("#expansion *[id]")).toBeNull();
 
     const [firstSpan, secondSpan] = doc.querySelectorAll("#expansion a > span");
-    expect(firstSpan.title).toBe("pass");
+    expect(firstSpan.title).toBe(
+      'code thing. Activate for what links to the definition of "code thing"'
+    );
     expect(firstSpan.firstElementChild.localName).toBe("code");
     expect(firstSpan.firstElementChild.textContent).toBe("code thing");
     expect(secondSpan.textContent).toBe("span");
