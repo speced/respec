@@ -20,7 +20,8 @@ export function run() {
     // Make it possible to reach dfns by tabbing on keyboard
     // allowing keyboard actions as needed.
     dfn.tabIndex = 0;
-    const definition = dfn.textContent === '""' ? "the empty string" : norm(dfn.textContent);
+    const definition =
+      dfn.textContent === '""' ? "the empty string" : norm(dfn.textContent);
     dfn.title = `${definition}. Activate for what links to the definition of "${definition}"`;
 
     // Per https://tabatkins.github.io/bikeshed/#dfn-export, a dfn with dfnType
