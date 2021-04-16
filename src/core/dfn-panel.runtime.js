@@ -199,7 +199,7 @@ function createTrapListener(anchors, panel, dfn) {
         }
         break;
 
-      // Hitting "Escape" releases the trap and returns focus
+      // Hitting "Escape" returns focus to dfn.
       case "Escape":
         hidePanel(panel);
         dfn.focus();

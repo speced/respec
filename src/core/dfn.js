@@ -17,8 +17,7 @@ export function run() {
       dfn.dataset.dfnType = "idl";
     }
 
-    // Make it possible to reach dfns by tabbing on keyboard
-    // allowing keyboard actions as needed.
+    // Make it possible to reach dfns by tabbing, allowing keyboard actions as needed.
     dfn.tabIndex = 0;
     const definition =
       dfn.textContent === '""' ? "the empty string" : norm(dfn.textContent);
