@@ -33,7 +33,7 @@ describe("Core — Definitions", () => {
     const doc = await makeRSDoc(ops);
     const sec = doc.getElementById("dfns");
     const dfns = sec.querySelectorAll("dfn");
-    expect(dfns.id).toHaveSize(4);
+    expect(dfns.length).toHaveSize(4);
     expect([...dfns].every(dfn => dfn.tabIndex === 0)).toBeTrue();
   });
 
