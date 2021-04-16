@@ -9,27 +9,24 @@ function panelListener() {
   /** @type {HTMLElement} */
   let panel = null;
   return event => {
-    const { target: el, type } = event;
+    const { target, type } = event;
 
-    if (!(el instanceof HTMLElement)) return;
+    if (!(target instanceof HTMLElement)) return;
 
     // For keys, we only care about Enter key to activate the panel
+    // otherwise it's activated via a click.
     if (type === "keydown" && event.key !== "Enter") return;
 
-    const action =
-      type === "keydown"
-        ? derivePressAction(event, panel)
-        : deriveClickAction(event);
-
+    const action = deriveAction(event);
     const coords = deriveCoordinates(event);
 
     switch (action) {
       case "show": {
         hidePanel(panel);
         /** @type {HTMLElement} */
-        const dfn = el.closest("dfn, .index-term");
+        const dfn = target.closest("dfn, .index-term");
         panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
-        displayPanel(dfn, panel, coords, type);
+        displayPanel(dfn, panel, coords);
         break;
       }
       case "dock": {
@@ -47,19 +44,21 @@ function panelListener() {
   };
 }
 
+/**
+ * @param {MouseEvent|KeyboardEvent} event
+ */
 function deriveCoordinates(event) {
-  switch (event.type) {
-    case "click":
-      return { x: event.clientX, y: event.clientY };
-    case "keydown": {
-      const rect = event.target.getBoundingClientRect();
-      // Offset to the middle of the element
-      const x = rect.x + rect.width / 2;
-      // Placed at the bottom of the element
-      const y = rect.y + rect.height;
-      return { x, y };
-    }
+  if (event instanceof MouseEvent) {
+    return { x: event.clientX, y: event.clientY };
   }
+  // Otherwise, KeyboardEvent...
+  const target = /** @type HTMLElement */ (event.target);
+  const rect = target.getBoundingClientRect();
+  // Offset to the middle of the element
+  const x = rect.x + rect.width / 2;
+  // Placed at the bottom of the element
+  const y = rect.y + rect.height;
+  return { x, y };
 }
 
 function setupPanel() {
@@ -69,20 +68,10 @@ function setupPanel() {
 }
 
 /**
- *
- * @param {HTMLElement} panel
- * @returns string
+ * @param {Event} event
  */
-function derivePressAction(event, panel) {
-  const hitALink = !!event.target.closest("a");
-  if (hitALink) return "none";
-  if (!panel || panel.hidden) return "show";
-  return "hide";
-}
-
-function deriveClickAction(event) {
-  /** @type {HTMLElement} */
-  const target = event.target;
+function deriveAction(event) {
+  const target = /** @type {HTMLElement} */ (event.target);
   const hitALink = !!target.closest("a");
   if (target.closest("dfn, .index-term")) {
     return hitALink ? "none" : "show";
@@ -104,9 +93,8 @@ function deriveClickAction(event) {
  * @param {HTMLElement} dfn
  * @param {HTMLElement} panel
  * @param {{ x: number, y: number }} clickPosition
- * @param {string} eventType
  */
-function displayPanel(dfn, panel, { x, y }, eventType) {
+function displayPanel(dfn, panel, { x, y }) {
   panel.hidden = false;
   // distance (px) between edge of panel and the pointing triangle (caret)
   const MARGIN = 20;
@@ -141,12 +129,12 @@ function displayPanel(dfn, panel, { x, y }, eventType) {
     caret.style.left = `${newCaretOffset}px`;
   }
 
-  // If we are displaying because of a keydown,
-  // we want to trap focus
-  if (eventType === "keydown") {
-    trapFocus(panel, dfn);
-  }
+  // As it's a dialog, we trap focus.
+  // TODO: when <dialog> becomes a implemented, we should really
+  // use that.
+  trapFocus(panel, dfn);
 }
+
 /**
  * @param {HTMLElement} panel
  * @param {HTMLElement} dfn
@@ -154,12 +142,40 @@ function displayPanel(dfn, panel, { x, y }, eventType) {
  */
 function trapFocus(panel, dfn) {
   /** @type NodeListOf<HTMLAnchorElement> elements */
-  const elements = panel.querySelectorAll("a[href]");
-  if (!elements.length) return;
-  const lastIndex = elements.length - 1;
+  const anchors = panel.querySelectorAll("a[href]");
+  // No need to trap focus
+  if (!anchors.length) return;
 
+  // Move focus to first anchor element
+  const first = anchors.item(0);
+  first.focus();
+
+  const trapListener = createTrapListener(anchors, panel, dfn);
+  panel.addEventListener("keydown", trapListener);
+
+  // Hiding the panel releases the trap
+  const mo = new MutationObserver(records => {
+    const [record] = records;
+    const target = /** @type HTMLElement */ (record.target);
+    if (target.hidden) {
+      panel.removeEventListener("keydown", trapListener);
+      mo.disconnect();
+    }
+  });
+  mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+}
+
+/**
+ *
+ * @param {NodeListOf<HTMLAnchorElement>} anchors
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function createTrapListener(anchors, panel, dfn) {
+  const lastIndex = anchors.length - 1;
   let currentIndex = 0;
-  const trapListener = function trapListener(event) {
+  return event => {
     switch (event.key) {
       // Hitting "Tab" traps us in a nice loop around elements.
       case "Tab": {
@@ -178,7 +194,6 @@ function trapFocus(panel, dfn) {
       case "Enter":
         if (event.target instanceof HTMLAnchorElement) {
           event.preventDefault();
-          panel.removeEventListener("keydown", trapListener);
           window.location = event.target.href;
           hidePanel(panel);
         }
@@ -186,16 +201,12 @@ function trapFocus(panel, dfn) {
 
       // Hitting "Escape" releases the trap and returns focus
       case "Escape":
-        panel.removeEventListener("keydown", trapListener);
         hidePanel(panel);
         dfn.focus();
         break;
     }
-    elements.item(currentIndex).focus();
+    anchors.item(currentIndex).focus();
   };
-  panel.addEventListener("keydown", trapListener);
-  const first = elements.item(0);
-  first.focus();
 }
 
 /** @param {HTMLElement} panel */
