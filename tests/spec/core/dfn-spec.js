@@ -21,6 +21,22 @@ describe("Core — Definitions", () => {
     expect(sec.querySelector("a").getAttribute("href")).toBe("#dfn-text");
   });
 
+  it("makes dfn tab enabled", async () => {
+    const body = `
+    <section id='dfns'>
+      <dfn>dfn 1</dfn>
+      <dfn>dfn 2</dfn>
+      <dfn>dfn 3</dfn>
+      <dfn>dfn 4</dfn>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const sec = doc.getElementById("dfns");
+    const dfns = sec.querySelectorAll("dfn");
+    expect(dfns.id).toHaveSize(4);
+    expect([...dfns].every(dfn => dfn.tabIndex === 0)).toBeTrue();
+  });
+
   it("makes links <code> when their definitions are <code>", async () => {
     const ops = {
       config: makeBasicConfig(),
