@@ -5,6 +5,12 @@ if (document.respec) {
   setupPanel();
 }
 
+function setupPanel() {
+  const listener = panelListener();
+  document.body.addEventListener("click", listener);
+  document.body.addEventListener("keydown", listener);
+}
+
 function panelListener() {
   /** @type {HTMLElement} */
   let panel = null;
@@ -59,12 +65,6 @@ function deriveCoordinates(event) {
   // Placed at the bottom of the element
   const y = rect.y + rect.height;
   return { x, y };
-}
-
-function setupPanel() {
-  const listener = panelListener();
-  document.body.addEventListener("click", listener);
-  document.body.addEventListener("keydown", listener);
 }
 
 /**
