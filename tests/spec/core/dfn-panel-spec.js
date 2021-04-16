@@ -24,6 +24,25 @@ describe("Core — dfnPanel", () => {
   `;
   const ops = makeStandardOps(null, body);
 
+  describe("aside container", () => {
+    const dfnId = "dfn-many";
+
+    it("has role and aria attributes", async () => {
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById(getPanelId(dfnId));
+      expect(panel.getAttribute("role")).toBe("dialog");
+      expect(panel.getAttribute("aria-modal")).toBe("true");
+      expect(panel.getAttribute("aria-label")).toBe(
+        "Links in this document to definition: many"
+      );
+
+      const permalink = panel.querySelector(".self-link");
+      expect(permalink.getAttribute("aria-label")).toBe(
+        "Permalink for definition: many"
+      );
+    });
+  });
+
   describe("dfnPanel state", () => {
     const dfnId = "dfn-many";
 
