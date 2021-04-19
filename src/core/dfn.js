@@ -17,10 +17,6 @@ export function run() {
       dfn.dataset.dfnType = "idl";
     }
 
-    // Make it possible to reach dfns by tabbing, allowing keyboard actions as needed.
-    dfn.tabIndex = 0;
-    dfn.setAttribute("role", "link");
-
     // Per https://tabatkins.github.io/bikeshed/#dfn-export, a dfn with dfnType
     // other than dfn and not marked with data-no-export is to be exported.
     // We also skip "imported" definitions via data-cite.

@@ -361,6 +361,11 @@ describe("Core — dfn-index", () => {
 
       expect(index.querySelectorAll(".index-term")).toHaveSize(2);
       const term = index.querySelector(".index-term");
+
+      expect(term.getAttribute("role")).toBe("link");
+      expect(term.tabIndex).toBe(0);
+      expect(term.getAttribute("aria-haspopup")).toBe("dialog");
+
       expect(term.textContent).toBe("Event interface");
       expect(term.id).toBe("index-term-event-interface");
 

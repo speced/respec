@@ -24,6 +24,11 @@ export async function run() {
   const panels = document.createDocumentFragment();
   for (const el of elems) {
     panels.append(createPanel(el));
+    // Make it possible to reach el by tabbing,
+    // allowing keyboard action as needed.
+    el.tabIndex = 0;
+    el.setAttribute("role", "link");
+    el.setAttribute("aria-haspopup", "dialog");
   }
   document.body.append(panels);
 
