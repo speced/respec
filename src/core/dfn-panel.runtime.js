@@ -24,7 +24,6 @@ function panelListener() {
     if (type === "keydown" && event.key !== "Enter") return;
 
     const action = deriveAction(event);
-    const coords = deriveCoordinates(event);
 
     switch (action) {
       case "show": {
@@ -32,6 +31,7 @@ function panelListener() {
         /** @type {HTMLElement} */
         const dfn = target.closest("dfn, .index-term");
         panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
+        const coords = deriveCoordinates(event);
         displayPanel(dfn, panel, coords);
         break;
       }
@@ -57,7 +57,7 @@ function deriveCoordinates(event) {
   if (event instanceof MouseEvent) {
     return { x: event.clientX, y: event.clientY };
   }
-  // Otherwise, KeyboardEvent...
+
   const target = /** @type HTMLElement */ (event.target);
   const rect = target.getBoundingClientRect();
   // Offset to the middle of the element
