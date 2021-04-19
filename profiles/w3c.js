@@ -65,7 +65,15 @@ const modules = [
   import("../src/core/anchor-expander.js"),
   import("../src/core/custom-elements/index.js"),
   /* Linters must be the last thing to run */
-  import("../src/core/linter.js"),
+  import("../src/core/linter-rules/check-charset.js"),
+  import("../src/core/linter-rules/check-punctuation.js"),
+  import("../src/core/linter-rules/check-internal-slots.js"),
+  import("../src/core/linter-rules/local-refs-exist.js"),
+  import("../src/core/linter-rules/no-headingless-sections.js"),
+  import("../src/core/linter-rules/no-unused-vars.js"),
+  import("../src/core/linter-rules/privsec-section.js"),
+  import("../src/core/linter-rules/wpt-tests-exist.js"),
+  import("../src/core/linter-rules/no-http-props.js"),
   import("../src/core/a11y.js"),
 ];
 

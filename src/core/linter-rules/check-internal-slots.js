@@ -2,30 +2,27 @@
 /**
  * Linter rule "check-internal-slots".
  */
-import LinterRule from "../LinterRule.js";
-import { lang as defaultLang } from "../l10n.js";
+import { getIntlData, showWarning } from "../utils.js";
 
-const name = "check-internal-slots";
+const ruleName = "check-internal-slots";
+export const name = "core/linter-rules/check-internal-slots";
 
-const meta = {
+const localizationStrings = {
   en: {
-    description: "Internal slots should be preceded by a '.'",
-    howToFix: "Add a '.' between the elements mentioned.",
-    help: "See developer console.",
+    msg: "Internal slots should be preceded by a '.'",
+    hint: "Add a '.' between the elements mentioned.",
   },
 };
+const l10n = getIntlData(localizationStrings);
 
-// Fall back to english, if language is missing
-const lang = defaultLang in meta ? defaultLang : "en";
+export function run(conf) {
+  if (!conf.lint?.[ruleName]) {
+    return;
+  }
 
-/**
- * Runs linter rule.
- * @param {Object} _ The ReSpec config.
- * @param {Document} doc The document to be checked.
- * @return {import("../../core/LinterRule").LinterResult}
- */
-function linterFunction(_, doc) {
-  const offendingElements = [...doc.querySelectorAll("var+a")].filter(
+  /** @type {NodeListOf<HTMLAnchorElement>} */
+  const elems = document.querySelectorAll("var+a");
+  const offendingElements = [...elems].filter(
     ({ previousSibling: { nodeName } }) => {
       const isPrevVar = nodeName && nodeName === "VAR";
       return isPrevVar;
@@ -36,12 +33,5 @@ function linterFunction(_, doc) {
     return;
   }
 
-  return {
-    name,
-    offendingElements,
-    occurrences: offendingElements.length,
-    ...meta[lang],
-  };
+  showWarning(l10n.msg, name, { hint: l10n.hint, elements: offendingElements });
 }
-
-export const rule = new LinterRule(name, linterFunction);

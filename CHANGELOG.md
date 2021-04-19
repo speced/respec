@@ -1,5 +1,31 @@
 # Changelog
 
+## [v26.5.0](https://github.com/w3c/respec/tree/v26.5.0) (2021-03-31)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.4.1...v26.5.0)
+
+**Fixed bugs:**
+
+- wgPatentPolicy and CG? [\#3420](https://github.com/w3c/respec/issues/3420)
+
+**Closed issues:**
+
+- Add a global ReSpec API [\#3089](https://github.com/w3c/respec/issues/3089)
+- Use custom ReSpec version while generating via respec2html [\#2874](https://github.com/w3c/respec/issues/2874)
+
+**Merged pull requests:**
+
+- fix\(w3c/headers\): wgPatentPolicy may be falsy [\#3424](https://github.com/w3c/respec/pull/3424) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps-dev\): bump karma from 6.2.0 to 6.3.2 [\#3423](https://github.com/w3c/respec/pull/3423) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): bump rollup from 2.42.2 to 2.44.0 [\#3422](https://github.com/w3c/respec/pull/3422) ([dependabot[bot]](https://github.com/apps/dependabot))
+- refactor\(tests/headless\): use jasmine instead of custom runner [\#3421](https://github.com/w3c/respec/pull/3421) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3419](https://github.com/w3c/respec/pull/3419) ([github-actions[bot]](https://github.com/apps/github-actions))
+- tests: support testing individual modules [\#3418](https://github.com/w3c/respec/pull/3418) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(deps\): update dependencies [\#3417](https://github.com/w3c/respec/pull/3417) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(tools/builder\): add a --watch flag [\#3406](https://github.com/w3c/respec/pull/3406) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/respec-global\): add toHTML\(\) method [\#3403](https://github.com/w3c/respec/pull/3403) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(respecDocWriter\): use locally installed respec version [\#2957](https://github.com/w3c/respec/pull/2957) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v26.4.1](https://github.com/w3c/respec/tree/v26.4.1) (2021-03-29)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.4.0...v26.4.1)

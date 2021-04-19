@@ -3,44 +3,34 @@
  * Linter rule "warn-local-ref".
  * Warns about href's that link to nonexistent id's in a spec
  */
-import LinterRule from "../LinterRule.js";
-import { lang as defaultLang } from "../l10n.js";
+import { getIntlData, showWarning } from "../utils.js";
 
-const name = "local-refs-exist";
+const ruleName = "local-refs-exist";
+export const name = "core/linter-rules/local-refs-exist";
 
-const meta = {
+const localizationStrings = {
   en: {
-    description: "Broken local reference found in document.",
-    howToFix: "Please fix the links mentioned.",
-    help: "See developer console.",
+    msg: "Broken local reference found in document.",
+    hint: "Please fix the links mentioned.",
   },
 };
+const l10n = getIntlData(localizationStrings);
 
-// Fall back to english, if language is missing
-const lang = defaultLang in meta ? defaultLang : "en";
-
-/**
- * Runs linter rule.
- * @param {Object} _ The ReSpec config.
- * @param  {Document} doc The document to be checked.
- * @return {import("../../core/LinterRule").LinterResult}
- */
-function linterFunction(_, doc) {
-  const offendingElements = [...doc.querySelectorAll("a[href^='#']")].filter(
-    isBrokenHyperlink
-  );
-  if (!offendingElements.length) {
+export function run(conf) {
+  if (!conf.lint?.[ruleName]) {
     return;
   }
-  return {
-    name,
-    offendingElements,
-    occurrences: offendingElements.length,
-    ...meta[lang],
-  };
-}
 
-export const rule = new LinterRule(name, linterFunction);
+  /** @type {NodeListOf<HTMLAnchorElement>} */
+  const elems = document.querySelectorAll("a[href^='#']");
+  const offendingElements = [...elems].filter(isBrokenHyperlink);
+  if (offendingElements.length) {
+    showWarning(l10n.msg, name, {
+      hint: l10n.hint,
+      elements: offendingElements,
+    });
+  }
+}
 
 function isBrokenHyperlink(elem) {
   const id = elem.getAttribute("href").substring(1);

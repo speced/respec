@@ -1,11 +1,11 @@
 {
   "name": "respec",
-  "version": "26.5.0",
+  "version": "26.5.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
-    "node": ">=10",
-    "npm": ">=5"
+    "node": ">=14",
+    "npm": ">=6"
   },
   "bin": {
     "respec": "tools/respec2html.js",
@@ -26,18 +26,18 @@
     "@rollup/plugin-alias": "^3.1.2",
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
-    "@types/marked": "^2.0.0",
+    "@types/marked": "^2.0.1",
     "@types/pluralize": "0.0.29",
-    "boxen": "^5.0.0",
+    "boxen": "^5.0.1",
     "chokidar": "^3.5.1",
     "clean-css": "^5.1.2",
     "epipebomb": "^1.0.0",
-    "eslint": "^7.23.0",
+    "eslint": "^7.24.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jasmine": "^4.1.2",
     "eslint-plugin-prettier": "^3.3.1",
-    "highlight.js": "^10.7.1",
+    "highlight.js": "^10.7.2",
     "hyperhtml": "^2.34.0",
     "idb": "^6.0.0",
     "jasmine": "^3.7.0",
@@ -52,12 +52,12 @@
     "pluralize": "^8.0.0",
     "prettier": "^2.2.1",
     "prompt": "^1.1.0",
-    "rollup": "^2.44.0",
+    "rollup": "^2.45.1",
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^11.3.2",
-    "typescript": "^4.2.3",
-    "webidl2": "^23.13.1"
+    "typescript": "^4.2.4",
+    "webidl2": "^24.0.0"
   },
   "scripts": {
     "build:geonovum-debug": "npm run build:geonovum -- --debug",
@@ -81,7 +81,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "finalhandler": "^1.1.2",
-    "marked": "^2.0.1",
+    "marked": "^2.0.3",
     "puppeteer": "^8.0.0",
     "sade": "^1.7.4",
     "serve-static": "^1.14.1"

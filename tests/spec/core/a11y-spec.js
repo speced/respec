@@ -3,7 +3,13 @@
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 
 describe("Core — a11y", () => {
-  afterAll(flushIframes);
+  beforeAll(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL *= 2;
+  });
+  afterAll(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL /= 2;
+    flushIframes();
+  });
 
   const body = `
     <section>
