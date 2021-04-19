@@ -203,7 +203,7 @@ function createTrapListener(anchors, panel, dfn) {
       case "Escape":
         hidePanel(panel);
         dfn.focus();
-        break;
+        return;
     }
     anchors.item(currentIndex).focus();
   };
