@@ -21,7 +21,7 @@ describe("Core — Definitions", () => {
     expect(sec.querySelector("a").getAttribute("href")).toBe("#dfn-text");
   });
 
-  it("makes dfn tab enabled", async () => {
+  it("makes dfn tab enabled whose aria-role is a link", async () => {
     const body = `
     <section id='dfns'>
       <dfn>dfn 1</dfn>
@@ -35,6 +35,9 @@ describe("Core — Definitions", () => {
     const dfns = sec.querySelectorAll("dfn");
     expect(dfns).toHaveSize(4);
     expect([...dfns].every(dfn => dfn.tabIndex === 0)).toBeTrue();
+    expect(
+      [...dfns].every(dfn => dfn.getAttribute("role") === "link")
+    ).toBeTrue();
   });
 
   it("makes links <code> when their definitions are <code>", async () => {
