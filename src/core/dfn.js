@@ -19,9 +19,7 @@ export function run() {
 
     // Make it possible to reach dfns by tabbing, allowing keyboard actions as needed.
     dfn.tabIndex = 0;
-    const definition =
-      dfn.textContent === '""' ? "the empty string" : norm(dfn.textContent);
-    dfn.title = `${definition}. Activate for what links to the definition of "${definition}"`;
+    dfn.setAttribute("role", "link");
 
     // Per https://tabatkins.github.io/bikeshed/#dfn-export, a dfn with dfnType
     // other than dfn and not marked with data-no-export is to be exported.
