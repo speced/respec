@@ -8,7 +8,6 @@
 
 - WebIDL CSS isn't injected [\#3442](https://github.com/w3c/respec/issues/3442)
 - Some refs from HTML starting with "DOM" aren't available  [\#3441](https://github.com/w3c/respec/issues/3441)
-- dfn-panel information not available for keyboard and screen reader users [\#3431](https://github.com/w3c/respec/issues/3431)
 
 **Closed issues:**
 
