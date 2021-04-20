@@ -365,6 +365,7 @@ describe("Core — dfn-index", () => {
       expect(term.getAttribute("role")).toBe("link");
       expect(term.tabIndex).toBe(0);
       expect(term.getAttribute("aria-haspopup")).toBe("dialog");
+      expect(term.title).toBe("Show what links to this definition");
 
       expect(term.textContent).toBe("Event interface");
       expect(term.id).toBe("index-term-event-interface");

@@ -29,6 +29,7 @@ export async function run() {
     el.tabIndex = 0;
     el.setAttribute("role", "link");
     el.setAttribute("aria-haspopup", "dialog");
+    if (!el.title) el.title = "Show what links to this definition";
   }
   document.body.append(panels);
 
