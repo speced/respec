@@ -182,7 +182,10 @@ export function decorateDfn(dfnElem, idlAst, parent, name) {
     const lCaseParent = parent.toLowerCase();
     const middle = lCaseParent ? `${lCaseParent}-` : "";
     let last = name.toLowerCase().replace(/[()]/g, "").replace(/\s/g, "-");
-    if (last === "") last = "the-empty-string";
+    if (last === "") {
+      last = "the-empty-string";
+      dfnElem.setAttribute("aria-label", "the empty string");
+    }
     dfnElem.id = `dom-${middle}${last}`;
   }
   dfnElem.dataset.idl = idlAst.type;
