@@ -7,8 +7,8 @@ if (document.respec) {
 
 function setupPanel() {
   const listener = panelListener();
-  document.body.addEventListener("click", listener);
   document.body.addEventListener("keydown", listener);
+  document.body.addEventListener("click", listener);
 }
 
 function panelListener() {
@@ -187,16 +187,13 @@ function createTrapListener(anchors, panel, dfn) {
           nextIndex = 0;
         }
         currentIndex = nextIndex;
+        anchors.item(currentIndex).focus();
         break;
       }
 
       // Hitting "Enter" on an anchor releases the trap.
       case "Enter":
-        if (event.target instanceof HTMLAnchorElement) {
-          event.preventDefault();
-          window.location = event.target.href;
-          hidePanel(panel);
-        }
+        hidePanel(panel);
         break;
 
       // Hitting "Escape" returns focus to dfn.
@@ -205,7 +202,6 @@ function createTrapListener(anchors, panel, dfn) {
         dfn.focus();
         return;
     }
-    anchors.item(currentIndex).focus();
   };
 }
 

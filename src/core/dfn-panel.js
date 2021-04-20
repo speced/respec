@@ -62,7 +62,7 @@ function createPanel(dfn) {
         <a
           class="self-link"
           href="${href}"
-          aria-label="Permalink for definition: ${definition}"
+          aria-label="Permalink for definition: ${definition}. Activate to close this dialog."
           >Permalink</a
         >
         ${dfnExportedMarker(dfn)} ${idlMarker(dfn, links)}

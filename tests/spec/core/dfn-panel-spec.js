@@ -38,7 +38,7 @@ describe("Core — dfnPanel", () => {
 
       const permalink = panel.querySelector(".self-link");
       expect(permalink.getAttribute("aria-label")).toBe(
-        "Permalink for definition: many"
+        "Permalink for definition: many. Activate to this dialog."
       );
     });
   });
