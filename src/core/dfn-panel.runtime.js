@@ -54,12 +54,21 @@ function panelListener() {
  * @param {MouseEvent|KeyboardEvent} event
  */
 function deriveCoordinates(event) {
-  if (event instanceof MouseEvent) {
+  const target = /** @type HTMLElement */ (event.target);
+
+  // We prevent synthetic AT clicks from putting
+  // the dialog in a weird place. The AT events sometimes
+  // lack coordinates, so they have clientX/Y = 0
+  const rect = target.getBoundingClientRect();
+  if (
+    event instanceof MouseEvent &&
+    event.clientX >= rect.left &&
+    event.clientY >= rect.top
+  ) {
+    // The event probably happened inside the bounding rect...
     return { x: event.clientX, y: event.clientY };
   }
 
-  const target = /** @type HTMLElement */ (event.target);
-  const rect = target.getBoundingClientRect();
   // Offset to the middle of the element
   const x = rect.x + rect.width / 2;
   // Placed at the bottom of the element
