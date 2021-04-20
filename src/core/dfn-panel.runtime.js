@@ -189,13 +189,12 @@ function createTrapListener(anchors, panel, dfn) {
       // Hitting "Tab" traps us in a nice loop around elements.
       case "Tab": {
         event.preventDefault();
-        let nextIndex = currentIndex + (event.shiftKey ? -1 : +1);
-        if (nextIndex < 0) {
-          nextIndex = lastIndex;
-        } else if (nextIndex > lastIndex) {
-          nextIndex = 0;
+        currentIndex += event.shiftKey ? -1 : +1;
+        if (currentIndex < 0) {
+          currentIndex = lastIndex;
+        } else if (currentIndex > lastIndex) {
+          currentIndex = 0;
         }
-        currentIndex = nextIndex;
         anchors.item(currentIndex).focus();
         break;
       }
