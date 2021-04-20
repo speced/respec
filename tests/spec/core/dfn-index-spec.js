@@ -361,6 +361,12 @@ describe("Core — dfn-index", () => {
 
       expect(index.querySelectorAll(".index-term")).toHaveSize(2);
       const term = index.querySelector(".index-term");
+
+      expect(term.getAttribute("role")).toBe("link");
+      expect(term.tabIndex).toBe(0);
+      expect(term.getAttribute("aria-haspopup")).toBe("dialog");
+      expect(term.title).toBe("Show what links to this definition");
+
       expect(term.textContent).toBe("Event interface");
       expect(term.id).toBe("index-term-event-interface");
 
@@ -373,7 +379,7 @@ describe("Core — dfn-index", () => {
       );
       expect(panel.querySelectorAll("ul li")).toHaveSize(1);
       const reference = panel.querySelector("ul li a");
-      expect(reference.textContent).toBe("1. TEST");
+      expect(reference.textContent).toBe("§ 1. TEST");
       expect(reference.hash).toBe("#ref-for-index-term-event-interface-1");
     });
 
