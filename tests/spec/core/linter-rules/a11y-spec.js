@@ -1,6 +1,6 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { flushIframes, makeRSDoc, makeStandardOps } from "../../SpecHelper.js";
 
 describe("Core — a11y", () => {
   beforeAll(() => {
@@ -34,14 +34,14 @@ describe("Core — a11y", () => {
   });
 
   it("does nothing if disabled", async () => {
-    const ops = makeStandardOps({ a11y: false }, body);
+    const ops = makeStandardOps({ lint: { a11y: false } }, body);
     const doc = await makeRSDoc(ops);
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
     expect(offendingElements).toHaveSize(0);
   });
 
   it("runs default tests if enabled", async () => {
-    const ops = makeStandardOps({ a11y: true }, body);
+    const ops = makeStandardOps({ lint: { a11y: true } }, body);
     const doc = await makeRSDoc(ops);
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
 
@@ -54,7 +54,7 @@ describe("Core — a11y", () => {
     const a11yOptions = {
       runOnly: ["image-alt", "landmark-one-main"],
     };
-    const ops = makeStandardOps({ a11y: a11yOptions }, body);
+    const ops = makeStandardOps({ lint: { a11y: a11yOptions } }, body);
     const doc = await makeRSDoc(ops);
 
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
@@ -71,7 +71,7 @@ describe("Core — a11y", () => {
         "image-alt": { enabled: false },
       },
     };
-    const ops = makeStandardOps({ a11y: a11yOptions }, body);
+    const ops = makeStandardOps({ lint: { a11y: a11yOptions } }, body);
     const doc = await makeRSDoc(ops);
 
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
