@@ -24,7 +24,7 @@ describe("Core — dfnPanel", () => {
   `;
   const ops = makeStandardOps(null, body);
 
-  describe("aside container", () => {
+  describe("panel container", () => {
     const dfnId = "dfn-many";
 
     it("has role and aria attributes", async () => {
