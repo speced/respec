@@ -101,4 +101,7 @@ jobs:
           npm link
       - name: run validator
         run: |
-          npx respec-validator examples/basic.built.html
+          npm i --no-save vnu-jar
+          vnu=$(node -p "require('vnu-jar')")
+          respec examples/basic.built.html /tmp/basic.built.html
+          java -jar $vnu /tmp/basic.built.html
