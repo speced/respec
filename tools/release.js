@@ -7,6 +7,8 @@ const { exec } = require("child_process");
 const loading = require("loading-indicator");
 const MAIN_BRANCH = "develop";
 const DEBUG = false;
+const vnu = require("vnu-jar");
+const tmp = require("tmp");
 
 // See: https://github.com/w3c/respec/issues/645
 require("epipebomb")();
@@ -68,6 +70,7 @@ function commandRunner(program) {
 const git = commandRunner("git");
 const npm = commandRunner("npm");
 const node = commandRunner("node");
+const validator = commandRunner(`java -jar ${vnu}`);
 
 cmdPrompt.start();
 
@@ -370,9 +373,17 @@ const run = async () => {
     }
     console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
     const source = `file:///${__dirname}/../examples/basic.built.html`;
-    await node(`./tools/respec2html.js ${source} -e --timeout 30`, {
-      showOutput: true,
-    });
+    const tempFile = tmp.fileSync();
+    await node(
+      `./tools/respec2html.js -e --timeout 30 ${source} ${tempFile.name}`,
+      {
+        showOutput: true,
+      }
+    );
+
+    // Do HTML validation
+    console.log(colors.info(" Making sure HTML validator is happy... 🕵🏻"));
+    await validator(`--stdout ${tempFile.name}`);
     console.log(colors.info(" Build Seems good... ✅"));
 
     // 4. Commit your changes
