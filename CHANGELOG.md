@@ -1,5 +1,19 @@
 # Changelog
 
+## [v26.5.3](https://github.com/w3c/respec/tree/v26.5.3) (2021-04-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.2...v26.5.3)
+
+**Fixed bugs:**
+
+- \<aside role=dialog\> fails spec-prod validation [\#3470](https://github.com/w3c/respec/issues/3470)
+
+**Merged pull requests:**
+
+- test\(core/xref-spec\): URL changed [\#3472](https://github.com/w3c/respec/pull/3472) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/dfn-pane\): aside should be a div [\#3471](https://github.com/w3c/respec/pull/3471) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): regenerate [\#3469](https://github.com/w3c/respec/pull/3469) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v26.5.2](https://github.com/w3c/respec/tree/v26.5.2) (2021-04-20)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.5.1...v26.5.2)
