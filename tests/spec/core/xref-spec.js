@@ -413,20 +413,20 @@ describe("Core — xref", () => {
     const body = `
       <section id="test">
         <section>
-        <p>Uses [[svg]] to create context for <a id="one">style</a></p>
+        <p>Uses [[svg]] to create context for <a id="one">link</a></p>
         </section>
         <section>
-          <p>Uses [[html]] to create context for <a id="two">style</a></p>
+          <p>Uses [[html]] to create context for <a id="two">link</a></p>
         </section>
         <section>
           <p>Uses [[html]] and [[svg]] to create context for
-            <a id="three">style</a>. It fails as it's defined in both.
+            <a id="three">link</a>. It fails as it's defined in both.
           </p>
         </section>
         <section>
           <p>But data-cite on element itself wins.
-            <a id="four">style</a> uses [[svg]],
-            whereas <a data-cite="html" id="five">style</a> uses html.
+            <a id="four">link</a> uses [[svg]],
+            whereas <a data-cite="html" id="five">link</a> uses html.
           </p>
         </section>
       </section>
@@ -437,8 +437,8 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = `https://www.w3.org/TR/SVG2/styling.html#elementdef-style`;
-    const expectedLink2 = `https://html.spec.whatwg.org/multipage/semantics.html#the-style-element`;
+    const expectedLink1 = `https://www.w3.org/TR/SVG/TR/SVG2/styling.html#LinkElement`;
+    const expectedLink2 = `https://html.spec.whatwg.org/multipage/semantics.html#the-link-element`;
 
     const one = doc.getElementById("one");
     expect(one.href).toBe(expectedLink1);
