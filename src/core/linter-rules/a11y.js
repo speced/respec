@@ -5,7 +5,7 @@
 
 import { showError, showWarning } from "../utils.js";
 
-export const name = "core/linter-rules//a11y";
+export const name = "core/linter-rules/a11y";
 
 const DISABLED_RULES = [
   "color-contrast", // too slow 🐢
