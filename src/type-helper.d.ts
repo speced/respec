@@ -15,7 +15,7 @@ declare module "text!*" {
   export default value;
 }
 
-// See: core/a11y
+// See: core/linter-rules/a11y
 interface AxeViolation {
   id: string;
   help: string;
