@@ -62,6 +62,16 @@ describe("Core — a11y", () => {
     expect(offendingElements[0].id).toContain("a11y-landmark-one-main");
     expect(offendingElements[0].localName).toBe("html");
     expect(offendingElements[1].id).toBe("image-alt-1");
+
+    const warnings = doc.respec.warnings.filter(
+      warn => warn.plugin === "core/linter-rules/a11y"
+    );
+    expect(warnings).toHaveSize(2);
+    const [imageAltWarning, landmarkWarning] = warnings;
+    expect(imageAltWarning.message).toContain("image-alt");
+    expect(imageAltWarning.elements).toHaveSize(1);
+    expect(imageAltWarning.elements[0].id).toBe("image-alt-1");
+    expect(landmarkWarning.message).toContain("landmark-one-main");
   });
 
   it("allows overriding rules option", async () => {
@@ -78,5 +88,11 @@ describe("Core — a11y", () => {
     expect(offendingElements).toHaveSize(1);
     expect(offendingElements[0].id).toContain("a11y-landmark-one-main");
     expect(offendingElements[0].localName).toBe("html");
+
+    const warnings = doc.respec.warnings.filter(
+      warn => warn.plugin === "core/linter-rules/a11y"
+    );
+    expect(warnings).toHaveSize(1);
+    expect(warnings[0].message).toContain("landmark-one-main");
   });
 });
