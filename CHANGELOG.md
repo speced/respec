@@ -1,5 +1,19 @@
 # Changelog
 
+## [v26.5.2](https://github.com/w3c/respec/tree/v26.5.2) (2021-04-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.1...v26.5.2)
+
+**Fixed bugs:**
+
+- Open dfnPanel using keyboard [\#2825](https://github.com/w3c/respec/issues/2825)
+
+**Merged pull requests:**
+
+- chore\(deps\): update dependencies [\#3468](https://github.com/w3c/respec/pull/3468) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3461](https://github.com/w3c/respec/pull/3461) ([github-actions[bot]](https://github.com/apps/github-actions))
+- fix\(core/dfn-panel\): make dfn panel keyboard accessible [\#3458](https://github.com/w3c/respec/pull/3458) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v26.5.1](https://github.com/w3c/respec/tree/v26.5.1) (2021-04-19)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.5.0...v26.5.1)
