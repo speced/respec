@@ -382,14 +382,9 @@ export async function run() {
   if (!idls.length) {
     return;
   }
-  if (!document.querySelector(".idl:not(pre), .webidl:not(pre)")) {
-    const link = document.querySelector("head link");
-    if (link) {
-      const style = document.createElement("style");
-      style.textContent = css;
-      link.before(style);
-    }
-  }
+  const style = document.createElement("style");
+  style.textContent = css;
+  document.querySelector("head link, head > *:last-child").before(style);
 
   const astArray = [...idls].map(renderWebIDL);
 

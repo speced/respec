@@ -1,5 +1,65 @@
 # Changelog
 
+## [v26.5.3](https://github.com/w3c/respec/tree/v26.5.3) (2021-04-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.2...v26.5.3)
+
+**Fixed bugs:**
+
+- \<aside role=dialog\> fails spec-prod validation [\#3470](https://github.com/w3c/respec/issues/3470)
+
+**Merged pull requests:**
+
+- test\(core/xref-spec\): URL changed [\#3472](https://github.com/w3c/respec/pull/3472) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/dfn-pane\): aside should be a div [\#3471](https://github.com/w3c/respec/pull/3471) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): regenerate [\#3469](https://github.com/w3c/respec/pull/3469) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [v26.5.2](https://github.com/w3c/respec/tree/v26.5.2) (2021-04-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.1...v26.5.2)
+
+**Fixed bugs:**
+
+- Open dfnPanel using keyboard [\#2825](https://github.com/w3c/respec/issues/2825)
+
+**Merged pull requests:**
+
+- chore\(deps\): update dependencies [\#3468](https://github.com/w3c/respec/pull/3468) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3461](https://github.com/w3c/respec/pull/3461) ([github-actions[bot]](https://github.com/apps/github-actions))
+- fix\(core/dfn-panel\): make dfn panel keyboard accessible [\#3458](https://github.com/w3c/respec/pull/3458) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.5.1](https://github.com/w3c/respec/tree/v26.5.1) (2021-04-19)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.0...v26.5.1)
+
+**Fixed bugs:**
+
+- WebIDL CSS isn't injected [\#3442](https://github.com/w3c/respec/issues/3442)
+- Some refs from HTML starting with "DOM" aren't available  [\#3441](https://github.com/w3c/respec/issues/3441)
+
+**Closed issues:**
+
+- Add a link to specref with last-updated time [\#3440](https://github.com/w3c/respec/issues/3440)
+- Documentation: export is no longer using shepherd [\#3430](https://github.com/w3c/respec/issues/3430)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): ensure loading of webidl.css [\#3460](https://github.com/w3c/respec/pull/3460) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(tools/dev-server\): output red errors [\#3459](https://github.com/w3c/respec/pull/3459) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(tools/dev-server\): run dev server before tests, help msg [\#3456](https://github.com/w3c/respec/pull/3456) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(tools/\*\): disallow unknown options [\#3455](https://github.com/w3c/respec/pull/3455) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(tools/respec2html\): disallow unknown options [\#3454](https://github.com/w3c/respec/pull/3454) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/linter-rules/\*\): run as regular plugins [\#3453](https://github.com/w3c/respec/pull/3453) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/linter/check-punctuation\): run as regular plugin [\#3452](https://github.com/w3c/respec/pull/3452) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/linter/check-internal-slots\): run as regular plugin [\#3451](https://github.com/w3c/respec/pull/3451) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(package\): use node v14, npm v6 [\#3450](https://github.com/w3c/respec/pull/3450) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(deps\): update dependencies [\#3449](https://github.com/w3c/respec/pull/3449) ([sidvishnoi](https://github.com/sidvishnoi))
+- tests\(core/a11y\): increase timeout [\#3439](https://github.com/w3c/respec/pull/3439) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(ci/regressions\): test respec-w3c differences across branches  [\#3428](https://github.com/w3c/respec/pull/3428) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3427](https://github.com/w3c/respec/pull/3427) ([github-actions[bot]](https://github.com/apps/github-actions))
+- refactor\(tests/webidl\): update legacy constructors + cleanup [\#3425](https://github.com/w3c/respec/pull/3425) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/linter/check-charset\): run as regular plugin [\#3401](https://github.com/w3c/respec/pull/3401) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v26.5.0](https://github.com/w3c/respec/tree/v26.5.0) (2021-03-31)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.4.1...v26.5.0)
