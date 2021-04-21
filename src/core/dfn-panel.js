@@ -50,7 +50,7 @@ function createPanel(dfn) {
   const definition = dfn.getAttribute("aria-label") || norm(dfn.textContent);
   /** @type {HTMLElement} */
   const panel = html`
-    <aside
+    <div
       class="dfn-panel"
       id="${panelId}"
       hidden
@@ -70,7 +70,7 @@ function createPanel(dfn) {
       </div>
       <p><b>Referenced in:</b></p>
       ${referencesToHTML(id, links)}
-    </aside>
+    </div>
   `;
   return panel;
 }
