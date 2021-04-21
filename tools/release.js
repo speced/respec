@@ -8,7 +8,8 @@ const loading = require("loading-indicator");
 const MAIN_BRANCH = "develop";
 const DEBUG = false;
 const vnu = require("vnu-jar");
-const tmp = require("tmp");
+const path = require("path");
+const os = require("os");
 
 // See: https://github.com/w3c/respec/issues/645
 require("epipebomb")();
@@ -373,13 +374,10 @@ const run = async () => {
     }
     console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
     const source = `file:///${__dirname}/../examples/basic.built.html`;
-    const tempFile = tmp.fileSync();
-    await node(
-      `./tools/respec2html.js -e --timeout 30 ${source} ${tempFile.name}`,
-      {
-        showOutput: true,
-      }
-    );
+    const tempFile = path.join(os.tmpdir(), "index.html");
+    await node(`./tools/respec2html.js -e --timeout 30 ${source} ${tempFile}`, {
+      showOutput: true,
+    });
 
     // Do HTML validation
     console.log(colors.info(" Making sure HTML validator is happy... 🕵🏻"));
