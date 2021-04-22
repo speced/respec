@@ -403,6 +403,7 @@ const run = async () => {
       await git(`checkout ${initialBranch}`);
     }
     process.exit(1);
+    return;
   }
   // all is good...
   process.exit(0);
