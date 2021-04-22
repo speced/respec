@@ -23,6 +23,5 @@ export function run(conf) {
   document.head.append(html`<meta
     name="monetization"
     content="${paymentPointer}"
-    class="removeOnSave"
   />`);
 }
