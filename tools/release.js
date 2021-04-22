@@ -60,19 +60,13 @@ const validator = commandRunner(`java -jar ${vnu}`);
 cmdPrompt.start();
 
 const Prompts = {
-  askQuestion(promptOps) {
-    return new Promise((resolve, reject) => {
-      cmdPrompt.get(promptOps, (err, res) => {
-        if (err) {
-          return reject(err);
-        }
-        // @ts-ignore
-        if (res.question.toLowerCase() === "n") {
-          return reject(new Error("🙅  user declined."));
-        }
-        resolve(res.question);
-      });
-    });
+  async askQuestion(promptOps) {
+    const res = await cmdPrompt.get(promptOps);
+    // @ts-ignore
+    if (res.question.toLowerCase() === "n") {
+      throw new Error("🙅  user declined.");
+    }
+    return res.question;
   },
 
   /**
