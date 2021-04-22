@@ -1,5 +1,19 @@
 # Changelog
 
+## [v26.6.0](https://github.com/w3c/respec/tree/v26.6.0) (2021-04-22)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.3...v26.6.0)
+
+**Merged pull requests:**
+
+- test\(core/xref-spec\): fix bad URL [\#3478](https://github.com/w3c/respec/pull/3478) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/linter-rules/a11y\): convert core/a11y to linter rule [\#3477](https://github.com/w3c/respec/pull/3477) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(dependabot\): enable updates for github-actions [\#3476](https://github.com/w3c/respec/pull/3476) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(tools/release\): validate HTML before release [\#3475](https://github.com/w3c/respec/pull/3475) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): regenerate [\#3474](https://github.com/w3c/respec/pull/3474) ([github-actions[bot]](https://github.com/apps/github-actions))
+- chore\(workflows/pr\): validate HTML [\#3473](https://github.com/w3c/respec/pull/3473) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/web-monetization\): support adding monetization meta tag [\#2966](https://github.com/w3c/respec/pull/2966) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v26.5.3](https://github.com/w3c/respec/tree/v26.5.3) (2021-04-21)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.5.2...v26.5.3)
