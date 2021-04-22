@@ -437,7 +437,7 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = `https://www.w3.org/TR/SVG/TR/SVG2/styling.html#LinkElement`;
+    const expectedLink1 = `https://www.w3.org/TR/SVG/styling.html#LinkElement`;
     const expectedLink2 = `https://html.spec.whatwg.org/multipage/semantics.html#the-link-element`;
 
     const one = doc.getElementById("one");
