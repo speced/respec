@@ -64,6 +64,7 @@ const modules = [
   import("../src/core/algorithms.js"),
   import("../src/core/anchor-expander.js"),
   import("../src/core/custom-elements/index.js"),
+  import("../src/core/web-monetization.js"),
   /* Linters must be the last thing to run */
   import("../src/core/linter-rules/check-charset.js"),
   import("../src/core/linter-rules/check-punctuation.js"),
@@ -74,7 +75,7 @@ const modules = [
   import("../src/core/linter-rules/privsec-section.js"),
   import("../src/core/linter-rules/wpt-tests-exist.js"),
   import("../src/core/linter-rules/no-http-props.js"),
-  import("../src/core/a11y.js"),
+  import("../src/core/linter-rules/a11y.js"),
 ];
 
 async function domReady() {

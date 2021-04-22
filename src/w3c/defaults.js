@@ -19,6 +19,7 @@ const w3cDefaults = {
   lint: {
     "privsec-section": true,
     "wpt-tests-exist": false,
+    a11y: false,
   },
   doJsonLd: false,
   logos: [],
