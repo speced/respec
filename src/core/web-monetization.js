@@ -1,9 +1,6 @@
 // @ts-check
 /**
  * This module adds a "monetization" meta-tag to enable web-monetization.
- *
- * The meta-tag is added only to "live" documents, and is removed from generated
- * static documents.
  */
 import { html } from "./import-maps.js";
 
