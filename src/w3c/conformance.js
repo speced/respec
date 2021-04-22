@@ -1,9 +1,8 @@
 // @ts-check
 // Module w3c/conformance
 // Handle the conformance section properly.
-import { getIntlData, htmlJoinAnd } from "../core/utils.js";
+import { getIntlData, htmlJoinAnd, showWarning } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
-import { pub } from "../core/pubsubhub.js";
 import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";
 export const name = "w3c/conformance";
@@ -19,7 +18,7 @@ const localizationStrings = {
       return html`<p>
         The key word${plural ? "s" : ""} ${keywords} in this document
         ${plural ? "are" : "is"} to be interpreted as described in
-        <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+        <a href="https://datatracker.ietf.org/doc/html/bcp14">BCP 14</a>
         ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
         when, and only when, they appear in all capitals, as shown here.
       </p>`;
@@ -35,7 +34,7 @@ const localizationStrings = {
       return html`<p>
         ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in
         diesem Dokument ${plural ? "sind" : "ist"} gemäß
-        <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+        <a href="https://datatracker.ietf.org/doc/html/bcp14">BCP 14</a>
         ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
         und unter Berücksichtigung von
         <a href="https://github.com/adfinis-sygroup/2119/blob/master/2119de.rst"
@@ -81,10 +80,8 @@ export function run(conf) {
   }
   // Warn when there are RFC2119/RFC8174 keywords, but not conformance section
   if (!conformance && Object.keys(rfc2119Usage).length) {
-    pub(
-      "warn",
-      "Document uses RFC2119 keywords but lacks a conformance section. " +
-        'Please add a `<section id="conformance">`.'
-    );
+    const msg = `Document uses RFC2119 keywords but lacks a conformance section.`;
+    const hint = 'Please add a `<section id="conformance">`.';
+    showWarning(msg, name, { hint });
   }
 }

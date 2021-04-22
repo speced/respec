@@ -1,11 +1,9 @@
 // @ts-check
-import {
-  humanDate,
-  showInlineError,
-  toShortIsoDate,
-} from "../../core/utils.js";
+import { humanDate, showError, toShortIsoDate } from "../../core/utils.js";
 import { lang as defaultLang } from "../../core/l10n.js";
 import { html } from "../../core/import-maps.js";
+
+const name = "core/templates/show-people";
 
 const localizationStrings = {
   en: {
@@ -114,7 +112,9 @@ export default function showPeople(persons = []) {
     }
     if (p.orcid) {
       contents.push(
-        html`<a class="p-name orcid" href="${p.orcid}">${orcidIcon} </a>`
+        html`<a class="p-name orcid" href="${p.orcid}"
+          >${orcidIcon.cloneNode(true)}
+        </a>`
       );
     }
     if (p.company) {
@@ -149,11 +149,9 @@ export default function showPeople(persons = []) {
         ? humanDate(retiredDate)
         : "Invalid Date"; // todo: Localise invalid date
       if (!isValidDate) {
-        showInlineError(
-          timeElem,
-          "The date is invalid. The expected format is YYYY-MM-DD.",
-          "Invalid date"
-        );
+        const msg = "The date is invalid. The expected format is YYYY-MM-DD.";
+        const title = "Invalid date";
+        showError(msg, name, { title, elements: [timeElem] });
       }
       timeElem.dateTime = toShortIsoDate(retiredDate);
       contents.push(html` - ${l10n.until(timeElem)} `);

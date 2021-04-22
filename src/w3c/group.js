@@ -6,29 +6,36 @@
  * `wgURI`, and `wgPatentURI` options.
  */
 
-import { fetchAndCache, joinAnd } from "../core/utils.js";
-import { pub } from "../core/pubsubhub.js";
+import {
+  fetchAndCache,
+  joinAnd,
+  showError,
+  showWarning,
+} from "../core/utils.js";
 
 export const name = "w3c/group";
 
 const W3C_GROUPS_API = "https://respec.org/w3c/groups/";
+const LEGACY_OPTIONS = ["wg", "wgURI", "wgId", "wgPatentURI", "wgPatentPolicy"];
 
 export async function run(conf) {
-  if (!conf.group) return;
+  const usedLegacyOptions = LEGACY_OPTIONS.filter(opt => conf[opt]);
 
-  const supersededOptions = [
-    "wg",
-    "wgURI",
-    "wgId",
-    "wgPatentURI",
-    "wgPatentPolicy",
-  ];
-  const usedSupersededOptions = supersededOptions.filter(opt => conf[opt]);
-  if (usedSupersededOptions.length) {
-    const outdatedOptionsStr = joinAnd(usedSupersededOptions, s => `\`${s}\``);
+  if (!conf.group) {
+    if (usedLegacyOptions.length) {
+      const outdatedOptionsStr = joinAnd(LEGACY_OPTIONS, s => `\`${s}\``);
+      const msg = `Configuration options ${outdatedOptionsStr} are deprecated.`;
+      const hint = `Please use the [\`group\`](https://respec.org/docs/#group) option instead.`;
+      showWarning(msg, name, { hint });
+    }
+    return;
+  }
+
+  if (usedLegacyOptions.length) {
+    const outdatedOptionsStr = joinAnd(usedLegacyOptions, s => `\`${s}\``);
     const msg = `Configuration options ${outdatedOptionsStr} are superseded by \`group\` and will be overridden by ReSpec.`;
     const hint = "Please remove them from `respecConfig`.";
-    pub("warn", `${msg} ${hint}`);
+    showWarning(msg, name, { hint });
   }
 
   const { group } = conf;
@@ -48,6 +55,7 @@ async function getMultipleGroupDetails(groups) {
     wgURI: [],
     wgPatentURI: [],
     wgPatentPolicy: [],
+    groupType: [],
   };
   for (const groupDetails of details.filter(o => o)) {
     for (const key of Object.keys(result)) {
@@ -59,13 +67,17 @@ async function getMultipleGroupDetails(groups) {
 
 /**
  * @param {string} group
- * @typedef {{ wgId: number, wg: string, wgURI: string, wgPatentURI: string, wgPatentPolicy: string }} GroupDetails
+ * @typedef {{ wgId: number, wg: string, wgURI: string, wgPatentURI: string, wgPatentPolicy: string, groupType: W3CGroupType }} GroupDetails
  * @returns {Promise<GroupDetails|undefined>}
  */
 async function getGroupDetails(group) {
-  const url = new URL(group, W3C_GROUPS_API).href;
-  const res = await fetchAndCache(url);
-
+  let type = "";
+  let shortname = group;
+  if (group.includes("/")) {
+    [type, shortname] = group.split("/", 2);
+  }
+  const url = new URL(`${shortname}/${type}`, W3C_GROUPS_API);
+  const res = await fetchAndCache(url.href);
   if (res.ok) {
     const json = await res.json();
     const {
@@ -74,17 +86,17 @@ async function getGroupDetails(group) {
       URI: wgURI,
       patentURI: wgPatentURI,
       patentPolicy: wgPatentPolicy,
+      type: groupType,
     } = json;
-    return { wg, wgId, wgURI, wgPatentURI, wgPatentPolicy };
+    return { wg, wgId, wgURI, wgPatentURI, wgPatentPolicy, groupType };
   }
 
-  let message = `Failed to fetch group details (HTTP: ${res.status})`;
-  if (res.status === 404) {
-    const msg = `No group with name \`"${group}"\` found.`;
-    const hint =
-      "See [supported group names](https://respec.org/w3c/groups/) to use with the " +
-      "[`group`](https://github.com/w3c/respec/wiki/group) configuration option.";
-    message = `${msg} ${hint}`;
-  }
-  pub("error", message);
+  const text = await res.text();
+  const message = `Failed to fetch group details (HTTP: ${res.status}). ${text}`;
+  const hint =
+    res.status === 404
+      ? "See [supported group names](https://respec.org/w3c/groups/) to use with the " +
+        "[`group`](https://respec.org/docs/#group) configuration option."
+      : undefined;
+  showError(message, name, { hint });
 }

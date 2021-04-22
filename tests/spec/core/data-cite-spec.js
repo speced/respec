@@ -64,6 +64,25 @@ describe("Core — data-cite attribute", () => {
     expect(t2.href).toEqual(location);
   });
 
+  it(`doesn't confuse similarly named specs as self citing`, async () => {
+    const body = `
+      <section>
+        <h2>test</h2>
+        <p id="test">
+          [[[webxr-gamepads-module-1]]], [[webxr-gamepads-module-1]]
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps({ shortName: "gamepad" }, body);
+    const doc = await makeRSDoc(ops);
+    const [anchor1, anchor2] = doc.querySelectorAll("#test a");
+
+    expect(anchor1.href).toContain("TR/webxr-gamepads-module-1/");
+    expect(anchor1.textContent).toBe("WebXR Gamepads Module - Level 1");
+    expect(anchor2.href).toContain("#bib-webxr-gamepads-module-1");
+    expect(anchor2.textContent).toBe("webxr-gamepads-module-1");
+  });
+
   it("links data-cite attributes as normative/informative reference when parent is citing", async () => {
     const body = `
       <section class="informative" data-cite="FETCH">

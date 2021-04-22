@@ -4,19 +4,15 @@
 // Configuration:
 //  - localBiblio: override or supplement the official biblio with your own.
 
-/* jshint jquery: true */
 import { biblioDB } from "./biblio-db.js";
 import { createResourceHint } from "./utils.js";
 
 /** @type {Conf['biblio']} */
 export const biblio = {};
 
-// for backward compatibity
-export { wireReference, stringifyReference } from "./render-biblio.js";
-
 export const name = "core/biblio";
 
-const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
+const bibrefsURL = new URL("https://api.specref.org/bibrefs?refs=");
 
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.

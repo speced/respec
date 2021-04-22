@@ -301,7 +301,7 @@ describe("Core - Markdown", () => {
       \`\`\`
 
       \`\`\`
-      IDK what I am
+      IDK what I'am
       \`\`\`
     `;
     const ops = makeStandardOps({ format: "markdown" }, body);
@@ -372,7 +372,7 @@ describe("Core - Markdown", () => {
   });
 
   it("properly indents <pre> contents with no block indentation", async () => {
-    const idl = `function getAnswer() {\n  return 42;\n}`;
+    const idl = `function getAnswer() {\n  return 42;\n}\n`;
     const body = `
 # test
 

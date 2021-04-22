@@ -4,10 +4,19 @@ on:
     branches:
       - develop
       - gh-pages
+    paths-ignore:
+      - "**"
+      - "!**.js"
+      - "!**.json"
+      - "!**.css"
+      - "!**.html"
+      - "!.github/workflows/**"
 
 env:
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
   PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+  # See https://github.com/w3c/respec/pull/3306
+  LC_ALL: en_US.UTF-8
 
 jobs:
   test-headless:
@@ -15,14 +24,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 14
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-14-${{ hashFiles('**/package-lock.json') }}
       - name: install & build
         run: |
           npm ci
@@ -46,18 +55,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 14
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-14-${{ hashFiles('**/package-lock.json') }}
       - name: install & build
         run: |
           npm ci
           npm run build:w3c & npm run build:geonovum
-      - run: npm run test:karma
+      - run: npm test
         env:
           BROWSERS: ChromeHeadless

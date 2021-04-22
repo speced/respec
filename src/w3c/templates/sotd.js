@@ -121,13 +121,20 @@ function renderIsNoTrack(conf, opts) {
 
 function renderNotRec(conf) {
   let statusExplanation = "";
-  let updatePolicy =
-    "This document may be updated, replaced or obsoleted at any time. It is inappropriate to cite this document as other than work in progress. ";
+  let updatePolicy = html`This is a draft document and may be updated, replaced
+  or obsoleted by other documents at any time. It is inappropriate to cite this
+  document as other than work in progress.
+  ${conf.updateableRec
+    ? html`Future updates to this specification may incorporate
+        <a href="https://www.w3.org/2020/Process-20200915/#allow-new-features"
+          >new features</a
+        >.`
+    : ""}`;
   let reviewPolicy = "";
   if (conf.specStatus === "CRD") {
     statusExplanation =
       "A Candidate Recommendation Draft integrates changes from the previous Candidate Recommendation that the Working Group intends to include in a subsequent Candidate Recommendation Snapshot.";
-    if (conf.lsMode) {
+    if (conf.pubMode === "LS") {
       updatePolicy =
         "This document is maintained and updated at any time. Some parts of this document are work in progress. ";
     }
@@ -138,19 +145,18 @@ function renderNotRec(conf) {
       >
       and is intended to gather
       <a href="${conf.implementationReportURI}">implementation experience</a>.`;
-    updatePolicy = "";
-    if (conf.lsMode) {
+    updatePolicy = html`${conf.updateableRec
+      ? html`Future updates to this specification may incorporate
+          <a href="https://www.w3.org/2020/Process-20200915/#allow-new-features"
+            >new features</a
+          >.`
+      : ""}`;
+    if (conf.pubMode === "LS") {
       reviewPolicy = `Comments are welcome at any time but most especially before ${conf.humanCREnd}.`;
     } else {
       reviewPolicy = `This Candidate Recommendation is not expected to advance to Proposed Recommendation any earlier than ${conf.humanCREnd}.`;
     }
   } else if (conf.isPR) {
-    if (conf.updateableRec) {
-      updatePolicy += html`Future updates to this specification may incorporate
-        <a href="https://www.w3.org/2020/Process-20200915/#revised-rec-features"
-          >new features</a
-        >.`;
-    }
     reviewPolicy = html` The W3C Membership and other interested parties are
       invited to review the document and send comments through
       ${conf.humanPREnd}. Advisory Committee Representatives should consult
@@ -238,14 +244,16 @@ function renderDeliverer(conf) {
     wgPatentPolicy,
   } = conf;
 
+  const patentPolicyURL =
+    wgPatentPolicy === "PP2017"
+      ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
+      : "https://www.w3.org/Consortium/Patent-Policy/";
+
   const producers = !isIGNote
     ? html`
         This document was produced by ${multipleWGs ? "groups" : "a group"}
         operating under the
-        <a
-          href="${wgPatentPolicy === "PP2017"
-            ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
-            : "https://www.w3.org/Consortium/Patent-Policy/"}"
+        <a href="${patentPolicyURL}"
           >${wgPatentPolicy === "PP2017" ? "1 August 2017 " : ""}W3C Patent
           Policy</a
         >.
@@ -272,11 +280,9 @@ function renderDeliverer(conf) {
             : "the group; that page also includes"}
           instructions for disclosing a patent. An individual who has actual
           knowledge of a patent which the individual believes contains
-          <a href="https://www.w3.org/Consortium/Patent-Policy/#def-essential"
-            >Essential Claim(s)</a
-          >
+          <a href="${patentPolicyURL}#def-essential">Essential Claim(s)</a>
           must disclose the information in accordance with
-          <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Disclosure"
+          <a href="${patentPolicyURL}#sec-Disclosure"
             >section 6 of the W3C Patent Policy</a
           >.
         `
@@ -306,6 +312,12 @@ function noteForMemberSubmission(conf) {
   const teamComment = `https://www.w3.org/Submission/${conf.publishDate.getUTCFullYear()}/${
     conf.submissionCommentNumber
   }/Comment/`;
+
+  const patentPolicyURL =
+    conf.wgPatentPolicy === "PP2017"
+      ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
+      : "https://www.w3.org/Consortium/Patent-Policy/";
+
   return html`<p>
     By publishing this document, W3C acknowledges that the
     <a href="${conf.thisVersion}">Submitting Members</a> have made a formal
@@ -321,7 +333,7 @@ function noteForMemberSubmission(conf) {
     <a href="https://www.w3.org/Consortium/Prospectus/Joining">
       W3C Membership</a
     >. Please consult the requirements associated with Member Submissions of
-    <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-submissions"
+    <a href="${patentPolicyURL}#sec-submissions"
       >section 3.3 of the W3C Patent Policy</a
     >. Please consult the complete
     <a href="https://www.w3.org/Submission"
@@ -393,7 +405,7 @@ function linkToWorkingGroup(conf) {
   </p>`;
 }
 
-function linkToCommunity(conf, opts) {
+export function linkToCommunity(conf, opts) {
   if (!conf.github && !conf.wgPublicList) {
     return;
   }
@@ -413,14 +425,13 @@ function linkToCommunity(conf, opts) {
           <a href="${opts.mailToWGPublicListWithSubject}"
             >${conf.wgPublicList}@w3.org</a
           >
-          (<a
+          (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
+          <a
             href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
             >archives</a
           >)${conf.subjectPrefix
-            ? html`
-                with <code>${conf.subjectPrefix}</code> at the start of your
-                email's subject
-              `
+            ? html` with <code>${conf.subjectPrefix}</code> at the start of your
+                email's subject`
             : ""}.
         `
       : ""}

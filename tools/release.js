@@ -7,6 +7,9 @@ const { exec } = require("child_process");
 const loading = require("loading-indicator");
 const MAIN_BRANCH = "develop";
 const DEBUG = false;
+const vnu = require("vnu-jar");
+const path = require("path");
+const os = require("os");
 
 // See: https://github.com/w3c/respec/issues/645
 require("epipebomb")();
@@ -68,6 +71,7 @@ function commandRunner(program) {
 const git = commandRunner("git");
 const npm = commandRunner("npm");
 const node = commandRunner("node");
+const validator = commandRunner(`java -jar ${vnu}`);
 
 cmdPrompt.start();
 
@@ -369,12 +373,15 @@ const run = async () => {
       await Builder.build({ name });
     }
     console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
-    const nullDevice =
-      process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
-    await node(
-      `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../examples/basic.built.html --out ${nullDevice}`,
-      { showOutput: true }
-    );
+    const source = `file:///${__dirname}/../examples/basic.built.html`;
+    const tempFile = path.join(os.tmpdir(), "index.html");
+    await node(`./tools/respec2html.js -e --timeout 30 ${source} ${tempFile}`, {
+      showOutput: true,
+    });
+
+    // Do HTML validation
+    console.log(colors.info(" Making sure HTML validator is happy... 🕵🏻"));
+    await validator(`--stdout ${tempFile.name}`);
     console.log(colors.info(" Build Seems good... ✅"));
 
     // 4. Commit your changes

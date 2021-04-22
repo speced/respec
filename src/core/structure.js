@@ -13,7 +13,7 @@ import {
   getIntlData,
   parents,
   renameElement,
-  showInlineError,
+  showError,
 } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
@@ -252,7 +252,7 @@ function skipFromToC() {
     const maxToc = parseInt(section.dataset.maxToc, 10);
     if (maxToc < 0 || maxToc > 6 || Number.isNaN(maxToc)) {
       const msg = "`data-max-toc` must have a value between 0-6 (inclusive).";
-      showInlineError(section, msg, msg);
+      showError(msg, name, { elements: [section] });
       continue;
     }
 

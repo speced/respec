@@ -24,6 +24,25 @@ describe("Core — dfnPanel", () => {
   `;
   const ops = makeStandardOps(null, body);
 
+  describe("panel container", () => {
+    const dfnId = "dfn-many";
+
+    it("has role and aria attributes", async () => {
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById(getPanelId(dfnId));
+      expect(panel.getAttribute("role")).toBe("dialog");
+      expect(panel.getAttribute("aria-modal")).toBe("true");
+      expect(panel.getAttribute("aria-label")).toBe(
+        "Links in this document to definition: many"
+      );
+
+      const permalink = panel.querySelector(".self-link");
+      expect(permalink.getAttribute("aria-label")).toBe(
+        "Permalink for definition: many. Activate to close this dialog."
+      );
+    });
+  });
+
   describe("dfnPanel state", () => {
     const dfnId = "dfn-many";
 
@@ -140,7 +159,7 @@ describe("Core — dfnPanel", () => {
 
     const references = panel.querySelectorAll("ul li a");
     expect(references).toHaveSize(1);
-    expect(references[0].textContent).toBe("1. top level heading");
+    expect(references[0].textContent).toBe("§ 1. top level heading");
     expect(references[0].hash).toBe("#ref-for-dfn-one-1");
   });
 
@@ -163,34 +182,65 @@ describe("Core — dfnPanel", () => {
 
     const item1Links = item1.querySelectorAll("a");
     expect(item1Links).toHaveSize(3);
-    expect(item1Links[0].textContent).toBe("1. top level heading");
+    expect(item1Links[0].textContent).toBe("§ 1. top level heading");
     expect(item1Links[0].hash).toBe("#ref-for-dfn-many-1");
     expect(item1Links[1].textContent).toBe("(2)");
     expect(item1Links[1].hash).toBe("#ref-for-dfn-many-2");
     expect(item1Links[2].textContent).toBe("(3)");
     expect(item1Links[2].hash).toBe("#ref-for-dfn-many-5");
-    expect(item1.textContent.trim()).toBe("1. top level heading (2) (3)");
+    expect(item1.textContent.trim()).toBe("§ 1. top level heading (2) (3)");
 
     const item2Links = item2.querySelectorAll("a");
     expect(item2Links).toHaveSize(2);
-    expect(item2Links[0].textContent).toBe("1.1 nested section heading");
+    expect(item2Links[0].textContent).toBe("§ 1.1 nested section heading");
     expect(item2Links[0].hash).toBe("#ref-for-dfn-many-3");
     expect(item2Links[1].textContent).toBe("(2)");
     expect(item2Links[1].hash).toBe("#ref-for-dfn-many-4");
-    expect(item2.textContent.trim()).toBe("1.1 nested section heading (2)");
+    expect(item2.textContent.trim()).toBe("§ 1.1 nested section heading (2)");
   });
 
   it("renders a marker on exported definitions", async () => {
     const doc = await makeRSDoc(ops);
 
     const panelDnExported = doc.getElementById(getPanelId("dfn-many"));
-    const marker = panelDnExported.querySelector(".dfn-exported");
+    expect(panelDnExported.querySelectorAll(".marker")).toHaveSize(1);
+    const marker = panelDnExported.querySelector(".marker.dfn-exported");
     expect(marker).toBeTruthy();
     expect(marker.textContent).toBe("exported");
     expect(marker.previousElementSibling.textContent).toBe("Permalink");
 
     const panelDfnNotExported = doc.getElementById(getPanelId("dfn-one"));
     expect(panelDfnNotExported.querySelector(".dfn-exported")).toBeFalsy();
+  });
+
+  it("renders a link to jump to IDL block", async () => {
+    const body = `
+      <section data-dfn-for="Foo">
+        <h2><dfn>Foo</dfn> interface</h2>
+        <pre class="idl" id="test-webidl-block">
+        [Exposed=Window]
+        interface Foo {
+          constructor();
+          attribute DOMString bar;
+        };
+        </pre>
+        <dfn id="test-dfn-idl">bar</dfn>
+        <dfn id="test-dfn-no-idl">baz</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const panelDfnIdl = doc.getElementById(getPanelId("test-dfn-idl"));
+    expect(panelDfnIdl.querySelectorAll(".marker")).toHaveSize(2);
+
+    const marker = panelDfnIdl.querySelector(".marker.idl-block");
+    expect(marker).toBeTruthy();
+    expect(marker.textContent).toBe("IDL");
+    expect(marker.hash).toBe("#test-webidl-block");
+
+    const panelDfnNotIdl = doc.getElementById(getPanelId("test-dfn-no-idl"));
+    expect(panelDfnNotIdl.querySelectorAll(".marker")).toHaveSize(0);
   });
 
   it("works in exported document", async () => {
@@ -218,7 +268,7 @@ describe("Core — dfnPanel", () => {
 
     const references = panel.querySelectorAll("ul li a");
     expect(references).toHaveSize(1);
-    expect(references[0].textContent).toBe("1. top level heading");
+    expect(references[0].textContent).toBe("§ 1. top level heading");
     expect(references[0].hash).toBe("#ref-for-dfn-one-1");
   });
 });

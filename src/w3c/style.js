@@ -1,12 +1,16 @@
 // @ts-check
-/* jshint strict: true, browser:true, jquery: true */
 // Module w3c/style
 // Inserts a link to the appropriate W3C style for the specification's maturity level.
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
-import { createResourceHint, linkCSS, toKeyValuePairs } from "../core/utils.js";
-import { pub, sub } from "../core/pubsubhub.js";
+import {
+  createResourceHint,
+  linkCSS,
+  showWarning,
+  toKeyValuePairs,
+} from "../core/utils.js";
+import { sub } from "../core/pubsubhub.js";
 export const name = "w3c/style";
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
@@ -115,9 +119,9 @@ function styleMover(linkURL) {
 
 export function run(conf) {
   if (!conf.specStatus) {
-    const warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
+    const msg = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
     conf.specStatus = "base";
-    pub("warn", warn);
+    showWarning(msg, name);
   }
 
   let styleFile = "W3C-";

@@ -1,9 +1,8 @@
 // @ts-check
 // Module ui/save-html
 // Saves content to HTML when asked to
-import { getIntlData } from "../core/utils.js";
+import { getIntlData, showWarning } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
-import { pub } from "../core/pubsubhub.js";
 import { rsDocToDataURL } from "../core/exporter.js";
 import { ui } from "../core/ui.js";
 
@@ -79,7 +78,7 @@ function toDownloadLink(details) {
 
 const saveDialog = {
   async show(button) {
-    await document.respecIsReady;
+    await document.respec.ready;
     const div = html`<div class="respec-save-buttons">
       ${downloadLinks.map(toDownloadLink)}
     </div>`;
@@ -104,9 +103,8 @@ function show() {
  */
 export function exportDocument(_, mimeType) {
   const msg =
-    "Exporting via ui/save-html module's `exportDocument()` is deprecated and will be removed. " +
-    "Use core/exporter `rsDocToDataURL()` instead.";
-  pub("warn", msg);
-  console.warn(msg);
+    "Exporting via ui/save-html module's `exportDocument()` is deprecated and will be removed.";
+  const hint = "Use core/exporter `rsDocToDataURL()` instead.";
+  showWarning(msg, name, { hint });
   return rsDocToDataURL(mimeType);
 }

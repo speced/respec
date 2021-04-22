@@ -10,7 +10,5 @@ js/deps/builds
 !js/profile-w3c-common.js
 !js/profile-geonovum.js
 !js/profile-w3c.js
-!js/shortcut.js
 .vscode/*
-!.vscode/settings.json
 !.vscode/tasks.json

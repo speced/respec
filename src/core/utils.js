@@ -86,57 +86,6 @@ export function removeReSpec(doc) {
 
 /**
  * Adds error class to each element while emitting a warning
- * @param {HTMLElement|HTMLElement[]} elems
- * @param {String} msg message to show in warning
- * @param {String=} title error message to add on each element
- * @param {object} [options]
- * @param {string} [options.details]
- */
-export function showInlineWarning(elems, msg, title, options = {}) {
-  if (!Array.isArray(elems)) elems = [elems];
-  const message = getErrorMessage(elems, msg, title, options);
-  pub("warn", message);
-  console.warn(msg, elems);
-}
-
-/**
- * Adds error class to each element while emitting a warning
- * @param {HTMLElement|HTMLElement[]} elems
- * @param {String} msg message to show in warning
- * @param {String} title error message to add on each element
- * @param {object} [options]
- * @param {string} [options.details]
- */
-export function showInlineError(elems, msg, title, options = {}) {
-  if (!Array.isArray(elems)) elems = [elems];
-  const message = getErrorMessage(elems, msg, title, options);
-  pub("error", message);
-  console.error(msg, elems);
-}
-
-/**
- * @param {HTMLElement[]} elems
- * @param {String} msg
- * @param {String} title
- * @param {object} [options]
- * @param {string} [options.details]
- */
-function getErrorMessage(elems, msg, title, { details }) {
-  const links = elems
-    .map((element, i) => {
-      markAsOffending(element, msg, title);
-      return generateMarkdownLink(element, i);
-    })
-    .join(", ");
-  let message = `${msg} at: ${links}.`;
-  if (details) {
-    message += `\n\n<details>${details}</details>`;
-  }
-  return message;
-}
-
-/**
- * Adds error class to each element while emitting a warning
  * @param {HTMLElement} elem
  * @param {String} msg message to show in warning
  * @param {String=} title error message to add on each element
@@ -148,82 +97,6 @@ function markAsOffending(elem, msg, title) {
   }
   if (!elem.id) {
     addId(elem, "respec-offender");
-  }
-}
-
-/**
- * @param {Element} element
- * @param {number} i
- */
-function generateMarkdownLink(element, i) {
-  return `[${i + 1}](#${element.id})`;
-}
-
-export class IDBKeyVal {
-  /**
-   * @param {import("idb").IDBPDatabase} idb
-   * @param {string} storeName
-   */
-  constructor(idb, storeName) {
-    this.idb = idb;
-    this.storeName = storeName;
-  }
-
-  /** @param {string} key */
-  async get(key) {
-    return await this.idb
-      .transaction(this.storeName)
-      .objectStore(this.storeName)
-      .get(key);
-  }
-
-  /**
-   * @param {string[]} keys
-   */
-  async getMany(keys) {
-    const keySet = new Set(keys);
-    /** @type {Map<string, any>} */
-    const results = new Map();
-    let cursor = await this.idb.transaction(this.storeName).store.openCursor();
-    while (cursor) {
-      if (keySet.has(cursor.key)) {
-        results.set(cursor.key, cursor.value);
-      }
-      cursor = await cursor.continue();
-    }
-    return results;
-  }
-
-  /**
-   * @param {string} key
-   * @param {any} value
-   */
-  async set(key, value) {
-    const tx = this.idb.transaction(this.storeName, "readwrite");
-    tx.objectStore(this.storeName).put(value, key);
-    return await tx.done;
-  }
-
-  async addMany(entries) {
-    const tx = this.idb.transaction(this.storeName, "readwrite");
-    for (const [key, value] of entries) {
-      tx.objectStore(this.storeName).put(value, key);
-    }
-    return await tx.done;
-  }
-
-  async clear() {
-    const tx = this.idb.transaction(this.storeName, "readwrite");
-    tx.objectStore(this.storeName).clear();
-    return await tx.done;
-  }
-
-  async keys() {
-    const tx = this.idb.transaction(this.storeName);
-    /** @type {Promise<string[]>} */
-    const keys = tx.objectStore(this.storeName).getAllKeys();
-    await tx.done;
-    return keys;
   }
 }
 
@@ -399,10 +272,9 @@ export function runTransforms(content, flist, ...funcArgs) {
         try {
           content = method.apply(this, args);
         } catch (e) {
-          pub(
-            "warn",
-            `call to \`${meth}()\` failed with: ${e}. See error console for stack trace.`
-          );
+          const msg = `call to \`${meth}()\` failed with: ${e}.`;
+          const hint = "See developer console for stack trace.";
+          showWarning(msg, "utils/runTransforms", { hint });
           console.error(e);
         }
       }
@@ -909,4 +781,66 @@ export class CaseInsensitiveMap extends Map {
   delete(key) {
     return super.delete(key.toLowerCase());
   }
+}
+
+export class RespecError extends Error {
+  /**
+   * @param {Parameters<typeof showError>[0]} message
+   * @param {Parameters<typeof showError>[1]} plugin
+   * @param {Parameters<typeof showError>[2] & { isWarning: boolean }} options
+   */
+  constructor(message, plugin, options) {
+    super(message);
+    const name = options.isWarning ? "ReSpecWarning" : "ReSpecError";
+    Object.assign(this, { message, plugin, name, ...options });
+    if (options.elements) {
+      options.elements.forEach(elem =>
+        markAsOffending(elem, message, options.title)
+      );
+    }
+  }
+
+  toJSON() {
+    const { message, name, stack } = this;
+    // @ts-expect-error https://github.com/microsoft/TypeScript/issues/26792
+    const { plugin, hint, elements, title, details } = this;
+    return { message, name, plugin, hint, elements, title, details, stack };
+  }
+}
+
+/**
+ * @param {string} message
+ * @param {string} pluginName Name of plugin that caused the error.
+ * @param {object} [options]
+ * @param {string} [options.hint] How to solve the error?
+ * @param {HTMLElement[]} [options.elements] Offending elements.
+ * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
+ * @param {string} [options.details] Any further details/context.
+ */
+export function showError(message, pluginName, options = {}) {
+  const opts = { ...options, isWarning: false };
+  pub("error", new RespecError(message, pluginName, opts));
+}
+
+/**
+ * @param {string} message
+ * @param {string} pluginName Name of plugin that caused the error.
+ * @param {object} [options]
+ * @param {string} [options.hint] How to solve the error?
+ * @param {HTMLElement[]} [options.elements] Offending elements.
+ * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
+ * @param {string} [options.details] Any further details/context.
+ */
+export function showWarning(message, pluginName, options = {}) {
+  const opts = { ...options, isWarning: true };
+  pub("warn", new RespecError(message, pluginName, opts));
+}
+
+/**
+ * Creates a quick markdown link to a property in the docs.
+ *
+ * @param {string} prop ReSpec configuration property to link to in docs.
+ */
+export function docLink(prop) {
+  return `[\`${prop}\`](https://respec.org/docs/#${prop})`;
 }

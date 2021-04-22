@@ -5,8 +5,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { getIntlData } from "../core/utils.js";
-import { pub } from "./pubsubhub.js";
+import { getIntlData, showError, showWarning } from "../core/utils.js";
 export const name = "core/github";
 
 let resolveGithubPromise;
@@ -15,7 +14,7 @@ let rejectGithubPromise;
 export const github = new Promise((resolve, reject) => {
   resolveGithubPromise = resolve;
   rejectGithubPromise = message => {
-    pub("error", message);
+    showError(message, name);
     reject(new Error(message));
   };
 });
@@ -23,35 +22,35 @@ export const github = new Promise((resolve, reject) => {
 const localizationStrings = {
   en: {
     file_a_bug: "File a bug",
-    participate: "Participate",
+    participate: "Participate:",
     commit_history: "Commit history",
   },
   ko: {
     participate: "참여",
   },
   zh: {
-    participate: "参与：",
     file_a_bug: "反馈错误",
+    participate: "参与：",
   },
   ja: {
+    commit_history: "変更履歴",
     file_a_bug: "問題報告",
     participate: "参加方法：",
-    commit_history: "変更履歴",
   },
   nl: {
     commit_history: "Revisiehistorie",
     file_a_bug: "Dien een melding in",
-    participate: "Doe mee",
+    participate: "Doe mee:",
   },
   es: {
     commit_history: "Historia de cambios",
     file_a_bug: "Nota un bug",
-    participate: "Participe",
+    participate: "Participe:",
   },
   de: {
-    file_a_bug: "Fehler melden",
-    participate: "Mitmachen",
     commit_history: "Revisionen",
+    file_a_bug: "Fehler melden",
+    participate: "Mitmachen:",
   },
 };
 const l10n = getIntlData(localizationStrings);
@@ -135,7 +134,7 @@ export async function run(conf) {
       githubAPI = conf.githubAPI;
     } else {
       const msg = "`respecConfig.githubAPI` should not be added manually.";
-      pub("warn", msg);
+      showWarning(msg, name);
     }
   }
   const normalizedGHObj = {

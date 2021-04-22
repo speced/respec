@@ -15,7 +15,7 @@ declare module "text!*" {
   export default value;
 }
 
-// See: core/a11y
+// See: core/linter-rules/a11y
 interface AxeViolation {
   id: string;
   help: string;
@@ -46,18 +46,17 @@ interface Window {
     (deps: string[], callback: (...modules: any[]) => void): void;
     modules: { [dep: string]: any };
   };
-  $: JQueryStatic;
-  jQuery: JQueryStatic;
   axe?: {
     run(context: Node, options: any): Promise<{ violations: AxeViolation[] }>;
   };
 }
 
 interface Document {
+  /** @deprecated in favour of `document.respec.ready` */
   respecIsReady: Promise<void>;
   respec: {
     readonly version: string;
-    readonly ready: Document["respecIsReady"];
+    readonly ready: Promise<void>;
   };
   createNodeIterator<T>(
     root: Node,
@@ -71,8 +70,8 @@ interface Document {
   ): TreeWalker<T>;
 }
 
-interface NodeIterator<T extends Node> { }
-interface TreeWalker<T extends Node> { }
+interface NodeIterator<T extends Node> {}
+interface TreeWalker<T extends Node> {}
 
 interface Node {
   cloneNode<T extends Node = this>(deep?: boolean): T;
@@ -93,14 +92,6 @@ declare namespace Intl {
 
     format(items: Iterable<string>): string;
   }
-}
-
-interface JQuery {
-  renameElement(name: string): JQuery<any>;
-  getDfnTitles(): string[];
-  linkTargets(): import("./core/utils.js").LinkTarget[];
-  makeID(pfx?: string, txt?: string, noLC?: boolean): string;
-  allTextNodes(exclusions: string[]): Text[];
 }
 
 interface BiblioData {
@@ -143,9 +134,11 @@ type ResourceHintOption = {
    * If the hint should remain in the spec after processing.
    */
   dontRemove?: boolean;
-}
+};
 
 module "core/xref" {
+  import { IDBPDatabase, DBSchema } from "idb";
+
   export interface RequestEntry {
     term: string;
     id: string;
@@ -169,4 +162,21 @@ module "core/xref" {
     };
     query?: RequestEntry[];
   }
+
+  interface XrefDBScheme extends DBSchema {
+    xrefs: {
+      key: string;
+      value: { query: RequestEntry; result: SearchResultEntry[] };
+      indexes: { byTerm: string };
+    };
+  }
+
+  export type XrefDatabase = IDBPDatabase<XrefDBScheme>;
+}
+
+enum W3CGroupType {
+  "bg",
+  "cg",
+  "ig",
+  "wg",
 }

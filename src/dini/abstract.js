@@ -1,8 +1,7 @@
 // @ts-check
 // Module dini/abstract
 // Handle the abstract section properly.
-import { getIntlData } from "../core/utils.js";
-import { pub } from "../core/pubsubhub.js";
+import { getIntlData, showError } from "../core/utils.js";
 export const name = "dini/abstract";
 
 const localizationStrings = {
@@ -33,7 +32,8 @@ const l10n = getIntlData(localizationStrings);
 export async function run() {
   const abs = document.getElementById("abstract");
   if (!abs) {
-    pub("error", `Document must have one element with \`id="abstract"`);
+    const msg = `Document must have one element with \`id="abstract"`;
+    showError(msg, name);
     return;
   }
   abs.classList.add("introductory");

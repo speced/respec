@@ -1,8 +1,7 @@
 // @ts-check
-import { fetchAndCache, getIntlData } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
+import { fetchAndCache, getIntlData, showError } from "./utils.js";
+import css from "../styles/mdn-annotation.css.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
 
 export const name = "core/mdn-annotation";
 
@@ -42,14 +41,6 @@ const localizationStrings = {
   },
 };
 const l10n = getIntlData(localizationStrings);
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/mdn-annotation.css")).default;
-  } catch {
-    return fetchAsset("mdn-annotation.css");
-  }
-}
 
 /**
  * @param {HTMLElement} node
@@ -142,7 +133,7 @@ export async function run(conf) {
   if (!mdnSpecJson) return;
 
   const style = document.createElement("style");
-  style.textContent = await loadStyle();
+  style.textContent = css;
   document.head.append(style);
 
   for (const elem of findElements(mdnSpecJson)) {
@@ -186,7 +177,7 @@ async function getMdnData(key, mdnConf) {
   if (res.status === 404) {
     const msg = `Could not find MDN data associated with key "${key}".`;
     const hint = "Please add a valid key to `respecConfig.mdn`";
-    pub("error", `${msg} ${hint}`);
+    showError(msg, name, { hint });
     return;
   }
   return await res.json();

@@ -1,25 +1,174 @@
 /**
- * Exports fetchAndWrite() method, allowing programmatic control of the
- * spec generator.
- *
- * For usage, see example a https://github.com/w3c/respec/pull/692
+ * Exports toHTML() method, allowing programmatic control of the spec generator.
  */
-/* jshint node: true, browser: false */
-"use strict";
-const os = require("os");
 const puppeteer = require("puppeteer");
-const colors = require("colors");
-const { mkdtemp, writeFile } = require("fs").promises;
 const path = require("path");
-colors.setTheme({
-  debug: "cyan",
-  error: "red",
-  warn: "yellow",
-  info: "blue",
-});
+const { mkdtemp, readFile, writeFile } = require("fs").promises;
+const { tmpdir } = require("os");
+
+const noop = () => {};
 
 /**
  * Fetches a ReSpec "src" URL, and writes the processed static HTML to an "out" path.
+ * @param {string} src A URL or filepath that is the ReSpec source.
+ * @param {object} [options]
+ * @param {number} [options.timeout] Milliseconds before processing should timeout.
+ * @param {boolean} [options.useLocal] Use locally installed ReSpec instead of the one in document.
+ * @param {(error: RsError) => void} [options.onError] What to do if a ReSpec processing has an error. Does nothing by default.
+ * @param {(warning: RsError) => void} [options.onWarning] What to do if a ReSpec processing has a warning. Does nothing by default.
+ * @param {(msg: string, timeRemaining: number) => void} [options.onProgress]
+ * @param {boolean} [options.disableSandbox] See https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox
+ * @param {boolean} [options.devtools] Show the Chromium window with devtools open for debugging.
+ * @return {Promise<{ html: string, errors: RsError[], warnings: RsError[] }>}
+ * @throws {Error} If failed to process.
+ */
+async function toHTML(src, options = {}) {
+  const {
+    timeout = 300000,
+    disableSandbox = false,
+    devtools = false,
+    useLocal = false,
+  } = options;
+  if (typeof options.onError !== "function") {
+    options.onError = noop;
+  }
+  if (typeof options.onWarning !== "function") {
+    options.onWarning = noop;
+  }
+  if (typeof options.onProgress !== "function") {
+    options.onProgress = noop;
+  }
+
+  const log = msg => options.onProgress(msg, timer.remaining);
+  const timer = createTimer(timeout);
+
+  /** @type {RsError[]} */
+  const errors = [];
+  /** @type {RsError[]} */
+  const warnings = [];
+  const onError = error => {
+    errors.push(error);
+    options.onError(error);
+  };
+  const onWarning = warning => {
+    warnings.push(warning);
+    options.onWarning(warning);
+  };
+
+  const userDataDir = await mkdtemp(`${tmpdir()}/respec2html-`);
+  const args = [];
+  if (disableSandbox) args.push("--no-sandbox");
+
+  log("Launching browser");
+  const browser = await puppeteer.launch({ userDataDir, args, devtools });
+
+  try {
+    const page = await browser.newPage();
+
+    handleConsoleMessages(page, onError, onWarning);
+    if (useLocal) {
+      await useLocalReSpec(page, log);
+    }
+
+    const url = new URL(src);
+    log(`Navigating to ${url}`);
+    const response = await page.goto(url.href, { timeout: timer.remaining });
+    if (
+      !response.ok() &&
+      response.status() /* workaround: 0 means ok for local files */
+    ) {
+      // don't show params, as they can contain the API key!
+      const debugURL = `${url.origin}${url.pathname}`;
+      const msg = `📡 HTTP Error ${response.status()}: ${debugURL}`;
+      throw new Error(msg);
+    }
+    log(`Navigation complete.`);
+
+    await checkIfReSpec(page);
+    const version = await getVersion(page);
+    log(`Using ReSpec v${version.join(".")}`);
+
+    log("Processing ReSpec document...");
+    const html = await generateHTML(page, timer, version, url);
+    log("Processed document.");
+
+    // Race condition: Wait before page close for all console messages to be logged
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    await page.close();
+    log("Done.");
+
+    return { html, errors, warnings };
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Replace the ReSpec script in document with the locally installed one. This is
+ * useful in CI env or when you want to pin the ReSpec version.
+ *
+ * @assumption The ReSpec script being used in the document is hosted on either
+ * w3.org or w3c.github.io. If this assumption doesn't hold true (interception
+ * fails), this function will timeout.
+ *
+ * The following ReSpec URLs are supported:
+ * https://www.w3.org/Tools/respec/${profile}
+ * https://w3c.github.io/respec/builds/${profile}.js
+ * file:///home/path-to-respec/builds/${profile}.js
+ * http://localhost:PORT/builds/${profile}.js
+ * https://example.com/builds/${profile}.js
+ *
+ * @param {import("puppeteer").Page} page
+ * @param {(msg: any) => void} log
+ */
+async function useLocalReSpec(page, log) {
+  await page.setRequestInterception(true);
+
+  page.on("request", async function requestInterceptor(request) {
+    if (!isRespecScript(request)) {
+      await request.continue();
+      return;
+    }
+
+    const url = new URL(request.url());
+    const respecProfileRegex = /\/(respec-[\w-]+)(?:\.js)?$/;
+    const profile = url.pathname.match(respecProfileRegex)[1];
+    const localPath = path.join(__dirname, "..", "builds", `${profile}.js`);
+    const relPath = path.relative(process.cwd(), localPath);
+    log(`Intercepted ${url} to respond with ${relPath}`);
+    await request.respond({
+      contentType: "text/javascript; charset=utf-8",
+      body: await readFile(localPath),
+    });
+    // Workaround for https://github.com/puppeteer/puppeteer/issues/4208
+    page.off("request", requestInterceptor);
+    await page.setRequestInterception(false);
+  });
+}
+
+/** @param {import("puppeteer").HTTPRequest} req */
+function isRespecScript(req) {
+  if (req.method() !== "GET" || req.resourceType() !== "script") {
+    return false;
+  }
+
+  const { host, pathname: path } = new URL(req.url());
+  switch (host) {
+    case "www.w3.org":
+      return (
+        path.startsWith("/Tools/respec/") && !path.includes("respec-highlight")
+      );
+    case "w3c.github.io":
+      return path.startsWith("/respec/builds/");
+    default:
+      // localhost, file://, and everything else
+      return /\/builds\/respec-[\w-]+\.js$/.test(path);
+  }
+}
+
+/**
+ * Fetches a ReSpec "src" URL, and writes the processed static HTML to an "out" path.
+ * @deprecated Please use `toHTML` instead.
  * @param {string} src A URL or filepath that is the ReSpec source.
  * @param {string | null | ""} out A path to write to. If null, goes to stdout. If "", then don't write, just return value.
  * @param {object} [whenToHalt] Allowing execution to stop without writing.
@@ -29,94 +178,62 @@ colors.setTheme({
  * @param {number} [options.timeout] Milliseconds before processing should timeout.
  * @param {boolean} [options.disableSandbox] See https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox
  * @param {boolean} [options.debug] Show the Chromium window with devtools open for debugging.
+ * @param {boolean} [options.verbose] Log processing status to stdout.
  * @param {(error: RsError) => void} [options.onError] What to do if a ReSpec processing has an error. Logs to stderr by default.
  * @param {(warning: RsError) => void} [options.onWarning] What to do if a ReSpec processing has a warning. Logs to stderr by default.
  * @return {Promise<string>} Resolves with HTML when done writing. Rejects on errors.
  */
-async function fetchAndWrite(
-  src,
-  out,
-  whenToHalt = {},
-  {
-    timeout = 300000,
-    disableSandbox = false,
-    debug = false,
-    onError = error =>
-      console.error(
-        colors.error(`💥 ReSpec error: ${colors.debug(error.message)}`)
-      ),
-    onWarning = warning =>
-      console.warn(
-        colors.warn(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`)
-      ),
-  } = {}
-) {
-  const timer = createTimer(timeout);
+async function fetchAndWrite(src, out, whenToHalt = {}, options = {}) {
+  const colors = require("colors");
+  colors.setTheme({ debug: "cyan", error: "red", warn: "yellow" });
 
-  const userDataDir = await mkdtemp(`${os.tmpdir()}/respec2html-`);
-  const args = disableSandbox ? ["--no-sandbox"] : undefined;
-  const browser = await puppeteer.launch({
-    userDataDir,
-    args,
-    devtools: debug,
-  });
-  try {
-    const page = await browser.newPage();
+  const showError = error => console.error(colors.error(error));
+  const showWarning = warning => console.warn(colors.warn(warning));
 
-    const haltFlags = { error: false, warn: false };
-    handleConsoleMessages(page, haltFlags, onError, onWarning);
+  showWarning(
+    "DEPRECATION WARNING: `fetchAndWrite` is deprecated and will be removed in a future version. Please use `toHTML` instead."
+  );
 
-    const url = new URL(src);
-    const response = await page.goto(url, { timeout });
-    if (
-      !response.ok() &&
-      response.status() /* workaround: 0 means ok for local files */
-    ) {
-      const warn = colors.warn(`📡 HTTP Error ${response.status()}:`);
-      // don't show params, as they can contain the API key!
-      const debugURL = `${url.origin}${url.pathname}`;
-      const msg = `${warn} ${colors.debug(debugURL)}`;
-      throw new Error(msg);
-    }
-    await checkIfReSpec(page);
-    const html = await generateHTML(page, url, timer);
-    const abortOnWarning = whenToHalt.haltOnWarn && haltFlags.warn;
-    const abortOnError = whenToHalt.haltOnError && haltFlags.error;
-    if (abortOnError || abortOnWarning) {
-      throw new Error(
-        `${abortOnError ? "Errors" : "Warnings"} found during processing.`
-      );
-    }
-    await write(out, html);
-    // Race condition: Wait before page close for all console messages to be logged
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await page.close();
-    return html;
-  } finally {
-    await browser.close();
+  const opts = {
+    onError(error) {
+      showError(`💥 ReSpec error: ${colors.debug(error.message)}`);
+    },
+    onWarning(warning) {
+      showWarning(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`);
+    },
+    ...options,
+    devtools: options.debug,
+  };
+  const { html, errors, warnings } = await toHTML(src, opts);
+
+  const abortOnWarning = whenToHalt.haltOnWarn && warnings.length;
+  const abortOnError = whenToHalt.haltOnError && errors.length;
+  if (abortOnError || abortOnWarning) {
+    throw new Error(
+      `${abortOnError ? "Errors" : "Warnings"} found during processing.`
+    );
   }
+
+  if (out === "") out = null;
+  else if (out === null) out = "stdout";
+
+  await write(out, html);
+  return html;
 }
 
 /**
  * @param {import("puppeteer").Page} page
- * @param {string} url
- * @param {ReturnType<typeof createTimer>} timer
+ * @typedef {[major: number, minor: number, patch: number]} ReSpecVersion
+ * @returns {Promise<ReSpecVersion>}
  */
-async function generateHTML(page, url, timer) {
+async function getVersion(page) {
   await page.waitForFunction(() => window.hasOwnProperty("respecVersion"));
-  const version = await page.evaluate(getVersion);
-  try {
-    return await page.evaluate(evaluateHTML, version, timer);
-  } catch (err) {
-    const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${colors.debug(
-      `${
-        `Specification: ${url}\n` +
-        `ReSpec version: ${version.join(".")}\n` +
-        "File a bug: https://github.com/w3c/respec/\n"
-      }${err ? `Error: ${err.stack}\n` : ""}`
-    )}`;
-    throw new Error(msg);
-  }
+  return await page.evaluate(() => {
+    if (/^\D/.test(window.respecVersion)) {
+      return [123456789, 0, 0];
+    }
+    return window.respecVersion.split(".").map(str => parseInt(str, 10));
+  });
 }
 
 /**
@@ -125,39 +242,57 @@ async function generateHTML(page, url, timer) {
 async function checkIfReSpec(page) {
   const isRespecDoc = await page.evaluate(isRespec);
   if (!isRespecDoc) {
-    const msg = `${colors.warn(
-      "🕵️‍♀️  That doesn't seem to be a ReSpec document. Please check manually:"
-    )} ${colors.debug(page.url)}`;
+    const msg = `🕵️‍♀️  That doesn't seem to be a ReSpec document. Please check manually: ${page.url()}`;
     throw new Error(msg);
   }
   return isRespecDoc;
-}
 
-async function isRespec() {
-  const query = "script[data-main*='profile-'], script[src*='respec']";
-  if (document.head.querySelector(query)) {
-    return true;
+  async function isRespec() {
+    const query = "script[data-main*='profile-'], script[src*='respec']";
+    if (document.head.querySelector(query)) {
+      return true;
+    }
+    await new Promise(resolve => {
+      document.onreadystatechange = () => {
+        if (document.readyState === "complete") resolve();
+      };
+      document.onreadystatechange();
+    });
+    await new Promise(resolve => {
+      setTimeout(resolve, 2000);
+    });
+    return Boolean(document.getElementById("respec-ui"));
   }
-  await new Promise(resolve => {
-    document.onreadystatechange = () => {
-      if (document.readyState === "complete") {
-        resolve();
-      }
-    };
-    document.onreadystatechange();
-  });
-  await new Promise(resolve => {
-    setTimeout(resolve, 2000);
-  });
-  return Boolean(document.getElementById("respec-ui"));
 }
 
 /**
- * @param {number[]} version
+ * @param {import("puppeteer").Page} page
+ * @param {ReturnType<typeof createTimer>} timer
+ * @param {ReSpecVersion} version
+ * @param {URL} url
+ */
+async function generateHTML(page, timer, version, url) {
+  try {
+    return await page.evaluate(evaluateHTML, version, timer);
+  } catch (err) {
+    const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${`${
+      `Specification: ${url}\n` +
+      `ReSpec version: ${version.join(".")}\n` +
+      "File a bug: https://github.com/w3c/respec/\n"
+    }${err ? `Error: ${err.stack}\n` : ""}`}`;
+    throw new Error(msg);
+  }
+}
+
+/**
+ * @param {ReSpecVersion} version
  * @param {ReturnType<typeof createTimer>} timer
  */
 async function evaluateHTML(version, timer) {
-  await timeout(document.respecIsReady, timer.remaining);
+  await timeout(
+    document.respec ? document.respec.ready : document.respecIsReady,
+    timer.remaining
+  );
 
   const [major, minor] = version;
   if (major < 20 || (major === 20 && minor < 10)) {
@@ -174,7 +309,7 @@ async function evaluateHTML(version, timer) {
       });
     });
     return exportDocument("html", "text/html");
-  } else {
+  } else if (!document.respec || !document.respec.toHTML) {
     const { rsDocToDataURL } = await new Promise((resolve, reject) => {
       require(["core/exporter"], resolve, err => {
         reject(new Error(err.message));
@@ -183,44 +318,58 @@ async function evaluateHTML(version, timer) {
     const dataURL = rsDocToDataURL("text/html");
     const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
     return decodeURIComponent(encodedString);
+  } else {
+    return await document.respec.toHTML();
   }
 
   function timeout(promise, ms) {
     return new Promise((resolve, reject) => {
       promise.then(resolve, reject);
-      const msg = `Timeout: document.respecIsReady didn't resolve in ${ms}ms.`;
+      const msg = `Timeout: document.respec.ready didn't resolve in ${ms}ms.`;
       setTimeout(() => reject(msg), ms);
     });
   }
 }
 
-function getVersion() {
-  if (window.respecVersion === "Developer Edition") {
-    return [123456789, 0, 0];
-  }
-  return window.respecVersion.split(".").map(str => parseInt(str, 10));
-}
+/**
+ * @typedef {object} RsErrorBasic
+ * @property {string} RsErrorBasic.message
+ *
+ * @typedef {object} ReSpecError
+ * @property {string} ReSpecError.message
+ * @property {string} ReSpecError.plugin
+ * @property {string} [ReSpecError.hint]
+ * @property {HTMLElement[]} [ReSpecError.elements]
+ * @property {string} [ReSpecError.title]
+ * @property {string} [ReSpecError.details]
+ *
+ * @typedef {RsErrorBasic | ReSpecError} RsError
+ */
 
 /**
  * Specifies what to do when the browser emits "error" and "warn" console messages.
  * @param  {import("puppeteer").Page} page Instance of page to listen on.
- * @param {object} haltFlags
- * @param {boolean} [haltFlags.error]
- * @param {boolean} [haltFlags.warn]
- * @typedef {{ message: string }} RsError
  * @param {(error: RsError) => void} onError
  * @param {(error: RsError) => void} onWarning
  */
-function handleConsoleMessages(page, haltFlags, onError, onWarning) {
+function handleConsoleMessages(page, onError, onWarning) {
   /** @param {import('puppeteer').JSHandle<any>} handle */
   async function stringifyJSHandle(handle) {
-    return await handle.executionContext().evaluate(o => String(o), handle);
+    return await handle.executionContext().evaluate(obj => {
+      if (typeof obj === "string") {
+        // Old ReSpec versions might report errors as strings.
+        return JSON.stringify({ message: String(obj) });
+      } else {
+        // Ideally: `obj instanceof RsError` and `RsError instanceof Error`.
+        return JSON.stringify(obj);
+      }
+    }, handle);
   }
 
   page.on("console", async message => {
     const args = await Promise.all(message.args().map(stringifyJSHandle));
     const msgText = message.text();
-    const text = args.filter(msg => msg !== "undefined").join(" ");
+    const text = args.filter(msg => msg !== "undefined")[0] || "";
     const type = message.type();
     if (
       (type === "error" || type === "warning") &&
@@ -235,17 +384,9 @@ function handleConsoleMessages(page, haltFlags, onError, onWarning) {
     }
     switch (type) {
       case "error":
-        onError({ message: text });
-        haltFlags.error = true;
-        break;
+        return onError(JSON.parse(text));
       case "warning":
-        // Ignore polling of respecDone
-        if (/document\.respecDone/.test(text)) {
-          return;
-        }
-        onWarning({ message: text });
-        haltFlags.warn = true;
-        break;
+        return onWarning(JSON.parse(text));
     }
   });
 }
@@ -261,14 +402,17 @@ function createTimer(duration) {
 }
 
 /**
- * @param {string | null | ""} destination
+ * @param {string | "stdout" | null | "" | undefined} destination
  * @param {string} html
+ * @private Do not use this function directly outside ReSpec.
  */
 async function write(destination, html) {
   switch (destination) {
     case "":
-      break;
     case null:
+    case undefined:
+      break;
+    case "stdout":
       process.stdout.write(html);
       break;
     default: {
@@ -280,4 +424,6 @@ async function write(destination, html) {
   }
 }
 
+exports.toHTML = toHTML;
 exports.fetchAndWrite = fetchAndWrite;
+exports.write = write;
