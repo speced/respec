@@ -9,7 +9,7 @@ import { html } from "./import-maps.js";
 
 export const name = "core/web-monetization";
 
-const DEFAULT_PAYMENT_POINTER = "$coil.xrptipbot.com/XzUlVjPFQ7qxCPcQqzhbdQ";
+const DEFAULT_PAYMENT_POINTER = "$ilp.uphold.com/DwJmxPHHi8K3";
 
 export function run(conf) {
   const { monetization } = conf;

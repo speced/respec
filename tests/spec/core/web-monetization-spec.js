@@ -16,7 +16,7 @@ describe("Core - Web Monetization", () => {
     const doc = await makeRSDoc(ops);
 
     const metaTag = doc.querySelector("meta[name='monetization']");
-    expect(metaTag.content).toBe("$coil.xrptipbot.com/XzUlVjPFQ7qxCPcQqzhbdQ");
+    expect(metaTag.content).toBe("$ilp.uphold.com/DwJmxPHHi8K3");
     expect(metaTag.classList).toContain("removeOnSave");
   });
 
@@ -25,7 +25,7 @@ describe("Core - Web Monetization", () => {
     const doc = await makeRSDoc(ops);
 
     const metaTag = doc.querySelector("meta[name='monetization']");
-    expect(metaTag.content).toBe("$coil.xrptipbot.com/XzUlVjPFQ7qxCPcQqzhbdQ");
+    expect(metaTag.content).toBe("$ilp.uphold.com/DwJmxPHHi8K3");
     expect(metaTag.classList).toContain("removeOnSave");
   });
 
