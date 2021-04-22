@@ -97,9 +97,9 @@ const Builder = {
   /**
    * @param {object} options
    * @param {string} options.name Name of the profile (in `/profiles` dierctory) to build.
-   * @param {boolean} options.debug Don't run minifiers if true.
+   * @param {boolean} [options.debug] Don't run minifiers if true.
    */
-  async build({ name, debug }) {
+  async build({ name, debug = false }) {
     const { inputOptions, outputOptions } = this._getOptions(name, { debug });
     console.log(`Building ${rel(inputOptions.input)}. Please wait...`);
     const bundle = await rollup.rollup(inputOptions);

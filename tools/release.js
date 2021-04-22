@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-"use strict";
+// @ts-check
 const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
@@ -36,36 +36,20 @@ const loadOps = {
   delay: 100,
 };
 
-colors.setTheme({
-  "breaking change": "red",
-  chore: "grey",
-  data: "grey",
-  debug: "cyan",
-  docs: "grey",
-  error: "red",
-  feat: "green",
-  fix: "red",
-  help: "cyan",
-  important: "red",
-  info: "green",
-  input: "grey",
-  prompt: "grey",
-  refactor: "green",
-  style: "grey",
-  test: "grey",
-  verbose: "cyan",
-  warn: "yellow",
-  l10n: "green",
-});
-
+/** @param {string} program */
 function commandRunner(program) {
-  return (cmd, options = { showOutput: false }) => {
-    console.log(colors.debug(`Run: ${program} ${colors.prompt(cmd)}`));
+  /**
+   * @param {string} cmd
+   * @param {{showOutput: boolean}} [options ]
+   */
+  const runner = (cmd, options = { showOutput: false }) => {
+    console.log(colors.cyan(`Run: ${program} ${colors.grey(cmd)}`));
     if (DEBUG) {
       return Promise.resolve("");
     }
     return toExecPromise(`${program} ${cmd}`, { ...options, timeout: 200000 });
   };
+  return runner;
 }
 
 const git = commandRunner("git");
@@ -76,25 +60,24 @@ const validator = commandRunner(`java -jar ${vnu}`);
 cmdPrompt.start();
 
 const Prompts = {
-  askQuestion(promptOps) {
-    return new Promise((resolve, reject) => {
-      cmdPrompt.get(promptOps, (err, res) => {
-        if (err) {
-          return reject(new Error(err));
-        }
-        if (res.question.toLowerCase() === "n") {
-          return reject(new Error("🙅  user declined."));
-        }
-        resolve(res.question);
-      });
-    });
+  async askQuestion(promptOps) {
+    const res = await cmdPrompt.get(promptOps);
+    // @ts-ignore
+    if (res.question.toLowerCase() === "n") {
+      throw new Error("🙅  user declined.");
+    }
+    return res.question;
   },
 
+  /**
+   * @param {string} from
+   * @param {string} to
+   */
   async askSwitchToBranch(from, to) {
     const promptOps = {
-      description: `You're on branch ${colors.info(
+      description: `You're on branch ${colors.green(
         from
-      )}. Switch to ${colors.info(to)}?`,
+      )}. Switch to ${colors.green(to)}?`,
       pattern: /^[yn]$/i,
       message: "Values can be 'y' or 'n'.",
       default: "y",
@@ -103,6 +86,7 @@ const Prompts = {
     await git(`checkout ${to}`);
   },
 
+  /** @param {string} branch */
   async askToPullBranch(branch) {
     const promptOps = {
       description: `Branch ${branch} needs a pull. Do you want me to do a pull?`,
@@ -124,7 +108,7 @@ const Prompts = {
     try {
       await this.askQuestion(promptOps);
     } catch (err) {
-      const warning = colors.warn(
+      const warning = colors.yellow(
         "🚨 Make sure to run `git up; git checkout develop`"
       );
       console.warn(warning);
@@ -132,6 +116,7 @@ const Prompts = {
     }
   },
 
+  /** @param {string} commits */
   stylelizeCommits(commits) {
     const iconMap = new Map([
       ["a11y", "♿"],
@@ -180,6 +165,8 @@ const Prompts = {
    *  - MAJOR version when you make incompatible API changes,
    *  - MINOR version when you add functionality in a backwards-compatible manner, and
    *  - PATCH version when you make backwards-compatible bug fixes.
+   * @param {string} commits
+   * @param {string} version
    */
   suggestSemVersion(commits, version) {
     let [major, minor, patch] = version
@@ -253,7 +240,7 @@ const Prompts = {
 
   async askPushAll() {
     const promptOps = {
-      description: `${colors.important(
+      description: `${colors.red(
         "🔥  Ready to make this live? 🔥"
       )}  (last chance!)`,
       pattern: /^[yn]$/i,
@@ -264,6 +251,12 @@ const Prompts = {
   },
 };
 
+/**
+ *
+ * @param {string} cmd
+ * @param {{ timeout: number, showOutput: boolean }} options
+ * @returns {Promise<string>}
+ */
 function toExecPromise(cmd, { timeout, showOutput }) {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
@@ -281,9 +274,7 @@ function toExecPromise(cmd, { timeout, showOutput }) {
       proc.stderr.pipe(process.stderr);
       proc.stdout.pipe(process.stdout);
     }
-    proc.on("error", err => {
-      reject(new Error(err));
-    });
+    proc.on("error", err => reject(err));
     proc.on("close", number => {
       if (number === 1) {
         reject(new Error("Abnormal termination"));
@@ -330,11 +321,11 @@ class Indicator {
 const indicators = new Map([
   [
     "remote-update",
-    new Indicator(colors.info(" Performing Git remote update... 📡 ")),
+    new Indicator(colors.green(" Performing Git remote update... 📡 ")),
   ],
   [
     "push-to-server",
-    new Indicator(colors.info(" Pushing everything back to server... 📡")),
+    new Indicator(colors.green(" Pushing everything back to server... 📡")),
   ],
 ]);
 
@@ -372,7 +363,7 @@ const run = async () => {
     for (const name of ["w3c", "geonovum", "dini"]) {
       await Builder.build({ name });
     }
-    console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
+    console.log(colors.green(" Making sure the generated version is ok... 🕵🏻"));
     const source = `file:///${__dirname}/../examples/basic.built.html`;
     const tempFile = path.join(os.tmpdir(), "index.html");
     await node(`./tools/respec2html.js -e --timeout 30 ${source} ${tempFile}`, {
@@ -380,9 +371,9 @@ const run = async () => {
     });
 
     // Do HTML validation
-    console.log(colors.info(" Making sure HTML validator is happy... 🕵🏻"));
-    await validator(`--stdout ${tempFile.name}`);
-    console.log(colors.info(" Build Seems good... ✅"));
+    console.log(colors.green(" Making sure HTML validator is happy... 🕵🏻"));
+    await validator(`--stdout ${tempFile}`);
+    console.log(colors.green(" Build Seems good... ✅"));
 
     // 4. Commit your changes
     await git("add builds package.json package-lock.json");
@@ -400,14 +391,14 @@ const run = async () => {
     await git("push origin gh-pages");
     await git("push --tags");
     indicators.get("push-to-server").hide();
-    console.log(colors.info(" Publishing to npm... 📡"));
+    console.log(colors.green(" Publishing to npm... 📡"));
     await npm("publish", { showOutput: true });
     if (initialBranch !== MAIN_BRANCH) {
       await Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
   } catch (err) {
     console.error(colors.red(`\n☠  ${err.message}`));
-    const currentBranch = getCurrentBranch();
+    const currentBranch = await getCurrentBranch();
     if (initialBranch !== currentBranch) {
       await git(`checkout ${initialBranch}`);
     }
