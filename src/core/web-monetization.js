@@ -17,6 +17,11 @@ export function run(conf) {
   const paymentPointer =
     typeof monetization === "string" ? monetization : DEFAULT_PAYMENT_POINTER;
 
+  if (paymentPointer === DEFAULT_PAYMENT_POINTER) {
+    document.head.append(
+      html`<!-- Support ReSpec's development - https://opencollective.com/respec --> `
+    );
+  }
   document.head.append(html`<meta
     name="monetization"
     content="${paymentPointer}"
