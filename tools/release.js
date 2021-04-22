@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-"use strict";
+// @ts-check
 const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
@@ -36,31 +36,9 @@ const loadOps = {
   delay: 100,
 };
 
-colors.setTheme({
-  "breaking change": "red",
-  chore: "grey",
-  data: "grey",
-  debug: "cyan",
-  docs: "grey",
-  error: "red",
-  feat: "green",
-  fix: "red",
-  help: "cyan",
-  important: "red",
-  info: "green",
-  input: "grey",
-  prompt: "grey",
-  refactor: "green",
-  style: "grey",
-  test: "grey",
-  verbose: "cyan",
-  warn: "yellow",
-  l10n: "green",
-});
-
 function commandRunner(program) {
   return (cmd, options = { showOutput: false }) => {
-    console.log(colors.debug(`Run: ${program} ${colors.prompt(cmd)}`));
+    console.log(colors.cyan(`Run: ${program} ${colors.grey(cmd)}`));
     if (DEBUG) {
       return Promise.resolve("");
     }
@@ -92,9 +70,9 @@ const Prompts = {
 
   async askSwitchToBranch(from, to) {
     const promptOps = {
-      description: `You're on branch ${colors.info(
+      description: `You're on branch ${colors.green(
         from
-      )}. Switch to ${colors.info(to)}?`,
+      )}. Switch to ${colors.green(to)}?`,
       pattern: /^[yn]$/i,
       message: "Values can be 'y' or 'n'.",
       default: "y",
@@ -124,7 +102,7 @@ const Prompts = {
     try {
       await this.askQuestion(promptOps);
     } catch (err) {
-      const warning = colors.warn(
+      const warning = colors.yellow(
         "🚨 Make sure to run `git up; git checkout develop`"
       );
       console.warn(warning);
@@ -253,7 +231,7 @@ const Prompts = {
 
   async askPushAll() {
     const promptOps = {
-      description: `${colors.important(
+      description: `${colors.red(
         "🔥  Ready to make this live? 🔥"
       )}  (last chance!)`,
       pattern: /^[yn]$/i,
@@ -330,11 +308,11 @@ class Indicator {
 const indicators = new Map([
   [
     "remote-update",
-    new Indicator(colors.info(" Performing Git remote update... 📡 ")),
+    new Indicator(colors.green(" Performing Git remote update... 📡 ")),
   ],
   [
     "push-to-server",
-    new Indicator(colors.info(" Pushing everything back to server... 📡")),
+    new Indicator(colors.green(" Pushing everything back to server... 📡")),
   ],
 ]);
 
@@ -372,7 +350,7 @@ const run = async () => {
     for (const name of ["w3c", "geonovum", "dini"]) {
       await Builder.build({ name });
     }
-    console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
+    console.log(colors.green(" Making sure the generated version is ok... 🕵🏻"));
     const source = `file:///${__dirname}/../examples/basic.built.html`;
     const tempFile = path.join(os.tmpdir(), "index.html");
     await node(`./tools/respec2html.js -e --timeout 30 ${source} ${tempFile}`, {
@@ -380,9 +358,9 @@ const run = async () => {
     });
 
     // Do HTML validation
-    console.log(colors.info(" Making sure HTML validator is happy... 🕵🏻"));
+    console.log(colors.green(" Making sure HTML validator is happy... 🕵🏻"));
     await validator(`--stdout ${tempFile.name}`);
-    console.log(colors.info(" Build Seems good... ✅"));
+    console.log(colors.green(" Build Seems good... ✅"));
 
     // 4. Commit your changes
     await git("add builds package.json package-lock.json");
@@ -400,7 +378,7 @@ const run = async () => {
     await git("push origin gh-pages");
     await git("push --tags");
     indicators.get("push-to-server").hide();
-    console.log(colors.info(" Publishing to npm... 📡"));
+    console.log(colors.green(" Publishing to npm... 📡"));
     await npm("publish", { showOutput: true });
     if (initialBranch !== MAIN_BRANCH) {
       await Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
