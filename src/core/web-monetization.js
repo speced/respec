@@ -9,7 +9,7 @@ import { html } from "./import-maps.js";
 
 export const name = "core/web-monetization";
 
-const DEFAULT_PAYMENT_POINTER = "$wallet.example.com/respec";
+const DEFAULT_PAYMENT_POINTER = "$coil.xrptipbot.com/XzUlVjPFQ7qxCPcQqzhbdQ";
 
 export function run(conf) {
   const { monetization } = conf;
