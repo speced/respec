@@ -36,14 +36,20 @@ const loadOps = {
   delay: 100,
 };
 
+/** @param {string} program */
 function commandRunner(program) {
-  return (cmd, options = { showOutput: false }) => {
+  /**
+   * @param {string} cmd
+   * @param {{showOutput: boolean}} [options ]
+   */
+  const runner = (cmd, options = { showOutput: false }) => {
     console.log(colors.cyan(`Run: ${program} ${colors.grey(cmd)}`));
     if (DEBUG) {
       return Promise.resolve("");
     }
     return toExecPromise(`${program} ${cmd}`, { ...options, timeout: 200000 });
   };
+  return runner;
 }
 
 const git = commandRunner("git");
