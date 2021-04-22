@@ -58,8 +58,9 @@ const Prompts = {
     return new Promise((resolve, reject) => {
       cmdPrompt.get(promptOps, (err, res) => {
         if (err) {
-          return reject(new Error(err));
+          return reject(err);
         }
+        // @ts-ignore
         if (res.question.toLowerCase() === "n") {
           return reject(new Error("🙅  user declined."));
         }
@@ -68,6 +69,10 @@ const Prompts = {
     });
   },
 
+  /**
+   * @param {string} from
+   * @param {string} to
+   */
   async askSwitchToBranch(from, to) {
     const promptOps = {
       description: `You're on branch ${colors.green(
@@ -81,6 +86,7 @@ const Prompts = {
     await git(`checkout ${to}`);
   },
 
+  /** @param {string} branch */
   async askToPullBranch(branch) {
     const promptOps = {
       description: `Branch ${branch} needs a pull. Do you want me to do a pull?`,
@@ -110,6 +116,7 @@ const Prompts = {
     }
   },
 
+  /** @param {string} commits */
   stylelizeCommits(commits) {
     const iconMap = new Map([
       ["a11y", "♿"],
@@ -158,6 +165,8 @@ const Prompts = {
    *  - MAJOR version when you make incompatible API changes,
    *  - MINOR version when you add functionality in a backwards-compatible manner, and
    *  - PATCH version when you make backwards-compatible bug fixes.
+   * @param {string} commits
+   * @param {string} version
    */
   suggestSemVersion(commits, version) {
     let [major, minor, patch] = version
@@ -242,6 +251,12 @@ const Prompts = {
   },
 };
 
+/**
+ *
+ * @param {string} cmd
+ * @param {{ timeout: number, showOutput: boolean }} options
+ * @returns {Promise<string>}
+ */
 function toExecPromise(cmd, { timeout, showOutput }) {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
@@ -259,9 +274,7 @@ function toExecPromise(cmd, { timeout, showOutput }) {
       proc.stderr.pipe(process.stderr);
       proc.stdout.pipe(process.stdout);
     }
-    proc.on("error", err => {
-      reject(new Error(err));
-    });
+    proc.on("error", err => reject(err));
     proc.on("close", number => {
       if (number === 1) {
         reject(new Error("Abnormal termination"));
@@ -359,7 +372,7 @@ const run = async () => {
 
     // Do HTML validation
     console.log(colors.green(" Making sure HTML validator is happy... 🕵🏻"));
-    await validator(`--stdout ${tempFile.name}`);
+    await validator(`--stdout ${tempFile}`);
     console.log(colors.green(" Build Seems good... ✅"));
 
     // 4. Commit your changes
@@ -385,12 +398,11 @@ const run = async () => {
     }
   } catch (err) {
     console.error(colors.red(`\n☠  ${err.message}`));
-    const currentBranch = getCurrentBranch();
+    const currentBranch = await getCurrentBranch();
     if (initialBranch !== currentBranch) {
       await git(`checkout ${initialBranch}`);
     }
     process.exit(1);
-    return;
   }
   // all is good...
   process.exit(0);
