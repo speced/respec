@@ -12,6 +12,13 @@ export const name = "core/highlight";
 
 const nextMsgId = msgIdGenerator("highlight");
 
+/**
+ * @param {string} lang
+ * @param {import("../type-helper.js").HljsVersion} version
+ */
+const getLanguageURL = (lang, version) =>
+  `https://unpkg.com/@highlightjs/cdn-assets@${version}/languages/${lang}.min.js`;
+
 function getLanguageHint(classList) {
   return Array.from(classList)
     .filter(item => item !== "highlight" && item !== "nolinks")
@@ -88,6 +95,14 @@ export async function run(conf) {
   if (!highlightables.length) {
     return;
   }
+
+  if (Array.isArray(conf.highlightLanguages)) {
+    const languageUrls = conf.highlightLanguages.map(lang =>
+      getLanguageURL(lang, "10.7.2")
+    );
+    await Promise.all(languageUrls.map(loadLanguage));
+  }
+
   const promisesToHighlight = highlightables
     .filter(elem => elem.textContent.trim())
     .map(highlightElement);
@@ -97,4 +112,22 @@ export async function run(conf) {
     </style>`
   );
   await Promise.all(promisesToHighlight);
+}
+
+async function loadLanguage(langURL) {
+  const msg = { action: "highlight-load-lang", langURL, id: nextMsgId() };
+  const worker = await workerPromise;
+  worker.postMessage(msg);
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error("Timed out waiting for highlight load."));
+    }, 4000);
+    worker.addEventListener("message", function listener(ev) {
+      const { id } = ev.data;
+      if (id !== msg.id) return; // not for us!
+      worker.removeEventListener("message", listener);
+      clearTimeout(timeoutId);
+      resolve();
+    });
+  });
 }

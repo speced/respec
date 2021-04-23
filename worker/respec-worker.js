@@ -12,7 +12,9 @@ self.addEventListener("message", ({ data: originalData }) => {
     case "highlight-load-lang": {
       const { langURL, propName, lang } = data;
       importScripts(langURL);
-      self.hljs.registerLanguage(lang, self[propName]);
+      if (lang && propName) {
+        self.hljs.registerLanguage(lang, self[propName]);
+      }
       break;
     }
     case "highlight": {

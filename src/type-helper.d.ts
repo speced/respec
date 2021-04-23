@@ -24,6 +24,8 @@ interface AxeViolation {
   nodes: { failureSummary: string; element: HTMLElement }[];
 }
 
+type HighlightLanguageURL = `https://unpkg.com/@highlightjs/cdn-assets@${HljsVersion}/languages/${string}.min.js`;
+
 declare var respecConfig: any;
 interface Window {
   respecVersion: string;
@@ -180,3 +182,4 @@ enum W3CGroupType {
   "ig",
   "wg",
 }
+export type HljsVersion = "10.7.2";
