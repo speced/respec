@@ -150,7 +150,7 @@ const Prompts = {
               : "❓";
           // colorize
           if (match) {
-            result = result.replace(match.toLowerCase(), colors[match](match));
+            result = result.replace(match.toLowerCase(), colors.green(match));
           }
           return `  ${icon} ${result}`;
         })
@@ -397,7 +397,7 @@ const run = async () => {
       await Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
   } catch (err) {
-    console.error(colors.red(`\n☠  ${err.message}`));
+    console.error(colors.red(`\n☠  ${err.stack}`));
     const currentBranch = await getCurrentBranch();
     if (initialBranch !== currentBranch) {
       await git(`checkout ${initialBranch}`);
