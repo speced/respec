@@ -83,7 +83,6 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf) {
-  conf.isUnofficial = conf.specStatus === "PD";
   if (!conf.specStatus) {
     const msg = "Missing required configuration: `specStatus`";
     showError(msg, name);

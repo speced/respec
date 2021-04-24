@@ -1,6 +1,6 @@
 // @ts-check
 // Module aom/style
-// Inserts a link to the appropriate W3C style for the specification's maturity level.
+// Inserts a link to the appropriate style for the specification's maturity level.
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
@@ -108,10 +108,10 @@ export function run(conf) {
 
   // Figure out which style file to use.
   switch (conf.specStatus.toUpperCase()) {
-    case "UNOFFICIAL":
+    case "PD":
       styleFile = "W3C-UD";
       break;
-    case "BASE":
+    default:
       styleFile = "base.css";
       break;
   }

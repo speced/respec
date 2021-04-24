@@ -21,9 +21,6 @@ const aomDefaults = {
   // choice between Markdown and HTML depends on the complexity of the spec
   // example of Markdown spec: https://github.com/WICG/netinfo/blob/gh-pages/index.html
   format: "markdown",
-  // isED: false, // is Editor's Draft?
-  // isNoTrack: true, // is it on Rec Track? could probably be deleted
-  // isPR: false, // is Proposed Rec?
   logos: [
     {
       src: "https://aomedia.org/assets/images/aomedia-icon-only.png",
@@ -34,10 +31,7 @@ const aomDefaults = {
       url: "https://aomedia.org/",
     },
   ],
-  prependW3C: false,
-  doJsonLd: false,
   license: "aom",
-  showPreviousVersion: false,
 };
 
 function computeProps(conf) {
