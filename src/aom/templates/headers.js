@@ -43,7 +43,7 @@ function getSpecSubTitleElem(conf) {
 
 export default conf => {
   return html`<div class="head">
-    ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
+    ${conf.specStatus !== "PD" ? conf.logos.map(showLogo) : ""} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
     <h2>
       ${conf.textStatus} - 
@@ -104,7 +104,9 @@ function renderCopyright(conf) {
   return conf.overrideCopyright
     ? [conf.overrideCopyright]
     : html`<p class="copyright">
-Copyright 2019, The Alliance for Open Media<br>
+Copyright ${conf.publishYear}, <a href="https://www.w3.org/"
+      ><abbr title="The Alliance for Open Media">AOM</abbr></a
+    ><br>
 Licensing information is available at http://aomedia.org/license/<br>
 The MATERIALS ARE PROVIDED “AS IS.” The Alliance for Open Media, its members, 
 and its contributors expressly disclaim any warranties (express, implied, or 

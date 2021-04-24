@@ -8,24 +8,6 @@ const localizationStrings = {
   en: {
     abstract: "Abstract",
   },
-  // ko: {
-  //   abstract: "요약",
-  // },
-  // zh: {
-  //   abstract: "摘要",
-  // },
-  // ja: {
-  //   abstract: "要約",
-  // },
-  // nl: {
-  //   abstract: "Samenvatting",
-  // },
-  // es: {
-  //   abstract: "Resumen",
-  // },
-  // de: {
-  //   abstract: "Zusammenfassung",
-  // },
 };
 const l10n = getIntlData(localizationStrings);
 
