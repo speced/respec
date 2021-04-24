@@ -23,7 +23,7 @@ const localizationStrings = {
         when, and only when, they appear in all capitals, as shown here.
       </p>`;
     },
-  }
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
