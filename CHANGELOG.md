@@ -1,5 +1,26 @@
 # Changelog
 
+## [v26.6.1](https://github.com/w3c/respec/tree/v26.6.1) (2021-04-26)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.0...v26.6.1)
+
+**Fixed bugs:**
+
+- dfn.role=link containing a link [\#3482](https://github.com/w3c/respec/issues/3482)
+- dfn panel for data-cite dfn are unused [\#3254](https://github.com/w3c/respec/issues/3254)
+
+**Closed issues:**
+
+- Add support for partial interface references [\#3264](https://github.com/w3c/respec/issues/3264)
+- "npm start" devserver doesn't work with Firefox [\#3070](https://github.com/w3c/respec/issues/3070)
+
+**Merged pull requests:**
+
+- fix\(core/dfn-panel\): don't add  panel for data-cite [\#3484](https://github.com/w3c/respec/pull/3484) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(tools/release\): colors\[match\] not a function [\#3481](https://github.com/w3c/respec/pull/3481) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(tools/release\): add type checking [\#3480](https://github.com/w3c/respec/pull/3480) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3479](https://github.com/w3c/respec/pull/3479) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v26.6.0](https://github.com/w3c/respec/tree/v26.6.0) (2021-04-22)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.5.3...v26.6.0)
