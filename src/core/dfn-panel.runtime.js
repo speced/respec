@@ -82,7 +82,7 @@ function deriveCoordinates(event) {
 function deriveAction(event) {
   const target = /** @type {HTMLElement} */ (event.target);
   const hitALink = !!target.closest("a");
-  if (target.closest("dfn, .index-term")) {
+  if (target.closest("dfn:not([data-cite]), .index-term")) {
     return hitALink ? "none" : "show";
   }
   if (target.closest(".dfn-panel")) {
