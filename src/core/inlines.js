@@ -131,13 +131,20 @@ function inlineRefMatches(matched) {
 
 /**
  * @param {string} matched
+ * @param {Text} text
  */
-function inlineXrefMatches(matched) {
+function inlineXrefMatches(matched, text) {
   // slices "{{" at the beginning and "}}" at the end
-  const ref = matched.slice(2, -2).trim();
-  return ref.startsWith("\\")
-    ? matched.replace("\\", "")
-    : idlStringToHtml(norm(ref));
+  const ref = norm(matched.slice(2, -2));
+  if (ref.startsWith("\\")) {
+    return matched.replace("\\", "");
+  }
+
+  const node = idlStringToHtml(ref);
+  // If it's inside a dfn, it should just be coded, not linked.
+  // This is because dfn elements are treated as links by ReSpec via role=link.
+  const renderAsCode = !!text.parentElement.closest("dfn");
+  return renderAsCode ? inlineCodeMatches(`\`${node.textContent}\``) : node;
 }
 
 /**
@@ -288,7 +295,7 @@ export function run(conf) {
       if (!matched) {
         df.append(t);
       } else if (t.startsWith("{{")) {
-        const node = inlineXrefMatches(t);
+        const node = inlineXrefMatches(t, txt);
         df.append(node);
       } else if (t.startsWith("[[[")) {
         const node = inlineRefMatches(t);
