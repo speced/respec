@@ -294,36 +294,38 @@ export function run(conf) {
       matched = !matched;
       if (!matched) {
         df.append(t);
-        continue;
-      }
-      switch (true) {
-        case t.startsWith("{{"):
-          df.append(inlineXrefMatches(t, txt));
-          break;
-        case t.startsWith("[[["):
-          df.append(inlineRefMatches(t));
-          break;
-        case t.startsWith("[["):
-          df.append(...inlineBibrefMatches(t, txt, conf));
-          break;
-        case t.startsWith("|"):
-          df.append(inlineVariableMatches(t));
-          break;
-        case t.startsWith("[="):
-          df.append(inlineAnchorMatches(t));
-          break;
-        case t.startsWith("`"):
-          df.append(inlineCodeMatches(t));
-          break;
-        case t.startsWith("[^"):
-          df.append(inlineElementMatches(t));
-          break;
-        case abbrMap.has(t):
-          df.append(inlineAbbrMatches(t, txt, abbrMap));
-          break;
-        case keywords.test(t):
-          df.append(inlineRFC2119Matches(t));
-          break;
+      } else if (t.startsWith("{{")) {
+        const node = inlineXrefMatches(t, txt);
+        df.append(node);
+      } else if (t.startsWith("[[[")) {
+        const node = inlineRefMatches(t);
+        df.append(node);
+      } else if (t.startsWith("[[")) {
+        const nodes = inlineBibrefMatches(t, txt, conf);
+        df.append(...nodes);
+      } else if (t.startsWith("|")) {
+        const node = inlineVariableMatches(t);
+        df.append(node);
+      } else if (t.startsWith("[=")) {
+        const node = inlineAnchorMatches(t);
+        df.append(node);
+      } else if (t.startsWith("`")) {
+        const node = inlineCodeMatches(t);
+        df.append(node);
+      } else if (t.startsWith("[^")) {
+        const node = inlineElementMatches(t);
+        df.append(node);
+      } else if (abbrMap.has(t)) {
+        const node = inlineAbbrMatches(t, txt, abbrMap);
+        df.append(node);
+      } else if (keywords.test(t)) {
+        const node = inlineRFC2119Matches(t);
+        df.append(node);
+      } else {
+        // FAIL -- not sure that this can really happen
+        throw new Error(
+          `Found token '${t}' but it does not correspond to anything`
+        );
       }
     }
     txt.replaceWith(df);
