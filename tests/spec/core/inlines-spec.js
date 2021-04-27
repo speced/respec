@@ -477,4 +477,29 @@ describe("Core - Inlines", () => {
       "#dom-referrerpolicy-no-referrer"
     );
   });
+
+  it("doesn't link processed inline WebIDL if inside a definition", async () => {
+    const body = `
+      <section>
+        <dfn id="dfn">
+          ABC
+          {{ EventTarget/addEventListener(type, callback) }}
+          {{ Window / event }}
+          {{ ReferrerPolicy/"no-referrer" }}
+          123
+        </dfn>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const dfn = doc.getElementById("dfn");
+    expect(dfn.querySelector("a")).toBeNull();
+
+    const codeElements = dfn.querySelectorAll("code");
+    expect(codeElements).toHaveSize(3);
+
+    const [eventListen, event, noRef] = codeElements;
+    expect(eventListen.textContent).toBe("addEventListener(type, callback)");
+    expect(event.textContent).toBe("event");
+    expect(noRef.textContent).toBe(`"no-referrer"`);
+  });
 });
