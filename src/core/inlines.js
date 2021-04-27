@@ -135,7 +135,7 @@ function inlineRefMatches(matched) {
  */
 function inlineXrefMatches(matched, text) {
   // slices "{{" at the beginning and "}}" at the end
-  const ref = norm(matched.slice(2, -2).trim());
+  const ref = norm(matched.slice(2, -2));
   if (ref.startsWith("\\")) {
     return matched.replace("\\", "");
   }
