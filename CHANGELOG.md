@@ -1,5 +1,19 @@
 # Changelog
 
+## [v26.6.2](https://github.com/w3c/respec/tree/v26.6.2) (2021-04-27)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.1...v26.6.2)
+
+**Fixed bugs:**
+
+- dfn.role=link containing a link [\#3482](https://github.com/w3c/respec/issues/3482)
+
+**Merged pull requests:**
+
+- fix\(core/inlines\): don't link IDL inside dfn [\#3491](https://github.com/w3c/respec/pull/3491) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps\): update dependencies [\#3490](https://github.com/w3c/respec/pull/3490) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3485](https://github.com/w3c/respec/pull/3485) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v26.6.1](https://github.com/w3c/respec/tree/v26.6.1) (2021-04-26)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.6.0...v26.6.1)
