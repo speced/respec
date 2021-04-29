@@ -127,7 +127,7 @@ const findPath = makeComponentFinder("/");
  * @property {boolean} isNormative
  * @property {string} frag
  * @property {string} path
- * @property {string} href - canonical href coming from xref
+ * @property {string} [href] - canonical href coming from xref
  * @param {HTMLElement} elem
  * @return {CiteDetails};
  */
