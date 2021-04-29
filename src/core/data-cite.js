@@ -71,41 +71,44 @@ function linkElem(elem, linkProps, citeDetails) {
   const { href, title } = linkProps;
   const wrapInCiteEl = !citeDetails.path && !citeDetails.frag;
 
-  if (elem.localName === "a") {
-    const anchor = /** @type {HTMLAnchorElement} */ (elem);
-    if (anchor.textContent === "" && anchor.dataset.lt !== "the-empty-string") {
-      anchor.textContent = title;
+  switch (elem.localName) {
+    case "a": {
+      const el = /** @type {HTMLAnchorElement} */ (elem);
+      if (el.textContent === "" && el.dataset.lt !== "the-empty-string") {
+        el.textContent = title;
+      }
+      el.href = href;
+      if (wrapInCiteEl) {
+        const cite = document.createElement("cite");
+        el.replaceWith(cite);
+        cite.append(el);
+      }
+      break;
     }
-    anchor.href = href;
-    if (wrapInCiteEl) {
-      const cite = document.createElement("cite");
-      anchor.replaceWith(cite);
-      cite.append(anchor);
+    case "dfn": {
+      const anchor = document.createElement("a");
+      anchor.href = href;
+      if (!elem.textContent) {
+        anchor.textContent = title;
+        elem.append(anchor);
+      } else {
+        wrapInner(elem, anchor);
+      }
+      if (wrapInCiteEl) {
+        const cite = document.createElement("cite");
+        cite.append(anchor);
+        elem.append(cite);
+      }
+      if ("export" in elem.dataset) {
+        const msg = "Exporting an linked external definition is not allowed.";
+        const hint = "Please remove the `data-export` attribute.";
+        showError(msg, name, { hint, elements: [elem] });
+        delete elem.dataset.export;
+      }
+      elem.classList.add("externalDFN");
+      elem.dataset.noExport = "";
+      break;
     }
-    return;
-  }
-
-  if (elem.localName === "dfn") {
-    const anchor = document.createElement("a");
-    anchor.href = href;
-    if (!elem.textContent) {
-      anchor.textContent = title;
-      elem.append(anchor);
-    } else {
-      wrapInner(elem, anchor);
-    }
-    if (wrapInCiteEl) {
-      const cite = document.createElement("cite");
-      cite.append(anchor);
-      elem.append(cite);
-    }
-    if ("export" in elem.dataset) {
-      const msg = "Exporting an linked external definition is not allowed.";
-      const hint = "Please remove the `data-export` attribute.";
-      showError(msg, name, { hint, elements: [elem] });
-      delete elem.dataset.export;
-    }
-    elem.dataset.noExport = "";
   }
 }
 
