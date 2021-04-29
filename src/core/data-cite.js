@@ -81,31 +81,29 @@ function linkElem(elem, linkProps, citeDetails) {
       elem.replaceWith(cite);
       cite.append(elem);
     }
-    return;
+  } else if (elem.localName === "dfn") {
+    const anchor = document.createElement("a");
+    anchor.href = href;
+    if (!elem.textContent) {
+      anchor.textContent = title;
+      elem.append(anchor);
+    } else {
+      wrapInner(elem, anchor);
+    }
+    if (wrapInCiteEl) {
+      const cite = document.createElement("cite");
+      cite.append(anchor);
+      elem.append(cite);
+    }
+    if ("export" in elem.dataset) {
+      const msg = "Exporting an linked external definition is not allowed.";
+      const hint = "Please remove the `data-export` attribute.";
+      showError(msg, name, { hint, elements: [elem] });
+      delete elem.dataset.export;
+    }
+    elem.classList.add("externalDFN");
+    elem.dataset.noExport = "";
   }
-
-  // It's a dfn
-  const anchor = document.createElement("a");
-  anchor.href = href;
-  if (!elem.textContent) {
-    anchor.textContent = title;
-    elem.append(anchor);
-  } else {
-    wrapInner(elem, anchor);
-  }
-  if (wrapInCiteEl) {
-    const cite = document.createElement("cite");
-    cite.append(anchor);
-    elem.append(cite);
-  }
-  if ("export" in elem.dataset) {
-    const msg = "Exporting an linked external definition is not allowed.";
-    const hint = "Please remove the `data-export` attribute.";
-    showError(msg, name, { hint, elements: [elem] });
-    delete elem.dataset.export;
-  }
-  elem.classList.add("externalDFN");
-  elem.dataset.noExport = "";
 }
 
 /**
