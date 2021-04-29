@@ -6,7 +6,7 @@
  */
 
 import { addId, getIntlData, norm } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/dfn-index.css.js";
 import { getTermFromElement } from "./xref.js";
 import { html } from "./import-maps.js";
 import { renderInlineCitation } from "./render-biblio.js";
@@ -46,14 +46,14 @@ const CODE_TYPES = new Set([
  * @typedef {{ term: string, type: string, linkFor: string, elem: HTMLAnchorElement }} Entry
  */
 
-export async function run() {
+export function run() {
   const index = document.querySelector("section#index");
   if (!index) {
     return;
   }
 
   const styleEl = document.createElement("style");
-  styleEl.textContent = await loadStyle();
+  styleEl.textContent = css;
   document.head.appendChild(styleEl);
 
   index.classList.add("appendix");
@@ -72,6 +72,9 @@ export async function run() {
     ${createExternalTermIndex()}
   </section>`;
   index.append(externalTermIndex);
+  for (const el of externalTermIndex.querySelectorAll(".index-term")) {
+    addId(el, "index-term");
+  }
 
   // XXX: This event is used to overcome an edge case with core/structure,
   // related to a circular dependency in plugin run order. We want
@@ -290,7 +293,6 @@ function renderExternalTermEntry(entry) {
   const el = html`<li>
     <span class="index-term" data-href="${elem.href}">${{ html: text }}</span>
   </li>`;
-  addId(el.querySelector("span"), "index-term");
   return el;
 }
 
@@ -322,7 +324,7 @@ const TYPE_TERMS = new Set([
   "double",
   "unrestricted double",
   // Following are not primitive types, but aren't interfaces either.
-  "void",
+  "undefined",
   "any",
   "object",
   "symbol",
@@ -358,14 +360,6 @@ function getTermText(entry) {
   }
 
   return text;
-}
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/dfn-index.css")).default;
-  } catch {
-    return fetchAsset("dfn-index.css");
-  }
 }
 
 /** @param {Document} doc */

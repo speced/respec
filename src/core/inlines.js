@@ -12,8 +12,8 @@ import {
   getTextNodes,
   norm,
   refTypeFromContext,
-  showInlineError,
-  showInlineWarning,
+  showError,
+  showWarning,
 } from "./utils.js";
 import { html } from "./import-maps.js";
 import { idlStringToHtml } from "./inline-idl-parser.js";
@@ -77,16 +77,24 @@ const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
  */
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
-  const [element, attribute] = value.split("/", 2).map(s => s && s.trim());
-  const [xrefType, xrefFor, textContent] = attribute
-    ? ["element-attr", element, attribute]
-    : ["element", null, element];
-  const code = html`<code
+  const [element, attribute, attrValue] = value
+    .split("/", 3)
+    .map(s => s && s.trim())
+    .filter(s => !!s);
+  const [xrefType, xrefFor, textContent] = (() => {
+    if (attrValue) {
+      return ["attr-value", `${element}/${attribute}`, attrValue];
+    } else if (attribute) {
+      return ["element-attr", element, attribute];
+    } else {
+      return ["element", null, element];
+    }
+  })();
+  return html`<code
     ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
       >${textContent}</a
     ></code
   >`;
-  return code;
 }
 
 /**
@@ -115,23 +123,28 @@ function inlineRefMatches(matched) {
     return html`<a href="${ref}"></a>`;
   }
   const badReference = html`<span>${matched}</span>`;
-  showInlineError(
-    badReference, // cite element
-    `Wasn't able to expand ${matched} as it didn't match any id in the document.`,
-    `Please make sure there is element with id ${ref} in the document.`
-  );
+  const msg = `Wasn't able to expand ${matched} as it didn't match any id in the document.`;
+  const hint = `Please make sure there is element with id ${ref} in the document.`;
+  showError(msg, name, { hint, elements: [badReference] });
   return badReference;
 }
 
 /**
  * @param {string} matched
+ * @param {Text} text
  */
-function inlineXrefMatches(matched) {
+function inlineXrefMatches(matched, text) {
   // slices "{{" at the beginning and "}}" at the end
-  const ref = matched.slice(2, -2).trim();
-  return ref.startsWith("\\")
-    ? matched.replace("\\", "")
-    : idlStringToHtml(norm(ref));
+  const ref = norm(matched.slice(2, -2));
+  if (ref.startsWith("\\")) {
+    return matched.replace("\\", "");
+  }
+
+  const node = idlStringToHtml(ref);
+  // If it's inside a dfn, it should just be coded, not linked.
+  // This is because dfn elements are treated as links by ReSpec via role=link.
+  const renderAsCode = !!text.parentElement.closest("dfn");
+  return renderAsCode ? inlineCodeMatches(`\`${node.textContent}\``) : node;
 }
 
 /**
@@ -153,11 +166,9 @@ function inlineBibrefMatches(matched, txt, conf) {
   const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
     const citeElem = cite.childNodes[1] || cite;
-    showInlineWarning(
-      citeElem,
-      "Normative references in informative sections are not allowed. " +
-        `Remove '!' from the start of the reference \`[[${ref}]]\``
-    );
+    const msg = `Normative references in informative sections are not allowed. `;
+    const hint = `Remove '!' from the start of the reference \`[[${ref}]]\``;
+    showWarning(msg, name, { elements: [citeElem], hint });
   }
 
   if (type === "informative" && !illegal) {
@@ -200,7 +211,7 @@ function inlineVariableMatches(matched) {
  */
 function inlineAnchorMatches(matched) {
   matched = matched.slice(2, -2); // Chop [= =]
-  const parts = matched.split("/", 2).map(s => s.trim());
+  const parts = splitBySlash(matched, 2);
   const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
   const [linkingText, text] = content.includes("|")
     ? content.split("|", 2).map(s => s.trim())
@@ -283,40 +294,52 @@ export function run(conf) {
       matched = !matched;
       if (!matched) {
         df.append(t);
-      } else if (t.startsWith("{{")) {
-        const node = inlineXrefMatches(t);
-        df.append(node);
-      } else if (t.startsWith("[[[")) {
-        const node = inlineRefMatches(t);
-        df.append(node);
-      } else if (t.startsWith("[[")) {
-        const nodes = inlineBibrefMatches(t, txt, conf);
-        df.append(...nodes);
-      } else if (t.startsWith("|")) {
-        const node = inlineVariableMatches(t);
-        df.append(node);
-      } else if (t.startsWith("[=")) {
-        const node = inlineAnchorMatches(t);
-        df.append(node);
-      } else if (t.startsWith("`")) {
-        const node = inlineCodeMatches(t);
-        df.append(node);
-      } else if (t.startsWith("[^")) {
-        const node = inlineElementMatches(t);
-        df.append(node);
-      } else if (abbrMap.has(t)) {
-        const node = inlineAbbrMatches(t, txt, abbrMap);
-        df.append(node);
-      } else if (keywords.test(t)) {
-        const node = inlineRFC2119Matches(t);
-        df.append(node);
-      } else {
-        // FAIL -- not sure that this can really happen
-        throw new Error(
-          `Found token '${t}' but it does not correspond to anything`
-        );
+        continue;
+      }
+      switch (true) {
+        case t.startsWith("{{"):
+          df.append(inlineXrefMatches(t, txt));
+          break;
+        case t.startsWith("[[["):
+          df.append(inlineRefMatches(t));
+          break;
+        case t.startsWith("[["):
+          df.append(...inlineBibrefMatches(t, txt, conf));
+          break;
+        case t.startsWith("|"):
+          df.append(inlineVariableMatches(t));
+          break;
+        case t.startsWith("[="):
+          df.append(inlineAnchorMatches(t));
+          break;
+        case t.startsWith("`"):
+          df.append(inlineCodeMatches(t));
+          break;
+        case t.startsWith("[^"):
+          df.append(inlineElementMatches(t));
+          break;
+        case abbrMap.has(t):
+          df.append(inlineAbbrMatches(t, txt, abbrMap));
+          break;
+        case keywords.test(t):
+          df.append(inlineRFC2119Matches(t));
+          break;
       }
     }
     txt.replaceWith(df);
   }
+}
+
+/**
+ * Split a string by slash (`/`) unless it's escaped by a backslash (`\`)
+ * @param {string} str
+ *
+ * TODO: Use negative lookbehind (`str.split(/(?<!\\)\//)`) when supported.
+ * https://github.com/w3c/respec/issues/2869
+ */
+function splitBySlash(str, limit = Infinity) {
+  return str
+    .replace("\\/", "%%")
+    .split("/", limit)
+    .map(s => s && s.trim().replace("%%", "/"));
 }

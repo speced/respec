@@ -2,10 +2,9 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import { addId, getIntlData } from "./utils.js";
+import { addId, getIntlData, showError } from "./utils.js";
 import { biblio } from "./biblio.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
 
 export const name = "core/render-biblio";
 
@@ -38,6 +37,11 @@ const localizationStrings = {
     norm_references: "Normen und Spezifikationen",
     references: "Referenzen",
   },
+  zh: {
+    info_references: "非规范性引用",
+    norm_references: "规范性引用",
+    references: "参考文献",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);
@@ -54,16 +58,6 @@ const REF_STATUSES = new Map([
   ["WD", "W3C Working Draft"],
   ["WG-NOTE", "W3C Working Group Note"],
 ]);
-
-const defaultsReference = Object.freeze({
-  authors: [],
-  date: "",
-  href: "",
-  publisher: "",
-  status: "",
-  title: "",
-  etAl: false,
-});
 
 const endWithDot = endNormalizer(".");
 
@@ -114,9 +108,7 @@ function createReferencesSection(refs, title) {
 
   const sec = html`<section>
     <h3>${title}</h3>
-    <dl class="bibliography">
-      ${refsToShow.map(showRef)}
-    </dl>
+    <dl class="bibliography">${refsToShow.map(showRef)}</dl>
   </section>`;
   addId(sec, "", title);
 
@@ -141,7 +133,7 @@ function toRefContent(ref) {
     if (circular.has(refcontent.aliasOf)) {
       refcontent = null;
       const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
-      pub("error", msg);
+      showError(msg, name);
     } else {
       key = refcontent.aliasOf;
       refcontent = biblio[key];
@@ -227,38 +219,8 @@ function endNormalizer(endStr) {
   };
 }
 
-export function wireReference(rawRef, target = "_blank") {
-  if (typeof rawRef !== "object") {
-    throw new TypeError("Only modern object references are allowed");
-  }
-  const ref = Object.assign({}, defaultsReference, rawRef);
-  const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
-  const status = REF_STATUSES.get(ref.status) || ref.status;
-  return html.wire(ref)`
-    <cite>
-      <a
-        href="${ref.href}"
-        target="${target}"
-        rel="noopener noreferrer">
-        ${ref.title.trim()}</a>.
-    </cite>
-    <span class="authors">
-      ${endWithDot(authors)}
-    </span>
-    <span class="publisher">
-      ${endWithDot(ref.publisher)}
-    </span>
-    <span class="pubDate">
-      ${endWithDot(ref.date)}
-    </span>
-    <span class="pubStatus">
-      ${endWithDot(status)}
-    </span>
-  `;
-}
-
 /** @param {BiblioData|string} ref */
-export function stringifyReference(ref) {
+function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
   let output = `<cite>${ref.title}</cite>`;
 
@@ -327,7 +289,7 @@ function warnBadRefs(badRefs) {
       ),
     ].filter(({ textContent: t }) => t.toLowerCase() === ref.toLowerCase());
     const msg = `Bad reference: [\`${ref}\`] (appears ${badrefs.length} times)`;
-    pub("error", msg);
+    showError(msg, name);
     console.warn("Bad references: ", badrefs);
   });
 }

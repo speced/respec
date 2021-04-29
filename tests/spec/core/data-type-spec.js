@@ -8,28 +8,30 @@ describe("Core — data-type attribute", () => {
         <h2><dfn>PaymentRequest</dfn></h2>
         <pre class="idl">
           interface PaymentRequest {
-            Promise&lt;void&gt; returnsPromise();
-            void returnsVoid(DOMString someArg);
+            Promise&lt;undefined&gt; returnsPromise();
+            undefined returnsUndefined(DOMString someArg);
           };
         </pre>
         <div data-dfn-for="PaymentRequest">
           <dfn>returnsPromise()</dfn> method
-          <dfn>returnsVoid()</dfn> method
+          <dfn>returnsUndefined()</dfn> method
         </div>
       </section>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
 
-    // Promise&lt;void&gt; returnsPromise();
+    // Promise&lt;undefined&gt; returnsPromise();
     const returnsPromise = doc.getElementById(
       "dom-paymentrequest-returnspromise"
     );
     expect(returnsPromise.dataset.type).toBe("Promise");
 
-    // void returnsVoid(DOMString someArg);
-    const returnsVoid = doc.getElementById("dom-paymentrequest-returnsvoid");
-    expect(returnsVoid.dataset.type).toBe("void");
+    // undefined returnsUndefined(DOMString someArg);
+    const returnsUndefined = doc.getElementById(
+      "dom-paymentrequest-returnsundefined"
+    );
+    expect(returnsUndefined.dataset.type).toBe("undefined");
   });
 
   it("adds data-type to an interface's attribute definitions", async () => {

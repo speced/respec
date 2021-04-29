@@ -9,9 +9,8 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { getIntlData, showInlineWarning } from "./utils.js";
+import { getIntlData, showError, showWarning } from "./utils.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
 const localizationStrings = {
   en: {
     missing_test_suite_uri:
@@ -33,6 +32,13 @@ const localizationStrings = {
       "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' angegeben.",
     tests: "Tests",
     test: "Test",
+  },
+  zh: {
+    missing_test_suite_uri:
+      "本规范中包含测试，但在 ReSpec 配置中缺少 '" +
+      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)'。",
+    tests: "测试",
+    test: "测试",
   },
 };
 
@@ -78,9 +84,7 @@ function toListItem(href) {
 
   const testList = html`
     <li>
-      <a href="${href}">
-        ${testFileName}
-      </a>
+      <a href="${href}">${testFileName}</a>
       ${emojiList}
     </li>
   `;
@@ -96,7 +100,7 @@ export function run(conf) {
     return;
   }
   if (!conf.testSuiteURI) {
-    pub("error", l10n.missing_test_suite_uri);
+    showError(l10n.missing_test_suite_uri, name);
     return;
   }
 
@@ -119,7 +123,8 @@ function toTestURLs(tests, testSuiteURI) {
       try {
         return new URL(test, testSuiteURI).href;
       } catch {
-        pub("warn", `Bad URI: ${test}`);
+        const msg = `Bad URI: ${test}`;
+        showWarning(msg, name);
       }
     })
     .filter(href => href);
@@ -134,13 +139,11 @@ function handleDuplicates(testURLs, elem) {
     (link, i, self) => self.indexOf(link) !== i
   );
   if (duplicates.length) {
-    showInlineWarning(
-      elem,
-      `Duplicate tests found`,
-      `To fix, remove duplicates from "data-tests": ${duplicates
-        .map(url => new URL(url).pathname)
-        .join(", ")}`
-    );
+    const msg = `Duplicate tests found`;
+    const hint = `To fix, remove duplicates from "data-tests": ${duplicates
+      .map(url => new URL(url).pathname)
+      .join(", ")}`;
+    showWarning(msg, name, { hint, elements: [elem] });
   }
 }
 
@@ -151,9 +154,7 @@ function toHTML(testURLs) {
   const uniqueList = [...new Set(testURLs)];
   const details = html`
     <details class="respec-tests-details removeOnSave">
-      <summary>
-        tests: ${uniqueList.length}
-      </summary>
+      <summary>tests: ${uniqueList.length}</summary>
       <ul>
         ${uniqueList.map(toListItem)}
       </ul>

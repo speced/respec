@@ -1,7 +1,7 @@
 // ReSpec Worker v1.0.0
 "use strict";
 try {
-  importScripts("https://www.w3.org/Tools/respec/respec-highlight.js");
+  importScripts("https://www.w3.org/Tools/respec/respec-highlight");
 } catch (err) {
   console.error("Network error loading highlighter", err);
 }

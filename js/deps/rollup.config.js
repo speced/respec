@@ -1,6 +1,6 @@
 // rollup.config.js
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 const template = {
   output: {
@@ -14,10 +14,6 @@ const template = {
 };
 
 export default [
-  {
-    input: "js/deps/jquery.js",
-    ...template
-  },
   {
     input: "js/deps/pluralize.js",
     ...template

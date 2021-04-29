@@ -1,10 +1,11 @@
 // @ts-check
-import { getIntlData } from "../../core/utils.js";
+import { getIntlData, showWarning } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
-import { pub } from "../../core/pubsubhub.js";
-import showLink from "./show-link.js";
-import showLogo from "./show-logo.js";
-import showPeople from "./show-people.js";
+import showLink from "../../core/templates/show-link.js";
+import showLogo from "../../core/templates/show-logo.js";
+import showPeople from "../../core/templates/show-people.js";
+
+const name = "dini/templates/headers";
 
 const ccLicense = "https://creativecommons.org/licenses/by/4.0/legalcode";
 
@@ -32,6 +33,8 @@ const localizationStrings = {
     this_version: "현재 버전:",
   },
   zh: {
+    author: "作者：",
+    authors: "作者：",
     editor: "编辑：",
     editors: "编辑：",
     former_editor: "原编辑：",
@@ -126,9 +129,7 @@ export default conf => {
         : ""}
       ${conf.authors
         ? html`
-            <dt>
-              ${conf.multipleAuthors ? l10n.authors : l10n.author}
-            </dt>
+            <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
             ${showPeople(conf.authors)}
           `
         : ""}
@@ -156,10 +157,9 @@ function renderCopyright(conf) {
     return existingCopyright;
   }
   if (conf.hasOwnProperty("overrideCopyright")) {
-    const msg =
-      "The `overrideCopyright` configuration option is deprecated. " +
-      'Please use `<p class="copyright">` instead.';
-    pub("warn", msg);
+    const msg = "The `overrideCopyright` configuration option is deprecated.";
+    const hint = 'Please use `<p class="copyright">` instead.';
+    showWarning(msg, name, { hint });
   }
   return conf.overrideCopyright
     ? [conf.overrideCopyright]

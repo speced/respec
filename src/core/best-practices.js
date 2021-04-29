@@ -3,10 +3,9 @@
 // Handles the marking up of best practices, and can generate a summary of all of them.
 // The summary is generated if there is a section in the document with ID bp-summary.
 // Best practices are marked up with span.practicelab.
-import { addId, getIntlData, makeSafeCopy } from "./utils.js";
+import { addId, getIntlData, makeSafeCopy, showWarning } from "./utils.js";
 import { lang as defaultLang } from "../core/l10n.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
 
 export const name = "core/best-practices";
 
@@ -19,6 +18,9 @@ const localizationStrings = {
   },
   de: {
     best_practice: "Musterbeispiel ",
+  },
+  zh: {
+    best_practice: "最佳实践 ",
   },
 };
 const l10n = getIntlData(localizationStrings);
@@ -37,11 +39,7 @@ export function run() {
 
     // Make the summary items, if we have a summary
     if (summaryItems) {
-      const li = html`
-        <li>
-          ${localizedBpName}: ${makeSafeCopy(bp)}
-        </li>
-      `;
+      const li = html`<li>${localizedBpName}: ${makeSafeCopy(bp)}</li>`;
       summaryItems.appendChild(li);
     }
 
@@ -63,10 +61,8 @@ export function run() {
       bpSummary.appendChild(summaryItems);
     }
   } else if (bpSummary) {
-    pub(
-      "warn",
-      "Using best practices summary (#bp-summary) but no best practices found."
-    );
+    const msg = `Using best practices summary (#bp-summary) but no best practices found.`;
+    showWarning(msg, name);
     bpSummary.remove();
   }
 }

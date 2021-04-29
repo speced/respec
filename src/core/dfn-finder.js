@@ -1,6 +1,6 @@
 // @ts-check
 import { definitionMap, registerDefinition } from "./dfn-map.js";
-import { showInlineError, wrapInner } from "./utils.js";
+import { showError, wrapInner } from "./utils.js";
 
 const topLevelEntities = new Set([
   "callback interface",
@@ -36,7 +36,7 @@ export function findDfn(defn, name, { parent = "" } = {}) {
 }
 
 /**
- * @param {string} type
+ * @param {{ type: string, arguments: any[] }} idlAst
  * @param {string} parent
  * @param {string} name
  */
@@ -96,10 +96,8 @@ function generateMethodNamesWithArgs(operationName, argsAst) {
   const requiredOperation = `${operationName}(${requiredArgs})`;
   operationNames.push(requiredOperation);
   const optionalOps = optional.map((_, index) => {
-    const optionalArgs = optional.slice(0, index + 1).join(", ");
-    const result = `${operationName}(${requiredArgs}${
-      optionalArgs ? `, ${optionalArgs}` : ""
-    })`;
+    const args = [...required, ...optional.slice(0, index + 1)].join(", ");
+    const result = `${operationName}(${args})`;
     return result;
   });
   operationNames.push(...optionalOps);
@@ -164,7 +162,8 @@ function findNormalDfn(defn, parent, ...names) {
       const msg = `WebIDL identifier \`${name}\` ${
         parent ? `for \`${parent}\`` : ""
       } is defined multiple times`;
-      showInlineError(dfns, msg, "Duplicate definition.");
+      const title = "Duplicate definition.";
+      showError(msg, name, { title, elements: dfns });
     }
     if (dfns.length) {
       return dfns[0];
@@ -183,7 +182,10 @@ export function decorateDfn(dfnElem, idlAst, parent, name) {
     const lCaseParent = parent.toLowerCase();
     const middle = lCaseParent ? `${lCaseParent}-` : "";
     let last = name.toLowerCase().replace(/[()]/g, "").replace(/\s/g, "-");
-    if (last === "") last = "the-empty-string";
+    if (last === "") {
+      last = "the-empty-string";
+      dfnElem.setAttribute("aria-label", "the empty string");
+    }
     dfnElem.id = `dom-${middle}${last}`;
   }
   dfnElem.dataset.idl = idlAst.type;
@@ -258,8 +260,9 @@ function getDfns(name, parent, originalName, type) {
 /**
  * @return {string}
  */
-function getDataType(idlStruct) {
+function getDataType(idlStruct = {}) {
   const { idlType, generic, union } = idlStruct;
+  if (idlType === undefined) return "";
   if (typeof idlType === "string") return idlType;
   if (generic) return generic;
   // join on "|" handles for "unsigned short" etc.

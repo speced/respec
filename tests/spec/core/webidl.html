@@ -1,71 +1,17 @@
 <!DOCTYPE html>
-<html xmlns='http://www.w3.org/1999/xhtml'>
+<html>
   <head>
     <meta charset='utf-8'/>
     <title>WebIDL Tests</title>
-    <script class='remove'>
+    <script class="remove">
       var respecConfig = {
-              specStatus:   "ED"
-          ,   shortName:    "webidl"
-          ,   editors:      [{ name: "Robin Berjon", url: "http://berjon.com/" }]
-          ,   wg:           "ReSpec Hackin' Gang"
-          ,   wgURI:        "https://darobin.github.com/respec"
-          ,   wgPublicList: "none"
-          ,   wgPatentURI:  "https://example.com/"
-          ,   edDraftURI:   "https://darobin.github.com/respec"
-        };
+        specStatus: "base",
+        shortName: "webidl",
+        editors: [{name: "foo"}],
+      };
     </script>
   </head>
   <body>
-<section data-dfn-for="ExampleInterface" data-link-for="ExampleInterface">
-  <h2><dfn>ExampleInterface</dfn> interface</h2>
-  <pre class="idl no-link-warnings">
-  interface ExampleInterface {
-    void exampleMethod();
-    readonly attribute USVString url;
-  };
-  </pre>
-  <dl>
-    <dt><dfn>exampleMethod()</dfn></dt>
-    <dd>Define <a>exampleMethod</a> here...</dd>
-    <dt><dfn>url</dfn></dt>
-    <dd>Define <a>url</a> here...</dd>
-  </dl>
-</section>
-<section data-link-for="ExampleInterface">
-  <h2>Here is how you link!</h2>
-  <p>The <a>ExampleInterface</a> or the <a>ExampleInterface.exampleMethod()</a></p>
-  <p>Or like this: <a>exampleMethod</a> - which uses data-link-for</p>
-</section>
-    <section id='abstract'>
-      <p>
-        This fake spec tried to exercise all aspects of WebIDL so as to do regression testing in this
-        complex piece of code.
-      </p>
-    </section>
-    <section id='sotd'>
-      <p>
-        CUSTOM PARAGRAPH
-      </p>
-    </section>
-    <section id="records">
-    <h2>Testing records</h2>
-    <pre class="idl no-link-warnings">
-    dictionary Foo {
-      record&lt;DOMString, USVString> pass;
-    };
-    </pre>
-    </section>
-    <section id="linkToIDLSpec">
-    <h2>Linking to WebIDL spec</h2>
-    <pre class="idl no-link-warnings">
-    [Constructor(sequence&lt;DOMString> methodData), SecureContext]
-    interface LinkingTest {
-      readonly attribute DOMString? aBoolAttribute;
-      Promise&lt;void>            returnsPromise(unsigned long long argument);
-    };
-    </pre>
-    </section>
     <section>
       <h2>Section with definitions</h2>
       <p>
@@ -81,22 +27,24 @@
     <section id="sec-parenthesis-method" data-dfn-for="ParenthesisTest" data-link-for="ParenthesisTest">
       <h2>More linking</h2>
       <pre class="idl no-link-warnings">
+      [Exposed=Window]
       interface ParenthesisTest {
-          void basic();
-          void noParens();
-          [Something] void ext();
+          undefined basic();
+          undefined noParens();
+          [Something] undefined ext();
           unsigned long long ull(short s);
           unsigned long long ull(long s);
           getter float withName ();
-          setter void named ();
-          void dataLtOverride();
-          void fullyQualified();
-          void fullyQualifiedNoParens();
-          void doTheFoo();
+          setter undefined named ();
+          undefined dataLtOverride();
+          undefined fullyQualified();
+          undefined fullyQualifiedNoParens();
+          undefined doTheFoo();
       };
       </pre>
       <pre class="idl" id="similar-names">
       // makes sure that types and identifiers are not confused
+      [Exposed=Window]
       interface SimilarlyNamed {
         attribute TestInterface testInterface;
         attribute TestCBInterface testCBInterface;
@@ -106,6 +54,7 @@
         readonly maplike&lt;SimilarlyNamed, SimilarlyNamed>;
       };
       TestInterface includes TestMixin;
+      [Exposed=Window]
       interface TestInterface {};
       callback interface TestCBInterface {};
       typedef (TestInterface or TestCBInterface) TestTypedef;
@@ -115,6 +64,7 @@
       interface mixin TestMixin {
         attribute Bar bar;
       };
+      [Exposed=Window]
       interface Bar {};
       </pre>
       <section data-dfn-for="SimilarlyNamed">
@@ -203,13 +153,19 @@
         Basic interface.
       </p>
       <pre id='if-basic' class='idl'>
-        interface SuperStar {};
+        [Something, Exposed=Window]
+        interface SuperStar {
+          constructor();
+        };
       </pre>
       <p>
         Interface with extended attribute.
       </p>
       <pre id='if-extended-attribute' class='idl'>
-        [Something, Constructor()] interface SuperStar {};
+        [Something, Exposed=Window]
+        interface SuperStar {
+          constructor();
+        };
       </pre>
       <p>
         Interface with extended attribute and RHS identifier list.
@@ -221,7 +177,7 @@
         Interface with inheritance.
       </p>
       <pre id='if-inheritance' class='idl'>
-        interface SuperStar : HyperStar {};
+        [Exposed=Window] interface SuperStar : HyperStar {};
       </pre>
       <p>
         Partial interface .
@@ -245,9 +201,13 @@
         partial interface mixin SuperStar {};
       </pre>
       <pre id='if-doc' class='idl'>
+        [Exposed=Window]
         interface DocInterface {};
+        [Exposed=Window]
         interface DocIsNotCaseSensitive {};
+        [Exposed=Window]
         interface UndocInterface {};
+        [Exposed=Window]
         namespace Afterglow {};
       </pre>
       <p id='if-doc-p'>
@@ -261,25 +221,17 @@
         Constructors on interfaces
       </p>
       <pre id='ctor-basic' class='idl'>
-        [Something,
-         Constructor,
-         Constructor(boolean bar, sequence&lt;double> foo, Promise&lt;double&gt; blah)]
-        interface SuperStar {};
+        [NoSomething, Exposed=Window]
+        interface SuperStar {
+          constructor();
+          constructor(boolean bar, sequence&lt;double> foo);
+        };
       </pre>
       <pre id='ctor-noea' class='idl'>
-        [Constructor] interface SuperStar {};
-      </pre>
-    </section>
-    <section>
-      <h2>NamedConstructors</h2>
-      <p>
-        NamedConstructors on interfaces
-      </p>
-      <pre id='namedctor-basic' class='idl'>
-        [Something,
-         NamedConstructor=Sun(),
-         NamedConstructor=Sun(boolean bar, Date foo)]
-        interface SuperStar {};
+        [Exposed=Window]
+        interface SuperStar {
+          constructor();
+        };
       </pre>
     </section>
     <section>
@@ -288,6 +240,7 @@
         All constants and some type testing
       </p>
       <pre id='const-basic' class='idl'>
+        [Exposed=Window]
         interface ConstTest {
           // 1
           const boolean test = true;
@@ -335,12 +288,13 @@
         Basic attributes testing.
       </p>
       <p>
-        The <code><dfn>Performance</dfn></code> interface.
+        The <dfn>Performance</dfn> interface.
       </p>
       <p data-dfn-for="AttrBasic">
         The <dfn>performance</dfn> attribute.
       </p>
       <pre id='attr-basic' class='idl'>
+        [Exposed=Window]
         interface AttrBasic {
           // 1
           attribute DOMString regular;
@@ -385,18 +339,21 @@
       specials don't necessarily have an indentifier
        -->
        <pre class="idl" id="stringifiertest">
+        [Exposed=Window]
         interface StringifierTest {
           stringifier StringPass ();
           stringifier StringNamedPass named ();
         };
       </pre>
       <pre class="idl" id="gettertest">
+        [Exposed=Window]
         interface GetterTest {
           getter GetterPass ();
           getter GetterNamedPass named ();
         };
       </pre>
       <pre class="idl" id="settertest">
+        [Exposed=Window]
         interface SetterTest {
           setter SetterPass ();
           setter SetterNamedPass named ();
@@ -406,11 +363,12 @@
         <dfn>performance()</dfn> method.
       </p>
       <pre id='meth-basic' class='idl'>
+        [Exposed=Window]
         interface MethBasic {
           // 1
-          void basic();
+          undefined basic();
           // 2
-          [Something] void ext();
+          [Something] undefined ext();
           // 3
           unsigned long long ull(short s, short n);
           // 3.5
@@ -420,9 +378,9 @@
           // 6
           getter float withName ();
           // 7
-          setter void ();
+          setter undefined ();
           // 8
-          setter void named ();
+          setter undefined named ();
           // 9
           static Promise&lt;RTCCertificate>  generateCertificate(AlgorithmIdentifier keygenAlgorithm);
           // 10
@@ -431,8 +389,8 @@
           stringifier DOMString ();
           // 12
           stringifier;
-          Promise&lt;void> complete(optional PaymentComplete result = "unknown");
-          Promise&lt;void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
+          Promise&lt;undefined> complete(optional PaymentComplete result = "unknown");
+          Promise&lt;undefined> another(optional  /*trivia*/  PaymentComplete result = "unknown");
           Performance performance();
         };
       </pre>
@@ -443,32 +401,37 @@
     <section>
       <h2>iterable/maplike/setlike declarations</h2>
       <pre id='iterable-like' class='idl'>
+        [Exposed=Window]
         interface Yukina {
           iterable&lt;DOMString&gt;;
         };
-
+        [Exposed=Window]
         interface Sayo {
           iterable&lt;DOMString, DOMString&gt;;
         };
-
+        [Exposed=Window]
         interface Kasumi {
           maplike&lt;DOMString, DOMString&gt;;
         };
-
+        [Exposed=Window]
         interface Arisa {
           setlike&lt;DOMString&gt;;
         };
       </pre>
       <pre class="idl" id='map-set-readonly'>
+        [Exposed=Window]
         interface MapLikeInterface {
           maplike&lt;MapLikeInterface, MapLikeInterface&gt;;
         };
+        [Exposed=Window]
         interface ReadOnlyMapLike {
           readonly maplike&lt;ReadOnlyMapLike, ReadOnlyMapLike&gt;;
         };
+        [Exposed=Window]
         interface SetLikeInterface {
           setlike&lt;SetLikeInterface&gt;;
         };
+        [Exposed=Window]
         interface ReadOnlySetLike {
           readonly setlike&lt;ReadOnlySetLike&gt;;
         };
@@ -483,19 +446,6 @@
         <dfn>SetLikeInterface</dfn> interface
         <dfn>ReadOnlySetLike</dfn> interface
       </p>
-    </section>
-    <section>
-      <h2>Comments</h2>
-      <pre id="comments-basic" class='idl'>
-        interface SuperStar {
-          // This is a comment
-          // over two lines.
-          /* This one
-             has
-             three. */
-          <!-- this is an HTML comment that will be ignored -->
-        };
-      </pre>
     </section>
     <section>
       <h2>Dictionaries</h2>
@@ -617,7 +567,7 @@
         Basic callback.
       </p>
       <pre id='cb-basic' class='idl'>
-        callback SuperStar = void();
+        callback SuperStar = undefined();
       </pre>
       <p>
         Less basic callback.
@@ -629,7 +579,7 @@
         Callback with multiple arguments.
       </p>
       <pre id='cb-mult-args' class='idl'>
-        callback SortCallback = void (any a, any b);
+        callback SortCallback = undefined (any a, any b);
       </pre>
       <p id="cb-less-basic-doc"><dfn>CbLessBasic</dfn></p>
       <!--
@@ -673,18 +623,19 @@
         Basic includes.
       </p>
       <pre id='incl-basic' class='idl'>
-        Window includes Breakable;
+        Window includes Document;
       </pre>
       <p>
         Less basic includes.
       </p>
       <pre id='incl-less-basic' class='idl'>
-        [Something]Window includes Breakable;
+        [Something]Window includes Document;
       </pre>
     </section>
     <section id="documentation">
       <h2>Documentation</h2>
       <pre id='doc-iface' class='idl'>
+        [Exposed=Window]
         interface Documented {
           attribute DOMString docString;
           attribute DOMString notDefined;
@@ -713,12 +664,14 @@
     <section>
       <h2>IDL block with arbitrary CSS classes</h2>
       <pre id='retain-css-classes' class='idl a b c overlarge'>
+        [Exposed=Window]
         interface NotTested {};
       </pre>
     </section>
     <section>
       <h2>Autolink to WebIDL spec for toJSON</h2>
       <pre id="AutoLinkToIDLSpec" class="idl">
+        [Exposed=Window]
         interface AutoLinkToIDLSpec {
           [Default] object toJSON();
         };
@@ -727,6 +680,7 @@
     <section data-link-for="AutoLinkToIDLSpecLinkFor">
       <h2>Autolink to WebIDL spec for toJSON with data-link-for</h2>
       <pre id="AutoLinkToIDLSpecLinkFor" class="idl">
+        [Exposed=Window]
         interface AutoLinkToIDLSpecLinkFor {
           [Default] object toJSON();
         };
@@ -735,23 +689,25 @@
     <section id="DefinedToJson" data-dfn-for="DefinedToJson" data-link-for="DefinedToJson">
       <h2>We can define our own toJSON()</h2>
       <pre class="idl">
+        [Exposed=Window]
         interface DefinedToJson {
           readonly attribute DOMString country;
           [Default] object toJSON();
-          void toWhatever();
+          undefined toWhatever();
         };
       </pre>
       <section>
       <h2><dfn>toJSON()</dfn> method</h2>
-      <p>When <a>toJSON()</a> is called, run [[!WEBIDL]]'s <a data-cite="WEBIDL#default-tojson-steps">default toJSON steps</a>.</p>
+      <p>When <a>toJSON()</a> is called, run [[WEBIDL]]'s <a data-cite="WEBIDL#default-tojson-steps">default toJSON steps</a>.</p>
       </section>
     </section>
     <section>
       <h2>Optionals and trivia</h2>
       <pre class="idl" id="optional-trivia">
-        [Constructor(X x, optional Y y, /*trivia*/ Z y)]
+        [Exposed=Window]
         interface Foo {
-          void foo(X x, optional Y y, /*trivia*/ optional Z z);
+          constructor(X x, optional Y y, /*trivia*/ Z y);
+          undefined foo(X x, optional Y y, /*trivia*/ optional Z z);
         };
         callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       </pre>
@@ -759,10 +715,11 @@
     <section data-dfn-for="CodedThings">
         <h2><dfn>CodedThings</dfn> interface</h2>
         <pre class="idl">
+        [Exposed=Window]
         interface CodedThings {
           attribute DOMString definedElsewhere;
           attribute Bar barBar;
-          void doTheFoo();
+          undefined doTheFoo();
         };
         </pre>
         <dfn>doTheFoo()</dfn>
@@ -783,9 +740,10 @@
       <section id="idl-dfn-types">
         <h2>It gives definitions the right idl type</h2>
         <pre class="idl">
+          [Exposed=Window]
           interface InterfaceType {
             readonly attribute DOMString attributeType;
-            void operationType();
+            undefined operationType();
           };
           dictionary DictionaryType {
             DOMString fieldType;

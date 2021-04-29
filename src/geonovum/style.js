@@ -4,8 +4,13 @@
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
-import { createResourceHint, linkCSS, toKeyValuePairs } from "../core/utils.js";
-import { pub, sub } from "../core/pubsubhub.js";
+import {
+  createResourceHint,
+  linkCSS,
+  showWarning,
+  toKeyValuePairs,
+} from "../core/utils.js";
+import { sub } from "../core/pubsubhub.js";
 export const name = "geonovum/style";
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
@@ -49,7 +54,8 @@ function createStyle(css_name) {
 }
 
 function createResourceHints() {
-  const resourceHints = [
+  /** @type ResourceHintOption[] */
+  const opts = [
     {
       hint: "preconnect", // for W3C fixup.js
       href: "https://www.w3.org",
@@ -73,12 +79,11 @@ function createResourceHints() {
       href: "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.svg",
       as: "image",
     },
-  ]
-    .map(createResourceHint)
-    .reduce((frag, link) => {
-      frag.appendChild(link);
-      return frag;
-    }, document.createDocumentFragment());
+  ];
+  const resourceHints = document.createDocumentFragment();
+  for (const link of opts.map(createResourceHint)) {
+    resourceHints.appendChild(link);
+  }
   return resourceHints;
 }
 
@@ -103,9 +108,9 @@ document.head.prepend(elements);
 // export function run(conf, doc, cb) {
 export function run(conf) {
   if (!conf.specStatus) {
-    const warn = "`respecConfig.specStatus` missing. Defaulting to 'GN-BASIS'.";
+    const msg = "`respecConfig.specStatus` missing. Defaulting to 'GN-BASIS'.";
     conf.specStatus = "GN-BASIS";
-    pub("warn", warn);
+    showWarning(msg, name);
   }
 
   if (document.body.querySelector("figure.scalable")) {

@@ -1,31 +1,25 @@
 #!/usr/bin/env node
-
 "use strict";
+const sade = require("sade");
 const colors = require("colors");
-const { promises: fsp } = require("fs");
+const { readFileSync } = require("fs");
 const path = require("path");
-const { rollup } = require("rollup");
-const alias = require("rollup-plugin-alias");
-const CleanCSS = require("clean-css");
-const commandLineArgs = require("command-line-args");
-const getUsage = require("command-line-usage");
-colors.setTheme({
-  error: "red",
-  info: "white",
-});
+const rollup = require("rollup");
+const alias = require("@rollup/plugin-alias");
+
+const rel = p => path.relative(process.cwd(), p);
 
 /**
  * @param {object} opts
  * @param {RegExp[]} opts.include
  */
 function string(opts) {
-  const minifier = new CleanCSS();
   return {
     transform(code, id) {
       if (!opts.include.some(re => re.test(id))) return;
 
-      if (id.endsWith(".css")) {
-        code = minifier.minify(code).styles;
+      if (id.endsWith(".runtime.js")) {
+        code = `(() => {\n${code}})()`;
       }
 
       return {
@@ -36,108 +30,50 @@ function string(opts) {
   };
 }
 
-/** @type {import("command-line-usage").OptionDefinition[]} */
-const optionList = [
-  {
-    alias: "h",
-    defaultValue: false,
-    description: "Display this usage guide.",
-    name: "help",
-    type: Boolean,
-  },
-  {
-    alias: "p",
-    defaultOption: true,
-    description:
-      "Name of profile to build. Profile must be " +
-      "in the profiles/ folder (e.g., w3c.js)",
-    multiple: false,
-    name: "profile",
-    type: String,
-  },
-  {
-    alias: "d",
-    defaultValue: false,
-    description: "Disable optimization to ease debugging",
-    name: "debug",
-    type: Boolean,
-  },
-];
-
-const usageSections = [
-  {
-    header: "builder",
-    content: "Builder builds a ReSpec profile",
-  },
-  {
-    header: "Options",
-    optionList,
-  },
-  {
-    header: "Examples",
-    content: [
-      {
-        desc: "1. Build W3C Profile ",
-        example: "$ ./tools/builder.js --profile=w3c",
-      },
-    ],
-  },
-  {
-    content: "Project home: {underline https://github.com/w3c/respec}",
-    raw: true,
-  },
-];
-
 const Builder = {
   /**
    * Async function that gets the current version of ReSpec from package.json
    *
-   * @returns {Promise<String>} The version string.
+   * @returns {string} The version string.
    */
-  getRespecVersion: async () => {
+  getRespecVersion: () => {
     const packagePath = path.join(__dirname, "../package.json");
-    const content = await fsp.readFile(packagePath, "utf-8");
+    const content = readFileSync(packagePath, "utf-8");
     return JSON.parse(content).version;
   },
 
-  /**
-   * Async function runs Requirejs' optimizer to generate the output.
-   *
-   * using a custom configuration.
-   * @param {object} options
-   * @param {string} options.name
-   * @param {boolean} options.debug
-   */
-  async build({ name, debug }) {
+  _getOptions(name, { debug }) {
     if (!name) {
       throw new TypeError("name is required");
     }
     const buildPath = path.join(__dirname, "../builds");
     const outFile = `respec-${name}.js`;
     const outPath = path.join(buildPath, outFile);
-    console.log(colors.info(`Generating ${outFile}. Please wait...`));
+    const version = this.getRespecVersion();
 
-    // optimisation settings
-    const version = await this.getRespecVersion();
-    const buildDir = path.resolve(__dirname, "../builds/");
-    const workerDir = path.resolve(__dirname, "../worker/");
-
+    /** @type {import("rollup").InputOptions} */
     const inputOptions = {
       input: require.resolve(`../profiles/${name}.js`),
       plugins: [
         !debug && require("rollup-plugin-terser").terser(),
         alias({
-          resolve: [".css", ".svg"],
-          entries: [
-            {
-              find: /^text!(.*)/,
-              replacement: "./$1",
-            },
-          ],
+          entries: [{ find: /^text!(.*)/, replacement: "./$1" }],
         }),
         string({
-          include: [/\.css$/, /\.svg$/, /respec-worker\.js$/],
+          include: [/\.runtime\.js$/, /\.svg$/, /respec-worker\.js$/],
         }),
+        !debug &&
+          require("rollup-plugin-minify-html-literals").default({
+            include: [/\.css\.js$/],
+            options: {
+              minifyOptions: {
+                minifyCSS: { format: "keep-breaks" },
+              },
+              // disable html`` minification
+              shouldMinify: () => false,
+              shouldMinifyCSS: ({ tag }) => !debug && tag === "css",
+            },
+          }),
       ],
       onwarn(warning, warn) {
         if (warning.code !== "CIRCULAR_DEPENDENCY") {
@@ -146,6 +82,8 @@ const Builder = {
       },
       inlineDynamicImports: true,
     };
+
+    /** @type {import("rollup").OutputOptions} */
     const outputOptions = {
       file: outPath,
       format: "iife",
@@ -153,42 +91,71 @@ const Builder = {
       banner: `window.respecVersion = "${version}";\n`,
     };
 
-    const bundle = await rollup(inputOptions);
-    await bundle.write(outputOptions);
+    return { inputOptions, outputOptions };
+  },
 
-    // copy respec-worker
-    await fsp.copyFile(
-      `${workerDir}/respec-worker.js`,
-      `${buildDir}/respec-worker.js`
-    );
+  /**
+   * @param {object} options
+   * @param {string} options.name Name of the profile (in `/profiles` dierctory) to build.
+   * @param {boolean} [options.debug] Don't run minifiers if true.
+   */
+  async build({ name, debug = false }) {
+    const { inputOptions, outputOptions } = this._getOptions(name, { debug });
+    console.log(`Building ${rel(inputOptions.input)}. Please wait...`);
+    const bundle = await rollup.rollup(inputOptions);
+    await bundle.write(outputOptions);
+    console.log(`  Wrote ${rel(outputOptions.file)}.`);
+  },
+
+  watch({ name, debug }) {
+    const { inputOptions, outputOptions } = this._getOptions(name, { debug });
+    const watcher = rollup.watch({ ...inputOptions, output: outputOptions });
+    watcher.on("event", async ev => {
+      switch (ev.code) {
+        case "BUNDLE_START":
+          console.log(`Building ${rel(ev.input)}. Please wait...`);
+          break;
+        case "BUNDLE_END":
+          console.log(
+            `  Wrote ${rel(ev.output[0])} in ${ev.duration}ms.`,
+            "Watching for file changes..."
+          );
+          await ev.result.close();
+          break;
+        case "ERROR":
+          console.log(ev.error);
+          break;
+      }
+    });
+    return watcher;
   },
 };
 
 exports.Builder = Builder;
 if (require.main === module) {
-  (async function run() {
-    let parsedArgs;
-    try {
-      parsedArgs = commandLineArgs(optionList);
-    } catch (err) {
-      console.info(getUsage(usageSections));
-      console.error(colors.error(err.stack));
-      return process.exit(127);
-    }
-    if (parsedArgs.help) {
-      console.info(getUsage(usageSections));
-      return process.exit(0);
-    }
-    const { profile: name, debug } = parsedArgs;
-    if (!name) {
-      return;
-    }
-    try {
-      await Builder.build({ name, debug });
-    } catch (err) {
-      console.error(colors.error(err.stack));
-      return process.exit(1);
-    }
-    process.exit(0);
-  })();
+  sade("./tools/builder.js <profile>", true)
+    .describe(
+      "Builder builds a ReSpec profile. Profile must be in the profiles/ folder (e.g., w3c.js)"
+    )
+    .example(`w3c ${colors.dim("# Build W3C profile.")}`)
+    .example(
+      `w3c --debug ${colors.dim("# Build W3C profile without optimizations.")}`
+    )
+    .option("-d, --debug", "Disable optimization to ease debugging", false)
+    .option("-w, --watch", "Automatically re-build on file changes", false)
+    .action(async (profile, opts) => {
+      if (opts.watch) {
+        Builder.watch({ name: profile, debug: opts.debug });
+        return;
+      }
+      try {
+        await Builder.build({ name: profile, debug: opts.debug });
+      } catch (err) {
+        console.error(colors.red(err.stack));
+        return process.exit(1);
+      }
+    })
+    .parse(process.argv, {
+      unknown: flag => console.error(`Unknown option: ${flag}`),
+    });
 }

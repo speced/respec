@@ -80,7 +80,7 @@ describe("Core — data-tests attribute", () => {
       const items = Array.from(
         doc.querySelectorAll("#testable > .respec-tests-details > ul > li > a")
       );
-      expect(items.length).toBe(5);
+      expect(items).toHaveSize(5);
       items.forEach(({ origin, pathname }, i) => {
         expect(origin).toBe("https://wpt.fyi");
         expect(pathname.endsWith(`test${i}.html`)).toBe(true);
@@ -162,7 +162,7 @@ describe("Core — data-tests attribute", () => {
           "#duplicates > .respec-tests-details > ul > li > a"
         )
       );
-      expect(items.length).toBe(2);
+      expect(items).toHaveSize(2);
       expect(items[0].textContent.trim()).toBe("payment-request-show-method");
       expect(items[1].textContent.trim()).toBe("some-other-test");
     });

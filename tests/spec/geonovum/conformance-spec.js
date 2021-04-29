@@ -20,8 +20,8 @@ describe("Geonovum — Conformance", () => {
     };
     const doc = await makeRSDoc(ops);
     const conformance = doc.getElementById("conformance");
-    expect(conformance.querySelectorAll("h2").length).toBe(1);
+    expect(conformance.querySelectorAll("h2")).toHaveSize(1);
     expect(conformance.querySelector("h2").textContent).toBe("Conformiteit");
-    expect(conformance.querySelectorAll("p").length).toBe(3);
+    expect(conformance.querySelectorAll("p")).toHaveSize(3);
   });
 });

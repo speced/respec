@@ -29,7 +29,7 @@ describe("Core — Issues and Notes", () => {
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
     const issues = doc.querySelectorAll(".issue");
-    expect(issues.length).toBe(3);
+    expect(issues).toHaveSize(3);
     const [
       overriddenIdIssue,
       firstDuplicateIssue,
@@ -39,7 +39,7 @@ describe("Core — Issues and Notes", () => {
     expect(firstDuplicateIssue.id).not.toBe(secondDuplicateIssue.id);
 
     const issueSummaryItems = doc.querySelectorAll("#issue-summary li a");
-    expect(issueSummaryItems.length).toBe(3);
+    expect(issueSummaryItems).toHaveSize(3);
     const [firstItem, secondItem, thirdItem] = issueSummaryItems;
     expect(firstItem.hash).toBe(`#${overriddenIdIssue.id}`);
     expect(secondItem.hash).toBe(`#${firstDuplicateIssue.id}`);
@@ -71,20 +71,20 @@ describe("Core — Issues and Notes", () => {
     expect(spatr.closest("div")).toBeNull();
     expect(spnot.closest("div")).toBeNull();
     expect(issue.getAttribute("role")).toBeNull();
-    expect(issue.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(issue.querySelectorAll("div.issue-title")).toHaveSize(1);
     expect(issue.querySelector("div.issue-title").textContent).toBe(
       "Issue 1: ISS-TIT"
     );
     expect(piss.getAttribute("title")).toBeNull();
     expect(piss.textContent).toBe("ISSUE");
-    expect(atr.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(atr.querySelectorAll("div.issue-title")).toHaveSize(1);
     expect(atr.querySelector("div.issue-title").textContent).toBe(
       "(Feature at Risk) Issue 2: ATR-TIT"
     );
     expect(patr.getAttribute("title")).toBeNull();
     expect(patr.textContent).toBe("FEATURE AT RISK");
 
-    expect(note.querySelectorAll("div.note-title").length).toBe(1);
+    expect(note.querySelectorAll("div.note-title")).toHaveSize(1);
     expect(note.getAttribute("role")).toBe("note");
     expect(note.querySelector("div.note-title").textContent).toBe(
       "Note: NOT-TIT"
@@ -104,7 +104,7 @@ describe("Core — Issues and Notes", () => {
     const doc = await makeRSDoc(ops);
     const edNote = doc.querySelector("div.note");
     const pnot = edNote.querySelector("p");
-    expect(edNote.querySelectorAll("div.ednote-title").length).toBe(1);
+    expect(edNote.querySelectorAll("div.ednote-title")).toHaveSize(1);
     expect(edNote.querySelector("div.ednote-title").textContent).toBe(
       "Editor's note: EDNOTE-TIT"
     );
@@ -121,8 +121,8 @@ describe("Core — Issues and Notes", () => {
         `<p class='issue' title='ISS-TIT'>ISSUE</p></section>`,
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelectorAll("section .warning").length).toBe(2);
-    expect(doc.querySelectorAll("section .warning-title").length).toBe(1);
+    expect(doc.querySelectorAll("section .warning")).toHaveSize(2);
+    expect(doc.querySelectorAll("section .warning-title")).toHaveSize(1);
     expect(doc.querySelector("section .warning-title").textContent).toBe(
       "Warning: WARN-TIT"
     );
@@ -232,7 +232,7 @@ describe("Core — Issues and Notes", () => {
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.issue");
     const piss = iss.querySelector("p");
-    expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(iss.querySelectorAll("div.issue-title")).toHaveSize(1);
     expect(iss.querySelector("div.issue-title").textContent).toBe("Issue 10");
     expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
       `${issueBaseConfig.issueBase}10`
@@ -283,7 +283,7 @@ describe("Core — Issues and Notes", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelectorAll("div.issue").length).toBe(2);
+    expect(doc.querySelectorAll("div.issue")).toHaveSize(2);
     expect(
       doc.querySelector(
         "div#issue-container-number-1548 span.issue-label[aria-label]"
@@ -330,7 +330,7 @@ describe("Core — Issues and Notes", () => {
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.atrisk");
     const piss = iss.querySelector("p");
-    expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(iss.querySelectorAll("div.issue-title")).toHaveSize(1);
     expect(iss.querySelector("div.issue-title").textContent).toBe(
       "(Feature at Risk) Issue 10"
     );
@@ -353,7 +353,7 @@ describe("Core — Issues and Notes", () => {
     const doc = await makeRSDoc(ops);
     const issue = doc.querySelector("div.atrisk");
     const issueTitles = issue.querySelectorAll("div.issue-title");
-    expect(issueTitles.length).toBe(1);
+    expect(issueTitles).toHaveSize(1);
     expect(issueTitles[0].querySelector("a").getAttribute("href")).toBe(
       `${config.github}/issues/1540`
     );

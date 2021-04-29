@@ -36,7 +36,7 @@ export function rsDocToDataURL(mimeType, doc = document) {
   return `data:${mimeType};charset=utf-8,${encodedString}`;
 }
 
-function serialize(format, doc) {
+export function serialize(format, doc) {
   const cloneDoc = doc.cloneNode(true);
   cleanup(cloneDoc);
   let result = "";
@@ -45,6 +45,7 @@ function serialize(format, doc) {
       result = new XMLSerializer().serializeToString(cloneDoc);
       break;
     default: {
+      prettify(cloneDoc);
       if (cloneDoc.doctype) {
         result += new XMLSerializer().serializeToString(cloneDoc.doctype);
       }
@@ -90,6 +91,16 @@ function cleanup(cloneDoc) {
   insertions.appendChild(metaGenerator);
   head.prepend(insertions);
   pub("beforesave", documentElement);
+}
+
+/** @param {Document} cloneDoc */
+function prettify(cloneDoc) {
+  cloneDoc.querySelectorAll("style").forEach(el => {
+    el.innerHTML = `\n${el.innerHTML}\n`;
+  });
+  cloneDoc.querySelectorAll("head > *").forEach(el => {
+    el.outerHTML = `\n${el.outerHTML}`;
+  });
 }
 
 expose("core/exporter", { rsDocToDataURL });

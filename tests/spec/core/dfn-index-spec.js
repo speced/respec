@@ -14,7 +14,7 @@ describe("Core — dfn-index", () => {
 
     expect(index.classList).toContain("appendix");
 
-    expect(index.querySelectorAll("h2").length).toBe(1);
+    expect(index.querySelectorAll("h2")).toHaveSize(1);
     expect(index.querySelector("h2").textContent).toBe("A. Index");
     expect(index.firstElementChild).toBe(index.querySelector("h2"));
     expect(index.querySelector("h2").nextElementSibling).toEqual(
@@ -31,7 +31,7 @@ describe("Core — dfn-index", () => {
     const doc = await makeRSDoc(ops);
     const index = doc.getElementById("index");
 
-    expect(index.querySelectorAll("h2").length).toBe(1);
+    expect(index.querySelectorAll("h2")).toHaveSize(1);
     expect(index.querySelector("h2").textContent).toBe("A. el índex");
     expect(index.firstElementChild).toBe(
       index.querySelector("h2#custom-heading")
@@ -39,7 +39,7 @@ describe("Core — dfn-index", () => {
     expect(index.querySelector("p#custom-paragraph").textContent).toBe("PASS");
 
     const subsections = index.querySelectorAll("section");
-    expect(subsections.length).toBe(2);
+    expect(subsections).toHaveSize(2);
     const [localIndex, externalIndex] = subsections;
 
     const localIndexHeading = localIndex.querySelector("h3");
@@ -70,7 +70,7 @@ describe("Core — dfn-index", () => {
             interface Foo {
               constructor();
               attribute DOMString bar;
-              void doTheFoo();
+              undefined doTheFoo();
             };
           </pre>
           <p><dfn>[[\\haha]]</dfn> is an internal slot.</p>
@@ -123,7 +123,7 @@ describe("Core — dfn-index", () => {
     it("links non-unique terms by their types", () => {
       const item = index.querySelector("ul.index > li:nth-child(1)");
       const subItems = item.querySelectorAll("li");
-      expect(subItems.length).toBe(2);
+      expect(subItems).toHaveSize(2);
       const [defnOf, attrOfFoo] = subItems;
       expect(defnOf.textContent.trim()).toBe("definition of");
       expect(defnOf.querySelector("a").hash).toBe("#dfn-bar");
@@ -200,6 +200,10 @@ describe("Core — dfn-index", () => {
           </li>
           <li><a>JSON.stringify</a></li>
         </ul>
+        <ul class="test" data-testid="possible-duplicate-id">
+        <li><a data-cite="ECMASCRIPT#sec-json.parse">parsing</a></li>
+        <li><a data-cite="ECMASCRIPT#sec-15.12.2">parsing</a></li>
+        </ul>
       </section>
       <section id="index"></section>`;
 
@@ -222,6 +226,8 @@ describe("Core — dfn-index", () => {
         "EventInit",
         "type attribute",
         "JSON.stringify",
+        "parsing",
+        "parsing",
         "allow attribute",
         "EventHandler",
         "fully active",
@@ -244,7 +250,7 @@ describe("Core — dfn-index", () => {
 
     it("lists terms grouped by specs", () => {
       const bySpecs = index.querySelectorAll("ul.index > li");
-      expect(bySpecs.length).toBe(6);
+      expect(bySpecs).toHaveSize(6);
       expect(bySpecs[0].textContent.trim()).toMatch(
         /\[DOM\] defines the following:/
       );
@@ -262,12 +268,12 @@ describe("Core — dfn-index", () => {
       ]);
 
       const termsInDom = [...bySpecs[0].querySelectorAll("li")];
-      expect(termsInDom.length).toBe(4);
+      expect(termsInDom).toHaveSize(4);
     });
 
     it("lists terms in a spec in sorted order", () => {
       const termsInDom = index.querySelectorAll("[data-spec='DOM'] li");
-      expect(termsInDom.length).toBe(4);
+      expect(termsInDom).toHaveSize(4);
       const terms = [...termsInDom].map(el => el.textContent.trim());
       expect(terms[0]).toMatch(/^creating an event/);
       expect(terms[1]).toMatch(/^Event/);
@@ -322,7 +328,7 @@ describe("Core — dfn-index", () => {
       expect(iframeAllowAttribute.textContent.trim()).toMatch(
         /\(for iframe element\)$/
       );
-      expect(iframeAllowAttribute.querySelectorAll("code").length).toBe(2);
+      expect(iframeAllowAttribute.querySelectorAll("code")).toHaveSize(2);
       const [allow, iframe] = iframeAllowAttribute.querySelectorAll("code");
       expect(allow.textContent).toBe("allow");
       expect(iframe.textContent).toBe("iframe");
@@ -330,7 +336,7 @@ describe("Core — dfn-index", () => {
       const fullyActive = termsInHTML[2];
       expect(fullyActive.textContent.trim()).toMatch(/^fully active/);
       expect(fullyActive.textContent.trim()).toMatch(/\(for Document\)$/);
-      expect(fullyActive.querySelectorAll("code").length).toBe(1);
+      expect(fullyActive.querySelectorAll("code")).toHaveSize(1);
       expect(fullyActive.querySelector("code").textContent).toBe("Document");
 
       const responsibleDocument = termsInHTML[4];
@@ -340,7 +346,7 @@ describe("Core — dfn-index", () => {
       expect(responsibleDocument.textContent.trim()).toMatch(
         /\(for environment settings object\)$/
       );
-      expect(responsibleDocument.querySelectorAll("code").length).toBe(0);
+      expect(responsibleDocument.querySelectorAll("code")).toHaveSize(0);
     });
 
     it("opens dfnPanel on term click", async () => {
@@ -353,22 +359,38 @@ describe("Core — dfn-index", () => {
       const doc = await makeRSDoc(ops);
       const index = doc.getElementById("index-defined-elsewhere");
 
-      expect(index.querySelectorAll(".index-term").length).toBe(2);
+      expect(index.querySelectorAll(".index-term")).toHaveSize(2);
       const term = index.querySelector(".index-term");
+
+      expect(term.getAttribute("role")).toBe("link");
+      expect(term.tabIndex).toBe(0);
+      expect(term.getAttribute("aria-haspopup")).toBe("dialog");
+      expect(term.title).toBe("Show what links to this definition");
+
       expect(term.textContent).toBe("Event interface");
       expect(term.id).toBe("index-term-event-interface");
 
-      expect(doc.getElementById("dfn-panel")).toBeFalsy();
+      const panel = doc.getElementById(`dfn-panel-for-${term.id}`);
+      expect(panel.hidden).toBeTrue();
       term.click();
-      const panel = doc.getElementById("dfn-panel");
-      expect(panel).toBeTruthy();
+      expect(panel.hidden).toBeFalse();
       expect(panel.querySelector("a.self-link").href).toBe(
         "https://dom.spec.whatwg.org/#event"
       );
-      expect(panel.querySelectorAll("ul li").length).toBe(1);
+      expect(panel.querySelectorAll("ul li")).toHaveSize(1);
       const reference = panel.querySelector("ul li a");
-      expect(reference.textContent).toBe("1. TEST");
+      expect(reference.textContent).toBe("§ 1. TEST");
       expect(reference.hash).toBe("#ref-for-index-term-event-interface-1");
+    });
+
+    it("associates different id to each term", async () => {
+      const termsInEcma = index.querySelectorAll(
+        "[data-spec='ECMASCRIPT'] li span"
+      );
+      expect(termsInEcma).toHaveSize(3);
+      const [, parsing1, parsing2] = termsInEcma;
+      expect(parsing1.id).toBe("index-term-parsing");
+      expect(parsing2.id).toBe("index-term-parsing-0");
     });
   });
 });

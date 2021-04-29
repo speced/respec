@@ -74,7 +74,7 @@ describe("Core - Figures", () => {
     expect(tof.querySelector("figcaption")).toBeNull();
     expect(tofHeader).toBeTruthy();
     expect(tofHeader.textContent).toBe("1. List of Figures");
-    expect(tofItems.length).toBe(2);
+    expect(tofItems).toHaveSize(2);
     expect(figLinks[0].textContent).toBe("Figure 1 test 1");
     expect(figLinks[1].textContent).toBe("Figure 2 test 2");
   });
@@ -107,7 +107,7 @@ describe("Core - Figures", () => {
     const tof = doc.getElementById("tof");
     const tofItems = tof.querySelectorAll("ul li");
     expect(tof.querySelector("figcaption")).toBeNull();
-    expect(tofItems.length).toBe(1);
+    expect(tofItems).toHaveSize(1);
   });
 
   describe("normalize images", () => {

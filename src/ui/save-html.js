@@ -1,9 +1,8 @@
 // @ts-check
 // Module ui/save-html
 // Saves content to HTML when asked to
-import { getIntlData } from "../core/utils.js";
+import { getIntlData, showWarning } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
-import { pub } from "../core/pubsubhub.js";
 import { rsDocToDataURL } from "../core/exporter.js";
 import { ui } from "../core/ui.js";
 
@@ -22,17 +21,11 @@ const localizationStrings = {
   de: {
     save_snapshot: "Exportieren",
   },
+  zh: {
+    save_snapshot: "导出",
+  },
 };
 const l10n = getIntlData(localizationStrings);
-
-// Create and download an EPUB 3 version of the content
-// Using (by default) the EPUB 3 conversion service set up at labs.w3.org/epub-generator
-// For more details on that service, see https://github.com/iherman/respec2epub
-const epubURL = new URL(
-  "https://labs.w3.org/epub-generator/cgi-bin/epub-generator.py"
-);
-epubURL.searchParams.append("type", "respec");
-epubURL.searchParams.append("url", document.location.href);
 
 const downloadLinks = [
   {
@@ -58,7 +51,15 @@ const downloadLinks = [
     fileName: "spec.epub",
     title: "EPUB 3",
     type: "application/epub+zip",
-    href: epubURL.href,
+    get href() {
+      // Create and download an EPUB 3.2 version of the content
+      // Using the EPUB 3.2 conversion service set up at labs.w3.org/r2epub
+      // For more details on that service, see https://github.com/iherman/respec2epub
+      const epubURL = new URL("https://labs.w3.org/r2epub/");
+      epubURL.searchParams.append("respec", "true");
+      epubURL.searchParams.append("url", document.location.href);
+      return epubURL.href;
+    },
   },
 ];
 
@@ -77,7 +78,7 @@ function toDownloadLink(details) {
 
 const saveDialog = {
   async show(button) {
-    await document.respecIsReady;
+    await document.respec.ready;
     const div = html`<div class="respec-save-buttons">
       ${downloadLinks.map(toDownloadLink)}
     </div>`;
@@ -102,9 +103,8 @@ function show() {
  */
 export function exportDocument(_, mimeType) {
   const msg =
-    "Exporting via ui/save-html module's `exportDocument()` is deprecated and will be removed. " +
-    "Use core/exporter `rsDocToDataURL()` instead.";
-  pub("warn", msg);
-  console.warn(msg);
+    "Exporting via ui/save-html module's `exportDocument()` is deprecated and will be removed.";
+  const hint = "Use core/exporter `rsDocToDataURL()` instead.";
+  showWarning(msg, name, { hint });
   return rsDocToDataURL(mimeType);
 }

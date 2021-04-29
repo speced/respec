@@ -11,7 +11,7 @@
 //     element with its href pointing to the requirement it should be referencing
 //     and a class of "reqRef".
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
+import { showError } from "./utils.js";
 
 export const name = "core/requirements";
 
@@ -32,7 +32,7 @@ export function run() {
     } else {
       txt = `Req. not found '${id}'`;
       const msg = `Requirement not found in element \`a.reqRef\`: ${id}`;
-      pub("error", msg);
+      showError(msg, name);
       console.warn(msg, ref);
     }
     ref.textContent = txt;

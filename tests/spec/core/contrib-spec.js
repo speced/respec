@@ -33,7 +33,7 @@ describe("Core — Contributors", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    expect(doc.querySelectorAll("#gh-contributors li").length).toBe(3);
+    expect(doc.querySelectorAll("#gh-contributors li")).toHaveSize(3);
     const bobbyTables = doc.querySelector("#gh-contributors li");
     expect(bobbyTables.querySelector("a").textContent).toBe("Bobby Tables");
     expect(bobbyTables.querySelector("a").href).toBe(
