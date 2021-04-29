@@ -71,42 +71,40 @@ function linkElem(elem, linkProps, citeDetails) {
   const { href, title } = linkProps;
   const wrapInCiteEl = !citeDetails.path && !citeDetails.frag;
 
-  if (elem.localName === "a") {
-    const anchor = /** @type {HTMLAnchorElement} */ (elem);
-    if (anchor.textContent === "" && anchor.dataset.lt !== "the-empty-string") {
-      anchor.textContent = title;
+  if (elem instanceof HTMLAnchorElement) {
+    if (elem.textContent === "" && elem.dataset.lt !== "the-empty-string") {
+      elem.textContent = title;
     }
-    anchor.href = href;
+    elem.href = href;
     if (wrapInCiteEl) {
       const cite = document.createElement("cite");
-      anchor.replaceWith(cite);
-      cite.append(anchor);
+      elem.replaceWith(cite);
+      cite.append(elem);
     }
     return;
   }
-
-  if (elem.localName === "dfn") {
-    const anchor = document.createElement("a");
-    anchor.href = href;
-    if (!elem.textContent) {
-      anchor.textContent = title;
-      elem.append(anchor);
-    } else {
-      wrapInner(elem, anchor);
-    }
-    if (wrapInCiteEl) {
-      const cite = document.createElement("cite");
-      cite.append(anchor);
-      elem.append(cite);
-    }
-    if ("export" in elem.dataset) {
-      const msg = "Exporting an linked external definition is not allowed.";
-      const hint = "Please remove the `data-export` attribute.";
-      showError(msg, name, { hint, elements: [elem] });
-      delete elem.dataset.export;
-    }
-    elem.dataset.noExport = "";
+  // It's a dfn
+  const anchor = document.createElement("a");
+  anchor.href = href;
+  if (!elem.textContent) {
+    anchor.textContent = title;
+    elem.append(anchor);
+  } else {
+    wrapInner(elem, anchor);
   }
+  if (wrapInCiteEl) {
+    const cite = document.createElement("cite");
+    cite.append(anchor);
+    elem.append(cite);
+  }
+  if ("export" in elem.dataset) {
+    const msg = "Exporting an linked external definition is not allowed.";
+    const hint = "Please remove the `data-export` attribute.";
+    showError(msg, name, { hint, elements: [elem] });
+    delete elem.dataset.export;
+  }
+  elem.classList.add("externalDFN");
+  elem.dataset.noExport = "";
 }
 
 /**
