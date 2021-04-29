@@ -83,6 +83,7 @@ function linkElem(elem, linkProps, citeDetails) {
     }
     return;
   }
+
   // It's a dfn
   const anchor = document.createElement("a");
   anchor.href = href;
