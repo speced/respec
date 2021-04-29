@@ -29,7 +29,7 @@ export const THIS_SPEC = "__SPEC__";
  * @param {CiteDetails} citeDetails
  */
 async function getLinkProps(citeDetails) {
-  const { key, frag, path } = citeDetails;
+  const { key, frag, path, href: canonicalHref } = citeDetails;
   let href = "";
   let title = "";
   // This is just referring to this document
@@ -44,13 +44,18 @@ async function getLinkProps(citeDetails) {
     href = entry.href;
     title = entry.title;
   }
-  if (path) {
-    // See: https://github.com/w3c/respec/issues/1856#issuecomment-429579475
-    const relPath = path.startsWith("/") ? `.${path}` : path;
-    href = new URL(relPath, href).href;
-  }
-  if (frag) {
-    href = new URL(frag, href).href;
+  if (canonicalHref) {
+    // Xref gave us a canonical link, so let's use that.
+    href = canonicalHref;
+  } else {
+    if (path) {
+      // See: https://github.com/w3c/respec/issues/1856#issuecomment-429579475
+      const relPath = path.startsWith("/") ? `.${path}` : path;
+      href = new URL(relPath, href).href;
+    }
+    if (frag) {
+      href = new URL(frag, href).href;
+    }
   }
   return { href, title };
 }
@@ -124,13 +129,14 @@ const findPath = makeComponentFinder("/");
  * @property {boolean} isNormative
  * @property {string} frag
  * @property {string} path
- *
+ * @property {string} [href] - canonical href coming from xref
  * @param {HTMLElement} elem
  * @return {CiteDetails};
  */
 export function toCiteDetails(elem) {
   const { dataset } = elem;
-  const { cite: rawKey, citeFrag, citePath } = dataset;
+  const { cite: rawKey, citeFrag, citePath, citeHref } = dataset;
+
   // The key is a fragment, resolve using the shortName as key
   if (rawKey.startsWith("#") && !citeFrag) {
     // Closes data-cite not starting with "#"
@@ -152,7 +158,7 @@ export function toCiteDetails(elem) {
   // key is before "/" and "#" but after "!" or "?" (e.g., ?key/path#frag)
   const hasPrecedingMark = /^[?|!]/.test(rawKey);
   const key = rawKey.split(/[/|#]/)[0].substring(Number(hasPrecedingMark));
-  const details = { key, isNormative, frag, path };
+  const details = { key, isNormative, frag, path, href: citeHref };
   return details;
 }
 
