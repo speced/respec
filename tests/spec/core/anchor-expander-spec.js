@@ -78,7 +78,8 @@ describe("Core - anchor-expander", () => {
     expect(doc.querySelector("#expansion *[id]")).toBeNull();
 
     const [firstSpan, secondSpan] = doc.querySelectorAll("#expansion a > span");
-    expect(firstSpan.title).toBe("pass");
+    // title get dropped from dfns
+    expect(firstSpan.title).toBe("");
     expect(firstSpan.firstElementChild.localName).toBe("code");
     expect(firstSpan.firstElementChild.textContent).toBe("code thing");
     expect(secondSpan.textContent).toBe("span");
