@@ -391,11 +391,17 @@ function addDataCite(elem, query, result, conf) {
   const { uri, shortname, spec, normative, type, for: forContext } = result;
   // if authored spec context had `result.spec`, use it instead of shortname
   const cite = specs.flat().includes(spec) ? spec : shortname;
-  const url = new URL(uri, "https://example.org");
+  // we use this "partial" URL to resolve parts of urls...
+  // but sometimes we get lucky and we get an absolute URL from xref
+  // which we can then use in other places (e.g., data-cite.js)
+  const url = new URL(uri, "https://partial");
   const { pathname: citePath } = url;
   const citeFrag = url.hash.slice(1);
   const dataset = { cite, citePath, citeFrag, type };
   if (forContext) dataset.linkFor = forContext[0];
+  if (url.origin && url.origin !== "https://partial") {
+    dataset.citeHref = url.href;
+  }
   Object.assign(elem.dataset, dataset);
 
   addToReferences(elem, cite, normative, term, conf);

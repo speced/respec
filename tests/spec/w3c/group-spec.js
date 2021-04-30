@@ -39,6 +39,18 @@ describe("W3C — Group", () => {
     ]);
   });
 
+  it("when a multiple groups are specified, and it's noRecTrack true, it pluralizes the groups", async () => {
+    const ops = makeStandardOps({
+      group: ["payments", "webapps"],
+      noRecTrack: true,
+    });
+    const doc = await makeRSDoc(ops);
+    const sotd = doc.getElementById("sotd").textContent;
+    expect(sotd).toContain(
+      "The groups do not expect this document to become a W3C Recommendation."
+    );
+  });
+
   it("overrides superseded options", async () => {
     const inputConf = { group: "payments", wg: "foo", wgId: "1234" };
     const conf = await getGroupConf(inputConf);
