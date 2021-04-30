@@ -716,7 +716,12 @@ export class InsensitiveStringSet extends Set {
 export function makeSafeCopy(node) {
   const clone = node.cloneNode(true);
   clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
-  clone.querySelectorAll("dfn").forEach(dfn => renameElement(dfn, "span"));
+  clone.querySelectorAll("dfn").forEach(dfn => {
+    const span = renameElement(dfn, "span");
+    for (const { name } of span.attributes) {
+      span.removeAttribute(name);
+    }
+  });
   if (clone.hasAttribute("id")) clone.removeAttribute("id");
   removeCommentNodes(clone);
   return clone;
