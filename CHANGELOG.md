@@ -1,5 +1,34 @@
 # Changelog
 
+## [v26.6.4](https://github.com/w3c/respec/tree/v26.6.4) (2021-04-30)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.3...v26.6.4)
+
+**Fixed bugs:**
+
+- Automatic link to sub-sections duplicate definition markup [\#3486](https://github.com/w3c/respec/issues/3486)
+
+**Merged pull requests:**
+
+- fix\(core/utils\): removes attributes from dfn when calling makeSafeCopy [\#3500](https://github.com/w3c/respec/pull/3500) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.6.3](https://github.com/w3c/respec/tree/v26.6.3) (2021-04-30)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.2...v26.6.3)
+
+**Fixed bugs:**
+
+- Respec generates wrong patent policy text for joint publication. [\#3494](https://github.com/w3c/respec/issues/3494)
+
+**Merged pull requests:**
+
+- chore\(ci/pr\): don't re-install html validator [\#3498](https://github.com/w3c/respec/pull/3498) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/data-cite\): use switch case in linkElem [\#3497](https://github.com/w3c/respec/pull/3497) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/templates/sotd\): pluralize groups when noRecTrack [\#3496](https://github.com/w3c/respec/pull/3496) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/xref\): use full hrefs when available [\#3495](https://github.com/w3c/respec/pull/3495) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): add v26.6.2 [\#3493](https://github.com/w3c/respec/pull/3493) ([github-actions[bot]](https://github.com/apps/github-actions))
+- refactor\(core/inlines\): use switch instead of ifs [\#3492](https://github.com/w3c/respec/pull/3492) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v26.6.2](https://github.com/w3c/respec/tree/v26.6.2) (2021-04-27)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.6.1...v26.6.2)
