@@ -113,8 +113,8 @@ export default function showPeople(persons = []) {
     if (p.orcid) {
       contents.push(
         html`<a class="p-name orcid" href="${p.orcid}"
-          >${orcidIcon.cloneNode(true)}
-        </a>`
+          >${orcidIcon.cloneNode(true)}</a
+        >`
       );
     }
     if (p.company) {
