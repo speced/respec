@@ -40,7 +40,7 @@ const localizationStrings = {
 
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
-const orcidIcon = html`<svg
+const orcidIcon = () => html`<svg
   width="16"
   height="16"
   xmlns="http://www.w3.org/2000/svg"
@@ -112,9 +112,7 @@ export default function showPeople(persons = []) {
     }
     if (p.orcid) {
       contents.push(
-        html`<a class="p-name orcid" href="${p.orcid}"
-          >${orcidIcon.cloneNode(true)}</a
-        >`
+        html`<a class="p-name orcid" href="${p.orcid}">${orcidIcon()}</a>`
       );
     }
     if (p.company) {
