@@ -16,9 +16,7 @@ describe("W3C — Group", () => {
     const conf = await getGroupConf({ group: "payments" });
     expect(conf.wg).toBe("Web Payments Working Group");
     expect(conf.wgId).toBe("83744");
-    expect(conf.wgPatentURI).toBe(
-      "https://www.w3.org/2004/01/pp-impl/83744/status"
-    );
+    expect(conf.wgPatentURI).toBe("https://www.w3.org/groups/wg/payments/ipr");
     expect(conf.wgURI).toBe("https://www.w3.org/Payments/WG/");
   });
 
@@ -30,8 +28,8 @@ describe("W3C — Group", () => {
     ]);
     expect(conf.wgId).toEqual([83744, 114929]);
     expect(conf.wgPatentURI).toEqual([
-      "https://www.w3.org/2004/01/pp-impl/83744/status",
-      "https://www.w3.org/2004/01/pp-impl/114929/status",
+      "https://www.w3.org/groups/wg/payments/ipr",
+      "https://www.w3.org/groups/wg/webapps/ipr",
     ]);
     expect(conf.wgURI).toEqual([
       "https://www.w3.org/Payments/WG/",
@@ -65,7 +63,7 @@ describe("W3C — Group", () => {
     expect(conf.wg).toEqual(["Web Applications Working Group"]);
     expect(conf.wgId).toEqual([114929]);
     expect(conf.wgPatentURI).toEqual([
-      "https://www.w3.org/2004/01/pp-impl/114929/status",
+      "https://www.w3.org/groups/wg/webapps/ipr",
     ]);
     expect(conf.wgURI).toEqual(["https://www.w3.org/2019/webapps/"]);
   });
