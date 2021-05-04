@@ -470,6 +470,19 @@ describe("Core - Utils", () => {
         div.remove();
         a.remove();
       });
+
+      it("renames elements and doesn't copy attributes when copyAttributes is false", () => {
+        const a = document.createElement("a");
+        a.setAttribute("class", "some-class");
+        a.setAttribute("title", "title");
+        a.innerHTML = "<span id='inner-pass'>pass</span>";
+        document.body.appendChild(a);
+        const div = utils.renameElement(a, "div", { copyAttributes: false });
+        expect(div instanceof HTMLDivElement).toBe(true);
+        expect(div.attributes).toHaveSize(0);
+        div.remove();
+        a.remove();
+      });
     });
 
     describe("addId", () => {

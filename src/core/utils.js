@@ -552,14 +552,23 @@ export function getLinkTargets(elem) {
  * Changes name of a DOM Element
  * @param {Element} elem element to rename
  * @param {String} newName new element name
+ * @param {Object} options
+ * @param {boolean} options.copyAttributes
+ *
  * @returns {Element} new renamed element
  */
-export function renameElement(elem, newName) {
+export function renameElement(
+  elem,
+  newName,
+  options = { copyAttributes: true }
+) {
   if (elem.localName === newName) return elem;
   const newElement = elem.ownerDocument.createElement(newName);
   // copy attributes
-  for (const { name, value } of elem.attributes) {
-    newElement.setAttribute(name, value);
+  if (options.copyAttributes) {
+    for (const { name, value } of elem.attributes) {
+      newElement.setAttribute(name, value);
+    }
   }
   // copy child nodes
   newElement.append(...elem.childNodes);
@@ -717,10 +726,7 @@ export function makeSafeCopy(node) {
   const clone = node.cloneNode(true);
   clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
   clone.querySelectorAll("dfn").forEach(dfn => {
-    const span = renameElement(dfn, "span");
-    for (const { name } of span.attributes) {
-      span.removeAttribute(name);
-    }
+    renameElement(dfn, "span", { copyAttributes: false });
   });
   if (clone.hasAttribute("id")) clone.removeAttribute("id");
   removeCommentNodes(clone);
