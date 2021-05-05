@@ -50,8 +50,8 @@ export async function run(conf) {
     return;
   }
 
-  const missingTests = [...offendingTests].map(test => `\`${test}\``);
-  showWarning(`${l10n.msg}: ${missingTests.join(", ")}.`, name, {
+  const missingTests = [...offendingTests].map(test => ` * \`${test}\``);
+  showWarning(`${l10n.msg}:\n${missingTests.join("\n")}\n\n`, name, {
     hint: l10n.hint,
     elements: offendingElements,
   });
