@@ -10,8 +10,9 @@ export const name = "core/linter-rules/wpt-tests-exist";
 
 const localizationStrings = {
   en: {
-    msg: "Non-existent Web Platform Tests",
-    hint: "Please fix the tests mentioned.",
+    msg: "The following tests could not be found in Web Platform Tests:",
+    hint:
+      "Check [wpt.live](https://wpt.live) to see if they've been deleted or renamed.",
   },
 };
 const l10n = getIntlData(localizationStrings);
