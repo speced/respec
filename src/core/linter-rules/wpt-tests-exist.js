@@ -10,9 +10,9 @@ export const name = "core/linter-rules/wpt-tests-exist";
 
 const localizationStrings = {
   en: {
-    msg: "The following tests could not be found in Web Platform Tests:",
+    msg: "The following test could not be found in Web Platform Tests:",
     hint:
-      "Check [wpt.live](https://wpt.live) to see if they've been deleted or renamed.",
+      "Check [wpt.live](https://wpt.live) to see if it was deleted or renamed.",
   },
 };
 const l10n = getIntlData(localizationStrings);
@@ -27,35 +27,22 @@ export async function run(conf) {
     return;
   }
 
-  const offendingElements = [];
-  const offendingTests = new Set();
-
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll("[data-tests]");
   const testables = [...elems].filter(elem => elem.dataset.tests);
 
   for (const elem of testables) {
-    const tests = elem.dataset.tests
+    elem.dataset.tests
       .split(/,/gm)
       .map(test => test.trim().split("#")[0])
-      .filter(test => test);
-
-    const missingTests = tests.filter(test => !filesInWPT.has(test));
-    if (missingTests.length) {
-      offendingElements.push(elem);
-      missingTests.forEach(test => offendingTests.add(test));
-    }
+      .filter(test => test && !filesInWPT.has(test))
+      .map(missingTest => {
+        showWarning(`${l10n.msg} \`${missingTest}\`.`, name, {
+          hint: l10n.hint,
+          elements: [elem],
+        });
+      });
   }
-
-  if (!offendingElements.length) {
-    return;
-  }
-
-  const missingTests = [...offendingTests].map(test => ` * \`${test}\``);
-  showWarning(`${l10n.msg}:\n${missingTests.join("\n")}\n\n`, name, {
-    hint: l10n.hint,
-    elements: offendingElements,
-  });
 }
 
 /**
