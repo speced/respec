@@ -24,6 +24,7 @@ const w3cDefaults = {
   doJsonLd: false,
   logos: [],
   xref: true,
+  wgId: "",
 };
 
 export function run(conf) {
