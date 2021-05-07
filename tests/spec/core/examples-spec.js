@@ -56,6 +56,9 @@ describe("Core — Examples", () => {
   });
   it("processes children of aside examples", async () => {
     const body = `
+      <section id="sotd">
+       <p>.</p>
+      <section>
       <aside class="example">
       <pre class="js">
       // Whitespace before this text should be removed
