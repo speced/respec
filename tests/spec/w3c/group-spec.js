@@ -15,7 +15,7 @@ describe("W3C — Group", () => {
   it("adds group details when a single group is specified", async () => {
     const conf = await getGroupConf({ group: "payments" });
     expect(conf.wg).toBe("Web Payments Working Group");
-    expect(conf.wgId).toBe("83744");
+    expect(conf.wgId).toBe(83744);
     expect(conf.wgPatentURI).toBe("https://www.w3.org/groups/wg/payments/ipr");
     expect(conf.wgURI).toBe("https://www.w3.org/Payments/WG/");
   });
