@@ -25,7 +25,6 @@ const w3cDefaults = {
   logos: [],
   xref: true,
   wgId: "",
-  wgPatentURI: "",
 };
 
 export function run(conf) {
