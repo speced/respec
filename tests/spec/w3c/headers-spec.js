@@ -1471,21 +1471,6 @@ describe("W3C — Headers", () => {
   });
 
   describe("wgId, data-deliverer, and isNote", () => {
-    it("derives the wgId from wgPatentURI and adds data-deliverer", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        wgPatentURI: "https://www.w3.org/pp-impl/123456/status",
-        specStatus: "WG-NOTE",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      const { wgId, isNote } = doc.defaultView.respecConfig;
-      const elem = doc.querySelector("p[data-deliverer]");
-      expect(isNote).toBe(true);
-      expect(wgId).toBe("123456");
-      expect(elem).toBeTruthy();
-      expect(elem.dataset.deliverer).toBe("123456");
-    });
     it("gracefully handles missing wgPatentURI", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -1503,7 +1488,7 @@ describe("W3C — Headers", () => {
     it("only doesn't data-deliverer for non-notes", async () => {
       const ops = makeStandardOps();
       const newProps = {
-        wgPatentURI: "https://www.w3.org/pp-impl/123456/status",
+        group: "webapps",
         specStatus: "WD",
       };
       Object.assign(ops.config, newProps);
@@ -1511,7 +1496,7 @@ describe("W3C — Headers", () => {
       const elem = doc.querySelector("p[data-deliverer]");
       const { wgId, isNote } = doc.defaultView.respecConfig;
       expect(isNote).toBe(false);
-      expect(wgId).toBe("123456");
+      expect(wgId).toBe(114929);
       expect(elem).toBe(null);
     });
     it("excludes the long patent text for note types", async () => {

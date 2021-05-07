@@ -678,7 +678,13 @@ describe("Core — xref", () => {
       </section>
       `;
       const config = {
-        xref: ["html", "credential-management", "encoding", "dom", "webauthn"],
+        xref: [
+          "html",
+          "credential-management",
+          "encoding",
+          "dom",
+          "webauthn-2",
+        ],
         localBiblio,
       };
       const ops = makeStandardOps(config, body);
@@ -705,10 +711,10 @@ describe("Core — xref", () => {
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
       expect(link3a.href).toBe(
-        "https://www.w3.org/TR/webauthn-1/#publickeycredential"
+        "https://www.w3.org/TR/webauthn-2/#publickeycredential"
       );
       expect(link3b.href).toBe(
-        "https://www.w3.org/TR/webauthn-1/#dom-publickeycredential-type-slot"
+        "https://www.w3.org/TR/webauthn-2/#dom-publickeycredential-type-slot"
       );
       expect(link3a.firstElementChild.localName).toBe("code");
       expect(link3b.firstElementChild.localName).toBe("code");
