@@ -197,7 +197,7 @@ async function run(args) {
 
 function printWelcomeMessage(args) {
   const messages = [
-    ["dev server", `http://localhost:${SERVE_PORT}`],
+    ["dev server", `http://localhost:${SERVE_PORT}/examples/`],
     ["karma (unit tests)", `http://localhost:${KARMA_PORT_UNIT_TESTS}`],
     [
       "karma (integration tests)",
