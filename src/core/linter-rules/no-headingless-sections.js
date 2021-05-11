@@ -17,8 +17,7 @@ const localizationStrings = {
   },
   nl: {
     msg: "Alle secties moeten beginnen met een `h2-6` element.",
-    hint:
-      "Voeg een `h2-6` toe aan de conflicterende sectie of gebruik een `<div>`.",
+    hint: "Voeg een `h2-6` toe aan de conflicterende sectie of gebruik een `<div>`.",
   },
   zh: {
     msg: "所有章节（section）都必须以 `h2-6` 元素开头。",

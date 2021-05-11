@@ -431,9 +431,8 @@ describe("Core - Inlines", () => {
     expect(mapForEach.href).toBe("https://infra.spec.whatwg.org/#map-iterate");
 
     // qualified multiline
-    const [multiListForEach, multiMapForEach] = doc.querySelectorAll(
-      "#overmatch a"
-    );
+    const [multiListForEach, multiMapForEach] =
+      doc.querySelectorAll("#overmatch a");
     expect(multiListForEach.href).toBe(
       "https://infra.spec.whatwg.org/#list-iterate"
     );
