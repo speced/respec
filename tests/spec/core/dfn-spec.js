@@ -35,9 +35,6 @@ describe("Core — Definitions", () => {
     const dfns = sec.querySelectorAll("dfn");
     expect(dfns).toHaveSize(4);
     expect([...dfns].every(dfn => dfn.tabIndex === 0)).toBeTrue();
-    expect(
-      [...dfns].every(dfn => dfn.getAttribute("role") === "link")
-    ).toBeTrue();
   });
 
   it("makes links <code> when their definitions are <code>", async () => {
