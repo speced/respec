@@ -30,11 +30,8 @@ describe("Core — Issues and Notes", () => {
     const doc = await makeRSDoc(ops);
     const issues = doc.querySelectorAll(".issue");
     expect(issues).toHaveSize(3);
-    const [
-      overriddenIdIssue,
-      firstDuplicateIssue,
-      secondDuplicateIssue,
-    ] = issues;
+    const [overriddenIdIssue, firstDuplicateIssue, secondDuplicateIssue] =
+      issues;
     expect(overriddenIdIssue.id).toBe("override-123");
     expect(firstDuplicateIssue.id).not.toBe(secondDuplicateIssue.id);
 
@@ -168,12 +165,8 @@ describe("Core — Issues and Notes", () => {
       "this is 404"
     );
 
-    const [
-      refactorLabel,
-      bugLabel,
-      blankLabel,
-      invalidLabel,
-    ] = doc.getElementsByClassName("respec-gh-label");
+    const [refactorLabel, bugLabel, blankLabel, invalidLabel] =
+      doc.getElementsByClassName("respec-gh-label");
 
     expect(refactorLabel.textContent).toBe("refactor");
     expect(refactorLabel.classList).toContain(

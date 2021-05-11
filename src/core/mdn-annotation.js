@@ -168,10 +168,8 @@ function getMdnKey(conf) {
  * @returns {Promise<MdnData|undefined>}
  */
 async function getMdnData(key, mdnConf) {
-  const {
-    baseJsonPath = BASE_JSON_PATH,
-    maxAge = 60 * 60 * 24 * 1000,
-  } = mdnConf;
+  const { baseJsonPath = BASE_JSON_PATH, maxAge = 60 * 60 * 24 * 1000 } =
+    mdnConf;
   const url = new URL(`${key}.json`, baseJsonPath).href;
   const res = await fetchAndCache(url, maxAge);
   if (res.status === 404) {
