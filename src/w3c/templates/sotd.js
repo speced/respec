@@ -355,10 +355,8 @@ function noteForTeamSubmission(conf, opts) {
 }
 
 export function renderPublicList(conf, opts) {
-  const {
-    mailToWGPublicListWithSubject,
-    mailToWGPublicListSubscription,
-  } = opts;
+  const { mailToWGPublicListWithSubject, mailToWGPublicListSubscription } =
+    opts;
   const { wgPublicList, subjectPrefix } = conf;
   const archivesURL = `https://lists.w3.org/Archives/Public/${wgPublicList}/`;
   return html`<p>

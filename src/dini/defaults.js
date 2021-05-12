@@ -25,8 +25,7 @@ const licenses = new Map([
   [
     "cc-by-sa",
     {
-      name:
-        "Creative Commons Attribution-ShareAlike 4.0 International Public License",
+      name: "Creative Commons Attribution-ShareAlike 4.0 International Public License",
       short: "CC-BY-SA",
       url: "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
     },

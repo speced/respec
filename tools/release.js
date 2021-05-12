@@ -131,7 +131,8 @@ const Prompts = {
       ["style", "🖌"],
       ["test", "👍"],
     ]);
-    const commitHints = /^l10n|^docs|^chore|^fix|^style|^refactor|^test|^feat|^breaking\schange/i;
+    const commitHints =
+      /^l10n|^docs|^chore|^fix|^style|^refactor|^test|^feat|^breaking\schange/i;
     return (
       commits
         .split("\n")

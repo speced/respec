@@ -11,8 +11,7 @@ export const name = "core/linter-rules/wpt-tests-exist";
 const localizationStrings = {
   en: {
     msg: "The following test could not be found in Web Platform Tests:",
-    hint:
-      "Check [wpt.live](https://wpt.live) to see if it was deleted or renamed.",
+    hint: "Check [wpt.live](https://wpt.live) to see if it was deleted or renamed.",
   },
 };
 const l10n = getIntlData(localizationStrings);

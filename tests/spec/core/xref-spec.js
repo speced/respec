@@ -817,9 +817,8 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const [uLongLong, unrestrictedFloat, double] = doc.querySelectorAll(
-        "#test a"
-      );
+      const [uLongLong, unrestrictedFloat, double] =
+        doc.querySelectorAll("#test a");
 
       expect(uLongLong.textContent).toBe("unsigned long long");
       expect(uLongLong.hash).toBe("#idl-unsigned-long-long");

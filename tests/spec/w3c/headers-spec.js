@@ -386,8 +386,7 @@ describe("W3C — Headers", () => {
         specStatus: "REC",
         editors: [
           {
-            name:
-              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            name: "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
             company: "<span lang='ja'>マイクロソフト</span> (Microsoft)",
           },
         ],
@@ -397,9 +396,8 @@ describe("W3C — Headers", () => {
       const dtElems = [...doc.querySelectorAll(".head dt")];
       const dtElem = dtElems.find(findEditor);
       const ddElem = dtElem.nextElementSibling;
-      const [personName, edition, company] = ddElem.querySelectorAll(
-        "span[lang=ja]"
-      );
+      const [personName, edition, company] =
+        ddElem.querySelectorAll("span[lang=ja]");
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
@@ -512,8 +510,7 @@ describe("W3C — Headers", () => {
         specStatus: "REC",
         formerEditors: [
           {
-            name:
-              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            name: "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
             company: "Microsoft",
           },
         ],
@@ -1182,9 +1179,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const dt = Array.from(
-        doc.querySelectorAll("dt")
-      ).find(({ textContent }) => /Implementation report:/.test(textContent));
+      const dt = Array.from(doc.querySelectorAll("dt")).find(
+        ({ textContent }) => /Implementation report:/.test(textContent)
+      );
       const dd = dt.nextElementSibling;
       expect(dd.textContent.trim()).toBe("URI");
     });
@@ -2101,8 +2098,7 @@ describe("W3C — Headers", () => {
           url: "http://prod/",
         },
         {
-          src:
-            "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
+          src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
           alt: "this is a larger gif",
           height: 876,
           width: 283,
