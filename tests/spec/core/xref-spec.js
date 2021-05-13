@@ -683,7 +683,7 @@ describe("Core — xref", () => {
           "credential-management",
           "encoding",
           "dom",
-          "webauthn-2",
+          "webauthn-3",
         ],
         localBiblio,
       };
@@ -711,10 +711,10 @@ describe("Core — xref", () => {
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
       expect(link3a.href).toBe(
-        "https://www.w3.org/TR/webauthn-2/#publickeycredential"
+        "https://www.w3.org/TR/webauthn-3/#publickeycredential"
       );
       expect(link3b.href).toBe(
-        "https://www.w3.org/TR/webauthn-2/#dom-publickeycredential-type-slot"
+        "https://www.w3.org/TR/webauthn-3/#dom-publickeycredential-type-slot"
       );
       expect(link3a.firstElementChild.localName).toBe("code");
       expect(link3b.firstElementChild.localName).toBe("code");
@@ -817,9 +817,8 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const [uLongLong, unrestrictedFloat, double] = doc.querySelectorAll(
-        "#test a"
-      );
+      const [uLongLong, unrestrictedFloat, double] =
+        doc.querySelectorAll("#test a");
 
       expect(uLongLong.textContent).toBe("unsigned long long");
       expect(uLongLong.hash).toBe("#idl-unsigned-long-long");

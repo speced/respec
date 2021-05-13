@@ -182,13 +182,8 @@ describe("Core — Link to definitions", () => {
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
 
-    const [
-      dfnInterface,
-      dfnAttr,
-      dfnMethod,
-      dfnEnum,
-      dfnEnumValue,
-    ] = doc.querySelectorAll("#test dfn");
+    const [dfnInterface, dfnAttr, dfnMethod, dfnEnum, dfnEnumValue] =
+      doc.querySelectorAll("#test dfn");
     expect(dfnInterface.dataset.dfnFor).toBe("");
     expect(dfnAttr.dataset.dfnFor).toBe("HyperStar");
     expect(dfnMethod.dataset.dfnFor).toBe("HyperStar");
@@ -211,11 +206,8 @@ describe("Core — Link to definitions", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const [
-      visibilityState,
-      visibilityStateHidden,
-      documentHidden,
-    ] = doc.querySelectorAll("#test a");
+    const [visibilityState, visibilityStateHidden, documentHidden] =
+      doc.querySelectorAll("#test a");
 
     expect(visibilityState.hash).toBe("#vis-state");
     expect(visibilityStateHidden.hash).toBe("#vis-state-hidden");

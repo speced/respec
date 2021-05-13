@@ -40,8 +40,9 @@ describe("Core — Seo", () => {
     await doc.respec.ready;
     await new Promise(resolve => {
       const check = () => {
-        const hasMetaDesc = doc.querySelectorAll("meta[name=description]")
-          .length;
+        const hasMetaDesc = doc.querySelectorAll(
+          "meta[name=description]"
+        ).length;
         // Firefox is buggy, short circuit
         if (navigator.userAgent.includes("Firefox") && !hasMetaDesc) {
           expect(true).toBe(true);
