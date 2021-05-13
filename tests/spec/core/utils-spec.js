@@ -15,7 +15,6 @@ describe("Core - Utils", () => {
           data-title="RTCIceTransport"
           data-dfn-for=""
           tabindex="0"
-          role="link"
           aria-haspopup="dialog"
           title="Show what links to this definition"><code>RTCIceTransport</code></dfn>
       `;
