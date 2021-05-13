@@ -159,8 +159,8 @@ describe("W3C — Headers", () => {
         const dtEditors = contains(doc, "dt", "Editors:");
         expect(dtEditors).toHaveSize(0);
         const dd = dtFormerEditors[0].nextElementSibling;
-        expect(dd.textContent).toBe("FORMER EDITOR 1");
-        expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
+        expect(dd.textContent.trim()).toBe("FORMER EDITOR 1");
+        expect(dd.nextElementSibling.textContent.trim()).toContain("FORMER EDITOR 2");
       });
       it("relocates multiple editors with retiredDate member to multiple formerEditor", async () => {
         const ops = makeStandardOps();
@@ -269,41 +269,6 @@ describe("W3C — Headers", () => {
       expect(doc.querySelector("dd > .p-name + .orcid + .org")).not.toBeNull();
     });
 
-    it("identifies valid and invalid ORCIDs", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "REC",
-        editors: [
-          {
-            name: "John Doe",
-            orcid: "https://orcid.org/0000-0002-1694-233X",
-          },
-          {
-            name: "Jane Doe",
-            orcid: "0000-0002-1694-233X",
-          },
-          {
-            name: "John Smith",
-            orcid: "http://orcid.org/0000-0002-1694-233X",
-          },
-          {
-            name: "Jane Smith",
-            orcid: "0000-0002-1694-2330",
-          },
-        ],
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-
-      expect(
-        doc.querySelectorAll(
-          "a.orcid[href='https://orcid.org/0000-0002-1694-233X']"
-        )
-      ).toHaveSize(2);
-      expect(doc.querySelectorAll("a.orcid")).toHaveSize(2);
-      expect(doc.querySelectorAll("a.orcid svg")).toHaveSize(2);
-    });
-
     it("takes multiple editors into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -324,8 +289,8 @@ describe("W3C — Headers", () => {
       expect(dtEditors).toHaveSize(1);
       expect(dtEditor).toHaveSize(0);
       const dd = dtEditors[0].nextElementSibling;
-      expect(dd.textContent).toBe("NAME1");
-      expect(dd.nextElementSibling.textContent).toBe("NAME2");
+      expect(dd.textContent.trim()).toBe("NAME1");
+      expect(dd.nextElementSibling.textContent.trim()).toBe("NAME2");
     });
 
     it("takes editors extras into account", async () => {
@@ -337,23 +302,9 @@ describe("W3C — Headers", () => {
             name: "Mr foo",
             extras: [
               {
-                name: "0000-0003-0782-2704",
-                href: "http://orcid.org/0000-0003-0782-2704",
-                class: "orcid",
-              },
-              {
                 name: "@ivan_herman",
                 href: "http://twitter.com/ivan_herman",
                 class: "twitter",
-              },
-              {
-                href: "http://not-valid-missing-name",
-                class: "invalid",
-              },
-              {
-                name: "\n\t  \n",
-                href: "http://empty-name",
-                class: "invalid",
               },
             ],
           },
@@ -361,24 +312,16 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const oricdHref = ops.config.editors[0].extras[0].href;
-      const twitterHref = ops.config.editors[0].extras[1].href;
-      const orcidAnchor = doc.querySelector(`a[href='${oricdHref}']`);
+      const twitterHref = ops.config.editors[0].extras[0].href;
       const twitterAnchor = doc.querySelector(`a[href='${twitterHref}']`);
       // general checks
       const header = doc.querySelector("div.head");
-      [orcidAnchor, twitterAnchor].forEach(elem => {
-        // Check parent is correct.
-        expect(elem.parentNode.localName).toBe("span");
-        // Check that it's in the header of the document
-        expect(header.contains(elem)).toBe(true);
-      });
+      expect(twitterAnchor.localName).toBe("a");
+      // Check that it's in the header of the document
+      expect(header.contains(twitterAnchor)).toBe(true);
+
       // Check CSS is correctly applied
-      expect(orcidAnchor.parentNode.className).toBe("orcid");
-      expect(twitterAnchor.parentNode.className).toBe("twitter");
-      // check that extra items with no name are ignored
-      expect(doc.querySelector("a[href='http://not-valid']")).toBe(null);
-      expect(doc.querySelector("a[href='http://empty-name']")).toBe(null);
+      expect(twitterAnchor.className).toBe("twitter");
     });
 
     it("treats editor's info as HTML", async () => {
@@ -386,7 +329,8 @@ describe("W3C — Headers", () => {
         specStatus: "REC",
         editors: [
           {
-            name: "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
             company: "<span lang='ja'>マイクロソフト</span> (Microsoft)",
           },
         ],
@@ -396,8 +340,9 @@ describe("W3C — Headers", () => {
       const dtElems = [...doc.querySelectorAll(".head dt")];
       const dtElem = dtElems.find(findEditor);
       const ddElem = dtElem.nextElementSibling;
-      const [personName, edition, company] =
-        ddElem.querySelectorAll("span[lang=ja]");
+      const [personName, edition, company] = ddElem.querySelectorAll(
+        "span[lang=ja]"
+      );
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
@@ -498,11 +443,11 @@ describe("W3C — Headers", () => {
 
       const firstEditor = formerEditorsLabel.nextSibling;
       expect(firstEditor.localName).toBe("dd");
-      expect(firstEditor.textContent).toBe("NAME1");
+      expect(firstEditor.textContent.trim()).toBe("NAME1");
 
       const secondEditor = firstEditor.nextSibling;
       expect(secondEditor.localName).toBe("dd");
-      expect(secondEditor.textContent).toBe("NAME2");
+      expect(secondEditor.textContent.trim()).toBe("NAME2");
     });
 
     it("treats formerEditor's name as HTML", async () => {
@@ -510,7 +455,8 @@ describe("W3C — Headers", () => {
         specStatus: "REC",
         formerEditors: [
           {
-            name: "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
             company: "Microsoft",
           },
         ],
@@ -548,7 +494,7 @@ describe("W3C — Headers", () => {
       expect(dtAuthors).toHaveSize(0);
       expect(dtAuthor).toHaveSize(1);
       const dd = dtAuthor[0].nextElementSibling;
-      expect(dd.textContent).toBe("NAME1");
+      expect(dd.textContent.trim()).toBe("NAME1");
     });
 
     it("takes multiple authors into account", async () => {
@@ -568,11 +514,11 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect(contains(doc, "dt", "Authors:")).toHaveSize(1);
       expect(contains(doc, "dt", "Author:")).toHaveSize(0);
-      expect(contains(doc, "dt", "Authors:")[0].nextSibling.textContent).toBe(
-        "NAME1"
-      );
       expect(
-        contains(doc, "dt", "Authors:")[0].nextSibling.nextSibling.textContent
+        contains(doc, "dt", "Authors:")[0].nextSibling.textContent.trim()
+      ).toBe("NAME1");
+      expect(
+        contains(doc, "dt", "Authors:")[0].nextSibling.nextSibling.textContent.trim()
       ).toBe("NAME2");
     });
   });
@@ -835,7 +781,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.getElementById("subtitle")).toBe(null);
+      expect(doc.getElementById("subtitle")).toBeNull();
     });
 
     it("uses existing h2#subtitle as subtitle", async () => {
@@ -1179,9 +1125,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const dt = Array.from(doc.querySelectorAll("dt")).find(
-        ({ textContent }) => /Implementation report:/.test(textContent)
-      );
+      const dt = Array.from(
+        doc.querySelectorAll("dt")
+      ).find(({ textContent }) => /Implementation report:/.test(textContent));
       const dd = dt.nextElementSibling;
       expect(dd.textContent.trim()).toBe("URI");
     });
@@ -1494,7 +1440,7 @@ describe("W3C — Headers", () => {
       const { wgId, isNote } = doc.defaultView.respecConfig;
       expect(isNote).toBe(false);
       expect(wgId).toBe(114929);
-      expect(elem).toBe(null);
+      expect(elem).toBeNull();
     });
     it("excludes the long patent text for note types", async () => {
       const noteTypes = ["WG-NOTE", "FPWD-NOTE"];
@@ -2003,7 +1949,7 @@ describe("W3C — Headers", () => {
     const aElem = doc.querySelector(
       `a[href^="http://www.w3.org/2003/03/Translations/"]`
     );
-    expect(aElem).toBe(null);
+    expect(aElem).toBeNull();
   });
   describe("isPreview", () => {
     it("adds annoying warning when isPreview", async () => {
@@ -2098,7 +2044,8 @@ describe("W3C — Headers", () => {
           url: "http://prod/",
         },
         {
-          src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
+          src:
+            "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
           alt: "this is a larger gif",
           height: 876,
           width: 283,

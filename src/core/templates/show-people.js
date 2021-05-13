@@ -1,9 +1,28 @@
 // @ts-check
-import { humanDate, showError, toShortIsoDate } from "../../core/utils.js";
-import { lang as defaultLang } from "../../core/l10n.js";
-import { html } from "../../core/import-maps.js";
+/**
+ * @typedef {object} Person
+ * @property {string} [Person.name]
+ * @property {string|number} [Person.w3cid]
+ * @property {string} [Person.mailto]
+ * @property {string} [Person.url]
+ * @property {string} [Person.orcid]
+ * @property {string} [Person.company]
+ * @property {string} [Person.companyURL]
+ * @property {string} [Person.note]
+ * @property {string} [Person.retiredDate]
+ * @property {PersonExtras} [Person.extras]
+ *
+ * @typedef {object} PersonExtras
+ * @property {string} PersonExtras.name
+ * @property {string} [PersonExtras.class]
+ * @property {string} [PersonExtras.href]
+ */
 
 const name = "core/templates/show-people";
+
+import { humanDate, showError, showWarning } from "../../core/utils.js";
+import { lang as defaultLang } from "../../core/l10n.js";
+import { html } from "../../core/import-maps.js";
 
 const localizationStrings = {
   en: {
@@ -62,113 +81,210 @@ const orcidIcon = () => html`<svg
 </svg>`;
 
 /**
- * @typedef {object} Person
- * @property {string} [Person.name]
- * @property {string} [Person.company]
- * @property {string|number} [Person.w3cid]
- * @property {string} [Person.mailto]
- * @property {string} [Person.url]
- * @property {string} [Person.orcid]
- * @property {string} [Person.company]
- * @property {string} [Person.companyURL]
- * @property {string} [Person.note]
- * @property {string} [Person.retiredDate]
- * @property {PersonExtras} [Person.extras]
- *
- * @typedef {object} PersonExtras
- * @property {string} PersonExtras.name
- * @property {string} [PersonExtras.class]
- * @property {string} [PersonExtras.href]
- *
  * @param {Person[]} persons
  */
 export default function showPeople(persons = []) {
+  return persons.filter(validatePerson).map(personToHTML);
+}
+
+function personToHTML(person) {
   const l10n = localizationStrings[lang];
-  return persons.map(getItem);
-
-  function getItem(p) {
-    const personName = [p.name]; // treated as opt-in HTML by hyperHTML
-    const company = [p.company];
-    const editorid = p.w3cid ? parseInt(p.w3cid, 10) : null;
-    /** @type {HTMLElement} */
-    const dd = html`<dd
-      class="p-author h-card vcard"
-      data-editor-id="${editorid}"
-    ></dd>`;
-    const span = document.createDocumentFragment();
-    const contents = [];
-    if (p.mailto) {
-      contents.push(html`<a
-        class="ed_mailto u-email email p-name"
-        href="${`mailto:${p.mailto}`}"
+  const personName = [person.name]; // treated as opt-in HTML by hyperHTML
+  const company = [person.company];
+  const editorId = person.w3cid ? parseInt(person.w3cid, 10) : null;
+  const contents = [];
+  if (person.mailto) {
+    contents.push(html`<a
+      class="ed_mailto u-email email p-name"
+      href="${`mailto:${person.mailto}`}"
+      >${personName}</a
+    >`);
+  } else if (person.url) {
+    contents.push(
+      html`<a class="u-url url p-name fn" href="${person.url}"
         >${personName}</a
-      >`);
-    } else if (p.url) {
-      contents.push(
-        html`<a class="u-url url p-name fn" href="${p.url}">${personName}</a>`
-      );
-    } else {
-      contents.push(html`<span class="p-name fn">${personName}</span>`);
-    }
-    if (p.orcid) {
-      contents.push(
-        html`<a class="p-name orcid" href="${p.orcid}">${orcidIcon()}</a>`
-      );
-    }
-    if (p.company) {
-      if (p.companyURL) {
-        contents.push(
-          html`
-            (<a class="p-org org h-org h-card" href="${p.companyURL}"
-              >${company}</a
-            >)
-          `
+      >`
+    );
+  } else {
+    contents.push(html`<span class="p-name fn">${personName}</span>`);
+  }
+  if (person.orcid) {
+    contents.push(
+      html`<a class="p-name orcid" href="${person.orcid}">${orcidIcon()}</a>`
+    );
+  }
+  if (person.company) {
+    const hCard = "p-org org h-org";
+    const companyElem = person.companyURL
+      ? html`<a class="${hCard}" href="${person.companyURL}">${company}</a>`
+      : html`<span class="${hCard}">${company}</span>`;
+    contents.push(html` (${companyElem})`);
+  }
+  if (person.note) contents.push(document.createTextNode(` (${person.note})`));
+  if (person.extras) {
+    person.extras
+      .map(extra => html`, ${renderExtra(extra)}`)
+      .reduce((contents, html) => {
+        contents.push(html);
+        return contents;
+      }, contents);
+  }
+  if (person.retiredDate) {
+    const { retiredDate } = person;
+    const time = html`<time datetime="${retiredDate}"
+      >${humanDate(retiredDate)}</time
+    >`;
+    contents.push(html` - ${l10n.until(time)} `);
+  }
+  const dd = html`<dd
+    class="editor p-author h-card vcard"
+    data-editor-id="${editorId}"
+  >
+    ${contents}
+  </dd>`;
+  return dd;
+}
+
+function renderExtra(extra) {
+  const classVal = extra.class || null;
+  const { name, href } = extra;
+  return href
+    ? html`<a href="${href}" class="${classVal}">${name}</a>`
+    : html`<span class="${classVal}">${name}</span>`;
+}
+
+/**
+ * @param {Person} person
+ * @param {Number} index
+ * @returns
+ */
+function validatePerson(person, index) {
+  const hint =
+    "See [Person](https://respec.org/docs/#person) configuration for available options.";
+  if (!person.name) {
+    const msg = `Person object at index ${index} is missing required member "name"`;
+    showError(msg, name, { hint });
+    return false;
+  }
+
+  if (person.orcid && !validateAndCanonicalizeOrcid(person, index)) {
+    return false;
+  }
+
+  if (
+    person.retiredDate &&
+    !validateDateMember("retiredDate", person.retiredDate, index, hint)
+  ) {
+    return false;
+  }
+
+  if (person.hasOwnProperty("extras") && !validateExtras(person.extras, hint)) {
+    return false;
+  }
+
+  if (person.companyURL && !person.company) {
+    const msg = `Person object at index ${index} has a "companyURL" member but no "company" member.`;
+    showWarning(msg, name, { hint: `Please add a "company" member. ${hint}` });
+  }
+  return true;
+}
+
+/**
+ *
+ * @param {PersonExtras} extras
+ * @param {string} hint
+ */
+function validateExtras(extras, hint) {
+  if (!Array.isArray(extras)) {
+    showError(`A person's "extras" member must be an array.`, name, { hint });
+    return false;
+  }
+  return extras.every((extra, index) => {
+    switch (true) {
+      case typeof extra !== "object":
+        showError(`"extra" index ${index} is not an object.`, name, {
+          hint,
+        });
+        return false;
+      case !extra.hasOwnProperty("name"):
+        showError(
+          `\`PersonExtra\` object at index ${index} is missing required "name" member.`,
+          name,
+          { hint }
         );
-      } else {
-        contents.push(html` (${company}) `);
-      }
+        return false;
+      case typeof extra.name === "string" && extra.name.trim() === "":
+        showError(
+          `\`PersonExtra\` object at index ${index} "name" can't be empty.`,
+          name,
+          { hint }
+        );
+        return false;
     }
-    if (p.note) contents.push(document.createTextNode(` (${p.note})`));
-    if (p.extras) {
-      const results = p.extras
-        // Remove empty names
-        .filter(extra => extra.name && extra.name.trim())
-        // Convert to HTML
-        .map(getExtra);
-      for (const result of results) {
-        contents.push(document.createTextNode(", "), result);
-      }
-    }
-    if (p.retiredDate) {
-      const retiredDate = new Date(p.retiredDate);
-      const isValidDate = retiredDate.toString() !== "Invalid Date";
-      const timeElem = document.createElement("time");
-      timeElem.textContent = isValidDate
-        ? humanDate(retiredDate)
-        : "Invalid Date"; // todo: Localise invalid date
-      if (!isValidDate) {
-        const msg = "The date is invalid. The expected format is YYYY-MM-DD.";
-        const title = "Invalid date";
-        showError(msg, name, { title, elements: [timeElem] });
-      }
-      timeElem.dateTime = toShortIsoDate(retiredDate);
-      contents.push(html` - ${l10n.until(timeElem)} `);
-    }
+    return true;
+  });
+}
 
-    // @ts-ignore: hyperhtml types only support Element but we use a DocumentFragment here
-    html.bind(span)`${contents}`;
-    dd.appendChild(span);
-    return dd;
+/**
+ * @param {string} member
+ * @param {string} rawDate
+ * @param {number} index
+ * @param {string} hint
+ * @returns
+ */
+function validateDateMember(member, rawDate, index, hint) {
+  const date = new Date(rawDate);
+  const isValidDate = date.toString() !== "Invalid Date";
+  if (!isValidDate) {
+    const msg = `"${member}" of person at index ${index} is invalid.`;
+    showError(msg, name, {
+      hint: `The expected format is YYYY-MM-DD. ${hint}`,
+    });
+    return false;
+  }
+  return true;
+}
+
+/**
+ *
+ * @param {Person} person
+ * @param {number} index
+ * @returns {boolean}
+ */
+function validateAndCanonicalizeOrcid(person, index) {
+  const { orcid } = person;
+  const orcidUrl = new URL(orcid, "https://orcid.org/");
+  const msg = `"${person.orcid}" at index ${index} has an invalid ORCID`;
+
+  if (orcidUrl.origin !== "https://orcid.org") {
+    const hint = `The origin should be "https://orcid.org", not "${orcidUrl.origin}"`;
+    showError(msg, name, { hint });
+    return false;
   }
 
-  function getExtra(extra) {
-    const span = html`<span class="${extra.class || null}"></span>`;
-    let textContainer = span;
-    if (extra.href) {
-      textContainer = html`<a href="${extra.href}"></a>`;
-      span.appendChild(textContainer);
-    }
-    textContainer.textContent = extra.name;
-    return span;
+  // trailing slash would mess up checksum
+  const orcidId = orcidUrl.pathname.slice(1).replace(/\/$/, "");
+  if (!/^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/.test(orcidId)) {
+    const hint = `ORCIDs have the format "1234-1234-1234-1234", not "${orcidId}"`;
+    showError(msg, name, { hint });
+    return false;
   }
+
+  // calculate checksum as per https://support.orcid.org/hc/en-us/articles/360006897674-Structure-of-the-ORCID-Identifier
+  const lastDigit = orcidId[orcidId.length - 1];
+  const remainder = orcidId
+    .split("")
+    .slice(0, -1)
+    .filter(c => /\d/.test(c))
+    .map(Number)
+    .reduce((acc, c) => (acc + c) * 2, 0);
+  const lastDigitInt = (12 - (remainder % 11)) % 11;
+  const lastDigitShould = lastDigitInt === 10 ? "X" : String(lastDigitInt);
+  if (lastDigit !== lastDigitShould) {
+    const hint = `orcid "${orcidId}" has an invalid checksum`;
+    showError(msg, name, { hint });
+    return false;
+  }
+  person.orcid = orcidUrl.href;
+  return true;
 }
