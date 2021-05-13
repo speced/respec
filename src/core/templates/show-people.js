@@ -182,6 +182,13 @@ function validatePerson(person, index) {
     return false;
   }
 
+  if (person.url && person.mailto) {
+    const msg = `Person object at index ${index} has both "url" and "mailto" property.`;
+    showWarning(msg, name, {
+      hint: `Please chose either "url" or "mailto" ("url" is preferred). ${hint}`,
+    });
+  }
+
   if (person.companyURL && !person.company) {
     const msg = `Person object at index ${index} has a "companyURL" member but no "company" member.`;
     showWarning(msg, name, { hint: `Please add a "company" member. ${hint}` });
