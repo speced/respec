@@ -305,6 +305,8 @@ const processMDSections = convertElements("[data-format='markdown']:not(body)");
 const blockLevelElements =
   "[data-format=markdown], section, div, address, article, aside, figure, header, main";
 
+export const hooks = ["before-markdown", "after-markdown"];
+
 export function run(conf) {
   const hasMDSections = !!document.querySelector(
     "[data-format=markdown]:not(body)"

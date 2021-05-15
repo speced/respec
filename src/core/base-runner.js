@@ -1,6 +1,7 @@
 // @ts-check
 // Module core/base-runner
 // The module in charge of running the whole processing pipeline.
+import { utils as extensionUtils, setupExtensions } from "./extensions.js";
 import { run as includeConfig } from "./include-config.js";
 import { init as initReSpecGlobal } from "./respec-global.js";
 import { run as overrideConfig } from "./override-configuration.js";
@@ -51,7 +52,9 @@ async function executePreparePass(runnables, config) {
   }
 }
 
-async function executeRunPass(runnables, config) {
+async function executeRunPass(corePlugins, config) {
+  const runnables = setupExtensions(corePlugins, respecConfig);
+
   for (const plug of runnables) {
     const name = plug.name || "";
 
@@ -68,6 +71,10 @@ async function executeRunPass(runnables, config) {
         try {
           if (plug.Plugin) {
             await new plug.Plugin(config).run();
+            resolve();
+          } else if (plug.on && plug.run) {
+            // is extension
+            await plug.run(config, extensionUtils);
             resolve();
           } else if (plug.run) {
             await plug.run(config);

@@ -15,6 +15,15 @@
           name: "Your Name",
           url: "https://your-site.com",
         }],
+        extensions: [
+          {
+            name: "my-extension",
+            on: "before-markdown",
+            async run(conf, utils) {
+              utils.showWarning("oops from extension", this.name);
+            }
+          }
+        ],
         github: "https://github.com/w3c/some-API/",
         testSuiteURI: "https://w3c-test.org/some-API/",
         implementationReportURI: "https://w3c.github.io/test-results/some-API",
