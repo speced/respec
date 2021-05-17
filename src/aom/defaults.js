@@ -13,7 +13,7 @@ const licenses = new Map([
       short: "AOM",
       url: "http://aomedia.org/license/",
     },
-  ]
+  ],
 ]);
 
 const aomDefaults = {
