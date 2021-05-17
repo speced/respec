@@ -19,7 +19,7 @@ const localizationStrings = {
     latest_published_version: "Latest approved version:",
     this_version: "This version:",
     issue_tracker: "Issue Tracker:",
-  }
+  },
 };
 
 export const l10n = getIntlData(localizationStrings);
@@ -43,10 +43,10 @@ function getSpecSubTitleElem(conf) {
 
 export default conf => {
   return html`<div class="head">
-    ${conf.specStatus !== "PD" ? conf.logos.map(showLogo) : ""} ${document.querySelector("h1#title")}
-    ${getSpecSubTitleElem(conf)}
+    ${conf.specStatus !== "PD" ? conf.logos.map(showLogo) : ""}
+    ${document.querySelector("h1#title")} ${getSpecSubTitleElem(conf)}
     <h2>
-      ${conf.textStatus} - 
+      ${conf.textStatus} -
       <time class="dt-published" datetime="${conf.dashDate}"
         >${conf.publishHumanDate}</time
       >
@@ -54,15 +54,11 @@ export default conf => {
     <dl>
       <dt>${l10n.this_version}</dt>
       <dd>
-        <a class="u-url" href="${conf.thisVersion}"
-          >${conf.thisVersion}</a
-        >
+        <a class="u-url" href="${conf.thisVersion}">${conf.thisVersion}</a>
       </dd>
       <dt>${l10n.issue_tracker}</dt>
       <dd>
-        <a class="u-url" href="${conf.issueTracker}"
-          >${conf.issueTracker}</a
-        >
+        <a class="u-url" href="${conf.issueTracker}">${conf.issueTracker}</a>
       </dd>
       <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
       ${showPeople(conf.editors)}
@@ -103,19 +99,24 @@ function renderCopyright(conf) {
   }
   return conf.overrideCopyright
     ? [conf.overrideCopyright]
-    : html`<p class="copyright">Copyright ${conf.publishYear}, 
-    <a href="https://www.w3.org/"><abbr title="The Alliance for Open Media">AOM</abbr></a><br>
-    Licensing information is available at http://aomedia.org/license/<br>
-    The MATERIALS ARE PROVIDED “AS IS.” The Alliance for Open Media, its members, 
-    and its contributors expressly disclaim any warranties (express, implied, or 
-    otherwise), including implied warranties of merchantability, non-infringement, 
-    fitness for a particular purpose, or title, related to the materials. The entire 
-    risk as to implementing or otherwise using the materials is assumed by the 
-    implementer and user. IN NO EVENT WILL THE ALLIANCE FOR OPEN MEDIA, ITS MEMBERS, 
-    OR CONTRIBUTORS BE LIABLE TO ANY OTHER PARTY FOR LOST PROFITS OR ANY FORM OF 
-    INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER FROM 
-    ANY CAUSES OF ACTION OF ANY KIND WITH RESPECT TO THIS DELIVERABLE OR ITS 
-    GOVERNING AGREEMENT, WHETHER BASED ON BREACH OF CONTRACT, TORT (INCLUDING 
-    NEGLIGENCE), OR OTHERWISE, AND WHETHER OR NOT THE OTHER MEMBER HAS BEEN 
-    ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>`;
+    : html`<p class="copyright">
+        Copyright ${conf.publishYear},
+        <a href="https://www.w3.org/"
+          ><abbr title="The Alliance for Open Media">AOM</abbr></a
+        ><br />
+        Licensing information is available at http://aomedia.org/license/<br />
+        The MATERIALS ARE PROVIDED “AS IS.” The Alliance for Open Media, its
+        members,and its contributors expressly disclaim any warranties (express,
+        implied, or otherwise), including implied warranties of merchantability,
+        non-infringement, fitness for a particular purpose, or title, related to
+        the materials. The entire risk as to implementing or otherwise using the
+        materials is assumed by the implementer and user. IN NO EVENT WILL THE
+        ALLIANCE FOR OPEN MEDIA, ITS MEMBERS, OR CONTRIBUTORS BE LIABLE TO ANY
+        OTHER PARTY FOR LOST PROFITS OR ANY FORM OF INDIRECT, SPECIAL,
+        INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER FROM ANY CAUSES OF
+        ACTION OF ANY KIND WITH RESPECT TO THIS DELIVERABLE OR ITS GOVERNING
+        AGREEMENT, WHETHER BASED ON BREACH OF CONTRACT, TORT (INCLUDING
+        NEGLIGENCE), OR OTHERWISE, AND WHETHER OR NOT THE OTHER MEMBER HAS BEEN
+        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+      </p>`;
 }
