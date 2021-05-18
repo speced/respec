@@ -124,12 +124,9 @@ function personToHTML(person) {
     contents.push(document.createTextNode(` (${person.note})`));
   }
   if (person.extras) {
-    person.extras
-      .map(extra => html`, ${renderExtra(extra)}`)
-      .reduce((contents, html) => {
-        contents.push(html);
-        return contents;
-      }, contents);
+    contents.push(
+      ...person.extras.map(extra => html`, ${renderExtra(extra)}`)
+    );
   }
   if (person.retiredDate) {
     const { retiredDate } = person;
