@@ -27,20 +27,30 @@ describe("Core Linter Rule - 'wpt-tests-exist'", () => {
     `;
 
     const warnings = await getWarnings(body);
-    expect(warnings).toHaveSize(1);
-    const { message, elements } = warnings[0];
+    expect(warnings).toHaveSize(3);
 
-    expect(elements).toHaveSize(2);
+    // warn1 is a's 404.min.html
+    // warn2 is a's 404.html
+    // warn3 is b's 404.html
+    const [warn1, warn2, warn3] = warnings;
 
-    const [a, b] = elements;
-    expect(a.id).toBe("a");
-    expect(b.id).toBe("b");
+    expect(warn1.elements).toHaveSize(1);
+    expect(warn1.elements[0].id).toBe("a");
+    expect(warn1.message).toContain("404.min.html");
 
-    expect(message).toContain("404.min.html");
-    expect(message).toContain("404.html");
-    expect(message).not.toContain("baz.html");
-    expect(message).not.toContain("foo.html");
-    expect(message).not.toContain("cool.html");
+    expect(warn2.elements).toHaveSize(1);
+    expect(warn2.elements[0].id).toBe("a");
+    expect(warn2.message).toContain("404.html");
+
+    expect(warn3.elements).toHaveSize(1);
+    expect(warn3.elements[0].id).toBe("b");
+    expect(warn3.message).toContain("404.html");
+
+    for (const { message } of warnings) {
+      expect(message).not.toContain("baz.html");
+      expect(message).not.toContain("foo.html");
+      expect(message).not.toContain("cool.html");
+    }
   });
 
   it("does nothing if no tests are missing", async () => {

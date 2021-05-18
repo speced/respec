@@ -377,8 +377,8 @@ describe("W3C — Headers", () => {
       expect(orcidAnchor.parentNode.className).toBe("orcid");
       expect(twitterAnchor.parentNode.className).toBe("twitter");
       // check that extra items with no name are ignored
-      expect(doc.querySelector("a[href='http://not-valid']")).toBe(null);
-      expect(doc.querySelector("a[href='http://empty-name']")).toBe(null);
+      expect(doc.querySelector("a[href='http://not-valid']")).toBeNull();
+      expect(doc.querySelector("a[href='http://empty-name']")).toBeNull();
     });
 
     it("treats editor's info as HTML", async () => {
@@ -386,8 +386,7 @@ describe("W3C — Headers", () => {
         specStatus: "REC",
         editors: [
           {
-            name:
-              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            name: "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
             company: "<span lang='ja'>マイクロソフト</span> (Microsoft)",
           },
         ],
@@ -397,9 +396,8 @@ describe("W3C — Headers", () => {
       const dtElems = [...doc.querySelectorAll(".head dt")];
       const dtElem = dtElems.find(findEditor);
       const ddElem = dtElem.nextElementSibling;
-      const [personName, edition, company] = ddElem.querySelectorAll(
-        "span[lang=ja]"
-      );
+      const [personName, edition, company] =
+        ddElem.querySelectorAll("span[lang=ja]");
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
@@ -512,8 +510,7 @@ describe("W3C — Headers", () => {
         specStatus: "REC",
         formerEditors: [
           {
-            name:
-              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            name: "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
             company: "Microsoft",
           },
         ],
@@ -838,7 +835,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.getElementById("subtitle")).toBe(null);
+      expect(doc.getElementById("subtitle")).toBeNull();
     });
 
     it("uses existing h2#subtitle as subtitle", async () => {
@@ -1182,9 +1179,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const dt = Array.from(
-        doc.querySelectorAll("dt")
-      ).find(({ textContent }) => /Implementation report:/.test(textContent));
+      const dt = Array.from(doc.querySelectorAll("dt")).find(
+        ({ textContent }) => /Implementation report:/.test(textContent)
+      );
       const dd = dt.nextElementSibling;
       expect(dd.textContent.trim()).toBe("URI");
     });
@@ -1471,21 +1468,6 @@ describe("W3C — Headers", () => {
   });
 
   describe("wgId, data-deliverer, and isNote", () => {
-    it("derives the wgId from wgPatentURI and adds data-deliverer", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        wgPatentURI: "https://www.w3.org/pp-impl/123456/status",
-        specStatus: "WG-NOTE",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      const { wgId, isNote } = doc.defaultView.respecConfig;
-      const elem = doc.querySelector("p[data-deliverer]");
-      expect(isNote).toBe(true);
-      expect(wgId).toBe("123456");
-      expect(elem).toBeTruthy();
-      expect(elem.dataset.deliverer).toBe("123456");
-    });
     it("gracefully handles missing wgPatentURI", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -1503,7 +1485,7 @@ describe("W3C — Headers", () => {
     it("only doesn't data-deliverer for non-notes", async () => {
       const ops = makeStandardOps();
       const newProps = {
-        wgPatentURI: "https://www.w3.org/pp-impl/123456/status",
+        group: "webapps",
         specStatus: "WD",
       };
       Object.assign(ops.config, newProps);
@@ -1511,8 +1493,8 @@ describe("W3C — Headers", () => {
       const elem = doc.querySelector("p[data-deliverer]");
       const { wgId, isNote } = doc.defaultView.respecConfig;
       expect(isNote).toBe(false);
-      expect(wgId).toBe("123456");
-      expect(elem).toBe(null);
+      expect(wgId).toBe(114929);
+      expect(elem).toBeNull();
     });
     it("excludes the long patent text for note types", async () => {
       const noteTypes = ["WG-NOTE", "FPWD-NOTE"];
@@ -2021,7 +2003,7 @@ describe("W3C — Headers", () => {
     const aElem = doc.querySelector(
       `a[href^="http://www.w3.org/2003/03/Translations/"]`
     );
-    expect(aElem).toBe(null);
+    expect(aElem).toBeNull();
   });
   describe("isPreview", () => {
     it("adds annoying warning when isPreview", async () => {
@@ -2116,8 +2098,7 @@ describe("W3C — Headers", () => {
           url: "http://prod/",
         },
         {
-          src:
-            "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
+          src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
           alt: "this is a larger gif",
           height: 876,
           width: 283,

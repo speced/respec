@@ -1,5 +1,83 @@
 # Changelog
 
+## [v26.6.4](https://github.com/w3c/respec/tree/v26.6.4) (2021-04-30)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.3...v26.6.4)
+
+**Fixed bugs:**
+
+- Automatic link to sub-sections duplicate definition markup [\#3486](https://github.com/w3c/respec/issues/3486)
+
+**Merged pull requests:**
+
+- fix\(core/utils\): removes attributes from dfn when calling makeSafeCopy [\#3500](https://github.com/w3c/respec/pull/3500) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.6.3](https://github.com/w3c/respec/tree/v26.6.3) (2021-04-30)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.2...v26.6.3)
+
+**Fixed bugs:**
+
+- Respec generates wrong patent policy text for joint publication. [\#3494](https://github.com/w3c/respec/issues/3494)
+
+**Merged pull requests:**
+
+- chore\(ci/pr\): don't re-install html validator [\#3498](https://github.com/w3c/respec/pull/3498) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/data-cite\): use switch case in linkElem [\#3497](https://github.com/w3c/respec/pull/3497) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/templates/sotd\): pluralize groups when noRecTrack [\#3496](https://github.com/w3c/respec/pull/3496) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/xref\): use full hrefs when available [\#3495](https://github.com/w3c/respec/pull/3495) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): add v26.6.2 [\#3493](https://github.com/w3c/respec/pull/3493) ([github-actions[bot]](https://github.com/apps/github-actions))
+- refactor\(core/inlines\): use switch instead of ifs [\#3492](https://github.com/w3c/respec/pull/3492) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.6.2](https://github.com/w3c/respec/tree/v26.6.2) (2021-04-27)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.1...v26.6.2)
+
+**Fixed bugs:**
+
+- dfn.role=link containing a link [\#3482](https://github.com/w3c/respec/issues/3482)
+
+**Merged pull requests:**
+
+- fix\(core/inlines\): don't link IDL inside dfn [\#3491](https://github.com/w3c/respec/pull/3491) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps\): update dependencies [\#3490](https://github.com/w3c/respec/pull/3490) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3485](https://github.com/w3c/respec/pull/3485) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [v26.6.1](https://github.com/w3c/respec/tree/v26.6.1) (2021-04-26)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.0...v26.6.1)
+
+**Fixed bugs:**
+
+- dfn.role=link containing a link [\#3482](https://github.com/w3c/respec/issues/3482)
+- dfn panel for data-cite dfn are unused [\#3254](https://github.com/w3c/respec/issues/3254)
+
+**Closed issues:**
+
+- Add support for partial interface references [\#3264](https://github.com/w3c/respec/issues/3264)
+- "npm start" devserver doesn't work with Firefox [\#3070](https://github.com/w3c/respec/issues/3070)
+
+**Merged pull requests:**
+
+- fix\(core/dfn-panel\): don't add  panel for data-cite [\#3484](https://github.com/w3c/respec/pull/3484) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(tools/release\): colors\[match\] not a function [\#3481](https://github.com/w3c/respec/pull/3481) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(tools/release\): add type checking [\#3480](https://github.com/w3c/respec/pull/3480) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3479](https://github.com/w3c/respec/pull/3479) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [v26.6.0](https://github.com/w3c/respec/tree/v26.6.0) (2021-04-22)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.3...v26.6.0)
+
+**Merged pull requests:**
+
+- test\(core/xref-spec\): fix bad URL [\#3478](https://github.com/w3c/respec/pull/3478) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/linter-rules/a11y\): convert core/a11y to linter rule [\#3477](https://github.com/w3c/respec/pull/3477) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(dependabot\): enable updates for github-actions [\#3476](https://github.com/w3c/respec/pull/3476) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(tools/release\): validate HTML before release [\#3475](https://github.com/w3c/respec/pull/3475) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): regenerate [\#3474](https://github.com/w3c/respec/pull/3474) ([github-actions[bot]](https://github.com/apps/github-actions))
+- chore\(workflows/pr\): validate HTML [\#3473](https://github.com/w3c/respec/pull/3473) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/web-monetization\): support adding monetization meta tag [\#2966](https://github.com/w3c/respec/pull/2966) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v26.5.3](https://github.com/w3c/respec/tree/v26.5.3) (2021-04-21)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.5.2...v26.5.3)

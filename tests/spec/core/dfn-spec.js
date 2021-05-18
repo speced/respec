@@ -35,9 +35,6 @@ describe("Core — Definitions", () => {
     const dfns = sec.querySelectorAll("dfn");
     expect(dfns).toHaveSize(4);
     expect([...dfns].every(dfn => dfn.tabIndex === 0)).toBeTrue();
-    expect(
-      [...dfns].every(dfn => dfn.getAttribute("role") === "link")
-    ).toBeTrue();
   });
 
   it("makes links <code> when their definitions are <code>", async () => {
@@ -102,7 +99,7 @@ describe("Core — Definitions", () => {
     const code = doc.querySelector("#t1 code");
     expect(code.textContent).toBe("Test");
     const t2 = doc.getElementById("t2");
-    expect(t2.querySelector("code")).toBe(null);
+    expect(t2.querySelector("code")).toBeNull();
     expect(t2.querySelector("a").textContent).toBe("not wrapped in code");
     expect(t2.querySelector("a").getAttribute("href")).toBe("#dom-test");
   });

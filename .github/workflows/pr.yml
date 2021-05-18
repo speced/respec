@@ -100,7 +100,6 @@ jobs:
           npm run build:w3c
       - name: run validator
         run: |
-          npm i --no-save --no-audit vnu-jar
           vnu=$(node -p "require('vnu-jar')")
           ./tools/respec2html.js examples/basic.built.html /tmp/basic.built.html --verbose
           java -jar $vnu /tmp/basic.built.html

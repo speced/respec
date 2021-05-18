@@ -247,7 +247,7 @@ describe("Core - biblioDB", () => {
       const alias = await biblioDB.resolveAlias("whatwg-dom");
       expect(alias).toBe("WHATWG-DOM");
       const noAlias = await biblioDB.resolveAlias("does not exist");
-      expect(noAlias).toBe(null);
+      expect(noAlias).toBeNull();
     });
   });
 

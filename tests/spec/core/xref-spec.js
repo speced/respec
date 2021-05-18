@@ -437,7 +437,7 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = `https://www.w3.org/TR/SVG/TR/SVG2/styling.html#LinkElement`;
+    const expectedLink1 = `https://www.w3.org/TR/SVG/styling.html#LinkElement`;
     const expectedLink2 = `https://html.spec.whatwg.org/multipage/semantics.html#the-link-element`;
 
     const one = doc.getElementById("one");
@@ -678,7 +678,13 @@ describe("Core — xref", () => {
       </section>
       `;
       const config = {
-        xref: ["html", "credential-management", "encoding", "dom", "webauthn"],
+        xref: [
+          "html",
+          "credential-management",
+          "encoding",
+          "dom",
+          "webauthn-3",
+        ],
         localBiblio,
       };
       const ops = makeStandardOps(config, body);
@@ -705,10 +711,10 @@ describe("Core — xref", () => {
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
       expect(link3a.href).toBe(
-        "https://www.w3.org/TR/webauthn-1/#publickeycredential"
+        "https://www.w3.org/TR/webauthn-3/#publickeycredential"
       );
       expect(link3b.href).toBe(
-        "https://www.w3.org/TR/webauthn-1/#dom-publickeycredential-type-slot"
+        "https://www.w3.org/TR/webauthn-3/#dom-publickeycredential-type-slot"
       );
       expect(link3a.firstElementChild.localName).toBe("code");
       expect(link3b.firstElementChild.localName).toBe("code");
@@ -811,9 +817,8 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const [uLongLong, unrestrictedFloat, double] = doc.querySelectorAll(
-        "#test a"
-      );
+      const [uLongLong, unrestrictedFloat, double] =
+        doc.querySelectorAll("#test a");
 
       expect(uLongLong.textContent).toBe("unsigned long long");
       expect(uLongLong.hash).toBe("#idl-unsigned-long-long");

@@ -201,8 +201,7 @@ const licenses = new Map([
     {
       name: "W3C Software Notice and License",
       short: "W3C Software",
-      url:
-        "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
+      url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
     },
   ],
   [
@@ -210,8 +209,7 @@ const licenses = new Map([
     {
       name: "W3C Software and Document Notice and License",
       short: "W3C Software and Document",
-      url:
-        "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+      url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
     },
   ],
   [
@@ -530,18 +528,6 @@ export function run(conf) {
   conf.shortISODate = ISODate.format(conf.publishDate);
   validatePatentPolicies(conf);
 
-  if (conf.hasOwnProperty("wgPatentURI") && !Array.isArray(conf.wgPatentURI)) {
-    Object.defineProperty(conf, "wgId", {
-      get() {
-        // it's always at "pp-impl" + 1
-        const urlParts = this.wgPatentURI.split("/");
-        const pos = urlParts.findIndex(item => item === "pp-impl") + 1;
-        return urlParts[pos] || "";
-      },
-    });
-  } else {
-    conf.wgId = conf.wgId ? conf.wgId : "";
-  }
   // configuration done - yay!
 
   const options = {

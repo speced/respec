@@ -4,6 +4,27 @@ import * as utils from "../../../src/core/utils.js";
 import { html } from "../../../src/core/import-maps.js";
 
 describe("Core - Utils", () => {
+  describe("makeSafeCopy", () => {
+    it("removes attributes from dfn elements when making a safe copy", () => {
+      const p = document.createElement("p");
+      p.innerHTML = `
+        <dfn
+          data-export=""
+          data-dfn-type="interface"
+          data-idl="interface"
+          data-title="RTCIceTransport"
+          data-dfn-for=""
+          tabindex="0"
+          aria-haspopup="dialog"
+          title="Show what links to this definition"><code>RTCIceTransport</code></dfn>
+      `;
+      const copy = utils.makeSafeCopy(p);
+      const span = copy.querySelector("span");
+      expect(span.textContent).toBe("RTCIceTransport");
+      expect(copy.attributes).toHaveSize(0);
+    });
+  });
+
   describe("fetchAndCache", () => {
     async function clearCaches() {
       const keys = await caches.keys();
@@ -445,6 +466,19 @@ describe("Core - Utils", () => {
         const inner = document.querySelector("div#this-is-a-div #inner-pass");
         expect(inner).toBeTruthy();
         expect(inner.textContent).toBe("pass");
+        div.remove();
+        a.remove();
+      });
+
+      it("renames elements and doesn't copy attributes when copyAttributes is false", () => {
+        const a = document.createElement("a");
+        a.setAttribute("class", "some-class");
+        a.setAttribute("title", "title");
+        a.innerHTML = "<span id='inner-pass'>pass</span>";
+        document.body.appendChild(a);
+        const div = utils.renameElement(a, "div", { copyAttributes: false });
+        expect(div instanceof HTMLDivElement).toBe(true);
+        expect(div.attributes).toHaveSize(0);
         div.remove();
         a.remove();
       });
