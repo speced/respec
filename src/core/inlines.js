@@ -258,9 +258,11 @@ export function run(conf) {
 
   // PRE-PROCESSING
   /** @type {NodeListOf<HTMLElement>} */
-  const abbrs = document.querySelectorAll("abbr[title]");
-  for (const abbr of abbrs) {
-    abbrMap.set(abbr.textContent, abbr.title);
+  const abbrElements = document.querySelectorAll("abbr[title]:not(.exclude)");
+  for (const { textContent, title } of abbrElements) {
+    const key = norm(textContent);
+    const value = norm(title);
+    abbrMap.set(key, value);
   }
   const aKeys = [...abbrMap.keys()];
   const abbrRx = aKeys.length ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)` : null;

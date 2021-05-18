@@ -99,6 +99,31 @@ describe("Core - Inlines", () => {
     expect(rfc2119[1].textContent).toBe("NOT RECOMMENDED");
   });
 
+  it("excludes generating abbr elements when .exclude class is present", async () => {
+    const body = `
+      <section>
+        <h2>
+          <abbr title="excluded" class="exclude">
+            EXCLUDE
+          </abbr>
+          <abbr title="  included  abbr  ">
+            INCLUDE
+          </abbr>
+        </h2>
+        <p id="test">
+          EXCLUDE INCLUDE
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const abbrs = doc.querySelectorAll("#test abbr");
+    expect(abbrs).toHaveSize(1);
+
+    const abbr = abbrs.item(0);
+    expect(abbr.title).toBe("included abbr");
+  });
+
   it("processes inline variable syntax", async () => {
     const body = `
       <section>
@@ -406,9 +431,8 @@ describe("Core - Inlines", () => {
     expect(mapForEach.href).toBe("https://infra.spec.whatwg.org/#map-iterate");
 
     // qualified multiline
-    const [multiListForEach, multiMapForEach] = doc.querySelectorAll(
-      "#overmatch a"
-    );
+    const [multiListForEach, multiMapForEach] =
+      doc.querySelectorAll("#overmatch a");
     expect(multiListForEach.href).toBe(
       "https://infra.spec.whatwg.org/#list-iterate"
     );

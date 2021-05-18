@@ -201,8 +201,7 @@ const licenses = new Map([
     {
       name: "W3C Software Notice and License",
       short: "W3C Software",
-      url:
-        "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
+      url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
     },
   ],
   [
@@ -210,8 +209,7 @@ const licenses = new Map([
     {
       name: "W3C Software and Document Notice and License",
       short: "W3C Software and Document",
-      url:
-        "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+      url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
     },
   ],
   [

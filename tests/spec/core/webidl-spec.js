@@ -132,11 +132,8 @@ describe("Core - WebIDL", () => {
       );
 
       // Promise&lt;undefined> returnsPromise(unsigned long long argument);
-      const [
-        promiseLink,
-        undefinedLink,
-        unsignedLongLink,
-      ] = idl.querySelectorAll("*[data-title='returnsPromise'] a");
+      const [promiseLink, undefinedLink, unsignedLongLink] =
+        idl.querySelectorAll("*[data-title='returnsPromise'] a");
       // Promise
       expect(promiseLink.textContent).toBe("Promise");
       expect(promiseLink.href.endsWith("#idl-promise")).toBe(true);

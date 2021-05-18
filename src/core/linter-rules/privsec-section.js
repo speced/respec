@@ -14,8 +14,7 @@ export const name = "core/linter-rules/privsec-section";
 
 const localizationStrings = {
   en: {
-    msg:
-      "Document must have a 'Privacy and/or Security' Considerations section.",
+    msg: "Document must have a 'Privacy and/or Security' Considerations section.",
     hint:
       "Add a privacy and/or security considerations section. " +
       "See the [Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/).",

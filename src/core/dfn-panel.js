@@ -27,7 +27,6 @@ export async function run() {
     // Make it possible to reach el by tabbing,
     // allowing keyboard action as needed.
     el.tabIndex = 0;
-    el.setAttribute("role", "link");
     el.setAttribute("aria-haspopup", "dialog");
     if (!el.title) el.title = "Show what links to this definition";
   }
