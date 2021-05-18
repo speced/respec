@@ -164,7 +164,7 @@ function validatePerson(person, index) {
   const hint =
     "See [Person](https://respec.org/docs/#person) configuration for available options.";
   if (!person.name) {
-    const msg = `Person object at index ${index} is missing required member "name"`;
+    const msg = `Person object at index ${index} is missing required member "name".`;
     showError(msg, name, { hint });
     return false;
   }
