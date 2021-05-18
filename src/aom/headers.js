@@ -39,9 +39,7 @@
 //          - href: a URL for the value (e.g., "https://foo.com/issues"). Optional.
 //          - class: a string representing CSS classes. Optional.
 //  - license: can be one of the following
-//      - "cc-by-sa"
-//      - "cc-by"
-//      - "cc0"
+//      - "aom"
 import { ISODate, showError } from "../core/utils.js";
 import headersTmpl from "./templates/headers.js";
 import { pub } from "../core/pubsubhub.js";

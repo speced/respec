@@ -20,6 +20,7 @@ const aomDefaults = {
   // treat document as "Common Markdown" (with a little bit of HTML).
   // choice between Markdown and HTML depends on the complexity of the spec
   // example of Markdown spec: https://github.com/WICG/netinfo/blob/gh-pages/index.html
+  // Helpful guide: https://respec.org/docs/#markdown
   format: "markdown",
   logos: [
     {
