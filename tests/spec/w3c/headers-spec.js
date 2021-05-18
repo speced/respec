@@ -377,8 +377,8 @@ describe("W3C — Headers", () => {
       expect(orcidAnchor.parentNode.className).toBe("orcid");
       expect(twitterAnchor.parentNode.className).toBe("twitter");
       // check that extra items with no name are ignored
-      expect(doc.querySelector("a[href='http://not-valid']")).toBe(null);
-      expect(doc.querySelector("a[href='http://empty-name']")).toBe(null);
+      expect(doc.querySelector("a[href='http://not-valid']")).toBeNull();
+      expect(doc.querySelector("a[href='http://empty-name']")).toBeNull();
     });
 
     it("treats editor's info as HTML", async () => {
@@ -835,7 +835,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.getElementById("subtitle")).toBe(null);
+      expect(doc.getElementById("subtitle")).toBeNull();
     });
 
     it("uses existing h2#subtitle as subtitle", async () => {
@@ -1494,7 +1494,7 @@ describe("W3C — Headers", () => {
       const { wgId, isNote } = doc.defaultView.respecConfig;
       expect(isNote).toBe(false);
       expect(wgId).toBe(114929);
-      expect(elem).toBe(null);
+      expect(elem).toBeNull();
     });
     it("excludes the long patent text for note types", async () => {
       const noteTypes = ["WG-NOTE", "FPWD-NOTE"];
@@ -2003,7 +2003,7 @@ describe("W3C — Headers", () => {
     const aElem = doc.querySelector(
       `a[href^="http://www.w3.org/2003/03/Translations/"]`
     );
-    expect(aElem).toBe(null);
+    expect(aElem).toBeNull();
   });
   describe("isPreview", () => {
     it("adds annoying warning when isPreview", async () => {
