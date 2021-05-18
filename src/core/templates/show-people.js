@@ -120,7 +120,9 @@ function personToHTML(person) {
       : html`<span class="${hCard}">${company}</span>`;
     contents.push(html` (${companyElem})`);
   }
-  if (person.note) contents.push(document.createTextNode(` (${person.note})`));
+  if (person.note) {
+    contents.push(document.createTextNode(` (${person.note})`));
+  }
   if (person.extras) {
     person.extras
       .map(extra => html`, ${renderExtra(extra)}`)
