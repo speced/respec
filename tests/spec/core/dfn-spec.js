@@ -99,7 +99,7 @@ describe("Core — Definitions", () => {
     const code = doc.querySelector("#t1 code");
     expect(code.textContent).toBe("Test");
     const t2 = doc.getElementById("t2");
-    expect(t2.querySelector("code")).toBe(null);
+    expect(t2.querySelector("code")).toBeNull();
     expect(t2.querySelector("a").textContent).toBe("not wrapped in code");
     expect(t2.querySelector("a").getAttribute("href")).toBe("#dom-test");
   });
