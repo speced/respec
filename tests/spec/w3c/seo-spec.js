@@ -148,7 +148,7 @@ describe("W3C - SEO", () => {
     expect(jsonld.editor).toContain({
       type: "Person",
       name: "Gregg Kellogg",
-      url: "http://URI",
+      url: "mailto:EMAIL",
       "foaf:mbox": "EMAIL",
       worksFor: {
         name: "COMPANY",
