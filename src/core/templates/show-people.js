@@ -268,7 +268,7 @@ function validateAndCanonicalizeOrcid(person, index) {
   // trailing slash would mess up checksum
   const orcidId = orcidUrl.pathname.slice(1).replace(/\/$/, "");
   if (!/^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/.test(orcidId)) {
-    const hint = `ORCIDs have the format "1234-1234-1234-1234", not "${orcidId}"`;
+    const hint = `ORCIDs have the format "1234-1234-1234-1234", not "${orcidId}."`;
     showError(msg, name, { hint });
     return false;
   }
