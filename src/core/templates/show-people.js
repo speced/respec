@@ -260,7 +260,7 @@ function validateAndCanonicalizeOrcid(person, index) {
   const msg = `"${person.orcid}" at index ${index} has an invalid ORCID`;
 
   if (orcidUrl.origin !== "https://orcid.org") {
-    const hint = `The origin should be "https://orcid.org", not "${orcidUrl.origin}"`;
+    const hint = `The origin should be "https://orcid.org", not "${orcidUrl.origin}".`;
     showError(msg, name, { hint });
     return false;
   }
