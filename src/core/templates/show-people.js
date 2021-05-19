@@ -73,7 +73,7 @@ const orcidIcon = () => html`<svg
  */
 export default function showPeople(conf, propName) {
   const people = conf[propName];
-  if (!Array.isArray(people) || !people.length) return;   // nothing to show...
+  if (!Array.isArray(people) || !people.length) return; // nothing to show...
 
   const validatePerson = personValidator(propName);
   return people.filter(validatePerson).map(personToHTML);
