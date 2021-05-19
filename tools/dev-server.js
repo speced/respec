@@ -20,7 +20,7 @@ const colors = require("colors");
 const boxen = require("boxen");
 const sade = require("sade");
 const serveConfig = require("../serve.json");
-const { Builder } = require("./builder");
+const { Builder } = require("./builder.js");
 
 const KARMA_PORT_UNIT_TESTS = 9876;
 const KARMA_PORT_INTEGRATION_TESTS = 9877;

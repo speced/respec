@@ -5,7 +5,7 @@
  */
 const path = require("path");
 const { writeFile } = require("fs").promises;
-const { Builder } = require("./builder");
+const { Builder } = require("./builder.js");
 
 const { DEPLOY_PRIME_URL, COMMIT_REF, REVIEW_ID, REPOSITORY_URL } = process.env;
 

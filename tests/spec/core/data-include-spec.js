@@ -43,7 +43,7 @@ describe("Core — Data Include", () => {
     };
     const doc = await makeRSDoc(ops, url);
     const missing = doc.getElementById("this-should-be-missing");
-    expect(missing).toBe(null);
+    expect(missing).toBeNull();
     const included = doc.getElementById("replacement-test");
     expect(included).toBeTruthy();
     const heading = doc.querySelector("#replacement-test > h3");
