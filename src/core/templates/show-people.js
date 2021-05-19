@@ -287,7 +287,7 @@ function validateAndCanonicalizeOrcid(person, index) {
   const lastDigitInt = (12 - (remainder % 11)) % 11;
   const lastDigitShould = lastDigitInt === 10 ? "X" : String(lastDigitInt);
   if (lastDigit !== lastDigitShould) {
-    const hint = `orcid "${orcidId}" has an invalid checksum`;
+    const hint = `ORCID "${orcidId}" has an invalid checksum.`;
     showError(msg, name, { hint });
     return false;
   }
