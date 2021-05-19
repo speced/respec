@@ -191,7 +191,7 @@ type Person = {
   companyURL?: string;
   note?: string;
   retiredDate?: string;
-  extras?: PersonExtras;
+  extras?: PersonExtras[];
 }
 
 type PersonExtras = {
