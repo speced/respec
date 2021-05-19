@@ -183,7 +183,7 @@ enum W3CGroupType {
 
 type Person = {
   name?: string;
-  w3cid?: string|number;
+  w3cid?: string | number;
   mailto?: string;
   url?: string;
   orcid?: string;
