@@ -22,14 +22,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - name: Ensure builds/ has not changed
         run: |
-          curl https://api.github.com/repos/w3c/respec/pulls/${{ github.event.pull_request.number }}/files -o /tmp/pr_files.json
-          cat /tmp/pr_files.json
+          curl -sL https://api.github.com/repos/w3c/respec/pulls/${{ github.event.pull_request.number }}/files -o /tmp/pr_files.json
           cat /tmp/pr_files.json | jq -r '.[].filename' | grep -qE "^builds/" || exit 0
-          echo 'Uh oh! builds/** was changed.'; exit 1
+          echo 'Uh oh! builds/ was changed.'; exit 1
       - uses: actions/setup-node@v2
         with:
           node-version: 14
