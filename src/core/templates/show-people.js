@@ -196,7 +196,7 @@ function personValidator(prop) {
     if (person.companyURL && !person.company) {
       const msg = `${preamble} Has a "\`companyURL\`" property but no "\`company\`" property.`;
       showWarning(msg, name, {
-        hint: `Please add a "\`company\`" property. ${hint}`,
+        hint: `Please add a "\`company\`" property. ${hint}.`,
       });
     }
     return true;
@@ -257,7 +257,7 @@ function validateExtras(extras, hint, preamble) {
 function validateAndCanonicalizeOrcid(person, index) {
   const { orcid } = person;
   const orcidUrl = new URL(orcid, "https://orcid.org/");
-  const msg = `"${person.orcid}" at index ${index} has an invalid ORCID`;
+  const msg = `"${person.orcid}" at index ${index} has an invalid ORCID.`;
 
   if (orcidUrl.origin !== "https://orcid.org") {
     const hint = `The origin should be "https://orcid.org", not "${orcidUrl.origin}".`;
