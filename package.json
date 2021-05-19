@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "26.7.0",
+  "version": "26.8.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -34,12 +34,12 @@
     "epipebomb": "^1.0.0",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-jasmine": "^4.1.2",
     "eslint-plugin-prettier": "^3.4.0",
     "highlight.js": "^10.7.2",
     "hyperhtml": "^2.34.0",
-    "idb": "^6.0.0",
+    "idb": "^6.1.0",
     "jasmine": "^3.7.0",
     "karma": "^6.3.2",
     "karma-chrome-launcher": "^3.1.0",
@@ -52,7 +52,7 @@
     "pluralize": "^8.0.0",
     "prettier": "^2.3.0",
     "prompt": "^1.1.0",
-    "rollup": "^2.47.0",
+    "rollup": "^2.48.0",
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^11.3.2",
@@ -61,6 +61,8 @@
     "webidl2": "^24.0.1"
   },
   "scripts": {
+    "build:aom-debug": "npm run build:aom -- --debug",
+    "build:aom": "node ./tools/builder.js aom",
     "build:geonovum-debug": "npm run build:geonovum -- --debug",
     "build:geonovum": "node ./tools/builder.js geonovum",
     "build:w3c-debug": "npm run build:w3c -- --debug",

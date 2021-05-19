@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // @ts-check
-const { Builder } = require("./builder");
+const { Builder } = require("./builder.js");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
 const { exec } = require("child_process");
@@ -361,7 +361,7 @@ const run = async () => {
 
     // 3. Run the build script (node tools/builder.js).
     await npm("run builddeps");
-    for (const name of ["w3c", "geonovum", "dini"]) {
+    for (const name of ["w3c", "geonovum", "dini", "aom"]) {
       await Builder.build({ name });
     }
     console.log(colors.green(" Making sure the generated version is ok... 🕵🏻"));
