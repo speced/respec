@@ -514,7 +514,7 @@ export function run(conf) {
       "Add an [`errata`](https://respec.org/docs/#errata) URL to your respecConfig.";
     showError(msg, name, { hint });
   }
-  conf.prependW3C = !conf.isUnofficial;
+  conf.prependW3C = !conf.isBasic && !conf.isUnofficial;
   conf.isED = conf.specStatus === "ED";
   conf.isCR = conf.specStatus === "CR" || conf.specStatus === "CRD";
   conf.isCRDraft = conf.specStatus === "CRD";
