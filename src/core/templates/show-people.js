@@ -72,9 +72,8 @@ const orcidIcon = () => html`<svg
  * @param {string} propName - the name of the property of the people to render.
  */
 export default function showPeople(conf, propName) {
-  // nothing to show...
   const people = conf[propName];
-  if (!Array.isArray(people) || !people.length) return;
+  if (!Array.isArray(people) || !people.length) return;   // nothing to show...
 
   const validatePerson = personValidator(propName);
   return people.filter(validatePerson).map(personToHTML);
