@@ -6,7 +6,7 @@ const finalhandler = require("finalhandler");
 const sade = require("sade");
 const colors = require("colors");
 const marked = require("marked");
-const { toHTML, write } = require("./respecDocWriter");
+const { toHTML, write } = require("./respecDocWriter.js");
 
 class Renderer extends marked.Renderer {
   strong(text) {
