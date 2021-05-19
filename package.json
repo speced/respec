@@ -58,7 +58,7 @@
     "serve": "^11.3.2",
     "typescript": "^4.2.4",
     "vnu-jar": "^21.4.9",
-    "webidl2": "^24.0.1"
+    "webidl2": "^24.1.1"
   },
   "scripts": {
     "build:aom-debug": "npm run build:aom -- --debug",
