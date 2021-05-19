@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "26.7.0",
+  "version": "26.8.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -61,6 +61,8 @@
     "webidl2": "^24.0.1"
   },
   "scripts": {
+    "build:aom-debug": "npm run build:aom -- --debug",
+    "build:aom": "node ./tools/builder.js aom",
     "build:geonovum-debug": "npm run build:geonovum -- --debug",
     "build:geonovum": "node ./tools/builder.js geonovum",
     "build:w3c-debug": "npm run build:w3c -- --debug",
