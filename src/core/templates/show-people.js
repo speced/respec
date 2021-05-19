@@ -1,26 +1,13 @@
 // @ts-check
-/**
- * @typedef {object} Person
- * @property {string} [Person.name]
- * @property {string|number} [Person.w3cid]
- * @property {string} [Person.mailto]
- * @property {string} [Person.url]
- * @property {string} [Person.orcid]
- * @property {string} [Person.company]
- * @property {string} [Person.companyURL]
- * @property {string} [Person.note]
- * @property {string} [Person.retiredDate]
- * @property {PersonExtras} [Person.extras]
- *
- * @typedef {object} PersonExtras
- * @property {string} PersonExtras.name
- * @property {string} [PersonExtras.class]
- * @property {string} [PersonExtras.href]
- */
 
 const name = "core/templates/show-people";
 
-import { humanDate, showError, showWarning } from "../../core/utils.js";
+import {
+  humanDate,
+  isValidConfDate,
+  showError,
+  showWarning,
+} from "../../core/utils.js";
 import { lang as defaultLang } from "../../core/l10n.js";
 import { html } from "../../core/import-maps.js";
 
@@ -81,29 +68,37 @@ const orcidIcon = () => html`<svg
 </svg>`;
 
 /**
- * @param {Person[]} persons
+ * @param {Conf} conf
+ * @param {string} propName - the name of the property of the people to render.
  */
-export default function showPeople(persons = []) {
-  return persons.filter(validatePerson).map(personToHTML);
+export default function showPeople(conf, propName) {
+  // nothing to show...
+  const people = conf[propName];
+  if (!Array.isArray(people) || !people.length) return;
+
+  const validatePerson = personValidator(propName);
+  return people.filter(validatePerson).map(personToHTML);
 }
 
 function personToHTML(person) {
   const l10n = localizationStrings[lang];
-  const personName = [person.name]; // treated as opt-in HTML by hyperHTML
+  // The following are treated as opt-in HTML by hyperHTML
+  // we need to deprecate this!
+  const personName = [person.name];
   const company = [person.company];
-  const editorId = person.w3cid ? parseInt(person.w3cid, 10) : null;
+  const editorId = person.w3cid ? person.w3cid : null;
   const contents = [];
   if (person.mailto) {
-    contents.push(html`<a
-      class="ed_mailto u-email email p-name"
-      href="${`mailto:${person.mailto}`}"
-      >${personName}</a
-    >`);
-  } else if (person.url) {
+    person.url = `mailto:${person.mailto}`;
+  }
+  if (person.url) {
+    const url = new URL(person.url, document.location.href);
+    const classList =
+      url.protocol === "mailto:"
+        ? "ed_mailto u-email email p-name"
+        : "u-url url p-name fn";
     contents.push(
-      html`<a class="u-url url p-name fn" href="${person.url}"
-        >${personName}</a
-      >`
+      html`<a class="${classList}" href="${person.url}">${personName}</a>`
     );
   } else {
     contents.push(html`<span class="p-name fn">${personName}</span>`);
@@ -124,9 +119,7 @@ function personToHTML(person) {
     contents.push(document.createTextNode(` (${person.note})`));
   }
   if (person.extras) {
-    contents.push(
-      ...person.extras.map(extra => html`, ${renderExtra(extra)}`)
-    );
+    contents.push(...person.extras.map(extra => html`, ${renderExtra(extra)}`));
   }
   if (person.retiredDate) {
     const { retiredDate } = person;
@@ -153,75 +146,100 @@ function renderExtra(extra) {
 }
 
 /**
- * @param {Person} person
- * @param {Number} index
- * @returns
+ *
+ * @param {string} prop
  */
-function validatePerson(person, index) {
-  const hint =
-    "See [Person](https://respec.org/docs/#person) configuration for available options.";
-  if (!person.name) {
-    const msg = `Person object at index ${index} is missing required member "name".`;
-    showError(msg, name, { hint });
-    return false;
-  }
+function personValidator(prop) {
+  /**
+   * @param {Person} person
+   * @param {Number} index
+   * @returns
+   */
+  return function validatePerson(person, index) {
+    const docsUrl = "https://respec.org/docs/";
+    const hint = `See [person](${docsUrl}#person) configuration for available options.`;
 
-  if (person.orcid && !validateAndCanonicalizeOrcid(person, index)) {
-    return false;
-  }
+    const preamble =
+      `Error processing the [person object](${docsUrl}#person) ` +
+      `at index ${index} of the "[\`${prop}\`](${docsUrl}#${prop})" configuration option.`;
+    if (!person.name) {
+      const msg = `${preamble} Missing required property \`"name"\`.`;
+      showError(msg, name, { hint });
+      return false;
+    }
 
-  if (
-    person.retiredDate &&
-    !validateDateMember("retiredDate", person.retiredDate, index, hint)
-  ) {
-    return false;
-  }
+    if (person.orcid && !validateAndCanonicalizeOrcid(person, index)) {
+      return false;
+    }
 
-  if (person.hasOwnProperty("extras") && !validateExtras(person.extras, hint)) {
-    return false;
-  }
+    if (person.retiredDate && !isValidConfDate(person.retiredDate)) {
+      const msg = `${preamble} The property "\`retiredDate\`" is not a valid date.`;
+      showError(msg, name, {
+        hint: `The expected format is YYYY-MM-DD. ${hint}`,
+      });
+      return false;
+    }
 
-  if (person.url && person.mailto) {
-    const msg = `Person object at index ${index} has both "url" and "mailto" property.`;
-    showWarning(msg, name, {
-      hint: `Please chose either "url" or "mailto" ("url" is preferred). ${hint}`,
-    });
-  }
+    if (
+      person.hasOwnProperty("extras") &&
+      !validateExtras(person.extras, hint, preamble)
+    ) {
+      return false;
+    }
 
-  if (person.companyURL && !person.company) {
-    const msg = `Person object at index ${index} has a "companyURL" member but no "company" member.`;
-    showWarning(msg, name, { hint: `Please add a "company" member. ${hint}` });
-  }
-  return true;
+    if (person.url && person.mailto) {
+      const msg = `${preamble} Has both "url" and "mailto" property.`;
+      showWarning(msg, name, {
+        hint: `Please choose either "url" or "mailto" ("url" is preferred). ${hint}`,
+      });
+    }
+
+    if (person.companyURL && !person.company) {
+      const msg = `${preamble} Has a "\`companyURL\`" property but no "\`company\`" property.`;
+      showWarning(msg, name, {
+        hint: `Please add a "\`company\`" property. ${hint}`,
+      });
+    }
+    return true;
+  };
 }
 
 /**
  *
  * @param {PersonExtras} extras
  * @param {string} hint
+ * @param {string} preamble
  */
-function validateExtras(extras, hint) {
+function validateExtras(extras, hint, preamble) {
   if (!Array.isArray(extras)) {
-    showError(`A person's "extras" member must be an array.`, name, { hint });
+    showError(
+      `${preamble}. A person's "extras" member must be an array.`,
+      name,
+      { hint }
+    );
     return false;
   }
   return extras.every((extra, index) => {
     switch (true) {
       case typeof extra !== "object":
-        showError(`"extra" index ${index} is not an object.`, name, {
-          hint,
-        });
+        showError(
+          `${preamble}. Member "extra" at index ${index} is not an object.`,
+          name,
+          {
+            hint,
+          }
+        );
         return false;
       case !extra.hasOwnProperty("name"):
         showError(
-          `\`PersonExtra\` object at index ${index} is missing required "name" member.`,
+          `${preamble} \`PersonExtra\` object at index ${index} is missing required "name" member.`,
           name,
           { hint }
         );
         return false;
       case typeof extra.name === "string" && extra.name.trim() === "":
         showError(
-          `\`PersonExtra\` object at index ${index} "name" can't be empty.`,
+          `${preamble} \`PersonExtra\` object at index ${index} "name" can't be empty.`,
           name,
           { hint }
         );
@@ -229,26 +247,6 @@ function validateExtras(extras, hint) {
     }
     return true;
   });
-}
-
-/**
- * @param {string} member
- * @param {string} rawDate
- * @param {number} index
- * @param {string} hint
- * @returns
- */
-function validateDateMember(member, rawDate, index, hint) {
-  const date = new Date(rawDate);
-  const isValidDate = date.toString() !== "Invalid Date";
-  if (!isValidDate) {
-    const msg = `"${member}" of person at index ${index} is invalid.`;
-    showError(msg, name, {
-      hint: `The expected format is YYYY-MM-DD. ${hint}`,
-    });
-    return false;
-  }
-  return true;
 }
 
 /**

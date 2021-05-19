@@ -180,3 +180,22 @@ enum W3CGroupType {
   "ig",
   "wg",
 }
+
+type Person = {
+  name?: string;
+  w3cid?: string|number;
+  mailto?: string;
+  url?: string;
+  orcid?: string;
+  company?: string;
+  companyURL?: string;
+  note?: string;
+  retiredDate?: string;
+  extras?: PersonExtras;
+}
+
+type PersonExtras = {
+  name: string;
+  class?: string;
+  href?: string;
+}

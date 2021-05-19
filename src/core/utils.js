@@ -222,6 +222,19 @@ export function isoDate(date) {
   return (date instanceof Date ? date : new Date(date)).toISOString();
 }
 
+/**
+ * Checks if a date is in expected format used by ReSpec (yyyy-mm-dd)
+ *
+ * @param {string} rawDate
+ * @returns
+ */
+export function isValidConfDate(rawDate) {
+  const date = /\d{4}-\d{2}-\d{2}/.test(rawDate)
+    ? new Date(rawDate)
+    : "Invalid Date";
+  return date.toString() !== "Invalid Date";
+}
+
 // Given an object, it converts it to a key value pair separated by
 // ("=", configurable) and a delimiter (" ," configurable).
 // for example, {"foo": "bar", "baz": 1} becomes "foo=bar, baz=1"
