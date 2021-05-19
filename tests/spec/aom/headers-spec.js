@@ -9,12 +9,7 @@ import {
 
 describe("AOM — Headers", () => {
   afterEach(flushIframes);
-  /**
-   * @param {Node} node
-   */
-  function collapsedTextContent({ textContent }) {
-    return textContent.replace(/\s+/g, " ");
-  }
+
   describe("specStatus", () => {
     it("takes specStatus into account", async () => {
       const ops = makeStandardAomOps({
