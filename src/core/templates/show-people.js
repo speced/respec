@@ -156,32 +156,59 @@ function personValidator(prop) {
    */
   return function validatePerson(person, index) {
     const docsUrl = "https://respec.org/docs/";
-    const hint = `See [person](${docsUrl}#person) configuration for available options.`;
-
+    const seePersonHint = `See [person](${docsUrl}#person) configuration for available options.`;
     const preamble =
       `Error processing the [person object](${docsUrl}#person) ` +
       `at index ${index} of the "[\`${prop}\`](${docsUrl}#${prop})" configuration option.`;
+
     if (!person.name) {
       const msg = `${preamble} Missing required property \`"name"\`.`;
-      showError(msg, name, { hint });
+      showError(msg, name, { hint: seePersonHint });
       return false;
     }
 
-    if (person.orcid && !validateAndCanonicalizeOrcid(person, index)) {
-      return false;
+    if (person.orcid) {
+      const { orcid } = person;
+      const orcidUrl = new URL(orcid, "https://orcid.org/");
+
+      if (orcidUrl.origin !== "https://orcid.org") {
+        const msg = `${preamble} "${person.orcid}" at index ${index} has an invalid ORCID.`;
+        const hint = `The origin should be "https://orcid.org", not "${orcidUrl.origin}".`;
+        showError(msg, name, { hint });
+        return false;
+      }
+
+      // trailing slash would mess up checksum
+      const orcidId = orcidUrl.pathname.slice(1).replace(/\/$/, "");
+      if (!/^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/.test(orcidId)) {
+        const msg = `${preamble} ORCID "${orcidId}" has wrong format.`;
+        const hint = `ORCIDs have the format "1234-1234-1234-1234."`;
+        showError(msg, name, { hint });
+        return false;
+      }
+
+      if (!checkOrcidChecksum(orcid)) {
+        const msg = `${preamble} ORCID "${orcid}" failed checksum check.`;
+        const hint = "Please check that the ORCID is valid.";
+        showError(msg, name, { hint });
+        return false;
+      }
+
+      // canonical form
+      person.orcid = orcidUrl.href;
     }
 
     if (person.retiredDate && !isValidConfDate(person.retiredDate)) {
       const msg = `${preamble} The property "\`retiredDate\`" is not a valid date.`;
       showError(msg, name, {
-        hint: `The expected format is YYYY-MM-DD. ${hint}`,
+        hint: `The expected format is YYYY-MM-DD. ${seePersonHint}`,
       });
       return false;
     }
 
     if (
       person.hasOwnProperty("extras") &&
-      !validateExtras(person.extras, hint, preamble)
+      !validateExtras(person.extras, seePersonHint, preamble)
     ) {
       return false;
     }
@@ -189,14 +216,14 @@ function personValidator(prop) {
     if (person.url && person.mailto) {
       const msg = `${preamble} Has both "url" and "mailto" property.`;
       showWarning(msg, name, {
-        hint: `Please choose either "url" or "mailto" ("url" is preferred). ${hint}`,
+        hint: `Please choose either "url" or "mailto" ("url" is preferred). ${seePersonHint}`,
       });
     }
 
     if (person.companyURL && !person.company) {
       const msg = `${preamble} Has a "\`companyURL\`" property but no "\`company\`" property.`;
       showWarning(msg, name, {
-        hint: `Please add a "\`company\`" property. ${hint}.`,
+        hint: `Please add a "\`company\`" property. ${seePersonHint}.`,
       });
     }
     return true;
@@ -249,33 +276,13 @@ function validateExtras(extras, hint, preamble) {
 }
 
 /**
- *
- * @param {Person} person
- * @param {number} index
+ * @param {string} orcid
  * @returns {boolean}
  */
-function validateAndCanonicalizeOrcid(person, index) {
-  const { orcid } = person;
-  const orcidUrl = new URL(orcid, "https://orcid.org/");
-  const msg = `"${person.orcid}" at index ${index} has an invalid ORCID.`;
-
-  if (orcidUrl.origin !== "https://orcid.org") {
-    const hint = `The origin should be "https://orcid.org", not "${orcidUrl.origin}".`;
-    showError(msg, name, { hint });
-    return false;
-  }
-
-  // trailing slash would mess up checksum
-  const orcidId = orcidUrl.pathname.slice(1).replace(/\/$/, "");
-  if (!/^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/.test(orcidId)) {
-    const hint = `ORCIDs have the format "1234-1234-1234-1234", not "${orcidId}."`;
-    showError(msg, name, { hint });
-    return false;
-  }
-
+function checkOrcidChecksum(orcid) {
   // calculate checksum as per https://support.orcid.org/hc/en-us/articles/360006897674-Structure-of-the-ORCID-Identifier
-  const lastDigit = orcidId[orcidId.length - 1];
-  const remainder = orcidId
+  const lastDigit = orcid[orcid.length - 1];
+  const remainder = orcid
     .split("")
     .slice(0, -1)
     .filter(c => /\d/.test(c))
@@ -283,11 +290,5 @@ function validateAndCanonicalizeOrcid(person, index) {
     .reduce((acc, c) => (acc + c) * 2, 0);
   const lastDigitInt = (12 - (remainder % 11)) % 11;
   const lastDigitShould = lastDigitInt === 10 ? "X" : String(lastDigitInt);
-  if (lastDigit !== lastDigitShould) {
-    const hint = `ORCID "${orcidId}" has an invalid checksum.`;
-    showError(msg, name, { hint });
-    return false;
-  }
-  person.orcid = orcidUrl.href;
-  return true;
+  return lastDigit === lastDigitShould;
 }
