@@ -1,5 +1,69 @@
 # Changelog
 
+## [v26.8.0](https://github.com/w3c/respec/tree/v26.8.0) (2021-05-19)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.7.0...v26.8.0)
+
+**Closed issues:**
+
+- Tests `toBe(null)`, should use `toBeNull()` [\#3538](https://github.com/w3c/respec/issues/3538)
+
+**Merged pull requests:**
+
+- feat\(aom\): define AOM profile [\#3543](https://github.com/w3c/respec/pull/3543) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps\): update dependencies [\#3540](https://github.com/w3c/respec/pull/3540) ([sidvishnoi](https://github.com/sidvishnoi))
+- Changed toBe\(null\) to toBeNull\(\) [\#3539](https://github.com/w3c/respec/pull/3539) ([himanshu007-creator](https://github.com/himanshu007-creator))
+
+## [v26.7.0](https://github.com/w3c/respec/tree/v26.7.0) (2021-05-13)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.6...v26.7.0)
+
+**Fixed bugs:**
+
+- dfn.role=link containing a link [\#3482](https://github.com/w3c/respec/issues/3482)
+
+**Closed issues:**
+
+- How to turn off the abbreviations feature? [\#3514](https://github.com/w3c/respec/issues/3514)
+
+**Merged pull requests:**
+
+- fix\(core/dfn-panel\): stop assignig role=link to dfn [\#3529](https://github.com/w3c/respec/pull/3529) ([marcoscaceres](https://github.com/marcoscaceres))
+- test\(core/xref-spec\): point to webauthn-3 now [\#3528](https://github.com/w3c/respec/pull/3528) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(tools/dev-server\): point to examples [\#3526](https://github.com/w3c/respec/pull/3526) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/inlines\): allow excluding abbr from inlines [\#3515](https://github.com/w3c/respec/pull/3515) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps\): bump hosted-git-info from 2.8.8 to 2.8.9 [\#3513](https://github.com/w3c/respec/pull/3513) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(package\): update deps [\#3512](https://github.com/w3c/respec/pull/3512) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.6.6](https://github.com/w3c/respec/tree/v26.6.6) (2021-05-07)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.5...v26.6.6)
+
+**Fixed bugs:**
+
+- Automatic link to sub-sections duplicate definition markup [\#3486](https://github.com/w3c/respec/issues/3486)
+
+**Merged pull requests:**
+
+- test\(core/xref-spec\): use specific webauthn version [\#3511](https://github.com/w3c/respec/pull/3511) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(lint/wpt-tests-exist\): make separate warnings [\#3509](https://github.com/w3c/respec/pull/3509) ([marcoscaceres](https://github.com/marcoscaceres))
+- tests\(w3c/group-spec\): ipr disclousures have new URLs [\#3508](https://github.com/w3c/respec/pull/3508) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/anchor-expander\): don't copy attributes when expanding [\#3507](https://github.com/w3c/respec/pull/3507) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps-dev\): bump rollup from 2.45.2 to 2.47.0 [\#3506](https://github.com/w3c/respec/pull/3506) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v26.6.5](https://github.com/w3c/respec/tree/v26.6.5) (2021-05-04)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.4...v26.6.5)
+
+**Fixed bugs:**
+
+- Underlined space after ORCID icon [\#3501](https://github.com/w3c/respec/issues/3501)
+
+**Merged pull requests:**
+
+- fix\(templates/show-people\): remove extraneous WS from ORCID link [\#3502](https://github.com/w3c/respec/pull/3502) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3499](https://github.com/w3c/respec/pull/3499) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v26.6.4](https://github.com/w3c/respec/tree/v26.6.4) (2021-04-30)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.6.3...v26.6.4)
