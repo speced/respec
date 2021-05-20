@@ -157,7 +157,7 @@ const status2text = {
   REC: "Recommendation",
   RSCND: "Rescinded Recommendation",
   unofficial: "Unofficial Draft",
-  base: "Document",
+  base: "",
   finding: "TAG Finding",
   "draft-finding": "Draft TAG Finding",
   "CG-DRAFT": "Draft Community Group Report",
