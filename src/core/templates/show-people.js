@@ -172,7 +172,7 @@ function personValidator(prop) {
       const orcidUrl = new URL(orcid, "https://orcid.org/");
 
       if (orcidUrl.origin !== "https://orcid.org") {
-        const msg = `${preamble} ORCID "${person.orcid}" at index ${index} invalid.`;
+        const msg = `${preamble} ORCID "${person.orcid}" at index ${index} is invalid.`;
         const hint = `The origin should be "https://orcid.org", not "${orcidUrl.origin}".`;
         showError(msg, name, { hint });
         return false;
