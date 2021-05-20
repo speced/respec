@@ -67,6 +67,16 @@ describe("W3C — Headers", () => {
         "has received the endorsement of the W3C and its Members. W3C recommends the wide deployment of this specification as a standard for the Web."
       );
     });
+
+    describe("specStatus - base", () => {
+      it("doesn't add 'w3c' to header when status is base", async () => {
+        const ops = makeStandardOps({
+          specStatus: "base",
+        });
+        const doc = await makeRSDoc(ops);
+        expect(doc.querySelector(".head h2").textContent).not.toContain("W3C");
+      });
+    });
   });
 
   describe("shortName", () => {
