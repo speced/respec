@@ -265,6 +265,14 @@ describe("Core - Utils", () => {
     });
   });
 
+  describe("isValidConfDate", () => {
+    it("checks the validity of a date", () => {
+      expect(utils.isValidConfDate("2000-01-01")).toBeTrue();
+      expect(utils.isValidConfDate("01-01-01")).toBeFalse();
+      expect(utils.isValidConfDate("March 1, 2020")).toBeFalse();
+    });
+  });
+
   describe("joinAnd", () => {
     it("joins with proper commas and 'and'", () => {
       expect(utils.joinAnd([])).toBe("");
