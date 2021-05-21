@@ -140,7 +140,7 @@ export default (conf, options) => {
         : ""}
     </h2>
     <dl>
-      ${!conf.isNoTrack
+      ${conf.isTagFinding || !conf.isNoTrack
         ? html`
             <dt>${l10n.this_version}</dt>
             <dd>
