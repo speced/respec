@@ -69,7 +69,7 @@ const orcidIcon = () => html`<svg
 
 /**
  * @param {Conf} conf
- * @param {string} propName - the name of the property of the people to render.
+ * @param {"editors" | "authors" | "formerEditors"} propName - the name of the property of the people to render.
  */
 export default function showPeople(conf, propName) {
   const people = conf[propName];
