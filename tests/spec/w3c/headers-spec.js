@@ -70,7 +70,7 @@ describe("W3C — Headers", () => {
 
     it("includes version links for 'draft-finding'", async () => {
       const ops = makeStandardOps({
-        showname: "test",
+        shortName: "test",
         specStatus: "draft-finding",
       });
       const doc = await makeRSDoc(ops);
