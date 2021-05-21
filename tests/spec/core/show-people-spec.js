@@ -72,7 +72,7 @@ describe("Core - Templates - Show People", () => {
       expect(a.textContent).toBe(person.name);
     });
 
-    it("generates prefers email over their URL", () => {
+    it("prefers email over their URL", () => {
       const render = html.bind(document.createDocumentFragment());
       const person = {
         name: "name",

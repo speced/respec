@@ -79,13 +79,16 @@ export default function showPeople(conf, propName) {
   return people.filter(validatePerson).map(personToHTML);
 }
 
+/**
+ * @param {Person} person
+ */
 function personToHTML(person) {
   const l10n = localizationStrings[lang];
   // The following are treated as opt-in HTML by hyperHTML
   // we need to deprecate this!
   const personName = [person.name];
   const company = [person.company];
-  const editorId = person.w3cid ? person.w3cid : null;
+  const editorId = person.w3cid || null;
   const contents = [];
   if (person.mailto) {
     person.url = `mailto:${person.mailto}`;
@@ -152,7 +155,6 @@ function personValidator(prop) {
   /**
    * @param {Person} person
    * @param {Number} index
-   * @returns
    */
   return function validatePerson(person, index) {
     const docsUrl = "https://respec.org/docs/";

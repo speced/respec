@@ -226,7 +226,6 @@ export function isoDate(date) {
  * Checks if a date is in expected format used by ReSpec (yyyy-mm-dd)
  *
  * @param {string} rawDate
- * @returns
  */
 export function isValidConfDate(rawDate) {
   const date = /\d{4}-\d{2}-\d{2}/.test(rawDate)
