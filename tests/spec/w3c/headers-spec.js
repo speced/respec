@@ -68,6 +68,26 @@ describe("W3C — Headers", () => {
       );
     });
 
+    it("includes version links for 'draft-finding'", async () => {
+      const ops = makeStandardOps({
+        showname: "test",
+        specStatus: "draft-finding",
+      });
+      const doc = await makeRSDoc(ops);
+      const definitions = doc.querySelectorAll(".head dt");
+      const [firstDt, secondDt, thirdDt] = definitions;
+
+      expect(firstDt.textContent).toContain("This version:");
+      const firstA = firstDt.nextElementSibling.querySelector("a");
+      expect(firstA.href).toContain("/2001/tag/");
+
+      expect(secondDt.textContent).toContain("Latest published version:");
+      const secondA = secondDt.nextElementSibling.querySelector("a");
+      expect(secondA.href).toContain("/2001/tag/");
+
+      expect(thirdDt.textContent).toContain("Latest editor's draft:");
+    });
+
     describe("specStatus - base", () => {
       it("doesn't add 'w3c' to header when status is base", async () => {
         const ops = makeStandardOps({
