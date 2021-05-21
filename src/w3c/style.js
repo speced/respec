@@ -148,7 +148,7 @@ export function run(conf) {
       styleFile += "UD";
       break;
     case "FINDING":
-    case "FINDING-DRAFT":
+    case "DRAFT-FINDING":
     case "BASE":
       styleFile = "base.css";
       break;
