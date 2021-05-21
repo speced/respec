@@ -106,10 +106,13 @@ interface BiblioData {
   etAl?: boolean;
 }
 interface Conf {
-  informativeReferences: Set<string>;
-  normativeReferences: Set<string>;
-  localBiblio?: Record<string, BiblioData>;
+  authors?: Person[];
   biblio: Record<string, BiblioData>;
+  editors?: Person[];
+  formerEditors?: Person[];
+  informativeReferences: Set<string>;
+  localBiblio?: Record<string, BiblioData>;
+  normativeReferences: Set<string>;
   shortName: string;
 }
 
