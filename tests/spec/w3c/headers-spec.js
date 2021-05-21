@@ -79,7 +79,7 @@ describe("W3C — Headers", () => {
 
       expect(firstDt.textContent).toContain("This version:");
       const firstA = firstDt.nextElementSibling.querySelector("a");
-      expect(firstA.href).toContain("/2001/tag/");
+      expect(firstA.href).toContain("/2001/tag/doc/test-");
 
       expect(secondDt.textContent).toContain("Latest published version:");
       const secondA = secondDt.nextElementSibling.querySelector("a");
