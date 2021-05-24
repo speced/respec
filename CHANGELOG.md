@@ -1,5 +1,37 @@
 # Changelog
 
+## [v26.8.2](https://github.com/w3c/respec/tree/v26.8.2) (2021-05-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.1...v26.8.2)
+
+**Fixed bugs:**
+
+- It's currently not possible for a Draft Finding to link to its most recently published Finding [\#3541](https://github.com/w3c/respec/issues/3541)
+- Missing 'p-org' hcard classes [\#3530](https://github.com/w3c/respec/issues/3530)
+
+**Merged pull requests:**
+
+- fix\(w3c/style\): misspelled finding-draft [\#3551](https://github.com/w3c/respec/pull/3551) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(w3c/templates/headers\): show versions links for TAG docs [\#3550](https://github.com/w3c/respec/pull/3550) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/show-people\): more robust error checking [\#3531](https://github.com/w3c/respec/pull/3531) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.8.1](https://github.com/w3c/respec/tree/v26.8.1) (2021-05-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.0...v26.8.1)
+
+**Fixed bugs:**
+
+- How to remove "W3C Document" [\#3542](https://github.com/w3c/respec/issues/3542)
+
+**Merged pull requests:**
+
+- fix\(core/ui\): display plugin name after error msg [\#3548](https://github.com/w3c/respec/pull/3548) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps-dev\): bump webidl2 from 24.0.1 to 24.1.1 [\#3547](https://github.com/w3c/respec/pull/3547) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(ci/pr\): ensure changes to builds/ aren't committed [\#3546](https://github.com/w3c/respec/pull/3546) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/headers\): don't add W3C to h2 for 'base' documents [\#3545](https://github.com/w3c/respec/pull/3545) ([marcoscaceres](https://github.com/marcoscaceres))
+- docs\(examples\): update basic.html and basic.built.html [\#3527](https://github.com/w3c/respec/pull/3527) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): regenerate [\#3505](https://github.com/w3c/respec/pull/3505) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v26.8.0](https://github.com/w3c/respec/tree/v26.8.0) (2021-05-19)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.7.0...v26.8.0)
