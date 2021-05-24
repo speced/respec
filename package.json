@@ -85,7 +85,7 @@
     "colors": "^1.4.0",
     "finalhandler": "^1.1.2",
     "jasmine-core": "^3.7.1",
-    "marked": "^2.0.3",
+    "marked": "^2.0.5",
     "puppeteer": "^9.1.1",
     "sade": "^1.7.4",
     "serve-static": "^1.14.1"
