@@ -12,7 +12,6 @@ import {
   getTextNodes,
   norm,
   refTypeFromContext,
-  showError,
   showWarning,
 } from "./utils.js";
 import { html } from "./import-maps.js";
