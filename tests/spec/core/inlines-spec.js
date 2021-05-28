@@ -236,6 +236,10 @@ describe("Core - Inlines", () => {
   });
 
   it("allows [[[#...]]] to be a general expander for ids in document", async () => {
+    /** @param {string} text */
+    function generateDataIncludeUrl(text) {
+      return `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`;
+    }
     const body = `
       <section id="section">
         <h2>section heading</h2>
@@ -245,18 +249,22 @@ describe("Core - Inlines", () => {
         <aside class="example" id="example-aside_thing" title="aside"></aside>
         <pre class="example" id="example-pre" title="pre">
         </pre>
+        <section data-include="${generateDataIncludeUrl(
+          `## Example Dynamic\nA dynamically generated heading`
+        )}" data-include-format="markdown"></section>
       </section>
       <p id="output">
         [[[#section]]]
         [[[#figure]]]
         [[[#example-aside_thing]]]
         [[[#example-pre]]]
+        [[[#example-dynamic]]]
         [[[#does-not-exist]]]
       </p>`;
     const doc = await makeRSDoc(makeStandardOps(null, body));
     const anchors = doc.querySelectorAll("#output a");
-    expect(anchors).toHaveSize(4);
-    const [section, figure, exampleAside, examplePre] = anchors;
+    expect(anchors).toHaveSize(6);
+    const [section, figure, exampleAside, examplePre, exampleDynamic] = anchors;
     expect(section.textContent).toBe("§\u00A01. section heading");
     expect(section.classList).toContain("sec-ref");
     expect(figure.textContent).toBe("Figure 1");
@@ -265,8 +273,11 @@ describe("Core - Inlines", () => {
     expect(exampleAside.classList).toContain("box-ref");
     expect(examplePre.textContent).toBe("Example 2");
     expect(examplePre.classList).toContain("box-ref");
-    const badOne = doc.querySelector("#output span.respec-offending-element");
-    expect(badOne.textContent).toBe("[[[#does-not-exist]]]");
+    expect(exampleDynamic.textContent).toContain("Example Dynamic");
+    expect(exampleDynamic.classList).toContain("sec-ref");
+
+    const badOne = doc.querySelector("#output a.respec-offending-element");
+    expect(badOne.textContent).toBe("#does-not-exist");
   });
 
   it("proceseses backticks inside [= =] inline links", async () => {
