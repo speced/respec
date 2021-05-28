@@ -8,10 +8,10 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
 const dashes = /-/g;
+
 /**
  * Hashes a string from char code. Can return a negative number.
  * Based on https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
- *
  * @param {String} text
  */
 function hashString(text) {
@@ -41,7 +41,7 @@ export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   day: "2-digit",
 });
 
-// CSS selector for matching elements that are non-normative
+/** CSS selector for matching elements that are non-normative */
 export const nonNormativeSelector =
   ".informative, .note, .issue, .example, .ednote, .practice, .introductory";
 
@@ -78,6 +78,9 @@ export function createResourceHint(opts) {
 }
 
 // RESPEC STUFF
+/**
+ * @param {Document} doc
+ */
 export function removeReSpec(doc) {
   doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
     elem.remove();
@@ -101,11 +104,20 @@ function markAsOffending(elem, msg, title) {
 }
 
 // STRING HELPERS
-// Takes an array and returns a string that separates each of its items with the proper commas and
-// "and". The second argument is a mapping function that can convert the items before they are
-// joined
-export function joinAnd(array = [], mapper = item => item, lang = docLang) {
-  const items = array.map(mapper);
+
+/**
+ * Takes an array and returns a string that separates each of its items with the
+ * proper commas and "and". The second argument is a mapping function that can
+ * convert the items before they are joined.
+ * @template T
+ * @param {T[]} array
+ * @param {(item: T) => string} [mapper]
+ * @param {string} [lang]
+ */
+export function joinAnd(array, mapper, lang = docLang) {
+  const items = mapper
+    ? array.map(mapper)
+    : /** @type {string[]} */ (/** @type {unknown[]} */ (array));
   if (Intl.ListFormat && typeof Intl.ListFormat === "function") {
     const formatter = new Intl.ListFormat(lang, {
       style: "long",
@@ -129,11 +141,12 @@ export function joinAnd(array = [], mapper = item => item, lang = docLang) {
   }
 }
 
-// Takes a string, applies some XML escapes, and returns the escaped string.
-// Note that overall using either Handlebars' escaped output or jQuery is much
-// preferred to operating on strings directly.
-export function xmlEscape(s) {
-  return s
+/**
+ * Takes a string, applies some XML escapes, and returns the escaped string.
+ * @param {string} str
+ */
+export function xmlEscape(str) {
+  return str
     .replace(/&/g, "&amp;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
@@ -141,7 +154,8 @@ export function xmlEscape(s) {
 }
 
 /**
- * Trims string at both ends and replaces all other white space with a single space
+ * Trims string at both ends and replaces all other white space with a single
+ * space.
  * @param {string} str
  */
 export function norm(str) {
@@ -182,19 +196,29 @@ export function getIntlData(localizationStrings, lang = docLang) {
 }
 
 // --- DATE HELPERS -------------------------------------------------------------------------------
-// Takes a Date object and an optional separator and returns the year,month,day representation with
-// the custom separator (defaulting to none) and proper 0-padding
+/**
+ * Takes a Date object and an optional separator and returns the year,month,day
+ * representation with the custom separator (defaulting to none) and proper
+ * 0-padding.
+ * @param {Date} date
+ */
 export function concatDate(date, sep = "") {
   return ISODate.format(date).replace(dashes, sep);
 }
 
-// formats a date to "yyyy-mm-dd"
+/**
+ * Formats a date to "yyyy-mm-dd".
+ * @param {Date} date
+ */
 export function toShortIsoDate(date) {
   return ISODate.format(date);
 }
 
-// given either a Date object or a date in YYYY-MM-DD format,
-// return a human-formatted date suitable for use in a W3C specification
+/**
+ * Given either a Date object or a date in `YYYY-MM-DD` format, return a
+ * human-formatted date suitable for use in the specification.
+ * @param {Date | string} [date]
+ */
 export function humanDate(
   date = new Date(),
   lang = document.documentElement.lang || "en"
@@ -216,15 +240,18 @@ export function humanDate(
   // date month year
   return `${day} ${month} ${year}`;
 }
-// given either a Date object or a date in YYYY-MM-DD format,
-// return an ISO formatted date suitable for use in a xsd:datetime item
+
+/**
+ * Given either a Date object or a date in `YYYY-MM-DD` format, return an ISO
+ * formatted date suitable for use in a xsd:datetime item
+ * @param {Date | string} date
+ */
 export function isoDate(date) {
   return (date instanceof Date ? date : new Date(date)).toISOString();
 }
 
 /**
  * Checks if a date is in expected format used by ReSpec (yyyy-mm-dd)
- *
  * @param {string} rawDate
  */
 export function isValidConfDate(rawDate) {
@@ -234,9 +261,11 @@ export function isValidConfDate(rawDate) {
   return date.toString() !== "Invalid Date";
 }
 
-// Given an object, it converts it to a key value pair separated by
-// ("=", configurable) and a delimiter (" ," configurable).
-// for example, {"foo": "bar", "baz": 1} becomes "foo=bar, baz=1"
+/**
+ * Given an object, it converts it to a key value pair separated by ("=", configurable) and a delimiter (" ," configurable).
+ * @example {"foo": "bar", "baz": 1} becomes "foo=bar, baz=1"
+ * @param {Record<string, any>} obj
+ */
 export function toKeyValuePairs(obj, delimiter = ", ", separator = "=") {
   return Array.from(Object.entries(obj))
     .map(([key, value]) => `${key}${separator}${JSON.stringify(value)}`)
@@ -244,10 +273,14 @@ export function toKeyValuePairs(obj, delimiter = ", ", separator = "=") {
 }
 
 // STYLE HELPERS
-// take a document and either a link or an array of links to CSS and appends
-// a <link/> element to the head pointing to each
-export function linkCSS(doc, styles) {
-  const stylesArray = [].concat(styles);
+/**
+ * Take a document and either a link or an array of links to CSS and appends a
+ * `<link rel="stylesheet">` element to the head pointing to each.
+ * @param {Document} doc
+ * @param {string | string[]} urls
+ */
+export function linkCSS(doc, urls) {
+  const stylesArray = [].concat(urls);
   const frag = stylesArray
     .map(url => {
       const link = doc.createElement("link");
@@ -263,14 +296,17 @@ export function linkCSS(doc, styles) {
 }
 
 // TRANSFORMATIONS
-// Run list of transforms over content and return result.
-// Please note that this is a legacy method that is only kept in order
-// to maintain compatibility
-// with RSv1. It is therefore not tested and not actively supported.
+
 /**
+ * Run list of transforms over content and return result.
+ *
+ * Please note that this is a legacy method that is only kept in order to
+ * maintain compatibility with RSv1. It is therefore not tested and not actively
+ * supported.
  * @this {any}
  * @param {string} content
- * @param {string} [flist]
+ * @param {string} [flist] List of global function names.
+ * @param {unknown[]} [funcArgs] Arguments to pass to each function.
  */
 export function runTransforms(content, flist, ...funcArgs) {
   const args = [this, content, ...funcArgs];
@@ -298,13 +334,13 @@ export function runTransforms(content, flist, ...funcArgs) {
 /**
  * Cached request handler
  * @param {RequestInfo} input
- * @param {number} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
+ * @param {number} maxAge cache expiration duration in ms. defaults to 24 hours
  * @return {Promise<Response>}
  *  if a cached response is available and it's not stale, return it
  *  else: request from network, cache and return fresh response.
  *    If network fails, return a stale cached version if exists (else throw)
  */
-export async function fetchAndCache(input, maxAge = 86400000) {
+export async function fetchAndCache(input, maxAge = 24 * 60 * 60 * 1000) {
   const request = new Request(input);
   const url = new URL(request.url);
 
@@ -353,6 +389,12 @@ export async function fetchAndCache(input, maxAge = 86400000) {
 
 // --- DOM HELPERS -------------------------------
 
+/**
+ * Separates each item with proper commas.
+ * @template T
+ * @param {T[]} array
+ * @param {(item: T) => any} mapper
+ */
 export function htmlJoinComma(array, mapper = item => item) {
   const items = array.map(mapper);
   const joined = items.slice(0, -1).map(item => html`${item}, `);
@@ -361,8 +403,9 @@ export function htmlJoinComma(array, mapper = item => item) {
 
 /**
  * Separates each item with proper commas and "and".
- * @param {string[]} array
- * @param {(str: any) => object} mapper
+ * @template T
+ * @param {T[]} array
+ * @param {(item: T) => any} mapper
  */
 export function htmlJoinAnd(array, mapper = item => item) {
   const items = array.map(mapper);
@@ -392,8 +435,8 @@ export function addHashId(elem, prefix = "") {
 }
 
 /**
- * Creates and sets an ID to an element (elem)
- * using a specific prefix if provided, and a specific text if given.
+ * Creates and sets an ID to an element (elem) using a specific prefix if
+ * provided, and a specific text if given.
  * @param {HTMLElement} elem element
  * @param {String} pfx prefix
  * @param {String} txt text
@@ -442,7 +485,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
  * @param {Node} el
  * @param {string[]} exclusions node localName to exclude
  * @param {object} options
- * @param {boolean} options.wsNodes if nodes that only have whitespace are returned.
+ * @param {boolean} options.wsNodes return only whitespace-only nodes.
  * @returns {Text[]}
  */
 export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
@@ -471,15 +514,13 @@ export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
 }
 
 /**
- * For any element, returns an array of title strings that applies
- *   the algorithm used for determining the actual title of a
- *   <dfn> element (but can apply to other as well).
- * if args.isDefinition is true, then the element is a definition, not a
- *   reference to a definition. Any @title will be replaced with
- *   @data-lt to be consistent with Bikeshed / Shepherd.
- * This method now *prefers* the data-lt attribute for the list of
- *   titles. That attribute is added by this method to dfn elements, so
- *   subsequent calls to this method will return the data-lt based list.
+ * For any element, returns an array of title strings that applies the algorithm
+ * used for determining the actual title of a `<dfn>` element (but can apply to
+ * other as well).
+ *
+ * This method now *prefers* the `data-lt` attribute for the list of titles.
+ * That attribute is added by this method to `<dfn>` elements, so subsequent
+ * calls to this method will return the `data-lt` based list.
  * @param {HTMLElement} elem
  * @returns {String[]} array of title strings
  */
@@ -522,8 +563,8 @@ export function getDfnTitles(elem) {
 }
 
 /**
- * For an element (usually <a>), returns an array of targets that
- * element might refer to, of the form
+ * For an element (usually <a>), returns an array of targets that element might
+ * refer to, of the form
  * @typedef {object} LinkTarget
  * @property {string} for
  * @property {string} title
@@ -588,6 +629,10 @@ export function renameElement(
   return newElement;
 }
 
+/**
+ * @param {string} ref
+ * @param {HTMLElement} element
+ */
 export function refTypeFromContext(ref, element) {
   const closestInformative = element.closest(nonNormativeSelector);
   let isInformative = false;
@@ -643,8 +688,8 @@ export function parents(element, selector) {
 }
 
 /**
- * Calculates indentation when the element starts after a newline.
- * The value will be empty if no newline or any non-whitespace exists after one.
+ * Calculates indentation when the element starts after a newline. The value
+ * will be empty if no newline or any non-whitespace exists after one.
  * @param {Element} element
  *
  * @example `    <div></div>` returns "    " (4 spaces).
@@ -672,6 +717,7 @@ export function getElementIndentation(element) {
  * @param {number} counter A number, which can start at a given value.
  */
 export function msgIdGenerator(namespace, counter = 0) {
+  /** @returns {Generator<string, never, never>}  */
   function* idGenerator(namespace, counter) {
     while (true) {
       yield `${namespace}:${counter}`;
@@ -684,6 +730,7 @@ export function msgIdGenerator(namespace, counter = 0) {
   };
 }
 
+/** @extends {Set<string>} */
 export class InsensitiveStringSet extends Set {
   /**
    * @param {Array<String>} [keys] Optional, initial keys
@@ -734,6 +781,9 @@ export class InsensitiveStringSet extends Set {
   }
 }
 
+/**
+ * @param {HTMLElement} node
+ */
 export function makeSafeCopy(node) {
   const clone = node.cloneNode(true);
   clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
@@ -745,6 +795,9 @@ export function makeSafeCopy(node) {
   return clone;
 }
 
+/**
+ * @param {Node} node
+ */
 export function removeCommentNodes(node) {
   const walker = document.createTreeWalker(node, NodeFilter.SHOW_COMMENT);
   for (const comment of [...walkTree(walker)]) {
