@@ -4,6 +4,7 @@ import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
+import showTranslations from "../../core/templates/show-translations.js";
 
 const name = "w3c/templates/headers";
 
@@ -32,6 +33,7 @@ const localizationStrings = {
     prev_version: "Previous version:",
     prev_recommendation: "Previous Recommendation:",
     latest_recommendation: "Latest Recommendation:",
+    translations: "Translations:",
   },
   ko: {
     author: "저자:",
@@ -219,6 +221,12 @@ export default (conf, options) => {
         ? html`
             <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
             ${showPeople(conf, "authors")}
+          `
+        : ""}
+      ${conf.translations
+        ? html`
+            <dt>${l10n.translations}</dt>
+            ${showTranslations(conf.translations)}
           `
         : ""}
       ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
