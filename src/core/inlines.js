@@ -12,7 +12,6 @@ import {
   getTextNodes,
   norm,
   refTypeFromContext,
-  showError,
   showWarning,
 } from "./utils.js";
 import { html } from "./import-maps.js";
@@ -119,14 +118,7 @@ function inlineRefMatches(matched) {
   if (!ref.startsWith("#")) {
     return html`<a data-cite="${ref}"></a>`;
   }
-  if (document.querySelector(ref)) {
-    return html`<a href="${ref}"></a>`;
-  }
-  const badReference = html`<span>${matched}</span>`;
-  const msg = `Wasn't able to expand ${matched} as it didn't match any id in the document.`;
-  const hint = `Please make sure there is element with id ${ref} in the document.`;
-  showError(msg, name, { hint, elements: [badReference] });
-  return badReference;
+  return html`<a href="${ref}"></a>`;
 }
 
 /**
