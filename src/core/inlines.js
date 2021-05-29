@@ -118,7 +118,6 @@ function inlineRefMatches(matched) {
   if (!ref.startsWith("#")) {
     return html`<a data-cite="${ref}"></a>`;
   }
-  console.log(matched, ref);
   return html`<a href="${ref}"></a>`;
 }
 
