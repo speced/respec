@@ -153,7 +153,7 @@ function inlineBibrefMatches(matched, txt, conf) {
   }
 
   const [spec, linkText] = ref.split("|").map(norm);
-  const { type, illegal } = refTypeFromContext(spec, txt.parentNode);
+  const { type, illegal } = refTypeFromContext(spec, txt.parentElement);
   const cite = renderInlineCitation(spec, linkText);
   const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
