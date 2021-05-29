@@ -21,7 +21,7 @@ export const github = new Promise((resolve, reject) => {
 
 const localizationStrings = {
   en: {
-    file_a_bug: "File a bug",
+    file_a_bug: "File an issue",
     participate: "Participate:",
     commit_history: "Commit history",
   },
