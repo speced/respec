@@ -564,7 +564,7 @@ export function getDfnTitles(elem) {
 
 /**
  * For an element (usually <a>), returns an array of targets that element might
- * refer to, of the form
+ * refer to, in the object structure:
  * @typedef {object} LinkTarget
  * @property {string} for
  * @property {string} title
