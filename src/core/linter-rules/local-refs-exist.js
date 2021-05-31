@@ -22,7 +22,7 @@ export function run(conf) {
   }
 
   /** @type {NodeListOf<HTMLAnchorElement>} */
-  const elems = document.querySelectorAll("a[href^='#']");
+  const elems = document.querySelectorAll("a[href]");
   const offendingElements = [...elems].filter(isBrokenHyperlink);
   if (offendingElements.length) {
     showWarning(l10n.msg, name, {
@@ -32,8 +32,13 @@ export function run(conf) {
   }
 }
 
+/** @param {HTMLAnchorElement} elem */
 function isBrokenHyperlink(elem) {
-  const id = elem.getAttribute("href").substring(1);
+  if (elem.pathname !== location.pathname || !elem.hash) {
+    return false;
+  }
+
+  const id = elem.hash.substring(1);
   const doc = elem.ownerDocument;
   return !doc.getElementById(id) && !doc.getElementsByName(id).length;
 }
