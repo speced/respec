@@ -19,13 +19,15 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
       <a href="#ID">PASS</a>
       <a href="#ID-NOT-EXIST">FAIL</a>
       <a href="#ID-NOT-EXIST">FAIL</a>
+      <a href="/outside-this-page-1234#ID-NOT-EXIST">PASS</a>
+      <a href="${location.pathname}#ID-NOT-EXIST">FAIL</a>
     `;
 
     const warnings = await getWarnings(body);
     expect(warnings).toHaveSize(1);
 
     const [warning] = warnings;
-    expect(warning.elements).toHaveSize(2);
+    expect(warning.elements).toHaveSize(3);
     const [offendingElement] = warning.elements;
     const { hash } = new URL(offendingElement.href);
     expect(hash).toBe("#ID-NOT-EXIST");
