@@ -1,5 +1,39 @@
 # Changelog
 
+## [v26.8.5](https://github.com/w3c/respec/tree/v26.8.5) (2021-05-31)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.4...v26.8.5)
+
+**Merged pull requests:**
+
+- fix\(core/inlines\): expand markdown headings [\#3567](https://github.com/w3c/respec/pull/3567) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v26.8.4](https://github.com/w3c/respec/tree/v26.8.4) (2021-05-29)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.3...v26.8.4)
+
+**Implemented enhancements:**
+
+- File a Bug -\> Issue [\#3564](https://github.com/w3c/respec/issues/3564)
+
+**Merged pull requests:**
+
+- refactor\(core/utils\): add JSDoc TypeScript annotations [\#3568](https://github.com/w3c/respec/pull/3568) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/github\): file an issue, not bug [\#3565](https://github.com/w3c/respec/pull/3565) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.8.3](https://github.com/w3c/respec/tree/v26.8.3) (2021-05-25)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.2...v26.8.3)
+
+**Fixed bugs:**
+
+- Deprecate Person.mailto... use Person.url [\#3532](https://github.com/w3c/respec/issues/3532)
+
+**Merged pull requests:**
+
+- chore\(package\): update deps [\#3559](https://github.com/w3c/respec/pull/3559) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webmonetization\): use respec.org payment pointer [\#3552](https://github.com/w3c/respec/pull/3552) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v26.8.2](https://github.com/w3c/respec/tree/v26.8.2) (2021-05-21)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.8.1...v26.8.2)
