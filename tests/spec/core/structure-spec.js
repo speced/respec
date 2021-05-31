@@ -127,12 +127,11 @@ describe("Core - Structure", () => {
     expect(doc.getElementById("toc")).toBeNull();
   });
 
-  it("should include introductory sections in ToC with tocIntroductory", async () => {
+  it("should include introductory sections in ToC", async () => {
     const ops = {
       config: makeBasicConfig(),
       body,
     };
-    ops.config.tocIntroductory = true;
     const doc = await makeRSDoc(ops);
     const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toBe("Table of Contents");

@@ -4,7 +4,6 @@
 
 // CONFIGURATION:
 //  - noTOC: if set to true, no TOC is generated and sections are not numbered
-//  - tocIntroductory: if set to true, the introductory material is listed in the TOC
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
@@ -14,6 +13,7 @@ import {
   parents,
   renameElement,
   showError,
+  showWarning,
 } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
@@ -135,11 +135,9 @@ function appendixNumber(num) {
  *
  * @param {Element} parent
  */
-function getSectionTree(parent, { tocIntroductory = false } = {}) {
+function getSectionTree(parent) {
   /** @type {NodeListOf<HTMLElement>} */
-  const sectionElements = tocIntroductory
-    ? parent.querySelectorAll(":scope > section")
-    : parent.querySelectorAll(":scope > section:not(.introductory)");
+  const sectionElements = parent.querySelectorAll(":scope > section");
   /** @type {Section[]} */
   const sections = [];
 
@@ -160,7 +158,7 @@ function getSectionTree(parent, { tocIntroductory = false } = {}) {
       title,
       isIntro: section.classList.contains("introductory"),
       isAppendix: section.classList.contains("appendix"),
-      subsections: getSectionTree(section, { tocIntroductory }),
+      subsections: getSectionTree(section),
     });
   }
   return sections;
@@ -194,9 +192,12 @@ function filterHeader(h) {
 }
 
 export function run(conf) {
-  if ("tocIntroductory" in conf === false) {
-    conf.tocIntroductory = false;
+  if ("tocIntroductory" in conf) {
+    const msg = "Configuration option `tocIntroductory` is deprecated.";
+    const hint = `Add a 'notoc' class to remove a section from Table of Contents.`;
+    showWarning(msg, name, { hint });
   }
+
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = Infinity;
   }
@@ -206,9 +207,7 @@ export function run(conf) {
   // makeTOC
   if (!conf.noTOC) {
     skipFromToC();
-    const sectionTree = getSectionTree(document.body, {
-      tocIntroductory: conf.tocIntroductory,
-    });
+    const sectionTree = getSectionTree(document.body);
     const result = scanSections(sectionTree, conf.maxTocLevel);
     if (result) {
       createTableOfContents(result);
