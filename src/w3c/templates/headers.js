@@ -33,7 +33,6 @@ const localizationStrings = {
     prev_version: "Previous version:",
     prev_recommendation: "Previous Recommendation:",
     latest_recommendation: "Latest Recommendation:",
-    translations: "Translations:",
   },
   ko: {
     author: "저자:",

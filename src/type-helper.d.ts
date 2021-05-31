@@ -110,6 +110,7 @@ interface Conf {
   biblio: Record<string, BiblioData>;
   editors?: Person[];
   formerEditors?: Person[];
+  translations?: Record<string, string>,
   informativeReferences: Set<string>;
   localBiblio?: Record<string, BiblioData>;
   normativeReferences: Set<string>;
