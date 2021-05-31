@@ -23,7 +23,10 @@ export function run(conf) {
 
   /** @type {NodeListOf<HTMLAnchorElement>} */
   const elems = document.querySelectorAll("a[href]");
-  const offendingElements = [...elems].filter(isBrokenHyperlink);
+  const baseURI = new URL(document.baseURI);
+  const offendingElements = [...elems].filter(elem =>
+    isBrokenHyperlink(elem, baseURI)
+  );
   if (offendingElements.length) {
     showWarning(l10n.msg, name, {
       hint: l10n.hint,
@@ -32,9 +35,16 @@ export function run(conf) {
   }
 }
 
-/** @param {HTMLAnchorElement} elem */
-function isBrokenHyperlink(elem) {
-  if (!elem.hash || elem.pathname !== new URL(document.baseURI).pathname) {
+/**
+ * @param {HTMLAnchorElement} elem
+ * @param {URL} baseURI
+ */
+function isBrokenHyperlink(elem, baseURI) {
+  if (!elem.hash) {
+    return false;
+  }
+  if (elem.origin === baseURI.origin && elem.pathname !== baseURI.pathname) {
+    // skip fragment links outside current page
     return false;
   }
 
