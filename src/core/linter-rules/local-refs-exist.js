@@ -34,11 +34,11 @@ export function run(conf) {
 
 /** @param {HTMLAnchorElement} elem */
 function isBrokenHyperlink(elem) {
-  if (elem.pathname !== location.pathname || !elem.hash) {
+  if (!elem.hash || elem.pathname !== new URL(document.baseURI).pathname) {
     return false;
   }
 
-  const id = elem.hash.substring(1);
+  const id = decodeURIComponent(elem.hash.substring(1));
   const doc = elem.ownerDocument;
   return !doc.getElementById(id) && !doc.getElementsByName(id).length;
 }
