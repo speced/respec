@@ -14,7 +14,6 @@
 import {
   addId,
   getIntlData,
-  joinAnd,
   parents,
   showError,
   showWarning,
@@ -297,16 +296,8 @@ function makeIssueSectionSummary(issueList) {
  */
 function createLabelsGroup(labels, title, repoURL) {
   const labelsGroup = labels.map(label => createLabel(label, repoURL));
-  const labelNames = labels.map(label => label.name);
-  const joinedNames = joinAnd(labelNames);
   if (labelsGroup.length) {
     labelsGroup.unshift(document.createTextNode(" "));
-  }
-  if (labelNames.length) {
-    const ariaLabel = `This issue is labelled as ${joinedNames}.`;
-    return html`<span class="issue-label" aria-label="${ariaLabel}"
-      >: ${title}${labelsGroup}</span
-    >`;
   }
   return html`<span class="issue-label">: ${title}${labelsGroup}</span>`;
 }
@@ -326,10 +317,12 @@ function createLabel(label, repoURL) {
   issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
   const color = textColorFromBgColor(bgColor);
   const style = `background-color: #${bgColor}; color: ${color}`;
-  return html`<a
+  const ariaLabel = `GitHub label: ${name}`;
+  return html` <a
     class="respec-gh-label"
     style="${style}"
     href="${issuesURL.href}"
+    aria-label="${ariaLabel}"
     >${name}</a
   >`;
 }
