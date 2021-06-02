@@ -317,7 +317,7 @@ function createLabel(label, repoURL) {
   issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
   const color = textColorFromBgColor(bgColor);
   const style = `background-color: #${bgColor}; color: ${color}`;
-  const ariaLabel = `GitHub label ${name}`;
+  const ariaLabel = `GitHub label: ${name}`;
   return html` <a
     class="respec-gh-label"
     style="${style}"
