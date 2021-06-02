@@ -14,7 +14,6 @@
 import {
   addId,
   getIntlData,
-  joinAnd,
   parents,
   showError,
   showWarning,
