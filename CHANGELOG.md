@@ -1,5 +1,25 @@
 # Changelog
 
+## [v26.8.7](https://github.com/w3c/respec/tree/v26.8.7) (2021-06-02)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.6...v26.8.7)
+
+**Fixed bugs:**
+
+- `aria-label` generated for github issues raises a warning in the HTML validator [\#3584](https://github.com/w3c/respec/issues/3584)
+
+**Merged pull requests:**
+
+- fix\(core/issues-notes\): invalid aria-label [\#3586](https://github.com/w3c/respec/pull/3586) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.8.6](https://github.com/w3c/respec/tree/v26.8.6) (2021-06-01)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.5...v26.8.6)
+
+**Merged pull requests:**
+
+- chore\(deps\): update dependencies [\#3578](https://github.com/w3c/respec/pull/3578) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v26.8.5](https://github.com/w3c/respec/tree/v26.8.5) (2021-05-31)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.8.4...v26.8.5)
