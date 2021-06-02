@@ -18,7 +18,7 @@ self.addEventListener("message", ({ data: originalData }) => {
       const { code } = data;
       const langs = data.languages.length ? data.languages : undefined;
       try {
-        const { value, language } = self.hljs.highlightAuto(code, langs);
+        const { value, language } = self.hljs.highlight(code, langs);
         Object.assign(data, { value, language });
       } catch (err) {
         console.error("Could not transform some code?", err);
