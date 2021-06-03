@@ -627,6 +627,22 @@ describe("Core — xref", () => {
       expect(link3.firstElementChild.localName).toBe("code");
     });
 
+    it("links interface constants", async () => {
+      const body = `
+      <section id="test">
+        <p id="link1">{{HTMLMediaElement/HAVE_METADATA}}</p>
+      </section>
+      `;
+      const config = { xref: "web-platform" };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+      const a = doc.querySelector("#link1 a");
+      expect(a.href).toBe(
+        "https://html.spec.whatwg.org/multipage/media.html#dom-media-have_metadata"
+      );
+      expect(a.textContent).toBe("HAVE_METADATA");
+    });
+
     it("links methods", async () => {
       const body = `
       <section id="test">
