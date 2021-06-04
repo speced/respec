@@ -28,7 +28,6 @@ export async function run() {
     // allowing keyboard action as needed.
     el.tabIndex = 0;
     el.setAttribute("aria-haspopup", "dialog");
-    if (!el.title) el.title = "Show what links to this definition";
   }
   document.body.append(panels);
 
