@@ -337,8 +337,6 @@ export function run(conf) {
  *
  * @param {string} str
  *
- * TODO: Use negative lookbehind (`str.split(/(?<!\\)\//)`) when supported.
- * https://github.com/w3c/respec/issues/2869
  */
 function splitByFor(str) {
   const cleanUp = str => str.replace("%%", "/").split("/").map(norm).join("/");
