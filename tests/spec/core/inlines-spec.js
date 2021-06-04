@@ -416,6 +416,10 @@ describe("Core - Inlines", () => {
           [= code point| Unicode code point =]
           [= iteration/break|break out of iteration =]
         </p>
+        <p id="deep-for" data-cite="streams">
+        [= ReadableStream / set
+          up / pullAlgorithm=]
+        </p>
       </section>
     `;
     const config = { xref: true };
@@ -457,6 +461,10 @@ describe("Core - Inlines", () => {
     expect(codePoint.hash).toBe("#code-point");
     expect(iterationBreak.textContent).toBe("break out of iteration");
     expect(iterationBreak.hash).toBe("#iteration-break");
+
+    // Deep for= parts
+    const pullAlgorithm = doc.querySelector("#deep-for a");
+    expect(pullAlgorithm.hash).toBe("#readablestream-set-up-pullalgorithm");
   });
 
   it("allows escaping `/` in [= concept =] links", async () => {
