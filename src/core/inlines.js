@@ -342,7 +342,7 @@ export function run(conf) {
  */
 function splitByFor(str) {
   const cleanUp = str => str.replace("%%", "/").split("/").map(norm).join("/");
-  const safeString = norm(str).replace("\\/", "%%");
+  const safeString = str.replace("\\/", "%%");
   const lastSlash = safeString.lastIndexOf("/");
   if (lastSlash === -1) {
     return [cleanUp(safeString)];
