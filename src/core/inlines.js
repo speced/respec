@@ -342,12 +342,12 @@ export function run(conf) {
  */
 function splitByFor(str) {
   const cleanUp = str => str.replace("%%", "/").split("/").map(norm).join("/");
-  const safeString = str.replace("\\/", "%%");
-  const lastSlash = safeString.lastIndexOf("/");
-  if (lastSlash === -1) {
-    return [cleanUp(safeString)];
+  const safeStr = str.replace("\\/", "%%");
+  const lastSlashIdx = safeStr.lastIndexOf("/");
+  if (lastSlashIdx === -1) {
+    return [cleanUp(safeStr)];
   }
-  const forPart = safeString.substring(0, lastSlash);
-  const linkingText = safeString.substring(lastSlash + 1, safeString.length);
+  const forPart = safeStr.substring(0, lastSlashIdx);
+  const linkingText = safeStr.substring(lastSlashIdx + 1, safeStr.length);
   return [cleanUp(forPart), cleanUp(linkingText)];
 }
