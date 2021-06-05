@@ -21,7 +21,7 @@ describe("Core - Pluralize", () => {
     expect(dfnFoo.dataset.lt).toBeFalsy();
     expect(dfnFoo.dataset.plurals).toBe("foos");
     const linksFoo = [...doc.querySelectorAll("#fooLinks a")];
-    expect(linksFoo.length).toBe(2);
+    expect(linksFoo).toHaveSize(2);
     expect(
       linksFoo.every(el => el.getAttribute("href") === "#dfn-foo")
     ).toBeTruthy();
@@ -31,7 +31,7 @@ describe("Core - Pluralize", () => {
     expect(dfnBars.dataset.lt).toBeFalsy();
     expect(dfnBars.dataset.plurals).toBe("bar");
     const linksBars = [...doc.querySelectorAll("#barLinks a")];
-    expect(linksBars.length).toBe(3);
+    expect(linksBars).toHaveSize(3);
     expect(
       linksBars.every(el => el.getAttribute("href") === "#dfn-bars")
     ).toBeTruthy();
@@ -58,7 +58,7 @@ describe("Core - Pluralize", () => {
     expect(dfn.dataset.lt).toBe("Baz|Bars");
     expect(dfn.dataset.plurals.split("|").sort()).toEqual(["bar", "bazs"]);
     const validLinks = [...doc.querySelectorAll("#section a[href^='#']")];
-    expect(validLinks.length).toBe(7);
+    expect(validLinks).toHaveSize(7);
     expect(
       validLinks.every(el => el.getAttribute("href") === "#dfn-baz")
     ).toBeTruthy();
@@ -85,7 +85,7 @@ describe("Core - Pluralize", () => {
     expect(lt).toBe("yeast|fungus");
     expect(plurals.split("|").sort()).toEqual(["fungi", "yeasts"]);
     const links = [...doc.querySelectorAll("#test a[href^='#']")];
-    expect(links.length).toBe(4);
+    expect(links).toHaveSize(4);
     expect(
       links.every(el => el.getAttribute("href") === "#dfn-yeast")
     ).toBeTruthy();
@@ -100,24 +100,6 @@ describe("Core - Pluralize", () => {
       </section>
     `;
     const ops = makeStandardOps({ pluralize: false }, body);
-    const doc = await makeRSDoc(ops);
-
-    const { id: dfnId } = doc.querySelector("#section dfn");
-    expect(dfnId).toBe("dfn-foo");
-    const [validLink, invalidLink] = [...doc.querySelectorAll("#section a")];
-    expect(validLink.getAttribute("href")).toBe("#dfn-foo");
-    expect(invalidLink.classList).toContain("respec-offending-element");
-  });
-
-  it("does nothing if conf.pluralize is not defined", async () => {
-    const body = `
-      <section id="section">
-        <dfn>foo</dfn> can be referenced
-        as <a>foo</a>
-        but not as <a>foos</a>
-      </section>
-    `;
-    const ops = makeStandardOps({ specStatus: "unofficial" }, body);
     const doc = await makeRSDoc(ops);
 
     const { id: dfnId } = doc.querySelector("#section dfn");
@@ -195,7 +177,7 @@ describe("Core - Pluralize", () => {
     expect(linkToBar.getAttribute("href")).toBe("#dfn-bar");
     expect(linkToBars.getAttribute("href")).toBe("#dfn-bars");
     expect(linkToFoo.getAttribute("href")).toBe("#dfn-foo");
-    expect(linksToFoos.length).toBe(6);
+    expect(linksToFoos).toHaveSize(6);
     expect(
       linksToFoos.every(el => el.getAttribute("href") === "#dfn-foos")
     ).toBeTruthy();

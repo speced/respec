@@ -38,7 +38,7 @@ describe("Core - anchor-expander", () => {
     const anchors = doc.querySelectorAll(
       "#no-header  a.respec-offending-element"
     );
-    expect(anchors.length).toBe(2);
+    expect(anchors).toHaveSize(2);
     expect(
       [...anchors].every(({ textContent }) => textContent === "#no-header")
     ).toBeTruthy();
@@ -78,12 +78,39 @@ describe("Core - anchor-expander", () => {
     expect(doc.querySelector("#expansion *[id]")).toBeNull();
 
     const [firstSpan, secondSpan] = doc.querySelectorAll("#expansion a > span");
-    expect(firstSpan.title).toBe("pass");
+    // title gets dropped from dfns
+    expect(firstSpan.title).toBe("");
     expect(firstSpan.firstElementChild.localName).toBe("code");
     expect(firstSpan.firstElementChild.textContent).toBe("code thing");
     expect(secondSpan.textContent).toBe("span");
     expect(secondSpan.dataset.value).toBe("pass");
   });
+
+  it("safely copies IDL defined things without copying their attributes", async () => {
+    const body = `
+    <section data-dfn-for="Foo" id="thefoo">
+      <h2>
+        <dfn>Foo</dfn> interface
+      </h2>
+      <pre class="idl">
+      [Exposed=Window]
+      interface Foo {};
+      </pre>
+      <p id="expansion">
+       [[[#thefoo]]]
+      </p>
+    </section>`;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector("#expansion dfn")).toBeNull();
+    expect(doc.querySelector("#expansion *[id]")).toBeNull();
+    const span = doc.querySelector("#expansion a > span");
+    expect(span.attributes).toHaveSize(0);
+    const code = span.firstElementChild;
+    expect(code.localName).toBe("code");
+    expect(code.textContent).toBe("Foo");
+  });
+
   it("gets applies contextual directional and language information to expanded nodes", async () => {
     const body = `
       <section lang="ar" class="introductory">
@@ -91,7 +118,7 @@ describe("Core - anchor-expander", () => {
       </section>
       <section>
         <h2>Some other section</section>
-        <p id="expansion">[[[#myid]]]</a></p>
+        <p id="expansion">[[[#myid]]]</p>
         <p id="expansion2"><a href="#myid" dir="ltr" lang=""></a></p>
       </section>
     `;
@@ -103,5 +130,62 @@ describe("Core - anchor-expander", () => {
     const secondExpansion = doc.querySelector("#expansion2 a");
     expect(secondExpansion.dir).toBe("ltr");
     expect(secondExpansion.lang).toBe("");
+  });
+
+  it("it removes trailing whitespace when expanding headers", async () => {
+    const body = `
+      <section lang="ar" class="introductory">
+        <h2 id="someid">
+          This
+          <code>is</code>
+          a test
+        </h2>
+      </section>
+      <section>
+        <h2>Some other section</section>
+        <p id="expansion1">[[[#someid]]].</p>
+        <p id="expansion2"><a href="#someid"></a>!</p>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+
+    const p1 = doc.getElementById("expansion1");
+    const { textContent: text1 } = p1.querySelector("a").lastChild;
+    expect(text1.endsWith("a test")).toBeTrue();
+    expect(p1.textContent.endsWith("a test.")).toBeTrue();
+
+    const p2 = doc.getElementById("expansion2");
+    const { textContent: text2 } = p2.querySelector("a").lastChild;
+    expect(text2.endsWith("a test")).toBeTrue();
+    expect(p2.textContent.endsWith("a test!")).toBeTrue();
+  });
+
+  it("it converts nested anchors inside heading/sections expansions into spans", async () => {
+    const body = `
+      <section id="sectionid">
+        <h2 id="someid">
+          Some {{MediaDevices}}
+        </h2>
+        <pre class="idl">
+          [Exposed=Window]
+          interface MediaDevices {};
+        </pre>
+        <p id="exp1">[[[#someid]]].</p>
+        <p id="exp2"><a href="#someid"></a>!</p>
+        <p id="exp3"><a href="#sectionid"></a></p>
+        <p id="exp4">[[[#sectionid]]]</p>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    for (const exp of ["exp1", "exp2", "exp3", "exp4"]) {
+      const p = doc.getElementById(exp);
+      expect(p.querySelector("a a")).toBeNull();
+      const span = p.querySelector("span");
+      expect(span).toBeTruthy();
+      expect(span.textContent.trim()).toEqual("MediaDevices");
+      expect(span.attributes).toHaveSize(0);
+    }
   });
 });

@@ -11,9 +11,15 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, getIntlData, joinAnd, parents } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
-import { hyperHTML } from "./import-maps.js";
+import {
+  addId,
+  getIntlData,
+  parents,
+  showError,
+  showWarning,
+} from "./utils.js";
+import css from "../styles/issues-notes.css.js";
+import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/issues-notes";
@@ -27,9 +33,6 @@ const localizationStrings = {
     no_issues_in_spec: "There are no issues listed in this specification.",
     note: "Note",
     warning: "Warning",
-  },
-  zh: {
-    note: "注",
   },
   ja: {
     note: "注",
@@ -63,17 +66,16 @@ const localizationStrings = {
     note: "Hinweis",
     warning: "Warnung",
   },
+  zh: {
+    editors_note: "编者注",
+    feature_at_risk: "（有可能变动的特性）Issue",
+    issue: "Issue",
+    issue_summary: "Issue 总结",
+    no_issues_in_spec: "本规范中未列出任何 issue。",
+    note: "注",
+    warning: "警告",
+  },
 };
-
-const cssPromise = loadStyle();
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/issues-notes.css")).default;
-  } catch {
-    return fetchAsset("issues-notes.css");
-  }
-}
 
 const l10n = getIntlData(localizationStrings);
 
@@ -116,10 +118,11 @@ function handleIssues(ins, ghIssues, conf) {
     if (!isInline) {
       const cssClass = isFeatureAtRisk ? `${type} atrisk` : type;
       const ariaRole = type === "note" ? "note" : null;
-      const div = hyperHTML`<div class="${cssClass}" role="${ariaRole}"></div>`;
+      const div = html`<div class="${cssClass}" role="${ariaRole}"></div>`;
       const title = document.createElement("span");
-      const titleParent = hyperHTML`
-        <div role='heading' class='${`${type}-title marker`}'>${title}</div>`;
+      const className = `${type}-title marker`;
+      // prettier-ignore
+      const titleParent = html`<div role="heading" class="${className}">${title}</div>`;
       addId(titleParent, "h", type);
       let text = displayType;
       if (inno.id) {
@@ -147,7 +150,8 @@ function handleIssues(ins, ghIssues, conf) {
           title.classList.add("issue-number");
           ghIssue = ghIssues.get(dataNum);
           if (!ghIssue) {
-            pub("warning", `Failed to fetch issue number ${dataNum}`);
+            const msg = `Failed to fetch issue number ${dataNum}.`;
+            showWarning(msg, name);
           }
           if (ghIssue && !report.title) {
             report.title = ghIssue.title;
@@ -244,9 +248,9 @@ function getIssueType(inno) {
 function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
   // Set issueBase to cause issue to be linked to the external issue tracker
   if (!isFeatureAtRisk && conf.issueBase) {
-    return hyperHTML`<a href='${conf.issueBase + dataNum}'/>`;
+    return html`<a href="${conf.issueBase + dataNum}" />`;
   } else if (isFeatureAtRisk && conf.atRiskBase) {
-    return hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
+    return html`<a href="${conf.atRiskBase + dataNum}" />`;
   }
 }
 
@@ -257,11 +261,9 @@ function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
 function createIssueSummaryEntry(l10nIssue, report, id) {
   const issueNumberText = `${l10nIssue} ${report.number}`;
   const title = report.title
-    ? hyperHTML`<span style="text-transform: none">: ${report.title}</span>`
+    ? html`<span style="text-transform: none">: ${report.title}</span>`
     : "";
-  return hyperHTML`
-    <li><a href="${`#${id}`}">${issueNumberText}</a>${title}</li>
-  `;
+  return html`<li><a href="${`#${id}`}">${issueNumberText}</a>${title}</li>`;
 }
 
 /**
@@ -275,7 +277,7 @@ function makeIssueSectionSummary(issueList) {
 
   issueList.hasChildNodes()
     ? issueSummaryElement.append(issueList)
-    : issueSummaryElement.append(hyperHTML`<p>${l10n.no_issues_in_spec}</p>`);
+    : issueSummaryElement.append(html`<p>${l10n.no_issues_in_spec}</p>`);
   if (
     !heading ||
     (heading && heading !== issueSummaryElement.firstElementChild)
@@ -287,14 +289,6 @@ function makeIssueSectionSummary(issueList) {
   }
 }
 
-function isLight(rgb) {
-  const red = (rgb >> 16) & 0xff;
-  const green = (rgb >> 8) & 0xff;
-  const blue = (rgb >> 0) & 0xff;
-  const illumination = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-  return illumination > 140;
-}
-
 /**
  * @param {GitHubLabel[]} labels
  * @param {string} title
@@ -302,18 +296,15 @@ function isLight(rgb) {
  */
 function createLabelsGroup(labels, title, repoURL) {
   const labelsGroup = labels.map(label => createLabel(label, repoURL));
-  const labelNames = labels.map(label => label.name);
-  const joinedNames = joinAnd(labelNames);
   if (labelsGroup.length) {
     labelsGroup.unshift(document.createTextNode(" "));
   }
-  if (labelNames.length) {
-    const ariaLabel = `This issue is labelled as ${joinedNames}.`;
-    return hyperHTML`<span
-      class="issue-label"
-      aria-label="${ariaLabel}">: ${title}${labelsGroup}</span>`;
-  }
-  return hyperHTML`<span class="issue-label">: ${title}${labelsGroup}</span>`;
+  return html`<span class="issue-label">: ${title}${labelsGroup}</span>`;
+}
+
+/** @param {string} bgColorHex background color as a hex value without '#' */
+function textColorFromBgColor(bgColorHex) {
+  return parseInt(bgColorHex, 16) > 0xffffff / 2 ? "#000" : "#fff";
 }
 
 /**
@@ -321,17 +312,19 @@ function createLabelsGroup(labels, title, repoURL) {
  * @param {string} repoURL
  */
 function createLabel(label, repoURL) {
-  const { color, name } = label;
+  const { color: bgColor, name } = label;
   const issuesURL = new URL("./issues/", repoURL);
   issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
-  const rgb = parseInt(color, 16);
-  const textColorClass = isNaN(rgb) || isLight(rgb) ? "light" : "dark";
-  const cssClasses = `respec-gh-label respec-label-${textColorClass}`;
-  const style = `background-color: #${color}`;
-  return hyperHTML`<a
-    class="${cssClasses}"
+  const color = textColorFromBgColor(bgColor);
+  const style = `background-color: #${bgColor}; color: ${color}`;
+  const ariaLabel = `GitHub label: ${name}`;
+  return html` <a
+    class="respec-gh-label"
     style="${style}"
-    href="${issuesURL.href}">${name}</a>`;
+    href="${issuesURL.href}"
+    aria-label="${ariaLabel}"
+    >${name}</a
+  >`;
 }
 
 /**
@@ -358,7 +351,7 @@ async function fetchAndStoreGithubIssues(github) {
   const response = await fetch(url.href);
   if (!response.ok) {
     const msg = `Error fetching issues from GitHub. (HTTP Status ${response.status}).`;
-    pub("error", msg);
+    showError(msg, name);
     return new Map();
   }
 
@@ -375,10 +368,11 @@ export async function run(conf) {
     return; // nothing to do.
   }
   const ghIssues = await fetchAndStoreGithubIssues(conf.github);
-  const css = await cssPromise;
   const { head: headElem } = document;
   headElem.insertBefore(
-    hyperHTML`<style>${css}</style>`,
+    html`<style>
+      ${css}
+    </style>`,
     headElem.querySelector("link")
   );
   handleIssues(issuesAndNotes, ghIssues, conf);

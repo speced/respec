@@ -1,36 +1,16 @@
 // @ts-check
-import { hyperHTML as html } from "../../core/import-maps.js";
-import { l10n } from "./sotd.js";
+import {
+  l10n,
+  linkToCommunity,
+  renderPreview,
+  renderPublicList,
+} from "./sotd.js";
+import { html } from "../../core/import-maps.js";
 
 export default (conf, opts) => {
   return html`
     <h2>${l10n.sotd}</h2>
-    ${conf.isPreview
-      ? html`
-          <details class="annoying-warning" open="">
-            <summary
-              >This is a
-              preview${conf.prUrl && conf.prNumber
-                ? html`
-                    of pull request
-                    <a href="${conf.prUrl}">#${conf.prNumber}</a>
-                  `
-                : ""}</summary
-            >
-            <p>
-              Do not attempt to implement this version of the specification. Do
-              not reference this version as authoritative in any way.
-              ${conf.edDraftURI
-                ? html`
-                    Instead, see
-                    <a href="${conf.edDraftURI}">${conf.edDraftURI}</a> for the
-                    Editor's draft.
-                  `
-                : ""}
-            </p>
-          </details>
-        `
-      : ""}
+    ${conf.isPreview ? renderPreview(conf) : ""}
     <p>
       This specification was published by the
       <a href="${conf.wgURI}">${conf.wg}</a>. It is not a W3C Standard nor is it
@@ -56,27 +36,8 @@ export default (conf, opts) => {
       >.
     </p>
     ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-    ${conf.wgPublicList
-      ? html`
-          <p>
-            If you wish to make comments regarding this document, please send
-            them to
-            <a href="${opts.mailToWGPublicListWithSubject}"
-              >${conf.wgPublicList}@w3.org</a
-            >
-            (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
-            <a
-              href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
-              >archives</a
-            >)${conf.subjectPrefix
-              ? html`
-                  with <code>${conf.subjectPrefix}</code> at the start of your
-                  email's subject
-                `
-              : ""}.
-          </p>
-        `
-      : ""}
+    ${!conf.github && conf.wgPublicList ? renderPublicList(conf, opts) : ""}
+    ${conf.github ? linkToCommunity(conf, opts) : ""}
     ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
     ${opts.additionalSections}
   `;

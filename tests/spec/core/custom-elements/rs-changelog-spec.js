@@ -16,11 +16,11 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
     const doc = await makeRSDoc(ops);
 
     const commits = doc.querySelectorAll("rs-changelog li");
-    expect(commits.length).toBe(8);
+    expect(commits).toHaveSize(8);
     const firstCommit = commits[0];
     expect(firstCommit.textContent).toBe("chore: ReSpec fixes");
     const links = firstCommit.querySelectorAll("a");
-    expect(links.length).toBe(1);
+    expect(links).toHaveSize(1);
     expect(links[0].href).toBe("https://github.com/org/repo/commit/80aad0a");
   });
 
@@ -37,13 +37,13 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
     const doc = await makeRSDoc(ops);
 
     const commits = doc.querySelectorAll("rs-changelog li");
-    expect(commits.length).toBe(5);
+    expect(commits).toHaveSize(5);
     const firstCommit = commits[0];
     expect(firstCommit.textContent).toBe(
       "Editorial: Add privacy notice regarding <var> usage (#869)"
     );
     const links = firstCommit.querySelectorAll("a");
-    expect(links.length).toBe(2);
+    expect(links).toHaveSize(2);
     const [commitLink, prLink] = links;
     expect(commitLink.href).toBe("https://github.com/org/repo/commit/276f4ba");
     expect(prLink.href).toBe("https://github.com/org/repo/pull/869");

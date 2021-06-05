@@ -1,52 +1,79 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8" />
     <title>Replace me with a real title</title>
-    <script src="../builds/respec-w3c.js" class='remove'></script>
-    <script class='remove'>
+    <script src="../builds/respec-w3c.js" class="remove" defer></script>
+    <script class="remove">
+      // All config options at https://respec.org/docs/
       var respecConfig = {
         specStatus: "ED",
-        editors: [{
-          name: "Your Name",
-          url: "https://your-site.com",
-        }],
-        github: "https://github.com/w3c/some-API/",
+        editors: [
+          {
+            name: "Your Name",
+            url: "https://your-site.com",
+          },
+        ],
+        github: "w3c/respec",
+        shortName: "respec",
+        xref: "web-platform",
+        group: "webapps",
       };
     </script>
   </head>
   <body>
-    <section id='abstract'>
-      <p>
-        This is required.
-      </p>
+    <section id="abstract">
+      <p>This is required.</p>
     </section>
-    <section id='sotd'>
-      <p>
-        This is required.
-      </p>
+    <section id="sotd">
+      <p>This is required.</p>
+    </section>
+    <section class="informative">
+      <h2>Introduction</h2>
+      <p>Some informative introductory text.</p>
+      <aside class="note" title="A useful note">
+        <p>I'm a note!</p>
+      </aside>
+    </section>
+    <section>
+      <h2>A section</h2>
+      <aside class="example">
+        <p>This is an example.</p>
+        <pre class="js">
+        // Automatic syntax highlighting
+        function someJavaScript(){}
+        </pre>
+      </aside>
+      <section>
+        <h3>I'm a sub-section</h3>
+        <p class="issue" data-number="3524">
+          <!-- Issue can automatically be populated from GitHub -->
+        </p>
+      </section>
     </section>
     <section data-dfn-for="Foo">
-      <h2><dfn>Foo</dfn> interface</h2>
+      <h2>Start your spec!</h2>
       <pre class="idl">
-      [Exposed=Window]
-      interface Foo {
-        constructor();
+        [Exposed=Window]
+        interface Foo {
         attribute DOMString bar;
-        void doTheFoo();
-      };
+        undefined doTheFoo();
+        };
       </pre>
-      <p>The <a>Foo</a> interface is nice. Lets you do stuff.</p>
-      <p>The <dfn>Foo.constructor()</dfn> creates a Foo instance.</p>
-      <p>The <dfn>bar</dfn> attribute, returns 🍺.</p>
-      <p>The <dfn>doTheFoo()</dfn> method, returns nothing.</p>
-      <pre class="js example" title="Usage example">
-        const foo = new Foo();
-        if (foo.bar === "my bar") {
-          foo.doTheBar();
-        }
-      </pre>
+      <p>The <dfn>Foo</dfn> interface represents a {{Foo}}.</p>
+      <p>
+        The <dfn>doTheFoo()</dfn> method does the foo. Call it by running
+        {{Foo/doTheFoo()}}.
+      </p>
+      <ol class="algorithm">
+        <li>A |variable:DOMString| can be declared like this.</li>
+      </ol>
     </section>
+    <section id="conformance">
+      <p>
+        This is required for specifications that contain normative material.
+      </p>
+    </section>
+    <section id="index"></section>
   </body>
 </html>
-

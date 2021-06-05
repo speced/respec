@@ -16,12 +16,11 @@ describe("Core — Seo", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
     await new Promise(resolve => {
       const check = () => {
-        const hasMetaDesc = doc.querySelectorAll("meta[name=description]")
-          .length;
-        expect(hasMetaDesc).toBe(0);
+        const hasMetaDesc = doc.querySelectorAll("meta[name=description]");
+        expect(hasMetaDesc).toHaveSize(0);
         resolve();
       };
       window.requestIdleCallback ? window.requestIdleCallback(check) : check();
@@ -38,11 +37,12 @@ describe("Core — Seo", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
     await new Promise(resolve => {
       const check = () => {
-        const hasMetaDesc = doc.querySelectorAll("meta[name=description]")
-          .length;
+        const hasMetaDesc = doc.querySelectorAll(
+          "meta[name=description]"
+        ).length;
         // Firefox is buggy, short circuit
         if (navigator.userAgent.includes("Firefox") && !hasMetaDesc) {
           expect(true).toBe(true);

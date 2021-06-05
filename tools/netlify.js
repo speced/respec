@@ -5,18 +5,21 @@
  */
 const path = require("path");
 const { writeFile } = require("fs").promises;
-const { Builder } = require("./builder");
+const { Builder } = require("./builder.js");
 
 const { DEPLOY_PRIME_URL, COMMIT_REF, REVIEW_ID, REPOSITORY_URL } = process.env;
 
 const BUILD_DIR = path.resolve(__dirname, "../builds/");
-const PROFILES = ["w3c", "w3c-common", "geonovum", "dini"];
+const PROFILES = ["w3c", "geonovum", "dini"];
 
 const SPECS = {
   W3C: [
-    "https://w3c.github.io/payment-request/",
+    "https://w3c.github.io/badging/",
     "https://w3c.github.io/gamepad/",
     "https://w3c.github.io/hr-time/",
+    "https://w3c.github.io/payment-request/",
+    "https://w3c.github.io/trace-context/",
+    "https://w3c.github.io/web-share/",
   ],
   DINI: [
     "https://dini-ag-kim.github.io/oer-service-card/latest/",

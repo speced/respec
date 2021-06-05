@@ -1,0 +1,28 @@
+name: Changelog
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - gh-pages
+
+jobs:
+  changelog:
+    name: Update Changelog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+      - run: gem install github_changelog_generator
+      - run: github_changelog_generator -u w3c -p respec --no-unreleased
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
+      - uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: "chore(CHANGELOG): regenerate"
+          title: "chore(CHANGELOG): regenerate"
+          branch: regenerate-changelog

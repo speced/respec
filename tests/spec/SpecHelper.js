@@ -17,8 +17,8 @@ export function makeRSDoc(opts, src, style = "") {
       if (src) {
         decorateDocument(doc, opts);
       }
-      if (doc.respecIsReady) {
-        await doc.respecIsReady;
+      if (doc.respec) {
+        await doc.respec.ready;
         resolve(doc);
       }
       window.addEventListener("message", function msgHandler(ev) {
@@ -49,9 +49,24 @@ export function makeRSDoc(opts, src, style = "") {
     } else {
       const doc = document.implementation.createHTMLDocument();
       decorateDocument(doc, opts);
-      ifr.srcdoc = doc.documentElement.outerHTML;
+      ifr.srcdoc = `<!DOCTYPE html>${doc.documentElement.outerHTML}`;
     }
     // trigger load
+    document.body.appendChild(ifr);
+    iframes.push(ifr);
+  });
+}
+
+/**
+ * @param {Document} doc
+ * @returns {Promise<Document>}
+ */
+export async function getExportedDoc(doc) {
+  const exportedHTML = await doc.respec.toHTML();
+  return new Promise(resolve => {
+    const ifr = document.createElement("iframe");
+    ifr.addEventListener("load", () => resolve(ifr.contentDocument));
+    ifr.srcdoc = exportedHTML;
     document.body.appendChild(ifr);
     iframes.push(ifr);
   });
@@ -180,6 +195,17 @@ export function makeBasicConfig(profile = "w3c") {
         edDraftURI: "https://foo.com",
         shortName: "Foo",
       };
+    case "aom":
+      return {
+        editors: [
+          {
+            name: "Person Name",
+          },
+        ],
+        specStatus: "PD",
+      };
+    default:
+      throw new Error(`Unknown profile: ${profile}`);
   }
 }
 
@@ -205,5 +231,13 @@ export function makeStandardGeoOps(config = {}, body = makeDefaultBody()) {
   return {
     body,
     config: { ...makeBasicConfig("geonovum"), ...config },
+  };
+}
+
+export function makeStandardAomOps(config = {}, body = makeDefaultBody()) {
+  return {
+    body,
+    config: { ...makeBasicConfig("aom"), ...config },
+    profile: "aom",
   };
 }

@@ -1,6 +1,9 @@
 # ReSpec
 
-[![Backers on Open Collective](https://opencollective.com/respec/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/respec/sponsors/badge.svg)](#sponsors) [![Greenkeeper badge](https://badges.greenkeeper.io/w3c/respec.svg)](https://greenkeeper.io/) [![Build Status](https://github.com/w3c/respec/workflows/Node%20CI/badge.svg?branch=develop)](https://github.com/w3c/respec/actions?query=workflow%3A%22Node+CI%22+branch%3Adevelop) [![Known Vulnerabilities](https://snyk.io/test/github/w3c/respec/badge.svg)](https://snyk.io/test/github/w3c/respec)
+[![Backers on Open Collective](https://opencollective.com/respec/backers/badge.svg)](#backers)
+[![Sponsors on Open Collective](https://opencollective.com/respec/sponsors/badge.svg)](#sponsors)
+[![Build Status](https://github.com/w3c/respec/workflows/Node%20CI/badge.svg?branch=develop)](https://github.com/w3c/respec/actions?query=workflow%3A%22Node+CI%22+branch%3Adevelop)
+[![Website status](https://img.shields.io/github/workflow/status/marcoscaceres/respec.org/Health%20Check?label=respec.org&logo=curl)](https://github.com/marcoscaceres/respec.org/actions?query=workflow%3A%22Health+Check%22)
 
 ReSpec is a JS library that makes it easier to write technical specifications, or documents
 that tend to be technical in nature in general. It was originally designed for the purpose
@@ -11,7 +14,7 @@ well.
 
 If you are just interested in writing a spec, you can grab the [starter spec](examples/starter.html).
 
-We have extensive documentation on [how to use ReSpec](https://github.com/w3c/respec/wiki) in our wiki, including:  
+We have extensive documentation on [how to use ReSpec](https://github.com/w3c/respec/wiki) in our wiki, including:
 
   * [User's guide](https://github.com/w3c/respec/wiki/ReSpec-Editor's-Guide)
   * [WebIDL guide](https://github.com/w3c/respec/wiki/WebIDL-Guide)
@@ -46,7 +49,7 @@ Bibliographical references have been moved out of ReSpec. You want to use
 
 ## Contribute
 
-Please see our [developer guide](https://github.com/w3c/respec/wiki/Developers-Guide). 
+Please see our [developer guide](https://github.com/w3c/respec/wiki/Developers-Guide).
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 

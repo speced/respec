@@ -21,6 +21,22 @@ describe("Core — Definitions", () => {
     expect(sec.querySelector("a").getAttribute("href")).toBe("#dfn-text");
   });
 
+  it("makes dfn tab enabled whose aria-role is a link", async () => {
+    const body = `
+    <section id='dfns'>
+      <dfn>dfn 1</dfn>
+      <dfn>dfn 2</dfn>
+      <dfn>dfn 3</dfn>
+      <dfn>dfn 4</dfn>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const sec = doc.getElementById("dfns");
+    const dfns = sec.querySelectorAll("dfn");
+    expect(dfns).toHaveSize(4);
+    expect([...dfns].every(dfn => dfn.tabIndex === 0)).toBeTrue();
+  });
+
   it("makes links <code> when their definitions are <code>", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -83,9 +99,9 @@ describe("Core — Definitions", () => {
     const code = doc.querySelector("#t1 code");
     expect(code.textContent).toBe("Test");
     const t2 = doc.getElementById("t2");
-    expect(t2.querySelector("code")).toBe(null);
+    expect(t2.querySelector("code")).toBeNull();
     expect(t2.querySelector("a").textContent).toBe("not wrapped in code");
-    expect(t2.querySelector("a").getAttribute("href")).toBe("#idl-def-test");
+    expect(t2.querySelector("a").getAttribute("href")).toBe("#dom-test");
   });
 
   it("processes aliases", async () => {
@@ -99,7 +115,6 @@ describe("Core — Definitions", () => {
     const doc = await makeRSDoc(ops);
     const dfn = doc.querySelector("dfn[data-lt]");
     expect(dfn.dataset.lt).toBe("text|text 1|text 2|text 3");
-    expect(dfn.dataset.dfnType).toBe("dfn");
   });
 
   it("allows linking via data-local-lt", async () => {

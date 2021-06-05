@@ -64,6 +64,25 @@ describe("Core — data-cite attribute", () => {
     expect(t2.href).toEqual(location);
   });
 
+  it(`doesn't confuse similarly named specs as self citing`, async () => {
+    const body = `
+      <section>
+        <h2>test</h2>
+        <p id="test">
+          [[[webxr-gamepads-module-1]]], [[webxr-gamepads-module-1]]
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps({ shortName: "gamepad" }, body);
+    const doc = await makeRSDoc(ops);
+    const [anchor1, anchor2] = doc.querySelectorAll("#test a");
+
+    expect(anchor1.href).toContain("TR/webxr-gamepads-module-1/");
+    expect(anchor1.textContent).toBe("WebXR Gamepads Module - Level 1");
+    expect(anchor2.href).toContain("#bib-webxr-gamepads-module-1");
+    expect(anchor2.textContent).toBe("webxr-gamepads-module-1");
+  });
+
   it("links data-cite attributes as normative/informative reference when parent is citing", async () => {
     const body = `
       <section class="informative" data-cite="FETCH">
@@ -96,7 +115,6 @@ describe("Core — data-cite attribute", () => {
     const a = doc.querySelector("#t1 > a");
     expect(a.textContent).toBe("inline link");
     expect(a.href).toBe("https://html.spec.whatwg.org/multipage/#test");
-    expect(a.hasAttribute("data-cite")).toBe(false);
     expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
       "normative-references"
     );
@@ -106,7 +124,6 @@ describe("Core — data-cite attribute", () => {
     const dfnA = doc.querySelector("#t2 > dfn > a");
     expect(dfnA.textContent).toBe("inline link");
     expect(dfnA.href).toBe("https://html.spec.whatwg.org/multipage/#test");
-    expect(dfnA.hasAttribute("data-cite")).toBe(false);
     expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
       "normative-references"
     );
@@ -123,7 +140,6 @@ describe("Core — data-cite attribute", () => {
     const a = doc.querySelector("#t1 > cite > a");
     expect(a.textContent).toBe("inline link");
     expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
-    expect(a.hasAttribute("data-cite")).toBe(false);
     expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
       "normative-references"
     );
@@ -140,7 +156,6 @@ describe("Core — data-cite attribute", () => {
     const a = doc.querySelector("#t1 > cite > a");
     expect(a.textContent).toBe("inline link");
     expect(a.href).toBe("https://dom.spec.whatwg.org/");
-    expect(a.hasAttribute("data-cite")).toBe(false);
     expect(doc.getElementById("bib-whatwg-dom").closest("section").id).toBe(
       "informative-references"
     );
@@ -161,8 +176,6 @@ describe("Core — data-cite attribute", () => {
     expect(a2.textContent).toBe("link 2");
     expect(a1.href).toBe("");
     expect(a2.href).toBe("");
-    expect(a1.hasAttribute("data-cite")).toBe(false);
-    expect(a2.hasAttribute("data-cite")).toBe(false);
     expect(doc.getElementById("bib-no-exist-inf").closest("section").id).toBe(
       "informative-references"
     );
@@ -185,7 +198,6 @@ describe("Core — data-cite attribute", () => {
     expect(a.href).toBe(
       "https://html.spec.whatwg.org/multipage/webappapis.html#scripting"
     );
-    expect(a.hasAttribute("data-cite")).toBe(false);
     expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
       "normative-references"
     );
@@ -207,7 +219,6 @@ describe("Core — data-cite attribute", () => {
       expect(a.href).toBe(
         "https://html.spec.whatwg.org/multipage/webappapis.html#pass"
       );
-      expect(a.hasAttribute("data-cite")).toBe(false);
       expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
         "informative-references"
       );
@@ -238,7 +249,6 @@ describe("Core — data-cite attribute", () => {
       const a = doc.querySelector("#t1 > a");
       expect(a.textContent).toBe("inline link");
       expect(a.href).toBe("https://html.spec.whatwg.org/multipage/#pass");
-      expect(a.hasAttribute("data-cite")).toBe(false);
       expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
         "normative-references"
       );
@@ -325,7 +335,7 @@ describe("Core — data-cite attribute", () => {
           `${doc.location.href}#${anchor.dataset.cite.split("#")[1]}`
       )
     ).toBeTruthy();
-    expect(dahut).toBe(null);
+    expect(dahut).toBeNull();
   });
 
   it("Adds <cite> around <a> when frag and path are missing from <a/dfn data-cite='some-spec'>", async () => {

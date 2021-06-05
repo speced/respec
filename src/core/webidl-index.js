@@ -12,8 +12,8 @@
  * that is preferred.
  */
 export const name = "core/webidl-index";
+import { nonNormativeSelector, wrapInner } from "./utils.js";
 import { addIDLHeader } from "./webidl.js";
-import { nonNormativeSelector } from "./utils.js";
 
 export function run() {
   /** @type {HTMLElement | null} */
@@ -36,11 +36,11 @@ export function run() {
 
   // filter out the IDL marked with class="exclude" and the IDL in non-normative sections
   const idlIndex = Array.from(
-    document.querySelectorAll("pre.def.idl:not(.exclude)")
+    document.querySelectorAll("pre.idl:not(.exclude) > code")
   ).filter(idl => !idl.closest(nonNormativeSelector));
 
   if (idlIndex.length === 0) {
-    const text = "This specification doesn't declare any Web IDL.";
+    const text = "This specification doesn't normatively declare any Web IDL.";
     idlIndexSec.append(text);
     return;
   }
@@ -64,9 +64,9 @@ export function run() {
     });
   // Remove duplicate IDs
   pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
-  // Remove IDL headers
-  pre.querySelectorAll(".idlHeader").forEach(elem => elem.remove());
+
   // Add our own IDL header
   idlIndexSec.appendChild(pre);
+  wrapInner(pre, document.createElement("code"));
   addIDLHeader(pre);
 }

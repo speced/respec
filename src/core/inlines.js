@@ -12,10 +12,9 @@ import {
   getTextNodes,
   norm,
   refTypeFromContext,
-  showInlineError,
-  showInlineWarning,
+  showWarning,
 } from "./utils.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { idlStringToHtml } from "./inline-idl-parser.js";
 import { renderInlineCitation } from "./render-biblio.js";
 
@@ -64,7 +63,7 @@ const l10n = getIntlData(localizationStrings);
 const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
 const inlineIdlReference = /(?:{{[^}]+}})/; // {{ WebIDLThing }}
 const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
-const inlineCitation = /(?:\[\[(?:!|\\|\?)?[A-Za-z0-9.-]+\]\])/; // [[citation]]
+const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
@@ -77,15 +76,24 @@ const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
  */
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
-  const [element, attribute] = value.split("/", 2).map(s => s && s.trim());
-  const [xrefType, xrefFor, textContent] = attribute
-    ? ["element-attr", element, attribute]
-    : ["element", null, element];
-  const html = hyperHTML`<code><a
-    data-xref-type="${xrefType}"
-    data-xref-for="${xrefFor}"
-    >${textContent}</a></code>`;
-  return html;
+  const [element, attribute, attrValue] = value
+    .split("/", 3)
+    .map(s => s && s.trim())
+    .filter(s => !!s);
+  const [xrefType, xrefFor, textContent] = (() => {
+    if (attrValue) {
+      return ["attr-value", `${element}/${attribute}`, attrValue];
+    } else if (attribute) {
+      return ["element-attr", element, attribute];
+    } else {
+      return ["element", null, element];
+    }
+  })();
+  return html`<code
+    ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
+      >${textContent}</a
+    ></code
+  >`;
 }
 
 /**
@@ -94,7 +102,7 @@ function inlineElementMatches(matched) {
  */
 function inlineRFC2119Matches(matched) {
   const value = norm(matched);
-  const nodeElement = hyperHTML`<em class="rfc2119" title="${value}">${value}</em>`;
+  const nodeElement = html`<em class="rfc2119">${value}</em>`;
   // remember which ones were used
   rfc2119Usage[value] = true;
   return nodeElement;
@@ -108,29 +116,27 @@ function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
   if (!ref.startsWith("#")) {
-    return hyperHTML`<a data-cite="${ref}"></a>`;
+    return html`<a data-cite="${ref}"></a>`;
   }
-  if (document.querySelector(ref)) {
-    return hyperHTML`<a href="${ref}"></a>`;
-  }
-  const badReference = hyperHTML`<span>${matched}</span>`;
-  showInlineError(
-    badReference, // cite element
-    `Wasn't able to expand ${matched} as it didn't match any id in the document.`,
-    `Please make sure there is element with id ${ref} in the document.`
-  );
-  return badReference;
+  return html`<a href="${ref}"></a>`;
 }
 
 /**
  * @param {string} matched
+ * @param {Text} text
  */
-function inlineXrefMatches(matched) {
+function inlineXrefMatches(matched, text) {
   // slices "{{" at the beginning and "}}" at the end
-  const ref = matched.slice(2, -2).trim();
-  return ref.startsWith("\\")
-    ? matched.replace("\\", "")
-    : idlStringToHtml(norm(ref));
+  const ref = norm(matched.slice(2, -2));
+  if (ref.startsWith("\\")) {
+    return matched.replace("\\", "");
+  }
+
+  const node = idlStringToHtml(ref);
+  // If it's inside a dfn, it should just be coded, not linked.
+  // This is because dfn elements are treated as links by ReSpec via role=link.
+  const renderAsCode = !!text.parentElement.closest("dfn");
+  return renderAsCode ? inlineCodeMatches(`\`${node.textContent}\``) : node;
 }
 
 /**
@@ -145,15 +151,16 @@ function inlineBibrefMatches(matched, txt, conf) {
   if (ref.startsWith("\\")) {
     return [`[[${ref.slice(1)}]]`];
   }
-  const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
-  const cite = renderInlineCitation(ref);
-  const cleanRef = ref.replace(/^(!|\?)/, "");
+
+  const [spec, linkText] = ref.split("|").map(norm);
+  const { type, illegal } = refTypeFromContext(spec, txt.parentElement);
+  const cite = renderInlineCitation(spec, linkText);
+  const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
-    showInlineWarning(
-      cite.childNodes[1], // cite element
-      "Normative references in informative sections are not allowed. " +
-        `Remove '!' from the start of the reference \`[[${ref}]]\``
-    );
+    const citeElem = cite.childNodes[1] || cite;
+    const msg = `Normative references in informative sections are not allowed. `;
+    const hint = `Remove '!' from the start of the reference \`[[${ref}]]\``;
+    showWarning(msg, name, { elements: [citeElem], hint });
   }
 
   if (type === "informative" && !illegal) {
@@ -161,7 +168,7 @@ function inlineBibrefMatches(matched, txt, conf) {
   } else {
     conf.normativeReferences.add(cleanRef);
   }
-  return cite.childNodes;
+  return cite.childNodes[1] ? cite.childNodes : [cite];
 }
 
 /**
@@ -172,7 +179,7 @@ function inlineBibrefMatches(matched, txt, conf) {
 function inlineAbbrMatches(matched, txt, abbrMap) {
   return txt.parentElement.tagName === "ABBR"
     ? matched
-    : hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
+    : html`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
 }
 
 /**
@@ -184,7 +191,7 @@ function inlineVariableMatches(matched) {
   // remove "|" at the beginning and at the end, then split at an optional `:`
   const matches = matched.slice(1, -1).split(":", 2);
   const [varName, type] = matches.map(s => s.trim());
-  return hyperHTML`<var data-type="${type}">${varName}</var>`;
+  return html`<var data-type="${type}">${varName}</var>`;
 }
 
 /**
@@ -196,19 +203,25 @@ function inlineVariableMatches(matched) {
  */
 function inlineAnchorMatches(matched) {
   matched = matched.slice(2, -2); // Chop [= =]
-  const parts = matched.split("/", 2).map(s => s.trim());
+  const parts = splitByFor(matched);
   const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
   const [linkingText, text] = content.includes("|")
     ? content.split("|", 2).map(s => s.trim())
     : [null, content];
   const processedContent = processInlineContent(text);
   const forContext = isFor ? norm(isFor) : null;
-  return hyperHTML`<a data-link-for="${forContext}" data-xref-for="${forContext}" data-lt="${linkingText}">${processedContent}</a>`;
+  return html`<a
+    data-link-type="dfn"
+    data-link-for="${forContext}"
+    data-xref-for="${forContext}"
+    data-lt="${linkingText}"
+    >${processedContent}</a
+  >`;
 }
 
 function inlineCodeMatches(matched) {
   const clean = matched.slice(1, -1); // Chop ` and `
-  return hyperHTML`<code>${clean}</code>`;
+  return html`<code>${clean}</code>`;
 }
 
 function processInlineContent(text) {
@@ -237,9 +250,11 @@ export function run(conf) {
 
   // PRE-PROCESSING
   /** @type {NodeListOf<HTMLElement>} */
-  const abbrs = document.querySelectorAll("abbr[title]");
-  for (const abbr of abbrs) {
-    abbrMap.set(abbr.textContent, abbr.title);
+  const abbrElements = document.querySelectorAll("abbr[title]:not(.exclude)");
+  for (const { textContent, title } of abbrElements) {
+    const key = norm(textContent);
+    const value = norm(title);
+    abbrMap.set(key, value);
   }
   const aKeys = [...abbrMap.keys()];
   const abbrRx = aKeys.length ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)` : null;
@@ -273,40 +288,64 @@ export function run(conf) {
       matched = !matched;
       if (!matched) {
         df.append(t);
-      } else if (t.startsWith("{{")) {
-        const node = inlineXrefMatches(t);
-        df.append(node);
-      } else if (t.startsWith("[[[")) {
-        const node = inlineRefMatches(t);
-        df.append(node);
-      } else if (t.startsWith("[[")) {
-        const nodes = inlineBibrefMatches(t, txt, conf);
-        df.append(...nodes);
-      } else if (t.startsWith("|")) {
-        const node = inlineVariableMatches(t);
-        df.append(node);
-      } else if (t.startsWith("[=")) {
-        const node = inlineAnchorMatches(t);
-        df.append(node);
-      } else if (t.startsWith("`")) {
-        const node = inlineCodeMatches(t);
-        df.append(node);
-      } else if (t.startsWith("[^")) {
-        const node = inlineElementMatches(t);
-        df.append(node);
-      } else if (abbrMap.has(t)) {
-        const node = inlineAbbrMatches(t, txt, abbrMap);
-        df.append(node);
-      } else if (keywords.test(t)) {
-        const node = inlineRFC2119Matches(t);
-        df.append(node);
-      } else {
-        // FAIL -- not sure that this can really happen
-        throw new Error(
-          `Found token '${t}' but it does not correspond to anything`
-        );
+        continue;
+      }
+      switch (true) {
+        case t.startsWith("{{"):
+          df.append(inlineXrefMatches(t, txt));
+          break;
+        case t.startsWith("[[["):
+          df.append(inlineRefMatches(t));
+          break;
+        case t.startsWith("[["):
+          df.append(...inlineBibrefMatches(t, txt, conf));
+          break;
+        case t.startsWith("|"):
+          df.append(inlineVariableMatches(t));
+          break;
+        case t.startsWith("[="):
+          df.append(inlineAnchorMatches(t));
+          break;
+        case t.startsWith("`"):
+          df.append(inlineCodeMatches(t));
+          break;
+        case t.startsWith("[^"):
+          df.append(inlineElementMatches(t));
+          break;
+        case abbrMap.has(t):
+          df.append(inlineAbbrMatches(t, txt, abbrMap));
+          break;
+        case keywords.test(t):
+          df.append(inlineRFC2119Matches(t));
+          break;
       }
     }
     txt.replaceWith(df);
   }
+}
+
+/**
+ * Linking strings are always composed of:
+ *
+ *   (for-part /)+ linking-text
+ *
+ * E.g., " ReadableStream / set up / pullAlgorithm ".
+ * Where "ReadableStream/set up/" is for-part, and "pullAlgorithm" is
+ * the linking-text.
+ *
+ * The for part is optional, but when present can be two or three levels deep.
+ *
+ * @param {string} str
+ *
+ */
+function splitByFor(str) {
+  const cleanUp = str => str.replace("%%", "/").split("/").map(norm).join("/");
+  const safeStr = str.replace("\\/", "%%");
+  const lastSlashIdx = safeStr.lastIndexOf("/");
+  if (lastSlashIdx === -1) {
+    return [cleanUp(safeStr)];
+  }
+  const forPart = safeStr.substring(0, lastSlashIdx);
+  const linkingText = safeStr.substring(lastSlashIdx + 1, safeStr.length);
+  return [cleanUp(forPart), cleanUp(linkingText)];
 }

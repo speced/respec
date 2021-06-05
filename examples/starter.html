@@ -4,18 +4,26 @@
     <meta charset='utf-8'>
     <script src='https://www.w3.org/Tools/respec/respec-w3c' async class='remove'></script>
     <script class='remove'>
+      // All config options at https://respec.org/docs/
       var respecConfig = {
+        // Working Groups ids at https://respec.org/w3c/groups/
+        group: "webapps", 
         specStatus: "unofficial",
         editors: [{
           name: "Your Name",
           url: "http://your-site.com",
         }],
-        github: "https://github.com/user/my-awesome-api",
+        github: {
+          branch: "main",
+          repoURL: "user/my-awesome-api", 
+        },
+        // See https://respec.org/docs/#xref for usage.
+        xref: "web-platform",
       };
     </script>
   </head>
   <body>
-    <h1>My Awesome API</h1>
+    <h1 id="title">My Awesome API</h1>
     <section id='abstract'>
       <p>
         This is required.
@@ -26,24 +34,25 @@
         This is required.
       </p>
     </section>
-    <section data-dfn-for="Foo" data-link-for="Foo">
+    <section data-dfn-for="Foo">
       <h2>Start your spec!</h2>
       <pre class="idl">
+      [Exposed=Window]
       interface Foo {
-        attribute Bar bar;
-        void doTheFoo();
+        attribute DOMString bar;
+        undefined doTheFoo();
       };
       </pre>
       <section>
         <h2><dfn>bar</dfn> attribute</h2>
-        <p>When getting, the <a>bar</a> attribute returns you a 🍹.</p>
+        <p>When getting, the {{Foo/bar}} attribute returns you a 🍹.</p>
       </section>
       <section>
-        <h2><dfn>doTheFoo(DOMString thing)</dfn> method</h2>
-        <p>When called, <code>doTheFoo(<var>thing</var>)</code> it MUST behave as follows:</p>
+        <h2><dfn>doTheFoo()</dfn> method</h2>
+        <p>When called, {{Foo/doTheFoo()}} MUST behave as follows:</p>
         <ol class="algorithm">
           <li>If <var>thing</var>....</li>
-          <li>Let <var>someProp</var>... of the [[!DOM]] spec.</li>
+          <li>Let <var>someProp</var>... of the [[DOM]] spec.</li>
         </ol>
       </section>
     </section>

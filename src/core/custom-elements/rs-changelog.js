@@ -8,8 +8,8 @@
  * @typedef {{message: string, hash: string}} Commit
  */
 import { github } from "../github.js";
-import { hyperHTML } from "../import-maps.js";
-import { showInlineError } from "../utils.js";
+import { html } from "../import-maps.js";
+import { showError } from "../utils.js";
 
 export const name = "rs-changelog";
 
@@ -29,12 +29,12 @@ export const element = class ChangelogElement extends HTMLElement {
 
   connectedCallback() {
     const { from, to, filter } = this.props;
-    hyperHTML.bind(this)`
+    html.bind(this)`
       <ul>
       ${{
         any: fetchCommits(from, to, filter)
           .then(commits => toHTML(commits))
-          .catch(error => showInlineError(this, error.message, error.message))
+          .catch(error => showError(error.message, name, { elements: [this] }))
           .finally(() => {
             this.dispatchEvent(new CustomEvent("done"));
           }),
@@ -82,7 +82,7 @@ async function toHTML(commits) {
     const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
     const commitURL = `${repoURL}commit/${commit.hash}`;
     const prURL = prNumber ? `${repoURL}pull/${prNumber}` : null;
-    const pr = prNumber && hyperHTML` (<a href="${prURL}">#${prNumber}</a>)`;
-    return hyperHTML`<li><a href="${commitURL}">${message.trim()}</a>${pr}</li>`;
+    const pr = prNumber && html` (<a href="${prURL}">#${prNumber}</a>)`;
+    return html`<li><a href="${commitURL}">${message.trim()}</a>${pr}</li>`;
   });
 }

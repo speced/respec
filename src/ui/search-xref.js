@@ -2,10 +2,10 @@
 // Module ui/search-xref
 // Search xref database
 import { lang as defaultLang } from "../core/l10n.js";
-import { hyperHTML } from "../core/import-maps.js";
+import { html } from "../core/import-maps.js";
 import { ui } from "../core/ui.js";
 
-const XREF_URL = "https://respec.org/xref/";
+const URL = "https://respec.org/xref/";
 
 const localizationStrings = {
   en: {
@@ -17,6 +17,9 @@ const localizationStrings = {
   de: {
     title: "Definitionen durchsuchen",
   },
+  zh: {
+    title: "搜索定义",
+  },
 };
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 const l10n = localizationStrings[lang];
@@ -25,9 +28,9 @@ const button = ui.addCommand(l10n.title, show, "Ctrl+Shift+Alt+x", "📚");
 
 function show() {
   const onLoad = e => e.target.classList.add("ready");
-  const xrefSearchUI = hyperHTML`
-    <iframe id="xref-ui" src="${XREF_URL}" onload=${onLoad}></iframe>
-    <a href="${XREF_URL}" target="_blank">Open Search UI in a new tab</a>
+  const xrefSearchUI = html`
+    <iframe class="respec-iframe" src="${URL}" onload="${onLoad}"></iframe>
+    <a href="${URL}" target="_blank">Open Search UI in a new tab</a>
   `;
   ui.freshModal(l10n.title, xrefSearchUI, button);
 }

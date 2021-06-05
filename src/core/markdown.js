@@ -53,12 +53,45 @@ const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
 
 class Renderer extends marked.Renderer {
-  code(code, language, isEscaped) {
+  code(code, infoString, isEscaped) {
+    const { language, ...metaData } = Renderer.parseInfoString(infoString);
+
     // regex to check whether the language is webidl
     if (/(^webidl$)/i.test(language)) {
       return `<pre class="idl">${code}</pre>`;
     }
-    return super.code(code, language, isEscaped);
+
+    const html = super.code(code, language, isEscaped);
+
+    const { example, illegalExample } = metaData;
+    if (!example && !illegalExample) return html;
+
+    const title = example || illegalExample;
+    const className = `${language} ${example ? "example" : "illegal-example"}`;
+    return html.replace("<pre>", `<pre title="${title}" class="${className}">`);
+  }
+
+  /**
+   * @param {string} infoString
+   */
+  static parseInfoString(infoString) {
+    const firstSpace = infoString.search(/\s/);
+    if (firstSpace === -1) {
+      return { language: infoString };
+    }
+
+    const language = infoString.slice(0, firstSpace);
+    const metaDataStr = infoString.slice(firstSpace + 1);
+    let metaData;
+    if (metaDataStr) {
+      try {
+        metaData = JSON.parse(`{ ${metaDataStr} }`);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    return { language, ...metaData };
   }
 
   heading(text, level, raw, slugger) {
@@ -241,6 +274,25 @@ function structure(fragment, doc) {
 }
 
 /**
+ * Re-structure DOM around elem whose markdown has been processed.
+ * @param {Element} elem
+ */
+export function restructure(elem) {
+  const structuredInternals = structure(elem, elem.ownerDocument);
+  if (
+    structuredInternals.firstElementChild.localName === "section" &&
+    elem.localName === "section"
+  ) {
+    const section = structuredInternals.firstElementChild;
+    section.remove();
+    elem.append(...section.childNodes);
+  } else {
+    elem.textContent = "";
+  }
+  elem.appendChild(structuredInternals);
+}
+
+/**
  * @param {Iterable<Element>} elements
  */
 function substituteWithTextNodes(elements) {
@@ -263,29 +315,9 @@ export function run(conf) {
   }
   // Only has markdown-format sections
   if (!isMDFormat) {
-    processMDSections(document.body)
-      .map(elem => {
-        const structuredInternals = structure(elem, elem.ownerDocument);
-        return {
-          structuredInternals,
-          elem,
-        };
-      })
-      .forEach(({ elem, structuredInternals }) => {
-        elem.setAttribute("aria-busy", "true");
-        if (
-          structuredInternals.firstElementChild.localName === "section" &&
-          elem.localName === "section"
-        ) {
-          const section = structuredInternals.firstElementChild;
-          section.remove();
-          elem.append(...section.childNodes);
-        } else {
-          elem.textContent = "";
-        }
-        elem.appendChild(structuredInternals);
-        elem.setAttribute("aria-busy", "false");
-      });
+    for (const processedElem of processMDSections(document.body)) {
+      restructure(processedElem);
+    }
     return;
   }
   // We transplant the UI to do the markdown processing

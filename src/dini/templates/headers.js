@@ -1,10 +1,11 @@
 // @ts-check
-import { getIntlData } from "../../core/utils.js";
-import { hyperHTML as html } from "../../core/import-maps.js";
-import { pub } from "../../core/pubsubhub.js";
-import showLink from "./show-link.js";
-import showLogo from "./show-logo.js";
-import showPeople from "./show-people.js";
+import { getIntlData, showWarning } from "../../core/utils.js";
+import { html } from "../../core/import-maps.js";
+import showLink from "../../core/templates/show-link.js";
+import showLogo from "../../core/templates/show-logo.js";
+import showPeople from "../../core/templates/show-people.js";
+
+const name = "dini/templates/headers";
 
 const ccLicense = "https://creativecommons.org/licenses/by/4.0/legalcode";
 
@@ -32,6 +33,8 @@ const localizationStrings = {
     this_version: "현재 버전:",
   },
   zh: {
+    author: "作者：",
+    authors: "作者：",
     editor: "编辑：",
     editors: "编辑：",
     former_editor: "原编辑：",
@@ -102,43 +105,39 @@ function getSpecSubTitleElem(conf) {
 }
 
 export default conf => {
-  return html`
-    <div class="head">
-      ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
-      ${getSpecSubTitleElem(conf)}
-      <h2>
-        ${conf.textStatus}
-        <time class="dt-published" datetime="${conf.dashDate}"
-          >${conf.publishHumanDate}</time
-        >
-      </h2>
-      <dl>
-        <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
-        ${showPeople(conf.editors)}
-        ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
-          ? html`
-              <dt>
-                ${conf.multipleFormerEditors
-                  ? l10n.former_editors
-                  : l10n.former_editor}
-              </dt>
-              ${showPeople(conf.formerEditors)}
-            `
-          : ""}
-        ${conf.authors
-          ? html`
-              <dt>
-                ${conf.multipleAuthors ? l10n.authors : l10n.author}
-              </dt>
-              ${showPeople(conf.authors)}
-            `
-          : ""}
-        ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
-      </dl>
-      ${renderCopyright(conf)}
-      <hr />
-    </div>
-  `;
+  return html`<div class="head">
+    ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
+    ${getSpecSubTitleElem(conf)}
+    <h2>
+      ${conf.textStatus}
+      <time class="dt-published" datetime="${conf.dashDate}"
+        >${conf.publishHumanDate}</time
+      >
+    </h2>
+    <dl>
+      <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
+      ${showPeople(conf, "editors")}
+      ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
+        ? html`
+            <dt>
+              ${conf.multipleFormerEditors
+                ? l10n.former_editors
+                : l10n.former_editor}
+            </dt>
+            ${showPeople(conf, "formerEditors")}
+          `
+        : ""}
+      ${conf.authors
+        ? html`
+            <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
+            ${showPeople(conf, "authors")}
+          `
+        : ""}
+      ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
+    </dl>
+    ${renderCopyright(conf)}
+    <hr />
+  </div>`;
 };
 
 /**
@@ -147,9 +146,7 @@ export default conf => {
  * @param {string=} cssClass
  */
 function linkLicense(text, url, cssClass) {
-  return html`
-    <a rel="license" href="${url}" class="${cssClass}">${text}</a>
-  `;
+  return html`<a rel="license" href="${url}" class="${cssClass}">${text}</a>`;
 }
 
 function renderCopyright(conf) {
@@ -160,21 +157,18 @@ function renderCopyright(conf) {
     return existingCopyright;
   }
   if (conf.hasOwnProperty("overrideCopyright")) {
-    const msg =
-      "The `overrideCopyright` configuration option is deprecated. " +
-      'Please use `<p class="copyright">` instead.';
-    pub("warn", msg);
+    const msg = "The `overrideCopyright` configuration option is deprecated.";
+    const hint = 'Please use `<p class="copyright">` instead.';
+    showWarning(msg, name, { hint });
   }
   return conf.overrideCopyright
     ? [conf.overrideCopyright]
-    : html`
-        <p class="copyright">
-          Dieses Dokument ist lizensiert unter
-          ${linkLicense(
-            "Creative Commons Attribution 4.0 International Public License",
-            ccLicense,
-            "subfoot"
-          )}.
-        </p>
-      `;
+    : html`<p class="copyright">
+        Dieses Dokument ist lizensiert unter
+        ${linkLicense(
+          "Creative Commons Attribution 4.0 International Public License",
+          ccLicense,
+          "subfoot"
+        )}.
+      </p>`;
 }

@@ -1,9 +1,14 @@
 // @ts-check
-// Automatically adds external references.
-// Looks for the terms which do not have a definition locally on Shepherd API
-// For each returend result, adds `data-cite` attributes to respective elements,
-//   so later they can be handled by core/link-to-dfn.
-// https://github.com/w3c/respec/issues/1662
+/**
+ * @module core/xref
+ *
+ * Automatically adds external references.
+ *
+ * Searches for the terms which do not have a local definition at xref API and
+ * for each query, adds `data-cite` attributes to respective elements.
+ * `core/data-cite` later converts these data-cite attributes to actual links.
+ * https://github.com/w3c/respec/issues/1662
+ */
 /**
  * @typedef {import('core/xref').RequestEntry} RequestEntry
  * @typedef {import('core/xref').Response} Response
@@ -16,10 +21,13 @@ import {
   createResourceHint,
   nonNormativeSelector,
   norm as normalize,
-  showInlineError,
-  showInlineWarning,
+  showError,
+  showWarning,
 } from "./utils.js";
-import { pub } from "./pubsubhub.js";
+import { possibleExternalLinks } from "./link-to-dfn.js";
+import { sub } from "./pubsubhub.js";
+
+export const name = "core/xref";
 
 const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
@@ -38,11 +46,13 @@ if (
 }
 
 /**
- * main external reference driver
  * @param {Object} conf respecConfig
- * @param {HTMLElement[]} elems possibleExternalLinks
  */
-export async function run(conf, elems) {
+export async function run(conf) {
+  if (!conf.xref) {
+    return;
+  }
+
   const xref = normalizeConfig(conf.xref);
   if (xref.specs) {
     const bodyCite = document.body.dataset.cite
@@ -51,6 +61,7 @@ export async function run(conf, elems) {
     document.body.dataset.cite = bodyCite.concat(xref.specs).join(" ");
   }
 
+  const elems = possibleExternalLinks.concat(findExplicitExternalLinks());
   if (!elems.length) return;
 
   /** @type {RequestEntry[]} */
@@ -63,6 +74,31 @@ export async function run(conf, elems) {
 
   const data = await getData(queryKeys, xref.url);
   addDataCiteToTerms(elems, queryKeys, data, conf);
+
+  sub("beforesave", cleanup);
+}
+
+/**
+ * Find additional references that need to be looked up externally.
+ * Examples: a[data-cite="spec"], dfn[data-cite="spec"], dfn.externalDFN
+ */
+function findExplicitExternalLinks() {
+  /** @type {NodeListOf<HTMLElement>} */
+  const links = document.querySelectorAll(
+    "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
+      "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
+  );
+  /** @type {NodeListOf<HTMLElement>} */
+  const externalDFNs = document.querySelectorAll("dfn.externalDFN");
+  return [...links]
+    .filter(el => {
+      // ignore empties
+      if (el.textContent.trim() === "") return false;
+      /** @type {HTMLElement} */
+      const closest = el.closest("[data-cite]");
+      return !closest || closest.dataset.cite !== "";
+    })
+    .concat(...externalDFNs);
 }
 
 /**
@@ -103,11 +139,10 @@ function normalizeConfig(xref) {
         }
       }
       break;
-    default:
-      pub(
-        "error",
-        `Invalid value for \`xref\` configuration option. Received: "${xref}".`
-      );
+    default: {
+      const msg = `Invalid value for \`xref\` configuration option. Received: "${xref}".`;
+      showError(msg, name);
+    }
   }
   return config;
 
@@ -118,7 +153,7 @@ function normalizeConfig(xref) {
     const msg =
       `Invalid profile "${profile}" in \`respecConfig.xref\`. ` +
       `Please use one of the supported profiles: ${supportedProfiles}.`;
-    pub("error", msg);
+    showError(msg, name);
   }
 }
 
@@ -145,7 +180,7 @@ function getRequestEntry(elem) {
 }
 
 /** @param {HTMLElement} elem */
-function getTermFromElement(elem) {
+export function getTermFromElement(elem) {
   const { lt: linkingText } = elem.dataset;
   let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
   term = normalize(term);
@@ -164,8 +199,19 @@ function getSpecContext(elem) {
   /** @type {HTMLElement} */
   let dataciteElem = elem.closest("[data-cite]");
 
+  // Traverse up towards the root element, adding levels of lower priority specs
+  while (dataciteElem) {
+    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
+    const cites = cite.split(/\s+/).filter(s => s);
+    if (cites.length) {
+      specs.push(cites);
+    }
+    if (dataciteElem === elem) break;
+    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
+  }
+
   // If element itself contains data-cite, we don't take inline context into
-  // account. The inline bibref context has highest priority, if available.
+  // account. The inline bibref context has lowest priority, if available.
   if (dataciteElem !== elem) {
     const closestSection = elem.closest("section");
     /** @type {Iterable<HTMLElement>} */
@@ -176,17 +222,6 @@ function getSpecContext(elem) {
     if (inlineRefs.length) {
       specs.push(inlineRefs);
     }
-  }
-
-  // Traverse up towards the root element, adding levels of lower priority specs
-  while (dataciteElem) {
-    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
-    const cites = cite.split(/\s+/).filter(s => s);
-    if (cites.length) {
-      specs.push(cites);
-    }
-    if (dataciteElem === elem) break;
-    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
   }
 
   const uniqueSpecContext = dedupeSpecContext(specs);
@@ -265,7 +300,7 @@ async function getData(queryKeys, apiUrl) {
   const fetchedResults = await fetchFromNetwork(termsToLook, apiUrl);
   if (fetchedResults.size) {
     // add data to cache
-    await cacheXrefData(fetchedResults);
+    await cacheXrefData(uniqueQueryKeys, fetchedResults);
   }
 
   return new Map([...resultsFromCache, ...fetchedResults]);
@@ -352,12 +387,21 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
  * @param {any} conf
  */
 function addDataCite(elem, query, result, conf) {
-  const { term } = query;
-  const { uri, shortname: cite, normative, type } = result;
-
-  const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
-  const [citePath, citeFrag] = path.split("#");
+  const { term, specs = [] } = query;
+  const { uri, shortname, spec, normative, type, for: forContext } = result;
+  // if authored spec context had `result.spec`, use it instead of shortname
+  const cite = specs.flat().includes(spec) ? spec : shortname;
+  // we use this "partial" URL to resolve parts of urls...
+  // but sometimes we get lucky and we get an absolute URL from xref
+  // which we can then use in other places (e.g., data-cite.js)
+  const url = new URL(uri, "https://partial");
+  const { pathname: citePath } = url;
+  const citeFrag = url.hash.slice(1);
   const dataset = { cite, citePath, citeFrag, type };
+  if (forContext) dataset.linkFor = forContext[0];
+  if (url.origin && url.origin !== "https://partial") {
+    dataset.citeHref = url.href;
+  }
   Object.assign(elem.dataset, dataset);
 
   addToReferences(elem, cite, normative, term, conf);
@@ -391,11 +435,9 @@ function addToReferences(elem, cite, normative, term, conf) {
     return;
   }
 
-  const msg =
-    `Adding an informative reference to "${term}" from "${cite}" ` +
-    "in a normative section";
-  const title = "Error: Informative reference in normative section";
-  showInlineWarning(elem, msg, title);
+  const msg = `Normative reference to "${term}" found but term is defined informatively in "${cite}"`;
+  const title = "Error: Normative reference to informative term";
+  showWarning(msg, name, { title, elements: [elem] });
 }
 
 /** @param {Errors} errors */
@@ -409,15 +451,19 @@ function showErrors({ ambiguous, notFound }) {
     return url;
   };
 
+  const howToFix = howToCiteURL =>
+    "[Learn more about this error](https://respec.org/docs/#error-term-not-found)" +
+    ` or see [how to cite to resolve the error](${howToCiteURL}).`;
+
   for (const { query, elems } of notFound.values()) {
-    const specs = [...new Set(query.specs.flat())].sort();
+    const specs = query.specs ? [...new Set(query.specs.flat())].sort() : [];
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = specs.map(spec => `\`${spec}\``).join(", ");
-    const msg =
-      `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}. ` +
-      `See [how to cite to resolve the error](${formUrl})`;
-    showInlineError(elems, msg, "Error: No matching dfn found.");
+    const hint = howToFix(formUrl);
+    const msg = `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}.`;
+    const title = "Error: No matching dfn found.";
+    showError(msg, name, { title, elements: elems, hint });
   }
 
   for (const { query, elems, results } of ambiguous.values()) {
@@ -425,10 +471,10 @@ function showErrors({ ambiguous, notFound }) {
     const specsString = specs.map(s => `**${s}**`).join(", ");
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
-    const msg =
-      `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous. ` +
-      `See [how to cite to resolve the error](${formUrl})`;
-    showInlineError(elems, msg, "Error: Linking an ambiguous dfn.");
+    const hint = howToFix(formUrl);
+    const msg = `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous.`;
+    const title = "Error: Linking an ambiguous dfn.";
+    showError(msg, name, { title, elements: elems, hint });
   }
 }
 
@@ -442,4 +488,14 @@ function objectHash(obj) {
 function bufferToHexString(buffer) {
   const byteArray = new Uint8Array(buffer);
   return [...byteArray].map(v => v.toString(16).padStart(2, "0")).join("");
+}
+
+function cleanup(doc) {
+  const elems = doc.querySelectorAll(
+    "a[data-xref-for], a[data-xref-type], a[data-link-for]"
+  );
+  const attrToRemove = ["data-xref-for", "data-xref-type", "data-link-for"];
+  elems.forEach(el => {
+    attrToRemove.forEach(attr => el.removeAttribute(attr));
+  });
 }

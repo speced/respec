@@ -2,7 +2,7 @@
 // Module geonovum/conformance
 // Handle the conformance section properly.
 // based on W3C conformance, but because Geonovum has different requirements, have a separate module
-import { hyperHTML as html } from "../core/import-maps.js";
+import { html } from "../core/import-maps.js";
 export const name = "geonovum/conformance";
 
 /**
@@ -16,9 +16,7 @@ function processConformance(conformance) {
       diagrammen, voorbeelden, en noten in dit document niet normatief. Verder
       is alles in dit document normatief.
     </p>
-    <p>
-      Informatief en normatief.
-    </p>
+    <p>Informatief en normatief.</p>
   `;
   conformance.prepend(...content.childNodes);
 }

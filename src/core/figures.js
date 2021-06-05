@@ -8,10 +8,10 @@ import {
   addId,
   getIntlData,
   renameElement,
-  showInlineWarning,
+  showWarning,
   wrapInner,
 } from "./utils.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 
 export const name = "core/figures";
 
@@ -37,8 +37,8 @@ const localizationStrings = {
     list_of_figures: "Lista de Figuras",
   },
   zh: {
-    fig: "圖 ",
-    list_of_figures: "List of Figures",
+    fig: "图 ",
+    list_of_figures: "规范中包含的图",
   },
   de: {
     fig: "Abbildung",
@@ -58,8 +58,10 @@ export function run() {
   if (tof.length && tofElement) {
     decorateTableOfFigures(tofElement);
     tofElement.append(
-      hyperHTML`<h2>${l10n.list_of_figures}</h2>`,
-      hyperHTML`<ul class='tof'>${tof}</ul>`
+      html`<h2>${l10n.list_of_figures}</h2>`,
+      html`<ul class="tof">
+        ${tof}
+      </ul>`
     );
   }
 }
@@ -77,7 +79,8 @@ function collectFigures() {
       decorateFigure(fig, caption, i);
       tof.push(getTableOfFiguresListItem(fig.id, caption));
     } else {
-      showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
+      const msg = "Found a `<figure>` without a `<figcaption>`.";
+      showWarning(msg, name, { elements: [fig] });
     }
   });
   return tof;
@@ -92,8 +95,8 @@ function decorateFigure(figure, caption, i) {
   const title = caption.textContent;
   addId(figure, "fig", title);
   // set proper caption title
-  wrapInner(caption, hyperHTML`<span class='fig-title'>`);
-  caption.prepend(l10n.fig, hyperHTML`<bdi class='figno'>${i + 1}</bdi>`, " ");
+  wrapInner(caption, html`<span class="fig-title"></span>`);
+  caption.prepend(l10n.fig, html`<bdi class="figno">${i + 1}</bdi>`, " ");
 }
 
 /**
@@ -106,8 +109,8 @@ function getTableOfFiguresListItem(figureId, caption) {
   tofCaption.querySelectorAll("a").forEach(anchor => {
     renameElement(anchor, "span").removeAttribute("href");
   });
-  return hyperHTML`<li class='tofline'>
-    <a class='tocxref' href='${`#${figureId}`}'>${tofCaption.childNodes}</a>
+  return html`<li class="tofline">
+    <a class="tocxref" href="${`#${figureId}`}">${tofCaption.childNodes}</a>
   </li>`;
 }
 

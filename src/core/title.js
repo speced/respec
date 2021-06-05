@@ -10,8 +10,8 @@
  *
  */
 
-import { getIntlData, norm, showInlineError } from "./utils.js";
-import { hyperHTML } from "./import-maps.js";
+import { getIntlData, norm, showError } from "./utils.js";
+import { html } from "./import-maps.js";
 export const name = "core/title";
 
 const localizationStrings = {
@@ -21,6 +21,9 @@ const localizationStrings = {
   de: {
     default_title: "Kein Titel",
   },
+  zh: {
+    default_title: "无标题",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);
@@ -28,7 +31,7 @@ const l10n = getIntlData(localizationStrings);
 export function run(conf) {
   /** @type {HTMLElement} */
   const h1Elem =
-    document.querySelector("h1#title") || hyperHTML`<h1 id="title">`;
+    document.querySelector("h1#title") || html`<h1 id="title"></h1>`;
 
   // check existing element is ok to use
   if (h1Elem.isConnected && h1Elem.textContent.trim() === "") {
@@ -37,8 +40,8 @@ export function run(conf) {
       "To fix this, please give your document a `<title>`. " +
       "If you need special markup in the document's title, " +
       'please use a `<h1 id="title">`.';
-    const msgTitle = "Document is missing a title";
-    showInlineError(h1Elem, msg, msgTitle);
+    const title = "Document is missing a title";
+    showError(msg, name, { title, elements: [h1Elem] });
   }
 
   // Decorate the spec title
@@ -62,7 +65,7 @@ function setDocumentTitle(conf, h1Elem) {
 
   if (conf.isPreview && conf.prNumber) {
     const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;
-    const { childNodes } = hyperHTML`
+    const { childNodes } = html`
       Preview of PR <a href="${prUrl}">#${conf.prNumber}</a>:
     `;
     h1Elem.prepend(...childNodes);

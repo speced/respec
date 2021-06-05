@@ -46,14 +46,14 @@ interface Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex).not.toBe(null);
+    expect(idlIndex).not.toBeNull();
     const pre = idlIndex.querySelector("pre");
     // idlHeaders are not tested here
     pre.querySelectorAll(".idlHeader").forEach(elem => elem.remove());
 
     expect(pre.textContent).toBe(expectedIDL);
     const header = doc.querySelector("#idl-index > h2");
-    expect(header).not.toBe(null);
+    expect(header).not.toBeNull();
     expect(header.textContent).toBe("1. IDL Index");
   });
 
@@ -222,7 +222,7 @@ interface Bar {
     const doc = await makeRSDoc(ops);
     const { textContent } = doc.getElementById("idl-index");
     expect(textContent).toContain(
-      "This specification doesn't declare any Web IDL"
+      "This specification doesn't normatively declare any Web IDL."
     );
   });
 
@@ -264,10 +264,10 @@ dictionary Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex).not.toBe(null);
+    expect(idlIndex).not.toBeNull();
     const pre = idlIndex.querySelector("pre");
 
-    expect(pre.querySelectorAll(".idlHeader").length).toBe(1);
+    expect(pre.querySelectorAll(".idlHeader")).toHaveSize(1);
     const idlHeader = pre.querySelector(".idlHeader");
     expect(idlHeader.querySelector("a.self-link").getAttribute("href")).toBe(
       "#actual-idl-index"
@@ -290,12 +290,12 @@ dictionary Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex).not.toBe(null);
-    expect(idlIndex.querySelector("pre")).toBe(null);
+    expect(idlIndex).not.toBeNull();
+    expect(idlIndex.querySelector("pre")).toBeNull();
     const header = doc.querySelector("#idl-index > h2");
-    expect(header).not.toBe(null);
+    expect(header).not.toBeNull();
     expect(header.textContent).toBe("1. PASS");
-    expect(doc.querySelectorAll("#idl-index > h2").length).toBe(1);
+    expect(doc.querySelectorAll("#idl-index > h2")).toHaveSize(1);
   });
 
   it("doesn't include ids in the cloned indexed", async () => {
@@ -319,6 +319,32 @@ dictionary Bar {
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("#idl-index pre");
-    expect(pre.querySelectorAll("*[id]").length).toBe(0);
+    expect(pre.querySelectorAll("*[id]")).toHaveSize(0);
+  });
+
+  it("wraps IDL in a single code element", async () => {
+    const body = `
+      ${makeDefaultBody()}
+      <pre class=idl>
+      [Exposed=Window]
+      interface Test {};
+      </pre>
+      <pre class=idl>
+      [Exposed=Window]
+      interface Test2 {};
+      </pre>
+      <section id="idl-index">
+      </section>
+      <section id="conformance"></section>
+    `;
+    const ops = {
+      config: makeBasicConfig(),
+      body,
+    };
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelectorAll("#idl-index pre > code")).toHaveSize(1);
+    const code = doc.querySelector("#idl-index pre > code");
+    expect(code.textContent).toContain("interface Test {}");
+    expect(code.textContent).toContain("interface Test2 {}");
   });
 });

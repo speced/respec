@@ -15,6 +15,15 @@ declare module "text!*" {
   export default value;
 }
 
+// See: core/linter-rules/a11y
+interface AxeViolation {
+  id: string;
+  help: string;
+  helpUrl: string;
+  description: string;
+  nodes: { failureSummary: string; element: HTMLElement }[];
+}
+
 declare var respecConfig: any;
 interface Window {
   respecVersion: string;
@@ -37,12 +46,18 @@ interface Window {
     (deps: string[], callback: (...modules: any[]) => void): void;
     modules: { [dep: string]: any };
   };
-  $: JQueryStatic;
-  jQuery: JQueryStatic;
+  axe?: {
+    run(context: Node, options: any): Promise<{ violations: AxeViolation[] }>;
+  };
 }
 
 interface Document {
+  /** @deprecated in favour of `document.respec.ready` */
   respecIsReady: Promise<void>;
+  respec: {
+    readonly version: string;
+    readonly ready: Promise<void>;
+  };
   createNodeIterator<T>(
     root: Node,
     whatToShow?: number,
@@ -79,29 +94,54 @@ declare namespace Intl {
   }
 }
 
-interface JQuery {
-  renameElement(name: string): JQuery<any>;
-  getDfnTitles(): string[];
-  linkTargets(): import("./core/utils.js").LinkTarget[];
-  makeID(pfx?: string, txt?: string, noLC?: boolean): string;
-  allTextNodes(exclusions: string[]): Text[];
-}
-
 interface BiblioData {
   aliasOf?: string;
   id?: string;
   title: string;
   href?: string;
   authors?: string[];
+  publisher?: string;
+  date?: string;
+  status?: string;
+  etAl?: boolean;
 }
 interface Conf {
-  informativeReferences: Set<string>;
-  normativeReferences: Set<string>;
-  localBiblio?: Record<string, BiblioData>;
+  authors?: Person[];
   biblio: Record<string, BiblioData>;
+  editors?: Person[];
+  formerEditors?: Person[];
+  informativeReferences: Set<string>;
+  localBiblio?: Record<string, BiblioData>;
+  normativeReferences: Set<string>;
+  shortName: string;
 }
 
+type ResourceHintOption = {
+  /**
+   * The type of hint.
+   **/
+  hint: "preconnect" | "preload" | "dns-prefetch" | "prerender";
+  /**
+   * The URL for the resource or origin.
+   **/
+  href: string;
+  /**
+   * the CORS mode to use (see HTML spec).
+   */
+  corsMode?: "anonymous" | "use-credentials";
+  /**
+   * fetch destination type.
+   */
+  as?: "script" | "style" | "image";
+  /**
+   * If the hint should remain in the spec after processing.
+   */
+  dontRemove?: boolean;
+};
+
 module "core/xref" {
+  import { IDBPDatabase, DBSchema } from "idb";
+
   export interface RequestEntry {
     term: string;
     id: string;
@@ -125,4 +165,40 @@ module "core/xref" {
     };
     query?: RequestEntry[];
   }
+
+  interface XrefDBScheme extends DBSchema {
+    xrefs: {
+      key: string;
+      value: { query: RequestEntry; result: SearchResultEntry[] };
+      indexes: { byTerm: string };
+    };
+  }
+
+  export type XrefDatabase = IDBPDatabase<XrefDBScheme>;
+}
+
+enum W3CGroupType {
+  "bg",
+  "cg",
+  "ig",
+  "wg",
+}
+
+type Person = {
+  name: string;
+  w3cid?: string | number;
+  mailto?: string;
+  url?: string;
+  orcid?: string;
+  company?: string;
+  companyURL?: string;
+  note?: string;
+  retiredDate?: string;
+  extras?: PersonExtras[];
+}
+
+type PersonExtras = {
+  name: string;
+  class?: string;
+  href?: string;
 }

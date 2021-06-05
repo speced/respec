@@ -3,15 +3,15 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { lang as docLang } from "./l10n.js";
-import { hyperHTML } from "./import-maps.js";
+import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
 const dashes = /-/g;
+
 /**
  * Hashes a string from char code. Can return a negative number.
  * Based on https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
- *
  * @param {String} text
  */
 function hashString(text) {
@@ -41,54 +41,18 @@ export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   day: "2-digit",
 });
 
-const resourceHints = new Set([
-  "dns-prefetch",
-  "preconnect",
-  "preload",
-  "prerender",
-]);
-
-const fetchDestinations = new Set([
-  "document",
-  "embed",
-  "font",
-  "image",
-  "manifest",
-  "media",
-  "object",
-  "report",
-  "script",
-  "serviceworker",
-  "sharedworker",
-  "style",
-  "worker",
-  "xslt",
-  "",
-]);
-
-// CSS selector for matching elements that are non-normative
+/** CSS selector for matching elements that are non-normative */
 export const nonNormativeSelector =
   ".informative, .note, .issue, .example, .ednote, .practice, .introductory";
 
 /**
  * Creates a link element that represents a resource hint.
  *
- * @param {Object} opts Configure the resource hint.
- * @param {String} opts.hint The type of hint (see resourceHints).
- * @param {String} opts.href The URL for the resource or origin.
- * @param {String} [opts.corsMode] Optional, the CORS mode to use (see HTML spec).
- * @param {String} [opts.as] Optional, fetch destination type (see fetchDestinations).
- * @param {boolean} [opts.dontRemove] If the hint should remain in the spec after processing.
+ * @param {ResourceHintOption} opts Configure the resource hint.
  * @return {HTMLLinkElement} A link element ready to use.
  */
 export function createResourceHint(opts) {
-  if (!opts || typeof opts !== "object") {
-    throw new TypeError("Missing options");
-  }
-  if (!resourceHints.has(opts.hint)) {
-    throw new TypeError("Invalid resources hint");
-  }
-  const url = new URL(opts.href, location.href);
+  const url = new URL(opts.href, document.baseURI);
   const linkElem = document.createElement("link");
   let { href } = url;
   linkElem.rel = opts.hint;
@@ -101,10 +65,7 @@ export function createResourceHint(opts) {
       }
       break;
     case "preload":
-      if ("as" in opts && typeof opts.as === "string") {
-        if (!fetchDestinations.has(opts.as)) {
-          console.warn(`Unknown request destination: ${opts.as}`);
-        }
+      if ("as" in opts) {
         linkElem.setAttribute("as", opts.as);
       }
       break;
@@ -117,52 +78,13 @@ export function createResourceHint(opts) {
 }
 
 // RESPEC STUFF
+/**
+ * @param {Document} doc
+ */
 export function removeReSpec(doc) {
   doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
     elem.remove();
   });
-}
-
-/**
- * Adds error class to each element while emitting a warning
- * @param {HTMLElement|HTMLElement[]} elems
- * @param {String} msg message to show in warning
- * @param {String=} title error message to add on each element
- */
-export function showInlineWarning(elems, msg, title) {
-  if (!Array.isArray(elems)) elems = [elems];
-  const links = elems
-    .map((element, i) => {
-      markAsOffending(element, msg, title);
-      return generateMarkdownLink(element, i);
-    })
-    .join(", ");
-  pub("warn", `${msg} at: ${links}.`);
-  console.warn(msg, elems);
-}
-
-/**
- * Adds error class to each element while emitting a warning
- * @param {HTMLElement|HTMLElement[]} elems
- * @param {String} msg message to show in warning
- * @param {String} title error message to add on each element
- * @param {object} [options]
- * @param {string} [options.details]
- */
-export function showInlineError(elems, msg, title, { details } = {}) {
-  if (!Array.isArray(elems)) elems = [elems];
-  const links = elems
-    .map((element, i) => {
-      markAsOffending(element, msg, title);
-      return generateMarkdownLink(element, i);
-    })
-    .join(", ");
-  let message = `${msg} at: ${links}.`;
-  if (details) {
-    message += `\n\n<details>${details}</details>`;
-  }
-  pub("error", message);
-  console.error(msg, elems);
 }
 
 /**
@@ -181,88 +103,21 @@ function markAsOffending(elem, msg, title) {
   }
 }
 
-/**
- * @param {Element} element
- * @param {number} i
- */
-function generateMarkdownLink(element, i) {
-  return `[${i + 1}](#${element.id})`;
-}
-
-export class IDBKeyVal {
-  /**
-   * @param {import("idb").IDBPDatabase} idb
-   * @param {string} storeName
-   */
-  constructor(idb, storeName) {
-    this.idb = idb;
-    this.storeName = storeName;
-  }
-
-  /** @param {string} key */
-  async get(key) {
-    return await this.idb
-      .transaction(this.storeName)
-      .objectStore(this.storeName)
-      .get(key);
-  }
-
-  /**
-   * @param {string[]} keys
-   */
-  async getMany(keys) {
-    const keySet = new Set(keys);
-    /** @type {Map<string, any>} */
-    const results = new Map();
-    let cursor = await this.idb.transaction(this.storeName).store.openCursor();
-    while (cursor) {
-      if (keySet.has(cursor.key)) {
-        results.set(cursor.key, cursor.value);
-      }
-      cursor = await cursor.continue();
-    }
-    return results;
-  }
-
-  /**
-   * @param {string} key
-   * @param {any} value
-   */
-  async set(key, value) {
-    const tx = this.idb.transaction(this.storeName, "readwrite");
-    tx.objectStore(this.storeName).put(value, key);
-    return await tx.done;
-  }
-
-  async addMany(entries) {
-    const tx = this.idb.transaction(this.storeName, "readwrite");
-    for (const [key, value] of entries) {
-      tx.objectStore(this.storeName).put(value, key);
-    }
-    return await tx.done;
-  }
-
-  async clear() {
-    const tx = this.idb.transaction(this.storeName, "readwrite");
-    tx.objectStore(this.storeName).clear();
-    return await tx.done;
-  }
-
-  async keys() {
-    const tx = this.idb.transaction(this.storeName);
-    /** @type {Promise<string[]>} */
-    const keys = tx.objectStore(this.storeName).getAllKeys();
-    await tx.done;
-    return keys;
-  }
-}
-
 // STRING HELPERS
-// Takes an array and returns a string that separates each of its items with the proper commas and
-// "and". The second argument is a mapping function that can convert the items before they are
-// joined
-export function joinAnd(array = [], mapper = item => item, lang = docLang) {
-  const items = array.map(mapper);
+
+/**
+ * Takes an array and returns a string that separates each of its items with the
+ * proper commas and "and". The second argument is a mapping function that can
+ * convert the items before they are joined.
+ * @template T
+ * @param {T[]} array
+ * @param {(item: T) => string} [mapper]
+ * @param {string} [lang]
+ */
+export function joinAnd(array, mapper, lang = docLang) {
+  const items = mapper
+    ? array.map(mapper)
+    : /** @type {string[]} */ (/** @type {unknown[]} */ (array));
   if (Intl.ListFormat && typeof Intl.ListFormat === "function") {
     const formatter = new Intl.ListFormat(lang, {
       style: "long",
@@ -286,11 +141,12 @@ export function joinAnd(array = [], mapper = item => item, lang = docLang) {
   }
 }
 
-// Takes a string, applies some XML escapes, and returns the escaped string.
-// Note that overall using either Handlebars' escaped output or jQuery is much
-// preferred to operating on strings directly.
-export function xmlEscape(s) {
-  return s
+/**
+ * Takes a string, applies some XML escapes, and returns the escaped string.
+ * @param {string} str
+ */
+export function xmlEscape(str) {
+  return str
     .replace(/&/g, "&amp;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
@@ -298,7 +154,8 @@ export function xmlEscape(s) {
 }
 
 /**
- * Trims string at both ends and replaces all other white space with a single space
+ * Trims string at both ends and replaces all other white space with a single
+ * space.
  * @param {string} str
  */
 export function norm(str) {
@@ -322,7 +179,7 @@ function resolveLanguageAlias(lang) {
  * @returns {T[keyof T]}
  */
 export function getIntlData(localizationStrings, lang = docLang) {
-  lang = resolveLanguageAlias(lang);
+  lang = resolveLanguageAlias(lang.toLowerCase());
   // Proxy return type is a known bug:
   // https://github.com/Microsoft/TypeScript/issues/20846
   // @ts-ignore
@@ -339,19 +196,29 @@ export function getIntlData(localizationStrings, lang = docLang) {
 }
 
 // --- DATE HELPERS -------------------------------------------------------------------------------
-// Takes a Date object and an optional separator and returns the year,month,day representation with
-// the custom separator (defaulting to none) and proper 0-padding
+/**
+ * Takes a Date object and an optional separator and returns the year,month,day
+ * representation with the custom separator (defaulting to none) and proper
+ * 0-padding.
+ * @param {Date} date
+ */
 export function concatDate(date, sep = "") {
   return ISODate.format(date).replace(dashes, sep);
 }
 
-// formats a date to "yyyy-mm-dd"
+/**
+ * Formats a date to "yyyy-mm-dd".
+ * @param {Date} date
+ */
 export function toShortIsoDate(date) {
   return ISODate.format(date);
 }
 
-// given either a Date object or a date in YYYY-MM-DD format,
-// return a human-formatted date suitable for use in a W3C specification
+/**
+ * Given either a Date object or a date in `YYYY-MM-DD` format, return a
+ * human-formatted date suitable for use in the specification.
+ * @param {Date | string} [date]
+ */
 export function humanDate(
   date = new Date(),
   lang = document.documentElement.lang || "en"
@@ -373,15 +240,32 @@ export function humanDate(
   // date month year
   return `${day} ${month} ${year}`;
 }
-// given either a Date object or a date in YYYY-MM-DD format,
-// return an ISO formatted date suitable for use in a xsd:datetime item
+
+/**
+ * Given either a Date object or a date in `YYYY-MM-DD` format, return an ISO
+ * formatted date suitable for use in a xsd:datetime item
+ * @param {Date | string} date
+ */
 export function isoDate(date) {
   return (date instanceof Date ? date : new Date(date)).toISOString();
 }
 
-// Given an object, it converts it to a key value pair separated by
-// ("=", configurable) and a delimiter (" ," configurable).
-// for example, {"foo": "bar", "baz": 1} becomes "foo=bar, baz=1"
+/**
+ * Checks if a date is in expected format used by ReSpec (yyyy-mm-dd)
+ * @param {string} rawDate
+ */
+export function isValidConfDate(rawDate) {
+  const date = /\d{4}-\d{2}-\d{2}/.test(rawDate)
+    ? new Date(rawDate)
+    : "Invalid Date";
+  return date.toString() !== "Invalid Date";
+}
+
+/**
+ * Given an object, it converts it to a key value pair separated by ("=", configurable) and a delimiter (" ," configurable).
+ * @example {"foo": "bar", "baz": 1} becomes "foo=bar, baz=1"
+ * @param {Record<string, any>} obj
+ */
 export function toKeyValuePairs(obj, delimiter = ", ", separator = "=") {
   return Array.from(Object.entries(obj))
     .map(([key, value]) => `${key}${separator}${JSON.stringify(value)}`)
@@ -389,10 +273,14 @@ export function toKeyValuePairs(obj, delimiter = ", ", separator = "=") {
 }
 
 // STYLE HELPERS
-// take a document and either a link or an array of links to CSS and appends
-// a <link/> element to the head pointing to each
-export function linkCSS(doc, styles) {
-  const stylesArray = [].concat(styles);
+/**
+ * Take a document and either a link or an array of links to CSS and appends a
+ * `<link rel="stylesheet">` element to the head pointing to each.
+ * @param {Document} doc
+ * @param {string | string[]} urls
+ */
+export function linkCSS(doc, urls) {
+  const stylesArray = [].concat(urls);
   const frag = stylesArray
     .map(url => {
       const link = doc.createElement("link");
@@ -408,14 +296,17 @@ export function linkCSS(doc, styles) {
 }
 
 // TRANSFORMATIONS
-// Run list of transforms over content and return result.
-// Please note that this is a legacy method that is only kept in order
-// to maintain compatibility
-// with RSv1. It is therefore not tested and not actively supported.
+
 /**
+ * Run list of transforms over content and return result.
+ *
+ * Please note that this is a legacy method that is only kept in order to
+ * maintain compatibility with RSv1. It is therefore not tested and not actively
+ * supported.
  * @this {any}
  * @param {string} content
- * @param {string} [flist]
+ * @param {string} [flist] List of global function names.
+ * @param {unknown[]} [funcArgs] Arguments to pass to each function.
  */
 export function runTransforms(content, flist, ...funcArgs) {
   const args = [this, content, ...funcArgs];
@@ -429,10 +320,9 @@ export function runTransforms(content, flist, ...funcArgs) {
         try {
           content = method.apply(this, args);
         } catch (e) {
-          pub(
-            "warn",
-            `call to \`${meth}()\` failed with: ${e}. See error console for stack trace.`
-          );
+          const msg = `call to \`${meth}()\` failed with: ${e}.`;
+          const hint = "See developer console for stack trace.";
+          showWarning(msg, "utils/runTransforms", { hint });
           console.error(e);
         }
       }
@@ -444,13 +334,13 @@ export function runTransforms(content, flist, ...funcArgs) {
 /**
  * Cached request handler
  * @param {RequestInfo} input
- * @param {number} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
+ * @param {number} maxAge cache expiration duration in ms. defaults to 24 hours
  * @return {Promise<Response>}
  *  if a cached response is available and it's not stale, return it
  *  else: request from network, cache and return fresh response.
  *    If network fails, return a stale cached version if exists (else throw)
  */
-export async function fetchAndCache(input, maxAge = 86400000) {
+export async function fetchAndCache(input, maxAge = 24 * 60 * 60 * 1000) {
   const request = new Request(input);
   const url = new URL(request.url);
 
@@ -487,7 +377,7 @@ export async function fetchAndCache(input, maxAge = 86400000) {
     const clonedResponse = response.clone();
     const customHeaders = new Headers(response.headers);
     const expiryDate = new Date(Date.now() + maxAge);
-    customHeaders.set("Expires", expiryDate.toString());
+    customHeaders.set("Expires", expiryDate.toISOString());
     const cacheResponse = new Response(await clonedResponse.blob(), {
       headers: customHeaders,
     });
@@ -499,16 +389,23 @@ export async function fetchAndCache(input, maxAge = 86400000) {
 
 // --- DOM HELPERS -------------------------------
 
+/**
+ * Separates each item with proper commas.
+ * @template T
+ * @param {T[]} array
+ * @param {(item: T) => any} mapper
+ */
 export function htmlJoinComma(array, mapper = item => item) {
   const items = array.map(mapper);
-  const joined = items.slice(0, -1).map(item => hyperHTML`${item}, `);
-  return hyperHTML`${joined}${items[items.length - 1]}`;
+  const joined = items.slice(0, -1).map(item => html`${item}, `);
+  return html`${joined}${items[items.length - 1]}`;
 }
 
 /**
  * Separates each item with proper commas and "and".
- * @param {string[]} array
- * @param {(str: any) => object} mapper
+ * @template T
+ * @param {T[]} array
+ * @param {(item: T) => any} mapper
  */
 export function htmlJoinAnd(array, mapper = item => item) {
   const items = array.map(mapper);
@@ -517,10 +414,10 @@ export function htmlJoinAnd(array, mapper = item => item) {
     case 1: // "x"
       return items[0];
     case 2: // x and y
-      return hyperHTML`${items[0]}${l10n.x_and_y}${items[1]}`;
+      return html`${items[0]}${l10n.x_and_y}${items[1]}`;
     default: {
       const joined = htmlJoinComma(items.slice(0, -1));
-      return hyperHTML`${joined}${l10n.x_y_and_z}${items[items.length - 1]}`;
+      return html`${joined}${l10n.x_y_and_z}${items[items.length - 1]}`;
     }
   }
 }
@@ -538,8 +435,8 @@ export function addHashId(elem, prefix = "") {
 }
 
 /**
- * Creates and sets an ID to an element (elem)
- * using a specific prefix if provided, and a specific text if given.
+ * Creates and sets an ID to an element (elem) using a specific prefix if
+ * provided, and a specific text if given.
  * @param {HTMLElement} elem element
  * @param {String} pfx prefix
  * @param {String} txt text
@@ -564,9 +461,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 
   if (!id) {
     id = "generatedID";
-  } else if (pfx === "example") {
-    id = txt;
-  } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
+  } else if (/\.$/.test(id) || !/^[a-z]/i.test(pfx || id)) {
     id = `x${id}`; // trailing . doesn't play well with jQuery
   }
   if (pfx) {
@@ -590,7 +485,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
  * @param {Node} el
  * @param {string[]} exclusions node localName to exclude
  * @param {object} options
- * @param {boolean} options.wsNodes if nodes that only have whitespace are returned.
+ * @param {boolean} options.wsNodes return only whitespace-only nodes.
  * @returns {Text[]}
  */
 export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
@@ -619,15 +514,13 @@ export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
 }
 
 /**
- * For any element, returns an array of title strings that applies
- *   the algorithm used for determining the actual title of a
- *   <dfn> element (but can apply to other as well).
- * if args.isDefinition is true, then the element is a definition, not a
- *   reference to a definition. Any @title will be replaced with
- *   @data-lt to be consistent with Bikeshed / Shepherd.
- * This method now *prefers* the data-lt attribute for the list of
- *   titles. That attribute is added by this method to dfn elements, so
- *   subsequent calls to this method will return the data-lt based list.
+ * For any element, returns an array of title strings that applies the algorithm
+ * used for determining the actual title of a `<dfn>` element (but can apply to
+ * other as well).
+ *
+ * This method now *prefers* the `data-lt` attribute for the list of titles.
+ * That attribute is added by this method to `<dfn>` elements, so subsequent
+ * calls to this method will return the `data-lt` based list.
  * @param {HTMLElement} elem
  * @returns {String[]} array of title strings
  */
@@ -670,8 +563,8 @@ export function getDfnTitles(elem) {
 }
 
 /**
- * For an element (usually <a>), returns an array of targets that
- * element might refer to, of the form
+ * For an element (usually <a>), returns an array of targets that element might
+ * refer to, in the object structure:
  * @typedef {object} LinkTarget
  * @property {string} for
  * @property {string} title
@@ -699,6 +592,7 @@ export function getLinkTargets(elem) {
       result.push({ for: split[0], title: split[1] });
     }
     result.push({ for: linkFor, title });
+    if (!linkForElem) result.push({ for: title, title });
 
     // Finally, we can try to match without link for
     if (linkFor !== "") result.push({ for: "", title });
@@ -711,14 +605,23 @@ export function getLinkTargets(elem) {
  * Changes name of a DOM Element
  * @param {Element} elem element to rename
  * @param {String} newName new element name
+ * @param {Object} options
+ * @param {boolean} options.copyAttributes
+ *
  * @returns {Element} new renamed element
  */
-export function renameElement(elem, newName) {
+export function renameElement(
+  elem,
+  newName,
+  options = { copyAttributes: true }
+) {
   if (elem.localName === newName) return elem;
   const newElement = elem.ownerDocument.createElement(newName);
   // copy attributes
-  for (const { name, value } of elem.attributes) {
-    newElement.setAttribute(name, value);
+  if (options.copyAttributes) {
+    for (const { name, value } of elem.attributes) {
+      newElement.setAttribute(name, value);
+    }
   }
   // copy child nodes
   newElement.append(...elem.childNodes);
@@ -726,6 +629,10 @@ export function renameElement(elem, newName) {
   return newElement;
 }
 
+/**
+ * @param {string} ref
+ * @param {HTMLElement} element
+ */
 export function refTypeFromContext(ref, element) {
   const closestInformative = element.closest(nonNormativeSelector);
   let isInformative = false;
@@ -781,8 +688,8 @@ export function parents(element, selector) {
 }
 
 /**
- * Calculates indentation when the element starts after a newline.
- * The value will be empty if no newline or any non-whitespace exists after one.
+ * Calculates indentation when the element starts after a newline. The value
+ * will be empty if no newline or any non-whitespace exists after one.
  * @param {Element} element
  *
  * @example `    <div></div>` returns "    " (4 spaces).
@@ -810,6 +717,7 @@ export function getElementIndentation(element) {
  * @param {number} counter A number, which can start at a given value.
  */
 export function msgIdGenerator(namespace, counter = 0) {
+  /** @returns {Generator<string, never, never>}  */
   function* idGenerator(namespace, counter) {
     while (true) {
       yield `${namespace}:${counter}`;
@@ -822,6 +730,7 @@ export function msgIdGenerator(namespace, counter = 0) {
   };
 }
 
+/** @extends {Set<string>} */
 export class InsensitiveStringSet extends Set {
   /**
    * @param {Array<String>} [keys] Optional, initial keys
@@ -872,15 +781,23 @@ export class InsensitiveStringSet extends Set {
   }
 }
 
+/**
+ * @param {HTMLElement} node
+ */
 export function makeSafeCopy(node) {
   const clone = node.cloneNode(true);
   clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
-  clone.querySelectorAll("dfn").forEach(dfn => renameElement(dfn, "span"));
+  clone.querySelectorAll("dfn").forEach(dfn => {
+    renameElement(dfn, "span", { copyAttributes: false });
+  });
   if (clone.hasAttribute("id")) clone.removeAttribute("id");
   removeCommentNodes(clone);
   return clone;
 }
 
+/**
+ * @param {Node} node
+ */
 export function removeCommentNodes(node) {
   const walker = document.createTreeWalker(node, NodeFilter.SHOW_COMMENT);
   for (const comment of [...walkTree(walker)]) {
@@ -899,9 +816,13 @@ function* walkTree(walker) {
   }
 }
 
+/**
+ * @template ValueType
+ * @extends {Map<string, ValueType>}
+ */
 export class CaseInsensitiveMap extends Map {
   /**
-   * @param {Array<[String, HTMLElement]>} [entries]
+   * @param {Array<[string, ValueType]>} [entries]
    */
   constructor(entries = []) {
     super();
@@ -912,7 +833,7 @@ export class CaseInsensitiveMap extends Map {
   }
   /**
    * @param {String} key
-   * @param {*} value
+   * @param {ValueType} value
    */
   set(key, value) {
     super.set(key.toLowerCase(), value);
@@ -936,4 +857,66 @@ export class CaseInsensitiveMap extends Map {
   delete(key) {
     return super.delete(key.toLowerCase());
   }
+}
+
+export class RespecError extends Error {
+  /**
+   * @param {Parameters<typeof showError>[0]} message
+   * @param {Parameters<typeof showError>[1]} plugin
+   * @param {Parameters<typeof showError>[2] & { isWarning: boolean }} options
+   */
+  constructor(message, plugin, options) {
+    super(message);
+    const name = options.isWarning ? "ReSpecWarning" : "ReSpecError";
+    Object.assign(this, { message, plugin, name, ...options });
+    if (options.elements) {
+      options.elements.forEach(elem =>
+        markAsOffending(elem, message, options.title)
+      );
+    }
+  }
+
+  toJSON() {
+    const { message, name, stack } = this;
+    // @ts-expect-error https://github.com/microsoft/TypeScript/issues/26792
+    const { plugin, hint, elements, title, details } = this;
+    return { message, name, plugin, hint, elements, title, details, stack };
+  }
+}
+
+/**
+ * @param {string} message
+ * @param {string} pluginName Name of plugin that caused the error.
+ * @param {object} [options]
+ * @param {string} [options.hint] How to solve the error?
+ * @param {HTMLElement[]} [options.elements] Offending elements.
+ * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
+ * @param {string} [options.details] Any further details/context.
+ */
+export function showError(message, pluginName, options = {}) {
+  const opts = { ...options, isWarning: false };
+  pub("error", new RespecError(message, pluginName, opts));
+}
+
+/**
+ * @param {string} message
+ * @param {string} pluginName Name of plugin that caused the error.
+ * @param {object} [options]
+ * @param {string} [options.hint] How to solve the error?
+ * @param {HTMLElement[]} [options.elements] Offending elements.
+ * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
+ * @param {string} [options.details] Any further details/context.
+ */
+export function showWarning(message, pluginName, options = {}) {
+  const opts = { ...options, isWarning: true };
+  pub("warn", new RespecError(message, pluginName, opts));
+}
+
+/**
+ * Creates a quick markdown link to a property in the docs.
+ *
+ * @param {string} prop ReSpec configuration property to link to in docs.
+ */
+export function docLink(prop) {
+  return `[\`${prop}\`](https://respec.org/docs/#${prop})`;
 }

@@ -5,6 +5,7 @@ import {
   makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
+  makeStandardOps,
 } from "../SpecHelper.js";
 
 describe("Core — Data Include", () => {
@@ -42,7 +43,7 @@ describe("Core — Data Include", () => {
     };
     const doc = await makeRSDoc(ops, url);
     const missing = doc.getElementById("this-should-be-missing");
-    expect(missing).toBe(null);
+    expect(missing).toBeNull();
     const included = doc.getElementById("replacement-test");
     expect(included).toBeTruthy();
     const heading = doc.querySelector("#replacement-test > h3");
@@ -86,7 +87,7 @@ describe("Core — Data Include", () => {
     const h2 = doc.querySelector("#includes > h2");
     expect(h2).toBeTruthy();
     expect(h2.textContent).toBe("1. PASS");
-    expect(doc.querySelectorAll("*[data-include]").length).toBe(0);
+    expect(doc.querySelectorAll("*[data-include]")).toHaveSize(0);
   });
 
   it("processes single line markdown text", async () => {
@@ -119,11 +120,11 @@ describe("Core — Data Include", () => {
 
 1. Rose
 
-  Blue rose is blue
+   Blue rose is blue
 
-  Red rose is red
+   Red rose is red
 
-  Rose of the wasteland is violet
+   Rose of the wasteland is violet
     `);
     it("processes multiline markdown text", async () => {
       const ops = {
@@ -178,6 +179,45 @@ describe("Core — Data Include", () => {
       expect(li.parentElement.parentElement.localName).toBe("section");
       // Shouldn't break other sections
       expect(doc.getElementById("abstract")).toBeTruthy();
+    });
+
+    it("processes markdown with unescaped html code blocks", async () => {
+      const includeBody = `
+        ## Test
+
+        A paragraph.
+
+        \`\`\`html
+        <!DOCTYPE html>
+        <html lang="en">
+          <body>
+            <div class="note">note</div>
+          </body>
+        </html>
+        \`\`\`
+      `;
+      const body = `<section
+        id="includes"
+        data-include-format="markdown"
+        data-include="${generateDataUrl(includeBody)}"
+      ></section>`;
+
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+
+      const h2 = doc.querySelector("#includes > h2");
+      expect(h2).toBeTruthy();
+      expect(h2.textContent).toContain("Test");
+
+      const p = doc.querySelector("#includes > p");
+      expect(p).toBeTruthy();
+      expect(p.textContent).toBe("A paragraph.");
+
+      const pre = doc.querySelector("#includes > pre");
+      expect(pre.querySelector("code").classList).toContain("html");
+      expect(pre.textContent).toContain("<!DOCTYPE html>");
+
+      expect(doc.querySelector("#includes .note")).toBeFalsy();
     });
   });
 });

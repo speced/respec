@@ -10,7 +10,7 @@ import {
 
 describe("Core — Can I Use", () => {
   afterAll(flushIframes);
-  const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.json`;
+  const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.html`;
 
   it("uses meaningful defaults", async () => {
     const ops = makeStandardOps({
@@ -20,7 +20,7 @@ describe("Core — Can I Use", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
@@ -38,7 +38,7 @@ describe("Core — Can I Use", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
@@ -49,7 +49,7 @@ describe("Core — Can I Use", () => {
   it("does nothing if caniuse is not enabled", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse).toBeFalsy();
@@ -65,7 +65,7 @@ describe("Core — Can I Use", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
 
     const link = doc.querySelector(".caniuse-stats a");
     expect(link.textContent).toBe("caniuse.com");
@@ -82,7 +82,7 @@ describe("Core — Can I Use", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+    await doc.respec.ready;
 
     const stats = doc.querySelector(".caniuse-stats");
 
@@ -91,14 +91,14 @@ describe("Core — Can I Use", () => {
     expect(moreInfoLink.textContent.trim()).toBe("More info");
 
     const browsers = stats.querySelectorAll(".caniuse-browser");
-    expect(browsers.length).toBe(2); // not 3, as there is no data for "opera"
+    expect(browsers).toHaveSize(2); // not 3, as there is no data for "opera"
     const [firefox, chrome] = browsers;
 
     const chromeVersions = chrome.querySelectorAll("ul li.caniuse-cell");
-    expect(chromeVersions.length).toBe(2);
+    expect(chromeVersions).toHaveSize(2);
 
     const firefoxVersions = firefox.querySelectorAll("ul li.caniuse-cell");
-    expect(firefoxVersions.length).toBe(5);
+    expect(firefoxVersions).toHaveSize(4);
 
     const firefoxButton = firefox.querySelector("button");
     expect(firefoxButton.textContent.trim()).toBe("Firefox 61");
@@ -106,16 +106,6 @@ describe("Core — Can I Use", () => {
 
     expect(firefoxVersions[0].textContent.trim()).toBe("60");
     expect(firefoxVersions[0].classList.value).toBe("caniuse-cell n d");
-
-    // test dropdown
-    // let style = getComputedStyle(firefox.querySelector("ul"));
-    // expect(style.getPropertyValue("display")).toBe("none");
-
-    // // BUG: cannot trigger focus:
-    // see: https://github.com/w3c/respec/issues/1642
-    // firefoxButton.focus();
-    // style = getComputedStyle(firefox.querySelector("ul"));
-    // expect(style.getPropertyValue("display")).toBe("block");
   });
 
   it("removes irrelevant config for caniuse feature", async () => {
@@ -135,7 +125,7 @@ describe("Core — Can I Use", () => {
       apiURL: `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`,
     };
     const doc = await makeRSDoc(opsWithCaniuse);
-    await doc.respecIsReady;
+    await doc.respec.ready;
 
     const text = doc.getElementById("initialUserConfig").textContent;
     expect(JSON.parse(text)).toEqual(expectedObj);

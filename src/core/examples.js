@@ -7,8 +7,8 @@
 // be used by a containing shell to extract all examples.
 
 import { addId, getIntlData } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
-import { hyperHTML as html } from "./import-maps.js";
+import css from "../styles/examples.css.js";
+import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 export const name = "core/examples";
@@ -32,19 +32,12 @@ const localizationStrings = {
   de: {
     example: "Beispiel",
   },
+  zh: {
+    example: "例",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);
-
-const cssPromise = loadStyle();
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/examples.css")).default;
-  } catch {
-    return fetchAsset("examples.css");
-  }
-}
 
 /**
  * @typedef {object} Report
@@ -62,32 +55,25 @@ function makeTitle(elem, num, report) {
   if (report.title) elem.removeAttribute("title");
   const number = num > 0 ? ` ${num}` : "";
   const title = report.title
-    ? html`
-        <span class="example-title">: ${report.title}</span>
-      `
+    ? html`<span class="example-title">: ${report.title}</span>`
     : "";
-  return html`
-    <div class="marker">
-      <a class="self-link">${l10n.example}<bdi>${number}</bdi></a
-      >${title}
-    </div>
-  `;
+  return html`<div class="marker">
+    <a class="self-link">${l10n.example}<bdi>${number}</bdi></a
+    >${title}
+  </div>`;
 }
 
-export async function run() {
+export function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"
   );
   if (!examples.length) return;
 
-  const css = await cssPromise;
   document.head.insertBefore(
-    html`
-      <style>
-        ${css}
-      </style>
-    `,
+    html`<style>
+      ${css}
+    </style>`,
     document.querySelector("link")
   );
 
@@ -108,7 +94,7 @@ export async function run() {
         addId(example, `example-${number}`, title); // title gets used
       } else {
         // use the number as the title... so, e.g., "example-5"
-        addId(example, `example`, String(number));
+        addId(example, "example", String(number));
       }
       const { id } = example;
       const selfLink = div.querySelector("a.self-link");
@@ -126,11 +112,9 @@ export async function run() {
       const id = example.id ? example.id : null;
       if (id) example.removeAttribute("id");
       const exampleTitle = makeTitle(example, inAside ? 0 : number, report);
-      const div = html`
-        <div class="example" id="${id}">
-          ${exampleTitle} ${example.cloneNode(true)}
-        </div>
-      `;
+      const div = html`<div class="example" id="${id}">
+        ${exampleTitle} ${example.cloneNode(true)}
+      </div>`;
       if (title) {
         addId(div, `example-${number}`, title);
       }

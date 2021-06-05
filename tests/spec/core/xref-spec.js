@@ -6,25 +6,13 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
-import { IDBKeyVal } from "../../../src/core/utils.js";
-import { openDB } from "../../../node_modules/idb/build/esm/index.js";
+import { clearXrefData } from "../../../src/core/xref-db.js";
 
 describe("Core — xref", () => {
   afterAll(flushIframes);
 
-  let cache;
-  beforeAll(async () => {
-    const idb = await openDB("xref", 1, {
-      upgrade(db) {
-        db.createObjectStore("xrefs");
-      },
-    });
-    cache = new IDBKeyVal(idb, "xrefs");
-  });
-
   beforeEach(async () => {
-    // clear idb cache before each
-    await cache.clear();
+    await clearXrefData();
   });
 
   const localBiblio = {
@@ -50,15 +38,11 @@ describe("Core — xref", () => {
       href: "https://www.w3.org/TR/css-layout-api-1/",
       id: "css-layout-api-1",
     },
-    "css-snappoints": {
-      href: "https://www.w3.org/TR/css-snappoints-1/",
-    },
-    "css-scroll-snap": {
-      href: "https://drafts.csswg.org/css-scroll-snap-1/",
-    },
+    "css-scroll-snap": { href: "https://drafts.csswg.org/css-scroll-snap-1/" },
     "referrer-policy": {
       href: "https://www.w3.org/TR/referrer-policy/",
     },
+    "css-syntax": { aliasOf: "css-syntax-3" },
     "css-scoping": { aliasOf: "css-scoping-1" },
     "css-scoping-1": { href: "https://drafts.csswg.org/css-scoping-1/" },
     "local-1": { id: "local-1", href: "https://example.com/" },
@@ -66,86 +50,6 @@ describe("Core — xref", () => {
     "local-3": { id: "local-3", href: "https://example.com/" },
     "local-4": { id: "local-4", href: "https://example.com/" },
   };
-  const expectedLinks = new Map([
-    [
-      "event handler",
-      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers",
-    ],
-    ["list", "https://infra.spec.whatwg.org/#list"],
-    [
-      "sw-fetch",
-      "https://www.w3.org/TR/service-workers-1/#service-worker-global-scope-fetch-event",
-    ],
-    ["uppercase", "https://infra.spec.whatwg.org/#ascii-uppercase"],
-    ["url parser", "https://url.spec.whatwg.org/#concept-url-parser"],
-    ["dictionary", "https://heycam.github.io/webidl/#dfn-dictionary"],
-    ["alphanumeric", "https://infra.spec.whatwg.org/#ascii-alphanumeric"],
-    ["exception", "https://heycam.github.io/webidl/#dfn-exception"],
-    [
-      "Window",
-      "https://html.spec.whatwg.org/multipage/window-object.html#window",
-    ],
-    ["Window.event", "https://dom.spec.whatwg.org/#dom-window-event"],
-    [
-      "PermissionStatus.[[query]]",
-      "https://www.w3.org/TR/permissions/#dom-permissionstatus-query-slot",
-    ],
-    ["PermissionStatus", "https://www.w3.org/TR/permissions/#permissionstatus"],
-    [
-      "EventTarget.addEventListener",
-      "https://dom.spec.whatwg.org/#dom-eventtarget-addeventlistener",
-    ],
-    ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
-    [
-      "Credential.[[type]]",
-      "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot",
-    ],
-    ["Credential", "https://www.w3.org/TR/credential-management-1/#credential"],
-    [
-      "Credential.[[CollectFromCredentialStore]]",
-      "https://www.w3.org/TR/credential-management-1/#dom-credential-collectfromcredentialstore-slot",
-    ],
-    [
-      "PublicKeyCredential.[[type]]",
-      "https://www.w3.org/TR/webauthn-1/#dom-publickeycredential-type-slot",
-    ],
-    [
-      "PublicKeyCredential",
-      "https://www.w3.org/TR/webauthn-1/#publickeycredential",
-    ],
-    [
-      "TextDecoderOptions",
-      "https://encoding.spec.whatwg.org/#textdecoderoptions",
-    ],
-    [
-      `TextDecoderOptions["fatal"]`,
-      "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal",
-    ],
-    ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
-    [
-      "allowedFeatures",
-      "https://www.w3.org/TR/feature-policy-1/#dom-featurepolicy-allowedfeatures",
-    ],
-    ["ChildNode", "https://dom.spec.whatwg.org/#childnode"],
-    ["ChildNode.after", "https://dom.spec.whatwg.org/#dom-childnode-after"],
-    ["URLSearchParams", "https://url.spec.whatwg.org/#urlsearchparams"],
-    [
-      "URLSearchParams.append",
-      "https://url.spec.whatwg.org/#dom-urlsearchparams-append",
-    ],
-    [
-      "ServiceWorkerUpdateViaCache.imports",
-      "https://www.w3.org/TR/service-workers-1/#dom-serviceworkerupdateviacache-imports",
-    ],
-    [
-      "blob",
-      "https://xhr.spec.whatwg.org/#dom-xmlhttprequestresponsetype-blob",
-    ],
-    [
-      "ChildDisplayType.block",
-      "https://www.w3.org/TR/css-layout-api-1/#dom-childdisplaytype-block",
-    ],
-  ]);
 
   it("does nothing if xref is not enabled", async () => {
     const body = `<a id="external-link">event handler</a>`;
@@ -168,11 +72,13 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link = doc.querySelector("#external-link a");
-    expect(link.href).toBe(expectedLinks.get("event handler"));
+    expect(link.href).toBe(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
     expect(link.classList.contains("respec-offending-element")).toBeFalsy();
 
     const dfn = doc.querySelector("#external-dfn dfn a");
-    expect(dfn.href).toBe(expectedLinks.get("url parser"));
+    expect(dfn.href).toBe("https://url.spec.whatwg.org/#concept-url-parser");
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
   });
 
@@ -203,9 +109,7 @@ describe("Core — xref", () => {
 
   it("uses data-cite to disambiguate", async () => {
     const body = `
-      <section id="links" data-cite="css-snappoints">
-        <p><a>intended direction</a> is defined 1 time in css-scroll-snap and 1 time in css-snappoints.
-          It uses parent's data-cite (css-snappoints).</p>
+      <section id="links" data-cite="html">
         <p>Looks up <a data-cite="infra">ASCII uppercase</a> in infra.</p>
         <p>As <a data-cite="infra">ASCII upcasing</a> doesn't exist in INFRA,
           it resolves to spec only.</p>
@@ -221,26 +125,25 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const [link1, link2, link3] = [...doc.querySelectorAll("#links a")];
-    expect(link1.href).toBe(
-      "https://www.w3.org/TR/css-snappoints-1/#intended-direction"
-    );
-    expect(link2.href).toBe(expectedLinks.get("uppercase"));
-    expect(link3.href).toBe("https://infra.spec.whatwg.org/");
+    const [link1, link2] = [...doc.querySelectorAll("#links a")];
+    expect(link1.href).toBe("https://infra.spec.whatwg.org/#ascii-uppercase");
+    expect(link2.href).toBe("https://infra.spec.whatwg.org/");
 
     const [dfn1, dfn2, dfn3] = [...doc.querySelectorAll("#dfns dfn a")];
-    expect(dfn1.href).toBe(expectedLinks.get("event handler"));
-    expect(dfn2.href).toBe(expectedLinks.get("list"));
+    expect(dfn1.href).toBe(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
+    expect(dfn2.href).toBe("https://infra.spec.whatwg.org/#list");
     expect(dfn3.href).toBe("https://html.spec.whatwg.org/multipage/");
   });
 
   it("shows error if cannot resolve by data-cite", async () => {
     const body = `
-      <section data-cite="svg">
-        <p id="test">[^symbol^] twice in svg spec.</p>
+      <section data-cite="html">
+        <p id="test"><a>script</a> twice in HTML spec.</p>
       </section>
     `;
-    const config = { xref: ["svg"], localBiblio };
+    const config = { xref: ["HTML"], localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -253,28 +156,26 @@ describe("Core — xref", () => {
     // https://github.com/w3c/respec/pull/1750
     const body = `
       <section id="test">
-        <p data-cite="css-scroll-snap"><a id="one">intended direction</a></p>
-        <p data-cite="css-snappoints"><a id="two">intended direction</a></p>
-        <p data-cite="css-snappoints">
-          <a id="three" data-cite="css-scroll-snap">intended direction</a> (overrides parent)
-          <a id="four">intended direction</a> (uses parent's data-cite - css-snappoints)
+        <p data-cite="css-values"><a id="one">ident</a></p>
+        <p data-cite="css-syntax"><a id="two">ident</a></p>
+        <p data-cite="css-syntax">
+          <a id="three" data-cite="css-values">ident</a> (overrides parent)
+          <a id="four">ident</a> (uses parent's data-cite - css-syntax)
         </p>
-        <p><a id="five" data-cite="NOT-FOUND">intended direction</a></p>
+        <p><a id="five" data-cite="NOT-FOUND">ident</a></p>
       </section>
     `;
     const config = { xref: true, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const scrollSnapLink =
-      "https://drafts.csswg.org/css-scroll-snap-1/#intended-direction";
-    const snappointsLink =
-      "https://www.w3.org/TR/css-snappoints-1/#intended-direction";
+    const cssValuesLink = "https://www.w3.org/TR/css-values-3/#css-identifier";
+    const cssSyntaxLink = "https://www.w3.org/TR/css-syntax-3/#identifier";
 
-    expect(doc.getElementById("one").href).toBe(scrollSnapLink);
-    expect(doc.getElementById("two").href).toBe(snappointsLink);
-    expect(doc.getElementById("three").href).toBe(scrollSnapLink);
-    expect(doc.getElementById("four").href).toBe(snappointsLink);
+    expect(doc.getElementById("one").href).toBe(cssValuesLink);
+    expect(doc.getElementById("two").href).toBe(cssSyntaxLink);
+    expect(doc.getElementById("three").href).toBe(cssValuesLink);
+    expect(doc.getElementById("four").href).toBe(cssSyntaxLink);
 
     const five = doc.getElementById("five");
     expect(five.href).toBe("");
@@ -307,10 +208,14 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link1 = doc.getElementById("link1");
-    expect(link1.href).toEqual(expectedLinks.get("event handler"));
+    expect(link1.href).toEqual(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
 
     const link2 = doc.getElementById("link2");
-    expect(link2.href).toEqual(expectedLinks.get("event handler"));
+    expect(link2.href).toEqual(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
 
     const link3 = doc.getElementById("link3");
     expect(link3.href).toEqual("https://fetch.spec.whatwg.org/");
@@ -328,6 +233,22 @@ describe("Core — xref", () => {
     const linkLocal2 = doc.getElementById("link-local-2");
     expect(linkLocal2.href).toEqual("https://dom.spec.whatwg.org/");
     expect(linkLocal2.classList).toContain("respec-offending-element");
+  });
+
+  it("uses data-cite as authored in spec context", async () => {
+    const body = `<section id="test">
+      <p data-cite="css-syntax-3">[=CSS/parsing=]</p>
+      <p data-cite="css-color">[=sRGB=]</p>
+    </section>`;
+    const localBiblio = { "css-color": { aliasOf: "css-color-3" } };
+    const ops = makeStandardOps({ localBiblio }, body);
+    const doc = await makeRSDoc(ops);
+
+    const [specLink, shortnameLink] = doc.querySelectorAll("#test a");
+    expect(specLink.hash).toBe(
+      "#css-parse-something-according-to-a-css-grammar"
+    );
+    expect(shortnameLink.hash).toBe("#sRGB");
   });
 
   it("treats terms as local if empty data-cite on parent", async () => {
@@ -353,18 +274,22 @@ describe("Core — xref", () => {
       "https://html.spec.whatwg.org/multipage/#hello"
     );
     const externalDfn1 = doc.querySelector("#external-dfn-1 a");
-    expect(externalDfn1.href).toBe(expectedLinks.get("dictionary"));
+    expect(externalDfn1.href).toBe(
+      "https://heycam.github.io/webidl/#dfn-dictionary"
+    );
     const externalDfn2 = doc.querySelector("#external-dfn-2 a");
-    expect(externalDfn2.href).toBe(expectedLinks.get("list"));
+    expect(externalDfn2.href).toBe("https://infra.spec.whatwg.org/#list");
     const localLink1 = doc.querySelector("#local-link-1 a");
     expect(localLink1.getAttribute("href")).toBe("#dfn-local-one");
     const externalLink1 = doc.querySelector("#external-link-1 a");
-    expect(externalLink1.href).toBe(expectedLinks.get("url parser"));
+    expect(externalLink1.href).toBe(
+      "https://url.spec.whatwg.org/#concept-url-parser"
+    );
 
     const offendingElements = doc.querySelectorAll(
       "#test .respec-offending-element"
     );
-    expect(offendingElements.length).toBe(0);
+    expect(offendingElements).toHaveSize(0);
   });
 
   it("ignores terms if local dfn exists", async () => {
@@ -393,20 +318,24 @@ describe("Core — xref", () => {
       "https://html.spec.whatwg.org/multipage/#world"
     );
     const externalDfn1 = doc.querySelector("#external-dfn-1 a");
-    expect(externalDfn1.href).toBe(expectedLinks.get("url parser"));
+    expect(externalDfn1.href).toBe(
+      "https://url.spec.whatwg.org/#concept-url-parser"
+    );
     const externalDfn2 = doc.querySelector("#external-dfn-2 a");
-    expect(externalDfn2.href).toBe(expectedLinks.get("list"));
+    expect(externalDfn2.href).toBe("https://infra.spec.whatwg.org/#list");
     const localLink1 = doc.querySelector("#local-link-1 a");
     expect(localLink1.getAttribute("href")).toBe("#dfn-local-one");
     const localLink2 = doc.querySelector("#local-link-2 a");
     expect(localLink2.getAttribute("href")).toBe("#dfn-local-one");
     const externalLink1 = doc.querySelector("#external-link-1 a");
-    expect(externalLink1.href).toBe(expectedLinks.get("event handler"));
+    expect(externalLink1.href).toBe(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
 
     const offendingElements = doc.querySelectorAll(
       "#test .respec-offending-element"
     );
-    expect(offendingElements.length).toBe(0);
+    expect(offendingElements).toHaveSize(0);
   });
 
   it("takes data-lt into account", async () => {
@@ -426,12 +355,16 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link = doc.querySelector("#test1 a");
-    expect(link.getAttribute("href")).toBe(expectedLinks.get("list"));
+    expect(link.getAttribute("href")).toBe(
+      "https://infra.spec.whatwg.org/#list"
+    );
 
     const links = [...doc.querySelectorAll("#test2 a")];
-    expect(links.length).toBe(4);
+    expect(links).toHaveSize(4);
     for (const link of links) {
-      expect(link.href).toBe(expectedLinks.get("event handler"));
+      expect(link.href).toBe(
+        "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+      );
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
   });
@@ -458,16 +391,20 @@ describe("Core — xref", () => {
     const dfn = doc.querySelector("#test dfn");
     expect(dfn.id).toBe("dfn-event-handler");
     const links = [...doc.querySelectorAll("#test a")];
-    expect(links.length).toBe(6);
+    expect(links).toHaveSize(6);
     for (const link of links) {
-      expect(link.href).toBe(expectedLinks.get("event handler"));
+      expect(link.href).toBe(
+        "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+      );
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
 
     const test2Links = [...doc.querySelectorAll("#test2 a")];
-    expect(test2Links.length).toBe(3);
+    expect(test2Links).toHaveSize(3);
     for (const link of test2Links) {
-      expect(link.href).toBe(expectedLinks.get("event handler"));
+      expect(link.href).toBe(
+        "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+      );
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
   });
@@ -476,20 +413,20 @@ describe("Core — xref", () => {
     const body = `
       <section id="test">
         <section>
-        <p>Uses [[css-scoping]] to create context for <a id="one">shadow root</a></p>
+        <p>Uses [[svg]] to create context for <a id="one">link</a></p>
         </section>
         <section>
-          <p>Uses [[dom]] to create context for <a id="two">shadow root</a></p>
+          <p>Uses [[html]] to create context for <a id="two">link</a></p>
         </section>
         <section>
-          <p>Uses [[dom]] and [[css-scoping]] to create context for
-            <a id="three">shadow root</a>. It fails as it's defined in both.
+          <p>Uses [[html]] and [[svg]] to create context for
+            <a id="three">link</a>. It fails as it's defined in both.
           </p>
         </section>
         <section>
           <p>But data-cite on element itself wins.
-            <a id="four">shadow root</a> uses [[css-scoping]],
-            whereas <a data-cite="dom" id="five">shadow root</a> uses dom.
+            <a id="four">link</a> uses [[svg]],
+            whereas <a data-cite="html" id="five">link</a> uses html.
           </p>
         </section>
       </section>
@@ -500,8 +437,8 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = "https://drafts.csswg.org/css-scoping-1/#shadow-root";
-    const expectedLink2 = "https://dom.spec.whatwg.org/#concept-shadow-root";
+    const expectedLink1 = `https://www.w3.org/TR/SVG/styling.html#LinkElement`;
+    const expectedLink2 = `https://html.spec.whatwg.org/multipage/semantics.html#the-link-element`;
 
     const one = doc.getElementById("one");
     expect(one.href).toBe(expectedLink1);
@@ -511,12 +448,24 @@ describe("Core — xref", () => {
     const three = doc.getElementById("three");
     expect(three.href).toBe("");
     expect(three.classList).toContain("respec-offending-element");
-    expect(doc.querySelectorAll(".respec-offending-element").length).toBe(1);
+    expect(doc.querySelectorAll(".respec-offending-element")).toHaveSize(1);
 
     const four = doc.getElementById("four");
     expect(four.href).toBe(expectedLink1);
     const five = doc.getElementById("five");
     expect(five.href).toBe(expectedLink2);
+  });
+
+  it("gives inline spec context least priority", async () => {
+    const body = `
+      <section id="test" data-cite="INFRA">
+        [= list =] [[html]]
+      </section>`;
+    const ops = makeStandardOps({ xref: true }, body);
+    const doc = await makeRSDoc(ops);
+
+    const listLink = doc.querySelector("#test a");
+    expect(listLink.href).toBe("https://infra.spec.whatwg.org/#list");
   });
 
   it("adds normative and informative references", async () => {
@@ -563,23 +512,33 @@ describe("Core — xref", () => {
     const valid1 = doc.getElementById("valid1");
     expect(valid1.href).toBe("https://example.com/#fake-inform-1");
     const valid1n = doc.getElementById("valid1n");
-    expect(valid1n.href).toBe(expectedLinks.get("list"));
+    expect(valid1n.href).toBe("https://infra.spec.whatwg.org/#list");
     const valid2 = doc.getElementById("valid2");
     expect(valid2.href).toBe("https://example.com/#fake-inform-2");
     const valid2n = doc.getElementById("valid2n");
-    expect(valid2n.href).toBe(expectedLinks.get("event handler"));
+    expect(valid2n.href).toBe(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
     const valid3 = doc.getElementById("valid3");
     expect(valid3.href).toBe("https://example.com/#fake-inform-3");
     const valid3n = doc.getElementById("valid3n");
-    expect(valid3n.href).toBe(expectedLinks.get("dictionary"));
+    expect(valid3n.href).toBe(
+      "https://heycam.github.io/webidl/#dfn-dictionary"
+    );
     const valid4 = doc.getElementById("valid4");
     expect(valid4.href).toBe("https://example.com/#fake-inform-4");
     const valid4n = doc.getElementById("valid4n");
-    expect(valid4n.href).toBe(expectedLinks.get("alphanumeric"));
+    expect(valid4n.href).toBe(
+      "https://infra.spec.whatwg.org/#ascii-alphanumeric"
+    );
     const valid5n = doc.getElementById("valid5n");
-    expect(valid5n.href).toBe(expectedLinks.get("url parser"));
+    expect(valid5n.href).toBe(
+      "https://url.spec.whatwg.org/#concept-url-parser"
+    );
     const valid6n = doc.getElementById("valid6n");
-    expect(valid6n.href).toBe(expectedLinks.get("url parser"));
+    expect(valid6n.href).toBe(
+      "https://url.spec.whatwg.org/#concept-url-parser"
+    );
 
     const badLink = doc.getElementById("invalid");
     expect(badLink.href).toBe(
@@ -587,11 +546,11 @@ describe("Core — xref", () => {
     );
     expect(badLink.classList).toContain("respec-offending-element");
     expect(badLink.title).toBe(
-      "Error: Informative reference in normative section"
+      "Error: Normative reference to informative term"
     );
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
-    expect(normRefs.length).toBe(1); // excludes `css-values` of `#invalid`
+    expect(normRefs).toHaveSize(1); // excludes `css-values` of `#invalid`
     expect(normRefs.map(r => r.textContent)).toEqual(["[URL]"]);
 
     const informRefs = [...doc.querySelectorAll("#informative-references dt")];
@@ -649,8 +608,12 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const [windowLink, eventTargetLink] = doc.querySelectorAll("#link1 a");
-      expect(windowLink.href).toBe(expectedLinks.get("Window"));
-      expect(eventTargetLink.href).toBe(expectedLinks.get("EventTarget"));
+      expect(windowLink.href).toBe(
+        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+      );
+      expect(eventTargetLink.href).toBe(
+        "https://dom.spec.whatwg.org/#eventtarget"
+      );
       expect(eventTargetLink.firstElementChild.localName).toBe("code");
 
       const link2 = doc.querySelector("#link2 a");
@@ -659,9 +622,25 @@ describe("Core — xref", () => {
       expect(link2.firstElementChild.localName).toBe("code");
 
       const link3 = doc.querySelector("#link3 a");
-      expect(link3.href).toBe(expectedLinks.get("EventTarget"));
+      expect(link3.href).toBe("https://dom.spec.whatwg.org/#eventtarget");
       expect(link3.textContent).toBe("EventTarget");
       expect(link3.firstElementChild.localName).toBe("code");
+    });
+
+    it("links interface constants", async () => {
+      const body = `
+      <section id="test">
+        <p id="link1">{{HTMLMediaElement/HAVE_METADATA}}</p>
+      </section>
+      `;
+      const config = { xref: "web-platform" };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+      const a = doc.querySelector("#link1 a");
+      expect(a.href).toBe(
+        "https://html.spec.whatwg.org/multipage/media.html#dom-media-have_metadata"
+      );
+      expect(a.textContent).toBe("HAVE_METADATA");
     });
 
     it("links methods", async () => {
@@ -677,26 +656,30 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const [link1a, link1b] = [...doc.querySelectorAll("#link1 a")];
-      expect(link1a.href).toBe(expectedLinks.get("EventTarget"));
+      expect(link1a.href).toBe("https://dom.spec.whatwg.org/#eventtarget");
       expect(link1b.href).toBe(
-        expectedLinks.get("EventTarget.addEventListener")
+        "https://dom.spec.whatwg.org/#dom-eventtarget-addeventlistener"
       );
       expect(link1a.firstElementChild.localName).toBe("code");
       expect(link1b.firstElementChild.localName).toBe("code");
       const vars1 = [...doc.querySelectorAll("#link1 var")];
-      expect(vars1.length).toBe(2);
+      expect(vars1).toHaveSize(2);
       expect(vars1[0].textContent).toBe("type");
       expect(vars1[1].textContent).toBe("callback");
 
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
-      expect(link2a.href).toBe(expectedLinks.get("ChildNode"));
+      expect(link2a.href).toBe("https://dom.spec.whatwg.org/#childnode");
       expect(link2a.firstElementChild.localName).toBe("code");
-      expect(link2b.href).toBe(expectedLinks.get("ChildNode.after"));
+      expect(link2b.href).toBe(
+        "https://dom.spec.whatwg.org/#dom-childnode-after"
+      );
       expect(link2b.firstElementChild.localName).toBe("code");
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
-      expect(link3a.href).toBe(expectedLinks.get("URLSearchParams"));
-      expect(link3b.href).toBe(expectedLinks.get("URLSearchParams.append"));
+      expect(link3a.href).toBe("https://url.spec.whatwg.org/#urlsearchparams");
+      expect(link3b.href).toBe(
+        "https://url.spec.whatwg.org/#dom-urlsearchparams-append"
+      );
       expect(link3a.firstElementChild.localName).toBe("code");
       expect(link3b.firstElementChild.localName).toBe("code");
     });
@@ -711,38 +694,54 @@ describe("Core — xref", () => {
       </section>
       `;
       const config = {
-        xref: ["html", "credential-management", "encoding", "dom", "webauthn"],
+        xref: [
+          "html",
+          "credential-management",
+          "encoding",
+          "dom",
+          "webauthn-3",
+        ],
         localBiblio,
       };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
       const [link1a, link1b] = [...doc.querySelectorAll("#link1 a")];
-      expect(link1a.href).toBe(expectedLinks.get("Window"));
-      expect(link1b.href).toBe(expectedLinks.get("Window.event"));
+      expect(link1a.href).toBe(
+        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+      );
+      expect(link1b.href).toBe("https://dom.spec.whatwg.org/#dom-window-event");
       expect(link1a.firstElementChild.localName).toBe("code");
       expect(link1b.firstElementChild.localName).toBe("code");
 
       // the base "Credential" is used to disambiguate as "forContext"
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
-      expect(link2a.href).toBe(expectedLinks.get("Credential"));
-      expect(link2b.href).toBe(expectedLinks.get("Credential.[[type]]"));
+      expect(link2a.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#credential"
+      );
+      expect(link2b.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot"
+      );
       expect(link2a.firstElementChild.localName).toBe("code");
       expect(link2b.firstElementChild.localName).toBe("code");
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
-      expect(link3a.href).toBe(expectedLinks.get("PublicKeyCredential"));
+      expect(link3a.href).toBe(
+        "https://www.w3.org/TR/webauthn-3/#publickeycredential"
+      );
       expect(link3b.href).toBe(
-        expectedLinks.get("PublicKeyCredential.[[type]]")
+        "https://www.w3.org/TR/webauthn-3/#dom-publickeycredential-type-slot"
       );
       expect(link3a.firstElementChild.localName).toBe("code");
       expect(link3b.firstElementChild.localName).toBe("code");
 
       // "TextDecoderOptions" is dictionary and "fatal" is dict-member
       const [link4a, link4b] = [...doc.querySelectorAll("#link4 a")];
-      expect(link4a.href).toBe(expectedLinks.get("TextDecoderOptions"));
+      expect(link4a.href).toBe(
+        "https://encoding.spec.whatwg.org/#textdecoderoptions"
+      );
       expect(link4b.href).toBe(
-        expectedLinks.get(`TextDecoderOptions["fatal"]`)
+        "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal"
       );
       expect(link4a.firstElementChild.localName).toBe("code");
       expect(link4b.firstElementChild.localName).toBe("code");
@@ -767,8 +766,12 @@ describe("Core — xref", () => {
 
       // the base "Credential" is used as "forContext" for [[type]]
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
-      expect(link2a.href).toBe(expectedLinks.get("Credential"));
-      expect(link2b.href).toBe(expectedLinks.get("Credential.[[type]]"));
+      expect(link2a.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#credential"
+      );
+      expect(link2b.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot"
+      );
       expect(link2a.firstElementChild.localName).toBe("code");
       expect(link2b.firstElementChild.localName).toBe("code");
     });
@@ -830,9 +833,8 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const [uLongLong, unrestrictedFloat, double] = doc.querySelectorAll(
-        "#test a"
-      );
+      const [uLongLong, unrestrictedFloat, double] =
+        doc.querySelectorAll("#test a");
 
       expect(uLongLong.textContent).toBe("unsigned long long");
       expect(uLongLong.hash).toBe("#idl-unsigned-long-long");
@@ -869,8 +871,12 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const externalLinks = [...doc.querySelectorAll("#link-external a")];
-      expect(externalLinks[0].href).toBe(expectedLinks.get("Window"));
-      expect(externalLinks[1].href).toBe(expectedLinks.get("Window.event"));
+      expect(externalLinks[0].href).toBe(
+        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+      );
+      expect(externalLinks[1].href).toBe(
+        "https://dom.spec.whatwg.org/#dom-window-event"
+      );
 
       const paymentAddressLinks = [...doc.querySelectorAll("#link-internal a")];
       expect(paymentAddressLinks[0].getAttribute("href")).toBe(
@@ -990,59 +996,6 @@ describe("Core — xref", () => {
         jasmine.arrayWithExactContents(["XHR", "SVG"])
       );
     });
-  });
-
-  it("caches results and uses cached results when available", async () => {
-    const config = { xref: true, localBiblio };
-    const keys = new Map([
-      ["dictionary", "7a82727efd37620ec8b50cac9dca75d1b1f08d94"],
-      ["url parser", "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"],
-    ]);
-
-    const body1 = `
-      <section>
-        <p><a id="link">dictionary</a><p>
-      </section>`;
-
-    expectAsync(cache.keys()).toBeResolvedTo([]);
-    const preCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
-    expect(preCacheDoc.getElementById("link").href).toBe(
-      expectedLinks.get("dictionary")
-    );
-    expectAsync(cache.keys()).toBeResolvedTo([
-      keys.get("dictionary"),
-      "__LAST_VERSION_CHECK__",
-    ]);
-
-    // no new data was requested from server, cache shoudln't change
-    const postCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
-    expect(postCacheDoc.getElementById("link").href).toBe(
-      expectedLinks.get("dictionary")
-    );
-    expectAsync(cache.keys()).toBeResolvedTo([
-      keys.get("dictionary"),
-      "__LAST_VERSION_CHECK__",
-    ]);
-
-    // new data was requested from server, cache should change
-    const body2 = `
-      <section>
-        <p><a id="link-1">dictionary</a><p>
-        <p><a id="link-2">URL parser</a><p>
-      </section>
-    `;
-    const updatedCacheDoc = await makeRSDoc(makeStandardOps(config, body2));
-    expect(updatedCacheDoc.getElementById("link-1").href).toBe(
-      expectedLinks.get("dictionary")
-    );
-    expect(updatedCacheDoc.getElementById("link-2").href).toBe(
-      expectedLinks.get("url parser")
-    );
-    expectAsync(cache.keys()).toBeResolvedTo([
-      keys.get("dictionary"),
-      "__LAST_VERSION_CHECK__",
-      keys.get("url parser"),
-    ]);
   });
 
   it("respects requests to not perform an xref lookup", async () => {

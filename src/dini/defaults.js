@@ -4,11 +4,6 @@
  */
 export const name = "dini/defaults";
 import { coreDefaults } from "../core/defaults.js";
-import { definitionMap } from "../core/dfn-map.js";
-import linter from "../core/linter.js";
-import { rule as privsecSectionRule } from "../core/linter-rules/privsec-section.js";
-
-linter.register(privsecSectionRule);
 
 const licenses = new Map([
   [
@@ -30,8 +25,7 @@ const licenses = new Map([
   [
     "cc-by-sa",
     {
-      name:
-        "Creative Commons Attribution-ShareAlike 4.0 International Public License",
+      name: "Creative Commons Attribution-ShareAlike 4.0 International Public License",
       short: "CC-BY-SA",
       url: "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
     },
@@ -48,7 +42,6 @@ const diniDefaults = {
     "wpt-tests-exist": false,
   },
   logos: [],
-  pluralize: true,
   prependW3C: false,
   doJsonLd: false,
   license: "cc-by",
@@ -63,7 +56,6 @@ function computeProps(conf) {
 }
 
 export function run(conf) {
-  if (conf.specStatus === "unofficial") return;
   // assign the defaults
   const lint =
     conf.lint === false
@@ -82,9 +74,4 @@ export function run(conf) {
 
   // computed properties
   Object.assign(conf, computeProps(conf));
-
-  // TODO: eventually, we want to remove this.
-  // It's here for legacy support of json-ld specs
-  // see https://github.com/w3c/respec/issues/2019
-  Object.assign(conf, { ...Object.fromEntries(definitionMap) });
 }
