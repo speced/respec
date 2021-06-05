@@ -194,7 +194,7 @@ function filterHeader(h) {
 export function run(conf) {
   if ("tocIntroductory" in conf) {
     const msg = "Configuration option `tocIntroductory` is deprecated.";
-    const hint = `Add a 'notoc' class to remove a section from Table of Contents.`;
+    const hint = `Add a 'notoc' class to remove a section from the Table of Contents.`;
     showWarning(msg, name, { hint });
   }
 
