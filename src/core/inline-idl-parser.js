@@ -174,7 +174,7 @@ function renderAttribute(details) {
   const { identifier: linkFor } = parent || {};
   const element = html`${renderParent ? "." : ""}<a
       data-link-type="idl"
-      data-xref-type="attribute|dict-member"
+      data-xref-type="attribute|dict-member|const"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
       ><code>${identifier}</code></a

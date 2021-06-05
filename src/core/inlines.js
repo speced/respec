@@ -203,7 +203,7 @@ function inlineVariableMatches(matched) {
  */
 function inlineAnchorMatches(matched) {
   matched = matched.slice(2, -2); // Chop [= =]
-  const parts = splitBySlash(matched, 2);
+  const parts = splitByFor(matched);
   const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
   const [linkingText, text] = content.includes("|")
     ? content.split("|", 2).map(s => s.trim())
@@ -325,15 +325,27 @@ export function run(conf) {
 }
 
 /**
- * Split a string by slash (`/`) unless it's escaped by a backslash (`\`)
+ * Linking strings are always composed of:
+ *
+ *   (for-part /)+ linking-text
+ *
+ * E.g., " ReadableStream / set up / pullAlgorithm ".
+ * Where "ReadableStream/set up/" is for-part, and "pullAlgorithm" is
+ * the linking-text.
+ *
+ * The for part is optional, but when present can be two or three levels deep.
+ *
  * @param {string} str
  *
- * TODO: Use negative lookbehind (`str.split(/(?<!\\)\//)`) when supported.
- * https://github.com/w3c/respec/issues/2869
  */
-function splitBySlash(str, limit = Infinity) {
-  return str
-    .replace("\\/", "%%")
-    .split("/", limit)
-    .map(s => s && s.trim().replace("%%", "/"));
+function splitByFor(str) {
+  const cleanUp = str => str.replace("%%", "/").split("/").map(norm).join("/");
+  const safeStr = str.replace("\\/", "%%");
+  const lastSlashIdx = safeStr.lastIndexOf("/");
+  if (lastSlashIdx === -1) {
+    return [cleanUp(safeStr)];
+  }
+  const forPart = safeStr.substring(0, lastSlashIdx);
+  const linkingText = safeStr.substring(lastSlashIdx + 1, safeStr.length);
+  return [cleanUp(forPart), cleanUp(linkingText)];
 }

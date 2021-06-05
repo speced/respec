@@ -234,7 +234,7 @@ function personValidator(prop) {
 
 /**
  *
- * @param {PersonExtras} extras
+ * @param {PersonExtras[]} extras
  * @param {string} hint
  * @param {string} preamble
  */
