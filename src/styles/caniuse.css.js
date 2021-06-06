@@ -33,10 +33,7 @@ button.caniuse-cell {
     padding: 0.5em;
   }
 
-  .caniuse-cell.d::before,
-  .caniuse-cell.a::before,
-  .caniuse-cell.x::before,
-  .caniuse-cell.p::before {
+  .caniuse-cell:is(.a,.d,.p,.x)::before {
     content: "⚠️";
     padding: 0.5em;
   }
@@ -104,8 +101,7 @@ li.caniuse-cell {
 }
 
 /* no support, disabled by default */
-.caniuse-cell.n,
-.caniuse-cell.d {
+.caniuse-cell:is(.n,.d) {
   --caniuse-angle: 45deg;
   --caniuse-bg: var(--no-support);
   --caniuse-bg-alt: var(--no-support-alt);
