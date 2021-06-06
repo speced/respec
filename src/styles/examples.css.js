@@ -8,8 +8,7 @@ span.example-title {
   text-transform: none;
 }
 
-aside.example,
-div.example,
+:is(aside,div).example,
 div.illegal-example {
   padding: 0.5em;
   margin: 1em 0;
@@ -25,9 +24,7 @@ div.illegal-example p {
   color: black;
 }
 
-aside.example,
-div.example {
-  padding: 0.5em;
+:is(aside,div).example {
   border-left-width: 0.5em;
   border-left-style: solid;
   border-color: #e0cb52;
@@ -39,6 +36,7 @@ aside.example div.example {
   border-color: #999;
   background: #fff;
 }
+
 aside.example div.example span.example-title {
   color: #999;
 }
