@@ -126,7 +126,8 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 }
 
 /* show rest of the browser versions */
-.caniuse-stats :is(button:focus + ul, .caniuse-browser:hover > ul) {
+.caniuse-stats button:focus + ul,
+.caniuse-stats .caniuse-browser:hover > ul {
   display: block;
 }
 `;
