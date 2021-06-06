@@ -9,7 +9,6 @@ export default css`
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: baseline;
-  cursor: pointer;
 }
 
 button.caniuse-cell {
@@ -28,7 +27,7 @@ button.caniuse-cell {
     padding: 0.5em;
   }
 
-  .caniuse-cell.n::before{
+  .caniuse-cell.n::before {
     content: "❌";
     padding: 0.5em;
   }
