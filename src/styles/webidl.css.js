@@ -32,9 +32,9 @@ pre.idl > code {
 }
 
 .idlHeader a.self-link {
-   margin-left: .3cm;
-   text-decoration: none;
-   border-bottom: none;
+  margin-left: .3cm;
+  text-decoration: none;
+  border-bottom: none;
 }
 
 .idlID {
