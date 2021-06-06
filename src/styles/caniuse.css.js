@@ -9,6 +9,7 @@ export default css`
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: baseline;
+  cursor: default;
 }
 
 button.caniuse-cell {
@@ -125,8 +126,7 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 }
 
 /* show rest of the browser versions */
-.caniuse-stats button:focus + ul,
-.caniuse-stats .caniuse-browser:hover > ul {
+.caniuse-stats :is(button:focus + ul, .caniuse-browser:hover > ul) {
   display: block;
 }
 `;
