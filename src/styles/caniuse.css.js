@@ -113,9 +113,7 @@ li.caniuse-cell {
 
 /* not supported by default / partial support etc
 see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
-.caniuse-cell.a,
-.caniuse-cell.x,
-.caniuse-cell.p {
+.caniuse-cell:is(.a,.x,.p) {
   --caniuse-angle: 90deg;
   --caniuse-bg: var(--partial);
   --caniuse-bg-alt: var(--partial-alt);
