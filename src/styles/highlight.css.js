@@ -58,7 +58,7 @@ export default css`
 .hljs-addition,
 .hljs-attribute,
 .hljs-meta-string {
-  color: #42803C;
+  color: #42803c;
 }
 
 .hljs-built_in,

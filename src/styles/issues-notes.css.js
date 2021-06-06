@@ -5,43 +5,47 @@ const css = String.raw;
 // prettier-ignore
 export default css`
 .issue-label {
-    text-transform: initial;
+  text-transform: initial;
 }
 
-.warning > p:first-child { margin-top: 0 }
-.warning {
-    padding: .5em;
-    border-left-width: .5em;
-    border-left-style: solid;
+.warning > p:first-child {
+  margin-top: 0;
 }
-span.warning { padding: .1em .5em .15em; }
+.warning {
+  padding: 0.5em;
+  border-left-width: 0.5em;
+  border-left-style: solid;
+}
+span.warning {
+  padding: 0.1em 0.5em 0.15em;
+}
 
 .issue.closed span.issue-number {
-    text-decoration: line-through;
+  text-decoration: line-through;
 }
 
 .warning {
-    border-color: #f11;
-    border-width: .2em;
-    border-style: solid;
-    background: #fbe9e9;
+  border-color: #f11;
+  border-width: 0.2em;
+  border-style: solid;
+  background: #fbe9e9;
 }
 
-.warning-title:before{
-    content: "⚠"; /*U+26A0 WARNING SIGN*/
-    font-size: 1.3em;
-    float: left;
-    padding-right: .3em;
-    margin-top: -0.3em;
+.warning-title:before {
+  content: "⚠"; /*U+26A0 WARNING SIGN*/
+  font-size: 1.3em;
+  float: left;
+  padding-right: 0.3em;
+  margin-top: -0.3em;
 }
 
 li.task-list-item {
-    list-style: none;
+  list-style: none;
 }
 
 input.task-list-item-checkbox {
-    margin: 0 0.35em 0.25em -1.6em;
-    vertical-align: middle;
+  margin: 0 0.35em 0.25em -1.6em;
+  vertical-align: middle;
 }
 
 .issue a.respec-gh-label {
