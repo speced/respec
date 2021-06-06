@@ -28,7 +28,7 @@ button.caniuse-cell {
     padding: 0.5em;
   }
 
-  .caniuse-cell.n::before{
+  .caniuse-cell.n::before {
     content: "❌";
     padding: 0.5em;
   }
