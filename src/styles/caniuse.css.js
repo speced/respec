@@ -9,7 +9,6 @@ export default css`
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: baseline;
-  cursor: auto;
 }
 
 button.caniuse-cell {
