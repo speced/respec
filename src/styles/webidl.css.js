@@ -32,9 +32,9 @@ pre.idl > code {
 }
 
 .idlHeader a.self-link {
-   margin-left: .3cm;
-   text-decoration: none;
-   border-bottom: none;
+  margin-left: 0.3cm;
+  text-decoration: none;
+  border-bottom: none;
 }
 
 .idlID {
@@ -67,7 +67,6 @@ a.idlEnumItem {
   color: #005a9c;
 }
 
-
 /*.idlParam*/
 
 .idlParamName,
@@ -78,7 +77,6 @@ a.idlEnumItem {
 .extAttr {
   color: #666;
 }
-
 
 /*.idlSectionComment*/
 
@@ -118,7 +116,7 @@ a.idlEnumItem {
   background-color: #dcdcdc;
   background-image: none;
   border-color: #b5b5b5;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15)
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .respec-button-copy-paste.selected:hover {
