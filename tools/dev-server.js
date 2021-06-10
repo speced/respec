@@ -48,9 +48,6 @@ class KarmaServer {
       logLevel: karma.constants.LOG_WARN,
       client: {
         args: ["--grep", grep],
-        jasmine: {
-          random: false,
-        },
       },
       mochaReporter: { ignoreSkipped: true },
     });
