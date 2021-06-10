@@ -91,9 +91,7 @@ module.exports = config => {
     options.plugins = ["karma-*"].concat(localPlugins);
   }
 
-  if (config && config.set) {
-    config.set(options);
-  }
+  config.set(options);
   return options;
 };
 module.exports.files = files;
