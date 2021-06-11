@@ -31,7 +31,6 @@ const files = [
   {
     pattern: "tests/test-main.js",
     type: "module",
-    included: true,
   },
 ];
 
