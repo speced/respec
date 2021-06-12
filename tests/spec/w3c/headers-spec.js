@@ -1214,6 +1214,50 @@ describe("W3C — Headers", () => {
       expect(latestVersionLink).toBeNull();
       expect(latestVersionEl.textContent.trim()).toBe("none");
     });
+
+    it("allows overriding latest published version to a different location", async () => {
+      const ops = makeStandardOps({
+        shortName: "spec",
+        specStatus: "CR",
+        latestVersion: "https://somewhere.else/",
+      });
+      const doc = await makeRSDoc(ops);
+
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      expect(latestVersion).toBeTruthy();
+      const latestVersionEl = latestVersion.nextElementSibling;
+      expect(latestVersionEl.localName).toBe("dd");
+      const latestVersionLink = latestVersionEl.querySelector("a");
+      expect(latestVersionLink.href).toBe("https://somewhere.else/");
+      expect(latestVersionEl.textContent.trim()).toBe(
+        "https://somewhere.else/"
+      );
+    });
+    it("allows resolves latestVersion using w3c.org as the base", async () => {
+      const ops = makeStandardOps({
+        shortName: "some-spec",
+        level: 3,
+        specStatus: "CR",
+        latestVersion: "TR/its-here",
+      });
+      const doc = await makeRSDoc(ops);
+
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      expect(latestVersion).toBeTruthy();
+      const latestVersionEl = latestVersion.nextElementSibling;
+      expect(latestVersionEl.localName).toBe("dd");
+      const latestVersionLink = latestVersionEl.querySelector("a");
+      expect(latestVersionLink.href).toBe("https://www.w3.org/TR/its-here");
+      expect(latestVersionEl.textContent.trim()).toBe(
+        "https://www.w3.org/TR/its-here"
+      );
+    });
   });
 
   describe("prevED", () => {
