@@ -1813,7 +1813,7 @@ describe("W3C — Headers", () => {
         wg: "WGNAME",
         wgURI: "http://WG",
         thisVersion: "http://THIS",
-        latestVersion: "http://LATEST",
+        latestVersion: "https://some.places/LATEST",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1832,7 +1832,7 @@ describe("W3C — Headers", () => {
       expect(terms[1].textContent).toBe("Latest published version:");
       expect(terms[1].nextElementSibling.localName).toBe("dd");
       expect(terms[1].nextElementSibling.textContent).toContain(
-        "http://LATEST"
+        "https://some.places/LATEST"
       );
       const sotd = doc.getElementById("sotd");
       expect(sotd.querySelectorAll("a[href='http://WG']")).toHaveSize(1);
