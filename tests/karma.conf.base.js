@@ -2,42 +2,45 @@
 /* eslint-env node */
 const path = require("path");
 
+/** @type {import("karma").ConfigOptions["files"]} */
+const files = [
+  {
+    pattern: "builds/**/*.*",
+    included: false,
+  },
+  {
+    pattern: "@(src|js)/**/*",
+    included: false,
+  },
+  {
+    pattern: "worker/*.js",
+    included: false,
+  },
+  {
+    pattern: "node_modules/@(idb|hyperhtml|marked|webidl2)/**/*.js",
+    included: false,
+  },
+  {
+    pattern: "tests/@(data|support-files)/**/*",
+    included: false,
+  },
+  {
+    pattern: "tests/**/*.html",
+    included: false,
+  },
+  {
+    pattern: "tests/test-main.js",
+    type: "module",
+  },
+];
+
 /** @param {import("karma").Config} config */
 module.exports = config => {
   /** @type {import("karma").ConfigOptions} */
   const options = {
     basePath: path.join(__dirname, ".."),
     frameworks: ["jasmine"],
-    files: [
-      {
-        pattern: "builds/**/*.*",
-        included: false,
-      },
-      {
-        pattern: "@(src|js)/**/*",
-        included: false,
-      },
-      {
-        pattern: "worker/*.js",
-        included: false,
-      },
-      {
-        pattern: "node_modules/@(idb|hyperhtml|marked|webidl2)/**/*.js",
-        included: false,
-      },
-      {
-        pattern: "tests/@(data|support-files)/**/*",
-        included: false,
-      },
-      {
-        pattern: "tests/**/*.html",
-        included: false,
-      },
-      {
-        pattern: "tests/test-main.js",
-        type: "module",
-      },
-    ],
+    files,
     exclude: ["**/*.swp", "*.swp", ".DS_Store"],
 
     proxies: {
@@ -87,5 +90,7 @@ module.exports = config => {
     options.plugins = ["karma-*"].concat(localPlugins);
   }
 
+  config.set(options);
   return options;
 };
+module.exports.files = files;
