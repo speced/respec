@@ -2006,7 +2006,7 @@ describe("W3C — Headers", () => {
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
     const aElem = doc.querySelector(
-      `a[href^="http://www.w3.org/2003/03/Translations/"]`
+      `a[href^="https://www.w3.org/Translations/"]`
     );
     expect(aElem.href.endsWith("PASS")).toBeTruthy();
     const textContent = aElem.parentElement.textContent
@@ -2024,7 +2024,7 @@ describe("W3C — Headers", () => {
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
     const aElem = doc.querySelector(
-      `a[href^="http://www.w3.org/2003/03/Translations/"]`
+      `a[href^="https://www.w3.org/Translations/"]`
     );
     expect(aElem).toBeNull();
   });
