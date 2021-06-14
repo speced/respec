@@ -43,6 +43,7 @@ describe("Core — xref", () => {
       href: "https://www.w3.org/TR/referrer-policy/",
     },
     "css-syntax": { aliasOf: "css-syntax-3" },
+    "css-values": { aliasOf: "css-values-4" },
     "css-scoping": { aliasOf: "css-scoping-1" },
     "css-scoping-1": { href: "https://drafts.csswg.org/css-scoping-1/" },
     "local-1": { id: "local-1", href: "https://example.com/" },
@@ -156,10 +157,10 @@ describe("Core — xref", () => {
     // https://github.com/w3c/respec/pull/1750
     const body = `
       <section id="test">
-        <p data-cite="css-values"><a id="one">ident</a></p>
+        <p data-cite="css-values"><a id="one" data-xref-type="css-value" data-xref-for="attr()">ident</a></p>
         <p data-cite="css-syntax"><a id="two">ident</a></p>
         <p data-cite="css-syntax">
-          <a id="three" data-cite="css-values">ident</a> (overrides parent)
+          <a id="three" data-cite="css-values" data-xref-for="CSS">ident</a> (overrides parent)
           <a id="four">ident</a> (uses parent's data-cite - css-syntax)
         </p>
         <p><a id="five" data-cite="NOT-FOUND">ident</a></p>
@@ -169,13 +170,18 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const cssValuesLink = "https://www.w3.org/TR/css-values-3/#css-identifier";
-    const cssSyntaxLink = "https://www.w3.org/TR/css-syntax-3/#identifier";
-
-    expect(doc.getElementById("one").href).toBe(cssValuesLink);
-    expect(doc.getElementById("two").href).toBe(cssSyntaxLink);
-    expect(doc.getElementById("three").href).toBe(cssValuesLink);
-    expect(doc.getElementById("four").href).toBe(cssSyntaxLink);
+    expect(doc.getElementById("one").href).toBe(
+      "https://www.w3.org/TR/css-values-4/#valdef-attr-ident"
+    );
+    expect(doc.getElementById("two").href).toBe(
+      "https://www.w3.org/TR/css-syntax-3/#identifier"
+    );
+    expect(doc.getElementById("three").href).toBe(
+      "https://www.w3.org/TR/css-values-4/#css-css-identifier"
+    );
+    expect(doc.getElementById("four").href).toBe(
+      "https://www.w3.org/TR/css-syntax-3/#identifier"
+    );
 
     const five = doc.getElementById("five");
     expect(five.href).toBe("");
@@ -542,7 +548,7 @@ describe("Core — xref", () => {
 
     const badLink = doc.getElementById("invalid");
     expect(badLink.href).toBe(
-      "https://www.w3.org/TR/css-values-3/#bearing-angle"
+      "https://www.w3.org/TR/css-values-4/#bearing-angle"
     );
     expect(badLink.classList).toContain("respec-offending-element");
     expect(badLink.title).toBe(
