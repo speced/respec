@@ -57,7 +57,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^11.3.2",
     "typescript": "^4.3.2",
-    "vnu-jar": "^21.4.9",
+    "vnu-jar": "^21.6.11",
     "webidl2": "^24.1.1"
   },
   "scripts": {
