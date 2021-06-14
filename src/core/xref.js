@@ -132,7 +132,7 @@ function normalizeConfig(xref) {
       if (xref.profile) {
         const profile = xref.profile.toLowerCase();
         if (profile in profiles) {
-          const specs = xref.specs?.concat(profiles[profile]) ?? [];
+          const specs = (xref.specs ?? []).concat(profiles[profile]) ?? [];
           Object.assign(config, { specs });
         } else {
           invalidProfileError(xref.profile);
