@@ -234,7 +234,7 @@ export default (conf, options) => {
       ? html`<p>
           See also
           <a
-            href="${`http://www.w3.org/2003/03/Translations/byTechnology?technology=${conf.shortName}`}"
+            href="${`https://www.w3.org/Translations/?technology=${conf.shortName}`}"
           >
             <strong>translations</strong></a
           >.
