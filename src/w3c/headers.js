@@ -110,7 +110,6 @@ const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
 /**
  * Resolves against https://www.w3.org.
  * @param {string} href
- * @returns
  */
 function w3Url(href) {
   return new URL(href, "https://www.w3.org/").href;
