@@ -143,6 +143,9 @@ describe("Core - Inlines", () => {
       <section>
         <p id="h"> TEXT |var: Generic&lt;int&gt;| TEXT |var2: Generic&lt;unsigned short int&gt;| </p>
       </section>
+      <section>
+        <p id="nulls"> |var 1: null type spaces?| and |var 2 : NullableType?| </p>
+      </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
 
@@ -188,6 +191,12 @@ describe("Core - Inlines", () => {
     expect(h[0].dataset.type).toBe("Generic<int>");
     expect(h[1].textContent).toBe("var2");
     expect(h[1].dataset.type).toBe("Generic<unsigned short int>");
+
+    const [nullVar1, nullVar2] = doc.querySelectorAll("#nulls > var");
+    expect(nullVar1.textContent).toBe("var 1");
+    expect(nullVar1.dataset.type).toBe("null type spaces?");
+    expect(nullVar2.textContent).toBe("var 2");
+    expect(nullVar2.dataset.type).toBe("NullableType?");
   });
 
   it("expands inline references and they get classified as normative/informative correctly", async () => {
