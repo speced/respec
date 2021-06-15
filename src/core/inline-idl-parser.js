@@ -4,13 +4,14 @@
 
 import { htmlJoinComma, showError } from "./utils.js";
 import { html } from "./import-maps.js";
-const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}} {{ double }}
+const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+\??$/; // {{unrestricted double?}} {{ double }}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;
 const slotRegex = /^\[\[(\w+)\]\]$/;
 // matches: `value` or `[[value]]`
 // NOTE: [[value]] is actually a slot, but database has this as type="attribute"
 const attributeRegex = /^((?:\[\[)?(?:\w+)(?:\]\])?)$/;
+const baseRegex = /^(?:\w+)\??$/;
 const enumRegex = /^(\w+)\["([\w- ]*)"\]$/;
 // TODO: const splitRegex = /(?<=\]\]|\b)\./
 // https://github.com/w3c/respec/pull/1848/files#r225087385
@@ -21,6 +22,7 @@ const methodSplitRegex = /\.?(\w+\(.*\)$)/;
  * @property {"base"} type
  * @property {string} identifier
  * @property {boolean} renderParent
+ * @property {boolean} nullable
  * @property {InlineIdl | null} [parent]
  *
  * @typedef {object} IdlAttribute
@@ -56,6 +58,7 @@ const methodSplitRegex = /\.?(\w+\(.*\)$)/;
  *
  * @typedef {object} IdlPrimitive
  * @property {"idl-primitive"} type
+ * @property {boolean} nullable
  * @property {string} identifier
  * @property {boolean} renderParent
  * @property {InlineIdl | null} [parent]
@@ -116,12 +119,21 @@ function parseInlineIDL(str) {
       continue;
     }
     if (idlPrimitiveRegex.test(value)) {
-      results.push({ type: "idl-primitive", identifier: value, renderParent });
+      const nullable = value.endsWith("?");
+      const identifier = nullable ? value.slice(0, -1) : value;
+      results.push({
+        type: "idl-primitive",
+        identifier,
+        renderParent,
+        nullable,
+      });
       continue;
     }
     // base, always final token
-    if (attributeRegex.test(value) && tokens.length === 0) {
-      results.push({ type: "base", identifier: value, renderParent });
+    if (baseRegex.test(value) && tokens.length === 0) {
+      const nullable = value.endsWith("?");
+      const identifier = nullable ? value.slice(0, -1) : value;
+      results.push({ type: "base", identifier, renderParent, nullable });
       continue;
     }
     throw new SyntaxError(`IDL micro-syntax parsing error in \`{{ ${str} }}\``);
@@ -139,10 +151,13 @@ function parseInlineIDL(str) {
  */
 function renderBase(details) {
   // Check if base is a local variable in a section
-  const { identifier, renderParent } = details;
+  const { identifier, renderParent, nullable } = details;
   if (renderParent) {
-    return html`<a data-xref-type="_IDL_" data-link-type="idl"
-      ><code>${identifier}</code></a
+    return html`<a
+      data-xref-type="_IDL_"
+      data-link-type="idl"
+      data-lt="${identifier}"
+      ><code>${identifier + (nullable ? "?" : "")}</code></a
     >`;
   }
 }
@@ -244,12 +259,13 @@ function renderException(details) {
  * @param {IdlPrimitive} details
  */
 function renderIdlPrimitiveType(details) {
-  const { identifier } = details;
+  const { identifier, nullable } = details;
   const element = html`<a
     data-link-type="idl"
     data-cite="WebIDL"
     data-xref-type="interface"
-    ><code>${identifier}</code></a
+    data-lt="${identifier}"
+    ><code>${identifier + (nullable ? "?" : "")}</code></a
   >`;
   return element;
 }

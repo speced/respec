@@ -61,8 +61,8 @@ const l10n = getIntlData(localizationStrings);
 // TODO: Replace (?!`) at the end with (?:<!`) at the start when Firefox + Safari
 // add support.
 const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
-const inlineIdlReference = /(?:{{[^}]+}})/; // {{ WebIDLThing }}
-const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
+const inlineIdlReference = /(?:{{[^}]+\?*}})/; // {{ WebIDLThing }}, {{ WebIDLThing? }}
+const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+\??)?\|\B/; // |var : Type?|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
