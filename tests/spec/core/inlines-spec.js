@@ -530,6 +530,56 @@ describe("Core - Inlines", () => {
     );
   });
 
+  it("supports {{ Nullable? }} types and primitives", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+        [Exposed=Window]
+        interface InterFace{};
+        dictionary Dict{};
+        </pre>
+        <p id="interface">{{ InterFace? }}</p>
+        <p id="dictionary">{{ Dict? }}</p>
+        <p id="primitive">{{ unsigned short? }}</p>
+      </section>
+    `;
+    const config = { xref: ["WebIDL"] };
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+
+    const [interfaceDfn, dictDfn] = doc.querySelectorAll(".idl dfn");
+
+    // {{ Interface? }}
+    const interfaceAnchor = doc.querySelector("#interface a");
+    expect(interfaceAnchor.textContent).toBe("InterFace?");
+    expect(interfaceAnchor.hash.endsWith(interfaceDfn.id)).toBeTrue();
+
+    const interfaceData = interfaceAnchor.dataset;
+    expect(interfaceData.xrefType).toBe("_IDL_");
+    expect(interfaceData.linkType).toBe("idl");
+    expect(interfaceData.lt).toBe("InterFace");
+
+    // {{ Dict? }}
+    const dictAnchor = doc.querySelector("#dictionary a");
+    expect(dictAnchor.textContent).toBe("Dict?");
+    expect(dictAnchor.hash.endsWith(dictDfn.id)).toBeTrue();
+
+    const dictData = dictAnchor.dataset;
+    expect(dictData.xrefType).toBe("_IDL_");
+    expect(dictData.linkType).toBe("idl");
+    expect(dictData.lt).toBe("Dict");
+
+    // {{ unsigned short? }}
+    const primitiveAnchor = doc.querySelector("#primitive a");
+    expect(primitiveAnchor.textContent).toBe("unsigned short?");
+    expect(primitiveAnchor.hash).toBe("#idl-unsigned-short");
+
+    const primitiveData = primitiveAnchor.dataset;
+    expect(primitiveData.linkType).toBe("idl");
+    expect(primitiveData.cite).toBe("webidl");
+    expect(primitiveData.xrefType).toBe("interface");
+    expect(primitiveData.lt).toBe("unsigned short");
+  });
+
   it("doesn't link processed inline WebIDL if inside a definition", async () => {
     const body = `
       <section>
