@@ -108,11 +108,12 @@ const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
 });
 
 /**
- * Tagged template. Resolves against https://www.w3c.org.
- * */
-function w3Url(strings, ...values) {
-  const str = strings.map((str, i) => str + (values[i] ?? "")).join("");
-  return new URL(str, "https://www.w3.org/").href;
+ * Resolves against https://www.w3.org.
+ * @param {string} href
+ * @returns
+ */
+function w3Url(href) {
+  return new URL(href, "https://www.w3.org/").href;
 }
 
 const status2maturity = {
@@ -390,7 +391,7 @@ export function run(conf) {
     const year = conf.publishDate.getUTCFullYear();
     const date = concatDate(publishDate);
     const docVersion = `${maturity}-${shortName}-${date}`;
-    conf.thisVersion = w3Url`${pubSpace}/${year}/${docVersion}/`;
+    conf.thisVersion = w3Url(`${pubSpace}/${year}/${docVersion}/`);
   }
   if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
 
@@ -398,8 +399,8 @@ export function run(conf) {
 
   if (conf.latestVersion !== null) {
     conf.latestVersion = conf.latestVersion
-      ? w3Url`${conf.latestVersion}`
-      : w3Url`${pubSpace}/${conf.shortName}/`;
+      ? w3Url(`${conf.latestVersion}`)
+      : w3Url(`${pubSpace}/${conf.shortName}/`);
   }
 
   if (conf.previousPublishDate) {
@@ -417,16 +418,18 @@ export function run(conf) {
       status2maturity[conf.previousMaturity] ?? conf.previousMaturity;
     if (conf.isTagFinding && conf.latestVersion) {
       const pubDate = ISODate.format(conf.publishDate);
-      conf.thisVersion = w3Url`${latestPath}-${pubDate}`;
+      conf.thisVersion = w3Url(`${latestPath}-${pubDate}`);
       const prevPubDate = ISODate.format(conf.previousPublishDate);
-      conf.prevVersion = w3Url`${latestPath}-${prevPubDate}}`;
+      conf.prevVersion = w3Url(`${latestPath}-${prevPubDate}}`);
     } else if (conf.isCGBG || conf.isBasic) {
       conf.prevVersion = conf.prevVersion || "";
     } else {
       const year = conf.previousPublishDate.getUTCFullYear();
       const { shortName } = conf;
       const date = concatDate(conf.previousPublishDate);
-      conf.prevVersion = w3Url`${pubSpace}/${year}/${prevMaturity}-${shortName}-${date}/`;
+      conf.prevVersion = w3Url(
+        `${pubSpace}/${year}/${prevMaturity}-${shortName}-${date}/`
+      );
     }
   } else {
     if (
@@ -447,7 +450,7 @@ export function run(conf) {
     if (!conf.prevVersion) conf.prevVersion = "";
   }
   if (conf.prevRecShortname && !conf.prevRecURI)
-    conf.prevRecURI = w3Url`${pubSpace}/${conf.prevRecShortname}`;
+    conf.prevRecURI = w3Url(`${pubSpace}/${conf.prevRecShortname}`);
   if (!conf.formerEditors) conf.formerEditors = [];
   if (conf.editors) {
     // Move any editors with retiredDate to formerEditors.
