@@ -466,7 +466,7 @@ export function run(conf) {
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
   conf.multipleFormerEditors = conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
-  (conf.alternateFormats || []).forEach(it => {
+  conf.alternateFormats?.forEach(it => {
     if (!it.uri || !it.label) {
       const msg = "All alternate formats must have a uri and a label.";
       showError(msg, name);
