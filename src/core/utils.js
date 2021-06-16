@@ -109,15 +109,12 @@ function joinFactory(type, style = "long") {
     let elemCount = 0;
     return !mapper
       ? formatter.format(items)
-      : formatter
-          .formatToParts(items)
-          // @ts-ignore
-          .map(({ type, value }) => {
-            if (type === "element") {
-              return mapper(value, elemCount++, items);
-            }
-            return value;
-          });
+      : formatter.formatToParts(items).map(({ type, value }) => {
+          if (type === "element") {
+            return mapper(value, elemCount++, items);
+          }
+          return value;
+        });
   };
 }
 
