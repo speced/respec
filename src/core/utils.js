@@ -97,24 +97,22 @@ function markAsOffending(elem, msg, title) {
  * @param {"long"|"narrow"} style
  */
 function joinFactory(type, style = "long") {
-  const formatter = new Intl.ListFormat(docLang, {
-    style,
-    type,
-  });
+  const formatter = new Intl.ListFormat(docLang, { style, type });
   /**
    * @param {string[]} items
-   * @param {(value: undefined, index: number, array: string[]) => any} [mapper]
+   * @param {(value: string, index: number, array: string[]) => any} [mapper]
    */
   return (items, mapper) => {
     let elemCount = 0;
-    return !mapper
-      ? formatter.format(items)
-      : formatter.formatToParts(items).map(({ type, value }) => {
-          if (type === "element") {
-            return mapper(value, elemCount++, items);
-          }
-          return value;
-        });
+    if (!mapper) {
+      return formatter.format(items);
+    }
+    return formatter.formatToParts(items).map(({ type, value }) => {
+      if (type === "element") {
+        return mapper(value, elemCount++, items);
+      }
+      return value;
+    });
   };
 }
 
