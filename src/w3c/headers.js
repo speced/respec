@@ -528,13 +528,11 @@ export function run(conf) {
           conf.alternateFormats.map(({ label }) => label),
           (_, i) => {
             const alt = conf.alternateFormats[i];
-            const lang = alt?.lang ?? null;
-            const type = alt?.type ?? null;
             return html`<a
               rel="alternate"
               href="${alt.uri}"
-              hreflang="${lang}"
-              type="${type}"
+              hreflang="${alt?.lang ?? null}"
+              type="${alt?.type ?? null}"
               >${alt.label}</a
             >`;
           }
