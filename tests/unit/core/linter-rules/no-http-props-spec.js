@@ -28,7 +28,7 @@ describe("Core Linter Rule - 'no-http-props'", () => {
     expect(warning.hint).toContain(
       "Please change the following properties to 'https://':"
     );
-    expect(warning.hint).toContain("`URI`");
+    expect(warning.hint).toContain("URI");
     expect(warning.hint).toContain("`charterDisclosureURI`");
 
     conf.charterDisclosureURI = "https://valid";

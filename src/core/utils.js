@@ -913,10 +913,23 @@ export function showWarning(message, pluginName, options = {}) {
 }
 
 /**
- * Creates a quick markdown link to a property in the docs.
+ * Makes a string `coded`.
  *
- * @param {string} prop ReSpec configuration property to link to in docs.
+ * @param {string} item
+ * @returns {string}
  */
-export function docLink(prop) {
-  return `[\`${prop}\`](https://respec.org/docs/#${prop})`;
+export function toMDCode(item) {
+  return String(item) ? `\`${item}\`` : "";
+}
+
+/**
+ *
+ * @param {string[]} array
+ * @returns
+ */
+export function mdJoinOr(array) {
+  return joinOr(array, toMDCode);
+}
+export function mdJoinAnd(array) {
+  return joinAnd(array, toMDCode);
 }

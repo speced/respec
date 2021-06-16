@@ -612,5 +612,26 @@ describe("Core - Utils", () => {
         expect(utils.getElementIndentation(anchor)).toBe("          ");
       });
     });
+
+    describe("toMDCode()", () => {
+      it("wraps a string in backticks", () => {
+        expect(utils.toMDCode("")).toBe("");
+        expect(utils.toMDCode("test")).toBe("`test`");
+      });
+    });
+
+    describe("mdJoinOr()", () => {
+      it("uses uses disjunction", () => {
+        expect(utils.mdJoinOr([])).toBe("");
+        expect(utils.mdJoinOr(["a", "b", "c"])).toBe("`a`, `b`, or `c`");
+      });
+    });
+
+    describe("mdJoinAnd()", () => {
+      it("uses conjunction", () => {
+        expect(utils.mdJoinAnd([])).toBe("");
+        expect(utils.mdJoinAnd(["a", "b", "c"])).toBe("`a`, `b`, and `c`");
+      });
+    });
   });
 });

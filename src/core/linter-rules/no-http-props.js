@@ -4,13 +4,14 @@
  * start with http:// in the ReSpec config.
  */
 import { getIntlData, joinAnd, showWarning } from "../utils.js";
+import { docLink } from "../respec-docs.js";
 
 const ruleName = "no-http-props";
 export const name = "core/linter-rules/no-http-props";
 
 const localizationStrings = {
   en: {
-    msg: "Insecure URLs are not allowed in `respecConfig`.",
+    msg: docLink`Insecure URLs are not allowed in ${"respecConfig"}.`,
     hint: "Please change the following properties to 'https://': ",
   },
   zh: {
@@ -40,7 +41,7 @@ export function run(conf) {
     );
 
   if (offendingMembers.length) {
-    const keys = joinAnd(offendingMembers, key => `\`${key}\``);
+    const keys = joinAnd(offendingMembers, key => docLink`${key}`);
     showWarning(l10n.msg, name, { hint: l10n.hint + keys });
   }
 }

@@ -4,8 +4,9 @@
  */
 export const name = "w3c/defaults";
 import { bgStatus, cgStatus, cgbgStatus } from "./headers.js";
-import { docLink, showError } from "../core/utils.js";
+import { mdJoinOr, showError } from "../core/utils.js";
 import { coreDefaults } from "../core/defaults.js";
+import { docLink } from "../core/respec-docs.js";
 
 const w3cLogo = {
   src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
@@ -62,10 +63,8 @@ function validateStatusForGroup(conf) {
   switch (groupType) {
     case "cg": {
       if (![...cgbgStatus, "unofficial"].includes(specStatus)) {
-        const msg = `W3C Community Group documents can't use \`"${specStatus}"\` for the ${docLink(
-          "specStatus"
-        )} configuration option.`;
-        const hint = `Please use one of: ${toMDCode(
+        const msg = docLink`W3C Community Group documents can't use \`"${specStatus}"\` for the ${"specStatus"} configuration option.`;
+        const hint = `Please use one of: ${mdJoinOr(
           cgStatus
         )}. Automatically falling back to \`"CG-DRAFT"\`.`;
         showError(msg, name, { hint });
@@ -75,10 +74,8 @@ function validateStatusForGroup(conf) {
     }
     case "bg": {
       if (![...bgStatus, "unofficial"].includes(specStatus)) {
-        const msg = `W3C Business Group documents can't use \`"${specStatus}"\` for the ${docLink(
-          "specStatus"
-        )} configuration option.`;
-        const hint = `Please use one of: ${toMDCode(
+        const msg = docLink`W3C Business Group documents can't use \`"${specStatus}"\` for the ${"specStatus"} configuration option.`;
+        const hint = `Please use one of: ${mdJoinOr(
           bgStatus
         )}. Automatically falling back to \`"BG-DRAFT"\`.`;
         showError(msg, name, { hint });
@@ -88,19 +85,11 @@ function validateStatusForGroup(conf) {
     }
     case "wg": {
       if (cgbgStatus.includes(specStatus)) {
-        const msg = `W3C Working Group documents can't use \`"${specStatus}"\` for the ${docLink(
-          "specStatus"
-        )} configuration option.`;
-        const hint = `Please see ${docLink(
-          "specStatus"
-        )} for appropriate values for this type of group.`;
+        const msg = docLink`W3C Working Group documents can't use \`"${specStatus}"\` for the ${"specStatus"} configuration option.`;
+        const hint = docLink`Please see ${"specStatus"} for appropriate values for this type of group.`;
         showError(msg, name, { hint });
       }
       break;
     }
   }
-}
-
-function toMDCode(list) {
-  return list.map(item => `\`"${item}"\``).join(", ");
 }

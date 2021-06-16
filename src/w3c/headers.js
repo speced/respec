@@ -86,13 +86,14 @@
 import {
   ISODate,
   concatDate,
-  docLink,
   htmlJoinAnd,
+  mdJoinOr,
   showError,
   showWarning,
 } from "../core/utils.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
+import { docLink } from "../core/respec-docs.js";
 import headersTmpl from "./templates/headers.js";
 import { html } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";
@@ -259,19 +260,15 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
     const formattedDate = ISODate.format(date);
     return new Date(formattedDate);
   }
-  const msg =
-    `[\`${prop}\`](https://github.com/w3c/respec/wiki/${prop}) ` +
-    `is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
+  const msg = docLink`${prop} is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
   showError(msg, name);
   return new Date(ISODate.format(new Date()));
 }
 
 export function run(conf) {
   if (!conf.specStatus) {
-    const msg = `Missing required configuration: ${docLink("specStatus")}.`;
-    const hint = `Please select an appropriate status from ${docLink(
-      "specStatus"
-    )} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
+    const msg = docLink`Missing required configuration: ${"specStatus"}.`;
+    const hint = docLink`Please select an appropriate status from ${"specStatus"} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
     showError(msg, name, { hint });
   }
   conf.isUnofficial = conf.specStatus === "unofficial";
@@ -280,17 +277,12 @@ export function run(conf) {
   }
   if (conf.isUnofficial) {
     if (conf.license && !licenses.has(conf.license)) {
-      const msg = `The ${docLink(
-        "license"
-      )} configuration option has an invalid value: "\`${
+      const msg = docLink`The ${"license"} configuration option has an invalid value: "\`${
         conf.license
       }\`". Defaulting to "cc-by".`;
-      const licensesKeys = [...licenses.keys()]
-        .map(key => `\`"${key}"\``)
-        .join(", ");
-      const hint = `Please explicitly set ${docLink(
-        "license"
-      )} to one of: ${licensesKeys}.`;
+      const hint = docLink`Please explicitly set ${"license"} to one of: ${mdJoinOr(
+        [...licenses.keys()]
+      )}.`;
       showError(msg, name, { hint });
       conf.license = "cc-by";
     }
@@ -303,10 +295,8 @@ export function run(conf) {
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
   if (!conf.isUnofficial && ["cc-by"].includes(conf.license)) {
-    const msg = `You cannot use license "\`${conf.license}\`" with W3C Specs.`;
-    const hint = `Please set ${docLink(
-      "license"
-    )} to "w3c-software-doc" instead.`;
+    const msg = docLink`License "\`${conf.license}\`" is not allowed for W3C Specifications.`;
+    const hint = docLink`Please set ${"license"} to "w3c-software-doc" instead.`;
     showError(msg, name, { hint });
   }
   conf.licenseInfo = licenses.get(conf.license);
@@ -328,9 +318,8 @@ export function run(conf) {
     ) {
       const msg =
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. ";
-      const hint =
-        `Please update your ${docLink("testSuiteURI")} to point to the ` +
-        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/tree/master/${conf.shortName} ).`;
+      const wptLiveURL = `https://wpt.live/${conf.shortName}`;
+      const hint = docLink`Please update your ${"testSuiteURI"} to point to the new tests repository (e.g., ${wptLiveURL}).`;
       showWarning(msg, name, { hint });
     }
   }
@@ -372,8 +361,8 @@ export function run(conf) {
     conf.specStatus === "finding" || conf.specStatus === "draft-finding";
 
   if (conf.isRecTrack && !hasGitHubIssuesLink(conf)) {
-    const msg = `Rec-track documents must link to Github issues from their head.`;
-    const hint = `Please use the [\`github\`](https://respec.org/docs/#github) configuration option.`;
+    const msg = docLink`Missing link to GitHub in head of document.`;
+    const hint = docLink`Please add the ${"github"} configuration option to document's ${"respecConfig"}.`;
     showError(msg, name, { hint });
   }
   if (!conf.edDraftURI) {
@@ -440,10 +429,9 @@ export function run(conf) {
       !conf.isNoTrack &&
       !conf.isSubmission
     ) {
-      const msg = "Document on track but no previous version.";
-      const hint =
-        "Add [`previousMaturity`](https://respec.org/docs/#previousMaturity) " +
-        "and [`previousPublishDate`](https://respec.org/docs/#previousPublishDate) to ReSpec's config.";
+      const msg =
+        "This document is on the W3C Recommendation Track, but is missing the required 'Previous Version' link.";
+      const hint = docLink`Add ${"previousMaturity"} and ${"previousPublishDate"} to the document's ${"respecConfig"}.`;
       showError(msg, name, { hint });
     }
     if (!conf.prevVersion) conf.prevVersion = "";
@@ -462,7 +450,7 @@ export function run(conf) {
     }
   }
   if (!conf.editors || conf.editors.length === 0) {
-    const msg = "At least one editor is required";
+    const msg = "At least one editor is required.";
     showError(msg, name);
   }
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
@@ -496,8 +484,7 @@ export function run(conf) {
   conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
   if (conf.isRec && !conf.errata) {
     const msg = "Recommendations must have an errata link.";
-    const hint =
-      "Add an [`errata`](https://respec.org/docs/#errata) URL to your respecConfig.";
+    const hint = docLink`Add an ${"errata"} URL to your ${"respecConfig"}.`;
     showError(msg, name, { hint });
   }
   conf.prependW3C = !conf.isBasic && !conf.isUnofficial;
@@ -548,8 +535,10 @@ export function run(conf) {
     document.getElementById("sotd") || document.createElement("section");
   if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !sotd.id) {
     const msg =
-      "A custom SotD paragraph is required for your type of document.";
-    showError(msg, name);
+      "A Status of This Document must include at least on custom paragraph.";
+    const hint =
+      "Add a `<p>` in the 'sotd' section that reflects the status of this specification.";
+    showError(msg, name, { elements: [sotd], hint });
   }
   sotd.id = sotd.id || "sotd";
   sotd.classList.add("introductory");
@@ -566,14 +555,12 @@ export function run(conf) {
     wgPotentialArray.some(item => Array.isArray(item)) &&
     !wgPotentialArray.every(item => Array.isArray(item))
   ) {
-    const msg =
-      "If one of '`wg`', '`wgURI`', or '`wgPatentURI`' is an array, they all have to be.";
-    showError(msg, name);
+    const msg = docLink`If one of ${"wg"}, ${"wgURI"}, or ${"wgPatentURI"} is an array, they all have to be.`;
+    const hint = docLink`Use the ${"group"} option with an array instead.`;
+    showError(msg, name, { hint });
   }
   if (conf.isCGBG && !conf.wg) {
-    const msg =
-      "[`wg`](https://github.com/w3c/respec/wiki/wg)" +
-      " configuration option is required for this kind of document.";
+    const msg = docLink`${"wg"} configuration option is required for this kind of document.`;
     showError(msg, name);
   }
   if (Array.isArray(conf.wg)) {
@@ -598,21 +585,19 @@ export function run(conf) {
     }
   }
   if (conf.specStatus === "PR" && !conf.crEnd) {
-    const msg =
-      '`specStatus` is "PR" but no `crEnd` is specified (needed to indicate end of previous CR).';
+    const msg = docLink`${"specStatus"} is "PR" but no ${"crEnd"} is specified in the ${"respecConfig"} (needed to indicate end of previous CR).`;
     showError(msg, name);
   }
 
   if (conf.specStatus === "CR" && !conf.crEnd) {
-    const msg =
-      '`specStatus` is "CR", but no `crEnd` is specified in Respec config.';
+    const msg = docLink`${"specStatus"} is "CR", but no ${"crEnd"} is specified in the ${"respecConfig"}.`;
     showError(msg, name);
   }
   conf.crEnd = validateDateAndRecover(conf, "crEnd");
   conf.humanCREnd = W3CDate.format(conf.crEnd);
 
   if (conf.specStatus === "PR" && !conf.prEnd) {
-    const msg = `\`specStatus\` is "PR" but no \`prEnd\` is specified.`;
+    const msg = docLink`${"specStatus"} is "PR" but no ${"prEnd"} is specified in the ${"respecConfig"}.`;
     showError(msg, name);
   }
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
@@ -626,20 +611,21 @@ export function run(conf) {
   conf.humanPEREnd = W3CDate.format(conf.perEnd);
 
   const revisionTypes = ["addition", "correction"];
-  if (
-    conf.specStatus === "REC" &&
-    conf.revisionTypes &&
-    conf.revisionTypes.length > 0
-  ) {
-    const unknownRevisionType = conf.revisionTypes.find(
-      x => !revisionTypes.includes(x)
-    );
-    if (unknownRevisionType) {
-      const msg = `\`specStatus\` is "REC" with unknown revision type '${unknownRevisionType}'`;
-      showError(msg, name);
+  if (conf.specStatus === "REC" && conf.revisionTypes?.length > 0) {
+    if (conf.revisionTypes.some(x => !revisionTypes.includes(x))) {
+      const unknownRevisionTypes = conf.revisionTypes.filter(
+        x => !revisionTypes.includes(x)
+      );
+      const msg = docLink`${"specStatus"} is "REC" with unknown ${"revisionTypes"}: '${mdJoinOr(
+        unknownRevisionTypes
+      )}'.`;
+      const hint = docLink`The valid values for ${"revisionTypes"} are: ${mdJoinOr(
+        revisionTypes
+      )}.`;
+      showError(msg, name, { hint });
     }
     if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
-      const msg = `\`specStatus\` is "REC" with proposed additions but the Rec is not marked as a allowing new features.`;
+      const msg = docLink`${"specStatus"} is "REC" with proposed additions but the Recommendation is not marked as a allowing new features.`;
       showError(msg, name);
     }
   }
@@ -651,7 +637,7 @@ export function run(conf) {
     conf.revisionTypes.length > 0 &&
     !conf.revisedRecEnd
   ) {
-    const msg = `\`specStatus\` is "REC" with proposed corrections or additions but no \`revisedRecEnd\` is specified.`;
+    const msg = docLink`${"specStatus"} is "REC" with proposed corrections or additions but no ${"revisedRecEnd"} is specified in the ${"respecConfig"}.`;
     showError(msg, name);
   }
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
@@ -662,7 +648,9 @@ export function run(conf) {
       ? true
       : !conf.isRecTrack && maturity == "WD" && conf.specStatus !== "FPWD-NOTE";
   if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
-    const msg = `Document configured as [\`noRecTrack\`](https://github.com/w3c/respec/wiki/noRecTrack), but its status ("${conf.specStatus}") puts it on the W3C Rec Track.`;
+    const msg = docLink`Document configured as ${"noRecTrack"}, but its status ("${
+      conf.specStatus
+    }") puts it on the W3C Rec Track.`;
     const hint = `Status cannot be any of: ${recTrackStatus.join(", ")}.`;
     showError(msg, name, { hint });
   }
@@ -676,14 +664,12 @@ export function run(conf) {
   }
 
   if (!conf.implementationReportURI && conf.isCR) {
-    const msg =
-      "CR documents must have an [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI) that describes [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).";
-    showError(msg, name);
+    const msg = docLink`Missing ${"implementationReportURI"} configuration option in ${"respecConfig"}.`;
+    const hint = docLink`CR documents must have an ${"implementationReportURI"} that describes the ${"implementation experience"}.`;
+    showError(msg, name, { hint });
   }
   if (!conf.implementationReportURI && conf.isPR) {
-    const msg =
-      "PR documents should include an " +
-      " [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI) that describes [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).";
+    const msg = docLink`PR documents should include an ${"implementationReportURI"}, which needs to link to a document that describes the ${"implementation experience"}.`;
     showWarning(msg, name);
   }
 
@@ -703,16 +689,16 @@ function validatePatentPolicies(conf) {
     policies.size &&
     ![...policies].every(policy => patentPolicies.includes(policy))
   ) {
-    const msg = `Invalid [\`wgPatentPolicy\`](https://respec.org/docs#wgPatentPolicy) value: "${conf.wgPatentPolicy}".`;
-    const hint = `Please use one of: ${patentPolicies
-      .map(p => `\`${p}\``)
-      .join(", ")} .`;
+    const msg = docLink`Invalid ${"wgPatentPolicy"} value: "${
+      conf.wgPatentPolicy
+    }".`;
+    const hint = `Please use one of: ${mdJoinOr(patentPolicies)}.`;
     showError(msg, name, { hint });
   }
   if (policies.size !== 1) {
     const msg =
       "When collaborating across multiple groups, they must use the same patent policy.";
-    const hint = `Please check the patent policies of each group. The patent policies were: ${[
+    const hint = docLink`For ${"wgPatentPolicy"}, please check the patent policies of each group. The patent policies were: ${[
       ...policies,
     ].join(", ")}.`;
     showError(msg, name, { hint });
@@ -764,7 +750,7 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
     additionalContent.appendChild(sotdClone.firstChild);
   }
   if (isTagFinding && !additionalContent.hasChildNodes()) {
-    const msg = `ReSpec does not support automated SotD generation for TAG findings.`;
+    const msg = docLink`ReSpec does not support automated SotD generation for TAG findings.`;
     const hint = `Please add the prerequisite content in the 'sotd' section.`;
     showWarning(msg, name, { hint });
   }
