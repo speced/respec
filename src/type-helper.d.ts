@@ -84,7 +84,7 @@ declare namespace Intl {
     formatToParts(items: string[]): {
       type: "element" | "literal";
       value: string;
-    };
+    }[];
     constructor(
       locales?: string | string[],
       options?: {
