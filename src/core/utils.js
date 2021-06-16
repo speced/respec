@@ -105,7 +105,7 @@ function joinFactory(type, style = "long") {
   return (items, mapper) => {
     let elemCount = 0;
     if (!mapper) {
-      return formatter.format(items);
+      return [formatter.format(items)];
     }
     return formatter.formatToParts(items).map(({ type, value }) => {
       if (type === "element") {
@@ -130,8 +130,7 @@ const disjunction = joinFactory("disjunction");
  * @param {(value: undefined, index: number, array: undefined[]) => string} [mapper]
  */
 export function joinAnd(items, mapper) {
-  const result = conjunction(items, mapper);
-  return typeof result === "string" ? result : result.join("");
+  return conjunction(items, mapper).join("");
 }
 
 /**
@@ -140,8 +139,7 @@ export function joinAnd(items, mapper) {
  * @param {(value: undefined, index: number, array: undefined[]) => string} [mapper]
  */
 export function joinOr(items, mapper) {
-  const result = disjunction(items, mapper);
-  return typeof result === "string" ? result : result.join("");
+  return disjunction(items, mapper).join("");
 }
 
 /**
