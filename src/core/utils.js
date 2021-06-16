@@ -96,11 +96,15 @@ function markAsOffending(elem, msg, title) {
  * @param {"conjunction"|"disjunction"} type
  * @param {"long"|"narrow"} style
  */
-function makeListJoiner(type, style = "long") {
+function joinFactory(type, style = "long") {
   const formatter = new Intl.ListFormat(docLang, {
     style,
     type,
   });
+  /**
+   * @param {string[]} items
+   * @param {(value: undefined, index: number, array: string[]) => any} [mapper]
+   */
   return (items, mapper) => {
     let elemCount = 0;
     return !mapper
@@ -121,22 +125,29 @@ function makeListJoiner(type, style = "long") {
  * Takes an array and returns a string that separates each of its items with the
  * proper commas and "and". The second argument is a mapping function that can
  * convert the items before they are joined.
- * @template T
- * @param {T[]} array
- * @param {(item: T) => string} [mapper]
  */
-const conjunction = makeListJoiner("conjunction");
-const disjunction = makeListJoiner("disjunction");
+const conjunction = joinFactory("conjunction");
+const disjunction = joinFactory("disjunction");
 
-export const joinAnd = (items, mapper) => {
+/**
+ *
+ * @param {string[]} items
+ * @param {(value: undefined, index: number, array: undefined[]) => string} [mapper]
+ */
+export function joinAnd(items, mapper) {
   const result = conjunction(items, mapper);
   return typeof result === "string" ? result : result.join("");
-};
+}
 
-export const joinOr = (items, mapper) => {
+/**
+ *
+ * @param {string[]} items
+ * @param {(value: undefined, index: number, array: undefined[]) => string} [mapper]
+ */
+export function joinOr(items, mapper) {
   const result = disjunction(items, mapper);
   return typeof result === "string" ? result : result.join("");
-};
+}
 
 /**
  * Takes a string, applies some XML escapes, and returns the escaped string.
