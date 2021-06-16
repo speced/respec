@@ -99,6 +99,7 @@ function markAsOffending(elem, msg, title) {
 function joinFactory(type, style = "long") {
   const formatter = new Intl.ListFormat(docLang, { style, type });
   /**
+   * @template T
    * @param {string[]} items
    * @param {(value: string, index: number, array: string[]) => any} [mapper]
    */
@@ -394,22 +395,21 @@ export async function fetchAndCache(input, maxAge = 24 * 60 * 60 * 1000) {
  * Separates each item with proper commas.
  * @template T
  * @param {T[]} array
- * @param {(item: T) => any} mapper
+ * @param {(item: T) => any} [mapper]
  */
 export function htmlJoinComma(array, mapper = item => item) {
   const items = array.map(mapper);
   const joined = items.slice(0, -1).map(item => html`${item}, `);
   return html`${joined}${items[items.length - 1]}`;
 }
-
 /**
- * Separates each item with proper commas and "and".
+ *
+ * @param {string[]} array
+ * @param {(item: any) => any[]} [mapper]
  */
 export function htmlJoinAnd(array, mapper) {
-  const result = conjunction(array, mapper).map(item =>
-    typeof item === "string" ? html`${item}` : item
-  );
-  return result;
+  const result = [].concat(conjunction(array, mapper));
+  return result.map(item => (typeof item === "string" ? html`${item}` : item));
 }
 
 /**
