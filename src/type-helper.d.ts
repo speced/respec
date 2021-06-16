@@ -81,6 +81,10 @@ declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
 
 declare namespace Intl {
   class ListFormat {
+    formatToParts(items: string): {
+      type: "element" | "literal";
+      value: string;
+    };
     constructor(
       locales?: string | string[],
       options?: {

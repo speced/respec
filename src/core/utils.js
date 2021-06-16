@@ -22,18 +22,6 @@ function hashString(text) {
   return String(hash);
 }
 
-const localizationStrings = {
-  en: {
-    x_and_y: " and ",
-    x_y_and_z: ", and ",
-  },
-  de: {
-    x_and_y: " und ",
-    x_y_and_z: " und ",
-  },
-};
-const l10n = getIntlData(localizationStrings);
-
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   timeZone: "UTC",
   year: "numeric",
@@ -104,6 +92,30 @@ function markAsOffending(elem, msg, title) {
 }
 
 // STRING HELPERS
+/**
+ * @param {"conjunction"|"disjunction"} type
+ * @param {"long"|"narrow"} style
+ */
+function makeListJoiner(type, style = "long") {
+  const formatter = new Intl.ListFormat(docLang, {
+    style,
+    type,
+  });
+  return (items, mapper) => {
+    let elemCount = 0;
+    return !mapper
+      ? formatter.format(items)
+      : formatter
+          .formatToParts(items)
+          // @ts-ignore
+          .map(({ type, value }) => {
+            if (type === "element") {
+              return mapper(value, elemCount++, items);
+            }
+            return value;
+          });
+  };
+}
 
 /**
  * Takes an array and returns a string that separates each of its items with the
@@ -112,34 +124,19 @@ function markAsOffending(elem, msg, title) {
  * @template T
  * @param {T[]} array
  * @param {(item: T) => string} [mapper]
- * @param {string} [lang]
  */
-export function joinAnd(array, mapper, lang = docLang) {
-  const items = mapper
-    ? array.map(mapper)
-    : /** @type {string[]} */ (/** @type {unknown[]} */ (array));
-  if (Intl.ListFormat && typeof Intl.ListFormat === "function") {
-    const formatter = new Intl.ListFormat(lang, {
-      style: "long",
-      type: "conjunction",
-    });
-    return formatter.format(items);
-  }
-  switch (items.length) {
-    case 0:
-    case 1: // "x"
-      return items.toString();
-    case 2: // x and y
-      return items.join(l10n.x_and_y);
-    default: {
-      // x, y, and z
-      const str = items.join(", ");
-      const lastComma = str.lastIndexOf(",");
-      const and = l10n.x_y_and_z;
-      return `${str.substr(0, lastComma)}${and}${str.slice(lastComma + 2)}`;
-    }
-  }
-}
+const conjunction = makeListJoiner("conjunction");
+const disjunction = makeListJoiner("disjunction");
+
+export const joinAnd = (items, mapper) => {
+  const result = conjunction(items, mapper);
+  return typeof result === "string" ? result : result.join("");
+};
+
+export const joinOr = (items, mapper) => {
+  const result = disjunction(items, mapper);
+  return typeof result === "string" ? result : result.join("");
+};
 
 /**
  * Takes a string, applies some XML escapes, and returns the escaped string.
@@ -403,23 +400,12 @@ export function htmlJoinComma(array, mapper = item => item) {
 
 /**
  * Separates each item with proper commas and "and".
- * @template T
- * @param {T[]} array
- * @param {(item: T) => any} mapper
  */
-export function htmlJoinAnd(array, mapper = item => item) {
-  const items = array.map(mapper);
-  switch (items.length) {
-    case 0:
-    case 1: // "x"
-      return items[0];
-    case 2: // x and y
-      return html`${items[0]}${l10n.x_and_y}${items[1]}`;
-    default: {
-      const joined = htmlJoinComma(items.slice(0, -1));
-      return html`${joined}${l10n.x_y_and_z}${items[items.length - 1]}`;
-    }
-  }
+export function htmlJoinAnd(array, mapper) {
+  const result = conjunction(array, mapper).map(item =>
+    typeof item === "string" ? html`${item}` : item
+  );
+  return result;
 }
 
 /**
