@@ -510,17 +510,20 @@ export function run(conf) {
     get alternatesHTML() {
       return (
         conf.alternateFormats &&
-        htmlJoinAnd(conf.alternateFormats, alt => {
-          const lang = alt.hasOwnProperty("lang") && alt.lang ? alt.lang : null;
-          const type = alt.hasOwnProperty("type") && alt.type ? alt.type : null;
-          return html`<a
-            rel="alternate"
-            href="${alt.uri}"
-            hreflang="${lang}"
-            type="${type}"
-            >${alt.label}</a
-          >`;
-        })
+        htmlJoinAnd(
+          // We need to pass a string here...
+          conf.alternateFormats.map(({ label }) => label),
+          (_, i) => {
+            const alt = conf.alternateFormats[i];
+            return html`<a
+              rel="alternate"
+              href="${alt.uri}"
+              hreflang="${alt?.lang ?? null}"
+              type="${alt?.type ?? null}"
+              >${alt.label}</a
+            >`;
+          }
+        )
       );
     },
   };
@@ -568,16 +571,13 @@ export function run(conf) {
     conf.wgHTML = htmlJoinAnd(conf.wg, (wg, idx) => {
       return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
     });
-    const pats = [];
-    for (let i = 0, n = conf.wg.length; i < n; i++) {
-      pats.push(
-        html`a
-          <a href="${conf.wgPatentURI[i]}" rel="disclosure"
-            >public list of any patent disclosures (${conf.wg[i]})</a
-          >`
-      );
-    }
-    conf.wgPatentHTML = htmlJoinAnd(pats);
+
+    conf.wgPatentHTML = htmlJoinAnd(conf.wg, (wg, i) => {
+      return html`a
+        <a href="${conf.wgPatentURI[i]}" rel="disclosure"
+          >public list of any patent disclosures (${wg})</a
+        >`;
+    });
   } else {
     conf.multipleWGs = false;
     if (conf.wg) {
