@@ -1,4 +1,4 @@
-const configOptions = new Set([
+const linkableThings = new Set([
   "a11y",
   "additionalCopyrightHolders",
   "addPatentNote",
@@ -11,6 +11,27 @@ const configOptions = new Set([
   "check-punctuation",
   "copyrightStart",
   "crEnd",
+  "data-abbr",
+  "data-cite",
+  "data-dfn-for",
+  "data-dfn-type",
+  "data-export",
+  "data-format",
+  "data-include-format",
+  "data-include-replace",
+  "data-include",
+  "data-link-for",
+  "data-link-type",
+  "data-local-lt",
+  "data-lt-no-plural",
+  "data-lt-noDefault",
+  "data-lt",
+  "data-max-toc",
+  "data-number",
+  "data-oninclude",
+  "data-sort",
+  "data-tests",
+  "dir",
   "doJsonLd",
   "edDraftURI",
   "editors",
@@ -22,6 +43,7 @@ const configOptions = new Set([
   "highlightVars",
   "implementationReportURI",
   "isPreview",
+  "lang",
   "lcEnd",
   "level",
   "license",
@@ -63,7 +85,10 @@ const configOptions = new Set([
   "xref",
 ]);
 
-const configReMapper = new Map([["respecConfig", "configuring-respec"]]);
+const configReMapper = new Map([
+  ["respecConfig", "configuring-respec"],
+  ["using `data-dfn-for`", "using-data-dfn-for"],
+]);
 
 const otherDocsLinks = new Map([
   [
@@ -85,7 +110,7 @@ export function docLink(strings, ...keys) {
           return `${s}[\`${key}\`](https://respec.org/docs/#${configReMapper.get(
             key
           )})`;
-        case configOptions.has(key):
+        case linkableThings.has(key):
           return `${s}[\`${key}\`](https://respec.org/docs/#${key})`;
         case otherDocsLinks.has(key):
           return `${s}[${key}](${otherDocsLinks.get(key)})`;

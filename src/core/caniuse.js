@@ -8,6 +8,7 @@ import { pub, sub } from "./pubsubhub.js";
 import { showError, showWarning } from "./utils.js";
 import css from "../styles/caniuse.css.js";
 import { html } from "./import-maps.js";
+import { docLink } from "./respec-docs.js";
 
 export const name = "core/caniuse";
 
@@ -105,9 +106,7 @@ function getNormalizedConf(conf) {
     const invalidBrowsers = browsers.filter(browser => !BROWSERS.has(browser));
     if (invalidBrowsers.length) {
       const names = invalidBrowsers.map(b => `"\`${b}\`"`).join(", ");
-      const msg =
-        `Ignoring invalid browser(s): ${names} in ` +
-        "[`respecConfig.caniuse.browsers`](https://github.com/w3c/respec/wiki/caniuse)";
+      const msg = docLink`Invalid browser(s): (${names}) in the \`browser\` property of ${"caniuse"}.`;
       showWarning(msg, name);
     }
   }
