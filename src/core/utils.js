@@ -105,11 +105,8 @@ function joinFactory(type, style = "long") {
    */
   return (items, mapper) => {
     let elemCount = 0;
-    if (!mapper) {
-      return [formatter.format(items)];
-    }
     return formatter.formatToParts(items).map(({ type, value }) => {
-      if (type === "element") {
+      if (type === "element" && mapper) {
         return mapper(value, elemCount++, items);
       }
       return value;
