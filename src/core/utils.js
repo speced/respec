@@ -102,7 +102,6 @@ function joinFactory(type, style = "long") {
    * @template T
    * @param {string[]} items
    * @param {(value: string, index: number, array: string[]) => any} [mapper]
-   * @return (items: T[], mapper?: (item: T) => any), getter?: (item: T) => string) => {}
    */
   return (items, mapper) => {
     let elemCount = 0;
