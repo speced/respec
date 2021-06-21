@@ -29,7 +29,7 @@
     "@types/marked": "^2.0.3",
     "@types/pluralize": "0.0.29",
     "boxen": "^5.0.1",
-    "chokidar": "^3.5.1",
+    "chokidar": "^3.5.2",
     "clean-css": "^5.1.2",
     "epipebomb": "^1.0.0",
     "eslint": "^7.28.0",
