@@ -756,8 +756,8 @@ describe("Core — xref", () => {
     it("links internalSlots", async () => {
       const body = `
       <section>
-        <p><dfn>[[\\type]]</dfn></p>
-        <p id="link1">{{ [[type]] }}</p>
+        <p><dfn data-dfn-for="Window">[[\\type]]</dfn></p>
+        <p id="link1">{{ Window/[[type]] }}</p>
         <p id="link2">{{ Credential.[[type]] }}</p>
       </section>
       `;

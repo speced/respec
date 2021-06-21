@@ -9,7 +9,9 @@ describe("Core — Link to definitions", () => {
     const bodyText = `
       <section>
         <h2>Test section</h2>
-        <p><dfn>[[\\test]]</dfn><a id="testAnchor">[[\\test]]</a>
+        <p>
+          <dfn data-dfn-for="Window">[[\\test]]</dfn>
+          <a data-link-for="Window" id="testAnchor">[[\\test]]</a>
       </section>`;
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);

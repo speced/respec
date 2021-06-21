@@ -153,4 +153,57 @@ describe("Core — Definitions", () => {
       expect(el.hash).toBe("#dfn-first");
     }
   });
+
+  describe("internal slot definitions", () => {
+    const body = `
+      <section data-dfn-for="Test" data-cite="HTML">
+        <h2>Internal slots</h2>
+        <pre class="idl">
+          [Exposed=Window]
+          interface Foo{};
+        </pre>
+        <p>
+          <dfn id="simple">[[\\slot]]</dfn>
+          <dfn id="parent" data-dfn-for="Window">[[\\slot]]</dfn>
+          <dfn id="broken" data-dfn-for="">[[\\broken]]</dfn>
+        </p>
+        <section data-dfn-for="">
+          <h2>.</h2>
+          <p>
+            <dfn id="broken-parent">[[\\broken]]</dfn>
+          </p>
+        </section>
+        <p>
+        {{Test/[[slot]]}}
+        {{Window/[[slot]]}}
+        </p>
+      </section>
+    `;
+    it("sets the data-dfn-type an idl attribute", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("simple");
+      expect(dfn.textContent).toBe("[[slot]]");
+      expect(dfn.dataset.dfnType).toBe("attribute");
+      expect(dfn.dataset.idl).toBe("");
+    });
+
+    it("when data-dfn-for is missing, it use the closes data-dfn-for as parent", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("simple");
+      expect(dfn.dataset.dfnFor).toBe("Test");
+      const dfnWithParent = doc.getElementById("parent");
+      expect(dfnWithParent.dataset.dfnFor).toBe("Window");
+    });
+
+    it("errors if the internal slot is not for something", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfnErrors = doc.respec.errors.filter(
+        ({ plugin }) => plugin === "core/dfn"
+      );
+      expect(dfnErrors).toHaveSize(2);
+    });
+  });
 });

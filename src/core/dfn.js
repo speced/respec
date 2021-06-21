@@ -2,7 +2,7 @@
 // Module core/dfn
 // - Finds all <dfn> elements and populates definitionMap to identify them.
 
-import { getDfnTitles, norm } from "./utils.js";
+import { getDfnTitles, norm, showError } from "./utils.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/dfn";
@@ -12,10 +12,9 @@ export function run() {
     const titles = getDfnTitles(dfn);
     registerDefinition(dfn, titles);
 
-    // Treat Internal Slots as IDL.
-    if (!dfn.dataset.dfnType && /^\[\[\w+\]\]$/.test(titles[0])) {
-      dfn.dataset.dfnType = "idl";
-    }
+    const [firstTitle] = titles;
+
+    processInternalSlotsAsIDL(firstTitle, dfn);
 
     // Per https://tabatkins.github.io/bikeshed/#dfn-export, a dfn with dfnType
     // other than dfn and not marked with data-no-export is to be exported.
@@ -26,9 +25,36 @@ export function run() {
     }
 
     // Only add `lt`s that are different from the text content
-    if (titles.length === 1 && titles[0] === norm(dfn.textContent)) {
+    if (titles.length === 1 && firstTitle === norm(dfn.textContent)) {
       return;
     }
     dfn.dataset.lt = titles.join("|");
   });
+}
+/**
+ *
+ * @param {string} title
+ * @param {HTMLElement} dfn
+ */
+function processInternalSlotsAsIDL(title, dfn) {
+  if (!/^\[\[\w+\]\]$/.test(title)) return;
+  if (!dfn.dataset.idl) {
+    dfn.dataset.idl = "";
+  }
+
+  // Automatically use the closest data-dfn-for as the parent.
+  /** @type HTMLElement */
+  const parent = dfn.closest("[data-dfn-for]");
+  if (parent && dfn !== parent && parent.dataset.dfnFor) {
+    dfn.dataset.dfnFor = parent.dataset.dfnFor;
+  }
+
+  // Assure that it's data-dfn-for= something.
+  if (!dfn.dataset.dfnFor) {
+    const msg = `Internal slot "${title}" must be associated with a WebIDL interface.`;
+    const hint =
+      "Use a `data-dfn-for` attribute to associate this dfn with an WebIDL interface.";
+    showError(msg, name, { hint, elements: [dfn] });
+  }
+  dfn.dataset.dfnType = "attribute";
 }
