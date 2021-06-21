@@ -362,7 +362,7 @@ export function run(conf) {
 
   if (conf.isRecTrack && !hasGitHubIssuesLink(conf)) {
     const msg = docLink`Missing link to GitHub in head of document.`;
-    const hint = docLink`Please add the ${"github"} configuration option to document's ${"respecConfig"}.`;
+    const hint = docLink`Please add the ${"github"} configuration option to document's ${"respecConfig|#configuring-respec"}.`;
     showError(msg, name, { hint });
   }
   if (!conf.edDraftURI) {
@@ -431,7 +431,7 @@ export function run(conf) {
     ) {
       const msg =
         "This document is on the W3C Recommendation Track, but is missing the required 'Previous Version' link.";
-      const hint = docLink`Add ${"previousMaturity"} and ${"previousPublishDate"} to the document's ${"respecConfig"}.`;
+      const hint = docLink`Add ${"previousMaturity"} and ${"previousPublishDate"} to the document's ${"respecConfig|#configuring-respec"}.`;
       showError(msg, name, { hint });
     }
     if (!conf.prevVersion) conf.prevVersion = "";
@@ -484,7 +484,7 @@ export function run(conf) {
   conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
   if (conf.isRec && !conf.errata) {
     const msg = "Recommendations must have an errata link.";
-    const hint = docLink`Add an ${"errata"} URL to your ${"respecConfig"}.`;
+    const hint = docLink`Add an ${"errata"} URL to your ${"respecConfig|#configuring-respec"}.`;
     showError(msg, name, { hint });
   }
   conf.prependW3C = !conf.isBasic && !conf.isUnofficial;
@@ -585,19 +585,19 @@ export function run(conf) {
     }
   }
   if (conf.specStatus === "PR" && !conf.crEnd) {
-    const msg = docLink`${"specStatus"} is "PR" but no ${"crEnd"} is specified in the ${"respecConfig"} (needed to indicate end of previous CR).`;
+    const msg = docLink`${"specStatus"} is "PR" but no ${"crEnd"} is specified in the ${"respecConfig|#configuring-respec"} (needed to indicate end of previous CR).`;
     showError(msg, name);
   }
 
   if (conf.specStatus === "CR" && !conf.crEnd) {
-    const msg = docLink`${"specStatus"} is "CR", but no ${"crEnd"} is specified in the ${"respecConfig"}.`;
+    const msg = docLink`${"specStatus"} is "CR", but no ${"crEnd"} is specified in the ${"respecConfig|#configuring-respec"}.`;
     showError(msg, name);
   }
   conf.crEnd = validateDateAndRecover(conf, "crEnd");
   conf.humanCREnd = W3CDate.format(conf.crEnd);
 
   if (conf.specStatus === "PR" && !conf.prEnd) {
-    const msg = docLink`${"specStatus"} is "PR" but no ${"prEnd"} is specified in the ${"respecConfig"}.`;
+    const msg = docLink`${"specStatus"} is "PR" but no ${"prEnd"} is specified in the ${"respecConfig|#configuring-respec"}.`;
     showError(msg, name);
   }
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
@@ -637,7 +637,7 @@ export function run(conf) {
     conf.revisionTypes.length > 0 &&
     !conf.revisedRecEnd
   ) {
-    const msg = docLink`${"specStatus"} is "REC" with proposed corrections or additions but no ${"revisedRecEnd"} is specified in the ${"respecConfig"}.`;
+    const msg = docLink`${"specStatus"} is "REC" with proposed corrections or additions but no ${"revisedRecEnd"} is specified in the ${"respecConfig|#configuring-respec"}.`;
     showError(msg, name);
   }
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
@@ -664,12 +664,12 @@ export function run(conf) {
   }
 
   if (!conf.implementationReportURI && conf.isCR) {
-    const msg = docLink`Missing ${"implementationReportURI"} configuration option in ${"respecConfig"}.`;
-    const hint = docLink`CR documents must have an ${"implementationReportURI"} that describes the ${"implementation experience"}.`;
+    const msg = docLink`Missing ${"implementationReportURI"} configuration option in ${"respecConfig|#configuring-respec"}.`;
+    const hint = docLink`CR documents must have an ${"implementationReportURI"} that describes the [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).`;
     showError(msg, name, { hint });
   }
   if (!conf.implementationReportURI && conf.isPR) {
-    const msg = docLink`PR documents should include an ${"implementationReportURI"}, which needs to link to a document that describes the ${"implementation experience"}.`;
+    const msg = docLink`PR documents should include an ${"implementationReportURI"}, which needs to link to a document that describes the [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).`;
     showWarning(msg, name);
   }
 

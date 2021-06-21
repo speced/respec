@@ -96,7 +96,7 @@ async function getGroupDetails(group) {
   const message = `Failed to fetch group details (HTTP: ${res.status}). ${text}`;
   const hint =
     res.status === 404
-      ? docLink`See the list of ${"supported group short names"} to use with the ${"group"} configuration option.`
+      ? docLink`See the list of [supported group names](https://respec.org/w3c/groups/) to use with the ${"group"} configuration option.`
       : undefined;
   showError(message, name, { hint });
 }

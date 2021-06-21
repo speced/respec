@@ -17,9 +17,9 @@ describe("Core - ReSpec docs", () => {
     });
 
     it("it aliases relative to docs folder", () => {
-      const result = docLink`Link to ${"doc status|#specStatus"}.`;
+      const result = docLink`See ${"using `data-dfn-for`|#data-dfn-for"}.`;
       expect(result).toBe(
-        "Link to [doc status](https://respec.org/docs/#specStatus)."
+        "See [using `data-dfn-for`](https://respec.org/docs/#data-dfn-for)."
       );
     });
 

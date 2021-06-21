@@ -188,7 +188,7 @@ function defineIdlName(escaped, data, parent) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
     const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}.`;
-    const hint = docLink`See ${"using `data-dfn-for`"}.`;
+    const hint = docLink`See ${"using `data-dfn-for`|#data-dfn-for"}.`;
     showWarning(msg, pluginName, { elements: [unlinkedAnchor], hint });
   }
   return unlinkedAnchor;
