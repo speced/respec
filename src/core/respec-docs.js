@@ -85,38 +85,28 @@ const linkableThings = new Set([
   "xref",
 ]);
 
-const configReMapper = new Map([
-  ["respecConfig", "configuring-respec"],
-  ["using `data-dfn-for`", "using-data-dfn-for"],
-]);
-
-const otherDocsLinks = new Map([
-  [
-    "implementation experience",
-    "https://www.w3.org/Consortium/Process/#implementation-experience",
-  ],
-  ["supported group short names", "https://respec.org/w3c/groups/"],
-]);
-
 /**
  * Tagged Template string, helps with linking to documentation.
  */
 export function docLink(strings, ...keys) {
   return strings
     .map((s, i) => {
-      const key = keys[i] ?? "";
-      switch (true) {
-        case configReMapper.has(key):
-          return `${s}[\`${key}\`](https://respec.org/docs/#${configReMapper.get(
-            key
-          )})`;
-        case linkableThings.has(key):
-          return `${s}[\`${key}\`](https://respec.org/docs/#${key})`;
-        case otherDocsLinks.has(key):
-          return `${s}[${key}](${otherDocsLinks.get(key)})`;
-        default:
-          return s + key;
+      const key = keys[i];
+      if (!key) {
+        return s;
       }
+      const [linkingText, href] = key.split("|");
+      // Known things...
+      if (!href && linkableThings.has(linkingText)) {
+        return `${s}[\`${linkingText}\`](https://respec.org/docs/#${linkingText})`;
+      }
+      // Aliased and other links
+      if (href) {
+        const url = new URL(href, "https://respec.org/docs/");
+        return `${s}[${linkingText}](${url.href})`;
+      }
+      // Otherwise, pass through...
+      return s + linkingText;
     })
     .join("");
 }

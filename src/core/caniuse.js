@@ -4,11 +4,11 @@
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
+import { joinAnd, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
-import { showError, showWarning } from "./utils.js";
 import css from "../styles/caniuse.css.js";
-import { html } from "./import-maps.js";
 import { docLink } from "./respec-docs.js";
+import { html } from "./import-maps.js";
 
 export const name = "core/caniuse";
 
@@ -66,8 +66,7 @@ export async function run(conf) {
       return html`${{ html: stats }}`;
     } catch (err) {
       const msg = `Couldn't find feature "${options.feature}" on caniuse.com.`;
-      const hint =
-        "Please check the feature key on [caniuse.com](https://caniuse.com)";
+      const hint = docLink`Please check the feature key on [caniuse.com](https://caniuse.com) and update ${"caniuse"}`;
       showError(msg, name, { hint });
       console.error(err);
       return html`<a href="${featureURL}">caniuse.com</a>`;
@@ -105,7 +104,7 @@ function getNormalizedConf(conf) {
   if (Array.isArray(browsers)) {
     const invalidBrowsers = browsers.filter(browser => !BROWSERS.has(browser));
     if (invalidBrowsers.length) {
-      const names = invalidBrowsers.map(b => `"\`${b}\`"`).join(", ");
+      const names = joinAnd(invalidBrowsers.map(b => `"\`${b}\`"`));
       const msg = docLink`Invalid browser(s): (${names}) in the \`browser\` property of ${"caniuse"}.`;
       showWarning(msg, name);
     }
