@@ -14,7 +14,7 @@ export function run() {
 
     const [firstTitle] = titles;
 
-    processInternalSlotsAsIDL(firstTitle, dfn);
+    associateInternalSlotWithIDL(firstTitle, dfn);
 
     // Per https://tabatkins.github.io/bikeshed/#dfn-export, a dfn with dfnType
     // other than dfn and not marked with data-no-export is to be exported.
@@ -36,7 +36,7 @@ export function run() {
  * @param {string} title
  * @param {HTMLElement} dfn
  */
-function processInternalSlotsAsIDL(title, dfn) {
+function associateInternalSlotWithIDL(title, dfn) {
   if (!/^\[\[\w+\]\]$/.test(title)) return;
   if (!dfn.dataset.idl) {
     dfn.dataset.idl = "";
