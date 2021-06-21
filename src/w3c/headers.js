@@ -87,6 +87,7 @@ import {
   ISODate,
   concatDate,
   htmlJoinAnd,
+  mdJoinAnd,
   mdJoinOr,
   showError,
   showWarning,
@@ -683,15 +684,17 @@ export function run(conf) {
 
 function validatePatentPolicies(conf) {
   if (!conf.wgPatentPolicy) return;
-
   const policies = new Set([].concat(conf.wgPatentPolicy));
   if (
     policies.size &&
     ![...policies].every(policy => patentPolicies.includes(policy))
   ) {
-    const msg = docLink`Invalid ${"wgPatentPolicy"} value: "${
-      conf.wgPatentPolicy
-    }".`;
+    const invalidPolicies = [...policies].filter(
+      policy => !patentPolicies.includes(policy)
+    );
+    const msg = docLink`Invalid ${"wgPatentPolicy"} value(s): ${mdJoinAnd(
+      invalidPolicies
+    )}.`;
     const hint = `Please use one of: ${mdJoinOr(patentPolicies)}.`;
     showError(msg, name, { hint });
   }
