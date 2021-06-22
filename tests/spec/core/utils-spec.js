@@ -621,7 +621,7 @@ describe("Core - Utils", () => {
     });
 
     describe("mdJoinOr()", () => {
-      it("uses uses disjunction", () => {
+      it("uses disjunction", () => {
         expect(utils.mdJoinOr([])).toBe("");
         expect(utils.mdJoinOr(["a", "b", "c"])).toBe("`a`, `b`, or `c`");
       });
@@ -652,7 +652,7 @@ describe("Core - Utils", () => {
         expect(result).toBe("Link to nothing.");
       });
 
-      it("it links known config options", () => {
+      it("it links to [config] options", () => {
         const result = docLink`Link to ${"[specStatus]"}.`;
         expect(result).toBe(
           "Link to [`specStatus`](https://respec.org/docs/#specStatus)."

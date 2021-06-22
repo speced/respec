@@ -564,7 +564,7 @@ export function run(conf) {
     showError(msg, name, { hint });
   }
   if (conf.isCGBG && !conf.wg) {
-    const msg = docLink`][wg]"} configuration option is required for this kind of document.`;
+    const msg = docLink`${"[wg]"} configuration option is required for this kind of document.`;
     showError(msg, name);
   }
   if (Array.isArray(conf.wg)) {

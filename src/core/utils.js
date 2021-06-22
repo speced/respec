@@ -906,11 +906,11 @@ export function showWarning(message, pluginName, options = {}) {
  * @returns {string}
  */
 export function toMDCode(item) {
-  return String(item) ? `\`${item}\`` : "";
+  return item ? `\`${item}\`` : "";
 }
 
 /**
- * Wraps in back-ticks ` for code.
+ * Joins an array of strings, wrapping each string in back-ticks (`) for inline markdown code.
  *
  * @param {string[]} array
  * @param {object} options
@@ -938,7 +938,7 @@ function addQuotes(item) {
 /**
  * Tagged template string, helps with linking to documentation.
  * Things inside [squareBrackets] are considered direct links to the documentation.
- * To alias something, once can use a "|", like [respecConfig|#respec-configuration].
+ * To alias something, one can use a "|", like [respecConfig|#respec-configuration].
  *
  */
 export function docLink(strings, ...keys) {
@@ -949,7 +949,9 @@ export function docLink(strings, ...keys) {
         return s;
       }
       // Linkables are wrapped in square brackets
-      if (!key.startsWith("[") && !key.endsWith("]")) return s + key;
+      if (!key.startsWith("[") && !key.endsWith("]")) {
+        return s + key;
+      }
 
       const [linkingText, href] = key.slice(1, -1).split("|");
       if (href) {
