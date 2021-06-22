@@ -939,7 +939,8 @@ function addQuotes(item) {
  * Tagged template string, helps with linking to documentation.
  * Things inside [squareBrackets] are considered direct links to the documentation.
  * To alias something, one can use a "|", like [respecConfig|#respec-configuration].
- *
+ * @param {TemplateStringsArray} strings
+ * @param {string[]} keys
  */
 export function docLink(strings, ...keys) {
   return strings
