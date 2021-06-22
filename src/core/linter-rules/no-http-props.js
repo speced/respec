@@ -40,7 +40,7 @@ export function run(conf) {
     );
 
   if (offendingMembers.length) {
-    const keys = joinAnd(offendingMembers, key => docLink`${toMDCode([${key}])}`);
+    const keys = joinAnd(offendingMembers, key => docLink`${`[${key}]`}`);
     showWarning(l10n.msg, name, { hint: l10n.hint + keys });
   }
 }

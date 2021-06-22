@@ -188,8 +188,8 @@ const status2long = {
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
-export const maybeRecTrack = ["FPWD", "WD"];
-export const recTrackStatus = ["FPLC", "LC", "CR", "CRD", "PR", "PER", "REC"];
+const maybeRecTrack = ["FPWD", "WD"];
+const recTrackStatus = ["FPLC", "LC", "CR", "CRD", "PR", "PER", "REC"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
 export const bgStatus = ["BG-DRAFT", "BG-FINAL"];
 export const cgbgStatus = [...cgStatus, ...bgStatus];
