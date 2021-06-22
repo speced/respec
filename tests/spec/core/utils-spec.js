@@ -625,12 +625,24 @@ describe("Core - Utils", () => {
         expect(utils.mdJoinOr([])).toBe("");
         expect(utils.mdJoinOr(["a", "b", "c"])).toBe("`a`, `b`, or `c`");
       });
+      it("quotes and uses disjunction", () => {
+        expect(utils.mdJoinOr([], { quotes: true })).toBe("");
+        expect(utils.mdJoinOr(["a", "b", "c"], { quotes: true })).toBe(
+          '`"a"`, `"b"`, or `"c"`'
+        );
+      });
     });
 
     describe("mdJoinAnd()", () => {
       it("uses conjunction", () => {
         expect(utils.mdJoinAnd([])).toBe("");
         expect(utils.mdJoinAnd(["a", "b", "c"])).toBe("`a`, `b`, and `c`");
+      });
+      it("quotes and uses conjunction", () => {
+        expect(utils.mdJoinAnd([], { quotes: true })).toBe("");
+        expect(utils.mdJoinAnd(["a", "b", "c"], { quotes: true })).toBe(
+          '`"a"`, `"b"`, and `"c"`'
+        );
       });
     });
   });
