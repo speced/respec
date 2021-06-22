@@ -88,7 +88,12 @@ function validateStatusForGroup(conf) {
       break;
     }
     case "wg": {
-      const trackStatus = [...maybeRecTrack, ...recTrackStatus];
+      const trackStatus = [
+        "unofficial",
+        "ED",
+        ...maybeRecTrack,
+        ...recTrackStatus,
+      ];
       if (
         // it's using a BG/CG status
         cgbgStatus.includes(specStatus) ||
