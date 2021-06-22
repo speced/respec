@@ -133,7 +133,7 @@ function handleDuplicates(testURLs, elem) {
     (link, i, self) => self.indexOf(link) !== i
   );
   if (duplicates.length) {
-    const msg = `Duplicate tests found in the ${"data-tests"} attribute`;
+    const msg = docLink`Duplicate tests found in the ${"data-tests"} attribute`;
     const hint = docLink`To fix, remove duplicates from ${"data-tests"}: ${duplicates
       .map(url => new URL(url).pathname)
       .join(", ")}`;

@@ -104,7 +104,7 @@ function getNormalizedConf(conf) {
   if (Array.isArray(browsers)) {
     const invalidBrowsers = browsers.filter(browser => !BROWSERS.has(browser));
     if (invalidBrowsers.length) {
-      const names = joinAnd(invalidBrowsers.map(b => `"\`${b}\`"`));
+      const names = joinAnd(invalidBrowsers, b => `"\`${b}\`"`);
       const msg = docLink`Invalid browser(s): (${names}) in the \`browser\` property of ${"caniuse"}.`;
       showWarning(msg, name);
     }
