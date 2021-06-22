@@ -10,26 +10,26 @@ describe("Core - ReSpec docs", () => {
     });
 
     it("it links known config options", () => {
-      const result = docLink`Link to ${"specStatus"}.`;
+      const result = docLink`Link to ${"[specStatus]"}.`;
       expect(result).toBe(
         "Link to [`specStatus`](https://respec.org/docs/#specStatus)."
       );
     });
 
     it("it aliases relative to docs folder", () => {
-      const result = docLink`See ${"using `data-dfn-for`|#data-dfn-for"}.`;
+      const result = docLink`See ${"[using `data-dfn-for`|#data-dfn-for]"}.`;
       expect(result).toBe(
         "See [using `data-dfn-for`](https://respec.org/docs/#data-dfn-for)."
       );
     });
 
     it("it aliases absolute URLs", () => {
-      const result = docLink`Link to ${"doc status|https://somewhere.else"}.`;
+      const result = docLink`Link to ${"[doc status|https://somewhere.else]"}.`;
       expect(result).toBe("Link to [doc status](https://somewhere.else/).");
     });
 
     it("it allows mixing known, aliased, and absolute URLs", () => {
-      const result = docLink`Link to ${"authors"} ${"writers|editors"} ${"somewhere|https://somewhere.else"}.`;
+      const result = docLink`Link to ${"[authors]"} ${"[writers|editors]"} ${"[somewhere|https://somewhere.else]"}.`;
       expect(result).toBe(
         "Link to [`authors`](https://respec.org/docs/#authors) [writers](https://respec.org/docs/editors) [somewhere](https://somewhere.else/)."
       );

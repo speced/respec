@@ -16,7 +16,7 @@ export async function run(conf) {
   }
 
   if (!conf.github) {
-    const msg = docLink`Requested list of contributors from GitHub, but ${"github"} configuration option is not set.`;
+    const msg = docLink`Requested list of contributors from GitHub, but ${"[github]"} configuration option is not set.`;
     showError(msg, name);
     return;
   }

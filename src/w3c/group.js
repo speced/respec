@@ -26,7 +26,7 @@ export async function run(conf) {
     if (usedLegacyOptions.length) {
       const outdatedOptionsStr = mdJoinAnd(LEGACY_OPTIONS);
       const msg = `Configuration options ${outdatedOptionsStr} are deprecated.`;
-      const hint = docLink`Please use the ${"group"} configuration option instead.`;
+      const hint = docLink`Please use the ${"[group]"} configuration option instead.`;
       showWarning(msg, name, { hint });
     }
     return;
@@ -34,8 +34,8 @@ export async function run(conf) {
 
   if (usedLegacyOptions.length) {
     const outdatedOptionsStr = mdJoinAnd(usedLegacyOptions);
-    const msg = docLink`Configuration options ${outdatedOptionsStr} are superseded by ${"group"} and will be overridden by ReSpec.`;
-    const hint = docLink`Remove them from the document's ${"respecConfig"} to silence this warning.`;
+    const msg = docLink`Configuration options ${outdatedOptionsStr} are superseded by ${"[group]"} and will be overridden by ReSpec.`;
+    const hint = docLink`Remove them from the document's ${"[respecConfig|#configuring-respec]"} to silence this warning.`;
     showWarning(msg, name, { hint });
   }
 
@@ -96,7 +96,7 @@ async function getGroupDetails(group) {
   const message = `Failed to fetch group details (HTTP: ${res.status}). ${text}`;
   const hint =
     res.status === 404
-      ? docLink`See the list of [supported group names](https://respec.org/w3c/groups/) to use with the ${"group"} configuration option.`
+      ? docLink`See the list of [supported group names](https://respec.org/w3c/groups/) to use with the ${"[group]"} configuration option.`
       : undefined;
   showError(message, name, { hint });
 }

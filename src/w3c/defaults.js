@@ -3,7 +3,13 @@
  * Sets the defaults for W3C specs
  */
 export const name = "w3c/defaults";
-import { bgStatus, cgStatus, cgbgStatus } from "./headers.js";
+import {
+  bgStatus,
+  cgStatus,
+  cgbgStatus,
+  maybeRecTrack,
+  recTrackStatus,
+} from "./headers.js";
 import { mdJoinOr, showError } from "../core/utils.js";
 import { coreDefaults } from "../core/defaults.js";
 import { docLink } from "../core/respec-docs.js";
@@ -63,10 +69,9 @@ function validateStatusForGroup(conf) {
   switch (groupType) {
     case "cg": {
       if (![...cgbgStatus, "unofficial"].includes(specStatus)) {
-        const msg = docLink`W3C Community Group documents can't use \`"${specStatus}"\` for the ${"specStatus"} configuration option.`;
-        const hint = `Please use one of: ${mdJoinOr(
-          cgStatus
-        )}. Automatically falling back to \`"CG-DRAFT"\`.`;
+        const msg = docLink`W3C Community Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
+        const supportedStatus = mdJoinOr(cgStatus, { quotes: true });
+        const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"CG-DRAFT"\`.`;
         showError(msg, name, { hint });
         conf.specStatus = "CG-DRAFT";
       }
@@ -74,19 +79,25 @@ function validateStatusForGroup(conf) {
     }
     case "bg": {
       if (![...bgStatus, "unofficial"].includes(specStatus)) {
-        const msg = docLink`W3C Business Group documents can't use \`"${specStatus}"\` for the ${"specStatus"} configuration option.`;
-        const hint = `Please use one of: ${mdJoinOr(
-          bgStatus
-        )}. Automatically falling back to \`"BG-DRAFT"\`.`;
+        const msg = docLink`W3C Business Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
+        const supportedStatus = mdJoinOr(bgStatus, { quotes: true });
+        const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"BG-DRAFT"\`.`;
         showError(msg, name, { hint });
         conf.specStatus = "BG-DRAFT";
       }
       break;
     }
     case "wg": {
-      if (cgbgStatus.includes(specStatus)) {
-        const msg = docLink`W3C Working Group documents can't use \`"${specStatus}"\` for the ${"specStatus"} configuration option.`;
-        const hint = docLink`Please see ${"specStatus"} for appropriate values for this type of group.`;
+      const trackStatus = [...maybeRecTrack, ...recTrackStatus];
+      if (
+        // it's using a BG/CG status
+        cgbgStatus.includes(specStatus) ||
+        // Is not one of the supported status for working groups
+        !trackStatus.includes(specStatus)
+      ) {
+        const msg = docLink`W3C Working Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
+        const supportedStatus = mdJoinOr(trackStatus, { quotes: true });
+        const hint = docLink`Please use one of: ${supportedStatus}. Please see ${"[specStatus]"} for appropriate values for this type of group.`;
         showError(msg, name, { hint });
       }
       break;

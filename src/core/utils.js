@@ -910,13 +910,27 @@ export function toMDCode(item) {
 }
 
 /**
+ * Wraps in back-ticks ` for code.
  *
  * @param {string[]} array
- * @returns
+ * @param {object} options
+ * @param {boolean} options.quotes Surround each item in quotes
  */
-export function mdJoinOr(array) {
-  return joinOr(array, toMDCode);
+export function mdJoinOr(array, { quotes } = { quotes: false }) {
+  return joinOr(array, quotes ? s => toMDCode(addQuotes(s)) : toMDCode);
 }
-export function mdJoinAnd(array) {
-  return joinAnd(array, toMDCode);
+
+/**
+ * Wraps in back-ticks ` for code.
+ *
+ * @param {string[]} array
+ * @param {object} options
+ * @param {boolean} options.quotes Surround each item in quotes
+ */
+export function mdJoinAnd(array, { quotes } = { quotes: false }) {
+  return joinAnd(array, quotes ? s => toMDCode(addQuotes(s)) : toMDCode);
+}
+
+function addQuotes(item) {
+  return String(item) ? `"${item}"` : "";
 }

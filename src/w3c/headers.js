@@ -188,8 +188,8 @@ const status2long = {
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
-const maybeRecTrack = ["FPWD", "WD"];
-const recTrackStatus = ["FPLC", "LC", "CR", "CRD", "PR", "PER", "REC"];
+export const maybeRecTrack = ["FPWD", "WD"];
+export const recTrackStatus = ["FPLC", "LC", "CR", "CRD", "PR", "PER", "REC"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
 export const bgStatus = ["BG-DRAFT", "BG-FINAL"];
 export const cgbgStatus = [...cgStatus, ...bgStatus];
@@ -268,8 +268,8 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 
 export function run(conf) {
   if (!conf.specStatus) {
-    const msg = docLink`Missing required configuration: ${"specStatus"}.`;
-    const hint = docLink`Please select an appropriate status from ${"specStatus"} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
+    const msg = docLink`Missing required configuration: ${"[specStatus]"}.`;
+    const hint = docLink`Please select an appropriate status from ${"[specStatus]"} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
     showError(msg, name, { hint });
   }
   conf.isUnofficial = conf.specStatus === "unofficial";
@@ -278,10 +278,10 @@ export function run(conf) {
   }
   if (conf.isUnofficial) {
     if (conf.license && !licenses.has(conf.license)) {
-      const msg = docLink`The ${"license"} configuration option has an invalid value: "\`${
+      const msg = docLink`The ${"[license]"} configuration option has an invalid value: "\`${
         conf.license
       }\`". Defaulting to "cc-by".`;
-      const hint = docLink`Please explicitly set ${"license"} to one of: ${mdJoinOr(
+      const hint = docLink`Please explicitly set ${"[license]"} to one of: ${mdJoinOr(
         [...licenses.keys()]
       )}.`;
       showError(msg, name, { hint });
@@ -297,7 +297,7 @@ export function run(conf) {
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
   if (!conf.isUnofficial && ["cc-by"].includes(conf.license)) {
     const msg = docLink`License "\`${conf.license}\`" is not allowed for W3C Specifications.`;
-    const hint = docLink`Please set ${"license"} to "w3c-software-doc" instead.`;
+    const hint = docLink`Please set ${"[license]"} to "w3c-software-doc" instead.`;
     showError(msg, name, { hint });
   }
   conf.licenseInfo = licenses.get(conf.license);
@@ -320,7 +320,7 @@ export function run(conf) {
       const msg =
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. ";
       const wptLiveURL = `https://wpt.live/${conf.shortName}`;
-      const hint = docLink`Please update your ${"testSuiteURI"} to point to the new tests repository (e.g., ${wptLiveURL}).`;
+      const hint = docLink`Please update your ${"[testSuiteURI]"} to point to the new tests repository (e.g., ${wptLiveURL}).`;
       showWarning(msg, name, { hint });
     }
   }
@@ -363,7 +363,7 @@ export function run(conf) {
 
   if (conf.isRecTrack && !hasGitHubIssuesLink(conf)) {
     const msg = docLink`Missing link to GitHub in head of document.`;
-    const hint = docLink`Please add the ${"github"} configuration option to document's ${"respecConfig|#configuring-respec"}.`;
+    const hint = docLink`Please add the ${"[github]"} configuration option to document's ${"[`respecConfig`|#configuring-respec]"}.`;
     showError(msg, name, { hint });
   }
   if (!conf.edDraftURI) {
@@ -432,7 +432,7 @@ export function run(conf) {
     ) {
       const msg =
         "This document is on the W3C Recommendation Track, but is missing the required 'Previous Version' link.";
-      const hint = docLink`Add ${"previousMaturity"} and ${"previousPublishDate"} to the document's ${"respecConfig|#configuring-respec"}.`;
+      const hint = docLink`Add ${"[previousMaturity]"} and ${"[previousPublishDate]"} to the document's ${"[`respecConfig`|#configuring-respec]"}.`;
       showError(msg, name, { hint });
     }
     if (!conf.prevVersion) conf.prevVersion = "";
@@ -485,7 +485,7 @@ export function run(conf) {
   conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
   if (conf.isRec && !conf.errata) {
     const msg = "Recommendations must have an errata link.";
-    const hint = docLink`Add an ${"errata"} URL to your ${"respecConfig|#configuring-respec"}.`;
+    const hint = docLink`Add an ${"[errata]"} URL to your ${"[`respecConfig`|#configuring-respec]"}.`;
     showError(msg, name, { hint });
   }
   conf.prependW3C = !conf.isBasic && !conf.isUnofficial;
@@ -559,12 +559,12 @@ export function run(conf) {
     wgPotentialArray.some(item => Array.isArray(item)) &&
     !wgPotentialArray.every(item => Array.isArray(item))
   ) {
-    const msg = docLink`If one of ${"wg"}, ${"wgURI"}, or ${"wgPatentURI"} is an array, they all have to be.`;
-    const hint = docLink`Use the ${"group"} option with an array instead.`;
+    const msg = docLink`If one of ${"[wg]"}, ${"[wgURI]"}, or ${"[wgPatentURI]"} is an array, they all have to be.`;
+    const hint = docLink`Use the ${"[group]"} option with an array instead.`;
     showError(msg, name, { hint });
   }
   if (conf.isCGBG && !conf.wg) {
-    const msg = docLink`${"wg"} configuration option is required for this kind of document.`;
+    const msg = docLink`][wg]"} configuration option is required for this kind of document.`;
     showError(msg, name);
   }
   if (Array.isArray(conf.wg)) {
@@ -586,26 +586,26 @@ export function run(conf) {
     }
   }
   if (conf.specStatus === "PR" && !conf.crEnd) {
-    const msg = docLink`${"specStatus"} is "PR" but no ${"crEnd"} is specified in the ${"respecConfig|#configuring-respec"} (needed to indicate end of previous CR).`;
+    const msg = docLink`${"[specStatus]"} is "PR" but no ${"[crEnd]"} is specified in the ${"[`respecConfig`|#configuring-respec]"} (needed to indicate end of previous CR).`;
     showError(msg, name);
   }
 
   if (conf.specStatus === "CR" && !conf.crEnd) {
-    const msg = docLink`${"specStatus"} is "CR", but no ${"crEnd"} is specified in the ${"respecConfig|#configuring-respec"}.`;
+    const msg = docLink`${"[specStatus]"} is "CR", but no ${"[crEnd]"} is specified in the ${"[`respecConfig`|#configuring-respec]"}.`;
     showError(msg, name);
   }
   conf.crEnd = validateDateAndRecover(conf, "crEnd");
   conf.humanCREnd = W3CDate.format(conf.crEnd);
 
   if (conf.specStatus === "PR" && !conf.prEnd) {
-    const msg = docLink`${"specStatus"} is "PR" but no ${"prEnd"} is specified in the ${"respecConfig|#configuring-respec"}.`;
+    const msg = docLink`${"[specStatus]"} is "PR" but no ${"[prEnd]"} is specified in the ${"[`respecConfig`|#configuring-respec]"}.`;
     showError(msg, name);
   }
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
   conf.humanPREnd = W3CDate.format(conf.prEnd);
 
   if (conf.specStatus === "PER" && !conf.perEnd) {
-    const msg = "Status is PER but no perEnd is specified";
+    const msg = docLink`${"[specStatus]"} is "PR", but no ${"[prEnd]"} is specified`;
     showError(msg, name);
   }
   conf.perEnd = validateDateAndRecover(conf, "perEnd");
@@ -617,16 +617,16 @@ export function run(conf) {
       const unknownRevisionTypes = conf.revisionTypes.filter(
         x => !revisionTypes.includes(x)
       );
-      const msg = docLink`${"specStatus"} is "REC" with unknown ${"revisionTypes"}: '${mdJoinOr(
+      const msg = docLink`${"[specStatus]"} is "REC" with unknown ${"[revisionTypes]"}: '${mdJoinOr(
         unknownRevisionTypes
       )}'.`;
-      const hint = docLink`The valid values for ${"revisionTypes"} are: ${mdJoinOr(
+      const hint = docLink`The valid values for ${"[revisionTypes]"} are: ${mdJoinOr(
         revisionTypes
       )}.`;
       showError(msg, name, { hint });
     }
     if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
-      const msg = docLink`${"specStatus"} is "REC" with proposed additions but the Recommendation is not marked as a allowing new features.`;
+      const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as a allowing new features.`;
       showError(msg, name);
     }
   }
@@ -638,7 +638,7 @@ export function run(conf) {
     conf.revisionTypes.length > 0 &&
     !conf.revisedRecEnd
   ) {
-    const msg = docLink`${"specStatus"} is "REC" with proposed corrections or additions but no ${"revisedRecEnd"} is specified in the ${"respecConfig|#configuring-respec"}.`;
+    const msg = docLink`${"[specStatus]"} is "REC" with proposed corrections or additions but no ${"[revisedRecEnd]"} is specified in the ${"[`respecConfig`|#configuring-respec]"}.`;
     showError(msg, name);
   }
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
@@ -649,15 +649,15 @@ export function run(conf) {
       ? true
       : !conf.isRecTrack && maturity == "WD" && conf.specStatus !== "FPWD-NOTE";
   if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
-    const msg = docLink`Document configured as ${"noRecTrack"}, but its status ("${
+    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${
       conf.specStatus
     }") puts it on the W3C Rec Track.`;
-    const hint = `Status cannot be any of: ${recTrackStatus.join(", ")}.`;
+    const notAllowed = mdJoinOr(recTrackStatus, { quotes: true });
+    const hint = `Status **can't** be any of: ${notAllowed}.`;
     showError(msg, name, { hint });
   }
   if (conf.isIGNote && !conf.charterDisclosureURI) {
-    const msg =
-      "IG-NOTEs must link to charter's disclosure section using `charterDisclosureURI`.";
+    const msg = docLink`IG-NOTEs must link to charter's disclosure section using ${"[charterDisclosureURI]"}.`;
     showError(msg, name);
   }
   if (!sotd.classList.contains("override")) {
@@ -665,12 +665,12 @@ export function run(conf) {
   }
 
   if (!conf.implementationReportURI && conf.isCR) {
-    const msg = docLink`Missing ${"implementationReportURI"} configuration option in ${"respecConfig|#configuring-respec"}.`;
-    const hint = docLink`CR documents must have an ${"implementationReportURI"} that describes the [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).`;
+    const msg = docLink`Missing ${"[implementationReportURI]"} configuration option in ${"[`respecConfig`|#configuring-respec]"}.`;
+    const hint = docLink`CR documents must have an ${"[implementationReportURI]"} that describes the [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).`;
     showError(msg, name, { hint });
   }
   if (!conf.implementationReportURI && conf.isPR) {
-    const msg = docLink`PR documents should include an ${"implementationReportURI"}, which needs to link to a document that describes the [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).`;
+    const msg = docLink`PR documents should include an ${"[implementationReportURI]"}, which needs to link to a document that describes the [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).`;
     showWarning(msg, name);
   }
 
@@ -692,7 +692,7 @@ function validatePatentPolicies(conf) {
     const invalidPolicies = [...policies].filter(
       policy => !patentPolicies.includes(policy)
     );
-    const msg = docLink`Invalid ${"wgPatentPolicy"} value(s): ${mdJoinAnd(
+    const msg = docLink`Invalid ${"[wgPatentPolicy]"} value(s): ${mdJoinAnd(
       invalidPolicies
     )}.`;
     const hint = `Please use one of: ${mdJoinOr(patentPolicies)}.`;
@@ -701,7 +701,7 @@ function validatePatentPolicies(conf) {
   if (policies.size !== 1) {
     const msg =
       "When collaborating across multiple groups, they must use the same patent policy.";
-    const hint = docLink`For ${"wgPatentPolicy"}, please check the patent policies of each group. The patent policies were: ${[
+    const hint = docLink`For ${"[wgPatentPolicy]"}, please check the patent policies of each group. The patent policies were: ${[
       ...policies,
     ].join(", ")}.`;
     showError(msg, name, { hint });

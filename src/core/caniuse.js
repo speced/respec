@@ -4,7 +4,7 @@
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
-import { joinAnd, showError, showWarning } from "./utils.js";
+import { mdJoinAnd, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
 import css from "../styles/caniuse.css.js";
 import { docLink } from "./respec-docs.js";
@@ -66,7 +66,7 @@ export async function run(conf) {
       return html`${{ html: stats }}`;
     } catch (err) {
       const msg = `Couldn't find feature "${options.feature}" on caniuse.com.`;
-      const hint = docLink`Please check the feature key on [caniuse.com](https://caniuse.com) and update ${"caniuse"}`;
+      const hint = docLink`Please check the feature key on [caniuse.com](https://caniuse.com) and update ${"[caniuse]"}`;
       showError(msg, name, { hint });
       console.error(err);
       return html`<a href="${featureURL}">caniuse.com</a>`;
@@ -104,8 +104,8 @@ function getNormalizedConf(conf) {
   if (Array.isArray(browsers)) {
     const invalidBrowsers = browsers.filter(browser => !BROWSERS.has(browser));
     if (invalidBrowsers.length) {
-      const names = joinAnd(invalidBrowsers, b => `"\`${b}\`"`);
-      const msg = docLink`Invalid browser(s): (${names}) in the \`browser\` property of ${"caniuse"}.`;
+      const names = mdJoinAnd(invalidBrowsers, { quotes: true });
+      const msg = docLink`Invalid browser(s): (${names}) in the \`browser\` property of ${"[caniuse]"}.`;
       showWarning(msg, name);
     }
   }

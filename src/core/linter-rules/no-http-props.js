@@ -11,11 +11,11 @@ export const name = "core/linter-rules/no-http-props";
 
 const localizationStrings = {
   en: {
-    msg: docLink`Insecure URLs are not allowed in ${"respecConfig"}.`,
+    msg: docLink`Insecure URLs are not allowed in ${"[`respecConfig`|#configuring-respec]"}.`,
     hint: "Please change the following properties to 'https://': ",
   },
   zh: {
-    msg: "`respecConfig` 中不允许使用不安全的URL.",
+    msg: docLink`${"[`respecConfig`|#configuring-respec]"} 中不允许使用不安全的URL.`,
     hint: "请将以下属性更改为 https://：",
   },
 };

@@ -9,27 +9,27 @@
  *
  * Docs: https://respec.org/doc/#data-tests
  */
-import { getIntlData, showError, showWarning } from "./utils.js";
+import { getIntlData, mdJoinAnd, showError, showWarning } from "./utils.js";
 import { docLink } from "./respec-docs.js";
 import { html } from "./import-maps.js";
 const localizationStrings = {
   en: {
-    missing_test_suite_uri: docLink`Found tests in your spec, but missing ${"testSuiteURI"} in your ReSpec config.`,
+    missing_test_suite_uri: docLink`Found tests in your spec, but missing ${"[testSuiteURI]"} in your ReSpec config.`,
     tests: "tests",
     test: "test",
   },
   ja: {
-    missing_test_suite_uri: docLink`この仕様内にテストの項目を検出しましたが，ReSpec の設定に ${"testSuiteURI"} が見つかりません．`,
+    missing_test_suite_uri: docLink`この仕様内にテストの項目を検出しましたが，ReSpec の設定に ${"[testSuiteURI]"} が見つかりません．`,
     tests: "テスト",
     test: "テスト",
   },
   de: {
-    missing_test_suite_uri: docLink`Die Spezifikation enthält Tests, aber in der ReSpec-Konfiguration ist keine ${"testSuiteURI"} angegeben.`,
+    missing_test_suite_uri: docLink`Die Spezifikation enthält Tests, aber in der ReSpec-Konfiguration ist keine ${"[testSuiteURI]"} angegeben.`,
     tests: "Tests",
     test: "Test",
   },
   zh: {
-    missing_test_suite_uri: docLink`本规范中包含测试，但在 ReSpec 配置中缺少 ${"testSuiteURI"}。`,
+    missing_test_suite_uri: docLink`本规范中包含测试，但在 ReSpec 配置中缺少 ${"[testSuiteURI]"}。`,
     tests: "测试",
     test: "测试",
   },
@@ -117,7 +117,7 @@ function toTestURLs(tests, testSuiteURI, elem) {
       try {
         return new URL(test, testSuiteURI).href;
       } catch {
-        const msg = docLink`Invalid URL in ${"data-tests"} attribute: ${test}`;
+        const msg = docLink`Invalid URL in ${"[data-tests]"} attribute: ${test}.`;
         showWarning(msg, name, { elements: [elem] });
       }
     })
@@ -133,10 +133,9 @@ function handleDuplicates(testURLs, elem) {
     (link, i, self) => self.indexOf(link) !== i
   );
   if (duplicates.length) {
-    const msg = docLink`Duplicate tests found in the ${"data-tests"} attribute`;
-    const hint = docLink`To fix, remove duplicates from ${"data-tests"}: ${duplicates
-      .map(url => new URL(url).pathname)
-      .join(", ")}`;
+    const msg = docLink`Duplicate tests found in the ${"[data-tests]"} attribute.`;
+    const tests = mdJoinAnd(duplicates, { quotes: true });
+    const hint = docLink`To fix, remove duplicates from ${"[data-tests]"}: ${tests}`;
     showWarning(msg, name, { hint, elements: [elem] });
   }
 }
