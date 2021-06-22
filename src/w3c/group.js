@@ -35,7 +35,7 @@ export async function run(conf) {
   if (usedLegacyOptions.length) {
     const outdatedOptionsStr = codedJoinAnd(usedLegacyOptions);
     const msg = docLink`Configuration options ${outdatedOptionsStr} are superseded by ${"[group]"} and will be overridden by ReSpec.`;
-    const hint = docLink`Remove them from the document's ${"[respecConfig|#configuring-respec]"} to silence this warning.`;
+    const hint = docLink`Remove them from the document's ${"[respecConfig]"} to silence this warning.`;
     showWarning(msg, name, { hint });
   }
 
