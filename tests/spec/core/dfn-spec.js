@@ -163,8 +163,13 @@ describe("Core — Definitions", () => {
           interface Foo{};
         </pre>
         <p>
-          <dfn id="simple">[[\\slot]]</dfn>
-          <dfn id="parent" data-dfn-for="Window">[[\\slot]]</dfn>
+          <dfn id="attribute">
+            [[\\internal slot]]
+          </dfn>
+          <dfn id="method">
+            [[\\I am_a method]](I, really, ...am)
+          </dfn>
+          <dfn id="parent" data-dfn-for="Window">[[\\internal slot]]</dfn>
           <dfn id="broken" data-dfn-for="">[[\\broken]]</dfn>
         </p>
         <section data-dfn-for="">
@@ -174,24 +179,37 @@ describe("Core — Definitions", () => {
           </p>
         </section>
         <p>
-        {{Test/[[slot]]}}
-        {{Window/[[slot]]}}
+        {{Test/[[internal slot]]}}
+        {{Test/[[I am_a method]](I, really, ...am)}}
+        {{Window/[[internal slot]]}}
         </p>
       </section>
     `;
-    it("sets the data-dfn-type an idl attribute", async () => {
+
+    it("sets the data-dfn-type as an attribute", async () => {
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
-      const dfn = doc.getElementById("simple");
-      expect(dfn.textContent).toBe("[[slot]]");
+      const dfn = doc.getElementById("attribute");
+      expect(dfn.textContent.trim()).toBe("[[internal slot]]");
       expect(dfn.dataset.dfnType).toBe("attribute");
+      expect(dfn.dataset.idl).toBe("");
+    });
+
+    it("sets the data-dfn-type as a method, when it's a method", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("method");
+      expect(dfn.textContent.trim()).toBe(
+        "[[I am_a method]](I, really, ...am)"
+      );
+      expect(dfn.dataset.dfnType).toBe("method");
       expect(dfn.dataset.idl).toBe("");
     });
 
     it("when data-dfn-for is missing, it use the closes data-dfn-for as parent", async () => {
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
-      const dfn = doc.getElementById("simple");
+      const dfn = doc.getElementById("attribute");
       expect(dfn.dataset.dfnFor).toBe("Test");
       const dfnWithParent = doc.getElementById("parent");
       expect(dfnWithParent.dataset.dfnFor).toBe("Window");

@@ -2,8 +2,15 @@
 // Module core/dfn
 // - Finds all <dfn> elements and populates definitionMap to identify them.
 
-import { getDfnTitles, norm, showError } from "./utils.js";
+import {
+  codedJoinOr,
+  docLink,
+  getDfnTitles,
+  norm,
+  showError,
+} from "./utils.js";
 import { registerDefinition } from "./dfn-map.js";
+import { slotRegex } from "./inline-idl-parser.js";
 
 export const name = "core/dfn";
 
@@ -13,8 +20,10 @@ export function run() {
     registerDefinition(dfn, titles);
 
     const [firstTitle] = titles;
-
-    associateInternalSlotWithIDL(firstTitle, dfn);
+    // Matches attributes and methods, like [[some words]](with, optional, arguments)
+    if (slotRegex.test(firstTitle)) {
+      processAsInternalSlot(firstTitle, dfn);
+    }
 
     // Per https://tabatkins.github.io/bikeshed/#dfn-export, a dfn with dfnType
     // other than dfn and not marked with data-no-export is to be exported.
@@ -36,9 +45,8 @@ export function run() {
  * @param {string} title
  * @param {HTMLElement} dfn
  */
-function associateInternalSlotWithIDL(title, dfn) {
-  if (!/^\[\[\w+\]\]$/.test(title)) return;
-  if (!dfn.dataset.idl) {
+function processAsInternalSlot(title, dfn) {
+  if (!dfn.dataset.hasOwnProperty("idl")) {
     dfn.dataset.idl = "";
   }
 
@@ -56,5 +64,20 @@ function associateInternalSlotWithIDL(title, dfn) {
       "Use a `data-dfn-for` attribute to associate this dfn with a WebIDL interface.";
     showError(msg, name, { hint, elements: [dfn] });
   }
-  dfn.dataset.dfnType = "attribute";
+
+  // If it ends with a ), then it's method. Attribute otherwise.
+  if (!dfn.dataset.dfnType) {
+    dfn.dataset.dfnType = title.endsWith(")") ? "method" : "attribute";
+    return;
+  }
+
+  // Perform validation on the dfn's type type.
+  const allowedSlotTypes = ["attribute", "method"];
+  if (!allowedSlotTypes.some(type => dfn.dataset.dfnType === type)) {
+    const msg = docLink`Invalid ${"[data-dfn-for]"} for defining an internal slot.`;
+    const hint = `The only allowed types are: ${codedJoinOr(allowedSlotTypes, {
+      quotes: true,
+    })}.`;
+    showError(msg, name, { hint, elements: [dfn] });
+  }
 }
