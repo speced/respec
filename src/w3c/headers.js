@@ -85,11 +85,11 @@
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
 import {
   ISODate,
+  codedJoinAnd,
+  codedJoinOr,
   concatDate,
   docLink,
   htmlJoinAnd,
-  mdJoinAnd,
-  mdJoinOr,
   showError,
   showWarning,
 } from "../core/utils.js";
@@ -281,7 +281,7 @@ export function run(conf) {
       const msg = docLink`The ${"[license]"} configuration option has an invalid value: "\`${
         conf.license
       }\`". Defaulting to "cc-by".`;
-      const hint = docLink`Please explicitly set ${"[license]"} to one of: ${mdJoinOr(
+      const hint = docLink`Please explicitly set ${"[license]"} to one of: ${codedJoinOr(
         [...licenses.keys()]
       )}.`;
       showError(msg, name, { hint });
@@ -617,10 +617,10 @@ export function run(conf) {
       const unknownRevisionTypes = conf.revisionTypes.filter(
         x => !revisionTypes.includes(x)
       );
-      const msg = docLink`${"[specStatus]"} is "REC" with unknown ${"[revisionTypes]"}: '${mdJoinOr(
+      const msg = docLink`${"[specStatus]"} is "REC" with unknown ${"[revisionTypes]"}: '${codedJoinOr(
         unknownRevisionTypes
       )}'.`;
-      const hint = docLink`The valid values for ${"[revisionTypes]"} are: ${mdJoinOr(
+      const hint = docLink`The valid values for ${"[revisionTypes]"} are: ${codedJoinOr(
         revisionTypes
       )}.`;
       showError(msg, name, { hint });
@@ -652,7 +652,7 @@ export function run(conf) {
     const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${
       conf.specStatus
     }") puts it on the W3C Rec Track.`;
-    const notAllowed = mdJoinOr(recTrackStatus, { quotes: true });
+    const notAllowed = codedJoinOr(recTrackStatus, { quotes: true });
     const hint = `Status **can't** be any of: ${notAllowed}.`;
     showError(msg, name, { hint });
   }
@@ -692,10 +692,10 @@ function validatePatentPolicies(conf) {
     const invalidPolicies = [...policies].filter(
       policy => !patentPolicies.includes(policy)
     );
-    const msg = docLink`Invalid ${"[wgPatentPolicy]"} value(s): ${mdJoinAnd(
+    const msg = docLink`Invalid ${"[wgPatentPolicy]"} value(s): ${codedJoinAnd(
       invalidPolicies
     )}.`;
-    const hint = `Please use one of: ${mdJoinOr(patentPolicies)}.`;
+    const hint = `Please use one of: ${codedJoinOr(patentPolicies)}.`;
     showError(msg, name, { hint });
   }
   if (policies.size !== 1) {

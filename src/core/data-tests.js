@@ -10,9 +10,9 @@
  * Docs: https://respec.org/doc/#data-tests
  */
 import {
+  codedJoinAnd,
   docLink,
   getIntlData,
-  mdJoinAnd,
   showError,
   showWarning,
 } from "./utils.js";
@@ -139,7 +139,7 @@ function handleDuplicates(testURLs, elem) {
   );
   if (duplicates.length) {
     const msg = docLink`Duplicate tests found in the ${"[data-tests]"} attribute.`;
-    const tests = mdJoinAnd(duplicates, { quotes: true });
+    const tests = codedJoinAnd(duplicates, { quotes: true });
     const hint = docLink`To fix, remove duplicates from ${"[data-tests]"}: ${tests}.`;
     showWarning(msg, name, { hint, elements: [elem] });
   }

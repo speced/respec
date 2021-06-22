@@ -916,7 +916,7 @@ export function toMDCode(item) {
  * @param {object} options
  * @param {boolean} options.quotes Surround each item in quotes
  */
-export function mdJoinOr(array, { quotes } = { quotes: false }) {
+export function codedJoinOr(array, { quotes } = { quotes: false }) {
   return joinOr(array, quotes ? s => toMDCode(addQuotes(s)) : toMDCode);
 }
 
@@ -927,7 +927,7 @@ export function mdJoinOr(array, { quotes } = { quotes: false }) {
  * @param {object} options
  * @param {boolean} options.quotes Surround each item in quotes
  */
-export function mdJoinAnd(array, { quotes } = { quotes: false }) {
+export function codedJoinAnd(array, { quotes } = { quotes: false }) {
   return joinAnd(array, quotes ? s => toMDCode(addQuotes(s)) : toMDCode);
 }
 

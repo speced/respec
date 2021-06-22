@@ -620,27 +620,27 @@ describe("Core - Utils", () => {
       });
     });
 
-    describe("mdJoinOr()", () => {
+    describe("codedJoinOr()", () => {
       it("uses disjunction", () => {
-        expect(utils.mdJoinOr([])).toBe("");
-        expect(utils.mdJoinOr(["a", "b", "c"])).toBe("`a`, `b`, or `c`");
+        expect(utils.codedJoinOr([])).toBe("");
+        expect(utils.codedJoinOr(["a", "b", "c"])).toBe("`a`, `b`, or `c`");
       });
       it("quotes and uses disjunction", () => {
-        expect(utils.mdJoinOr([], { quotes: true })).toBe("");
-        expect(utils.mdJoinOr(["a", "b", "c"], { quotes: true })).toBe(
+        expect(utils.codedJoinOr([], { quotes: true })).toBe("");
+        expect(utils.codedJoinOr(["a", "b", "c"], { quotes: true })).toBe(
           '`"a"`, `"b"`, or `"c"`'
         );
       });
     });
 
-    describe("mdJoinAnd()", () => {
+    describe("codedJoinAnd()", () => {
       it("uses conjunction", () => {
-        expect(utils.mdJoinAnd([])).toBe("");
-        expect(utils.mdJoinAnd(["a", "b", "c"])).toBe("`a`, `b`, and `c`");
+        expect(utils.codedJoinAnd([])).toBe("");
+        expect(utils.codedJoinAnd(["a", "b", "c"])).toBe("`a`, `b`, and `c`");
       });
       it("quotes and uses conjunction", () => {
-        expect(utils.mdJoinAnd([], { quotes: true })).toBe("");
-        expect(utils.mdJoinAnd(["a", "b", "c"], { quotes: true })).toBe(
+        expect(utils.codedJoinAnd([], { quotes: true })).toBe("");
+        expect(utils.codedJoinAnd(["a", "b", "c"], { quotes: true })).toBe(
           '`"a"`, `"b"`, and `"c"`'
         );
       });

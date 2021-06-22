@@ -7,9 +7,9 @@
  */
 
 import {
+  codedJoinAnd,
   docLink,
   fetchAndCache,
-  mdJoinAnd,
   showError,
   showWarning,
 } from "../core/utils.js";
@@ -24,7 +24,7 @@ export async function run(conf) {
 
   if (!conf.group) {
     if (usedLegacyOptions.length) {
-      const outdatedOptionsStr = mdJoinAnd(LEGACY_OPTIONS);
+      const outdatedOptionsStr = codedJoinAnd(LEGACY_OPTIONS);
       const msg = `Configuration options ${outdatedOptionsStr} are deprecated.`;
       const hint = docLink`Please use the ${"[group]"} configuration option instead.`;
       showWarning(msg, name, { hint });
@@ -33,7 +33,7 @@ export async function run(conf) {
   }
 
   if (usedLegacyOptions.length) {
-    const outdatedOptionsStr = mdJoinAnd(usedLegacyOptions);
+    const outdatedOptionsStr = codedJoinAnd(usedLegacyOptions);
     const msg = docLink`Configuration options ${outdatedOptionsStr} are superseded by ${"[group]"} and will be overridden by ReSpec.`;
     const hint = docLink`Remove them from the document's ${"[respecConfig|#configuring-respec]"} to silence this warning.`;
     showWarning(msg, name, { hint });

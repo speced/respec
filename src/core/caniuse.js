@@ -4,7 +4,7 @@
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
-import { docLink, mdJoinAnd, showError, showWarning } from "./utils.js";
+import { codedJoinAnd, docLink, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
 import css from "../styles/caniuse.css.js";
 import { html } from "./import-maps.js";
@@ -103,7 +103,7 @@ function getNormalizedConf(conf) {
   if (Array.isArray(browsers)) {
     const invalidBrowsers = browsers.filter(browser => !BROWSERS.has(browser));
     if (invalidBrowsers.length) {
-      const names = mdJoinAnd(invalidBrowsers, { quotes: true });
+      const names = codedJoinAnd(invalidBrowsers, { quotes: true });
       const msg = docLink`Invalid browser(s): (${names}) in the \`browser\` property of ${"[caniuse]"}.`;
       showWarning(msg, name);
     }

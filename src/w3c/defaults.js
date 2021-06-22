@@ -4,7 +4,7 @@
  */
 export const name = "w3c/defaults";
 import { bgStatus, cgStatus, cgbgStatus } from "./headers.js";
-import { docLink, mdJoinOr, showError } from "../core/utils.js";
+import { codedJoinOr, docLink, showError } from "../core/utils.js";
 import { coreDefaults } from "../core/defaults.js";
 
 const w3cLogo = {
@@ -63,7 +63,7 @@ function validateStatusForGroup(conf) {
     case "cg": {
       if (![...cgbgStatus, "unofficial"].includes(specStatus)) {
         const msg = docLink`W3C Community Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
-        const supportedStatus = mdJoinOr(cgStatus, { quotes: true });
+        const supportedStatus = codedJoinOr(cgStatus, { quotes: true });
         const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"CG-DRAFT"\`.`;
         showError(msg, name, { hint });
         conf.specStatus = "CG-DRAFT";
@@ -73,7 +73,7 @@ function validateStatusForGroup(conf) {
     case "bg": {
       if (![...bgStatus, "unofficial"].includes(specStatus)) {
         const msg = docLink`W3C Business Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
-        const supportedStatus = mdJoinOr(bgStatus, { quotes: true });
+        const supportedStatus = codedJoinOr(bgStatus, { quotes: true });
         const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"BG-DRAFT"\`.`;
         showError(msg, name, { hint });
         conf.specStatus = "BG-DRAFT";
