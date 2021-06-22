@@ -4,8 +4,7 @@
 // in the content of elements with key identifiers:
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
-import { fetchAndCache, joinAnd, showError } from "./utils.js";
-import { docLink } from "./respec-docs.js";
+import { docLink, fetchAndCache, joinAnd, showError } from "./utils.js";
 import { html } from "./import-maps.js";
 export const name = "core/contrib";
 

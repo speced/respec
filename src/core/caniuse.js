@@ -4,10 +4,9 @@
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
-import { mdJoinAnd, showError, showWarning } from "./utils.js";
+import { docLink, mdJoinAnd, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
 import css from "../styles/caniuse.css.js";
-import { docLink } from "./respec-docs.js";
 import { html } from "./import-maps.js";
 
 export const name = "core/caniuse";

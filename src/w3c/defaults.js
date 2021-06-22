@@ -10,9 +10,8 @@ import {
   maybeRecTrack,
   recTrackStatus,
 } from "./headers.js";
-import { mdJoinOr, showError } from "../core/utils.js";
+import { docLink, mdJoinOr, showError } from "../core/utils.js";
 import { coreDefaults } from "../core/defaults.js";
-import { docLink } from "../core/respec-docs.js";
 
 const w3cLogo = {
   src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",

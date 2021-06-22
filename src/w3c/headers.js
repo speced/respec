@@ -86,6 +86,7 @@
 import {
   ISODate,
   concatDate,
+  docLink,
   htmlJoinAnd,
   mdJoinAnd,
   mdJoinOr,
@@ -94,7 +95,6 @@ import {
 } from "../core/utils.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
-import { docLink } from "../core/respec-docs.js";
 import headersTmpl from "./templates/headers.js";
 import { html } from "../core/import-maps.js";
 import { pub } from "../core/pubsubhub.js";

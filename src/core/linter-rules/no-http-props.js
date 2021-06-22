@@ -3,8 +3,7 @@
  * Linter rule "no-http-props". Makes sure the there are no URLs that
  * start with http:// in the ReSpec config.
  */
-import { getIntlData, joinAnd, showWarning } from "../utils.js";
-import { docLink } from "../respec-docs.js";
+import { docLink, getIntlData, joinAnd, showWarning } from "../utils.js";
 
 const ruleName = "no-http-props";
 export const name = "core/linter-rules/no-http-props";

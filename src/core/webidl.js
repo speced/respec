@@ -6,6 +6,7 @@
 //  - don't use generated content in the CSS!
 import {
   addHashId,
+  docLink,
   showError,
   showWarning,
   wrapInner,
@@ -15,7 +16,6 @@ import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";
 import css from "../styles/webidl.css.js";
-import { docLink } from "./respec-docs.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";

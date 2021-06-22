@@ -7,12 +7,12 @@
  */
 
 import {
+  docLink,
   fetchAndCache,
   mdJoinAnd,
   showError,
   showWarning,
 } from "../core/utils.js";
-import { docLink } from "../core/respec-docs.js";
 
 export const name = "w3c/group";
 

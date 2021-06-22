@@ -9,8 +9,13 @@
  *
  * Docs: https://respec.org/doc/#data-tests
  */
-import { getIntlData, mdJoinAnd, showError, showWarning } from "./utils.js";
-import { docLink } from "./respec-docs.js";
+import {
+  docLink,
+  getIntlData,
+  mdJoinAnd,
+  showError,
+  showWarning,
+} from "./utils.js";
 import { html } from "./import-maps.js";
 const localizationStrings = {
   en: {

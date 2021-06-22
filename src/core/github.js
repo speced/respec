@@ -5,8 +5,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { getIntlData, showError, showWarning } from "../core/utils.js";
-import { docLink } from "./respec-docs.js";
+import { docLink, getIntlData, showError, showWarning } from "../core/utils.js";
 export const name = "core/github";
 
 let resolveGithubPromise;
