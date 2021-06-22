@@ -135,7 +135,7 @@ function handleDuplicates(testURLs, elem) {
   if (duplicates.length) {
     const msg = docLink`Duplicate tests found in the ${"[data-tests]"} attribute.`;
     const tests = mdJoinAnd(duplicates, { quotes: true });
-    const hint = docLink`To fix, remove duplicates from ${"[data-tests]"}: ${tests}`;
+    const hint = docLink`To fix, remove duplicates from ${"[data-tests]"}: ${tests}.`;
     showWarning(msg, name, { hint, elements: [elem] });
   }
 }
