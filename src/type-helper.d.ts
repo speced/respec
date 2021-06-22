@@ -199,10 +199,10 @@ type Person = {
   note?: string;
   retiredDate?: string;
   extras?: PersonExtras[];
-}
+};
 
 type PersonExtras = {
   name: string;
   class?: string;
   href?: string;
-}
+};

@@ -900,10 +900,66 @@ export function showWarning(message, pluginName, options = {}) {
 }
 
 /**
- * Creates a quick markdown link to a property in the docs.
+ * Makes a string `coded`.
  *
- * @param {string} prop ReSpec configuration property to link to in docs.
+ * @param {string} item
+ * @returns {string}
  */
-export function docLink(prop) {
-  return `[\`${prop}\`](https://respec.org/docs/#${prop})`;
+export function toMDCode(item) {
+  return item ? `\`${item}\`` : "";
+}
+
+/**
+ * Joins an array of strings, wrapping each string in back-ticks (`) for inline markdown code.
+ *
+ * @param {string[]} array
+ * @param {object} options
+ * @param {boolean} options.quotes Surround each item in quotes
+ */
+export function codedJoinOr(array, { quotes } = { quotes: false }) {
+  return joinOr(array, quotes ? s => toMDCode(addQuotes(s)) : toMDCode);
+}
+
+/**
+ * Wraps in back-ticks ` for code.
+ *
+ * @param {string[]} array
+ * @param {object} options
+ * @param {boolean} options.quotes Surround each item in quotes
+ */
+export function codedJoinAnd(array, { quotes } = { quotes: false }) {
+  return joinAnd(array, quotes ? s => toMDCode(addQuotes(s)) : toMDCode);
+}
+
+function addQuotes(item) {
+  return String(item) ? `"${item}"` : "";
+}
+
+/**
+ * Tagged template string, helps with linking to documentation.
+ * Things inside [squareBrackets] are considered direct links to the documentation.
+ * To alias something, one can use a "|", like [respecConfig|#respec-configuration].
+ * @param {TemplateStringsArray} strings
+ * @param {string[]} keys
+ */
+export function docLink(strings, ...keys) {
+  return strings
+    .map((s, i) => {
+      const key = keys[i];
+      if (!key) {
+        return s;
+      }
+      // Linkables are wrapped in square brackets
+      if (!key.startsWith("[") && !key.endsWith("]")) {
+        return s + key;
+      }
+
+      const [linkingText, href] = key.slice(1, -1).split("|");
+      if (href) {
+        const url = new URL(href, "https://respec.org/docs/");
+        return `${s}[${linkingText}](${url})`;
+      }
+      return `${s}[\`${linkingText}\`](https://respec.org/docs/#${linkingText})`;
+    })
+    .join("");
 }
