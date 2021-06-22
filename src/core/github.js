@@ -71,16 +71,19 @@ export async function run(conf) {
   }
   let tempURL = conf.github.repoURL || conf.github;
   if (!tempURL.endsWith("/")) tempURL += "/";
-  let ghURL = tempURL;
+  /** @type URL */
+  let ghURL;
   try {
-    ghURL = new URL(tempURL, "https://github.com").href;
+    ghURL = new URL(tempURL, "https://github.com");
   } catch {
-    const msg = docLink`${"[github]"} configuration option is not a valid URL? (${ghURL}).`;
+    const msg = docLink`${"[github]"} configuration option is not a valid URL? (${tempURL}).`;
     rejectGithubPromise(msg);
     return;
   }
   if (ghURL.origin !== "https://github.com") {
-    const msg = docLink`${"[github]"} configuration option must be HTTPS and pointing to GitHub. (${ghURL}).`;
+    const msg = docLink`${"[github]"} configuration option must be HTTPS and pointing to GitHub. (${
+      ghURL.href
+    }).`;
     rejectGithubPromise(msg);
     return;
   }
