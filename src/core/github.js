@@ -71,9 +71,9 @@ export async function run(conf) {
   }
   let tempURL = conf.github.repoURL || conf.github;
   if (!tempURL.endsWith("/")) tempURL += "/";
-  let ghURL;
+  let ghURL = tempURL;
   try {
-    ghURL = new URL(tempURL, "https://github.com");
+    ghURL = new URL(tempURL, "https://github.com").href;
   } catch {
     const msg = docLink`${"[github]"} configuration option is not a valid URL? (${ghURL}).`;
     rejectGithubPromise(msg);
