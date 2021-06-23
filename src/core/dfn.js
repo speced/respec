@@ -60,8 +60,7 @@ function processAsInternalSlot(title, dfn) {
   // Assure that it's data-dfn-for= something.
   if (!dfn.dataset.dfnFor) {
     const msg = `Internal slot "${title}" must be associated with a WebIDL interface.`;
-    const hint =
-      "Use a `data-dfn-for` attribute to associate this dfn with a WebIDL interface.";
+    const hint = docLink`Use a ${"[data-dfn-for]"} attribute to associate this dfn with a WebIDL interface.`;
     showError(msg, name, { hint, elements: [dfn] });
   }
 
