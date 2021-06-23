@@ -7,8 +7,9 @@
  */
 
 import {
+  codedJoinAnd,
+  docLink,
   fetchAndCache,
-  joinAnd,
   showError,
   showWarning,
 } from "../core/utils.js";
@@ -23,18 +24,18 @@ export async function run(conf) {
 
   if (!conf.group) {
     if (usedLegacyOptions.length) {
-      const outdatedOptionsStr = joinAnd(LEGACY_OPTIONS, s => `\`${s}\``);
+      const outdatedOptionsStr = codedJoinAnd(LEGACY_OPTIONS);
       const msg = `Configuration options ${outdatedOptionsStr} are deprecated.`;
-      const hint = `Please use the [\`group\`](https://respec.org/docs/#group) option instead.`;
+      const hint = docLink`Please use the ${"[group]"} configuration option instead.`;
       showWarning(msg, name, { hint });
     }
     return;
   }
 
   if (usedLegacyOptions.length) {
-    const outdatedOptionsStr = joinAnd(usedLegacyOptions, s => `\`${s}\``);
-    const msg = `Configuration options ${outdatedOptionsStr} are superseded by \`group\` and will be overridden by ReSpec.`;
-    const hint = "Please remove them from `respecConfig`.";
+    const outdatedOptionsStr = codedJoinAnd(usedLegacyOptions);
+    const msg = docLink`Configuration options ${outdatedOptionsStr} are superseded by ${"[group]"} and will be overridden by ReSpec.`;
+    const hint = docLink`Remove them from the document's ${"[respecConfig]"} to silence this warning.`;
     showWarning(msg, name, { hint });
   }
 
@@ -95,8 +96,7 @@ async function getGroupDetails(group) {
   const message = `Failed to fetch group details (HTTP: ${res.status}). ${text}`;
   const hint =
     res.status === 404
-      ? "See [supported group names](https://respec.org/w3c/groups/) to use with the " +
-        "[`group`](https://respec.org/docs/#group) configuration option."
+      ? docLink`See the list of [supported group names](https://respec.org/w3c/groups/) to use with the ${"[group]"} configuration option.`
       : undefined;
   showError(message, name, { hint });
 }
