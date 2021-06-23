@@ -8,7 +8,7 @@ const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+\??$/; // {{unrestricted double?}}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;
 
-export const slotRegex = /\[\[(\w+(?: +\w+)*)\]\](\([^)]*\)(\.[^)]*\))?)*$/;
+export const slotRegex = /^\[\[(\w+(?: +\w+)*)\]\](\([^)]*\))?$/;
 // matches: `value` or `[[value]]`
 // NOTE: [[value]] is actually a slot, but database has this as type="attribute"
 const attributeRegex = /^((?:\[\[)?(?:\w+(?: +\w+)*)(?:\]\])?)$/;
