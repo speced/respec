@@ -73,7 +73,7 @@ function processAsInternalSlot(title, dfn) {
   // Perform validation on the dfn's type type.
   const allowedSlotTypes = ["attribute", "method"];
   if (!allowedSlotTypes.includes(dfn.dataset.dfnType)) {
-    const msg = docLink`Invalid ${"[data-dfn-for]"} for defining an internal slot.`;
+    const msg = docLink`Invalid ${"[data-dfn-type]"} for defining an internal slot.`;
     const hint = `The only allowed types are: ${codedJoinOr(allowedSlotTypes, {
       quotes: true,
     })}.`;
