@@ -19,10 +19,10 @@ export function run() {
     const titles = getDfnTitles(dfn);
     registerDefinition(dfn, titles);
 
-    const [firstTitle] = titles;
+    const [linkingText] = titles;
     // Matches attributes and methods, like [[some words]](with, optional, arguments)
-    if (slotRegex.test(firstTitle)) {
-      processAsInternalSlot(firstTitle, dfn);
+    if (slotRegex.test(linkingText)) {
+      processAsInternalSlot(linkingText, dfn);
     }
 
     // Per https://tabatkins.github.io/bikeshed/#dfn-export, a dfn with dfnType
@@ -34,7 +34,7 @@ export function run() {
     }
 
     // Only add `lt`s that are different from the text content
-    if (titles.length === 1 && firstTitle === norm(dfn.textContent)) {
+    if (titles.length === 1 && linkingText === norm(dfn.textContent)) {
       return;
     }
     dfn.dataset.lt = titles.join("|");
