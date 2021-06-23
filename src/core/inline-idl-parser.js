@@ -79,7 +79,6 @@ function parseInlineIDL(str) {
   const splitter = isProbablySlotRegex.test(str)
     ? slotSplitRegex
     : methodSplitRegex;
-  debugger
   const [nonMethodPart, methodPart] = str.split(splitter);
   const tokens = nonMethodPart
     .split(/[./]/)
