@@ -18,7 +18,7 @@ const enumRegex = /^(\w+)\["([\w- ]*)"\]$/;
 // https://github.com/w3c/respec/pull/1848/files#r225087385
 const methodSplitRegex = /\.?(\w+\(.*\)$)/;
 const slotSplitRegex = /\.?\/(.+)/;
-const isProbablySlotRegex = /\[\[.+\]\]/;
+const isProbablySlotRegex = /^\[\[.+\]\]/;
 /**
  * @typedef {object} IdlBase
  * @property {"base"} type
