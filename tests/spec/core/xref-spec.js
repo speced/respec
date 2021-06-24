@@ -759,6 +759,9 @@ describe("Core — xref", () => {
         <p><dfn data-dfn-for="Window">[[\\type]]</dfn></p>
         <p id="link1">{{ Window/[[type]] }}</p>
         <p id="link2">{{ Credential.[[type]] }}</p>
+        <p id="link3">{{
+          PasswordCredential/[[CollectFromCredentialStore]](origin, options, sameOriginWithAncestors)
+        }}</p>
       </section>
       `;
       const config = { xref: true, localBiblio };
@@ -780,6 +783,13 @@ describe("Core — xref", () => {
       );
       expect(link2a.firstElementChild.localName).toBe("code");
       expect(link2b.firstElementChild.localName).toBe("code");
+
+      // [[CollectFromCredentialStore]](origin, options, sameOriginWithAncestors)
+      const link3 = doc.querySelector("#link3 a");
+      expect(link3.firstElementChild.localName).toBe("code");
+      expect(link3.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#dom-passwordcredential-collectfromcredentialstore-slot"
+      );
     });
 
     it("links enum and enum-values", async () => {
