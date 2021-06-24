@@ -8,6 +8,7 @@ import {
   getDfnTitles,
   norm,
   showError,
+  toMDCode,
 } from "./utils.js";
 import { registerDefinition } from "./dfn-map.js";
 import { slotRegex } from "./inline-idl-parser.js";
@@ -65,18 +66,21 @@ function processAsInternalSlot(title, dfn) {
   }
 
   // If it ends with a ), then it's method. Attribute otherwise.
+  const derivedType = title.endsWith(")") ? "method" : "attribute";
   if (!dfn.dataset.dfnType) {
-    dfn.dataset.dfnType = title.endsWith(")") ? "method" : "attribute";
+    dfn.dataset.dfnType = derivedType;
     return;
   }
 
-  // Perform validation on the dfn's type type.
+  // Perform validation on the dfn's type.
   const allowedSlotTypes = ["attribute", "method"];
-  if (!allowedSlotTypes.includes(dfn.dataset.dfnType)) {
-    const msg = docLink`Invalid ${"[data-dfn-type]"} for defining an internal slot.`;
-    const hint = `The only allowed types are: ${codedJoinOr(allowedSlotTypes, {
+  const { dfnType } = dfn.dataset;
+  if (!allowedSlotTypes.includes(dfnType) || derivedType !== dfnType) {
+    const msg = docLink`Invalid ${"[data-dfn-type]"} attribute on internal slot.`;
+    const prettyTypes = codedJoinOr(allowedSlotTypes, {
       quotes: true,
-    })}.`;
+    });
+    const hint = `The only allowed types are: ${prettyTypes}. The slot "${title}" seems to be a "${toMDCode(derivedType)}"?`;
     showError(msg, name, { hint, elements: [dfn] });
   }
 }
