@@ -141,10 +141,12 @@ describe("Core — Link to definitions", () => {
     const body = `
       <section id="test">
         <dfn data-dfn-for="MyEvent">[[\\aSlot]]</dfn>
+        <dfn data-dfn-for="MyEvent">[[\\an internal slot]](foo, bar)</dfn>
         <dfn>MyEvent</dfn>
         <p id="link-slots">
           <span>{{ MyEvent/[[aSlot]] }}</span>
           <span>{{ MyEvent.[[aSlot]] }}</span>
+          <span>{{ MyEvent/[[an internal slot]](foo, bar) }}</span>
         </p>
       </section>
     `;
@@ -156,6 +158,53 @@ describe("Core — Link to definitions", () => {
     const href = `#${dfn.id}`;
     expect(links[0].hash).toBe(href);
     expect(links[1].hash).toBe(href);
+  });
+
+  it("supports internal slot being a method with no args", async () => {
+    const body = `
+      <section>
+        <dfn id="method" data-dfn-for="MyEvent">
+          [[\\an internal_slot]]()
+        </dfn>
+        <dfn>MyEvent</dfn>
+        <p id="link-slots">
+          <span>{{ MyEvent/[[an internal_slot]]() }}</span>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const dfn = doc.querySelector("#method");
+    const links = doc.querySelectorAll("#link-slots a");
+    expect(links[0].hash).toBe(`#${dfn.id}`);
+    const vars = document.querySelectorAll("#link-slots var");
+    expect(vars).toHaveSize(0);
+  });
+
+  it("supports internal slot being a method with arguments", async () => {
+    const body = `
+      <section>
+        <dfn id="method" data-dfn-for="MyEvent">
+          [[\\an internal_slot]](foo, bar)
+        </dfn>
+        <dfn>MyEvent</dfn>
+        <p id="link-slots">
+          <span>{{ MyEvent/[[an internal_slot]](foo, bar) }}</span>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const dfn = doc.querySelector("#method");
+    const links = doc.querySelectorAll("#link-slots a");
+    expect(links[0].hash).toBe(`#${dfn.id}`);
+    const vars = doc.querySelectorAll("#link-slots var");
+    expect(vars).toHaveSize(2);
+    const [foo, bar] = vars;
+    expect(foo.textContent).toBe("foo");
+    expect(bar.textContent).toBe("bar");
   });
 
   it("has empty data-dfn-for on top level things", async () => {
