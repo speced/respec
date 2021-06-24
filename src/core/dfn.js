@@ -53,7 +53,7 @@ function processAsInternalSlot(title, dfn) {
   // Automatically use the closest data-dfn-for as the parent.
   /** @type HTMLElement */
   const parent = dfn.closest("[data-dfn-for]");
-  if (parent && dfn !== parent && parent.dataset.dfnFor) {
+  if (dfn !== parent && parent?.dataset.dfnFor) {
     dfn.dataset.dfnFor = parent.dataset.dfnFor;
   }
 
