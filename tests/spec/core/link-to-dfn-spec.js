@@ -145,7 +145,6 @@ describe("Core — Link to definitions", () => {
         <dfn>MyEvent</dfn>
         <p id="link-slots">
           <span>{{ MyEvent/[[aSlot]] }}</span>
-          <span>{{ MyEvent.[[aSlot]] }}</span>
           <span>{{ MyEvent/[[an internal slot]](foo, bar) }}</span>
         </p>
       </section>
@@ -153,11 +152,10 @@ describe("Core — Link to definitions", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
 
-    const dfn = doc.querySelector("#test dfn");
-    const links = doc.querySelectorAll("#link-slots span a:last-child");
-    const href = `#${dfn.id}`;
-    expect(links[0].hash).toBe(href);
-    expect(links[1].hash).toBe(href);
+    const [dfn1, dfn2] = doc.querySelectorAll("#test dfn");
+    const [link1, link2] = doc.querySelectorAll("#link-slots a");
+    expect(link1.hash).toBe(`#${dfn1.id}`);
+    expect(link2.hash).toBe(`#${dfn2.id}`);
   });
 
   it("supports internal slot being a method with no args", async () => {

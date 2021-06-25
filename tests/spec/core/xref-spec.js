@@ -694,7 +694,7 @@ describe("Core — xref", () => {
       const body = `
       <section>
         <p id="link1">{{Window.event}}</p>
-        <p id="link2">{{ Credential.[[type]] }}</p>
+        <p id="link2">{{ Credential/[[type]] }}</p>
         <p id="link3">{{ PublicKeyCredential.[[type]] }}</p>
         <p id="link4">{{ TextDecoderOptions.fatal }}</p>
       </section>
@@ -758,7 +758,7 @@ describe("Core — xref", () => {
       <section>
         <p><dfn data-dfn-for="Window">[[\\type]]</dfn></p>
         <p id="link1">{{ Window/[[type]] }}</p>
-        <p id="link2">{{ Credential.[[type]] }}</p>
+        <p id="link2">{{ Credential/[[type]] }}</p>
         <p id="link3">{{
           PasswordCredential/[[CollectFromCredentialStore]](origin, options, sameOriginWithAncestors)
         }}</p>
@@ -774,15 +774,11 @@ describe("Core — xref", () => {
       expect(link1.firstElementChild.localName).toBe("code");
 
       // the base "Credential" is used as "forContext" for [[type]]
-      const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
+      const [link2a] = [...doc.querySelectorAll("#link2 a")];
       expect(link2a.href).toBe(
-        "https://www.w3.org/TR/credential-management-1/#credential"
-      );
-      expect(link2b.href).toBe(
         "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot"
       );
       expect(link2a.firstElementChild.localName).toBe("code");
-      expect(link2b.firstElementChild.localName).toBe("code");
 
       // [[CollectFromCredentialStore]](origin, options, sameOriginWithAncestors)
       const link3 = doc.querySelector("#link3 a");

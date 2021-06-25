@@ -8,7 +8,7 @@ const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+\??$/; // {{unrestricted double?}}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;
 
-export const slotRegex = /^\[\[(\w+(?: +\w+)*)\]\](\([^)]*\))?$/;
+export const slotRegex = /\[\[(\w+(?: +\w+)*)\]\](\([^)]*\))?$/;
 // matches: `value` or `[[value]]`
 // NOTE: [[value]] is actually a slot, but database has this as type="attribute"
 const attributeRegex = /^((?:\[\[)?(?:\w+(?: +\w+)*)(?:\]\])?)$/;
@@ -17,8 +17,8 @@ const enumRegex = /^(\w+)\["([\w- ]*)"\]$/;
 // TODO: const splitRegex = /(?<=\]\]|\b)\./
 // https://github.com/w3c/respec/pull/1848/files#r225087385
 const methodSplitRegex = /\.?(\w+\(.*\)$)/;
-const slotSplitRegex = /\.?\/(.+)/;
-const isProbablySlotRegex = /^\[\[.+\]\]/;
+const slotSplitRegex = /\/(.+)/;
+const isProbablySlotRegex = /\[\[.+\]\]/;
 /**
  * @typedef {object} IdlBase
  * @property {"base"} type
@@ -76,13 +76,17 @@ const isProbablySlotRegex = /^\[\[.+\]\]/;
  */
 function parseInlineIDL(str) {
   // If it's got [[ string ]], then split as an internal slot
-  const splitter = isProbablySlotRegex.test(str)
-    ? slotSplitRegex
-    : methodSplitRegex;
-  const [nonMethodPart, methodPart] = str.split(splitter);
-  const tokens = nonMethodPart
+  const isSlot = isProbablySlotRegex.test(str);
+  const splitter = isSlot ? slotSplitRegex : methodSplitRegex;
+  const [forPart, childString] = str.split(splitter);
+  if (isSlot && forPart && !childString) {
+    throw new SyntaxError(
+      `Internal slot missing "for" part. Expected \`{{ InterfaceName/${forPart}}}\` }.`
+    );
+  }
+  const tokens = forPart
     .split(/[./]/)
-    .concat(methodPart)
+    .concat(childString)
     .filter(s => s && s.trim())
     .map(s => s.trim());
   const renderParent = !str.includes("/");
@@ -190,7 +194,7 @@ function renderInternalSlot(details) {
   const { identifier: linkFor } = parent || {};
   const isMethod = slotType === "method";
   const argsHtml = isMethod
-    ? htmlJoinComma(args, arg => html`<var>${arg}</var>`)
+    ? html`(${htmlJoinComma(args, htmlArgMapper)})`
     : null;
   const textArgs = isMethod ? `(${args.join(", ")})` : "";
   const lt = `[[${identifier}]]${textArgs}`;
@@ -199,11 +203,19 @@ function renderInternalSlot(details) {
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
       data-lt="${lt}"
-      ><code>[[${identifier}]]${isMethod ? html`(${argsHtml})` : null}</code></a
+      ><code>[[${identifier}]]${argsHtml}</code></a
     >`;
   return element;
 }
 
+function htmlArgMapper(str, i, array) {
+  if (i < array.length - 1) return html`<var>${str}</var>`;
+  // only the last argument can be variadic
+  const parts = str.split(/(^\.{3})(.+)/);
+  const isVariadic = parts.length > 1;
+  const arg = isVariadic ? parts[2] : parts[0];
+  return html`${isVariadic ? "..." : null}<var>${arg}</var>`;
+}
 /**
  * Attribute: .identifier
  * @param {IdlAttribute} details
@@ -228,7 +240,7 @@ function renderAttribute(details) {
 function renderMethod(details) {
   const { args, identifier, type, parent, renderParent } = details;
   const { identifier: linkFor } = parent || {};
-  const argsText = htmlJoinComma(args, arg => html`<var>${arg}</var>`);
+  const argsText = htmlJoinComma(args, htmlArgMapper);
   const searchText = `${identifier}(${args.join(", ")})`;
   const element = html`${parent && renderParent ? "." : ""}<a
       data-link-type="idl"
