@@ -80,7 +80,9 @@ function processAsInternalSlot(title, dfn) {
     const prettyTypes = codedJoinOr(allowedSlotTypes, {
       quotes: true,
     });
-    const hint = `The only allowed types are: ${prettyTypes}. The slot "${title}" seems to be a "${toMDCode(derivedType)}"?`;
+    const hint = `The only allowed types are: ${prettyTypes}. The slot "${title}" seems to be a "${toMDCode(
+      derivedType
+    )}"?`;
     showError(msg, name, { hint, elements: [dfn] });
   }
 }
