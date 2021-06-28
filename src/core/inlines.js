@@ -76,17 +76,23 @@ const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
  */
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
-  const [element, attribute, attrValue] = value
+  const [forPart, attribute, attrValue] = value
     .split("/", 3)
     .map(s => s && s.trim())
     .filter(s => !!s);
+
   const [xrefType, xrefFor, textContent] = (() => {
+    // [^ /role ^], for example
+    const isGlobalAttr = value.startsWith("/");
+    if (isGlobalAttr) {
+      return ["element-attr", null, forPart];
+    }
     if (attrValue) {
-      return ["attr-value", `${element}/${attribute}`, attrValue];
+      return ["attr-value", `${forPart}/${attribute}`, attrValue];
     } else if (attribute) {
-      return ["element-attr", element, attribute];
+      return ["element-attr", forPart, attribute];
     } else {
-      return ["element", null, element];
+      return ["element", null, forPart];
     }
   })();
   return html`<code
