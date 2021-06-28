@@ -86,8 +86,7 @@ function inlineElementMatches(matched) {
     const isGlobalAttr = value.startsWith("/");
     if (isGlobalAttr) {
       return ["element-attr", null, forPart];
-    }
-    if (attrValue) {
+    } else if (attrValue) {
       return ["attr-value", `${forPart}/${attribute}`, attrValue];
     } else if (attribute) {
       return ["element-attr", forPart, attribute];
