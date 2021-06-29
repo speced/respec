@@ -19,6 +19,9 @@
 import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import {
   createResourceHint,
+  docLink,
+  joinAnd,
+  joinOr,
   nonNormativeSelector,
   norm as normalize,
   showError,
@@ -147,9 +150,7 @@ function normalizeConfig(xref) {
   return config;
 
   function invalidProfileError(profile) {
-    const supportedProfiles = Object.keys(profiles)
-      .map(p => `"${p}"`)
-      .join(", ");
+    const supportedProfiles = joinOr(Object.keys(profiles), s => `"${s}"`);
     const msg =
       `Invalid profile "${profile}" in \`respecConfig.xref\`. ` +
       `Please use one of the supported profiles: ${supportedProfiles}.`;
@@ -435,8 +436,8 @@ function addToReferences(elem, cite, normative, term, conf) {
     return;
   }
 
-  const msg = `Normative reference to "${term}" found but term is defined informatively in "${cite}"`;
-  const title = "Error: Normative reference to informative term";
+  const msg = `Normative reference to "${term}" found but term is defined "informatively" in "${cite}".`;
+  const title = "Normative reference to non-normative term.";
   showWarning(msg, name, { title, elements: [elem] });
 }
 
@@ -448,32 +449,37 @@ function showErrors({ ambiguous, notFound }) {
     if (query.for) url.searchParams.set("for", query.for);
     url.searchParams.set("types", query.types.join(","));
     if (specs.length) url.searchParams.set("specs", specs.join(","));
-    return url;
+    return url.href;
   };
 
-  const howToFix = howToCiteURL =>
-    "[Learn more about this error](https://respec.org/docs/#error-term-not-found)" +
-    ` or see [how to cite to resolve the error](${howToCiteURL}).`;
+  const howToFix = (howToCiteURL, originalTerm) => {
+    return docLink`
+    [See search matches for "${originalTerm}"](${howToCiteURL}) or
+    ${"[Learn about this error|#error-term-not-found]"}.`;
+  };
 
   for (const { query, elems } of notFound.values()) {
     const specs = query.specs ? [...new Set(query.specs.flat())].sort() : [];
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query);
-    const specsString = specs.map(spec => `\`${spec}\``).join(", ");
-    const hint = howToFix(formUrl);
-    const msg = `Couldn't match "**${originalTerm}**" to anything in the document or in any other document cited in this specification: ${specsString}.`;
-    const title = "Error: No matching dfn found.";
+    const specsString = joinAnd(specs, s => `**[${s}]**`);
+    const hint = howToFix(formUrl, originalTerm);
+    const forParent = query.for ? `, for **"${query.for}"**, ` : "";
+    const msg = `Couldn't find "**${originalTerm}**"${forParent} in this document or other cited documents: ${specsString}.`;
+    const title = "No matching definition found.";
     showError(msg, name, { title, elements: elems, hint });
   }
 
   for (const { query, elems, results } of ambiguous.values()) {
     const specs = [...new Set(results.map(entry => entry.shortname))].sort();
-    const specsString = specs.map(s => `**${s}**`).join(", ");
+    const specsString = joinAnd(specs, s => `**[${s}]**`);
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
-    const hint = howToFix(formUrl);
-    const msg = `The term "**${originalTerm}**" is defined in ${specsString} in multiple ways, so it's ambiguous.`;
-    const title = "Error: Linking an ambiguous dfn.";
+    const forParent = query.for ? `, for **"${query.for}"**, ` : "";
+    const moreInfo = howToFix(formUrl, originalTerm);
+    const hint = docLink`To fix, use the ${"[data-cite]"} attribute to pick the one you mean from the appropriate specification. ${moreInfo}.`;
+    const msg = `The term "**${originalTerm}**"${forParent} is ambiguous because it's defined in ${specsString}.`;
+    const title = "Definition is ambiguous.";
     showError(msg, name, { title, elements: elems, hint });
   }
 }

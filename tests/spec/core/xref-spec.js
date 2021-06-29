@@ -105,7 +105,7 @@ describe("Core — xref", () => {
     const link = doc.getElementById("external-link");
     expect(link.classList).toContain("respec-offending-element");
     expect(link.getAttribute("href")).toBeFalsy();
-    expect(link.title).toBe("Error: No matching dfn found.");
+    expect(link.title).toBe("No matching definition found.");
   });
 
   it("uses data-cite to disambiguate", async () => {
@@ -150,7 +150,7 @@ describe("Core — xref", () => {
 
     const link = doc.querySelector("#test a");
     expect(link.classList).toContain("respec-offending-element");
-    expect(link.title).toBe("Error: Linking an ambiguous dfn.");
+    expect(link.title).toBe("Definition is ambiguous.");
   });
 
   it("uses data-cite to disambiguate - 2", async () => {
@@ -186,7 +186,7 @@ describe("Core — xref", () => {
     const five = doc.getElementById("five");
     expect(five.href).toBe("");
     expect(five.classList).toContain("respec-offending-element");
-    expect(five.title).toBe("Error: No matching dfn found.");
+    expect(five.title).toBe("No matching definition found.");
   });
 
   it("uses data-cite fallbacks", async () => {
@@ -226,7 +226,7 @@ describe("Core — xref", () => {
     const link3 = doc.getElementById("link3");
     expect(link3.href).toEqual("https://fetch.spec.whatwg.org/");
     expect(link3.classList).toContain("respec-offending-element");
-    expect(link3.title).toEqual("Error: No matching dfn found.");
+    expect(link3.title).toEqual("No matching definition found.");
 
     const linkLocal0 = doc.getElementById("link-local-0");
     expect(linkLocal0.getAttribute("href")).toEqual("#dfn-local");
@@ -551,9 +551,7 @@ describe("Core — xref", () => {
       "https://www.w3.org/TR/css-values-4/#bearing-angle"
     );
     expect(badLink.classList).toContain("respec-offending-element");
-    expect(badLink.title).toBe(
-      "Error: Normative reference to informative term"
-    );
+    expect(badLink.title).toBe("Normative reference to non-normative term.");
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
     expect(normRefs).toHaveSize(1); // excludes `css-values` of `#invalid`
