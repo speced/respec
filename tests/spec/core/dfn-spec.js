@@ -153,4 +153,75 @@ describe("Core — Definitions", () => {
       expect(el.hash).toBe("#dfn-first");
     }
   });
+
+  describe("internal slot definitions", () => {
+    const body = `
+      <section data-dfn-for="Test" data-cite="HTML">
+        <h2>Internal slots</h2>
+        <pre class="idl">
+          [Exposed=Window]
+          interface Foo{};
+        </pre>
+        <p>
+          <dfn id="attribute">
+            [[\\internal slot]]
+          </dfn>
+          <dfn id="method">
+            [[\\I am_a method]](I, really, ...am)
+          </dfn>
+          <dfn id="parent" data-dfn-for="Window">[[\\internal slot]]</dfn>
+          <dfn id="broken" data-dfn-for="">[[\\broken]]</dfn>
+        </p>
+        <section data-dfn-for="">
+          <h2>.</h2>
+          <p>
+            <dfn id="broken-parent">[[\\broken]]</dfn>
+          </p>
+        </section>
+        <p>
+        {{Test/[[internal slot]]}}
+        {{Test/[[I am_a method]](I, really, ...am)}}
+        {{Window/[[internal slot]]}}
+        </p>
+      </section>
+    `;
+
+    it("sets the data-dfn-type as an attribute", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("attribute");
+      expect(dfn.textContent.trim()).toBe("[[internal slot]]");
+      expect(dfn.dataset.dfnType).toBe("attribute");
+      expect(dfn.dataset.idl).toBe("");
+    });
+
+    it("sets the data-dfn-type as a method, when it's a method", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("method");
+      expect(dfn.textContent.trim()).toBe(
+        "[[I am_a method]](I, really, ...am)"
+      );
+      expect(dfn.dataset.dfnType).toBe("method");
+      expect(dfn.dataset.idl).toBe("");
+    });
+
+    it("when data-dfn-for is missing, it use the closes data-dfn-for as parent", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("attribute");
+      expect(dfn.dataset.dfnFor).toBe("Test");
+      const dfnWithParent = doc.getElementById("parent");
+      expect(dfnWithParent.dataset.dfnFor).toBe("Window");
+    });
+
+    it("errors if the internal slot is not for something", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfnErrors = doc.respec.errors.filter(
+        ({ plugin }) => plugin === "core/dfn"
+      );
+      expect(dfnErrors).toHaveSize(2);
+    });
+  });
 });

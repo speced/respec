@@ -366,12 +366,13 @@ describe("Core - Inlines", () => {
     );
   });
 
-  it("processes inline inline [^element^]s.", async () => {
+  it("processes inline [^element^] and hierarchies.", async () => {
     const body = `
       <section>
         <p id="test">[^body^]</p>
         <p id="test2">[^iframe/allow^]</p>
         <p id="test3">[^ html-global/inputmode/text ^]</p>
+        <p id="test4">[^ /role ^]</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps({ xref: ["HTML"] }, body));
@@ -383,6 +384,9 @@ describe("Core - Inlines", () => {
     const inputModeAnchor = doc.querySelector("#test3 a");
     expect(inputModeAnchor.textContent).toBe("text");
     expect(inputModeAnchor.hash).toBe("#attr-inputmode-keyword-text");
+    const roleAttribute = doc.querySelector("#test4 a");
+    expect(roleAttribute.textContent).toBe("role");
+    expect(roleAttribute.hash).toBe("#attr-aria-role");
   });
 
   it("processes [= BikeShed style inline links =]", async () => {
