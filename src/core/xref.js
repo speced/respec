@@ -149,7 +149,7 @@ function normalizeConfig(xref) {
   return config;
 
   function invalidProfileError(profile) {
-    const supportedProfiles = joinAnd(Object.keys(profiles), s => `"${s}"`);
+    const supportedProfiles = joinOr(Object.keys(profiles), s => `"${s}"`);
     const msg =
       `Invalid profile "${profile}" in \`respecConfig.xref\`. ` +
       `Please use one of the supported profiles: ${supportedProfiles}.`;
@@ -454,7 +454,7 @@ function showErrors({ ambiguous, notFound }) {
   const howToFix = (howToCiteURL, originalTerm) => {
     return docLink`
     [See search matches for "${originalTerm}"](${howToCiteURL}) or
-    ${"[Learn about this error|#error-term-not-found]"}`;
+    ${"[Learn about this error|#error-term-not-found]"}.`;
   };
 
   for (const { query, elems } of notFound.values()) {
@@ -475,10 +475,8 @@ function showErrors({ ambiguous, notFound }) {
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const forParent = query.for ? `, for **"${query.for}"**, ` : "";
-    const hint = docLink`To fix, use the ${"[data-cite]"} attribute to pick the one you mean from the appropriate specification. ${howToFix(
-      formUrl,
-      originalTerm
-    )}.`;
+    const moreInfo = howToFix(formUrl, originalTerm);
+    const hint = docLink`To fix, use the ${"[data-cite]"} attribute to pick the one you mean from the appropriate specification. ${moreInfo}.`;
     const msg = `The term "**${originalTerm}**"${forParent} is ambiguous because it's defined in ${specsString}.`;
     const title = "Definition is ambiguous.";
     showError(msg, name, { title, elements: elems, hint });
