@@ -105,7 +105,7 @@ describe("Core — xref", () => {
     const link = doc.getElementById("external-link");
     expect(link.classList).toContain("respec-offending-element");
     expect(link.getAttribute("href")).toBeFalsy();
-    expect(link.title).toBe("Error: No matching dfn found.");
+    expect(link.title).toBe("No matching definition found.");
   });
 
   it("uses data-cite to disambiguate", async () => {
@@ -150,7 +150,7 @@ describe("Core — xref", () => {
 
     const link = doc.querySelector("#test a");
     expect(link.classList).toContain("respec-offending-element");
-    expect(link.title).toBe("Error: Linking an ambiguous dfn.");
+    expect(link.title).toBe("Definition is ambiguous.");
   });
 
   it("uses data-cite to disambiguate - 2", async () => {
@@ -186,7 +186,7 @@ describe("Core — xref", () => {
     const five = doc.getElementById("five");
     expect(five.href).toBe("");
     expect(five.classList).toContain("respec-offending-element");
-    expect(five.title).toBe("Error: No matching dfn found.");
+    expect(five.title).toBe("No matching definition found.");
   });
 
   it("uses data-cite fallbacks", async () => {
@@ -226,7 +226,7 @@ describe("Core — xref", () => {
     const link3 = doc.getElementById("link3");
     expect(link3.href).toEqual("https://fetch.spec.whatwg.org/");
     expect(link3.classList).toContain("respec-offending-element");
-    expect(link3.title).toEqual("Error: No matching dfn found.");
+    expect(link3.title).toEqual("No matching definition found.");
 
     const linkLocal0 = doc.getElementById("link-local-0");
     expect(linkLocal0.getAttribute("href")).toEqual("#dfn-local");
@@ -551,9 +551,7 @@ describe("Core — xref", () => {
       "https://www.w3.org/TR/css-values-4/#bearing-angle"
     );
     expect(badLink.classList).toContain("respec-offending-element");
-    expect(badLink.title).toBe(
-      "Error: Normative reference to informative term"
-    );
+    expect(badLink.title).toBe("Normative reference to non-normative term.");
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
     expect(normRefs).toHaveSize(1); // excludes `css-values` of `#invalid`
@@ -623,9 +621,7 @@ describe("Core — xref", () => {
       expect(eventTargetLink.firstElementChild.localName).toBe("code");
 
       const link2 = doc.querySelector("#link2 a");
-      expect(link2.href).toBeFalsy();
-      expect(link2.textContent).toBe("[[query]]");
-      expect(link2.firstElementChild.localName).toBe("code");
+      expect(link2).toBeNull();
 
       const link3 = doc.querySelector("#link3 a");
       expect(link3.href).toBe("https://dom.spec.whatwg.org/#eventtarget");
@@ -694,8 +690,8 @@ describe("Core — xref", () => {
       const body = `
       <section>
         <p id="link1">{{Window.event}}</p>
-        <p id="link2">{{ Credential.[[type]] }}</p>
-        <p id="link3">{{ PublicKeyCredential.[[type]] }}</p>
+        <p id="link2">{{ Credential/[[type]] }}</p>
+        <p id="link3">{{ PublicKeyCredential/[[type]] }}</p>
         <p id="link4">{{ TextDecoderOptions.fatal }}</p>
       </section>
       `;
@@ -721,25 +717,19 @@ describe("Core — xref", () => {
       expect(link1b.firstElementChild.localName).toBe("code");
 
       // the base "Credential" is used to disambiguate as "forContext"
-      const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
-      expect(link2a.href).toBe(
-        "https://www.w3.org/TR/credential-management-1/#credential"
-      );
-      expect(link2b.href).toBe(
+      expect(doc.querySelectorAll("#link2 a")).toHaveSize(1);
+      const link2 = doc.querySelector("#link2 a");
+      expect(link2.href).toBe(
         "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot"
       );
-      expect(link2a.firstElementChild.localName).toBe("code");
-      expect(link2b.firstElementChild.localName).toBe("code");
+      expect(link2.firstElementChild.localName).toBe("code");
 
-      const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
-      expect(link3a.href).toBe(
-        "https://www.w3.org/TR/webauthn-3/#publickeycredential"
-      );
-      expect(link3b.href).toBe(
+      expect(doc.querySelectorAll("#link3 a")).toHaveSize(1);
+      const link3 = doc.querySelector("#link3 a");
+      expect(link3.href).toBe(
         "https://www.w3.org/TR/webauthn-3/#dom-publickeycredential-type-slot"
       );
-      expect(link3a.firstElementChild.localName).toBe("code");
-      expect(link3b.firstElementChild.localName).toBe("code");
+      expect(link3.firstElementChild.localName).toBe("code");
 
       // "TextDecoderOptions" is dictionary and "fatal" is dict-member
       const [link4a, link4b] = [...doc.querySelectorAll("#link4 a")];
@@ -756,9 +746,12 @@ describe("Core — xref", () => {
     it("links internalSlots", async () => {
       const body = `
       <section>
-        <p><dfn>[[\\type]]</dfn></p>
-        <p id="link1">{{ [[type]] }}</p>
-        <p id="link2">{{ Credential.[[type]] }}</p>
+        <p><dfn data-dfn-for="Window">[[\\type]]</dfn></p>
+        <p id="link1">{{ Window/[[type]] }}</p>
+        <p id="link2">{{ Credential/[[type]] }}</p>
+        <p id="link3">{{
+          PasswordCredential/[[CollectFromCredentialStore]](origin, options, sameOriginWithAncestors)
+        }}</p>
       </section>
       `;
       const config = { xref: true, localBiblio };
@@ -771,15 +764,19 @@ describe("Core — xref", () => {
       expect(link1.firstElementChild.localName).toBe("code");
 
       // the base "Credential" is used as "forContext" for [[type]]
-      const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
+      expect(doc.querySelectorAll("#link2 a")).toHaveSize(1);
+      const link2a = doc.querySelector("#link2 a");
       expect(link2a.href).toBe(
-        "https://www.w3.org/TR/credential-management-1/#credential"
-      );
-      expect(link2b.href).toBe(
         "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot"
       );
       expect(link2a.firstElementChild.localName).toBe("code");
-      expect(link2b.firstElementChild.localName).toBe("code");
+
+      // [[CollectFromCredentialStore]](origin, options, sameOriginWithAncestors)
+      const link3 = doc.querySelector("#link3 a");
+      expect(link3.firstElementChild.localName).toBe("code");
+      expect(link3.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#dom-passwordcredential-collectfromcredentialstore-slot"
+      );
     });
 
     it("links enum and enum-values", async () => {
