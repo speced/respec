@@ -93,7 +93,7 @@ function addContractDefaults() {
   }
 
   // Per "the contract", export all definitions, except where:
-  //  - Explicitly marked with data-no-export.
+  //  - Explicitly marked with data-noexport.
   //  - The type is "dfn" and not explicitly marked for export (i.e., just a regular definition).
   //  - definitions was included via (legacy) data-cite="foo#bar".
   /** @type NodeListOf<HTMLElement> */
