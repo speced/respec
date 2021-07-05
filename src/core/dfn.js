@@ -87,7 +87,6 @@ function addContractDefaults() {
   const dfnsWithNoType = document.querySelectorAll(
     "dfn:is([data-dfn-type=''],:not([data-dfn-type])"
   );
-
   for (const dfn of dfnsWithNoType) {
     dfn.dataset.dfnType = "dfn";
   }
@@ -100,7 +99,7 @@ function addContractDefaults() {
   const exportableDfns = document.querySelectorAll(
     "dfn:not([data-noexport]):not([data-export]):not([data-dfn-type='dfn']):not(data-cite)"
   );
-  exportableDfns.forEach(dfn => {
+  for (const dfn of exportableDfns) {
     dfn.dataset.export = "";
-  });
+  }
 }
