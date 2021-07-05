@@ -98,7 +98,7 @@ function addContractDefaults() {
   //  - definitions was included via (legacy) data-cite="foo#bar".
   /** @type NodeListOf<HTMLElement> */
   const exportableDfns = document.querySelectorAll(
-    "dfn:not([data-no-export]):not([data-export]):not([data-dfn-type='dfn']):not(data-cite)"
+    "dfn:not([data-noexport]):not([data-export]):not([data-dfn-type='dfn']):not(data-cite)"
   );
   exportableDfns.forEach(dfn => {
     dfn.dataset.export = "";

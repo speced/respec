@@ -55,11 +55,11 @@ describe("Core — Definitions", () => {
     const body = `
     <section id='dfns'>
       <dfn data-dfn-type="abstract-op">dfn1</dfn>
-      <dfn data-dfn-type="abstract-op" data-no-export>dfn2</dfn>
+      <dfn data-dfn-type="abstract-op" data-noexport>dfn2</dfn>
       <dfn data-dfn-type="abstract-op" data-export>dfn3</dfn>
       <dfn data-cite="dom#something">dfn4</dfn>
       <dfn>dfn5</dfn>
-      <dfn data-no-export>dfn6</dfn>
+      <dfn data-noexport>dfn6</dfn>
     </section>`;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
@@ -89,7 +89,7 @@ describe("Core — Definitions", () => {
     expect(dfn5.dataset.hasOwnProperty("export")).toBeFalse();
     expect(dfn5.dataset.dfnType).toBe("dfn");
 
-    // six definition is not exported, because it's data-no-export.
+    // six definition is not exported, because it's data-noexport.
     expect(dfn6.dataset.hasOwnProperty("export")).toBeFalse();
     expect(dfn6.dataset.dfnType).toBe("dfn");
     expect(dfn6.dataset.export).toBeUndefined();
