@@ -21,6 +21,80 @@ describe("Core — Definitions", () => {
     expect(sec.querySelector("a").getAttribute("href")).toBe("#dfn-text");
   });
 
+  it("gives definitions a type and an id", async () => {
+    const body = `
+    <section id='dfns'>
+      <dfn>some definition</dfn>
+      <dfn data-export>some other def</dfn>
+      <dfn data-dfn-type="abstract-op">some other def</dfn>
+      <dfn data-dfn-type="">empty dfn type</dfn>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const sec = doc.getElementById("dfns");
+    const dfns = sec.querySelectorAll("dfn");
+    expect(dfns).toHaveSize(4);
+    expect([...dfns].every(dfn => Boolean(dfn.getAttribute("id")))).toBeTrue();
+    expect(
+      [...dfns].every(dfn => dfn.hasAttribute("data-dfn-type"))
+    ).toBeTrue();
+    const [dfn1, dfn2, dfn3, dfn4] = dfns;
+
+    expect(dfn1.dataset.dfnType).toBe("dfn");
+    expect(dfn1.dataset.export).toBeUndefined();
+
+    expect(dfn2.dataset.dfnType).toBe("dfn");
+    expect(dfn2.dataset.hasOwnProperty("export")).toBeTrue();
+
+    expect(dfn3.dataset.dfnType).toBe("abstract-op");
+    // Override empty type with "dfn"
+    expect(dfn4.dataset.dfnType).toBe("dfn");
+  });
+
+  it("exports known types by default", async () => {
+    const body = `
+    <section id='dfns'>
+      <dfn data-dfn-type="abstract-op">dfn1</dfn>
+      <dfn data-dfn-type="abstract-op" data-no-export>dfn2</dfn>
+      <dfn data-dfn-type="abstract-op" data-export>dfn3</dfn>
+      <dfn data-cite="dom#something">dfn4</dfn>
+      <dfn>dfn5</dfn>
+      <dfn data-no-export>dfn6</dfn>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const sec = doc.getElementById("dfns");
+    const dfns = sec.querySelectorAll("dfn");
+    expect(dfns).toHaveSize(6);
+    const [dfn1, dfn2, dfn3, dfn4, dfn5, dfn6] = dfns;
+
+    // first "abstract-op" is exported by default
+    expect(dfn1.dataset.dfnType).toBe("abstract-op");
+    expect(dfn1.dataset.hasOwnProperty("export")).toBeTrue();
+
+    // second "abstract-op" is not exported
+    expect(dfn2.dataset.dfnType).toBe("abstract-op");
+    expect(dfn2.dataset.hasOwnProperty("export")).toBeFalse();
+
+    // third "abstract-op" is exported
+    expect(dfn3.dataset.dfnType).toBe("abstract-op");
+    expect(dfn3.dataset.hasOwnProperty("export")).toBeTrue();
+
+    // fourth doesn't export, because it's using data-cite.
+    expect(dfn4.dataset.hasOwnProperty("export")).toBeFalse();
+    expect(dfn4.dataset.dfnType).toBe("dfn");
+
+    // fifth "dfn" is not exported, because it's just a regular "dfn".
+    expect(dfn5.dataset.hasOwnProperty("export")).toBeFalse();
+    expect(dfn5.dataset.dfnType).toBe("dfn");
+
+    // six definition is not exported, because it's data-no-export.
+    expect(dfn6.dataset.hasOwnProperty("export")).toBeFalse();
+    expect(dfn6.dataset.dfnType).toBe("dfn");
+    expect(dfn6.dataset.export).toBeUndefined();
+  });
+
   it("makes dfn tab enabled whose aria-role is a link", async () => {
     const body = `
     <section id='dfns'>

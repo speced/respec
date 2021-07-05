@@ -12,11 +12,12 @@ import {
 } from "./utils.js";
 import { registerDefinition } from "./dfn-map.js";
 import { slotRegex } from "./inline-idl-parser.js";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/dfn";
 
 export function run() {
-  document.querySelectorAll("dfn").forEach(dfn => {
+  for (const dfn of document.querySelectorAll("dfn")) {
     const titles = getDfnTitles(dfn);
     registerDefinition(dfn, titles);
 
@@ -26,20 +27,13 @@ export function run() {
       processAsInternalSlot(linkingText, dfn);
     }
 
-    // Per https://tabatkins.github.io/bikeshed/#dfn-export, a dfn with dfnType
-    // other than dfn and not marked with data-no-export is to be exported.
-    // We also skip "imported" definitions via data-cite.
-    const ds = dfn.dataset;
-    if (ds.dfnType && ds.dfnType !== "dfn" && !ds.cite && !ds.noExport) {
-      dfn.dataset.export = "";
-    }
-
     // Only add `lt`s that are different from the text content
     if (titles.length === 1 && linkingText === norm(dfn.textContent)) {
-      return;
+      continue;
     }
     dfn.dataset.lt = titles.join("|");
-  });
+  }
+  sub("plugins-done", addContractDefaults);
 }
 /**
  *
@@ -85,4 +79,27 @@ function processAsInternalSlot(title, dfn) {
     )}"?`;
     showError(msg, name, { hint, elements: [dfn] });
   }
+}
+
+function addContractDefaults() {
+  // find all dfns that don't have a type and default them to "dfn".
+  /** @type NodeListOf<HTMLElement> */
+  const dfnsWithNoType = document.querySelectorAll(
+    "dfn:is([data-dfn-type=''],:not([data-dfn-type])"
+  );
+
+  for (const dfn of dfnsWithNoType) {
+    dfn.dataset.dfnType = "dfn";
+  }
+
+  // Per "the contract", export all definitions, except where:
+  //  - type is "dfn" and not marked with data-no-export.
+  //  - definitions was included via data-cite.
+  /** @type NodeListOf<HTMLElement> */
+  const exportableDfns = document.querySelectorAll(
+    "dfn:not([data-no-export]):not([data-export]):not([data-dfn-type='dfn']):not(data-cite)"
+  );
+  exportableDfns.forEach(dfn => {
+    dfn.dataset.export = "";
+  });
 }
