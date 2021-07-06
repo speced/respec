@@ -3,7 +3,13 @@
  * Sets the defaults for W3C specs
  */
 export const name = "w3c/defaults";
-import { bgStatus, cgStatus, cgbgStatus } from "./headers.js";
+import {
+  bgStatus,
+  cgStatus,
+  cgbgStatus,
+  maybeRecTrack,
+  recTrackStatus,
+} from "./headers.js";
 import { codedJoinOr, docLink, showError } from "../core/utils.js";
 import { coreDefaults } from "../core/defaults.js";
 
@@ -38,13 +44,6 @@ export function run(conf) {
           ...conf.lint,
         };
 
-  if (conf.specStatus && conf.specStatus.toLowerCase() !== "unofficial") {
-    w3cDefaults.logos.push(w3cLogo);
-    if (!conf.hasOwnProperty("license")) {
-      w3cDefaults.license = "w3c-software-doc";
-    }
-  }
-
   Object.assign(conf, {
     ...coreDefaults,
     ...w3cDefaults,
@@ -52,8 +51,28 @@ export function run(conf) {
     lint,
   });
 
+  processLogos(conf);
+
   if (conf.groupType && conf.specStatus) {
     validateStatusForGroup(conf);
+  }
+}
+
+function processLogos(conf) {
+  const status = conf.specStatus ?? "";
+  // Always include the W3C logo and license for W3C Recommendation track.
+  // Excludes "ED" status
+  if ([...maybeRecTrack, ...recTrackStatus].includes(status)) {
+    conf.logos?.unshift(w3cLogo);
+    if (!conf.hasOwnProperty("license")) {
+      conf.license = "w3c-software-doc";
+    }
+  }
+
+  // Special case for "ED" status...
+  // Allow overriding the logos, otherwise include the w3c logo.
+  if (status === "ED" && conf.logos?.length === 0) {
+    conf.logos.push(w3cLogo);
   }
 }
 
