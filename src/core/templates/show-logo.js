@@ -20,10 +20,10 @@ export default function showLogo(logo, index) {
   /** @type {HTMLAnchorElement} */
   const a = html`<a href="${logo.url ?? null}" class="logo"
     ><img
-      id="${logo.id ?? null}"
-      alt="${logo.alt ?? null}"
-      width="${logo.width ?? null}"
-      height="${logo.height ?? null}"
+      id="${logo.id || null}"
+      alt="${logo.alt || null}"
+      width="${logo.width || null}"
+      height="${logo.height || null}"
       crossorigin
     />
   </a>`;
