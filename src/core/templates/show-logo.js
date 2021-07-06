@@ -20,10 +20,11 @@ export default function showLogo(logo, index) {
   /** @type {HTMLAnchorElement} */
   const a = html`<a href="${logo.url ?? null}" class="logo"
     ><img
-      id="${logo.id || null}"
       alt="${logo.alt || null}"
-      width="${logo.width || null}"
       height="${logo.height || null}"
+      id="${logo.id || null}"
+      width="${logo.width || null}"
+      src="${logo.src || null}"
       crossorigin
     />
   </a>`;
@@ -33,10 +34,7 @@ export default function showLogo(logo, index) {
     const hint = docLink`Add the missing "\`alt\`" property describing the logo. See ${"[logos]"} for more information.`;
     showError(msg, name, { hint, elements: [img] });
   }
-  // avoid triggering 404 requests from dynamically generated hyperHTML attribute values
-  if (logo.src) {
-    img.src = logo.src;
-  } else {
+  if (!img.src) {
     const msg = `Logo at index ${index} is missing "\`src\`" property.`;
     const hint = docLink`The \`src\` property is required on every logo. See ${"[logos]"} for more information.`;
     showError(msg, name, { hint, elements: [img] });
