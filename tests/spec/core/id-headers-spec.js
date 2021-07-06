@@ -10,7 +10,7 @@ describe("Core - ID headers", () => {
     <section id="t0"><p>BLAH</p><h6>FOO</h6></section>
     <section><h2>test-1</h2></section>
     <section><h2 id="custom-id">Pass</h2></section>
-    <section id="sotd">
+    <section id="sotd" class="notoc">
     <p>...</p>
     <section>
       <h3>Level 3 heading</h3>

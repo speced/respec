@@ -1923,7 +1923,7 @@ describe("W3C — Headers", () => {
           <h2>PASS</h2>
           <p>Normal section.</p>
         </section>
-        <section id="sotd" class="introductory">
+        <section id="sotd" class="introductory notoc">
           <h2>test</h2>
           <p id="p1">
             CUSTOM PARAGRAPH 1
@@ -1984,8 +1984,7 @@ describe("W3C — Headers", () => {
       expect(p3.previousElementSibling).toBe(firstSection);
       expect(p3.nextElementSibling).toBe(lastSection);
 
-      // There should only be one thing in the ToC
-      expect(doc.querySelectorAll("#toc li")).toHaveSize(1);
+      expect(doc.querySelectorAll("#toc li")).toHaveSize(2);
       // and it should say "PASS"
       expect(doc.querySelector("#toc li bdi").nextSibling.textContent).toBe(
         "PASS"
@@ -2103,8 +2102,32 @@ describe("W3C — Headers", () => {
       expect(elems).toHaveSize(2);
     });
 
+    it("adds W3C logo for status EDs by default", async () => {
+      const ops = makeStandardOps({ specStatus: "ED" });
+      const doc = await makeRSDoc(ops);
+      const logo = doc.querySelector("a.logo");
+      expect(logo.href).toBe("https://www.w3.org/");
+    });
+
+    it("allows overriding logos for EDs", async () => {
+      const ops = makeStandardOps({
+        specStatus: "ED",
+        logos: [
+          {
+            src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
+            alt: "Logo",
+            id: "logo",
+            url: "https://somewhere.else/",
+          },
+        ],
+      });
+      const doc = await makeRSDoc(ops);
+      expect(doc.querySelectorAll("a.logo")).toHaveSize(1);
+      const logo = doc.querySelector("a.logo");
+      expect(logo.href).toBe("https://somewhere.else/");
+    });
+
     it("adds logos defined by configuration", async () => {
-      const ops = makeStandardOps();
       const logos = [
         {
           src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
@@ -2128,11 +2151,18 @@ describe("W3C — Headers", () => {
           url: "http://shiny/",
         },
       ];
-      Object.assign(ops.config, { logos });
+      const ops = makeStandardOps({ specStatus: "WD", logos });
       const doc = await makeRSDoc(ops);
       // get logos
-      const logosAnchors = doc.querySelectorAll(".logo");
+      const logosAnchors = [...doc.querySelectorAll(".logo")];
       expect(logos).toHaveSize(3);
+
+      // remove W3C logo
+      const w3cLogo = logosAnchors.shift();
+      expect(w3cLogo).toBeTruthy();
+      // check w3c logo url
+      expect(w3cLogo.href).toBe("https://www.w3.org/");
+
       logosAnchors.forEach((anchor, i) => {
         const logo = logos[i];
         const img = anchor.querySelector("img");
