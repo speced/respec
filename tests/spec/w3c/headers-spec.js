@@ -1923,7 +1923,7 @@ describe("W3C — Headers", () => {
           <h2>PASS</h2>
           <p>Normal section.</p>
         </section>
-        <section id="sotd" class="introductory">
+        <section id="sotd" class="introductory notoc">
           <h2>test</h2>
           <p id="p1">
             CUSTOM PARAGRAPH 1
@@ -1984,8 +1984,7 @@ describe("W3C — Headers", () => {
       expect(p3.previousElementSibling).toBe(firstSection);
       expect(p3.nextElementSibling).toBe(lastSection);
 
-      // There should only be one thing in the ToC
-      expect(doc.querySelectorAll("#toc li")).toHaveSize(1);
+      expect(doc.querySelectorAll("#toc li")).toHaveSize(2);
       // and it should say "PASS"
       expect(doc.querySelector("#toc li bdi").nextSibling.textContent).toBe(
         "PASS"

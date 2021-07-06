@@ -20,7 +20,6 @@ import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
-const headerTags = ["h1", ...lowerHeaderTags];
 
 export const name = "core/structure";
 
@@ -157,7 +156,7 @@ function getSectionTree(parent) {
       element: section,
       header,
       title,
-      isIntro: section.classList.contains("introductory"),
+      isIntro: Boolean(section.closest(".introductory")),
       isAppendix: section.classList.contains("appendix"),
       subsections: getSectionTree(section),
     });
@@ -234,12 +233,11 @@ function renameSectionHeaders() {
 }
 
 function getNonintroductorySectionHeaders() {
-  const headerSelector = headerTags
-    .map(h => `section:not(.introductory) ${h}:first-child`)
-    .join(",");
-  return [...document.querySelectorAll(headerSelector)].filter(
-    elem => !elem.closest("section.introductory")
-  );
+  return [
+    ...document.querySelectorAll(
+      "section:not(.introductory) :is(h1,h2,h3,h4,h5,h6):first-child"
+    ),
+  ].filter(elem => !elem.closest("section.introductory"));
 }
 
 /**
