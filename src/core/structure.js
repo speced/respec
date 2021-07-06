@@ -9,6 +9,7 @@
 
 import {
   addId,
+  docLink,
   getIntlData,
   parents,
   renameElement,
@@ -192,9 +193,9 @@ function filterHeader(h) {
 }
 
 export function run(conf) {
-  if ("tocIntroductory" in conf && tocIntroductory === "false") {
+  if ("tocIntroductory" in conf && conf.tocIntroductory === false) {
     const msg = "Configuration option `tocIntroductory` is deprecated.";
-    const hint = `Add a 'notoc' class to remove a section from the Table of Contents.`;
+    const hint = docLink`Use the ${"[`notoc`|#notoc-class]"} CSS class to remove a section from the Table of Contents.`;
     showWarning(msg, name, { hint });
   }
 
