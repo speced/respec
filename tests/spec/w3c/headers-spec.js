@@ -2124,6 +2124,8 @@ describe("W3C — Headers", () => {
       });
       const doc = await makeRSDoc(ops);
       expect(doc.querySelectorAll("a.logo")).toHaveSize(1);
+      const logo = doc.querySelector("a.logo");
+      expect(logo.href).toBe("https://somewhere.else/");
     });
 
     it("adds logos defined by configuration", async () => {
