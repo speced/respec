@@ -18,7 +18,7 @@ const name = "core/templates/show-logo";
  */
 export default function showLogo(logo, index) {
   /** @type {HTMLAnchorElement} */
-  const a = html`<a href="${logo.url ?? null}" class="logo"
+  const a = html`<a href="${logo.url || null}" class="logo"
     ><img
       alt="${logo.alt || null}"
       height="${logo.height || null}"
