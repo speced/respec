@@ -2141,7 +2141,33 @@ describe("W3C — Headers", () => {
         expect(img.alt).toBe(logo.alt);
         expect(img.height).toBe(logo.height);
         expect(img.width).toBe(logo.width);
+        expect(img.crossOrigin).toBe("anonymous");
       });
+    });
+
+    it("shows errors if a logo are lacks a alt and src", async () => {
+      const logos = [
+        {
+          // not alt, no src - so 2 errors
+          id: "logo-1",
+        },
+        {
+          id: "logo-2",
+          src: "", // error
+          alt: "", // error
+        },
+        {
+          id: "logo-3",
+          src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+          alt: "some alt",
+        },
+      ];
+      const ops = makeStandardOps({ specStatus: "ED", logos });
+      const doc = await makeRSDoc(ops);
+      expect(doc.respec.errors).toHaveSize(4);
+      doc.respec.errors.every(
+        ({ plugin }) => plugin === "core/templates/show-logo"
+      );
     });
   });
 
