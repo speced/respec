@@ -51,6 +51,10 @@ export function run(conf) {
     lint,
   });
 
+  if (conf.specStatus !== "unofficial" && !conf.hasOwnProperty("license")) {
+    conf.license = "w3c-software-doc";
+  }
+
   processLogos(conf);
 
   if (conf.groupType && conf.specStatus) {
@@ -64,9 +68,6 @@ function processLogos(conf) {
   // Excludes "ED" status
   if ([...maybeRecTrack, ...recTrackStatus].includes(status)) {
     conf.logos?.unshift(w3cLogo);
-    if (!conf.hasOwnProperty("license")) {
-      conf.license = "w3c-software-doc";
-    }
   }
 
   // Special case for "ED" status...
