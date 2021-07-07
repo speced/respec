@@ -84,7 +84,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "finalhandler": "^1.1.2",
-    "jasmine-core": "^3.7.1",
+    "jasmine-core": "^3.8.0",
     "marked": "^2.1.3",
     "puppeteer": "^10.0.0",
     "sade": "^1.7.4",
