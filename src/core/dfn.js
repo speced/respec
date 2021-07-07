@@ -59,6 +59,9 @@ function processAsInternalSlot(title, dfn) {
     showError(msg, name, { hint, elements: [dfn] });
   }
 
+  // Don't export internal slots by default, as they are not supposed to be public.
+  if (!dfn.dataset.hasOwnProperty("export")) dfn.dataset.noexport = "";
+
   // If it ends with a ), then it's method. Attribute otherwise.
   const derivedType = title.endsWith(")") ? "method" : "attribute";
   if (!dfn.dataset.dfnType) {
@@ -82,7 +85,7 @@ function processAsInternalSlot(title, dfn) {
 }
 
 function addContractDefaults() {
-  // find all dfns that don't have a type and default them to "dfn".
+  // Find all dfns that don't have a type and default them to "dfn".
   /** @type NodeListOf<HTMLElement> */
   const dfnsWithNoType = document.querySelectorAll(
     "dfn:is([data-dfn-type=''],:not([data-dfn-type]))"
@@ -97,7 +100,7 @@ function addContractDefaults() {
   //  - definitions was included via (legacy) data-cite="foo#bar".
   /** @type NodeListOf<HTMLElement> */
   const exportableDfns = document.querySelectorAll(
-    "dfn:not([data-noexport]):not([data-export]):not([data-dfn-type='dfn']):not(data-cite)"
+    "dfn:not([data-noexport], [data-export], [data-dfn-type='dfn'], [data-cite])"
   );
   for (const dfn of exportableDfns) {
     dfn.dataset.export = "";

@@ -240,7 +240,7 @@ describe("Core — Definitions", () => {
           <dfn id="attribute">
             [[\\internal slot]]
           </dfn>
-          <dfn id="method">
+          <dfn id="method" data-export="">
             [[\\I am_a method]](I, really, ...am)
           </dfn>
           <dfn id="parent" data-dfn-for="Window">[[\\internal slot]]</dfn>
@@ -267,6 +267,7 @@ describe("Core — Definitions", () => {
       expect(dfn.textContent.trim()).toBe("[[internal slot]]");
       expect(dfn.dataset.dfnType).toBe("attribute");
       expect(dfn.dataset.idl).toBe("");
+      expect(dfn.dataset.noexport).toBe("");
     });
 
     it("sets the data-dfn-type as a method, when it's a method", async () => {
@@ -278,6 +279,8 @@ describe("Core — Definitions", () => {
       );
       expect(dfn.dataset.dfnType).toBe("method");
       expect(dfn.dataset.idl).toBe("");
+      expect(dfn.dataset.noexport).toBeUndefined();
+      expect(dfn.dataset.export).toBe("");
     });
 
     it("when data-dfn-for is missing, it use the closes data-dfn-for as parent", async () => {
