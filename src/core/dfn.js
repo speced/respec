@@ -85,7 +85,7 @@ function addContractDefaults() {
   // find all dfns that don't have a type and default them to "dfn".
   /** @type NodeListOf<HTMLElement> */
   const dfnsWithNoType = document.querySelectorAll(
-    "dfn:is([data-dfn-type=''],:not([data-dfn-type])"
+    "dfn:is([data-dfn-type=''],:not([data-dfn-type]))"
   );
   for (const dfn of dfnsWithNoType) {
     dfn.dataset.dfnType = "dfn";
