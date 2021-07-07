@@ -21,23 +21,23 @@ export default function showLogo(logo, index) {
   const a = html`<a href="${logo.url || null}" class="logo"
     ><img
       alt="${logo.alt || null}"
+      crossorigin
       height="${logo.height || null}"
       id="${logo.id || null}"
-      width="${logo.width || null}"
       src="${logo.src || null}"
-      crossorigin
+      width="${logo.width || null}"
     />
   </a>`;
-  const img = a.querySelector("img");
-  if (!img.alt) {
-    const msg = `Logo at index ${index} is missing required "\`alt\`" property.`;
+  if (!logo.alt) {
+    const src = logo.src ? `, with \`src\` ${logo.src}, ` : "";
+    const msg = `Logo at index ${index}${src} is missing required "\`alt\`" property.`;
     const hint = docLink`Add the missing "\`alt\`" property describing the logo. See ${"[logos]"} for more information.`;
-    showError(msg, name, { hint, elements: [img] });
+    showError(msg, name, { hint, elements: [a] });
   }
-  if (!img.src) {
+  if (!logo.src) {
     const msg = `Logo at index ${index} is missing "\`src\`" property.`;
     const hint = docLink`The \`src\` property is required on every logo. See ${"[logos]"} for more information.`;
-    showError(msg, name, { hint, elements: [img] });
+    showError(msg, name, { hint, elements: [a] });
   }
   return a;
 }
