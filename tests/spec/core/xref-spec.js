@@ -158,9 +158,9 @@ describe("Core — xref", () => {
     const body = `
       <section id="test">
         <p data-cite="css-values"><a id="one" data-xref-type="css-value" data-xref-for="attr()">ident</a></p>
-        <p data-cite="css-syntax"><a id="two">ident</a></p>
-        <p data-cite="css-syntax">
-          <a id="three" data-cite="css-values" data-xref-for="CSS">ident</a> (overrides parent)
+        <p data-cite="css-values-4"><a id="two">ident</a></p>
+        <p data-cite="css-values-4">
+          <a id="three" data-cite="css-values-3">ident</a> (overrides parent)
           <a id="four">ident</a> (uses parent's data-cite - css-syntax)
         </p>
         <p><a id="five" data-cite="NOT-FOUND">ident</a></p>
@@ -174,13 +174,13 @@ describe("Core — xref", () => {
       "https://www.w3.org/TR/css-values-4/#valdef-attr-ident"
     );
     expect(doc.getElementById("two").href).toBe(
-      "https://www.w3.org/TR/css-syntax-3/#identifier"
+      "https://www.w3.org/TR/css-values-4/#css-identifier"
     );
     expect(doc.getElementById("three").href).toBe(
-      "https://www.w3.org/TR/css-values-4/#css-css-identifier"
+      "https://www.w3.org/TR/css-values-3/#css-identifier"
     );
     expect(doc.getElementById("four").href).toBe(
-      "https://www.w3.org/TR/css-syntax-3/#identifier"
+      "https://www.w3.org/TR/css-values-4/#css-identifier"
     );
 
     const five = doc.getElementById("five");
@@ -244,17 +244,14 @@ describe("Core — xref", () => {
   it("uses data-cite as authored in spec context", async () => {
     const body = `<section id="test">
       <p data-cite="css-syntax-3">[=CSS/parsing=]</p>
-      <p data-cite="css-color">[=sRGB=]</p>
     </section>`;
-    const localBiblio = { "css-color": { aliasOf: "css-color-3" } };
-    const ops = makeStandardOps({ localBiblio }, body);
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
 
-    const [specLink, shortnameLink] = doc.querySelectorAll("#test a");
+    const [specLink] = doc.querySelectorAll("#test a");
     expect(specLink.hash).toBe(
       "#css-parse-something-according-to-a-css-grammar"
     );
-    expect(shortnameLink.hash).toBe("#sRGB");
   });
 
   it("treats terms as local if empty data-cite on parent", async () => {
