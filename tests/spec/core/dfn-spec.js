@@ -260,6 +260,24 @@ describe("Core — Definitions", () => {
       </section>
     `;
 
+    it("doesn't export internal slots by default", async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        body,
+      };
+      const doc = await makeRSDoc(ops);
+
+      // The attribute is not exported explicitly, so defaults to "noexport".
+      const attribute = doc.getElementById("attribute");
+      expect(attribute.dataset.export).toBeUndefined();
+      expect(attribute.dataset.noexport).toBe("");
+
+      // The method has an explicit export, so doesn't have a "noexport".
+      const method = doc.getElementById("method");
+      expect(method.dataset.export).toBe("");
+      expect(method.dataset.noexport).toBeUndefined();
+    });
+
     it("sets the data-dfn-type as an attribute", async () => {
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
