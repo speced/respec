@@ -23,7 +23,8 @@ export function run() {
 
     const [linkingText] = titles;
     // Matches attributes and methods, like [[some words]](with, optional, arguments)
-    if (slotRegex.test(linkingText)) {
+    // but ignores legacy data-cite="foo#bar" (e.g., a link to a slot in the ES6 spec)
+    if (!dfn.dataset.cite && slotRegex.test(linkingText)) {
       processAsInternalSlot(linkingText, dfn);
     }
 

@@ -257,6 +257,9 @@ describe("Core — Definitions", () => {
         {{Test/[[I am_a method]](I, really, ...am)}}
         {{Window/[[internal slot]]}}
         </p>
+        <p>
+          <dfn id="legacy" data-cite="ecma-262#sec-8.6.2">[[\\Class]]</dfn>
+        </p>
       </section>
     `;
 
@@ -308,6 +311,13 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.dfnFor).toBe("Test");
       const dfnWithParent = doc.getElementById("parent");
       expect(dfnWithParent.dataset.dfnFor).toBe("Window");
+    });
+
+    it("treats legacy slot references as regular definitions", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("legacy");
+      expect(dfn.dataset.dfnType).toBe("dfn");
     });
 
     it("errors if the internal slot is not for something", async () => {
