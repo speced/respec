@@ -88,8 +88,7 @@ export async function run(conf) {
 function findExplicitExternalLinks() {
   /** @type {NodeListOf<HTMLElement>} */
   const links = document.querySelectorAll(
-    "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
-      "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
+    ":is(a,dfn)[data-cite]:not([data-cite=''],[data-cite*='#'])"
   );
   /** @type {NodeListOf<HTMLElement>} */
   const externalDFNs = document.querySelectorAll("dfn.externalDFN");

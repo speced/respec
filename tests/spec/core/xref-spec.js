@@ -386,6 +386,9 @@ describe("Core — xref", () => {
         <dfn class="externalDFN">event handler</dfn>
         <a>event handler</a> <a>event handlers</a>
       </section>
+      <section id="dom" data-cite="dom">
+        [=attributes=] [=elements=]
+      </section>
     `;
     const config = { xref: ["html"], localBiblio, pluralize: true };
     const ops = makeStandardOps(config, body);
@@ -410,6 +413,13 @@ describe("Core — xref", () => {
       );
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
+
+    // Dom spec links for attribute and element
+    const domSpecLinks = [...doc.querySelectorAll("#dom a")];
+    expect(domSpecLinks).toHaveSize(2);
+    const [attr, elem] = domSpecLinks;
+    expect(attr.href).toBe("https://dom.spec.whatwg.org/#concept-element");
+    expect(elem.href).toBe("https://dom.spec.whatwg.org/#concept-attribute");
   });
 
   it("uses inline references to provide context", async () => {
