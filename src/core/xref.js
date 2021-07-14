@@ -242,7 +242,7 @@ function dedupeSpecContext(specs) {
     const uniqueSpecs = [...new Set(level)].filter(
       spec => !higherPriority.includes(spec)
     );
-    unique.push(uniqueSpecs.sort());
+    unique.push(uniqueSpecs);
   }
   return unique;
 }
