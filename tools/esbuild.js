@@ -1,10 +1,11 @@
+const path = require("path");
 const fs = require("fs/promises");
 const esbuild = require("esbuild");
 
-const pluginCssLiteral = (settings = {}) => ({
+/** @returns {import("esbuild").Plugin} */
+const pluginCssLiteral = ({ filter = /^$/, minify = false } = {}) => ({
   name: "css-literal",
   setup(build) {
-    const { filter = /\.css\.js$/, namespace = "", minify = false } = settings;
     let warnings;
 
     const parse = css => {
@@ -35,20 +36,45 @@ const pluginCssLiteral = (settings = {}) => ({
       return { contents: `export default String.raw\`${parsedCSS}\`` };
     };
 
-    build.onLoad({ filter, namespace }, async args => {
+    build.onLoad({ filter }, async args => {
       const contents = await fs.readFile(args.path, "utf8");
       return transformContents({ contents });
     });
   },
 });
 
+/** @returns {import("esbuild").Plugin} */
+const inlineAsString = ({ filter = /^$/ } = {}) => ({
+  name: "inline-string",
+  setup(build) {
+    build.onResolve({ filter }, args => ({
+      path: path.resolve(args.resolveDir, args.path.replace("text!", "")),
+    }));
+    build.onLoad({ filter }, async args => {
+      console.log(args.path);
+      const contents = await fs.readFile(args.path, "utf8");
+      return {
+        contents: `export default ${JSON.stringify(contents)};`,
+        loader: "text",
+      };
+    });
+  },
+});
+
+const entryPoints = ["profiles/w3c.js"];
 const minify = true;
+console.log({ entryPoints });
 esbuild.build({
-  entryPoints: ["profiles/w3c.js"],
+  entryPoints,
   bundle: true,
-  minify,
+  plugins: [
+    pluginCssLiteral({ filter: /\.css\.js$/, minify }),
+    inlineAsString({ filter: /^text!/ }),
+  ],
   outdir: "builds",
-  plugins: [pluginCssLiteral({ minify })],
+  target: "es2020",
+  minify,
+  sourcemap: true,
 });
 // .then(console.log)
 // .catch(err => (console.error(err), process.exit(1)));
