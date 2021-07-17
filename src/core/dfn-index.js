@@ -98,9 +98,7 @@ function createLocalTermIndex() {
 function collectLocalTerms() {
   /** @type {Map<string, HTMLElement[]>} */
   const data = new Map();
-  /** @type {NodeListOf<HTMLElement>} */
-  const elems = document.querySelectorAll("dfn:not([data-cite])");
-  for (const elem of elems) {
+  for (const elem of document.querySelectorAll("dfn:not([data-cite])")) {
     if (!elem.id) continue;
     const text = norm(elem.textContent);
     const elemsByTerm = data.get(text) || data.set(text, []).get(text);
@@ -163,8 +161,9 @@ function getLocalTermType(dfn) {
 
 /** @param {HTMLElement} dfn */
 function getLocalTermParentContext(dfn) {
-  /** @type {HTMLElement} */
-  const dfnFor = dfn.closest("[data-dfn-for]:not([data-dfn-for=''])");
+  const dfnFor = /** @type {HTMLElement} */ (
+    dfn.closest("[data-dfn-for]:not([data-dfn-for=''])")
+  );
   return dfnFor ? dfnFor.dataset.dfnFor : "";
 }
 
@@ -227,9 +226,9 @@ function appendSectionNumbers() {
     return html`<span class="print-only">${secNum}</span>`;
   };
 
-  /** @type {NodeListOf<HTMLElement>} */
-  const elems = document.querySelectorAll("#index-defined-here li[data-id]");
-  elems.forEach(el => el.append(getSectionNumber(el.dataset.id)));
+  document
+    .querySelectorAll("#index-defined-here li[data-id]")
+    .forEach(el => el.append(getSectionNumber(el.dataset.id)));
 }
 
 function createExternalTermIndex() {
@@ -257,9 +256,7 @@ function collectExternalTerms() {
   /** @type {Map<string, Entry[]>} spec => entry[] */
   const data = new Map();
 
-  /** @type {NodeListOf<HTMLAnchorElement>} */
-  const elements = document.querySelectorAll(`a[data-cite]`);
-  for (const elem of elements) {
+  for (const elem of document.querySelectorAll(`a[data-cite]`)) {
     if (!elem.dataset.cite) {
       continue;
     }

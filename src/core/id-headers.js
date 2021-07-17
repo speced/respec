@@ -8,7 +8,6 @@ import { addId } from "./utils.js";
 import { html } from "./import-maps.js";
 
 export function run(conf) {
-  /** @type {NodeListOf<HTMLElement>} */
   const headings = document.querySelectorAll(
     `section:not(.head):not(.introductory) h2, h3, h4, h5, h6`
   );

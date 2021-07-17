@@ -27,8 +27,9 @@ const l10n = getIntlData(localizationStrings);
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 export function run() {
-  /** @type {NodeListOf<HTMLElement>} */
-  const bps = document.querySelectorAll(".practicelab");
+  const bps = /** @type {NodeListOf<HTMLElement>} */ (
+    document.querySelectorAll(".practicelab")
+  );
   const bpSummary = document.getElementById("bp-summary");
   const summaryItems = bpSummary ? document.createElement("ul") : null;
   [...bps].forEach((bp, num) => {

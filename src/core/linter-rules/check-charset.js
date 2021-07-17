@@ -24,7 +24,6 @@ export function run(conf) {
     return;
   }
 
-  /** @type {NodeListOf<HTMLMetaElement>} */
   const metas = document.querySelectorAll("meta[charset]");
   const val = [];
   for (const meta of metas) {

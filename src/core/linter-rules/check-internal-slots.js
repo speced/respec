@@ -20,7 +20,6 @@ export function run(conf) {
     return;
   }
 
-  /** @type {NodeListOf<HTMLAnchorElement>} */
   const elems = document.querySelectorAll("var+a");
   const offendingElements = [...elems].filter(
     ({ previousSibling: { nodeName } }) => {

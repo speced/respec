@@ -7,8 +7,7 @@ import css from "../styles/algorithms.css.js";
 export const name = "core/algorithms";
 
 export function run() {
-  const elements = Array.from(document.querySelectorAll("ol.algorithm li"));
-  elements
+  Array.from(document.querySelectorAll("ol.algorithm li"))
     .filter(li => li.textContent.trim().startsWith("Assert: "))
     .forEach(li => li.classList.add("assert"));
   if (document.querySelector(".assert")) {

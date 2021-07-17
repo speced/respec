@@ -20,9 +20,7 @@ export function run(conf) {
 
   let section = null;
   const varMap = new Map();
-  /** @type {NodeListOf<HTMLElement>} */
-  const variables = document.querySelectorAll("section var");
-  for (const varElem of variables) {
+  for (const varElem of document.querySelectorAll("section var")) {
     const currentSection = varElem.closest("section");
     if (section !== currentSection) {
       section = currentSection;

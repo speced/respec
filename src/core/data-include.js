@@ -48,8 +48,9 @@ function fillWithText(el, data, { replace }) {
  * @param {string} url
  */
 function processResponse(rawData, id, url) {
-  /** @type {HTMLElement} */
-  const el = document.querySelector(`[data-include-id=${id}]`);
+  const el = /** @type {HTMLElement} */ (
+    document.querySelector(`[data-include-id=${id}]`)
+  );
   const data = runTransforms(rawData, el.dataset.oninclude, url);
   const replace = typeof el.dataset.includeReplace === "string";
   fillWithText(el, data, { replace });
@@ -74,8 +75,9 @@ function removeIncludeAttributes(el) {
 }
 
 export async function run() {
-  /** @type {NodeListOf<HTMLElement>} */
-  const includables = document.querySelectorAll("[data-include]");
+  const includables = /** @type {NodeListOf<HTMLElement>} */ (
+    document.querySelectorAll("[data-include]")
+  );
 
   const promisesToInclude = Array.from(includables).map(async el => {
     const url = el.dataset.include;

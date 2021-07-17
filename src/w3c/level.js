@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * This module updates the title and shortName
  * of a spec when there is a valid level configuration.

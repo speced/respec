@@ -15,7 +15,6 @@ export function run(conf) {
 
   const pluralizeDfn = getPluralizer();
 
-  /** @type {NodeListOf<HTMLElement>} */
   const dfns = document.querySelectorAll(
     "dfn:not([data-lt-no-plural]):not([data-lt-noDefault])"
   );
@@ -42,9 +41,7 @@ export function run(conf) {
 function getPluralizer() {
   /** @type {Set<string>} */
   const links = new Set();
-  /** @type {NodeListOf<HTMLAnchorElement>} */
-  const reflessAnchors = document.querySelectorAll("a:not([href])");
-  reflessAnchors.forEach(el => {
+  document.querySelectorAll("a:not([href])").forEach(el => {
     const normText = normalize(el.textContent).toLowerCase();
     links.add(normText);
     if (el.dataset.lt) {
@@ -54,9 +51,7 @@ function getPluralizer() {
 
   /** @type {Set<string>} */
   const dfnTexts = new Set();
-  /** @type {NodeListOf<HTMLElement>} */
-  const dfns = document.querySelectorAll("dfn:not([data-lt-noDefault])");
-  dfns.forEach(dfn => {
+  document.querySelectorAll("dfn:not([data-lt-noDefault])").forEach(dfn => {
     const normText = normalize(dfn.textContent).toLowerCase();
     dfnTexts.add(normText);
     if (dfn.dataset.lt) {

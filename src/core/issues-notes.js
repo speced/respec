@@ -335,8 +335,9 @@ async function fetchAndStoreGithubIssues(github) {
     return new Map();
   }
 
-  /** @type {NodeListOf<HTMLElement>} */
-  const specIssues = document.querySelectorAll(".issue[data-number]");
+  const specIssues = /** @type {NodeListOf<HTMLElement>} */ (
+    document.querySelectorAll(".issue[data-number]")
+  );
   const issueNumbers = [...specIssues]
     .map(elem => Number.parseInt(elem.dataset.number, 10))
     .filter(issueNumber => issueNumber);
@@ -361,9 +362,9 @@ async function fetchAndStoreGithubIssues(github) {
 }
 
 export async function run(conf) {
-  const query = ".issue, .note, .warning, .ednote";
-  /** @type {NodeListOf<HTMLElement>} */
-  const issuesAndNotes = document.querySelectorAll(query);
+  const issuesAndNotes = /** @type {NodeListOf<HTMLElement>} */ (
+    document.querySelectorAll(".issue, .note, .warning, .ednote")
+  );
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }

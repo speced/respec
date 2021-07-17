@@ -55,8 +55,9 @@ export function sortDefinitionTerms(dl, dir) {
 }
 
 export function run() {
-  /** @type {NodeListOf<HTMLElement>} */
-  const sortables = document.querySelectorAll("[data-sort]");
+  const sortables = /** @type {NodeListOf<HTMLElement>} */ (
+    document.querySelectorAll("[data-sort]")
+  );
   for (const elem of sortables) {
     let sortedElems;
     const dir = elem.dataset.sort || "ascending";

@@ -1,3 +1,5 @@
+import "typed-query-selector";
+
 interface Element {
   /*
    * This signature helps JSDoc to assert types in a separate line:

@@ -566,8 +566,9 @@ export function getDfnTitles(elem) {
  * @returns {LinkTarget[]}
  */
 export function getLinkTargets(elem) {
-  /** @type {HTMLElement} */
-  const linkForElem = elem.closest("[data-link-for]");
+  const linkForElem = /** @type {HTMLElement} */ (
+    elem.closest("[data-link-for]")
+  );
   const linkFor = linkForElem ? linkForElem.dataset.linkFor : "";
   const titles = getDfnTitles(elem);
   const results = titles.reduce((result, title) => {
@@ -772,7 +773,7 @@ export class InsensitiveStringSet extends Set {
  * @param {HTMLElement} node
  */
 export function makeSafeCopy(node) {
-  const clone = node.cloneNode(true);
+  const clone = /** @type {HTMLElement} */ (node.cloneNode(true));
   clone.querySelectorAll("[id]").forEach(elem => elem.removeAttribute("id"));
   clone.querySelectorAll("dfn").forEach(dfn => {
     renameElement(dfn, "span", { copyAttributes: false });

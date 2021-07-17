@@ -143,9 +143,9 @@ export function toCiteDetails(elem) {
   // The key is a fragment, resolve using the shortName as key
   if (rawKey.startsWith("#") && !citeFrag) {
     // Closes data-cite not starting with "#"
-    /** @type {HTMLElement} */
-    const closest = elem.parentElement.closest(
-      `[data-cite]:not([data-cite^="#"])`
+
+    const closest = /** @type {HTMLElement} */ (
+      elem.parentElement.closest(`[data-cite]:not([data-cite^="#"])`)
     );
     const { key: parentKey, isNormative: closestIsNormative } = closest
       ? toCiteDetails(closest)
@@ -166,7 +166,6 @@ export function toCiteDetails(elem) {
 }
 
 export async function run() {
-  /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );

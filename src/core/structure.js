@@ -68,7 +68,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
   if (sections.length === 0) {
     return null;
   }
-  /** @type {HTMLElement} */
+  /** @type {HTMLOListElement} */
   const ol = html`<ol class="toc"></ol>`;
   for (const section of sections) {
     if (section.isAppendix && !prefix && !appendixMode) {
@@ -244,7 +244,6 @@ function getNonintroductorySectionHeaders() {
  * Skip descendent sections from appearing in ToC using data-max-toc.
  */
 function skipFromToC() {
-  /** @type {NodeListOf<HTMLElement>} */
   const sections = document.querySelectorAll("section[data-max-toc]");
   for (const section of sections) {
     const maxToc = parseInt(section.dataset.maxToc, 10);

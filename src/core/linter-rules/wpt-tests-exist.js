@@ -26,8 +26,9 @@ export async function run(conf) {
     return;
   }
 
-  /** @type {NodeListOf<HTMLElement>} */
-  const elems = document.querySelectorAll("[data-tests]");
+  const elems = /** @type {NodeListOf<HTMLElement>} */ (
+    document.querySelectorAll("[data-tests]")
+  );
   const testables = [...elems].filter(elem => elem.dataset.tests);
 
   for (const elem of testables) {

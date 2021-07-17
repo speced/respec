@@ -254,7 +254,6 @@ export function run(conf) {
   if (!conf.respecRFC2119) conf.respecRFC2119 = rfc2119Usage;
 
   // PRE-PROCESSING
-  /** @type {NodeListOf<HTMLElement>} */
   const abbrElements = document.querySelectorAll("abbr[title]:not(.exclude)");
   for (const { textContent, title } of abbrElements) {
     const key = norm(textContent);

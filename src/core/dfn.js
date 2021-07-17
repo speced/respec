@@ -47,8 +47,8 @@ function processAsInternalSlot(title, dfn) {
   }
 
   // Automatically use the closest data-dfn-for as the parent.
-  /** @type HTMLElement */
-  const parent = dfn.closest("[data-dfn-for]");
+
+  const parent = /** @type HTMLElement */ (dfn.closest("[data-dfn-for]"));
   if (dfn !== parent && parent?.dataset.dfnFor) {
     dfn.dataset.dfnFor = parent.dataset.dfnFor;
   }
@@ -87,7 +87,6 @@ function processAsInternalSlot(title, dfn) {
 
 function addContractDefaults() {
   // Find all dfns that don't have a type and default them to "dfn".
-  /** @type NodeListOf<HTMLElement> */
   const dfnsWithNoType = document.querySelectorAll(
     "dfn:is([data-dfn-type=''],:not([data-dfn-type]))"
   );

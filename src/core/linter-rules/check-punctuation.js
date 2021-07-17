@@ -29,7 +29,6 @@ export function run(conf) {
     "m"
   );
 
-  /** @type {NodeListOf<HTMLParagraphElement>} */
   const elems = document.querySelectorAll("p:not(#back-to-top)");
   const offendingElements = [...elems].filter(
     elem => !punctuatingRegExp.test(elem.textContent.trim())

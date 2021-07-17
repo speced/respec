@@ -68,10 +68,9 @@ export function run(conf) {
 
   if (!informs.length && !norms.length) return;
 
-  /** @type {HTMLElement} */
   const refSection =
     document.querySelector("section#references") ||
-    html`<section id="references"></section>`;
+    /** @type {HTMLElement} */ (html`<section id="references"></section>`);
 
   if (!document.querySelector("section#references > h2")) {
     refSection.prepend(html`<h2>${l10n.references}</h2>`);

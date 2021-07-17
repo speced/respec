@@ -105,7 +105,7 @@ function decorateFigure(figure, caption, i) {
  * @return {HTMLElement}
  */
 function getTableOfFiguresListItem(figureId, caption) {
-  const tofCaption = caption.cloneNode(true);
+  const tofCaption = /** @type HTMLElement */ (caption.cloneNode(true));
   tofCaption.querySelectorAll("a").forEach(anchor => {
     renameElement(anchor, "span").removeAttribute("href");
   });

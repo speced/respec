@@ -64,7 +64,6 @@ function makeTitle(elem, num, report) {
 }
 
 export function run() {
-  /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"
   );

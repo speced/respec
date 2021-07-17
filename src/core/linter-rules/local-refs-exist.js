@@ -21,7 +21,6 @@ export function run(conf) {
     return;
   }
 
-  /** @type {NodeListOf<HTMLAnchorElement>} */
   const elems = document.querySelectorAll("a[href^='#']");
   const offendingElements = [...elems].filter(isBrokenHyperlink);
   if (offendingElements.length) {

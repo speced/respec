@@ -86,18 +86,15 @@ export async function run(conf) {
  * Examples: a[data-cite="spec"], dfn[data-cite="spec"], dfn.externalDFN
  */
 function findExplicitExternalLinks() {
-  /** @type {NodeListOf<HTMLElement>} */
   const links = document.querySelectorAll(
     ":is(a,dfn)[data-cite]:not([data-cite=''],[data-cite*='#'])"
   );
-  /** @type {NodeListOf<HTMLElement>} */
   const externalDFNs = document.querySelectorAll("dfn.externalDFN");
   return [...links]
     .filter(el => {
       // ignore empties
       if (el.textContent.trim() === "") return false;
-      /** @type {HTMLElement} */
-      const closest = el.closest("[data-cite]");
+      const closest = /** @type {HTMLElement} */ (el.closest("[data-cite]"));
       return !closest || closest.dataset.cite !== "";
     })
     .concat(...externalDFNs);
@@ -196,8 +193,7 @@ function getSpecContext(elem) {
   /** @type {string[][]} */
   const specs = [];
 
-  /** @type {HTMLElement} */
-  let dataciteElem = elem.closest("[data-cite]");
+  let dataciteElem = /** @type {HTMLElement} */ (elem.closest("[data-cite]"));
 
   // Traverse up towards the root element, adding levels of lower priority specs
   while (dataciteElem) {

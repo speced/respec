@@ -5,8 +5,9 @@ import { showError } from "./utils.js";
 export const name = "core/dfn-abbr";
 
 export function run() {
-  /** @type {NodeListOf<HTMLElement>} */
-  const elements = document.querySelectorAll("[data-abbr]");
+  const elements = /** @type {NodeListOf<HTMLElement>} */ (
+    document.querySelectorAll("[data-abbr]")
+  );
   for (const elem of elements) {
     const { localName } = elem;
     switch (localName) {

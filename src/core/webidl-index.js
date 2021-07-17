@@ -16,7 +16,6 @@ import { nonNormativeSelector, wrapInner } from "./utils.js";
 import { addIDLHeader } from "./webidl.js";
 
 export function run() {
-  /** @type {HTMLElement | null} */
   const idlIndexSec = document.querySelector("section#idl-index");
   if (!idlIndexSec) {
     return;

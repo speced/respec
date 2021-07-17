@@ -28,8 +28,10 @@ function panelListener() {
     switch (action) {
       case "show": {
         hidePanel(panel);
-        /** @type {HTMLElement} */
-        const dfn = target.closest("dfn, .index-term");
+
+        const dfn = /** @type {HTMLElement} */ (
+          target.closest("dfn, .index-term")
+        );
         panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
         const coords = deriveCoordinates(event);
         displayPanel(dfn, panel, coords);
@@ -133,8 +135,7 @@ function displayPanel(dfn, panel, { x, y }) {
     const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
     const newCaretOffset = left - newLeft;
     panel.style.left = `${newLeft}px`;
-    /** @type {HTMLElement} */
-    const caret = panel.querySelector(".caret");
+    const caret = /** @type {HTMLElement} */ (panel.querySelector(".caret"));
     caret.style.left = `${newCaretOffset}px`;
   }
 

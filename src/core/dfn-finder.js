@@ -240,8 +240,9 @@ function getDfns(name, parent, originalName, type) {
     // This is explicitly marked as a concept, so we can't use it
     if (dfn.dataset.dfnType === "dfn") return false;
 
-    /** @type {HTMLElement} */
-    const closestDfnFor = dfn.closest(`[data-dfn-for]`);
+    const closestDfnFor = /** @type {HTMLElement} */ (
+      dfn.closest(`[data-dfn-for]`)
+    );
     return closestDfnFor && closestDfnFor.dataset.dfnFor === parent;
   });
 

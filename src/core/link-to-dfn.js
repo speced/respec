@@ -65,7 +65,6 @@ export async function run(conf) {
   /** @type {HTMLAnchorElement[]} */
   const badLinks = [];
 
-  /** @type {NodeListOf<HTMLAnchorElement>} */
   const localAnchors = document.querySelectorAll(
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
   );
@@ -292,7 +291,6 @@ function updateReferences(conf) {
   // https://regex101.com/r/rsZyIJ/5
   const regex = new RegExp(String.raw`^([?!])?${shortName}\b([^-])`, "i");
 
-  /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );

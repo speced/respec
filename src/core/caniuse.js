@@ -58,7 +58,6 @@ export async function run(conf) {
 
   const featureURL = new URL(options.feature, "https://caniuse.com/").href;
 
-  const headDlElem = document.querySelector(".head dl");
   const contentPromise = (async () => {
     try {
       const stats = await conf.state[name].fetchPromise;
@@ -78,7 +77,7 @@ export async function run(conf) {
         placeholder: "Fetching data from caniuse.com...",
       }}
     </dd>`;
-  headDlElem.append(...definitionPair.childNodes);
+  document.querySelector(".head dl").append(...definitionPair.childNodes);
   await contentPromise;
 
   // remove from export

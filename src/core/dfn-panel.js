@@ -17,9 +17,10 @@ export async function run() {
     document.querySelector("link")
   );
 
-  /** @type {NodeListOf<HTMLElement>} */
-  const elems = document.querySelectorAll(
-    "dfn[id]:not([data-cite]), #index-defined-elsewhere .index-term"
+  const elems = /** @type {NodeListOf<HTMLElement>} */ (
+    document.querySelectorAll(
+      "dfn[id]:not([data-cite]), #index-defined-elsewhere .index-term"
+    )
   );
   const panels = document.createDocumentFragment();
   for (const el of elems) {
@@ -41,7 +42,6 @@ export async function run() {
 function createPanel(dfn) {
   const { id } = dfn;
   const href = dfn.dataset.href || `#${id}`;
-  /** @type {NodeListOf<HTMLAnchorElement>} */
   const links = document.querySelectorAll(`a[href="${href}"]:not(.index-term)`);
 
   const panelId = `dfn-panel-for-${dfn.id}`;
