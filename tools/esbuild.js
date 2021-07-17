@@ -1,16 +1,10 @@
-const path = require("path");
 const fs = require("fs/promises");
 const esbuild = require("esbuild");
 
 const pluginCssLiteral = (settings = {}) => ({
   name: "css-literal",
   setup(build) {
-    const {
-      filter = /.*/,
-      namespace = "",
-      tag = "css",
-      minify = false,
-    } = settings;
+    const { filter = /\.css\.js$/, namespace = "", minify = false } = settings;
     let warnings;
 
     const parse = css => {
@@ -18,36 +12,32 @@ const pluginCssLiteral = (settings = {}) => ({
         loader: "css",
         minify,
       });
+      if (result.warnings.length) {
+        return (warnings = result.warnings);
+      }
+      return result.code;
+    };
 
-      if (result.warnings.length) return (warnings = result.warnings);
-
-      return `css\`${result.code}\``;
+    const extractCSS = (contents, pattern) => {
+      const index = contents.indexOf(pattern);
+      if (index == -1) return { contents };
+      const start = index + pattern.length + 1;
+      const end = contents.indexOf("`", start);
+      return contents.slice(start, end);
     };
 
     const transformContents = async ({ contents }) => {
-      const index = contents.indexOf(`${tag}\``);
+      const pattern = "export default css`";
+      const css = extractCSS(contents, pattern);
 
-      if (index == -1) return { contents };
-
-      const start = index + tag.length + 1;
-      const end = contents.indexOf("`", start);
-      const css = contents.slice(start, end);
-
-      return Promise.resolve({ css })
-        .then(result => {
-          const css = parse(result.css);
-          if (warnings) return { warnings };
-          contents = css;
-          return { contents };
-        })
-        .catch(error => {
-          throw error;
-        });
+      const parsedCSS = parse(css);
+      if (warnings) return { warnings };
+      return { contents: `export default String.raw\`${parsedCSS}\`` };
     };
 
     build.onLoad({ filter, namespace }, async args => {
       const contents = await fs.readFile(args.path, "utf8");
-      return transformContents({ args, contents });
+      return transformContents({ contents });
     });
   },
 });
