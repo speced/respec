@@ -13,12 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-14-${{ hashFiles('**/package-lock.json') }}
+        with: { node-version: 14, cache: npm }
       - run: npm ci
       - run: npm run build:w3c
       - uses: actions/upload-artifact@v2
@@ -47,12 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-14-${{ hashFiles('**/package-lock.json') }}
+        with: { node-version: 14, cache: npm }
       - run: npm ci --production --ignore-scripts
       - uses: actions/download-artifact@v2
         with:
