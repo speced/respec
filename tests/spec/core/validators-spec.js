@@ -16,7 +16,9 @@ describe("Core - Validators", () => {
       ];
       for (const element of elements) {
         const dfn = document.createElement("dfn");
-        expect(validateDOMName(element, "element", dfn, "foo/bar")).toBeTrue();
+        expect(validateDOMName(element, "element", dfn, "foo/bar"))
+          .withContext(`element name: ${element}`)
+          .toBeTrue();
         expect(dfn.classList.contains("respec-offending-element")).toBeFalse();
       }
     });
