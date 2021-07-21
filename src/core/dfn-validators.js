@@ -7,15 +7,16 @@ import { showError } from "./utils.js";
  * @type {DefinitionValidator} */
 export function validateMimeType(text, type, elem, pluginName) {
   try {
+    // Contructor can throw.
     const type = new MIMEType(text);
     if (type.toString() !== text) {
-      throw new Error(`Input doesn't match it's canonical '${type}')`);
+      throw new Error(`Input doesn't match its canonical form: "${type}".`);
     }
     return true;
   } catch (error) {
     const msg = `Invalid ${type} "${text}": ${error.message}.`;
     const hint =
-      "Check that the media type has both a type and a sub-type, and that it's in a canonical form (e.g., `text/plain`).";
+      "Check that the MIME type has both a type and a sub-type, and that it's in a canonical form (e.g., `text/plain`).";
     showError(msg, pluginName, { hint, elements: [elem] });
   }
   return false;
