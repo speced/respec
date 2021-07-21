@@ -7,7 +7,7 @@ import { showError } from "./utils.js";
  * @type {DefinitionValidator} */
 export function validateMimeType(text, type, elem, pluginName) {
   try {
-    // Contructor can throw.
+    // Constructor can throw.
     const type = new MIMEType(text);
     if (type.toString() !== text) {
       throw new Error(`Input doesn't match its canonical form: "${type}".`);
@@ -45,7 +45,7 @@ export function validateDOMName(text, type, elem, pluginName) {
 }
 
 /**
- * Used to validates common variable or other named thing in a spec, like event names.
+ * Validates common variable or other named thing in a spec, like event names.
  *
  * @param {"event"} type
  * @type {DefinitionValidator}
