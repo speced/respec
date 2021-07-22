@@ -27,7 +27,9 @@ describe("Core - Validators", () => {
       const elements = ["my element", "crypto$", "🪳", "-something", ""];
       for (const element of elements) {
         const dfn = document.createElement("dfn");
-        expect(validateDOMName(element, "element", dfn, "foo/bar")).toBeFalse();
+        expect(validateDOMName(element, "element", dfn, "foo/bar"))
+          .withContext(`element name: ${element}`)
+          .toBeFalse();
         expect(dfn.classList.contains("respec-offending-element")).toBeTrue();
       }
     });
@@ -36,9 +38,9 @@ describe("Core - Validators", () => {
       const attributes = ["crossorigin", "aria-hidden", "aria-roledescription"];
       for (const attribute of attributes) {
         const dfn = document.createElement("dfn");
-        expect(
-          validateDOMName(attribute, "attribute", dfn, "foo/bar")
-        ).toBeTrue();
+        expect(validateDOMName(attribute, "attribute", dfn, "foo/bar"))
+          .withContext(`attribute name: ${attribute}`)
+          .toBeTrue();
         expect(dfn.classList.contains("respec-offending-element")).toBeFalse();
       }
     });
@@ -54,9 +56,9 @@ describe("Core - Validators", () => {
       ];
       for (const mimeType of mimeTypes) {
         const dfn = document.createElement("dfn");
-        expect(
-          validateMimeType(mimeType, "mimetype", dfn, "foo/bar")
-        ).toBeTrue();
+        expect(validateMimeType(mimeType, "mimetype", dfn, "foo/bar"))
+          .withContext(`mime type: ${mimeType}`)
+          .toBeTrue();
         expect(dfn.classList.contains("respec-offending-element")).toBeFalse();
       }
     });
@@ -69,19 +71,21 @@ describe("Core - Validators", () => {
       ];
       for (const mimeType of mimeTypes) {
         const dfn = document.createElement("dfn");
-        expect(
-          validateMimeType(mimeType, "mimetype", dfn, "foo/bar")
-        ).toBeFalse();
+        expect(validateMimeType(mimeType, "mimetype", dfn, "foo/bar"))
+          .withContext(`invalid mimetype: ${mimeType}`)
+          .toBeFalse();
         expect(dfn.classList.contains("respec-offending-element")).toBeTrue();
       }
     });
   });
-  describe("validateName", () => {
+  describe("validateCommonName", () => {
     it("generates no error if the name is valid", () => {
       const names = ["foo", "bar", "baz", "quux"];
       for (const name of names) {
         const dfn = document.createElement("dfn");
-        expect(validateCommonName(name, "event", dfn, "foo/bar")).toBeTrue();
+        expect(validateCommonName(name, "event", dfn, "foo/bar"))
+          .withContext(`name: ${name}`)
+          .toBeTrue();
         expect(dfn.classList.contains("respec-offending-element")).toBeFalse();
       }
     });
@@ -90,7 +94,9 @@ describe("Core - Validators", () => {
       const names = ["my event", "crypto$", "🪳", "-something"];
       for (const name of names) {
         const dfn = document.createElement("dfn");
-        expect(validateCommonName(name, "event", dfn, "foo/bar")).toBeFalse();
+        expect(validateCommonName(name, "event", dfn, "foo/bar"))
+          .withContext(`invalid name: ${name}`)
+          .toBeFalse();
         expect(dfn.classList.contains("respec-offending-element")).toBeTrue();
       }
     });
