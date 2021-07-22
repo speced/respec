@@ -45,7 +45,7 @@ export function validateDOMName(text, type, elem, pluginName) {
 }
 
 /**
- * Used to validates common variable or other named thing in a spec, like event names.
+ * Validates common variable or other named thing in a spec, like event names.
  *
  * @type {DefinitionValidator}
  */
