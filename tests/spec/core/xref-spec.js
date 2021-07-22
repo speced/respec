@@ -382,8 +382,8 @@ describe("Core — xref", () => {
     const domSpecLinks = [...doc.querySelectorAll("#dom a")];
     expect(domSpecLinks).toHaveSize(2);
     const [attr, elem] = domSpecLinks;
-    expect(attr.href).toBe("https://dom.spec.whatwg.org/#concept-element");
-    expect(elem.href).toBe("https://dom.spec.whatwg.org/#concept-attribute");
+    expect(attr.href).toBe("https://dom.spec.whatwg.org/#concept-attribute");
+    expect(elem.href).toBe("https://dom.spec.whatwg.org/#concept-element");
   });
 
   it("uses inline references to provide context", async () => {
