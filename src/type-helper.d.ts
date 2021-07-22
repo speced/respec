@@ -206,3 +206,13 @@ type PersonExtras = {
   class?: string;
   href?: string;
 };
+
+type DefinitionValidator = (
+  /** Text to validate. */
+  text: string,
+  /** The type of thing being validated. */
+  type: string,
+  /** The element from which the validation originated. */
+  element: HTMLElement,
+  /** The name of the plugin originating the validation. */
+  pluginName: string) => boolean;
