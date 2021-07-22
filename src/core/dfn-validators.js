@@ -12,14 +12,14 @@ export function validateMimeType(text, type, elem, pluginName) {
     if (type.toString() !== text) {
       throw new Error(`Input doesn't match its canonical form: "${type}".`);
     }
-    return true;
   } catch (error) {
     const msg = `Invalid ${type} "${text}": ${error.message}.`;
     const hint =
       "Check that the MIME type has both a type and a sub-type, and that it's in a canonical form (e.g., `text/plain`).";
     showError(msg, pluginName, { hint, elements: [elem] });
+    return false;
   }
-  return false;
+  return true;
 }
 
 /**
@@ -45,13 +45,12 @@ export function validateDOMName(text, type, elem, pluginName) {
 }
 
 /**
- * Validates common variable or other named thing in a spec, like event names.
+ * Used to validates common variable or other named thing in a spec, like event names.
  *
- * @param {"event"} type
  * @type {DefinitionValidator}
  */
 export function validateCommonName(text, type, elem, pluginName) {
-  // Check a-z, maybe a dash followed by words, case insensitive.
+  // Check a-z, maybe a dash and letters, case insensitive.
   // Also, no spaces.
   if (/^[a-z]+(-[a-z]+)*$/i.test(text)) {
     return true; // all good
