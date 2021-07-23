@@ -329,4 +329,218 @@ describe("Core — Definitions", () => {
       expect(dfnErrors).toHaveSize(2);
     });
   });
+
+  describe("CSS class based definitions types", () => {
+    it("allows exporting definitions through a class", async () => {
+      const body = `
+      <section>
+        <h2>abstract operations</h2>
+        <p>
+          <dfn class="export">just a regular definition</dfn>
+        </p>
+      </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("dfn");
+      expect(dfn.textContent).toBe("just a regular definition");
+      expect(dfn.dataset.export).toBe("");
+      expect(dfn.dataset.noexport).toBeUndefined();
+
+      // Check validation error
+      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      expect(errors).toHaveSize(0);
+    });
+
+    it("handles abstract operations", async () => {
+      const body = `
+      <section>
+        <h2>abstract operations</h2>
+        <p id="abstract-op">
+          <dfn class="abstract-op">abstract operation</dfn>
+        </p>
+      </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("#abstract-op dfn");
+      expect(dfn.dataset.dfnType).toBe("abstract-op");
+      expect(dfn.dataset.export).toBe("");
+    });
+
+    it("handles attributes", async () => {
+      const body = `
+        <section>
+          <h2>Attributes</h2>
+          <p id="attributes">
+            <dfn class="attribute">some-attribute</dfn>
+          </p>
+          <p id="attribute-bad">
+            <dfn class="attribute">-attribute</dfn>
+          </p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("#attributes dfn");
+      expect(dfn.dataset.dfnType).toBe("attribute");
+      expect(dfn.dataset.export).toBe("");
+
+      // Check validation error
+      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      expect(errors).toHaveSize(1);
+    });
+
+    it("handles attribute values", async () => {
+      const body = `
+        <section>
+          <h2>Attribute values</h2>
+          <p id="attr-value">
+            <dfn class="attr-value" data-dfn-for="input/type">password</dfn>
+          </p>
+          <p id="attr-value-errors">
+            <dfn class="attr-value">some-text</dfn>
+            <dfn class="attr-value">-not-ok!</dfn>
+          </p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("#attr-value dfn");
+      expect(dfn.dataset.dfnFor).toBe("input/type");
+      expect(dfn.dataset.dfnType).toBe("attr-value");
+      expect(dfn.dataset.export).toBe("");
+
+      // Check validation error
+      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      expect(errors).toHaveSize(2);
+    });
+
+    it("handles elements", async () => {
+      const body = `
+        <section>
+          <h2>Elements</h2>
+          <p id="elements">
+            <dfn class="element">element</dfn>
+          </p>
+          <p id="elements-bad">
+            <dfn class="element">-element</dfn>
+          </p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("#elements dfn");
+      expect(dfn.dataset.dfnType).toBe("element");
+      expect(dfn.dataset.export).toBe("");
+
+      // Check validation error
+      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      expect(errors).toHaveSize(1);
+      expect(errors[0].message).toContain("-element");
+    });
+
+    it("handles element states", async () => {
+      const body = `
+        <section>
+          <h2>Element states</h2>
+          <p id="element-state">
+            <dfn data-dfn-for="input" data-dfn-type="element-state">Password</dfn>
+          </p>
+          <p id="element-state-bad">
+            <dfn class="element-state">terrible state</dfn>
+          </p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("#element-state dfn");
+      expect(dfn.dataset.dfnFor).toBe("input");
+      expect(dfn.dataset.dfnType).toBe("element-state");
+      expect(dfn.dataset.export).toBe("");
+
+      // Check validation error
+      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      // missing data-dfn-for and invalid name
+      expect(errors).toHaveSize(2);
+    });
+
+    it("handles events", async () => {
+      const body = `
+        <section>
+          <h2>Events</h2>
+          <p id="events">
+            <dfn class="event">DOMContentLoaded</dfn>
+          </p>
+          <p id="events-bad">
+            <dfn class="event">-event</dfn>
+          </p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("#events dfn");
+      expect(dfn.dataset.dfnType).toBe("event");
+      expect(dfn.dataset.export).toBe("");
+
+      // Check validation error
+      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      expect(errors).toHaveSize(1);
+      expect(errors[0].message).toContain("-event");
+    });
+
+    it("handles http-headers", async () => {
+      const body = `
+        <section>
+          <h2>HTTP Header</h2>
+          <p id="http-header">
+            <dfn class="http-header">Some-Header</dfn>
+          </p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("#http-header dfn");
+      expect(dfn.dataset.dfnType).toBe("http-header");
+      expect(dfn.dataset.export).toBe("");
+    });
+
+    it("handles schemes", async () => {
+      const body = `
+        <section>
+          <h2>Scheme</h2>
+          <p id="http-header">
+            <dfn class="scheme">scheme</dfn>
+          </p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("#http-header dfn");
+      expect(dfn.dataset.dfnType).toBe("scheme");
+      expect(dfn.dataset.export).toBe("");
+    });
+
+    it("handles media types", async () => {
+      const body = `
+        <section>
+          <h2>HTTP Header</h2>
+          <p id="http-header">
+            <dfn class="media-type">application/something-something</dfn>
+          </p>
+          <p id="http-header-bad">
+            <dfn class="media-type">bad type</dfn>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("#http-header dfn");
+      expect(dfn.dataset.dfnType).toBe("media-type");
+      expect(dfn.dataset.export).toBe("");
+
+      // Check validation error
+      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      expect(errors).toHaveSize(1);
+    });
+  });
 });

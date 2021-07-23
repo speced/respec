@@ -10,11 +10,44 @@ import {
   showError,
   toMDCode,
 } from "./utils.js";
+import {
+  validateCommonName,
+  validateDOMName,
+  validateMimeType,
+} from "./dfn-validators.js";
 import { registerDefinition } from "./dfn-map.js";
 import { slotRegex } from "./inline-idl-parser.js";
 import { sub } from "./pubsubhub.js";
 
 export const name = "core/dfn";
+
+const knownTypesMap = new Map([
+  ["abstract-op", { requiresFor: false }],
+  ["attribute", { requiresFor: false, validator: validateDOMName }],
+  [
+    "attr-value",
+    {
+      requiresFor: true,
+      associateWith: "an HTML attribute",
+      validator: validateDOMName,
+    },
+  ],
+  ["element", { requiresFor: false, validator: validateDOMName }],
+  [
+    "element-state",
+    {
+      requiresFor: true,
+      associateWith: "an HTML attribute",
+      validator: validateCommonName,
+    },
+  ],
+  ["event", { requiresFor: false, validator: validateCommonName }],
+  ["http-header", { requiresFor: false }],
+  ["scheme", { requiresFor: false, validator: validateCommonName }],
+  ["media-type", { requiresFor: false, validator: validateMimeType }],
+]);
+
+const knownTypes = [...knownTypesMap.keys()];
 
 export function run() {
   for (const dfn of document.querySelectorAll("dfn")) {
@@ -22,11 +55,44 @@ export function run() {
     registerDefinition(dfn, titles);
 
     const [linkingText] = titles;
-    // Matches attributes and methods, like [[some words]](with, optional, arguments)
-    // but ignores legacy data-cite="foo#bar" (e.g., a link to a slot in the ES6 spec)
-    if (!dfn.dataset.cite && slotRegex.test(linkingText)) {
-      processAsInternalSlot(linkingText, dfn);
+
+    let shouldExport = false;
+    let type = "";
+
+    // It's a legacy cite or redefining a something it doesn't own, so it gets no benefit.
+    if (dfn.dataset.cite && /.+#./.test(dfn.dataset.cite)) {
+      continue;
     }
+
+    switch (true) {
+      // class defined type (e.g., "<dfn class="element">)
+      case knownTypes.some(name => dfn.classList.contains(name)):
+        type = knownTypes.find(name => dfn.classList.contains(name));
+        validateDefinition(dfn, linkingText, type);
+        shouldExport = true;
+        break;
+
+      // Internal slots: attributes+ methods (e.g., [[some words]](with, optional, arguments))
+      case slotRegex.test(linkingText):
+        shouldExport = false;
+        type = processAsInternalSlot(linkingText, dfn);
+        break;
+    }
+
+    // If the Editor explicitly asked for it to be exported, so let's export it.
+    if (dfn.classList.contains("export")) shouldExport = true;
+
+    if (shouldExport && !dfn.dataset.hasOwnProperty("noexport")) {
+      dfn.dataset.export = "";
+    }
+
+    // Get closest type from context
+    if (!type) {
+      /** @type {HTMLElement} */
+      const closestType = dfn.closest("[data-dfn-type]");
+      type = closestType?.dataset.dfnType;
+    }
+    if (!dfn.dataset.dfnType && type) dfn.dataset.dfnType = type;
 
     // Only add `lt`s that are different from the text content
     if (titles.length === 1 && linkingText === norm(dfn.textContent)) {
@@ -36,6 +102,21 @@ export function run() {
   }
   sub("plugins-done", addContractDefaults);
 }
+
+function validateDefinition(dfn, linkingText, type) {
+  const entry = knownTypesMap.get(type);
+  if (entry.requiresFor && !dfn.dataset.dfnFor) {
+    const msg = docLink`Definition of type "\`${type}\`" requires a ${"[data-dfn-for]"} attribute.`;
+    const { associateWith } = entry;
+    const hint = docLink`Use a ${"[data-dfn-for]"} attribute to associate this with ${associateWith}.`;
+    showError(msg, name, { hint, elements: [dfn] });
+  }
+
+  if (entry.validator) {
+    entry.validator(linkingText, type, dfn, name);
+  }
+}
+
 /**
  *
  * @param {string} title
@@ -66,8 +147,7 @@ function processAsInternalSlot(title, dfn) {
   // If it ends with a ), then it's method. Attribute otherwise.
   const derivedType = title.endsWith(")") ? "method" : "attribute";
   if (!dfn.dataset.dfnType) {
-    dfn.dataset.dfnType = derivedType;
-    return;
+    return derivedType;
   }
 
   // Perform validation on the dfn's type.
@@ -82,7 +162,9 @@ function processAsInternalSlot(title, dfn) {
       derivedType
     )}"?`;
     showError(msg, name, { hint, elements: [dfn] });
+    return "dfn";
   }
+  return dfnType;
 }
 
 function addContractDefaults() {
