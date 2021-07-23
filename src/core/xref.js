@@ -68,12 +68,11 @@ export async function run(conf) {
   if (!elems.length) return;
 
   /** @type {RequestEntry[]} */
-  const queryKeys = [];
-  for (const elem of elems) {
-    const entry = getRequestEntry(elem);
-    const id = await objectHash(entry);
-    queryKeys.push({ ...entry, id });
-  }
+  const queryKeys = await Promise.all(
+    elems.map(getRequestEntry).map(async entry => {
+      return { id: await objectHash(entry), ...entry };
+    })
+  );
 
   const data = await getData(queryKeys, xref.url);
   addDataCiteToTerms(elems, queryKeys, data, conf);
