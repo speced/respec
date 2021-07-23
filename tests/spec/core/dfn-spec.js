@@ -21,6 +21,80 @@ describe("Core — Definitions", () => {
     expect(sec.querySelector("a").getAttribute("href")).toBe("#dfn-text");
   });
 
+  it("gives definitions a type and an id", async () => {
+    const body = `
+    <section id='dfns'>
+      <dfn>some definition</dfn>
+      <dfn data-export>some other def</dfn>
+      <dfn data-dfn-type="abstract-op">some other def</dfn>
+      <dfn data-dfn-type="">empty dfn type</dfn>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const sec = doc.getElementById("dfns");
+    const dfns = sec.querySelectorAll("dfn");
+    expect(dfns).toHaveSize(4);
+    expect([...dfns].every(dfn => Boolean(dfn.getAttribute("id")))).toBeTrue();
+    expect(
+      [...dfns].every(dfn => dfn.hasAttribute("data-dfn-type"))
+    ).toBeTrue();
+    const [dfn1, dfn2, dfn3, dfn4] = dfns;
+
+    expect(dfn1.dataset.dfnType).toBe("dfn");
+    expect(dfn1.dataset.export).toBeUndefined();
+
+    expect(dfn2.dataset.dfnType).toBe("dfn");
+    expect(dfn2.dataset.hasOwnProperty("export")).toBeTrue();
+
+    expect(dfn3.dataset.dfnType).toBe("abstract-op");
+    // Override empty type with "dfn"
+    expect(dfn4.dataset.dfnType).toBe("dfn");
+  });
+
+  it("exports known types by default", async () => {
+    const body = `
+    <section id='dfns'>
+      <dfn data-dfn-type="abstract-op">dfn1</dfn>
+      <dfn data-dfn-type="abstract-op" data-noexport>dfn2</dfn>
+      <dfn data-dfn-type="abstract-op" data-export>dfn3</dfn>
+      <dfn data-cite="dom#something">dfn4</dfn>
+      <dfn>dfn5</dfn>
+      <dfn data-noexport>dfn6</dfn>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const sec = doc.getElementById("dfns");
+    const dfns = sec.querySelectorAll("dfn");
+    expect(dfns).toHaveSize(6);
+    const [dfn1, dfn2, dfn3, dfn4, dfn5, dfn6] = dfns;
+
+    // first "abstract-op" is exported by default
+    expect(dfn1.dataset.dfnType).toBe("abstract-op");
+    expect(dfn1.dataset.hasOwnProperty("export")).toBeTrue();
+
+    // second "abstract-op" is not exported
+    expect(dfn2.dataset.dfnType).toBe("abstract-op");
+    expect(dfn2.dataset.hasOwnProperty("export")).toBeFalse();
+
+    // third "abstract-op" is exported
+    expect(dfn3.dataset.dfnType).toBe("abstract-op");
+    expect(dfn3.dataset.hasOwnProperty("export")).toBeTrue();
+
+    // fourth doesn't export, because it's using data-cite.
+    expect(dfn4.dataset.hasOwnProperty("export")).toBeFalse();
+    expect(dfn4.dataset.dfnType).toBe("dfn");
+
+    // fifth "dfn" is not exported, because it's just a regular "dfn".
+    expect(dfn5.dataset.hasOwnProperty("export")).toBeFalse();
+    expect(dfn5.dataset.dfnType).toBe("dfn");
+
+    // six definition is not exported, because it's data-noexport.
+    expect(dfn6.dataset.hasOwnProperty("export")).toBeFalse();
+    expect(dfn6.dataset.dfnType).toBe("dfn");
+    expect(dfn6.dataset.export).toBeUndefined();
+  });
+
   it("makes dfn tab enabled whose aria-role is a link", async () => {
     const body = `
     <section id='dfns'>
@@ -166,7 +240,7 @@ describe("Core — Definitions", () => {
           <dfn id="attribute">
             [[\\internal slot]]
           </dfn>
-          <dfn id="method">
+          <dfn id="method" data-export="">
             [[\\I am_a method]](I, really, ...am)
           </dfn>
           <dfn id="parent" data-dfn-for="Window">[[\\internal slot]]</dfn>
@@ -183,8 +257,29 @@ describe("Core — Definitions", () => {
         {{Test/[[I am_a method]](I, really, ...am)}}
         {{Window/[[internal slot]]}}
         </p>
+        <p>
+          <dfn id="legacy" data-cite="ecma-262#sec-8.6.2">[[\\Class]]</dfn>
+        </p>
       </section>
     `;
+
+    it("doesn't export internal slots by default", async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        body,
+      };
+      const doc = await makeRSDoc(ops);
+
+      // The attribute is not exported explicitly, so defaults to "noexport".
+      const attribute = doc.getElementById("attribute");
+      expect(attribute.dataset.export).toBeUndefined();
+      expect(attribute.dataset.noexport).toBe("");
+
+      // The method has an explicit export, so doesn't have a "noexport".
+      const method = doc.getElementById("method");
+      expect(method.dataset.export).toBe("");
+      expect(method.dataset.noexport).toBeUndefined();
+    });
 
     it("sets the data-dfn-type as an attribute", async () => {
       const ops = makeStandardOps(null, body);
@@ -193,6 +288,7 @@ describe("Core — Definitions", () => {
       expect(dfn.textContent.trim()).toBe("[[internal slot]]");
       expect(dfn.dataset.dfnType).toBe("attribute");
       expect(dfn.dataset.idl).toBe("");
+      expect(dfn.dataset.noexport).toBe("");
     });
 
     it("sets the data-dfn-type as a method, when it's a method", async () => {
@@ -204,6 +300,8 @@ describe("Core — Definitions", () => {
       );
       expect(dfn.dataset.dfnType).toBe("method");
       expect(dfn.dataset.idl).toBe("");
+      expect(dfn.dataset.noexport).toBeUndefined();
+      expect(dfn.dataset.export).toBe("");
     });
 
     it("when data-dfn-for is missing, it use the closes data-dfn-for as parent", async () => {
@@ -213,6 +311,13 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.dfnFor).toBe("Test");
       const dfnWithParent = doc.getElementById("parent");
       expect(dfnWithParent.dataset.dfnFor).toBe("Window");
+    });
+
+    it("treats legacy slot references as regular definitions", async () => {
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("legacy");
+      expect(dfn.dataset.dfnType).toBe("dfn");
     });
 
     it("errors if the internal slot is not for something", async () => {

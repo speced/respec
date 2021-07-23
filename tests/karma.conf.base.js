@@ -17,7 +17,8 @@ const files = [
     included: false,
   },
   {
-    pattern: "node_modules/@(idb|hyperhtml|marked|webidl2)/**/*.js",
+    pattern:
+      "node_modules/@(idb|hyperhtml|marked|webidl2|sniffy-mimetype)/**/*.js",
     included: false,
   },
   {
