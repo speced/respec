@@ -1917,38 +1917,38 @@ describe("W3C — Headers", () => {
   });
 
   it("allows custom sections and custom content, not just paragraphs", async () => {
-    const ops = makeStandardOps();
-    ops.body = `
-        <section>
-          <h2>PASS</h2>
-          <p>Normal section.</p>
-        </section>
-        <section id="sotd" class="introductory notoc">
-          <h2>test</h2>
-          <p id="p1">
-            CUSTOM PARAGRAPH 1
-          </p>
-          <p id="p2">
-            CUSTOM PARAGRAPH 2
-          </p><!--
-          comment node
-          -->
-          text node
-          <ol id="ol">
-            <li>item 1</li>
-            <li>item 2</li>
-          </ol>
-          <section id="first-sub-section">
-            <h3>Testing</h3>
-          </section>
-          <p id="p3">
-            This is terrible, but can happen.
-          </p>
-          <section id="last-sub-section">
-            <h2>not in toc...</h2>
-          </section>
-        </section>`;
-    const theTest = doc => {
+    const body = `
+    <section>
+      <h2>PASS</h2>
+      <p>Normal section.</p>
+    </section>
+    <!-- nothing here will appear in the ToC -->
+    <section id="sotd" class="introductory notoc">
+      <h2>test</h2>
+      <p id="p1">
+        CUSTOM PARAGRAPH 1
+      </p>
+      <p id="p2">
+        CUSTOM PARAGRAPH 2
+      </p><!--
+      comment node
+      -->
+      text node
+      <ol id="ol">
+        <li>item 1</li>
+        <li>item 2</li>
+      </ol>
+      <section id="first-sub-section">
+        <h3>Testing</h3>
+      </section>
+      <p id="p3">
+        This is terrible, but can happen.
+      </p>
+      <section id="last-sub-section">
+        <h2>not in toc...</h2>
+      </section>
+    </section>`;
+    const theTest = (doc, context) => {
       // the class introductory is added by script
       const sotd = doc.getElementById("sotd");
 
@@ -1978,23 +1978,28 @@ describe("W3C — Headers", () => {
       const lastSection = doc.getElementById("last-sub-section");
       expect(sotd.lastElementChild).toBe(lastSection);
 
-      // p3 is sadwiched in between the sections
+      // p3 is sandwiched in between the sections
       const p3 = doc.getElementById("p3");
       expect(p3).toBeTruthy();
       expect(p3.previousElementSibling).toBe(firstSection);
       expect(p3.nextElementSibling).toBe(lastSection);
 
-      expect(doc.querySelectorAll("#toc li")).toHaveSize(2);
+      // Abstract, PASS, Another TOC thing
+      expect(doc.querySelectorAll("#toc li"))
+        .withContext(context)
+        .toHaveSize(2);
       // and it should say "PASS"
       expect(doc.querySelector("#toc li bdi").nextSibling.textContent).toBe(
         "PASS"
       );
     };
-    theTest(await makeRSDoc(ops));
-    const cgOpts = Object.assign({}, ops, {
-      config: { specStatus: "CG-DRAFT" },
-    });
-    theTest(await makeRSDoc(cgOpts));
+    theTest(await makeRSDoc(makeStandardOps({}, body)), "normal working group");
+    theTest(
+      await makeRSDoc(
+        makeStandardOps({ specStatus: "CG-DRAFT", wg: "WICG" }, body)
+      ),
+      "community group draft"
+    );
   });
   it("includes translation link when it's a REC", async () => {
     const ops = makeStandardOps();
