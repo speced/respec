@@ -61,7 +61,7 @@ export function run() {
 
     const [linkingText] = titles;
 
-    let { type, shouldExport } = computeTypeAndExport(linkingText);
+    let { type, shouldExport } = computeTypeAndExport(dfn, linkingText);
 
     // If the Editor explicitly asked for it to be exported, so let's export it.
     if (dfn.classList.contains("export")) shouldExport = true;
