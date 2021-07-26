@@ -56,6 +56,7 @@
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^12.0.0",
+    "simple-git-hooks": "^2.5.1",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^4.3.5",
     "vnu-jar": "^21.6.11",
@@ -96,6 +97,9 @@
     "tools/respec2html.js",
     "tools/respecDocWriter.js"
   ],
+  "simple-git-hooks": {
+    "pre-push": "npm run lint"
+  },
   "prettier": {
     "trailingComma": "es5",
     "arrowParens": "avoid"
