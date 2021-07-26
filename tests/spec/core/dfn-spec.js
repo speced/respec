@@ -351,7 +351,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.noexport).toBeUndefined();
 
       // Check validation error
-      const errors = doc.respec.errors.filter(findDfnErrors);
+      const errors = findDfnErrors(doc);
       expect(errors).toHaveSize(0);
     });
 
@@ -390,7 +390,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(findDfnErrors);
+      const errors = findDfnErrors(doc);
       expect(errors).toHaveSize(1);
       expect(errors[0].message).toContain("-attribute");
     });
@@ -416,7 +416,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(findDfnErrors);
+      const errors = findDfnErrors(doc);
       expect(errors).toHaveSize(2);
       expect(errors[0].message).toContain("attr-value");
       expect(errors[1].message).toContain("-not-ok!");
@@ -441,7 +441,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(findDfnErrors);
+      const errors = findDfnErrors(doc);
       expect(errors).toHaveSize(1);
       expect(errors[0].message).toContain("-element");
     });
@@ -466,7 +466,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(findDfnErrors);
+      const errors = findDfnErrors(doc);
       // missing data-dfn-for and invalid name
       expect(errors).toHaveSize(2);
       expect(errors[1].message).toContain("terrible state");
@@ -491,7 +491,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(findDfnErrors);
+      const errors = findDfnErrors(doc);
       expect(errors).toHaveSize(1);
       expect(errors[0].message).toContain("-event");
     });
@@ -546,7 +546,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(findDfnErrors);
+      const errors = findDfnErrors(doc);
       expect(errors).toHaveSize(1);
       expect(errors[0].message).toContain("bad type");
     });
