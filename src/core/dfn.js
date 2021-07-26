@@ -109,6 +109,12 @@ function computeTypeAndExport(dfn, linkingText) {
       shouldExport = false;
       type = processAsInternalSlot(linkingText, dfn);
       break;
+
+    // A definition that ends with "task source" is a "task-source"...
+    case /\w+ task source$/i.test(linkingText):
+      shouldExport = true;
+      type = "task-source";
+      break;
   }
   return { type, shouldExport };
 }
