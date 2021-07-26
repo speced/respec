@@ -21,7 +21,7 @@ import { sub } from "./pubsubhub.js";
 
 export const name = "core/dfn";
 
-/** @type {Map<string, { requiresFor: boolean, validator?: (...args: any[]) => boolean, associateWith?: string}>}  */
+/** @type {Map<string, { requiresFor: boolean, validator?: DefinitionValidator, associateWith?: string}>}  */
 const knownTypesMap = new Map([
   ["abstract-op", { requiresFor: false }],
   ["attribute", { requiresFor: false, validator: validateDOMName }],
@@ -84,7 +84,7 @@ function computeTypeAndExport(dfn, linkingText) {
     // class defined type (e.g., "<dfn class="element">)
     case knownTypes.some(name => dfn.classList.contains(name)):
       type = knownTypes.find(name => dfn.classList.contains(name));
-      validateDefinition(dfn, linkingText, type);
+      validateDefinition(linkingText, type, dfn);
       shouldExport = true;
       break;
 
@@ -111,7 +111,12 @@ function computeTypeAndExport(dfn, linkingText) {
   if (!dfn.dataset.dfnType && type) dfn.dataset.dfnType = type;
 }
 
-function validateDefinition(dfn, linkingText, type) {
+/**
+ * @param {string} text
+ * @param {string} type
+ * @param {HTMLElement} dfn
+ */
+function validateDefinition(text, type, dfn) {
   const entry = knownTypesMap.get(type);
   if (entry.requiresFor && !dfn.dataset.dfnFor) {
     const msg = docLink`Definition of type "\`${type}\`" requires a ${"[data-dfn-for]"} attribute.`;
@@ -121,7 +126,7 @@ function validateDefinition(dfn, linkingText, type) {
   }
 
   if (entry.validator) {
-    entry.validator(linkingText, type, dfn, name);
+    entry.validator(text, type, dfn, name);
   }
 }
 
