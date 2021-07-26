@@ -11,7 +11,8 @@ import {
 describe("Core — Definitions", () => {
   afterAll(flushIframes);
 
-  const findDfnErrors = doc => doc.respec.errors.filter(err => err.plugin === "core/dfn");
+  const findDfnErrors = doc =>
+    doc.respec.errors.filter(err => err.plugin === "core/dfn");
 
   it("processes definitions", async () => {
     const ops = {
