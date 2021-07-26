@@ -445,7 +445,7 @@ describe("Core — Definitions", () => {
         <section>
           <h2>Element states</h2>
           <p id="element-state">
-            <dfn data-dfn-for="input" data-dfn-type="element-state">Password</dfn>
+            <dfn class="element-state" data-dfn-for="input">Password</dfn>
           </p>
           <p id="element-state-bad">
             <dfn class="element-state">terrible state</dfn>

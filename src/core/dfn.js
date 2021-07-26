@@ -21,6 +21,7 @@ import { sub } from "./pubsubhub.js";
 
 export const name = "core/dfn";
 
+/** @type {Map<string, { requiresFor: boolean, validator?: (...args: any[]) => boolean, associateWith?: string}>}  */
 const knownTypesMap = new Map([
   ["abstract-op", { requiresFor: false }],
   ["attribute", { requiresFor: false, validator: validateDOMName }],
@@ -55,7 +56,7 @@ export function run() {
     registerDefinition(dfn, titles);
 
     // It's a legacy cite or redefining a something it doesn't own, so it gets no benefit.
-    if (dfn.dataset.cite && /.+#./.test(dfn.dataset.cite)) {
+    if (dfn.dataset.cite && /\b#\b/.test(dfn.dataset.cite)) {
       continue;
     }
 
@@ -74,7 +75,6 @@ export function run() {
 /**
  * @param {HTMLElement} dfn
  * @param {string} linkingText
- * @return {Object}
  * */
 function computeTypeAndExport(dfn, linkingText) {
   let shouldExport = false;
@@ -98,7 +98,7 @@ function computeTypeAndExport(dfn, linkingText) {
   // If the Editor explicitly asked for it to be exported, so let's export it.
   if (dfn.classList.contains("export")) shouldExport = true;
 
-  if (shouldExport && !dfn.dataset.hasOwnProperty("noexport")) {
+  if (shouldExport && !dfn.hasAttribute("data-noexport")) {
     dfn.dataset.export = "";
   }
 
