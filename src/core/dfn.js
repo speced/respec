@@ -60,23 +60,7 @@ export function run() {
     }
 
     const [linkingText] = titles;
-
-    let { type, shouldExport } = computeTypeAndExport(dfn, linkingText);
-
-    // If the Editor explicitly asked for it to be exported, so let's export it.
-    if (dfn.classList.contains("export")) shouldExport = true;
-
-    if (shouldExport && !dfn.dataset.hasOwnProperty("noexport")) {
-      dfn.dataset.export = "";
-    }
-
-    // Get closest type from context
-    if (!type) {
-      /** @type {HTMLElement} */
-      const closestType = dfn.closest("[data-dfn-type]");
-      type = closestType?.dataset.dfnType;
-    }
-    if (!dfn.dataset.dfnType && type) dfn.dataset.dfnType = type;
+    computeTypeAndExport(dfn, linkingText);
 
     // Only add `lt`s that are different from the text content
     if (titles.length === 1 && linkingText === norm(dfn.textContent)) {
@@ -110,7 +94,21 @@ function computeTypeAndExport(dfn, linkingText) {
       type = processAsInternalSlot(linkingText, dfn);
       break;
   }
-  return { type, shouldExport };
+
+  // If the Editor explicitly asked for it to be exported, so let's export it.
+  if (dfn.classList.contains("export")) shouldExport = true;
+
+  if (shouldExport && !dfn.dataset.hasOwnProperty("noexport")) {
+    dfn.dataset.export = "";
+  }
+
+  // Get closest type from context
+  if (!type) {
+    /** @type {HTMLElement} */
+    const closestType = dfn.closest("[data-dfn-type]");
+    type = closestType?.dataset.dfnType;
+  }
+  if (!dfn.dataset.dfnType && type) dfn.dataset.dfnType = type;
 }
 
 function validateDefinition(dfn, linkingText, type) {
