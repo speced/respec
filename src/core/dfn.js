@@ -98,7 +98,7 @@ function computeTypeAndExport(dfn, linkingText) {
 
   // If the Editor explicitly asked for it to be exported, so let's export it.
   if (dfn.classList.contains("export")) shouldExport = true;
-  
+
   // Get closest type from context
   if (!type) {
     /** @type {HTMLElement} */
