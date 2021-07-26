@@ -550,5 +550,22 @@ describe("Core — Definitions", () => {
       expect(errors).toHaveSize(1);
       expect(errors[0].message).toContain("bad type");
     });
+
+    it("handles multiple types in the class by allowing the first one to win", async () => {
+      const body = `
+        <section>
+          <h2>Multiple definitions</h2>
+          <p>
+            <dfn id="multiple-definitions" class="banana event element media-type">event</dfn>
+          </p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("#multiple-definitions");
+      expect(dfn.dataset.dfnType).toBe("event");
+      expect(dfn.textContent).toBe("event");
+      expect(dfn.dataset.export).toBe("");
+    });
   });
 });

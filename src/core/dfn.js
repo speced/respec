@@ -83,7 +83,10 @@ function computeTypeAndExport(dfn, linkingText) {
   switch (true) {
     // class defined type (e.g., "<dfn class="element">)
     case knownTypes.some(name => dfn.classList.contains(name)):
-      type = knownTypes.find(name => dfn.classList.contains(name));
+      // First one wins
+      type = [...dfn.classList].find(className =>
+        knownTypes.includes(className)
+      );
       validateDefinition(linkingText, type, dfn);
       shouldExport = true;
       break;
