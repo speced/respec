@@ -97,16 +97,16 @@ function computeTypeAndExport(dfn, linkingText) {
   }
 
   // Get closest type from context
+  // If the Editor explicitly asked for it to be exported, so let's export it.
+  if (dfn.classList.contains("export")) shouldExport = true;
+  
   if (!type) {
     /** @type {HTMLElement} */
     const closestType = dfn.closest("[data-dfn-type]");
     type = closestType?.dataset.dfnType;
   }
+
   if (!dfn.dataset.dfnType && type) dfn.dataset.dfnType = type;
-
-  // If the Editor explicitly asked for it to be exported, so let's export it.
-  if (dfn.classList.contains("export")) shouldExport = true;
-
   if (shouldExport && !dfn.hasAttribute("data-noexport")) {
     dfn.dataset.export = "";
   }
