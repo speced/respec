@@ -611,6 +611,16 @@ export function run(conf) {
   conf.perEnd = validateDateAndRecover(conf, "perEnd");
   conf.humanPEREnd = W3CDate.format(conf.perEnd);
 
+  if (conf.hasOwnProperty("updateableRec")) {
+    const msg = "Configuration option `updateableRec` is deprecated.";
+    const hint = docLink`Add an ${"[`updateable-rec`|#updateable-rec-class]"} CSS class to the Status of This Document section instead.`;
+    showWarning(msg, name, { hint });
+    if (conf.updateableRec) {
+      sotd.classList.add("updateable-rec");
+    }
+  }
+
+  conf.updateableRec = sotd.classList.contains("updateable-rec");
   const revisionTypes = ["addition", "correction"];
   if (conf.specStatus === "REC" && conf.revisionTypes?.length > 0) {
     if (conf.revisionTypes.some(x => !revisionTypes.includes(x))) {
