@@ -54,30 +54,14 @@ export function run() {
     const titles = getDfnTitles(dfn);
     registerDefinition(dfn, titles);
 
-    const [linkingText] = titles;
-
-    let shouldExport = false;
-    let type = "";
-
     // It's a legacy cite or redefining a something it doesn't own, so it gets no benefit.
     if (dfn.dataset.cite && /.+#./.test(dfn.dataset.cite)) {
       continue;
     }
 
-    switch (true) {
-      // class defined type (e.g., "<dfn class="element">)
-      case knownTypes.some(name => dfn.classList.contains(name)):
-        type = knownTypes.find(name => dfn.classList.contains(name));
-        validateDefinition(dfn, linkingText, type);
-        shouldExport = true;
-        break;
+    const [linkingText] = titles;
 
-      // Internal slots: attributes+ methods (e.g., [[some words]](with, optional, arguments))
-      case slotRegex.test(linkingText):
-        shouldExport = false;
-        type = processAsInternalSlot(linkingText, dfn);
-        break;
-    }
+    let { type, shouldExport } = computeTypeAndExport(linkingText);
 
     // If the Editor explicitly asked for it to be exported, so let's export it.
     if (dfn.classList.contains("export")) shouldExport = true;
@@ -101,6 +85,27 @@ export function run() {
     dfn.dataset.lt = titles.join("|");
   }
   sub("plugins-done", addContractDefaults);
+}
+
+function computeTypeAndExport(dfn, linkingText) {
+  let shouldExport = false;
+  let type = "";
+
+  switch (true) {
+    // class defined type (e.g., "<dfn class="element">)
+    case knownTypes.some(name => dfn.classList.contains(name)):
+      type = knownTypes.find(name => dfn.classList.contains(name));
+      validateDefinition(dfn, linkingText, type);
+      shouldExport = true;
+      break;
+
+    // Internal slots: attributes+ methods (e.g., [[some words]](with, optional, arguments))
+    case slotRegex.test(linkingText):
+      shouldExport = false;
+      type = processAsInternalSlot(linkingText, dfn);
+      break;
+  }
+  return { type, shouldExport };
 }
 
 function validateDefinition(dfn, linkingText, type) {
