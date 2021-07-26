@@ -85,7 +85,7 @@ function computeTypeAndExport(dfn, linkingText) {
     case knownTypes.some(name => dfn.classList.contains(name)):
       // First one wins
       type = [...dfn.classList].find(className =>
-        knownTypes.includes(className)
+        knownTypesMap.has(className)
       );
       validateDefinition(linkingText, type, dfn);
       shouldExport = true;
