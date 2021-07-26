@@ -87,6 +87,11 @@ export function run() {
   sub("plugins-done", addContractDefaults);
 }
 
+/**
+ * @param {HTMLElement} dfn
+ * @param {string} linkingText
+ * @return {Object}
+ * */
 function computeTypeAndExport(dfn, linkingText) {
   let shouldExport = false;
   let type = "";
