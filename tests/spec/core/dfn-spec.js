@@ -10,6 +10,9 @@ import {
 
 describe("Core — Definitions", () => {
   afterAll(flushIframes);
+
+  const findDfnErrors = err => err.plugin === "core/dfn";
+
   it("processes definitions", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -348,7 +351,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.noexport).toBeUndefined();
 
       // Check validation error
-      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      const errors = doc.respec.errors.filter(findDfnErrors);
       expect(errors).toHaveSize(0);
     });
 
@@ -387,8 +390,9 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      const errors = doc.respec.errors.filter(findDfnErrors);
       expect(errors).toHaveSize(1);
+      expect(errors[0].message).toContain("-attribute");
     });
 
     it("handles attribute values", async () => {
@@ -400,7 +404,7 @@ describe("Core — Definitions", () => {
           </p>
           <p id="attr-value-errors">
             <dfn class="attr-value">some-text</dfn>
-            <dfn class="attr-value">-not-ok!</dfn>
+            <dfn class="attr-value" data-dfn-for="input/type">-not-ok!</dfn>
           </p>
         </section>
       `;
@@ -412,8 +416,10 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      const errors = doc.respec.errors.filter(findDfnErrors);
       expect(errors).toHaveSize(2);
+      expect(errors[0].message).toContain("attr-value");
+      expect(errors[1].message).toContain("-not-ok!");
     });
 
     it("handles elements", async () => {
@@ -435,7 +441,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      const errors = doc.respec.errors.filter(findDfnErrors);
       expect(errors).toHaveSize(1);
       expect(errors[0].message).toContain("-element");
     });
@@ -460,9 +466,10 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      const errors = doc.respec.errors.filter(findDfnErrors);
       // missing data-dfn-for and invalid name
       expect(errors).toHaveSize(2);
+      expect(errors[1].message).toContain("terrible state");
     });
 
     it("handles events", async () => {
@@ -484,7 +491,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      const errors = doc.respec.errors.filter(findDfnErrors);
       expect(errors).toHaveSize(1);
       expect(errors[0].message).toContain("-event");
     });
@@ -539,8 +546,9 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
-      const errors = doc.respec.errors.filter(err => err.plugin === "core/dfn");
+      const errors = doc.respec.errors.filter(findDfnErrors);
       expect(errors).toHaveSize(1);
+      expect(errors[0].message).toContain("bad type");
     });
   });
 });

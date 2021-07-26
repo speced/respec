@@ -30,7 +30,7 @@ const knownTypesMap = new Map([
     {
       requiresFor: true,
       associateWith: "an HTML attribute",
-      validator: validateDOMName,
+      validator: validateCommonName,
     },
   ],
   ["element", { requiresFor: false, validator: validateDOMName }],
