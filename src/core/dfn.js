@@ -113,7 +113,7 @@ function computeExport(dfn) {
   switch (true) {
     // Error if we have both exports and no exports.
     case dfn.matches(".export.no-export"): {
-      const msg = docLink`Declares both "${"[no-export]"}" and "${"[export]"}" css class.`;
+      const msg = docLink`Declares both "${"[no-export]"}" and "${"[export]"}" CSS class.`;
       const hint = "Please use only one.";
       showError(msg, name, { elements: [dfn], hint });
       break;
