@@ -609,7 +609,7 @@ describe("Core — Definitions", () => {
       expect(errors).toHaveSize(0);
     });
 
-    it("errors if the dfn declares export and no-export classes", async () => {
+    it("errors if the dfn declares both export and no-export classes", async () => {
       const body = `
         <section>
           <h2>Confused exports</h2>
