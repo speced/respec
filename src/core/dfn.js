@@ -176,7 +176,7 @@ function processAsInternalSlot(title, dfn) {
   }
 
   // Don't export internal slots by default, as they are not supposed to be public.
-  if (!dfn.matches("export") && !dfn.matches("[data-export]")) {
+  if (!dfn.matches(".export") && !dfn.matches("[data-export]")) {
     dfn.dataset.noexport = "";
   }
 
