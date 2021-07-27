@@ -138,13 +138,6 @@ function computeExport(dfn) {
 }
 
 /**
- * @param {HTMLElement} dfn
- */
-function isNoExport(dfn) {
-  return dfn.matches(".no-export") || dfn.matches("[data-noexport]");
-}
-
-/**
  * @param {string} text
  * @param {string} type
  * @param {HTMLElement} dfn
