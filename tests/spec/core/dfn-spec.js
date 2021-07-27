@@ -568,5 +568,22 @@ describe("Core — Definitions", () => {
       expect(dfn.textContent).toBe("event");
       expect(dfn.dataset.export).toBe("");
     });
+
+    it("errors if the dfn declares export and no-export classes", async () => {
+      const body = `
+        <section>
+          <h2>Confused exports</h2>
+          <p>
+            <dfn class="export no-export">can't decide</dfn>
+          </p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      // Check validation error
+      const errors = findDfnErrors(doc);
+      expect(errors).toHaveSize(1);
+      expect(errors[0].message).toContain("declares both");
+    });
   });
 });

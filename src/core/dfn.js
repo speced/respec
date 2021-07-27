@@ -61,7 +61,8 @@ export function run() {
     }
 
     const [linkingText] = titles;
-    computeTypeAndExport(dfn, linkingText);
+    computeType(dfn, linkingText);
+    computeExport(dfn);
 
     // Only add `lt`s that are different from the text content
     if (titles.length === 1 && linkingText === norm(dfn.textContent)) {
@@ -76,8 +77,7 @@ export function run() {
  * @param {HTMLElement} dfn
  * @param {string} linkingText
  * */
-function computeTypeAndExport(dfn, linkingText) {
-  let shouldExport = false;
+function computeType(dfn, linkingText) {
   let type = "";
 
   switch (true) {
@@ -86,29 +86,47 @@ function computeTypeAndExport(dfn, linkingText) {
       // First one wins
       type = [...dfn.classList].find(className => knownTypesMap.has(className));
       validateDefinition(linkingText, type, dfn);
-      shouldExport = true;
       break;
 
     // Internal slots: attributes+ methods (e.g., [[some words]](with, optional, arguments))
     case slotRegex.test(linkingText):
-      shouldExport = false;
       type = processAsInternalSlot(linkingText, dfn);
       break;
-  }
 
   // If the Editor explicitly asked for it to be exported, so let's export it.
   if (dfn.classList.contains("export")) shouldExport = true;
 
-  // Get closest type from context
+  // Assign the type
   if (!type) {
     /** @type {HTMLElement} */
     const closestType = dfn.closest("[data-dfn-type]");
     type = closestType?.dataset.dfnType;
+  } else if (!dfn.dataset.dfnType) {
+    dfn.dataset.dfnType = type;
   }
+}
 
-  if (!dfn.dataset.dfnType && type) dfn.dataset.dfnType = type;
-  if (shouldExport && !dfn.hasAttribute("data-noexport")) {
-    dfn.dataset.export = "";
+// Deal with export/no export
+function computeExport(dfn) {
+  switch (true) {
+    // If we have both exports and no exports, we should show an error.
+    case dfn.matches(".export.no-export"): {
+      const msg = docLink`Definition of declares both "export" and "no-export" css class.`;
+      const hint = "Please use only one.";
+      showError(msg, name, { elements: [dfn], hint });
+      break;
+    }
+
+    // No export wins
+    case dfn.matches(".no-export") || dfn.matches("[data-no-export]"):
+      delete dfn.dataset.export;
+      dfn.dataset.noexport = "";
+      break;
+
+    // If the author explicitly asked for it to be exported, so let's export it.
+    case dfn.matches(".export") && !dfn.matches("[data-no-export]"):
+      dfn.dataset.export = "";
+      break;
   }
 }
 
@@ -156,7 +174,9 @@ function processAsInternalSlot(title, dfn) {
   }
 
   // Don't export internal slots by default, as they are not supposed to be public.
-  if (!dfn.dataset.hasOwnProperty("export")) dfn.dataset.noexport = "";
+  if (!dfn.matches("export") && !dfn.matches("[data-export]")) {
+    dfn.dataset.noexport = "";
+  }
 
   // If it ends with a ), then it's method. Attribute otherwise.
   const derivedType = title.endsWith(")") ? "method" : "attribute";
