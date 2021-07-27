@@ -92,9 +92,7 @@ function computeType(dfn, linkingText) {
     case slotRegex.test(linkingText):
       type = processAsInternalSlot(linkingText, dfn);
       break;
-
-  // If the Editor explicitly asked for it to be exported, so let's export it.
-  if (dfn.classList.contains("export")) shouldExport = true;
+  }
 
   // Derive closest type
   if (!type && !dfn.matches("[data-dfn-type]")) {
