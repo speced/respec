@@ -131,7 +131,7 @@ function computeExport(dfn) {
       break;
 
     // If the author explicitly asked for it to be exported, so let's export it.
-    case dfn.matches(".export") && !dfn.matches("[data-no-export]"):
+    case dfn.matches(".export") && !dfn.matches("[data-noexport]"):
       dfn.dataset.export = "";
       break;
   }
