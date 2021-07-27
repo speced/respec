@@ -111,17 +111,22 @@ function computeType(dfn, linkingText) {
 // Deal with export/no export
 function computeExport(dfn) {
   switch (true) {
-    // If we have both exports and no exports, we should show an error.
+    // Error if we have both exports and no exports.
     case dfn.matches(".export.no-export"): {
-      const msg = docLink`Definition of declares both "export" and "no-export" css class.`;
+      const msg = docLink`Declares both "${"[no-export]"}" and "${"[export]"}" css class.`;
       const hint = "Please use only one.";
       showError(msg, name, { elements: [dfn], hint });
       break;
     }
 
     // No export wins
-    case dfn.matches(".no-export") || dfn.matches("[data-no-export]"):
-      delete dfn.dataset.export;
+    case isNoExport(dfn):
+      if (dfn.matches("[data-export]")) {
+        const msg = docLink`Declares ${"[no-export]"} CSS class, but also has a "${"[data-export]"}" attribute.`;
+        const hint = "Please chose only one.";
+        showError(msg, name, { elements: [dfn], hint });
+        delete dfn.dataset.export;
+      }
       dfn.dataset.noexport = "";
       break;
 
@@ -130,6 +135,13 @@ function computeExport(dfn) {
       dfn.dataset.export = "";
       break;
   }
+}
+
+/**
+ * @param {HTMLElement} dfn
+ */
+function isNoExport(dfn) {
+  return dfn.matches(".no-export") || dfn.matches("[data-noexport]");
 }
 
 /**
