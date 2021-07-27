@@ -96,14 +96,18 @@ function computeType(dfn, linkingText) {
   // If the Editor explicitly asked for it to be exported, so let's export it.
   if (dfn.classList.contains("export")) shouldExport = true;
 
-  // Assign the type
-  if (!type) {
+  // Derive closest type
+  if (!type && !dfn.matches("[data-dfn-type]")) {
     /** @type {HTMLElement} */
     const closestType = dfn.closest("[data-dfn-type]");
     type = closestType?.dataset.dfnType;
-  } else if (!dfn.dataset.dfnType) {
+  }
+  // only if we have type and one wasn't explicitly given.
+  if (type && !dfn.dataset.dfnType) {
     dfn.dataset.dfnType = type;
   }
+  // Finally, addContractDefaults() will add the type to the dfn if it's not there.
+  // But other modules may end up adding a type (e.g., the WebIDL module)
 }
 
 // Deal with export/no export
