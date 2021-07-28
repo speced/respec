@@ -120,7 +120,7 @@ function computeExport(dfn) {
     }
 
     // No export wins
-    case dfn.matches(".no-export") || dfn.matches("[data-noexport]"):
+    case dfn.matches(".no-export, [data-noexport]"):
       if (dfn.matches("[data-export]")) {
         const msg = docLink`Declares ${"[no-export]"} CSS class, but also has a "${"[data-export]"}" attribute.`;
         const hint = "Please chose only one.";
