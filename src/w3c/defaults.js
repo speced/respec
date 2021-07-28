@@ -4,6 +4,7 @@
  */
 export const name = "w3c/defaults";
 import {
+  W3CNotes,
   bgStatus,
   cgStatus,
   cgbgStatus,
@@ -66,7 +67,7 @@ function processLogos(conf) {
   const status = conf.specStatus ?? "";
   // Always include the W3C logo and license for W3C Recommendation track.
   // Excludes "ED" status
-  if ([...maybeRecTrack, ...recTrackStatus].includes(status)) {
+  if ([...maybeRecTrack, ...recTrackStatus, ...W3CNotes].includes(status)) {
     conf.logos?.unshift(w3cLogo);
   }
 

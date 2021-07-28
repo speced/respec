@@ -2114,6 +2114,18 @@ describe("W3C — Headers", () => {
       expect(logo.href).toBe("https://www.w3.org/");
     });
 
+    it("adds W3C logo for status W3C Notes", async () => {
+      const notes = ["FPWD-NOTE", "WG-NOTE"];
+      for (const specStatus of notes) {
+        const ops = makeStandardOps({ specStatus });
+        const doc = await makeRSDoc(ops);
+        const logo = doc.querySelector("a.logo");
+        expect(logo.href)
+          .withContext(`specStatus : "${specStatus}"`)
+          .toBe("https://www.w3.org/");
+      }
+    });
+
     it("allows overriding logos for EDs", async () => {
       const ops = makeStandardOps({
         specStatus: "ED",
