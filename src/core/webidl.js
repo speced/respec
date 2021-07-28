@@ -142,7 +142,7 @@ function defineIdlName(escaped, data, parent) {
   const linkType = getDfnType(data.type);
   if (dfn) {
     if (!data.partial) {
-      dfn.dataset.export = "";
+      if (!dfn.matches("[data-noexport]")) dfn.dataset.export = "";
       dfn.dataset.dfnType = linkType;
     }
     decorateDfn(dfn, data, parentName, name);

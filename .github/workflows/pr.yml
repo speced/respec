@@ -28,13 +28,7 @@ jobs:
           cat /tmp/pr_files.json | jq -r '.[].filename' | grep -qE "^builds/" || exit 0
           echo "::error::Uh oh! builds/ was changed."; exit 1
       - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-14-${{ hashFiles('**/package-lock.json') }}
+        with: { node-version: 14, cache: npm }
       - run: npm ci
       - run: npm run lint
 
@@ -45,13 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-14-${{ hashFiles('**/package-lock.json') }}
+        with: { node-version: 14, cache: npm }
       - run: npm ci
       - run: npm run test:build
       - run: npm run build:w3c
@@ -67,13 +55,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-14-${{ hashFiles('**/package-lock.json') }}
+        with: { node-version: 14, cache: npm }
       - name: install & build
         run: |
           npm ci
@@ -92,13 +74,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-14-${{ hashFiles('**/package-lock.json') }}
+        with: { node-version: 14, cache: npm }
       - name: install & build
         run: |
           npm ci
