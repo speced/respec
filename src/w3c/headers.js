@@ -188,6 +188,7 @@ const status2long = {
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
+export const W3CNotes = ["FPWD-NOTE", "WG-NOTE"];
 export const maybeRecTrack = ["FPWD", "WD"];
 export const recTrackStatus = ["FPLC", "LC", "CR", "CRD", "PR", "PER", "REC"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
@@ -495,7 +496,7 @@ export function run(conf) {
   conf.isPR = conf.specStatus === "PR";
   conf.isPER = conf.specStatus === "PER";
   conf.isMO = conf.specStatus === "MO";
-  conf.isNote = ["FPWD-NOTE", "WG-NOTE"].includes(conf.specStatus);
+  conf.isNote = W3CNotes.includes(conf.specStatus);
   conf.isIGNote = conf.specStatus === "IG-NOTE";
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
