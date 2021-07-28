@@ -81,6 +81,10 @@ declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
 
 declare namespace Intl {
   class ListFormat {
+    formatToParts(items: string[]): {
+      type: "element" | "literal";
+      value: string;
+    }[];
     constructor(
       locales?: string | string[],
       options?: {
@@ -195,10 +199,20 @@ type Person = {
   note?: string;
   retiredDate?: string;
   extras?: PersonExtras[];
-}
+};
 
 type PersonExtras = {
   name: string;
   class?: string;
   href?: string;
-}
+};
+
+type DefinitionValidator = (
+  /** Text to validate. */
+  text: string,
+  /** The type of thing being validated. */
+  type: string,
+  /** The element from which the validation originated. */
+  element: HTMLElement,
+  /** The name of the plugin originating the validation. */
+  pluginName: string) => boolean;

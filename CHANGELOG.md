@@ -1,5 +1,57 @@
 # Changelog
 
+## [v26.8.11](https://github.com/w3c/respec/tree/v26.8.11) (2021-06-07)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.10...v26.8.11)
+
+**Merged pull requests:**
+
+- style\(styles/\*\): run through prettier [\#3606](https://github.com/w3c/respec/pull/3606) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(styles/caniuse\): use cursor: default [\#3605](https://github.com/w3c/respec/pull/3605) ([marcoscaceres](https://github.com/marcoscaceres))
+- style\(styles/respec\): whitespace fixes [\#3600](https://github.com/w3c/respec/pull/3600) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.8.10](https://github.com/w3c/respec/tree/v26.8.10) (2021-06-04)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.9...v26.8.10)
+
+**Fixed bugs:**
+
+- xref not able to link \[=ReadableStream/set up/pullAlgorithm=\] [\#3595](https://github.com/w3c/respec/issues/3595)
+
+**Closed issues:**
+
+- Support expansion of headings across specs [\#3589](https://github.com/w3c/respec/issues/3589)
+
+**Merged pull requests:**
+
+- fix\(core/inlines\): support \[=deep/for/links=\] [\#3596](https://github.com/w3c/respec/pull/3596) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.8.9](https://github.com/w3c/respec/tree/v26.8.9) (2021-06-04)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.8...v26.8.9)
+
+**Fixed bugs:**
+
+- `title` attr added to panel'd dfns is breaking Bikeshed [\#3592](https://github.com/w3c/respec/issues/3592)
+
+**Merged pull requests:**
+
+- fix\(core/dfn-panel\): don't add title attribute to dfn [\#3593](https://github.com/w3c/respec/pull/3593) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v26.8.8](https://github.com/w3c/respec/tree/v26.8.8) (2021-06-03)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.7...v26.8.8)
+
+**Fixed bugs:**
+
+- Referencing IDL Constants fails [\#3590](https://github.com/w3c/respec/issues/3590)
+
+**Merged pull requests:**
+
+- fix\(core/inline-idl-parser\): link interface contants [\#3591](https://github.com/w3c/respec/pull/3591) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps\): bump ws from 7.4.3 to 7.4.6 [\#3587](https://github.com/w3c/respec/pull/3587) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(CHANGELOG\): regenerate [\#3582](https://github.com/w3c/respec/pull/3582) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v26.8.7](https://github.com/w3c/respec/tree/v26.8.7) (2021-06-02)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.8.6...v26.8.7)
