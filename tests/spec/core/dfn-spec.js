@@ -232,6 +232,59 @@ describe("Core — Definitions", () => {
     }
   });
 
+  it("automatically identifies task sources and exports them by default", async () => {
+    const body = `
+      <section>
+        <h2>Task sources</h2>
+        <p>
+          <!-- valid for export -->
+          <dfn id="task-1">I'm a
+            task
+            source
+          </dfn>
+          <!-- Won't match, because no name -->
+          <dfn id="task-2">
+            task source
+          </dfn>
+
+          <!-- explicit no export -->
+          <dfn id="task-3" data-noexport="">
+            secret
+            task source
+          </dfn>
+
+          <dfn class="no-export" id="task-4" data-dfn-type="custom-type">
+            Custom task source
+          </dfn>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const dfn = doc.getElementById("task-1");
+    expect(dfn.dataset.dfnFor).toBeUndefined();
+    expect(dfn.dataset.export).toBe("");
+    expect(dfn.dataset.dfnType).toBe("task-source");
+
+    const dfn2 = doc.getElementById("task-2");
+    expect(dfn2.dataset.dfnFor).toBeUndefined();
+    expect(dfn2.dataset.export).toBeUndefined();
+    expect(dfn2.dataset.dfnType).toBe("dfn");
+
+    const dfn3 = doc.getElementById("task-3");
+    expect(dfn3.dataset.dfnFor).toBeUndefined();
+    expect(dfn3.dataset.export).toBeUndefined();
+    expect(dfn3.dataset.dfnType).toBe("task-source");
+    expect(dfn3.dataset.noexport).toBe("");
+
+    const dfn4 = doc.getElementById("task-4");
+    expect(dfn4.dataset.dfnFor).toBeUndefined();
+    expect(dfn4.dataset.export).toBeUndefined();
+    expect(dfn4.dataset.dfnType).toBe("custom-type");
+    expect(dfn4.dataset.noexport).toBe("");
+  });
+
   describe("internal slot definitions", () => {
     const body = `
       <section data-dfn-for="Test" data-cite="HTML">

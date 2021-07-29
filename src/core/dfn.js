@@ -92,6 +92,12 @@ function computeType(dfn, linkingText) {
     case slotRegex.test(linkingText):
       type = processAsInternalSlot(linkingText, dfn);
       break;
+
+    // A definition that ends with "task source" is a "task-source"...
+    case /\b task source$/i.test(linkingText):
+      type = "task-source";
+      processAsTaskSource(dfn);
+      break;
   }
 
   // Derive closest type
@@ -106,6 +112,13 @@ function computeType(dfn, linkingText) {
   }
   // Finally, addContractDefaults() will add the type to the dfn if it's not there.
   // But other modules may end up adding a type (e.g., the WebIDL module)
+}
+
+function processAsTaskSource(dfn) {
+  // Task sources are exported by default.
+  if (!dfn.matches(".no-export, [data-noexport]")) {
+    dfn.dataset.export = "";
+  }
 }
 
 // Deal with export/no export
