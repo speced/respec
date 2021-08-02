@@ -172,7 +172,10 @@ function getRequestEntry(elem) {
   const forContext = getForContext(elem, isIDL);
 
   return {
-    id: "", // TBD
+    // Add an empty `id` to ensure the shape of object returned stays same when
+    // actual `id` is added later (minor perf optimization, also makes
+    // TypeScript happy).
+    id: "",
     term,
     types,
     ...(specs.length && { specs }),
