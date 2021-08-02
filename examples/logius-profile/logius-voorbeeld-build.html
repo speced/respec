@@ -6,41 +6,40 @@
   <title>
     Logius's testpage
   </title>
-  <script src='../profiles/logius.js' async class='remove'></script>
-  <link rel="shortcut icon" type="image/x-icon" href="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/logius.ico" />
+  <script src='../../builds/respec-logius.js' async class='remove'></script>
+  <link rel="shortcut icon" type="image/x-icon"
+    href="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/logius.ico" />
   <script class='remove'>
     var respecConfig = {
-      specStatus: "DEF",
       specType: "HR",
+      specStatus: "WV",
+
       //subtitle: "Hier komt een subtitle",
       shortName: "API-Design-Rules",
 
       publishDate: "2020-09-20",
-      previousPublishDate: "2007-01-31",
-
-      publishVersion: "1.7",
-      previousPublishVersion: "1.6.5",
+      previousPublishDate: "2018-10-07",
       // Zie https://github.com/w3c/respec/wiki/previousMaturity. Dit moet een
       // A YYYY-MM-DD date. When a previousPublishDate is specified, this is typically required as well in order to generate the "Previous Version"
       previousMaturity: "DEF",
-      // prevRecURI: "lalalalal",
+      pubDomain: "dk",
+      pubSubDomain: "watisdk",
+
       editors: [{
-          name: "Pieter Hering",
-          mailto: "api@digikoppeling.nl",          
-          company: "Logius",
-          companyURL: "https://logius.nl/standaarden",
-        },{
-          name: "Peter Haasnoot",
-          url: "https://logius.nl/standaarden",
-        }
-      ],
+        name: "P H",
+        mailto: "api@digikoppeling",
+        company: "Logius",
+        companyURL: "https://logius.nl/standaarden",
+      }, {
+        name: "P H",
+        url: "https://logius.nl/standaarden",
+      }],
       authors: [{
-          name: "Pieter Hering",
-          url: "https://logius.nl/standaarden",
-        }
-      ],
+        name: "P H",
+        url: "https://logius.nl/standaarden",
+      }],
       github: "https://github.com/Logius-standaarden/API-Design-Rules",
-      testSuiteURI: "https://github.com/Logius-standaarden/API-Design-Rules",
+      //   testSuiteURI: "https://github.com/Logius-standaarden/API-Design-Rules",
       highlightVars: true,
       // noHighlightCSS: true, // hidden config ?! 
       nl_emailcomments: "digikoppeling@logius.nl",
@@ -56,8 +55,7 @@
           uri: "https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.pdf",
         },
       ],
-      pubDomain: "dk",
-      pubSubDomain: "watisdk",
+
       //nl_addReleaseTagTitle: true,
       nl_markdownSplitH1sections: false,
       nl_github: {
@@ -68,7 +66,6 @@
       nl_organisationName: "Logius",
       nl_organisationPrefix: "LS-",
       nl_markdownTableClass: "simple",
-      nl_markdownCodeClass: "code",
       nl_markdownEmbedImageInFigure: true,
       nl_organisationStylesURL: "https://publicatie.centrumvoorstandaarden.nl/respec/style/",
       // nl_organisationStylesURL: "http://localhost:8081/respec/style/",
@@ -93,7 +90,6 @@
     }
 
   </script>
-  <link rel="stylesheet" type="text/css" href="./media/style.css">
 </head>
 
 <body>
@@ -116,7 +112,7 @@
       since this is an informative section [[DOM]].
     </p>
 
- </section>
+  </section>
   <section data-format="markdown" data-include="dk_doel_document.md" data-oninclude="include"></section>
 
   <!-- <section id="tof" class="informative appendix"></section> -->
