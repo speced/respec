@@ -216,7 +216,7 @@ function inlineAnchorMatches(matched) {
   const forContext = isFor ? norm(isFor) : null;
   let type = "dfn";
   switch (true) {
-    case /task source$/.test(matched):
+    case /task source$/i.test(matched):
       type = "task-source";
       break;
   }

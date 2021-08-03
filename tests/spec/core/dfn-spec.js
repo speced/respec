@@ -259,7 +259,7 @@ describe("Core — Definitions", () => {
         </p>
         <p id="links">
           <a>I'm a task source</a>
-          [=I'm a task source=]
+          [=I'm a Task Source=]
         </p>
       </section>
     `;
