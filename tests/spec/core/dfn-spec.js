@@ -285,6 +285,34 @@ describe("Core — Definitions", () => {
     expect(dfn4.dataset.noexport).toBe("");
   });
 
+  it("supports permission type", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `
+          <p id="permission">
+            <dfn class="permission">"permission"</dfn>
+            <dfn class="permission">needs-quotes</dfn>
+            <dfn class="permission">"no spaces allowed"</dfn>
+            <a>"permission"</a>
+          </p>
+        `,
+    };
+    const doc = await makeRSDoc(ops);
+    const permission = doc.querySelector("#permission dfn");
+    expect(permission.dataset.dfnType).toBe("permission");
+    expect(permission.dataset.export).toBe("");
+
+    // invalid ones
+    const errors = findDfnErrors(doc);
+    expect(errors.length).toBe(2);
+    expect(errors[0].message).toContain("quotes");
+    expect(errors[1].message).toContain("Invalid permission name");
+
+    // link check
+    const a = doc.querySelector("#permission a");
+    expect(a.hash).toBe("#dfn-permission");
+  });
+
   describe("internal slot definitions", () => {
     const body = `
       <section data-dfn-for="Test" data-cite="HTML">

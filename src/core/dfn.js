@@ -14,6 +14,7 @@ import {
   validateCommonName,
   validateDOMName,
   validateMimeType,
+  validateQuotedString,
 } from "./dfn-validators.js";
 import { registerDefinition } from "./dfn-map.js";
 import { slotRegex } from "./inline-idl-parser.js";
@@ -44,8 +45,9 @@ const knownTypesMap = new Map([
   ],
   ["event", { requiresFor: false, validator: validateCommonName }],
   ["http-header", { requiresFor: false }],
-  ["scheme", { requiresFor: false, validator: validateCommonName }],
   ["media-type", { requiresFor: false, validator: validateMimeType }],
+  ["scheme", { requiresFor: false, validator: validateCommonName }],
+  ["permission", { requiresFor: false, validator: validateQuotedString }],
 ]);
 
 const knownTypes = [...knownTypesMap.keys()];
