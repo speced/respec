@@ -2,6 +2,7 @@ import {
   validateCommonName,
   validateDOMName,
   validateMimeType,
+  validateQuotedString,
 } from "../../../src/core/dfn-validators.js";
 
 describe("Core - Validators", () => {
@@ -99,6 +100,42 @@ describe("Core - Validators", () => {
         const dfn = document.createElement("dfn");
         const context = `invalid mimeType: ${mimeType}`;
         expect(validateMimeType(mimeType, "mimetype", dfn, "foo/bar"))
+          .withContext(context)
+          .toBeFalse();
+        expect(dfn.classList.contains("respec-offending-element"))
+          .withContext(context)
+          .toBeTrue();
+      }
+    });
+  });
+
+  describe("validateQuotedString", () => {
+    it("doesn't generate an error if the string is valid", () => {
+      const names = ['"quoted"', '"quoted-string"'];
+      for (const name of names) {
+        const dfn = document.createElement("dfn");
+        const context = `string: ${name}`;
+        expect(validateQuotedString(name, "string", dfn, "foo/bar"))
+          .withContext(context)
+          .toBeTrue();
+        expect(dfn.classList.contains("respec-offending-element"))
+          .withContext(context)
+          .toBeFalse();
+      }
+    });
+
+    it("generates errors for unquoted strings", () => {
+      const names = [
+        "spaced string",
+        "thing$",
+        '"start only',
+        'end only"',
+        "-something",
+      ];
+      for (const name of names) {
+        const dfn = document.createElement("dfn");
+        const context = `invalid name: ${name}`;
+        expect(validateQuotedString(name, "permission", dfn, "foo/bar"))
           .withContext(context)
           .toBeFalse();
         expect(dfn.classList.contains("respec-offending-element"))

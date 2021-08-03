@@ -55,8 +55,20 @@ export function validateCommonName(text, type, elem, pluginName) {
   if (/^[a-z]+(-[a-z]+)*$/i.test(text)) {
     return true; // all good
   }
-  const msg = `Invalid ${type} name "${text}"`;
-  const hint = `Check that the ${type} name is allowed`;
+  const msg = `Invalid ${type} name "${text}".`;
+  const hint = `Check that the ${type} name is allowed per the naming rules for this type.`;
+  showError(msg, pluginName, { hint, elements: [elem] });
+  return false;
+}
+
+/**
+ * @type {DefinitionValidator} */
+export function validateQuotedString(text, type, elem, pluginName) {
+  if (text.startsWith(`"`) && text.endsWith(`"`)) {
+    return validateCommonName(text.slice(1, -1), type, elem, pluginName);
+  }
+  const msg = `Invalid ${type} "${text}".`;
+  const hint = `Check that the ${type} is quoted with double quotes.`;
   showError(msg, pluginName, { hint, elements: [elem] });
   return false;
 }
