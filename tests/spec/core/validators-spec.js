@@ -125,7 +125,13 @@ describe("Core - Validators", () => {
     });
 
     it("generates errors for unquoted strings", () => {
-      const names = ["spaced string", "thing$", "🪳not", "-something"];
+      const names = [
+        "spaced string",
+        "thing$",
+        '"start only',
+        'end only"',
+        "-something",
+      ];
       for (const name of names) {
         const dfn = document.createElement("dfn");
         const context = `invalid name: ${name}`;
