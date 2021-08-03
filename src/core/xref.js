@@ -71,8 +71,8 @@ export async function run(conf) {
   const queryKeys = [];
   for (const elem of elems) {
     const entry = getRequestEntry(elem);
-    const id = await objectHash(entry);
-    queryKeys.push({ ...entry, id });
+    entry.id = await objectHash(entry);
+    queryKeys.push(entry);
   }
 
   const data = await getData(queryKeys, xref.url);
@@ -172,6 +172,10 @@ function getRequestEntry(elem) {
   const forContext = getForContext(elem, isIDL);
 
   return {
+    // Add an empty `id` to ensure the shape of object returned stays same when
+    // actual `id` is added later (minor perf optimization, also makes
+    // TypeScript happy).
+    id: "",
     term,
     types,
     ...(specs.length && { specs }),
