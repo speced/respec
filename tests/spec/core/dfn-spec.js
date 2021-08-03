@@ -257,6 +257,10 @@ describe("Core — Definitions", () => {
             Custom task source
           </dfn>
         </p>
+        <p id="links">
+          <a>I'm a task source</a>
+          [=I'm a Task Source=]
+        </p>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -283,6 +287,11 @@ describe("Core — Definitions", () => {
     expect(dfn4.dataset.export).toBeUndefined();
     expect(dfn4.dataset.dfnType).toBe("custom-type");
     expect(dfn4.dataset.noexport).toBe("");
+
+    const [link1, link2] = doc.querySelectorAll("#links a");
+    expect(link1.hash).toBe(`#${dfn.id}`);
+    expect(link2.hash).toBe(`#${dfn.id}`);
+    expect(link2.dataset.linkType).toBe(`task-source`);
   });
 
   describe("internal slot definitions", () => {
