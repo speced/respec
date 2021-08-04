@@ -90,12 +90,12 @@ th code {
 }
 
 a[href].orcid {
-    padding-left: 4px;
-    padding-right: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 a[href].orcid > svg {
-    margin-bottom: -2px;
+  margin-bottom: -2px;
 }
 
 /* --- TOC --- */

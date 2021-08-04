@@ -1,9 +1,15 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { flushIframes, makeRSDoc, makeStandardOps } from "../../SpecHelper.js";
 
 describe("Core — a11y", () => {
-  afterAll(flushIframes);
+  beforeAll(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL *= 2;
+  });
+  afterAll(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL /= 2;
+    flushIframes();
+  });
 
   const body = `
     <section>
@@ -28,14 +34,14 @@ describe("Core — a11y", () => {
   });
 
   it("does nothing if disabled", async () => {
-    const ops = makeStandardOps({ a11y: false }, body);
+    const ops = makeStandardOps({ lint: { a11y: false } }, body);
     const doc = await makeRSDoc(ops);
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
     expect(offendingElements).toHaveSize(0);
   });
 
   it("runs default tests if enabled", async () => {
-    const ops = makeStandardOps({ a11y: true }, body);
+    const ops = makeStandardOps({ lint: { a11y: true } }, body);
     const doc = await makeRSDoc(ops);
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
 
@@ -48,7 +54,7 @@ describe("Core — a11y", () => {
     const a11yOptions = {
       runOnly: ["image-alt", "landmark-one-main"],
     };
-    const ops = makeStandardOps({ a11y: a11yOptions }, body);
+    const ops = makeStandardOps({ lint: { a11y: a11yOptions } }, body);
     const doc = await makeRSDoc(ops);
 
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
@@ -56,6 +62,16 @@ describe("Core — a11y", () => {
     expect(offendingElements[0].id).toContain("a11y-landmark-one-main");
     expect(offendingElements[0].localName).toBe("html");
     expect(offendingElements[1].id).toBe("image-alt-1");
+
+    const warnings = doc.respec.warnings.filter(
+      warn => warn.plugin === "core/linter-rules/a11y"
+    );
+    expect(warnings).toHaveSize(2);
+    const [imageAltWarning, landmarkWarning] = warnings;
+    expect(imageAltWarning.message).toContain("image-alt");
+    expect(imageAltWarning.elements).toHaveSize(1);
+    expect(imageAltWarning.elements[0].id).toBe("image-alt-1");
+    expect(landmarkWarning.message).toContain("landmark-one-main");
   });
 
   it("allows overriding rules option", async () => {
@@ -65,12 +81,18 @@ describe("Core — a11y", () => {
         "image-alt": { enabled: false },
       },
     };
-    const ops = makeStandardOps({ a11y: a11yOptions }, body);
+    const ops = makeStandardOps({ lint: { a11y: a11yOptions } }, body);
     const doc = await makeRSDoc(ops);
 
     const offendingElements = doc.querySelectorAll(".respec-offending-element");
     expect(offendingElements).toHaveSize(1);
     expect(offendingElements[0].id).toContain("a11y-landmark-one-main");
     expect(offendingElements[0].localName).toBe("html");
+
+    const warnings = doc.respec.warnings.filter(
+      warn => warn.plugin === "core/linter-rules/a11y"
+    );
+    expect(warnings).toHaveSize(1);
+    expect(warnings[0].message).toContain("landmark-one-main");
   });
 });

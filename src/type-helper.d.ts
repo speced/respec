@@ -15,7 +15,7 @@ declare module "text!*" {
   export default value;
 }
 
-// See: core/a11y
+// See: core/linter-rules/a11y
 interface AxeViolation {
   id: string;
   help: string;
@@ -81,6 +81,10 @@ declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
 
 declare namespace Intl {
   class ListFormat {
+    formatToParts(items: string[]): {
+      type: "element" | "literal";
+      value: string;
+    }[];
     constructor(
       locales?: string | string[],
       options?: {
@@ -106,10 +110,13 @@ interface BiblioData {
   etAl?: boolean;
 }
 interface Conf {
-  informativeReferences: Set<string>;
-  normativeReferences: Set<string>;
-  localBiblio?: Record<string, BiblioData>;
+  authors?: Person[];
   biblio: Record<string, BiblioData>;
+  editors?: Person[];
+  formerEditors?: Person[];
+  informativeReferences: Set<string>;
+  localBiblio?: Record<string, BiblioData>;
+  normativeReferences: Set<string>;
   shortName: string;
 }
 
@@ -180,3 +187,32 @@ enum W3CGroupType {
   "ig",
   "wg",
 }
+
+type Person = {
+  name: string;
+  w3cid?: string | number;
+  mailto?: string;
+  url?: string;
+  orcid?: string;
+  company?: string;
+  companyURL?: string;
+  note?: string;
+  retiredDate?: string;
+  extras?: PersonExtras[];
+};
+
+type PersonExtras = {
+  name: string;
+  class?: string;
+  href?: string;
+};
+
+type DefinitionValidator = (
+  /** Text to validate. */
+  text: string,
+  /** The type of thing being validated. */
+  type: string,
+  /** The element from which the validation originated. */
+  element: HTMLElement,
+  /** The name of the plugin originating the validation. */
+  pluginName: string) => boolean;

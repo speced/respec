@@ -80,6 +80,7 @@ function processFigure(matchingElement, id, a) {
   }
   // remove the figure's title
   const children = [...makeSafeCopy(figcaption).childNodes].filter(
+    // @ts-ignore
     node => !node.classList || !node.classList.contains("fig-title")
   );
   // drop an empty space at the end.
@@ -109,6 +110,7 @@ function processSection(matchingElement, id, a) {
 function processHeading(heading, a) {
   const hadSelfLink = heading.querySelector(".self-link");
   const children = [...makeSafeCopy(heading).childNodes].filter(
+    // @ts-ignore
     node => !node.classList || !node.classList.contains("self-link")
   );
   a.append(...children);

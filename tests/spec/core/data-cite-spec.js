@@ -335,7 +335,7 @@ describe("Core — data-cite attribute", () => {
           `${doc.location.href}#${anchor.dataset.cite.split("#")[1]}`
       )
     ).toBeTruthy();
-    expect(dahut).toBe(null);
+    expect(dahut).toBeNull();
   });
 
   it("Adds <cite> around <a> when frag and path are missing from <a/dfn data-cite='some-spec'>", async () => {

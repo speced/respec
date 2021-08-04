@@ -30,11 +30,8 @@ describe("Core — Issues and Notes", () => {
     const doc = await makeRSDoc(ops);
     const issues = doc.querySelectorAll(".issue");
     expect(issues).toHaveSize(3);
-    const [
-      overriddenIdIssue,
-      firstDuplicateIssue,
-      secondDuplicateIssue,
-    ] = issues;
+    const [overriddenIdIssue, firstDuplicateIssue, secondDuplicateIssue] =
+      issues;
     expect(overriddenIdIssue.id).toBe("override-123");
     expect(firstDuplicateIssue.id).not.toBe(secondDuplicateIssue.id);
 
@@ -168,12 +165,8 @@ describe("Core — Issues and Notes", () => {
       "this is 404"
     );
 
-    const [
-      refactorLabel,
-      bugLabel,
-      blankLabel,
-      invalidLabel,
-    ] = doc.getElementsByClassName("respec-gh-label");
+    const [refactorLabel, bugLabel, blankLabel, invalidLabel] =
+      doc.getElementsByClassName("respec-gh-label");
 
     expect(refactorLabel.textContent).toBe("refactor");
     expect(refactorLabel.classList).toContain(
@@ -279,24 +272,18 @@ describe("Core — Issues and Notes", () => {
       config: githubConfig,
       body: `${makeDefaultBody()}
         <div class='issue' data-number='1548'>no aria-label for this</div>
-        <div class='issue' data-number='1540'>this should have aria-label</div>
+        <div class='issue' data-number='1540'>this should have aria-labels</div>
       `,
     };
     const doc = await makeRSDoc(ops);
     expect(doc.querySelectorAll("div.issue")).toHaveSize(2);
     expect(
-      doc.querySelector(
-        "div#issue-container-number-1548 span.issue-label[aria-label]"
-      )
+      doc.querySelector("div#issue-container-number-1548 [aria-label]")
     ).toBeNull();
-
-    const expectedAttributeValue =
-      "This issue is labelled as refactor, bug, blank, and not-a-color.";
-    expect(
-      doc.querySelector(
-        `div#issue-container-number-1540 span.issue-label[aria-label="${expectedAttributeValue}"]`
-      )
-    ).toBeTruthy();
+    const labels = doc.querySelectorAll(
+      "div#issue-container-number-1540 a[aria-label^='GitHub label']"
+    );
+    expect(labels).toHaveSize(4);
   });
   it("renders the original issue post in an empty issue block", async () => {
     const ops = {

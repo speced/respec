@@ -22,14 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
+      - name: Ensure builds/ has not changed
+        run: |
+          curl -sL https://api.github.com/repos/w3c/respec/pulls/${{ github.event.pull_request.number }}/files -o /tmp/pr_files.json
+          cat /tmp/pr_files.json | jq -r '.[].filename' | grep -qE "^builds/" || exit 0
+          echo "::error::Uh oh! builds/ was changed."; exit 1
+      - uses: actions/setup-node@v2
+        with: { node-version: 14, cache: npm }
       - run: npm ci
       - run: npm run lint
 
@@ -39,14 +38,8 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/setup-node@v2
+        with: { node-version: 14, cache: npm }
       - run: npm ci
       - run: npm run test:build
       - run: npm run build:w3c
@@ -61,14 +54,8 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/setup-node@v2
+        with: { node-version: 14, cache: npm }
       - name: install & build
         run: |
           npm ci
@@ -79,3 +66,21 @@ jobs:
       - run: npm run test:integration
         env:
           BROWSERS: ${{ matrix.browser }}
+
+  html-validate:
+    name: Validate HTML
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with: { node-version: 14, cache: npm }
+      - name: install & build
+        run: |
+          npm ci
+          npm run build:w3c
+      - name: run validator
+        run: |
+          vnu=$(node -p "require('vnu-jar')")
+          ./tools/respec2html.js examples/basic.built.html /tmp/basic.built.html --verbose
+          java -jar $vnu /tmp/basic.built.html

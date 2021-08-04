@@ -6,6 +6,7 @@
 //  - don't use generated content in the CSS!
 import {
   addHashId,
+  docLink,
   showError,
   showWarning,
   wrapInner,
@@ -141,7 +142,7 @@ function defineIdlName(escaped, data, parent) {
   const linkType = getDfnType(data.type);
   if (dfn) {
     if (!data.partial) {
-      dfn.dataset.export = "";
+      if (!dfn.matches("[data-noexport]")) dfn.dataset.export = "";
       dfn.dataset.dfnType = linkType;
     }
     decorateDfn(dfn, data, parentName, name);
@@ -186,8 +187,9 @@ function defineIdlName(escaped, data, parent) {
   if (showWarnings) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
-    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
-    showWarning(msg, pluginName, { elements: [unlinkedAnchor] });
+    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}.`;
+    const hint = docLink`See ${"using `data-dfn-for`|#data-dfn-for"} in ReSpec's documentation.`;
+    showWarning(msg, pluginName, { elements: [unlinkedAnchor], hint });
   }
   return unlinkedAnchor;
 }
@@ -382,14 +384,9 @@ export async function run() {
   if (!idls.length) {
     return;
   }
-  if (!document.querySelector(".idl:not(pre), .webidl:not(pre)")) {
-    const link = document.querySelector("head link");
-    if (link) {
-      const style = document.createElement("style");
-      style.textContent = css;
-      link.before(style);
-    }
-  }
+  const style = document.createElement("style");
+  style.textContent = css;
+  document.querySelector("head link, head > *:last-child").before(style);
 
   const astArray = [...idls].map(renderWebIDL);
 

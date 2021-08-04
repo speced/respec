@@ -140,7 +140,7 @@ export default (conf, options) => {
         : ""}
     </h2>
     <dl>
-      ${!conf.isNoTrack
+      ${conf.isTagFinding || !conf.isNoTrack
         ? html`
             <dt>${l10n.this_version}</dt>
             <dd>
@@ -204,7 +204,7 @@ export default (conf, options) => {
             <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
           `}
       <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
-      ${showPeople(conf.editors)}
+      ${showPeople(conf, "editors")}
       ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
         ? html`
             <dt>
@@ -212,13 +212,13 @@ export default (conf, options) => {
                 ? l10n.former_editors
                 : l10n.former_editor}
             </dt>
-            ${showPeople(conf.formerEditors)}
+            ${showPeople(conf, "formerEditors")}
           `
         : ""}
       ${conf.authors
         ? html`
             <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
-            ${showPeople(conf.authors)}
+            ${showPeople(conf, "authors")}
           `
         : ""}
       ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
@@ -234,7 +234,7 @@ export default (conf, options) => {
       ? html`<p>
           See also
           <a
-            href="${`http://www.w3.org/2003/03/Translations/byTechnology?technology=${conf.shortName}`}"
+            href="${`https://www.w3.org/Translations/?technology=${conf.shortName}`}"
           >
             <strong>translations</strong></a
           >.

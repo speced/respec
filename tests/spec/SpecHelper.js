@@ -195,6 +195,17 @@ export function makeBasicConfig(profile = "w3c") {
         edDraftURI: "https://foo.com",
         shortName: "Foo",
       };
+    case "aom":
+      return {
+        editors: [
+          {
+            name: "Person Name",
+          },
+        ],
+        specStatus: "PD",
+      };
+    default:
+      throw new Error(`Unknown profile: ${profile}`);
   }
 }
 
@@ -220,5 +231,13 @@ export function makeStandardGeoOps(config = {}, body = makeDefaultBody()) {
   return {
     body,
     config: { ...makeBasicConfig("geonovum"), ...config },
+  };
+}
+
+export function makeStandardAomOps(config = {}, body = makeDefaultBody()) {
+  return {
+    body,
+    config: { ...makeBasicConfig("aom"), ...config },
+    profile: "aom",
   };
 }

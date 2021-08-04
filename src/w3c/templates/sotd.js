@@ -260,7 +260,9 @@ function renderDeliverer(conf) {
       `
     : "";
   const wontBeRec = recNotExpected
-    ? "The group does not expect this document to become a W3C Recommendation."
+    ? `The ${
+        multipleWGs ? "groups do" : "group does"
+      } not expect this document to become a W3C Recommendation.`
     : "";
   return html`<p data-deliverer="${isNote || isIGNote ? wgId : null}">
     ${producers} ${wontBeRec}
@@ -353,10 +355,8 @@ function noteForTeamSubmission(conf, opts) {
 }
 
 export function renderPublicList(conf, opts) {
-  const {
-    mailToWGPublicListWithSubject,
-    mailToWGPublicListSubscription,
-  } = opts;
+  const { mailToWGPublicListWithSubject, mailToWGPublicListSubscription } =
+    opts;
   const { wgPublicList, subjectPrefix } = conf;
   const archivesURL = `https://lists.w3.org/Archives/Public/${wgPublicList}/`;
   return html`<p>
