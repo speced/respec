@@ -1,8 +1,4 @@
-"use strict";
-// In case everything else fails, we want the error
-window.addEventListener("error", ev => {
-  console.error(ev.error, ev.message, ev);
-});
+import * as ReSpec from "../src/respec.js";
 
 const modules = [
   // order is significant
@@ -72,27 +68,18 @@ const modules = [
   import("../src/core/anchor-expander.js"),
   import("../src/core/custom-elements/index.js"),
   /* Linters must be the last thing to run */
-  import("../src/core/linter.js"),
+  import("../src/core/linter-rules/check-charset.js"),
+  import("../src/core/linter-rules/check-punctuation.js"),
+  import("../src/core/linter-rules/check-internal-slots.js"),
+  import("../src/core/linter-rules/local-refs-exist.js"),
+  import("../src/core/linter-rules/no-headingless-sections.js"),
+  import("../src/core/linter-rules/no-unused-vars.js"),
+  import("../src/core/linter-rules/privsec-section.js"),
+  import("../src/core/linter-rules/wpt-tests-exist.js"),
+  import("../src/core/linter-rules/no-http-props.js"),
   import("../src/core/a11y.js"),
 ];
 
-async function domReady() {
-  if (document.readyState === "loading") {
-    await new Promise(resolve =>
-      document.addEventListener("DOMContentLoaded", resolve)
-    );
-  }
-}
-
-(async () => {
-  const [runner, { ui }, ...plugins] = await Promise.all(modules);
-  try {
-    ui.show();
-    await domReady();
-    await runner.runAll(plugins);
-  } finally {
-    ui.enable();
-  }
-})().catch(err => {
-  console.error(err);
-});
+Promise.all(modules)
+  .then(plugins => ReSpec.run(plugins))
+  .catch(err => console.error(err));
