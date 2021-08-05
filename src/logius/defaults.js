@@ -19,7 +19,6 @@ linter.register(
 );
 
 // todo: check if licenses are already defined
-// const cgbg = new Set(["BG-DRAFT", "BG-FINAL", "CG-DRAFT", "CG-FINAL"]);
 const licenses = new Map([
   [
     "cc0",
