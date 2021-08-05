@@ -2,7 +2,6 @@
 // Module core/structure
 //  Handles producing the ToC and numbering sections across the document.
 
-
 // CONFIGURATION:
 //  - noTOC: if set to true, no TOC is generated and sections are not numbered
 //  - lang: can change the generated text (supported: en, fr)
