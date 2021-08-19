@@ -49,8 +49,14 @@ export async function updateFromNetwork(
   }
   /** @type {Conf['biblio']} */
   const data = await response.json();
+  // SpecRef updates every hour, so we should follow suit
+  // https://github.com/tobie/specref#hourly-auto-updating
+  const oneHourFromNow = Date.now() + 1000 * 60 * 60 * 1;
   try {
-    await biblioDB.addAll(data);
+    const expires = response.headers.has("Expires")
+      ? Math.min(Date.parse(response.headers.get("Expires")), oneHourFromNow)
+      : oneHourFromNow;
+    await biblioDB.addAll(data, expires);
   } catch (err) {
     console.error(err);
   }
@@ -78,7 +84,6 @@ export async function resolveRef(key) {
  */
 async function getReferencesFromIdb(neededRefs) {
   const idbRefs = [];
-
   // See if we have them in IDB
   try {
     await biblioDB.ready; // can throw
@@ -150,7 +155,10 @@ export class Plugin {
           .sort()
       )
     );
-    const idbRefs = await getReferencesFromIdb(neededRefs);
+
+    const idbRefs = neededRefs.length
+      ? await getReferencesFromIdb(neededRefs)
+      : [];
     const split = { hasData: [], noData: [] };
     idbRefs.forEach(ref => {
       (ref.data ? split.hasData : split.noData).push(ref);
