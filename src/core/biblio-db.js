@@ -156,7 +156,7 @@ export const biblioDB = {
    * @param {BibliographyMap} data An object that contains references and aliases.
    * @param {number} expires The date/time when the data expires.
    */
-  async addAll(data, expires = Date.now() + 1000 * 60 * 60 * 24) {
+  async addAll(data, expires) {
     if (!data) {
       return;
     }

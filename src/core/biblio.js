@@ -49,10 +49,13 @@ export async function updateFromNetwork(
   }
   /** @type {Conf['biblio']} */
   const data = await response.json();
+  // SpecRef updates every hour, so we should follow suit
+  // https://github.com/tobie/specref#hourly-auto-updating
+  const oneHourFromNow = Date.now() + 1000 * 60 * 60 * 1;
   try {
     const expires = response.headers.has("Expires")
-      ? Date.parse(response.headers.get("Expires"))
-      : undefined;
+      ? Math.min(Date.parse(response.headers.get("Expires")), oneHourFromNow)
+      : oneHourFromNow;
     await biblioDB.addAll(data, expires);
   } catch (err) {
     console.error(err);
