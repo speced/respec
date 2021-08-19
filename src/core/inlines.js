@@ -214,14 +214,8 @@ function inlineAnchorMatches(matched) {
     : [null, content];
   const processedContent = processInlineContent(text);
   const forContext = isFor ? norm(isFor) : null;
-  let type = "dfn";
-  switch (true) {
-    case /task\s+source$/i.test(matched):
-      type = "task-source";
-      break;
-  }
   return html`<a
-    data-link-type="${type}"
+    data-link-type="dfn"
     data-link-for="${forContext}"
     data-xref-for="${forContext}"
     data-lt="${linkingText}"
