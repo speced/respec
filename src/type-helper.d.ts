@@ -98,6 +98,8 @@ declare namespace Intl {
   }
 }
 
+interface BibliographyMap extends Record<string, BiblioData> {}
+
 interface BiblioData {
   aliasOf?: string;
   id?: string;
@@ -108,6 +110,7 @@ interface BiblioData {
   date?: string;
   status?: string;
   etAl?: boolean;
+  expires: number;
 }
 interface Conf {
   authors?: Person[];

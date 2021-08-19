@@ -50,7 +50,10 @@ export async function updateFromNetwork(
   /** @type {Conf['biblio']} */
   const data = await response.json();
   try {
-    await biblioDB.addAll(data);
+    const expires = response.headers.has("Expires")
+      ? Date.parse(response.headers.get("Expires"))
+      : undefined;
+    await biblioDB.addAll(data, expires);
   } catch (err) {
     console.error(err);
   }
@@ -78,7 +81,6 @@ export async function resolveRef(key) {
  */
 async function getReferencesFromIdb(neededRefs) {
   const idbRefs = [];
-
   // See if we have them in IDB
   try {
     await biblioDB.ready; // can throw
@@ -150,7 +152,10 @@ export class Plugin {
           .sort()
       )
     );
-    const idbRefs = await getReferencesFromIdb(neededRefs);
+
+    const idbRefs = neededRefs.length
+      ? await getReferencesFromIdb(neededRefs)
+      : [];
     const split = { hasData: [], noData: [] };
     idbRefs.forEach(ref => {
       (ref.data ? split.hasData : split.noData).push(ref);
