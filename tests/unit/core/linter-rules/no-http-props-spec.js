@@ -11,8 +11,20 @@ describe("Core Linter Rule - 'no-http-props'", () => {
     );
   }
 
+  it("skips over defined, but empty, URIs", async () => {
+    const conf = {
+      undefined_URI: undefined,
+      empty_URI: "",
+      null_URI: null,
+      URI: "http://fail",
+    };
+    const warnings = await getWarnings(conf);
+    expect(warnings).toHaveSize(1);
+  });
+
   it("checks any prop ending with 'URI' (case sensitive)", async () => {
     const conf = {
+      undefined_URI: undefined,
       FAIL_uri: "http://fail",
       failURIfail: "http://fail",
       URI: "http://pass",
