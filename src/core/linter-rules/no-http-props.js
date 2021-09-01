@@ -33,7 +33,7 @@ export function run(conf) {
 
   const offendingMembers = Object.getOwnPropertyNames(conf)
     // this check is cheap, "prevED" is w3c exception.
-    .filter(key => key.endsWith("URI") || key === "prevED")
+    .filter(key => (key.endsWith("URI") && conf[key]) || key === "prevED")
     // this check is expensive, so separate step
     .filter(key =>
       new URL(conf[key], parent.location.href).href.startsWith("http://")
