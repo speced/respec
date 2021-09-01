@@ -61,6 +61,7 @@ class Renderer extends marked.Renderer {
       return `<pre class="idl">${code}</pre>`;
     }
 
+    // @ts-expect-error
     const html = super.code(code, language, isEscaped);
 
     const { example, illegalExample } = metaData;
@@ -100,6 +101,7 @@ class Renderer extends marked.Renderer {
       const [, textContent, id] = text.match(headingWithIdRegex);
       return `<h${level} id="${id}">${textContent}</h${level}>`;
     }
+    // @ts-expect-error
     return super.heading(text, level, raw, slugger);
   }
 }
