@@ -5,7 +5,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { getIntlData, showError, showWarning } from "../core/utils.js";
+import { docLink, getIntlData, showError, showWarning } from "../core/utils.js";
 export const name = "core/github";
 
 let resolveGithubPromise;
@@ -65,31 +65,31 @@ export async function run(conf) {
     typeof conf.github === "object" &&
     !conf.github.hasOwnProperty("repoURL")
   ) {
-    const msg =
-      "Config option `[github](https://github.com/w3c/respec/wiki/github)` " +
-      "is missing property `repoURL`.";
+    const msg = docLink`Config option ${"[github]"} is missing property \`repoURL\`.`;
     rejectGithubPromise(msg);
     return;
   }
   let tempURL = conf.github.repoURL || conf.github;
   if (!tempURL.endsWith("/")) tempURL += "/";
+  /** @type URL */
   let ghURL;
   try {
     ghURL = new URL(tempURL, "https://github.com");
   } catch {
-    const msg = `\`respecConf.github\` is not a valid URL? (${ghURL})`;
+    const msg = docLink`${"[github]"} configuration option is not a valid URL? (${tempURL}).`;
     rejectGithubPromise(msg);
     return;
   }
   if (ghURL.origin !== "https://github.com") {
-    const msg = `\`respecConf.github\` must be HTTPS and pointing to GitHub. (${ghURL})`;
+    const msg = docLink`${"[github]"} configuration option must be HTTPS and pointing to GitHub. (${
+      ghURL.href
+    }).`;
     rejectGithubPromise(msg);
     return;
   }
   const [org, repo] = ghURL.pathname.split("/").filter(item => item);
   if (!org || !repo) {
-    const msg =
-      "`respecConf.github` URL needs a path with, for example, w3c/my-spec";
+    const msg = docLink`${"[github]"} URL needs a path. For example, "w3c/my-spec".`;
     rejectGithubPromise(msg);
     return;
   }
@@ -118,7 +118,7 @@ export async function run(conf) {
       },
       {
         value: l10n.commit_history,
-        href: new URL(`./commits/${branch}`, ghURL.href).href,
+        href: new URL(`./commits/${conf.github.branch ?? ""}`, ghURL.href).href,
       },
       {
         value: "Pull requests",
@@ -133,7 +133,8 @@ export async function run(conf) {
       // for testing
       githubAPI = conf.githubAPI;
     } else {
-      const msg = "`respecConfig.githubAPI` should not be added manually.";
+      const msg =
+        "The `githubAPI` configuration option is private and should not be added manually.";
       showWarning(msg, name);
     }
   }
