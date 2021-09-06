@@ -118,7 +118,7 @@ export async function run(conf) {
       },
       {
         value: l10n.commit_history,
-        href: new URL(`./commits/${branch}`, ghURL.href).href,
+        href: new URL(`./commits/${conf.github.branch ?? ""}`, ghURL.href).href,
       },
       {
         value: "Pull requests",
