@@ -123,7 +123,7 @@ describe("Core - Github", () => {
       const doc = await makeRSDoc({ ...l10n, ...stringOpt });
       const commitHistory = definitionListTest(doc);
       expect(commitHistory.querySelector("a").href).toBe(
-        "https://github.com/w3c/respec/commits/gh-pages"
+        "https://github.com/w3c/respec/commits/"
       );
     });
     it("generates a participate set of links (from object)", async () => {
