@@ -316,7 +316,15 @@ function getDefnName(defn) {
 }
 
 // IDL types that never need a data-dfn-for
-const topLevelIdlTypes = ["interface", "interface mixin", "dictionary", "namespace", "enum", "typedef", "callback"];
+const topLevelIdlTypes = [
+  "interface",
+  "interface mixin",
+  "dictionary",
+  "namespace",
+  "enum",
+  "typedef",
+  "callback",
+];
 
 /**
  * @param {Element} idlElement
