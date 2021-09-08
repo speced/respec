@@ -11,20 +11,82 @@ import {
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
+
+/**
+ * @param {Node} node
+ */
+function collapsedTextContent({ textContent }) {
+  return textContent.replace(/\s+/g, " ");
+}
+
+function contains(el, query, string) {
+  return [...el.querySelectorAll(query)].filter(child =>
+    collapsedTextContent(child).includes(string)
+  );
+}
+describe("W3C - Headers for 2021 Process", () => {
+  afterAll(flushIframes);
+
+  it("has a details and summary", async () => {
+    const opts = makeStandardOps({ specStatus: "FPWD" });
+    const doc = await makeRSDoc(opts);
+    const details = doc.querySelector(".head details");
+    const summary = doc.querySelector(".head summary");
+    expect(details).toBeTruthy();
+    expect(summary).toBeTruthy();
+  });
+
+  it("links to the 'kinds of documents' only for W3C documents", async () => {
+    for (const specStatus of [
+      "FPWD",
+      "LCWD",
+      "WD",
+      "CR",
+      "CRD",
+      "PR",
+      "REC",
+      "NOTE",
+    ]) {
+      const w3cDoc = await makeRSDoc(makeStandardOps({ specStatus }));
+      const w3cLink = w3cDoc.querySelector(
+        ".head a[href='https://www.w3.org/standards/types']"
+      );
+      expect(w3cLink).withContext(`specStatus: ${specStatus}`).toBeTruthy();
+    }
+
+    for (const specStatus of ["unofficial", "base"]) {
+      const doc = await makeRSDoc(makeStandardOps({ specStatus }));
+      const w3cLink = doc.querySelector(
+        ".head a[href='https://www.w3.org/standards/types']"
+      );
+      expect(w3cLink).toBeNull();
+    }
+  });
+  it("includes a Feedback: <dd> to github issues", async () => {
+    const doc = await makeRSDoc(makeStandardOps());
+    const [dt] = contains(doc, ".head dt", "Feedback:");
+    const dd = dt.nextElementSibling;
+    expect(dd.querySelector("a[href^='https://github.com/']")).toBeTruthy();
+  });
+  it("includes a Feedback: <dd> for mailing list, when mailing list is supplied", async () => {
+    const opts = makeStandardOps({
+      wgPublicList: "public-webapps",
+    });
+    const doc = await makeRSDoc(opts);
+    const [dd] = contains(doc, ".head dd", "public-webapps@w3.org");
+
+    // Check the archive link
+    const archive = dd.querySelector(
+      "a[rel='discussion'][href^='https://lists.w3.org/']"
+    );
+    expect(archive).toBeTruthy();
+    expect(archive.textContent.trim()).toBe("archives");
+  });
+});
+
 describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
-  /**
-   * @param {Node} node
-   */
-  function collapsedTextContent({ textContent }) {
-    return textContent.replace(/\s+/g, " ");
-  }
-  function contains(el, query, string) {
-    return [...el.querySelectorAll(query)].filter(child =>
-      collapsedTextContent(child).includes(string)
-    );
-  }
   describe("prevRecShortname & prevRecURI", () => {
     it("takes prevRecShortname and prevRecURI into account", async () => {
       const ops = makeStandardOps();
@@ -255,9 +317,6 @@ describe("W3C — Headers", () => {
         expect(dd.nextElementSibling.nextElementSibling.textContent).toContain(
           "FORMER EDITOR 3"
         );
-        expect(
-          dd.nextElementSibling.nextElementSibling.nextElementSibling
-        ).toBeNull();
       });
     });
     it("takes a single editors into account", async () => {

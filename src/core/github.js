@@ -105,27 +105,6 @@ export async function run(conf) {
     pullBase: new URL("./pulls/", ghURL).href,
     shortName: repo,
   };
-  const otherLink = {
-    key: l10n.participate,
-    data: [
-      {
-        value: `GitHub ${org}/${repo}`,
-        href: ghURL,
-      },
-      {
-        value: l10n.file_a_bug,
-        href: newProps.issueBase,
-      },
-      {
-        value: l10n.commit_history,
-        href: new URL(`./commits/${conf.github.branch ?? ""}`, ghURL.href).href,
-      },
-      {
-        value: "Pull requests",
-        href: newProps.pullBase,
-      },
-    ],
-  };
   // Assign new properties, but retain existing ones
   let githubAPI = "https://respec.org/github";
   if (conf.githubAPI) {
@@ -137,6 +116,34 @@ export async function run(conf) {
         "The `githubAPI` configuration option is private and should not be added manually.";
       showWarning(msg, name);
     }
+  }
+  if (!conf.excludeGithubLinks) {
+    const otherLink = {
+      key: l10n.participate,
+      data: [
+        {
+          value: `GitHub ${org}/${repo}`,
+          href: ghURL,
+        },
+        {
+          value: l10n.file_a_bug,
+          href: newProps.issueBase,
+        },
+        {
+          value: l10n.commit_history,
+          href: new URL(`./commits/${conf.github.branch ?? ""}`, ghURL.href)
+            .href,
+        },
+        {
+          value: "Pull requests",
+          href: newProps.pullBase,
+        },
+      ],
+    };
+    if (!conf.otherLinks) {
+      conf.otherLinks = [];
+    }
+    conf.otherLinks.unshift(otherLink);
   }
   const normalizedGHObj = {
     branch,
@@ -153,5 +160,4 @@ export async function run(conf) {
     githubAPI,
   };
   Object.assign(conf, normalizedConfig);
-  conf.otherLinks.unshift(otherLink);
 }

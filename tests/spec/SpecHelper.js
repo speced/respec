@@ -183,6 +183,7 @@ export function makeBasicConfig(profile = "w3c") {
         perEnd: "1999-01-01",
         lint: false,
         definitionMap: {},
+        github: "w3c/respect",
       };
     case "geonovum":
       return {
