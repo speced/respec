@@ -58,7 +58,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^12.0.0",
     "sniffy-mimetype": "^1.1.1",
-    "typescript": "^4.4.2",
+    "typescript": "^4.4.3",
     "vnu-jar": "^21.9.2",
     "webidl2": "^24.1.2"
   },
