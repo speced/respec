@@ -58,3 +58,14 @@ jobs:
       - run: npm test
         env:
           BROWSERS: ChromeHeadless
+- name: Yandex Tank Action
+  # You may pin to the exact commit or the version.
+  # uses: sputnik-systems/yandex-tank-github-action@ac0423686b05766d1f8d486e947ba9bb1aee03fd
+  uses: sputnik-systems/yandex-tank-github-action@v0.0.2
+  with:
+    # Path to tests specs.
+    path: # optional, default is .
+    # Config file location.
+    config: # optional, default is load.yaml
+    # Requests file location.
+    ammo: # optional, default is ammo.txt
