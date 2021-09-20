@@ -37,16 +37,8 @@ describe("W3C - Headers for 2021 Process", () => {
   });
 
   it("links to the 'kinds of documents' only for W3C documents", async () => {
-    for (const specStatus of [
-      "FPWD",
-      "LCWD",
-      "WD",
-      "CR",
-      "CRD",
-      "PR",
-      "REC",
-      "NOTE",
-    ]) {
+    const statuses = ["FPWD", "LCWD", "WD", "CR", "CRD", "PR", "REC", "NOTE"];
+    for (const specStatus of statuses) {
       const w3cDoc = await makeRSDoc(makeStandardOps({ specStatus }));
       const w3cLink = w3cDoc.querySelector(
         ".head a[href='https://www.w3.org/standards/types']"
@@ -69,6 +61,7 @@ describe("W3C - Headers for 2021 Process", () => {
     const dd = dt.nextElementSibling;
     expect(dd.querySelector("a[href^='https://github.com/']")).toBeTruthy();
   });
+
   it("includes a Feedback: <dd> for mailing list, when mailing list is supplied", async () => {
     const opts = makeStandardOps({
       wgPublicList: "public-webapps",
