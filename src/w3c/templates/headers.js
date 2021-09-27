@@ -100,6 +100,8 @@ const localizationStrings = {
     archives: "archivos",
     author: "Autor:",
     authors: "Autores:",
+    editor: "Editor:",
+    editors: "Editores:",
     feedback: "Comentarios:",
     former_editor: "Antiguo editor:",
     former_editors: "Antiguos editores:",
