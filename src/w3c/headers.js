@@ -362,11 +362,15 @@ export async function run(conf) {
   conf.isTagFinding =
     conf.specStatus === "finding" || conf.specStatus === "draft-finding";
 
-  if (conf.isRecTrack && !hasGitHubIssuesLink(conf)) {
-    const msg = docLink`Missing link to GitHub in head of document.`;
-    const hint = docLink`Please add the ${"[github]"} configuration option to document's ${"[respecConfig]"}.`;
-    showError(msg, name, { hint });
+  if (conf.isRecTrack && !conf.github && !conf.wgPublicList) {
+    const msg =
+      "W3C Process requires a either a link to a public repository or mailing list.";
+    const hint = docLink`Use the ${"[github]"} configuration option to add a link to a repository. Alternatively use ${"[wgPublicList]"} to link to a mailing list.`;
+    showError(msg, name, {
+      hint,
+    });
   }
+
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
     if (conf.specStatus === "ED") {
@@ -812,18 +816,4 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
  */
 function isElement(node) {
   return node.nodeType === Node.ELEMENT_NODE;
-}
-
-function hasGitHubIssuesLink(conf) {
-  return (
-    conf.github ||
-    (conf.otherLinks &&
-      conf.otherLinks.find(linkGroup =>
-        linkGroup.data.find(
-          l =>
-            l.href &&
-            l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/)
-        )
-      ))
-  );
 }

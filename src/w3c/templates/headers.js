@@ -283,13 +283,6 @@ export default (conf, options) => {
 };
 
 function renderFeedback(conf) {
-  if (!conf.github) {
-    const hint = docLink`Use the ${"[github]"} configuration option to add a link to a repository.`;
-    showError("A link to a public repository is required.", name, {
-      hint,
-    });
-  }
-
   if (!conf.github && !conf.wgPublicList) return;
   const definitions = [];
 
