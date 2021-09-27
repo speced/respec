@@ -32,8 +32,10 @@ describe("W3C - Headers for 2021 Process", () => {
     const doc = await makeRSDoc(opts);
     const details = doc.querySelector(".head details");
     const summary = doc.querySelector(".head summary");
+    const dl = doc.querySelector(".head details > dl");
     expect(details).toBeTruthy();
     expect(summary).toBeTruthy();
+    expect(dl).toBeTruthy();
   });
 
   it("links to the 'kinds of documents' only for W3C documents", async () => {
