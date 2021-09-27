@@ -30,6 +30,7 @@ const localizationStrings = {
     feedback: "Feedback:",
     former_editor: "Former editor:",
     former_editors: "Former editors:",
+    history: "History:",
     latest_editors_draft: "Latest editor's draft:",
     latest_published_version: "Latest published version:",
     more_details_about_this_doc: "More details about this document",
@@ -96,13 +97,27 @@ const localizationStrings = {
     this_version: "Deze versie:",
   },
   es: {
+    archives: "archivos",
     author: "Autor:",
     authors: "Autores:",
-    editor: "Editor:",
-    editors: "Editores:",
-    latest_editors_draft: "Borrador de editor mas reciente:",
-    latest_published_version: "Versión publicada mas reciente:",
-    this_version: "Ésta versión:",
+    feedback: "Comentarios:",
+    former_editor: "Antiguo editor:",
+    former_editors: "Antiguos editores:",
+    history: "Historia:",
+    latest_editors_draft: "Última versión del editor:",
+    latest_published_version: "Última versión publicada:",
+    more_details_about_this_doc: "Más detalles sobre este documento:",
+    message_topic: "… detalles de mensaje …",
+    edited_in_place: "editado en lugar",
+    this_version: "Esta versión:",
+    test_suite: "Suite de pruebas:",
+    implementation_report: "Informe de implementación:",
+    prev_editor_draft: "Última versión del editor:",
+    prev_version: "Última versión:",
+    prev_recommendation: "Última Recomendación:",
+    latest_recommendation: "Recomendación más reciente:",
+    with_subject_line: "con línea de asunto",
+    your_topic_here: "TU SUJETO AQUÍ",
   },
   de: {
     author: "Autor/in:",
@@ -166,6 +181,12 @@ export default (conf, options) => {
           ? html`
               <dt>${l10n.latest_editors_draft}</dt>
               <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
+            `
+          : ""}
+        ${conf.historyURI
+          ? html`
+              <dt>${l10n.history}</dt>
+              <dd><a href="${conf.historyURI}">${conf.historyURI}</a></dd>
             `
           : ""}
         ${conf.testSuiteURI

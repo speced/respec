@@ -8,6 +8,8 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
+import { recTrackStatus } from "../../../src/w3c/headers.js";
+
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
@@ -199,14 +201,14 @@ describe("W3C — Headers", () => {
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
-        const dtFormerEditor = contains(doc, "dt", "Former editor:");
-        expect(dtFormerEditor[0].nextElementSibling.textContent).toContain(
+        const [dtFormerEditor] = contains(doc, "dt", "Antiguo editor:");
+        expect(dtFormerEditor.nextElementSibling.textContent).toContain(
           "Hasta"
         );
-        expect(dtFormerEditor[0].nextElementSibling.textContent).toContain(
+        expect(dtFormerEditor.nextElementSibling.textContent).toContain(
           "marzo"
         );
-        const time = dtFormerEditor[0].nextElementSibling.querySelector("time");
+        const time = dtFormerEditor.nextElementSibling.querySelector("time");
         expect(time.dateTime).toBe("2020-03-01");
       });
       it("relocates single editor with retiredDate member to single formerEditor", async () => {
@@ -335,8 +337,10 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(contains(doc, "dt", "Editors:")).toHaveSize(0);
-      expect(contains(doc, "dt", "Editor:")).toHaveSize(1);
-      const dd = doc.querySelectorAll("dd")[5];
+      const editors = contains(doc, "dt", "Editor:");
+      expect(editors).toHaveSize(1);
+      const [editor] = editors;
+      const dd = editor.nextElementSibling;
       expect(dd.querySelectorAll("a[href='http://COMPANY']")).toHaveSize(1);
       expect(dd.querySelector("a[href='http://COMPANY']").textContent).toBe(
         "COMPANY"
@@ -1006,10 +1010,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const terms = doc.querySelectorAll("dt");
-      expect(terms[4].textContent).toBe("Previous version:");
-      expect(terms[4].nextElementSibling.localName).toBe("dd");
-      expect(terms[4].nextElementSibling.textContent).toMatch(
+      const [dt] = contains(doc, "dt", "Previous version:");
+      expect(dt.nextElementSibling.localName).toBe("dd");
+      expect(dt.nextElementSibling.textContent).toMatch(
         /\/1977\/CR-[^/]+-19770315\//
       );
     });
@@ -1197,10 +1200,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const terms = doc.querySelectorAll("dt");
-      expect(terms[3].textContent).toBe("Test suite:");
-      expect(terms[3].nextElementSibling.localName).toBe("dd");
-      expect(terms[3].nextElementSibling.textContent).toBe("my:uri");
+      const [dt] = contains(doc, ".head dt", "Test suite:");
+      expect(dt.nextElementSibling.localName).toBe("dd");
+      expect(dt.nextElementSibling.textContent).toBe("my:uri");
     });
   });
 
@@ -1324,10 +1326,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const terms = doc.querySelectorAll("dt");
-      expect(terms[4].textContent).toBe("Previous editor's draft:");
-      expect(terms[4].nextElementSibling.localName).toBe("dd");
-      expect(terms[4].nextElementSibling.textContent).toBe("URI");
+      const [dt] = contains(doc, ".head dt", "Previous editor's draft:");
+      expect(dt.nextElementSibling.localName).toBe("dd");
+      expect(dt.nextElementSibling.textContent).toBe("URI");
     });
   });
 
@@ -1434,9 +1435,13 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps({ specStatus }, body);
       const doc = await makeRSDoc(ops);
       const copyright = doc.querySelector(".head p.copyright");
-      expect(copyright).toBeTruthy();
-      expect(copyright.textContent.trim()).toBe("No copyright intended.");
-      expect(doc.querySelectorAll(".copyright")).toHaveSize(1);
+      expect(copyright).withContext(specStatus).toBeTruthy();
+      expect(copyright.textContent.trim())
+        .withContext(specStatus)
+        .toBe("No copyright intended.");
+      expect(doc.querySelectorAll(".copyright"))
+        .withContext(specStatus)
+        .toHaveSize(1);
     }
   });
 
@@ -2270,6 +2275,82 @@ describe("W3C — Headers", () => {
       doc.respec.errors.every(
         ({ plugin }) => plugin === "core/templates/show-logo"
       );
+    });
+  });
+
+  describe("historyURI", () => {
+    it("shows the history of the spec", async () => {
+      const ops = makeStandardOps({ shortName: "test", specStatus: "WD" });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      expect(history.nextElementSibling).toBeTruthy();
+      const historyLink = history.nextElementSibling.querySelector("a");
+      expect(historyLink).toBeTruthy();
+      expect(historyLink.href).toBe(
+        "https://www.w3.org/standards/history/test"
+      );
+    });
+
+    it("allows overriding the historyURI", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "WD",
+        historyURI: "http://example.com/history",
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      expect(history.nextElementSibling).toBeTruthy();
+      const historyLink = history.nextElementSibling.querySelector("a");
+      expect(historyLink).toBeTruthy();
+      expect(historyLink.href).toBe("http://example.com/history");
+    });
+
+    it("allowing removing the history entirely buy nulling it out", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "WD",
+        historyURI: null,
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeFalsy();
+    });
+
+    it("derives the historyURI automatically when it's missing, but the document is on TR", async () => {
+      const ops = makeStandardOps({
+        shortName: "payment-request",
+        specStatus: "ED",
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      expect(history.nextElementSibling).toBeTruthy();
+      const historyLink = history.nextElementSibling.querySelector("a");
+      expect(historyLink).toBeTruthy();
+      expect(historyLink.href).toBe(
+        "https://www.w3.org/standards/history/payment-request"
+      );
+    });
+
+    it("includes the history for all rec-track status docs", async () => {
+      for (const specStatus of recTrackStatus) {
+        const shortName = `${specStatus}-test`;
+        const ops = makeStandardOps({
+          shortName,
+          specStatus,
+        });
+        const doc = await makeRSDoc(ops);
+        const [history] = contains(doc, ".head dt", "History:");
+        expect(history).withContext(specStatus).toBeTruthy();
+        expect(history.nextElementSibling).withContext(specStatus).toBeTruthy();
+        const historyLink = history.nextElementSibling.querySelector("a");
+        expect(historyLink).withContext(specStatus).toBeTruthy();
+        expect(historyLink.href)
+          .withContext(specStatus)
+          .toBe(`https://www.w3.org/standards/history/${shortName}`);
+      }
     });
   });
 

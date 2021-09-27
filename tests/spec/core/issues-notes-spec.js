@@ -133,7 +133,7 @@ describe("Core — Issues and Notes", () => {
         <p id='ixx' class='issue'>Unnumbered ISSUE</p>
       </section>
     `;
-    const ops = makeStandardOps({}, body);
+    const ops = makeStandardOps({ github: null }, body);
     const doc = await makeRSDoc(ops);
     const [i10, i11, ixx] = doc.querySelectorAll(".issue .issue-title");
     expect(i10.textContent).toBe("Issue 10");
