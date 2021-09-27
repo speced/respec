@@ -41,7 +41,10 @@ export function prepare(conf) {
     return; // no feature to show
   }
 
-  document.head.appendChild(html`<style class="removeOnSave">
+  document.head.appendChild(html`<style
+    id="caniuse-stylesheet"
+    class="${options.removeOnSave ? "removeOnSave" : ""}"
+  >
     ${css}
   </style>`);
 
@@ -71,7 +74,9 @@ export async function run(conf) {
       return html`<a href="${featureURL}">caniuse.com</a>`;
     }
   })();
-  const definitionPair = html`<dt class="caniuse-title">Browser support:</dt>
+  const definitionPair = html`<dt class="caniuse-title">
+      Browser support (caniuse.com):
+    </dt>
     <dd class="caniuse-stats">
       ${{
         any: contentPromise,
@@ -80,13 +85,17 @@ export async function run(conf) {
     </dd>`;
   headDlElem.append(...definitionPair.childNodes);
   await contentPromise;
-
-  // remove from export
   pub("amend-user-config", { caniuse: options.feature });
-  sub("beforesave", outputDoc => {
-    html.bind(outputDoc.querySelector(".caniuse-stats"))`
-      <a href="${featureURL}">caniuse.com</a>`;
-  });
+  if (options.removeOnSave) {
+    // Will remove the browser support cells.
+    headDlElem
+      .querySelectorAll(".caniuse-browser")
+      .forEach(elem => elem.classList.add("removeOnSave"));
+    sub("beforesave", outputDoc => {
+      html.bind(outputDoc.querySelector(".caniuse-stats"))`
+        <a href="${featureURL}">caniuse.com</a>`;
+    });
+  }
 }
 
 /**
@@ -94,7 +103,7 @@ export async function run(conf) {
  * @param {Object} conf   configuration settings
  */
 function getNormalizedConf(conf) {
-  const DEFAULTS = { versions: 4 };
+  const DEFAULTS = { versions: 4, removeOnSave: false };
   if (typeof conf.caniuse === "string") {
     return { feature: conf.caniuse, ...DEFAULTS };
   }
