@@ -271,7 +271,7 @@ export default (conf, options) => {
 };
 
 function renderSpecTitle(conf) {
-  const specType = conf.isCR ? `${conf.longStatus}` : `${conf.textStatus}`;
+  const specType = conf.isCR ? conf.longStatus : conf.textStatus;
   const preamble = conf.prependW3C
     ? html`<a href="https://www.w3.org/standards/types">W3C ${specType}</a
         >${" "}`
