@@ -13,23 +13,20 @@ import { recTrackStatus } from "../../../src/w3c/headers.js";
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
-
-/**
- * @param {Node} node
- */
-function collapsedTextContent({ textContent }) {
-  return textContent.replace(/\s+/g, " ");
-}
-
-function contains(el, query, string) {
-  return [...el.querySelectorAll(query)].filter(child =>
-    collapsedTextContent(child).includes(string)
-  );
-}
-
 describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
+  /**
+   * @param {Node} node
+   */
+  function collapsedTextContent({ textContent }) {
+    return textContent.replace(/\s+/g, " ");
+  }
+  function contains(el, query, string) {
+    return [...el.querySelectorAll(query)].filter(child =>
+      collapsedTextContent(child).includes(string)
+    );
+  }
 
   it("has a details and summary", async () => {
     const opts = makeStandardOps({ specStatus: "FPWD" });
