@@ -141,14 +141,14 @@ describe("W3C — Headers", () => {
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
-        const dtFormerEditor = contains(doc, "dt", "Former editor:");
-        expect(dtFormerEditor[0].nextElementSibling.textContent).toContain(
+        const [dtFormerEditor] = contains(doc, "dt", "Antiguo editor:");
+        expect(dtFormerEditor.nextElementSibling.textContent).toContain(
           "Hasta"
         );
-        expect(dtFormerEditor[0].nextElementSibling.textContent).toContain(
+        expect(dtFormerEditor.nextElementSibling.textContent).toContain(
           "marzo"
         );
-        const time = dtFormerEditor[0].nextElementSibling.querySelector("time");
+        const time = dtFormerEditor.nextElementSibling.querySelector("time");
         expect(time.dateTime).toBe("2020-03-01");
       });
       it("relocates single editor with retiredDate member to single formerEditor", async () => {
