@@ -31,8 +31,8 @@ describe("W3C - SEO", () => {
   });
 
   it("shouldn't set any canonical URI if no shortname is defined", async () => {
-    // github option sets the shortname, so we exclude it here.
-    const ops = makeStandardOps({ shortName: undefined, github: undefined });
+    const ops = makeStandardOps();
+    ops.config.shortName = undefined;
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector("link[rel='canonical']")).toBeNull();
   });
