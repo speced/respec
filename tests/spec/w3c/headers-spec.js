@@ -999,15 +999,16 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
-        errata: "ERR",
+        errata: "https://foo.com",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(
-        contains(doc.querySelector(".head"), "a", "errata")[0].getAttribute(
-          "href"
-        )
-      ).toBe("ERR");
+      const [errata] = contains(
+        doc,
+        ".head dd>a[href='https://foo.com']",
+        "Errata exists"
+      );
+      expect(errata).toBeTruthy();
     });
   });
 
@@ -2256,7 +2257,9 @@ describe("W3C — Headers", () => {
 
   describe("Feedback", () => {
     it("includes a Feedback: with a <dd> to github issues", async () => {
-      const doc = await makeRSDoc(makeStandardOps());
+      const doc = await makeRSDoc(
+        makeStandardOps({ github: "w3c/respec", specStatus: "WD" })
+      );
       const [dt] = contains(doc, ".head dt", "Feedback:");
       const dd = dt.nextElementSibling;
       expect(dd.querySelector("a[href^='https://github.com/']")).toBeTruthy();
