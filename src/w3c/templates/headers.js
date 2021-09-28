@@ -1,11 +1,5 @@
 // @ts-check
-import {
-  docLink,
-  getIntlData,
-  humanDate,
-  showError,
-  showWarning,
-} from "../../core/utils.js";
+import { getIntlData, humanDate, showWarning } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
@@ -25,6 +19,7 @@ const localizationStrings = {
     archives: "archives",
     author: "Author:",
     authors: "Authors:",
+    commit_history: "Commit history",
     edited_in_place: "edited in place",
     editor: "Editor:",
     editors: "Editors:",
@@ -41,6 +36,7 @@ const localizationStrings = {
     prev_editor_draft: "Previous editor's draft:",
     prev_recommendation: "Previous Recommendation:",
     prev_version: "Previous version:",
+    publication_history: "Publication history",
     test_suite: "Test suite:",
     this_version: "This version:",
     with_subject_line: "with subject line",
@@ -100,6 +96,7 @@ const localizationStrings = {
     archives: "archivos",
     author: "Autor:",
     authors: "Autores:",
+    commit_history: "Historial de cambios",
     edited_in_place: "editado en lugar",
     editor: "Editor:",
     editors: "Editores:",
@@ -113,6 +110,7 @@ const localizationStrings = {
     latest_recommendation: "Recomendación más reciente:",
     message_topic: "… detalles de mensaje …",
     more_details_about_this_doc: "Más detalles sobre este documento:",
+    publication_history: "Historial de publicación",
     prev_editor_draft: "Última versión del editor:",
     prev_recommendation: "Última Recomendación:",
     prev_version: "Última versión:",
@@ -185,12 +183,6 @@ export default (conf, options) => {
               <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
             `
           : ""}
-        ${conf.historyURI
-          ? html`
-              <dt>${l10n.history}</dt>
-              <dd><a href="${conf.historyURI}">${conf.historyURI}</a></dd>
-            `
-          : ""}
         ${conf.testSuiteURI
           ? html`
               <dt>${l10n.test_suite}</dt>
@@ -249,6 +241,23 @@ export default (conf, options) => {
             `
           : ""}
         ${renderFeedback(conf)}
+        ${conf.historyURI
+          ? html`
+              <dt>${l10n.history}</dt>
+              <dd>
+                <a href="${conf.historyURI}">${l10n.publication_history}</a>
+              </dd>
+              ${conf.github
+                ? html`
+                    <dd>
+                      <a href="${conf.github.commitHistoryURL}"
+                        >${l10n.commit_history}</a
+                      >
+                    </dd>
+                  `
+                : ""}
+            `
+          : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
       </dl>
     </details>
@@ -288,9 +297,15 @@ function renderFeedback(conf) {
 
   // Github feedback...
   if (conf.github) {
-    const issuesURL = new URL("./issues/", conf.github.repoURL);
+    const { repoURL, issuesURL, newIssuesURL, pullsURL, fullName } =
+      conf.github;
     definitions.push(
-      html`<dd><a href="${issuesURL}">${issuesURL.href}</a></dd>`
+      html`<dd>
+        <a href="${repoURL}">GitHub ${fullName}</a>
+        (<a href="${pullsURL}">pull requests</a>,
+        <a href="${newIssuesURL}">new issue</a>,
+        <a href="${issuesURL}">open issues</a>)
+      </dd>`
     );
   }
 

@@ -26,8 +26,10 @@ function contains(el, query, string) {
     collapsedTextContent(child).includes(string)
   );
 }
-describe("W3C - Headers for 2021 Process", () => {
-  afterAll(flushIframes);
+
+describe("W3C — Headers", () => {
+  afterEach(flushIframes);
+  const simpleSpecURL = "spec/core/simple.html";
 
   it("has a details and summary", async () => {
     const opts = makeStandardOps({ specStatus: "FPWD" });
@@ -59,32 +61,6 @@ describe("W3C - Headers for 2021 Process", () => {
     }
   });
 
-  it("includes a Feedback: <dd> to github issues", async () => {
-    const doc = await makeRSDoc(makeStandardOps());
-    const [dt] = contains(doc, ".head dt", "Feedback:");
-    const dd = dt.nextElementSibling;
-    expect(dd.querySelector("a[href^='https://github.com/']")).toBeTruthy();
-  });
-
-  it("includes a Feedback: <dd> for mailing list, when mailing list is supplied", async () => {
-    const opts = makeStandardOps({
-      wgPublicList: "public-webapps",
-    });
-    const doc = await makeRSDoc(opts);
-    const [dd] = contains(doc, ".head dd", "public-webapps@w3.org");
-
-    // Check the archive link
-    const archive = dd.querySelector(
-      "a[rel='discussion'][href^='https://lists.w3.org/']"
-    );
-    expect(archive).toBeTruthy();
-    expect(archive.textContent.trim()).toBe("archives");
-  });
-});
-
-describe("W3C — Headers", () => {
-  afterEach(flushIframes);
-  const simpleSpecURL = "spec/core/simple.html";
   describe("prevRecShortname & prevRecURI", () => {
     it("takes prevRecShortname and prevRecURI into account", async () => {
       const ops = makeStandardOps();
@@ -2278,8 +2254,54 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("historyURI", () => {
-    it("shows the history of the spec", async () => {
+  describe("Feedback", () => {
+    it("includes a Feedback: with a <dd> to github issues", async () => {
+      const doc = await makeRSDoc(makeStandardOps());
+      const [dt] = contains(doc, ".head dt", "Feedback:");
+      const dd = dt.nextElementSibling;
+      expect(dd.querySelector("a[href^='https://github.com/']")).toBeTruthy();
+    });
+
+    it("includes links for to new issue, pull requests, open issues", async () => {
+      const doc = await makeRSDoc(makeStandardOps({ github: "w3c/respec" }));
+      const [prLink] = contains(
+        doc,
+        ".head a[href='https://github.com/w3c/respec/pulls/']",
+        "pull requests"
+      );
+      expect(prLink).toBeTruthy();
+      const [openIssue] = contains(
+        doc,
+        ".head a[href='https://github.com/w3c/respec/issues/']",
+        "open issues"
+      );
+      expect(openIssue).toBeTruthy();
+      const [newIssue] = contains(
+        doc,
+        ".head a[href='https://github.com/w3c/respec/issues/new']",
+        "new issue"
+      );
+      expect(newIssue).toBeTruthy();
+    });
+
+    it("includes a Feedback: with a <dd> for mailing list, when mailing list is supplied", async () => {
+      const opts = makeStandardOps({
+        wgPublicList: "public-webapps",
+      });
+      const doc = await makeRSDoc(opts);
+      const [dd] = contains(doc, ".head dd", "public-webapps@w3.org");
+
+      // Check the archive link
+      const archive = dd.querySelector(
+        "a[rel='discussion'][href^='https://lists.w3.org/']"
+      );
+      expect(archive).toBeTruthy();
+      expect(archive.textContent.trim()).toBe("archives");
+    });
+  });
+
+  describe("History", () => {
+    it("shows the publication history of the spec", async () => {
       const ops = makeStandardOps({ shortName: "test", specStatus: "WD" });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
@@ -2290,6 +2312,19 @@ describe("W3C — Headers", () => {
       expect(historyLink.href).toBe(
         "https://www.w3.org/standards/history/test"
       );
+      expect(historyLink.textContent).toContain("Publication history");
+    });
+
+    it("includes a dd for the commit history of the document", async () => {
+      const ops = makeStandardOps({
+        github: "w3c/respec",
+        shortName: "test",
+        specStatus: "WD",
+      });
+      const doc = await makeRSDoc(ops);
+      const [commitHistory] = contains(doc, ".head dd>a", "Commit history");
+      expect(commitHistory.href).toBe("https://github.com/w3c/respec/commits/");
+      expect(commitHistory).toBeTruthy();
     });
 
     it("allows overriding the historyURI", async () => {

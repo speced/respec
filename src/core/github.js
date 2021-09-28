@@ -95,6 +95,10 @@ export async function run(conf) {
   }
   const branch = conf.github.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
+  const commitHistoryURL = new URL(
+    `./commits/${conf.github.branch ?? ""}`,
+    ghURL.href
+  );
   const newProps = {
     edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubToken: undefined,
@@ -131,8 +135,7 @@ export async function run(conf) {
         },
         {
           value: l10n.commit_history,
-          href: new URL(`./commits/${conf.github.branch ?? ""}`, ghURL.href)
-            .href,
+          href: commitHistoryURL.href,
         },
         {
           value: "Pull requests",
@@ -150,6 +153,10 @@ export async function run(conf) {
     repoURL: ghURL.href,
     apiBase: githubAPI,
     fullName: `${org}/${repo}`,
+    issuesURL: issueBase,
+    pullsURL: newProps.pullBase,
+    newIssuesURL: new URL("./new", issueBase).href,
+    commitHistoryURL: commitHistoryURL.href,
   };
   resolveGithubPromise(normalizedGHObj);
 
