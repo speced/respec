@@ -317,9 +317,9 @@ function renderFeedback(conf) {
     >`;
 
     // The subject line...
-    const subjectLine = conf.subjectPrefix
-      ? conf.subjectPrefix
-      : html`[${conf.shortName}] <em>${l10n.message_topic}</em>`;
+    const subjectLine =
+      conf.subjectPrefix ||
+      html`[${conf.shortName}] <em>${l10n.message_topic}</em>`;
     const emailSubject = html`${l10n.with_subject_line}${" "}
       <kbd>${subjectLine}</kbd>`;
 
