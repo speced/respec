@@ -25,6 +25,25 @@ describe("W3C — Headers", () => {
       collapsedTextContent(child).includes(string)
     );
   }
+  it("links to the 'kinds of documents' only for W3C documents", async () => {
+    const statuses = ["FPWD", "LCWD", "WD", "CR", "CRD", "PR", "REC", "NOTE"];
+    for (const specStatus of statuses) {
+      const w3cDoc = await makeRSDoc(makeStandardOps({ specStatus }));
+      const w3cLink = w3cDoc.querySelector(
+        ".head a[href='https://www.w3.org/standards/types']"
+      );
+      expect(w3cLink).withContext(`specStatus: ${specStatus}`).toBeTruthy();
+    }
+
+    for (const specStatus of ["unofficial", "base"]) {
+      const doc = await makeRSDoc(makeStandardOps({ specStatus }));
+      const w3cLink = doc.querySelector(
+        ".head a[href='https://www.w3.org/standards/types']"
+      );
+      expect(w3cLink).toBeNull();
+    }
+  });
+
   describe("prevRecShortname & prevRecURI", () => {
     it("takes prevRecShortname and prevRecURI into account", async () => {
       const ops = makeStandardOps();
