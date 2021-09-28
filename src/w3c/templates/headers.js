@@ -273,11 +273,10 @@ export default (conf, options) => {
 function renderSpecTitle(conf) {
   const specType = conf.isCR ? conf.longStatus : conf.textStatus;
   const preamble = conf.prependW3C
-    ? html`<a href="https://www.w3.org/standards/types">W3C ${specType}</a
-        >${" "}`
-    : html`${specType}${" "}`;
+    ? html`<a href="https://www.w3.org/standards/types">W3C ${specType}</a>`
+    : html`${specType}`;
 
-  return html`${preamble}
+  return html`${preamble}${" "}
     <time class="dt-published" datetime="${conf.dashDate}"
       >${conf.publishHumanDate}</time
     >${conf.modificationDate
