@@ -28,8 +28,8 @@ describe("W3C — Headers", () => {
   it("links to the 'kinds of documents' only for W3C documents", async () => {
     const statuses = ["FPWD", "LCWD", "WD", "CR", "CRD", "PR", "REC", "NOTE"];
     for (const specStatus of statuses) {
-      const w3cDoc = await makeRSDoc(makeStandardOps({ specStatus }));
-      const w3cLink = w3cDoc.querySelector(
+      const doc = await makeRSDoc(makeStandardOps({ specStatus }));
+      const w3cLink = doc.querySelector(
         ".head a[href='https://www.w3.org/standards/types']"
       );
       expect(w3cLink).withContext(`specStatus: ${specStatus}`).toBeTruthy();
@@ -40,7 +40,7 @@ describe("W3C — Headers", () => {
       const w3cLink = doc.querySelector(
         ".head a[href='https://www.w3.org/standards/types']"
       );
-      expect(w3cLink).toBeNull();
+      expect(w3cLink).withContext(`specStatus: ${specStatus}`).toBeNull();
     }
   });
 
