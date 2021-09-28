@@ -32,6 +32,8 @@ const w3cDefaults = {
   logos: [],
   xref: true,
   wgId: "",
+  otherLinks: [],
+  excludeGithubLinks: true,
 };
 
 export function run(conf) {
