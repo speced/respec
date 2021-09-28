@@ -280,8 +280,10 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(contains(doc, "dt", "Editors:")).toHaveSize(0);
-      expect(contains(doc, "dt", "Editor:")).toHaveSize(1);
-      const dd = doc.querySelectorAll("dd")[5];
+      const editors = contains(doc, "dt", "Editor:");
+      expect(editors).toHaveSize(1);
+      const [editor] = editors;
+      const dd = editor.nextElementSibling;
       expect(dd.querySelectorAll("a[href='http://COMPANY']")).toHaveSize(1);
       expect(dd.querySelector("a[href='http://COMPANY']").textContent).toBe(
         "COMPANY"
@@ -951,10 +953,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const terms = doc.querySelectorAll("dt");
-      expect(terms[4].textContent).toBe("Previous version:");
-      expect(terms[4].nextElementSibling.localName).toBe("dd");
-      expect(terms[4].nextElementSibling.textContent).toMatch(
+      const [dt] = contains(doc, "dt", "Previous version:");
+      expect(dt.nextElementSibling.localName).toBe("dd");
+      expect(dt.nextElementSibling.textContent).toMatch(
         /\/1977\/CR-[^/]+-19770315\//
       );
     });
@@ -1142,10 +1143,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const terms = doc.querySelectorAll("dt");
-      expect(terms[3].textContent).toBe("Test suite:");
-      expect(terms[3].nextElementSibling.localName).toBe("dd");
-      expect(terms[3].nextElementSibling.textContent).toBe("my:uri");
+      const [dt] = contains(doc, ".head dt", "Test suite:");
+      expect(dt.nextElementSibling.localName).toBe("dd");
+      expect(dt.nextElementSibling.textContent).toBe("my:uri");
     });
   });
 
@@ -1269,10 +1269,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const terms = doc.querySelectorAll("dt");
-      expect(terms[4].textContent).toBe("Previous editor's draft:");
-      expect(terms[4].nextElementSibling.localName).toBe("dd");
-      expect(terms[4].nextElementSibling.textContent).toBe("URI");
+      const [dt] = contains(doc, ".head dt", "Previous editor's draft:");
+      expect(dt.nextElementSibling.localName).toBe("dd");
+      expect(dt.nextElementSibling.textContent).toBe("URI");
     });
   });
 
@@ -1379,9 +1378,13 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps({ specStatus }, body);
       const doc = await makeRSDoc(ops);
       const copyright = doc.querySelector(".head p.copyright");
-      expect(copyright).toBeTruthy();
-      expect(copyright.textContent.trim()).toBe("No copyright intended.");
-      expect(doc.querySelectorAll(".copyright")).toHaveSize(1);
+      expect(copyright).withContext(specStatus).toBeTruthy();
+      expect(copyright.textContent.trim())
+        .withContext(specStatus)
+        .toBe("No copyright intended.");
+      expect(doc.querySelectorAll(".copyright"))
+        .withContext(specStatus)
+        .toHaveSize(1);
     }
   });
 
