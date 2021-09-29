@@ -33,6 +33,7 @@ describe("W3C — Headers", () => {
     const summary = doc.querySelector(".head summary");
     const dl = doc.querySelector(".head details > dl");
     expect(details).toBeTruthy();
+    expect(details.open).toBe(true);
     expect(summary).toBeTruthy();
     expect(dl).toBeTruthy();
   });
