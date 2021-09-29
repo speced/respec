@@ -156,90 +156,93 @@ export default (conf, options) => {
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
     <h2>${renderSpecTitle(conf)}</h2>
-    <dl>
-      ${conf.isTagFinding || !conf.isNoTrack
-        ? html`
-            <dt>${l10n.this_version}</dt>
-            <dd>
-              <a class="u-url" href="${conf.thisVersion}"
-                >${conf.thisVersion}</a
-              >
-            </dd>
-            <dt>${l10n.latest_published_version}</dt>
-            <dd>
-              ${conf.latestVersion
-                ? html`<a href="${conf.latestVersion}"
-                    >${conf.latestVersion}</a
-                  >`
-                : "none"}
-            </dd>
-          `
-        : ""}
-      ${conf.edDraftURI
-        ? html`
-            <dt>${l10n.latest_editors_draft}</dt>
-            <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
-          `
-        : ""}
-      ${conf.testSuiteURI
-        ? html`
-            <dt>${l10n.test_suite}</dt>
-            <dd><a href="${conf.testSuiteURI}">${conf.testSuiteURI}</a></dd>
-          `
-        : ""}
-      ${conf.implementationReportURI
-        ? html`
-            <dt>${l10n.implementation_report}</dt>
-            <dd>
-              <a href="${conf.implementationReportURI}"
-                >${conf.implementationReportURI}</a
-              >
-            </dd>
-          `
-        : ""}
-      ${conf.isED && conf.prevED
-        ? html`
-            <dt>${l10n.prev_editor_draft}</dt>
-            <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
-          `
-        : ""}
-      ${conf.showPreviousVersion
-        ? html`
-            <dt>${l10n.prev_version}</dt>
-            <dd><a href="${conf.prevVersion}">${conf.prevVersion}</a></dd>
-          `
-        : ""}
-      ${!conf.prevRecURI
-        ? ""
-        : conf.isRec
-        ? html`
-            <dt>${l10n.prev_recommendation}</dt>
-            <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-          `
-        : html`
-            <dt>${l10n.latest_recommendation}</dt>
-            <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-          `}
-      <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
-      ${showPeople(conf, "editors")}
-      ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
-        ? html`
-            <dt>
-              ${conf.multipleFormerEditors
-                ? l10n.former_editors
-                : l10n.former_editor}
-            </dt>
-            ${showPeople(conf, "formerEditors")}
-          `
-        : ""}
-      ${conf.authors
-        ? html`
-            <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
-            ${showPeople(conf, "authors")}
-          `
-        : ""}
-      ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
-    </dl>
+    <details open="">
+      <summary>${l10n.more_details_about_this_doc}</summary>
+      <dl>
+        ${conf.isTagFinding || !conf.isNoTrack
+          ? html`
+              <dt>${l10n.this_version}</dt>
+              <dd>
+                <a class="u-url" href="${conf.thisVersion}"
+                  >${conf.thisVersion}</a
+                >
+              </dd>
+              <dt>${l10n.latest_published_version}</dt>
+              <dd>
+                ${conf.latestVersion
+                  ? html`<a href="${conf.latestVersion}"
+                      >${conf.latestVersion}</a
+                    >`
+                  : "none"}
+              </dd>
+            `
+          : ""}
+        ${conf.edDraftURI
+          ? html`
+              <dt>${l10n.latest_editors_draft}</dt>
+              <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
+            `
+          : ""}
+        ${conf.testSuiteURI
+          ? html`
+              <dt>${l10n.test_suite}</dt>
+              <dd><a href="${conf.testSuiteURI}">${conf.testSuiteURI}</a></dd>
+            `
+          : ""}
+        ${conf.implementationReportURI
+          ? html`
+              <dt>${l10n.implementation_report}</dt>
+              <dd>
+                <a href="${conf.implementationReportURI}"
+                  >${conf.implementationReportURI}</a
+                >
+              </dd>
+            `
+          : ""}
+        ${conf.isED && conf.prevED
+          ? html`
+              <dt>${l10n.prev_editor_draft}</dt>
+              <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
+            `
+          : ""}
+        ${conf.showPreviousVersion
+          ? html`
+              <dt>${l10n.prev_version}</dt>
+              <dd><a href="${conf.prevVersion}">${conf.prevVersion}</a></dd>
+            `
+          : ""}
+        ${!conf.prevRecURI
+          ? ""
+          : conf.isRec
+          ? html`
+              <dt>${l10n.prev_recommendation}</dt>
+              <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+            `
+          : html`
+              <dt>${l10n.latest_recommendation}</dt>
+              <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+            `}
+        <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
+        ${showPeople(conf, "editors")}
+        ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
+          ? html`
+              <dt>
+                ${conf.multipleFormerEditors
+                  ? l10n.former_editors
+                  : l10n.former_editor}
+              </dt>
+              ${showPeople(conf, "formerEditors")}
+            `
+          : ""}
+        ${conf.authors
+          ? html`
+              <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
+              ${showPeople(conf, "authors")}
+            `
+          : ""}
+        ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
+      </dl>
+    </details>
     ${conf.errata
       ? html`<p>
           Please check the
