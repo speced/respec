@@ -240,6 +240,23 @@ export default (conf, options) => {
               ${showPeople(conf, "authors")}
             `
           : ""}
+        ${conf.historyURI
+          ? html`
+              <dt>${l10n.history}</dt>
+              <dd>
+                <a href="${conf.historyURI}">${l10n.publication_history}</a>
+              </dd>
+              ${conf.github
+                ? html`
+                    <dd>
+                      <a href="${conf.github.commitHistoryURL}"
+                        >${l10n.commit_history}</a
+                      >
+                    </dd>
+                  `
+                : ""}
+            `
+          : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
       </dl>
     </details>

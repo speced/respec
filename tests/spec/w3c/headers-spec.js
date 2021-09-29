@@ -8,6 +8,8 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
+import { recTrackStatus } from "../../../src/w3c/headers.js";
+
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
@@ -287,9 +289,6 @@ describe("W3C — Headers", () => {
         expect(dd.nextElementSibling.nextElementSibling.textContent).toContain(
           "FORMER EDITOR 3"
         );
-        expect(
-          dd.nextElementSibling.nextElementSibling.nextElementSibling
-        ).toBeNull();
       });
     });
     it("takes a single editors into account", async () => {
@@ -2250,6 +2249,95 @@ describe("W3C — Headers", () => {
       doc.respec.errors.every(
         ({ plugin }) => plugin === "core/templates/show-logo"
       );
+    });
+  });
+
+  describe("History", () => {
+    it("shows the publication history of the spec", async () => {
+      const ops = makeStandardOps({ shortName: "test", specStatus: "WD" });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      expect(history.nextElementSibling).toBeTruthy();
+      const historyLink = history.nextElementSibling.querySelector("a");
+      expect(historyLink).toBeTruthy();
+      expect(historyLink.href).toBe(
+        "https://www.w3.org/standards/history/test"
+      );
+      expect(historyLink.textContent).toContain("Publication history");
+    });
+
+    it("includes a dd for the commit history of the document", async () => {
+      const ops = makeStandardOps({
+        github: "w3c/respec",
+        shortName: "test",
+        specStatus: "WD",
+      });
+      const doc = await makeRSDoc(ops);
+      const [commitHistory] = contains(doc, ".head dd>a", "Commit history");
+      expect(commitHistory.href).toBe("https://github.com/w3c/respec/commits/");
+      expect(commitHistory).toBeTruthy();
+    });
+
+    it("allows overriding the historyURI", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "WD",
+        historyURI: "http://example.com/history",
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      expect(history.nextElementSibling).toBeTruthy();
+      const historyLink = history.nextElementSibling.querySelector("a");
+      expect(historyLink).toBeTruthy();
+      expect(historyLink.href).toBe("http://example.com/history");
+    });
+
+    it("allowing removing the history entirely buy nulling it out", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "WD",
+        historyURI: null,
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeFalsy();
+    });
+
+    it("derives the historyURI automatically when it's missing, but the document is on TR", async () => {
+      const ops = makeStandardOps({
+        shortName: "payment-request",
+        specStatus: "ED",
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      expect(history.nextElementSibling).toBeTruthy();
+      const historyLink = history.nextElementSibling.querySelector("a");
+      expect(historyLink).toBeTruthy();
+      expect(historyLink.href).toBe(
+        "https://www.w3.org/standards/history/payment-request"
+      );
+    });
+
+    it("includes the history for all rec-track status docs", async () => {
+      for (const specStatus of recTrackStatus) {
+        const shortName = `${specStatus}-test`;
+        const ops = makeStandardOps({
+          shortName,
+          specStatus,
+        });
+        const doc = await makeRSDoc(ops);
+        const [history] = contains(doc, ".head dt", "History:");
+        expect(history).withContext(specStatus).toBeTruthy();
+        expect(history.nextElementSibling).withContext(specStatus).toBeTruthy();
+        const historyLink = history.nextElementSibling.querySelector("a");
+        expect(historyLink).withContext(specStatus).toBeTruthy();
+        expect(historyLink.href)
+          .withContext(specStatus)
+          .toBe(`https://www.w3.org/standards/history/${shortName}`);
+      }
     });
   });
 

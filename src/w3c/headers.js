@@ -267,7 +267,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
-export function run(conf) {
+export async function run(conf) {
   if (!conf.specStatus) {
     const msg = docLink`Missing required configuration: ${"[specStatus]"}.`;
     const hint = docLink`Please select an appropriate status from ${"[specStatus]"} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
@@ -506,6 +506,7 @@ export function run(conf) {
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
   validatePatentPolicies(conf);
+  await deriveHistoryURI(conf);
 
   // configuration done - yay!
 
@@ -695,6 +696,36 @@ export function run(conf) {
     publishISODate: conf.publishISODate,
     generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
   });
+}
+
+async function deriveHistoryURI(conf) {
+  if (!conf.shortName || conf.historyURI === null) {
+    return; // Nothing to do
+  }
+
+  const historyURL = new URL(
+    conf.historyURI ?? conf.shortName,
+    "https://www.w3.org/standards/history/"
+  );
+
+  // If it's on the Rec Track or it's TR worthy, then it has a history.
+  const willHaveHistory = [...recTrackStatus, ...W3CNotes, ...maybeRecTrack];
+  if (willHaveHistory.includes(conf.specStatus)) {
+    conf.historyURI = historyURL.href;
+    return;
+  }
+
+  // Do a fetch HEAD request to see if the history exists...
+  // We don't discriminate... if it's on the W3C website with a history,
+  // we show it.
+  try {
+    const response = await fetch(historyURL, { method: "HEAD" });
+    if (response.ok && response.status === 200) {
+      conf.historyURI = historyURL.href;
+    }
+  } catch {
+    // Ignore fetch errors
+  }
 }
 
 function validatePatentPolicies(conf) {
