@@ -156,7 +156,7 @@ export default (conf, options) => {
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
     <h2>${renderSpecTitle(conf)}</h2>
-    <details>
+    <details open="">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
         ${conf.isTagFinding || !conf.isNoTrack
