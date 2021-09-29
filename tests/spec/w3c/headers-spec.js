@@ -287,9 +287,6 @@ describe("W3C — Headers", () => {
         expect(dd.nextElementSibling.nextElementSibling.textContent).toContain(
           "FORMER EDITOR 3"
         );
-        expect(
-          dd.nextElementSibling.nextElementSibling.nextElementSibling
-        ).toBeNull();
       });
     });
     it("takes a single editors into account", async () => {
@@ -998,15 +995,16 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
-        errata: "ERR",
+        errata: "https://foo.com",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(
-        contains(doc.querySelector(".head"), "a", "errata")[0].getAttribute(
-          "href"
-        )
-      ).toBe("ERR");
+      const [errata] = contains(
+        doc,
+        ".head dd>a[href='https://foo.com']",
+        "Errata exists"
+      );
+      expect(errata).toBeTruthy();
     });
   });
 
