@@ -25,6 +25,19 @@ describe("W3C — Headers", () => {
       collapsedTextContent(child).includes(string)
     );
   }
+
+  it("has a details and summary", async () => {
+    const opts = makeStandardOps({ specStatus: "FPWD" });
+    const doc = await makeRSDoc(opts);
+    const details = doc.querySelector(".head details");
+    const summary = doc.querySelector(".head summary");
+    const dl = doc.querySelector(".head details > dl");
+    expect(details).toBeTruthy();
+    expect(details.open).toBe(true);
+    expect(summary).toBeTruthy();
+    expect(dl).toBeTruthy();
+  });
+
   it("links to the 'kinds of documents' only for W3C documents", async () => {
     const statuses = ["FPWD", "LCWD", "WD", "CR", "CRD", "PR", "REC", "NOTE"];
     for (const specStatus of statuses) {
