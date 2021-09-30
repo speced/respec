@@ -242,30 +242,16 @@ export default (conf, options) => {
             `
           : ""}
         ${renderFeedback(conf)}
-        ${conf.historyURI
-          ? html`
-              <dt>${l10n.history}</dt>
-              <dd>
-                <a href="${conf.historyURI}">${l10n.publication_history}</a>
-              </dd>
-              ${conf.github
-                ? html`
-                    <dd>
-                      <a href="${conf.github.commitHistoryURL}"
-                        >${l10n.commit_history}</a
-                      >
-                    </dd>
-                  `
-                : ""}
-            `
-          : ""}
-        ${conf.errata
-          ? html`<dt>Errata</dt>
-              <dd><a href="${conf.errata}">Errata exists</a>.</dd>`
-          : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
       </dl>
     </details>
+    ${conf.errata
+      ? html`<p>
+          Please check the
+          <a href="${conf.errata}"><strong>errata</strong></a> for any errors or
+          issues reported since publication.
+        </p>`
+      : ""}
     ${conf.isRec
       ? html`<p>
           See also
