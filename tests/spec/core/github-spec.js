@@ -12,6 +12,7 @@ describe("Core - Github", () => {
   const stringOpt = {
     config: Object.assign(makeBasicConfig(), {
       github: "https://github.com/w3c/respec/",
+      excludeGithubLinks: false,
     }),
     body: makeDefaultBody(),
   };
@@ -21,6 +22,7 @@ describe("Core - Github", () => {
         repoURL: "https://github.com/w3c/respec/",
         branch: "develop",
       },
+      excludeGithubLinks: false,
     }),
     body: makeDefaultBody(),
   };
