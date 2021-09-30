@@ -2,6 +2,7 @@
 
 import {
   flushIframes,
+  getExportedDoc,
   makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
@@ -129,5 +130,51 @@ describe("Core — Can I Use", () => {
 
     const text = doc.getElementById("initialUserConfig").textContent;
     expect(JSON.parse(text)).toEqual(expectedObj);
+  });
+
+  it("includes caniuse by default in exported documents", async () => {
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "FEATURE",
+        apiURL,
+      },
+    });
+    const exportedDoc = await getExportedDoc(await makeRSDoc(ops));
+    // make sure there is a style element with id caniuse-stylesheet
+    const style = exportedDoc.querySelector("#caniuse-stylesheet");
+    expect(style).toBeTruthy();
+    // make sure that removeOnSave is not present in classlist
+    expect(style.classList.contains("removeOnSave")).toBeFalsy();
+  });
+
+  it("includes caniuse cells via explicit removeOnSave being false", async () => {
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "FEATURE",
+        apiURL,
+        removeOnSave: false,
+      },
+    });
+    const exportedDoc = await getExportedDoc(await makeRSDoc(ops));
+    // make sure there is a style element with id caniuse-stylesheet
+    const style = exportedDoc.querySelector("#caniuse-stylesheet");
+    expect(style).toBeTruthy();
+    // make sure that removeOnSave is not present in classlist
+    expect(style.classList.contains("removeOnSave")).toBeFalsy();
+  });
+
+  it("allows removing caniuse cells from exported docs via configuration", async () => {
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "FEATURE",
+        apiURL,
+        removeOnSave: true,
+      },
+    });
+    const exportedDoc = await getExportedDoc(await makeRSDoc(ops));
+    // make sure there is a style element with id caniuse-stylesheet
+    const style = exportedDoc.querySelector("#caniuse-stylesheet");
+    expect(style).toBeNull();
+    expect(exportedDoc.querySelector(".caniuse-browser")).toBeFalsy();
   });
 });

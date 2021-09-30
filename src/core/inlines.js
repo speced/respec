@@ -21,37 +21,36 @@ import { renderInlineCitation } from "./render-biblio.js";
 export const name = "core/inlines";
 export const rfc2119Usage = {};
 
+/** @param {RegExp[]} regexes */
+const joinRegex = regexes => new RegExp(regexes.map(re => re.source).join("|"));
+
 const localizationStrings = {
   en: {
     rfc2119Keywords() {
-      return new RegExp(
-        [
-          "\\bMUST(?:\\s+NOT)?\\b",
-          "\\bSHOULD(?:\\s+NOT)?\\b",
-          "\\bSHALL(?:\\s+NOT)?\\b",
-          "\\bMAY\\b",
-          "\\b(?:NOT\\s+)?REQUIRED\\b",
-          "\\b(?:NOT\\s+)?RECOMMENDED\\b",
-          "\\bOPTIONAL\\b",
-        ].join("|")
-      );
+      return joinRegex([
+        /\bMUST(?:\s+NOT)?\b/,
+        /\bSHOULD(?:\s+NOT)?\b/,
+        /\bSHALL(?:\s+NOT)?\b/,
+        /\bMAY?\b/,
+        /\b(?:NOT\s+)?REQUIRED\b/,
+        /\b(?:NOT\s+)?RECOMMENDED\b/,
+        /\bOPTIONAL\b/,
+      ]);
     },
   },
   de: {
     rfc2119Keywords() {
-      return new RegExp(
-        [
-          "\\bMUSS\\b",
-          "\\bERFORDERLICH\\b",
-          "\\b(?:NICHT\\s+)?NÖTIG\\b",
-          "\\bDARF(?:\\s+NICHT)?\\b",
-          "\\bVERBOTEN\\b",
-          "\\bSOLL(?:\\s+NICHT)?\\b",
-          "\\b(?:NICHT\\s+)?EMPFOHLEN\\b",
-          "\\bKANN\\b",
-          "\\bOPTIONAL\\b",
-        ].join("|")
-      );
+      return joinRegex([
+        /\bMUSS\b/,
+        /\bERFORDERLICH\b/,
+        /\b(?:NICHT\s+)?NÖTIG\b/,
+        /\bDARF(?:\s+NICHT)?\b/,
+        /\bVERBOTEN\b/,
+        /\bSOLL(?:\s+NICHT)?\b/,
+        /\b(?:NICHT\s+)?EMPFOHLEN\b/,
+        /\bKANN\b/,
+        /\bOPTIONAL\b/,
+      ]);
     },
   },
 };
@@ -61,8 +60,8 @@ const l10n = getIntlData(localizationStrings);
 // TODO: Replace (?!`) at the end with (?:<!`) at the start when Firefox + Safari
 // add support.
 const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
-const inlineIdlReference = /(?:{{[^}]+}})/; // {{ WebIDLThing }}
-const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+)?\|\B/; // |var : Type|
+const inlineIdlReference = /(?:{{[^}]+\?*}})/; // {{ WebIDLThing }}, {{ WebIDLThing? }}
+const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;<>]+\??)?\|\B/; // |var : Type?|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
@@ -76,17 +75,22 @@ const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
  */
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
-  const [element, attribute, attrValue] = value
+  const [forPart, attribute, attrValue] = value
     .split("/", 3)
     .map(s => s && s.trim())
     .filter(s => !!s);
+
   const [xrefType, xrefFor, textContent] = (() => {
-    if (attrValue) {
-      return ["attr-value", `${element}/${attribute}`, attrValue];
+    // [^ /role ^], for example
+    const isGlobalAttr = value.startsWith("/");
+    if (isGlobalAttr) {
+      return ["element-attr", null, forPart];
+    } else if (attrValue) {
+      return ["attr-value", `${forPart}/${attribute}`, attrValue];
     } else if (attribute) {
-      return ["element-attr", element, attribute];
+      return ["element-attr", forPart, attribute];
     } else {
-      return ["element", null, element];
+      return ["element", null, forPart];
     }
   })();
   return html`<code
@@ -256,8 +260,9 @@ export function run(conf) {
     const value = norm(title);
     abbrMap.set(key, value);
   }
-  const aKeys = [...abbrMap.keys()];
-  const abbrRx = aKeys.length ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)` : null;
+  const abbrRx = abbrMap.size
+    ? new RegExp(`(?:\\b${[...abbrMap.keys()].join("\\b)|(?:\\b")}\\b)`)
+    : null;
 
   // PROCESSING
   // Don't gather text nodes for these:
@@ -266,21 +271,24 @@ export function run(conf) {
     wsNodes: false, // we don't want nodes with just whitespace
   });
   const keywords = l10n.rfc2119Keywords();
-  const rx = new RegExp(
-    `(${[
-      keywords.source,
-      inlineIdlReference.source,
-      inlineVariable.source,
-      inlineCitation.source,
-      inlineExpansion.source,
-      inlineAnchor.source,
-      inlineCodeRegExp.source,
-      inlineElement.source,
-      ...(abbrRx ? [abbrRx] : []),
-    ].join("|")})`
+
+  const inlinesRegex = new RegExp(
+    `(${
+      joinRegex([
+        keywords,
+        inlineIdlReference,
+        inlineVariable,
+        inlineCitation,
+        inlineExpansion,
+        inlineAnchor,
+        inlineCodeRegExp,
+        inlineElement,
+        ...(abbrRx ? [abbrRx] : []),
+      ]).source
+    })`
   );
   for (const txt of txts) {
-    const subtxt = txt.data.split(rx);
+    const subtxt = txt.data.split(inlinesRegex);
     if (subtxt.length === 1) continue;
     const df = document.createDocumentFragment();
     let matched = true;

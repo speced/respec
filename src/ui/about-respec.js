@@ -58,7 +58,7 @@ function show() {
     ReSpec is a document production toolchain, with a notable focus on W3C specifications.
   </p>
   <p>
-    <a href='https://github.com/w3c/respec/wiki'>Documentation</a>,
+    <a href='https://respec.org/docs'>Documentation</a>,
     <a href='https://github.com/w3c/respec/issues'>Bugs</a>.
   </p>
   <table border="1" width="100%" hidden="${entries.length ? false : true}">
