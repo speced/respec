@@ -2278,7 +2278,7 @@ describe("W3C — Headers", () => {
       expect(openIssue).toBeTruthy();
       const [newIssue] = contains(
         doc,
-        ".head a[href='https://github.com/w3c/respec/issues/new']",
+        ".head a[href='https://github.com/w3c/respec/issues/new/choose']",
         "new issue"
       );
       expect(newIssue).toBeTruthy();
