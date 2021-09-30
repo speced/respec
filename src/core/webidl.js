@@ -6,6 +6,7 @@
 //  - don't use generated content in the CSS!
 import {
   addHashId,
+  docLink,
   showError,
   showWarning,
   wrapInner,
@@ -141,7 +142,7 @@ function defineIdlName(escaped, data, parent) {
   const linkType = getDfnType(data.type);
   if (dfn) {
     if (!data.partial) {
-      dfn.dataset.export = "";
+      if (!dfn.matches("[data-noexport]")) dfn.dataset.export = "";
       dfn.dataset.dfnType = linkType;
     }
     decorateDfn(dfn, data, parentName, name);
@@ -186,8 +187,9 @@ function defineIdlName(escaped, data, parent) {
   if (showWarnings) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
-    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
-    showWarning(msg, pluginName, { elements: [unlinkedAnchor] });
+    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}.`;
+    const hint = docLink`See ${"using `data-dfn-for`|#data-dfn-for"} in ReSpec's documentation.`;
+    showWarning(msg, pluginName, { elements: [unlinkedAnchor], hint });
   }
   return unlinkedAnchor;
 }
@@ -313,6 +315,17 @@ function getDefnName(defn) {
   }
 }
 
+// IDL types that never need a data-dfn-for
+const topLevelIdlTypes = [
+  "interface",
+  "interface mixin",
+  "dictionary",
+  "namespace",
+  "enum",
+  "typedef",
+  "callback",
+];
+
 /**
  * @param {Element} idlElement
  * @param {number} index
@@ -344,8 +357,10 @@ function renderWebIDL(idlElement, index) {
     }
     const title = elem.dataset.title;
     // Select the nearest ancestor element that can contain members.
+    const idlType = elem.dataset.dfnType;
+
     const parent = elem.parentElement.closest("[data-idl][data-title]");
-    if (parent) {
+    if (parent && !topLevelIdlTypes.includes(idlType)) {
       elem.dataset.dfnFor = parent.dataset.title;
     }
     if (elem.localName === "dfn") {
