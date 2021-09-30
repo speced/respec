@@ -155,7 +155,7 @@ export async function run(conf) {
     fullName: `${org}/${repo}`,
     issuesURL: issueBase,
     pullsURL: newProps.pullBase,
-    newIssuesURL: new URL("./new", issueBase).href,
+    newIssuesURL: new URL("./new/choose", issueBase).href,
     commitHistoryURL: commitHistoryURL.href,
   };
   resolveGithubPromise(normalizedGHObj);
