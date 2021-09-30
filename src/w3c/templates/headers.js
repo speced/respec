@@ -183,6 +183,7 @@ export default (conf, options) => {
               <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
             `
           : ""}
+        ${renderHistory(conf)}
         ${conf.testSuiteURI
           ? html`
               <dt>${l10n.test_suite}</dt>
@@ -338,6 +339,28 @@ function renderFeedback(conf) {
   }
   return html`<dt>${l10n.feedback}</dt>
     ${definitions}`;
+}
+
+function renderHistory(conf) {
+  if (!conf.historyURI && !conf.github) return;
+  const ddElements = [];
+  if (conf.historyURI) {
+    const dd = html`<dd>
+      <a href="${conf.historyURI}">${l10n.publication_history}</a>
+    </dd>`;
+    ddElements.push(dd);
+  }
+  if (conf.github) {
+    const dd = html`
+      <dd>
+        <a href="${conf.github.commitHistoryURL}">${l10n.commit_history}</a>
+      </dd>
+    `;
+    ddElements.push(dd);
+  }
+
+  return html`<dt>${l10n.history}</dt>
+    ${ddElements}`;
 }
 
 function renderSpecTitle(conf) {

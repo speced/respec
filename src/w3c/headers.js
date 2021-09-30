@@ -720,8 +720,8 @@ async function deriveHistoryURI(conf) {
   // we show it.
   try {
     const response = await fetch(historyURL, { method: "HEAD" });
-    if (response.ok && response.status === 200) {
-      conf.historyURI = historyURL.href;
+    if (response.ok) {
+      conf.historyURI = response.url;
     }
   } catch {
     // Ignore fetch errors

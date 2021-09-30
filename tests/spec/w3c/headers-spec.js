@@ -2325,7 +2325,33 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const [commitHistory] = contains(doc, ".head dd>a", "Commit history");
       expect(commitHistory.href).toBe("https://github.com/w3c/respec/commits/");
-      expect(commitHistory).toBeTruthy();
+      const [publicationHistory] = contains(
+        doc,
+        ".head dd>a",
+        "Publication history"
+      );
+      expect(publicationHistory.href).toBeTruthy(
+        "https://www.w3.org/standards/history/respec"
+      );
+    });
+
+    it("includes a dd for the commit history, but excludes a publication history for unpublished types", async () => {
+      for (const specStatus of ["unofficial", "base"]) {
+        const ops = makeStandardOps({
+          github: "my/some-repo",
+          shortName: "test",
+          specStatus,
+        });
+        const doc = await makeRSDoc(ops);
+        const [commitHistory] = contains(doc, ".head dd>a", "Commit history");
+        expect(commitHistory).withContext(specStatus).toBeTruthy();
+        const publicationHistory = contains(
+          doc,
+          ".head dd>a",
+          "Publication history"
+        );
+        expect(publicationHistory.length).withContext(specStatus).toBe(0);
+      }
     });
 
     it("allows overriding the historyURI", async () => {
