@@ -315,6 +315,17 @@ function getDefnName(defn) {
   }
 }
 
+// IDL types that never need a data-dfn-for
+const topLevelIdlTypes = [
+  "interface",
+  "interface mixin",
+  "dictionary",
+  "namespace",
+  "enum",
+  "typedef",
+  "callback",
+];
+
 /**
  * @param {Element} idlElement
  * @param {number} index
@@ -346,8 +357,10 @@ function renderWebIDL(idlElement, index) {
     }
     const title = elem.dataset.title;
     // Select the nearest ancestor element that can contain members.
+    const idlType = elem.dataset.dfnType;
+
     const parent = elem.parentElement.closest("[data-idl][data-title]");
-    if (parent) {
+    if (parent && !topLevelIdlTypes.includes(idlType)) {
       elem.dataset.dfnFor = parent.dataset.title;
     }
     if (elem.localName === "dfn") {
