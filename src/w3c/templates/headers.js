@@ -293,8 +293,8 @@ function renderFeedback(conf) {
     );
   }
 
+  // The <a href="mailto:list?subject"> link for the public list
   if (conf.wgPublicList) {
-    // The <a href="mailto:list?subject"> link for the public list
     const mailToURL = new URL(`mailto:${conf.wgPublicList}@w3.org`);
     const subject =
       conf.subjectPrefix ?? `[${conf.shortName}] ${l10n.your_topic_here}`;
