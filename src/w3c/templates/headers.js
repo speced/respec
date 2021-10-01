@@ -241,6 +241,7 @@ export default (conf, options) => {
               ${showPeople(conf, "authors")}
             `
           : ""}
+        ${renderFeedback(conf)}
         ${conf.errata
           ? html`<dt>Errata:</dt>
               <dd><a href="${conf.errata}">Errata exists</a>.</dd>`
@@ -270,6 +271,58 @@ export default (conf, options) => {
     <hr title="Separator for header" />
   </div>`;
 };
+
+function renderFeedback(conf) {
+  if (!conf.github && !conf.wgPublicList) return;
+  const definitions = [];
+
+  // Github feedback...
+  if (conf.github) {
+    const { repoURL, issuesURL, newIssuesURL, pullsURL, fullName } =
+      conf.github;
+    definitions.push(
+      html`<dd>
+        <a href="${repoURL}">GitHub ${fullName}</a>
+        (<a href="${pullsURL}">pull requests</a>,
+        <a href="${newIssuesURL}">new issue</a>,
+        <a href="${issuesURL}">open issues</a>)
+      </dd>`
+    );
+  }
+
+  // The <a href="mailto:list?subject"> link for the public list
+  if (conf.wgPublicList) {
+    const mailToURL = new URL(`mailto:${conf.wgPublicList}@w3.org`);
+    const subject =
+      conf.subjectPrefix ?? `[${conf.shortName}] ${l10n.your_topic_here}`;
+    const mailingListLink = html`<a
+      href="${mailToURL.href}?subject=${encodeURIComponent(subject)}"
+      >${mailToURL.pathname}</a
+    >`;
+
+    // The subject line...
+    const subjectLine =
+      conf.subjectPrefix ||
+      html`[${conf.shortName}] <em>${l10n.message_topic}</em>`;
+    const emailSubject = html`${l10n.with_subject_line}${" "}
+      <kbd>${subjectLine}</kbd>`;
+
+    // Archives link
+    const archiveURL = new URL(
+      conf.wgPublicList,
+      "https://lists.w3.org/Archives/Public/"
+    );
+    const archiveLink = html`(<a href="${archiveURL}" rel="discussion"
+        >${l10n.archives}</a
+      >)`;
+
+    definitions.push(
+      html`<dd>${mailingListLink} ${emailSubject} ${archiveLink}</dd>`
+    );
+  }
+  return html`<dt>${l10n.feedback}</dt>
+    ${definitions}`;
+}
 
 function renderHistory(conf) {
   if (!conf.historyURI && !conf.github) return;
