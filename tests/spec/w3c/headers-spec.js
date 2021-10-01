@@ -2252,6 +2252,54 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("Feedback", () => {
+    it("includes a Feedback: with a <dd> to github issues", async () => {
+      const doc = await makeRSDoc(
+        makeStandardOps({ github: "w3c/respec", specStatus: "WD" })
+      );
+      const [dt] = contains(doc, ".head dt", "Feedback:");
+      const dd = dt.nextElementSibling;
+      expect(dd.querySelector("a[href^='https://github.com/']")).toBeTruthy();
+    });
+
+    it("includes links for to new issue, pull requests, open issues", async () => {
+      const doc = await makeRSDoc(makeStandardOps({ github: "w3c/respec" }));
+      const [prLink] = contains(
+        doc,
+        ".head a[href='https://github.com/w3c/respec/pulls/']",
+        "pull requests"
+      );
+      expect(prLink).toBeTruthy();
+      const [openIssue] = contains(
+        doc,
+        ".head a[href='https://github.com/w3c/respec/issues/']",
+        "open issues"
+      );
+      expect(openIssue).toBeTruthy();
+      const [newIssue] = contains(
+        doc,
+        ".head a[href='https://github.com/w3c/respec/issues/new/choose']",
+        "new issue"
+      );
+      expect(newIssue).toBeTruthy();
+    });
+
+    it("includes a Feedback: with a <dd> for mailing list, when mailing list is supplied", async () => {
+      const opts = makeStandardOps({
+        wgPublicList: "public-webapps",
+      });
+      const doc = await makeRSDoc(opts);
+      const [dd] = contains(doc, ".head dd", "public-webapps@w3.org");
+
+      // Check the archive link
+      const archive = dd.querySelector(
+        "a[rel='discussion'][href^='https://lists.w3.org/']"
+      );
+      expect(archive).toBeTruthy();
+      expect(archive.textContent.trim()).toBe("archives");
+    });
+  });
+
   describe("History", () => {
     it("shows the publication history of the spec", async () => {
       const ops = makeStandardOps({ shortName: "test", specStatus: "WD" });
