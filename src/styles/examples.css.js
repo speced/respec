@@ -37,9 +37,6 @@ aside.example div.example {
   background: #fff;
 }
 
-aside.example div.example span.example-title {
-  color: #999;
-}
 
 .example pre {
   background-color: rgba(0, 0, 0, 0.03);
