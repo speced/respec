@@ -1,7 +1,7 @@
 // @ts-check
 // Module ui/save-html
 // Saves content to HTML when asked to
-import { getIntlData, showWarning } from "../core/utils.js";
+import { ISODate, getIntlData, showWarning } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { rsDocToDataURL } from "../core/exporter.js";
 import { ui } from "../core/ui.js";
@@ -30,7 +30,7 @@ const l10n = getIntlData(localizationStrings);
 const downloadLinks = [
   {
     id: "respec-save-as-html",
-    fileName: "index.html",
+    fileName: (name = "index") => `${name}.html`,
     title: "HTML",
     type: "text/html",
     get href() {
@@ -39,7 +39,7 @@ const downloadLinks = [
   },
   {
     id: "respec-save-as-xml",
-    fileName: "index.xhtml",
+    fileName: (name = "index") => `${name}.xhtml`,
     title: "XML",
     type: "application/xml",
     get href() {
@@ -48,7 +48,7 @@ const downloadLinks = [
   },
   {
     id: "respec-save-as-epub",
-    fileName: "spec.epub",
+    fileName: (name = "spec") => `${name}.epub`,
     title: "EPUB 3",
     type: "application/epub+zip",
     get href() {
@@ -63,12 +63,18 @@ const downloadLinks = [
   },
 ];
 
-function toDownloadLink(details) {
+/**
+ * @param {typeof downloadLinks[0]} details
+ */
+function toDownloadLink(details, conf) {
   const { id, href, fileName, title, type } = details;
+  const filename = conf.shortName
+    ? `${conf.shortName}-${ISODate.format(conf.publishDate)}`
+    : undefined;
   return html`<a
     href="${href}"
     id="${id}"
-    download="${fileName}"
+    download="${fileName(filename)}"
     type="${type}"
     class="respec-save-button"
     onclick=${() => ui.closeModal()}
@@ -76,25 +82,27 @@ function toDownloadLink(details) {
   >`;
 }
 
-const saveDialog = {
-  async show(button) {
-    await document.respec.ready;
-    const div = html`<div class="respec-save-buttons">
-      ${downloadLinks.map(toDownloadLink)}
-    </div>`;
-    ui.freshModal(l10n.save_snapshot, div, button);
-  },
-};
+export function run(conf) {
+  const saveDialog = {
+    async show(button) {
+      await document.respec.ready;
+      const div = html`<div class="respec-save-buttons">
+        ${downloadLinks.map(details => toDownloadLink(details, conf))}
+      </div>`;
+      ui.freshModal(l10n.save_snapshot, div, button);
+    },
+  };
 
-const supportsDownload = "download" in HTMLAnchorElement.prototype;
-let button;
-if (supportsDownload) {
-  button = ui.addCommand(l10n.save_snapshot, show, "Ctrl+Shift+Alt+S", "💾");
-}
+  const supportsDownload = "download" in HTMLAnchorElement.prototype;
+  let button;
+  if (supportsDownload) {
+    button = ui.addCommand(l10n.save_snapshot, show, "Ctrl+Shift+Alt+S", "💾");
+  }
 
-function show() {
-  if (!supportsDownload) return;
-  saveDialog.show(button);
+  function show() {
+    if (!supportsDownload) return;
+    saveDialog.show(button);
+  }
 }
 
 /**
