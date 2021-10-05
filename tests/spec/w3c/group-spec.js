@@ -15,10 +15,8 @@ describe("W3C — Group", () => {
   it("adds group details when a single group is specified", async () => {
     const conf = await getGroupConf({ group: "payments" });
     expect(conf.wg).toBe("Web Payments Working Group");
-    expect(conf.wgId).toBe("83744");
-    expect(conf.wgPatentURI).toBe(
-      "https://www.w3.org/2004/01/pp-impl/83744/status"
-    );
+    expect(conf.wgId).toBe(83744);
+    expect(conf.wgPatentURI).toBe("https://www.w3.org/groups/wg/payments/ipr");
     expect(conf.wgURI).toBe("https://www.w3.org/Payments/WG/");
   });
 
@@ -30,13 +28,25 @@ describe("W3C — Group", () => {
     ]);
     expect(conf.wgId).toEqual([83744, 114929]);
     expect(conf.wgPatentURI).toEqual([
-      "https://www.w3.org/2004/01/pp-impl/83744/status",
-      "https://www.w3.org/2004/01/pp-impl/114929/status",
+      "https://www.w3.org/groups/wg/payments/ipr",
+      "https://www.w3.org/groups/wg/webapps/ipr",
     ]);
     expect(conf.wgURI).toEqual([
       "https://www.w3.org/Payments/WG/",
       "https://www.w3.org/2019/webapps/",
     ]);
+  });
+
+  it("when a multiple groups are specified, and it's noRecTrack true, it pluralizes the groups", async () => {
+    const ops = makeStandardOps({
+      group: ["payments", "webapps"],
+      noRecTrack: true,
+    });
+    const doc = await makeRSDoc(ops);
+    const sotd = doc.getElementById("sotd").textContent;
+    expect(sotd).toContain(
+      "The groups do not expect this document to become a W3C Recommendation."
+    );
   });
 
   it("overrides superseded options", async () => {
@@ -53,7 +63,7 @@ describe("W3C — Group", () => {
     expect(conf.wg).toEqual(["Web Applications Working Group"]);
     expect(conf.wgId).toEqual([114929]);
     expect(conf.wgPatentURI).toEqual([
-      "https://www.w3.org/2004/01/pp-impl/114929/status",
+      "https://www.w3.org/groups/wg/webapps/ipr",
     ]);
     expect(conf.wgURI).toEqual(["https://www.w3.org/2019/webapps/"]);
   });

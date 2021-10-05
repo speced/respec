@@ -3,7 +3,7 @@
  */
 const puppeteer = require("puppeteer");
 const path = require("path");
-const { mkdtemp, writeFile } = require("fs").promises;
+const { mkdtemp, readFile, writeFile } = require("fs").promises;
 const { tmpdir } = require("os");
 
 const noop = () => {};
@@ -13,6 +13,7 @@ const noop = () => {};
  * @param {string} src A URL or filepath that is the ReSpec source.
  * @param {object} [options]
  * @param {number} [options.timeout] Milliseconds before processing should timeout.
+ * @param {boolean} [options.useLocal] Use locally installed ReSpec instead of the one in document.
  * @param {(error: RsError) => void} [options.onError] What to do if a ReSpec processing has an error. Does nothing by default.
  * @param {(warning: RsError) => void} [options.onWarning] What to do if a ReSpec processing has a warning. Does nothing by default.
  * @param {(msg: string, timeRemaining: number) => void} [options.onProgress]
@@ -26,6 +27,7 @@ async function toHTML(src, options = {}) {
     timeout = 300000,
     disableSandbox = false,
     devtools = false,
+    useLocal = false,
   } = options;
   if (typeof options.onError !== "function") {
     options.onError = noop;
@@ -62,7 +64,11 @@ async function toHTML(src, options = {}) {
 
   try {
     const page = await browser.newPage();
+
     handleConsoleMessages(page, onError, onWarning);
+    if (useLocal) {
+      await useLocalReSpec(page, log);
+    }
 
     const url = new URL(src);
     log(`Navigating to ${url}`);
@@ -94,6 +100,69 @@ async function toHTML(src, options = {}) {
     return { html, errors, warnings };
   } finally {
     await browser.close();
+  }
+}
+
+/**
+ * Replace the ReSpec script in document with the locally installed one. This is
+ * useful in CI env or when you want to pin the ReSpec version.
+ *
+ * @assumption The ReSpec script being used in the document is hosted on either
+ * w3.org or w3c.github.io. If this assumption doesn't hold true (interception
+ * fails), this function will timeout.
+ *
+ * The following ReSpec URLs are supported:
+ * https://www.w3.org/Tools/respec/${profile}
+ * https://w3c.github.io/respec/builds/${profile}.js
+ * file:///home/path-to-respec/builds/${profile}.js
+ * http://localhost:PORT/builds/${profile}.js
+ * https://example.com/builds/${profile}.js
+ *
+ * @param {import("puppeteer").Page} page
+ * @param {(msg: any) => void} log
+ */
+async function useLocalReSpec(page, log) {
+  await page.setRequestInterception(true);
+
+  page.on("request", async function requestInterceptor(request) {
+    if (!isRespecScript(request)) {
+      await request.continue();
+      return;
+    }
+
+    const url = new URL(request.url());
+    const respecProfileRegex = /\/(respec-[\w-]+)(?:\.js)?$/;
+    const profile = url.pathname.match(respecProfileRegex)[1];
+    const localPath = path.join(__dirname, "..", "builds", `${profile}.js`);
+    const relPath = path.relative(process.cwd(), localPath);
+    log(`Intercepted ${url} to respond with ${relPath}`);
+    await request.respond({
+      contentType: "text/javascript; charset=utf-8",
+      body: await readFile(localPath),
+    });
+    // Workaround for https://github.com/puppeteer/puppeteer/issues/4208
+    page.off("request", requestInterceptor);
+    await page.setRequestInterception(false);
+  });
+}
+
+/** @param {import("puppeteer").HTTPRequest} req */
+function isRespecScript(req) {
+  if (req.method() !== "GET" || req.resourceType() !== "script") {
+    return false;
+  }
+
+  const { host, pathname: path } = new URL(req.url());
+  switch (host) {
+    case "www.w3.org":
+      return (
+        path.startsWith("/Tools/respec/") && !path.includes("respec-highlight")
+      );
+    case "w3c.github.io":
+      return path.startsWith("/respec/builds/");
+    default:
+      // localhost, file://, and everything else
+      return /\/builds\/respec-[\w-]+\.js$/.test(path);
   }
 }
 
@@ -240,7 +309,7 @@ async function evaluateHTML(version, timer) {
       });
     });
     return exportDocument("html", "text/html");
-  } else {
+  } else if (!document.respec || !document.respec.toHTML) {
     const { rsDocToDataURL } = await new Promise((resolve, reject) => {
       require(["core/exporter"], resolve, err => {
         reject(new Error(err.message));
@@ -249,6 +318,8 @@ async function evaluateHTML(version, timer) {
     const dataURL = rsDocToDataURL("text/html");
     const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
     return decodeURIComponent(encodedString);
+  } else {
+    return await document.respec.toHTML();
   }
 
   function timeout(promise, ms) {
@@ -261,9 +332,23 @@ async function evaluateHTML(version, timer) {
 }
 
 /**
+ * @typedef {object} RsErrorBasic
+ * @property {string} RsErrorBasic.message
+ *
+ * @typedef {object} ReSpecError
+ * @property {string} ReSpecError.message
+ * @property {string} ReSpecError.plugin
+ * @property {string} [ReSpecError.hint]
+ * @property {HTMLElement[]} [ReSpecError.elements]
+ * @property {string} [ReSpecError.title]
+ * @property {string} [ReSpecError.details]
+ *
+ * @typedef {RsErrorBasic | ReSpecError} RsError
+ */
+
+/**
  * Specifies what to do when the browser emits "error" and "warn" console messages.
  * @param  {import("puppeteer").Page} page Instance of page to listen on.
- * @typedef {{ message: string }} RsError
  * @param {(error: RsError) => void} onError
  * @param {(error: RsError) => void} onWarning
  */

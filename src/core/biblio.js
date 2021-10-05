@@ -4,19 +4,15 @@
 // Configuration:
 //  - localBiblio: override or supplement the official biblio with your own.
 
-/* jshint jquery: true */
 import { biblioDB } from "./biblio-db.js";
 import { createResourceHint } from "./utils.js";
 
 /** @type {Conf['biblio']} */
 export const biblio = {};
 
-// for backward compatibity
-export { wireReference, stringifyReference } from "./render-biblio.js";
-
 export const name = "core/biblio";
 
-const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
+const bibrefsURL = new URL("https://api.specref.org/bibrefs?refs=");
 
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.
@@ -53,8 +49,14 @@ export async function updateFromNetwork(
   }
   /** @type {Conf['biblio']} */
   const data = await response.json();
+  // SpecRef updates every hour, so we should follow suit
+  // https://github.com/tobie/specref#hourly-auto-updating
+  const oneHourFromNow = Date.now() + 1000 * 60 * 60 * 1;
   try {
-    await biblioDB.addAll(data);
+    const expires = response.headers.has("Expires")
+      ? Math.min(Date.parse(response.headers.get("Expires")), oneHourFromNow)
+      : oneHourFromNow;
+    await biblioDB.addAll(data, expires);
   } catch (err) {
     console.error(err);
   }
@@ -82,7 +84,6 @@ export async function resolveRef(key) {
  */
 async function getReferencesFromIdb(neededRefs) {
   const idbRefs = [];
-
   // See if we have them in IDB
   try {
     await biblioDB.ready; // can throw
@@ -154,7 +155,10 @@ export class Plugin {
           .sort()
       )
     );
-    const idbRefs = await getReferencesFromIdb(neededRefs);
+
+    const idbRefs = neededRefs.length
+      ? await getReferencesFromIdb(neededRefs)
+      : [];
     const split = { hasData: [], noData: [] };
     idbRefs.forEach(ref => {
       (ref.data ? split.hasData : split.noData).push(ref);

@@ -7,7 +7,7 @@
 // be used by a containing shell to extract all examples.
 
 import { addId, getIntlData } from "./utils.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/examples.css.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -39,16 +39,6 @@ const localizationStrings = {
 
 const l10n = getIntlData(localizationStrings);
 
-const cssPromise = loadStyle();
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/examples.css")).default;
-  } catch {
-    return fetchAsset("examples.css");
-  }
-}
-
 /**
  * @typedef {object} Report
  * @property {number} number
@@ -73,14 +63,13 @@ function makeTitle(elem, num, report) {
   </div>`;
 }
 
-export async function run() {
+export function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"
   );
   if (!examples.length) return;
 
-  const css = await cssPromise;
   document.head.insertBefore(
     html`<style>
       ${css}
@@ -101,13 +90,7 @@ export async function run() {
       ++number;
       const div = makeTitle(example, number, report);
       example.prepend(div);
-      if (title) {
-        addId(example, `example-${number}`, title); // title gets used
-      } else {
-        // use the number as the title... so, e.g., "example-5"
-        addId(example, "example", String(number));
-      }
-      const { id } = example;
+      const id = addId(example, "example", title || String(number));
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
       pub("example", report);
@@ -126,10 +109,7 @@ export async function run() {
       const div = html`<div class="example" id="${id}">
         ${exampleTitle} ${example.cloneNode(true)}
       </div>`;
-      if (title) {
-        addId(div, `example-${number}`, title);
-      }
-      addId(div, `example`, String(number));
+      addId(div, "example", title || String(number));
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${div.id}`;
       example.replaceWith(div);

@@ -1,3 +1,14 @@
+/**
+ * This tools lets one effectively run:
+ *  $ npm run build:w3c
+ *  $ npm run server
+ *  $ npm run test:unit + test:integration
+ * with ability to:
+ *  - build/test when a file changes
+ *  - build/test on a single keypress (interactive mode)
+ *  - cleanup builds/ directory after use.
+ */
+
 const path = require("path");
 const { execSync } = require("child_process");
 const { createServer } = require("http");
@@ -8,46 +19,87 @@ const colors = require("colors");
 const boxen = require("boxen");
 const sade = require("sade");
 const serveConfig = require("../serve.json");
-const { Builder } = require("./builder");
+const { Builder } = require("./builder.js");
 
 const KARMA_PORT = 9876;
 const SERVE_PORT = 5000;
 
+class KarmaServer {
+  /**
+   * @param {number} port
+   * @param {string} [browser]
+   */
+  constructor(port, browser, grep = "") {
+    const browsers = browser ? [browser] : undefined;
+
+    const files = [
+      ...require("../tests/karma.conf.base.js").files,
+      ...require("../tests/unit/karma.conf.js").additionalFiles,
+      ...require("../tests/spec/karma.conf.js").additionalFiles,
+    ];
+    const configFile = require.resolve("../tests/karma.conf.base.js");
+
+    this._karmaConfig = karma.config.parseConfig(configFile, {
+      browsers,
+      port,
+      files,
+      basePath: path.join(__dirname, ".."),
+      autoWatch: false,
+      logLevel: karma.constants.LOG_WARN,
+      client: {
+        args: ["--grep", grep],
+      },
+      mochaReporter: { ignoreSkipped: true },
+    });
+    this._isActive = null;
+  }
+
+  start() {
+    this.karmaServer = new karma.Server(this._karmaConfig);
+    this.karmaServer.start();
+    return new Promise(resolve =>
+      this.karmaServer.once("browsers_ready", resolve)
+    );
+  }
+
+  stop() {
+    return new Promise(resolve =>
+      karma.stopper.stop(this._karmaConfig, resolve)
+    );
+  }
+
+  async run() {
+    if (this._isActive) return;
+
+    this._isActive = true;
+    karma.runner.run(this._karmaConfig, () => {});
+    await new Promise(resolve =>
+      this.karmaServer.once("run_complete", resolve)
+    );
+    this._isActive = false;
+  }
+}
+
 sade("./tools/dev-server.js", true)
   .option("-p, --profile", "Name of profile to build.", "w3c")
   .option("-i, --interactive", "Run in interactive mode.", false)
-  .option(
-    "--browser",
-    'Browser for Karma unit tests (e.g., "Chrome"). Multiple allowed.'
-  )
+  .option("--browser", 'Browser for Karma unit tests (e.g., "Chrome").')
   .option("--grep", "Run specific tests using karma --grep")
   .action(opts => run(opts))
-  .parse(process.argv);
+  .parse(process.argv, {
+    unknown: flag => console.error(`Unknown option: ${flag}`),
+  });
 
-function run(args) {
+async function run(args) {
   let isActive = false;
-  const karmaConfig = karma.config.parseConfig(
-    path.join(__dirname, "../karma.conf.js"),
-    {
-      browsers:
-        typeof args.browser === "string" ? [args.browser] : args.browser,
-      autoWatch: false,
-      port: KARMA_PORT,
-      logLevel: karma.constants.LOG_WARN,
-      client: {
-        args: ["--grep", args.grep || ""],
-      },
-      mochaReporter: { ignoreSkipped: true },
-    }
-  );
-  const karmaServer = new karma.Server(karmaConfig);
+  const karmaServer = new KarmaServer(KARMA_PORT, args.browser, args.grep);
   const devServer = createServer((req, res) => serve(req, res, serveConfig));
   devServer.on("error", onError);
 
   if (args.interactive) {
     registerStdinHandler();
   } else {
-    const paths = ["./src", "./tests/spec"];
+    const paths = ["./src", "./tests/spec", "./tests/unit"];
     const watcher = chokidar.watch(paths, { ignoreInitial: true });
     watcher.on("all", onFileChange);
     watcher.on("error", onError);
@@ -57,13 +109,13 @@ function run(args) {
     execSync("git checkout -- builds", { stdio: "inherit" });
   });
 
+  devServer.listen(SERVE_PORT);
   printWelcomeMessage(args);
 
-  karmaServer.start();
-  devServer.listen(SERVE_PORT);
-  karmaServer.on("browsers_ready", () =>
-    buildAndTest({ profile: args.profile })
-  );
+  await karmaServer.start();
+  if (!args.interactive) {
+    await buildAndTest();
+  }
 
   function registerStdinHandler() {
     // https://stackoverflow.com/a/12506613
@@ -80,11 +132,9 @@ function run(args) {
 
       switch (key) {
         case "\u0003": //  ctrl-c (end of text)
-        case "q": {
-          return karma.stopper.stop(karmaConfig, code => {
-            setTimeout(() => process.exit(code), 0);
-          });
-        }
+        case "q":
+          await karmaServer.stop();
+          return process.exit(0);
         case "t":
           return await buildAndTest();
         case "T":
@@ -97,27 +147,25 @@ function run(args) {
     });
   }
 
-  async function buildAndTest(options = {}) {
-    const { preventBuild = false } = options;
+  async function buildAndTest({ preventBuild = false } = {}) {
     if (isActive) return;
     try {
       isActive = true;
       if (!preventBuild) {
         await Builder.build({ name: args.profile, debug: true });
       }
-      karma.runner.run(karmaConfig, () => {});
+      await karmaServer.run();
     } catch (err) {
-      console.error(colors.error(err.stack));
+      console.error(colors.red(err.stack));
     } finally {
       isActive = false;
     }
   }
 
-  function onError(err) {
-    console.error(colors.error(err.stack));
-    karma.stopper.stop(karmaConfig, () => {
-      process.exit(1);
-    });
+  async function onError(err) {
+    console.error(colors.red(err.stack));
+    await karmaServer.stop();
+    process.exit(1);
   }
 
   async function onFileChange(_event, file) {
@@ -128,7 +176,7 @@ function run(args) {
 
 function printWelcomeMessage(args) {
   const messages = [
-    ["dev server", `http://localhost:${SERVE_PORT}`],
+    ["dev server", `http://localhost:${SERVE_PORT}/examples/`],
     ["karma server", `http://localhost:${KARMA_PORT}`],
     [
       "file watcher",
@@ -144,13 +192,14 @@ function printWelcomeMessage(args) {
 
   const message = messages
     .map(([title, text]) => {
-      return colors.white.bold(`${title}:`.padEnd(18)) + colors.white(text);
+      return colors.white.bold(`${title}:`.padEnd(30)) + colors.white(text);
     })
     .join("\n");
 
   const boxOptions = {
     padding: 1,
     borderColor: "green",
+    borderStyle: "bold",
     backgroundColor: "black",
   };
   console.log(boxen(message, boxOptions));

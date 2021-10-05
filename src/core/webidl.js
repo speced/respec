@@ -6,6 +6,7 @@
 //  - don't use generated content in the CSS!
 import {
   addHashId,
+  docLink,
   showError,
   showWarning,
   wrapInner,
@@ -14,7 +15,7 @@ import {
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";
-import { fetchAsset } from "./text-loader.js";
+import css from "../styles/webidl.css.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";
@@ -141,7 +142,7 @@ function defineIdlName(escaped, data, parent) {
   const linkType = getDfnType(data.type);
   if (dfn) {
     if (!data.partial) {
-      dfn.dataset.export = "";
+      if (!dfn.matches("[data-noexport]")) dfn.dataset.export = "";
       dfn.dataset.dfnType = linkType;
     }
     decorateDfn(dfn, data, parentName, name);
@@ -186,8 +187,9 @@ function defineIdlName(escaped, data, parent) {
   if (showWarnings) {
     const styledName = data.type === "operation" ? `${name}()` : name;
     const ofParent = parentName ? ` \`${parentName}\`'s` : "";
-    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`;
-    showWarning(msg, pluginName, { elements: [unlinkedAnchor] });
+    const msg = `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${data.type}.`;
+    const hint = docLink`See ${"using `data-dfn-for`|#data-dfn-for"} in ReSpec's documentation.`;
+    showWarning(msg, pluginName, { elements: [unlinkedAnchor], hint });
   }
   return unlinkedAnchor;
 }
@@ -313,6 +315,17 @@ function getDefnName(defn) {
   }
 }
 
+// IDL types that never need a data-dfn-for
+const topLevelIdlTypes = [
+  "interface",
+  "interface mixin",
+  "dictionary",
+  "namespace",
+  "enum",
+  "typedef",
+  "callback",
+];
+
 /**
  * @param {Element} idlElement
  * @param {number} index
@@ -344,8 +357,10 @@ function renderWebIDL(idlElement, index) {
     }
     const title = elem.dataset.title;
     // Select the nearest ancestor element that can contain members.
+    const idlType = elem.dataset.dfnType;
+
     const parent = elem.parentElement.closest("[data-idl][data-title]");
-    if (parent) {
+    if (parent && !topLevelIdlTypes.includes(idlType)) {
       elem.dataset.dfnFor = parent.dataset.title;
     }
     if (elem.localName === "dfn") {
@@ -377,29 +392,14 @@ export function addIDLHeader(pre) {
   addCopyIDLButton(header);
 }
 
-const cssPromise = loadStyle();
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/webidl.css")).default;
-  } catch {
-    return fetchAsset("webidl.css");
-  }
-}
-
 export async function run() {
   const idls = document.querySelectorAll("pre.idl, pre.webidl");
   if (!idls.length) {
     return;
   }
-  if (!document.querySelector(".idl:not(pre), .webidl:not(pre)")) {
-    const link = document.querySelector("head link");
-    if (link) {
-      const style = document.createElement("style");
-      style.textContent = await cssPromise;
-      link.before(style);
-    }
-  }
+  const style = document.createElement("style");
+  style.textContent = css;
+  document.querySelector("head link, head > *:last-child").before(style);
 
   const astArray = [...idls].map(renderWebIDL);
 

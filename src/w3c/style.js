@@ -1,5 +1,4 @@
 // @ts-check
-/* jshint strict: true, browser:true, jquery: true */
 // Module w3c/style
 // Inserts a link to the appropriate W3C style for the specification's maturity level.
 // CONFIGURATION
@@ -149,7 +148,7 @@ export function run(conf) {
       styleFile += "UD";
       break;
     case "FINDING":
-    case "FINDING-DRAFT":
+    case "DRAFT-FINDING":
     case "BASE":
       styleFile = "base.css";
       break;

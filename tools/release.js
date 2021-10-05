@@ -1,12 +1,15 @@
 #!/usr/bin/env node
-"use strict";
-const { Builder } = require("./builder");
+// @ts-check
+const { Builder } = require("./builder.js");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
 const { exec } = require("child_process");
 const loading = require("loading-indicator");
 const MAIN_BRANCH = "develop";
 const DEBUG = false;
+const vnu = require("vnu-jar");
+const path = require("path");
+const os = require("os");
 
 // See: https://github.com/w3c/respec/issues/645
 require("epipebomb")();
@@ -33,64 +36,48 @@ const loadOps = {
   delay: 100,
 };
 
-colors.setTheme({
-  "breaking change": "red",
-  chore: "grey",
-  data: "grey",
-  debug: "cyan",
-  docs: "grey",
-  error: "red",
-  feat: "green",
-  fix: "red",
-  help: "cyan",
-  important: "red",
-  info: "green",
-  input: "grey",
-  prompt: "grey",
-  refactor: "green",
-  style: "grey",
-  test: "grey",
-  verbose: "cyan",
-  warn: "yellow",
-  l10n: "green",
-});
-
+/** @param {string} program */
 function commandRunner(program) {
-  return (cmd, options = { showOutput: false }) => {
-    console.log(colors.debug(`Run: ${program} ${colors.prompt(cmd)}`));
+  /**
+   * @param {string} cmd
+   * @param {{showOutput: boolean}} [options ]
+   */
+  const runner = (cmd, options = { showOutput: false }) => {
+    console.log(colors.cyan(`Run: ${program} ${colors.grey(cmd)}`));
     if (DEBUG) {
       return Promise.resolve("");
     }
     return toExecPromise(`${program} ${cmd}`, { ...options, timeout: 200000 });
   };
+  return runner;
 }
 
 const git = commandRunner("git");
 const npm = commandRunner("npm");
 const node = commandRunner("node");
+const validator = commandRunner(`java -jar ${vnu}`);
 
 cmdPrompt.start();
 
 const Prompts = {
-  askQuestion(promptOps) {
-    return new Promise((resolve, reject) => {
-      cmdPrompt.get(promptOps, (err, res) => {
-        if (err) {
-          return reject(new Error(err));
-        }
-        if (res.question.toLowerCase() === "n") {
-          return reject(new Error("🙅  user declined."));
-        }
-        resolve(res.question);
-      });
-    });
+  async askQuestion(promptOps) {
+    const res = await cmdPrompt.get(promptOps);
+    // @ts-ignore
+    if (res.question.toLowerCase() === "n") {
+      throw new Error("🙅  user declined.");
+    }
+    return res.question;
   },
 
+  /**
+   * @param {string} from
+   * @param {string} to
+   */
   async askSwitchToBranch(from, to) {
     const promptOps = {
-      description: `You're on branch ${colors.info(
+      description: `You're on branch ${colors.green(
         from
-      )}. Switch to ${colors.info(to)}?`,
+      )}. Switch to ${colors.green(to)}?`,
       pattern: /^[yn]$/i,
       message: "Values can be 'y' or 'n'.",
       default: "y",
@@ -99,6 +86,7 @@ const Prompts = {
     await git(`checkout ${to}`);
   },
 
+  /** @param {string} branch */
   async askToPullBranch(branch) {
     const promptOps = {
       description: `Branch ${branch} needs a pull. Do you want me to do a pull?`,
@@ -120,7 +108,7 @@ const Prompts = {
     try {
       await this.askQuestion(promptOps);
     } catch (err) {
-      const warning = colors.warn(
+      const warning = colors.yellow(
         "🚨 Make sure to run `git up; git checkout develop`"
       );
       console.warn(warning);
@@ -128,6 +116,7 @@ const Prompts = {
     }
   },
 
+  /** @param {string} commits */
   stylelizeCommits(commits) {
     const iconMap = new Map([
       ["a11y", "♿"],
@@ -142,7 +131,8 @@ const Prompts = {
       ["style", "🖌"],
       ["test", "👍"],
     ]);
-    const commitHints = /^l10n|^docs|^chore|^fix|^style|^refactor|^test|^feat|^breaking\schange/i;
+    const commitHints =
+      /^l10n|^docs|^chore|^fix|^style|^refactor|^test|^feat|^breaking\schange/i;
     return (
       commits
         .split("\n")
@@ -161,7 +151,7 @@ const Prompts = {
               : "❓";
           // colorize
           if (match) {
-            result = result.replace(match.toLowerCase(), colors[match](match));
+            result = result.replace(match.toLowerCase(), colors.green(match));
           }
           return `  ${icon} ${result}`;
         })
@@ -176,6 +166,8 @@ const Prompts = {
    *  - MAJOR version when you make incompatible API changes,
    *  - MINOR version when you add functionality in a backwards-compatible manner, and
    *  - PATCH version when you make backwards-compatible bug fixes.
+   * @param {string} commits
+   * @param {string} version
    */
   suggestSemVersion(commits, version) {
     let [major, minor, patch] = version
@@ -249,7 +241,7 @@ const Prompts = {
 
   async askPushAll() {
     const promptOps = {
-      description: `${colors.important(
+      description: `${colors.red(
         "🔥  Ready to make this live? 🔥"
       )}  (last chance!)`,
       pattern: /^[yn]$/i,
@@ -260,6 +252,12 @@ const Prompts = {
   },
 };
 
+/**
+ *
+ * @param {string} cmd
+ * @param {{ timeout: number, showOutput: boolean }} options
+ * @returns {Promise<string>}
+ */
 function toExecPromise(cmd, { timeout, showOutput }) {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
@@ -277,9 +275,7 @@ function toExecPromise(cmd, { timeout, showOutput }) {
       proc.stderr.pipe(process.stderr);
       proc.stdout.pipe(process.stdout);
     }
-    proc.on("error", err => {
-      reject(new Error(err));
-    });
+    proc.on("error", err => reject(err));
     proc.on("close", number => {
       if (number === 1) {
         reject(new Error("Abnormal termination"));
@@ -326,15 +322,19 @@ class Indicator {
 const indicators = new Map([
   [
     "remote-update",
-    new Indicator(colors.info(" Performing Git remote update... 📡 ")),
+    new Indicator(colors.green(" Performing Git remote update... 📡 ")),
   ],
   [
     "push-to-server",
-    new Indicator(colors.info(" Pushing everything back to server... 📡")),
+    new Indicator(colors.green(" Pushing everything back to server... 📡")),
   ],
 ]);
 
 const run = async () => {
+  const npmVersion = await npm("--version");
+  if (!npmVersion.trim().startsWith("6")) {
+    throw new Error(`Must use npm 6.x for release. Found ${npmVersion}`);
+  }
   const initialBranch = await getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
@@ -365,15 +365,20 @@ const run = async () => {
 
     // 3. Run the build script (node tools/builder.js).
     await npm("run builddeps");
-    for (const name of ["w3c", "geonovum", "dini"]) {
+    for (const name of ["w3c", "geonovum", "dini", "aom"]) {
       await Builder.build({ name });
     }
-    console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
+    console.log(colors.green(" Making sure the generated version is ok... 🕵🏻"));
     const source = `file:///${__dirname}/../examples/basic.built.html`;
-    await node(`./tools/respec2html.js ${source} -e --timeout 30`, {
+    const tempFile = path.join(os.tmpdir(), "index.html");
+    await node(`./tools/respec2html.js -e --timeout 30 ${source} ${tempFile}`, {
       showOutput: true,
     });
-    console.log(colors.info(" Build Seems good... ✅"));
+
+    // Do HTML validation
+    console.log(colors.green(" Making sure HTML validator is happy... 🕵🏻"));
+    await validator(`--stdout ${tempFile}`);
+    console.log(colors.green(" Build Seems good... ✅"));
 
     // 4. Commit your changes
     await git("add builds package.json package-lock.json");
@@ -391,14 +396,14 @@ const run = async () => {
     await git("push origin gh-pages");
     await git("push --tags");
     indicators.get("push-to-server").hide();
-    console.log(colors.info(" Publishing to npm... 📡"));
+    console.log(colors.green(" Publishing to npm... 📡"));
     await npm("publish", { showOutput: true });
     if (initialBranch !== MAIN_BRANCH) {
       await Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
   } catch (err) {
-    console.error(colors.red(`\n☠  ${err.message}`));
-    const currentBranch = getCurrentBranch();
+    console.error(colors.red(`\n☠  ${err.stack}`));
+    const currentBranch = await getCurrentBranch();
     if (initialBranch !== currentBranch) {
       await git(`checkout ${initialBranch}`);
     }

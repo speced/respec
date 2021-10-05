@@ -4,10 +4,6 @@
  */
 export const name = "geonovum/defaults";
 import { coreDefaults } from "../core/defaults.js";
-import linter from "../core/linter.js";
-import { rule as privsecSectionRule } from "../core/linter-rules/privsec-section.js";
-
-linter.register(privsecSectionRule);
 
 const licenses = new Map([
   [
@@ -29,8 +25,7 @@ const licenses = new Map([
   [
     "cc-by-nd",
     {
-      name:
-        "Creative Commons Attribution-NoDerivatives 4.0 International Public License",
+      name: "Creative Commons Attribution-NoDerivatives 4.0 International Public License",
       short: "CC-BY-ND",
       url: "https://creativecommons.org/licenses/by-nd/4.0/legalcode.nl",
     },

@@ -5,7 +5,26 @@ const serveStatic = require("serve-static");
 const finalhandler = require("finalhandler");
 const sade = require("sade");
 const colors = require("colors");
-const { toHTML, write } = require("./respecDocWriter");
+const marked = require("marked");
+const { toHTML, write } = require("./respecDocWriter.js");
+
+class Renderer extends marked.Renderer {
+  strong(text) {
+    return colors.bold(text);
+  }
+  em(text) {
+    return colors.italic(text);
+  }
+  codespan(text) {
+    return colors.underline(text);
+  }
+  paragraph(text) {
+    return text;
+  }
+  link(href, _title, text) {
+    return `[${text}](${colors.blue.dim.underline(href)})`;
+  }
+}
 
 class Logger {
   /** @param {boolean} verbose */
@@ -19,26 +38,57 @@ class Logger {
    */
   info(message, timeRemaining) {
     if (!this.verbose) return;
-    console.log(`[Timeout: ${timeRemaining}ms] ${message}`);
+    const header = colors.dim.bgWhite.black.bold("[INFO]");
+    const time = colors.dim(`[Timeout: ${timeRemaining}ms]`);
+    console.error(header, time, message);
   }
 
-  /** @param {{ message: string }} rsError */
+  /**
+   * @typedef {import("./respecDocWriter.js").RsError} RsError
+   * @param {RsError} rsError
+   */
   error(rsError) {
-    console.error(
-      colors.red(`💥 ReSpec error: ${colors.cyan(rsError.message)}`)
-    );
+    const header = colors.bgRed.white.bold("[ERROR]");
+    const message = colors.red(this._formatMarkdown(rsError.message));
+    console.error(header, message);
+    if (rsError.plugin) {
+      this._printDetails(rsError);
+    }
   }
 
-  /** @param {{ message: string }} rsError */
+  /** @param {RsError} rsError */
   warn(rsError) {
-    console.warn(
-      colors.yellow(`⚠️ ReSpec warning: ${colors.cyan(rsError.message)}`)
-    );
+    const header = colors.bgYellow.black.bold("[WARNING]");
+    const message = colors.yellow(this._formatMarkdown(rsError.message));
+    console.error(header, message);
+    if (rsError.plugin) {
+      this._printDetails(rsError);
+    }
   }
 
   /** @param {Error | string} error */
   fatal(error) {
-    console.error(colors.red(error.stack || error));
+    const header = colors.bgRed.white.bold("[FATAL]");
+    const message = colors.red(error.stack || error);
+    console.error(header, message);
+  }
+
+  _formatMarkdown(str) {
+    if (typeof str !== "string") return str;
+    return marked(str, { smartypants: true, renderer: new Renderer() });
+  }
+
+  /** @param {import("./respecDocWriter").ReSpecError} rsError */
+  _printDetails(rsError) {
+    const print = (title, value) => {
+      if (!value) return;
+      const padWidth = "Plugin".length + 1; // "Plugin" is the longest title
+      const paddedTitle = `${title}:`.padStart(padWidth);
+      console.error(" ", colors.bold(paddedTitle), this._formatMarkdown(value));
+    };
+    print("Count", rsError.elements && String(rsError.elements.length));
+    print("Plugin", rsError.plugin);
+    print("Hint", rsError.hint);
   }
 }
 
@@ -113,6 +163,11 @@ cli
     "How long to wait before timing out (in seconds).",
     10
   )
+  .option(
+    "--use-local",
+    "Use locally installed ReSpec instead of the one in document.",
+    false
+  )
   .option("-e, --haltonerror", "Abort if the spec has any errors.", false)
   .option("-w, --haltonwarn", "Abort if ReSpec generates warnings.", false)
   .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
@@ -124,7 +179,7 @@ cli
 cli.action((source, destination, opts) => {
   source = source || opts.src;
   destination = destination || opts.out;
-  const log = new Logger(opts.verbose && destination !== "stdout");
+  const log = new Logger(opts.verbose);
 
   if (!source) {
     log.fatal("A source is required.");
@@ -144,7 +199,12 @@ cli._version = () => {
   console.log(version);
 };
 
-cli.parse(process.argv);
+cli.parse(process.argv, {
+  unknown(flag) {
+    new Logger().fatal(`Unknown option: ${flag}`);
+    process.exit(1);
+  },
+});
 
 /**
  * @param {string} source
@@ -165,6 +225,7 @@ async function run(source, destination, options, log) {
 
   const { html, errors, warnings } = await toHTML(src, {
     timeout: options.timeout * 1000,
+    useLocal: options["use-local"],
     onError: log.error.bind(log),
     onWarning: log.warn.bind(log),
     onProgress: log.info.bind(log),

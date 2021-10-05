@@ -49,7 +49,7 @@ export function makeRSDoc(opts, src, style = "") {
     } else {
       const doc = document.implementation.createHTMLDocument();
       decorateDocument(doc, opts);
-      ifr.srcdoc = doc.documentElement.outerHTML;
+      ifr.srcdoc = `<!DOCTYPE html>${doc.documentElement.outerHTML}`;
     }
     // trigger load
     document.body.appendChild(ifr);
@@ -62,19 +62,11 @@ export function makeRSDoc(opts, src, style = "") {
  * @returns {Promise<Document>}
  */
 export async function getExportedDoc(doc) {
-  const dataURL = await new Promise(resolve => {
-    doc.defaultView.require(["core/exporter"], ({ rsDocToDataURL }) =>
-      resolve(rsDocToDataURL("text/html", doc))
-    );
-  });
-
+  const exportedHTML = await doc.respec.toHTML();
   return new Promise(resolve => {
     const ifr = document.createElement("iframe");
     ifr.addEventListener("load", () => resolve(ifr.contentDocument));
-    ifr.srcdoc = decodeURIComponent(dataURL).replace(
-      "data:text/html;charset=utf-8,",
-      ""
-    );
+    ifr.srcdoc = exportedHTML;
     document.body.appendChild(ifr);
     iframes.push(ifr);
   });
@@ -203,6 +195,17 @@ export function makeBasicConfig(profile = "w3c") {
         edDraftURI: "https://foo.com",
         shortName: "Foo",
       };
+    case "aom":
+      return {
+        editors: [
+          {
+            name: "Person Name",
+          },
+        ],
+        specStatus: "PD",
+      };
+    default:
+      throw new Error(`Unknown profile: ${profile}`);
   }
 }
 
@@ -228,5 +231,13 @@ export function makeStandardGeoOps(config = {}, body = makeDefaultBody()) {
   return {
     body,
     config: { ...makeBasicConfig("geonovum"), ...config },
+  };
+}
+
+export function makeStandardAomOps(config = {}, body = makeDefaultBody()) {
+  return {
+    body,
+    config: { ...makeBasicConfig("aom"), ...config },
+    profile: "aom",
   };
 }

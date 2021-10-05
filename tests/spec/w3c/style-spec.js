@@ -23,6 +23,10 @@ const specStatus = [
     expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
   },
   {
+    status: "draft-finding",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
+  },
+  {
     status: "unofficial",
     expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-UD",
   },
@@ -149,6 +153,6 @@ describe("W3C - Style", () => {
     const doc = await makeRSDoc(ops, "spec/core/simple.html");
     const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
     const elem = doc.querySelector(query);
-    expect(elem).toBe(null);
+    expect(elem).toBeNull();
   });
 });

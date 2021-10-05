@@ -65,7 +65,7 @@ describe("W3C — Bibliographic References", () => {
   const ops = makeStandardOps({ localBiblio }, body);
 
   afterAll(flushIframes);
-  const bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");
+  const bibRefsURL = new URL("https://api.specref.org/bibrefs");
 
   let doc;
   let specRefOk;
@@ -150,7 +150,7 @@ describe("W3C — Bibliographic References", () => {
       <section id="conformance">
         <p id="refs-dom">[[DOM4]] [[DOM]] [[dom]] [[dom4]]</p>
         <p id="refs-cssom">[[CSSOM-VIEW]] [[cssom-view]] [[cssom-view-1]]</p>
-        <p id="refs-local">[[LOCAL]] <a data-cite="LOCAL">PASS<a></p>
+        <p id="refs-local">[[LOCAL]] <a data-cite="LOCAL">PASS</a></p>
       </section>
     `;
     const localBiblio = {

@@ -7,36 +7,34 @@
  *
  * `data-tests` takes a space separated list of URLs, e.g. data-test="foo.html bar.html".
  *
- * Docs: https://github.com/w3c/respec/wiki/data-tests
+ * Docs: https://respec.org/doc/#data-tests
  */
-import { getIntlData, showError, showWarning } from "./utils.js";
+import {
+  codedJoinAnd,
+  docLink,
+  getIntlData,
+  showError,
+  showWarning,
+} from "./utils.js";
 import { html } from "./import-maps.js";
 const localizationStrings = {
   en: {
-    missing_test_suite_uri:
-      "Found tests in your spec, but missing '" +
-      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' in your ReSpec config.",
+    missing_test_suite_uri: docLink`Found tests in your spec, but missing ${"[testSuiteURI]"} in your ReSpec config.`,
     tests: "tests",
     test: "test",
   },
   ja: {
-    missing_test_suite_uri:
-      "この仕様内にテストの項目を検出しましたが，ReSpec の設定に '" +
-      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' が見つかりません．",
+    missing_test_suite_uri: docLink`この仕様内にテストの項目を検出しましたが，ReSpec の設定に ${"[testSuiteURI]"} が見つかりません．`,
     tests: "テスト",
     test: "テスト",
   },
   de: {
-    missing_test_suite_uri:
-      "Die Spezifikation enthält Tests, aber in der ReSpec-Konfiguration ist keine '" +
-      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' angegeben.",
+    missing_test_suite_uri: docLink`Die Spezifikation enthält Tests, aber in der ReSpec-Konfiguration ist keine ${"[testSuiteURI]"} angegeben.`,
     tests: "Tests",
     test: "Test",
   },
   zh: {
-    missing_test_suite_uri:
-      "本规范中包含测试，但在 ReSpec 配置中缺少 '" +
-      "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)'。",
+    missing_test_suite_uri: docLink`本规范中包含测试，但在 ReSpec 配置中缺少 ${"[testSuiteURI]"}。`,
     tests: "测试",
     test: "测试",
   },
@@ -106,7 +104,7 @@ export function run(conf) {
 
   for (const elem of testables) {
     const tests = elem.dataset.tests.split(/,/gm).map(url => url.trim());
-    const testURLs = toTestURLs(tests, conf.testSuiteURI);
+    const testURLs = toTestURLs(tests, conf.testSuiteURI, elem);
     handleDuplicates(testURLs, elem);
     const details = toHTML(testURLs);
     elem.append(details);
@@ -116,15 +114,16 @@ export function run(conf) {
 /**
  * @param {string[]} tests
  * @param {string} testSuiteURI
+ * @param {HTMLElement} elem
  */
-function toTestURLs(tests, testSuiteURI) {
+function toTestURLs(tests, testSuiteURI, elem) {
   return tests
     .map(test => {
       try {
         return new URL(test, testSuiteURI).href;
       } catch {
-        const msg = `Bad URI: ${test}`;
-        showWarning(msg, name);
+        const msg = docLink`Invalid URL in ${"[data-tests]"} attribute: ${test}.`;
+        showWarning(msg, name, { elements: [elem] });
       }
     })
     .filter(href => href);
@@ -139,10 +138,9 @@ function handleDuplicates(testURLs, elem) {
     (link, i, self) => self.indexOf(link) !== i
   );
   if (duplicates.length) {
-    const msg = `Duplicate tests found`;
-    const hint = `To fix, remove duplicates from "data-tests": ${duplicates
-      .map(url => new URL(url).pathname)
-      .join(", ")}`;
+    const msg = docLink`Duplicate tests found in the ${"[data-tests]"} attribute.`;
+    const tests = codedJoinAnd(duplicates, { quotes: true });
+    const hint = docLink`To fix, remove duplicates from ${"[data-tests]"}: ${tests}.`;
     showWarning(msg, name, { hint, elements: [elem] });
   }
 }

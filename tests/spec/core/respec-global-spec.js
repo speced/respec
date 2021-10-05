@@ -36,11 +36,28 @@ describe("Core — Respec Global - document.respec", () => {
     expect(doc.respec.warnings).toHaveSize(1);
     const warning = doc.respec.warnings[0];
     expect(warning.name).toBe("ReSpecWarning");
-    expect(warning.plugin).toBe("core/linter/local-refs-exist");
+    expect(warning.plugin).toBe("core/linter-rules/local-refs-exist");
     expect(warning.message).toMatch(/Broken local reference/);
     expect(warning.elements).toHaveSize(1);
     expect(warning.elements[0].textContent).toBe("FAIL");
 
     expect(doc.respec.errors).toHaveSize(0);
+  });
+
+  it("returns exported html with toHTML()", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops);
+
+    const html = await doc.respec.toHTML();
+    expect(typeof html).toBe("string");
+
+    const regex = new RegExp(`^<!DOCTYPE html>\\s*<html.+lang="en"`);
+    expect(html.slice(0, 40)).toMatch(regex);
+
+    const exportedDoc = new DOMParser().parseFromString(html, "text/html");
+    // <meta name=generator> is added in exported docs only.
+    const generator = exportedDoc.querySelector("meta[name=generator]");
+    expect(generator).toBeTruthy();
+    expect(generator.content).toContain("ReSpec");
   });
 });

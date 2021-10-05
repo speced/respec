@@ -9,7 +9,9 @@ describe("Core — Link to definitions", () => {
     const bodyText = `
       <section>
         <h2>Test section</h2>
-        <p><dfn>[[\\test]]</dfn><a id="testAnchor">[[\\test]]</a>
+        <p>
+          <dfn data-dfn-for="Window">[[\\test]]</dfn>
+          <a data-link-for="Window" id="testAnchor">[[\\test]]</a>
       </section>`;
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
@@ -139,21 +141,68 @@ describe("Core — Link to definitions", () => {
     const body = `
       <section id="test">
         <dfn data-dfn-for="MyEvent">[[\\aSlot]]</dfn>
+        <dfn data-dfn-for="MyEvent">[[\\an internal slot]](foo, bar)</dfn>
         <dfn>MyEvent</dfn>
         <p id="link-slots">
           <span>{{ MyEvent/[[aSlot]] }}</span>
-          <span>{{ MyEvent.[[aSlot]] }}</span>
+          <span>{{ MyEvent/[[an internal slot]](foo, bar) }}</span>
         </p>
       </section>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
 
-    const dfn = doc.querySelector("#test dfn");
-    const links = doc.querySelectorAll("#link-slots span a:last-child");
-    const href = `#${dfn.id}`;
-    expect(links[0].hash).toBe(href);
-    expect(links[1].hash).toBe(href);
+    const [dfn1, dfn2] = doc.querySelectorAll("#test dfn");
+    const [link1, link2] = doc.querySelectorAll("#link-slots a");
+    expect(link1.hash).toBe(`#${dfn1.id}`);
+    expect(link2.hash).toBe(`#${dfn2.id}`);
+  });
+
+  it("supports internal slot being a method with no args", async () => {
+    const body = `
+      <section>
+        <dfn id="method" data-dfn-for="MyEvent">
+          [[\\an internal_slot]]()
+        </dfn>
+        <dfn>MyEvent</dfn>
+        <p id="link-slots">
+          <span>{{ MyEvent/[[an internal_slot]]() }}</span>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const dfn = doc.querySelector("#method");
+    const links = doc.querySelectorAll("#link-slots a");
+    expect(links[0].hash).toBe(`#${dfn.id}`);
+    const vars = document.querySelectorAll("#link-slots var");
+    expect(vars).toHaveSize(0);
+  });
+
+  it("supports internal slot being a method with arguments", async () => {
+    const body = `
+      <section>
+        <dfn id="method" data-dfn-for="MyEvent">
+          [[\\an internal_slot]](foo, bar)
+        </dfn>
+        <dfn>MyEvent</dfn>
+        <p id="link-slots">
+          <span>{{ MyEvent/[[an internal_slot]](foo, bar) }}</span>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const dfn = doc.querySelector("#method");
+    const links = doc.querySelectorAll("#link-slots a");
+    expect(links[0].hash).toBe(`#${dfn.id}`);
+    const vars = doc.querySelectorAll("#link-slots var");
+    expect(vars).toHaveSize(2);
+    const [foo, bar] = vars;
+    expect(foo.textContent).toBe("foo");
+    expect(bar.textContent).toBe("bar");
   });
 
   it("has empty data-dfn-for on top level things", async () => {
@@ -182,13 +231,8 @@ describe("Core — Link to definitions", () => {
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
 
-    const [
-      dfnInterface,
-      dfnAttr,
-      dfnMethod,
-      dfnEnum,
-      dfnEnumValue,
-    ] = doc.querySelectorAll("#test dfn");
+    const [dfnInterface, dfnAttr, dfnMethod, dfnEnum, dfnEnumValue] =
+      doc.querySelectorAll("#test dfn");
     expect(dfnInterface.dataset.dfnFor).toBe("");
     expect(dfnAttr.dataset.dfnFor).toBe("HyperStar");
     expect(dfnMethod.dataset.dfnFor).toBe("HyperStar");
@@ -211,11 +255,8 @@ describe("Core — Link to definitions", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const [
-      visibilityState,
-      visibilityStateHidden,
-      documentHidden,
-    ] = doc.querySelectorAll("#test a");
+    const [visibilityState, visibilityStateHidden, documentHidden] =
+      doc.querySelectorAll("#test a");
 
     expect(visibilityState.hash).toBe("#vis-state");
     expect(visibilityStateHidden.hash).toBe("#vis-state-hidden");

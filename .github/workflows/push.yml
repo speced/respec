@@ -24,14 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/setup-node@v2
+        with: { node-version: 14, cache: npm }
       - name: install & build
         run: |
           npm ci
@@ -55,18 +49,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-12-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/setup-node@v2
+        with: { node-version: 14, cache: npm }
       - name: install & build
         run: |
           npm ci
           npm run build:w3c & npm run build:geonovum
-      - run: npm run test:karma
+      - run: npm test
         env:
           BROWSERS: ChromeHeadless

@@ -8,6 +8,7 @@
  * This module also adds the legacy `document.respecIsReady` property for
  * backward compatibility. It is now an alias to `document.respec.ready`.
  */
+import { serialize } from "../core/exporter.js";
 import { showWarning } from "../core/utils.js";
 import { sub } from "./pubsubhub.js";
 
@@ -39,6 +40,10 @@ class ReSpec {
 
   get ready() {
     return this._respecDonePromise;
+  }
+
+  async toHTML() {
+    return serialize("html", document);
   }
 }
 

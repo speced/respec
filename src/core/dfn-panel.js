@@ -2,14 +2,14 @@
 // Constructs "dfn panels" which show all the local references to a dfn and a
 // self link to the selected dfn. Based on Bikeshed's dfn panels at
 // https://github.com/tabatkins/bikeshed/blob/ef44162c2e/bikeshed/dfnpanels.py
-import { fetchAsset, fetchBase } from "./text-loader.js";
+import css from "../styles/dfn-panel.css.js";
+import { fetchBase } from "./text-loader.js";
 import { html } from "./import-maps.js";
 import { norm } from "./utils.js";
 
 export const name = "core/dfn-panel";
 
 export async function run() {
-  const css = await loadStyle();
   document.head.insertBefore(
     html`<style>
       ${css}
@@ -19,11 +19,15 @@ export async function run() {
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
-    "dfn[id], #index-defined-elsewhere .index-term"
+    "dfn[id]:not([data-cite]), #index-defined-elsewhere .index-term"
   );
   const panels = document.createDocumentFragment();
   for (const el of elems) {
     panels.append(createPanel(el));
+    // Make it possible to reach el by tabbing,
+    // allowing keyboard action as needed.
+    el.tabIndex = 0;
+    el.setAttribute("aria-haspopup", "dialog");
   }
   document.body.append(panels);
 
@@ -41,17 +45,30 @@ function createPanel(dfn) {
   const links = document.querySelectorAll(`a[href="${href}"]:not(.index-term)`);
 
   const panelId = `dfn-panel-for-${dfn.id}`;
+  const definition = dfn.getAttribute("aria-label") || norm(dfn.textContent);
   /** @type {HTMLElement} */
   const panel = html`
-    <aside class="dfn-panel" id="${panelId}" hidden>
+    <div
+      class="dfn-panel"
+      id="${panelId}"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-label="Links in this document to definition: ${definition}"
+    >
       <span class="caret"></span>
       <div>
-        <a class="self-link" href="${href}">Permalink</a>
+        <a
+          class="self-link"
+          href="${href}"
+          aria-label="Permalink for definition: ${definition}. Activate to close this dialog."
+          >Permalink</a
+        >
         ${dfnExportedMarker(dfn)} ${idlMarker(dfn, links)}
       </div>
-      <b>Referenced in:</b>
+      <p><b>Referenced in:</b></p>
       ${referencesToHTML(id, links)}
-    </aside>
+    </div>
   `;
   return panel;
 }
@@ -114,13 +131,17 @@ function referencesToHTML(id, links) {
   /**
    * Returns a list that is easier to render in `listItemToHTML`.
    * @param {[string, string[]]} entry an entry from `titleToIDs`
-   * @returns {{ title: string, id: string }[]} The first list item contains
+   * @returns {{ title: string, text: string, id: string, }[]} The first list item contains
    * title from `getReferenceTitle`, rest of items contain strings like `(2)`,
    * `(3)` as title.
    */
   const toLinkProps = ([title, ids]) => {
-    return [{ title, id: ids[0] }].concat(
-      ids.slice(1).map((id, i) => ({ title: `(${i + 2})`, id }))
+    return [{ title, id: ids[0], text: title }].concat(
+      ids.slice(1).map((id, i) => ({
+        title: `Reference ${i + 2}`,
+        text: `(${i + 2})`,
+        id,
+      }))
     );
   };
 
@@ -130,7 +151,8 @@ function referencesToHTML(id, links) {
    */
   const listItemToHTML = entry => html`<li>
     ${toLinkProps(entry).map(
-      link => html`<a href="#${link.id}">${link.title}</a>${" "}`
+      link =>
+        html`<a href="#${link.id}" title="${link.title}">${link.text}</a>${" "}`
     )}
   </li>`;
 
@@ -145,15 +167,7 @@ function getReferenceTitle(link) {
   if (!section) return null;
   const heading = section.querySelector("h1, h2, h3, h4, h5, h6");
   if (!heading) return null;
-  return norm(heading.textContent);
-}
-
-async function loadStyle() {
-  try {
-    return (await import("text!../../assets/dfn-panel.css")).default;
-  } catch {
-    return fetchAsset("dfn-panel.css");
-  }
+  return `§ ${norm(heading.textContent)}`;
 }
 
 async function loadScript() {
