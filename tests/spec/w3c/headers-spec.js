@@ -1010,6 +1010,21 @@ describe("W3C — Headers", () => {
   });
 
   describe("license configuration", () => {
+    it("shows and error when the license is unknown", async () => {
+      const ops = makeStandardOps({
+        specStatus: "WD",
+        license: "document",
+        github: "w3c/respec",
+      });
+      const doc = await makeRSDoc(ops, simpleSpecURL);
+      expect(doc.respec.errors).toHaveSize(1);
+      const [error] = doc.respec.errors;
+      expect(error.plugin).toBe("w3c/headers");
+      expect(error.message).toContain(
+        'The license "`document`" is not supported.'
+      );
+    });
+
     it("defaults to cc-by when spec status is unofficial", async () => {
       const ops = makeStandardOps({
         shortName: "whatever",

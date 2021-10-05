@@ -301,6 +301,15 @@ export async function run(conf) {
     const hint = docLink`Please set ${"[license]"} to "w3c-software-doc" instead.`;
     showError(msg, name, { hint });
   }
+  if (!licenses.has(conf.license)) {
+    const msg = `The license "\`${conf.license}\`" is not supported.`;
+    const choices = codedJoinOr(Array.from(licenses.keys()), {
+      quotes: true,
+    });
+    const hint = docLink`Please set
+      ${"[license]"} to one of: ${choices}.`;
+    showError(msg, name, { hint });
+  }
   conf.licenseInfo = licenses.get(conf.license);
   conf.isCGBG = cgbgStatus.includes(conf.specStatus);
   conf.isCGFinal = conf.isCGBG && conf.specStatus.endsWith("G-FINAL");
