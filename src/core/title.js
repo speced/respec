@@ -60,7 +60,7 @@ function setDocumentTitle(conf, h1Elem) {
   if (!h1Elem.isConnected) {
     h1Elem.textContent = document.title || `${l10n.default_title}`;
   }
-  // We replace `<br>` with ":" and "-", as appropriate.
+  // We replace ":<br>" with ":", and "<br>" with "-", as appropriate.
   const tempElem = document.createElement("h1");
   tempElem.innerHTML = h1Elem.innerHTML
     .replace(/:<br>/g, ": ")
