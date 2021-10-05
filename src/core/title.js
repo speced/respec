@@ -55,6 +55,7 @@ export function run(conf) {
 }
 
 function setDocumentTitle(conf, h1Elem) {
+  debugger;
   // If the h1 is newly created, it won't be connected. In this case
   // we use the <title> or a localized fallback.
   if (!h1Elem.isConnected) {
