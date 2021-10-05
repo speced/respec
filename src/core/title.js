@@ -55,13 +55,18 @@ export function run(conf) {
 }
 
 function setDocumentTitle(conf, h1Elem) {
+  debugger;
   // If the h1 is newly created, it won't be connected. In this case
   // we use the <title> or a localized fallback.
   if (!h1Elem.isConnected) {
     h1Elem.textContent = document.title || `${l10n.default_title}`;
   }
-
-  let documentTitle = norm(h1Elem.textContent);
+  // We replace `<br>` with ":" and "-", as appropriate.
+  const tempElem = document.createElement("h1");
+  tempElem.innerHTML = h1Elem.innerHTML
+    .replace(/:<br>/g, ": ")
+    .replace(/<br>/g, " - ");
+  let documentTitle = norm(tempElem.textContent);
 
   if (conf.isPreview && conf.prNumber) {
     const prUrl = conf.prUrl || `${conf.github.repoURL}pull/${conf.prNumber}`;

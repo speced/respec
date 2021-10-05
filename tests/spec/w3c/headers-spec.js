@@ -722,6 +722,18 @@ describe("W3C — Headers", () => {
       expect(h1).toBeTruthy();
       expect(h1.textContent.trim()).toBe("override!!!");
     });
+
+    it("handles special case of localized spec title by doing replacement of <br> elements", async () => {
+      const body = `
+      <title>hi</title>
+      <h1 id="title">Requirements for Chinese Text:<br/>Layout<br/><span lang="zh">中文排版需求</span></h1>
+      ${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe(
+        "Requirements for Chinese Text: Layout - 中文排版需求"
+      );
+    });
   });
 
   describe("precedence rules for h1#title is present and <title> is absent", () => {
