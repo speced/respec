@@ -303,9 +303,11 @@ export async function run(conf) {
   }
   if (!licenses.has(conf.license)) {
     const msg = `The license "\`${conf.license}\`" is not supported.`;
-    const hint = `Please set ${docLink(
-      "license"
-    )} to "w3c-software-doc" instead.`;
+    const choices = codedJoinOr(Array.from(licenses.keys()), {
+      quotes: true,
+    });
+    const hint = docLink`Please set
+      ${"[license]"} to one of: ${choices}.`;
     showError(msg, name, { hint });
   }
   conf.licenseInfo = licenses.get(conf.license);
