@@ -69,7 +69,9 @@ const downloadLinks = [
 function toDownloadLink(details, conf) {
   const { id, href, fileName, title, type } = details;
   const filename = conf.shortName
-    ? `${conf.shortName}-${concatDate(conf.publishDate || new Date())}`
+    ? `${conf.specStatus}-${conf.shortName}-${concatDate(
+        conf.publishDate || new Date()
+      )}`
     : undefined;
   return html`<a
     href="${href}"
