@@ -21,6 +21,7 @@ describe("Core — xref", () => {
       id: "service-workers-1",
       href: "https://www.w3.org/TR/service-workers-1/",
     },
+    webidl: { id: "WebIDL", href: "https://webidl.spec.whatwg.org/" },
     infra: { id: "INFRA", href: "https://infra.spec.whatwg.org/" },
     "credential-management": { aliasOf: "credential-management-1" },
     "credential-management-1": {
