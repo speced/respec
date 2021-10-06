@@ -30,7 +30,7 @@ const l10n = getIntlData(localizationStrings);
 const downloadLinks = [
   {
     id: "respec-save-as-html",
-    fileName: (name = "index") => `${name}.html`,
+    ext: "html",
     title: "HTML",
     type: "text/html",
     get href() {
@@ -39,7 +39,7 @@ const downloadLinks = [
   },
   {
     id: "respec-save-as-xml",
-    fileName: (name = "index") => `${name}.xhtml`,
+    ext: "xhtml",
     title: "XML",
     type: "application/xml",
     get href() {
@@ -48,7 +48,7 @@ const downloadLinks = [
   },
   {
     id: "respec-save-as-epub",
-    fileName: (name = "spec") => `${name}.epub`,
+    ext: "epub",
     title: "EPUB 3",
     type: "application/epub+zip",
     get href() {
@@ -67,15 +67,13 @@ const downloadLinks = [
  * @param {typeof downloadLinks[0]} details
  */
 function toDownloadLink(details, conf) {
-  const { id, href, fileName, title, type } = details;
+  const { id, href, ext, title, type } = details;
   const date = concatDate(conf.publishDate || new Date());
-  const filename = conf.shortName
-    ? [conf.specStatus, conf.shortName, date].join("-")
-    : undefined;
+  const filename = [conf.specStatus, conf.shortName || "spec", date].join("-");
   return html`<a
     href="${href}"
     id="${id}"
-    download="${fileName(filename)}"
+    download="${filename}.${ext}"
     type="${type}"
     class="respec-save-button"
     onclick=${() => ui.closeModal()}
