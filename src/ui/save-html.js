@@ -1,7 +1,7 @@
 // @ts-check
 // Module ui/save-html
 // Saves content to HTML when asked to
-import { ISODate, getIntlData, showWarning } from "../core/utils.js";
+import { concatDate, getIntlData, showWarning } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { rsDocToDataURL } from "../core/exporter.js";
 import { ui } from "../core/ui.js";
@@ -69,7 +69,7 @@ const downloadLinks = [
 function toDownloadLink(details, conf) {
   const { id, href, fileName, title, type } = details;
   const filename = conf.shortName
-    ? `${conf.shortName}-${ISODate.format(conf.publishDate || new Date())}`
+    ? `${conf.shortName}-${concatDate(conf.publishDate || new Date())}`
     : undefined;
   return html`<a
     href="${href}"
