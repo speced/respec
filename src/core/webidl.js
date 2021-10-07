@@ -370,11 +370,11 @@ function renderWebIDL(idlElement, index) {
   // cross reference
   const closestCite = idlElement.closest("[data-cite], body");
   const { dataset } = closestCite;
-  if (!dataset.cite) dataset.cite = "webidl";
+  if (!dataset.cite) dataset.cite = "WEBIDL";
   // includes webidl in some form
   if (!/\bwebidl\b/i.test(dataset.cite)) {
     const cites = dataset.cite.trim().split(/\s+/);
-    dataset.cite = ["webidl", ...cites].join(" ");
+    dataset.cite = ["WEBIDL", ...cites].join(" ");
   }
   addIDLHeader(idlElement);
   return parse;
