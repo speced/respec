@@ -8,7 +8,7 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
-import { recTrackStatus } from "../../../src/w3c/headers.js";
+import { licenses, recTrackStatus } from "../../../src/w3c/headers.js";
 
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
@@ -1068,10 +1068,38 @@ describe("W3C — Headers", () => {
       );
     });
 
-    it("includes the W3C Software and Document Notice and License (w3c-software-doc)", async () => {
+    it("supports various licenses", async () => {
+      for (const license of licenses.keys()) {
+        if (!license) continue; // skip 'undefined' special case
+        const ops = makeStandardOps({
+          specStatus: "FPWD",
+          license,
+          shortName: "whatever",
+          editors: [{ name: "foo" }],
+        });
+        const doc = await makeRSDoc(ops);
+        const licenseLinks = doc.querySelectorAll("div.head a[rel=license]");
+        expect(licenseLinks).withContext(license).toHaveSize(1);
+        const { url } = licenses.get(license);
+        expect(licenseLinks[0].href).withContext(license).toBe(url);
+      }
+    });
+
+    it("shows an error when a w3c document is unlicensed", async () => {
+      const ops = makeStandardOps({
+        license: "",
+      });
+      const doc = await makeRSDoc(ops, simpleSpecURL);
+      expect(doc.respec.errors).toHaveSize(1);
+      const [error] = doc.respec.errors;
+      expect(error.plugin).toBe("w3c/headers");
+      expect(error.message).toContain("not supported");
+    });
+
+    it("supports the Document License (document)", async () => {
       const ops = makeStandardOps({
         specStatus: "FPWD",
-        license: "w3c-software-doc",
+        license: "document",
         shortName: "whatever",
         editors: [{ name: "foo" }],
       });
@@ -1079,7 +1107,7 @@ describe("W3C — Headers", () => {
       const licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses).toHaveSize(1);
       expect(licenses[0].href).toBe(
-        "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
+        "https://www.w3.org/Consortium/Legal/2015/doc-license"
       );
     });
 
