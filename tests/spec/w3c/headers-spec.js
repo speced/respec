@@ -1025,7 +1025,7 @@ describe("W3C — Headers", () => {
     it("shows and error when the license is unknown", async () => {
       const ops = makeStandardOps({
         specStatus: "WD",
-        license: "document",
+        license: "unknown",
         github: "w3c/respec",
       });
       const doc = await makeRSDoc(ops, simpleSpecURL);
@@ -1033,7 +1033,7 @@ describe("W3C — Headers", () => {
       const [error] = doc.respec.errors;
       expect(error.plugin).toBe("w3c/headers");
       expect(error.message).toContain(
-        'The license "`document`" is not supported.'
+        'The license "`unknown`" is not supported.'
       );
     });
 
