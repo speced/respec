@@ -41,9 +41,9 @@ const templates = {
     // Shepherd classifies "interfaces" as starting with capital letters,
     // like Promise, FrozenArray, etc.
     return /^[A-Z]/.test(keyword)
-      ? html`<a data-xref-type="interface" data-cite="WebIDL">${keyword}</a>`
+      ? html`<a data-xref-type="interface" data-cite="WEBIDL">${keyword}</a>`
       : // Other keywords like sequence, maplike, etc...
-        html`<a data-xref-type="dfn" data-cite="WebIDL">${keyword}</a>`;
+        html`<a data-xref-type="dfn" data-cite="WEBIDL">${keyword}</a>`;
   },
   reference(wrapped, unescaped, context) {
     if (context.type === "extended-attribute" && context.name !== "Exposed") {
@@ -370,11 +370,11 @@ function renderWebIDL(idlElement, index) {
   // cross reference
   const closestCite = idlElement.closest("[data-cite], body");
   const { dataset } = closestCite;
-  if (!dataset.cite) dataset.cite = "WebIDL";
+  if (!dataset.cite) dataset.cite = "WEBIDL";
   // includes webidl in some form
   if (!/\bwebidl\b/i.test(dataset.cite)) {
     const cites = dataset.cite.trim().split(/\s+/);
-    dataset.cite = ["WebIDL", ...cites].join(" ");
+    dataset.cite = ["WEBIDL", ...cites].join(" ");
   }
   addIDLHeader(idlElement);
   return parse;

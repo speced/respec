@@ -91,7 +91,7 @@ async function addJSONLDInfo(conf, doc) {
     type,
     name: document.title,
     inLanguage: doc.documentElement.lang || "en",
-    license: conf.licenseInfo.url,
+    license: conf.licenseInfo?.url,
     datePublished: conf.dashDate,
     /** @type {{ name: string, url?: string } | { name: string, url?: string }[]} */
     copyrightHolder: {

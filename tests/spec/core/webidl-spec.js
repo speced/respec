@@ -1368,7 +1368,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
 
     // DOMString fromWebIDL();
     const domString = doc.querySelector(
-      "#link-test a[href='https://heycam.github.io/webidl/#idl-DOMString']"
+      "#link-test a[href='https://webidl.spec.whatwg.org/#idl-DOMString']"
     );
     expect(domString).toBeTruthy();
 
@@ -1426,7 +1426,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const objectAnchor = doc.querySelector("#link-test a[href$=idl-object]");
     expect(objectAnchor.dataset.xrefType).toBe("interface");
     expect(objectAnchor.href).toBe(
-      "https://heycam.github.io/webidl/#idl-object"
+      "https://webidl.spec.whatwg.org/#idl-object"
     );
   });
 

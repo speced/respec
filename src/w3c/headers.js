@@ -267,7 +267,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
-export function run(conf) {
+export async function run(conf) {
   if (!conf.specStatus) {
     const msg = docLink`Missing required configuration: ${"[specStatus]"}.`;
     const hint = docLink`Please select an appropriate status from ${"[specStatus]"} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
@@ -299,6 +299,15 @@ export function run(conf) {
   if (!conf.isUnofficial && ["cc-by"].includes(conf.license)) {
     const msg = docLink`License "\`${conf.license}\`" is not allowed for W3C Specifications.`;
     const hint = docLink`Please set ${"[license]"} to "w3c-software-doc" instead.`;
+    showError(msg, name, { hint });
+  }
+  if (!licenses.has(conf.license)) {
+    const msg = `The license "\`${conf.license}\`" is not supported.`;
+    const choices = codedJoinOr(Array.from(licenses.keys()), {
+      quotes: true,
+    });
+    const hint = docLink`Please set
+      ${"[license]"} to one of: ${choices}.`;
     showError(msg, name, { hint });
   }
   conf.licenseInfo = licenses.get(conf.license);
@@ -362,11 +371,15 @@ export function run(conf) {
   conf.isTagFinding =
     conf.specStatus === "finding" || conf.specStatus === "draft-finding";
 
-  if (conf.isRecTrack && !hasGitHubIssuesLink(conf)) {
-    const msg = docLink`Missing link to GitHub in head of document.`;
-    const hint = docLink`Please add the ${"[github]"} configuration option to document's ${"[respecConfig]"}.`;
-    showError(msg, name, { hint });
+  if (conf.isRecTrack && !conf.github && !conf.wgPublicList) {
+    const msg =
+      "W3C Process requires a either a link to a public repository or mailing list.";
+    const hint = docLink`Use the ${"[github]"} configuration option to add a link to a repository. Alternatively use ${"[wgPublicList]"} to link to a mailing list.`;
+    showError(msg, name, {
+      hint,
+    });
   }
+
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
     if (conf.specStatus === "ED") {
@@ -502,6 +515,7 @@ export function run(conf) {
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
   validatePatentPolicies(conf);
+  await deriveHistoryURI(conf);
 
   // configuration done - yay!
 
@@ -693,6 +707,36 @@ export function run(conf) {
   });
 }
 
+async function deriveHistoryURI(conf) {
+  if (!conf.shortName || conf.historyURI === null) {
+    return; // Nothing to do
+  }
+
+  const historyURL = new URL(
+    conf.historyURI ?? conf.shortName,
+    "https://www.w3.org/standards/history/"
+  );
+
+  // If it's on the Rec Track or it's TR worthy, then it has a history.
+  const willHaveHistory = [...recTrackStatus, ...W3CNotes, ...maybeRecTrack];
+  if (willHaveHistory.includes(conf.specStatus)) {
+    conf.historyURI = historyURL.href;
+    return;
+  }
+
+  // Do a fetch HEAD request to see if the history exists...
+  // We don't discriminate... if it's on the W3C website with a history,
+  // we show it.
+  try {
+    const response = await fetch(historyURL, { method: "HEAD" });
+    if (response.ok) {
+      conf.historyURI = response.url;
+    }
+  } catch {
+    // Ignore fetch errors
+  }
+}
+
 function validatePatentPolicies(conf) {
   if (!conf.wgPatentPolicy) return;
   const policies = new Set([].concat(conf.wgPatentPolicy));
@@ -781,18 +825,4 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
  */
 function isElement(node) {
   return node.nodeType === Node.ELEMENT_NODE;
-}
-
-function hasGitHubIssuesLink(conf) {
-  return (
-    conf.github ||
-    (conf.otherLinks &&
-      conf.otherLinks.find(linkGroup =>
-        linkGroup.data.find(
-          l =>
-            l.href &&
-            l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/)
-        )
-      ))
-  );
 }
