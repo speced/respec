@@ -1,9 +1,11 @@
 // @ts-check
-import { getIntlData, humanDate } from "../../core/utils.js";
+import { getIntlData, humanDate, showWarning } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
+
+const name = "w3c/templates/headers";
 
 const localizationStrings = {
   en: {
@@ -384,6 +386,13 @@ function renderCopyright(conf) {
   if (existingCopyright) {
     existingCopyright.remove();
     return existingCopyright;
+  }
+  if (conf.hasOwnProperty("overrideCopyright")) {
+    const msg = "The `overrideCopyright` configuration option is deprecated.";
+    const hint =
+      'Please add a `<p class="copyright">` element directly to your document instead';
+    showWarning(msg, name, { hint });
+    return html`${[conf.overrideCopyright]}`;
   }
   if (conf.isUnofficial) {
     return html`<p class="copyright">
