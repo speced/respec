@@ -384,14 +384,7 @@ function renderCopyright(conf) {
     existingCopyright.remove();
     return existingCopyright;
   }
-  if (conf.hasOwnProperty("overrideCopyright")) {
-    const msg = "The `overrideCopyright` configuration option is deprecated.";
-    const hint =
-      'Please add a `<p class="copyright">` element directly to your document instead';
-    showWarning(msg, name, { hint });
-    return html`${[conf.overrideCopyright]}`;
-  }
-  if (conf.isUnofficial) {
+  if (conf.isUnofficial && conf.licenseInfo) {
     return html`<p class="copyright">
       Copyright &copy;
       ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
