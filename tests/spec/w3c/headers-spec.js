@@ -1080,8 +1080,11 @@ describe("W3C — Headers", () => {
         const doc = await makeRSDoc(ops);
         const licenseLinks = doc.querySelectorAll("div.head a[rel=license]");
         expect(licenseLinks).withContext(license).toHaveSize(1);
-        const { url } = licenses.get(license);
-        expect(licenseLinks[0].href).withContext(license).toBe(url);
+        const { url, short, name } = licenses.get(license);
+        const [link] = licenseLinks;
+        expect(link.href).withContext(license).toBe(url);
+        expect(link.textContent).withContext(license).toContain(short);
+        expect(link.title).withContext(license).toBe(name);
       }
     });
 
