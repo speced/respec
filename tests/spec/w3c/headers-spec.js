@@ -1096,32 +1096,19 @@ describe("W3C — Headers", () => {
       expect(error.message).toContain("not supported");
     });
 
-    it("supports the Document License (document)", async () => {
-      const ops = makeStandardOps({
-        specStatus: "FPWD",
-        license: "document",
-        shortName: "whatever",
-        editors: [{ name: "foo" }],
-      });
-      const doc = await makeRSDoc(ops);
-      const licenses = doc.querySelectorAll("div.head a[rel=license]");
-      expect(licenses).toHaveSize(1);
-      expect(licenses[0].href).toBe(
-        "https://www.w3.org/Consortium/Legal/2015/doc-license"
-      );
-    });
-
-    it("supports the W3C Document Notice and License (w3c-software)", async () => {
-      const ops = makeStandardOps({
-        specStatus: "unofficial",
-        license: "w3c-software",
-      });
-      const doc = await makeRSDoc(ops);
-      const licenses = doc.querySelectorAll("div.head a[rel=license]");
-      expect(licenses).toHaveSize(1);
-      expect(licenses[0].href).toBe(
-        "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231"
-      );
+    it("shows an error when a w3c document a disallowed license", async () => {
+      for (const license of ["cc-by", "cc0"]) {
+        const ops = makeStandardOps({
+          license,
+        });
+        const doc = await makeRSDoc(ops, simpleSpecURL);
+        expect(doc.respec.errors).toHaveSize(1);
+        const [error] = doc.respec.errors;
+        expect(error.plugin).withContext(license).toBe("w3c/headers");
+        expect(error.message)
+          .withContext(license)
+          .toContain("not allowed for W3C Specifications");
+      }
     });
 
     it("supports cc0 when spec status is unofficial", async () => {
@@ -1138,6 +1125,7 @@ describe("W3C — Headers", () => {
       expect(licenses[0].href).toBe(
         "https://creativecommons.org/publicdomain/zero/1.0/"
       );
+      expect(doc.respec.errors).toHaveSize(0);
     });
 
     it("makes sure that p.copyright wins", async () => {
