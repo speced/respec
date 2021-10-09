@@ -722,6 +722,18 @@ describe("W3C — Headers", () => {
       expect(h1).toBeTruthy();
       expect(h1.textContent.trim()).toBe("override!!!");
     });
+
+    it("handles special case of localized spec title by doing replacement of <br> elements", async () => {
+      const body = `
+      <title>hi</title>
+      <h1 id="title">Requirements for Chinese Text:<br/>Layout<br/><span lang="zh">中文排版需求</span></h1>
+      ${makeDefaultBody()}`;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe(
+        "Requirements for Chinese Text: Layout - 中文排版需求"
+      );
+    });
   });
 
   describe("precedence rules for h1#title is present and <title> is absent", () => {
@@ -1010,6 +1022,21 @@ describe("W3C — Headers", () => {
   });
 
   describe("license configuration", () => {
+    it("shows and error when the license is unknown", async () => {
+      const ops = makeStandardOps({
+        specStatus: "WD",
+        license: "document",
+        github: "w3c/respec",
+      });
+      const doc = await makeRSDoc(ops, simpleSpecURL);
+      expect(doc.respec.errors).toHaveSize(1);
+      const [error] = doc.respec.errors;
+      expect(error.plugin).toBe("w3c/headers");
+      expect(error.message).toContain(
+        'The license "`document`" is not supported.'
+      );
+    });
+
     it("defaults to cc-by when spec status is unofficial", async () => {
       const ops = makeStandardOps({
         shortName: "whatever",
@@ -2249,6 +2276,54 @@ describe("W3C — Headers", () => {
       doc.respec.errors.every(
         ({ plugin }) => plugin === "core/templates/show-logo"
       );
+    });
+  });
+
+  describe("Feedback", () => {
+    it("includes a Feedback: with a <dd> to github issues", async () => {
+      const doc = await makeRSDoc(
+        makeStandardOps({ github: "w3c/respec", specStatus: "WD" })
+      );
+      const [dt] = contains(doc, ".head dt", "Feedback:");
+      const dd = dt.nextElementSibling;
+      expect(dd.querySelector("a[href^='https://github.com/']")).toBeTruthy();
+    });
+
+    it("includes links for to new issue, pull requests, open issues", async () => {
+      const doc = await makeRSDoc(makeStandardOps({ github: "w3c/respec" }));
+      const [prLink] = contains(
+        doc,
+        ".head a[href='https://github.com/w3c/respec/pulls/']",
+        "pull requests"
+      );
+      expect(prLink).toBeTruthy();
+      const [openIssue] = contains(
+        doc,
+        ".head a[href='https://github.com/w3c/respec/issues/']",
+        "open issues"
+      );
+      expect(openIssue).toBeTruthy();
+      const [newIssue] = contains(
+        doc,
+        ".head a[href='https://github.com/w3c/respec/issues/new/choose']",
+        "new issue"
+      );
+      expect(newIssue).toBeTruthy();
+    });
+
+    it("includes a Feedback: with a <dd> for mailing list, when mailing list is supplied", async () => {
+      const opts = makeStandardOps({
+        wgPublicList: "public-webapps",
+      });
+      const doc = await makeRSDoc(opts);
+      const [dd] = contains(doc, ".head dd", "public-webapps@w3.org");
+
+      // Check the archive link
+      const archive = dd.querySelector(
+        "a[rel='discussion'][href^='https://lists.w3.org/']"
+      );
+      expect(archive).toBeTruthy();
+      expect(archive.textContent.trim()).toBe("archives");
     });
   });
 
