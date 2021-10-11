@@ -21,6 +21,7 @@ describe("Core — xref", () => {
       id: "service-workers-1",
       href: "https://www.w3.org/TR/service-workers-1/",
     },
+    webidl: { id: "WebIDL", href: "https://webidl.spec.whatwg.org/" },
     infra: { id: "INFRA", href: "https://infra.spec.whatwg.org/" },
     "credential-management": { aliasOf: "credential-management-1" },
     "credential-management-1": {
@@ -242,7 +243,7 @@ describe("Core — xref", () => {
     );
     const externalDfn1 = doc.querySelector("#external-dfn-1 a");
     expect(externalDfn1.href).toBe(
-      "https://heycam.github.io/webidl/#dfn-dictionary"
+      "https://webidl.spec.whatwg.org/#dfn-dictionary"
     );
     const externalDfn2 = doc.querySelector("#external-dfn-2 a");
     expect(externalDfn2.href).toBe("https://infra.spec.whatwg.org/#list");
@@ -499,9 +500,7 @@ describe("Core — xref", () => {
     const valid3 = doc.getElementById("valid3");
     expect(valid3.href).toBe("https://example.com/#fake-inform-3");
     const valid3n = doc.getElementById("valid3n");
-    expect(valid3n.href).toBe(
-      "https://heycam.github.io/webidl/#dfn-dictionary"
-    );
+    expect(valid3n.href).toBe("https://webidl.spec.whatwg.org/#dfn-dictionary");
     const valid4 = doc.getElementById("valid4");
     expect(valid4.href).toBe("https://example.com/#fake-inform-4");
     const valid4n = doc.getElementById("valid4n");
