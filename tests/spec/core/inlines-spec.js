@@ -362,7 +362,7 @@ describe("Core - Inlines", () => {
     const doc = await makeRSDoc(makeStandardOps(null, body));
     const syntaxErrorAnchor = doc.querySelector("#test a");
     expect(syntaxErrorAnchor.href).toBe(
-      "https://heycam.github.io/webidl/#syntaxerror"
+      "https://webidl.spec.whatwg.org/#syntaxerror"
     );
   });
 
