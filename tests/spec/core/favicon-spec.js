@@ -35,7 +35,7 @@ describe("Core - Favicon", () => {
     const linkTag = doc.querySelector("link[rel='icon']");
     // keep this as getAttribute to avoid escaping issues
     expect(linkTag.getAttribute("href")).toBe(
-      "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%220.9em%22 font-size=%22105%22>😻</text></svg>"
+      `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="0.9em" font-size="105">😻</text></svg>`
     );
   });
 });
