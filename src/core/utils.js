@@ -963,3 +963,13 @@ export function docLink(strings, ...keys) {
     })
     .join("");
 }
+
+export function isURL(str) {
+  try {
+    new URL(str);
+    return true;
+    // eslint-disable-next-line no-unused-vars
+  } catch (err) {
+    return false;
+  }
+}

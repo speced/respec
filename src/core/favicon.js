@@ -4,6 +4,7 @@
  *
  */
 import { html } from "./import-maps.js";
+import { isURL } from "./utils.js";
 
 export const name = "core/favicon";
 
@@ -14,7 +15,7 @@ export function run(conf) {
 
   let favLink;
   console.log(conf.favicon ? conf.favicon.length : 0);
-  if (/^[a-z]+:/.test(conf.favicon)) {
+  if (isURL(conf.favicon)) {
     favLink = conf.favicon;
     // test single character, Unicode edition
   } else if (/^.$/u.test(conf.favicon)) {
