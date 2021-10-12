@@ -176,6 +176,7 @@ const status2text = {
   base: "",
   finding: "TAG Finding",
   "draft-finding": "Draft TAG Finding",
+  "editor-draft-finding": "Draft TAG Finding",
   "CG-DRAFT": "Draft Community Group Report",
   "CG-FINAL": "Final Community Group Report",
   "BG-DRAFT": "Draft Business Group Report",
