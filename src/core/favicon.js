@@ -25,9 +25,10 @@ export function run(conf) {
   }
 
   const existingIcon = document.querySelector("link[rel='icon']");
+  const linkEl = html`<link rel="icon" href="${favLink}" />`;
   if (existingIcon) {
-    existingIcon.parentNode.replaceChild();
+    existingIcon.parentNode.replaceChild(linkEl, existingIcon);
   } else {
-    document.head.append(html`<link rel="icon" href="${favLink}" />`);
+    document.head.append(linkEl);
   }
 }
