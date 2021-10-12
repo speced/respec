@@ -19,7 +19,7 @@ export function run(conf) {
     favLink = conf.favicon;
     // test single character, Unicode edition
   } else if (/^.$/u.test(conf.favicon)) {
-    favLink = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%220.9em%22 font-size=%22105%22>${conf.favicon}</text></svg>`;
+    favLink = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="0.9em" font-size="105">${conf.favicon}</text></svg>`;
   } else {
     const hint = docLink`Check out ${"[favicon]"} for details.`;
     showWarning(
