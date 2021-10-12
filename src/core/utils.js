@@ -963,3 +963,16 @@ export function docLink(strings, ...keys) {
     })
     .join("");
 }
+
+/**
+ * Returns the normalised text of the first paragraph of the abstract.
+ * @returns {string}
+ */
+export function docDescription() {
+  const firstParagraph = document.querySelector("#abstract p:first-of-type");
+  if (!firstParagraph) {
+    return; // no abstract, so nothing to do
+  }
+  // Normalize whitespace: trim, remove new lines, tabs, etc.
+  return firstParagraph.textContent.replace(/\s+/, " ").trim();
+}

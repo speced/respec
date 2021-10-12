@@ -46,6 +46,7 @@ const modules = [
   import("../src/ui/search-specref.js"),
   import("../src/ui/search-xref.js"),
   import("../src/ui/about-respec.js"),
+  import("../src/core/social-card.js"),
   import("../src/core/seo.js"),
   import("../src/w3c/seo.js"),
   import("../src/core/highlight.js"),
