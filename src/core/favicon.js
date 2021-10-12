@@ -3,8 +3,8 @@
  * This module adds a "favicon" element. It knows how to use Unicode favicons, too.
  *
  */
+import { docLink, isURL, showWarning } from "./utils.js";
 import { html } from "./import-maps.js";
-import { isURL } from "./utils.js";
 
 export const name = "core/favicon";
 
@@ -21,6 +21,12 @@ export function run(conf) {
   } else if (/^.$/u.test(conf.favicon)) {
     favLink = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%220.9em%22 font-size=%22105%22>${conf.favicon}</text></svg>`;
   } else {
+    const hint = docLink`Check out ${"[favicon]"} for details.`;
+    showWarning(
+      "conf.favicon is neither a link nor a single character, ignored.",
+      name,
+      { hint }
+    );
     return;
   }
 
