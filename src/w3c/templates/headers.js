@@ -159,7 +159,7 @@ export default (conf, options) => {
     <details open="">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
-        ${conf.isTagFinding || !conf.isNoTrack
+        ${(conf.isTagFinding && !conf.isTagEditorFinding) || !conf.isNoTrack
           ? html`
               <dt>${l10n.this_version}</dt>
               <dd>
