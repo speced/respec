@@ -3,7 +3,7 @@
  */
 const puppeteer = require("puppeteer");
 const path = require("path");
-const { mkdtemp, readFile, writeFile } = require("fs").promises;
+const { mkdtemp, readFile } = require("fs").promises;
 const { tmpdir } = require("os");
 
 const noop = () => {};
@@ -164,61 +164,6 @@ function isRespecScript(req) {
       // localhost, file://, and everything else
       return /\/builds\/respec-[\w-]+\.js$/.test(path);
   }
-}
-
-/**
- * Fetches a ReSpec "src" URL, and writes the processed static HTML to an "out" path.
- * @deprecated Please use `toHTML` instead.
- * @param {string} src A URL or filepath that is the ReSpec source.
- * @param {string | null | ""} out A path to write to. If null, goes to stdout. If "", then don't write, just return value.
- * @param {object} [whenToHalt] Allowing execution to stop without writing.
- * @param {boolean} [whenToHalt.haltOnError] Do not write if a ReSpec processing has an error.
- * @param {boolean} [whenToHalt.haltOnWarn] Do not write if a ReSpec processing has a warning.
- * @param {object} [options]
- * @param {number} [options.timeout] Milliseconds before processing should timeout.
- * @param {boolean} [options.disableSandbox] See https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox
- * @param {boolean} [options.debug] Show the Chromium window with devtools open for debugging.
- * @param {boolean} [options.verbose] Log processing status to stdout.
- * @param {(error: RsError) => void} [options.onError] What to do if a ReSpec processing has an error. Logs to stderr by default.
- * @param {(warning: RsError) => void} [options.onWarning] What to do if a ReSpec processing has a warning. Logs to stderr by default.
- * @return {Promise<string>} Resolves with HTML when done writing. Rejects on errors.
- */
-async function fetchAndWrite(src, out, whenToHalt = {}, options = {}) {
-  const colors = require("colors");
-  colors.setTheme({ debug: "cyan", error: "red", warn: "yellow" });
-
-  const showError = error => console.error(colors.error(error));
-  const showWarning = warning => console.warn(colors.warn(warning));
-
-  showWarning(
-    "DEPRECATION WARNING: `fetchAndWrite` is deprecated and will be removed in a future version. Please use `toHTML` instead."
-  );
-
-  const opts = {
-    onError(error) {
-      showError(`💥 ReSpec error: ${colors.debug(error.message)}`);
-    },
-    onWarning(warning) {
-      showWarning(`⚠️ ReSpec warning: ${colors.debug(warning.message)}`);
-    },
-    ...options,
-    devtools: options.debug,
-  };
-  const { html, errors, warnings } = await toHTML(src, opts);
-
-  const abortOnWarning = whenToHalt.haltOnWarn && warnings.length;
-  const abortOnError = whenToHalt.haltOnError && errors.length;
-  if (abortOnError || abortOnWarning) {
-    throw new Error(
-      `${abortOnError ? "Errors" : "Warnings"} found during processing.`
-    );
-  }
-
-  if (out === "") out = null;
-  else if (out === null) out = "stdout";
-
-  await write(out, html);
-  return html;
 }
 
 /**
@@ -401,29 +346,4 @@ function createTimer(duration) {
   };
 }
 
-/**
- * @param {string | "stdout" | null | "" | undefined} destination
- * @param {string} html
- * @private Do not use this function directly outside ReSpec.
- */
-async function write(destination, html) {
-  switch (destination) {
-    case "":
-    case null:
-    case undefined:
-      break;
-    case "stdout":
-      process.stdout.write(html);
-      break;
-    default: {
-      const newFilePath = path.isAbsolute(destination)
-        ? destination
-        : path.resolve(process.cwd(), destination);
-      await writeFile(newFilePath, html, "utf-8");
-    }
-  }
-}
-
 exports.toHTML = toHTML;
-exports.fetchAndWrite = fetchAndWrite;
-exports.write = write;
