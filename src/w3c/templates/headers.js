@@ -399,7 +399,7 @@ function renderCopyright(conf) {
       Copyright &copy;
       ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
       the document editors/authors.
-      ${conf.licenseInfo.unlicensed !== "unlicensed"
+      ${conf.licenseInfo.name !== "unlicensed"
         ? html`Text is available under the
             <a rel="license" href="${conf.licenseInfo.url}"
               >${conf.licenseInfo.name}</a
