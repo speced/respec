@@ -296,12 +296,12 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 
 function deriveLicenseInfo(conf) {
   let license = undefined;
-  if ("license" in conf && typeof conf.license === "string") {
+  if (typeof conf.license === "string") {
     const lCaseLicense = conf.license.toLowerCase();
     if (!licenses.has(lCaseLicense)) {
       const msg = `The license "\`${conf.license}\`" is not supported.`;
       const choices = codedJoinOr(
-        Array.from(licenses.keys()).filter(k => k),
+        [...licenses.keys()].filter(k => k),
         {
           quotes: true,
         }

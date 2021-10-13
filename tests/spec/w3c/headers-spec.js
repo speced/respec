@@ -1101,9 +1101,7 @@ describe("W3C — Headers", () => {
 
     it("shows an error when a w3c document a disallowed license", async () => {
       for (const license of ["cc-by", "cc0"]) {
-        const ops = makeStandardOps({
-          license,
-        });
+        const ops = makeStandardOps({ license });
         const doc = await makeRSDoc(ops, simpleSpecURL);
         expect(doc.respec.errors).toHaveSize(1);
         const [error] = doc.respec.errors;
