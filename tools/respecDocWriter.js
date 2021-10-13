@@ -3,7 +3,7 @@
  */
 const puppeteer = require("puppeteer");
 const path = require("path");
-const { mkdtemp, readFile, writeFile } = require("fs").promises;
+const { mkdtemp, readFile } = require("fs").promises;
 const { tmpdir } = require("os");
 
 const noop = () => {};
@@ -346,28 +346,4 @@ function createTimer(duration) {
   };
 }
 
-/**
- * @param {string | "stdout" | null | "" | undefined} destination
- * @param {string} html
- * @private Do not use this function directly outside ReSpec.
- */
-async function write(destination, html) {
-  switch (destination) {
-    case "":
-    case null:
-    case undefined:
-      break;
-    case "stdout":
-      process.stdout.write(html);
-      break;
-    default: {
-      const newFilePath = path.isAbsolute(destination)
-        ? destination
-        : path.resolve(process.cwd(), destination);
-      await writeFile(newFilePath, html, "utf-8");
-    }
-  }
-}
-
 exports.toHTML = toHTML;
-exports.write = write;

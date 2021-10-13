@@ -6,7 +6,8 @@ const finalhandler = require("finalhandler");
 const sade = require("sade");
 const colors = require("colors");
 const marked = require("marked");
-const { toHTML, write } = require("./respecDocWriter.js");
+const { writeFile } = require("fs").promises;
+const { toHTML } = require("./respecDocWriter.js");
 
 class Renderer extends marked.Renderer {
   strong(text) {
@@ -244,4 +245,26 @@ async function run(source, destination, options, log) {
   await write(destination, html);
 
   if (staticServer) await staticServer.stop();
+}
+
+/**
+ * @param {string | "stdout" | null | "" | undefined} destination
+ * @param {string} html
+ */
+async function write(destination, html) {
+  switch (destination) {
+    case "":
+    case null:
+    case undefined:
+      break;
+    case "stdout":
+      process.stdout.write(html);
+      break;
+    default: {
+      const newFilePath = path.isAbsolute(destination)
+        ? destination
+        : path.resolve(process.cwd(), destination);
+      await writeFile(newFilePath, html, "utf-8");
+    }
+  }
 }
