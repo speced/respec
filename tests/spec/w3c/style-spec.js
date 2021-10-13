@@ -27,6 +27,10 @@ const specStatus = [
     expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
   },
   {
+    status: "editor-draft-finding",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
+  },
+  {
     status: "unofficial",
     expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-UD",
   },

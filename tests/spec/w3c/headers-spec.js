@@ -122,6 +122,18 @@ describe("W3C — Headers", () => {
       expect(thirdDt.textContent).toContain("Latest editor's draft:");
     });
 
+    it("does not include version links for 'editor-draft-finding'", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "editor-draft-finding",
+      });
+      const doc = await makeRSDoc(ops);
+      const definitions = doc.querySelectorAll(".head dt");
+      const [firstDt] = definitions;
+
+      expect(firstDt.textContent).toContain("Latest editor's draft:");
+    });
+
     describe("specStatus - base", () => {
       it("doesn't add 'w3c' to header when status is base", async () => {
         const ops = makeStandardOps({
