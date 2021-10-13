@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "26.14.0",
+  "version": "26.15.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -59,7 +59,7 @@
     "serve": "^12.0.1",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^4.4.3",
-    "vnu-jar": "^21.9.2",
+    "vnu-jar": "^21.10.8",
     "webidl2": "^24.1.2"
   },
   "scripts": {

@@ -32,10 +32,7 @@ button.caniuse-cell {
     padding: 0.5em;
   }
 
-  .caniuse-cell.d::before,
-  .caniuse-cell.a::before,
-  .caniuse-cell.x::before,
-  .caniuse-cell.p::before {
+  .caniuse-cell:is(.a,.d,.p,.x)::before {
     content: "⚠️";
     padding: 0.5em;
   }
@@ -103,8 +100,7 @@ li.caniuse-cell {
 }
 
 /* no support, disabled by default */
-.caniuse-cell.n,
-.caniuse-cell.d {
+.caniuse-cell:is(.n,.d) {
   --caniuse-angle: 45deg;
   --caniuse-bg: var(--no-support);
   --caniuse-bg-alt: var(--no-support-alt);
@@ -116,9 +112,7 @@ li.caniuse-cell {
 
 /* not supported by default / partial support etc
 see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
-.caniuse-cell.a,
-.caniuse-cell.x,
-.caniuse-cell.p {
+.caniuse-cell:is(.a,.x,.p) {
   --caniuse-angle: 90deg;
   --caniuse-bg: var(--partial);
   --caniuse-bg-alt: var(--partial-alt);
