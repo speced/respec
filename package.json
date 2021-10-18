@@ -59,7 +59,7 @@
     "serve": "^12.0.1",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^4.4.3",
-    "vnu-jar": "^21.10.8",
+    "vnu-jar": "^21.10.12",
     "webidl2": "^24.1.2"
   },
   "scripts": {
