@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "26.16.0",
+  "version": "26.16.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -32,16 +32,16 @@
     "chokidar": "^3.5.2",
     "clean-css": "^5.2.1",
     "epipebomb": "^1.0.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-jasmine": "^4.1.2",
     "eslint-plugin-prettier": "^4.0.0",
-    "highlight.js": "^11.2.0",
+    "highlight.js": "^11.3.1",
     "hyperhtml": "^2.34.0",
-    "idb": "^6.1.4",
-    "jasmine": "^3.9.0",
-    "jasmine-core": "^3.9.0",
+    "idb": "^6.1.5",
+    "jasmine": "^3.10.0",
+    "jasmine-core": "^3.10.0",
     "karma": "^6.3.4",
     "karma-chrome-launcher": "^3.1.0",
     "karma-firefox-launcher": "^2.1.1",
@@ -58,8 +58,8 @@
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^12.0.1",
     "sniffy-mimetype": "^1.1.1",
-    "typescript": "^4.4.3",
-    "vnu-jar": "^21.10.8",
+    "typescript": "^4.4.4",
+    "vnu-jar": "^21.10.12",
     "webidl2": "^24.1.2"
   },
   "scripts": {
@@ -86,7 +86,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "finalhandler": "^1.1.2",
-    "marked": "^3.0.4",
+    "marked": "^3.0.7",
     "puppeteer": "^10.4.0",
     "sade": "^1.7.4",
     "serve-static": "^1.14.1"
