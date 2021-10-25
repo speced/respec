@@ -25,7 +25,7 @@
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.5",
     "@rollup/plugin-commonjs": "^21.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.5",
+    "@rollup/plugin-node-resolve": "^13.0.6",
     "@types/marked": "^3.0.1",
     "@types/pluralize": "0.0.29",
     "boxen": "^5.1.2",
