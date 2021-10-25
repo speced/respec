@@ -30,7 +30,7 @@
     "@types/pluralize": "0.0.29",
     "boxen": "^5.1.2",
     "chokidar": "^3.5.2",
-    "clean-css": "^5.2.1",
+    "clean-css": "^5.2.2",
     "epipebomb": "^1.0.0",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
