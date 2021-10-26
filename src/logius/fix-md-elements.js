@@ -27,8 +27,7 @@ function addClassTables(conf) {
 // todo check non happy flows
 function addFigureImg(conf) {
   if (
-    !conf.nl_markdownEmbedImageInFigure ||
-    conf.nl_markdownEmbedImageInFigure == false
+    !conf.nl_markdownEmbedImageInFigure
   ) {
     return;
   }
