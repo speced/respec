@@ -14,12 +14,12 @@ import {
   refTypeFromContext,
   showError,
   showWarning,
-} from "./utils.js";
-import { html } from "./import-maps.js";
-import { idlStringToHtml } from "./inline-idl-parser.js";
-import { renderInlineCitation } from "./render-biblio.js";
+} from "../core/utils.js";
+import { html } from "../core/import-maps.js";
+import { idlStringToHtml } from "../core/inline-idl-parser.js";
+import { renderInlineCitation } from "../core/render-biblio.js";
 
-export const name = "core/inlines";
+export const name = "logius/inlines";
 export const rfc2119Usage = {};
 
 const localizationStrings = {
@@ -55,6 +55,23 @@ const localizationStrings = {
       );
     },
   },
+  nl: {
+    rfc2119Keywords() {
+      return new RegExp(
+        [
+          "\\bMOET(?:\\s+NIET)?\\b",
+          "\\bMOETEN(?:\\s+NIET)?\\b",
+          "\\bZOU(?:\\s+NIET)?\\b",
+          "\\bZOUDEN(?:\\s+NIET)?\\b",
+          "\\bMAG\\b",
+          "\\bMOGEN\\b",
+          "\\b(?:NIET\\s+)?VEREIST\\b",
+          "\\b(?:NIET\\s+)?AANBEVOLEN\\b",
+          "\\bOPTIONEEL\\b",
+        ].join("|")
+      );
+    },
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
@@ -77,24 +94,16 @@ const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
  */
 function inlineElementMatches(matched) {
   const value = matched.slice(2, -2).trim();
-  const [element, attribute, attrValue] = value
-    .split("/", 3)
-    .map(s => s && s.trim())
-    .filter(s => !!s);
-  const [xrefType, xrefFor, textContent] = (() => {
-    if (attrValue) {
-      return ["attr-value", `${element}/${attribute}`, attrValue];
-    } else if (attribute) {
-      return ["element-attr", element, attribute];
-    } else {
-      return ["element", null, element];
-    }
-  })();
-  return html`<code
+  const [element, attribute] = value.split("/", 2).map(s => s && s.trim());
+  const [xrefType, xrefFor, textContent] = attribute
+    ? ["element-attr", element, attribute]
+    : ["element", null, element];
+  const code = html`<code
     ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
       >${textContent}</a
     ></code
   >`;
+  return code;
 }
 
 /**
