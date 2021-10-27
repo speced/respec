@@ -53,6 +53,21 @@ const localizationStrings = {
       ]);
     },
   },
+  nl: {
+    rfc2119Keywords() {
+      return joinRegex([
+          /\bMOET(?:\s+NIET)?\b/,
+          /\bMOETEN(?:\s+NIET)?\b/,
+          /\bZOU(?:\s+NIET)?\b/,
+          /\bZOUDEN(?:\s+NIET)?\b/,
+          /\bMAG\b/,
+          /\bMOGEN\b/,
+          /\b(?:NIET\\s+)?VEREIST\b/,
+          /\b(?:NIET\\s+)?AANBEVOLEN\b/,
+          /\bOPTIONEEL\b/,
+        ]);
+    },
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
