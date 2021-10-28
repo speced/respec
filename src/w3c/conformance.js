@@ -45,6 +45,22 @@ const localizationStrings = {
       </p>`;
     },
   },
+  nl: {
+    conformance: "Conformiteit",
+    normativity:
+      "Naast onderdelen die als niet normatief gemarkeerd zijn, " +
+      "zijn ook alle diagrammen, voorbeelden, en noten in dit document niet normatief. " +
+      "Verder is alles in dit document normatief.",
+    keywordInterpretation(keywords, plural) {
+      return html`<p>
+        ${plural ? "De trefwoorden" : "Het trefwoord"} ${keywords} in dit document
+        ${plural ? "moeten" : "moet"} worden geïnterpreteerd als in
+        <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+        ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
+        als, en alleen als deze in hoofdletters zijn weergegeven, zoals hier getoond.
+      </p>`;
+    },
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
