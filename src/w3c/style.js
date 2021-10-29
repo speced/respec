@@ -149,6 +149,7 @@ export function run(conf) {
       break;
     case "FINDING":
     case "DRAFT-FINDING":
+    case "EDITOR-DRAFT-FINDING":
     case "BASE":
       styleFile = "base.css";
       break;

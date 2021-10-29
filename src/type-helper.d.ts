@@ -123,6 +123,21 @@ interface Conf {
   shortName: string;
 }
 
+type LicenseInfo = {
+  /**
+   * The name of the license.
+   */
+  name: string;
+  /**
+   * The URL of the license.
+   */
+  url: string;
+  /**
+   * The short linking text of license.
+   */
+  short: string;
+}
+
 type ResourceHintOption = {
   /**
    * The type of hint.
