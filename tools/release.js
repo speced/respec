@@ -331,10 +331,6 @@ const indicators = new Map([
 ]);
 
 const run = async () => {
-  const npmVersion = await npm("--version");
-  if (!npmVersion.trim().startsWith("7")) {
-    throw new Error(`Must use npm 7.x for release. Found ${npmVersion}`);
-  }
   const initialBranch = await getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
