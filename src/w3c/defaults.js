@@ -8,14 +8,14 @@ import {
   bgStatus,
   cgStatus,
   cgbgStatus,
-  maybeRecTrack,
   recTrackStatus,
+  registryTrackStatus,
 } from "./headers.js";
 import { codedJoinOr, docLink, showError } from "../core/utils.js";
 import { coreDefaults } from "../core/defaults.js";
 
 const w3cLogo = {
-  src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+  src: "https://www.w3.org/StyleSheets/TR/2021/logos/W3C",
   alt: "W3C",
   height: 48,
   width: 72,
@@ -69,7 +69,7 @@ function processLogos(conf) {
   const status = conf.specStatus ?? "";
   // Always include the W3C logo and license for W3C Recommendation track.
   // Excludes "ED" status
-  if ([...maybeRecTrack, ...recTrackStatus, ...W3CNotes].includes(status)) {
+  if ([...recTrackStatus, ...registryTrackStatus, ...W3CNotes].includes(status)) {
     conf.logos?.unshift(w3cLogo);
   }
 

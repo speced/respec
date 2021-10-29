@@ -49,7 +49,7 @@ function createMetaViewport() {
 function createBaseStyle() {
   const link = document.createElement("link");
   link.rel = "stylesheet";
-  link.href = "https://www.w3.org/StyleSheets/TR/2016/base.css";
+  link.href = "https://www.w3.org/StyleSheets/TR/2021/base.css";
   link.classList.add("removeOnSave");
   return link;
 }
@@ -59,7 +59,7 @@ function selectStyleVersion(styleVersion) {
   switch (styleVersion) {
     case null:
     case true:
-      version = "2016";
+      version = "2021";
       break;
     default:
       if (styleVersion && !isNaN(styleVersion)) {
@@ -78,17 +78,17 @@ function createResourceHints() {
     },
     {
       hint: "preload", // all specs need it, and we attach it on end-all.
-      href: "https://www.w3.org/scripts/TR/2016/fixup.js",
+      href: "https://www.w3.org/scripts/TR/2021/fixup.js",
       as: "script",
     },
     {
       hint: "preload", // all specs include on base.css.
-      href: "https://www.w3.org/StyleSheets/TR/2016/base.css",
+      href: "https://www.w3.org/StyleSheets/TR/2021/base.css",
       as: "style",
     },
     {
       hint: "preload", // all specs show the logo.
-      href: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+      href: "https://www.w3.org/StyleSheets/TR/2021/logos/W3C",
       as: "image",
     },
   ];
@@ -135,15 +135,6 @@ export function run(conf) {
       styleFile = conf.specStatus.toLowerCase();
       break;
     case "FPWD":
-    case "LC":
-    case "WD-NOTE":
-    case "LC-NOTE":
-      styleFile += "WD";
-      break;
-    case "WG-NOTE":
-    case "FPWD-NOTE":
-      styleFile += "WG-NOTE.css";
-      break;
     case "UNOFFICIAL":
       styleFile += "UD";
       break;
@@ -158,7 +149,7 @@ export function run(conf) {
   }
 
   // Select between released styles and experimental style.
-  const version = selectStyleVersion(conf.useExperimentalStyles || "2016");
+  const version = selectStyleVersion(conf.useExperimentalStyles || "2021");
   // Attach W3C fixup script after we are done.
   if (version && !conf.noToc) {
     sub(

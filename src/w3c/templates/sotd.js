@@ -1,7 +1,7 @@
 // @ts-check
 import { getIntlData } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
-
+import { status2track } from "../headers.js";
 const localizationStrings = {
   en: {
     sotd: "Status of This Document",
@@ -28,6 +28,8 @@ const localizationStrings = {
 
 export const l10n = getIntlData(localizationStrings);
 
+const processLink = "https://www.w3.org/2021/Process-20211102/";
+
 export default (conf, opts) => {
   return html`
     <h2>${l10n.sotd}</h2>
@@ -46,7 +48,7 @@ export default (conf, opts) => {
                 ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
                 ${!conf.overrideStatus
                   ? html`
-                      ${linkToWorkingGroup(conf)} ${linkToCommunity(conf, opts)}
+                      ${linkToWorkingGroup(conf)}
                     `
                   : ""}
                 ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
@@ -56,8 +58,8 @@ export default (conf, opts) => {
                   This document is governed by the
                   <a
                     id="w3c_process_revision"
-                    href="https://www.w3.org/2020/Process-20200915/"
-                    >15 September 2020 W3C Process Document</a
+                    href="${processLink}"
+                    >2 November 2021 W3C Process Document</a
                   >.
                 </p>
                 ${conf.addPatentNote
@@ -121,33 +123,72 @@ function renderIsNoTrack(conf, opts) {
 
 function renderNotRec(conf) {
   let statusExplanation = "";
+  let endorsement = `Publication as ${conf.anOrA} ${conf.textStatus} does not imply endorsement
+    by the W3C Membership.`;
   let updatePolicy = html`This is a draft document and may be updated, replaced
   or obsoleted by other documents at any time. It is inappropriate to cite this
   document as other than work in progress.
   ${conf.updateableRec
     ? html`Future updates to this specification may incorporate
-        <a href="https://www.w3.org/2020/Process-20200915/#allow-new-features"
+        <a href="${processLink}#allow-new-features"
           >new features</a
         >.`
     : ""}`;
   let reviewPolicy = "";
-  if (conf.specStatus === "CRD") {
+  if (conf.isNote && conf.specStatus !== "STMT") {
+    endorsement = html`${conf.textStatus}s are not endorsed
+    by the <abbr title="World Wide Web Consortium">W3C</abbr> nor its Membership.`;
+  } else if (conf.specStatus === "STMT") {
+    endorsement = html`<p>
+    A W3C Statement is a specification that, after extensive
+    consensus-building, has received the endorsement of the
+    <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.`;
+    updatePolicy = "";
+  } else if (conf.specStatus === "RY") {
+    endorsement = html`<p>W3C recommends the wide usage of this registry.
+    <p>A W3C Registry is a specification that, after extensive
+    consensus-building, has received the endorsement of the
+    <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.`;
+    updatePolicy = "";
+  } else if (conf.specStatus === "CRD") {
     statusExplanation =
       "A Candidate Recommendation Draft integrates changes from the previous Candidate Recommendation that the Working Group intends to include in a subsequent Candidate Recommendation Snapshot.";
     if (conf.pubMode === "LS") {
       updatePolicy =
         "This document is maintained and updated at any time. Some parts of this document are work in progress. ";
     }
+  } else if (conf.specStatus === "CRYD") {
+    statusExplanation =
+      "A Candidate Registry Draft integrates changes from the previous Candidate Registry Snapshot that the Working Group intends to include in a subsequent Candidate Registry Snapshot.";
+    if (conf.pubMode === "LS") {
+      updatePolicy =
+        "This document is maintained and updated at any time. Some parts of this document are work in progress. ";
+    }
+  } else if (conf.specStatus === "CRY") {
+    statusExplanation = html`A Candidate Registry Snapshot has received
+      <a href="${processLink}#dfn-wide-review"
+        >wide review</a
+      >.`;
+    updatePolicy = "";
+    reviewPolicy = html` The W3C Membership and other interested parties are
+      invited to review the document and send comments through
+      ${conf.humanPREnd}. Advisory Committee Representatives should consult
+      their
+      <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
+        >WBS questionnaires</a
+      >. Note that substantive technical comments were expected during the
+      Candidate Recommendation review period that ended ${conf.humanCREnd}.`;
   } else if (conf.specStatus === "CR") {
     statusExplanation = html`A Candidate Recommendation Snapshot has received
-      <a href="https://www.w3.org/2020/Process-20200915/#dfn-wide-review"
+      <a href="${processLink}#dfn-wide-review"
         >wide review</a
-      >
-      and is intended to gather
-      <a href="${conf.implementationReportURI}">implementation experience</a>.`;
+      >, is intended to gather
+      <a href="${conf.implementationReportURI}">implementation experience</a>,
+      and has commitments from Working Group members to
+      <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements">royalty-free licensing</a> for implementations.`;
     updatePolicy = html`${conf.updateableRec
       ? html`Future updates to this specification may incorporate
-          <a href="https://www.w3.org/2020/Process-20200915/#allow-new-features"
+          <a href="${processLink}#allow-new-features"
             >new features</a
           >.`
       : ""}`;
@@ -165,20 +206,8 @@ function renderNotRec(conf) {
         >WBS questionnaires</a
       >. Note that substantive technical comments were expected during the
       Candidate Recommendation review period that ended ${conf.humanCREnd}.`;
-  } else if (conf.isPER) {
-    reviewPolicy = html` W3C Advisory Committee Members are invited to send
-      formal review comments on this Proposed Edited Recommendation to the W3C
-      Team until ${conf.humanPEREnd}. Members of the Advisory Committee will
-      find the appropriate review form for this document by consulting their
-      list of current
-      <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
-        >WBS questionnaires</a
-      >.`;
   }
-  return html`<p>
-      Publication as ${conf.anOrA} ${conf.textStatus} does not imply endorsement
-      by the W3C Membership. ${statusExplanation}
-    </p>
+  return html`<p>${endorsement} ${statusExplanation}</p>
     ${updatePolicy ? html`<p>${updatePolicy}</p>` : ""}
     <p>${reviewPolicy}</p>`;
 }
@@ -195,15 +224,20 @@ function renderIsRec({
   if (revisionTypes.includes("correction") && !reviewTarget) {
     reviewTarget = "corrections";
   }
-  return html`<p>
+  return html`
+     <p>
+     W3C recommends the wide deployment of this specification as a standard for the Web.
+     <p>
       A W3C Recommendation is a specification that, after extensive
-      consensus-building, has received the endorsement of the W3C and its
-      Members. W3C recommends the wide deployment of this specification as a
-      standard for the Web.
+      consensus-building, has received the endorsement of the
+      <abbr title="World Wide Web Consortium">W3C</abbr> and its Members, and
+      participants granted <a
+      href='https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements'>Royalty-Free
+      IPR licenses</a> for implementations.
       ${updateableRec
         ? html`Future updates to this Recommendation may incorporate
             <a
-              href="https://www.w3.org/2020/Process-20200915/#allow-new-features"
+              href="${processLink}#allow-new-features"
               >new features</a
             >.`
         : ""}
@@ -234,8 +268,8 @@ function renderIsRec({
 function renderDeliverer(conf) {
   const {
     isNote,
+    isRegistry,
     wgId,
-    isIGNote,
     multipleWGs,
     recNotExpected,
     wgPatentHTML,
@@ -249,7 +283,7 @@ function renderDeliverer(conf) {
       ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
       : "https://www.w3.org/Consortium/Patent-Policy/";
 
-  const producers = !isIGNote
+  const producers = !(isNote || isRegistry)
     ? html`
         This document was produced by ${multipleWGs ? "groups" : "a group"}
         operating under the
@@ -258,15 +292,16 @@ function renderDeliverer(conf) {
           Policy</a
         >.
       `
-    : "";
-  const wontBeRec = recNotExpected
-    ? `The ${
-        multipleWGs ? "groups do" : "group does"
-      } not expect this document to become a W3C Recommendation.`
-    : "";
-  return html`<p data-deliverer="${isNote || isIGNote ? wgId : null}">
-    ${producers} ${wontBeRec}
-    ${!isNote && !isIGNote
+    : html`
+    The
+    <a href="${patentPolicyURL}"
+      >${wgPatentPolicy === "PP2017" ? "1 August 2017 " : ""}W3C Patent
+      Policy</a
+    > does not carry any licensing requirements or commitments on this document.
+    `;
+  return html`<p data-deliverer="${(isNote || isRegistry) ? wgId : null}">
+    ${producers}
+    ${!(isNote || isRegistry)
       ? html`
           ${multipleWGs
             ? html` W3C maintains ${wgPatentHTML} `
@@ -287,13 +322,6 @@ function renderDeliverer(conf) {
           <a href="${patentPolicyURL}#sec-Disclosure"
             >section 6 of the W3C Patent Policy</a
           >.
-        `
-      : ""}
-    ${isIGNote
-      ? html`
-          The disclosure obligations of the Participants of this group are
-          described in the
-          <a href="${charterDisclosureURI}">charter</a>.
         `
       : ""}
   </p>`;
@@ -379,29 +407,30 @@ function linkToWorkingGroup(conf) {
     if (conf.revisionTypes.includes("addition")) {
       if (conf.revisionTypes.includes("correction")) {
         proposedChanges = html`It includes
-          <a href="https://www.w3.org/2020/Process-20200915/#proposed-changes"
-            >proposed changes</a
+          <a href="${processLink}#proposed-amendments"
+            >proposed amendments</a
           >, introducing substantive changes and new features since the previous
-          Recommentation.`;
+          Recommendation.`;
       } else {
         proposedChanges = html`It includes
-          <a href="https://www.w3.org/2020/Process-20200915/#proposed-addition"
+          <a href="${processLink}#proposed-addition"
             >proposed additions</a
-          >, introducing new features since the previous Recommentation.`;
+          >, introducing new features since the previous Recommendation.`;
       }
     } else if (conf.revisionTypes.includes("correction")) {
       proposedChanges = html`It includes
-        <a href="https://www.w3.org/2020/Process-20200915/#proposed-correction"
+        <a href="${processLink}#proposed-correction"
           >proposed corrections</a
         >.`;
     }
   }
+  const track = (status2track[conf.specStatus])?
+    html` using the <a href="${processLink}#recs-and-notes"
+      >${status2track[conf.specStatus]} track</a>` : "";
   return html`<p>
     This document was published by ${conf.wgHTML} as ${conf.anOrA}
-    ${conf.longStatus}. ${proposedChanges}
-    ${conf.notYetRec
-      ? "This document is intended to become a W3C Recommendation."
-      : ""}
+    ${conf.longStatus}${track}.
+    ${proposedChanges}
   </p>`;
 }
 

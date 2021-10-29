@@ -148,7 +148,7 @@ export default (conf, options) => {
   return html`<div class="head">
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
-    <h2>${renderSpecTitle(conf)}</h2>
+    <p id="w3c-state">${renderSpecTitle(conf)}</p>
     <details open="">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
@@ -322,7 +322,7 @@ function renderHistory(conf) {
   const ddElements = [];
   if (conf.historyURI) {
     const dd = html`<dd>
-      <a href="${conf.historyURI}">${l10n.publication_history}</a>
+      <a href="${conf.historyURI}">${conf.historyURI}</a>
     </dd>`;
     ddElements.push(dd);
   }
@@ -340,9 +340,9 @@ function renderHistory(conf) {
 }
 
 function renderSpecTitle(conf) {
-  const specType = conf.isCR ? conf.longStatus : conf.textStatus;
+  const specType = (conf.isCR || conf.isCRY) ? conf.longStatus : conf.textStatus;
   const preamble = conf.prependW3C
-    ? html`<a href="https://www.w3.org/standards/types">W3C ${specType}</a>`
+    ? html`<a href="https://www.w3.org/standards/types#${conf.specStatus}">W3C ${specType}</a>`
     : html`${specType}`;
 
   return html`${preamble}${" "}

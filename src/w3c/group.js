@@ -84,11 +84,13 @@ async function getGroupDetails(group) {
     const {
       id: wgId,
       name: wg,
-      URI: wgURI,
       patentURI: wgPatentURI,
       patentPolicy: wgPatentPolicy,
       type: groupType,
+      shortname: wgShortname,
     } = json;
+    // TODO: Make this happen on the server?
+    const wgURI = `https://www.w3.org/groups/${groupType}/${wgShortname}`;
     return { wg, wgId, wgURI, wgPatentURI, wgPatentPolicy, groupType };
   }
 

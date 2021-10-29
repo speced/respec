@@ -45,7 +45,7 @@ describe("W3C — Headers", () => {
     for (const specStatus of statuses) {
       const doc = await makeRSDoc(makeStandardOps({ specStatus }));
       const w3cLink = doc.querySelector(
-        ".head a[href='https://www.w3.org/standards/types']"
+        `.head a[href='https://www.w3.org/standards/types#${specStatus}']`
       );
       expect(w3cLink).withContext(`specStatus: ${specStatus}`).toBeTruthy();
     }
@@ -53,7 +53,7 @@ describe("W3C — Headers", () => {
     for (const specStatus of ["unofficial", "base"]) {
       const doc = await makeRSDoc(makeStandardOps({ specStatus }));
       const w3cLink = doc.querySelector(
-        ".head a[href='https://www.w3.org/standards/types']"
+        ".head a[href='https://www.w3.org/standards/types#UD']"
       );
       expect(w3cLink).withContext(`specStatus: ${specStatus}`).toBeNull();
     }
