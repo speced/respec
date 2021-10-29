@@ -7,13 +7,6 @@ import showPeople from "../../core/templates/show-people.js";
 
 const name = "w3c/templates/headers";
 
-const ccLicense = "https://creativecommons.org/licenses/by/4.0/legalcode";
-const w3cLicense = "https://www.w3.org/Consortium/Legal/copyright-documents";
-const legalDisclaimer =
-  "https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer";
-const w3cTrademark =
-  "https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks";
-
 const localizationStrings = {
   en: {
     archives: "archives",
@@ -159,7 +152,7 @@ export default (conf, options) => {
     <details open="">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
-        ${conf.isTagFinding || !conf.isNoTrack
+        ${(conf.isTagFinding && !conf.isTagEditorFinding) || !conf.isNoTrack
           ? html`
               <dt>${l10n.this_version}</dt>
               <dd>
@@ -242,16 +235,13 @@ export default (conf, options) => {
             `
           : ""}
         ${renderFeedback(conf)}
+        ${conf.errata
+          ? html`<dt>Errata:</dt>
+              <dd><a href="${conf.errata}">Errata exists</a>.</dd>`
+          : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
       </dl>
     </details>
-    ${conf.errata
-      ? html`<p>
-          Please check the
-          <a href="${conf.errata}"><strong>errata</strong></a> for any errors or
-          issues reported since publication.
-        </p>`
-      : ""}
     ${conf.isRec
       ? html`<p>
           See also
@@ -376,12 +366,15 @@ function inPlaceModificationDate(date) {
 }
 
 /**
- * @param {string} text
- * @param {string} url
- * @param {string=} cssClass
+ * @param { LicenseInfo } licenseInfo license information
  */
-function linkLicense(text, url, cssClass) {
-  return html`<a rel="license" href="${url}" class="${cssClass}">${text}</a>`;
+function linkLicense(licenseInfo) {
+  const { url, short, name } = licenseInfo;
+  if (name === "unlicensed") {
+    return html`. <span class="issue">THIS DOCUMENT IS UNLICENSED</span>.`;
+  }
+  return html` and
+    <a rel="license" href="${url}" title="${name}">${short}</a> rules apply.`;
 }
 
 function renderCopyright(conf) {
@@ -398,11 +391,17 @@ function renderCopyright(conf) {
     showWarning(msg, name, { hint });
     return html`${[conf.overrideCopyright]}`;
   }
-  if (conf.isUnofficial && conf.licenseInfo) {
+  if (conf.isUnofficial) {
     return html`<p class="copyright">
-      This document is licensed under a
-      ${linkLicense(conf.licenseInfo.name, conf.licenseInfo.url, "subfoot")}
-      (${conf.licenseInfo.short}).
+      Copyright &copy;
+      ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
+      the document editors/authors.
+      ${conf.licenseInfo.name !== "unlicensed"
+        ? html`Text is available under the
+            <a rel="license" href="${conf.licenseInfo.url}"
+              >${conf.licenseInfo.name}</a
+            >; additional terms may apply.`
+        : ""}
     </p>`;
   }
   return renderOfficialCopyright(conf);
@@ -429,36 +428,12 @@ function renderOfficialCopyright(conf) {
         >ERCIM</abbr
       ></a
     >, <a href="https://www.keio.ac.jp/">Keio</a>,
-    <a href="https://ev.buaa.edu.cn/">Beihang</a>). ${noteIfDualLicense(conf)}
-    W3C <a href="${legalDisclaimer}">liability</a>,
-    <a href="${w3cTrademark}">trademark</a> and ${linkDocumentUse(conf)} rules
-    apply.
+    <a href="https://ev.buaa.edu.cn/">Beihang</a>). W3C
+    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer"
+      >liability</a
+    >,
+    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks"
+      >trademark</a
+    >${linkLicense(conf.licenseInfo)}
   </p>`;
-}
-
-function noteIfDualLicense(conf) {
-  if (!conf.isCCBY) {
-    return;
-  }
-  return html`
-    Some Rights Reserved: this document is dual-licensed,
-    ${linkLicense("CC-BY", ccLicense)} and
-    ${linkLicense("W3C Document License", w3cLicense)}.
-  `;
-}
-
-function linkDocumentUse(conf) {
-  if (conf.isCCBY) {
-    return linkLicense(
-      "document use",
-      "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html"
-    );
-  }
-  if (conf.isW3CSoftAndDocLicense) {
-    return linkLicense(
-      "permissive document license",
-      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
-    );
-  }
-  return linkLicense("document use", w3cLicense);
 }

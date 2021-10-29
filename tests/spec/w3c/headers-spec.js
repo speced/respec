@@ -8,7 +8,7 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
-import { recTrackStatus } from "../../../src/w3c/headers.js";
+import { licenses, recTrackStatus } from "../../../src/w3c/headers.js";
 
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
@@ -120,6 +120,18 @@ describe("W3C — Headers", () => {
       expect(secondA.href).toContain("/2001/tag/doc/test");
 
       expect(thirdDt.textContent).toContain("Latest editor's draft:");
+    });
+
+    it("does not include version links for 'editor-draft-finding'", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "editor-draft-finding",
+      });
+      const doc = await makeRSDoc(ops);
+      const definitions = doc.querySelectorAll(".head dt");
+      const [firstDt] = definitions;
+
+      expect(firstDt.textContent).toContain("Latest editor's draft:");
     });
 
     describe("specStatus - base", () => {
@@ -1009,15 +1021,16 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
-        errata: "ERR",
+        errata: "https://foo.com",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(
-        contains(doc.querySelector(".head"), "a", "errata")[0].getAttribute(
-          "href"
-        )
-      ).toBe("ERR");
+      const [errata] = contains(
+        doc,
+        ".head dd>a[href='https://foo.com']",
+        "Errata exists"
+      );
+      expect(errata).toBeTruthy();
     });
   });
 
@@ -1025,7 +1038,7 @@ describe("W3C — Headers", () => {
     it("shows and error when the license is unknown", async () => {
       const ops = makeStandardOps({
         specStatus: "WD",
-        license: "document",
+        license: "unknown",
         github: "w3c/respec",
       });
       const doc = await makeRSDoc(ops, simpleSpecURL);
@@ -1033,7 +1046,7 @@ describe("W3C — Headers", () => {
       const [error] = doc.respec.errors;
       expect(error.plugin).toBe("w3c/headers");
       expect(error.message).toContain(
-        'The license "`document`" is not supported.'
+        'The license "`unknown`" is not supported.'
       );
     });
 
@@ -1068,32 +1081,48 @@ describe("W3C — Headers", () => {
       );
     });
 
-    it("includes the W3C Software and Document Notice and License (w3c-software-doc)", async () => {
-      const ops = makeStandardOps({
-        specStatus: "FPWD",
-        license: "w3c-software-doc",
-        shortName: "whatever",
-        editors: [{ name: "foo" }],
-      });
-      const doc = await makeRSDoc(ops);
-      const licenses = doc.querySelectorAll("div.head a[rel=license]");
-      expect(licenses).toHaveSize(1);
-      expect(licenses[0].href).toBe(
-        "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
-      );
+    it("supports various licenses", async () => {
+      for (const license of licenses.keys()) {
+        if (!license) continue; // skip 'undefined' special case
+        const ops = makeStandardOps({
+          specStatus: "FPWD",
+          license,
+          shortName: "whatever",
+          editors: [{ name: "foo" }],
+        });
+        const doc = await makeRSDoc(ops);
+        const licenseLinks = doc.querySelectorAll("div.head a[rel=license]");
+        expect(licenseLinks).withContext(license).toHaveSize(1);
+        const { url, short, name } = licenses.get(license);
+        const [link] = licenseLinks;
+        expect(link.href).withContext(license).toBe(url);
+        expect(link.textContent).withContext(license).toContain(short);
+        expect(link.title).withContext(license).toBe(name);
+      }
     });
 
-    it("supports the W3C Document Notice and License (w3c-software)", async () => {
+    it("shows an error when a w3c document is unlicensed", async () => {
       const ops = makeStandardOps({
-        specStatus: "unofficial",
-        license: "w3c-software",
+        license: "",
       });
-      const doc = await makeRSDoc(ops);
-      const licenses = doc.querySelectorAll("div.head a[rel=license]");
-      expect(licenses).toHaveSize(1);
-      expect(licenses[0].href).toBe(
-        "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231"
-      );
+      const doc = await makeRSDoc(ops, simpleSpecURL);
+      expect(doc.respec.errors).toHaveSize(1);
+      const [error] = doc.respec.errors;
+      expect(error.plugin).toBe("w3c/headers");
+      expect(error.message).toContain("not supported");
+    });
+
+    it("shows an error when a w3c document a disallowed license", async () => {
+      for (const license of ["cc-by", "cc0"]) {
+        const ops = makeStandardOps({ license });
+        const doc = await makeRSDoc(ops, simpleSpecURL);
+        expect(doc.respec.errors).toHaveSize(1);
+        const [error] = doc.respec.errors;
+        expect(error.plugin).withContext(license).toBe("w3c/headers");
+        expect(error.message)
+          .withContext(license)
+          .toContain("not allowed for W3C Specifications");
+      }
     });
 
     it("supports cc0 when spec status is unofficial", async () => {
@@ -1110,6 +1139,7 @@ describe("W3C — Headers", () => {
       expect(licenses[0].href).toBe(
         "https://creativecommons.org/publicdomain/zero/1.0/"
       );
+      expect(doc.respec.errors).toHaveSize(0);
     });
 
     it("makes sure that p.copyright wins", async () => {

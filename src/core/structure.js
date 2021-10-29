@@ -9,12 +9,10 @@
 
 import {
   addId,
-  docLink,
   getIntlData,
   parents,
   renameElement,
   showError,
-  showWarning,
 } from "./utils.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
@@ -192,12 +190,6 @@ function filterHeader(h) {
 }
 
 export function run(conf) {
-  if ("tocIntroductory" in conf && conf.tocIntroductory === false) {
-    const msg = "Configuration option `tocIntroductory` is deprecated.";
-    const hint = docLink`Use the ${"[`notoc`|#notoc-class]"} CSS class to remove a section from the Table of Contents.`;
-    showWarning(msg, name, { hint });
-  }
-
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = Infinity;
   }
