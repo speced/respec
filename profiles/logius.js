@@ -25,8 +25,8 @@ const modules = [
   import("../src/w3c/abstract.js"),
   import("../src/core/data-transform.js"),
   import("../src/core/data-abbr.js"),
-  import("../src/logius/inlines.js"), // todo geonovum, only copied nl section
-  import("../src/logius/conformance.js"), // merged geonovum variant into w3c version
+  import("../src/core/inlines.js"), // moved dutch text from logius/inline.js to core/inline.js
+  import("../src/w3c/conformance.js"), // added dutch additions into w3c version
   import("../src/core/dfn.js"),
   import("../src/core/pluralize.js"),
   import("../src/core/examples.js"),
@@ -50,7 +50,7 @@ const modules = [
   import("../src/core/id-headers.js"),
   import("../src/core/caniuse.js"),
   import("../src/core/mdn-annotation.js"),
-  // todo geonovum insert leafletfigures.js 
+  // todo geonovum insert leafletfigures.js
   import("../src/ui/save-html.js"),
   import("../src/ui/search-specref.js"),
   import("../src/ui/search-xref.js"),
