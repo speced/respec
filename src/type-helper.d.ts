@@ -52,8 +52,6 @@ interface Window {
 }
 
 interface Document {
-  /** @deprecated in favour of `document.respec.ready` */
-  respecIsReady: Promise<void>;
   respec: {
     readonly version: string;
     readonly ready: Promise<void>;
@@ -98,6 +96,8 @@ declare namespace Intl {
   }
 }
 
+interface BibliographyMap extends Record<string, BiblioData> {}
+
 interface BiblioData {
   aliasOf?: string;
   id?: string;
@@ -108,6 +108,7 @@ interface BiblioData {
   date?: string;
   status?: string;
   etAl?: boolean;
+  expires: number;
 }
 interface Conf {
   authors?: Person[];
@@ -118,6 +119,21 @@ interface Conf {
   localBiblio?: Record<string, BiblioData>;
   normativeReferences: Set<string>;
   shortName: string;
+}
+
+type LicenseInfo = {
+  /**
+   * The name of the license.
+   */
+  name: string;
+  /**
+   * The URL of the license.
+   */
+  url: string;
+  /**
+   * The short linking text of license.
+   */
+  short: string;
 }
 
 type ResourceHintOption = {

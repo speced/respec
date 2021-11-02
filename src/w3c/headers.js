@@ -42,7 +42,6 @@
 //      specStatus is set to "ED".
 //  - additionalCopyrightHolders: a copyright owner in addition to W3C (or the only one if specStatus
 //      is unofficial)
-//  - overrideCopyright: provides markup to completely override the copyright
 //  - copyrightStart: the year from which the copyright starts running
 //  - prevED: the URI of the previous Editor's Draft if it has moved
 //  - prevRecShortname: the short name of the previous Recommendation, if the name has changed
@@ -78,6 +77,8 @@
 //  - license: can be one of the following
 //      - "cc-by", which is experimentally available in some groups (but likely to be phased out).
 //          Note that this is a dual licensing regime.
+//      - "document", which is the old, but still available, document license.
+//      - "dual", dual license.
 //      - "cc0", an extremely permissive license. It is only recommended if you are working on a document that is
 //          intended to be pushed to the WHATWG.
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
@@ -176,6 +177,7 @@ const status2text = {
   base: "",
   finding: "TAG Finding",
   "draft-finding": "Draft TAG Finding",
+  "editor-draft-finding": "Draft TAG Finding",
   "CG-DRAFT": "Draft Community Group Report",
   "CG-FINAL": "Final Community Group Report",
   "BG-DRAFT": "Draft Business Group Report",
@@ -198,13 +200,15 @@ const noTrackStatus = [
   "base",
   ...cgStatus,
   ...bgStatus,
+  "editor-draft-finding",
   "draft-finding",
   "finding",
   "MO",
   "unofficial",
 ];
 const precededByAn = ["ED", "IG-NOTE"];
-const licenses = new Map([
+/** @type {Map<string, LicenseInfo>} */
+export const licenses = new Map([
   [
     "cc0",
     {
@@ -225,7 +229,7 @@ const licenses = new Map([
     "w3c-software-doc",
     {
       name: "W3C Software and Document Notice and License",
-      short: "W3C Software and Document",
+      short: "permissive document license",
       url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
     },
   ],
@@ -235,6 +239,30 @@ const licenses = new Map([
       name: "Creative Commons Attribution 4.0 International Public License",
       short: "CC-BY",
       url: "https://creativecommons.org/licenses/by/4.0/legalcode",
+    },
+  ],
+  [
+    "document",
+    {
+      name: "W3C Document License",
+      short: "document use",
+      url: "https://www.w3.org/Consortium/Legal/2015/doc-license",
+    },
+  ],
+  [
+    "dual",
+    {
+      name: "W3C Dual License",
+      short: "dual license",
+      url: "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html",
+    },
+  ],
+  [
+    undefined,
+    {
+      name: "unlicensed",
+      url: null,
+      short: "UNLICENSED",
     },
   ],
 ]);
@@ -267,7 +295,41 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
-export function run(conf) {
+function deriveLicenseInfo(conf) {
+  let license = undefined;
+  if (typeof conf.license === "string") {
+    const lCaseLicense = conf.license.toLowerCase();
+    if (!licenses.has(lCaseLicense)) {
+      const msg = `The license "\`${conf.license}\`" is not supported.`;
+      const choices = codedJoinOr(
+        [...licenses.keys()].filter(k => k),
+        {
+          quotes: true,
+        }
+      );
+      const hint = docLink`Please set
+        ${"[license]"} to one of: ${choices}. If in doubt, remove \`license\` and let ReSpec pick one for you.`;
+      showError(msg, name, { hint });
+    } else {
+      license = lCaseLicense;
+    }
+  }
+
+  if (conf.isUnofficial && !license) {
+    license = "cc-by";
+  }
+
+  // W3C docs can't be CC-BY or CC0
+  if (!conf.isUnofficial && ["cc-by", "cc0"].includes(license)) {
+    const msg = docLink`License "\`${conf.license}\`" is not allowed for W3C Specifications.`;
+    const hint = docLink`Please set ${"[license]"} to \`"w3c-software-doc"\` instead.`;
+    showError(msg, name, { hint });
+  }
+  const licenseInfo = licenses.get(license);
+  return licenseInfo;
+}
+
+export async function run(conf) {
   if (!conf.specStatus) {
     const msg = docLink`Missing required configuration: ${"[specStatus]"}.`;
     const hint = docLink`Please select an appropriate status from ${"[specStatus]"} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
@@ -277,31 +339,8 @@ export function run(conf) {
   if (conf.isUnofficial && !Array.isArray(conf.logos)) {
     conf.logos = [];
   }
-  if (conf.isUnofficial) {
-    if (conf.license && !licenses.has(conf.license)) {
-      const msg = docLink`The ${"[license]"} configuration option has an invalid value: "\`${
-        conf.license
-      }\`". Defaulting to "cc-by".`;
-      const hint = docLink`Please explicitly set ${"[license]"} to one of: ${codedJoinOr(
-        [...licenses.keys()]
-      )}.`;
-      showError(msg, name, { hint });
-      conf.license = "cc-by";
-    }
-    // default it to cc-by
-    if (conf.license === undefined) {
-      conf.license = "cc-by";
-    }
-  }
 
-  conf.isCCBY = conf.license === "cc-by";
-  conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-  if (!conf.isUnofficial && ["cc-by"].includes(conf.license)) {
-    const msg = docLink`License "\`${conf.license}\`" is not allowed for W3C Specifications.`;
-    const hint = docLink`Please set ${"[license]"} to "w3c-software-doc" instead.`;
-    showError(msg, name, { hint });
-  }
-  conf.licenseInfo = licenses.get(conf.license);
+  conf.licenseInfo = deriveLicenseInfo(conf);
   conf.isCGBG = cgbgStatus.includes(conf.specStatus);
   conf.isCGFinal = conf.isCGBG && conf.specStatus.endsWith("G-FINAL");
   conf.isBasic = conf.specStatus === "base";
@@ -360,13 +399,20 @@ export function run(conf) {
   conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
   conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
   conf.isTagFinding =
-    conf.specStatus === "finding" || conf.specStatus === "draft-finding";
+    conf.specStatus === "finding" ||
+    conf.specStatus === "draft-finding" ||
+    conf.specStatus === "editor-draft-finding";
+  conf.isTagEditorFinding = conf.specStatus === "editor-draft-finding";
 
-  if (conf.isRecTrack && !hasGitHubIssuesLink(conf)) {
-    const msg = docLink`Missing link to GitHub in head of document.`;
-    const hint = docLink`Please add the ${"[github]"} configuration option to document's ${"[respecConfig]"}.`;
-    showError(msg, name, { hint });
+  if (conf.isRecTrack && !conf.github && !conf.wgPublicList) {
+    const msg =
+      "W3C Process requires a either a link to a public repository or mailing list.";
+    const hint = docLink`Use the ${"[github]"} configuration option to add a link to a repository. Alternatively use ${"[wgPublicList]"} to link to a mailing list.`;
+    showError(msg, name, {
+      hint,
+    });
   }
+
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
     if (conf.specStatus === "ED") {
@@ -471,7 +517,6 @@ export function run(conf) {
   if (status2rdf[conf.specStatus]) {
     conf.rdfStatus = status2rdf[conf.specStatus];
   }
-  conf.showThisVersion = !conf.isNoTrack || conf.isTagFinding;
   conf.showPreviousVersion =
     conf.specStatus !== "FPWD" &&
     conf.specStatus !== "FPLC" &&
@@ -502,6 +547,7 @@ export function run(conf) {
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
   validatePatentPolicies(conf);
+  await deriveHistoryURI(conf);
 
   // configuration done - yay!
 
@@ -693,6 +739,36 @@ export function run(conf) {
   });
 }
 
+async function deriveHistoryURI(conf) {
+  if (!conf.shortName || conf.historyURI === null) {
+    return; // Nothing to do
+  }
+
+  const historyURL = new URL(
+    conf.historyURI ?? conf.shortName,
+    "https://www.w3.org/standards/history/"
+  );
+
+  // If it's on the Rec Track or it's TR worthy, then it has a history.
+  const willHaveHistory = [...recTrackStatus, ...W3CNotes, ...maybeRecTrack];
+  if (willHaveHistory.includes(conf.specStatus)) {
+    conf.historyURI = historyURL.href;
+    return;
+  }
+
+  // Do a fetch HEAD request to see if the history exists...
+  // We don't discriminate... if it's on the W3C website with a history,
+  // we show it.
+  try {
+    const response = await fetch(historyURL, { method: "HEAD" });
+    if (response.ok) {
+      conf.historyURI = response.url;
+    }
+  } catch {
+    // Ignore fetch errors
+  }
+}
+
 function validatePatentPolicies(conf) {
   if (!conf.wgPatentPolicy) return;
   const policies = new Set([].concat(conf.wgPatentPolicy));
@@ -781,18 +857,4 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
  */
 function isElement(node) {
   return node.nodeType === Node.ELEMENT_NODE;
-}
-
-function hasGitHubIssuesLink(conf) {
-  return (
-    conf.github ||
-    (conf.otherLinks &&
-      conf.otherLinks.find(linkGroup =>
-        linkGroup.data.find(
-          l =>
-            l.href &&
-            l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/)
-        )
-      ))
-  );
 }

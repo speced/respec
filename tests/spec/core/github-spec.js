@@ -12,6 +12,7 @@ describe("Core - Github", () => {
   const stringOpt = {
     config: Object.assign(makeBasicConfig(), {
       github: "https://github.com/w3c/respec/",
+      excludeGithubLinks: false,
     }),
     body: makeDefaultBody(),
   };
@@ -21,6 +22,7 @@ describe("Core - Github", () => {
         repoURL: "https://github.com/w3c/respec/",
         branch: "develop",
       },
+      excludeGithubLinks: false,
     }),
     body: makeDefaultBody(),
   };
@@ -123,7 +125,7 @@ describe("Core - Github", () => {
       const doc = await makeRSDoc({ ...l10n, ...stringOpt });
       const commitHistory = definitionListTest(doc);
       expect(commitHistory.querySelector("a").href).toBe(
-        "https://github.com/w3c/respec/commits/gh-pages"
+        "https://github.com/w3c/respec/commits/"
       );
     });
     it("generates a participate set of links (from object)", async () => {

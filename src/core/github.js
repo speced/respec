@@ -95,6 +95,10 @@ export async function run(conf) {
   }
   const branch = conf.github.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
+  const commitHistoryURL = new URL(
+    `./commits/${conf.github.branch ?? ""}`,
+    ghURL.href
+  );
   const newProps = {
     edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubToken: undefined,
@@ -104,27 +108,6 @@ export async function run(conf) {
     otherLinks: [],
     pullBase: new URL("./pulls/", ghURL).href,
     shortName: repo,
-  };
-  const otherLink = {
-    key: l10n.participate,
-    data: [
-      {
-        value: `GitHub ${org}/${repo}`,
-        href: ghURL,
-      },
-      {
-        value: l10n.file_a_bug,
-        href: newProps.issueBase,
-      },
-      {
-        value: l10n.commit_history,
-        href: new URL(`./commits/${branch}`, ghURL.href).href,
-      },
-      {
-        value: "Pull requests",
-        href: newProps.pullBase,
-      },
-    ],
   };
   // Assign new properties, but retain existing ones
   let githubAPI = "https://respec.org/github";
@@ -138,11 +121,42 @@ export async function run(conf) {
       showWarning(msg, name);
     }
   }
+  if (!conf.excludeGithubLinks) {
+    const otherLink = {
+      key: l10n.participate,
+      data: [
+        {
+          value: `GitHub ${org}/${repo}`,
+          href: ghURL,
+        },
+        {
+          value: l10n.file_a_bug,
+          href: newProps.issueBase,
+        },
+        {
+          value: l10n.commit_history,
+          href: commitHistoryURL.href,
+        },
+        {
+          value: "Pull requests",
+          href: newProps.pullBase,
+        },
+      ],
+    };
+    if (!conf.otherLinks) {
+      conf.otherLinks = [];
+    }
+    conf.otherLinks.unshift(otherLink);
+  }
   const normalizedGHObj = {
     branch,
     repoURL: ghURL.href,
     apiBase: githubAPI,
     fullName: `${org}/${repo}`,
+    issuesURL: issueBase,
+    pullsURL: newProps.pullBase,
+    newIssuesURL: new URL("./new/choose", issueBase).href,
+    commitHistoryURL: commitHistoryURL.href,
   };
   resolveGithubPromise(normalizedGHObj);
 
@@ -153,5 +167,4 @@ export async function run(conf) {
     githubAPI,
   };
   Object.assign(conf, normalizedConfig);
-  conf.otherLinks.unshift(otherLink);
 }
