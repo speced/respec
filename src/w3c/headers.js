@@ -215,7 +215,6 @@ const noTrackStatus = [
   "MO",
   "unofficial",
 ];
-const precededByAn = ["ED", "IG-NOTE"];
 /** @type {Map<string, LicenseInfo>} */
 export const licenses = new Map([
   [
