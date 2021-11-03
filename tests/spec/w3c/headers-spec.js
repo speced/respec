@@ -2280,7 +2280,7 @@ describe("W3C — Headers", () => {
         },
         {
           id: "logo-3",
-          src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+          src: "https://www.w3.org/StyleSheets/TR/2021/logos/W3C",
           alt: "some alt",
         },
       ];

@@ -4,16 +4,13 @@
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
-import {
-  createResourceHint,
-  linkCSS,
-  showWarning,
-  toKeyValuePairs,
-} from "../core/utils.js";
+import { createResourceHint, linkCSS, showWarning } from "../core/utils.js";
+import { html } from "../core/import-maps.js";
 import { sub } from "../core/pubsubhub.js";
 export const name = "w3c/style";
-function attachFixupScript(doc, version) {
-  const script = doc.createElement("script");
+
+function attachFixupScript() {
+  const script = html`<script src="https://www.w3.org/scripts/TR/2021/fixup.js">`;
   if (location.hash) {
     script.addEventListener(
       "load",
@@ -23,50 +20,7 @@ function attachFixupScript(doc, version) {
       { once: true }
     );
   }
-  script.src = `https://www.w3.org/scripts/TR/${version}/fixup.js`;
-  doc.body.appendChild(script);
-}
-
-/**
- * Make a best effort to attach meta viewport at the top of the head.
- * Other plugins might subsequently push it down, but at least we start
- * at the right place. When ReSpec exports the HTML, it again moves the
- * meta viewport to the top of the head - so to make sure it's the first
- * thing the browser sees. See js/ui/save-html.js.
- */
-function createMetaViewport() {
-  const meta = document.createElement("meta");
-  meta.name = "viewport";
-  const contentProps = {
-    width: "device-width",
-    "initial-scale": "1",
-    "shrink-to-fit": "no",
-  };
-  meta.content = toKeyValuePairs(contentProps).replace(/"/g, "");
-  return meta;
-}
-
-function createBaseStyle() {
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "https://www.w3.org/StyleSheets/TR/2021/base.css";
-  link.classList.add("removeOnSave");
-  return link;
-}
-
-function selectStyleVersion(styleVersion) {
-  let version = "";
-  switch (styleVersion) {
-    case null:
-    case true:
-      version = "2021";
-      break;
-    default:
-      if (styleVersion && !isNaN(styleVersion)) {
-        version = styleVersion.toString().trim();
-      }
-  }
-  return version;
+  document.body.appendChild(script);
 }
 
 function createResourceHints() {
@@ -102,10 +56,19 @@ function createResourceHints() {
 const elements = createResourceHints();
 
 // Opportunistically apply base style
-elements.appendChild(createBaseStyle());
+elements.appendChild(html`<link
+  rel="stylesheet"
+  href="https://www.w3.org/StyleSheets/TR/2021/base.css"
+  class="removeOnSave"
+/>`);
 if (!document.head.querySelector("meta[name=viewport]")) {
   // Make meta viewport the first element in the head.
-  elements.prepend(createMetaViewport());
+  elements.prepend(
+    html`<meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />`
+  );
 }
 
 document.head.prepend(elements);
@@ -148,21 +111,15 @@ export function run(conf) {
       styleFile += conf.specStatus;
   }
 
-  // Select between released styles and experimental style.
-  const version = selectStyleVersion(conf.useExperimentalStyles || "2021");
   // Attach W3C fixup script after we are done.
-  if (version && !conf.noToc) {
-    sub(
-      "end-all",
-      () => {
-        attachFixupScript(document, version);
-      },
-      { once: true }
-    );
+  if (!conf.noToc) {
+    sub("end-all", attachFixupScript, { once: true });
   }
-  const finalVersionPath = version ? `${version}/` : "";
-  const finalStyleURL = `https://www.w3.org/StyleSheets/TR/${finalVersionPath}${styleFile}`;
-  linkCSS(document, finalStyleURL);
+  const finalStyleURL = new URL(
+    `/StyleSheets/TR/2021/${styleFile}`,
+    "https://www.w3.org/"
+  );
+  linkCSS(document, finalStyleURL.href);
   // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
   const moveStyle = styleMover(finalStyleURL);
   sub("beforesave", moveStyle);

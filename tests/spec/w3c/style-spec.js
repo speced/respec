@@ -12,92 +12,77 @@ import {
 const specStatus = [
   {
     status: "FPWD",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-WD",
   },
   {
     status: "WD-NOTE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-WD",
   },
   {
     status: "finding",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
   },
   {
     status: "draft-finding",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
   },
   {
     status: "editor-draft-finding",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
   },
   {
     status: "unofficial",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-UD",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-UD",
   },
   {
     status: "base",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
   },
   {
     status: "RSCND",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-RSCND",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-RSCND",
   },
   {
     status: "FPWD-NOTE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WG-NOTE.css",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-WG-NOTE.css",
   },
   {
     status: "FAKE-TEST-TYPE",
-    expectedURL:
-      "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-FAKE-TEST-TYPE",
   },
   {
     status: "CG-FINAL",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-final",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/cg-final",
   },
   {
     status: "CG-DRAFT",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-draft",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/cg-draft",
   },
   {
     status: "BG-FINAL",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-final",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/bg-final",
   },
   {
     status: "BG-DRAFT",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-draft",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/bg-draft",
   },
 ];
 
-async function loadWithStatus(status, expectedURL, mode) {
+async function loadWithStatus(status, expectedURL) {
   const config = makeBasicConfig();
-  config.useExperimentalStyles = false;
   config.specStatus = status;
-  config.prevVersion = "FPWD";
+  config.prevqVersion = "FPWD";
   config.previousMaturity = "WD";
   config.previousPublishDate = "2013-12-17";
-  let version = "2021/";
-  switch (mode) {
-    case "experimental":
-      config.useExperimentalStyles = true;
-      version = `${2021}/`;
-      break;
-    default:
-      if (mode) {
-        config.useExperimentalStyles = mode;
-        version = `${mode}/`;
-      }
-  }
-  const testedURL = expectedURL.replace("{version}", version);
   const ops = {
     config,
     body: makeDefaultBody(),
   };
   const doc = await makeRSDoc(ops);
-  const query = `link[href^='${testedURL}']`;
+  const query = `link[href^='${expectedURL}']`;
   const elem = doc.querySelector(query);
   expect(elem).toBeTruthy();
-  expect(elem.href).toBe(testedURL);
+  expect(elem.href).toBe(expectedURL);
   return doc;
 }
 
@@ -122,32 +107,16 @@ describe("W3C - Style", () => {
   });
 
   it("should default to base when specStatus is missing", async () => {
-    await loadWithStatus(
-      "",
-      "https://www.w3.org/StyleSheets/TR/{version}base.css"
-    );
+    await loadWithStatus("", "https://www.w3.org/StyleSheets/TR/2021/base.css");
   });
 
   // We pick random half from the list, as running the whole set is very slow
   pickRandomsFromList(specStatus).map(test => {
     it(`should style according to spec status ${test.status}`, async () => {
-      await loadWithStatus(test.status, test.expectedURL, "2016");
-    });
-  });
-
-  // We pick random half from the list, as running the whole set is very slow
-  pickRandomsFromList(specStatus).map(test => {
-    it(`should style according to spec status ${test.status} in experimental way`, async () => {
-      await loadWithStatus(test.status, test.expectedURL, "experimental");
-    });
-  });
-
-  // We pick random half from the list, as running the whole set is very slow
-  pickRandomsFromList(specStatus).map(test => {
-    it(`should not use 'experimental' URL in ${test.status} status when useExperimentalStyles is false`, async () => {
       await loadWithStatus(test.status, test.expectedURL);
     });
   });
+
   it("shouldn't include fixup.js when noToc is set", async () => {
     const ops = makeStandardOps();
     const newProps = {

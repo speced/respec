@@ -22,7 +22,7 @@ const serveConfig = require("../serve.json");
 const { Builder } = require("./builder.js");
 
 const KARMA_PORT = 9876;
-const SERVE_PORT = 5000;
+const SERVE_PORT = 8000;
 
 class KarmaServer {
   /**
