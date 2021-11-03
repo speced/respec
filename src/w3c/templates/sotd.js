@@ -30,6 +30,10 @@ export const l10n = getIntlData(localizationStrings);
 
 const processLink = "https://www.w3.org/2021/Process-20211102/";
 
+function prefix(word) {
+  return /^[aeiou]/i.test(word) ? `an ${word}` : `a ${word}`;
+}
+
 export default (conf, opts) => {
   return html`
     <h2>${l10n.sotd}</h2>
@@ -120,8 +124,8 @@ function renderIsNoTrack(conf, opts) {
 function renderNotRec(conf) {
   let statusExplanation = null;
   let reviewPolicy = null;
-  let endorsement = html`Publication as ${conf.anOrA} ${conf.textStatus} does
-  not imply endorsement by the W3C Membership.`;
+  let endorsement = html`Publication as ${prefix(conf.textStatus)} does not
+  imply endorsement by the W3C Membership.`;
   let updatePolicy = html`<p>
     This is a draft document and may be updated, replaced or obsoleted by other
     documents at any time. It is inappropriate to cite this document as other
@@ -446,8 +450,8 @@ function linkToWorkingGroup(conf) {
         >`
     : "";
   return html`<p>
-    This document was published by ${conf.wgHTML} as ${conf.anOrA}
-    ${conf.longStatus}${track}. ${proposedChanges}
+    This document was published by ${conf.wgHTML} as
+    ${prefix(conf.longStatus)}${track}. ${proposedChanges}
   </p>`;
 }
 

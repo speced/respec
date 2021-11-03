@@ -215,7 +215,6 @@ const noTrackStatus = [
   "MO",
   "unofficial",
 ];
-const precededByAn = ["ED", "IG-NOTE"];
 /** @type {Map<string, LicenseInfo>} */
 export const licenses = new Map([
   [
@@ -413,7 +412,6 @@ export async function run(conf) {
     conf.logos.push({ ...baseLogo, ...teamSubmissionLogo });
   }
   conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
-  conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
   conf.isTagFinding =
     conf.specStatus === "finding" ||
     conf.specStatus === "draft-finding" ||
