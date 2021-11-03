@@ -136,6 +136,34 @@ describe("W3C — Headers", () => {
       expect(firstDt.textContent).toContain("Latest editor's draft:");
     });
 
+    it("prefixes status text properly", async () => {
+      const edDoc = await makeRSDoc(
+        makeStandardOps({
+          shortName: "test",
+          specStatus: "ED",
+        })
+      );
+      const [result] = contains(
+        edDoc,
+        "p",
+        "Publication as an Editor's Draft does not imply endorsement by the W3C Membership"
+      );
+      expect(result).toBeTruthy();
+      const dNoteDoc = await makeRSDoc(
+        makeStandardOps({
+          shortName: "test",
+          specStatus: "DNOTE",
+          group: "webperf",
+        })
+      );
+      const [result2] = contains(
+        dNoteDoc,
+        "p",
+        "This document was published by the Web Performance Working Group as a Group Draft Note using the Note track."
+      );
+      expect(result2).toBeTruthy();
+    });
+
     describe("specStatus - base", () => {
       it("doesn't add 'w3c' to header when status is base", async () => {
         const ops = makeStandardOps({

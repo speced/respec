@@ -413,7 +413,6 @@ export async function run(conf) {
     conf.logos.push({ ...baseLogo, ...teamSubmissionLogo });
   }
   conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
-  conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
   conf.isTagFinding =
     conf.specStatus === "finding" ||
     conf.specStatus === "draft-finding" ||
