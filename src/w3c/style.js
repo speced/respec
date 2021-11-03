@@ -97,7 +97,6 @@ export function run(conf) {
     case "BG-FINAL":
       styleFile = conf.specStatus.toLowerCase();
       break;
-    case "FPWD":
     case "UNOFFICIAL":
       styleFile += "UD";
       break;

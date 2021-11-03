@@ -131,17 +131,6 @@ const publicationSpaces = {
   "draft-finding": "/2001/tag/doc",
 };
 
-const status2rdf = {
-  NOTE: "w3p:NOTE",
-  WD: "w3p:WD",
-  LC: "w3p:LastCall",
-  CR: "w3p:CR",
-  CRD: "w3p:CRD",
-  PR: "w3p:PR",
-  REC: "w3p:REC",
-  PER: "w3p:PER",
-  RSCND: "w3p:RSCND",
-};
 const status2text = {
   DNOTE: "Group Draft Note",
   NOTE: "Group Note",
@@ -527,9 +516,6 @@ export async function run(conf) {
     conf.copyrightStart = "";
   conf.longStatus = status2long[conf.specStatus];
   conf.textStatus = status2text[conf.specStatus];
-  if (status2rdf[conf.specStatus]) {
-    conf.rdfStatus = status2rdf[conf.specStatus];
-  }
   conf.showPreviousVersion = false;
   if (conf.isTagFinding)
     conf.showPreviousVersion = conf.previousPublishDate ? true : false;
@@ -707,10 +693,6 @@ export async function run(conf) {
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
   conf.humanRevisedRecEnd = W3CDate.format(conf.revisedRecEnd);
 
-  conf.recNotExpected =
-    conf.noRecTrack || conf.recNotExpected
-      ? true
-      : !conf.isRecTrack && maturity == "WD";
   if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
     const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${
       conf.specStatus

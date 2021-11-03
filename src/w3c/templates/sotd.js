@@ -118,93 +118,114 @@ function renderIsNoTrack(conf, opts) {
 }
 
 function renderNotRec(conf) {
-  let statusExplanation = "";
-  let endorsement = `Publication as ${conf.anOrA} ${conf.textStatus} does not imply endorsement
-    by the W3C Membership.`;
-  let updatePolicy = html`This is a draft document and may be updated, replaced
-  or obsoleted by other documents at any time. It is inappropriate to cite this
-  document as other than work in progress.
-  ${conf.updateableRec
-    ? html`Future updates to this specification may incorporate
-        <a href="${processLink}#allow-new-features">new features</a>.`
-    : ""}`;
-  let reviewPolicy = "";
-  if (conf.isNote && conf.specStatus !== "STMT") {
-    endorsement = html`${conf.textStatus}s are not endorsed by the
-      <abbr title="World Wide Web Consortium">W3C</abbr> nor its Membership.`;
-  } else if (conf.specStatus === "STMT") {
-    endorsement = html`<p>
-      A W3C Statement is a specification that, after extensive
-      consensus-building, has received the endorsement of the
-      <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.
-    </p>`;
-    updatePolicy = "";
-  } else if (conf.specStatus === "RY") {
-    endorsement = html`<p>W3C recommends the wide usage of this registry.</p>
-      <p>
-        A W3C Registry is a specification that, after extensive
+  let statusExplanation = null;
+  let reviewPolicy = null;
+  let endorsement = html`Publication as ${conf.anOrA} ${conf.textStatus} does
+  not imply endorsement by the W3C Membership.`;
+  let updatePolicy = html`<p>
+    This is a draft document and may be updated, replaced or obsoleted by other
+    documents at any time. It is inappropriate to cite this document as other
+    than work in progress.
+    ${conf.updateableRec
+      ? html`Future updates to this specification may incorporate
+          <a href="${processLink}#allow-new-features">new features</a>.`
+      : ""}
+  </p>`;
+  const lsUpdatePolicy = html`<p>
+    This document is maintained and updated at any time. Some parts of this
+    document are work in progress.
+  </p>`;
+
+  switch (conf.textStatus) {
+    case "STMT":
+      endorsement = html`<p>
+        A W3C Statement is a specification that, after extensive
         consensus-building, has received the endorsement of the
         <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.
       </p>`;
-    updatePolicy = "";
-  } else if (conf.specStatus === "CRD") {
-    statusExplanation =
-      "A Candidate Recommendation Draft integrates changes from the previous Candidate Recommendation that the Working Group intends to include in a subsequent Candidate Recommendation Snapshot.";
-    if (conf.pubMode === "LS") {
-      updatePolicy =
-        "This document is maintained and updated at any time. Some parts of this document are work in progress. ";
-    }
-  } else if (conf.specStatus === "CRYD") {
-    statusExplanation =
-      "A Candidate Registry Draft integrates changes from the previous Candidate Registry Snapshot that the Working Group intends to include in a subsequent Candidate Registry Snapshot.";
-    if (conf.pubMode === "LS") {
-      updatePolicy =
-        "This document is maintained and updated at any time. Some parts of this document are work in progress. ";
-    }
-  } else if (conf.specStatus === "CRY") {
-    statusExplanation = html`A Candidate Registry Snapshot has received
-      <a href="${processLink}#dfn-wide-review">wide review</a>.`;
-    updatePolicy = "";
-    reviewPolicy = html` The W3C Membership and other interested parties are
-      invited to review the document and send comments through
-      ${conf.humanPREnd}. Advisory Committee Representatives should consult
-      their
-      <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
-        >WBS questionnaires</a
-      >. Note that substantive technical comments were expected during the
-      Candidate Recommendation review period that ended ${conf.humanCREnd}.`;
-  } else if (conf.specStatus === "CR") {
-    statusExplanation = html`A Candidate Recommendation Snapshot has received
-      <a href="${processLink}#dfn-wide-review">wide review</a>, is intended to
-      gather
-      <a href="${conf.implementationReportURI}">implementation experience</a>,
-      and has commitments from Working Group members to
-      <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements"
-        >royalty-free licensing</a
-      >
-      for implementations.`;
-    updatePolicy = html`${conf.updateableRec
-      ? html`Future updates to this specification may incorporate
-          <a href="${processLink}#allow-new-features">new features</a>.`
-      : ""}`;
-    if (conf.pubMode === "LS") {
-      reviewPolicy = `Comments are welcome at any time but most especially before ${conf.humanCREnd}.`;
-    } else {
-      reviewPolicy = `This Candidate Recommendation is not expected to advance to Proposed Recommendation any earlier than ${conf.humanCREnd}.`;
-    }
-  } else if (conf.isPR) {
-    reviewPolicy = html` The W3C Membership and other interested parties are
-      invited to review the document and send comments through
-      ${conf.humanPREnd}. Advisory Committee Representatives should consult
-      their
-      <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
-        >WBS questionnaires</a
-      >. Note that substantive technical comments were expected during the
-      Candidate Recommendation review period that ended ${conf.humanCREnd}.`;
+      break;
+    case "RY":
+      endorsement = html`<p>W3C recommends the wide usage of this registry.</p>
+        <p>
+          A W3C Registry is a specification that, after extensive
+          consensus-building, has received the endorsement of the
+          <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.
+        </p>`;
+      break;
+    case "CRD":
+      statusExplanation = html`A Candidate Recommendation Draft integrates
+      changes from the previous Candidate Recommendation that the Working Group
+      intends to include in a subsequent Candidate Recommendation Snapshot.`;
+      if (conf.pubMode === "LS") {
+        updatePolicy = lsUpdatePolicy;
+      }
+      break;
+    case "CRYD":
+      statusExplanation = html`A Candidate Registry Draft integrates changes
+      from the previous Candidate Registry Snapshot that the Working Group
+      intends to include in a subsequent Candidate Registry Snapshot.`;
+      if (conf.pubMode === "LS") {
+        updatePolicy = lsUpdatePolicy;
+      }
+      break;
+    case "CRY":
+      statusExplanation = html`A Candidate Registry Snapshot has received
+        <a href="${processLink}#dfn-wide-review">wide review</a>.`;
+      reviewPolicy = html`<p>
+        The W3C Membership and other interested parties are invited to review
+        the document and send comments through ${conf.humanPREnd}. Advisory
+        Committee Representatives should consult their
+        <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
+          >WBS questionnaires</a
+        >. Note that substantive technical comments were expected during the
+        Candidate Recommendation review period that ended ${conf.humanCREnd}.
+      </p>`;
+      break;
+    case "CR":
+      statusExplanation = html`A Candidate Recommendation Snapshot has received
+        <a href="${processLink}#dfn-wide-review">wide review</a>, is intended to
+        gather
+        <a href="${conf.implementationReportURI}">implementation experience</a>,
+        and has commitments from Working Group members to
+        <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements"
+          >royalty-free licensing</a
+        >
+        for implementations.`;
+      updatePolicy = html`${conf.updateableRec
+        ? html`Future updates to this specification may incorporate
+            <a href="${processLink}#allow-new-features">new features</a>.`
+        : ""}`;
+      if (conf.pubMode === "LS") {
+        reviewPolicy = html`<p>
+          Comments are welcome at any time but most especially before
+          ${conf.humanCREnd}.
+        </p>`;
+      } else {
+        reviewPolicy = html`<p>
+          This Candidate Recommendation is not expected to advance to Proposed
+          Recommendation any earlier than ${conf.humanCREnd}.
+        </p>`;
+      }
+      break;
+    case "PR":
+      reviewPolicy = html`<p>
+        The W3C Membership and other interested parties are invited to review
+        the document and send comments through ${conf.humanPREnd}. Advisory
+        Committee Representatives should consult their
+        <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
+          >WBS questionnaires</a
+        >. Note that substantive technical comments were expected during the
+        Candidate Recommendation review period that ended ${conf.humanCREnd}.
+      </p>`;
+      break;
+    case "DNOTE":
+    case "NOTE":
+      endorsement = html`${conf.textStatus}s are not endorsed by the
+        <abbr title="World Wide Web Consortium">W3C</abbr> nor its Membership.`;
+      break;
   }
   return html`<p>${endorsement} ${statusExplanation}</p>
-    ${updatePolicy ? html`<p>${updatePolicy}</p>` : ""}
-    <p>${reviewPolicy}</p>`;
+    ${updatePolicy} ${reviewPolicy}`;
 }
 
 function renderIsRec({
