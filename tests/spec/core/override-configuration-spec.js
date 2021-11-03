@@ -16,7 +16,7 @@ describe("Core — Override Configuration", () => {
     );
     const doc = await makeRSDoc(makeStandardOps(), url);
     const { respecConfig: conf } = doc.defaultView;
-    const { textContent } = doc.querySelector(".head h2");
+    const { textContent } = doc.querySelector(".head p");
     expect(textContent).toContain("W3C Rescinded Recommendation");
     const month = conf.previousPublishDate.getUTCMonth();
     expect(month).toBe(2);

@@ -84,10 +84,10 @@ async function getGroupDetails(group) {
     const {
       id: wgId,
       name: wg,
-      URI: wgURI,
       patentURI: wgPatentURI,
       patentPolicy: wgPatentPolicy,
       type: groupType,
+      wgURI,
     } = json;
     return { wg, wgId, wgURI, wgPatentURI, wgPatentPolicy, groupType };
   }
