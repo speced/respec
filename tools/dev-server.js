@@ -16,7 +16,6 @@ const chokidar = require("chokidar");
 const karma = require("karma");
 const serve = require("serve-handler");
 const colors = require("colors");
-const boxen = require("boxen");
 const sade = require("sade");
 const serveConfig = require("../serve.json");
 const { Builder } = require("./builder.js");
@@ -110,7 +109,7 @@ async function run(args) {
   });
 
   devServer.listen(SERVE_PORT);
-  printWelcomeMessage(args);
+  await printWelcomeMessage(args);
 
   await karmaServer.start();
   if (!args.interactive) {
@@ -174,7 +173,7 @@ async function run(args) {
   }
 }
 
-function printWelcomeMessage(args) {
+async function printWelcomeMessage(args) {
   const messages = [
     ["dev server", `http://localhost:${SERVE_PORT}/examples/`],
     ["karma server", `http://localhost:${KARMA_PORT}`],
@@ -202,5 +201,6 @@ function printWelcomeMessage(args) {
     borderStyle: "bold",
     backgroundColor: "black",
   };
+  const { default: boxen } = await import("boxen");
   console.log(boxen(message, boxOptions));
 }
