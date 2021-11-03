@@ -1,11 +1,9 @@
 // @ts-check
-import { getIntlData, humanDate, showWarning } from "../../core/utils.js";
+import { getIntlData, humanDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
-
-const name = "w3c/templates/headers";
 
 const localizationStrings = {
   en: {
@@ -148,7 +146,7 @@ export default (conf, options) => {
   return html`<div class="head">
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
-    <h2>${renderSpecTitle(conf)}</h2>
+    <p id="w3c-state">${renderSpecTitle(conf)}</p>
     <details open="">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
@@ -235,16 +233,13 @@ export default (conf, options) => {
             `
           : ""}
         ${renderFeedback(conf)}
+        ${conf.errata
+          ? html`<dt>Errata:</dt>
+              <dd><a href="${conf.errata}">Errata exists</a>.</dd>`
+          : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
       </dl>
     </details>
-    ${conf.errata
-      ? html`<p>
-          Please check the
-          <a href="${conf.errata}"><strong>errata</strong></a> for any errors or
-          issues reported since publication.
-        </p>`
-      : ""}
     ${conf.isRec
       ? html`<p>
           See also
@@ -325,7 +320,7 @@ function renderHistory(conf) {
   const ddElements = [];
   if (conf.historyURI) {
     const dd = html`<dd>
-      <a href="${conf.historyURI}">${l10n.publication_history}</a>
+      <a href="${conf.historyURI}">${conf.historyURI}</a>
     </dd>`;
     ddElements.push(dd);
   }
@@ -343,9 +338,11 @@ function renderHistory(conf) {
 }
 
 function renderSpecTitle(conf) {
-  const specType = conf.isCR ? conf.longStatus : conf.textStatus;
+  const specType = conf.isCR || conf.isCRY ? conf.longStatus : conf.textStatus;
   const preamble = conf.prependW3C
-    ? html`<a href="https://www.w3.org/standards/types">W3C ${specType}</a>`
+    ? html`<a href="https://www.w3.org/standards/types#${conf.specStatus}"
+        >W3C ${specType}</a
+      >`
     : html`${specType}`;
 
   return html`${preamble}${" "}
@@ -387,14 +384,7 @@ function renderCopyright(conf) {
     existingCopyright.remove();
     return existingCopyright;
   }
-  if (conf.hasOwnProperty("overrideCopyright")) {
-    const msg = "The `overrideCopyright` configuration option is deprecated.";
-    const hint =
-      'Please add a `<p class="copyright">` element directly to your document instead';
-    showWarning(msg, name, { hint });
-    return html`${[conf.overrideCopyright]}`;
-  }
-  if (conf.isUnofficial) {
+  if (conf.isUnofficial && conf.licenseInfo) {
     return html`<p class="copyright">
       Copyright &copy;
       ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}

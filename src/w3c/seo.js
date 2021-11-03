@@ -5,6 +5,19 @@
 import { resolveRef } from "../core/biblio.js";
 import { showWarning } from "../core/utils.js";
 export const name = "w3c/seo";
+
+const status2rdf = {
+  NOTE: "w3p:NOTE",
+  WD: "w3p:WD",
+  LC: "w3p:LastCall",
+  CR: "w3p:CR",
+  CRD: "w3p:CRD",
+  PR: "w3p:PR",
+  REC: "w3p:REC",
+  PER: "w3p:PER",
+  RSCND: "w3p:RSCND",
+};
+
 export async function run(conf) {
   // Don't include a canonical URL for documents
   // that haven't been published.
@@ -69,9 +82,10 @@ export async function run(conf) {
 }
 
 async function addJSONLDInfo(conf, doc) {
+  const rdfStatus = status2rdf[conf.specStatus];
   // Content for JSON
   const type = ["TechArticle"];
-  if (conf.rdfStatus) type.push(conf.rdfStatus);
+  if (rdfStatus) type.push(rdfStatus);
 
   const jsonld = {
     "@context": [
