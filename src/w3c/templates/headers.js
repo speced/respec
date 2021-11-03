@@ -4,6 +4,7 @@ import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
+import { sub } from "../../core/pubsubhub.js";
 
 const localizationStrings = {
   en: {
@@ -141,6 +142,14 @@ function getSpecSubTitleElem(conf) {
   }
   return specSubTitleElem;
 }
+
+/**
+ * After export, we let fixup.js handle the <details>.
+ */
+sub("beforesave", doc => {
+  const details = doc.querySelector(".head details");
+  details.removeAttribute("open");
+});
 
 export default (conf, options) => {
   return html`<div class="head">
