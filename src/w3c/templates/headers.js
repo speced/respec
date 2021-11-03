@@ -338,9 +338,11 @@ function renderHistory(conf) {
 }
 
 function renderSpecTitle(conf) {
-  const specType = (conf.isCR || conf.isCRY) ? conf.longStatus : conf.textStatus;
+  const specType = conf.isCR || conf.isCRY ? conf.longStatus : conf.textStatus;
   const preamble = conf.prependW3C
-    ? html`<a href="https://www.w3.org/standards/types#${conf.specStatus}">W3C ${specType}</a>`
+    ? html`<a href="https://www.w3.org/standards/types#${conf.specStatus}"
+        >W3C ${specType}</a
+      >`
     : html`${specType}`;
 
   return html`${preamble}${" "}

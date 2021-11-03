@@ -47,18 +47,14 @@ export default (conf, opts) => {
             : html`
                 ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
                 ${!conf.overrideStatus
-                  ? html`
-                      ${linkToWorkingGroup(conf)}
-                    `
+                  ? html` ${linkToWorkingGroup(conf)} `
                   : ""}
                 ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
                 ${conf.isRec ? renderIsRec(conf) : renderNotRec(conf)}
                 ${renderDeliverer(conf)}
                 <p>
                   This document is governed by the
-                  <a
-                    id="w3c_process_revision"
-                    href="${processLink}"
+                  <a id="w3c_process_revision" href="${processLink}"
                     >2 November 2021 W3C Process Document</a
                   >.
                 </p>
@@ -130,25 +126,26 @@ function renderNotRec(conf) {
   document as other than work in progress.
   ${conf.updateableRec
     ? html`Future updates to this specification may incorporate
-        <a href="${processLink}#allow-new-features"
-          >new features</a
-        >.`
+        <a href="${processLink}#allow-new-features">new features</a>.`
     : ""}`;
   let reviewPolicy = "";
   if (conf.isNote && conf.specStatus !== "STMT") {
-    endorsement = html`${conf.textStatus}s are not endorsed
-    by the <abbr title="World Wide Web Consortium">W3C</abbr> nor its Membership.`;
+    endorsement = html`${conf.textStatus}s are not endorsed by the
+      <abbr title="World Wide Web Consortium">W3C</abbr> nor its Membership.`;
   } else if (conf.specStatus === "STMT") {
     endorsement = html`<p>
-    A W3C Statement is a specification that, after extensive
-    consensus-building, has received the endorsement of the
-    <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.`;
+      A W3C Statement is a specification that, after extensive
+      consensus-building, has received the endorsement of the
+      <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.
+    </p>`;
     updatePolicy = "";
   } else if (conf.specStatus === "RY") {
-    endorsement = html`<p>W3C recommends the wide usage of this registry.
-    <p>A W3C Registry is a specification that, after extensive
-    consensus-building, has received the endorsement of the
-    <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.`;
+    endorsement = html`<p>W3C recommends the wide usage of this registry.</p>
+      <p>
+        A W3C Registry is a specification that, after extensive
+        consensus-building, has received the endorsement of the
+        <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.
+      </p>`;
     updatePolicy = "";
   } else if (conf.specStatus === "CRD") {
     statusExplanation =
@@ -166,9 +163,7 @@ function renderNotRec(conf) {
     }
   } else if (conf.specStatus === "CRY") {
     statusExplanation = html`A Candidate Registry Snapshot has received
-      <a href="${processLink}#dfn-wide-review"
-        >wide review</a
-      >.`;
+      <a href="${processLink}#dfn-wide-review">wide review</a>.`;
     updatePolicy = "";
     reviewPolicy = html` The W3C Membership and other interested parties are
       invited to review the document and send comments through
@@ -180,17 +175,17 @@ function renderNotRec(conf) {
       Candidate Recommendation review period that ended ${conf.humanCREnd}.`;
   } else if (conf.specStatus === "CR") {
     statusExplanation = html`A Candidate Recommendation Snapshot has received
-      <a href="${processLink}#dfn-wide-review"
-        >wide review</a
-      >, is intended to gather
+      <a href="${processLink}#dfn-wide-review">wide review</a>, is intended to
+      gather
       <a href="${conf.implementationReportURI}">implementation experience</a>,
       and has commitments from Working Group members to
-      <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements">royalty-free licensing</a> for implementations.`;
+      <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements"
+        >royalty-free licensing</a
+      >
+      for implementations.`;
     updatePolicy = html`${conf.updateableRec
       ? html`Future updates to this specification may incorporate
-          <a href="${processLink}#allow-new-features"
-            >new features</a
-          >.`
+          <a href="${processLink}#allow-new-features">new features</a>.`
       : ""}`;
     if (conf.pubMode === "LS") {
       reviewPolicy = `Comments are welcome at any time but most especially before ${conf.humanCREnd}.`;
@@ -225,21 +220,23 @@ function renderIsRec({
     reviewTarget = "corrections";
   }
   return html`
-     <p>
-     W3C recommends the wide deployment of this specification as a standard for the Web.
-     <p>
+    <p>
+      W3C recommends the wide deployment of this specification as a standard for
+      the Web.
+    </p>
+
+    <p>
       A W3C Recommendation is a specification that, after extensive
       consensus-building, has received the endorsement of the
       <abbr title="World Wide Web Consortium">W3C</abbr> and its Members, and
-      participants granted <a
-      href='https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements'>Royalty-Free
-      IPR licenses</a> for implementations.
+      participants granted
+      <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements"
+        >Royalty-Free IPR licenses</a
+      >
+      for implementations.
       ${updateableRec
         ? html`Future updates to this Recommendation may incorporate
-            <a
-              href="${processLink}#allow-new-features"
-              >new features</a
-            >.`
+            <a href="${processLink}#allow-new-features">new features</a>.`
         : ""}
     </p>
     ${revisionTypes.includes("addition")
@@ -262,7 +259,8 @@ function renderIsRec({
             >WBS questionnaires</a
           >.
         </p>`
-      : ""} `;
+      : ""}
+  `;
 }
 
 function renderDeliverer(conf) {
@@ -271,10 +269,8 @@ function renderDeliverer(conf) {
     isRegistry,
     wgId,
     multipleWGs,
-    recNotExpected,
     wgPatentHTML,
     wgPatentURI,
-    charterDisclosureURI,
     wgPatentPolicy,
   } = conf;
 
@@ -293,13 +289,15 @@ function renderDeliverer(conf) {
         >.
       `
     : html`
-    The
-    <a href="${patentPolicyURL}"
-      >${wgPatentPolicy === "PP2017" ? "1 August 2017 " : ""}W3C Patent
-      Policy</a
-    > does not carry any licensing requirements or commitments on this document.
-    `;
-  return html`<p data-deliverer="${(isNote || isRegistry) ? wgId : null}">
+        The
+        <a href="${patentPolicyURL}"
+          >${wgPatentPolicy === "PP2017" ? "1 August 2017 " : ""}W3C Patent
+          Policy</a
+        >
+        does not carry any licensing requirements or commitments on this
+        document.
+      `;
+  return html`<p data-deliverer="${isNote || isRegistry ? wgId : null}">
     ${producers}
     ${!(isNote || isRegistry)
       ? html`
@@ -407,30 +405,28 @@ function linkToWorkingGroup(conf) {
     if (conf.revisionTypes.includes("addition")) {
       if (conf.revisionTypes.includes("correction")) {
         proposedChanges = html`It includes
-          <a href="${processLink}#proposed-amendments"
-            >proposed amendments</a
-          >, introducing substantive changes and new features since the previous
+          <a href="${processLink}#proposed-amendments">proposed amendments</a>,
+          introducing substantive changes and new features since the previous
           Recommendation.`;
       } else {
         proposedChanges = html`It includes
-          <a href="${processLink}#proposed-addition"
-            >proposed additions</a
-          >, introducing new features since the previous Recommendation.`;
+          <a href="${processLink}#proposed-addition">proposed additions</a>,
+          introducing new features since the previous Recommendation.`;
       }
     } else if (conf.revisionTypes.includes("correction")) {
       proposedChanges = html`It includes
-        <a href="${processLink}#proposed-correction"
-          >proposed corrections</a
-        >.`;
+        <a href="${processLink}#proposed-correction">proposed corrections</a>.`;
     }
   }
-  const track = (status2track[conf.specStatus])?
-    html` using the <a href="${processLink}#recs-and-notes"
-      >${status2track[conf.specStatus]} track</a>` : "";
+  const track = status2track[conf.specStatus]
+    ? html` using the
+        <a href="${processLink}#recs-and-notes"
+          >${status2track[conf.specStatus]} track</a
+        >`
+    : "";
   return html`<p>
     This document was published by ${conf.wgHTML} as ${conf.anOrA}
-    ${conf.longStatus}${track}.
-    ${proposedChanges}
+    ${conf.longStatus}${track}. ${proposedChanges}
   </p>`;
 }
 

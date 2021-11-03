@@ -69,7 +69,9 @@ function processLogos(conf) {
   const status = conf.specStatus ?? "";
   // Always include the W3C logo and license for W3C Recommendation track.
   // Excludes "ED" status
-  if ([...recTrackStatus, ...registryTrackStatus, ...W3CNotes].includes(status)) {
+  if (
+    [...recTrackStatus, ...registryTrackStatus, ...W3CNotes].includes(status)
+  ) {
     conf.logos?.unshift(w3cLogo);
   }
 

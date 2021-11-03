@@ -202,7 +202,16 @@ export const status2track = {
   RY: "Registry",
 };
 export const W3CNotes = ["DNOTE", "NOTE", "STMT"];
-export const recTrackStatus = ["FPWD", "WD", "CR", "CRD", "PR", "PER", "REC", "DISC"];
+export const recTrackStatus = [
+  "FPWD",
+  "WD",
+  "CR",
+  "CRD",
+  "PR",
+  "PER",
+  "REC",
+  "DISC",
+];
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
 export const bgStatus = ["BG-DRAFT", "BG-FINAL"];
@@ -743,7 +752,11 @@ async function deriveHistoryURI(conf) {
   );
 
   // If it's on the Rec Track or it's TR worthy, then it has a history.
-  const willHaveHistory = [...recTrackStatus, ...W3CNotes, ...registryTrackStatus];
+  const willHaveHistory = [
+    ...recTrackStatus,
+    ...W3CNotes,
+    ...registryTrackStatus,
+  ];
   if (willHaveHistory.includes(conf.specStatus)) {
     conf.historyURI = historyURL.href;
     return;
