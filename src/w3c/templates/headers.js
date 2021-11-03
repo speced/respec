@@ -147,7 +147,7 @@ export default (conf, options) => {
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
     <p id="w3c-state">${renderSpecTitle(conf)}</p>
-    <details open="">
+    <details open="${localStorage.getItem("tr-metadata") || "true"}">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
         ${(conf.isTagFinding && !conf.isTagEditorFinding) || !conf.isNoTrack
