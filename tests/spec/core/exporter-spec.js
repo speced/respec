@@ -89,7 +89,7 @@ describe("Core - exporter", () => {
     const doc = await getExportedDoc(ops);
     const { lastElementChild } = doc.head;
     expect(lastElementChild.href).toBe(
-      "https://www.w3.org/StyleSheets/TR/2016/W3C-ED"
+      "https://www.w3.org/StyleSheets/TR/2021/W3C-ED"
     );
   });
 });

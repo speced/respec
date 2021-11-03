@@ -42,7 +42,6 @@
 //      specStatus is set to "ED".
 //  - additionalCopyrightHolders: a copyright owner in addition to W3C (or the only one if specStatus
 //      is unofficial)
-//  - overrideCopyright: provides markup to completely override the copyright
 //  - copyrightStart: the year from which the copyright starts running
 //  - prevED: the URI of the previous Editor's Draft if it has moved
 //  - prevRecShortname: the short name of the previous Recommendation, if the name has changed
@@ -78,6 +77,8 @@
 //  - license: can be one of the following
 //      - "cc-by", which is experimentally available in some groups (but likely to be phased out).
 //          Note that this is a dual licensing regime.
+//      - "document", which is the old, but still available, document license.
+//      - "dual", dual license.
 //      - "cc0", an extremely permissive license. It is only recommended if you are working on a document that is
 //          intended to be pushed to the WHATWG.
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
@@ -121,13 +122,6 @@ const status2maturity = {
   LS: "WD",
   LD: "WD",
   FPWD: "WD",
-  LC: "WD",
-  FPLC: "WD",
-  "FPWD-NOTE": "NOTE",
-  "WD-NOTE": "WD",
-  "LC-NOTE": "LC",
-  "IG-NOTE": "NOTE",
-  "WG-NOTE": "NOTE",
 };
 
 const publicationSpaces = {
@@ -137,22 +131,10 @@ const publicationSpaces = {
   "draft-finding": "/2001/tag/doc",
 };
 
-const status2rdf = {
-  NOTE: "w3p:NOTE",
-  WD: "w3p:WD",
-  LC: "w3p:LastCall",
-  CR: "w3p:CR",
-  CRD: "w3p:CRD",
-  PR: "w3p:PR",
-  REC: "w3p:REC",
-  PER: "w3p:PER",
-  RSCND: "w3p:RSCND",
-};
 const status2text = {
-  NOTE: "Working Group Note",
-  "WG-NOTE": "Working Group Note",
-  "CG-NOTE": "Co-ordination Group Note",
-  "IG-NOTE": "Interest Group Note",
+  DNOTE: "Group Draft Note",
+  NOTE: "Group Note",
+  STMT: "Statement",
   "Member-SUBM": "Member Submission",
   "Team-SUBM": "Team Submission",
   MO: "Member-Only Document",
@@ -161,21 +143,22 @@ const status2text = {
   LD: "Living Document",
   FPWD: "First Public Working Draft",
   WD: "Working Draft",
-  "FPWD-NOTE": "Working Group Note",
-  "WD-NOTE": "Working Draft",
-  "LC-NOTE": "Working Draft",
-  FPLC: "First Public and Last Call Working Draft",
-  LC: "Last Call Working Draft",
   CR: "Candidate Recommendation",
   CRD: "Candidate Recommendation",
   PR: "Proposed Recommendation",
   PER: "Proposed Edited Recommendation",
   REC: "Recommendation",
+  DISC: "Discontinued Draft",
   RSCND: "Rescinded Recommendation",
+  DRY: "Draft Registry",
+  CRYD: "Candidate Registry",
+  CRY: "Candidate Registry",
+  RY: "Registry",
   unofficial: "Unofficial Draft",
   base: "",
   finding: "TAG Finding",
   "draft-finding": "Draft TAG Finding",
+  "editor-draft-finding": "Draft TAG Finding",
   "CG-DRAFT": "Draft Community Group Report",
   "CG-FINAL": "Final Community Group Report",
   "BG-DRAFT": "Draft Business Group Report",
@@ -185,12 +168,40 @@ const status2long = {
   ...status2text,
   CR: "Candidate Recommendation Snapshot",
   CRD: "Candidate Recommendation Draft",
-  "FPWD-NOTE": "First Public Working Group Note",
-  "LC-NOTE": "Last Call Working Draft",
+  CRY: "Candidate Registry Snapshot",
+  CRYD: "Candidate Registry Draft",
 };
-export const W3CNotes = ["FPWD-NOTE", "WG-NOTE"];
-export const maybeRecTrack = ["FPWD", "WD"];
-export const recTrackStatus = ["FPLC", "LC", "CR", "CRD", "PR", "PER", "REC"];
+export const status2track = {
+  DNOTE: "Note",
+  NOTE: "Note",
+  STMT: "Note",
+  "WG-NOTE": "Note",
+  "IG-NOTE": "Note",
+  FPWD: "Recommendation",
+  WD: "Recommendation",
+  CR: "Recommendation",
+  CRD: "Recommendation",
+  PR: "Recommendation",
+  REC: "Recommendation",
+  DISC: "Recommendation",
+  RSCND: "Recommendation",
+  DRY: "Registry",
+  CRYD: "Registry",
+  CRY: "Registry",
+  RY: "Registry",
+};
+export const W3CNotes = ["DNOTE", "NOTE", "STMT"];
+export const recTrackStatus = [
+  "FPWD",
+  "WD",
+  "CR",
+  "CRD",
+  "PR",
+  "PER",
+  "REC",
+  "DISC",
+];
+export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
 export const bgStatus = ["BG-DRAFT", "BG-FINAL"];
 export const cgbgStatus = [...cgStatus, ...bgStatus];
@@ -198,13 +209,15 @@ const noTrackStatus = [
   "base",
   ...cgStatus,
   ...bgStatus,
+  "editor-draft-finding",
   "draft-finding",
   "finding",
   "MO",
   "unofficial",
 ];
 const precededByAn = ["ED", "IG-NOTE"];
-const licenses = new Map([
+/** @type {Map<string, LicenseInfo>} */
+export const licenses = new Map([
   [
     "cc0",
     {
@@ -225,7 +238,7 @@ const licenses = new Map([
     "w3c-software-doc",
     {
       name: "W3C Software and Document Notice and License",
-      short: "W3C Software and Document",
+      short: "permissive document license",
       url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
     },
   ],
@@ -235,6 +248,30 @@ const licenses = new Map([
       name: "Creative Commons Attribution 4.0 International Public License",
       short: "CC-BY",
       url: "https://creativecommons.org/licenses/by/4.0/legalcode",
+    },
+  ],
+  [
+    "document",
+    {
+      name: "W3C Document License",
+      short: "document use",
+      url: "https://www.w3.org/Consortium/Legal/2015/doc-license",
+    },
+  ],
+  [
+    "dual",
+    {
+      name: "W3C Dual License",
+      short: "dual license",
+      url: "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html",
+    },
+  ],
+  [
+    undefined,
+    {
+      name: "unlicensed",
+      url: null,
+      short: "UNLICENSED",
     },
   ],
 ]);
@@ -267,6 +304,40 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
+function deriveLicenseInfo(conf) {
+  let license = undefined;
+  if (typeof conf.license === "string") {
+    const lCaseLicense = conf.license.toLowerCase();
+    if (!licenses.has(lCaseLicense)) {
+      const msg = `The license "\`${conf.license}\`" is not supported.`;
+      const choices = codedJoinOr(
+        [...licenses.keys()].filter(k => k),
+        {
+          quotes: true,
+        }
+      );
+      const hint = docLink`Please set
+        ${"[license]"} to one of: ${choices}. If in doubt, remove \`license\` and let ReSpec pick one for you.`;
+      showError(msg, name, { hint });
+    } else {
+      license = lCaseLicense;
+    }
+  }
+
+  if (conf.isUnofficial && !license) {
+    license = "cc-by";
+  }
+
+  // W3C docs can't be CC-BY or CC0
+  if (!conf.isUnofficial && ["cc-by", "cc0"].includes(license)) {
+    const msg = docLink`License "\`${conf.license}\`" is not allowed for W3C Specifications.`;
+    const hint = docLink`Please set ${"[license]"} to \`"w3c-software-doc"\` instead.`;
+    showError(msg, name, { hint });
+  }
+  const licenseInfo = licenses.get(license);
+  return licenseInfo;
+}
+
 export async function run(conf) {
   if (!conf.specStatus) {
     const msg = docLink`Missing required configuration: ${"[specStatus]"}.`;
@@ -277,40 +348,15 @@ export async function run(conf) {
   if (conf.isUnofficial && !Array.isArray(conf.logos)) {
     conf.logos = [];
   }
-  if (conf.isUnofficial) {
-    if (conf.license && !licenses.has(conf.license)) {
-      const msg = docLink`The ${"[license]"} configuration option has an invalid value: "\`${
-        conf.license
-      }\`". Defaulting to "cc-by".`;
-      const hint = docLink`Please explicitly set ${"[license]"} to one of: ${codedJoinOr(
-        [...licenses.keys()]
-      )}.`;
-      showError(msg, name, { hint });
-      conf.license = "cc-by";
-    }
-    // default it to cc-by
-    if (conf.license === undefined) {
-      conf.license = "cc-by";
-    }
+  // backward-compat, if any of those still exists
+  if (conf.specStatus === "IG-NOTE" || conf.specStatus === "WG-NOTE") {
+    const msg = `${conf.specStatus} are no longer supported. `;
+    const hint = docLink`Please update your ${"[specStatus]"} to use "NOTE".`;
+    showWarning(msg, name, { hint });
+    conf.specStatus = "NOTE";
   }
 
-  conf.isCCBY = conf.license === "cc-by";
-  conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-  if (!conf.isUnofficial && ["cc-by"].includes(conf.license)) {
-    const msg = docLink`License "\`${conf.license}\`" is not allowed for W3C Specifications.`;
-    const hint = docLink`Please set ${"[license]"} to "w3c-software-doc" instead.`;
-    showError(msg, name, { hint });
-  }
-  if (!licenses.has(conf.license)) {
-    const msg = `The license "\`${conf.license}\`" is not supported.`;
-    const choices = codedJoinOr(Array.from(licenses.keys()), {
-      quotes: true,
-    });
-    const hint = docLink`Please set
-      ${"[license]"} to one of: ${choices}.`;
-    showError(msg, name, { hint });
-  }
-  conf.licenseInfo = licenses.get(conf.license);
+  conf.licenseInfo = deriveLicenseInfo(conf);
   conf.isCGBG = cgbgStatus.includes(conf.specStatus);
   conf.isCGFinal = conf.isCGBG && conf.specStatus.endsWith("G-FINAL");
   conf.isBasic = conf.specStatus === "base";
@@ -345,7 +391,7 @@ export async function run(conf) {
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
   conf.isRecTrack = conf.noRecTrack
     ? false
-    : recTrackStatus.concat(maybeRecTrack).includes(conf.specStatus);
+    : recTrackStatus.includes(conf.specStatus);
   conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
   if (conf.isMemberSubmission) {
     const memSubmissionLogo = {
@@ -369,7 +415,10 @@ export async function run(conf) {
   conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
   conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
   conf.isTagFinding =
-    conf.specStatus === "finding" || conf.specStatus === "draft-finding";
+    conf.specStatus === "finding" ||
+    conf.specStatus === "draft-finding" ||
+    conf.specStatus === "editor-draft-finding";
+  conf.isTagEditorFinding = conf.specStatus === "editor-draft-finding";
 
   if (conf.isRecTrack && !conf.github && !conf.wgPublicList) {
     const msg =
@@ -435,20 +484,6 @@ export async function run(conf) {
       );
     }
   } else {
-    if (
-      !conf.specStatus.endsWith("NOTE") &&
-      conf.specStatus !== "FPWD" &&
-      conf.specStatus !== "FPLC" &&
-      conf.specStatus !== "ED" &&
-      !conf.noRecTrack &&
-      !conf.isNoTrack &&
-      !conf.isSubmission
-    ) {
-      const msg =
-        "This document is on the W3C Recommendation Track, but is missing the required 'Previous Version' link.";
-      const hint = docLink`Add ${"[previousMaturity]"} and ${"[previousPublishDate]"} to the document's ${"[respecConfig]"}.`;
-      showError(msg, name, { hint });
-    }
     if (!conf.prevVersion) conf.prevVersion = "";
   }
   if (conf.prevRecShortname && !conf.prevRecURI)
@@ -481,21 +516,9 @@ export async function run(conf) {
     conf.copyrightStart = "";
   conf.longStatus = status2long[conf.specStatus];
   conf.textStatus = status2text[conf.specStatus];
-  if (status2rdf[conf.specStatus]) {
-    conf.rdfStatus = status2rdf[conf.specStatus];
-  }
-  conf.showThisVersion = !conf.isNoTrack || conf.isTagFinding;
-  conf.showPreviousVersion =
-    conf.specStatus !== "FPWD" &&
-    conf.specStatus !== "FPLC" &&
-    conf.specStatus !== "ED" &&
-    !conf.isNoTrack &&
-    !conf.isSubmission;
-  if (conf.specStatus.endsWith("NOTE") && !conf.prevVersion)
-    conf.showPreviousVersion = false;
+  conf.showPreviousVersion = false;
   if (conf.isTagFinding)
     conf.showPreviousVersion = conf.previousPublishDate ? true : false;
-  conf.notYetRec = conf.isRecTrack && conf.specStatus !== "REC";
   conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
   if (conf.isRec && !conf.errata) {
     const msg = "Recommendations must have an errata link.";
@@ -505,12 +528,13 @@ export async function run(conf) {
   conf.prependW3C = !conf.isBasic && !conf.isUnofficial;
   conf.isED = conf.specStatus === "ED";
   conf.isCR = conf.specStatus === "CR" || conf.specStatus === "CRD";
+  conf.isCRY = conf.specStatus === "CRY" || conf.specStatus === "CRYD";
   conf.isCRDraft = conf.specStatus === "CRD";
   conf.isPR = conf.specStatus === "PR";
   conf.isPER = conf.specStatus === "PER";
   conf.isMO = conf.specStatus === "MO";
   conf.isNote = W3CNotes.includes(conf.specStatus);
-  conf.isIGNote = conf.specStatus === "IG-NOTE";
+  conf.isRegistry = registryTrackStatus.includes(conf.specStatus);
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
@@ -669,10 +693,6 @@ export async function run(conf) {
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
   conf.humanRevisedRecEnd = W3CDate.format(conf.revisedRecEnd);
 
-  conf.recNotExpected =
-    conf.noRecTrack || conf.recNotExpected
-      ? true
-      : !conf.isRecTrack && maturity == "WD" && conf.specStatus !== "FPWD-NOTE";
   if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
     const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${
       conf.specStatus
@@ -680,10 +700,6 @@ export async function run(conf) {
     const notAllowed = codedJoinOr(recTrackStatus, { quotes: true });
     const hint = `Status **can't** be any of: ${notAllowed}.`;
     showError(msg, name, { hint });
-  }
-  if (conf.isIGNote && !conf.charterDisclosureURI) {
-    const msg = docLink`IG-NOTEs must link to charter's disclosure section using ${"[charterDisclosureURI]"}.`;
-    showError(msg, name);
   }
   if (!sotd.classList.contains("override")) {
     html.bind(sotd)`${populateSoTD(conf, sotd)}`;
@@ -718,7 +734,11 @@ async function deriveHistoryURI(conf) {
   );
 
   // If it's on the Rec Track or it's TR worthy, then it has a history.
-  const willHaveHistory = [...recTrackStatus, ...W3CNotes, ...maybeRecTrack];
+  const willHaveHistory = [
+    ...recTrackStatus,
+    ...W3CNotes,
+    ...registryTrackStatus,
+  ];
   if (willHaveHistory.includes(conf.specStatus)) {
     conf.historyURI = historyURL.href;
     return;

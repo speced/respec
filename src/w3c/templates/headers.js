@@ -1,18 +1,9 @@
 // @ts-check
-import { getIntlData, humanDate, showWarning } from "../../core/utils.js";
+import { getIntlData, humanDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
-
-const name = "w3c/templates/headers";
-
-const ccLicense = "https://creativecommons.org/licenses/by/4.0/legalcode";
-const w3cLicense = "https://www.w3.org/Consortium/Legal/copyright-documents";
-const legalDisclaimer =
-  "https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer";
-const w3cTrademark =
-  "https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks";
 
 const localizationStrings = {
   en: {
@@ -155,11 +146,11 @@ export default (conf, options) => {
   return html`<div class="head">
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
-    <h2>${renderSpecTitle(conf)}</h2>
+    <p id="w3c-state">${renderSpecTitle(conf)}</p>
     <details open="">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
-        ${conf.isTagFinding || !conf.isNoTrack
+        ${(conf.isTagFinding && !conf.isTagEditorFinding) || !conf.isNoTrack
           ? html`
               <dt>${l10n.this_version}</dt>
               <dd>
@@ -242,16 +233,13 @@ export default (conf, options) => {
             `
           : ""}
         ${renderFeedback(conf)}
+        ${conf.errata
+          ? html`<dt>Errata:</dt>
+              <dd><a href="${conf.errata}">Errata exists</a>.</dd>`
+          : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
       </dl>
     </details>
-    ${conf.errata
-      ? html`<p>
-          Please check the
-          <a href="${conf.errata}"><strong>errata</strong></a> for any errors or
-          issues reported since publication.
-        </p>`
-      : ""}
     ${conf.isRec
       ? html`<p>
           See also
@@ -332,7 +320,7 @@ function renderHistory(conf) {
   const ddElements = [];
   if (conf.historyURI) {
     const dd = html`<dd>
-      <a href="${conf.historyURI}">${l10n.publication_history}</a>
+      <a href="${conf.historyURI}">${conf.historyURI}</a>
     </dd>`;
     ddElements.push(dd);
   }
@@ -350,9 +338,11 @@ function renderHistory(conf) {
 }
 
 function renderSpecTitle(conf) {
-  const specType = conf.isCR ? conf.longStatus : conf.textStatus;
+  const specType = conf.isCR || conf.isCRY ? conf.longStatus : conf.textStatus;
   const preamble = conf.prependW3C
-    ? html`<a href="https://www.w3.org/standards/types">W3C ${specType}</a>`
+    ? html`<a href="https://www.w3.org/standards/types#${conf.specStatus}"
+        >W3C ${specType}</a
+      >`
     : html`${specType}`;
 
   return html`${preamble}${" "}
@@ -376,12 +366,15 @@ function inPlaceModificationDate(date) {
 }
 
 /**
- * @param {string} text
- * @param {string} url
- * @param {string=} cssClass
+ * @param { LicenseInfo } licenseInfo license information
  */
-function linkLicense(text, url, cssClass) {
-  return html`<a rel="license" href="${url}" class="${cssClass}">${text}</a>`;
+function linkLicense(licenseInfo) {
+  const { url, short, name } = licenseInfo;
+  if (name === "unlicensed") {
+    return html`. <span class="issue">THIS DOCUMENT IS UNLICENSED</span>.`;
+  }
+  return html` and
+    <a rel="license" href="${url}" title="${name}">${short}</a> rules apply.`;
 }
 
 function renderCopyright(conf) {
@@ -391,18 +384,17 @@ function renderCopyright(conf) {
     existingCopyright.remove();
     return existingCopyright;
   }
-  if (conf.hasOwnProperty("overrideCopyright")) {
-    const msg = "The `overrideCopyright` configuration option is deprecated.";
-    const hint =
-      'Please add a `<p class="copyright">` element directly to your document instead';
-    showWarning(msg, name, { hint });
-    return html`${[conf.overrideCopyright]}`;
-  }
   if (conf.isUnofficial && conf.licenseInfo) {
     return html`<p class="copyright">
-      This document is licensed under a
-      ${linkLicense(conf.licenseInfo.name, conf.licenseInfo.url, "subfoot")}
-      (${conf.licenseInfo.short}).
+      Copyright &copy;
+      ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
+      the document editors/authors.
+      ${conf.licenseInfo.name !== "unlicensed"
+        ? html`Text is available under the
+            <a rel="license" href="${conf.licenseInfo.url}"
+              >${conf.licenseInfo.name}</a
+            >; additional terms may apply.`
+        : ""}
     </p>`;
   }
   return renderOfficialCopyright(conf);
@@ -429,36 +421,12 @@ function renderOfficialCopyright(conf) {
         >ERCIM</abbr
       ></a
     >, <a href="https://www.keio.ac.jp/">Keio</a>,
-    <a href="https://ev.buaa.edu.cn/">Beihang</a>). ${noteIfDualLicense(conf)}
-    W3C <a href="${legalDisclaimer}">liability</a>,
-    <a href="${w3cTrademark}">trademark</a> and ${linkDocumentUse(conf)} rules
-    apply.
+    <a href="https://ev.buaa.edu.cn/">Beihang</a>). W3C
+    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer"
+      >liability</a
+    >,
+    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks"
+      >trademark</a
+    >${linkLicense(conf.licenseInfo)}
   </p>`;
-}
-
-function noteIfDualLicense(conf) {
-  if (!conf.isCCBY) {
-    return;
-  }
-  return html`
-    Some Rights Reserved: this document is dual-licensed,
-    ${linkLicense("CC-BY", ccLicense)} and
-    ${linkLicense("W3C Document License", w3cLicense)}.
-  `;
-}
-
-function linkDocumentUse(conf) {
-  if (conf.isCCBY) {
-    return linkLicense(
-      "document use",
-      "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html"
-    );
-  }
-  if (conf.isW3CSoftAndDocLicense) {
-    return linkLicense(
-      "permissive document license",
-      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
-    );
-  }
-  return linkLicense("document use", w3cLicense);
 }
