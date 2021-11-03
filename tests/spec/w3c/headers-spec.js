@@ -1476,22 +1476,6 @@ describe("W3C — Headers", () => {
     }
   });
 
-  describe("overrideCopyright", () => {
-    it("takes overrideCopyright into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        overrideCopyright: "<p class='copyright2'>XXX</p>",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(doc.querySelectorAll(".head .copyright")).toHaveSize(0);
-      expect(doc.querySelectorAll(".head .copyright2")).toHaveSize(1);
-      expect(doc.querySelector(".head .copyright2", doc).textContent).toBe(
-        "XXX"
-      );
-    });
-  });
-
   describe("copyrightStart", () => {
     it("takes copyrightStart with an old date", async () => {
       const ops = makeStandardOps();

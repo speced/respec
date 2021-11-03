@@ -42,7 +42,6 @@
 //      specStatus is set to "ED".
 //  - additionalCopyrightHolders: a copyright owner in addition to W3C (or the only one if specStatus
 //      is unofficial)
-//  - overrideCopyright: provides markup to completely override the copyright
 //  - copyrightStart: the year from which the copyright starts running
 //  - prevED: the URI of the previous Editor's Draft if it has moved
 //  - prevRecShortname: the short name of the previous Recommendation, if the name has changed
