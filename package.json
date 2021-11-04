@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "27.0.3",
+  "version": "27.0.4",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -60,7 +60,7 @@
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^4.4.4",
     "vnu-jar": "^21.10.12",
-    "webidl2": "^24.1.2"
+    "webidl2": "^24.2.0"
   },
   "scripts": {
     "build:aom-debug": "npm run build:aom -- --debug",
@@ -87,7 +87,7 @@
     "colors": "^1.4.0",
     "finalhandler": "^1.1.2",
     "marked": "^4.0.0",
-    "puppeteer": "^10.4.0",
+    "puppeteer": "^11.0.0",
     "sade": "^1.7.4",
     "serve-static": "^1.14.1"
   },
