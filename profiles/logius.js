@@ -56,7 +56,7 @@ const modules = [
   import("../src/ui/search-xref.js"),
   import("../src/ui/about-respec.js"),
   import("../src/core/seo.js"),
-  import("../src/logius/seo.js"), // check
+  import("../src/w3c/seo.js"), // changed from logius/seo.js to w3c/seo.js since there was no notable difference
   import("../src/core/highlight.js"),
   import("../src/core/webidl-clipboard.js"), // skipped by geonovum
   import("../src/core/data-tests.js"),
