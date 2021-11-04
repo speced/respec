@@ -125,7 +125,7 @@ function renderNotRec(conf) {
   let statusExplanation = null;
   let reviewPolicy = null;
   let endorsement = html`Publication as ${prefix(conf.textStatus)} does not
-  imply endorsement by the W3C Membership.`;
+  imply endorsement by W3C and its Members.`;
   let updatePolicy = html`<p>
     This is a draft document and may be updated, replaced or obsoleted by other
     documents at any time. It is inappropriate to cite this document as other

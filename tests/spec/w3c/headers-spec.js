@@ -98,7 +98,7 @@ describe("W3C — Headers", () => {
         "W3C Editor's Draft"
       );
       expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
-        "does not imply endorsement by the W3C Membership."
+        "does not imply endorsement by W3C and its Members."
       );
     });
 
@@ -158,7 +158,7 @@ describe("W3C — Headers", () => {
       const [result] = contains(
         edDoc,
         "p",
-        "Publication as an Editor's Draft does not imply endorsement by the W3C Membership"
+        "Publication as an Editor's Draft does not imply endorsement by W3C and its Members."
       );
       expect(result).toBeTruthy();
       const dNoteDoc = await makeRSDoc(
