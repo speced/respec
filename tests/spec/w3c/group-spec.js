@@ -17,7 +17,7 @@ describe("W3C — Group", () => {
     expect(conf.wg).toBe("Web Payments Working Group");
     expect(conf.wgId).toBe(83744);
     expect(conf.wgPatentURI).toBe("https://www.w3.org/groups/wg/payments/ipr");
-    expect(conf.wgURI).toBe("https://www.w3.org/Payments/WG/");
+    expect(conf.wgURI).toBe("https://www.w3.org/groups/wg/payments");
   });
 
   it("adds group details when a multiple groups are specified", async () => {
@@ -32,20 +32,20 @@ describe("W3C — Group", () => {
       "https://www.w3.org/groups/wg/webapps/ipr",
     ]);
     expect(conf.wgURI).toEqual([
-      "https://www.w3.org/Payments/WG/",
-      "https://www.w3.org/2019/webapps/",
+      "https://www.w3.org/groups/wg/payments",
+      "https://www.w3.org/groups/wg/webapps",
     ]);
   });
 
-  it("when a multiple groups are specified, and it's noRecTrack true, it pluralizes the groups", async () => {
+  it("when a multiple groups are specified, it pluralizes the groups", async () => {
     const ops = makeStandardOps({
       group: ["payments", "webapps"],
-      noRecTrack: true,
+      specStatus: "NOTE",
     });
     const doc = await makeRSDoc(ops);
-    const sotd = doc.getElementById("sotd").textContent;
+    const sotd = doc.getElementById("sotd").textContent.replace(/\s+/g, " ");
     expect(sotd).toContain(
-      "The groups do not expect this document to become a W3C Recommendation."
+      "by the Web Payments Working Group and the Web Applications Working Group as a Group Note using the Note track"
     );
   });
 
@@ -65,7 +65,7 @@ describe("W3C — Group", () => {
     expect(conf.wgPatentURI).toEqual([
       "https://www.w3.org/groups/wg/webapps/ipr",
     ]);
-    expect(conf.wgURI).toEqual(["https://www.w3.org/2019/webapps/"]);
+    expect(conf.wgURI).toEqual(["https://www.w3.org/groups/wg/webapps"]);
   });
 
   it("fails if multiple groups exist with same shortname", async () => {
