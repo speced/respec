@@ -40,12 +40,24 @@ describe("W3C — Headers", () => {
     expect(dl).toBeTruthy();
   });
 
+  it("removes the open attribute from details on save", async () => {
+    const opts = makeStandardOps({ specStatus: "WD" });
+    const doc = await makeRSDoc(opts);
+    doc.querySelector(".head details").open = true;
+    const exportedDoc = new DOMParser().parseFromString(
+      await doc.respec.toHTML(),
+      "text/html"
+    );
+    const details = exportedDoc.querySelector(".head details");
+    expect(details.hasAttribute("open")).toBeFalsy();
+  });
+
   it("links to the 'kinds of documents' only for W3C documents", async () => {
-    const statuses = ["FPWD", "LCWD", "WD", "CR", "CRD", "PR", "REC", "NOTE"];
+    const statuses = ["FPWD", "WD", "CR", "CRD", "PR", "REC", "NOTE"];
     for (const specStatus of statuses) {
       const doc = await makeRSDoc(makeStandardOps({ specStatus }));
       const w3cLink = doc.querySelector(
-        ".head a[href='https://www.w3.org/standards/types']"
+        `.head a[href='https://www.w3.org/standards/types#${specStatus}']`
       );
       expect(w3cLink).withContext(`specStatus: ${specStatus}`).toBeTruthy();
     }
@@ -53,7 +65,7 @@ describe("W3C — Headers", () => {
     for (const specStatus of ["unofficial", "base"]) {
       const doc = await makeRSDoc(makeStandardOps({ specStatus }));
       const w3cLink = doc.querySelector(
-        ".head a[href='https://www.w3.org/standards/types']"
+        ".head a[href='https://www.w3.org/standards/types#UD']"
       );
       expect(w3cLink).withContext(`specStatus: ${specStatus}`).toBeNull();
     }
@@ -82,11 +94,11 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelector(".head h2").textContent).toContain(
+      expect(doc.querySelector(".head p").textContent).toContain(
         "W3C Editor's Draft"
       );
       expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
-        "does not imply endorsement by the W3C Membership."
+        "does not imply endorsement by W3C and its Members."
       );
     });
 
@@ -97,9 +109,11 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
-        "has received the endorsement of the W3C and its Members. W3C recommends the wide deployment of this specification as a standard for the Web."
+      const sotd = collapsedTextContent(doc.getElementById("sotd"));
+      expect(sotd).toContain(
+        "W3C recommends the wide deployment of this specification as a standard for the Web."
       );
+      expect(sotd).toContain("Royalty-Free IPR licenses");
     });
 
     it("includes version links for 'draft-finding'", async () => {
@@ -134,13 +148,41 @@ describe("W3C — Headers", () => {
       expect(firstDt.textContent).toContain("Latest editor's draft:");
     });
 
+    it("prefixes status text properly", async () => {
+      const edDoc = await makeRSDoc(
+        makeStandardOps({
+          shortName: "test",
+          specStatus: "ED",
+        })
+      );
+      const [result] = contains(
+        edDoc,
+        "p",
+        "Publication as an Editor's Draft does not imply endorsement by W3C and its Members."
+      );
+      expect(result).toBeTruthy();
+      const dNoteDoc = await makeRSDoc(
+        makeStandardOps({
+          shortName: "test",
+          specStatus: "DNOTE",
+          group: "webperf",
+        })
+      );
+      const [result2] = contains(
+        dNoteDoc,
+        "p",
+        "This document was published by the Web Performance Working Group as a Group Draft Note using the Note track."
+      );
+      expect(result2).toBeTruthy();
+    });
+
     describe("specStatus - base", () => {
       it("doesn't add 'w3c' to header when status is base", async () => {
         const ops = makeStandardOps({
           specStatus: "base",
         });
         const doc = await makeRSDoc(ops);
-        expect(doc.querySelector(".head h2").textContent).not.toContain("W3C");
+        expect(doc.querySelector(".head p").textContent).not.toContain("W3C");
       });
     });
   });
@@ -940,7 +982,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "h2", "15 March 1977")).toHaveSize(1);
+      expect(contains(doc, "p", "15 March 1977")).toHaveSize(1);
     });
   });
 
@@ -952,7 +994,7 @@ describe("W3C — Headers", () => {
       });
       const doc = await makeRSDoc(ops);
 
-      const [dateStatusEl] = contains(doc, "h2", "15 March 1977");
+      const [dateStatusEl] = contains(doc, "p", "15 March 1977");
       expect(dateStatusEl).toBeDefined();
 
       const dateModified = dateStatusEl.querySelector(".dt-modified");
@@ -969,7 +1011,7 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps({ publishDate: "1977-03-15" });
       const doc = await makeRSDoc(ops);
 
-      const [dateStatusEl] = contains(doc, "h2", "15 March 1977");
+      const [dateStatusEl] = contains(doc, "p", "15 March 1977");
       const text = collapsedTextContent(dateStatusEl).trim();
       expect(text).toMatch(/15 March 1977$/);
     });
@@ -1001,7 +1043,7 @@ describe("W3C — Headers", () => {
     it("takes previousPublishDate and previousMaturity into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
-        specStatus: "REC",
+        specStatus: "finding",
         publishDate: "2017-03-15",
         previousPublishDate: "1977-03-15",
         previousMaturity: "CR",
@@ -1010,8 +1052,8 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const [dt] = contains(doc, "dt", "Previous version:");
       expect(dt.nextElementSibling.localName).toBe("dd");
-      expect(dt.nextElementSibling.textContent).toMatch(
-        /\/1977\/CR-[^/]+-19770315\//
+      expect(dt.nextElementSibling.textContent).toContain(
+        "https://www.w3.org/2001/tag/doc"
       );
     });
   });
@@ -1569,7 +1611,7 @@ describe("W3C — Headers", () => {
     it("gracefully handles missing wgPatentURI", async () => {
       const ops = makeStandardOps();
       const newProps = {
-        specStatus: "FPWD-NOTE",
+        specStatus: "NOTE",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
@@ -1595,7 +1637,7 @@ describe("W3C — Headers", () => {
       expect(elem).toBeNull();
     });
     it("excludes the long patent text for note types", async () => {
-      const noteTypes = ["WG-NOTE", "FPWD-NOTE"];
+      const noteTypes = ["DNOTE", "NOTE"];
       for (const specStatus of noteTypes) {
         const opts = makeStandardOps({ specStatus });
         const doc = await makeRSDoc(opts);
@@ -1603,86 +1645,9 @@ describe("W3C — Headers", () => {
         const [p] = contains(sotd, "p", "Patent Policy");
         const normalized = p.textContent.trim().replace(/\s+/gm, " ");
         expect(normalized).toBe(
-          "This document was produced by a group operating under the W3C Patent Policy."
+          "The W3C Patent Policy does not carry any licensing requirements or commitments on this document."
         );
       }
-    });
-    it("includes specific text for IG-Notes", async () => {
-      const opts = makeStandardOps({ specStatus: "IG-NOTE" });
-      const doc = await makeRSDoc(opts);
-      const sotd = doc.querySelector("#sotd");
-      const [p] = contains(sotd, "p", "The disclosure obligations");
-      const normalized = p.textContent.trim().replace(/\s+/gm, " ");
-      expect(normalized).toBe(
-        "The disclosure obligations of the Participants of this group are described in the charter."
-      );
-    });
-  });
-
-  describe("wg, wgURI, wgPatentURI, wgPublicList", () => {
-    it("takes wg configurations into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        wg: "WGNAME",
-        wgURI: "WGURI",
-        wgPatentURI: "WGPATENT",
-        wgPublicList: "WGLIST",
-        subjectPrefix: "[The Prefix]",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      const sotd = doc.getElementById("sotd");
-      expect(contains(sotd, "p", "CUSTOM PARAGRAPH")).toHaveSize(1);
-      expect(contains(sotd, "a", "WGNAME")).toHaveSize(1);
-      expect(contains(sotd, "a", "WGNAME")[0].getAttribute("href")).toBe(
-        "WGURI"
-      );
-      expect(contains(sotd, "a", "WGLIST")).toHaveSize(1);
-      expect(contains(sotd, "a", "WGLIST")[0].getAttribute("href")).toBe(
-        "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
-      );
-      expect(contains(sotd, "a", "archives")[0].getAttribute("href")).toBe(
-        "https://lists.w3.org/Archives/Public/WGLIST/"
-      );
-      expect(contains(sotd, "a", "disclosures")[0].getAttribute("href")).toBe(
-        "WGPATENT"
-      );
-    });
-
-    it("takes multi-group configurations into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        wg: ["WGNAME1", "WGNAME2"],
-        wgURI: ["WGURI1", "WGURI2"],
-        wgPatentURI: ["WGPATENT1", "WGPATENT2"],
-        wgPublicList: "WGLIST",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      const sotd = doc.getElementById("sotd");
-      expect(contains(sotd, "a", "WGNAME1")).toHaveSize(2);
-      expect(contains(sotd, "a", "WGNAME2")).toHaveSize(2);
-      expect(contains(sotd, "a", "WGNAME1")[0].getAttribute("href")).toBe(
-        "WGURI1"
-      );
-      expect(contains(sotd, "a", "WGNAME2")[0].getAttribute("href")).toBe(
-        "WGURI2"
-      );
-      expect(contains(sotd, "a", "WGNAME1")[1].getAttribute("href")).toBe(
-        "WGPATENT1"
-      );
-      expect(contains(sotd, "a", "WGNAME2")[1].getAttribute("href")).toBe(
-        "WGPATENT2"
-      );
-      expect(contains(sotd, "a", "disclosures")).toHaveSize(2);
-      expect(contains(sotd, "a", "WGLIST")).toHaveSize(1);
-    });
-
-    it("does not emit working group link without conf.wg", async () => {
-      const ops = makeStandardOps();
-      const doc = await makeRSDoc(ops);
-      const sotd = doc.getElementById("sotd");
-      expect(sotd.textContent).not.toContain("This document was published by");
     });
   });
 
@@ -1705,13 +1670,13 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "Proposed Edited Recommendation");
-      expect(f).toHaveSize(3);
+      expect(f).toHaveSize(2);
       const questionnaires = doc
         .getElementById("sotd")
         .querySelector(
           "a[href='https://www.w3.org/2002/09/wbs/myQuestionnaires']"
         );
-      expect(questionnaires).toBeTruthy();
+      expect(questionnaires).toBeNull();
     });
   });
 
@@ -1731,9 +1696,6 @@ describe("W3C — Headers", () => {
       const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "CUSTOM PARAGRAPH");
       expect(f).toHaveSize(1);
-      expect(contains(f[0].previousElementSibling, "a", "WGLIST")).toHaveSize(
-        1
-      );
     });
 
     it("localizes sotd", async () => {
@@ -1752,21 +1714,6 @@ describe("W3C — Headers", () => {
       const { textContent } = doc.querySelector("#sotd h2");
       expect(doc.documentElement.lang).toBe("es");
       expect(textContent).toContain("Estado de este Document");
-    });
-  });
-
-  describe("charterDisclosureURI", () => {
-    it("takes charterDisclosureURI into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "IG-NOTE",
-        charterDisclosureURI: "URI",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(contains(doc, "#sotd a", "charter")[0].getAttribute("href")).toBe(
-        "URI"
-      );
     });
   });
 
@@ -2121,38 +2068,6 @@ describe("W3C — Headers", () => {
       expect(aElem).toBeTruthy();
     });
   });
-  // See https://github.com/w3c/respec/issues/653
-  it("states that the spec is destined to become a note", async () => {
-    const ops = makeStandardOps();
-    const newProps = {
-      noRecTrack: true,
-      specStatus: "WD",
-      recNotExpected: true,
-    };
-    Object.assign(ops.config, newProps);
-    const doc = await makeRSDoc(ops);
-    const sotdText = doc
-      .getElementById("sotd")
-      .textContent.replace(/\s+/gm, " ");
-    const expectedString =
-      "does not expect this document to become a W3C Recommendation";
-    expect(sotdText).toContain(expectedString);
-  });
-  it("states that the document won't be on the W3C Rec Track", async () => {
-    const ops = makeStandardOps();
-    const newProps = {
-      noRecTrack: true,
-      status: "ED",
-    };
-    Object.assign(ops.config, newProps);
-    const doc = await makeRSDoc(ops);
-    const sotdText = doc
-      .getElementById("sotd")
-      .textContent.replace(/\s+/gm, " ");
-    const expectedString =
-      "does not expect this document to become a W3C Recommendation";
-    expect(sotdText).toContain(expectedString);
-  });
 
   describe("logos", () => {
     it("does not add any default logo when spec is unofficial", async () => {
@@ -2190,7 +2105,7 @@ describe("W3C — Headers", () => {
     });
 
     it("adds W3C logo for status W3C Notes", async () => {
-      const notes = ["FPWD-NOTE", "WG-NOTE"];
+      const notes = ["DNOTE", "NOTE"];
       for (const specStatus of notes) {
         const ops = makeStandardOps({ specStatus });
         const doc = await makeRSDoc(ops);
@@ -2280,7 +2195,7 @@ describe("W3C — Headers", () => {
         },
         {
           id: "logo-3",
-          src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+          src: "https://www.w3.org/StyleSheets/TR/2021/logos/W3C",
           alt: "some alt",
         },
       ];
@@ -2353,7 +2268,9 @@ describe("W3C — Headers", () => {
       expect(historyLink.href).toBe(
         "https://www.w3.org/standards/history/test"
       );
-      expect(historyLink.textContent).toContain("Publication history");
+      expect(historyLink.textContent).toContain(
+        "https://www.w3.org/standards/history/test"
+      );
     });
 
     it("includes a dd for the commit history of the document", async () => {
@@ -2363,16 +2280,16 @@ describe("W3C — Headers", () => {
         specStatus: "WD",
       });
       const doc = await makeRSDoc(ops);
-      const [commitHistory] = contains(doc, ".head dd>a", "Commit history");
-      expect(commitHistory.href).toBe("https://github.com/w3c/respec/commits/");
+      const commitHistory = doc.querySelector(
+        ".head dd>a[href='https://github.com/w3c/respec/commits/']"
+      );
+      expect(commitHistory).toBeTruthy();
       const [publicationHistory] = contains(
         doc,
-        ".head dd>a",
-        "Publication history"
+        ".head dd>a[href='https://www.w3.org/standards/history/test']",
+        "https://www.w3.org/standards/history/test"
       );
-      expect(publicationHistory.href).toBeTruthy(
-        "https://www.w3.org/standards/history/respec"
-      );
+      expect(publicationHistory).toBeTruthy();
     });
 
     it("includes a dd for the commit history, but excludes a publication history for unpublished types", async () => {

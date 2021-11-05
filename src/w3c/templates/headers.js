@@ -4,6 +4,7 @@ import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
+import { sub } from "../../core/pubsubhub.js";
 
 const localizationStrings = {
   en: {
@@ -142,12 +143,20 @@ function getSpecSubTitleElem(conf) {
   return specSubTitleElem;
 }
 
+/**
+ * After export, we let fixup.js handle the <details>.
+ */
+sub("beforesave", doc => {
+  const details = doc.querySelector(".head details");
+  details.removeAttribute("open");
+});
+
 export default (conf, options) => {
   return html`<div class="head">
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
-    <h2>${renderSpecTitle(conf)}</h2>
-    <details open="">
+    <p id="w3c-state">${renderSpecTitle(conf)}</p>
+    <details open="${localStorage.getItem("tr-metadata") || "true"}">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
         ${(conf.isTagFinding && !conf.isTagEditorFinding) || !conf.isNoTrack
@@ -320,7 +329,7 @@ function renderHistory(conf) {
   const ddElements = [];
   if (conf.historyURI) {
     const dd = html`<dd>
-      <a href="${conf.historyURI}">${l10n.publication_history}</a>
+      <a href="${conf.historyURI}">${conf.historyURI}</a>
     </dd>`;
     ddElements.push(dd);
   }
@@ -338,9 +347,11 @@ function renderHistory(conf) {
 }
 
 function renderSpecTitle(conf) {
-  const specType = conf.isCR ? conf.longStatus : conf.textStatus;
+  const specType = conf.isCR || conf.isCRY ? conf.longStatus : conf.textStatus;
   const preamble = conf.prependW3C
-    ? html`<a href="https://www.w3.org/standards/types">W3C ${specType}</a>`
+    ? html`<a href="https://www.w3.org/standards/types#${conf.specStatus}"
+        >W3C ${specType}</a
+      >`
     : html`${specType}`;
 
   return html`${preamble}${" "}
