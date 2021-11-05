@@ -381,6 +381,7 @@ export function run(conf) {
       showError(msg, name);
     }
   });
+/*
   conf.multipleAlternates =
     conf.alternateFormats && conf.alternateFormats.length > 1;
   conf.alternatesHTML =
@@ -392,7 +393,8 @@ export function run(conf) {
         alt.hasOwnProperty("type") && alt.type ? ` type='${alt.type}'` : "";
       return `<a rel='alternate' href='${alt.uri}'${optional}>${alt.label}</a>`;
     });
-  if (conf.bugTracker) {
+*/  
+if (conf.bugTracker) {
     if (conf.bugTracker["new"] && conf.bugTracker.open) {
       conf.bugTrackerHTML = `<a href='${conf.bugTracker["new"]}'>${conf.l10n.file_a_bug}</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${conf.l10n.open_bugs}</a>${conf.l10n.close_parens}`;
     } else if (conf.bugTracker.open) {
@@ -450,6 +452,8 @@ export function run(conf) {
   });
   // configuration done - yay!
 
+
+/*
   const options = {
     get multipleAlternates() {
       return conf.alternateFormats && conf.alternateFormats.length > 1;
@@ -471,6 +475,36 @@ export function run(conf) {
       );
     },
   };
+
+*/
+// w3c version
+
+  const options = {
+    get multipleAlternates() {
+      return conf.alternateFormats && conf.alternateFormats.length > 1;
+    },
+    get alternatesHTML() {
+      return (
+        conf.alternateFormats &&
+        htmlJoinAnd(
+          // We need to pass a string here...
+          conf.alternateFormats.map(({ label }) => label),
+          (_, i) => {
+            const alt = conf.alternateFormats[i];
+            return html`<a
+              rel="alternate"
+              href="${alt.uri}"
+              hreflang="${alt?.lang ?? null}"
+              type="${alt?.type ?? null}"
+              >${alt.label}</a
+            >`;
+          }
+        )
+      );
+    },
+  };
+
+
   // insert into document
   const header = headersTmpl(conf, options);
   document.body.insertBefore(header, document.body.firstChild);
