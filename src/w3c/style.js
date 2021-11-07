@@ -91,6 +91,10 @@ export function run(conf) {
 
   // Figure out which style file to use.
   switch (conf.specStatus.toUpperCase()) {
+    case "WD":
+    case "FPWD":
+      styleFile = "W3C-WD";
+      break;
     case "CG-DRAFT":
     case "CG-FINAL":
     case "BG-DRAFT":

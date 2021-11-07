@@ -5,7 +5,7 @@ import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 const specStatus = [
   {
     status: "FPWD",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-WD",
   },
   {
     status: "NOTE",
