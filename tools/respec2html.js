@@ -5,7 +5,8 @@ const serveStatic = require("serve-static");
 const finalhandler = require("finalhandler");
 const sade = require("sade");
 const colors = require("colors");
-const marked = require("marked");
+const { marked } = require("marked");
+
 const { writeFile } = require("fs").promises;
 const { toHTML } = require("./respecDocWriter.js");
 
