@@ -40,7 +40,7 @@ describe("W3C — Headers", () => {
     expect(dl).toBeTruthy();
   });
 
-  it("removes the open attribute from details on save", async () => {
+  it("sets the open attribute from details on save", async () => {
     const opts = makeStandardOps({ specStatus: "WD" });
     const doc = await makeRSDoc(opts);
     doc.querySelector(".head details").open = true;
@@ -48,8 +48,7 @@ describe("W3C — Headers", () => {
       await doc.respec.toHTML(),
       "text/html"
     );
-    const details = exportedDoc.querySelector(".head details");
-    expect(details.hasAttribute("open")).toBeFalsy();
+    expect(exportedDoc.querySelector(".head details[open]")).toBeTruthy();
   });
 
   it("links to the 'kinds of documents' only for W3C documents", async () => {
