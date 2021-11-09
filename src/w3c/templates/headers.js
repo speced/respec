@@ -148,7 +148,7 @@ function getSpecSubTitleElem(conf) {
  */
 sub("beforesave", doc => {
   const details = doc.querySelector(".head details");
-  details.removeAttribute("open");
+  details.open = true;
 });
 
 export default (conf, options) => {
