@@ -126,7 +126,6 @@ const status2maturity = {
 
 const publicationSpaces = {
   "Member-SUBM": "/Submission",
-  "Team-SUBM": "/TeamSubmission/",
   finding: "/2001/tag/doc",
   "draft-finding": "/2001/tag/doc",
 };
@@ -136,7 +135,6 @@ const status2text = {
   NOTE: "Group Note",
   STMT: "Statement",
   "Member-SUBM": "Member Submission",
-  "Team-SUBM": "Team Submission",
   MO: "Member-Only Document",
   ED: "Editor's Draft",
   LS: "Living Standard",
@@ -401,17 +399,6 @@ export async function run(conf) {
     };
     conf.logos.push({ ...baseLogo, ...memSubmissionLogo });
   }
-  conf.isTeamSubmission = conf.specStatus === "Team-SUBM";
-  if (conf.isTeamSubmission) {
-    const teamSubmissionLogo = {
-      alt: "W3C Team Submission",
-      href: "https://www.w3.org/TeamSubmission/",
-      src: "https://www.w3.org/Icons/team_subm-v.svg",
-      width: "211",
-    };
-    conf.logos.push({ ...baseLogo, ...teamSubmissionLogo });
-  }
-  conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
   conf.isTagFinding =
     conf.specStatus === "finding" ||
     conf.specStatus === "draft-finding" ||
