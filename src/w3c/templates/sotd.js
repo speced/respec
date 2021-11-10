@@ -139,8 +139,7 @@ function renderNotRec(conf) {
     This document is maintained and updated at any time. Some parts of this
     document are work in progress.
   </p>`;
-
-  switch (conf.textStatus) {
+  switch (conf.specStatus) {
     case "STMT":
       endorsement = html`<p>
         A W3C Statement is a specification that, after extensive
@@ -225,7 +224,7 @@ function renderNotRec(conf) {
     case "DNOTE":
     case "NOTE":
       endorsement = html`${conf.textStatus}s are not endorsed by the
-        <abbr title="World Wide Web Consortium">W3C</abbr> nor its Membership.`;
+        <abbr title="World Wide Web Consortium">W3C</abbr> nor its Members.`;
       break;
   }
   return html`<p>${endorsement} ${statusExplanation}</p>
