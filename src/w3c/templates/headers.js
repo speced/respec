@@ -143,15 +143,15 @@ function getSpecSubTitleElem(conf) {
   return specSubTitleElem;
 }
 
-/**
- * After export, we let fixup.js handle the <details>.
- */
-sub("beforesave", doc => {
-  const details = doc.querySelector(".head details");
-  details.open = true;
-});
-
 export default (conf, options) => {
+  /**
+   * After export, we let fixup.js handle the <details>.
+   */
+  sub("beforesave", doc => {
+    const details = doc.querySelector(".head details");
+    details.open = true;
+  });
+
   return html`<div class="head">
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
