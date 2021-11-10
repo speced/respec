@@ -46,7 +46,7 @@ export default (conf, opts) => {
       ? renderIsNoTrack(conf, opts)
       : html`
           <p><em>${conf.l10n.status_at_publication}</em></p>
-          ${conf.isSubmission
+          ${conf.isMemberSubmission
             ? noteForSubmission(conf, opts)
             : html`
                 ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
@@ -139,8 +139,7 @@ function renderNotRec(conf) {
     This document is maintained and updated at any time. Some parts of this
     document are work in progress.
   </p>`;
-
-  switch (conf.textStatus) {
+  switch (conf.specStatus) {
     case "STMT":
       endorsement = html`<p>
         A W3C Statement is a specification that, after extensive
@@ -225,7 +224,7 @@ function renderNotRec(conf) {
     case "DNOTE":
     case "NOTE":
       endorsement = html`${conf.textStatus}s are not endorsed by the
-        <abbr title="World Wide Web Consortium">W3C</abbr> nor its Membership.`;
+        <abbr title="World Wide Web Consortium">W3C</abbr> nor its Members.`;
       break;
   }
   return html`<p>${endorsement} ${statusExplanation}</p>
@@ -353,11 +352,7 @@ function renderDeliverer(conf) {
 function noteForSubmission(conf, opts) {
   return html`
     ${opts.additionalContent}
-    ${conf.isMemberSubmission
-      ? noteForMemberSubmission(conf)
-      : conf.isTeamSubmission
-      ? noteForTeamSubmission(conf, opts)
-      : ""}
+    ${conf.isMemberSubmission ? noteForMemberSubmission(conf) : ""}
   `;
 }
 
@@ -393,16 +388,6 @@ function noteForMemberSubmission(conf) {
       >list of acknowledged W3C Member Submissions</a
     >.
   </p>`;
-}
-
-function noteForTeamSubmission(conf, opts) {
-  return html`
-    ${renderPublicList(conf, opts)}
-    <p>
-      Please consult the complete
-      <a href="https://www.w3.org/TeamSubmission/">list of Team Submissions</a>.
-    </p>
-  `;
 }
 
 export function renderPublicList(conf, opts) {
