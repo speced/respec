@@ -17,29 +17,32 @@ export async function run(conf, doc, cb) {
 }
 
 function processImages() {
-  Array.from(
-    document.querySelectorAll("figure.scalable img")
-  ).forEach(image => {
-    const { width, height, src } = image;
-    image.hidden = true;
-    const div = document.createElement("div");
-    div.classList.add("removeOnSave");
-    const map = L.map(div, {
-      maxZoom: 4,
-      minZoom: -4,
-      center: [0, 0],
-      crs: L.CRS.Simple,
-    });
-    const imageBounds = [[0, 0], [height, width]];
-    image.insertAdjacentElement("beforebegin", div);
-    map.setView([height / 2, width / 2], 1);
-    [
-      L.easyButton("fa-arrows-alt", () => window.open(src, "_blank")),
-      L.easyButton("fa-globe", () => map.fitBounds(imageBounds)),
-      L.imageOverlay(src, imageBounds),
-    ].forEach(item => item.addTo(map));
-    map.fitBounds(imageBounds);
-  });
+  Array.from(document.querySelectorAll("figure.scalable img")).forEach(
+    image => {
+      const { width, height, src } = image;
+      image.hidden = true;
+      const div = document.createElement("div");
+      div.classList.add("removeOnSave");
+      const map = L.map(div, {
+        maxZoom: 4,
+        minZoom: -4,
+        center: [0, 0],
+        crs: L.CRS.Simple,
+      });
+      const imageBounds = [
+        [0, 0],
+        [height, width],
+      ];
+      image.insertAdjacentElement("beforebegin", div);
+      map.setView([height / 2, width / 2], 1);
+      [
+        L.easyButton("fa-arrows-alt", () => window.open(src, "_blank")),
+        L.easyButton("fa-globe", () => map.fitBounds(imageBounds)),
+        L.imageOverlay(src, imageBounds),
+      ].forEach(item => item.addTo(map));
+      map.fitBounds(imageBounds);
+    }
+  );
 }
 
 const rawProcessImages = `
@@ -80,7 +83,7 @@ function addLeafletOnSave(rootElem) {
   leafletScript.src =
     "https://tools.geostandaarden.nl/respec/scripts/leaflet.js";
 
-  //Loads easy button
+  // Loads easy button
   const easyButtonScript = doc.createElement("script");
   easyButtonScript.src =
     "https://tools.geostandaarden.nl/respec/scripts/easy-button.js";

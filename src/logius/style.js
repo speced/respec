@@ -6,9 +6,9 @@
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
 import {
-  showWarning,
   createResourceHint,
   linkCSS,
+  showWarning,
   toKeyValuePairs,
 } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
@@ -64,21 +64,6 @@ function createBaseStyle() {
   link.href = getBaseStyleURI();
   link.classList.add("removeOnSave");
   return link;
-}
-
-function selectStyleVersion(styleVersion) {
-  let version = "";
-  switch (styleVersion) {
-    case null:
-    case true:
-      version = "";
-      break;
-    default:
-      if (styleVersion && !isNaN(styleVersion)) {
-        version = styleVersion.toString().trim();
-      }
-  }
-  return version;
 }
 
 function createResourceHints() {
@@ -224,11 +209,11 @@ export function run(conf) {
     const msg = `respecConfig.nl_organisationStylesURL missing. Defaulting to '${conf.nl_organisationStylesURL}'.`;
     showWarning(msg, name);
   }
-  
-   if (!conf.noToc) {
+
+  if (!conf.noToc) {
     sub("end-all", attachFixupScript, { once: true });
   }
-  
+
   const finalStyleURL = `${conf.nl_organisationStylesURL}${finalVersionPath}${styleFile}`;
   // (`using ${finalStyleURL}`);
   linkCSS(document, finalStyleURL);
