@@ -92,7 +92,10 @@
 /* pieter hering start synced with w3c version */
 import {
   ISODate,
+  codedJoinAnd,
+  codedJoinOr,
   concatDate,
+  docLink,
   htmlJoinAnd,
   showError,
   showWarning,
@@ -185,7 +188,11 @@ const licenses = {
   },
 };
 
-// todo check fixed, static url
+/**
+ * @param {*} conf
+ * @param {string} prop
+ * @param {string | number | Date} fallbackDate
+ */
 function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   const date = conf[prop] ? new Date(conf[prop]) : new Date(fallbackDate);
   // if date is valid
@@ -193,9 +200,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
     const formattedDate = ISODate.format(date);
     return new Date(formattedDate);
   }
-  const msg =
-    `[\`${prop}\`](https://github.com/w3c/respec/wiki/${prop}) ` +
-    `is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
+  const msg = docLink`${prop} is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
   showError(msg, name);
   return new Date(ISODate.format(new Date()));
 }
@@ -545,7 +550,7 @@ if (conf.bugTracker) {
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgHTML = htmlJoinAnd(conf.wg, (wg, idx) => {
-      return `the <a href='${conf.wgURI[idx]}'>${wg}</a>`;
+      return html`the <a href='${conf.wgURI[idx]}'>${wg}</a>`;
     });
     const pats = [];
     for (let i = 0, n = conf.wg.length; i < n; i++) {

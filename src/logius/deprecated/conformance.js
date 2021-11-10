@@ -1,4 +1,3 @@
-// @ts-check
 // Module w3c/conformance
 // Handle the conformance section properly.
 import { getIntlData, htmlJoinAnd } from "../core/utils.js";

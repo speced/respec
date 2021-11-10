@@ -30,17 +30,18 @@ function checkImgAlt(conf) {
     !conf.nl_markdownEmbedImageInFigure
   ) {
     return;
+  }  
+  /** @type {NodeListOf<HTMLImageElement>} */
+  const elems = document.querySelectorAll("section[data-format=markdown] img");
+  const offendingElements = [...elems].filter(
+    elem => !elem.alt
+  );
+  if (!offendingElements.length) {
+    return;
   }
-
-[...document.querySelectorAll("section[data-format=markdown] img")]
-  .filter(img => !img.closest("figure"))
-  .forEach(img => {
-    if (!img.alt) {
-      const msg = "Image missing alternative text.";
+  const msg = "Image missing alternative text.";
       const hint = "";
-      showWarning(msg, name, { elements: [img], hint });
-    }
-  });
+  showWarning(msg, name, { elements: offendingElements, hint });
 }
 
 // todo check if algorithm is correct!

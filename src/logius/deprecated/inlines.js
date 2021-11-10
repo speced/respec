@@ -1,4 +1,3 @@
-// @ts-check
 // Module core/inlines
 // Process all manners of inline information. These are done together despite it being
 // seemingly a better idea to orthogonalise them. The issue is that processing text nodes
