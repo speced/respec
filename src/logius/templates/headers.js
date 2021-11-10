@@ -1,5 +1,5 @@
 // @ts-check
-import { showWarning, getIntlData, humanDate } from "../../core/utils.js";
+import { getIntlData, humanDate, showWarning } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
@@ -8,7 +8,6 @@ import showPeople from "../../core/templates/show-people.js";
 const name = "logius/templates/headers";
 
 const ccLicense = "https://creativecommons.org/licenses/by/4.0/";
-const w3cLicense = "https://www.w3.org/Consortium/Legal/copyright-documents";
 const legalDisclaimer =
   "https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer";
 const w3cTrademark =
@@ -337,8 +336,8 @@ function renderOfficialCopyright(conf) {
         >ERCIM</abbr
       ></a
     >, <a href="https://www.keio.ac.jp/">Keio</a>,
-    <a href="https://ev.buaa.edu.cn/">Beihang</a>). W3C
-    W3C <a href="${legalDisclaimer}">liability</a>,
+    <a href="https://ev.buaa.edu.cn/">Beihang</a>). W3C W3C
+    <a href="${legalDisclaimer}">liability</a>,
     <a href="${w3cTrademark}">trademark</a> and ${linkDocumentUse(conf)} rules
     apply.
   </p>`;

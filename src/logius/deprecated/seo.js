@@ -2,7 +2,7 @@
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
 
-//import { pub } from "../core/pubsubhub.js";
+// import { pub } from "../core/pubsubhub.js";
 import { showWarning } from "../core/utils.js";
 import { resolveRef } from "../core/biblio.js";
 export const name = "w3c/seo";
@@ -73,7 +73,6 @@ export async function run(conf) {
   if (conf.doJsonLd) {
     await addJSONLDInfo(conf, document);
   }
-  
 }
 
 async function addJSONLDInfo(conf, doc) {

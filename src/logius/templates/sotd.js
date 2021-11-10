@@ -33,15 +33,15 @@ export default (conf, opts) => {
     <h2>${l10n.sotd}</h2>
     ${conf.isPreview ? renderPreview(conf) : ""}
     ${conf.isDEF
-      ? renderDEF(conf, opts)
+      ? renderDEF(opts)
       : conf.isVV
-      ? renderVV(conf, opts)
+      ? renderVV(opts)
       : conf.isCV
-      ? renderCV(conf, opts)
+      ? renderCV(opts)
       : conf.isWV
-      ? renderWV(conf, opts)
+      ? renderWV(opts)
       : conf.isBASIS
-      ? renderBASIS(conf, opts)
+      ? renderBASIS()
       : ""}
     ${renderGovernance(conf)} ${opts.additionalSections}
   `;
@@ -72,14 +72,14 @@ export function renderPreview(conf) {
   </details>`;
 }
 
-function renderDEF(conf, opts) {
+function renderDEF(opts) {
   return html`<p>
     Dit is de definitieve versie van ${opts.specDocument}. Wijzigingen naar
     aanleiding van consultaties zijn doorgevoerd.
   </p>`;
 }
 
-function renderWV(conf, opts) {
+function renderWV(opts) {
   return html`<p>
     Dit is een werkversie die op elk moment kan worden gewijzigd, verwijderd of
     vervangen door andere documenten. Het is geen door
@@ -87,19 +87,19 @@ function renderWV(conf, opts) {
   </p>`;
 }
 
-function renderCV(conf, opts) {
+function renderCV(opts) {
   return html` Dit is een door ${opts.operationalCommittee} goedgekeurde
     consultatieversie. Commentaar over dit document kan gestuurd worden naar
     <a href="${opts.emailCommentsMailto}"> ${opts.emailComments}</a>.`;
 }
 
-function renderVV(conf, opts) {
+function renderVV(opts) {
   return html`Dit is een definitief concept van de nieuwe versie van
   ${opts.specDocument}. Wijzigingen naar aanleiding van consultaties zijn
   doorgevoerd.`;
 }
 
-function renderBASIS(conf, opts) {
+function renderBASIS() {
   return html`Dit is een document zonder officiële status.`;
 }
 
@@ -139,7 +139,7 @@ function renderGovernance(conf) {
       governanceType += 200;
       break;
   }
-  //console.log(`governanceType: ${governanceType}`);
+  // console.log(`governanceType: ${governanceType}`);
   switch (governanceType) {
     case 111: // Geonovum + ST + DEF
       govText = `De programmaraad van Geonovum heeft deze standaard goedgekeurd.`;

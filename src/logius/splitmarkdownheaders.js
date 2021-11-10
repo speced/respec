@@ -1,38 +1,38 @@
 // @ts-check
 /*
-* Logius addition
-* this script splits markdown level 1 headers ("#") in seperate sections
+ * Logius addition
+ * this script splits markdown level 1 headers ("#") in seperate sections
  * in order to (temporary) fix a problem with markdown/respec
  * since a MD-document may only a single H1 header
-* e.g.
-* (note: newlines as required by markdown are removed for readibility)
-*
-* <section data-format="markdown">
-*   # Hoofdstuk 1
-*   ## This is level 1.2
-*   This is a paragraph with some `code`.
-*   # Hoofdstuk 2
-*   ## This is level 2.2
-* </section>
-*
-* into
-*
-* <section data-format="markdown">
-*   # Hoofdstuk 1
-*   ## This is level 1.2
-*   This is a paragraph with some `code`.
-* </section>
-* <section data-format="markdown">
-*   # Hoofdstuk 2
-*   ## This is level 2.2
-* </section>
-*
-*
+ * e.g.
+ * (note: newlines as required by markdown are removed for readibility)
+ *
+ * <section data-format="markdown">
+ *   # Hoofdstuk 1
+ *   ## This is level 1.2
+ *   This is a paragraph with some `code`.
+ *   # Hoofdstuk 2
+ *   ## This is level 2.2
+ * </section>
+ *
+ * into
+ *
+ * <section data-format="markdown">
+ *   # Hoofdstuk 1
+ *   ## This is level 1.2
+ *   This is a paragraph with some `code`.
+ * </section>
+ * <section data-format="markdown">
+ *   # Hoofdstuk 2
+ *   ## This is level 2.2
+ * </section>
+ *
+ *
  */
 
 export const name = "logius/splitmarkdownheaders";
 
-// todo refactor + correct commenting etc 
+// todo refactor + correct commenting etc
 // todo testing
 export function run(conf) {
   const hasMDSections = !!document.querySelector(
@@ -43,16 +43,14 @@ export function run(conf) {
     return; // Nothing to be done
   }
   // Pieter Hering, Logius
-  // splitMDsections is a Logius specific config property 
+  // splitMDsections is a Logius specific config property
   if ((isMDFormat || hasMDSections) && conf.nl_markdownSplitH1sections) {
     splitH1sections("[data-format=markdown]:not(body)");
     // const newBody = splitH1sections("[data-format=markdown]:not(body)");
     // document.body.replaceWith(newBody);
   }
   // end addition
-
 }
-
 
 // splitH1Sections performs the following steps
 // 1. select all nodes according to selector filter
@@ -62,9 +60,9 @@ export function run(conf) {
 // 5. remove the marked original nodes
 function splitH1sections(selector) {
   // Todo
-  // for some unknown reason the more logical cloneNode works 
+  // for some unknown reason the more logical cloneNode works
   // but has the strange side effect that the 'RespecPill' keeps on rotating
-  // therefor we operate directly on the document.body itself 
+  // therefor we operate directly on the document.body itself
   const bodyCopy = document.body; // .cloneNode(true);
   let elements = bodyCopy.querySelectorAll(selector);
 
@@ -76,7 +74,7 @@ function splitH1sections(selector) {
 
     let beforeNode = element;
     for (let i = newNode.childNodes.length - 1; i >= 0; i--) {
-      // insert the node backwards, to avoid some side effects when inserting childnodes 
+      // insert the node backwards, to avoid some side effects when inserting childnodes
       beforeNode = element.parentNode.insertBefore(
         newNode.childNodes[i],
         beforeNode
@@ -84,7 +82,7 @@ function splitH1sections(selector) {
     }
   });
   // the selector is  using '~=' in query to retrieve all node that contains the removeme attribute
-  // this fixes a bug where 'normative removeme'was not recognized 
+  // this fixes a bug where 'normative removeme'was not recognized
   elements = bodyCopy.querySelectorAll("[class~=removeme]:not(body)");
   // remove original elements
   elements.forEach(el => {
@@ -105,12 +103,12 @@ function filterH1lines(element) {
 
   const pos = [0];
   for (const match of matches) {
-    // skip first match since Respec starts a new section by default 
+    // skip first match since Respec starts a new section by default
     if (match.index > 0) {
       pos.push(match.index);
     }
   }
-  // add position of last character to have correct pairs for the substring operation    
+  // add position of last character to have correct pairs for the substring operation
   pos.push(element.innerHTML.length - 1);
 
   // create a div element as a container for the split sections

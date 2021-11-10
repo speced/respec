@@ -26,21 +26,17 @@ function addClassTables(conf) {
 }
 
 function checkImgAlt(conf) {
-  if (
-    !conf.nl_markdownEmbedImageInFigure
-  ) {
+  if (!conf.nl_markdownEmbedImageInFigure) {
     return;
-  }  
+  }
   /** @type {NodeListOf<HTMLImageElement>} */
   const elems = document.querySelectorAll("section[data-format=markdown] img");
-  const offendingElements = [...elems].filter(
-    elem => !elem.alt
-  );
+  const offendingElements = [...elems].filter(elem => !elem.alt);
   if (!offendingElements.length) {
     return;
   }
   const msg = "Image missing alternative text.";
-      const hint = "";
+  const hint = "";
   showWarning(msg, name, { elements: offendingElements, hint });
 }
 

@@ -46,7 +46,7 @@ const modules = [
   import("../src/core/contrib.js"),
   import("../src/core/fix-headers.js"),
   import("../src/core/structure.js"),
-  import("../src/core/informative.js"),  //solved handhaaf core version ipv  geonovum version
+  import("../src/core/informative.js"), // solved handhaaf core version ipv  geonovum version
   import("../src/core/id-headers.js"),
   import("../src/core/caniuse.js"),
   import("../src/core/mdn-annotation.js"),

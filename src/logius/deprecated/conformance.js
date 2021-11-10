@@ -53,11 +53,12 @@ const localizationStrings = {
       "Verder is alles in dit document normatief.",
     keywordInterpretation(keywords, plural) {
       return html`<p>
-        ${plural ? "De trefwoorden" : "Het trefwoord"} ${keywords} in dit document
-        ${plural ? "moeten" : "moet"} worden geïnterpreteerd als in
+        ${plural ? "De trefwoorden" : "Het trefwoord"} ${keywords} in dit
+        document ${plural ? "moeten" : "moet"} worden geïnterpreteerd als in
         <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
         ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
-        als, en alleen als deze in hoofdletters zijn weergegeven, zoals hier getoond.
+        als, en alleen als deze in hoofdletters zijn weergegeven, zoals hier
+        getoond.
       </p>`;
     },
   },
@@ -99,7 +100,7 @@ export function run(conf) {
     pub(
       "warn",
       "Document uses RFC2119 keywords but lacks a conformance section. " +
-      'Please add a `<section id="conformance">`.'
+        'Please add a `<section id="conformance">`.'
     );
   }
 }
