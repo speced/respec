@@ -11,14 +11,20 @@ describe("Core - ID headers", () => {
     <section><h2>test-1</h2></section>
     <section><h2 id="custom-id">Pass</h2></section>
     <section id="sotd" class="notoc">
-    <p>...</p>
-    <section>
-      <h3>Level 3 heading</h3>
+      <p>...</p>
       <section>
-        <h4>Level 4 heading</h4>
+        <h3>Level 3 heading</h3>
+        <section>
+          <h4>Level 4 heading</h4>
+        </section>
       </section>
     </section>
-  </section>
+    <section class="appendix">
+      <h2 id="a1">Appendix 1</h2>
+      <section>
+        <h3 id="a2">Level 3 appendix</h3>
+      </section>
+    </section>
   `;
   beforeAll(async () => {
     const ops = makeStandardOps({ addSectionLinks: true }, body);
@@ -31,13 +37,25 @@ describe("Core - ID headers", () => {
   });
 
   describe("section links", () => {
-    it("doesn't add sections links to introductory sections", () => {
-      expect(doc.querySelector(".introductory h2 a.self-link")).toBeFalsy();
+    it("adds sections links to introductory sections", () => {
+      expect(doc.querySelector(".introductory h2 a.self-link")).toBeTruthy();
     });
 
-    it("(aria) labels section links", () => {
-      const queryForSymbol = "h2 a[aria-label=§].self-link";
-      expect(doc.querySelector(queryForSymbol)).toBeTruthy();
+    it("adds aria-labels section, including section type", () => {
+      const intro = doc.querySelector(".introductory h2 a.self-link");
+      expect(intro.getAttribute("aria-label")).toBe("Permalink for Section");
+      const custom = doc.querySelector("#custom-id a.self-link");
+      expect(custom.getAttribute("aria-label")).toBe(
+        "Permalink for Section 2."
+      );
+      const appendix = doc.querySelector("#a1 a.self-link");
+      expect(appendix.getAttribute("aria-label")).toBe(
+        "Permalink for Appendix A."
+      );
+      const deepAppendix = doc.querySelector("#a2 a.self-link");
+      expect(deepAppendix.getAttribute("aria-label")).toBe(
+        "Permalink for Appendix A.1"
+      );
     });
 
     it("doesn't add sections links when addSectionLinks is false", async () => {
