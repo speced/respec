@@ -23,13 +23,7 @@ export default css`
 }
 
 /* --- INLINES --- */
-h1 abbr,
-h2 abbr,
-h3 abbr,
-h4 abbr,
-h5 abbr,
-h6 abbr,
-a abbr {
+:is(h1, h2, h3, h4, h5, h6, a) abbr {
   border: none;
 }
 
@@ -90,12 +84,12 @@ th code {
 }
 
 a[href].orcid {
-    padding-left: 4px;
-    padding-right: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 a[href].orcid > svg {
-    margin-bottom: -2px;
+  margin-bottom: -2px;
 }
 
 /* --- TOC --- */
@@ -237,11 +231,7 @@ aside.example .marker > a.self-link {
   color: inherit;
 }
 
-h2 > a.self-link,
-h3 > a.self-link,
-h4 > a.self-link,
-h5 > a.self-link,
-h6 > a.self-link {
+:is(h2, h3, h4, h5, h6) > a.self-link {
   border: none;
   color: inherit;
   font-size: 83%;
@@ -256,11 +246,7 @@ h6 > a.self-link {
   width: 2em;
 }
 
-h2 > a.self-link::before,
-h3 > a.self-link::before,
-h4 > a.self-link::before,
-h5 > a.self-link::before,
-h6 > a.self-link::before {
+:is(h2, h3, h4, h5, h6) > a.self-link::before{
   content: "§";
   display: block;
 }
@@ -271,11 +257,7 @@ h6 > a.self-link::before {
   }
 
   /* Don't position self-link in headings off-screen */
-  h2 > a.self-link,
-  h3 > a.self-link,
-  h4 > a.self-link,
-  h5 > a.self-link,
-  h6 > a.self-link {
+  :is(h2, h3, h4, h5, h6) > a.self-link {
     left: auto;
     top: auto;
   }

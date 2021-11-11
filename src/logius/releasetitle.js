@@ -6,7 +6,6 @@
 import { showError, showWarning } from "../core/utils.js";
 export const name = "core/releasetitle";
 
-
 // todo check if this works for gitlab as well
 async function getReleasename(conf) {
   const o = { tag_name: "" };

@@ -5,7 +5,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { getIntlData, showError, showWarning } from "../core/utils.js";
+import { docLink, getIntlData, showError, showWarning } from "../core/utils.js";
 export const name = "core/github";
 
 let resolveGithubPromise;
@@ -21,7 +21,7 @@ export const github = new Promise((resolve, reject) => {
 
 const localizationStrings = {
   en: {
-    file_a_bug: "File a bug",
+    file_a_bug: "File an issue",
     participate: "Participate:",
     commit_history: "Commit history",
   },
@@ -65,36 +65,40 @@ export async function run(conf) {
     typeof conf.github === "object" &&
     !conf.github.hasOwnProperty("repoURL")
   ) {
-    const msg =
-      "Config option `[github](https://github.com/w3c/respec/wiki/github)` " +
-      "is missing property `repoURL`.";
+    const msg = docLink`Config option ${"[github]"} is missing property \`repoURL\`.`;
     rejectGithubPromise(msg);
     return;
   }
   let tempURL = conf.github.repoURL || conf.github;
   if (!tempURL.endsWith("/")) tempURL += "/";
+  /** @type URL */
   let ghURL;
   try {
     ghURL = new URL(tempURL, "https://github.com");
   } catch {
-    const msg = `\`respecConf.github\` is not a valid URL? (${ghURL})`;
+    const msg = docLink`${"[github]"} configuration option is not a valid URL? (${tempURL}).`;
     rejectGithubPromise(msg);
     return;
   }
   if (ghURL.origin !== "https://github.com") {
-    const msg = `\`respecConf.github\` must be HTTPS and pointing to GitHub. (${ghURL})`;
+    const msg = docLink`${"[github]"} configuration option must be HTTPS and pointing to GitHub. (${
+      ghURL.href
+    }).`;
     rejectGithubPromise(msg);
     return;
   }
   const [org, repo] = ghURL.pathname.split("/").filter(item => item);
   if (!org || !repo) {
-    const msg =
-      "`respecConf.github` URL needs a path with, for example, w3c/my-spec";
+    const msg = docLink`${"[github]"} URL needs a path. For example, "w3c/my-spec".`;
     rejectGithubPromise(msg);
     return;
   }
   const branch = conf.github.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
+  const commitHistoryURL = new URL(
+    `./commits/${conf.github.branch ?? ""}`,
+    ghURL.href
+  );
   const newProps = {
     edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubToken: undefined,
@@ -105,27 +109,6 @@ export async function run(conf) {
     pullBase: new URL("./pulls/", ghURL).href,
     shortName: repo,
   };
-  const otherLink = {
-    key: l10n.participate,
-    data: [
-      {
-        value: `GitHub ${org}/${repo}`,
-        href: ghURL,
-      },
-      {
-        value: l10n.file_a_bug,
-        href: newProps.issueBase,
-      },
-      {
-        value: l10n.commit_history,
-        href: new URL(`./commits/${branch}`, ghURL.href).href,
-      },
-      {
-        value: "Pull requests",
-        href: newProps.pullBase,
-      },
-    ],
-  };
   // Assign new properties, but retain existing ones
   let githubAPI = "https://respec.org/github";
   if (conf.githubAPI) {
@@ -133,15 +116,47 @@ export async function run(conf) {
       // for testing
       githubAPI = conf.githubAPI;
     } else {
-      const msg = "`respecConfig.githubAPI` should not be added manually.";
+      const msg =
+        "The `githubAPI` configuration option is private and should not be added manually.";
       showWarning(msg, name);
     }
+  }
+  if (!conf.excludeGithubLinks) {
+    const otherLink = {
+      key: l10n.participate,
+      data: [
+        {
+          value: `GitHub ${org}/${repo}`,
+          href: ghURL,
+        },
+        {
+          value: l10n.file_a_bug,
+          href: newProps.issueBase,
+        },
+        {
+          value: l10n.commit_history,
+          href: commitHistoryURL.href,
+        },
+        {
+          value: "Pull requests",
+          href: newProps.pullBase,
+        },
+      ],
+    };
+    if (!conf.otherLinks) {
+      conf.otherLinks = [];
+    }
+    conf.otherLinks.unshift(otherLink);
   }
   const normalizedGHObj = {
     branch,
     repoURL: ghURL.href,
     apiBase: githubAPI,
     fullName: `${org}/${repo}`,
+    issuesURL: issueBase,
+    pullsURL: newProps.pullBase,
+    newIssuesURL: new URL("./new/choose", issueBase).href,
+    commitHistoryURL: commitHistoryURL.href,
   };
   resolveGithubPromise(normalizedGHObj);
 
@@ -152,5 +167,4 @@ export async function run(conf) {
     githubAPI,
   };
   Object.assign(conf, normalizedConfig);
-  conf.otherLinks.unshift(otherLink);
 }

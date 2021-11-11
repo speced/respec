@@ -93,6 +93,7 @@
 import {
   ISODate,
   concatDate,
+  docLink,
   htmlJoinAnd,
   showError,
   showWarning,
@@ -114,10 +115,6 @@ const NLRespecDate = new Intl.DateTimeFormat(["nl"], {
   month: "long",
   day: "2-digit",
 });
-
-// Thijs: clean this up, for Geonovum
-// added statusses and types for Geonovum
-const status2maturity = {};
 
 // Thijs Brentjens: added Geonovum statusses
 // https://github.com/Logius-standaarden/respec/wiki/specStatus
@@ -177,15 +174,18 @@ const licenses = {
     image: "https://tools.geostandaarden.nl/respec/style/logos/cc-by.svg",
   },
   "cc-by-nd": {
-    name:
-      "Creative Commons Naamsvermelding-GeenAfgeleideWerken 4.0 Internationaal",
+    name: "Creative Commons Naamsvermelding-GeenAfgeleideWerken 4.0 Internationaal",
     short: "CC-BY-ND",
     url: "https://creativecommons.org/licenses/by-nd/4.0/legalcode.nl",
     image: "https://tools.geostandaarden.nl/respec/style/logos/cc-by-nd.svg",
   },
 };
 
-// todo check fixed, static url
+/**
+ * @param {*} conf
+ * @param {string} prop
+ * @param {string | number | Date} fallbackDate
+ */
 function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   const date = conf[prop] ? new Date(conf[prop]) : new Date(fallbackDate);
   // if date is valid
@@ -193,9 +193,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
     const formattedDate = ISODate.format(date);
     return new Date(formattedDate);
   }
-  const msg =
-    `[\`${prop}\`](https://github.com/w3c/respec/wiki/${prop}) ` +
-    `is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
+  const msg = docLink`${prop} is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
   showError(msg, name);
   return new Date(ISODate.format(new Date()));
 }
@@ -203,7 +201,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 export function run(conf) {
   // Thijs Brentjens: TODO: decide by default unofficial?
   // conf.isUnofficial = conf.specStatus === "unofficial";
-  
+
   conf.isUnofficial = true;
   if (!conf.logos) {
     // conf.isUnofficial
@@ -313,7 +311,7 @@ export function run(conf) {
       // eslint-disable-next-line prettier/prettier
       conf.thisVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${subdomain}${specStatus}-${conf.specType.toLowerCase()}-${conf.shortName}-${concatDate(conf.publishDate)}/`;
     } else {
-       // Logius specific
+      // Logius specific
       conf.thisVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${subdomain}${conf.publishVersion}`;
     }
   } else {
@@ -330,9 +328,15 @@ export function run(conf) {
   if (conf.previousMaturity && !conf.previousStatus)
     conf.previousStatus = conf.previousMaturity;
   // Thijs Brentjens: default to current specStatus if previousStatus is not provided
-  if ((conf.previousPublishDate || conf.previousPublishVersion) && !conf.previousStatus)
+  if (
+    (conf.previousPublishDate || conf.previousPublishVersion) &&
+    !conf.previousStatus
+  )
     conf.previousStatus = conf.specStatus;
-  if ((conf.previousPublishDate || conf.previousPublishVersion) && conf.previousStatus) {
+  if (
+    (conf.previousPublishDate || conf.previousPublishVersion) &&
+    conf.previousStatus
+  ) {
     conf.previousPublishDate = validateDateAndRecover(
       conf,
       "previousPublishDate"
@@ -350,7 +354,7 @@ export function run(conf) {
       prevType = conf.specType.toLowerCase();
     }
     conf.prevVersion = `None${conf.previousPublishDate}`;
-    if (!conf.previousPublishVersion ) {
+    if (!conf.previousPublishVersion) {
       // eslint-disable-next-line prettier/prettier
       conf.prevVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${subdomain}${prevStatus}-${prevType}-${conf.shortName}-${concatDate(conf.previousPublishDate)}/`;
     } else {
@@ -381,6 +385,7 @@ export function run(conf) {
       showError(msg, name);
     }
   });
+  /*
   conf.multipleAlternates =
     conf.alternateFormats && conf.alternateFormats.length > 1;
   conf.alternatesHTML =
@@ -392,13 +397,14 @@ export function run(conf) {
         alt.hasOwnProperty("type") && alt.type ? ` type='${alt.type}'` : "";
       return `<a rel='alternate' href='${alt.uri}'${optional}>${alt.label}</a>`;
     });
+*/
   if (conf.bugTracker) {
-    if (conf.bugTracker["new"] && conf.bugTracker.open) {
-      conf.bugTrackerHTML = `<a href='${conf.bugTracker["new"]}'>${conf.l10n.file_a_bug}</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${conf.l10n.open_bugs}</a>${conf.l10n.close_parens}`;
+    if (conf.bugTracker.new && conf.bugTracker.open) {
+      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>${conf.l10n.file_a_bug}</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${conf.l10n.open_bugs}</a>${conf.l10n.close_parens}`;
     } else if (conf.bugTracker.open) {
       conf.bugTrackerHTML = `<a href='${conf.bugTracker.open}'>open bugs</a>`;
-    } else if (conf.bugTracker["new"]) {
-      conf.bugTrackerHTML = `<a href='${conf.bugTracker["new"]}'>file a bug</a>`;
+    } else if (conf.bugTracker.new) {
+      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>file a bug</a>`;
     }
   }
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
@@ -450,6 +456,7 @@ export function run(conf) {
   });
   // configuration done - yay!
 
+  /*
   const options = {
     get multipleAlternates() {
       return conf.alternateFormats && conf.alternateFormats.length > 1;
@@ -471,6 +478,35 @@ export function run(conf) {
       );
     },
   };
+
+*/
+  // w3c version
+
+  const options = {
+    get multipleAlternates() {
+      return conf.alternateFormats && conf.alternateFormats.length > 1;
+    },
+    get alternatesHTML() {
+      return (
+        conf.alternateFormats &&
+        htmlJoinAnd(
+          // We need to pass a string here...
+          conf.alternateFormats.map(({ label }) => label),
+          (_, i) => {
+            const alt = conf.alternateFormats[i];
+            return html`<a
+              rel="alternate"
+              href="${alt.uri}"
+              hreflang="${alt?.lang ?? null}"
+              type="${alt?.type ?? null}"
+              >${alt.label}</a
+            >`;
+          }
+        )
+      );
+    },
+  };
+
   // insert into document
   const header = headersTmpl(conf, options);
   document.body.insertBefore(header, document.body.firstChild);
@@ -511,13 +547,13 @@ export function run(conf) {
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgHTML = htmlJoinAnd(conf.wg, (wg, idx) => {
-      return `the <a href='${conf.wgURI[idx]}'>${wg}</a>`;
+      return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
     });
     const pats = [];
     for (let i = 0, n = conf.wg.length; i < n; i++) {
       pats.push(
         `a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>` +
-        `public list of any patent disclosures  (${conf.wg[i]})</a>`
+          `public list of any patent disclosures  (${conf.wg[i]})</a>`
       );
     }
     conf.wgPatentHTML = htmlJoinAnd(pats);
@@ -685,7 +721,7 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
     pub(
       "warn",
       "ReSpec does not support automated SotD generation for TAG findings, " +
-      "please add the prerequisite content in the 'sotd' section"
+        "please add the prerequisite content in the 'sotd' section"
     );
   }
   return {
@@ -696,60 +732,9 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
 }
 
 /**
- * @param {string} orcid Either an ORCID URL or just the 16-digit ID which comes after the /
- * @return {string} the full ORCID URL. Throws an error if the ID is invalid.
- */
-function normalizeOrcid(orcid) {
-  const orcidUrl = new URL(orcid, "https://orcid.org/");
-  if (orcidUrl.origin !== "https://orcid.org") {
-    throw new Error(
-      `The origin should be "https://orcid.org", not "${orcidUrl.origin}".`
-    );
-  }
-
-  // trailing slash would mess up checksum
-  const orcidId = orcidUrl.pathname.slice(1).replace(/\/$/, "");
-  if (!/^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/.test(orcidId)) {
-    throw new Error(
-      `ORCIDs have the format "1234-1234-1234-1234", not "${orcidId}"`
-    );
-  }
-
-  // calculate checksum as per https://support.orcid.org/hc/en-us/articles/360006897674-Structure-of-the-ORCID-Identifier
-  const lastDigit = orcidId[orcidId.length - 1];
-  const remainder = orcidId
-    .split("")
-    .slice(0, -1)
-    .filter(c => /\d/.test(c))
-    .map(Number)
-    .reduce((acc, c) => (acc + c) * 2, 0);
-  const lastDigitInt = (12 - (remainder % 11)) % 11;
-  const lastDigitShould = lastDigitInt === 10 ? "X" : String(lastDigitInt);
-  if (lastDigit !== lastDigitShould) {
-    throw new Error(`"${orcidId}" has an invalid checksum.`);
-  }
-
-  return orcidUrl.href;
-}
-
-/**
  * @param {Node} node
  * @return {node is Element}
  */
 function isElement(node) {
   return node.nodeType === Node.ELEMENT_NODE;
-}
-
-function hasGitHubIssuesLink(conf) {
-  return (
-    conf.github ||
-    (conf.otherLinks &&
-      conf.otherLinks.find(linkGroup =>
-        linkGroup.data.find(
-          l =>
-            l.href &&
-            l.href.toString().match(/^https:\/\/github\.com\/.*\/issues/)
-        )
-      ))
-  );
 }

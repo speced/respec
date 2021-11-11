@@ -6,15 +6,17 @@
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
 import {
-  showWarning,
   createResourceHint,
   linkCSS,
+  showWarning,
   toKeyValuePairs,
 } from "../core/utils.js";
+import { html } from "../core/import-maps.js";
 import { sub } from "../core/pubsubhub.js";
 export const name = "logius/style";
-function attachFixupScript(doc, version) {
-  const script = doc.createElement("script");
+
+function attachFixupScript() {
+  const script = html`<script src="https://www.w3.org/scripts/TR/2021/fixup.js">`;
   if (location.hash) {
     script.addEventListener(
       "load",
@@ -24,9 +26,7 @@ function attachFixupScript(doc, version) {
       { once: true }
     );
   }
-  // todo warning w3c.org/scripts is not accessible
-  script.src = `https://www.w3.org/scripts/TR/${version}/fixup.js`;
-  doc.body.appendChild(script);
+  document.body.appendChild(script);
 }
 
 /**
@@ -64,21 +64,6 @@ function createBaseStyle() {
   link.href = getBaseStyleURI();
   link.classList.add("removeOnSave");
   return link;
-}
-
-function selectStyleVersion(styleVersion) {
-  let version = "";
-  switch (styleVersion) {
-    case null:
-    case true:
-      version = "";
-      break;
-    default:
-      if (styleVersion && !isNaN(styleVersion)) {
-        version = styleVersion.toString().trim();
-      }
-  }
-  return version;
 }
 
 function createResourceHints() {
@@ -223,8 +208,12 @@ export function run(conf) {
       "https://tools.geostandaarden.nl/respec/style/";
     const msg = `respecConfig.nl_organisationStylesURL missing. Defaulting to '${conf.nl_organisationStylesURL}'.`;
     showWarning(msg, name);
-
   }
+
+  if (!conf.noToc) {
+    sub("end-all", attachFixupScript, { once: true });
+  }
+
   const finalStyleURL = `${conf.nl_organisationStylesURL}${finalVersionPath}${styleFile}`;
   // (`using ${finalStyleURL}`);
   linkCSS(document, finalStyleURL);

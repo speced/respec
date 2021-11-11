@@ -22,7 +22,6 @@ export function run(conf) {
     if (!conf.nl_github.issueBase.endsWith("/")) {
       conf.nl_github.issueBase += "/";
     }
-
   }
   if (conf.nl_github.issueBase) {
     if (!conf.nl_github.issueBase.endsWith("/")) {
@@ -43,8 +42,6 @@ export function run(conf) {
     }
     conf.otherLinks[0].data[3].href = conf.nl_github.pullrequests;
   }
-
-
 
   // todo: check if this is correct
   if (conf.nl_github.revision) {

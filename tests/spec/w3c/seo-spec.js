@@ -34,7 +34,7 @@ describe("W3C - SEO", () => {
     const ops = makeStandardOps();
     ops.config.shortName = undefined;
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelector("link[rel='canonical']")).toBe(null);
+    expect(doc.querySelector("link[rel='canonical']")).toBeNull();
   });
 
   it("shouldn't set any canonical URI if it is a draft document", async () => {
@@ -43,7 +43,7 @@ describe("W3C - SEO", () => {
     for (const status of draftStatuses) {
       ops.config.specStatus = status;
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelector("link[rel='canonical']")).toBe(null);
+      expect(doc.querySelector("link[rel='canonical']")).toBeNull();
     }
   });
 
@@ -148,7 +148,7 @@ describe("W3C - SEO", () => {
     expect(jsonld.editor).toContain({
       type: "Person",
       name: "Gregg Kellogg",
-      url: "http://URI",
+      url: "mailto:EMAIL",
       "foaf:mbox": "EMAIL",
       worksFor: {
         name: "COMPANY",

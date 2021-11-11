@@ -1,0 +1,59 @@
+name: Regressions
+on: workflow_dispatch
+
+env:
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+  PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+  FORCE_COLOR: 1
+
+jobs:
+  build:
+    name: Build W3C profile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with: { node-version: 14, cache: npm }
+      - run: npm ci
+      - run: npm run build:w3c
+      - uses: actions/upload-artifact@v2
+        with:
+          name: builds
+          path: |
+            builds/respec-w3c.js*
+            builds/respec-worker.js*
+            builds/respec-highlight.js*
+          retention-days: 1
+
+  test:
+    name: Diff ${{ matrix.source }}
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        source:
+          - https://w3c.github.io/manifest/
+          - https://w3c.github.io/payment-request/
+          - https://w3c.github.io/trace-context/
+          - https://w3c.github.io/screen-wake-lock/
+          - https://w3c.github.io/push-api/
+          - https://w3c.github.io/geolocation-api/
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with: { node-version: 14, cache: npm }
+      - run: npm ci --production --ignore-scripts
+      - uses: actions/download-artifact@v2
+        with:
+          name: builds
+          path: ./builds/
+      - run: git status
+      - run: node ./tools/respec2html ${{ matrix.source }} before.html -t 30 --verbose
+      - run: node ./tools/respec2html ${{ matrix.source }} after.html -t 30 --verbose --use-local
+      - uses: sidvishnoi/git-delta@v1
+      - name: git diff
+        run: |
+          set -o pipefail
+          git diff --exit-code --no-index before.html after.html | delta --diff-so-fancy
+          exit $?

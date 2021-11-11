@@ -2,21 +2,7 @@
  * Sets the defaults for NL-Respec documents
  */
 export const name = "logius/defaults";
-import { rule as checkPunctuation } from "../core/linter-rules/check-punctuation.js";
 import { coreDefaults } from "../core/defaults.js";
-import linter from "../core/linter.js";
-import { rule as localRefsExist } from "../core/linter-rules/local-refs-exist.js";
-import { rule as noHeadinglessSectionsRule } from "../core/linter-rules/no-headingless-sections.js";
-import { rule as noHttpPropsRule } from "../core/linter-rules/no-http-props.js";
-import { rule as privsecSectionRule } from "../core/linter-rules/privsec-section.js";
-
-linter.register(
-  noHttpPropsRule,
-  privsecSectionRule,
-  noHeadinglessSectionsRule,
-  checkPunctuation,
-  localRefsExist
-);
 
 // todo: check if licenses are already defined
 const licenses = new Map([
@@ -42,8 +28,7 @@ const licenses = new Map([
   [
     "cc-by-nd",
     {
-      name:
-        "Creative Commons Attribution-NoDerivatives 4.0 International Public License",
+      name: "Creative Commons Attribution-NoDerivatives 4.0 International Public License",
       short: "CC-BY-ND",
       url: "https://creativecommons.org/licenses/by-nd/4.0/legalcode.nl",
       image: "https://tools.geostandaarden.nl/respec/style/logos/cc-by-nd.svg",
@@ -91,6 +76,20 @@ export function run(conf) {
   // assign the defaults
   addLogoData(conf);
   // console.log(`config: ${conf.nl_logo.src}`),
+  const lint =
+    conf.lint === false
+      ? false
+      : {
+          ...coreDefaults.lint,
+          ...nlRespecDefaults.lint,
+          ...conf.lint,
+        };
+  Object.assign(conf, {
+    ...coreDefaults,
+    ...nlRespecDefaults,
+    ...conf,
+    lint,
+  });
   Object.assign(conf, { ...nlRespecDefaults, ...conf });
   // computed properties
   Object.assign(conf, computeProps(conf));

@@ -4,23 +4,27 @@
 
 import { htmlJoinComma, showError } from "./utils.js";
 import { html } from "./import-maps.js";
-const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+$/; // {{unrestricted double}} {{ double }}
+const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+\??$/; // {{unrestricted double?}} {{ double }}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
 const methodRegex = /(\w+)\((.*)\)$/;
-const slotRegex = /^\[\[(\w+)\]\]$/;
+
+export const slotRegex = /\[\[(\w+(?: +\w+)*)\]\](\([^)]*\))?$/;
 // matches: `value` or `[[value]]`
 // NOTE: [[value]] is actually a slot, but database has this as type="attribute"
-const attributeRegex = /^((?:\[\[)?(?:\w+)(?:\]\])?)$/;
+const attributeRegex = /^((?:\[\[)?(?:\w+(?: +\w+)*)(?:\]\])?)$/;
+const baseRegex = /^(?:\w+)\??$/;
 const enumRegex = /^(\w+)\["([\w- ]*)"\]$/;
 // TODO: const splitRegex = /(?<=\]\]|\b)\./
 // https://github.com/w3c/respec/pull/1848/files#r225087385
 const methodSplitRegex = /\.?(\w+\(.*\)$)/;
-
+const slotSplitRegex = /\/(.+)/;
+const isProbablySlotRegex = /\[\[.+\]\]/;
 /**
  * @typedef {object} IdlBase
  * @property {"base"} type
  * @property {string} identifier
  * @property {boolean} renderParent
+ * @property {boolean} nullable
  * @property {InlineIdl | null} [parent]
  *
  * @typedef {object} IdlAttribute
@@ -32,8 +36,10 @@ const methodSplitRegex = /\.?(\w+\(.*\)$)/;
  * @typedef {object} IdlInternalSlot
  * @property {"internal-slot"} type
  * @property {string} identifier
+ * @property {string[]} [args]
  * @property {boolean} renderParent
  * @property {InlineIdl | null} [parent]
+ * @property {"attribute"|"method"} slotType
  *
  * @typedef {object} IdlMethod
  * @property {"method"} type
@@ -56,6 +62,7 @@ const methodSplitRegex = /\.?(\w+\(.*\)$)/;
  *
  * @typedef {object} IdlPrimitive
  * @property {"idl-primitive"} type
+ * @property {boolean} nullable
  * @property {string} identifier
  * @property {boolean} renderParent
  * @property {InlineIdl | null} [parent]
@@ -68,10 +75,18 @@ const methodSplitRegex = /\.?(\w+\(.*\)$)/;
  * @returns {InlineIdl[]}
  */
 function parseInlineIDL(str) {
-  const [nonMethodPart, methodPart] = str.split(methodSplitRegex);
-  const tokens = nonMethodPart
+  // If it's got [[ string ]], then split as an internal slot
+  const isSlot = isProbablySlotRegex.test(str);
+  const splitter = isSlot ? slotSplitRegex : methodSplitRegex;
+  const [forPart, childString] = str.split(splitter);
+  if (isSlot && forPart && !childString) {
+    throw new SyntaxError(
+      `Internal slot missing "for" part. Expected \`{{ InterfaceName/${forPart}}}\` }.`
+    );
+  }
+  const tokens = forPart
     .split(/[./]/)
-    .concat(methodPart)
+    .concat(childString)
     .filter(s => s && s.trim())
     .map(s => s.trim());
   const renderParent = !str.includes("/");
@@ -105,8 +120,19 @@ function parseInlineIDL(str) {
     }
     // internal slot
     if (slotRegex.test(value)) {
-      const [, identifier] = value.match(slotRegex);
-      results.push({ type: "internal-slot", identifier, renderParent });
+      const [, identifier, allArgs] = value.match(slotRegex);
+      const slotType = allArgs ? "method" : "attribute";
+      const args = allArgs
+        ?.slice(1, -1)
+        .split(/,\s*/)
+        .filter(arg => arg);
+      results.push({
+        type: "internal-slot",
+        slotType,
+        identifier,
+        args,
+        renderParent,
+      });
       continue;
     }
     // attribute
@@ -116,12 +142,21 @@ function parseInlineIDL(str) {
       continue;
     }
     if (idlPrimitiveRegex.test(value)) {
-      results.push({ type: "idl-primitive", identifier: value, renderParent });
+      const nullable = value.endsWith("?");
+      const identifier = nullable ? value.slice(0, -1) : value;
+      results.push({
+        type: "idl-primitive",
+        identifier,
+        renderParent,
+        nullable,
+      });
       continue;
     }
     // base, always final token
-    if (attributeRegex.test(value) && tokens.length === 0) {
-      results.push({ type: "base", identifier: value, renderParent });
+    if (baseRegex.test(value) && tokens.length === 0) {
+      const nullable = value.endsWith("?");
+      const identifier = nullable ? value.slice(0, -1) : value;
+      results.push({ type: "base", identifier, renderParent, nullable });
       continue;
     }
     throw new SyntaxError(`IDL micro-syntax parsing error in \`{{ ${str} }}\``);
@@ -139,10 +174,13 @@ function parseInlineIDL(str) {
  */
 function renderBase(details) {
   // Check if base is a local variable in a section
-  const { identifier, renderParent } = details;
+  const { identifier, renderParent, nullable } = details;
   if (renderParent) {
-    return html`<a data-xref-type="_IDL_" data-link-type="idl"
-      ><code>${identifier}</code></a
+    return html`<a
+      data-xref-type="_IDL_"
+      data-link-type="idl"
+      data-lt="${identifier}"
+      ><code>${identifier + (nullable ? "?" : "")}</code></a
     >`;
   }
 }
@@ -152,19 +190,32 @@ function renderBase(details) {
  * @param {IdlInternalSlot} details
  */
 function renderInternalSlot(details) {
-  const { identifier, parent, renderParent } = details;
+  const { identifier, parent, slotType, renderParent, args } = details;
   const { identifier: linkFor } = parent || {};
-  const lt = `[[${identifier}]]`;
+  const isMethod = slotType === "method";
+  const argsHtml = isMethod
+    ? html`(${htmlJoinComma(args, htmlArgMapper)})`
+    : null;
+  const textArgs = isMethod ? `(${args.join(", ")})` : "";
+  const lt = `[[${identifier}]]${textArgs}`;
   const element = html`${parent && renderParent ? "." : ""}<a
-      data-xref-type="attribute"
-      data-link-for=${linkFor}
-      data-xref-for=${linkFor}
+      data-xref-type="${slotType}"
+      data-link-for="${linkFor}"
+      data-xref-for="${linkFor}"
       data-lt="${lt}"
-      ><code>[[${identifier}]]</code></a
+      ><code>[[${identifier}]]${argsHtml}</code></a
     >`;
   return element;
 }
 
+function htmlArgMapper(str, i, array) {
+  if (i < array.length - 1) return html`<var>${str}</var>`;
+  // only the last argument can be variadic
+  const parts = str.split(/(^\.{3})(.+)/);
+  const isVariadic = parts.length > 1;
+  const arg = isVariadic ? parts[2] : parts[0];
+  return html`${isVariadic ? "..." : null}<var>${arg}</var>`;
+}
 /**
  * Attribute: .identifier
  * @param {IdlAttribute} details
@@ -174,7 +225,7 @@ function renderAttribute(details) {
   const { identifier: linkFor } = parent || {};
   const element = html`${renderParent ? "." : ""}<a
       data-link-type="idl"
-      data-xref-type="attribute|dict-member"
+      data-xref-type="attribute|dict-member|const"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
       ><code>${identifier}</code></a
@@ -189,7 +240,7 @@ function renderAttribute(details) {
 function renderMethod(details) {
   const { args, identifier, type, parent, renderParent } = details;
   const { identifier: linkFor } = parent || {};
-  const argsText = htmlJoinComma(args, arg => html`<var>${arg}</var>`);
+  const argsText = htmlJoinComma(args, htmlArgMapper);
   const searchText = `${identifier}(${args.join(", ")})`;
   const element = html`${parent && renderParent ? "." : ""}<a
       data-link-type="idl"
@@ -244,12 +295,13 @@ function renderException(details) {
  * @param {IdlPrimitive} details
  */
 function renderIdlPrimitiveType(details) {
-  const { identifier } = details;
+  const { identifier, nullable } = details;
   const element = html`<a
     data-link-type="idl"
     data-cite="WebIDL"
     data-xref-type="interface"
-    ><code>${identifier}</code></a
+    data-lt="${identifier}"
+    ><code>${identifier + (nullable ? "?" : "")}</code></a
   >`;
   return element;
 }

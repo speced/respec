@@ -21,6 +21,7 @@ describe("Core — xref", () => {
       id: "service-workers-1",
       href: "https://www.w3.org/TR/service-workers-1/",
     },
+    webidl: { id: "WebIDL", href: "https://webidl.spec.whatwg.org/" },
     infra: { id: "INFRA", href: "https://infra.spec.whatwg.org/" },
     "credential-management": { aliasOf: "credential-management-1" },
     "credential-management-1": {
@@ -43,6 +44,7 @@ describe("Core — xref", () => {
       href: "https://www.w3.org/TR/referrer-policy/",
     },
     "css-syntax": { aliasOf: "css-syntax-3" },
+    "css-values": { aliasOf: "css-values-4" },
     "css-scoping": { aliasOf: "css-scoping-1" },
     "css-scoping-1": { href: "https://drafts.csswg.org/css-scoping-1/" },
     "local-1": { id: "local-1", href: "https://example.com/" },
@@ -104,7 +106,7 @@ describe("Core — xref", () => {
     const link = doc.getElementById("external-link");
     expect(link.classList).toContain("respec-offending-element");
     expect(link.getAttribute("href")).toBeFalsy();
-    expect(link.title).toBe("Error: No matching dfn found.");
+    expect(link.title).toBe("No matching definition found.");
   });
 
   it("uses data-cite to disambiguate", async () => {
@@ -149,38 +151,7 @@ describe("Core — xref", () => {
 
     const link = doc.querySelector("#test a");
     expect(link.classList).toContain("respec-offending-element");
-    expect(link.title).toBe("Error: Linking an ambiguous dfn.");
-  });
-
-  it("uses data-cite to disambiguate - 2", async () => {
-    // https://github.com/w3c/respec/pull/1750
-    const body = `
-      <section id="test">
-        <p data-cite="css-values"><a id="one">ident</a></p>
-        <p data-cite="css-syntax"><a id="two">ident</a></p>
-        <p data-cite="css-syntax">
-          <a id="three" data-cite="css-values">ident</a> (overrides parent)
-          <a id="four">ident</a> (uses parent's data-cite - css-syntax)
-        </p>
-        <p><a id="five" data-cite="NOT-FOUND">ident</a></p>
-      </section>
-    `;
-    const config = { xref: true, localBiblio };
-    const ops = makeStandardOps(config, body);
-    const doc = await makeRSDoc(ops);
-
-    const cssValuesLink = "https://www.w3.org/TR/css-values-3/#css-identifier";
-    const cssSyntaxLink = "https://www.w3.org/TR/css-syntax-3/#identifier";
-
-    expect(doc.getElementById("one").href).toBe(cssValuesLink);
-    expect(doc.getElementById("two").href).toBe(cssSyntaxLink);
-    expect(doc.getElementById("three").href).toBe(cssValuesLink);
-    expect(doc.getElementById("four").href).toBe(cssSyntaxLink);
-
-    const five = doc.getElementById("five");
-    expect(five.href).toBe("");
-    expect(five.classList).toContain("respec-offending-element");
-    expect(five.title).toBe("Error: No matching dfn found.");
+    expect(link.title).toBe("Definition is ambiguous.");
   });
 
   it("uses data-cite fallbacks", async () => {
@@ -220,7 +191,7 @@ describe("Core — xref", () => {
     const link3 = doc.getElementById("link3");
     expect(link3.href).toEqual("https://fetch.spec.whatwg.org/");
     expect(link3.classList).toContain("respec-offending-element");
-    expect(link3.title).toEqual("Error: No matching dfn found.");
+    expect(link3.title).toEqual("No matching definition found.");
 
     const linkLocal0 = doc.getElementById("link-local-0");
     expect(linkLocal0.getAttribute("href")).toEqual("#dfn-local");
@@ -238,17 +209,14 @@ describe("Core — xref", () => {
   it("uses data-cite as authored in spec context", async () => {
     const body = `<section id="test">
       <p data-cite="css-syntax-3">[=CSS/parsing=]</p>
-      <p data-cite="css-color">[=sRGB=]</p>
     </section>`;
-    const localBiblio = { "css-color": { aliasOf: "css-color-3" } };
-    const ops = makeStandardOps({ localBiblio }, body);
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
 
-    const [specLink, shortnameLink] = doc.querySelectorAll("#test a");
+    const [specLink] = doc.querySelectorAll("#test a");
     expect(specLink.hash).toBe(
       "#css-parse-something-according-to-a-css-grammar"
     );
-    expect(shortnameLink.hash).toBe("#sRGB");
   });
 
   it("treats terms as local if empty data-cite on parent", async () => {
@@ -275,7 +243,7 @@ describe("Core — xref", () => {
     );
     const externalDfn1 = doc.querySelector("#external-dfn-1 a");
     expect(externalDfn1.href).toBe(
-      "https://heycam.github.io/webidl/#dfn-dictionary"
+      "https://webidl.spec.whatwg.org/#dfn-dictionary"
     );
     const externalDfn2 = doc.querySelector("#external-dfn-2 a");
     expect(externalDfn2.href).toBe("https://infra.spec.whatwg.org/#list");
@@ -383,6 +351,9 @@ describe("Core — xref", () => {
         <dfn class="externalDFN">event handler</dfn>
         <a>event handler</a> <a>event handlers</a>
       </section>
+      <section id="dom" data-cite="dom">
+        [=attributes=] [=elements=]
+      </section>
     `;
     const config = { xref: ["html"], localBiblio, pluralize: true };
     const ops = makeStandardOps(config, body);
@@ -407,26 +378,33 @@ describe("Core — xref", () => {
       );
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
+
+    // Dom spec links for attribute and element
+    const domSpecLinks = [...doc.querySelectorAll("#dom a")];
+    expect(domSpecLinks).toHaveSize(2);
+    const [attr, elem] = domSpecLinks;
+    expect(attr.href).toBe("https://dom.spec.whatwg.org/#concept-attribute");
+    expect(elem.href).toBe("https://dom.spec.whatwg.org/#concept-element");
   });
 
   it("uses inline references to provide context", async () => {
     const body = `
       <section id="test">
         <section>
-        <p>Uses [[svg]] to create context for <a id="one">style</a></p>
+        <p>Uses [[svg]] to create context for <a id="one">link</a></p>
         </section>
         <section>
-          <p>Uses [[html]] to create context for <a id="two">style</a></p>
+          <p>Uses [[html]] to create context for <a id="two">link</a></p>
         </section>
         <section>
           <p>Uses [[html]] and [[svg]] to create context for
-            <a id="three">style</a>. It fails as it's defined in both.
+            <a id="three">link</a>. It fails as it's defined in both.
           </p>
         </section>
         <section>
           <p>But data-cite on element itself wins.
-            <a id="four">style</a> uses [[svg]],
-            whereas <a data-cite="html" id="five">style</a> uses html.
+            <a id="four">link</a> uses [[svg]],
+            whereas <a data-cite="html" id="five">link</a> uses html.
           </p>
         </section>
       </section>
@@ -437,8 +415,8 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = `https://www.w3.org/TR/SVG/styling.html#elementdef-style`;
-    const expectedLink2 = `https://html.spec.whatwg.org/multipage/semantics.html#the-style-element`;
+    const expectedLink1 = `https://www.w3.org/TR/SVG/styling.html#LinkElement`;
+    const expectedLink2 = `https://html.spec.whatwg.org/multipage/semantics.html#the-link-element`;
 
     const one = doc.getElementById("one");
     expect(one.href).toBe(expectedLink1);
@@ -522,9 +500,7 @@ describe("Core — xref", () => {
     const valid3 = doc.getElementById("valid3");
     expect(valid3.href).toBe("https://example.com/#fake-inform-3");
     const valid3n = doc.getElementById("valid3n");
-    expect(valid3n.href).toBe(
-      "https://heycam.github.io/webidl/#dfn-dictionary"
-    );
+    expect(valid3n.href).toBe("https://webidl.spec.whatwg.org/#dfn-dictionary");
     const valid4 = doc.getElementById("valid4");
     expect(valid4.href).toBe("https://example.com/#fake-inform-4");
     const valid4n = doc.getElementById("valid4n");
@@ -542,12 +518,10 @@ describe("Core — xref", () => {
 
     const badLink = doc.getElementById("invalid");
     expect(badLink.href).toBe(
-      "https://www.w3.org/TR/css-values-3/#bearing-angle"
+      "https://www.w3.org/TR/css-values-4/#bearing-angle"
     );
     expect(badLink.classList).toContain("respec-offending-element");
-    expect(badLink.title).toBe(
-      "Error: Normative reference to informative term"
-    );
+    expect(badLink.title).toBe("Normative reference to non-normative term.");
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
     expect(normRefs).toHaveSize(1); // excludes `css-values` of `#invalid`
@@ -617,14 +591,28 @@ describe("Core — xref", () => {
       expect(eventTargetLink.firstElementChild.localName).toBe("code");
 
       const link2 = doc.querySelector("#link2 a");
-      expect(link2.href).toBeFalsy();
-      expect(link2.textContent).toBe("[[query]]");
-      expect(link2.firstElementChild.localName).toBe("code");
+      expect(link2).toBeNull();
 
       const link3 = doc.querySelector("#link3 a");
       expect(link3.href).toBe("https://dom.spec.whatwg.org/#eventtarget");
       expect(link3.textContent).toBe("EventTarget");
       expect(link3.firstElementChild.localName).toBe("code");
+    });
+
+    it("links interface constants", async () => {
+      const body = `
+      <section id="test">
+        <p id="link1">{{HTMLMediaElement/HAVE_METADATA}}</p>
+      </section>
+      `;
+      const config = { xref: "web-platform" };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+      const a = doc.querySelector("#link1 a");
+      expect(a.href).toBe(
+        "https://html.spec.whatwg.org/multipage/media.html#dom-media-have_metadata"
+      );
+      expect(a.textContent).toBe("HAVE_METADATA");
     });
 
     it("links methods", async () => {
@@ -672,13 +660,19 @@ describe("Core — xref", () => {
       const body = `
       <section>
         <p id="link1">{{Window.event}}</p>
-        <p id="link2">{{ Credential.[[type]] }}</p>
-        <p id="link3">{{ PublicKeyCredential.[[type]] }}</p>
+        <p id="link2">{{ Credential/[[type]] }}</p>
+        <p id="link3">{{ PublicKeyCredential/[[type]] }}</p>
         <p id="link4">{{ TextDecoderOptions.fatal }}</p>
       </section>
       `;
       const config = {
-        xref: ["html", "credential-management", "encoding", "dom", "webauthn"],
+        xref: [
+          "html",
+          "credential-management",
+          "encoding",
+          "dom",
+          "webauthn-3",
+        ],
         localBiblio,
       };
       const ops = makeStandardOps(config, body);
@@ -693,25 +687,19 @@ describe("Core — xref", () => {
       expect(link1b.firstElementChild.localName).toBe("code");
 
       // the base "Credential" is used to disambiguate as "forContext"
-      const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
-      expect(link2a.href).toBe(
-        "https://www.w3.org/TR/credential-management-1/#credential"
-      );
-      expect(link2b.href).toBe(
+      expect(doc.querySelectorAll("#link2 a")).toHaveSize(1);
+      const link2 = doc.querySelector("#link2 a");
+      expect(link2.href).toBe(
         "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot"
       );
-      expect(link2a.firstElementChild.localName).toBe("code");
-      expect(link2b.firstElementChild.localName).toBe("code");
+      expect(link2.firstElementChild.localName).toBe("code");
 
-      const [link3a, link3b] = [...doc.querySelectorAll("#link3 a")];
-      expect(link3a.href).toBe(
-        "https://www.w3.org/TR/webauthn-1/#publickeycredential"
+      expect(doc.querySelectorAll("#link3 a")).toHaveSize(1);
+      const link3 = doc.querySelector("#link3 a");
+      expect(link3.href).toBe(
+        "https://www.w3.org/TR/webauthn-3/#dom-publickeycredential-type-slot"
       );
-      expect(link3b.href).toBe(
-        "https://www.w3.org/TR/webauthn-1/#dom-publickeycredential-type-slot"
-      );
-      expect(link3a.firstElementChild.localName).toBe("code");
-      expect(link3b.firstElementChild.localName).toBe("code");
+      expect(link3.firstElementChild.localName).toBe("code");
 
       // "TextDecoderOptions" is dictionary and "fatal" is dict-member
       const [link4a, link4b] = [...doc.querySelectorAll("#link4 a")];
@@ -728,9 +716,12 @@ describe("Core — xref", () => {
     it("links internalSlots", async () => {
       const body = `
       <section>
-        <p><dfn>[[\\type]]</dfn></p>
-        <p id="link1">{{ [[type]] }}</p>
-        <p id="link2">{{ Credential.[[type]] }}</p>
+        <p><dfn data-dfn-for="Window">[[\\type]]</dfn></p>
+        <p id="link1">{{ Window/[[type]] }}</p>
+        <p id="link2">{{ Credential/[[type]] }}</p>
+        <p id="link3">{{
+          PasswordCredential/[[CollectFromCredentialStore]](origin, options, sameOriginWithAncestors)
+        }}</p>
       </section>
       `;
       const config = { xref: true, localBiblio };
@@ -743,15 +734,19 @@ describe("Core — xref", () => {
       expect(link1.firstElementChild.localName).toBe("code");
 
       // the base "Credential" is used as "forContext" for [[type]]
-      const [link2a, link2b] = [...doc.querySelectorAll("#link2 a")];
+      expect(doc.querySelectorAll("#link2 a")).toHaveSize(1);
+      const link2a = doc.querySelector("#link2 a");
       expect(link2a.href).toBe(
-        "https://www.w3.org/TR/credential-management-1/#credential"
-      );
-      expect(link2b.href).toBe(
         "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot"
       );
       expect(link2a.firstElementChild.localName).toBe("code");
-      expect(link2b.firstElementChild.localName).toBe("code");
+
+      // [[CollectFromCredentialStore]](origin, options, sameOriginWithAncestors)
+      const link3 = doc.querySelector("#link3 a");
+      expect(link3.firstElementChild.localName).toBe("code");
+      expect(link3.href).toBe(
+        "https://www.w3.org/TR/credential-management-1/#dom-passwordcredential-collectfromcredentialstore-slot"
+      );
     });
 
     it("links enum and enum-values", async () => {
@@ -811,9 +806,8 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const [uLongLong, unrestrictedFloat, double] = doc.querySelectorAll(
-        "#test a"
-      );
+      const [uLongLong, unrestrictedFloat, double] =
+        doc.querySelectorAll("#test a");
 
       expect(uLongLong.textContent).toBe("unsigned long long");
       expect(uLongLong.hash).toBe("#idl-unsigned-long-long");

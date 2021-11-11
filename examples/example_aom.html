@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>
+      Replace me with a real title
+    </title>
+    <script src='../profiles/aom.js' type="module" class='remove'></script>
+    <script class='remove'>
+      var respecConfig = {
+        specStatus: "PD",
+        subtitle: "Subtitle",
+        shortName: "shortname-spec",
+        editors: [{
+          name: "Your Name",
+          url: "https://your-site.com",
+          company: "My company",
+          companyURL: "https://your-site.com",
+        }, {
+          name: "Your Name 2",
+          url: "https://your-site.com",
+          mailto: "name2@editor.org",
+          note: "A great spec editor"
+        }],
+        formerEditors: [{
+          name: "Your Name",
+          url: "https://your-site.com",
+        }, {
+          name: "Your Name 2",
+          url: "https://your-site.com",
+        }],
+        publishDate: "2021-04-23",
+        // Defaults to 'gh-pages' branch.  
+        // See https://respec.org/docs/#github if you need a different branch (e.g., "main"). 
+        github: "AOMedia/some-spec"
+      };
+    </script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>
+        This is the abstract (required).
+      </p>
+    </section>
+    <section class="informative" id="intro">
+      <h2>
+        Introduction
+      </h2>
+      <p>
+        This section has a CSS class "<code>informative</code>", so it is
+        listed in the TOC. ReSpec will list this reference as non-normative
+        since this is an informative section [[HTML]].
+      </p>
+    </section>
+    <section id="conformance">
+    </section>
+    <section data-dfn-for="Foo">
+      <h2>
+        <dfn>Foo</dfn> structure
+      </h2>
+      <p>
+        The <a>Foo</a> structure is nice. Lets you do stuff. You SHALL use it.
+      </p>
+      <p>
+        ReSpec will list this reference as normative, like [[AV1]]. You SHOULD use references.
+      </p>
+      <p>
+        This is an example of a non-normative reference in a normative section
+        [[?JPEG]]
+      </p>
+    </section>
+    <section id="example-figure">
+      <h2>
+        Figure
+      </h2>
+      <figure id="figure">
+        <img src="https://aomedia.org/assets/images/aomedia-icon-only.png" alt="AOM Logo">
+        <figcaption>
+          The AOM logo
+        </figcaption>
+      </figure>
+      <p>
+        Link to [[[#figure]]] ... the three square-brackets "expand" a local reference.   
+      </p>
+    </section>
+    <section id="tof" class="appendix">
+      <!-- a table of figures will be added here -->
+    </section>
+    <section id="index" class="appendix">
+      <!-- Index of terms defined/used by this specification will be added here  -->
+    </section>
+  </body>
+</html>

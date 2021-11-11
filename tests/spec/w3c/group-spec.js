@@ -15,11 +15,9 @@ describe("W3C — Group", () => {
   it("adds group details when a single group is specified", async () => {
     const conf = await getGroupConf({ group: "payments" });
     expect(conf.wg).toBe("Web Payments Working Group");
-    expect(conf.wgId).toBe("83744");
-    expect(conf.wgPatentURI).toBe(
-      "https://www.w3.org/2004/01/pp-impl/83744/status"
-    );
-    expect(conf.wgURI).toBe("https://www.w3.org/Payments/WG/");
+    expect(conf.wgId).toBe(83744);
+    expect(conf.wgPatentURI).toBe("https://www.w3.org/groups/wg/payments/ipr");
+    expect(conf.wgURI).toBe("https://www.w3.org/groups/wg/payments");
   });
 
   it("adds group details when a multiple groups are specified", async () => {
@@ -30,13 +28,25 @@ describe("W3C — Group", () => {
     ]);
     expect(conf.wgId).toEqual([83744, 114929]);
     expect(conf.wgPatentURI).toEqual([
-      "https://www.w3.org/2004/01/pp-impl/83744/status",
-      "https://www.w3.org/2004/01/pp-impl/114929/status",
+      "https://www.w3.org/groups/wg/payments/ipr",
+      "https://www.w3.org/groups/wg/webapps/ipr",
     ]);
     expect(conf.wgURI).toEqual([
-      "https://www.w3.org/Payments/WG/",
-      "https://www.w3.org/2019/webapps/",
+      "https://www.w3.org/groups/wg/payments",
+      "https://www.w3.org/groups/wg/webapps",
     ]);
+  });
+
+  it("when a multiple groups are specified, it pluralizes the groups", async () => {
+    const ops = makeStandardOps({
+      group: ["payments", "webapps"],
+      specStatus: "NOTE",
+    });
+    const doc = await makeRSDoc(ops);
+    const sotd = doc.getElementById("sotd").textContent.replace(/\s+/g, " ");
+    expect(sotd).toContain(
+      "by the Web Payments Working Group and the Web Applications Working Group as a Group Note using the Note track"
+    );
   });
 
   it("overrides superseded options", async () => {
@@ -53,9 +63,9 @@ describe("W3C — Group", () => {
     expect(conf.wg).toEqual(["Web Applications Working Group"]);
     expect(conf.wgId).toEqual([114929]);
     expect(conf.wgPatentURI).toEqual([
-      "https://www.w3.org/2004/01/pp-impl/114929/status",
+      "https://www.w3.org/groups/wg/webapps/ipr",
     ]);
-    expect(conf.wgURI).toEqual(["https://www.w3.org/2019/webapps/"]);
+    expect(conf.wgURI).toEqual(["https://www.w3.org/groups/wg/webapps"]);
   });
 
   it("fails if multiple groups exist with same shortname", async () => {

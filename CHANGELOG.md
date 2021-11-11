@@ -1,5 +1,345 @@
 # Changelog
 
+## [v26.8.11](https://github.com/w3c/respec/tree/v26.8.11) (2021-06-07)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.10...v26.8.11)
+
+**Merged pull requests:**
+
+- style\(styles/\*\): run through prettier [\#3606](https://github.com/w3c/respec/pull/3606) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(styles/caniuse\): use cursor: default [\#3605](https://github.com/w3c/respec/pull/3605) ([marcoscaceres](https://github.com/marcoscaceres))
+- style\(styles/respec\): whitespace fixes [\#3600](https://github.com/w3c/respec/pull/3600) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.8.10](https://github.com/w3c/respec/tree/v26.8.10) (2021-06-04)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.9...v26.8.10)
+
+**Fixed bugs:**
+
+- xref not able to link \[=ReadableStream/set up/pullAlgorithm=\] [\#3595](https://github.com/w3c/respec/issues/3595)
+
+**Closed issues:**
+
+- Support expansion of headings across specs [\#3589](https://github.com/w3c/respec/issues/3589)
+
+**Merged pull requests:**
+
+- fix\(core/inlines\): support \[=deep/for/links=\] [\#3596](https://github.com/w3c/respec/pull/3596) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.8.9](https://github.com/w3c/respec/tree/v26.8.9) (2021-06-04)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.8...v26.8.9)
+
+**Fixed bugs:**
+
+- `title` attr added to panel'd dfns is breaking Bikeshed [\#3592](https://github.com/w3c/respec/issues/3592)
+
+**Merged pull requests:**
+
+- fix\(core/dfn-panel\): don't add title attribute to dfn [\#3593](https://github.com/w3c/respec/pull/3593) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v26.8.8](https://github.com/w3c/respec/tree/v26.8.8) (2021-06-03)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.7...v26.8.8)
+
+**Fixed bugs:**
+
+- Referencing IDL Constants fails [\#3590](https://github.com/w3c/respec/issues/3590)
+
+**Merged pull requests:**
+
+- fix\(core/inline-idl-parser\): link interface contants [\#3591](https://github.com/w3c/respec/pull/3591) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps\): bump ws from 7.4.3 to 7.4.6 [\#3587](https://github.com/w3c/respec/pull/3587) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(CHANGELOG\): regenerate [\#3582](https://github.com/w3c/respec/pull/3582) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [v26.8.7](https://github.com/w3c/respec/tree/v26.8.7) (2021-06-02)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.6...v26.8.7)
+
+**Fixed bugs:**
+
+- `aria-label` generated for github issues raises a warning in the HTML validator [\#3584](https://github.com/w3c/respec/issues/3584)
+
+**Merged pull requests:**
+
+- fix\(core/issues-notes\): invalid aria-label [\#3586](https://github.com/w3c/respec/pull/3586) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.8.6](https://github.com/w3c/respec/tree/v26.8.6) (2021-06-01)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.5...v26.8.6)
+
+**Merged pull requests:**
+
+- chore\(deps\): update dependencies [\#3578](https://github.com/w3c/respec/pull/3578) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v26.8.5](https://github.com/w3c/respec/tree/v26.8.5) (2021-05-31)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.4...v26.8.5)
+
+**Merged pull requests:**
+
+- fix\(core/inlines\): expand markdown headings [\#3567](https://github.com/w3c/respec/pull/3567) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v26.8.4](https://github.com/w3c/respec/tree/v26.8.4) (2021-05-29)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.3...v26.8.4)
+
+**Implemented enhancements:**
+
+- File a Bug -\> Issue [\#3564](https://github.com/w3c/respec/issues/3564)
+
+**Merged pull requests:**
+
+- refactor\(core/utils\): add JSDoc TypeScript annotations [\#3568](https://github.com/w3c/respec/pull/3568) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/github\): file an issue, not bug [\#3565](https://github.com/w3c/respec/pull/3565) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.8.3](https://github.com/w3c/respec/tree/v26.8.3) (2021-05-25)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.2...v26.8.3)
+
+**Fixed bugs:**
+
+- Deprecate Person.mailto... use Person.url [\#3532](https://github.com/w3c/respec/issues/3532)
+
+**Merged pull requests:**
+
+- chore\(package\): update deps [\#3559](https://github.com/w3c/respec/pull/3559) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webmonetization\): use respec.org payment pointer [\#3552](https://github.com/w3c/respec/pull/3552) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v26.8.2](https://github.com/w3c/respec/tree/v26.8.2) (2021-05-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.1...v26.8.2)
+
+**Fixed bugs:**
+
+- It's currently not possible for a Draft Finding to link to its most recently published Finding [\#3541](https://github.com/w3c/respec/issues/3541)
+- Missing 'p-org' hcard classes [\#3530](https://github.com/w3c/respec/issues/3530)
+
+**Merged pull requests:**
+
+- fix\(w3c/style\): misspelled finding-draft [\#3551](https://github.com/w3c/respec/pull/3551) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(w3c/templates/headers\): show versions links for TAG docs [\#3550](https://github.com/w3c/respec/pull/3550) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/show-people\): more robust error checking [\#3531](https://github.com/w3c/respec/pull/3531) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.8.1](https://github.com/w3c/respec/tree/v26.8.1) (2021-05-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.8.0...v26.8.1)
+
+**Fixed bugs:**
+
+- How to remove "W3C Document" [\#3542](https://github.com/w3c/respec/issues/3542)
+
+**Merged pull requests:**
+
+- fix\(core/ui\): display plugin name after error msg [\#3548](https://github.com/w3c/respec/pull/3548) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps-dev\): bump webidl2 from 24.0.1 to 24.1.1 [\#3547](https://github.com/w3c/respec/pull/3547) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(ci/pr\): ensure changes to builds/ aren't committed [\#3546](https://github.com/w3c/respec/pull/3546) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/headers\): don't add W3C to h2 for 'base' documents [\#3545](https://github.com/w3c/respec/pull/3545) ([marcoscaceres](https://github.com/marcoscaceres))
+- docs\(examples\): update basic.html and basic.built.html [\#3527](https://github.com/w3c/respec/pull/3527) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): regenerate [\#3505](https://github.com/w3c/respec/pull/3505) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [v26.8.0](https://github.com/w3c/respec/tree/v26.8.0) (2021-05-19)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.7.0...v26.8.0)
+
+**Closed issues:**
+
+- Tests `toBe(null)`, should use `toBeNull()` [\#3538](https://github.com/w3c/respec/issues/3538)
+
+**Merged pull requests:**
+
+- feat\(aom\): define AOM profile [\#3543](https://github.com/w3c/respec/pull/3543) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps\): update dependencies [\#3540](https://github.com/w3c/respec/pull/3540) ([sidvishnoi](https://github.com/sidvishnoi))
+- Changed toBe\(null\) to toBeNull\(\) [\#3539](https://github.com/w3c/respec/pull/3539) ([himanshu007-creator](https://github.com/himanshu007-creator))
+
+## [v26.7.0](https://github.com/w3c/respec/tree/v26.7.0) (2021-05-13)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.6...v26.7.0)
+
+**Fixed bugs:**
+
+- dfn.role=link containing a link [\#3482](https://github.com/w3c/respec/issues/3482)
+
+**Closed issues:**
+
+- How to turn off the abbreviations feature? [\#3514](https://github.com/w3c/respec/issues/3514)
+
+**Merged pull requests:**
+
+- fix\(core/dfn-panel\): stop assignig role=link to dfn [\#3529](https://github.com/w3c/respec/pull/3529) ([marcoscaceres](https://github.com/marcoscaceres))
+- test\(core/xref-spec\): point to webauthn-3 now [\#3528](https://github.com/w3c/respec/pull/3528) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(tools/dev-server\): point to examples [\#3526](https://github.com/w3c/respec/pull/3526) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/inlines\): allow excluding abbr from inlines [\#3515](https://github.com/w3c/respec/pull/3515) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps\): bump hosted-git-info from 2.8.8 to 2.8.9 [\#3513](https://github.com/w3c/respec/pull/3513) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(package\): update deps [\#3512](https://github.com/w3c/respec/pull/3512) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.6.6](https://github.com/w3c/respec/tree/v26.6.6) (2021-05-07)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.5...v26.6.6)
+
+**Fixed bugs:**
+
+- Automatic link to sub-sections duplicate definition markup [\#3486](https://github.com/w3c/respec/issues/3486)
+
+**Merged pull requests:**
+
+- test\(core/xref-spec\): use specific webauthn version [\#3511](https://github.com/w3c/respec/pull/3511) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(lint/wpt-tests-exist\): make separate warnings [\#3509](https://github.com/w3c/respec/pull/3509) ([marcoscaceres](https://github.com/marcoscaceres))
+- tests\(w3c/group-spec\): ipr disclousures have new URLs [\#3508](https://github.com/w3c/respec/pull/3508) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/anchor-expander\): don't copy attributes when expanding [\#3507](https://github.com/w3c/respec/pull/3507) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps-dev\): bump rollup from 2.45.2 to 2.47.0 [\#3506](https://github.com/w3c/respec/pull/3506) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v26.6.5](https://github.com/w3c/respec/tree/v26.6.5) (2021-05-04)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.4...v26.6.5)
+
+**Fixed bugs:**
+
+- Underlined space after ORCID icon [\#3501](https://github.com/w3c/respec/issues/3501)
+
+**Merged pull requests:**
+
+- fix\(templates/show-people\): remove extraneous WS from ORCID link [\#3502](https://github.com/w3c/respec/pull/3502) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3499](https://github.com/w3c/respec/pull/3499) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [v26.6.4](https://github.com/w3c/respec/tree/v26.6.4) (2021-04-30)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.3...v26.6.4)
+
+**Fixed bugs:**
+
+- Automatic link to sub-sections duplicate definition markup [\#3486](https://github.com/w3c/respec/issues/3486)
+
+**Merged pull requests:**
+
+- fix\(core/utils\): removes attributes from dfn when calling makeSafeCopy [\#3500](https://github.com/w3c/respec/pull/3500) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.6.3](https://github.com/w3c/respec/tree/v26.6.3) (2021-04-30)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.2...v26.6.3)
+
+**Fixed bugs:**
+
+- Respec generates wrong patent policy text for joint publication. [\#3494](https://github.com/w3c/respec/issues/3494)
+
+**Merged pull requests:**
+
+- chore\(ci/pr\): don't re-install html validator [\#3498](https://github.com/w3c/respec/pull/3498) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/data-cite\): use switch case in linkElem [\#3497](https://github.com/w3c/respec/pull/3497) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/templates/sotd\): pluralize groups when noRecTrack [\#3496](https://github.com/w3c/respec/pull/3496) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/xref\): use full hrefs when available [\#3495](https://github.com/w3c/respec/pull/3495) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): add v26.6.2 [\#3493](https://github.com/w3c/respec/pull/3493) ([github-actions[bot]](https://github.com/apps/github-actions))
+- refactor\(core/inlines\): use switch instead of ifs [\#3492](https://github.com/w3c/respec/pull/3492) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.6.2](https://github.com/w3c/respec/tree/v26.6.2) (2021-04-27)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.1...v26.6.2)
+
+**Fixed bugs:**
+
+- dfn.role=link containing a link [\#3482](https://github.com/w3c/respec/issues/3482)
+
+**Merged pull requests:**
+
+- fix\(core/inlines\): don't link IDL inside dfn [\#3491](https://github.com/w3c/respec/pull/3491) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(deps\): update dependencies [\#3490](https://github.com/w3c/respec/pull/3490) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3485](https://github.com/w3c/respec/pull/3485) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [v26.6.1](https://github.com/w3c/respec/tree/v26.6.1) (2021-04-26)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.6.0...v26.6.1)
+
+**Fixed bugs:**
+
+- dfn.role=link containing a link [\#3482](https://github.com/w3c/respec/issues/3482)
+- dfn panel for data-cite dfn are unused [\#3254](https://github.com/w3c/respec/issues/3254)
+
+**Closed issues:**
+
+- Add support for partial interface references [\#3264](https://github.com/w3c/respec/issues/3264)
+- "npm start" devserver doesn't work with Firefox [\#3070](https://github.com/w3c/respec/issues/3070)
+
+**Merged pull requests:**
+
+- fix\(core/dfn-panel\): don't add  panel for data-cite [\#3484](https://github.com/w3c/respec/pull/3484) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(tools/release\): colors\[match\] not a function [\#3481](https://github.com/w3c/respec/pull/3481) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(tools/release\): add type checking [\#3480](https://github.com/w3c/respec/pull/3480) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3479](https://github.com/w3c/respec/pull/3479) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [v26.6.0](https://github.com/w3c/respec/tree/v26.6.0) (2021-04-22)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.3...v26.6.0)
+
+**Merged pull requests:**
+
+- test\(core/xref-spec\): fix bad URL [\#3478](https://github.com/w3c/respec/pull/3478) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/linter-rules/a11y\): convert core/a11y to linter rule [\#3477](https://github.com/w3c/respec/pull/3477) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(dependabot\): enable updates for github-actions [\#3476](https://github.com/w3c/respec/pull/3476) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(tools/release\): validate HTML before release [\#3475](https://github.com/w3c/respec/pull/3475) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): regenerate [\#3474](https://github.com/w3c/respec/pull/3474) ([github-actions[bot]](https://github.com/apps/github-actions))
+- chore\(workflows/pr\): validate HTML [\#3473](https://github.com/w3c/respec/pull/3473) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/web-monetization\): support adding monetization meta tag [\#2966](https://github.com/w3c/respec/pull/2966) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v26.5.3](https://github.com/w3c/respec/tree/v26.5.3) (2021-04-21)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.2...v26.5.3)
+
+**Fixed bugs:**
+
+- \<aside role=dialog\> fails spec-prod validation [\#3470](https://github.com/w3c/respec/issues/3470)
+
+**Merged pull requests:**
+
+- test\(core/xref-spec\): URL changed [\#3472](https://github.com/w3c/respec/pull/3472) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/dfn-pane\): aside should be a div [\#3471](https://github.com/w3c/respec/pull/3471) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(CHANGELOG\): regenerate [\#3469](https://github.com/w3c/respec/pull/3469) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [v26.5.2](https://github.com/w3c/respec/tree/v26.5.2) (2021-04-20)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.1...v26.5.2)
+
+**Fixed bugs:**
+
+- Open dfnPanel using keyboard [\#2825](https://github.com/w3c/respec/issues/2825)
+
+**Merged pull requests:**
+
+- chore\(deps\): update dependencies [\#3468](https://github.com/w3c/respec/pull/3468) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3461](https://github.com/w3c/respec/pull/3461) ([github-actions[bot]](https://github.com/apps/github-actions))
+- fix\(core/dfn-panel\): make dfn panel keyboard accessible [\#3458](https://github.com/w3c/respec/pull/3458) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v26.5.1](https://github.com/w3c/respec/tree/v26.5.1) (2021-04-19)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v26.5.0...v26.5.1)
+
+**Fixed bugs:**
+
+- WebIDL CSS isn't injected [\#3442](https://github.com/w3c/respec/issues/3442)
+- Some refs from HTML starting with "DOM" aren't available  [\#3441](https://github.com/w3c/respec/issues/3441)
+
+**Closed issues:**
+
+- Add a link to specref with last-updated time [\#3440](https://github.com/w3c/respec/issues/3440)
+- Documentation: export is no longer using shepherd [\#3430](https://github.com/w3c/respec/issues/3430)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): ensure loading of webidl.css [\#3460](https://github.com/w3c/respec/pull/3460) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(tools/dev-server\): output red errors [\#3459](https://github.com/w3c/respec/pull/3459) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(tools/dev-server\): run dev server before tests, help msg [\#3456](https://github.com/w3c/respec/pull/3456) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(tools/\*\): disallow unknown options [\#3455](https://github.com/w3c/respec/pull/3455) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(tools/respec2html\): disallow unknown options [\#3454](https://github.com/w3c/respec/pull/3454) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/linter-rules/\*\): run as regular plugins [\#3453](https://github.com/w3c/respec/pull/3453) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/linter/check-punctuation\): run as regular plugin [\#3452](https://github.com/w3c/respec/pull/3452) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/linter/check-internal-slots\): run as regular plugin [\#3451](https://github.com/w3c/respec/pull/3451) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(package\): use node v14, npm v6 [\#3450](https://github.com/w3c/respec/pull/3450) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(deps\): update dependencies [\#3449](https://github.com/w3c/respec/pull/3449) ([sidvishnoi](https://github.com/sidvishnoi))
+- tests\(core/a11y\): increase timeout [\#3439](https://github.com/w3c/respec/pull/3439) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(ci/regressions\): test respec-w3c differences across branches  [\#3428](https://github.com/w3c/respec/pull/3428) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(CHANGELOG\): regenerate [\#3427](https://github.com/w3c/respec/pull/3427) ([github-actions[bot]](https://github.com/apps/github-actions))
+- refactor\(tests/webidl\): update legacy constructors + cleanup [\#3425](https://github.com/w3c/respec/pull/3425) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/linter/check-charset\): run as regular plugin [\#3401](https://github.com/w3c/respec/pull/3401) ([sidvishnoi](https://github.com/sidvishnoi))
+
 ## [v26.5.0](https://github.com/w3c/respec/tree/v26.5.0) (2021-03-31)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.4.1...v26.5.0)

@@ -20,7 +20,7 @@ describe("Core — Examples", () => {
     const example = doc.querySelector("div.example pre");
     const div = example.closest("div");
     expect(div.classList).toContain("example");
-    expect(div.id).toBe("example-1-ex");
+    expect(div.id).toBe("example-ex");
 
     const markers = div.querySelectorAll("div.marker");
     expect(markers).toHaveSize(1);
@@ -41,7 +41,7 @@ describe("Core — Examples", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const example = doc.querySelector("aside.example");
-    expect(example.id).toBe("example-1-ex");
+    expect(example.id).toBe("example-ex");
 
     const markers = example.querySelectorAll("div.marker");
     expect(markers).toHaveSize(1);
@@ -56,6 +56,9 @@ describe("Core — Examples", () => {
   });
   it("processes children of aside examples", async () => {
     const body = `
+      <section id="sotd">
+       <p>.</p>
+      <section>
       <aside class="example">
       <pre class="js">
       // Whitespace before this text should be removed
@@ -95,7 +98,7 @@ describe("Core — Examples", () => {
     const [example1, example2, example3] = exampleLinks;
     expect(example1.getAttribute("href")).toBe("#example-1");
     expect(example2.getAttribute("href")).toBe("#pass");
-    expect(example3.getAttribute("href")).toBe("#example-3-pass");
+    expect(example3.getAttribute("href")).toBe("#example-pass");
   });
   it("self-links examples made from pre", async () => {
     const body = `
@@ -110,7 +113,7 @@ describe("Core — Examples", () => {
     const [example1, example2, example3] = exampleLinks;
     expect(example1.getAttribute("href")).toBe("#example-1");
     expect(example2.getAttribute("href")).toBe("#pass");
-    expect(example3.getAttribute("href")).toBe("#example-3-pass");
+    expect(example3.getAttribute("href")).toBe("#example-pass");
   });
   it("relocates ids and doesn't duplicate them", async () => {
     const body = `

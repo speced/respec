@@ -21,6 +21,7 @@ describe("W3C — Defaults", () => {
       "check-internal-slots": false,
       "check-charset": false,
       "wpt-tests-exist": false,
+      a11y: false,
     });
     expect(rsConf.highlightVars).toBe(true);
     expect(rsConf.license).toBe("w3c-software-doc");
@@ -61,6 +62,7 @@ describe("W3C — Defaults", () => {
       "check-internal-slots": true,
       "check-charset": false,
       "wpt-tests-exist": false,
+      a11y: false,
     });
     expect(rsConf.highlightVars).toBe(false);
     expect(rsConf.license).toBe("c0");
