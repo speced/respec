@@ -41,7 +41,7 @@ describe("Core - ID headers", () => {
       expect(doc.querySelector(".introductory h2 a.self-link")).toBeTruthy();
     });
 
-    it("adds aria-labels section, including section type", () => {
+    it("adds aria-label with section type and number", () => {
       const intro = doc.querySelector(".introductory h2 a.self-link");
       expect(intro.getAttribute("aria-label")).toBe("Permalink for Section");
       const custom = doc.querySelector("#custom-id a.self-link");
