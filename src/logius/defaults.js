@@ -41,6 +41,7 @@ const nlRespecDefaults = {
     "no-headingless-sections": false,
     "privsec-section": true,
     "no-http-props": true,
+    "no-altless-figures": true,
   },
   doJsonLd: true,
   license: "cc-by",

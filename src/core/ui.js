@@ -8,12 +8,22 @@
 //      - save to GitHub
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
+import { getIntlData, joinAnd } from "./utils.js";
 import { html, pluralize } from "./import-maps.js";
 import css from "../styles/ui.css.js";
-import { joinAnd } from "./utils.js";
 import { markdownToHtml } from "./markdown.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
+
+const localizationStrings = {
+  en: {
+    msg: "Occurred at",
+  },
+  nl: {
+    msg: "Voorgekomen bij",
+  },
+};
+const l10n = getIntlData(localizationStrings);
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
 insertStyle();
@@ -267,7 +277,7 @@ function rsErrorToHTML(err) {
   const plugin = err.plugin ? ` <small>(Plugin: "${err.plugin}")</small>.` : "";
   const hint = err.hint ? ` ${err.hint}` : "";
   const elements = Array.isArray(err.elements)
-    ? ` Occurred at: ${joinAnd(err.elements.map(generateMarkdownLink))}.`
+    ? ` ${l10n.msg}: ${joinAnd(err.elements.map(generateMarkdownLink))}.`
     : "";
   const details = err.details
     ? `\n\n<details>\n${err.details}\n</details>\n`

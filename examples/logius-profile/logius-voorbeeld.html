@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+  <meta charset='utf-8'>
+  <title>
+    Logius's testpage
+  </title>
+  <script src="../../profiles/logius.js" class="remove" type="module" async></script>
+  <link rel="shortcut icon" type="image/x-icon"
+    href="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/logius.ico" />
+  <script class='remove'>
+    var respecConfig = {
+      specType: "HR",
+      specStatus: "WV",
+
+      //subtitle: "Hier komt een subtitle",
+      shortName: "API-Design-Rules",
+
+      publishDate: "2020-09-20",
+      previousPublishDate: "2018-10-07",
+      // Zie https://github.com/w3c/respec/wiki/previousMaturity. Dit moet een
+      // A YYYY-MM-DD date. When a previousPublishDate is specified, this is typically required as well in order to generate the "Previous Version"
+      previousMaturity: "DEF",
+      pubDomain: "dk",
+      pubSubDomain: "watisdk",
+
+      editors: [{
+        name: "P H",
+        mailto: "api@digikoppeling",
+        company: "Logius",
+        companyURL: "https://logius.nl/standaarden",
+      }, {
+        name: "P H",
+        url: "https://logius.nl/standaarden",
+      }],
+      authors: [{
+        name: "P H",
+        url: "https://logius.nl/standaarden",
+      }],
+      github: "https://github.com/Logius-standaarden/API-Design-Rules",
+      //   testSuiteURI: "https://github.com/Logius-standaarden/API-Design-Rules",
+      highlightVars: true,
+      // noHighlightCSS: true, // hidden config ?! 
+      nl_emailcomments: "digikoppeling@logius.nl",
+      addSectionLinks: true,
+      a11y: false,
+      maxTocLevel: 3,
+      alternateFormats: [{
+          label: "html",
+          uri: "https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.html",
+        },
+        {
+          label: "pdf",
+          uri: "https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.pdf",
+        },
+      ],
+
+      //nl_addReleaseTagTitle: true,
+      nl_markdownSplitH1sections: false,
+      nl_github: {
+        issueBase: "https://github.com/Geonovum/KP-APIs/issues/",
+        revision: "https://github.com/Logius-standaarden/API-Design-Rules/commits/",
+        pullrequests: "https://github.com/Logius-standaarden/API-Design-Rules/pulls/"
+      },
+      nl_organisationName: "Logius",
+      nl_organisationPrefix: "LS-",
+      nl_markdownTableClass: "simple",
+      nl_markdownEmbedImageInFigure: true,
+      nl_organisationStylesURL: "https://publicatie.centrumvoorstandaarden.nl/respec/style/",
+      // nl_organisationStylesURL: "http://localhost:8081/respec/style/",
+      nl_organisationPublishURL: "https://publicatie.centrumvoorstandaarden.nl/",
+      nl_logo: {
+        src: "https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/figure-logius.svg",
+        //src: "http://localhost:8081/respec/style/logos/figure-logius.svg",
+        alt: "Logius",
+        id: "Logius",
+        height: 77,
+        width: 44,
+        url: "https://www.logius.nl/standaarden",
+      },
+      //preProcess: [mdAddFigure],
+    };
+
+  </script>
+  <script>
+    function include(utils, content, url) {
+      //alert(`utils:${utils}, content:${content}, url:${url}`);
+      return content;
+    }
+
+  </script>
+</head>
+
+<body>
+  <section id='abstract'></section>
+  <!-- <section id='sotd' style="display: none"> -->
+  <section id='sotd'></section>
+  <section class="introductory" id="overview">
+    <h2 id="title">
+      <!-- if <h1> than overrules <title> in <head> -->
+      Overview
+    </h2>
+  </section>
+  <section class="informative" id="intro">
+    <h2>
+      Introduction
+    </h2>
+    <p>
+      This section has a CSS class "<code>informative</code>", so it is
+      listed in the TOC. ReSpec will list this reference as non-normative
+      since this is an informative section [[DOM]].
+    </p>
+
+  </section>
+  <section data-format="markdown" data-include="dk_doel_document.md" data-oninclude="include"></section>
+
+  <!-- <section id="tof" class="informative appendix"></section> -->
+  <section id='conformance'>
+    <!-- This section is filled automatically by ReSpec. -->
+  </section>
+
+  <section id="tof">
+    <!-- This section is filled with figures automatically by ReSpec. -->
+  </section>
+
+  <section id="toc">
+    <!-- This section is filled with content automatically by ReSpec. -->
+  </section>
+
+  <section id="index">
+    <!-- This section is filled with content automatically by ReSpec. -->
+  </section>
+
+</body>
+
+</html>

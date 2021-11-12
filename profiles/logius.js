@@ -35,12 +35,10 @@ const modules = [
   // todo insert requirements ?
   import("../src/core/best-practices.js"),
   import("../src/core/figures.js"),
-  import("../src/core/webidl.js"), // todo skipped by geonovum
   import("../src/core/biblio.js"),
   import("../src/core/link-to-dfn.js"),
   import("../src/core/xref.js"),
   import("../src/core/data-cite.js"),
-  import("../src/core/webidl-index.js"),
   import("../src/core/render-biblio.js"),
   import("../src/core/dfn-index.js"),
   import("../src/core/contrib.js"),
@@ -48,9 +46,6 @@ const modules = [
   import("../src/core/structure.js"),
   import("../src/core/informative.js"), // solved handhaaf core version ipv  geonovum version
   import("../src/core/id-headers.js"),
-  import("../src/core/caniuse.js"),
-  import("../src/core/mdn-annotation.js"),
-  // todo geonovum insert leafletfigures.js
   import("../src/ui/save-html.js"),
   import("../src/ui/search-specref.js"),
   import("../src/ui/search-xref.js"),
@@ -58,8 +53,6 @@ const modules = [
   import("../src/core/seo.js"),
   import("../src/w3c/seo.js"), // changed from logius/seo.js to w3c/seo.js since there was no notable difference
   import("../src/core/highlight.js"),
-  import("../src/core/webidl-clipboard.js"), // skipped by geonovum
-  import("../src/core/data-tests.js"),
   import("../src/core/list-sorter.js"),
   import("../src/core/highlight-vars.js"),
   import("../src/core/dfn-panel.js"),
@@ -73,9 +66,9 @@ const modules = [
   import("../src/core/linter-rules/check-internal-slots.js"),
   import("../src/core/linter-rules/local-refs-exist.js"),
   import("../src/core/linter-rules/no-headingless-sections.js"),
+  import("../src/core/linter-rules/no-altless-figures.js"),
   import("../src/core/linter-rules/no-unused-vars.js"),
   import("../src/core/linter-rules/privsec-section.js"),
-  import("../src/core/linter-rules/wpt-tests-exist.js"),
   import("../src/core/linter-rules/no-http-props.js"),
   import("../src/core/linter-rules/a11y.js"),
 ];
