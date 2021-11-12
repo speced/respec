@@ -12,11 +12,11 @@ export const name = "core/linter-rules/no-altless-figures";
 const localizationStrings = {
   en: {
     msg: "All informative figures must have a text alternative.",
-    hint: "Check the HTML `<img>` `alt` attribute",
+    hint: "Check the HTML `<img>` `alt` attribute.",
   },
   nl: {
     msg: "Alle informatieve figuren dienen over een tekstueel alternatief te beschikken.",
-    hint: "Controleer het HTML `<img>` `alt` atribuut",
+    hint: "Controleer het HTML `<img>` `alt` atribuut.",
   },
 };
 const l10n = getIntlData(localizationStrings);
