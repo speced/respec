@@ -35,7 +35,6 @@ const modules = [
   // todo insert requirements ?
   import("../src/core/best-practices.js"),
   import("../src/core/figures.js"),
-  import("../src/core/webidl.js"), // todo skipped by geonovum
   import("../src/core/biblio.js"),
   import("../src/core/link-to-dfn.js"),
   import("../src/core/xref.js"),
@@ -67,6 +66,7 @@ const modules = [
   import("../src/core/linter-rules/check-internal-slots.js"),
   import("../src/core/linter-rules/local-refs-exist.js"),
   import("../src/core/linter-rules/no-headingless-sections.js"),
+  import("../src/core/linter-rules/no-altless-figures.js"),
   import("../src/core/linter-rules/no-unused-vars.js"),
   import("../src/core/linter-rules/privsec-section.js"),
   import("../src/core/linter-rules/no-http-props.js"),
