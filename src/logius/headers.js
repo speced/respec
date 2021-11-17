@@ -94,12 +94,14 @@ import {
   ISODate,
   concatDate,
   docLink,
+  getIntlData,
   htmlJoinAnd,
   showError,
   showWarning,
 } from "../core/utils.js";
 import headersTmpl from "./templates/headers.js";
 import { html } from "../core/import-maps.js";
+import { lang } from "../core/l10n.js";
 import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
 /* pieter hering end synced with w3c version */
@@ -108,6 +110,31 @@ import sotdTmpl from "./templates/sotd.js";
 // (see above)
 
 export const name = "logius/headers";
+
+const localizationStrings = {
+  en: {
+    sotd: "Status of This Document",
+    wv: "Draft",
+	cv: "Recommendation",
+    vv: "Proposed recommendation",
+    def: "Definitive version",
+    basis: "Document",
+    eo: "Verouderde versie",
+    tg: "Outdated version",	
+  },
+  nl: {
+    sotd: "Status van dit document",
+	wv: "Werkversie",
+	cv: "Consultatieversie",
+    vv: "Versie ter vaststelling",
+    def: "Vastgestelde versie",
+    basis: "Document",
+    eo: "Verouderde versie",
+    tg: "Teruggetrokken versie",
+  },
+};
+
+export const l10n = getIntlData(localizationStrings);
 
 const NLRespecDate = new Intl.DateTimeFormat(["nl"], {
   timeZone: "UTC",
@@ -121,18 +148,18 @@ const NLRespecDate = new Intl.DateTimeFormat(["nl"], {
 // pieter hering inserted generic names and added two statuses
 const status2text = {
   "GN-WV": "Werkversie",
-  WV: "Werkversie",
+  WV: l10n.wv,
   "GN-CV": "Consultatieversie",
-  CV: "Consultatieversie",
+  CV: l10n.cv,
   "GN-VV": "Versie ter vaststelling",
-  VV: "Versie ter vaststelling",
+  VV: l10n.vv,
   "GN-DEF": "Vastgestelde versie",
-  DEF: "Vastgestelde versie",
+  DEF: l10n.def,
   "GN-BASIS": "Document",
-  BASIS: "Document",
+  BASIS: l10n.basis,
   // 2020-12-31 extended with two new statuses
-  EO: "Verouderde versie",
-  TG: "Teruggetrokken versie",
+  EO: l10n.eo,
+  TG: l10n.tg,
 };
 
 // Thijs Brentjens: added Geonovum types
@@ -653,7 +680,9 @@ function populateSoTD(conf, sotd) {
     ...collectSotdContent(sotd, conf),
     get specDocument() {
       let article = "";
+	  if (lang.toLowerCase() == "nl" ) {
       conf.specType == "IM" ? (article = "het ") : (article = "de ");
+	  }
       return `${article} ${conf.typeStatus.toLowerCase()}`;
     },
     get operationalCommittee() {
