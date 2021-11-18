@@ -306,7 +306,7 @@ describe("W3C — Headers", () => {
         expect(dd.querySelector("time").dateTime).toBe("2020-03-02");
         expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
       });
-      it("relocates multiple editors with retiredDate member to multple formerEditors", async () => {
+      it("relocates multiple editors with retiredDate member to multiple formerEditors", async () => {
         const ops = makeStandardOps();
         const newProps = {
           specStatus: "REC",
