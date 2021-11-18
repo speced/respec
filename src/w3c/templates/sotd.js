@@ -255,7 +255,8 @@ function renderIsRec({
       <abbr title="World Wide Web Consortium">W3C</abbr> and its Members, and
       has commitments from Working Group members to
       <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements"
-        >royalty-free licensing</a>
+        >royalty-free licensing</a
+      >
       for implementations.
       ${updateableRec
         ? html`Future updates to this Recommendation may incorporate
