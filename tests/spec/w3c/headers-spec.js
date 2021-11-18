@@ -112,7 +112,7 @@ describe("W3C — Headers", () => {
       expect(sotd).toContain(
         "W3C recommends the wide deployment of this specification as a standard for the Web."
       );
-      expect(sotd).toContain("Royalty-Free IPR licenses");
+      expect(sotd).toContain("royalty-free licensing");
     });
 
     it("includes version links for 'draft-finding'", async () => {
