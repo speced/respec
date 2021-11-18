@@ -3,25 +3,25 @@ import { getIntlData } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 
 export default (conf, opts) => {
-	var localizationStrings = {
-  en: {
-    sotd: "Status of This Document",
-	def: `This is the definitive version of the ${opts.specDocument}. Edits resulting from consultations have been applied.`,
-	wv: `This is a draft that could be altered, removed or replaced by other documents. It is not a recommendation approved by ${opts.operationalCommittee}.`,
-	cv: `This is a proposed recommendation approved by ${opts.operationalCommittee}. Comments regarding this document may be sent to `,
-	vv: `This is the definitive concept of the ${opts.specDocument}. Edits resulting from consultations have been applied.`,
-	basis: "This document has no official standing.",
-  },
-  nl: {
-    sotd: "Status van dit document",
-	def: `Dit is de definitieve versie van ${opts.specDocument}. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd.`,
-	wv: `Dit is een werkversie die op elk moment kan worden gewijzigd, verwijderd of vervangen door andere documenten. Het is geen door ${opts.operationalCommittee} goedgekeurde consultatieversie.`,
-	cv: `Dit is een door ${opts.operationalCommittee} goedgekeurde consultatieversie. Commentaar over dit document kan gestuurd worden naar `,
-	vv: `Dit is een definitief concept van de nieuwe versie van ${opts.specDocument}. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd.`,
-	basis: "Dit is een document zonder officiële status.",
-  },
-};
-var l10n = getIntlData(localizationStrings);
+  const localizationStrings = {
+    en: {
+      sotd: "Status of This Document",
+      def: `This is the definitive version of the ${opts.specDocument}. Edits resulting from consultations have been applied.`,
+      wv: `This is a draft that could be altered, removed or replaced by other documents. It is not a recommendation approved by ${opts.operationalCommittee}.`,
+      cv: `This is a proposed recommendation approved by ${opts.operationalCommittee}. Comments regarding this document may be sent to `,
+      vv: `This is the definitive concept of the ${opts.specDocument}. Edits resulting from consultations have been applied.`,
+      basis: "This document has no official standing.",
+    },
+    nl: {
+      sotd: "Status van dit document",
+      def: `Dit is de definitieve versie van ${opts.specDocument}. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd.`,
+      wv: `Dit is een werkversie die op elk moment kan worden gewijzigd, verwijderd of vervangen door andere documenten. Het is geen door ${opts.operationalCommittee} goedgekeurde consultatieversie.`,
+      cv: `Dit is een door ${opts.operationalCommittee} goedgekeurde consultatieversie. Commentaar over dit document kan gestuurd worden naar `,
+      vv: `Dit is een definitief concept van de nieuwe versie van ${opts.specDocument}. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd.`,
+      basis: "Dit is een document zonder officiële status.",
+    },
+  };
+  const l10n = getIntlData(localizationStrings);
   return html`
     <h2>${l10n.sotd}</h2>
     ${conf.isPreview ? renderPreview(conf) : ""}
@@ -30,7 +30,9 @@ var l10n = getIntlData(localizationStrings);
       : conf.isVV
       ? l10n.vv
       : conf.isCV
-	  ? html`${l10n.cv}<a href="${opts.emailCommentsMailto}">${opts.emailComments}</a>.`
+      ? html`${l10n.cv}<a href="${opts.emailCommentsMailto}"
+            >${opts.emailComments}</a
+          >.`
       : conf.isWV
       ? l10n.wv
       : conf.isBASIS

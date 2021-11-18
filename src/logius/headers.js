@@ -115,22 +115,40 @@ const localizationStrings = {
   en: {
     sotd: "Status of This Document",
     wv: "Draft",
-	cv: "Recommendation",
+    cv: "Recommendation",
     vv: "Proposed recommendation",
     def: "Definitive version",
     basis: "Document",
     eo: "Verouderde versie",
-    tg: "Outdated version",	
+    tg: "Outdated version",
+    no: "Norm",
+    st: "Standard",
+    im: "Information model",
+    pr: "Guideline",
+    hr: "Guide",
+    wa: "Proposed recommendation",
+    al: "General",
+    bd: "Governance documentation",
+    bp: "Best practice",
   },
   nl: {
     sotd: "Status van dit document",
-	wv: "Werkversie",
-	cv: "Consultatieversie",
+    wv: "Werkversie",
+    cv: "Consultatieversie",
     vv: "Versie ter vaststelling",
     def: "Vastgestelde versie",
     basis: "Document",
     eo: "Verouderde versie",
     tg: "Teruggetrokken versie",
+    no: "Norm",
+    st: "Standaard",
+    im: "Informatiemodel",
+    pr: "Praktijkrichtlijn",
+    hr: "Handreiking",
+    wa: "Werkafspraak",
+    al: "Algemeen",
+    bd: "Beheerdocumentatie",
+    bp: "Best practice",
   },
 };
 
@@ -147,36 +165,33 @@ const NLRespecDate = new Intl.DateTimeFormat(["nl"], {
 // https://github.com/Logius-standaarden/respec/wiki/specStatus
 // pieter hering inserted generic names and added two statuses
 const status2text = {
-  "GN-WV": "Werkversie",
   WV: l10n.wv,
-  "GN-CV": "Consultatieversie",
   CV: l10n.cv,
-  "GN-VV": "Versie ter vaststelling",
   VV: l10n.vv,
-  "GN-DEF": "Vastgestelde versie",
   DEF: l10n.def,
-  "GN-BASIS": "Document",
   BASIS: l10n.basis,
-  // 2020-12-31 extended with two new statuses
   EO: l10n.eo,
   TG: l10n.tg,
+  "GN-WV": "Werkversie",
+  "GN-CV": "Consultatieversie",
+  "GN-VV": "Versie ter vaststelling",
+  "GN-DEF": "Vastgestelde versie",
+  "GN-BASIS": "Document",
 };
 
 // Thijs Brentjens: added Geonovum types
 // https://github.com/Logius-standaarden/respec/wiki/specType
 // pieter hering inserted generic names and added two statuses
 const type2text = {
-  NO: "Norm",
-  ST: "Standaard",
-  IM: "Informatiemodel",
-  PR: "Praktijkrichtlijn",
-  HR: "Handreiking",
-  WA: "Werkafspraak",
-  // 2019-05-10 extend with 2 new types
-  AL: "Algemeen",
-  BD: "Beheerdocumentatie",
-  // 2020-12-31 extended with a single types
-  BP: "Best Practice",
+  NO: l10n.no,
+  ST: l10n.st,
+  IM: l10n.im,
+  PR: l10n.pr,
+  HR: l10n.hr,
+  WA: l10n.wa,
+  AL: l10n.al,
+  BD: l10n.bd,
+  BP: l10n.bp,
 };
 
 const status2long = {
@@ -680,9 +695,9 @@ function populateSoTD(conf, sotd) {
     ...collectSotdContent(sotd, conf),
     get specDocument() {
       let article = "";
-	  if (lang.toLowerCase() == "nl" ) {
-      conf.specType == "IM" ? (article = "het ") : (article = "de ");
-	  }
+      if (lang.toLowerCase() == "nl") {
+        conf.specType == "IM" ? (article = "het ") : (article = "de ");
+      }
       return `${article} ${conf.typeStatus.toLowerCase()}`;
     },
     get operationalCommittee() {
