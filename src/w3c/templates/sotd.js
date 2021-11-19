@@ -223,7 +223,7 @@ function renderNotRec(conf) {
       break;
     case "DNOTE":
     case "NOTE":
-      endorsement = html`${conf.textStatus}s are not endorsed by the
+      endorsement = html`${conf.textStatus}s are not endorsed by
         <abbr title="World Wide Web Consortium">W3C</abbr> nor its Members.`;
       break;
   }
@@ -251,11 +251,11 @@ function renderIsRec({
 
     <p>
       A W3C Recommendation is a specification that, after extensive
-      consensus-building, has received the endorsement of the
+      consensus-building, is endorsed by
       <abbr title="World Wide Web Consortium">W3C</abbr> and its Members, and
-      participants granted
+      has commitments from Working Group members to
       <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements"
-        >Royalty-Free IPR licenses</a
+        >royalty-free licensing</a
       >
       for implementations.
       ${updateableRec
