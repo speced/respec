@@ -112,7 +112,7 @@ describe("W3C — Headers", () => {
       expect(sotd).toContain(
         "W3C recommends the wide deployment of this specification as a standard for the Web."
       );
-      expect(sotd).toContain("Royalty-Free IPR licenses");
+      expect(sotd).toContain("royalty-free licensing");
     });
 
     it("includes version links for 'draft-finding'", async () => {
@@ -306,7 +306,7 @@ describe("W3C — Headers", () => {
         expect(dd.querySelector("time").dateTime).toBe("2020-03-02");
         expect(dd.nextElementSibling.textContent).toContain("FORMER EDITOR 2");
       });
-      it("relocates multiple editors with retiredDate member to multple formerEditors", async () => {
+      it("relocates multiple editors with retiredDate member to multiple formerEditors", async () => {
         const ops = makeStandardOps();
         const newProps = {
           specStatus: "REC",
