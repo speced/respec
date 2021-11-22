@@ -9,8 +9,17 @@ import { html } from "./import-maps.js";
 
 const localizationStrings = {
   en: {
-    perma_for_appendix: "Permalink for Appendix",
-    perma_for_section: "Permalink for Section",
+    /**
+     *
+     * @param {"Appendix" | "Section"} sectionType
+     */
+    permalinkLabel(sectionType, sectionNumber) {
+      let label = `Permalink for ${sectionType}`;
+      if (sectionNumber) {
+        label += ` ${norm(sectionNumber.textContent)}`;
+      }
+      return label;
+    },
   },
 };
 const l10n = getIntlData(localizationStrings);
@@ -28,13 +37,10 @@ export function run(conf) {
       id = h.parentElement.id || h.id;
     }
     if (!conf.addSectionLinks) continue;
-    let label = h.closest(".appendix")
-      ? l10n.perma_for_appendix
-      : l10n.perma_for_section;
-    const sectionNumber = h.querySelector(":scope > bdi.secno");
-    if (sectionNumber) {
-      label += ` ${norm(sectionNumber.textContent)}`;
-    }
+    const label = l10n.permalinkLabel(
+      h.closest(".appendix") ? "Appendix" : "Section",
+      h.querySelector(":scope > bdi.secno")
+    );
     h.prepend(html`
       <a href="${`#${id}`}" class="self-link" aria-label="${label}"></a>
     `);
