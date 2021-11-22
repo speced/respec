@@ -56,6 +56,10 @@ describe("Core - ID headers", () => {
       expect(deepAppendix.getAttribute("aria-label")).toBe(
         "Permalink for Appendix A.1"
       );
+
+      // marked as noToc
+      const deepH4 = doc.querySelector("h4 a.self-link");
+      expect(deepH4.getAttribute("aria-label")).toBe("Permalink for Section");
     });
 
     it("doesn't add sections links when addSectionLinks is false", async () => {
