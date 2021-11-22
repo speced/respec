@@ -47,7 +47,7 @@
     "karma-firefox-launcher": "^2.1.2",
     "karma-jasmine": "^4.0.1",
     "karma-jasmine-html-reporter": "^1.7.0",
-    "karma-mocha-reporter": "^2.2.3",
+    "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
     "loading-indicator": "^2.0.0",
     "pluralize": "^8.0.0",
