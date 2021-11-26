@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["builds/**", "js/**","**/deprecated/**"],
+  "ignorePatterns": ["builds/**", "js/**"],
   "env": {
     "browser": true,
     "es6": true,
