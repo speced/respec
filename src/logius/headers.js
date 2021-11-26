@@ -94,12 +94,14 @@ import {
   ISODate,
   concatDate,
   docLink,
+  getIntlData,
   htmlJoinAnd,
   showError,
   showWarning,
 } from "../core/utils.js";
 import headersTmpl from "./templates/headers.js";
 import { html } from "../core/import-maps.js";
+import { lang } from "../core/l10n.js";
 import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
 /* pieter hering end synced with w3c version */
@@ -108,6 +110,49 @@ import sotdTmpl from "./templates/sotd.js";
 // (see above)
 
 export const name = "logius/headers";
+
+const localizationStrings = {
+  en: {
+    sotd: "Status of This Document",
+    wv: "Draft",
+    cv: "Recommendation",
+    vv: "Proposed recommendation",
+    def: "Definitive version",
+    basis: "Document",
+    eo: "Outdated version",
+    tg: "Rescinded version",
+    no: "Norm",
+    st: "Standard",
+    im: "Information model",
+    pr: "Guideline",
+    hr: "Guide",
+    wa: "Proposed recommendation",
+    al: "General",
+    bd: "Governance documentation",
+    bp: "Best practice",
+  },
+  nl: {
+    sotd: "Status van dit document",
+    wv: "Werkversie",
+    cv: "Consultatieversie",
+    vv: "Versie ter vaststelling",
+    def: "Vastgestelde versie",
+    basis: "Document",
+    eo: "Verouderde versie",
+    tg: "Teruggetrokken versie",
+    no: "Norm",
+    st: "Standaard",
+    im: "Informatiemodel",
+    pr: "Praktijkrichtlijn",
+    hr: "Handreiking",
+    wa: "Werkafspraak",
+    al: "Algemeen",
+    bd: "Beheerdocumentatie",
+    bp: "Best practice",
+  },
+};
+
+export const l10n = getIntlData(localizationStrings);
 
 const NLRespecDate = new Intl.DateTimeFormat(["nl"], {
   timeZone: "UTC",
@@ -120,36 +165,33 @@ const NLRespecDate = new Intl.DateTimeFormat(["nl"], {
 // https://github.com/Logius-standaarden/respec/wiki/specStatus
 // pieter hering inserted generic names and added two statuses
 const status2text = {
+  WV: l10n.wv,
+  CV: l10n.cv,
+  VV: l10n.vv,
+  DEF: l10n.def,
+  BASIS: l10n.basis,
+  EO: l10n.eo,
+  TG: l10n.tg,
   "GN-WV": "Werkversie",
-  WV: "Werkversie",
   "GN-CV": "Consultatieversie",
-  CV: "Consultatieversie",
   "GN-VV": "Versie ter vaststelling",
-  VV: "Versie ter vaststelling",
   "GN-DEF": "Vastgestelde versie",
-  DEF: "Vastgestelde versie",
   "GN-BASIS": "Document",
-  BASIS: "Document",
-  // 2020-12-31 extended with two new statuses
-  EO: "Verouderde versie",
-  TG: "Teruggetrokken versie",
 };
 
 // Thijs Brentjens: added Geonovum types
 // https://github.com/Logius-standaarden/respec/wiki/specType
 // pieter hering inserted generic names and added two statuses
 const type2text = {
-  NO: "Norm",
-  ST: "Standaard",
-  IM: "Informatiemodel",
-  PR: "Praktijkrichtlijn",
-  HR: "Handreiking",
-  WA: "Werkafspraak",
-  // 2019-05-10 extend with 2 new types
-  AL: "Algemeen",
-  BD: "Beheerdocumentatie",
-  // 2020-12-31 extended with a single types
-  BP: "Best Practice",
+  NO: l10n.no,
+  ST: l10n.st,
+  IM: l10n.im,
+  PR: l10n.pr,
+  HR: l10n.hr,
+  WA: l10n.wa,
+  AL: l10n.al,
+  BD: l10n.bd,
+  BP: l10n.bp,
 };
 
 const status2long = {
@@ -653,7 +695,9 @@ function populateSoTD(conf, sotd) {
     ...collectSotdContent(sotd, conf),
     get specDocument() {
       let article = "";
-      conf.specType == "IM" ? (article = "het ") : (article = "de ");
+      if (lang.toLowerCase() == "nl") {
+        conf.specType == "IM" ? (article = "het ") : (article = "de ");
+      }
       return `${article} ${conf.typeStatus.toLowerCase()}`;
     },
     get operationalCommittee() {
