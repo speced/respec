@@ -41,7 +41,7 @@ export function run(conf) {
       h.closest(".appendix") ? "Appendix" : "Section",
       h.querySelector(":scope > bdi.secno")
     );
-    h.prepend(html`
+    h.append(html`
       <a href="${`#${id}`}" class="self-link" aria-label="${label}"></a>
     `);
   }
