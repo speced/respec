@@ -252,7 +252,7 @@ export const licenses = new Map([
     {
       name: "W3C Document License",
       short: "document use",
-      url: "https://www.w3.org/Consortium/Legal/2015/doc-license",
+      url: "https://www.w3.org/Consortium/Legal/copyright-documents",
     },
   ],
   [
