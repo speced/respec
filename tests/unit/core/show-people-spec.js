@@ -5,6 +5,13 @@ import { sub } from "../../../src/core/pubsubhub.js";
 describe("Core - Templates - Show People", () => {
   describe("showPeople", () => {
     it("handles empty person", () => {
+      sub(
+        "error",
+        () => {
+          expect(true).toBeTrue();
+        },
+        { once: true }
+      );
       const render = html.bind(document.createDocumentFragment());
       const person = {};
       const result = render`${showPeople({ people: [person] }, "people")}`;
