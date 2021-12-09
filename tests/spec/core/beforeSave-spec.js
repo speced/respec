@@ -17,6 +17,10 @@ describe("Core - beforeSave config option", () => {
     const exportedDoc = await getExportedDoc(doc);
     expect(exportedDoc.querySelectorAll("#p1").length).toBe(1);
     expect(exportedDoc.querySelectorAll("#p2").length).toBe(1);
+    // make sure that the functions are run in order...
+    const p1 = exportedDoc.querySelector("#p1");
+    const p2 = exportedDoc.querySelector("#p2");
+    expect(p1.nextElementSibling).toBe(p2);
   });
 
   it("complains if it's not passed an array", async () => {
