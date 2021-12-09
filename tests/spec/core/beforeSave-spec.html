@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <script class="remove">
   const modifier1 = exportedDoc => {
-    const p = exportDoc.createElement("p");
+    const p = exportedDoc.createElement("p");
     p.id = "p1";
     p.textContent = "This is paragraph 1";
-    exportDoc.body.appendChild(p);
+    exportedDoc.body.appendChild(p);
   };
-  const modifier2 = exportDoc => {
-    const p = exportDoc.createElement("p");
+  const modifier2 = exportedDoc => {
+    const p = exportedDoc.createElement("p");
     p.id = "p2";
     p.textContent = "This is a sync paragraph";
-    exportDoc.body.appendChild(p);
+    exportedDoc.body.appendChild(p);
   };
   const respecConfig = {
     specStatus: "unofficial",
