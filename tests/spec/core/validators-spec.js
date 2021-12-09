@@ -137,6 +137,7 @@ describe("Core - Validators", () => {
         "-something",
       ];
       for (const name of names) {
+        sub("error", () => {}, { once: true });
         const dfn = document.createElement("dfn");
         const context = `invalid name: ${name}`;
         expect(validateQuotedString(name, "permission", dfn, "foo/bar"))
