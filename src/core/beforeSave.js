@@ -20,20 +20,20 @@ export function run(conf) {
   sub(
     "beforesave",
     documentElement => {
-      performTransformations(conf, documentElement);
+      performTransformations(conf.beforeSave, documentElement.ownerDocument);
     },
     { once: true }
   );
 }
 /**
- * @param {object} conf
- * @param {HTMLElement} documentElement
+ * @param {Array<Function>} transforms
+ * @param {Document}
  */
-function performTransformations(conf, { ownerDocument }) {
+function performTransformations(transforms, doc) {
   let pos = 0;
-  for (const fn of conf.beforeSave) {
+  for (const fn of transforms) {
     try {
-      fn(ownerDocument);
+      fn(doc);
     } catch (err) {
       const nameOrPosition = `\`${fn.name}\`` || `at position ${pos}`;
       const msg = docLink`Function ${nameOrPosition}\` threw an error during processing of ${"[beforeSave]"}.`;
