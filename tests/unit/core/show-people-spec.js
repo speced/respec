@@ -5,13 +5,7 @@ import { sub } from "../../../src/core/pubsubhub.js";
 describe("Core - Templates - Show People", () => {
   describe("showPeople", () => {
     it("handles empty person", () => {
-      sub(
-        "error",
-        () => {
-          expect(true).toBeTrue();
-        },
-        { once: true }
-      );
+      sub("error", () => {}, { once: true });
       const render = html.bind(document.createDocumentFragment());
       const person = {};
       const result = render`${showPeople({ people: [person] }, "people")}`;
@@ -104,13 +98,7 @@ describe("Core - Templates - Show People", () => {
     });
 
     it("identifies valid and invalid ORCIDs", async () => {
-      sub(
-        "error",
-        () => {
-          expect(true).toBeTrue();
-        },
-        { once: true }
-      );
+      sub("error", () => {}, { once: true });
       const people = [
         {
           name: "Valid 1",
@@ -151,13 +139,7 @@ describe("Core - Templates - Show People", () => {
     });
 
     it("ignores companyURL when company is missing", () => {
-      sub(
-        "warn",
-        () => {
-          expect(true).toBeTrue();
-        },
-        { once: true }
-      );
+      sub("warn", () => {}, { once: true });
       const render = html.bind(document.createDocumentFragment());
       const person = {
         name: "name",
@@ -199,13 +181,7 @@ describe("Core - Templates - Show People", () => {
     });
 
     it("filters out editors with invalid extras", () => {
-      sub(
-        "error",
-        () => {
-          expect(true).toBeTrue();
-        },
-        { once: true }
-      );
+      sub("error", () => {}, { once: true });
       const render = html.bind(document.createDocumentFragment());
       const people = [
         { name: "wrong type", extras: "" },
