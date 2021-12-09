@@ -49,6 +49,8 @@ const CODE_TYPES = new Set([
 export function run() {
   const index = document.querySelector("section#index");
   if (!index) {
+    // See below...
+    sub("toc", () => {}, { once: true });
     return;
   }
 

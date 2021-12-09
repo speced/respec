@@ -12,9 +12,14 @@ export const name = "core/pubsubhub";
 
 const subscriptions = new Map();
 
+/**
+ *
+ * @param {EventTopic} topic
+ * @param  {...any} data
+ */
 export function pub(topic, ...data) {
   if (!subscriptions.has(topic)) {
-    return; // Nothing to do...
+    throw new Error(`No subscribers for topic "${topic}".`);
   }
   Array.from(subscriptions.get(topic)).forEach(cb => {
     try {
@@ -37,8 +42,7 @@ export function pub(topic, ...data) {
 }
 /**
  * Subscribes to a message type.
- *
- * @param  {string} topic        The topic to subscribe to (e.g., "start-all")
+ * @param  {EventTopic} topic The topic to subscribe to
  * @param  {Function} cb         Callback function
  * @param  {Object} [opts]
  * @param  {Boolean} [opts.once] Add prop "once" for single notification.

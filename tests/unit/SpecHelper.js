@@ -14,6 +14,11 @@ export function makePluginDoc(
   plugins,
   { config = {}, head = `<meta charset="UTF-8" />`, body = "" } = {}
 ) {
+  plugins = [
+    `/src/core/ui.js`, // Needed for "start-all" event
+    `/src/core/dfn.js`, // Needed for "plugins-done" event,
+    ...plugins,
+  ];
   return getDoc(`
     <!DOCTYPE html>
     <html lang="en">
