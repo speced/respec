@@ -31,13 +31,7 @@ describe("Core - Validators", () => {
     it("generates an error if the element name is not valid", () => {
       const elements = ["my element", "crypto$", "🪳", "-something", ""];
       for (const element of elements) {
-        sub(
-          "error",
-          () => {
-            expect(true).toBeTrue();
-          },
-          { once: true }
-        );
+        sub("error", () => {}, { once: true });
         const dfn = document.createElement("dfn");
         const context = `element name: ${element}`;
         expect(validateDOMName(element, "element", dfn, "foo/bar"))
@@ -66,13 +60,7 @@ describe("Core - Validators", () => {
     it("generates an error if the attribute name is invalid", () => {
       const attributes = ["-crossorigin", "-whatever-", "aria-😇"];
       for (const attribute of attributes) {
-        sub(
-          "error",
-          () => {
-            expect(true).toBeTrue();
-          },
-          { once: true }
-        );
+        sub("error", () => {}, { once: true });
         const context = `attribute name: ${attribute}`;
         const dfn = document.createElement("dfn");
         expect(validateDOMName(attribute, "attribute", dfn, "foo/bar"))
@@ -94,13 +82,7 @@ describe("Core - Validators", () => {
         "text/plain",
       ];
       for (const mimeType of mimeTypes) {
-        sub(
-          "error",
-          () => {
-            expect(true).toBeTrue();
-          },
-          { once: true }
-        );
+        sub("error", () => {}, { once: true });
         const dfn = document.createElement("dfn");
         const context = `mimeType: ${mimeType}`;
         expect(validateMimeType(mimeType, "mimetype", dfn, "foo/bar"))
@@ -171,13 +153,7 @@ describe("Core - Validators", () => {
     it("generates no error if the name is valid", () => {
       const names = ["foo", "bar", "baz", "quux"];
       for (const name of names) {
-        sub(
-          "error",
-          () => {
-            expect(true).toBeTrue();
-          },
-          { once: true }
-        );
+        sub("error", () => {}, { once: true });
         const dfn = document.createElement("dfn");
         const context = `name: ${name}`;
         expect(validateCommonName(name, "event", dfn, "foo/bar"))
@@ -192,13 +168,7 @@ describe("Core - Validators", () => {
     it("it generates an error if the name is not valid", () => {
       const names = ["my event", "crypto$", "🪳", "-something"];
       for (const name of names) {
-        sub(
-          "error",
-          () => {
-            expect(true).toBeTrue();
-          },
-          { once: true }
-        );
+        sub("error", () => {}, { once: true });
         const dfn = document.createElement("dfn");
         const context = `invalid name: ${name}`;
         expect(validateCommonName(name, "event", dfn, "foo/bar"))
