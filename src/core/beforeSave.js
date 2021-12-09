@@ -19,22 +19,29 @@ export function run(conf) {
 
   sub(
     "beforesave",
-    ({ ownerDocument }) => {
-      let pos = 0;
-      for (const fn of conf.beforeSave) {
-        try {
-          fn(ownerDocument);
-        } catch (err) {
-          const nameOrPosition = `\`${fn.name}\`` || `at position ${pos}`;
-          const msg = docLink`Function ${nameOrPosition}\` threw an error during processing of ${"[beforeSave]"}.`;
-          const hint = "See developer console.";
-          showError(msg, name, { hint });
-          console.error(err);
-        } finally {
-          pos++;
-        }
-      }
+    documentElement => {
+      performTransformations(conf, documentElement);
     },
     { once: true }
   );
+}
+/**
+ * @param {object} conf
+ * @param {HTMLElement} documentElement
+ */
+function performTransformations(conf, { ownerDocument }) {
+  let pos = 0;
+  for (const fn of conf.beforeSave) {
+    try {
+      fn(ownerDocument);
+    } catch (err) {
+      const nameOrPosition = `\`${fn.name}\`` || `at position ${pos}`;
+      const msg = docLink`Function ${nameOrPosition}\` threw an error during processing of ${"[beforeSave]"}.`;
+      const hint = "See developer console.";
+      showError(msg, name, { hint });
+      console.error(err);
+    } finally {
+      pos++;
+    }
+  }
 }
