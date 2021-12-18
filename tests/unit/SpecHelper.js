@@ -15,8 +15,9 @@ export function makePluginDoc(
   { config = {}, head = `<meta charset="UTF-8" />`, body = "" } = {}
 ) {
   plugins = [
-    `/src/core/ui.js`, // Needed for "start-all" event
-    `/src/core/dfn.js`, // Needed for "plugins-done" event,
+    "/src/core/base-runner.js",
+    "/src/core/ui.js", // Needed for "start-all" event
+    "/src/core/dfn.js", // Needed for "plugins-done" event,
     ...plugins,
   ];
   return getDoc(`
@@ -29,9 +30,7 @@ export function makePluginDoc(
         </script>
         <script type="module">
           async function run(plugins) {
-            const allPlugins = ["/src/core/base-runner.js"]
-              .concat(plugins)
-              .map(p => "/base" + p);
+            const allPlugins = plugins.map(p => "/base" + p);
             try {
               const [baseRunner, ...plugs] = await Promise.all(
                 allPlugins.map(plug => import(plug))
