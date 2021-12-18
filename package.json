@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "28.0.7",
+  "version": "28.0.8",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -25,14 +25,14 @@
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.8",
     "@rollup/plugin-commonjs": "^21.0.1",
-    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@rollup/plugin-node-resolve": "^13.1.1",
     "@types/marked": "^4.0.1",
     "@types/pluralize": "0.0.29",
     "boxen": "^6.2.1",
     "chokidar": "^3.5.2",
     "clean-css": "^5.2.2",
     "epipebomb": "^1.0.0",
-    "eslint": "^8.4.0",
+    "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jasmine": "^4.1.3",
@@ -53,12 +53,12 @@
     "pluralize": "^8.0.0",
     "prettier": "^2.5.1",
     "prompt": "^1.2.0",
-    "rollup": "^2.60.2",
+    "rollup": "^2.61.1",
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "rollup-plugin-terser": "^7.0.2",
     "serve": "^13.0.2",
     "sniffy-mimetype": "^1.1.1",
-    "typescript": "^4.5.2",
+    "typescript": "^4.5.4",
     "vnu-jar": "^21.10.12",
     "webidl2": "^24.2.0"
   },
@@ -86,10 +86,10 @@
   "dependencies": {
     "colors": "^1.4.0",
     "finalhandler": "^1.1.2",
-    "marked": "^4.0.6",
-    "puppeteer": "^12.0.1",
+    "marked": "^4.0.7",
+    "puppeteer": "^13.0.0",
     "sade": "^1.7.4",
-    "serve-static": "^1.14.1"
+    "serve-static": "^1.14.2"
   },
   "files": [
     "builds/",

@@ -134,7 +134,7 @@ type LicenseInfo = {
    * The short linking text of license.
    */
   short: string;
-}
+};
 
 type ResourceHintOption = {
   /**
@@ -223,6 +223,16 @@ type PersonExtras = {
   href?: string;
 };
 
+type EventTopic =
+  | "amend-user-config"
+  | "beforesave"
+  | "end-all"
+  | "error"
+  | "plugins-done"
+  | "start-all"
+  | "toc"
+  | "warn";
+
 type DefinitionValidator = (
   /** Text to validate. */
   text: string,
@@ -231,4 +241,5 @@ type DefinitionValidator = (
   /** The element from which the validation originated. */
   element: HTMLElement,
   /** The name of the plugin originating the validation. */
-  pluginName: string) => boolean;
+  pluginName: string
+) => boolean;

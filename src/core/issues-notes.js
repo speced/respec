@@ -20,8 +20,6 @@ import {
 } from "./utils.js";
 import css from "../styles/issues-notes.css.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
-
 export const name = "core/issues-notes";
 
 const localizationStrings = {
@@ -186,7 +184,6 @@ function handleIssues(ins, ghIssues, conf) {
       const level = parents(titleParent, "section").length + 2;
       titleParent.setAttribute("aria-level", level);
     }
-    pub(report.type, report);
   });
   makeIssueSectionSummary(issueList);
 }
