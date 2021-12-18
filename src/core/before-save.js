@@ -1,7 +1,7 @@
 import { docLink, showError } from "./utils.js";
 import { sub } from "./pubsubhub.js";
 
-export const name = "core/beforeSave";
+export const name = "core/before-save";
 
 export function run(conf) {
   if (!conf.beforeSave) return;

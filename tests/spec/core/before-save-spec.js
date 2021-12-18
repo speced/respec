@@ -11,7 +11,7 @@ describe("Core - beforeSave config option", () => {
   it("allows modification before saving", async () => {
     const ops = makeStandardOps();
     ops.config = null; // use src doc's config
-    const doc = await makeRSDoc(ops, "spec/core/beforeSave-spec.html");
+    const doc = await makeRSDoc(ops, "spec/core/before-save-spec.html");
     expect(doc.getElementById("p1")).toBeNull();
     expect(doc.getElementById("p2")).toBeNull();
     const exportedDoc = await getExportedDoc(doc);
