@@ -1,4 +1,5 @@
 import {
+  errorFilters,
   flushIframes,
   getExportedDoc,
   makeRSDoc,
@@ -7,7 +8,7 @@ import {
 
 describe("Core - beforeSave config option", () => {
   afterAll(flushIframes);
-
+  const beforeSaveErrors = errorFilters.filter("core/before-save");
   it("allows modification before saving", async () => {
     const ops = makeStandardOps();
     ops.config = null; // use src doc's config
@@ -26,9 +27,7 @@ describe("Core - beforeSave config option", () => {
   it("complains if it's not passed an array", async () => {
     const ops = makeStandardOps({ beforeSave: "not a array" });
     const doc = await makeRSDoc(ops);
-    const errors = doc.respec.errors.filter(
-      err => err.plugin === "core/beforeSave"
-    );
+    const errors = beforeSaveErrors(doc);
     expect(errors.length).toBe(1);
     expect(errors[0].message).toContain("array of synchronous JS functions");
   });
@@ -36,9 +35,7 @@ describe("Core - beforeSave config option", () => {
   it("complains if it's not passed a function in the array", async () => {
     const ops = makeStandardOps({ beforeSave: ["not a function", () => {}] });
     const doc = await makeRSDoc(ops);
-    const errors = doc.respec.errors.filter(
-      err => err.plugin === "core/beforeSave"
-    );
+    const errors = beforeSaveErrors(doc);
     expect(errors.length).toBe(1);
     expect(errors[0].message).toContain("array of synchronous JS functions");
   });
@@ -46,9 +43,7 @@ describe("Core - beforeSave config option", () => {
   it("complains if passed an async function", async () => {
     const ops = makeStandardOps({ beforeSave: [() => {}, async () => {}] });
     const doc = await makeRSDoc(ops);
-    const errors = doc.respec.errors.filter(
-      err => err.plugin === "core/beforeSave"
-    );
+    const errors = beforeSaveErrors(doc);
     expect(errors.length).toBe(1);
     expect(errors[0].message).toContain("array of synchronous JS functions");
   });

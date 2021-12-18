@@ -56,6 +56,34 @@ export function makeRSDoc(opts, src, style = "") {
     iframes.push(ifr);
   });
 }
+/**
+ * Used to get errors and warnings from a spec.
+ */
+class UIMessageFilters extends Map {
+  /**
+   * @param {"warnings" | "errors"} type
+   */
+  constructor(type) {
+    super();
+    this.type = type;
+  }
+  /**
+   * @param {string} pluginName
+   * @returns (Document) => Array<RespecError>
+   */
+  filter(pluginName) {
+    if (this.has(pluginName)) {
+      return this.get(pluginName);
+    }
+    const filter = doc => {
+      return doc.respec[this.type].filter(err => err.plugin === pluginName);
+    };
+    this.set(pluginName, filter);
+    return filter;
+  }
+}
+export const errorFilters = new UIMessageFilters("errors");
+export const warningFilters = new UIMessageFilters("warnings");
 
 /**
  * @param {Document} doc
