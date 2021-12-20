@@ -59,12 +59,12 @@ export function makeRSDoc(opts, src, style = "") {
 /**
  * Used to get errors and warnings from a spec.
  */
-class UIMessageFilters extends Map {
+class UIMessageFilters {
   /**
    * @param {"warnings" | "errors"} type
    */
   constructor(type) {
-    super();
+    this.cache = new Map();
     this.type = type;
   }
   /**
@@ -72,13 +72,13 @@ class UIMessageFilters extends Map {
    * @returns (Document) => Array<RespecError>
    */
   filter(pluginName) {
-    if (this.has(pluginName)) {
-      return this.get(pluginName);
+    if (this.cache.has(pluginName)) {
+      return this.cache.get(pluginName);
     }
     const filter = doc => {
       return doc.respec[this.type].filter(err => err.plugin === pluginName);
     };
-    this.set(pluginName, filter);
+    this.cache.set(pluginName, filter);
     return filter;
   }
 }
