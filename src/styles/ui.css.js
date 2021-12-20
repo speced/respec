@@ -14,6 +14,10 @@ export default css`
   background: transparent;
 }
 
+.respec-modal .close-button:focus {
+  outline:none;
+}
+
 #respec-ui {
   position: fixed;
   display: flex;
@@ -184,6 +188,16 @@ export default css`
   padding: 0.4em 0.7em;
 }
 
+.respec-warning-list > li:last-child,
+.respec-error-list > li:last-child {
+  margin-bottom: 0;
+}
+
+.respec-warning-list > li:first-child,
+.respec-error-list > li:first-child {
+  margin-top: 0;
+}
+
 .respec-warning-list > li::before {
   content: "⚠️";
   padding-right: 0.5em;
@@ -303,8 +317,7 @@ export default css`
   padding: 1.2em 1.2em;
 }
 
-#respec-menu button.respec-option:hover,
-#respec-menu button:focus {
+#respec-menu button.respec-option:hover{
   background-color: #eeeeee;
 }
 
@@ -312,9 +325,13 @@ export default css`
   padding-right: 0.5em;
 }
 
+#respec-ui button.respec-option:first-child {
+  margin-top: 0;
+}
 #respec-ui button.respec-option:last-child {
   border: none;
   border-radius: inherit;
+  margin-bottom: 0;
 }
 
 .respec-button-copy-paste {
@@ -359,4 +376,11 @@ export default css`
   margin: 0 0.5em 0.5em;
   border-bottom-width: 1px;
 }
+
+.respec-hint {
+  display: inline-block;
+  padding-top: .2cm;
+  padding-left: .7cm;
+}
+
 `;

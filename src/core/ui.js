@@ -265,7 +265,7 @@ function rsErrorToHTML(err) {
   }
 
   const plugin = err.plugin ? ` <small>(Plugin: "${err.plugin}")</small>.` : "";
-  const hint = err.hint ? ` ${err.hint}` : "";
+  const hint = err.hint ? `<span class="respec-hint">${err.hint}</span>` : "";
   const elements = Array.isArray(err.elements)
     ? ` Occurred at: ${joinAnd(err.elements.map(generateMarkdownLink))}.`
     : "";
@@ -273,7 +273,7 @@ function rsErrorToHTML(err) {
     ? `\n\n<details>\n${err.details}\n</details>\n`
     : "";
 
-  const text = `${err.message}${hint}${elements}${plugin}${details}`;
+  const text = `**${err.message}**${plugin}<br>${hint}${elements}${details}`;
   return markdownToHtml(text);
 }
 
