@@ -24,7 +24,7 @@ const w3cLogo = {
 
 const w3cDefaults = {
   lint: {
-    "privsec-section": true,
+    "required-sections": true,
     "wpt-tests-exist": false,
     a11y: false,
   },
