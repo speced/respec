@@ -24,14 +24,8 @@ describe("Core — linter-rules - no-unused-dfns", () => {
         <p><dfn>bar</dfn></p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: {
-          "no-unused-dfns": false,
-        },
-      },
-      body
-    );
+    const config = { lint: { "no-unused-dfns": false } };
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const errors = lintErrors(doc);
     const warnings = lintWarnings(doc);
@@ -133,7 +127,7 @@ describe("Core — linter-rules - no-unused-dfns", () => {
     expect(warnings).toHaveSize(2);
   });
 
-  it("shows an error when the rule is set to 'error'", async () => {
+  it("shows as error when the rule is set to 'error'", async () => {
     const body = `
       <section>
         <h2>Heading</h2>
