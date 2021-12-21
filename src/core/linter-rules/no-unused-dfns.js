@@ -21,7 +21,7 @@ const localizationStrings = {
       return `Found definition for "${text}", but nothing links to it. This is usually a spec bug!`;
     },
     get hint() {
-      return docLink`Either remove the definition, or add the \`"lint-ignore"\` CSS class. Or did you want to ${"[export|#data-export]"} it? If yes, add the "export" CSS to it.`;
+      return docLink`Either remove the definition, or add a  \`"lint-ignore"\` CSS class. Or did you want to ${"[export|#data-export]"} it? If yes, add the "export" CSS to it.`;
     },
   },
 };
