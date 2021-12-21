@@ -21,6 +21,7 @@ describe("W3C — Defaults", () => {
       "check-internal-slots": false,
       "check-charset": false,
       "wpt-tests-exist": false,
+      "no-unused-dfns": "warn",
       a11y: false,
     });
     expect(rsConf.highlightVars).toBe(true);
@@ -41,6 +42,7 @@ describe("W3C — Defaults", () => {
           "check-punctuation": false,
           "fake-linter-rule": "foo",
           "check-internal-slots": true,
+          "no-unused-dfns": "error",
         },
         license: "c0",
         specStatus: "ED",
@@ -62,6 +64,7 @@ describe("W3C — Defaults", () => {
       "check-internal-slots": true,
       "check-charset": false,
       "wpt-tests-exist": false,
+      "no-unused-dfns": "error",
       a11y: false,
     });
     expect(rsConf.highlightVars).toBe(false);
