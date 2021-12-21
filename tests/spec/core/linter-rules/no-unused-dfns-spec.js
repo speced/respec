@@ -42,14 +42,8 @@ describe("Core — linter-rules - no-unused-dfns", () => {
         <p><dfn data-dfn-for="Test">baz</dfn> [=Test/baz=]</p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: {
-          "no-unused-dfns": true,
-        },
-      },
-      body
-    );
+    const config = { lint: { "no-unused-dfns": true } };
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const errors = lintErrors(doc);
     const warnings = lintWarnings(doc);
@@ -57,7 +51,7 @@ describe("Core — linter-rules - no-unused-dfns", () => {
     expect(warnings).toHaveSize(0);
   });
 
-  it("complains as an error by default", async () => {
+  it("defaults to warning", async () => {
     const body = `
       <section>
         <h2>Heading</h2>
@@ -65,19 +59,13 @@ describe("Core — linter-rules - no-unused-dfns", () => {
         <p><dfn>bar</dfn></p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: {
-          "no-unused-dfns": true,
-        },
-      },
-      body
-    );
+    const config = { lint: { "no-unused-dfns": true } };
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const errors = lintErrors(doc);
     const warnings = lintWarnings(doc);
-    expect(errors).toHaveSize(2);
-    expect(warnings).toHaveSize(0);
+    expect(errors).toHaveSize(0);
+    expect(warnings).toHaveSize(2);
   });
 
   it("complains even when the definitions are linked from the index", async () => {
@@ -89,19 +77,13 @@ describe("Core — linter-rules - no-unused-dfns", () => {
       </section>
       <section class="index"></section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: {
-          "no-unused-dfns": true,
-        },
-      },
-      body
-    );
+    const config = { lint: { "no-unused-dfns": true } };
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const errors = lintErrors(doc);
     const warnings = lintWarnings(doc);
-    expect(errors).toHaveSize(2);
-    expect(warnings).toHaveSize(0);
+    expect(errors).toHaveSize(0);
+    expect(warnings).toHaveSize(2);
   });
 
   it("warns when the rule is set to 'warn'", async () => {
@@ -112,14 +94,8 @@ describe("Core — linter-rules - no-unused-dfns", () => {
         <p><dfn>bar</dfn></p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: {
-          "no-unused-dfns": "warn",
-        },
-      },
-      body
-    );
+    const config = { lint: { "no-unused-dfns": "warn" } };
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const errors = lintErrors(doc);
     const warnings = lintWarnings(doc);
@@ -134,14 +110,8 @@ describe("Core — linter-rules - no-unused-dfns", () => {
         <p><dfn>foo</dfn></p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: {
-          "no-unused-dfns": "error",
-        },
-      },
-      body
-    );
+    const config = { lint: { "no-unused-dfns": "error" } };
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const errors = lintErrors(doc);
     const warnings = lintWarnings(doc);
@@ -161,14 +131,8 @@ describe("Core — linter-rules - no-unused-dfns", () => {
         </pre>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: {
-          "no-unused-dfns": true,
-        },
-      },
-      body
-    );
+    const config = { lint: { "no-unused-dfns": true } };
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const errors = lintErrors(doc);
     const warnings = lintWarnings(doc);
@@ -184,21 +148,15 @@ describe("Core — linter-rules - no-unused-dfns", () => {
         <p><dfn>bar</dfn></p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: {
-          "no-unused-dfns": true,
-        },
-      },
-      body
-    );
+    const config = { lint: { "no-unused-dfns": true } };
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const errors = lintErrors(doc);
     const warnings = lintWarnings(doc);
-    expect(errors).toHaveSize(1);
-    expect(warnings).toHaveSize(0);
-    const [error] = errors;
-    expect(error.message).toContain('"bar"');
+    expect(errors).toHaveSize(0);
+    expect(warnings).toHaveSize(1);
+    const [warning] = warnings;
+    expect(warning.message).toContain('"bar"');
   });
 
   it("ignores definitions that use legacy 'data-cite'", async () => {
@@ -208,14 +166,8 @@ describe("Core — linter-rules - no-unused-dfns", () => {
         <p><dfn data-cite="html#bar">bar</dfn></p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: {
-          "no-unused-dfns": true,
-        },
-      },
-      body
-    );
+    const config = { lint: { "no-unused-dfns": true } };
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const errors = lintErrors(doc);
     const warnings = lintWarnings(doc);
@@ -230,14 +182,8 @@ describe("Core — linter-rules - no-unused-dfns", () => {
         <p><dfn data-export="foo">bar</dfn></p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: {
-          "no-unused-dfns": true,
-        },
-      },
-      body
-    );
+    const config = { lint: { "no-unused-dfns": true } };
+    const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const errors = lintErrors(doc);
     const warnings = lintWarnings(doc);

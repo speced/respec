@@ -32,10 +32,10 @@ export function run(conf) {
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
   /** @type NodeListOf<HTMLElement> */
   const definitions = document.querySelectorAll(
-    "dfn[id]:not(.lint-ignore, [data-export], [data-cite])"
+    "dfn:not(.lint-ignore, [data-export], [data-cite])"
   );
 
-  const elements = [...definitions].filter(dfnFilter);
+  const elements = [...definitions].filter(isDfnUnused);
 
   // These are usually bad spec bugs, so best shown individually.
   elements.forEach(element => {
@@ -45,7 +45,7 @@ export function run(conf) {
   });
 }
 
-function dfnFilter(dfn) {
+function isDfnUnused(dfn) {
   // Not in the index
   // and not the "self-link" box
   return !document.querySelector(
