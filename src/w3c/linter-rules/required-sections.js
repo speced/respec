@@ -21,7 +21,7 @@ const localizationStrings = {
     hint(sectionTitle) {
       return (
         `Add a \`<section>\` with a "${sectionTitle}" header. ` +
-        "See the [Horizontal review guidelines](https://w3c.github.io/documentreview/#how_to_get_horizontal_review)."
+        "See the [Horizontal review guidelines](https://www.w3.org/Guide/documentreview/#how_to_get_horizontal_review)."
       );
     },
   },
