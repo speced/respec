@@ -7,6 +7,8 @@ import {
   makeStandardOps,
 } from "../../SpecHelper.js";
 
+import { requiresPrivSecStatus } from "../../../../src/w3c/linter-rules/required-sections.js";
+
 describe("w3c — required-sections", () => {
   afterAll(() => {
     flushIframes();
@@ -16,16 +18,6 @@ describe("w3c — required-sections", () => {
     "w3c/linter-rules/required-sections"
   );
 
-  it("doesn't generate errors for non-rec-track that don't have the required sections", async () => {
-    const ops = makeStandardOps({
-      lint: { "required-sections": true },
-      specStatus: "ED",
-    });
-    const doc = await makeRSDoc(ops);
-    const errors = linterErrors(doc);
-    expect(errors).toHaveSize(0);
-  });
-
   it("does nothing if disabled", async () => {
     const ops = makeStandardOps({ lint: { "required-sections": false } });
     const doc = await makeRSDoc(ops);
@@ -33,20 +25,32 @@ describe("w3c — required-sections", () => {
     expect(errors).toHaveSize(0);
   });
 
-  it("generates errors when its a rec track document and both privacy and security sections are missing", async () => {
+  it("doesn't generate errors for non-rec-track that don't have the required sections", async () => {
     const ops = makeStandardOps({
       lint: { "required-sections": true },
-      specStatus: "WD",
+      specStatus: "unofficial",
     });
     const doc = await makeRSDoc(ops);
     const errors = linterErrors(doc);
-    expect(errors).toHaveSize(2);
+    expect(errors).toHaveSize(0);
+  });
+
+  it("generates errors when its a rec track document and both privacy and security sections are missing", async () => {
+    for (const specStatus of requiresPrivSecStatus) {
+      const ops = makeStandardOps({
+        lint: { "required-sections": true },
+        specStatus,
+      });
+      const doc = await makeRSDoc(ops);
+      const errors = linterErrors(doc);
+      expect(errors).withContext(specStatus).toHaveSize(2);
+    }
   });
 
   it("generates an error if privacy section if present, but security is missing", async () => {
     const body = `
       <section>
-        <h2>Privacy Considerations</h2>
+        <h2>Privacy considerations</h2>
         <p>This is a privacy section</p>
       </section>
     `;
@@ -69,7 +73,7 @@ describe("w3c — required-sections", () => {
   it("generates an error if Security section if present, but privacy is missing", async () => {
     const body = `
       <section>
-        <h2>Security Considerations</h2>
+        <h2>Security considerations</h2>
         <p>This is a security section</p>
       </section>
     `;

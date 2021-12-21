@@ -8,7 +8,13 @@
  *
  */
 
-import { getIntlData, norm, showError } from "../../core/utils.js";
+import {
+  InsensitiveStringSet,
+  getIntlData,
+  norm,
+  showError,
+} from "../../core/utils.js";
+import { recTrackStatus } from "../headers.js";
 
 const ruleName = "required-sections";
 export const name = "w3c/linter-rules/required-sections";
@@ -26,32 +32,54 @@ const localizationStrings = {
     },
   },
 };
+
 const l10n = getIntlData(localizationStrings);
 
-function hasSection(headers, expectedText) {
-  const regex = new RegExp(expectedText, "im");
-  const found = headers.some(({ textContent }) => {
-    const text = norm(textContent);
-    return regex.test(text);
-  });
-  return found;
-}
+const requiredSections = new InsensitiveStringSet([
+  "Privacy Considerations",
+  "Security Considerations",
+]);
 
-const requiredSections = ["Privacy Considerations", "Security Considerations"];
+export const requiresPrivSecStatus = new Set([...recTrackStatus, "ED"]);
+requiresPrivSecStatus.delete("DISC"); // "Discontinued Draft"
 
 export function run(conf) {
-  if (!conf.lint?.[ruleName] || !conf.isRecTrack) {
+  if (!conf.lint?.[ruleName]) {
     return;
   }
-  // usually at end of the document
-  const headers = [
-    ...document.querySelectorAll("h2, h3, h4, h5, h6"),
-  ].reverse();
-  for (const section of requiredSections) {
-    if (!hasSection(headers, section)) {
-      const msg = l10n.msg(section);
-      const hint = l10n.hint(section);
-      showError(msg, name, { hint });
+
+  if (!requiresPrivSecStatus.has(conf.specStatus)) {
+    return;
+  }
+
+  /** @type {NodeListOf<HTMLElement>} */
+  const headers = document.querySelectorAll("h2, h3, h4, h5, h6");
+  const foundMap = new Map([...requiredSections].map(entry => [entry, false]));
+  for (const header of headers) {
+    const clone = header.cloneNode(true);
+    // section number
+    clone.querySelector("bdi")?.remove();
+    // self linking anchor
+    clone.querySelector("self-link")?.remove();
+    const text = norm(clone.textContent);
+    if (requiredSections.has(text)) {
+      foundMap.set(requiredSections.getCanonicalKey(text), true);
     }
+  }
+  // Did we find them all?
+  if ([...foundMap.values()].every(Boolean)) {
+    return;
+  }
+
+  // Show the ones we didn't find
+  const missingSections = [...foundMap.entries()]
+    .filter(([, found]) => !found)
+    .map(([section]) => section);
+
+  // Show them as errors individually
+  for (const title of missingSections) {
+    showError(l10n.msg(title), name, {
+      hint: l10n.hint(title),
+    });
   }
 }
