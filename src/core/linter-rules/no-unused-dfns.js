@@ -29,7 +29,7 @@ const l10n = getIntlData(localizationStrings);
 
 export function run(conf) {
   if (!conf.lint?.[ruleName]) return;
-  const logger = conf.lint[ruleName] === "warn" ? showWarning : showError;
+  const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
   /** @type NodeListOf<HTMLElement> */
   const definitions = document.querySelectorAll(
     "dfn[id]:not(.lint-ignore, [data-export], [data-cite])"
