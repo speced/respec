@@ -110,7 +110,7 @@ describe("Core — linter-rules - no-unused-dfns", () => {
     expect(warnings).toHaveSize(0);
   });
 
-  it("warnings when the rule is set to 'warn'", async () => {
+  it("warns when the rule is set to 'warn'", async () => {
     const body = `
       <section>
         <h2>Heading</h2>
