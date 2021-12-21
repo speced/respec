@@ -1,11 +1,8 @@
 // @ts-check
 /**
- * Checks that there is a section that has at least privacy and/or
- * security and considerations.
- *
- * The rule is "privacy" or "security", and "considerations", in any order,
- * case-insensitive, multi-line check.
- *
+ * The W3C Process requires separate Privacy Considerations and Security
+ * Considerations sections. This linter checks for the presence of these
+ * sections, and reports an error if they are not present.
  */
 
 import {
@@ -40,15 +37,15 @@ const requiredSections = new InsensitiveStringSet([
   "Security Considerations",
 ]);
 
-export const requiresPrivSecStatus = new Set([...recTrackStatus, "ED"]);
-requiresPrivSecStatus.delete("DISC"); // "Discontinued Draft"
+export const requiresSomeSectionStatus = new Set([...recTrackStatus, "ED"]);
+requiresSomeSectionStatus.delete("DISC"); // "Discontinued Draft"
 
 export function run(conf) {
   if (!conf.lint?.[ruleName]) {
     return;
   }
 
-  if (!requiresPrivSecStatus.has(conf.specStatus)) {
+  if (!requiresSomeSectionStatus.has(conf.specStatus)) {
     return;
   }
 

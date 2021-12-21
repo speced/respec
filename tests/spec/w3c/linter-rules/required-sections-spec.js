@@ -7,7 +7,7 @@ import {
   makeStandardOps,
 } from "../../SpecHelper.js";
 
-import { requiresPrivSecStatus } from "../../../../src/w3c/linter-rules/required-sections.js";
+import { requiresSomeSectionStatus } from "../../../../src/w3c/linter-rules/required-sections.js";
 
 describe("w3c — required-sections", () => {
   afterAll(() => {
@@ -36,7 +36,7 @@ describe("w3c — required-sections", () => {
   });
 
   it("generates errors when its a rec track document and both privacy and security sections are missing", async () => {
-    for (const specStatus of requiresPrivSecStatus) {
+    for (const specStatus of requiresSomeSectionStatus) {
       const ops = makeStandardOps({
         lint: { "required-sections": true },
         specStatus,
