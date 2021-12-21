@@ -86,6 +86,30 @@ describe("Core — linter-rules - no-unused-dfns", () => {
     expect(warnings).toHaveSize(0);
   });
 
+  it("complains even when the definitions are linked from the index", async () => {
+    const body = `
+      <section>
+        <h2>Heading</h2>
+        <p><dfn>foo</dfn></p>
+        <p><dfn>bar</dfn></p>
+      </section>
+      <section class="index"></section>
+    `;
+    const ops = makeStandardOps(
+      {
+        lint: {
+          "no-unused-dfns": true,
+        },
+      },
+      body
+    );
+    const doc = await makeRSDoc(ops);
+    const errors = lintErrors(doc);
+    const warnings = lintWarnings(doc);
+    expect(errors).toHaveSize(2);
+    expect(warnings).toHaveSize(0);
+  });
+
   it("warnings when the rule is set to 'warn'", async () => {
     const body = `
       <section>
