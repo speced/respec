@@ -27,7 +27,7 @@ describe("w3c — required-sections", () => {
   });
 
   it("does nothing if disabled", async () => {
-    const ops = makeStandardOps({ lint: { "required-sections": true } });
+    const ops = makeStandardOps({ lint: { "required-sections": false } });
     const doc = await makeRSDoc(ops);
     const errors = linterErrors(doc);
     expect(errors).toHaveSize(0);
