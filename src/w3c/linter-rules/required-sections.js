@@ -53,16 +53,14 @@ export function run(conf) {
   const headers = document.querySelectorAll("h2, h3, h4, h5, h6");
   for (const header of headers) {
     const clone = header.cloneNode(true);
-    // section number
-    clone.querySelector("bdi")?.remove();
-    // self linking anchor
-    clone.querySelector(".self-link")?.remove();
+    // section number and self-link anchor
+    clone.querySelectorAll("bdi, .self-link")?.forEach(elem => elem.remove());
     const text = norm(clone.textContent);
     if (requiredSections.has(text)) {
       requiredSections.delete(text);
       // Check if we find them all...
       if (requiredSections.size === 0) {
-        return; // done!
+        return; // All present, early return!
       }
     }
   }
