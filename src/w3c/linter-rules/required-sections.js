@@ -51,7 +51,6 @@ export function run(conf) {
 
   /** @type {NodeListOf<HTMLElement>} */
   const headers = document.querySelectorAll("h2, h3, h4, h5, h6");
-  const foundMap = new Map([...requiredSections].map(entry => [entry, false]));
   for (const header of headers) {
     const clone = header.cloneNode(true);
     // section number
@@ -60,21 +59,16 @@ export function run(conf) {
     clone.querySelector(".self-link")?.remove();
     const text = norm(clone.textContent);
     if (requiredSections.has(text)) {
-      foundMap.set(requiredSections.getCanonicalKey(text), true);
+      requiredSections.delete(text);
     }
   }
   // Did we find them all?
-  if ([...foundMap.values()].every(Boolean)) {
+  if (requiredSections.size === 0) {
     return;
   }
 
-  // Show the ones we didn't find
-  const missingSections = [...foundMap.entries()]
-    .filter(([, found]) => !found)
-    .map(([section]) => section);
-
   // Show them as errors individually
-  for (const title of missingSections) {
+  for (const title of requiredSections) {
     showError(l10n.msg(title), name, {
       hint: l10n.hint(title),
     });
