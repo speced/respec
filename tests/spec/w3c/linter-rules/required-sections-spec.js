@@ -101,8 +101,7 @@ describe("w3c — required-sections", () => {
       lint: { "required-sections": "error" },
       specStatus: "WD",
     };
-    const ops = makeStandardOps(conf, body);
-    const doc = await makeRSDoc(ops);
+    const doc = await makeRSDoc(makeStandardOps(conf, body));
     const errors = errorsFilter(doc);
     const warnings = warningsFilter(doc);
     expect(warnings).toHaveSize(0);
@@ -120,14 +119,11 @@ describe("w3c — required-sections", () => {
         <p>This is a security section</p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: { "required-sections": "error" },
-        specStatus: "WD",
-      },
-      body
-    );
-    const doc = await makeRSDoc(ops);
+    const conf = {
+      lint: { "required-sections": "error" },
+      specStatus: "WD",
+    };
+    const doc = await makeRSDoc(makeStandardOps(conf, body));
     const errors = errorsFilter(doc);
     const warnings = warningsFilter(doc);
     expect(warnings).toHaveSize(0);
@@ -149,14 +145,11 @@ describe("w3c — required-sections", () => {
         <p>This is a security section</p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: { "required-sections": true },
-        specStatus: "WD",
-      },
-      body
-    );
-    const doc = await makeRSDoc(ops);
+    const conf = {
+      lint: { "required-sections": true },
+      specStatus: "WD",
+    };
+    const doc = await makeRSDoc(makeStandardOps(conf, body));
     const errors = errorsFilter(doc);
     expect(errors).toHaveSize(0);
     const warnings = warningsFilter(doc);
