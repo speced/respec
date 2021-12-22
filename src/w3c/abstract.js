@@ -33,7 +33,7 @@ const l10n = getIntlData(localizationStrings);
 export async function run() {
   const abstract = findAbstract();
   if (!abstract) {
-    const msg = 'Document must have one `<section id="abstract">` in the body.';
+    const msg = 'Document must have one `<section id="abstract">`.';
     showError(msg, name);
     return;
   }
