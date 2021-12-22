@@ -57,7 +57,7 @@ export function run(conf) {
     // section number
     clone.querySelector("bdi")?.remove();
     // self linking anchor
-    clone.querySelector("self-link")?.remove();
+    clone.querySelector(".self-link")?.remove();
     const text = norm(clone.textContent);
     if (requiredSections.has(text)) {
       foundMap.set(requiredSections.getCanonicalKey(text), true);
