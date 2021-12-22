@@ -26,6 +26,7 @@ const w3cDefaults = {
   lint: {
     "required-sections": true,
     "wpt-tests-exist": false,
+    "no-unused-dfns": "warn",
     a11y: false,
   },
   doJsonLd: false,
