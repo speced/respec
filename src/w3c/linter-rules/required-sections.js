@@ -7,9 +7,11 @@
 
 import {
   InsensitiveStringSet,
+  docLink,
   getIntlData,
   norm,
   showError,
+  showWarning,
 } from "../../core/utils.js";
 import { recTrackStatus } from "../headers.js";
 
@@ -22,10 +24,9 @@ const localizationStrings = {
       return `W3C Recommendation track documents require a separate "${sectionTitle}" section.`;
     },
     hint(sectionTitle) {
-      return (
-        `Add a \`<section>\` with a "${sectionTitle}" header. ` +
-        "See the [Horizontal review guidelines](https://www.w3.org/Guide/documentreview/#how_to_get_horizontal_review)."
-      );
+      return docLink`Add a \`<section>\` with a "${sectionTitle}" header. See the [Horizontal review guidelines](https://www.w3.org/Guide/documentreview/#how_to_get_horizontal_review).
+        If the document is not intended for the W3C Recommendation track, set ${"[noRecTrack]"} to \`true\`
+        or turn off the ${`[${ruleName}]`} linter rule.`;
     },
   },
 };
@@ -45,9 +46,11 @@ export function run(conf) {
     return;
   }
 
-  if (!requiresSomeSectionStatus.has(conf.specStatus)) {
+  if (conf.noRecTrack || !requiresSomeSectionStatus.has(conf.specStatus)) {
     return;
   }
+
+  const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
 
   /** @type {NodeListOf<HTMLElement>} */
   const headers = document.querySelectorAll("h2, h3, h4, h5, h6");
@@ -67,7 +70,7 @@ export function run(conf) {
 
   // Show the ones we didn't find individually
   for (const title of requiredSections) {
-    showError(l10n.msg(title), name, {
+    logger(l10n.msg(title), name, {
       hint: l10n.hint(title),
     });
   }
