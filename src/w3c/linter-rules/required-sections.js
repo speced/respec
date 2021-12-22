@@ -30,13 +30,7 @@ const localizationStrings = {
     },
   },
 };
-
 const l10n = getIntlData(localizationStrings);
-
-const requiredSections = new InsensitiveStringSet([
-  "Privacy Considerations",
-  "Security Considerations",
-]);
 
 export const requiresSomeSectionStatus = new Set([...recTrackStatus, "ED"]);
 requiresSomeSectionStatus.delete("DISC"); // "Discontinued Draft"
@@ -52,6 +46,11 @@ export function run(conf) {
 
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
 
+  const missingRequiredSections = new InsensitiveStringSet([
+    "Privacy Considerations",
+    "Security Considerations",
+  ]);
+
   /** @type {NodeListOf<HTMLElement>} */
   const headers = document.querySelectorAll("h2, h3, h4, h5, h6");
   for (const header of headers) {
@@ -59,17 +58,17 @@ export function run(conf) {
     // section number and self-link anchor
     clone.querySelectorAll("bdi, .self-link")?.forEach(elem => elem.remove());
     const text = norm(clone.textContent);
-    if (requiredSections.has(text)) {
-      requiredSections.delete(text);
+    if (missingRequiredSections.has(text)) {
+      missingRequiredSections.delete(text);
       // Check if we find them all...
-      if (requiredSections.size === 0) {
+      if (missingRequiredSections.size === 0) {
         return; // All present, early return!
       }
     }
   }
 
   // Show the ones we didn't find individually
-  for (const title of requiredSections) {
+  for (const title of missingRequiredSections) {
     logger(l10n.msg(title), name, {
       hint: l10n.hint(title),
     });
