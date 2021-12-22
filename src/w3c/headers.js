@@ -124,7 +124,7 @@ const status2maturity = {
   FPWD: "WD",
 };
 
-const publicationSpaces = {
+export const publicationSpaces = {
   "Member-SUBM": "/Submission",
   finding: "/2001/tag/doc",
   "draft-finding": "/2001/tag/doc",
