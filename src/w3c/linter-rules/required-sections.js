@@ -60,14 +60,14 @@ export function run(conf) {
     const text = norm(clone.textContent);
     if (requiredSections.has(text)) {
       requiredSections.delete(text);
+      // Check if we find them all...
+      if (requiredSections.size === 0) {
+        return; // done!
+      }
     }
   }
-  // Did we find them all?
-  if (requiredSections.size === 0) {
-    return;
-  }
 
-  // Show them as errors individually
+  // Show the ones we didn't find individually
   for (const title of requiredSections) {
     showError(l10n.msg(title), name, {
       hint: l10n.hint(title),
