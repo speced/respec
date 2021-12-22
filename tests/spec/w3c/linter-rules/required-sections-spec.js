@@ -97,13 +97,11 @@ describe("w3c — required-sections", () => {
         <p>This is a privacy section</p>
       </section>
     `;
-    const ops = makeStandardOps(
-      {
-        lint: { "required-sections": "error" },
-        specStatus: "WD",
-      },
-      body
-    );
+    const conf = {
+      lint: { "required-sections": "error" },
+      specStatus: "WD",
+    };
+    const ops = makeStandardOps(conf, body);
     const doc = await makeRSDoc(ops);
     const errors = errorsFilter(doc);
     const warnings = warningsFilter(doc);
