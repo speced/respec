@@ -62,7 +62,7 @@ describe("Core - Markdown", () => {
     ops.abstract = null;
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector("code")).toBeFalsy();
-    expect(doc.querySelector("#foo h2").textContent).toBe("1. Foo");
+    expect(doc.querySelector("#foo").textContent).toBe("1. Foo");
     const listItems = doc.querySelectorAll(
       "section > ul:not([class=toc]) > li"
     );
@@ -93,13 +93,13 @@ describe("Core - Markdown", () => {
     const h2s = doc.querySelectorAll("#test-section h2");
     expect(h2s).toHaveSize(1);
     const [h2] = h2s;
-    expect(h2.id).toBe("x1-section-title");
+    expect(h2.id).toBe("section-title-0");
     const h3s = doc.querySelectorAll("#test-section h3");
     expect(h3s).toHaveSize(2);
     const [firstH3, secondH3] = h3s;
     expect(firstH3.id).not.toBe(secondH3);
     for (const elem of [h2, firstH3, secondH3]) {
-      expect(doc.querySelectorAll(`#${elem.id}`)).toHaveSize(1);
+      expect(elem.id).withContext(h2.textContent).toBeTruthy();
     }
   });
 
@@ -137,7 +137,7 @@ describe("Core - Markdown", () => {
     expect(bar.id).toBe("bar");
     expect(bar.textContent).toBe("2.1 Bar title");
 
-    expect(automaticId.id).toBe("x2-2-another-title");
+    expect(automaticId.id).toBe("another-title");
     expect(automaticId.textContent).toBe("2.2 Another title");
   });
 
@@ -164,27 +164,27 @@ describe("Core - Markdown", () => {
     const ops = makeStandardOps({ format: "markdown" }, body);
     ops.abstract = null;
     const doc = await makeRSDoc(ops);
-    const foo = doc.querySelector("#foo h2");
+    const foo = doc.querySelector("#foo");
     expect(foo.textContent).toBe("1. Foo");
     expect(foo.parentElement.localName).toBe("section");
 
-    const bar = doc.querySelector("#bar h3");
+    const bar = doc.querySelector("#bar");
     expect(bar.textContent).toBe("1.1 Bar");
     expect(bar.parentElement.localName).toBe("section");
 
-    const baz = doc.querySelector("#baz h3");
+    const baz = doc.querySelector("#baz");
     expect(baz.textContent).toBe("1.2 Baz");
     expect(baz.parentElement.localName).toBe("section");
 
-    const foobar = doc.querySelector("#foobar h4");
+    const foobar = doc.querySelector("#foobar");
     expect(foobar.textContent).toBe("1.2.1 Foobar");
     expect(foobar.parentElement.localName).toBe("section");
 
-    const foobaz = doc.querySelector("#foobaz h5");
+    const foobaz = doc.querySelector("#foobaz");
     expect(foobaz.textContent).toBe("1.2.1.1 Foobaz");
     expect(foobaz.parentElement.localName).toBe("section");
 
-    const zing = doc.querySelector("#zing h3");
+    const zing = doc.querySelector("#zing");
     expect(zing.textContent).toBe("1.3 Zing");
     expect(zing.parentElement.localName).toBe("section");
   });
@@ -251,9 +251,9 @@ describe("Core - Markdown", () => {
     const ops = makeStandardOps({ format: "markdown" }, body);
     ops.abstract = null;
     const doc = await makeRSDoc(ops);
-    const baz = doc.querySelector("#baz h2");
+    const baz = doc.querySelector("#baz");
     expect(baz.textContent).toBe("2. Baz");
-    const bar = doc.querySelector("#bar h3");
+    const bar = doc.querySelector("#bar");
     expect(bar.parentElement.contains(baz)).toBeFalsy();
     expect(baz.parentElement.contains(bar)).toBeFalsy();
   });
@@ -477,7 +477,9 @@ function getAnswer() {
           This is another paragraph.
         </section>
         <section id=dontTouch>
-          ## this should not change
+          <h2>
+          * this should not change
+          </h2>
         </section>
       `;
       const ops = makeStandardOps(null, body);
@@ -493,7 +495,7 @@ function getAnswer() {
       expect(anotherH3.textContent.trim()).toBe("1.2 another h3");
       expect(doc.querySelector("#markdown1 code")).toBeTruthy();
       const dontChange = doc.getElementById("dontTouch").textContent.trim();
-      expect(dontChange).toBe("## this should not change");
+      expect(dontChange).toContain("* this should not change");
     });
   });
 

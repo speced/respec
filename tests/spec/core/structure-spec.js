@@ -66,8 +66,12 @@ describe("Core - Structure", () => {
     // test default values
     const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
-    expect(toc.querySelector("ol > li:nth-child(1) a").hash).toBe("#abstract");
-    expect(toc.querySelector("ol > li:nth-child(2) a").hash).toBe("#sotd");
+    expect(toc.querySelector("ol > li:nth-child(1) a").hash).toBe(
+      "#abstract-0"
+    );
+    expect(toc.querySelector("ol > li:nth-child(2) a").hash).toBe(
+      "#status-of-this-document"
+    );
     expect(toc.querySelector("ol > li:nth-child(3) a").hash).toBe("#intro");
     expect(toc.querySelector("ol > li:nth-child(4) a").textContent).toBe(
       "1. ONE"
@@ -176,9 +180,7 @@ describe("Core - Structure", () => {
       "A.1.1.1 FOUR"
     );
     // should still add section number to the original header
-    expect(doc.getElementById("x1-1-1-1-1-five").textContent).toBe(
-      "1.1.1.1.1 FIVE"
-    );
+    expect(doc.getElementById("five").textContent).toBe("1.1.1.1.1 FIVE");
   });
 
   describe("data-max-toc", () => {

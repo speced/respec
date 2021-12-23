@@ -15,12 +15,14 @@ describe("Core - MDN Annotation", () => {
 
   describe("key", () => {
     const getMdnBox = doc =>
-      doc.getElementById("paymentrequest-interface").previousElementSibling;
+      doc.getElementById("paymentrequest-interface").closest("section")
+        .previousElementSibling;
 
-    it("does nothing if neither shortName or key are providded", async () => {
+    it("does nothing if neither shortName or key are provided", async () => {
       const ops = makeStandardOps({ mdn: { baseJsonPath }, shortName: null });
       const doc = await makeRSDoc(ops, "spec/core/mdn-annotation.html");
-      expect(getMdnBox(doc).matches("aside.mdn")).toBeFalse();
+      const mdnBox = getMdnBox(doc);
+      expect(mdnBox.matches("aside.mdn")).toBeFalse();
     });
 
     it("prefers `mdn.key` over shortName", async () => {
@@ -48,9 +50,9 @@ describe("Core - MDN Annotation", () => {
   });
 
   it("attaches MDNbox to the closest <section>", () => {
-    const paymentInterfaceSection = doc.getElementById(
-      "paymentrequest-interface"
-    );
+    const paymentInterfaceSection = doc
+      .getElementById("paymentrequest-interface")
+      .closest("section");
     const {
       previousElementSibling: { classList, tagName },
     } = paymentInterfaceSection;
@@ -59,9 +61,9 @@ describe("Core - MDN Annotation", () => {
   });
 
   it("attaches MDNbox with browser list", () => {
-    const paymentInterfaceSection = doc.getElementById(
-      "paymentrequest-interface"
-    );
+    const paymentInterfaceSection = doc
+      .getElementById("paymentrequest-interface")
+      .closest("section");
     const { previousElementSibling } = paymentInterfaceSection;
     const mdnSupport = previousElementSibling.querySelector("table");
     expect(mdnSupport).toBeTruthy();
@@ -70,9 +72,9 @@ describe("Core - MDN Annotation", () => {
   });
 
   it("displays correct browser support info", () => {
-    const paymentInterfaceSection = doc.getElementById(
-      "paymentrequest-interface"
-    );
+    const paymentInterfaceSection = doc
+      .getElementById("paymentrequest-interface")
+      .closest("section");
     const { previousElementSibling } = paymentInterfaceSection;
     const firstBrowserRow = previousElementSibling.querySelector("table > tr");
     expect(firstBrowserRow.classList).toContain("chrome");
@@ -91,8 +93,9 @@ describe("Core - MDN Annotation", () => {
     const textBad = poorSupportedMdnPanel.querySelector("details p");
     expect(textBad.classList).toContain("engines-some");
 
-    const { previousElementSibling: goodSupportedMdnPanel } =
-      doc.getElementById("paymentrequest-interface");
+    const { previousElementSibling: goodSupportedMdnPanel } = doc
+      .getElementById("paymentrequest-interface")
+      .closest("section");
     const iconGood = goodSupportedMdnPanel.querySelector(
       "details summary span:nth-child(2)"
     );
@@ -112,7 +115,7 @@ describe("Core - MDN Annotation", () => {
   it("allows overriding defaults", () => {
     const {
       previousElementSibling: { classList, tagName },
-    } = doc.getElementById("custom-method");
+    } = doc.getElementById("custom-method").closest("section");
     expect(tagName).toBe("ASIDE");
     expect(classList).toContain("mdn");
   });

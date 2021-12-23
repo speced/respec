@@ -17,8 +17,6 @@ import {
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
-const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
-
 export const name = "core/structure";
 
 const localizationStrings = {
@@ -144,12 +142,15 @@ function getSectionTree(parent) {
     if (!section.children.length || noToc) {
       continue;
     }
+    /** @type {HTMLElement} */
+    // @ts-expect-error
     const header = section.children[0];
-    if (!lowerHeaderTags.includes(header.localName)) {
+    if (!/^h[1-6]$/.test(header.localName)) {
       continue;
     }
     const title = header.textContent;
-    addId(section, null, title);
+    addId(header);
+    addId(section, "section", title);
     sections.push({
       element: section,
       header,

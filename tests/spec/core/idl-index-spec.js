@@ -198,6 +198,7 @@ interface Bar {
     const body = `
       ${makeDefaultBody()}
       <section>
+       <h2>some idl</h2>
         <pre class="idl exclude">
         [Exposed=Window]
         interface Foo {
@@ -206,6 +207,7 @@ interface Bar {
         </pre>
       </section>
       <section class="note">
+        <h2>More IDL</h2>
         <pre class="idl">
         [Exposed=Window]
         interface Bar {

@@ -556,7 +556,7 @@ describe("Core — xref", () => {
     });
 
     it("shows error if IDL string parsing fails", async () => {
-      const body = `<section id="test">text {{"imp"orts" }} text</section>`;
+      const body = `<section id="test"><p>text {{"imp"orts" }} text</p></section>`;
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
       const el = doc.getElementById("test");

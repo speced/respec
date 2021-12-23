@@ -9,7 +9,8 @@ describe("Core — data-abbr", () => {
       config: makeBasicConfig(),
       body: `
       <section id="section">
-        <dfn data-abbr>foo bar</dfn>
+        <h2>heading</h2>
+        <p><dfn data-abbr>foo bar</dfn></p>
       </section>`,
     };
     const doc = await makeRSDoc(ops);
@@ -29,6 +30,7 @@ describe("Core — data-abbr", () => {
       config: makeBasicConfig(),
       body: `
       <section id="section">
+        <h2>heading</h2>
         <dfn data-abbr>foo bar</dfn> can be referenced as
         <a class="dfnlink">FB</a>
         <a class="dfnlink">foo bar</a>
@@ -44,9 +46,12 @@ describe("Core — data-abbr", () => {
       config: makeBasicConfig(),
       body: `
       <section id="section">
+        <h2>heading</h2>
+        <p>
         <dfn data-abbr="">United States</dfn>
         <dfn data-abbr="PoR">Position of Responsibility</dfn>
         <dfn data-abbr="UI">User Interface</dfn>
+        </p>
         <div class="test">US</div>
         <div class="test">PoR</div>
         <div class="test">UI</div>

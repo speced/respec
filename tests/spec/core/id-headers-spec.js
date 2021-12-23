@@ -7,7 +7,7 @@ describe("Core - ID headers", () => {
   let doc;
   const body = `
     <section class="introductory"><h2>Intro</h2></section>
-    <section id="t0"><p>BLAH</p><h6>FOO</h6></section>
+    <section id="t0"><h6>FOO</h6></section>
     <section><h2>test-1</h2></section>
     <section><h2 id="custom-id">Pass</h2></section>
     <section id="sotd" class="notoc">
@@ -46,7 +46,7 @@ describe("Core - ID headers", () => {
       expect(intro.getAttribute("aria-label")).toBe("Permalink for Section");
       const custom = doc.querySelector("#custom-id a.self-link");
       expect(custom.getAttribute("aria-label")).toBe(
-        "Permalink for Section 2."
+        "Permalink for Section 3."
       );
       const appendix = doc.querySelector("#a1 a.self-link");
       expect(appendix.getAttribute("aria-label")).toBe(
@@ -77,10 +77,10 @@ describe("Core - ID headers", () => {
     });
 
     it("adds section links", () => {
-      const test1 = doc.querySelector("#test-1 > h2 > a.self-link");
+      const test1 = doc.querySelector("#section-test-1 > h2 > a.self-link");
       expect(test1.getAttribute("href")).toBe("#test-1");
 
-      const test2 = doc.querySelector("#pass > h2 > a.self-link");
+      const test2 = doc.querySelector("#section-pass > h2 > a.self-link");
       expect(test2.getAttribute("href")).toBe("#custom-id");
     });
 
