@@ -11,7 +11,11 @@ import { noTrackStatus } from "../../../../src/w3c/headers.js";
 import { requiresSomeSectionStatus } from "../../../../src/w3c/linter-rules/required-sections.js";
 
 describe("w3c — required-sections", () => {
+  beforeAll(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL *= 2;
+  });
   afterAll(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL /= 2;
     flushIframes();
   });
 
