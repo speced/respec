@@ -10,6 +10,7 @@ import {
   docLink,
   getIntlData,
   norm,
+  resolveLanguageAlias,
   showError,
   showWarning,
 } from "../../core/utils.js";
@@ -56,7 +57,8 @@ export function run(conf) {
   }
 
   // We can't check for headers unless we also have a translation
-  if (!localizationStrings[lang]) {
+  if (!localizationStrings[resolveLanguageAlias(lang)]) {
+    console.warn(`Missing localization strings for ${lang}.`);
     return;
   }
 
