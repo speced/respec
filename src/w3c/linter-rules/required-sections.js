@@ -13,6 +13,7 @@ import {
   showError,
   showWarning,
 } from "../../core/utils.js";
+import { lang } from "../../core/l10n.js";
 import { recTrackStatus } from "../headers.js";
 
 const ruleName = "required-sections";
@@ -28,6 +29,20 @@ const localizationStrings = {
         If the document is not intended for the W3C Recommendation track, set ${"[noRecTrack]"} to \`true\`
         or turn off the ${`[${ruleName}]`} linter rule.`;
     },
+    privacy_considerations: "Privacy Considerations",
+    security_considerations: "Security Considerations",
+  },
+  es: {
+    msg(sectionTitle) {
+      return `Documentos que van a ser "W3C Recommendation" requieren una sección "${sectionTitle}" separada.`;
+    },
+    hint(sectionTitle) {
+      return docLink`Agrega una \`<section>\` con título "${sectionTitle}". Ver los [Horizontal review guidelines](https://www.w3.org/Guide/documentreview/#how_to_get_horizontal_review).
+        Si el documento no está destinado a ser un W3C Recommendation, puedes poner ${"[noRecTrack]"} a \`true\`
+        o apaga la regla de linter ${`[${ruleName}]`}.`;
+    },
+    privacy_considerations: "Consideraciones de privacidad",
+    security_considerations: "Consideraciones de Seguridad",
   },
 };
 const l10n = getIntlData(localizationStrings);
@@ -40,6 +55,11 @@ export function run(conf) {
     return;
   }
 
+  // We can't check for headers unless we also have a translation
+  if (!localizationStrings[lang]) {
+    return;
+  }
+
   if (conf.noRecTrack || !requiresSomeSectionStatus.has(conf.specStatus)) {
     return;
   }
@@ -47,8 +67,8 @@ export function run(conf) {
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
 
   const missingRequiredSections = new InsensitiveStringSet([
-    "Privacy Considerations",
-    "Security Considerations",
+    l10n.privacy_considerations,
+    l10n.security_considerations,
   ]);
 
   /** @type {NodeListOf<HTMLElement>} */
