@@ -155,4 +155,40 @@ describe("w3c — required-sections", () => {
     const warnings = warningsFilter(doc);
     expect(warnings).toHaveSize(0);
   });
+
+  it("handles localized documents", async () => {
+    const body = `
+    <section>
+      <h2>Consideraciones de privacidad</h2>
+      <p>This is a privacy section</p>
+    </section>
+    `;
+    const conf = {
+      lint: { "required-sections": true },
+      specStatus: "WD",
+    };
+    const opts = makeStandardOps(conf, body);
+    opts.htmlAttrs = { lang: "es" };
+    const doc = await makeRSDoc(opts);
+    const errors = errorsFilter(doc);
+    expect(errors).toHaveSize(0);
+    const warnings = warningsFilter(doc);
+    expect(warnings).toHaveSize(1);
+    const [warn] = warnings;
+    expect(warn.message).toContain("Consideraciones de Seguridad");
+  });
+
+  it("gracefully handles localized documents for unknown languages", async () => {
+    const conf = {
+      lint: { "required-sections": true },
+      specStatus: "WD",
+    };
+    const opts = makeStandardOps(conf);
+    opts.htmlAttrs = { lang: "ab" }; // Abkhazian
+    const doc = await makeRSDoc(opts);
+    const errors = errorsFilter(doc);
+    expect(errors).toHaveSize(0);
+    const warnings = warningsFilter(doc);
+    expect(warnings).toHaveSize(0);
+  });
 });
