@@ -234,7 +234,7 @@ export default (conf, options) => {
         //   </p>`
         // : ""}
         html`
-          <p>
+          <p lang="nl">
             Er zijn errata aanwezig. Zie de
             <a href="${conf.errata}"><strong>errata</strong></a> voor fouten en
             problemen die gerapporteerd zijn na publicatie.
@@ -252,7 +252,7 @@ export default (conf, options) => {
         </p>`
       : ""}
     ${conf.alternateFormats
-      ? html`<p>
+      ? html`<p lang="en">
           ${options.multipleAlternates
             ? "This document is also available in these non-normative formats:"
             : "This document is also available in this non-normative format:"}
