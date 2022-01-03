@@ -302,7 +302,7 @@ function renderCopyright(conf) {
       ? html`<p class="copyright">${[conf.additionalCopyrightHolders]}</p>`
       : conf.overrideCopyright
       ? [conf.overrideCopyright]
-      : html`<p class="copyright">
+      : html`<p class="copyright" lang="en">
           This document is licensed under a
           ${linkLicense(
             "Creative Commons Attribution 4.0 License",
