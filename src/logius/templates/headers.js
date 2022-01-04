@@ -2,7 +2,7 @@
 import { getIntlData, humanDate, showWarning } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
-import showLogo from "../../core/templates/show-logo.js";
+import showLogo from "./show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
 
 const name = "logius/templates/headers";

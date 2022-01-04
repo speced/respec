@@ -7,6 +7,7 @@ export const name = "logius/fix-md-elements";
 export function run(conf) {
   addClassTables(conf);
   addClassCode(conf);
+  addFigureImg(conf);
 }
 // todo check if algorithm is correct!
 function addClassTables(conf) {
@@ -36,4 +37,25 @@ function addClassCode(conf) {
         code.classList.add(conf.nl_markdownCodeClass);
       })
   );
+}
+
+function addFigureImg(conf) {
+  if (
+    !conf.nl_markdownEmbedImageInFigure
+  ) {
+    return;
+  }
+
+[...document.querySelectorAll("section[data-format=markdown] img")]
+  .filter(img => !img.closest("figure"))
+  .forEach(img => {
+	  const figure = document.createElement("figure");
+          const figcaption = document.createElement("figcaption");
+		  figcaption.innerText = img.title;
+		  const cloneImg = img.cloneNode(false);
+		  figure.appendChild(cloneImg);
+          figure.appendChild(figcaption);
+          img.parentNode.insertBefore(figure, img);
+          img.remove();
+  });
 }
