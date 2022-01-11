@@ -20,7 +20,7 @@ export default function showLogo(logo, index) {
   /** @type {HTMLAnchorElement} */
   const a = html`<a href="${logo.url || null}" class="logo"
     ><img
-      alt="${logo.alt || null}"      
+      alt="${logo.alt || null}"
       height="${logo.height || null}"
       id="${logo.id || null}"
       src="${logo.src || null}"

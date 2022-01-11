@@ -40,22 +40,20 @@ function addClassCode(conf) {
 }
 
 function addFigureImg(conf) {
-  if (
-    !conf.nl_markdownEmbedImageInFigure
-  ) {
+  if (!conf.nl_markdownEmbedImageInFigure) {
     return;
   }
 
-[...document.querySelectorAll("section[data-format=markdown] img")]
-  .filter(img => !img.closest("figure"))
-  .forEach(img => {
-	  const figure = document.createElement("figure");
-          const figcaption = document.createElement("figcaption");
-		  figcaption.innerText = img.title;
-		  const cloneImg = img.cloneNode(false);
-		  figure.appendChild(cloneImg);
-          figure.appendChild(figcaption);
-          img.parentNode.insertBefore(figure, img);
-          img.remove();
-  });
+  [...document.querySelectorAll("section[data-format=markdown] img")]
+    .filter(img => !img.closest("figure"))
+    .forEach(img => {
+      const figure = document.createElement("figure");
+      const figcaption = document.createElement("figcaption");
+      figcaption.innerText = img.getAttribute("title");
+      const cloneImg = img.cloneNode(false);
+      figure.appendChild(cloneImg);
+      figure.appendChild(figcaption);
+      img.parentNode.insertBefore(figure, img);
+      img.remove();
+    });
 }
