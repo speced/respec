@@ -25,6 +25,11 @@ const localizationStrings = {
     latest_recommendation: "Latest Recommendation:",
     message_topic: "… message topic …",
     more_details_about_this_doc: "More details about this document",
+    multiple_alternates(plural) {
+      return `This document is also available in ${
+        plural ? "these non-normative formats" : "this non-normative format"
+      }:`;
+    },
     prev_editor_draft: "Previous editor's draft:",
     prev_recommendation: "Previous Recommendation:",
     prev_version: "Previous version:",
@@ -278,9 +283,7 @@ export default (conf, options) => {
       : ""}
     ${conf.alternateFormats
       ? html`<p>
-          ${options.multipleAlternates
-            ? "This document is also available in these non-normative formats:"
-            : "This document is also available in this non-normative format:"}
+          ${l10n.multiple_alternates(options.multipleAlternates)}
           ${options.alternatesHTML}
         </p>`
       : ""}
