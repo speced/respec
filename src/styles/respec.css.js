@@ -17,11 +17,6 @@ export default css`
   }
 }
 
-/* Override code highlighter background */
-.hljs {
-  background: transparent !important;
-}
-
 /* --- INLINES --- */
 :is(h1, h2, h3, h4, h5, h6, a) abbr {
   border: none;

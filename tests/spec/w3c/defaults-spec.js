@@ -12,8 +12,8 @@ describe("W3C — Defaults", () => {
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
     expect(rsConf.lint).toEqual({
+      "privsec-section": false,
       "no-headingless-sections": true,
-      "privsec-section": true,
       "no-http-props": true,
       "no-unused-vars": false,
       "local-refs-exist": true,
@@ -21,6 +21,8 @@ describe("W3C — Defaults", () => {
       "check-internal-slots": false,
       "check-charset": false,
       "wpt-tests-exist": false,
+      "no-unused-dfns": "warn",
+      "required-sections": true,
       a11y: false,
     });
     expect(rsConf.highlightVars).toBe(true);
@@ -41,6 +43,8 @@ describe("W3C — Defaults", () => {
           "check-punctuation": false,
           "fake-linter-rule": "foo",
           "check-internal-slots": true,
+          "no-unused-dfns": "error",
+          "required-sections": "warn",
         },
         license: "c0",
         specStatus: "ED",
@@ -62,6 +66,8 @@ describe("W3C — Defaults", () => {
       "check-internal-slots": true,
       "check-charset": false,
       "wpt-tests-exist": false,
+      "no-unused-dfns": "error",
+      "required-sections": "warn",
       a11y: false,
     });
     expect(rsConf.highlightVars).toBe(false);
