@@ -22,6 +22,8 @@ const status2rdf = {
 
 export const requiresCanonicalLink = new Set([
   ...recTrackStatus,
+  ...W3CNotes,
+  ...registryTrackStatus,
   "BG-FINAL",
   "CG-FINAL",
   "CRY",
