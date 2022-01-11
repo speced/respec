@@ -13,7 +13,7 @@ const modules = [
   import("../src/core/github.js"),
   import("../src/logius/github.js"), // try to revert some props
   import("../src/core/data-include.js"),
-  // import("../src/logius/splitmarkdownheaders.js"), // todo check
+  import("../src/logius/splitmarkdownheaders.js"), // todo check
   import("../src/core/markdown.js"),
   import("../src/logius/fix-md-elements.js"), // todo check
   import("../src/core/reindent.js"), // nothing changed but this module is in geonovum profile at line 3

@@ -2,7 +2,7 @@
 import { getIntlData, humanDate, showWarning } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
-import showLogo from "../../core/templates/show-logo.js";
+import showLogo from "./show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
 
 const name = "logius/templates/headers";
@@ -234,7 +234,7 @@ export default (conf, options) => {
         //   </p>`
         // : ""}
         html`
-          <p>
+          <p lang="nl">
             Er zijn errata aanwezig. Zie de
             <a href="${conf.errata}"><strong>errata</strong></a> voor fouten en
             problemen die gerapporteerd zijn na publicatie.
@@ -252,7 +252,7 @@ export default (conf, options) => {
         </p>`
       : ""}
     ${conf.alternateFormats
-      ? html`<p>
+      ? html`<p lang="en">
           ${options.multipleAlternates
             ? "This document is also available in these non-normative formats:"
             : "This document is also available in this non-normative format:"}
@@ -302,7 +302,7 @@ function renderCopyright(conf) {
       ? html`<p class="copyright">${[conf.additionalCopyrightHolders]}</p>`
       : conf.overrideCopyright
       ? [conf.overrideCopyright]
-      : html`<p class="copyright">
+      : html`<p class="copyright" lang="en">
           This document is licensed under a
           ${linkLicense(
             "Creative Commons Attribution 4.0 License",

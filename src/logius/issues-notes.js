@@ -27,7 +27,6 @@ import {
 import css from "../styles/issues-notes.css.js";
 
 import { html } from "../core/import-maps.js";
-import { pub } from "../core/pubsubhub.js";
 
 export const name = "logius/issues-notes";
 
@@ -203,7 +202,6 @@ function handleIssues(ins, ghIssues, conf) {
       const level = parents(titleParent, "section").length + 2;
       titleParent.setAttribute("aria-level", level);
     }
-    pub(report.type, report);
   });
   makeIssueSectionSummary(issueList);
 }

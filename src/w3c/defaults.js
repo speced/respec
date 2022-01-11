@@ -24,8 +24,10 @@ const w3cLogo = {
 
 const w3cDefaults = {
   lint: {
-    "privsec-section": true,
+    "privsec-section": false,
+    "required-sections": true,
     "wpt-tests-exist": false,
+    "no-unused-dfns": "warn",
     a11y: false,
   },
   doJsonLd: false,
