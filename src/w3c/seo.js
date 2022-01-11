@@ -3,7 +3,7 @@
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
 import { html } from "../core/import-maps.js";
-import { recTrackStatus } from "./headers.js";
+import { recTrackStatus, W3CNotes, registryTrackStatus } from "./headers.js";
 import { resolveRef } from "../core/biblio.js";
 import { showWarning } from "../core/utils.js";
 export const name = "w3c/seo";
