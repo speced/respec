@@ -25,6 +25,11 @@ const localizationStrings = {
     latest_recommendation: "Latest Recommendation:",
     message_topic: "… message topic …",
     more_details_about_this_doc: "More details about this document",
+    multiple_alternates(plural) {
+      return `This document is also available in ${
+        plural ? "these non-normative formats" : "this non-normative format"
+      }:`;
+    },
     prev_editor_draft: "Previous editor's draft:",
     prev_recommendation: "Previous Recommendation:",
     prev_version: "Previous version:",
@@ -129,14 +134,27 @@ const localizationStrings = {
     your_topic_here: "TU SUJETO AQUÍ",
   },
   de: {
+    archives: "Archiv",
     author: "Autor/in:",
     authors: "Autor/innen:",
+    commit_history: "Commit-Historie",
+    edited_in_place: "zuletzt geändert am",
     editor: "Redaktion:",
     editors: "Redaktion:",
+    feedback: "Feedback:",
     former_editor: "Frühere Mitwirkende:",
     former_editors: "Frühere Mitwirkende:",
+    history: "Verlauf:",
+    implementation_report: "Umsetzungsbericht:",
     latest_editors_draft: "Letzter Entwurf:",
     latest_published_version: "Letzte publizierte Fassung:",
+    latest_recommendation: "Aktuellste Empfehlung:",
+    more_details_about_this_doc: "Mehr Informationen über dieses Dokument",
+    prev_editor_draft: "Vorheriger Entwurf:",
+    prev_recommendation: "Vorherige Empfehlung:",
+    prev_version: "Vorherige Version:",
+    publication_history: "Veröffentlichungsverlauf",
+    test_suite: "Testumgebung:",
     this_version: "Diese Fassung:",
   },
 };
@@ -278,9 +296,7 @@ export default (conf, options) => {
       : ""}
     ${conf.alternateFormats
       ? html`<p>
-          ${options.multipleAlternates
-            ? "This document is also available in these non-normative formats:"
-            : "This document is also available in this non-normative format:"}
+          ${l10n.multiple_alternates(options.multipleAlternates)}
           ${options.alternatesHTML}
         </p>`
       : ""}
