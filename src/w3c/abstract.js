@@ -1,7 +1,7 @@
 // @ts-check
 // Module w3c/abstract
 // Handle the abstract section properly.
-import { getIntlData, norm, showError } from "../core/utils.js";
+import { getIntlData, norm, renameElement, showError } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 export const name = "w3c/abstract";
 
@@ -45,10 +45,23 @@ export async function run() {
 }
 
 function findAbstract() {
-  const abstract = document.querySelector("section#abstract");
+  /** @type {HTMLElement} */
+  const abstract = document.querySelector("#abstract");
   if (abstract) {
-    return abstract;
+    switch (abstract.localName) {
+      case "section":
+        return abstract;
+      case "div":
+        // Legacy documents may use a div
+        return renameElement(abstract, "section");
+      default:
+        showError("The abstract should be a `<section>` element.", name, {
+          elements: [abstract],
+        });
+        return abstract;
+    }
   }
+
   // Let's try find it by checking the headings.
   // This can happen if the document was generated
   // using markdown.
