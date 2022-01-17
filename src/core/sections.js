@@ -1,7 +1,7 @@
 /**
  * Module core/sections
  *
- * Adds sections to the document, based on the heading structure.
+ * Adds <section>s to the document, based on the heading structure.
  */
 export const name = "core/sections";
 
