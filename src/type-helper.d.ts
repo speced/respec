@@ -52,8 +52,6 @@ interface Window {
 }
 
 interface Document {
-  /** @deprecated in favour of `document.respec.ready` */
-  respecIsReady: Promise<void>;
   respec: {
     readonly version: string;
     readonly ready: Promise<void>;
@@ -81,6 +79,10 @@ declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
 
 declare namespace Intl {
   class ListFormat {
+    formatToParts(items: string[]): {
+      type: "element" | "literal";
+      value: string;
+    }[];
     constructor(
       locales?: string | string[],
       options?: {
@@ -94,6 +96,8 @@ declare namespace Intl {
   }
 }
 
+interface BibliographyMap extends Record<string, BiblioData> {}
+
 interface BiblioData {
   aliasOf?: string;
   id?: string;
@@ -104,6 +108,7 @@ interface BiblioData {
   date?: string;
   status?: string;
   etAl?: boolean;
+  expires: number;
 }
 interface Conf {
   authors?: Person[];
@@ -115,6 +120,21 @@ interface Conf {
   normativeReferences: Set<string>;
   shortName: string;
 }
+
+type LicenseInfo = {
+  /**
+   * The name of the license.
+   */
+  name: string;
+  /**
+   * The URL of the license.
+   */
+  url: string;
+  /**
+   * The short linking text of license.
+   */
+  short: string;
+};
 
 type ResourceHintOption = {
   /**
@@ -195,10 +215,31 @@ type Person = {
   note?: string;
   retiredDate?: string;
   extras?: PersonExtras[];
-}
+};
 
 type PersonExtras = {
   name: string;
   class?: string;
   href?: string;
-}
+};
+
+type EventTopic =
+  | "amend-user-config"
+  | "beforesave"
+  | "end-all"
+  | "error"
+  | "plugins-done"
+  | "start-all"
+  | "toc"
+  | "warn";
+
+type DefinitionValidator = (
+  /** Text to validate. */
+  text: string,
+  /** The type of thing being validated. */
+  type: string,
+  /** The element from which the validation originated. */
+  element: HTMLElement,
+  /** The name of the plugin originating the validation. */
+  pluginName: string
+) => boolean;

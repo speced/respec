@@ -4,7 +4,6 @@
 
 // CONFIGURATION:
 //  - noTOC: if set to true, no TOC is generated and sections are not numbered
-//  - tocIntroductory: if set to true, the introductory material is listed in the TOC
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
@@ -19,7 +18,6 @@ import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
-const headerTags = ["h1", ...lowerHeaderTags];
 
 export const name = "core/structure";
 
@@ -135,11 +133,9 @@ function appendixNumber(num) {
  *
  * @param {Element} parent
  */
-function getSectionTree(parent, { tocIntroductory = false } = {}) {
+function getSectionTree(parent) {
   /** @type {NodeListOf<HTMLElement>} */
-  const sectionElements = tocIntroductory
-    ? parent.querySelectorAll(":scope > section")
-    : parent.querySelectorAll(":scope > section:not(.introductory)");
+  const sectionElements = parent.querySelectorAll(":scope > section");
   /** @type {Section[]} */
   const sections = [];
 
@@ -158,9 +154,9 @@ function getSectionTree(parent, { tocIntroductory = false } = {}) {
       element: section,
       header,
       title,
-      isIntro: section.classList.contains("introductory"),
+      isIntro: Boolean(section.closest(".introductory")),
       isAppendix: section.classList.contains("appendix"),
-      subsections: getSectionTree(section, { tocIntroductory }),
+      subsections: getSectionTree(section),
     });
   }
   return sections;
@@ -194,9 +190,6 @@ function filterHeader(h) {
 }
 
 export function run(conf) {
-  if ("tocIntroductory" in conf === false) {
-    conf.tocIntroductory = false;
-  }
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = Infinity;
   }
@@ -206,9 +199,7 @@ export function run(conf) {
   // makeTOC
   if (!conf.noTOC) {
     skipFromToC();
-    const sectionTree = getSectionTree(document.body, {
-      tocIntroductory: conf.tocIntroductory,
-    });
+    const sectionTree = getSectionTree(document.body);
     const result = scanSections(sectionTree, conf.maxTocLevel);
     if (result) {
       createTableOfContents(result);
@@ -237,12 +228,11 @@ function renameSectionHeaders() {
 }
 
 function getNonintroductorySectionHeaders() {
-  const headerSelector = headerTags
-    .map(h => `section:not(.introductory) ${h}:first-child`)
-    .join(",");
-  return [...document.querySelectorAll(headerSelector)].filter(
-    elem => !elem.closest("section.introductory")
-  );
+  return [
+    ...document.querySelectorAll(
+      "section:not(.introductory) :is(h1,h2,h3,h4,h5,h6):first-child"
+    ),
+  ].filter(elem => !elem.closest("section.introductory"));
 }
 
 /**

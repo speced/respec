@@ -32,9 +32,9 @@ pre.idl > code {
 }
 
 .idlHeader a.self-link {
-   margin-left: .3cm;
-   text-decoration: none;
-   border-bottom: none;
+  margin-left: 0.3cm;
+  text-decoration: none;
+  border-bottom: none;
 }
 
 .idlID {
@@ -67,7 +67,6 @@ a.idlEnumItem {
   color: #005a9c;
 }
 
-
 /*.idlParam*/
 
 .idlParamName,
@@ -78,7 +77,6 @@ a.idlEnumItem {
 .extAttr {
   color: #666;
 }
-
 
 /*.idlSectionComment*/
 
@@ -97,38 +95,29 @@ a.idlEnumItem {
   box-shadow: 0 0 5px rgba(81, 167, 232, 0.5);
 }
 
-.respec-button-copy-paste:focus:hover,
-.respec-button-copy-paste.selected:focus {
+.respec-button-copy-paste:is(:focus:hover,.selected:focus) {
   border-color: #51a7e8;
 }
 
-.respec-button-copy-paste:hover,
-.respec-button-copy-paste:active,
-.respec-button-copy-paste.zeroclipboard-is-hover,
-.respec-button-copy-paste.zeroclipboard-is-active {
+.respec-button-copy-paste:is(:hover,:active,.zeroclipboard-is-hover,.zeroclipboard-is-active) {
   text-decoration: none;
   background-color: #ddd;
   background-image: linear-gradient(#eee, #ddd);
   border-color: #ccc;
 }
 
-.respec-button-copy-paste:active,
-.respec-button-copy-paste.selected,
-.respec-button-copy-paste.zeroclipboard-is-active {
+.respec-button-copy-paste:is(:active,.selected,.zeroclipboard-is-active) {
   background-color: #dcdcdc;
   background-image: none;
   border-color: #b5b5b5;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15)
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .respec-button-copy-paste.selected:hover {
   background-color: #cfcfcf;
 }
 
-.respec-button-copy-paste:disabled,
-.respec-button-copy-paste:disabled:hover,
-.respec-button-copy-paste.disabled,
-.respec-button-copy-paste.disabled:hover {
+.respec-button-copy-paste:is(:disabled,:disabled:hover,.disabled,.disabled:hover) {
   color: rgba(102, 102, 102, 0.5);
   cursor: default;
   background-color: rgba(229, 229, 229, 0.5);

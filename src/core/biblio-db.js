@@ -36,7 +36,8 @@ const readyPromise = openIdb();
  * @returns {Promise<import("idb").IDBPDatabase<BiblioDb>>}
  */
 async function openIdb() {
-  return await idb.openDB("respec-biblio2", 12, {
+  /** @type {import("idb").IDBPDatabase<BiblioDb>} */
+  const db = await idb.openDB("respec-biblio2", 12, {
     upgrade(db) {
       Array.from(db.objectStoreNames).map(storeName =>
         db.deleteObjectStore(storeName)
@@ -46,6 +47,23 @@ async function openIdb() {
       db.createObjectStore("reference", { keyPath: "id" });
     },
   });
+  // Clean the database of expired biblio entries.
+  const now = Date.now();
+  for (const storeName of [...ALLOWED_TYPES]) {
+    const store = db.transaction(storeName, "readwrite").store;
+    const range = IDBKeyRange.lowerBound(now);
+    let result = await store.openCursor(range);
+    while (result?.value) {
+      /** @type {BiblioData} */
+      const entry = result.value;
+      if (entry.expires === undefined || entry.expires < now) {
+        await store.delete(entry.id);
+      }
+      result = await result.continue();
+    }
+  }
+
+  return db;
 }
 
 export const biblioDB = {
@@ -57,7 +75,7 @@ export const biblioDB = {
    * If it's an alias, it resolves it.
    *
    * @param {String} id The reference or alias to look for.
-   * @return {Promise<Object?>} The reference or null.
+   * @return {Promise<BiblioData?>} The reference or null.
    */
   async find(id) {
     if (await this.isAlias(id)) {
@@ -116,7 +134,7 @@ export const biblioDB = {
    *
    * @param {AllowedType} type The type as per ALLOWED_TYPES.
    * @param {string} id The id for what to look up.
-   * @return {Promise<Object?>} Resolves with the retrieved object, or null.
+   * @return {Promise<BiblioData?>} Resolves with the retrieved object, or null.
    */
   async get(type, id) {
     if (!ALLOWED_TYPES.has(type)) {
@@ -135,15 +153,17 @@ export const biblioDB = {
    * Adds references and aliases to database. This is usually the data from
    * Specref's output (parsed JSON).
    *
-   * @param {Object} data An object that contains references and aliases.
+   * @param {BibliographyMap} data An object that contains references and aliases.
+   * @param {number} expires The date/time when the data expires.
    */
-  async addAll(data) {
+  async addAll(data, expires) {
     if (!data) {
       return;
     }
     const aliasesAndRefs = { alias: [], reference: [] };
     for (const id of Object.keys(data)) {
-      const obj = { id, ...data[id] };
+      /** @type {BiblioData} */
+      const obj = { id, ...data[id], expires };
       if (obj.aliasOf) {
         aliasesAndRefs.alias.push(obj);
       } else {
@@ -159,7 +179,7 @@ export const biblioDB = {
    * Adds a reference or alias to the database.
    *
    * @param {AllowedType} type The type as per ALLOWED_TYPES.
-   * @param {Object} details The object to store.
+   * @param {BiblioData} details The object to store.
    */
   async add(type, details) {
     if (!ALLOWED_TYPES.has(type)) {
@@ -172,9 +192,18 @@ export const biblioDB = {
       throw new TypeError("Invalid alias object.");
     }
     const db = await this.ready;
-    const isInDB = await this.has(type, details.id);
-    const store = db.transaction(type, "readwrite").store;
+    let isInDB = await this.has(type, details.id);
     // update or add, depending of already having it in db
+    // or if it's expired
+    if (isInDB) {
+      const entry = await this.get(type, details.id);
+      if (entry?.expires < Date.now()) {
+        const { store } = db.transaction(type, "readwrite");
+        await store.delete(details.id);
+        isInDB = false;
+      }
+    }
+    const { store } = db.transaction(type, "readwrite");
     return isInDB ? await store.put(details) : await store.add(details);
   },
   /**

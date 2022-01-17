@@ -143,6 +143,9 @@ describe("Core - Inlines", () => {
       <section>
         <p id="h"> TEXT |var: Generic&lt;int&gt;| TEXT |var2: Generic&lt;unsigned short int&gt;| </p>
       </section>
+      <section>
+        <p id="nulls"> |var 1: null type spaces?| and |var 2 : NullableType?| </p>
+      </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
 
@@ -188,6 +191,12 @@ describe("Core - Inlines", () => {
     expect(h[0].dataset.type).toBe("Generic<int>");
     expect(h[1].textContent).toBe("var2");
     expect(h[1].dataset.type).toBe("Generic<unsigned short int>");
+
+    const [nullVar1, nullVar2] = doc.querySelectorAll("#nulls > var");
+    expect(nullVar1.textContent).toBe("var 1");
+    expect(nullVar1.dataset.type).toBe("null type spaces?");
+    expect(nullVar2.textContent).toBe("var 2");
+    expect(nullVar2.dataset.type).toBe("NullableType?");
   });
 
   it("expands inline references and they get classified as normative/informative correctly", async () => {
@@ -353,16 +362,17 @@ describe("Core - Inlines", () => {
     const doc = await makeRSDoc(makeStandardOps(null, body));
     const syntaxErrorAnchor = doc.querySelector("#test a");
     expect(syntaxErrorAnchor.href).toBe(
-      "https://heycam.github.io/webidl/#syntaxerror"
+      "https://webidl.spec.whatwg.org/#syntaxerror"
     );
   });
 
-  it("processes inline inline [^element^]s.", async () => {
+  it("processes inline [^element^] and hierarchies.", async () => {
     const body = `
       <section>
         <p id="test">[^body^]</p>
         <p id="test2">[^iframe/allow^]</p>
         <p id="test3">[^ html-global/inputmode/text ^]</p>
+        <p id="test4">[^ /role ^]</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps({ xref: ["HTML"] }, body));
@@ -374,6 +384,9 @@ describe("Core - Inlines", () => {
     const inputModeAnchor = doc.querySelector("#test3 a");
     expect(inputModeAnchor.textContent).toBe("text");
     expect(inputModeAnchor.hash).toBe("#attr-inputmode-keyword-text");
+    const roleAttribute = doc.querySelector("#test4 a");
+    expect(roleAttribute.textContent).toBe("role");
+    expect(roleAttribute.hash).toBe("#attr-aria-role");
   });
 
   it("processes [= BikeShed style inline links =]", async () => {
@@ -519,6 +532,56 @@ describe("Core - Inlines", () => {
     expect(doc.querySelector("#link5 a").hash).toBe(
       "#dom-referrerpolicy-no-referrer"
     );
+  });
+
+  it("supports {{ Nullable? }} types and primitives", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+        [Exposed=Window]
+        interface InterFace{};
+        dictionary Dict{};
+        </pre>
+        <p id="interface">{{ InterFace? }}</p>
+        <p id="dictionary">{{ Dict? }}</p>
+        <p id="primitive">{{ unsigned short? }}</p>
+      </section>
+    `;
+    const config = { xref: ["WebIDL"] };
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+
+    const [interfaceDfn, dictDfn] = doc.querySelectorAll(".idl dfn");
+
+    // {{ Interface? }}
+    const interfaceAnchor = doc.querySelector("#interface a");
+    expect(interfaceAnchor.textContent).toBe("InterFace?");
+    expect(interfaceAnchor.hash.endsWith(interfaceDfn.id)).toBeTrue();
+
+    const interfaceData = interfaceAnchor.dataset;
+    expect(interfaceData.xrefType).toBe("_IDL_");
+    expect(interfaceData.linkType).toBe("idl");
+    expect(interfaceData.lt).toBe("InterFace");
+
+    // {{ Dict? }}
+    const dictAnchor = doc.querySelector("#dictionary a");
+    expect(dictAnchor.textContent).toBe("Dict?");
+    expect(dictAnchor.hash.endsWith(dictDfn.id)).toBeTrue();
+
+    const dictData = dictAnchor.dataset;
+    expect(dictData.xrefType).toBe("_IDL_");
+    expect(dictData.linkType).toBe("idl");
+    expect(dictData.lt).toBe("Dict");
+
+    // {{ unsigned short? }}
+    const primitiveAnchor = doc.querySelector("#primitive a");
+    expect(primitiveAnchor.textContent).toBe("unsigned short?");
+    expect(primitiveAnchor.hash).toBe("#idl-unsigned-short");
+
+    const primitiveData = primitiveAnchor.dataset;
+    expect(primitiveData.linkType).toBe("idl");
+    expect(primitiveData.cite).toBe("webidl");
+    expect(primitiveData.xrefType).toBe("interface");
+    expect(primitiveData.lt).toBe("unsigned short");
   });
 
   it("doesn't link processed inline WebIDL if inside a definition", async () => {

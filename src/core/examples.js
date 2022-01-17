@@ -9,7 +9,6 @@
 import { addId, getIntlData } from "./utils.js";
 import css from "../styles/examples.css.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
 
 export const name = "core/examples";
 
@@ -90,16 +89,9 @@ export function run() {
       ++number;
       const div = makeTitle(example, number, report);
       example.prepend(div);
-      if (title) {
-        addId(example, `example-${number}`, title); // title gets used
-      } else {
-        // use the number as the title... so, e.g., "example-5"
-        addId(example, "example", String(number));
-      }
-      const { id } = example;
+      const id = addId(example, "example", title || String(number));
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
-      pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
       if (!inAside) ++number;
@@ -115,14 +107,10 @@ export function run() {
       const div = html`<div class="example" id="${id}">
         ${exampleTitle} ${example.cloneNode(true)}
       </div>`;
-      if (title) {
-        addId(div, `example-${number}`, title);
-      }
-      addId(div, `example`, String(number));
+      addId(div, "example", title || String(number));
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${div.id}`;
       example.replaceWith(div);
-      if (!inAside) pub("example", report);
     }
   });
 }

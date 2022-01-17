@@ -66,9 +66,9 @@ describe("Geonovum - Style", () => {
     const ops = makeStandardGeoOps();
     // TODO: create test specs for Geonovum?
     const doc = await makeRSDoc(ops);
-    const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
+    const query = "script[src^='https://www.w3.org/scripts/TR/2021/fixup.js']";
     const elem = doc.querySelector(query);
-    expect(elem.src).toBe("https://www.w3.org/scripts/TR/2016/fixup.js");
+    expect(elem.src).toBe("https://www.w3.org/scripts/TR/2021/fixup.js");
   });
 
   it("should have a meta viewport added", async () => {

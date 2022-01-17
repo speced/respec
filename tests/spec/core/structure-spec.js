@@ -66,13 +66,18 @@ describe("Core - Structure", () => {
     // test default values
     const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
-    expect(toc.querySelector("ol > li a").textContent).toBe("1. ONE");
-    expect(toc.querySelectorAll("li")).toHaveSize(16);
-    expect(toc.querySelector("ol:first-of-type").childElementCount).toBe(4);
+    expect(toc.querySelector("ol > li:nth-child(1) a").hash).toBe("#abstract");
+    expect(toc.querySelector("ol > li:nth-child(2) a").hash).toBe("#sotd");
+    expect(toc.querySelector("ol > li:nth-child(3) a").hash).toBe("#intro");
+    expect(toc.querySelector("ol > li:nth-child(4) a").textContent).toBe(
+      "1. ONE"
+    );
+    expect(toc.querySelectorAll("li")).toHaveSize(19);
+    expect(toc.querySelector("ol:first-of-type").childElementCount).toBe(7);
     expect(toc.querySelector("a[href='#six']").textContent).toBe(
       "1.1.1.1.1.1 SIX"
     );
-    expect(toc.querySelector("ol > li:nth-child(3) > a").textContent).toBe(
+    expect(toc.querySelector("ol > li:nth-child(6) > a").textContent).toBe(
       "A. ONE"
     );
     expect(toc.querySelector("a[href='#six-0']").textContent).toBe(
@@ -127,12 +132,11 @@ describe("Core - Structure", () => {
     expect(doc.getElementById("toc")).toBeNull();
   });
 
-  it("should include introductory sections in ToC with tocIntroductory", async () => {
+  it("should include introductory sections in ToC", async () => {
     const ops = {
       config: makeBasicConfig(),
       body,
     };
-    ops.config.tocIntroductory = true;
     const doc = await makeRSDoc(ops);
     const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
@@ -153,14 +157,19 @@ describe("Core - Structure", () => {
     const doc = await makeRSDoc(ops);
     const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
-    expect(doc.querySelectorAll("#toc > ol > li")).toHaveSize(4);
-    expect(toc.querySelectorAll("li")).toHaveSize(12);
-    expect(doc.querySelector("#toc > ol > li > a").textContent).toBe("1. ONE");
+    expect(doc.querySelectorAll("#toc > ol > li")).toHaveSize(7);
+    expect(toc.querySelectorAll("li")).toHaveSize(15);
+    expect(doc.querySelector("#toc > ol > li > a").textContent).toBe(
+      "Abstract"
+    );
+    expect(
+      doc.querySelector("#toc > ol > li:nth-child(4) > a").textContent
+    ).toBe("1. ONE");
     expect(toc.querySelector("a[href='#four']").textContent).toBe(
       "1.1.1.1 FOUR"
     );
     expect(
-      doc.querySelector("#toc > ol > li:nth-child(3) > a").textContent
+      doc.querySelector("#toc > ol > li:nth-child(6) > a").textContent
     ).toBe("A. ONE");
 
     expect(toc.querySelector("a[href='#four-0']").textContent).toBe(
@@ -184,8 +193,9 @@ describe("Core - Structure", () => {
       const doc = await makeRSDoc(ops);
 
       const toc = doc.getElementById("toc");
-      expect(toc.querySelectorAll(":scope > ol > li")).toHaveSize(1);
-      const tocItem = toc.querySelector(":scope > ol > li");
+      const links = toc.querySelectorAll(":scope > ol > li:nth-child(n + 2)");
+      expect(links).toHaveSize(1);
+      const tocItem = links[0];
       expect(tocItem.textContent.trim()).toContain("PASS");
       expect(tocItem.textContent.trim()).not.toContain("SKIPPED");
     });
@@ -206,7 +216,7 @@ describe("Core - Structure", () => {
       const doc = await makeRSDoc(ops);
       const toc = doc.getElementById("toc");
 
-      const level1Item = toc.querySelector(":scope > ol > li");
+      const level1Item = toc.querySelector(":scope > ol > li:nth-child(n + 2)");
       expect(level1Item).toBeTruthy();
       expect(level1Item.textContent).toContain("1. PASS 1");
 
@@ -341,7 +351,8 @@ describe("Core - Structure", () => {
 
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const links = doc.querySelectorAll("#toc li > a");
+    const links = doc.querySelectorAll("#toc li:nth-child(n + 2) > a");
+    expect(links).toHaveSize(2);
     expect(links[0].hash).toBe("#one");
     expect(links[0].textContent).toBe("1. ONE");
     expect(links[1].hash).toBe("#zwei");

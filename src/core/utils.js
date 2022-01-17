@@ -22,18 +22,6 @@ function hashString(text) {
   return String(hash);
 }
 
-const localizationStrings = {
-  en: {
-    x_and_y: " and ",
-    x_y_and_z: ", and ",
-  },
-  de: {
-    x_and_y: " und ",
-    x_y_and_z: " und ",
-  },
-};
-const l10n = getIntlData(localizationStrings);
-
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   timeZone: "UTC",
   year: "numeric",
@@ -104,41 +92,52 @@ function markAsOffending(elem, msg, title) {
 }
 
 // STRING HELPERS
+/**
+ * @param {"conjunction"|"disjunction"} type
+ * @param {"long"|"narrow"} style
+ */
+function joinFactory(type, style = "long") {
+  const formatter = new Intl.ListFormat(docLang, { style, type });
+  /**
+   * @template T
+   * @param {string[]} items
+   * @param {(value: string, index: number, array: string[]) => any} [mapper]
+   */
+  return (items, mapper) => {
+    let elemCount = 0;
+    return formatter.formatToParts(items).map(({ type, value }) => {
+      if (type === "element" && mapper) {
+        return mapper(value, elemCount++, items);
+      }
+      return value;
+    });
+  };
+}
 
 /**
  * Takes an array and returns a string that separates each of its items with the
  * proper commas and "and". The second argument is a mapping function that can
  * convert the items before they are joined.
- * @template T
- * @param {T[]} array
- * @param {(item: T) => string} [mapper]
- * @param {string} [lang]
  */
-export function joinAnd(array, mapper, lang = docLang) {
-  const items = mapper
-    ? array.map(mapper)
-    : /** @type {string[]} */ (/** @type {unknown[]} */ (array));
-  if (Intl.ListFormat && typeof Intl.ListFormat === "function") {
-    const formatter = new Intl.ListFormat(lang, {
-      style: "long",
-      type: "conjunction",
-    });
-    return formatter.format(items);
-  }
-  switch (items.length) {
-    case 0:
-    case 1: // "x"
-      return items.toString();
-    case 2: // x and y
-      return items.join(l10n.x_and_y);
-    default: {
-      // x, y, and z
-      const str = items.join(", ");
-      const lastComma = str.lastIndexOf(",");
-      const and = l10n.x_y_and_z;
-      return `${str.substr(0, lastComma)}${and}${str.slice(lastComma + 2)}`;
-    }
-  }
+const conjunction = joinFactory("conjunction");
+const disjunction = joinFactory("disjunction");
+
+/**
+ *
+ * @param {string[]} items
+ * @param {(value: undefined, index: number, array: undefined[]) => string} [mapper]
+ */
+export function joinAnd(items, mapper) {
+  return conjunction(items, mapper).join("");
+}
+
+/**
+ *
+ * @param {string[]} items
+ * @param {(value: undefined, index: number, array: undefined[]) => string} [mapper]
+ */
+export function joinOr(items, mapper) {
+  return disjunction(items, mapper).join("");
 }
 
 /**
@@ -165,12 +164,13 @@ export function norm(str) {
 /**
  * @param {string} lang
  */
-function resolveLanguageAlias(lang) {
+export function resolveLanguageAlias(lang) {
+  const lCaseLang = lang.toLowerCase();
   const aliases = {
     "zh-hans": "zh",
     "zh-cn": "zh",
   };
-  return aliases[lang] || lang;
+  return aliases[lCaseLang] || lCaseLang;
 }
 
 /**
@@ -179,7 +179,7 @@ function resolveLanguageAlias(lang) {
  * @returns {T[keyof T]}
  */
 export function getIntlData(localizationStrings, lang = docLang) {
-  lang = resolveLanguageAlias(lang.toLowerCase());
+  lang = resolveLanguageAlias(lang);
   // Proxy return type is a known bug:
   // https://github.com/Microsoft/TypeScript/issues/20846
   // @ts-ignore
@@ -393,33 +393,21 @@ export async function fetchAndCache(input, maxAge = 24 * 60 * 60 * 1000) {
  * Separates each item with proper commas.
  * @template T
  * @param {T[]} array
- * @param {(item: T) => any} mapper
+ * @param {(item: T) => any} [mapper]
  */
 export function htmlJoinComma(array, mapper = item => item) {
   const items = array.map(mapper);
   const joined = items.slice(0, -1).map(item => html`${item}, `);
   return html`${joined}${items[items.length - 1]}`;
 }
-
 /**
- * Separates each item with proper commas and "and".
- * @template T
- * @param {T[]} array
- * @param {(item: T) => any} mapper
+ *
+ * @param {string[]} array
+ * @param {(item: any) => any[]} [mapper]
  */
-export function htmlJoinAnd(array, mapper = item => item) {
-  const items = array.map(mapper);
-  switch (items.length) {
-    case 0:
-    case 1: // "x"
-      return items[0];
-    case 2: // x and y
-      return html`${items[0]}${l10n.x_and_y}${items[1]}`;
-    default: {
-      const joined = htmlJoinComma(items.slice(0, -1));
-      return html`${joined}${l10n.x_y_and_z}${items[items.length - 1]}`;
-    }
-  }
+export function htmlJoinAnd(array, mapper) {
+  const result = [].concat(conjunction(array, mapper));
+  return result.map(item => (typeof item === "string" ? html`${item}` : item));
 }
 
 /**
@@ -913,10 +901,66 @@ export function showWarning(message, pluginName, options = {}) {
 }
 
 /**
- * Creates a quick markdown link to a property in the docs.
+ * Makes a string `coded`.
  *
- * @param {string} prop ReSpec configuration property to link to in docs.
+ * @param {string} item
+ * @returns {string}
  */
-export function docLink(prop) {
-  return `[\`${prop}\`](https://respec.org/docs/#${prop})`;
+export function toMDCode(item) {
+  return item ? `\`${item}\`` : "";
+}
+
+/**
+ * Joins an array of strings, wrapping each string in back-ticks (`) for inline markdown code.
+ *
+ * @param {string[]} array
+ * @param {object} options
+ * @param {boolean} options.quotes Surround each item in quotes
+ */
+export function codedJoinOr(array, { quotes } = { quotes: false }) {
+  return joinOr(array, quotes ? s => toMDCode(addQuotes(s)) : toMDCode);
+}
+
+/**
+ * Wraps in back-ticks ` for code.
+ *
+ * @param {string[]} array
+ * @param {object} options
+ * @param {boolean} options.quotes Surround each item in quotes
+ */
+export function codedJoinAnd(array, { quotes } = { quotes: false }) {
+  return joinAnd(array, quotes ? s => toMDCode(addQuotes(s)) : toMDCode);
+}
+
+function addQuotes(item) {
+  return String(item) ? `"${item}"` : "";
+}
+
+/**
+ * Tagged template string, helps with linking to documentation.
+ * Things inside [squareBrackets] are considered direct links to the documentation.
+ * To alias something, one can use a "|", like [respecConfig|#respec-configuration].
+ * @param {TemplateStringsArray} strings
+ * @param {string[]} keys
+ */
+export function docLink(strings, ...keys) {
+  return strings
+    .map((s, i) => {
+      const key = keys[i];
+      if (!key) {
+        return s;
+      }
+      // Linkables are wrapped in square brackets
+      if (!key.startsWith("[") && !key.endsWith("]")) {
+        return s + key;
+      }
+
+      const [linkingText, href] = key.slice(1, -1).split("|");
+      if (href) {
+        const url = new URL(href, "https://respec.org/docs/");
+        return `${s}[${linkingText}](${url})`;
+      }
+      return `${s}[\`${linkingText}\`](https://respec.org/docs/#${linkingText})`;
+    })
+    .join("");
 }

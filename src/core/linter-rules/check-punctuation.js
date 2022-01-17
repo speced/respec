@@ -30,7 +30,7 @@ export function run(conf) {
   );
 
   /** @type {NodeListOf<HTMLParagraphElement>} */
-  const elems = document.querySelectorAll("p:not(#back-to-top)");
+  const elems = document.querySelectorAll("p:not(#back-to-top,#w3c-state)");
   const offendingElements = [...elems].filter(
     elem => !punctuatingRegExp.test(elem.textContent.trim())
   );

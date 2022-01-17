@@ -16,11 +16,11 @@ describe("Core — a11y", () => {
       <h2>Test</h2>
       <img
         id="image-alt-1"
-        src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C"
+        src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C"
       />
       <img
         id="image-alt-2"
-        src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C"
+        src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C"
         alt="W3C Logo"
       />
     </section>
