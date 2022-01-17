@@ -23,7 +23,7 @@ describe("Core — sections", () => {
     }
   });
 
-  it("it handles when some headings are wrapped", async () => {
+  it("handles when some headings are wrapped", async () => {
     const body = `
       <h2 id="h2">Section 2</h2>
       <section>
