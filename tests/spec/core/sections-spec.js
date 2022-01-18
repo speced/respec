@@ -51,15 +51,15 @@ describe("Core — sections", () => {
   it("retains different nodes when wrapping", async () => {
     const body = `
       <h2 id="h2">Section 2</h2>
-        <p>paragraph 2</p><!--comment 2-->
+      <p>paragraph 2</p><!--comment 2-->
       <h3 id="h3">Section 3</h3>
-        <p>paragraph 3</p><!--comment 3-->
+      <p>paragraph 3</p><!--comment 3-->
       <h4 id="h4">Section 4</h4>
-        <p>paragraph 4</p><!--comment 4-->
+      <p>paragraph 4</p><!--comment 4-->
       <h5 id="h5">Section 5</h5>
-        <p>paragraph 5</p><!--comment 5-->
+      <p>paragraph 5</p><!--comment 5-->
       <h6 id="h6">Section 6</h6>
-        <p>paragraph 6</p><!--comment 6-->
+      <p>paragraph 6</p><!--comment 6-->
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
