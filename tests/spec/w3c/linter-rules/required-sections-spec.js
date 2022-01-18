@@ -5,17 +5,14 @@ import {
   flushIframes,
   makeRSDoc,
   makeStandardOps,
+  pickRandomsFromList,
   warningFilters,
 } from "../../SpecHelper.js";
 import { noTrackStatus } from "../../../../src/w3c/headers.js";
 import { requiresSomeSectionStatus } from "../../../../src/w3c/linter-rules/required-sections.js";
 
 describe("w3c — required-sections", () => {
-  beforeAll(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL *= 2;
-  });
   afterAll(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL /= 2;
     flushIframes();
   });
 
@@ -54,7 +51,7 @@ describe("w3c — required-sections", () => {
   });
 
   it("doesn't lint non-rec-track docs", async () => {
-    for (const specStatus of noTrackStatus) {
+    for (const specStatus of pickRandomsFromList(noTrackStatus)) {
       const ops = makeStandardOps({
         lint: { "required-sections": true },
         specStatus,
