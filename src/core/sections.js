@@ -5,7 +5,7 @@
  */
 export const name = "core/sections";
 
-class Builder {
+class DOMBuilder {
   constructor(doc) {
     this.doc = doc;
     this.root = doc.createDocumentFragment();
@@ -44,7 +44,7 @@ class Builder {
     this.current = section;
   }
 
-  addSection(node, process) {
+  addSection(node) {
     const header = this.findHeader(node);
     const position = header ? this.findPosition(header) : 1;
     const parent = this.findParent(position);
@@ -53,7 +53,7 @@ class Builder {
       node.removeChild(header);
     }
 
-    node.appendChild(process(node));
+    node.appendChild(structure(node));
 
     if (header) {
       node.prepend(header);
@@ -67,39 +67,40 @@ class Builder {
     this.current.appendChild(node);
   }
 }
-
-function structure(fragment, doc) {
-  function process(root) {
-    const stack = new Builder(doc);
-    while (root.firstChild) {
-      const node = root.firstChild;
-      switch (node.localName) {
-        case "h1":
-        case "h2":
-        case "h3":
-        case "h4":
-        case "h5":
-        case "h6":
-          stack.addHeader(node);
-          break;
-        case "section":
-          stack.addSection(node, process);
-          break;
-        default:
-          stack.addElement(node);
-      }
+/**
+ *
+ * @param {Node} fragment
+ * @returns
+ */
+function structure(fragment) {
+  const builder = new DOMBuilder(fragment.ownerDocument);
+  while (fragment.firstChild) {
+    const node = fragment.firstChild;
+    switch (node.localName) {
+      case "h1":
+      case "h2":
+      case "h3":
+      case "h4":
+      case "h5":
+      case "h6":
+        builder.addHeader(node);
+        break;
+      case "section":
+        builder.addSection(node);
+        break;
+      default:
+        builder.addElement(node);
     }
-    return stack.root;
   }
-  return process(fragment);
+  return builder.root;
 }
 
 /**
- * Re-structure DOM around elem whose markdown has been processed.
+ * Restructure a container element adding sections if needed.
  * @param {Element} elem
  */
 export function restructure(elem) {
-  const structuredInternals = structure(elem, elem.ownerDocument);
+  const structuredInternals = structure(elem);
   if (
     structuredInternals.firstElementChild.localName === "section" &&
     elem.localName === "section"

@@ -9,33 +9,6 @@
  * We use marked for parsing Markdown:
  * https://github.com/chjj/marked
  *
- * Note that the content of SECTION elements, and elements with a
- * class name of "note", "issue" or "req" are also parsed.
- *
- * The HTML created by the Markdown parser is turned into a nested
- * structure of SECTION elements, following the structure given by
- * the headings. For example, the following markup:
- *
- *     Title
- *     -----
- *
- *     ### Subtitle ###
- *
- *     Here's some text.
- *
- *     ### Another subtitle ###
- *
- *     More text.
- *
- * will be transformed into:
- *
- *       <h2>Title</h2>
- *       <h3>Subtitle</h3>
- *       <p>Here's some text.</p>
- *       <h3>Another subtitle</h3>
- *       <p>More text.</p>
- *
- * The whitespace of pre elements are left alone.
  */
 
 import { getElementIndentation } from "./utils.js";
