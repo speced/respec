@@ -14,10 +14,6 @@ export default css`
   background: transparent;
 }
 
-.respec-modal .close-button:focus {
-  outline:none;
-}
-
 #respec-ui {
   position: fixed;
   display: flex;
