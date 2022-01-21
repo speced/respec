@@ -188,14 +188,9 @@ export default css`
   padding: 0.4em 0.7em;
 }
 
-.respec-warning-list > li:last-child,
-.respec-error-list > li:last-child {
-  margin-bottom: 0;
-}
-
-.respec-warning-list > li:first-child,
-.respec-error-list > li:first-child {
-  margin-top: 0;
+.respec-warning-list > li + li,
+.respec-error-list > li + li {
+  margin-top: 0.5rem;
 }
 
 .respec-warning-list > li::before {
