@@ -173,15 +173,21 @@ export default css`
 .respec-error-list {
   margin: 0;
   padding: 0;
-  list-style: none;
   font-family: sans-serif;
-  background-color: rgb(255, 251, 230);
   font-size: 0.85em;
+}
+
+.respec-warning-list {
+  background-color: rgb(255, 251, 230);
 }
 
 .respec-warning-list > li,
 .respec-error-list > li {
-  padding: 0.4em 0.7em;
+  list-style-type: none;
+  margin: 0;
+  padding: .5em 0;
+  padding-left: 2em;
+  padding-right: .5em;
 }
 
 .respec-warning-list > li + li,
@@ -189,17 +195,19 @@ export default css`
   margin-top: 0.5rem;
 }
 
-.respec-warning-list > li::before {
-  content: "⚠️";
-  padding-right: 0.5em;
+.respec-warning-list > li:before,
+.respec-error-list > li:before {
+  position: absolute;
+  left: .4em;
 }
+
 .respec-warning-list p,
 .respec-error-list p {
   padding: 0;
   margin: 0;
 }
 
-.respec-warning-list li {
+.respec-warning-list > li {
   color: rgb(92, 59, 0);
   border-bottom: thin solid rgb(255, 245, 194);
 }
@@ -209,31 +217,21 @@ export default css`
   background-color: rgb(255, 240, 240);
 }
 
-.respec-error-list li::before {
-  content: "💥";
-  padding-right: 0.5em;
+.respec-warning-list > li::before {
+  content: "⚠️";
 }
 
-.respec-error-list li {
-  padding: 0.4em 0.7em;
+.respec-error-list > li::before {
+  content: "💥";
+}
+
+.respec-error-list > li {
   color: rgb(92, 59, 0);
   border-bottom: thin solid rgb(255, 215, 215);
 }
 
-.respec-error-list li > p {
-  margin: 0;
-  padding: 0;
-  display: inline-block;
-}
-
-.respec-error-list li > p:first-child,
-.respec-warning-list li > p:first-child {
-  display: inline;
-}
-
 .respec-warning-list > li li,
 .respec-error-list > li li {
-  margin: 0;
   list-style: disc;
 }
 
@@ -262,23 +260,19 @@ export default css`
   display: block;
   position: fixed;
   z-index: 11000;
-  margin: auto;
   top: 10%;
   background: #fff;
   border: 5px solid #666;
   min-width: 20%;
-  width: 79%;
   padding: 0;
   max-height: 80%;
   overflow-y: auto;
   margin: 0 -0.5cm;
+  left: 20%;
+  max-width: 75%;
+  min-width: 60%;
 }
 
-@media screen and (min-width: 78em) {
-  .respec-modal {
-    width: 62%;
-  }
-}
 
 .respec-modal h3 {
   margin: 0;
@@ -294,13 +288,8 @@ export default css`
   font-size: 1em;
 }
 
-.respec-modal .inside div p {
-  padding-left: 1cm;
-}
-
 #respec-menu button.respec-option {
   background: white;
-  padding: 0 0.2cm;
   border: none;
   width: 100%;
   text-align: left;
@@ -308,7 +297,7 @@ export default css`
   padding: 1.2em 1.2em;
 }
 
-#respec-menu button.respec-option:hover{
+#respec-menu button.respec-option:hover {
   background-color: #eeeeee;
 }
 
@@ -368,10 +357,14 @@ export default css`
   border-bottom-width: 1px;
 }
 
-.respec-hint {
-  display: inline-block;
-  padding-top: .2cm;
-  padding-left: .7cm;
+p.respec-hint, p.respec-occurrences {
+  display: block;
+  padding-top: 1em;
 }
 
+.respec-plugin {
+  text-align: right;
+  color: rgb(120, 120, 120, .5);
+  font-size: 0.6em;
+}
 `;
