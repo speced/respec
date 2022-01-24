@@ -181,8 +181,7 @@ export default css`
   background-color: rgb(255, 251, 230);
 }
 
-.respec-warning-list > li,
-.respec-error-list > li {
+:is(.respec-warning-list,.respec-error-list) > li {
   list-style-type: none;
   margin: 0;
   padding: .5em 0;
@@ -190,19 +189,16 @@ export default css`
   padding-right: .5em;
 }
 
-.respec-warning-list > li + li,
-.respec-error-list > li + li {
+:is(.respec-warning-list,.respec-error-list) > li + li {
   margin-top: 0.5rem;
 }
 
-.respec-warning-list > li:before,
-.respec-error-list > li:before {
+:is(.respec-warning-list,.respec-error-list) > li:before {
   position: absolute;
   left: .4em;
 }
 
-.respec-warning-list p,
-.respec-error-list p {
+:is(.respec-warning-list,.respec-error-list) p {
   padding: 0;
   margin: 0;
 }
@@ -230,8 +226,7 @@ export default css`
   border-bottom: thin solid rgb(255, 215, 215);
 }
 
-.respec-warning-list > li li,
-.respec-error-list > li li {
+:is(.respec-warning-list,.respec-error-list) > li li {
   list-style: disc;
 }
 
@@ -357,7 +352,7 @@ export default css`
   border-bottom-width: 1px;
 }
 
-p.respec-hint, p.respec-occurrences {
+p:is(.respec-hint,.respec-occurrences) {
   display: block;
   padding-top: 1em;
 }
