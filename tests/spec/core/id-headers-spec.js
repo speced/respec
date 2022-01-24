@@ -41,7 +41,7 @@ describe("Core - ID headers", () => {
       expect(doc.querySelector(".introductory h2 + a.self-link")).toBeTruthy();
     });
 
-    it("adds lables sections and appendix", () => {
+    it("distinguishes between regular sections and appendixes, including ones without a section number", () => {
       const anchor = doc.querySelector(".introductory h2 + a.self-link");
       let ariaLabel = anchor.getAttribute("aria-label");
       expect(ariaLabel).toBe("Permalink for this Section");
