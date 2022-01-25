@@ -274,7 +274,7 @@ describe("Core - Inlines", () => {
     const anchors = doc.querySelectorAll("#output a");
     expect(anchors).toHaveSize(6);
     const [section, figure, exampleAside, examplePre, exampleDynamic] = anchors;
-    expect(section.textContent).toBe("§\u00A01. section heading");
+    expect(section.textContent).toBe("1. section heading");
     expect(section.classList).toContain("sec-ref");
     expect(figure.textContent).toBe("Figure 1");
     expect(figure.classList).toContain("fig-ref");

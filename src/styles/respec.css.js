@@ -214,36 +214,23 @@ a[href].self-link:hover {
   background-color: transparent;
 }
 
-h2,
-h3,
-h4,
-h5,
-h6 {
-  position: relative;
-}
-
 aside.example .marker > a.self-link {
   color: inherit;
 }
 
-:is(h2, h3, h4, h5, h6) > a.self-link {
+:is(h2, h3, h4, h5, h6) + a.self-link {
   border: none;
   color: inherit;
-  font-size: 83%;
-  height: 2em;
-  left: -1.6em;
-  opacity: 0.5;
-  position: absolute;
-  text-align: center;
-  text-decoration: none;
-  top: 0;
-  transition: opacity 0.2s;
-  width: 2em;
+  position: relative;
+  top: -2.9em;
+  left: -1.4em;
+  margin-bottom: -2em;
 }
 
-:is(h2, h3, h4, h5, h6) > a.self-link::before{
+:is(h2, h3, h4, h5, h6) + a.self-link::before {
   content: "§";
-  display: block;
+  opacity: 0.5;
+  text-decoration: none;
 }
 
 @media (max-width: 767px) {
@@ -252,9 +239,8 @@ aside.example .marker > a.self-link {
   }
 
   /* Don't position self-link in headings off-screen */
-  :is(h2, h3, h4, h5, h6) > a.self-link {
-    left: auto;
-    top: auto;
+  :is(h2, h3, h4, h5, h6) + a.self-link {
+    left: 95%;
   }
 }
 
