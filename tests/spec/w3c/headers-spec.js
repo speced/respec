@@ -1934,7 +1934,8 @@ describe("W3C — Headers", () => {
     expect(sotd).toBeTruthy();
     expect(sotd.firstElementChild.localName).toBe("h2");
     expect(sotd.firstElementChild.textContent).toBe("Override");
-    expect(sotd.firstElementChild).toBe(sotd.lastElementChild);
+    expect(sotd.children.length).toBe(2);
+    expect(sotd.querySelector("a.self-link")).toBeTruthy();
   });
 
   it("allows custom sections and custom content, not just paragraphs", async () => {

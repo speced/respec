@@ -14,7 +14,9 @@ const localizationStrings = {
      * @param {"Appendix" | "Section"} sectionType
      */
     permalinkLabel(sectionType, sectionNumber) {
-      let label = `Permalink for ${sectionType}`;
+      let label = `Permalink for${
+        !sectionNumber ? " this" : ""
+      } ${sectionType}`;
       if (sectionNumber) {
         label += ` ${norm(sectionNumber.textContent)}`;
       }
@@ -41,8 +43,9 @@ export function run(conf) {
       h.closest(".appendix") ? "Appendix" : "Section",
       h.querySelector(":scope > bdi.secno")
     );
-    h.append(html`
-      <a href="${`#${id}`}" class="self-link" aria-label="${label}"></a>
-    `);
+    h.insertAdjacentElement(
+      "afterend",
+      html`<a href="${`#${id}`}" class="self-link" aria-label="${label}"></a>`
+    );
   }
 }

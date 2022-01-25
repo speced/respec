@@ -20,7 +20,7 @@ describe("Core - Markdown", () => {
     Array.from(doc.querySelectorAll(".removeOnSave")).forEach(elem => {
       elem.remove();
     });
-    const foo = doc.getElementById("foo");
+    const foo = doc.querySelector("#foo h2");
     expect(foo).toBeTruthy();
     expect(foo.textContent).toBe("1. Foo");
   });
@@ -29,7 +29,7 @@ describe("Core - Markdown", () => {
     const body = `<section>\nFoo\n===\n</section>`;
     const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
-    const foo = doc.getElementById("foo");
+    const foo = doc.querySelector("#foo h2");
     expect(foo).toBeTruthy();
     expect(foo.textContent).toBe("1. Foo");
   });
@@ -211,7 +211,7 @@ describe("Core - Markdown", () => {
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
-    const bar = doc.getElementById("bar");
+    const bar = doc.querySelector("#bar h2");
     expect(bar.textContent).toBe("2. Bar");
   });
 
@@ -265,7 +265,7 @@ describe("Core - Markdown", () => {
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
-    const bar = doc.getElementById("bar");
+    const bar = doc.querySelector("#bar h2");
     expect(bar.textContent).toBe("2. Bar");
     expect(doc.body.contains(bar)).toBeTruthy();
   });
