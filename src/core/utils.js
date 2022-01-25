@@ -164,12 +164,13 @@ export function norm(str) {
 /**
  * @param {string} lang
  */
-function resolveLanguageAlias(lang) {
+export function resolveLanguageAlias(lang) {
+  const lCaseLang = lang.toLowerCase();
   const aliases = {
     "zh-hans": "zh",
     "zh-cn": "zh",
   };
-  return aliases[lang] || lang;
+  return aliases[lCaseLang] || lCaseLang;
 }
 
 /**
@@ -178,7 +179,7 @@ function resolveLanguageAlias(lang) {
  * @returns {T[keyof T]}
  */
 export function getIntlData(localizationStrings, lang = docLang) {
-  lang = resolveLanguageAlias(lang.toLowerCase());
+  lang = resolveLanguageAlias(lang);
   // Proxy return type is a known bug:
   // https://github.com/Microsoft/TypeScript/issues/20846
   // @ts-ignore

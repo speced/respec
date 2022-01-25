@@ -82,5 +82,5 @@ jobs:
       - name: run validator
         run: |
           vnu=$(node -p "require('vnu-jar')")
-          ./tools/respec2html.js examples/basic.built.html /tmp/basic.built.html --verbose
+          ./tools/respec2html.js examples/basic.built.html /tmp/basic.built.html --verbose --timeout 30
           java -jar $vnu /tmp/basic.built.html

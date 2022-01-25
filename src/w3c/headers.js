@@ -124,7 +124,7 @@ const status2maturity = {
   FPWD: "WD",
 };
 
-const publicationSpaces = {
+export const publicationSpaces = {
   "Member-SUBM": "/Submission",
   finding: "/2001/tag/doc",
   "draft-finding": "/2001/tag/doc",
@@ -203,7 +203,7 @@ export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
 export const bgStatus = ["BG-DRAFT", "BG-FINAL"];
 export const cgbgStatus = [...cgStatus, ...bgStatus];
-const noTrackStatus = [
+export const noTrackStatus = [
   "base",
   ...cgStatus,
   ...bgStatus,
@@ -252,7 +252,7 @@ export const licenses = new Map([
     {
       name: "W3C Document License",
       short: "document use",
-      url: "https://www.w3.org/Consortium/Legal/2015/doc-license",
+      url: "https://www.w3.org/Consortium/Legal/copyright-documents",
     },
   ],
   [

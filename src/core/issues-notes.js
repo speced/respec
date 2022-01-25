@@ -20,8 +20,6 @@ import {
 } from "./utils.js";
 import css from "../styles/issues-notes.css.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
-
 export const name = "core/issues-notes";
 
 const localizationStrings = {
@@ -29,7 +27,7 @@ const localizationStrings = {
     editors_note: "Editor's note",
     feature_at_risk: "(Feature at Risk) Issue",
     issue: "Issue",
-    issue_summary: "Issue Summary",
+    issue_summary: "Issue summary",
     no_issues_in_spec: "There are no issues listed in this specification.",
     note: "Note",
     warning: "Warning",
@@ -157,10 +155,7 @@ function handleIssues(ins, ghIssues, conf) {
             report.title = ghIssue.title;
           }
         }
-        if (report.number !== undefined) {
-          // Add entry to #issue-summary.
-          issueList.append(createIssueSummaryEntry(l10n.issue, report, div.id));
-        }
+        issueList.append(createIssueSummaryEntry(l10n.issue, report, div.id));
       }
       title.textContent = text;
       if (report.title) {
@@ -186,7 +181,6 @@ function handleIssues(ins, ghIssues, conf) {
       const level = parents(titleParent, "section").length + 2;
       titleParent.setAttribute("aria-level", level);
     }
-    pub(report.type, report);
   });
   makeIssueSectionSummary(issueList);
 }
@@ -259,7 +253,9 @@ function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
  * @param {Report} report
  */
 function createIssueSummaryEntry(l10nIssue, report, id) {
-  const issueNumberText = `${l10nIssue} ${report.number}`;
+  const issueNumberText = `${l10nIssue}${
+    report.number ? ` ${report.number}` : ""
+  }`;
   const title = report.title
     ? html`<span style="text-transform: none">: ${report.title}</span>`
     : "";
