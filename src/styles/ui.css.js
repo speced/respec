@@ -354,7 +354,7 @@ export default css`
 
 p:is(.respec-hint,.respec-occurrences) {
   display: block;
-  padding-top: 1em;
+  margin-top: 0.5em;
 }
 
 .respec-plugin {
