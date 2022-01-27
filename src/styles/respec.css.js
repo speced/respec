@@ -222,15 +222,19 @@ aside.example .marker > a.self-link {
   border: none;
   color: inherit;
   position: relative;
-  top: -2.9em;
+  top: -2.75em;
   left: -1.4em;
   margin-bottom: -2em;
+  display: block;
+  font-size: 100%;
 }
 
 :is(h2, h3, h4, h5, h6) + a.self-link::before {
   content: "§";
   opacity: 0.5;
   text-decoration: none;
+  line-height: 1.2em;
+  vertical-align: top;
 }
 
 @media (max-width: 767px) {
@@ -240,7 +244,7 @@ aside.example .marker > a.self-link {
 
   /* Don't position self-link in headings off-screen */
   :is(h2, h3, h4, h5, h6) + a.self-link {
-    left: 95%;
+    left: 101%;
   }
 }
 
