@@ -234,7 +234,7 @@ aside.example .marker > a.self-link {
   opacity: 0.5;
   text-decoration: none;
   line-height: 1.2em;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 @media (max-width: 767px) {
