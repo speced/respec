@@ -72,21 +72,20 @@ export function run(conf) {
 }
 
 function processLogos(conf) {
+  const { specStatus: status } = conf;
   // Only include the W3C logo and license for W3C Recommendation track
   // that have an actual working group.
   // Excludes "ED" status
   if (
     conf.wg?.length &&
-    [...recTrackStatus, ...registryTrackStatus, ...W3CNotes].includes(
-      conf.specStatus
-    )
+    [...recTrackStatus, ...registryTrackStatus, ...W3CNotes].includes(status)
   ) {
     conf.logos?.unshift(w3cLogo);
   }
 
   // Special case for "ED" status...
   // Allow overriding the logos, otherwise include the w3c logo.
-  if (conf.specStatus === "ED" && conf.logos?.length === 0) {
+  if (status === "ED" && conf.logos?.length === 0) {
     conf.logos.push(w3cLogo);
   }
 }

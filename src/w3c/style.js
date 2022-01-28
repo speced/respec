@@ -5,12 +5,7 @@
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
 import { W3CNotes, recTrackStatus, registryTrackStatus } from "./headers.js";
-import {
-  createResourceHint,
-  docLink,
-  linkCSS,
-  showWarning,
-} from "../core/utils.js";
+import { createResourceHint, linkCSS } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { sub } from "../core/pubsubhub.js";
 export const name = "w3c/style";
