@@ -85,7 +85,9 @@ describe("W3C — Defaults", () => {
     const ops = makeStandardOps({ specStatus: "WD" });
     const docNoGroup = await makeRSDoc(ops);
     expect(docNoGroup.querySelector("img[alt='W3C']")).toBeNull();
+  });
 
+  it("doesn't show the W3C logo an unknown group is specified", async () => {
     const opsBadGroup = makeStandardOps({
       specStatus: "WD",
       group: "not a real group",
