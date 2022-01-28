@@ -107,9 +107,7 @@ describe("W3C — Defaults", () => {
 
   it("warns when using a W3C specStatus, but no group is configured and defaults to 'base'", async () => {
     const warningFilter = warningFilters.filter("w3c/defaults");
-    const ops = makeStandardOps({
-      specStatus: "WD",
-    });
+    const ops = makeStandardOps({ specStatus: "WD" });
     const doc = await makeRSDoc(ops);
     const warnings = warningFilter(doc);
     expect(warnings).toHaveSize(1);
