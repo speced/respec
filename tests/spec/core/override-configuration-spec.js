@@ -14,6 +14,7 @@ describe("Core — Override Configuration", () => {
       "additionalCopyrightHolders",
       "Internet Engineering Task Force"
     );
+    url.searchParams.set("group", "webapps");
     const doc = await makeRSDoc(makeStandardOps(), url);
     const { respecConfig: conf } = doc.defaultView;
     const { textContent } = doc.querySelector(".head p");

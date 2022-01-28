@@ -11,7 +11,7 @@ import {
   recTrackStatus,
   registryTrackStatus,
 } from "./headers.js";
-import { codedJoinOr, docLink, showError } from "../core/utils.js";
+import { codedJoinOr, docLink, showError, showWarning } from "../core/utils.js";
 import { coreDefaults } from "../core/defaults.js";
 
 const w3cLogo = {
@@ -56,30 +56,37 @@ export function run(conf) {
     lint,
   });
 
+  if (!conf.specStatus) {
+    const msg = docLink`The ${"[specStatus]"} configuration option is required. Defaulting to 'base' status."`;
+    const hint = docLink`Add a ${"[specStatus]"}. If unsure, use "unofficial".`;
+    conf.specStatus = "base";
+    showWarning(msg, name, { hint });
+  }
+
   if (conf.specStatus !== "unofficial" && !conf.hasOwnProperty("license")) {
     conf.license = "w3c-software-doc";
   }
 
   processLogos(conf);
-
-  if (conf.groupType && conf.specStatus) {
-    validateStatusForGroup(conf);
-  }
+  validateStatusForGroup(conf);
 }
 
 function processLogos(conf) {
-  const status = conf.specStatus ?? "";
-  // Always include the W3C logo and license for W3C Recommendation track.
+  // Only include the W3C logo and license for W3C Recommendation track
+  // that have an actual working group.
   // Excludes "ED" status
   if (
-    [...recTrackStatus, ...registryTrackStatus, ...W3CNotes].includes(status)
+    conf.wg?.length &&
+    [...recTrackStatus, ...registryTrackStatus, ...W3CNotes].includes(
+      conf.specStatus
+    )
   ) {
     conf.logos?.unshift(w3cLogo);
   }
 
   // Special case for "ED" status...
   // Allow overriding the logos, otherwise include the w3c logo.
-  if (status === "ED" && conf.logos?.length === 0) {
+  if (conf.specStatus === "ED" && conf.logos?.length === 0) {
     conf.logos.push(w3cLogo);
   }
 }
@@ -110,10 +117,21 @@ function validateStatusForGroup(conf) {
     case "wg": {
       if (cgbgStatus.includes(specStatus)) {
         const msg = docLink`W3C Working Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
-        const hint = docLink`Please see ${"[specStatus]"} for appropriate values for this type of group.`;
+        const hint = docLink`Please see ${"[specStatus]"} for appropriate status for W3C Working Group documents.`;
         showError(msg, name, { hint });
       }
       break;
     }
+    default:
+      if (
+        !conf.wgId &&
+        !["ED", "unofficial", "base", "UD"].includes(conf.specStatus)
+      ) {
+        const msg =
+          "Document is not associated with a [W3C group](https://respec.org/w3c/groups/). Defaulting to 'base' status.";
+        const hint = docLink`Use the ${"[group]"} configuration option to associated this document with a W3C group.`;
+        conf.specStatus = "base";
+        showWarning(msg, name, { hint });
+      }
   }
 }

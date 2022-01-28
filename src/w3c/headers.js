@@ -198,6 +198,7 @@ export const recTrackStatus = [
   "PER",
   "REC",
   "DISC",
+  "RSCND",
 ];
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
