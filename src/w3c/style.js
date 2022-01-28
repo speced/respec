@@ -112,7 +112,7 @@ export function run(conf) {
       break;
     case "UD":
     case "UNOFFICIAL":
-      styleFile = "W3C-UD";
+      styleFile += "UD";
       break;
     case "FINDING":
     case "DRAFT-FINDING":
