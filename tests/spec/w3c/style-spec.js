@@ -181,25 +181,20 @@ describe("W3C - Style", () => {
     expect(elem.content).toBe(expectedStr);
   });
 
-  it(
-    "styles according to specStatus and group",
-    async () => {
-      for (const { specStatus, expectedURL, group } of statuses) {
-        const conf = {
-          specStatus,
-          group,
-        };
-        const ops = makeStandardOps(conf);
-        const doc = await makeRSDoc(ops);
-        const query = `link[href^='${expectedURL}']`;
-        const elem = doc.querySelector(query);
-        const context = JSON.stringify(conf);
-        expect(elem).withContext(context).toBeTruthy();
-        expect(elem.href).withContext(context).toBe(expectedURL);
-      }
-    },
-    jasmine.DEFAULT_TIMEOUT_INTERVAL * 3
-  );
+  for (const { specStatus, expectedURL, group } of statuses) {
+    it(`styles with specStatus: ${specStatus}; group: ${group}`, async () => {
+      const conf = {
+        specStatus,
+        group,
+      };
+      const ops = makeStandardOps(conf);
+      const doc = await makeRSDoc(ops);
+      const query = `link[href^='${expectedURL}']`;
+      const elem = doc.querySelector(query);
+      expect(elem).toBeTruthy();
+      expect(elem.href).toBe(expectedURL);
+    });
+  }
 
   it("shouldn't include fixup.js when noToc is set", async () => {
     const ops = makeStandardOps();
