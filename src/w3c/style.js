@@ -88,7 +88,7 @@ function styleMover(linkURL) {
 
 export function run(conf) {
   const canonicalStatus = conf.specStatus?.toUpperCase() ?? "";
-  let styleFile = "W3C-";
+  let styleFile = "";
   const canUseW3CStyle =
     [
       ...recTrackStatus,
