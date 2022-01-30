@@ -98,12 +98,13 @@ import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
 import { html } from "../core/import-maps.js";
+import { lang } from "../core/l10n.js";
 import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
 
 export const name = "w3c/headers";
 
-const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
+const W3CDate = new Intl.DateTimeFormat([lang], {
   timeZone: "UTC",
   year: "numeric",
   month: "long",
