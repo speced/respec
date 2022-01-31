@@ -10,7 +10,6 @@ describe("Core - pubsubhub", () => {
       pub("test-1", { value: i });
       expect(result).toBe(`pass ${i}`);
     }
-
   });
 
   it("publishes messages to subscribed events once", () => {
