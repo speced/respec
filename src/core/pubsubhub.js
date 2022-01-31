@@ -18,6 +18,12 @@ export function sub(topic, cb, options = { once: false }) {
 
 export function pub(topic, detail) {
   subscriptions.dispatchEvent(new CustomEvent(topic, { detail }));
+  if (window.parent === window.self) {
+    return;
+  }
+  // If this is an iframe, postMessage parent (used in testing).
+  const args = String(JSON.stringify(detail?.stack || detail));
+  window.parent.postMessage({ topic, args }, window.parent.location.origin);
 }
 
 expose(name, { sub });
