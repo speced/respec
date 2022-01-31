@@ -2000,9 +2000,6 @@ describe("W3C — Headers", () => {
       <section id="first-sub-section">
         <h3>Testing</h3>
       </section>
-      <p id="p3">
-        This is terrible, but can happen.
-      </p>
       <section id="last-sub-section">
         <h2>not in toc...</h2>
       </section>
@@ -2036,12 +2033,6 @@ describe("W3C — Headers", () => {
 
       const lastSection = doc.getElementById("last-sub-section");
       expect(sotd.lastElementChild).toBe(lastSection);
-
-      // p3 is sandwiched in between the sections
-      const p3 = doc.getElementById("p3");
-      expect(p3).toBeTruthy();
-      expect(p3.previousElementSibling).toBe(firstSection);
-      expect(p3.nextElementSibling).toBe(lastSection);
 
       // Abstract, PASS, Another TOC thing
       expect(doc.querySelectorAll("#toc li"))
