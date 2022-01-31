@@ -54,7 +54,9 @@ describe("W3C — Headers", () => {
   it("links to the 'kinds of documents' only for W3C documents", async () => {
     const statuses = ["FPWD", "WD", "CR", "CRD", "PR", "REC", "NOTE"];
     for (const specStatus of statuses) {
-      const doc = await makeRSDoc(makeStandardOps({ specStatus }));
+      const doc = await makeRSDoc(
+        makeStandardOps({ specStatus, group: "webapps" })
+      );
       const w3cLink = doc.querySelector(
         `.head a[href='https://www.w3.org/standards/types#${specStatus}']`
       );
@@ -105,6 +107,7 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -119,6 +122,7 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps({
         shortName: "test",
         specStatus: "draft-finding",
+        group: "tag",
       });
       const doc = await makeRSDoc(ops);
       const definitions = doc.querySelectorAll(".head dt");
@@ -192,6 +196,7 @@ describe("W3C — Headers", () => {
       const newProps = {
         specStatus: "REC",
         shortName: "xxx",
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -225,6 +230,7 @@ describe("W3C — Headers", () => {
               retiredDate: "2020-03-01",
             },
           ],
+          group: "webapps",
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
@@ -248,6 +254,7 @@ describe("W3C — Headers", () => {
               retiredDate: "2020-03-01",
             },
           ],
+          group: "webapps",
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
@@ -269,6 +276,7 @@ describe("W3C — Headers", () => {
               name: "FORMER EDITOR 1",
             },
           ],
+          group: "webapps",
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
@@ -295,6 +303,7 @@ describe("W3C — Headers", () => {
               retiredDate: "2020-03-01",
             },
           ],
+          group: "webapps",
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
@@ -328,6 +337,7 @@ describe("W3C — Headers", () => {
               name: "FORMER EDITOR 1",
             },
           ],
+          group: "webapps",
         };
         Object.assign(ops.config, newProps);
         const doc = await makeRSDoc(ops);
@@ -360,6 +370,7 @@ describe("W3C — Headers", () => {
             orcid: "https://orcid.org/0000-0002-1694-233X",
           },
         ],
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -399,6 +410,7 @@ describe("W3C — Headers", () => {
             name: "NAME2",
           },
         ],
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -427,6 +439,7 @@ describe("W3C — Headers", () => {
             ],
           },
         ],
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -451,6 +464,7 @@ describe("W3C — Headers", () => {
             company: "<span lang='ja'>マイクロソフト</span> (Microsoft)",
           },
         ],
+        group: "webapps",
       };
       const ops = makeStandardOps(config);
       const doc = await makeRSDoc(ops);
@@ -477,6 +491,7 @@ describe("W3C — Headers", () => {
       const newProps = {
         specStatus: "REC",
         formerEditors: [],
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -503,6 +518,7 @@ describe("W3C — Headers", () => {
             w3cid: "1234",
           },
         ],
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -547,6 +563,7 @@ describe("W3C — Headers", () => {
             name: "NAME2",
           },
         ],
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -575,6 +592,7 @@ describe("W3C — Headers", () => {
             company: "Microsoft",
           },
         ],
+        group: "webapps",
       };
       const ops = makeStandardOps(config);
       const doc = await makeRSDoc(ops);
@@ -601,6 +619,7 @@ describe("W3C — Headers", () => {
             name: "NAME1",
           },
         ],
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -624,6 +643,7 @@ describe("W3C — Headers", () => {
             name: "NAME2",
           },
         ],
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -647,7 +667,7 @@ describe("W3C — Headers", () => {
       const body = `
         <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
       const ops = makeStandardOps(
-        { level: 0, specStatus: "REC", shortName: "abc" },
+        { level: 0, specStatus: "REC", shortName: "abc", group: "webapps" },
         body
       );
 
@@ -672,7 +692,7 @@ describe("W3C — Headers", () => {
       const body = `
       <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
       const ops = makeStandardOps(
-        { level: 9870, specStatus: "REC", shortName: "xyz" },
+        { level: 9870, specStatus: "REC", shortName: "xyz", group: "webapps" },
         body
       );
 
@@ -699,7 +719,7 @@ describe("W3C — Headers", () => {
       const body = `
       <h1 id="title">Spec <code>Marked</code> Up</h1>${makeDefaultBody()}`;
       const ops = makeStandardOps(
-        { level: "a1", specStatus: "REC", shortName: "xxx" },
+        { level: "a1", specStatus: "REC", shortName: "xxx", group: "webapps" },
         body
       );
 
@@ -983,6 +1003,15 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect(contains(doc, "p", "15 March 1977")).toHaveSize(1);
     });
+
+    it("localizes publishDate based on the document's language", async () => {
+      const ops = makeStandardOps({ publishDate: "1977-03-01" });
+      ops.htmlAttrs = {
+        lang: "de",
+      };
+      const doc = await makeRSDoc(ops);
+      expect(contains(doc, "p", "1. März 1977")).toHaveSize(1);
+    });
   });
 
   describe("modificationDate", () => {
@@ -1046,6 +1075,7 @@ describe("W3C — Headers", () => {
         publishDate: "2017-03-15",
         previousPublishDate: "1977-03-15",
         previousMaturity: "CR",
+        group: "tag",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1081,6 +1111,7 @@ describe("W3C — Headers", () => {
         specStatus: "WD",
         license: "unknown",
         github: "w3c/respec",
+        group: "webapps",
       });
       const doc = await makeRSDoc(ops, simpleSpecURL);
       expect(doc.respec.errors).toHaveSize(1);
@@ -1130,6 +1161,7 @@ describe("W3C — Headers", () => {
           license,
           shortName: "whatever",
           editors: [{ name: "foo" }],
+          group: "webapps",
         });
         const doc = await makeRSDoc(ops);
         const licenseLinks = doc.querySelectorAll("div.head a[rel=license]");
@@ -1300,6 +1332,7 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps({
         specStatus: "WD",
         edDraftURI: "URI",
+        group: "webapps",
       });
 
       const doc = await makeRSDoc(ops);
@@ -1349,6 +1382,7 @@ describe("W3C — Headers", () => {
         shortName: "spec",
         specStatus: "CR",
         latestVersion: "https://somewhere.else/",
+        group: "webapps",
       });
       const doc = await makeRSDoc(ops);
 
@@ -1371,6 +1405,7 @@ describe("W3C — Headers", () => {
         level: 3,
         specStatus: "CR",
         latestVersion: "TR/its-here",
+        group: "webapps",
       });
       const doc = await makeRSDoc(ops);
 
@@ -1410,6 +1445,7 @@ describe("W3C — Headers", () => {
       const newProps = {
         specStatus: "REC",
         additionalCopyrightHolders: "XXX",
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1422,6 +1458,7 @@ describe("W3C — Headers", () => {
       const newProps = {
         specStatus: "CG-DRAFT",
         additionalCopyrightHolders: "XXX",
+        group: "wicg",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1434,6 +1471,7 @@ describe("W3C — Headers", () => {
       const newProps = {
         specStatus: "CG-FINAL",
         additionalCopyrightHolders: "XXX",
+        group: "wicg",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1446,6 +1484,7 @@ describe("W3C — Headers", () => {
       const newProps = {
         specStatus: "BG-DRAFT",
         additionalCopyrightHolders: "XXX",
+        group: "publishingbg",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1458,6 +1497,7 @@ describe("W3C — Headers", () => {
       const newProps = {
         specStatus: "BG-FINAL",
         additionalCopyrightHolders: "XXX",
+        group: "publishingbg",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1471,6 +1511,7 @@ describe("W3C — Headers", () => {
         specStatus: "CG-DRAFT",
         additionalCopyrightHolders: "<span class='test'>XXX</span>",
         level: 99,
+        group: "wicg",
       });
 
       const doc = await makeRSDoc(ops);
@@ -1607,25 +1648,11 @@ describe("W3C — Headers", () => {
   });
 
   describe("wgId, data-deliverer, and isNote", () => {
-    it("gracefully handles missing wgPatentURI", async () => {
+    it("only doesn't add data-deliverer for non-notes", async () => {
       const ops = makeStandardOps();
       const newProps = {
-        specStatus: "NOTE",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      const elem = doc.querySelector("p[data-deliverer]");
-      const { wgId, isNote } = doc.defaultView.respecConfig;
-      expect(isNote).toBe(true);
-      expect(wgId).toBe("");
-      expect(elem).toBeTruthy();
-      expect(elem.dataset.deliverer).toBe("");
-    });
-    it("only doesn't data-deliverer for non-notes", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        group: "webapps",
         specStatus: "WD",
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
@@ -1638,7 +1665,7 @@ describe("W3C — Headers", () => {
     it("excludes the long patent text for note types", async () => {
       const noteTypes = ["DNOTE", "NOTE"];
       for (const specStatus of noteTypes) {
-        const opts = makeStandardOps({ specStatus });
+        const opts = makeStandardOps({ specStatus, group: "webapps" });
         const doc = await makeRSDoc(opts);
         const sotd = doc.querySelector("#sotd");
         const [p] = contains(sotd, "p", "Patent Policy");
@@ -1661,9 +1688,9 @@ describe("W3C — Headers", () => {
         perEnd: "2014-12-01",
         specStatus: "PER",
         wg: "WGNAME",
-        wgURI: "WGURI",
         wgPublicList: "WGLIST",
         subjectPrefix: "[The Prefix]",
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1685,7 +1712,6 @@ describe("W3C — Headers", () => {
       const newProps = {
         sotdAfterWGinfo: true,
         wg: "WGNAME",
-        wgURI: "WGURI",
         wgPublicList: "WGLIST",
         subjectPrefix: "[The Prefix]",
         implementationReportURI: "",
@@ -1735,16 +1761,19 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "CG-DRAFT",
-        wg: "WGNAME",
-        wgURI: "http://WG",
         wgPublicList: "WGLIST",
         subjectPrefix: "[The Prefix]",
+        group: "wicg",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       const c = doc.querySelector(".head .copyright");
-      expect(c.querySelectorAll("a[href='http://WG']")).toHaveSize(1);
-      expect(contains(c, "a", "WGNAME")).toHaveSize(1);
+      expect(
+        c.querySelectorAll("a[href='https://www.w3.org/groups/cg/wicg']")
+      ).toHaveSize(1);
+      expect(
+        contains(c, "a", "Web Platform Incubator Community Group")
+      ).toHaveSize(1);
       expect(
         c.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
@@ -1754,8 +1783,12 @@ describe("W3C — Headers", () => {
         "Draft Community Group Report"
       );
       const sotd = doc.getElementById("sotd");
-      expect(sotd.querySelectorAll("a[href='http://WG']")).toHaveSize(1);
-      expect(contains(sotd, "a", "WGNAME")).toHaveSize(1);
+      expect(
+        sotd.querySelectorAll("a[href='https://www.w3.org/groups/cg/wicg']")
+      ).toHaveSize(1);
+      expect(
+        contains(sotd, "a", "Web Platform Incubator Community Group")
+      ).toHaveSize(1);
       expect(
         sotd.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
@@ -1831,10 +1864,9 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "BG-FINAL",
-        wg: "WGNAME",
-        wgURI: "http://WG",
         thisVersion: "http://THIS",
         latestVersion: "https://some.places/LATEST",
+        group: "publishingbg",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1856,8 +1888,12 @@ describe("W3C — Headers", () => {
         "https://some.places/LATEST"
       );
       const sotd = doc.getElementById("sotd");
-      expect(sotd.querySelectorAll("a[href='http://WG']")).toHaveSize(1);
-      expect(contains(sotd, "a", "WGNAME")).toHaveSize(1);
+      expect(
+        sotd.querySelectorAll(
+          "a[href='https://www.w3.org/groups/bg/publishingbg']"
+        )
+      ).toHaveSize(1);
+      expect(contains(sotd, "a", "Publishing Business Group")).toHaveSize(1);
       expect(
         sotd.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/final/']"
@@ -1867,7 +1903,7 @@ describe("W3C — Headers", () => {
 
     it("handles the spec title in the copyright section correctly when the h1#title has markup", async () => {
       const body = `<h1 id="title">Spec with <code>markup</code>!</h1>${makeDefaultBody()}`;
-      const props = { specStatus: "BG-FINAL" };
+      const props = { specStatus: "BG-FINAL", group: "publishingbg" };
       const ops = makeStandardOps(props, body);
       const doc = await makeRSDoc(ops);
 
@@ -1889,6 +1925,7 @@ describe("W3C — Headers", () => {
         submissionCommentNumber: "01",
         publishDate: "2018-05-25",
         shortName: "yolo",
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       doc = await makeRSDoc(ops);
@@ -1963,9 +2000,6 @@ describe("W3C — Headers", () => {
       <section id="first-sub-section">
         <h3>Testing</h3>
       </section>
-      <p id="p3">
-        This is terrible, but can happen.
-      </p>
       <section id="last-sub-section">
         <h2>not in toc...</h2>
       </section>
@@ -2000,12 +2034,6 @@ describe("W3C — Headers", () => {
       const lastSection = doc.getElementById("last-sub-section");
       expect(sotd.lastElementChild).toBe(lastSection);
 
-      // p3 is sandwiched in between the sections
-      const p3 = doc.getElementById("p3");
-      expect(p3).toBeTruthy();
-      expect(p3.previousElementSibling).toBe(firstSection);
-      expect(p3.nextElementSibling).toBe(lastSection);
-
       // Abstract, PASS, Another TOC thing
       expect(doc.querySelectorAll("#toc li"))
         .withContext(context)
@@ -2028,6 +2056,7 @@ describe("W3C — Headers", () => {
     const newProps = {
       specStatus: "REC",
       shortName: "PASS",
+      group: "webapps",
     };
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
@@ -2107,7 +2136,7 @@ describe("W3C — Headers", () => {
     it("adds W3C logo for status W3C Notes", async () => {
       const notes = ["DNOTE", "NOTE"];
       for (const specStatus of notes) {
-        const ops = makeStandardOps({ specStatus });
+        const ops = makeStandardOps({ specStatus, group: "webapps" });
         const doc = await makeRSDoc(ops);
         const logo = doc.querySelector("a.logo");
         expect(logo.href)
@@ -2158,7 +2187,11 @@ describe("W3C — Headers", () => {
           url: "http://shiny/",
         },
       ];
-      const ops = makeStandardOps({ specStatus: "WD", logos });
+      const ops = makeStandardOps({
+        group: "webapps",
+        specStatus: "WD",
+        logos,
+      });
       const doc = await makeRSDoc(ops);
       // get logos
       const logosAnchors = [...doc.querySelectorAll(".logo")];
@@ -2258,7 +2291,11 @@ describe("W3C — Headers", () => {
 
   describe("History", () => {
     it("shows the publication history of the spec", async () => {
-      const ops = makeStandardOps({ shortName: "test", specStatus: "WD" });
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "WD",
+        group: "webapps",
+      });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
       expect(history).toBeTruthy();
@@ -2278,6 +2315,7 @@ describe("W3C — Headers", () => {
         github: "w3c/respec",
         shortName: "test",
         specStatus: "WD",
+        group: "webapps",
       });
       const doc = await makeRSDoc(ops);
       const commitHistory = doc.querySelector(
@@ -2359,6 +2397,7 @@ describe("W3C — Headers", () => {
         const ops = makeStandardOps({
           shortName,
           specStatus,
+          group: "webapps",
         });
         const doc = await makeRSDoc(ops);
         const [history] = contains(doc, ".head dt", "History:");

@@ -54,6 +54,7 @@ describe("w3c — required-sections", () => {
       const ops = makeStandardOps({
         lint: { "required-sections": true },
         specStatus,
+        group: "wicg",
       });
       const doc = await makeRSDoc(ops);
       const errors = errorsFilter(doc);
@@ -81,6 +82,7 @@ describe("w3c — required-sections", () => {
       const ops = makeStandardOps({
         lint: { "required-sections": true },
         specStatus,
+        group: "webapps",
       });
       const doc = await makeRSDoc(ops);
       const errors = errorsFilter(doc);
@@ -100,6 +102,7 @@ describe("w3c — required-sections", () => {
     const conf = {
       lint: { "required-sections": "error" },
       specStatus: "WD",
+      group: "webapps",
     };
     const doc = await makeRSDoc(makeStandardOps(conf, body));
     const errors = errorsFilter(doc);
@@ -122,6 +125,7 @@ describe("w3c — required-sections", () => {
     const conf = {
       lint: { "required-sections": "error" },
       specStatus: "WD",
+      group: "webapps",
     };
     const doc = await makeRSDoc(makeStandardOps(conf, body));
     const errors = errorsFilter(doc);
@@ -148,6 +152,7 @@ describe("w3c — required-sections", () => {
     const conf = {
       lint: { "required-sections": true },
       specStatus: "WD",
+      group: "webapps",
     };
     const doc = await makeRSDoc(makeStandardOps(conf, body));
     const errors = errorsFilter(doc);
@@ -166,6 +171,7 @@ describe("w3c — required-sections", () => {
     const conf = {
       lint: { "required-sections": true },
       specStatus: "WD",
+      group: "webapps",
     };
     const opts = makeStandardOps(conf, body);
     opts.htmlAttrs = { lang: "es" };
@@ -182,6 +188,7 @@ describe("w3c — required-sections", () => {
     const conf = {
       lint: { "required-sections": true },
       specStatus: "WD",
+      group: "webapps",
     };
     const opts = makeStandardOps(conf);
     opts.htmlAttrs = { lang: "ab" }; // Abkhazian

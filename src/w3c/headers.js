@@ -98,16 +98,20 @@ import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
 import { html } from "../core/import-maps.js";
+import { lang } from "../core/l10n.js";
 import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
 
 export const name = "w3c/headers";
 
-const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
+// We use an "Australian Date" because it omits the ","
+// after the day of the month, which is required by the W3C.
+const dateLang = lang === "en" || lang.startsWith("en-") ? "en-AU" : lang;
+const W3CDate = new Intl.DateTimeFormat(dateLang, {
   timeZone: "UTC",
   year: "numeric",
   month: "long",
-  day: "2-digit",
+  day: dateLang === "en-AU" ? "2-digit" : "numeric",
 });
 
 /**
@@ -198,6 +202,7 @@ export const recTrackStatus = [
   "PER",
   "REC",
   "DISC",
+  "RSCND",
 ];
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
