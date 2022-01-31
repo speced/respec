@@ -15,7 +15,7 @@ class ReSpec {
   constructor() {
     /** @type {Promise<void>} */
     this._respecDonePromise = new Promise(resolve => {
-      sub("end-all", resolve, { once: true });
+      sub("end-all", () => resolve(), { once: true });
     });
 
     this.errors = [];
