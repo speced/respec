@@ -107,11 +107,15 @@ export const name = "w3c/headers";
 // We use an "Australian Date" because it omits the ","
 // after the day of the month, which is required by the W3C.
 const dateLang = lang === "en" || lang.startsWith("en-") ? "en-AU" : lang;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 const W3CDate = new Intl.DateTimeFormat(dateLang, {
   timeZone: "UTC",
   year: "numeric",
   month: "long",
-  day: "2-digit",
+  day: dateLang === "en-AU" ? "2-digit" : "numeric",
 });
 
 /**

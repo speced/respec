@@ -1005,12 +1005,12 @@ describe("W3C — Headers", () => {
     });
 
     it("localizes publishDate based on the document's language", async () => {
-      const ops = makeStandardOps({ publishDate: "1977-03-15" });
+      const ops = makeStandardOps({ publishDate: "1977-03-01" });
       ops.htmlAttrs = {
         lang: "de",
       };
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "p", "15. März 1977")).toHaveSize(1);
+      expect(contains(doc, "p", "1. März 1977")).toHaveSize(1);
     });
   });
 
