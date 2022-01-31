@@ -9,9 +9,38 @@ import { showError } from "./utils.js";
  * and message receiving. Replaces legacy "msg" code in ReSpec.
  */
 export const name = "core/pubsubhub";
-
+/**
+ * @type {Map<EventTopic, Set<SubscriptionHandle>>} MessageMap
+ */
 const subscriptions = new Map();
+class SubscriptionHandle {
+  /**
+   * @param {EventTopic} topic
+   * @param {Function} cb
+   * @param {object} options
+   */
+  constructor(topic, cb, options) {
+    this.topic = topic;
+    this.cb = !options.once
+      ? cb
+      : // Wrap the callback in a function that will remove the subscription
+        (...args) => {
+          this.unsubscribe();
+          cb(...args);
+        };
 
+    subscriptions.has(topic)
+      ? subscriptions.get(topic).add(this)
+      : subscriptions.set(topic, new Set([this]));
+  }
+  unsubscribe() {
+    const callbacks = subscriptions.get(this.topic);
+    if (callbacks?.has(this) === false) {
+      console.warn(`Not subscribed to "${this.topic}"`, this.cb);
+    }
+    return callbacks.delete(this);
+  }
+}
 /**
  *
  * @param {EventTopic} topic
@@ -21,16 +50,16 @@ export function pub(topic, ...data) {
   if (!subscriptions.has(topic)) {
     throw new Error(`No subscribers for topic "${topic}".`);
   }
-  Array.from(subscriptions.get(topic)).forEach(cb => {
+  for (const handle of subscriptions.get(topic)) {
     try {
-      cb(...data);
+      handle.cb(...data);
     } catch (err) {
-      const msg = `Error when calling function ${cb.name}.`;
+      const msg = `Error when calling function ${handle.cb.name}.`;
       const hint = "See developer console.";
       showError(msg, name, { hint });
       console.error(err);
     }
-  });
+  }
   if (window.parent === window.self) {
     return;
   }
@@ -44,38 +73,21 @@ export function pub(topic, ...data) {
  * Subscribes to a message type.
  * @param  {EventTopic} topic The topic to subscribe to
  * @param  {Function} cb         Callback function
- * @param  {Object} [opts]
- * @param  {Boolean} [opts.once] Add prop "once" for single notification.
- * @return {Object}              An object that should be considered opaque,
- *                               used for unsubscribing from messages.
+ * @param  {Object} [options]
+ * @param  {Boolean} [options.once] Add prop "once" for single notification.
+ * @return {SubscriptionHandle} Handle for unsubscribing from messages.
  */
-export function sub(topic, cb, opts = { once: false }) {
-  if (opts.once) {
-    return sub(topic, function wrapper(...args) {
-      unsub({ topic, cb: wrapper });
-      cb(...args);
-    });
-  }
-  if (subscriptions.has(topic)) {
-    subscriptions.get(topic).add(cb);
-  } else {
-    subscriptions.set(topic, new Set([cb]));
-  }
-  return { topic, cb };
+export function sub(topic, cb, options = { once: false }) {
+  return new SubscriptionHandle(topic, cb, options);
 }
+
 /**
  * Unsubscribe from messages.
  *
- * @param {Object} opaque The object that was returned from calling sub()
+ * @param {SubscriptionHandle} handle The object that was returned from calling sub()
  */
-export function unsub({ topic, cb }) {
-  // opaque is whatever is returned by sub()
-  const callbacks = subscriptions.get(topic);
-  if (!callbacks || !callbacks.has(cb)) {
-    console.warn("Already unsubscribed:", topic, cb);
-    return false;
-  }
-  return callbacks.delete(cb);
+export function unsub(handle) {
+  return handle.unsubscribe();
 }
 
 expose(name, { sub });
