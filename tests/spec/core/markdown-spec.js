@@ -490,7 +490,7 @@ function getAnswer() {
       expect(h2.localName).toBe("h2");
       expect(h3.localName).toBe("h3");
       expect(anotherH3.localName).toBe("h3");
-      expect(anotherH3.textContent).toBe("1.2 another h3");
+      expect(anotherH3.textContent.trim()).toBe("1.2 another h3");
       expect(doc.querySelector("#markdown1 code")).toBeTruthy();
       const dontChange = doc.getElementById("dontTouch").textContent.trim();
       expect(dontChange).toBe("## this should not change");
