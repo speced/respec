@@ -150,6 +150,13 @@ const localizationStrings = {
     latest_published_version: "Letzte publizierte Fassung:",
     latest_recommendation: "Aktuellste Empfehlung:",
     more_details_about_this_doc: "Mehr Informationen über dieses Dokument",
+    multiple_alternates(plural) {
+      return `Dieses Dokument ist ebenfalls in ${
+        plural
+          ? "diesen nicht-normativen Formaten verfügbar"
+          : "in diesem nicht-normativen Format verfügbar"
+      }:`;
+    },
     prev_editor_draft: "Vorheriger Entwurf:",
     prev_recommendation: "Vorherige Empfehlung:",
     prev_version: "Vorherige Version:",
