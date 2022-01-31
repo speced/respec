@@ -136,7 +136,11 @@ function renderNotRec(conf) {
       : ""}
   </p>`;
   if (conf.specStatus === "DISC") {
-    updatePolicy = html`<p>Publication as a Discontinued Draft implies that this document is no longer intended to advance or to be maintained. It is inappropriate to cite this document as other than abandoned work.</p>`;
+    updatePolicy = html`<p>
+      Publication as a Discontinued Draft implies that this document is no
+      longer intended to advance or to be maintained. It is inappropriate to
+      cite this document as other than abandoned work.
+    </p>`;
   }
   const lsUpdatePolicy = html`<p>
     This document is maintained and updated at any time. Some parts of this
