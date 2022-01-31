@@ -1,6 +1,12 @@
 "use strict";
 
-import { flushIframes, makeDefaultBody, makeRSDoc } from "../SpecHelper.js";
+import {
+  flushIframes,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+  warningFilters,
+} from "../SpecHelper.js";
 
 describe("W3C — Defaults", () => {
   afterAll(flushIframes);
@@ -73,5 +79,60 @@ describe("W3C — Defaults", () => {
     expect(rsConf.highlightVars).toBe(false);
     expect(rsConf.license).toBe("c0");
     expect(rsConf.specStatus).toBe("ED");
+  });
+
+  it("doesn't show the W3C logo if no group or an invalid group is specified", async () => {
+    const ops = makeStandardOps({ specStatus: "WD" });
+    const docNoGroup = await makeRSDoc(ops);
+    expect(docNoGroup.querySelector("img[alt='W3C']")).toBeNull();
+  });
+
+  it("doesn't show the W3C logo an unknown group is specified", async () => {
+    const ops = makeStandardOps({
+      specStatus: "WD",
+      group: "not a real group",
+    });
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector("img[alt='W3C']")).toBeNull();
+  });
+
+  it("shows the W3C logo if a valid group and specStatus is specified", async () => {
+    const ops = makeStandardOps({
+      specStatus: "WD",
+      group: "css",
+    });
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector("img[alt='W3C']")).not.toBeNull();
+  });
+
+  it("warns when using a W3C specStatus, but no group is configured and defaults to 'base'", async () => {
+    const warningFilter = warningFilters.filter("w3c/defaults");
+    const ops = makeStandardOps({ specStatus: "WD" });
+    const doc = await makeRSDoc(ops);
+    const warnings = warningFilter(doc);
+    expect(warnings).toHaveSize(1);
+    expect(warnings[0].message).toContain(
+      "Document is not associated with a [W3C group]"
+    );
+    const config = doc.defaultView.respecConfig;
+    expect(config.specStatus).toBe("base");
+  });
+
+  it("warns when specStatus is missing, and defaults to 'base' for the specStatus", async () => {
+    const warningFilter = warningFilters.filter("w3c/defaults");
+    const ops = makeStandardOps({
+      config: {
+        editors: [{ name: "foo" }],
+      },
+      specStatus: "",
+    });
+    const doc = await makeRSDoc(ops);
+    const warnings = warningFilter(doc);
+    expect(warnings).toHaveSize(1);
+    expect(warnings[0].message).toContain(
+      "#specStatus) configuration option is required"
+    );
+    const config = doc.defaultView.respecConfig;
+    expect(config.specStatus).toBe("base");
   });
 });
