@@ -64,7 +64,7 @@ describe("Core — sections", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     for (let i = 2; i <= 6; i++) {
-      const p = doc.querySelector(`#h${i} + p`);
+      const p = doc.querySelector(`#h${i} + a + p`);
       expect(p.textContent).toBe(`paragraph ${i}`);
       const comment = p.nextSibling;
       expect(comment.nodeType).toBe(Node.COMMENT_NODE);
