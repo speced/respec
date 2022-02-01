@@ -10,7 +10,7 @@ export const name = "geonovum/conformance";
  */
 function processConformance(conformance) {
   const content = html`
-    <h2>Conformiteit</h2>
+    <h1>Conformiteit</h1>
     <p>
       Naast onderdelen die als niet normatief gemarkeerd zijn, zijn ook alle
       diagrammen, voorbeelden, en noten in dit document niet normatief. Verder

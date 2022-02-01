@@ -575,4 +575,74 @@ function getAnswer() {
       expect(p.localName).toBe("p");
     });
   });
+
+  it("retains heading order with generated sections", async () => {
+    const body = `
+    <section id="abstract">
+    Some abstract.
+    </section>
+
+    <section id="sotd">
+    Status.
+    </section>
+
+    # First section
+
+    This paragraph MUST.
+
+    <aside class="issue">
+    An issue.
+    </aside>
+
+    ## Sub section
+
+    This is sub-section paragraph.
+
+    <aside class="practice">
+      <p class="practicedesc">
+        <span class="practicelab">Best practice</span>
+      </p>
+    </aside>
+
+    <figure>
+      <figcaption>Figure caption</figcaption>
+    </figure>
+
+    <section id="conformance"></section>
+    <section id="issue-summary"></section>
+    <section id="bp-summary"></section>
+    <section id="tof"></section>
+    <section class="appendix">
+    # Acknowledgements
+
+    Thanks to everyone.
+    </section>
+    <section id="idl-index"></section>
+
+    <!-- References will appear last -->
+
+    `;
+    const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
+    const doc = await makeRSDoc(ops);
+    const headings = doc.querySelectorAll("body > section > h2");
+    const headingTitles = [
+      "Abstract",
+      "Status of This Document",
+      "1. First section",
+      "2. Conformance",
+      "3. Issue summary",
+      "4. Best Practices Summary",
+      "5. List of Figures",
+      "A. Acknowledgements",
+      "B. IDL Index",
+      "C. References",
+    ];
+    expect(headings).toHaveSize(headingTitles.length);
+    for (const heading of headings) {
+      const title = heading.textContent.trim();
+      expect(title).toContain(headingTitles.shift());
+    }
+  });
 });
+
