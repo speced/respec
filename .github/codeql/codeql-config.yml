@@ -1,2 +1,4 @@
 paths:
   - src
+  - profiles
+  - js
