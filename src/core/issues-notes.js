@@ -280,7 +280,7 @@ function makeIssueSectionSummary(issueList) {
   ) {
     issueSummaryElement.insertAdjacentHTML(
       "afterbegin",
-      `<h2>${l10n.issue_summary}</h2>`
+      `<h1>${l10n.issue_summary}</h1>`
     );
   }
 }
