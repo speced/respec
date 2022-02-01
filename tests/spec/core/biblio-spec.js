@@ -218,7 +218,17 @@ describe("W3C — Bibliographic References", () => {
     expect(badRefLink.getAttribute("href")).toBe("#bib-bad-ref");
     const badRef = doc.querySelector("#informative-references dd");
     expect(badRef).toBeTruthy();
-    expect(badRef.textContent).toBe("Reference not found.");
+    expect(badRef.textContent.trim()).toBe("Reference not found.");
+  });
+
+  it("shows a localized error if reference doesn't exist", async () => {
+    const body = `<p id="bad-ref">[[bad-ref]]</p>`;
+    const ops = makeStandardOps({ localBiblio }, body);
+    ops.htmlAttrs = { lang: "es" };
+    const doc = await makeRSDoc(ops);
+    const badRef = doc.querySelector("#referencias-informativas dd");
+    expect(badRef).toBeTruthy();
+    expect(badRef.textContent.trim()).toBe("Referencia no encontrada.");
   });
 
   it("uses cached results from IDB", async () => {
