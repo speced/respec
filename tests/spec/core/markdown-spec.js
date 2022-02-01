@@ -645,4 +645,3 @@ function getAnswer() {
     }
   });
 });
-
