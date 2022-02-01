@@ -1,4 +1,4 @@
-paths:
-  - src
-  - profiles
-  - js
+paths-ignore:
+  - builds
+  - tests
+  - node_modules
