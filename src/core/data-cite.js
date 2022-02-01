@@ -181,6 +181,11 @@ export async function run() {
       linkElem(elem, linkProps, citeDetails);
     } else {
       const msg = `Couldn't find a match for "${originalKey}"`;
+      switch (elem.dataset?.inlineType) {
+        case "inline-ref":
+          elem.textContent = `[[[${originalKey}]]]`;
+          break;
+      }
       showWarning(msg, name, { elements: [elem] });
     }
   }

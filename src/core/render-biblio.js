@@ -282,15 +282,15 @@ function decorateInlineReference(refs, aliases) {
 /**
  * warn about bad references
  */
-function warnBadRefs(badRefs) {
-  badRefs.forEach(({ ref }) => {
-    const badrefs = [
+function warnBadRefs(refs) {
+  refs.forEach(({ ref }) => {
+    const elements = [
       ...document.querySelectorAll(
         `a.bibref[href="#bib-${ref.toLowerCase()}"]`
       ),
     ].filter(({ textContent: t }) => t.toLowerCase() === ref.toLowerCase());
-    const msg = `Bad reference: [\`${ref}\`] (appears ${badrefs.length} times)`;
-    showError(msg, name);
-    console.warn("Bad references: ", badrefs);
+    const msg = `Reference "[${ref}]" not found.`;
+    const hint = `Search for ["${ref}"](https://www.specref.org?q=${ref}) on Specref to see if it exists or if it's misspelled.`;
+    showError(msg, name, { hint, elements });
   });
 }

@@ -120,9 +120,9 @@ function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
   if (!ref.startsWith("#")) {
-    return html`<a data-cite="${ref}"></a>`;
+    return html`<a data-cite="${ref}" data-inline-type="inline-ref"></a>`;
   }
-  return html`<a href="${ref}"></a>`;
+  return html`<a href="${ref}" data-inline-type="inline-ref"></a>`;
 }
 
 /**
