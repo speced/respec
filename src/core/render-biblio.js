@@ -71,8 +71,11 @@ export function run(conf) {
     document.querySelector("section#references") ||
     html`<section id="references"></section>`;
 
-  if (!document.querySelector("section#references > h2")) {
-    refSection.prepend(html`<h2>${l10n.references}</h2>`);
+  if (!document.querySelector("section#references > :is(h2, h1)")) {
+    // We use a h1 here because this could be structured from markdown
+    // which would otherwise end up in the wrong document order
+    // when the document is restructured.
+    refSection.prepend(html`<h1>${l10n.references}</h1>`);
   }
 
   refSection.classList.add("appendix");
