@@ -76,7 +76,7 @@ describe("W3C — Bibliographic References", () => {
 
   it("displays references correctly", async () => {
     const ref = doc.querySelector("#bib-evercookie + dd");
-    expect(ref.textContent).toBe(
+    expect(ref.textContent.trim()).toBe(
       "evercookie - virtually irrevocable persistent cookies. Samy Kamkar. September 2010. URL: https://samy.pl/evercookie/"
     );
   });
