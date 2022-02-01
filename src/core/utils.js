@@ -877,7 +877,7 @@ export class RespecError extends Error {
  * @param {string} pluginName Name of plugin that caused the error.
  * @param {object} [options]
  * @param {string} [options.hint] How to solve the error?
- * @param {Element[] | HTMLElement[]} [options.elements] Offending elements.
+ * @param {HTMLElement[]} [options.elements] Offending elements.
  * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
  * @param {string} [options.details] Any further details/context.
  */
@@ -891,7 +891,7 @@ export function showError(message, pluginName, options = {}) {
  * @param {string} pluginName Name of plugin that caused the error.
  * @param {object} [options]
  * @param {string} [options.hint] How to solve the error?
- * @param {Element[] | HTMLElement[]} [options.elements] Offending elements.
+ * @param {HTMLElement[]} [options.elements] Offending elements.
  * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
  * @param {string} [options.details] Any further details/context.
  */

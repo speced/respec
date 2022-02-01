@@ -284,11 +284,13 @@ function decorateInlineReference(refs, aliases) {
  */
 function warnBadRefs(refs) {
   refs.forEach(({ ref }) => {
-    const elements = [
-      ...document.querySelectorAll(
-        `a.bibref[href="#bib-${ref.toLowerCase()}"]`
-      ),
-    ].filter(({ textContent: t }) => t.toLowerCase() === ref.toLowerCase());
+    /** @type {NodeListOf<HTMLElement>} */
+    const links = document.querySelectorAll(
+      `a.bibref[href="#bib-${ref.toLowerCase()}"]`
+    );
+    const elements = [...links].filter(
+      ({ textContent: t }) => t.toLowerCase() === ref.toLowerCase()
+    );
     const msg = `Reference "[${ref}]" not found.`;
     const hint = `Search for ["${ref}"](https://www.specref.org?q=${ref}) on Specref to see if it exists or if it's misspelled.`;
     showError(msg, name, { hint, elements });
