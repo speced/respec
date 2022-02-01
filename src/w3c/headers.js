@@ -205,6 +205,7 @@ export const recTrackStatus = [
   "RSCND",
 ];
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
+export const tagStatus = ["draft-finding", "finding", "editor-draft-finding"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
 export const bgStatus = ["BG-DRAFT", "BG-FINAL"];
 export const cgbgStatus = [...cgStatus, ...bgStatus];
