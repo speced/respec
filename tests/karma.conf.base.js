@@ -40,6 +40,14 @@ module.exports = config => {
   /** @type {import("karma").ConfigOptions} */
   const options = {
     basePath: path.join(__dirname, ".."),
+    plugins: [
+      require("karma-jasmine"),
+      require("karma-mocha-reporter"),
+      require("karma-jasmine-html-reporter"),
+      require("karma-chrome-launcher"),
+      require("karma-firefox-launcher"),
+      require("karma-safari-launcher"),
+    ],
     frameworks: ["jasmine"],
     files,
     exclude: ["**/*.swp", "*.swp", ".DS_Store"],

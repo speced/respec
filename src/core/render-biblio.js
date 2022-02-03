@@ -13,6 +13,7 @@ const localizationStrings = {
     info_references: "Informative references",
     norm_references: "Normative references",
     references: "References",
+    reference_not_found: "Reference not found.",
   },
   ko: {
     references: "참조",
@@ -26,6 +27,7 @@ const localizationStrings = {
     info_references: "Referencias informativas",
     norm_references: "Referencias normativas",
     references: "Referencias",
+    reference_not_found: "Referencia no encontrada.",
   },
   ja: {
     info_references: "参照用参考文献",
@@ -194,21 +196,22 @@ export function renderInlineCitation(ref, linkText) {
 
 /**
  * renders a reference
- * @param {Ref} ref
+ * @param {Ref} reference
  */
-function showRef({ ref, refcontent }) {
+function showRef(reference) {
+  const { ref, refcontent } = reference;
   const refId = `bib-${ref.toLowerCase()}`;
-  if (refcontent) {
-    return html`
-      <dt id="${refId}">[${ref}]</dt>
-      <dd>${{ html: stringifyReference(refcontent) }}</dd>
-    `;
-  } else {
-    return html`
-      <dt id="${refId}">[${ref}]</dt>
-      <dd><em class="respec-offending-element">Reference not found.</em></dd>
-    `;
-  }
+  const result = html`
+    <dt id="${refId}">[${ref}]</dt>
+    <dd>
+      ${refcontent
+        ? { html: stringifyReference(refcontent) }
+        : html`<em class="respec-offending-element"
+            >${l10n.reference_not_found}</em
+          >`}
+    </dd>
+  `;
+  return result;
 }
 
 function endNormalizer(endStr) {

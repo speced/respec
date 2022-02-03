@@ -1,5 +1,7 @@
 "use strict";
 
+import { cgbgStatus, tagStatus } from "../../../src/w3c/headers.js";
+
 import {
   flushIframes,
   makeDefaultBody,
@@ -103,6 +105,28 @@ describe("W3C — Defaults", () => {
     });
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector("img[alt='W3C']")).not.toBeNull();
+  });
+
+  it("allows W3C TAG to show logos", async () => {
+    for (const specStatus of tagStatus) {
+      const ops = makeStandardOps({
+        specStatus,
+        group: "tag",
+      });
+      const doc = await makeRSDoc(ops);
+      expect(doc.querySelector("img[alt='W3C']")).not.toBeNull();
+    }
+  });
+
+  it("doesn't allow the W3C TAG to show logo when status is from another group type", async () => {
+    for (const specStatus of cgbgStatus) {
+      const ops = makeStandardOps({
+        specStatus,
+        group: "tag",
+      });
+      const doc = await makeRSDoc(ops);
+      expect(doc.querySelector("img[alt='W3C']")).toBeNull();
+    }
   });
 
   it("warns when using a W3C specStatus, but no group is configured and defaults to 'base'", async () => {
