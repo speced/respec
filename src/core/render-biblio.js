@@ -286,7 +286,7 @@ function decorateInlineReference(refs, aliases) {
  * warn about bad references
  */
 function warnBadRefs(refs) {
-  refs.forEach(({ ref }) => {
+  for (const { ref } of refs) {
     /** @type {NodeListOf<HTMLElement>} */
     const links = document.querySelectorAll(
       `a.bibref[href="#bib-${ref.toLowerCase()}"]`
@@ -297,5 +297,5 @@ function warnBadRefs(refs) {
     const msg = `Reference "[${ref}]" not found.`;
     const hint = `Search for ["${ref}"](https://www.specref.org?q=${ref}) on Specref to see if it exists or if it's misspelled.`;
     showError(msg, name, { hint, elements });
-  });
+  }
 }
