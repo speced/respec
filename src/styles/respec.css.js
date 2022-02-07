@@ -218,33 +218,34 @@ aside.example .marker > a.self-link {
   color: inherit;
 }
 
-:is(h2, h3, h4, h5, h6) + a.self-link {
-  border: none;
-  color: inherit;
+.header-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+:is(h2, h3, h4, h5, h6) {
   position: relative;
-  top: -2.75em;
-  left: -1.4em;
-  margin-bottom: -2em;
-  display: block;
-  font-size: 100%;
+  left: -.5em;
+}
+
+:is(h2, h3, h4, h5, h6) + a.self-link {
+  color: inherit;
+  order: -1;
+  position: relative;
+  left: -1em;
+  margin-top: 1.7rem;
+  font-size: 1rem;
 }
 
 :is(h2, h3, h4, h5, h6) + a.self-link::before {
   content: "§";
   opacity: 0.5;
   text-decoration: none;
-  line-height: 1.2em;
-  vertical-align: middle;
 }
 
 @media (max-width: 767px) {
   dd {
     margin-left: 0;
-  }
-
-  /* Don't position self-link in headings off-screen */
-  :is(h2, h3, h4, h5, h6) + a.self-link {
-    left: 101%;
   }
 }
 

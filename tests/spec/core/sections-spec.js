@@ -18,7 +18,7 @@ describe("Core — sections", () => {
     for (let i = 2; i <= 6; i++) {
       const context = `h${i}`;
       const h = doc.getElementById(context);
-      const section = h.parentElement;
+      const section = h.parentElement.parentElement;
       expect(section.localName).withContext(context).toBe("section");
       expect(section.id).withContext(context).toBe(`section-${i}`);
     }
@@ -42,7 +42,7 @@ describe("Core — sections", () => {
     const doc = await makeRSDoc(ops);
     for (let i = 2; i <= 6; i++) {
       const h = doc.getElementById(`h${i}`);
-      const section = h.parentElement;
+      const section = h.parentElement.parentElement;
       expect(section.localName).toBe("section");
       expect(section.id).toBe(`section-${i}`);
     }
@@ -64,7 +64,10 @@ describe("Core — sections", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     for (let i = 2; i <= 6; i++) {
-      const p = doc.querySelector(`#h${i} + a + p`);
+      const p = doc
+        .querySelector(`#h${i}`)
+        .closest("section")
+        .querySelector("p");
       expect(p.textContent).toBe(`paragraph ${i}`);
       const comment = p.nextSibling;
       expect(comment.nodeType).toBe(Node.COMMENT_NODE);

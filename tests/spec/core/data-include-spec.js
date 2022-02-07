@@ -46,7 +46,7 @@ describe("Core — Data Include", () => {
     expect(missing).toBeNull();
     const included = doc.getElementById("replacement-test");
     expect(included).toBeTruthy();
-    const heading = doc.querySelector("#replacement-test > h3");
+    const heading = doc.querySelector("#replacement-test > div > h3");
     expect(heading).toBeTruthy();
     expect(heading.textContent).toBe("Replacement");
   });
@@ -84,7 +84,7 @@ describe("Core — Data Include", () => {
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
-    const h2 = doc.querySelector("#includes > h2");
+    const h2 = doc.querySelector("#includes > div > h2");
     expect(h2).toBeTruthy();
     expect(h2.textContent).toBe("1. PASS");
     expect(doc.querySelectorAll("*[data-include]")).toHaveSize(0);
@@ -205,7 +205,7 @@ describe("Core — Data Include", () => {
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
 
-      const h2 = doc.querySelector("#includes > h2");
+      const h2 = doc.querySelector("#includes > div > h2");
       expect(h2).toBeTruthy();
       expect(h2.textContent).toContain("Test");
 
