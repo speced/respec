@@ -208,7 +208,7 @@ details.respec-tests-details > li {
   padding-left: 1em;
 }
 
-a[href].self-link:hover {
+.self-link:hover {
   opacity: 1;
   text-decoration: none;
   background-color: transparent;
@@ -235,11 +235,11 @@ aside.example .marker > a.self-link {
   left: -1.1em;
   top: .8rem;
   font-size: 1rem;
+  opacity: 0.5;
 }
 
 :is(h2, h3, h4, h5, h6) + a.self-link::before {
   content: "§";
-  opacity: 0.5;
   text-decoration: none;
   color: var(--heading-text);
 }
