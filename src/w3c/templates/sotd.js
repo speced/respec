@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData, W3CDate } from "../../core/utils.js";
+import { W3CDate, getIntlData } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import { status2track } from "../headers.js";
 const localizationStrings = {
@@ -282,8 +282,8 @@ function renderIsRec(conf) {
       ? html`<p>
           The W3C Membership and other interested parties are invited to review
           the proposed ${reviewTarget} and send comments through
-          ${W3CDate.format(revisedRecEnd)}. Advisory Committee Representatives should
-          consult their
+          ${W3CDate.format(revisedRecEnd)}. Advisory Committee Representatives
+          should consult their
           <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
             >WBS questionnaires</a
           >.

@@ -1,5 +1,5 @@
 // @ts-check
-import { ISODate, getIntlData, W3CDate } from "../../core/utils.js";
+import { ISODate, W3CDate, getIntlData } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
