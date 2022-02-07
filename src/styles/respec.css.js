@@ -232,8 +232,8 @@ aside.example .marker > a.self-link {
   color: inherit;
   order: -1;
   position: relative;
-  left: -1em;
-  margin-top: 1.7rem;
+  left: -1.1em;
+  top: .8rem;
   font-size: 1rem;
 }
 
@@ -246,11 +246,9 @@ aside.example .marker > a.self-link {
 
 :is(h4, h5, h6) + a.self-link::before {
   color: black;
-  margin-top: 0;
 }
 
 :is(h4, h5, h6) + a.self-link {
-  margin-top: 0;
   top: 0.6rem;
 }
 
