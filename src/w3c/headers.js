@@ -86,12 +86,12 @@
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
 import {
   ISODate,
-  W3CDate,
   codedJoinAnd,
   codedJoinOr,
   concatDate,
   docLink,
   htmlJoinAnd,
+  norm,
   showError,
   showWarning,
 } from "../core/utils.js";
@@ -702,7 +702,9 @@ export async function run(conf) {
   // Makes a record of a few auto-generated things.
   pub("amend-user-config", {
     publishISODate: conf.publishISODate,
-    generatedSubtitle: `${conf.longStatus} ${W3CDate.format(conf.publishDate)}`,
+    generatedSubtitle: norm(
+      document.getElementById("w3c-state")?.textContent ?? ""
+    ),
   });
 }
 
