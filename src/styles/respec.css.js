@@ -241,7 +241,20 @@ aside.example .marker > a.self-link {
   content: "§";
   opacity: 0.5;
   text-decoration: none;
+  color: var(--heading-text);
 }
+
+:is(h4, h5, h6) + a.self-link::before {
+  color: black;
+  margin-top: 0;
+}
+
+:is(h4, h5, h6) + a.self-link {
+  margin-top: 0;
+  top: 0.6rem;
+}
+
+
 
 @media (max-width: 767px) {
   dd {
