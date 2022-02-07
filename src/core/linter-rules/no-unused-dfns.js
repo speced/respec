@@ -26,7 +26,7 @@ const localizationStrings = {
 
         * Add a \`class="lint-ignore"\` attribute the definition.
         * Either remove the definition or change \`<dfn>\` to another type of HTML element.
-        * If you meant to ${"[export|#data-export]"} the definition, add \`class="export"\` to definition.
+        * If you meant to ${"[export|#data-export]"} the definition, add \`class="export"\` to the definition.
 
       To silence this warning entirely, set \`lint: { "no-unused-dfns": false }\` in your \`respecConfig\`.
       `;
