@@ -1043,6 +1043,27 @@ describe("W3C — Headers", () => {
       const text = collapsedTextContent(dateStatusEl).trim();
       expect(text).toMatch(/15 March 1977$/);
     });
+
+    it("localizes modificationDate", async () => {
+      const ops = makeStandardOps({
+        publishDate: "1977-03-15",
+        modificationDate: "2022-01-27",
+      });
+      ops.htmlAttrs = {
+        lang: "de",
+      };
+      const doc = await makeRSDoc(ops);
+
+      const [dateStatusEl] = contains(
+        doc,
+        "p",
+        "zuletzt geändert am 27. Januar 2022"
+      );
+      const dateModified = dateStatusEl.querySelector(".dt-modified");
+      expect(dateModified).toBeTruthy();
+      expect(dateModified.localName).toBe("time");
+      expect(dateModified.getAttribute("datetime")).toBe("2022-01-27");
+    });
   });
 
   describe("previousPublishDate & previousMaturity", () => {

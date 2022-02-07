@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData } from "../../core/utils.js";
+import { getIntlData, W3CDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import { status2track } from "../headers.js";
 const localizationStrings = {
@@ -208,24 +208,25 @@ function renderNotRec(conf) {
       if (conf.pubMode === "LS") {
         reviewPolicy = html`<p>
           Comments are welcome at any time but most especially before
-          ${conf.humanCREnd}.
+          ${W3CDate.format(conf.CREnd)}.
         </p>`;
       } else {
         reviewPolicy = html`<p>
           This Candidate Recommendation is not expected to advance to Proposed
-          Recommendation any earlier than ${conf.humanCREnd}.
+          Recommendation any earlier than ${W3CDate.format(conf.CREnd)}.
         </p>`;
       }
       break;
     case "PR":
       reviewPolicy = html`<p>
         The W3C Membership and other interested parties are invited to review
-        the document and send comments through ${conf.humanPREnd}. Advisory
-        Committee Representatives should consult their
+        the document and send comments through ${W3CDate.format(conf.PREnd)}.
+        Advisory Committee Representatives should consult their
         <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
           >WBS questionnaires</a
         >. Note that substantive technical comments were expected during the
-        Candidate Recommendation review period that ended ${conf.humanCREnd}.
+        Candidate Recommendation review period that ended
+        ${W3CDate.format(conf.CREnd)}.
       </p>`;
       break;
     case "DNOTE":
@@ -238,11 +239,8 @@ function renderNotRec(conf) {
     ${updatePolicy} ${reviewPolicy}`;
 }
 
-function renderIsRec({
-  updateableRec,
-  revisionTypes = [],
-  humanRevisedRecEnd,
-}) {
+function renderIsRec(conf) {
+  const { updateableRec, revisionTypes = [], revisedRecEnd } = conf;
   let reviewTarget = "";
   if (revisionTypes.includes("addition")) {
     reviewTarget = "additions";
@@ -284,7 +282,7 @@ function renderIsRec({
       ? html`<p>
           The W3C Membership and other interested parties are invited to review
           the proposed ${reviewTarget} and send comments through
-          ${humanRevisedRecEnd}. Advisory Committee Representatives should
+          ${W3CDate.format(revisedRecEnd)}. Advisory Committee Representatives should
           consult their
           <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
             >WBS questionnaires</a

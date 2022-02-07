@@ -29,6 +29,18 @@ export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   day: "2-digit",
 });
 
+// We use an "Australian Date" because it omits the ","
+// after the day of the month, which is required by the W3C.
+const dateLang =
+  docLang === "en" || docLang.startsWith("en-") ? "en-AU" : docLang;
+
+export const W3CDate = new Intl.DateTimeFormat(dateLang, {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "long",
+  day: dateLang === "en-AU" ? "2-digit" : "numeric",
+});
+
 /** CSS selector for matching elements that are non-normative */
 export const nonNormativeSelector =
   ".informative, .note, .issue, .example, .ednote, .practice, .introductory";
@@ -219,10 +231,8 @@ export function toShortIsoDate(date) {
  * human-formatted date suitable for use in the specification.
  * @param {Date | string} [date]
  */
-export function humanDate(
-  date = new Date(),
-  lang = document.documentElement.lang || "en"
-) {
+export function humanDate(date = new Date(), lang = docLang) {
+  lang = resolveLanguageAlias(lang);
   if (!(date instanceof Date)) date = new Date(date);
   const langs = [lang, "en"];
   const day = date.toLocaleString(langs, {
