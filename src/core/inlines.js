@@ -42,13 +42,17 @@ const localizationStrings = {
     rfc2119Keywords() {
       return joinRegex([
         /\bMUSS\b/,
+        /\bMÜSSEN\b/,
         /\bERFORDERLICH\b/,
         /\b(?:NICHT\s+)?NÖTIG\b/,
         /\bDARF(?:\s+NICHT)?\b/,
+        /\bDÜRFEN(?:\s+NICHT)?\b/,
         /\bVERBOTEN\b/,
         /\bSOLL(?:\s+NICHT)?\b/,
+        /\bSOLLEN(?:\s+NICHT)?\b/,
         /\b(?:NICHT\s+)?EMPFOHLEN\b/,
         /\bKANN\b/,
+        /\bKÖNNEN\b/,
         /\bOPTIONAL\b/,
       ]);
     },

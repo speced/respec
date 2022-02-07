@@ -10,6 +10,7 @@ import {
   cgbgStatus,
   recTrackStatus,
   registryTrackStatus,
+  tagStatus,
 } from "./headers.js";
 import { codedJoinOr, docLink, showError, showWarning } from "../core/utils.js";
 import { coreDefaults } from "../core/defaults.js";
@@ -67,8 +68,8 @@ export function run(conf) {
     conf.license = "w3c-software-doc";
   }
 
-  processLogos(conf);
   validateStatusForGroup(conf);
+  processLogos(conf);
 }
 
 function processLogos(conf) {
@@ -78,7 +79,12 @@ function processLogos(conf) {
   // Excludes "ED" status
   if (
     conf.wg?.length &&
-    [...recTrackStatus, ...registryTrackStatus, ...W3CNotes].includes(status)
+    [
+      ...recTrackStatus,
+      ...registryTrackStatus,
+      ...W3CNotes,
+      ...tagStatus,
+    ].includes(status)
   ) {
     conf.logos?.unshift(w3cLogo);
   }
@@ -91,7 +97,7 @@ function processLogos(conf) {
 }
 
 function validateStatusForGroup(conf) {
-  const { specStatus, groupType } = conf;
+  const { specStatus, groupType, group } = conf;
   switch (groupType) {
     case "cg": {
       if (![...cgbgStatus, "unofficial"].includes(specStatus)) {
@@ -114,13 +120,22 @@ function validateStatusForGroup(conf) {
       break;
     }
     case "wg": {
-      if (cgbgStatus.includes(specStatus)) {
+      if ([...tagStatus, ...cgbgStatus].includes(specStatus)) {
         const msg = docLink`W3C Working Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
         const hint = docLink`Please see ${"[specStatus]"} for appropriate status for W3C Working Group documents.`;
         showError(msg, name, { hint });
       }
       break;
     }
+    case "other":
+      if (group === "tag" && !tagStatus.includes(specStatus)) {
+        const msg = docLink`The W3C Technical Architecture Group's documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
+        const supportedStatus = codedJoinOr(tagStatus, { quotes: true });
+        const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"unofficial"\`.`;
+        showError(msg, name, { hint });
+        conf.specStatus = "unofficial";
+      }
+      break;
     default:
       if (
         !conf.wgId &&
