@@ -181,8 +181,8 @@ export async function run() {
       linkElem(elem, linkProps, citeDetails);
     } else {
       const msg = `Couldn't find a match for "${originalKey}"`;
-      if (elem.dataset?.matchedText) {
-        elem.textContent = elem.dataset?.matchedText;
+      if (elem.dataset.matchedText) {
+        elem.textContent = elem.dataset.matchedText;
       }
       showWarning(msg, name, { elements: [elem] });
     }
