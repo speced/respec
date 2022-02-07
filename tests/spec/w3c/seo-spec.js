@@ -1,57 +1,95 @@
 "use strict";
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { publicationSpaces } from "../../../src/w3c/headers.js";
+import { requiresCanonicalLink } from "../../../src/w3c/seo.js";
 
-function makeTest(uri) {
-  return doc => {
-    const canLink = doc.querySelector("link[rel='canonical']");
-    expect(canLink.href).toBe(uri);
-  };
-}
 describe("W3C - SEO", () => {
   afterAll(flushIframes);
 
   it("defaults to TR as canonical URI", async () => {
-    const test = makeTest("https://www.w3.org/TR/Foo/");
-    test(await makeRSDoc(makeStandardOps()));
+    const doc = await makeRSDoc(
+      makeStandardOps({ specStatus: "REC", group: "webapps" })
+    );
+    const href = "https://www.w3.org/TR/Foo/";
+    expect(
+      doc.querySelector(`link[rel='canonical'][href='${href}']`)
+    ).toBeTruthy();
   });
 
   it("sets the canonical URI to TR URI when so configured", async () => {
-    const test = makeTest("https://www.w3.org/TR/Foo/");
-    const ops = makeStandardOps();
-    ops.config.canonicalURI = "TR";
-    test(await makeRSDoc(ops));
+    const href = "https://www.w3.org/TR/Foo/";
+    const ops = makeStandardOps({ canonicalURI: "TR", group: "webapps" });
+    const doc = await makeRSDoc(ops);
+    expect(
+      doc.querySelector(`link[rel='canonical'][href='${href}']`)
+    ).toBeTruthy();
   });
 
-  it("sets the canonical URI to editors draft when so configured", async () => {
-    const test = makeTest("https://foo.com/");
-    const ops = makeStandardOps();
-    ops.config.canonicalURI = "edDraft";
-    test(await makeRSDoc(ops));
+  it("sets the canonical URI to editors draft when configured with 'edDraft'", async () => {
+    const href = "https://foo.com/";
+    const ops = makeStandardOps({ canonicalURI: "edDraft", group: "webapps" });
+    const doc = await makeRSDoc(ops);
+    expect(
+      doc.querySelector(`link[rel='canonical'][href='${href}']`)
+    ).toBeTruthy();
   });
 
   it("shouldn't set any canonical URI if no shortname is defined", async () => {
-    const ops = makeStandardOps();
-    ops.config.shortName = undefined;
+    const ops = makeStandardOps({ shortName: undefined });
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelector("link[rel='canonical']")).toBe(null);
+    expect(doc.querySelector("link[rel='canonical']")).toBeNull();
   });
 
   it("shouldn't set any canonical URI if it is a draft document", async () => {
-    const ops = makeStandardOps();
     const draftStatuses = ["CG-DRAFT", "BG-DRAFT", "unofficial"];
     for (const status of draftStatuses) {
-      ops.config.specStatus = status;
+      const ops = makeStandardOps({ specStatus: status });
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelector("link[rel='canonical']")).toBe(null);
+      expect(doc.querySelector("link[rel='canonical']"))
+        .withContext(draftStatuses)
+        .toBeNull();
     }
   });
 
-  it("sets the canonical URI if explicitly set", async () => {
-    const test = makeTest("https://example.com/");
-    const ops = makeStandardOps();
-    ops.config.canonicalURI = "https://example.com";
-    test(await makeRSDoc(ops));
+  it("doesn't adds a canonical link for drafts", async () => {
+    const draftStatuses = ["editor-draft-finding", "BG-DRAFT", "unofficial"];
+    for (const status of draftStatuses) {
+      const ops = makeStandardOps({ specStatus: status });
+      const doc = await makeRSDoc(ops);
+      expect(doc.querySelector("link[rel='canonical']"))
+        .withContext(draftStatuses)
+        .toBeNull();
+    }
+  });
+
+  it("handles tag documents correctly", async () => {
+    for (const specStatus of ["finding", "draft-finding"]) {
+      const ops = makeStandardOps({ specStatus, group: "tag" });
+      const doc = await makeRSDoc(ops);
+      const path = publicationSpaces[specStatus];
+      const link = doc.querySelector("link[rel='canonical']");
+      expect(link.href).withContext(specStatus).toContain(path);
+    }
+  });
+
+  it("adds canonical link when if explicitly set", async () => {
+    const canonicalURI = "https://example.com/";
+    const ops = makeStandardOps({ canonicalURI });
+    const doc = await makeRSDoc(ops);
+    expect(
+      doc.querySelector(`link[rel='canonical'][href='${canonicalURI}']`)
+    ).toBeTruthy();
+  });
+
+  it("adds canonicalURI links for types that require them", async () => {
+    for (const specStatus of requiresCanonicalLink) {
+      const ops = makeStandardOps({ specStatus, group: "webapps" });
+      const doc = await makeRSDoc(ops);
+      expect(doc.querySelector("link[rel='canonical']"))
+        .withContext(specStatus)
+        .toBeTruthy();
+    }
   });
 
   const body = `
@@ -81,6 +119,7 @@ describe("W3C - SEO", () => {
         name: "Shane McCarron",
       },
     ],
+    group: "webapps",
     shortName: "some-spec",
     publishDate: "2013-06-25",
     previousPublishDate: "2012-06-07",
@@ -148,7 +187,7 @@ describe("W3C - SEO", () => {
     expect(jsonld.editor).toContain({
       type: "Person",
       name: "Gregg Kellogg",
-      url: "http://URI",
+      url: "mailto:EMAIL",
       "foaf:mbox": "EMAIL",
       worksFor: {
         name: "COMPANY",

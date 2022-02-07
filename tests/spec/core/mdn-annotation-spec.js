@@ -81,9 +81,8 @@ describe("Core - MDN Annotation", () => {
   });
 
   it("displays engine support summary", () => {
-    const {
-      previousElementSibling: poorSupportedMdnPanel,
-    } = doc.getElementById("dom-paymentrequest-id");
+    const { previousElementSibling: poorSupportedMdnPanel } =
+      doc.getElementById("dom-paymentrequest-id");
     const iconBad = poorSupportedMdnPanel.querySelector(
       "details summary span:nth-child(2)"
     );
@@ -92,9 +91,8 @@ describe("Core - MDN Annotation", () => {
     const textBad = poorSupportedMdnPanel.querySelector("details p");
     expect(textBad.classList).toContain("engines-some");
 
-    const {
-      previousElementSibling: goodSupportedMdnPanel,
-    } = doc.getElementById("paymentrequest-interface");
+    const { previousElementSibling: goodSupportedMdnPanel } =
+      doc.getElementById("paymentrequest-interface");
     const iconGood = goodSupportedMdnPanel.querySelector(
       "details summary span:nth-child(2)"
     );

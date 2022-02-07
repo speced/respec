@@ -78,12 +78,39 @@ describe("Core - anchor-expander", () => {
     expect(doc.querySelector("#expansion *[id]")).toBeNull();
 
     const [firstSpan, secondSpan] = doc.querySelectorAll("#expansion a > span");
-    expect(firstSpan.title).toBe("pass");
+    // title gets dropped from dfns
+    expect(firstSpan.title).toBe("");
     expect(firstSpan.firstElementChild.localName).toBe("code");
     expect(firstSpan.firstElementChild.textContent).toBe("code thing");
     expect(secondSpan.textContent).toBe("span");
     expect(secondSpan.dataset.value).toBe("pass");
   });
+
+  it("safely copies IDL defined things without copying their attributes", async () => {
+    const body = `
+    <section data-dfn-for="Foo" id="thefoo">
+      <h2>
+        <dfn>Foo</dfn> interface
+      </h2>
+      <pre class="idl">
+      [Exposed=Window]
+      interface Foo {};
+      </pre>
+      <p id="expansion">
+       [[[#thefoo]]]
+      </p>
+    </section>`;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector("#expansion dfn")).toBeNull();
+    expect(doc.querySelector("#expansion *[id]")).toBeNull();
+    const span = doc.querySelector("#expansion a > span");
+    expect(span.attributes).toHaveSize(0);
+    const code = span.firstElementChild;
+    expect(code.localName).toBe("code");
+    expect(code.textContent).toBe("Foo");
+  });
+
   it("gets applies contextual directional and language information to expanded nodes", async () => {
     const body = `
       <section lang="ar" class="introductory">

@@ -9,8 +9,9 @@
 //  This module only really works when you are in an HTTP context, and will most likely
 //  fail if you are editing your documents on your local drive. That is due to security
 //  restrictions in the browser.
-import { markdownToHtml, restructure } from "./markdown.js";
 import { runTransforms, showError } from "./utils.js";
+import { markdownToHtml } from "./markdown.js";
+import { restructure } from "./sections.js";
 
 export const name = "core/data-include";
 

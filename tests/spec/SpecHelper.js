@@ -56,6 +56,34 @@ export function makeRSDoc(opts, src, style = "") {
     iframes.push(ifr);
   });
 }
+/**
+ * Used to get errors and warnings from a spec.
+ */
+class UIMessageFilters {
+  /**
+   * @param {"warnings" | "errors"} type
+   */
+  constructor(type) {
+    this.cache = new Map();
+    this.type = type;
+  }
+  /**
+   * @param {string} pluginName
+   * @returns (Document) => Array<RespecError>
+   */
+  filter(pluginName) {
+    if (this.cache.has(pluginName)) {
+      return this.cache.get(pluginName);
+    }
+    const filter = doc => {
+      return doc.respec[this.type].filter(err => err.plugin === pluginName);
+    };
+    this.cache.set(pluginName, filter);
+    return filter;
+  }
+}
+export const errorFilters = new UIMessageFilters("errors");
+export const warningFilters = new UIMessageFilters("warnings");
 
 /**
  * @param {Document} doc
@@ -195,6 +223,17 @@ export function makeBasicConfig(profile = "w3c") {
         edDraftURI: "https://foo.com",
         shortName: "Foo",
       };
+    case "aom":
+      return {
+        editors: [
+          {
+            name: "Person Name",
+          },
+        ],
+        specStatus: "PD",
+      };
+    default:
+      throw new Error(`Unknown profile: ${profile}`);
   }
 }
 
@@ -220,5 +259,13 @@ export function makeStandardGeoOps(config = {}, body = makeDefaultBody()) {
   return {
     body,
     config: { ...makeBasicConfig("geonovum"), ...config },
+  };
+}
+
+export function makeStandardAomOps(config = {}, body = makeDefaultBody()) {
+  return {
+    body,
+    config: { ...makeBasicConfig("aom"), ...config },
+    profile: "aom",
   };
 }

@@ -23,27 +23,30 @@ describe("Core — Issues and Notes", () => {
         <div class="issue" id=override-123 data-number=123></div>
         <div class="issue" data-number=123></div>
         <p class="issue" data-number=123></p>
+        <aside class="issue" title="An issue"></aside>
       </section>
       <section id="issue-summary"></section>
     `;
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
     const issues = doc.querySelectorAll(".issue");
-    expect(issues).toHaveSize(3);
+    expect(issues).toHaveSize(4);
     const [
       overriddenIdIssue,
       firstDuplicateIssue,
       secondDuplicateIssue,
+      asideIssue,
     ] = issues;
     expect(overriddenIdIssue.id).toBe("override-123");
     expect(firstDuplicateIssue.id).not.toBe(secondDuplicateIssue.id);
 
     const issueSummaryItems = doc.querySelectorAll("#issue-summary li a");
-    expect(issueSummaryItems).toHaveSize(3);
-    const [firstItem, secondItem, thirdItem] = issueSummaryItems;
+    expect(issueSummaryItems).toHaveSize(4);
+    const [firstItem, secondItem, thirdItem, fourthItem] = issueSummaryItems;
     expect(firstItem.hash).toBe(`#${overriddenIdIssue.id}`);
     expect(secondItem.hash).toBe(`#${firstDuplicateIssue.id}`);
     expect(thirdItem.hash).toBe(`#${secondDuplicateIssue.id}`);
+    expect(fourthItem.hash).toBe(`#${asideIssue.id}`);
   });
   it("should process issues and notes", async () => {
     const ops = {
@@ -168,12 +171,8 @@ describe("Core — Issues and Notes", () => {
       "this is 404"
     );
 
-    const [
-      refactorLabel,
-      bugLabel,
-      blankLabel,
-      invalidLabel,
-    ] = doc.getElementsByClassName("respec-gh-label");
+    const [refactorLabel, bugLabel, blankLabel, invalidLabel] =
+      doc.getElementsByClassName("respec-gh-label");
 
     expect(refactorLabel.textContent).toBe("refactor");
     expect(refactorLabel.classList).toContain(
@@ -279,24 +278,18 @@ describe("Core — Issues and Notes", () => {
       config: githubConfig,
       body: `${makeDefaultBody()}
         <div class='issue' data-number='1548'>no aria-label for this</div>
-        <div class='issue' data-number='1540'>this should have aria-label</div>
+        <div class='issue' data-number='1540'>this should have aria-labels</div>
       `,
     };
     const doc = await makeRSDoc(ops);
     expect(doc.querySelectorAll("div.issue")).toHaveSize(2);
     expect(
-      doc.querySelector(
-        "div#issue-container-number-1548 span.issue-label[aria-label]"
-      )
+      doc.querySelector("div#issue-container-number-1548 [aria-label]")
     ).toBeNull();
-
-    const expectedAttributeValue =
-      "This issue is labelled as refactor, bug, blank, and not-a-color.";
-    expect(
-      doc.querySelector(
-        `div#issue-container-number-1540 span.issue-label[aria-label="${expectedAttributeValue}"]`
-      )
-    ).toBeTruthy();
+    const labels = doc.querySelectorAll(
+      "div#issue-container-number-1540 a[aria-label^='GitHub label']"
+    );
+    expect(labels).toHaveSize(4);
   });
   it("renders the original issue post in an empty issue block", async () => {
     const ops = {
@@ -416,7 +409,7 @@ describe("Core — Issues and Notes", () => {
     };
     const doc = await makeRSDoc(ops);
     const h2 = doc.querySelector("#issue-summary > h2");
-    expect(h2.innerText).toContain("Issue Summary");
+    expect(h2.innerText).toContain("Issue summary");
     const p = doc.querySelector("#issue-summary p");
     expect(p.innerText).toContain("Here you will find all issues summary");
     const div = doc.querySelector("#issue-summary div");

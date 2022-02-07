@@ -2,23 +2,44 @@
 // Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
+import { W3CNotes, recTrackStatus, registryTrackStatus } from "./headers.js";
+import { html } from "../core/import-maps.js";
 import { resolveRef } from "../core/biblio.js";
 import { showWarning } from "../core/utils.js";
 export const name = "w3c/seo";
+
+const status2rdf = {
+  NOTE: "w3p:NOTE",
+  WD: "w3p:WD",
+  LC: "w3p:LastCall",
+  CR: "w3p:CR",
+  CRD: "w3p:CRD",
+  PR: "w3p:PR",
+  REC: "w3p:REC",
+  PER: "w3p:PER",
+  RSCND: "w3p:RSCND",
+};
+
+export const requiresCanonicalLink = new Set([
+  ...W3CNotes,
+  ...recTrackStatus,
+  ...registryTrackStatus,
+  "BG-FINAL",
+  "CG-FINAL",
+  "CRY",
+  "DRY",
+  "draft-finding",
+  "finding",
+]);
+
 export async function run(conf) {
-  // Don't include a canonical URL for documents
-  // that haven't been published.
-  if (!conf.canonicalURI) {
-    switch (conf.specStatus) {
-      case "CG-DRAFT":
-      case "BG-DRAFT":
-      case "unofficial":
-        return;
-    }
+  // Don't include a canonical URL for documents that haven't been published.
+  if (
+    (!conf.canonicalURI && !requiresCanonicalLink.has(conf.specStatus)) ||
+    !conf.shortName
+  ) {
+    return;
   }
-  const trLatestUri = conf.shortName
-    ? `https://www.w3.org/TR/${conf.shortName}/`
-    : null;
   switch (conf.canonicalURI) {
     case "edDraft":
       if (conf.edDraftURI) {
@@ -33,8 +54,8 @@ export async function run(conf) {
       }
       break;
     case "TR":
-      if (trLatestUri) {
-        conf.canonicalURI = trLatestUri;
+      if (conf.latestVersion) {
+        conf.canonicalURI = conf.latestVersion;
       } else {
         const msg = `Canonical URI set to TR, but no shortName is set in configuration`;
         showWarning(msg, name);
@@ -42,36 +63,25 @@ export async function run(conf) {
       }
       break;
     default:
-      if (conf.canonicalURI) {
-        try {
-          conf.canonicalURI = new URL(
-            conf.canonicalURI,
-            document.location.href
-          ).href;
-        } catch (err) {
-          const msg = `CanonicalURI is an invalid URL: ${err.message}`;
-          showWarning(msg, name);
-          conf.canonicalURI = null;
-        }
-      } else if (trLatestUri) {
-        conf.canonicalURI = trLatestUri;
+      if (conf.latestVersion && !conf.canonicalURI) {
+        conf.canonicalURI = conf.latestVersion;
       }
   }
   if (conf.canonicalURI) {
-    const linkElem = document.createElement("link");
-    linkElem.setAttribute("rel", "canonical");
-    linkElem.setAttribute("href", conf.canonicalURI);
+    const linkElem = html`<link rel="canonical" href="${conf.canonicalURI}" />`;
     document.head.appendChild(linkElem);
   }
+
   if (conf.doJsonLd) {
     await addJSONLDInfo(conf, document);
   }
 }
 
 async function addJSONLDInfo(conf, doc) {
+  const rdfStatus = status2rdf[conf.specStatus];
   // Content for JSON
   const type = ["TechArticle"];
-  if (conf.rdfStatus) type.push(conf.rdfStatus);
+  if (rdfStatus) type.push(rdfStatus);
 
   const jsonld = {
     "@context": [
@@ -91,7 +101,7 @@ async function addJSONLDInfo(conf, doc) {
     type,
     name: document.title,
     inLanguage: doc.documentElement.lang || "en",
-    license: conf.licenseInfo.url,
+    license: conf.licenseInfo?.url,
     datePublished: conf.dashDate,
     /** @type {{ name: string, url?: string } | { name: string, url?: string }[]} */
     copyrightHolder: {

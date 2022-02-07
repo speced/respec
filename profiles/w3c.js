@@ -1,13 +1,7 @@
-"use strict";
-// In case everything else fails, we want the error
-window.addEventListener("error", ev => {
-  console.error(ev.error, ev.message, ev);
-});
+import * as ReSpec from "../src/respec.js";
 
 const modules = [
   // order is significant
-  import("../src/core/base-runner.js"),
-  import("../src/core/ui.js"),
   import("../src/core/location-hash.js"),
   import("../src/core/l10n.js"),
   import("../src/w3c/group.js"),
@@ -38,11 +32,12 @@ const modules = [
   import("../src/core/link-to-dfn.js"),
   import("../src/core/xref.js"),
   import("../src/core/data-cite.js"),
-  import("../src/core/webidl-index.js"),
   import("../src/core/render-biblio.js"),
   import("../src/core/dfn-index.js"),
   import("../src/core/contrib.js"),
+  import("../src/core/sections.js"),
   import("../src/core/fix-headers.js"),
+  import("../src/core/webidl-index.js"),
   import("../src/core/structure.js"),
   import("../src/core/informative.js"),
   import("../src/core/id-headers.js"),
@@ -64,36 +59,22 @@ const modules = [
   import("../src/core/algorithms.js"),
   import("../src/core/anchor-expander.js"),
   import("../src/core/custom-elements/index.js"),
+  import("../src/core/web-monetization.js"),
+  import("../src/core/before-save.js"),
   /* Linters must be the last thing to run */
   import("../src/core/linter-rules/check-charset.js"),
   import("../src/core/linter-rules/check-punctuation.js"),
   import("../src/core/linter-rules/check-internal-slots.js"),
   import("../src/core/linter-rules/local-refs-exist.js"),
+  import("../src/core/linter-rules/no-unused-dfns.js"),
   import("../src/core/linter-rules/no-headingless-sections.js"),
   import("../src/core/linter-rules/no-unused-vars.js"),
-  import("../src/core/linter-rules/privsec-section.js"),
+  import("../src/w3c/linter-rules/required-sections.js"),
   import("../src/core/linter-rules/wpt-tests-exist.js"),
   import("../src/core/linter-rules/no-http-props.js"),
-  import("../src/core/a11y.js"),
+  import("../src/core/linter-rules/a11y.js"),
 ];
 
-async function domReady() {
-  if (document.readyState === "loading") {
-    await new Promise(resolve =>
-      document.addEventListener("DOMContentLoaded", resolve)
-    );
-  }
-}
-
-(async () => {
-  const [runner, { ui }, ...plugins] = await Promise.all(modules);
-  try {
-    ui.show();
-    await domReady();
-    await runner.runAll(plugins);
-  } finally {
-    ui.enable();
-  }
-})().catch(err => {
-  console.error(err);
-});
+Promise.all(modules)
+  .then(plugins => ReSpec.run(plugins))
+  .catch(err => console.error(err));

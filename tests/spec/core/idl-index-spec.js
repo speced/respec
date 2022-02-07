@@ -46,14 +46,14 @@ interface Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex).not.toBe(null);
+    expect(idlIndex).not.toBeNull();
     const pre = idlIndex.querySelector("pre");
     // idlHeaders are not tested here
     pre.querySelectorAll(".idlHeader").forEach(elem => elem.remove());
 
     expect(pre.textContent).toBe(expectedIDL);
     const header = doc.querySelector("#idl-index > h2");
-    expect(header).not.toBe(null);
+    expect(header).not.toBeNull();
     expect(header.textContent).toBe("1. IDL Index");
   });
 
@@ -264,7 +264,7 @@ dictionary Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex).not.toBe(null);
+    expect(idlIndex).not.toBeNull();
     const pre = idlIndex.querySelector("pre");
 
     expect(pre.querySelectorAll(".idlHeader")).toHaveSize(1);
@@ -290,10 +290,10 @@ dictionary Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex).not.toBe(null);
-    expect(idlIndex.querySelector("pre")).toBe(null);
+    expect(idlIndex).not.toBeNull();
+    expect(idlIndex.querySelector("pre")).toBeNull();
     const header = doc.querySelector("#idl-index > h2");
-    expect(header).not.toBe(null);
+    expect(header).not.toBeNull();
     expect(header.textContent).toBe("1. PASS");
     expect(doc.querySelectorAll("#idl-index > h2")).toHaveSize(1);
   });

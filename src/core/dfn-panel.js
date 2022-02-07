@@ -19,7 +19,7 @@ export async function run() {
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
-    "dfn[id], #index-defined-elsewhere .index-term"
+    "dfn[id]:not([data-cite]), #index-defined-elsewhere .index-term"
   );
   const panels = document.createDocumentFragment();
   for (const el of elems) {
@@ -27,9 +27,7 @@ export async function run() {
     // Make it possible to reach el by tabbing,
     // allowing keyboard action as needed.
     el.tabIndex = 0;
-    el.setAttribute("role", "link");
     el.setAttribute("aria-haspopup", "dialog");
-    if (!el.title) el.title = "Show what links to this definition";
   }
   document.body.append(panels);
 

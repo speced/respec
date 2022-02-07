@@ -10,7 +10,6 @@
 //  - once we have something decent, merge, ship as 3.2.0
 import { html, pluralize } from "./import-maps.js";
 import css from "../styles/ui.css.js";
-import { joinAnd } from "./utils.js";
 import { markdownToHtml } from "./markdown.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
@@ -264,23 +263,30 @@ function rsErrorToHTML(err) {
     return err;
   }
 
-  const plugin = err.plugin ? `(${err.plugin}): ` : "";
-  const hint = err.hint ? ` ${err.hint}` : "";
+  const plugin = err.plugin
+    ? `<p class="respec-plugin">(plugin: "${err.plugin}")</p>`
+    : "";
+  const hint = err.hint
+    ? `<p class="respec-hint">**How to fix:**  ${err.hint.trim()}</p>`
+    : "";
   const elements = Array.isArray(err.elements)
-    ? ` Occurred at: ${joinAnd(err.elements.map(generateMarkdownLink))}.`
+    ? `<p class="respec-occurrences">Occurred **${
+        err.elements.length
+      }** times at:</p>
+    ${err.elements.map(generateMarkdownLink)}
+    `
     : "";
   const details = err.details
     ? `\n\n<details>\n${err.details}\n</details>\n`
     : "";
 
-  const text = `${plugin}${err.message}${hint}${elements}${details}`;
+  const text = `**${err.message}**<br>${hint}${elements}${details}${plugin}`;
   return markdownToHtml(text);
 }
 
 /**
  * @param {Element} element
- * @param {number} i
  */
-function generateMarkdownLink(element, i) {
-  return `[${i + 1}](#${element.id})`;
+function generateMarkdownLink(element) {
+  return `\n * [\`<${element.localName}>\`](#${element.id}) element`;
 }

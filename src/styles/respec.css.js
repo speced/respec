@@ -17,19 +17,8 @@ export default css`
   }
 }
 
-/* Override code highlighter background */
-.hljs {
-  background: transparent !important;
-}
-
 /* --- INLINES --- */
-h1 abbr,
-h2 abbr,
-h3 abbr,
-h4 abbr,
-h5 abbr,
-h6 abbr,
-a abbr {
+:is(h1, h2, h3, h4, h5, h6, a) abbr {
   border: none;
 }
 
@@ -90,12 +79,12 @@ th code {
 }
 
 a[href].orcid {
-    padding-left: 4px;
-    padding-right: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 a[href].orcid > svg {
-    margin-bottom: -2px;
+  margin-bottom: -2px;
 }
 
 /* --- TOC --- */
@@ -225,44 +214,27 @@ a[href].self-link:hover {
   background-color: transparent;
 }
 
-h2,
-h3,
-h4,
-h5,
-h6 {
-  position: relative;
-}
-
 aside.example .marker > a.self-link {
   color: inherit;
 }
 
-h2 > a.self-link,
-h3 > a.self-link,
-h4 > a.self-link,
-h5 > a.self-link,
-h6 > a.self-link {
+:is(h2, h3, h4, h5, h6) + a.self-link {
   border: none;
   color: inherit;
-  font-size: 83%;
-  height: 2em;
-  left: -1.6em;
-  opacity: 0.5;
-  position: absolute;
-  text-align: center;
-  text-decoration: none;
-  top: 0;
-  transition: opacity 0.2s;
-  width: 2em;
+  position: relative;
+  top: -2.75em;
+  left: -1.4em;
+  margin-bottom: -2em;
+  display: block;
+  font-size: 100%;
 }
 
-h2 > a.self-link::before,
-h3 > a.self-link::before,
-h4 > a.self-link::before,
-h5 > a.self-link::before,
-h6 > a.self-link::before {
+:is(h2, h3, h4, h5, h6) + a.self-link::before {
   content: "§";
-  display: block;
+  opacity: 0.5;
+  text-decoration: none;
+  line-height: 1.2em;
+  vertical-align: middle;
 }
 
 @media (max-width: 767px) {
@@ -271,13 +243,8 @@ h6 > a.self-link::before {
   }
 
   /* Don't position self-link in headings off-screen */
-  h2 > a.self-link,
-  h3 > a.self-link,
-  h4 > a.self-link,
-  h5 > a.self-link,
-  h6 > a.self-link {
-    left: auto;
-    top: auto;
+  :is(h2, h3, h4, h5, h6) + a.self-link {
+    left: 101%;
   }
 }
 

@@ -16,7 +16,8 @@ describe("Core — Seo", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelectorAll("meta[name=description]")).toHaveSize(0);
+    const hasMetaDesc = doc.querySelectorAll("meta[name=description]");
+    expect(hasMetaDesc).toHaveSize(0);
   });
 
   it("inserts a meta element for the description", async () => {
@@ -29,9 +30,9 @@ describe("Core — Seo", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);
-    const metaTags = doc.querySelectorAll("meta[name=description]");
-    expect(metaTags).toHaveSize(1);
-    const meta = doc.head.querySelector("meta[name=description]");
+    const metas = doc.querySelectorAll("meta[name=description]"); 
+    expect(metas).toHaveSize(1);
+    const [meta] = metas;
     expect(meta.content).toBe("Pass");
   });
 });

@@ -1,9 +1,15 @@
 // @ts-check
-import { humanDate, showError, toShortIsoDate } from "../../core/utils.js";
-import { lang as defaultLang } from "../../core/l10n.js";
-import { html } from "../../core/import-maps.js";
 
 const name = "core/templates/show-people";
+
+import {
+  humanDate,
+  isValidConfDate,
+  showError,
+  showWarning,
+} from "../../core/utils.js";
+import { lang as defaultLang } from "../../core/l10n.js";
+import { html } from "../../core/import-maps.js";
 
 const localizationStrings = {
   en: {
@@ -40,7 +46,7 @@ const localizationStrings = {
 
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
-const orcidIcon = html`<svg
+const orcidIcon = () => html`<svg
   width="16"
   height="16"
   xmlns="http://www.w3.org/2000/svg"
@@ -62,115 +68,229 @@ const orcidIcon = html`<svg
 </svg>`;
 
 /**
- * @typedef {object} Person
- * @property {string} [Person.name]
- * @property {string} [Person.company]
- * @property {string|number} [Person.w3cid]
- * @property {string} [Person.mailto]
- * @property {string} [Person.url]
- * @property {string} [Person.orcid]
- * @property {string} [Person.company]
- * @property {string} [Person.companyURL]
- * @property {string} [Person.note]
- * @property {string} [Person.retiredDate]
- * @property {PersonExtras} [Person.extras]
- *
- * @typedef {object} PersonExtras
- * @property {string} PersonExtras.name
- * @property {string} [PersonExtras.class]
- * @property {string} [PersonExtras.href]
- *
- * @param {Person[]} persons
+ * @param {Conf} conf
+ * @param {"editors" | "authors" | "formerEditors"} propName - the name of the property of the people to render.
  */
-export default function showPeople(persons = []) {
+export default function showPeople(conf, propName) {
+  const people = conf[propName];
+  if (!Array.isArray(people) || !people.length) return; // nothing to show...
+
+  const validatePerson = personValidator(propName);
+  return people.filter(validatePerson).map(personToHTML);
+}
+
+/**
+ * @param {Person} person
+ */
+function personToHTML(person) {
   const l10n = localizationStrings[lang];
-  return persons.map(getItem);
+  // The following are treated as opt-in HTML by hyperHTML
+  // we need to deprecate this!
+  const personName = [person.name];
+  const company = [person.company];
+  const editorId = person.w3cid || null;
+  const contents = [];
+  if (person.mailto) {
+    person.url = `mailto:${person.mailto}`;
+  }
+  if (person.url) {
+    const url = new URL(person.url, document.location.href);
+    const classList =
+      url.protocol === "mailto:"
+        ? "ed_mailto u-email email p-name"
+        : "u-url url p-name fn";
+    contents.push(
+      html`<a class="${classList}" href="${person.url}">${personName}</a>`
+    );
+  } else {
+    contents.push(html`<span class="p-name fn">${personName}</span>`);
+  }
+  if (person.orcid) {
+    contents.push(
+      html`<a class="p-name orcid" href="${person.orcid}">${orcidIcon()}</a>`
+    );
+  }
+  if (person.company) {
+    const hCard = "p-org org h-org";
+    const companyElem = person.companyURL
+      ? html`<a class="${hCard}" href="${person.companyURL}">${company}</a>`
+      : html`<span class="${hCard}">${company}</span>`;
+    contents.push(html` (${companyElem})`);
+  }
+  if (person.note) {
+    contents.push(document.createTextNode(` (${person.note})`));
+  }
+  if (person.extras) {
+    contents.push(...person.extras.map(extra => html`, ${renderExtra(extra)}`));
+  }
+  if (person.retiredDate) {
+    const { retiredDate } = person;
+    const time = html`<time datetime="${retiredDate}"
+      >${humanDate(retiredDate)}</time
+    >`;
+    contents.push(html` - ${l10n.until(time)} `);
+  }
+  const dd = html`<dd
+    class="editor p-author h-card vcard"
+    data-editor-id="${editorId}"
+  >
+    ${contents}
+  </dd>`;
+  return dd;
+}
 
-  function getItem(p) {
-    const personName = [p.name]; // treated as opt-in HTML by hyperHTML
-    const company = [p.company];
-    const editorid = p.w3cid ? parseInt(p.w3cid, 10) : null;
-    /** @type {HTMLElement} */
-    const dd = html`<dd
-      class="p-author h-card vcard"
-      data-editor-id="${editorid}"
-    ></dd>`;
-    const span = document.createDocumentFragment();
-    const contents = [];
-    if (p.mailto) {
-      contents.push(html`<a
-        class="ed_mailto u-email email p-name"
-        href="${`mailto:${p.mailto}`}"
-        >${personName}</a
-      >`);
-    } else if (p.url) {
-      contents.push(
-        html`<a class="u-url url p-name fn" href="${p.url}">${personName}</a>`
-      );
-    } else {
-      contents.push(html`<span class="p-name fn">${personName}</span>`);
+function renderExtra(extra) {
+  const classVal = extra.class || null;
+  const { name, href } = extra;
+  return href
+    ? html`<a href="${href}" class="${classVal}">${name}</a>`
+    : html`<span class="${classVal}">${name}</span>`;
+}
+
+/**
+ *
+ * @param {string} prop
+ */
+function personValidator(prop) {
+  /**
+   * @param {Person} person
+   * @param {Number} index
+   */
+  return function validatePerson(person, index) {
+    const docsUrl = "https://respec.org/docs/";
+    const seePersonHint = `See [person](${docsUrl}#person) configuration for available options.`;
+    const preamble =
+      `Error processing the [person object](${docsUrl}#person) ` +
+      `at index ${index} of the "[\`${prop}\`](${docsUrl}#${prop})" configuration option.`;
+
+    if (!person.name) {
+      const msg = `${preamble} Missing required property \`"name"\`.`;
+      showError(msg, name, { hint: seePersonHint });
+      return false;
     }
-    if (p.orcid) {
-      contents.push(
-        html`<a class="p-name orcid" href="${p.orcid}"
-          >${orcidIcon.cloneNode(true)}
-        </a>`
-      );
+
+    if (person.orcid) {
+      const { orcid } = person;
+      const orcidUrl = new URL(orcid, "https://orcid.org/");
+
+      if (orcidUrl.origin !== "https://orcid.org") {
+        const msg = `${preamble} ORCID "${person.orcid}" at index ${index} is invalid.`;
+        const hint = `The origin should be "https://orcid.org", not "${orcidUrl.origin}".`;
+        showError(msg, name, { hint });
+        return false;
+      }
+
+      // trailing slash would mess up checksum
+      const orcidId = orcidUrl.pathname.slice(1).replace(/\/$/, "");
+      if (!/^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/.test(orcidId)) {
+        const msg = `${preamble} ORCID "${orcidId}" has wrong format.`;
+        const hint = `ORCIDs have the format "1234-1234-1234-1234."`;
+        showError(msg, name, { hint });
+        return false;
+      }
+
+      if (!checkOrcidChecksum(orcid)) {
+        const msg = `${preamble} ORCID "${orcid}" failed checksum check.`;
+        const hint = "Please check that the ORCID is valid.";
+        showError(msg, name, { hint });
+        return false;
+      }
+
+      // canonical form
+      person.orcid = orcidUrl.href;
     }
-    if (p.company) {
-      if (p.companyURL) {
-        contents.push(
-          html`
-            (<a class="p-org org h-org h-card" href="${p.companyURL}"
-              >${company}</a
-            >)
-          `
+
+    if (person.retiredDate && !isValidConfDate(person.retiredDate)) {
+      const msg = `${preamble} The property "\`retiredDate\`" is not a valid date.`;
+      showError(msg, name, {
+        hint: `The expected format is YYYY-MM-DD. ${seePersonHint}`,
+      });
+      return false;
+    }
+
+    if (
+      person.hasOwnProperty("extras") &&
+      !validateExtras(person.extras, seePersonHint, preamble)
+    ) {
+      return false;
+    }
+
+    if (person.url && person.mailto) {
+      const msg = `${preamble} Has both "url" and "mailto" property.`;
+      showWarning(msg, name, {
+        hint: `Please choose either "url" or "mailto" ("url" is preferred). ${seePersonHint}`,
+      });
+    }
+
+    if (person.companyURL && !person.company) {
+      const msg = `${preamble} Has a "\`companyURL\`" property but no "\`company\`" property.`;
+      showWarning(msg, name, {
+        hint: `Please add a "\`company\`" property. ${seePersonHint}.`,
+      });
+    }
+    return true;
+  };
+}
+
+/**
+ *
+ * @param {PersonExtras[]} extras
+ * @param {string} hint
+ * @param {string} preamble
+ */
+function validateExtras(extras, hint, preamble) {
+  if (!Array.isArray(extras)) {
+    showError(
+      `${preamble}. A person's "extras" member must be an array.`,
+      name,
+      { hint }
+    );
+    return false;
+  }
+  return extras.every((extra, index) => {
+    switch (true) {
+      case typeof extra !== "object":
+        showError(
+          `${preamble}. Member "extra" at index ${index} is not an object.`,
+          name,
+          {
+            hint,
+          }
         );
-      } else {
-        contents.push(html` (${company}) `);
-      }
+        return false;
+      case !extra.hasOwnProperty("name"):
+        showError(
+          `${preamble} \`PersonExtra\` object at index ${index} is missing required "name" member.`,
+          name,
+          { hint }
+        );
+        return false;
+      case typeof extra.name === "string" && extra.name.trim() === "":
+        showError(
+          `${preamble} \`PersonExtra\` object at index ${index} "name" can't be empty.`,
+          name,
+          { hint }
+        );
+        return false;
     }
-    if (p.note) contents.push(document.createTextNode(` (${p.note})`));
-    if (p.extras) {
-      const results = p.extras
-        // Remove empty names
-        .filter(extra => extra.name && extra.name.trim())
-        // Convert to HTML
-        .map(getExtra);
-      for (const result of results) {
-        contents.push(document.createTextNode(", "), result);
-      }
-    }
-    if (p.retiredDate) {
-      const retiredDate = new Date(p.retiredDate);
-      const isValidDate = retiredDate.toString() !== "Invalid Date";
-      const timeElem = document.createElement("time");
-      timeElem.textContent = isValidDate
-        ? humanDate(retiredDate)
-        : "Invalid Date"; // todo: Localise invalid date
-      if (!isValidDate) {
-        const msg = "The date is invalid. The expected format is YYYY-MM-DD.";
-        const title = "Invalid date";
-        showError(msg, name, { title, elements: [timeElem] });
-      }
-      timeElem.dateTime = toShortIsoDate(retiredDate);
-      contents.push(html` - ${l10n.until(timeElem)} `);
-    }
+    return true;
+  });
+}
 
-    // @ts-ignore: hyperhtml types only support Element but we use a DocumentFragment here
-    html.bind(span)`${contents}`;
-    dd.appendChild(span);
-    return dd;
-  }
-
-  function getExtra(extra) {
-    const span = html`<span class="${extra.class || null}"></span>`;
-    let textContainer = span;
-    if (extra.href) {
-      textContainer = html`<a href="${extra.href}"></a>`;
-      span.appendChild(textContainer);
-    }
-    textContainer.textContent = extra.name;
-    return span;
-  }
+/**
+ * @param {string} orcid
+ * @returns {boolean}
+ */
+function checkOrcidChecksum(orcid) {
+  // calculate checksum as per https://support.orcid.org/hc/en-us/articles/360006897674-Structure-of-the-ORCID-Identifier
+  const lastDigit = orcid[orcid.length - 1];
+  const remainder = orcid
+    .split("")
+    .slice(0, -1)
+    .filter(c => /\d/.test(c))
+    .map(Number)
+    .reduce((acc, c) => (acc + c) * 2, 0);
+  const lastDigitInt = (12 - (remainder % 11)) % 11;
+  const lastDigitShould = lastDigitInt === 10 ? "X" : String(lastDigitInt);
+  return lastDigit === lastDigitShould;
 }

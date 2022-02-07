@@ -17,7 +17,7 @@ describe("Core — dfn-index", () => {
     expect(index.querySelectorAll("h2")).toHaveSize(1);
     expect(index.querySelector("h2").textContent).toBe("A. Index");
     expect(index.firstElementChild).toBe(index.querySelector("h2"));
-    expect(index.querySelector("h2").nextElementSibling).toEqual(
+    expect(index.querySelector("h2 + a + p")).toEqual(
       doc.getElementById("pass")
     );
   });
@@ -46,15 +46,17 @@ describe("Core — dfn-index", () => {
     expect(localIndexHeading.textContent).toContain(
       "Terms defined by this specification"
     );
-    expect(localIndexHeading.nextElementSibling.matches("ul.index")).toBeTrue();
+    expect(
+      localIndex.querySelector("h3 + a.self-link + ul.index")
+    ).toBeTruthy();
 
     const externalIndexHeading = externalIndex.querySelector("h3");
     expect(externalIndexHeading.textContent).toContain(
       "Terms defined by reference"
     );
     expect(
-      externalIndexHeading.nextElementSibling.matches("ul.index")
-    ).toBeTrue();
+      externalIndex.querySelector("h3 + a.self-link + ul.index")
+    ).toBeTruthy();
   });
 
   describe("Local Terms Index", () => {
@@ -362,10 +364,8 @@ describe("Core — dfn-index", () => {
       expect(index.querySelectorAll(".index-term")).toHaveSize(2);
       const term = index.querySelector(".index-term");
 
-      expect(term.getAttribute("role")).toBe("link");
       expect(term.tabIndex).toBe(0);
       expect(term.getAttribute("aria-haspopup")).toBe("dialog");
-      expect(term.title).toBe("Show what links to this definition");
 
       expect(term.textContent).toBe("Event interface");
       expect(term.id).toBe("index-term-event-interface");

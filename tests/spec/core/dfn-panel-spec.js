@@ -27,6 +27,19 @@ describe("Core — dfnPanel", () => {
   describe("panel container", () => {
     const dfnId = "dfn-many";
 
+    it("doesn't add a panel for legacy <dfn data-cite>", async () => {
+      const body = `
+        <p>
+          <dfn id="legacy" data-cite="html#event">legacy link</dfn>
+          <a>legacy link</a>
+        </p>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById(getPanelId("legacy"));
+      expect(panel).toBeNull();
+    });
+
     it("has role and aria attributes", async () => {
       const doc = await makeRSDoc(ops);
       const panel = doc.getElementById(getPanelId(dfnId));

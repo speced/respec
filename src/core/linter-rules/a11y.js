@@ -1,12 +1,11 @@
 // @ts-check
 /**
- * Module: core/a11y
  * Lints for accessibility issues using axe-core package.
  */
 
-import { showError, showWarning } from "./utils.js";
+import { showError, showWarning } from "../utils.js";
 
-export const name = "core/a11y";
+export const name = "core/linter-rules/a11y";
 
 const DISABLED_RULES = [
   "color-contrast", // too slow 🐢
@@ -16,11 +15,12 @@ const DISABLED_RULES = [
 ];
 
 export async function run(conf) {
-  if (!conf.a11y) {
+  if (!conf.lint?.a11y && /** legacy */ !conf.a11y) {
     return;
   }
+  const config = conf.lint?.a11y || /** legacy */ conf.a11y;
 
-  const options = conf.a11y === true ? {} : conf.a11y;
+  const options = config === true ? {} : config;
   const violations = await getViolations(options);
   for (const violation of violations) {
     /**
@@ -39,7 +39,7 @@ export async function run(conf) {
     }
 
     const { id, help, description, helpUrl } = violation;
-    const title = `a11y/${id}: ${help}`;
+    const title = `a11y/${id}: ${help}.`;
     for (const [failureSummary, elements] of groupedBySummary) {
       const hints = formatHintsAsMarkdown(failureSummary);
       const details = `\n\n${description}.\n\n${hints}. ([Learn more](${helpUrl}))`;
@@ -89,7 +89,7 @@ async function getViolations(opts) {
 function importAxe() {
   const script = document.createElement("script");
   script.classList.add("remove");
-  script.src = "https://unpkg.com/axe-core@3/axe.min.js";
+  script.src = "https://unpkg.com/axe-core@4/axe.min.js";
   document.head.appendChild(script);
   return new Promise((resolve, reject) => {
     script.onload = () => resolve(window.axe);

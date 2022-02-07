@@ -4,6 +4,27 @@ import * as utils from "../../../src/core/utils.js";
 import { html } from "../../../src/core/import-maps.js";
 
 describe("Core - Utils", () => {
+  describe("makeSafeCopy", () => {
+    it("removes attributes from dfn elements when making a safe copy", () => {
+      const p = document.createElement("p");
+      p.innerHTML = `
+        <dfn
+          data-export=""
+          data-dfn-type="interface"
+          data-idl="interface"
+          data-title="RTCIceTransport"
+          data-dfn-for=""
+          tabindex="0"
+          aria-haspopup="dialog"
+          title="Show what links to this definition"><code>RTCIceTransport</code></dfn>
+      `;
+      const copy = utils.makeSafeCopy(p);
+      const span = copy.querySelector("span");
+      expect(span.textContent).toBe("RTCIceTransport");
+      expect(copy.attributes).toHaveSize(0);
+    });
+  });
+
   describe("fetchAndCache", () => {
     async function clearCaches() {
       const keys = await caches.keys();
@@ -244,6 +265,14 @@ describe("Core - Utils", () => {
     });
   });
 
+  describe("isValidConfDate", () => {
+    it("checks the validity of a date", () => {
+      expect(utils.isValidConfDate("2000-01-01")).toBeTrue();
+      expect(utils.isValidConfDate("01-01-01")).toBeFalse();
+      expect(utils.isValidConfDate("March 1, 2020")).toBeFalse();
+    });
+  });
+
   describe("joinAnd", () => {
     it("joins with proper commas and 'and'", () => {
       expect(utils.joinAnd([])).toBe("");
@@ -448,6 +477,19 @@ describe("Core - Utils", () => {
         div.remove();
         a.remove();
       });
+
+      it("renames elements and doesn't copy attributes when copyAttributes is false", () => {
+        const a = document.createElement("a");
+        a.setAttribute("class", "some-class");
+        a.setAttribute("title", "title");
+        a.innerHTML = "<span id='inner-pass'>pass</span>";
+        document.body.appendChild(a);
+        const div = utils.renameElement(a, "div", { copyAttributes: false });
+        expect(div instanceof HTMLDivElement).toBe(true);
+        expect(div.attributes).toHaveSize(0);
+        div.remove();
+        a.remove();
+      });
     });
 
     describe("addId", () => {
@@ -568,6 +610,72 @@ describe("Core - Utils", () => {
         const [anchor] = fragment.children;
 
         expect(utils.getElementIndentation(anchor)).toBe("          ");
+      });
+    });
+
+    describe("toMDCode()", () => {
+      it("wraps a string in backticks", () => {
+        expect(utils.toMDCode("")).toBe("");
+        expect(utils.toMDCode("test")).toBe("`test`");
+      });
+    });
+
+    describe("codedJoinOr()", () => {
+      it("uses disjunction", () => {
+        expect(utils.codedJoinOr([])).toBe("");
+        expect(utils.codedJoinOr(["a", "b", "c"])).toBe("`a`, `b`, or `c`");
+      });
+      it("quotes and uses disjunction", () => {
+        expect(utils.codedJoinOr([], { quotes: true })).toBe("");
+        expect(utils.codedJoinOr(["a", "b", "c"], { quotes: true })).toBe(
+          '`"a"`, `"b"`, or `"c"`'
+        );
+      });
+    });
+
+    describe("codedJoinAnd()", () => {
+      it("uses conjunction", () => {
+        expect(utils.codedJoinAnd([])).toBe("");
+        expect(utils.codedJoinAnd(["a", "b", "c"])).toBe("`a`, `b`, and `c`");
+      });
+      it("quotes and uses conjunction", () => {
+        expect(utils.codedJoinAnd([], { quotes: true })).toBe("");
+        expect(utils.codedJoinAnd(["a", "b", "c"], { quotes: true })).toBe(
+          '`"a"`, `"b"`, and `"c"`'
+        );
+      });
+    });
+    describe("docLink", () => {
+      const docLink = utils.docLink;
+      it("it allows unlinked strings", () => {
+        const result = docLink`Link to ${"nothing"}.`;
+        expect(result).toBe("Link to nothing.");
+      });
+
+      it("it links to [config] options", () => {
+        const result = docLink`Link to ${"[specStatus]"}.`;
+        expect(result).toBe(
+          "Link to [`specStatus`](https://respec.org/docs/#specStatus)."
+        );
+      });
+
+      it("it aliases relative to docs folder", () => {
+        const result = docLink`See ${"[using `data-dfn-for`|#data-dfn-for]"}.`;
+        expect(result).toBe(
+          "See [using `data-dfn-for`](https://respec.org/docs/#data-dfn-for)."
+        );
+      });
+
+      it("it aliases absolute URLs", () => {
+        const result = docLink`Link to ${"[doc status|https://somewhere.else]"}.`;
+        expect(result).toBe("Link to [doc status](https://somewhere.else/).");
+      });
+
+      it("it allows mixing known, aliased, and absolute URLs", () => {
+        const result = docLink`Link to ${"[authors]"} ${"[writers|editors]"} ${"[somewhere|https://somewhere.else]"}.`;
+        expect(result).toBe(
+          "Link to [`authors`](https://respec.org/docs/#authors) [writers](https://respec.org/docs/editors) [somewhere](https://somewhere.else/)."
+        );
       });
     });
   });
