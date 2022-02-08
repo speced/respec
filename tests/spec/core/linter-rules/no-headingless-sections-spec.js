@@ -12,7 +12,7 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
   );
   const config = { lint: { "no-headingless-sections": true } };
 
-  it("returns error when heading is missing section", async () => {
+  it("warns when heading is missing section", async () => {
     const body = `<section id="test"></section>`;
     const opts = makeStandardOps(config, body);
     const doc = await makeRSDoc(opts);

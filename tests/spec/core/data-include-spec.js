@@ -27,7 +27,7 @@ describe("Core — Data Include", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops, url);
-    const p = doc.querySelector("#includes > div.header-wrapper > p");
+    const p = doc.querySelector("#includes > div > p");
     expect(p).toBeTruthy();
     expect(p.textContent).toBe("INCLUDED");
     const div = doc.querySelector("#includes > div");
