@@ -257,14 +257,6 @@ describe("Core - Utils", () => {
     });
   });
 
-  describe("isoDate", () => {
-    it("produces an ISO date", () => {
-      expect(utils.isoDate("2013-06-25")).toMatch(/2013-06-2[45]T/);
-      const d = new Date("2013-09-25");
-      expect(utils.isoDate(d)).toMatch(/2013-09-2[45]T/);
-    });
-  });
-
   describe("isValidConfDate", () => {
     it("checks the validity of a date", () => {
       expect(utils.isValidConfDate("2000-01-01")).toBeTrue();
