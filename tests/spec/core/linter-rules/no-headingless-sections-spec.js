@@ -1,21 +1,22 @@
 "use strict";
 
-import { makePluginDoc } from "../../SpecHelper.js";
+import {
+  makeRSDoc,
+  makeStandardOps,
+  warningFilters,
+} from "../../../spec/SpecHelper.js";
 
 describe("Core Linter Rule - 'no-headingless-sections'", () => {
-  const modules = [`/src/core/linter-rules/no-headingless-sections.js`];
+  const warningsFilter = warningFilters.filter(
+    "core/linter-rules/no-headingless-sections"
+  );
+  const config = { lint: { "no-headingless-sections": true } };
 
-  async function getWarnings(body) {
-    const config = { lint: { "no-headingless-sections": true } };
-    const doc = await makePluginDoc(modules, { config, body });
-    return doc.respec.warnings.filter(
-      warning => warning.plugin === "core/linter-rules/no-headingless-sections"
-    );
-  }
-
-  it("returns error when heading is missing section", async () => {
+  it("warns when heading is missing section", async () => {
     const body = `<section id="test"></section>`;
-    const warnings = await getWarnings(body);
+    const opts = makeStandardOps(config, body);
+    const doc = await makeRSDoc(opts);
+    const warnings = warningsFilter(doc);
 
     expect(warnings).toHaveSize(1);
     const [warning] = warnings;
@@ -27,17 +28,19 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
 
   it("doesn't complain when sections do have a heading", async () => {
     const body = `
+      <section>
+        <h2>test</h2>
         <section>
-          <h2>test</h2>
-          <section>
-            <h3>Test</h3>
-          </section>
-          <section>
-            <h3>Test</h3>
-          </section>
+          <h3>Test</h3>
         </section>
+        <section>
+          <h3>Test</h3>
+        </section>
+      </section>
     `;
-    const warnings = await getWarnings(body);
+    const opts = makeStandardOps(config, body);
+    const doc = await makeRSDoc(opts);
+    const warnings = warningsFilter(doc);
     expect(warnings).toHaveSize(0);
   });
 
@@ -53,7 +56,9 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
           </section>
         </section>
     `;
-    const warnings = await getWarnings(body);
+    const opts = makeStandardOps(config, body);
+    const doc = await makeRSDoc(opts);
+    const warnings = warningsFilter(doc);
     expect(warnings).toHaveSize(1);
     expect(warnings[0].elements).toHaveSize(1);
     expect(warnings[0].elements[0].id).toBe("badone");

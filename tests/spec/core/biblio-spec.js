@@ -302,7 +302,7 @@ it("allows custom content in the references section", async () => {
     `,
   };
   const doc = await makeRSDoc(ops);
-  const { textContent: h2Text } = doc.querySelector("#references > h2");
+  const { textContent: h2Text } = doc.querySelector("#references h2");
   const { textContent: pText } = doc.querySelector("#references > p");
   const [normRef, infoRef] = doc.querySelectorAll("#references h3");
   expect(doc.documentElement.lang).toBe("nl");
