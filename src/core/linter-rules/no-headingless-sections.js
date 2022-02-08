@@ -32,7 +32,7 @@ export function run(conf) {
   }
   const sections = Array.from(document.getElementsByTagName("section"));
   const offendingElements = sections.filter(
-    ({ firstElementChild: e }) => e?.matches(".header-wrapper") === false
+    ({ firstElementChild: e }) => !e || !e.matches(".header-wrapper")
   );
 
   if (!offendingElements.length) return;
