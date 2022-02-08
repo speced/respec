@@ -41,7 +41,7 @@ describe("Core — Include config as JSON", () => {
     const expectedObj = Object.assign(makeBasicConfig(), {
       publishDate: "1999-12-11",
       publishISODate: "1999-12-11T00:00:00.000Z",
-      generatedSubtitle: "Editor's Draft 11 December 1999",
+      generatedSubtitle: "W3C Editor's Draft 11 December 1999",
     });
     const expected = JSON.stringify(expectedObj, null, 2);
     const doc = await makeRSDoc(ops);

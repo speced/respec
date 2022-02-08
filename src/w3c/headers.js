@@ -91,6 +91,7 @@ import {
   concatDate,
   docLink,
   htmlJoinAnd,
+  norm,
   showError,
   showWarning,
 } from "../core/utils.js";
@@ -710,7 +711,9 @@ export async function run(conf) {
   // Makes a record of a few auto-generated things.
   pub("amend-user-config", {
     publishISODate: conf.publishISODate,
-    generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
+    generatedSubtitle: norm(
+      document.getElementById("w3c-state")?.textContent ?? ""
+    ),
   });
 }
 
