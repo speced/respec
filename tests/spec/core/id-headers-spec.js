@@ -79,10 +79,14 @@ describe("Core - ID headers", () => {
     });
 
     it("adds section links", () => {
-      const test1 = doc.querySelector("#test-1 > h2 + a.self-link");
+      const test1 = doc.querySelector(
+        "#test-1 > div.header-wrapper > h2 + a.self-link"
+      );
       expect(test1.getAttribute("href")).toBe("#test-1");
 
-      const test2 = doc.querySelector("#pass > h2 + a.self-link");
+      const test2 = doc.querySelector(
+        "#pass > div.header-wrapper > h2 + a.self-link"
+      );
       expect(test2.getAttribute("href")).toBe("#custom-id");
     });
 
