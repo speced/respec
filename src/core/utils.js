@@ -33,7 +33,6 @@ export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
 // after the day of the month, which is required by the W3C.
 const dateLang =
   docLang === "en" || docLang.startsWith("en-") ? "en-AU" : docLang;
-
 export const W3CDate = new Intl.DateTimeFormat(dateLang, {
   timeZone: "UTC",
   year: "numeric",

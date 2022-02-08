@@ -43,6 +43,7 @@ const localizationStrings = {
     },
   },
 };
+const l10n = getIntlData(localizationStrings);
 
 const orcidIcon = () => html`<svg
   width="16"
@@ -81,7 +82,6 @@ export default function showPeople(conf, propName) {
  * @param {Person} person
  */
 function personToHTML(person) {
-  const l10n = getIntlData(localizationStrings);
   // The following are treated as opt-in HTML by hyperHTML
   // we need to deprecate this!
   const personName = [person.name];
