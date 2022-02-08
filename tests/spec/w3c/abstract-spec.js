@@ -72,9 +72,10 @@ describe("W3C — Abstract", () => {
     const doc = await makeRSDoc(null, "spec/w3c/abstract-legacy-div.html");
     expect(doc.querySelector("div#abstract")).toBeNull();
     expect(doc.querySelector("section#abstract.introductory")).toBeTruthy();
-    expect(doc.querySelector("section#abstract>h2").textContent).toBe(
-      "Abstract"
-    );
+    expect(
+      doc.querySelector("section#abstract > div.header-wrapper > h2")
+        .textContent
+    ).toBe("Abstract");
     expect(doc.querySelector("section#abstract>p").textContent).toBe(
       "The abstract."
     );
