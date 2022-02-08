@@ -23,11 +23,7 @@ describe("w3c — required-sections", () => {
   );
 
   it("does nothing if disabled", async () => {
-    const ops = makeStandardOps({
-      lint: { "required-sections": false },
-      specStatus: "WD",
-      group: "webapps",
-    });
+    const ops = makeStandardOps({ lint: { "required-sections": false } });
     const doc = await makeRSDoc(ops);
     const errors = errorsFilter(doc);
     const warnings = warningsFilter(doc);
@@ -36,11 +32,7 @@ describe("w3c — required-sections", () => {
   });
 
   it("allows using 'error' as the logger", async () => {
-    const ops = makeStandardOps({
-      lint: { "required-sections": "error" },
-      specStatus: "WD",
-      group: "webapps",
-    });
+    const ops = makeStandardOps({ lint: { "required-sections": "error" } });
     const doc = await makeRSDoc(ops);
     const errors = errorsFilter(doc);
     const warnings = warningsFilter(doc);
@@ -49,11 +41,7 @@ describe("w3c — required-sections", () => {
   });
 
   it("allows using 'warn' as the logger", async () => {
-    const ops = makeStandardOps({
-      lint: { "required-sections": "warn" },
-      specStatus: "WD",
-      group: "webapps",
-    });
+    const ops = makeStandardOps({ lint: { "required-sections": "warn" } });
     const doc = await makeRSDoc(ops);
     const errors = errorsFilter(doc);
     const warnings = warningsFilter(doc);
@@ -80,8 +68,7 @@ describe("w3c — required-sections", () => {
     const ops = makeStandardOps({
       lint: { "required-sections": true },
       noRecTrack: true,
-      specStatus: "WD",
-      group: "webapps",
+      specStatus: "ED",
     });
     const doc = await makeRSDoc(ops);
     const errors = errorsFilter(doc);
