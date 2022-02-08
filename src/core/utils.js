@@ -5,6 +5,7 @@
 import { lang as docLang } from "./l10n.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
+import { reindent } from "./reindent.js";
 export const name = "core/utils";
 
 const dashes = /-/g;
@@ -911,7 +912,7 @@ function addQuotes(item) {
  * @param {string[]} keys
  */
 export function docLink(strings, ...keys) {
-  return strings
+  const linkifiedStr = strings
     .map((s, i) => {
       const key = keys[i];
       if (!key) {
@@ -930,4 +931,5 @@ export function docLink(strings, ...keys) {
       return `${s}[\`${linkingText}\`](https://respec.org/docs/#${linkingText})`;
     })
     .join("");
+  return reindent(linkifiedStr);
 }
