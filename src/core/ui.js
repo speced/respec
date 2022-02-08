@@ -11,8 +11,8 @@
 import { html, pluralize } from "./import-maps.js";
 import css from "../styles/ui.css.js";
 import { markdownToHtml } from "./markdown.js";
-import { sub } from "./pubsubhub.js";
 import { reindent } from "./reindent.js";
+import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
