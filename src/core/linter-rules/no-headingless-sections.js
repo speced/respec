@@ -30,18 +30,15 @@ export function run(conf) {
   if (!conf.lint?.[ruleName]) {
     return;
   }
-  /** @type {NodeListOf<HTMLElement>} */
-  const sections = document.querySelectorAll(
-    "section:not(h1, h2, h3, h4, h5, h6)"
+  const sections = Array.from(document.getElementsByTagName("section"));
+  const offendingElements = sections.filter(
+    ({ firstElementChild: e }) => e?.matches(".header-wrapper") === false
   );
-  const elements = [...sections].filter(
-    ({ firstElementChild: elem }) => !elem?.matches(".header-wrapper")
-  );
-  const offendingElements = [...elements];
-  if (offendingElements.length) {
-    showWarning(l10n.msg, name, {
-      hint: l10n.hint,
-      elements: offendingElements,
-    });
-  }
+
+  if (!offendingElements.length) return;
+
+  showWarning(l10n.msg, name, {
+    hint: l10n.hint,
+    elements: offendingElements,
+  });
 }

@@ -223,12 +223,13 @@ aside.example .marker > a.self-link {
   align-items: center;
 }
 
-:is(h2, h3, h4, h5, h6) {
+:is(h2, h3, h4, h5, h6):not(#toc h2) {
   position: relative;
   left: -.5em;
+  border-bottom: 1px solid #ddd;
 }
 
-:is(h2, h3, h4, h5, h6) + a.self-link {
+:is(h2, h3, h4, h5, h6):not(#toc h2) + a.self-link {
   color: inherit;
   order: -1;
   position: relative;
