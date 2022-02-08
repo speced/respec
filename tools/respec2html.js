@@ -18,13 +18,19 @@ class Renderer extends marked.Renderer {
     return colors.italic(text);
   }
   codespan(text) {
-    return colors.underline(text);
+    return colors.underline(unescape(text));
   }
   paragraph(text) {
     return text;
   }
   link(href, _title, text) {
     return `[${text}](${colors.blue.dim.underline(href)})`;
+  }
+  list(body, _orderered) {
+    return `\n${body}`;
+  }
+  listitem(text) {
+    return `* ${text}\n`;
   }
 }
 
@@ -268,4 +274,22 @@ async function write(destination, html) {
       await writeFile(newFilePath, html, "utf-8");
     }
   }
+}
+
+/** @param {string} s */
+function unescape(s) {
+  const re = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
+  const unescaped = {
+    "&amp;": "&",
+    "&#38;": "&",
+    "&lt;": "<",
+    "&#60;": "<",
+    "&gt;": ">",
+    "&#62;": ">",
+    "&apos;": "'",
+    "&#39;": "'",
+    "&quot;": '"',
+    "&#34;": '"',
+  };
+  return s.replace(re, m => unescaped[m]);
 }
