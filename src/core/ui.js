@@ -11,7 +11,6 @@
 import { html, pluralize } from "./import-maps.js";
 import css from "../styles/ui.css.js";
 import { markdownToHtml } from "./markdown.js";
-import { reindent } from "./reindent.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
 
@@ -268,14 +267,12 @@ function rsErrorToHTML(err) {
     ? `<p class="respec-plugin">(plugin: "${err.plugin}")</p>`
     : "";
   const hint = err.hint
-    ? `<p class="respec-hint"><strong>How to fix:</strong> ${reindent(
-        err.hint
-      )}`
+    ? `\n<p class="respec-hint"><strong>How to fix:</strong> ${err.hint}\n`
     : "";
   const elements = Array.isArray(err.elements)
-    ? `<p class="respec-occurrences">Occurred **${
+    ? `<p class="respec-occurrences">Occurred <strong>${
         err.elements.length
-      }** times at:
+      }</strong> times at:</p>
     ${err.elements.map(generateMarkdownLink)}
     `
     : "";
@@ -283,7 +280,7 @@ function rsErrorToHTML(err) {
     ? `\n\n<details>\n${err.details}\n</details>\n`
     : "";
 
-  const text = `**${err.message}**\n${hint}${elements}${details}${plugin}`;
+  const text = `**${err.message}**${hint}${elements}${details}${plugin}`;
   return markdownToHtml(text);
 }
 
