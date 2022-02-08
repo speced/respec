@@ -78,7 +78,7 @@ export function run(conf) {
   for (const header of headers) {
     const clone = header.cloneNode(true);
     // section number and self-link anchor
-    clone.querySelectorAll("bdi, .self-link")?.forEach(elem => elem.remove());
+    clone.querySelectorAll("bdi")?.forEach(elem => elem.remove());
     const text = norm(clone.textContent);
     if (missingRequiredSections.has(text)) {
       missingRequiredSections.delete(text);

@@ -43,9 +43,13 @@ export function run(conf) {
       h.closest(".appendix") ? "Appendix" : "Section",
       h.querySelector(":scope > bdi.secno")
     );
-    h.insertAdjacentElement(
-      "afterend",
-      html`<a href="${`#${id}`}" class="self-link" aria-label="${label}"></a>`
-    );
+    const wrapper = html`<div class="header-wrapper"></div>`;
+    h.replaceWith(wrapper);
+    const selfLink = html`<a
+      href="#${id}"
+      class="self-link"
+      aria-label="${label}"
+    ></a>`;
+    wrapper.append(h, selfLink);
   }
 }
