@@ -1990,9 +1990,11 @@ describe("W3C — Headers", () => {
     const doc = await makeRSDoc(ops);
     const sotd = doc.getElementById("sotd");
     expect(sotd).toBeTruthy();
-    expect(sotd.firstElementChild.localName).toBe("h2");
-    expect(sotd.firstElementChild.textContent).toBe("Override");
-    expect(sotd.children.length).toBe(2);
+    const h2 = sotd.querySelector("div.header-wrapper > h2");
+    expect(h2.textContent).toBe("Override");
+    // the div that contains the header
+    expect(sotd.children.length).toBe(1);
+    expect(sotd.firstElementChild.localName).toBe("div");
     expect(sotd.querySelector("a.self-link")).toBeTruthy();
   });
 
