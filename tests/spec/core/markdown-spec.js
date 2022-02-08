@@ -625,7 +625,9 @@ function getAnswer() {
     const ops = makeStandardOps({ format: "markdown" }, body);
     ops.abstract = null;
     const doc = await makeRSDoc(ops);
-    const headings = doc.querySelectorAll("body > section > div > h2");
+    const headings = doc.querySelectorAll(
+      "body > section > div.header-wrapper > h2"
+    );
     const headingTitles = [
       "Abstract",
       "Status of This Document",
