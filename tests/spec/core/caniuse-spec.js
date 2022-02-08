@@ -113,7 +113,7 @@ describe("Core — Can I Use", () => {
     const expectedObj = Object.assign(makeBasicConfig(), {
       publishDate: "1999-12-11",
       publishISODate: "1999-12-11T00:00:00.000Z",
-      generatedSubtitle: "Editor's Draft 11 December 1999",
+      generatedSubtitle: "W3C Editor's Draft 11 December 1999",
       caniuse: "FEATURE",
     });
     const opsWithCaniuse = {
