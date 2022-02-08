@@ -8,6 +8,7 @@ const modules = [
   import("../src/w3c/defaults.js"),
   import("../src/core/style.js"),
   import("../src/w3c/style.js"),
+  import("../src/w3c/l10n.js"),
   import("../src/core/github.js"),
   import("../src/core/data-include.js"),
   import("../src/core/markdown.js"),
