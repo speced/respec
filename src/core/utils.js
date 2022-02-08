@@ -29,6 +29,17 @@ export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   day: "2-digit",
 });
 
+// We use an "Australian Date" because it omits the ","
+// after the day of the month, which is required by the W3C.
+const dateLang =
+  docLang === "en" || docLang.startsWith("en-") ? "en-AU" : docLang;
+export const W3CDate = new Intl.DateTimeFormat(dateLang, {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "long",
+  day: dateLang === "en-AU" ? "2-digit" : "numeric",
+});
+
 /** CSS selector for matching elements that are non-normative */
 export const nonNormativeSelector =
   ".informative, .note, .issue, .example, .ednote, .practice, .introductory";
@@ -204,50 +215,6 @@ export function getIntlData(localizationStrings, lang = docLang) {
  */
 export function concatDate(date, sep = "") {
   return ISODate.format(date).replace(dashes, sep);
-}
-
-/**
- * Formats a date to "yyyy-mm-dd".
- * @param {Date} date
- */
-export function toShortIsoDate(date) {
-  return ISODate.format(date);
-}
-
-/**
- * Given either a Date object or a date in `YYYY-MM-DD` format, return a
- * human-formatted date suitable for use in the specification.
- * @param {Date | string} [date]
- */
-export function humanDate(
-  date = new Date(),
-  lang = document.documentElement.lang || "en"
-) {
-  if (!(date instanceof Date)) date = new Date(date);
-  const langs = [lang, "en"];
-  const day = date.toLocaleString(langs, {
-    day: "2-digit",
-    timeZone: "UTC",
-  });
-  const month = date.toLocaleString(langs, {
-    month: "long",
-    timeZone: "UTC",
-  });
-  const year = date.toLocaleString(langs, {
-    year: "numeric",
-    timeZone: "UTC",
-  });
-  // date month year
-  return `${day} ${month} ${year}`;
-}
-
-/**
- * Given either a Date object or a date in `YYYY-MM-DD` format, return an ISO
- * formatted date suitable for use in a xsd:datetime item
- * @param {Date | string} date
- */
-export function isoDate(date) {
-  return (date instanceof Date ? date : new Date(date)).toISOString();
 }
 
 /**
