@@ -276,8 +276,11 @@ async function write(destination, html) {
   }
 }
 
-/** @param {string} s */
-function unescape(s) {
+/**
+ * From https://gist.github.com/WebReflection/df05641bd04954f6d366
+ * @param {string} str
+ */
+function unescape(str) {
   const re = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
   const unescaped = {
     "&amp;": "&",
@@ -291,5 +294,5 @@ function unescape(s) {
     "&quot;": '"',
     "&#34;": '"',
   };
-  return s.replace(re, m => unescaped[m]);
+  return str.replace(re, m => unescaped[m]);
 }
