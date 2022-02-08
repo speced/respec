@@ -629,8 +629,6 @@ function getAnswer() {
       "body > section > div.header-wrapper > h2"
     );
     const headingTitles = [
-      "Abstract",
-      "Status of This Document",
       "1. First section",
       "2. Conformance",
       "3. Issue summary",

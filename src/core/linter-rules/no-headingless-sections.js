@@ -30,8 +30,11 @@ export function run(conf) {
   if (!conf.lint?.[ruleName]) {
     return;
   }
-  const sections = Array.from(document.getElementsByTagName("section"));
-  const offendingElements = sections.filter(
+  /** @type {NodeListOf<HTMLElement>} */
+  const sections = document.querySelectorAll(
+    "section:not(.head,#abstract,#sotd)"
+  );
+  const offendingElements = [...sections].filter(
     ({ firstElementChild: e }) => !e || !e.matches(".header-wrapper")
   );
 
