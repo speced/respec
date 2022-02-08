@@ -48,7 +48,7 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
-export const requiresSomeSectionStatus = new Set([...recTrackStatus]);
+export const requiresSomeSectionStatus = new Set([...recTrackStatus, "ED"]);
 requiresSomeSectionStatus.delete("DISC"); // "Discontinued Draft"
 
 export function run(conf) {
