@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData, humanDate } from "../../core/utils.js";
+import { ISODate, W3CDate, getIntlData } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
@@ -165,7 +165,6 @@ const localizationStrings = {
     this_version: "Diese Fassung:",
   },
 };
-
 export const l10n = getIntlData(localizationStrings);
 
 function getSpecSubTitleElem(conf) {
@@ -393,25 +392,17 @@ function renderSpecTitle(conf) {
         >W3C ${specType}</a
       >`
     : html`${specType}`;
-
   return html`${preamble}${" "}
     <time class="dt-published" datetime="${conf.dashDate}"
-      >${conf.publishHumanDate}</time
+      >${W3CDate.format(conf.publishDate)}</time
     >${conf.modificationDate
       ? html`, ${l10n.edited_in_place}${" "}
-        ${inPlaceModificationDate(conf.modificationDate)}`
+          <time
+            class="dt-modified"
+            datetime="${ISODate.format(conf.modificationDate)}"
+            >${W3CDate.format(conf.modificationDate)}</time
+          >`
       : ""}`;
-}
-
-/**
- * @param {string} date document in-place edit date as YYYY-MM-DD
- * @returns {HTMLTimeElement}
- */
-function inPlaceModificationDate(date) {
-  const modificationHumanDate = humanDate(new Date(date));
-  return html`<time class="dt-modified" datetime="${date}"
-    >${modificationHumanDate}</time
-  >`;
 }
 
 /**
