@@ -253,8 +253,6 @@ aside.example .marker > a.self-link {
   top: 0.6rem;
 }
 
-
-
 @media (max-width: 767px) {
   dd {
     margin-left: 0;
