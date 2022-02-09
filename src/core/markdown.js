@@ -18,7 +18,6 @@ export const name = "core/markdown";
 
 const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
-
 class Renderer extends marked.Renderer {
   code(code, infoString, isEscaped) {
     const { language, ...metaData } = Renderer.parseInfoString(infoString);
@@ -71,24 +70,30 @@ class Renderer extends marked.Renderer {
   }
 }
 
+const config = {
+  sanitize: false,
+  gfm: true,
+  headerIds: false,
+  langPrefix: "",
+  renderer: new Renderer(),
+};
+
 /**
  * @param {string} text
+ * @param {object} options
+ * @param {boolean} options.inline
  */
-export function markdownToHtml(text) {
+export function markdownToHtml(text, options = { inline: false }) {
   const normalizedLeftPad = reindent(text);
   // As markdown is pulled from HTML, > and & are already escaped and
   // so blockquotes aren't picked up by the parser. This fixes it.
   const potentialMarkdown = normalizedLeftPad
     .replace(gtEntity, ">")
     .replace(ampEntity, "&");
-  // @ts-ignore
-  const result = marked(potentialMarkdown, {
-    sanitize: false,
-    gfm: true,
-    headerIds: false,
-    langPrefix: "",
-    renderer: new Renderer(),
-  });
+
+  const result = options.inline
+    ? marked.parseInline(potentialMarkdown, config)
+    : marked.parse(potentialMarkdown, config);
   return result;
 }
 
