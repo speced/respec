@@ -223,7 +223,7 @@ aside.example .marker > a.self-link {
   align-items: center;
 }
 
-:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, h2#subtitle) {
+:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2) {
   position: relative;
   left: -.5em;
 }
