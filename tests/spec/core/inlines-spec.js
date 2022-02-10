@@ -222,6 +222,7 @@ describe("Core - Inlines", () => {
       <section id="conformance">[[[html]]]</section>
       <section class="informative">
           <p>[[[dom]]]</a></p>
+          <p id="not-found">[[[not-found]]]</p>
       </section>
       <p>[[[fetch]]] and [[[?payment-request]]]</p>
       </section>
@@ -237,11 +238,16 @@ describe("Core - Inlines", () => {
     expect(norm.map(el => el.textContent)).toEqual(["[fetch]", "[html]"]);
 
     const inform = [...doc.querySelectorAll("#informative-references dt")];
-    expect(inform).toHaveSize(2);
+    expect(inform).toHaveSize(3);
     expect(inform.map(el => el.textContent)).toEqual([
       "[dom]",
+      "[not-found]",
       "[payment-request]",
     ]);
+
+    const notFound = doc.querySelector("#not-found");
+    expect(notFound).toBeTruthy();
+    expect(notFound.textContent).toBe("[[[not-found]]]");
   });
 
   it("allows [[[#...]]] to be a general expander for ids in document", async () => {

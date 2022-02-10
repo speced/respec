@@ -1003,6 +1003,15 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect(contains(doc, "p", "15 March 1977")).toHaveSize(1);
     });
+
+    it("localizes publishDate based on the document's language", async () => {
+      const ops = makeStandardOps({ publishDate: "1977-03-01" });
+      ops.htmlAttrs = {
+        lang: "de",
+      };
+      const doc = await makeRSDoc(ops);
+      expect(contains(doc, "p", "1. März 1977")).toHaveSize(1);
+    });
   });
 
   describe("modificationDate", () => {
@@ -1033,6 +1042,27 @@ describe("W3C — Headers", () => {
       const [dateStatusEl] = contains(doc, "p", "15 March 1977");
       const text = collapsedTextContent(dateStatusEl).trim();
       expect(text).toMatch(/15 March 1977$/);
+    });
+
+    it("localizes modificationDate", async () => {
+      const ops = makeStandardOps({
+        publishDate: "1977-03-15",
+        modificationDate: "2022-01-27",
+      });
+      ops.htmlAttrs = {
+        lang: "de",
+      };
+      const doc = await makeRSDoc(ops);
+
+      const [dateStatusEl] = contains(
+        doc,
+        "p",
+        "zuletzt geändert am 27. Januar 2022"
+      );
+      const dateModified = dateStatusEl.querySelector(".dt-modified");
+      expect(dateModified).toBeTruthy();
+      expect(dateModified.localName).toBe("time");
+      expect(dateModified.getAttribute("datetime")).toBe("2022-01-27");
     });
   });
 
@@ -1960,10 +1990,10 @@ describe("W3C — Headers", () => {
     const doc = await makeRSDoc(ops);
     const sotd = doc.getElementById("sotd");
     expect(sotd).toBeTruthy();
+    const h2 = sotd.querySelector("h2");
+    expect(h2.textContent).toBe("Override");
     expect(sotd.firstElementChild.localName).toBe("h2");
-    expect(sotd.firstElementChild.textContent).toBe("Override");
-    expect(sotd.children.length).toBe(2);
-    expect(sotd.querySelector("a.self-link")).toBeTruthy();
+    expect(sotd.querySelector("a.self-link")).toBeFalsy();
   });
 
   it("allows custom sections and custom content, not just paragraphs", async () => {
@@ -1991,9 +2021,6 @@ describe("W3C — Headers", () => {
       <section id="first-sub-section">
         <h3>Testing</h3>
       </section>
-      <p id="p3">
-        This is terrible, but can happen.
-      </p>
       <section id="last-sub-section">
         <h2>not in toc...</h2>
       </section>
@@ -2027,12 +2054,6 @@ describe("W3C — Headers", () => {
 
       const lastSection = doc.getElementById("last-sub-section");
       expect(sotd.lastElementChild).toBe(lastSection);
-
-      // p3 is sandwiched in between the sections
-      const p3 = doc.getElementById("p3");
-      expect(p3).toBeTruthy();
-      expect(p3.previousElementSibling).toBe(firstSection);
-      expect(p3.nextElementSibling).toBe(lastSection);
 
       // Abstract, PASS, Another TOC thing
       expect(doc.querySelectorAll("#toc li"))

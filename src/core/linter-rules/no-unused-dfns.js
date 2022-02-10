@@ -21,7 +21,14 @@ const localizationStrings = {
       return `Found definition for "${text}", but nothing links to it. This is usually a spec bug!`;
     },
     get hint() {
-      return docLink`Either remove the definition, or add a \`"lint-ignore"\` CSS class. If you meant to export it, add the ${"[export|#data-export]"} CSS.`;
+      return docLink`
+        You can do one of the following...
+
+          * Add a \`class="lint-ignore"\` attribute the definition.
+          * Either remove the definition or change \`<dfn>\` to another type of HTML element.
+          * If you meant to ${"[export|#data-export]"} the definition, add \`class="export"\` to the definition.
+
+        To silence this warning entirely, set \`lint: { "no-unused-dfns": false }\` in your \`respecConfig\`.`;
     },
   },
 };

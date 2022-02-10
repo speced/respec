@@ -52,7 +52,7 @@ interface Bar {
     pre.querySelectorAll(".idlHeader").forEach(elem => elem.remove());
 
     expect(pre.textContent).toBe(expectedIDL);
-    const header = doc.querySelector("#idl-index > h2");
+    const header = doc.querySelector("#idl-index > div.header-wrapper > h2");
     expect(header).not.toBeNull();
     expect(header.textContent).toBe("1. IDL Index");
   });
@@ -292,10 +292,12 @@ dictionary Bar {
     const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBeNull();
     expect(idlIndex.querySelector("pre")).toBeNull();
-    const header = doc.querySelector("#idl-index > h2");
+    const header = doc.querySelector("#idl-index > div.header-wrapper > h2");
     expect(header).not.toBeNull();
     expect(header.textContent).toBe("1. PASS");
-    expect(doc.querySelectorAll("#idl-index > h2")).toHaveSize(1);
+    expect(
+      doc.querySelectorAll("#idl-index > div.header-wrapper > h2")
+    ).toHaveSize(1);
   });
 
   it("doesn't include ids in the cloned indexed", async () => {

@@ -1,4 +1,3 @@
-import { sub, unsub } from "../../../src/core/pubsubhub.js";
 import {
   validateCommonName,
   validateDOMName,
@@ -7,10 +6,6 @@ import {
 } from "../../../src/core/dfn-validators.js";
 
 describe("Core - Validators", () => {
-  const handle = sub("error", () => {});
-  afterAll(() => {
-    unsub(handle);
-  });
   describe("validateDOMName", () => {
     it("doesn't generate an error if the element is valid", () => {
       const elements = [

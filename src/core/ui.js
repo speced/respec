@@ -267,20 +267,23 @@ function rsErrorToHTML(err) {
     ? `<p class="respec-plugin">(plugin: "${err.plugin}")</p>`
     : "";
   const hint = err.hint
-    ? `<p class="respec-hint">**How to fix:**  ${err.hint.trim()}</p>`
+    ? `\n<p class="respec-hint"><strong>How to fix:</strong> ${markdownToHtml(
+        err.hint,
+        { inline: true }
+      )}\n`
     : "";
   const elements = Array.isArray(err.elements)
-    ? `<p class="respec-occurrences">Occurred **${
+    ? `<p class="respec-occurrences">Occurred <strong>${
         err.elements.length
-      }** times at:</p>
+      }</strong> times at:</p>
     ${err.elements.map(generateMarkdownLink)}
     `
     : "";
   const details = err.details
     ? `\n\n<details>\n${err.details}\n</details>\n`
     : "";
-
-  const text = `**${err.message}**<br>${hint}${elements}${details}${plugin}`;
+  const msg = markdownToHtml(`**${err.message}**`, { inline: true });
+  const text = `${msg}${hint}${elements}${details}${plugin}`;
   return markdownToHtml(text);
 }
 

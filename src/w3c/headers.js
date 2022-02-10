@@ -91,6 +91,7 @@ import {
   concatDate,
   docLink,
   htmlJoinAnd,
+  norm,
   showError,
   showWarning,
 } from "../core/utils.js";
@@ -102,13 +103,6 @@ import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
 
 export const name = "w3c/headers";
-
-const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
-  timeZone: "UTC",
-  year: "numeric",
-  month: "long",
-  day: "2-digit",
-});
 
 /**
  * Resolves against https://www.w3.org.
@@ -201,6 +195,7 @@ export const recTrackStatus = [
   "RSCND",
 ];
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
+export const tagStatus = ["draft-finding", "finding", "editor-draft-finding"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
 export const bgStatus = ["BG-DRAFT", "BG-FINAL"];
 export const cgbgStatus = [...cgStatus, ...bgStatus];
@@ -385,7 +380,13 @@ export async function run(conf) {
     document.lastModified
   );
   conf.publishYear = conf.publishDate.getUTCFullYear();
-  conf.publishHumanDate = W3CDate.format(conf.publishDate);
+  if (conf.modificationDate) {
+    conf.modificationDate = validateDateAndRecover(
+      conf,
+      "modificationDate",
+      document.lastModified
+    );
+  }
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
   conf.isRecTrack = conf.noRecTrack
     ? false
@@ -620,21 +621,18 @@ export async function run(conf) {
     showError(msg, name);
   }
   conf.crEnd = validateDateAndRecover(conf, "crEnd");
-  conf.humanCREnd = W3CDate.format(conf.crEnd);
 
   if (conf.specStatus === "PR" && !conf.prEnd) {
     const msg = docLink`${"[specStatus]"} is "PR" but no ${"[prEnd]"} is specified in the ${"[respecConfig]"}.`;
     showError(msg, name);
   }
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
-  conf.humanPREnd = W3CDate.format(conf.prEnd);
 
   if (conf.specStatus === "PER" && !conf.perEnd) {
-    const msg = docLink`${"[specStatus]"} is "PR", but no ${"[prEnd]"} is specified`;
+    const msg = docLink`${"[specStatus]"} is "PER", but no ${"[perEnd]"} is specified`;
     showError(msg, name);
   }
   conf.perEnd = validateDateAndRecover(conf, "perEnd");
-  conf.humanPEREnd = W3CDate.format(conf.perEnd);
 
   if (conf.hasOwnProperty("updateableRec")) {
     const msg = "Configuration option `updateableRec` is deprecated.";
@@ -677,7 +675,6 @@ export async function run(conf) {
     showError(msg, name);
   }
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
-  conf.humanRevisedRecEnd = W3CDate.format(conf.revisedRecEnd);
 
   if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
     const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${
@@ -705,7 +702,9 @@ export async function run(conf) {
   // Makes a record of a few auto-generated things.
   pub("amend-user-config", {
     publishISODate: conf.publishISODate,
-    generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
+    generatedSubtitle: norm(
+      document.getElementById("w3c-state")?.textContent ?? ""
+    ),
   });
 }
 

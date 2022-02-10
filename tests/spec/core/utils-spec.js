@@ -239,32 +239,6 @@ describe("Core - Utils", () => {
     });
   });
 
-  describe("humanDate", () => {
-    it("produces a human date", () => {
-      expect(utils.humanDate("1977-03-15")).toBe("15 March 1977");
-      const d = new Date("1977-03-15");
-      expect(utils.humanDate(d)).toBe("15 March 1977");
-    });
-
-    it("produces a human date in different languages", () => {
-      expect(utils.humanDate("1977-03-15", "en")).toBe("15 March 1977");
-      const d = new Date("1977-03-15");
-      expect(utils.humanDate(d)).toBe("15 March 1977");
-      expect(utils.humanDate(d, "en")).toBe("15 March 1977");
-      expect(utils.humanDate(d, "nl")).toBe("15 maart 1977");
-      expect(utils.humanDate(d, "fr")).toBe("15 mars 1977");
-      expect(utils.humanDate(d, "unknown")).toBe("15 March 1977");
-    });
-  });
-
-  describe("isoDate", () => {
-    it("produces an ISO date", () => {
-      expect(utils.isoDate("2013-06-25")).toMatch(/2013-06-2[45]T/);
-      const d = new Date("2013-09-25");
-      expect(utils.isoDate(d)).toMatch(/2013-09-2[45]T/);
-    });
-  });
-
   describe("isValidConfDate", () => {
     it("checks the validity of a date", () => {
       expect(utils.isValidConfDate("2000-01-01")).toBeTrue();
