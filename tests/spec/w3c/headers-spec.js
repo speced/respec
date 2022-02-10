@@ -1,14 +1,20 @@
 "use strict";
 
 import {
+  cgbgStatus,
+  licenses,
+  noTrackStatus,
+  recTrackStatus,
+} from "../../../src/w3c/headers.js";
+
+import {
+  errorFilters,
   flushIframes,
   makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
-
-import { licenses, recTrackStatus } from "../../../src/w3c/headers.js";
 
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
@@ -1442,6 +1448,52 @@ describe("W3C — Headers", () => {
       expect(latestVersionEl.textContent.trim()).toBe(
         "https://www.w3.org/TR/its-here"
       );
+    });
+
+    it("sets the latestVersion URL for CG/BG status", async () => {
+      for (const specStatus of cgbgStatus) {
+        const ops = makeStandardOps({
+          shortName: "some-report",
+          specStatus,
+          group: "wicg",
+        });
+        const doc = await makeRSDoc(ops);
+        const terms = [...doc.querySelectorAll("dt")];
+        const latestVersion = terms.find(
+          el => el.textContent.trim() === "Latest published version:"
+        );
+        const anchor = latestVersion.nextElementSibling.querySelector("a");
+        const year = new Date().getUTCFullYear();
+        expect(anchor.href).toBe(`https://www.w3.org/${year}/some-report/`);
+        expect(anchor.textContent.trim()).toBe(
+          `https://www.w3.org/${year}/some-report/`
+        );
+      }
+    });
+
+    it("errors if latestVersion for a non-rec-track document tries to use /TR/ space", async () => {
+      const headerErrors = errorFilters.filter("w3c/headers");
+      for (const specStatus of noTrackStatus) {
+        const group = specStatus.includes("finding")
+          ? "tag"
+          : /^(BG|CG)-/.test(specStatus)
+          ? "wicg"
+          : "webapps";
+        const ops = makeStandardOps({
+          shortName: "some-report",
+          specStatus,
+          group,
+          latestVersion: "/TR/some-report/",
+        });
+        const doc = await makeRSDoc(ops);
+        const errors = headerErrors(doc);
+        expect(errors).toHaveSize(1);
+        expect(errors[0].message)
+          .withContext(specStatus)
+          .toContain(
+            `Documents with a status of \`"${specStatus}"\` can't be published on the W3C's /TR/ (Technical Report) space.`
+          );
+      }
     });
   });
 

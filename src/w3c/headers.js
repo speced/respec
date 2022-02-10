@@ -118,10 +118,15 @@ const status2maturity = {
   FPWD: "WD",
 };
 
+const year = new Date().getUTCFullYear();
 export const publicationSpaces = {
   "Member-SUBM": "/Submission",
   finding: "/2001/tag/doc",
   "draft-finding": "/2001/tag/doc",
+  "CG-FINAL": `/${year}`,
+  "BG-FINAL": `/${year}`,
+  "CG-DRAFT": `/${year}`,
+  "BG-DRAFT": `/${year}`,
 };
 
 const status2text = {
@@ -440,6 +445,15 @@ export async function run(conf) {
     conf.latestVersion = conf.latestVersion
       ? w3Url(`${conf.latestVersion}`)
       : w3Url(`${pubSpace}/${conf.shortName}/`);
+    // Error if it's noTrackStatus that claims to be published on /TR/
+    if (
+      conf.isNoTrack &&
+      conf.latestVersion.startsWith("https://www.w3.org/TR/")
+    ) {
+      const msg = `Documents with a status of \`"${conf.specStatus}"\` can't be published on the W3C's /TR/ (Technical Report) space.`;
+      const hint = docLink`Please update the ${"[latestVersion]"} URL configuration option or let ReSpec set it for you.`;
+      showError(msg, name, { hint });
+    }
   }
 
   if (conf.previousPublishDate) {
