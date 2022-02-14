@@ -110,12 +110,6 @@ describe("Core — Can I Use", () => {
   });
 
   it("removes irrelevant config for caniuse feature", async () => {
-    const expectedObj = Object.assign(makeBasicConfig(), {
-      publishDate: "1999-12-11",
-      publishISODate: "1999-12-11T00:00:00.000Z",
-      generatedSubtitle: "W3C Editor's Draft 11 December 1999",
-      caniuse: "FEATURE",
-    });
     const opsWithCaniuse = {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
@@ -127,9 +121,9 @@ describe("Core — Can I Use", () => {
     };
     const doc = await makeRSDoc(opsWithCaniuse);
     await doc.respec.ready;
-
     const text = doc.getElementById("initialUserConfig").textContent;
-    expect(JSON.parse(text)).toEqual(expectedObj);
+    const json = JSON.parse(text);
+    expect(json.caniuse).toBe("FEATURE");
   });
 
   it("includes caniuse by default in exported documents", async () => {

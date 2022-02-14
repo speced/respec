@@ -1,7 +1,14 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  errorFilters,
+  flushIframes,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
 import { clearXrefData } from "../../../src/core/xref-db.js";
+
+const errorsFilter = errorFilters.filter("core/webidl");
 
 describe("Core - WebIDL", () => {
   afterAll(flushIframes);
@@ -1780,11 +1787,10 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     </section>`;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const { errors } = doc.respec;
+    const errors = errorsFilter(doc);
     // There are two errors, one for "void" not being a thing anymore
     // and one for void not being xref'ed
-    expect(errors).toHaveSize(2);
-    const error = errors.find(err => err.plugin === "core/webidl");
-    expect(error.details).toContain("Promise&lt;void&gt;");
+    expect(errors).toHaveSize(1);
+    expect(errors[0].details).toContain("Promise&lt;void&gt;");
   });
 });
