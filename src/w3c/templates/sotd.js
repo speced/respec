@@ -89,9 +89,6 @@ export default (conf, opts) => {
                     >2 November 2021 W3C Process Document</a
                   >.
                 </p>
-                ${conf.addPatentNote
-                  ? html`<p>${[conf.addPatentNote]}</p>`
-                  : ""}
               `}
         `}
     ${opts.additionalSections}
