@@ -107,7 +107,7 @@ function validateStatusForGroup(conf) {
 
   if (!specStatus) {
     const msg = docLink`The ${"[specStatus]"} configuration option is required.`;
-    const hint = docLink`select an appropriate status from ${"[specStatus]"} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
+    const hint = docLink`Select an appropriate status from ${"[specStatus]"} based on your W3C group. If in doubt, use \`"unofficial"\`.`;
     showError(msg, name, { hint });
     conf.specStatus = "base";
     return;
@@ -127,7 +127,7 @@ function validateStatusForGroup(conf) {
       if (![...cgStatus, "unofficial", "UD"].includes(specStatus)) {
         const msg = docLink`W3C Community Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
         const supportedStatus = codedJoinOr(cgStatus, { quotes: true });
-        const hint = `use one of: ${supportedStatus}. Automatically falling back to \`"CG-DRAFT"\`.`;
+        const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"CG-DRAFT"\`.`;
         showError(msg, name, { hint });
         conf.specStatus = "CG-DRAFT";
       }
@@ -137,7 +137,7 @@ function validateStatusForGroup(conf) {
       if (![...bgStatus, "unofficial", "UD"].includes(specStatus)) {
         const msg = docLink`W3C Business Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
         const supportedStatus = codedJoinOr(bgStatus, { quotes: true });
-        const hint = `use one of: ${supportedStatus}. Automatically falling back to \`"BG-DRAFT"\`.`;
+        const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"BG-DRAFT"\`.`;
         showError(msg, name, { hint });
         conf.specStatus = "BG-DRAFT";
       }
@@ -146,7 +146,7 @@ function validateStatusForGroup(conf) {
     case "wg": {
       if (![...trStatus, "unofficial", "UD", "ED"].includes(specStatus)) {
         const msg = docLink`W3C Working Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
-        const hint = docLink`see ${"[specStatus]"} for appropriate status for W3C Working Group documents.`;
+        const hint = docLink`Pleas see ${"[specStatus]"} for appropriate status for W3C Working Group documents.`;
         showError(msg, name, { hint });
       }
       break;
