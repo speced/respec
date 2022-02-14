@@ -348,7 +348,7 @@ const run = async () => {
         break;
       case "needs to push":
         throw new Error(
-          `Found unpushed commits on "${"main"}" branch! Can't proceed.`
+          `Found unpushed commits on "main" branch! Can't proceed.`
         );
       default:
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
