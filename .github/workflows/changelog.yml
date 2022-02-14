@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: develop
+          ref: main
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6

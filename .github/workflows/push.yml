@@ -2,7 +2,7 @@ name: Node CI (push)
 on:
   push:
     branches:
-      - develop
+      - main
       - gh-pages
     paths-ignore:
       - "**"

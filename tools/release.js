@@ -5,7 +5,6 @@ const cmdPrompt = require("prompt");
 const colors = require("colors");
 const { exec } = require("child_process");
 const loading = require("loading-indicator");
-const MAIN_BRANCH = "develop";
 const DEBUG = false;
 const vnu = require("vnu-jar");
 const path = require("path");
@@ -109,7 +108,7 @@ const Prompts = {
       await this.askQuestion(promptOps);
     } catch (err) {
       const warning = colors.yellow(
-        "🚨 Make sure to run `git up; git checkout develop`"
+        "🚨 Make sure to run `git up; git checkout main `"
       );
       console.warn(warning);
       throw err;
@@ -333,23 +332,23 @@ const indicators = new Map([
 const run = async () => {
   const initialBranch = await getCurrentBranch();
   try {
-    // 1. Confirm maintainer is on up-to-date and on the develop branch ()
+    // 1. Confirm maintainer is on up-to-date and on the main branch ()
     indicators.get("remote-update").show();
     await git("remote update");
     indicators.get("remote-update").hide();
-    if (initialBranch !== MAIN_BRANCH) {
-      await Prompts.askSwitchToBranch(initialBranch, MAIN_BRANCH);
+    if (initialBranch !== "main") {
+      await Prompts.askSwitchToBranch(initialBranch, "main");
     }
     const branchState = await getBranchState();
     switch (branchState) {
       case "needs a pull":
-        await Prompts.askToPullBranch(MAIN_BRANCH);
+        await Prompts.askToPullBranch("main");
         break;
       case "up-to-date":
         break;
       case "needs to push":
         throw new Error(
-          `Found unpushed commits on "${MAIN_BRANCH}" branch! Can't proceed.`
+          `Found unpushed commits on "${"main"}" branch! Can't proceed.`
         );
       default:
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
@@ -381,21 +380,21 @@ const run = async () => {
     await git(`commit -m "v${version}"`);
     await git(`tag "v${version}"`);
 
-    // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
+    // 5. Merge to gh-pages (git checkout gh-pages; git merge main)
     await git("checkout gh-pages");
     await git("pull origin gh-pages");
-    await git("merge develop");
-    await git("checkout develop");
+    await git("merge main");
+    await git("checkout main");
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
-    await git("push origin develop");
+    await git("push origin main");
     await git("push origin gh-pages");
     await git("push --tags");
     indicators.get("push-to-server").hide();
     console.log(colors.green(" Publishing to npm... 📡"));
     await npm("publish", { showOutput: true });
-    if (initialBranch !== MAIN_BRANCH) {
-      await Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
+    if (initialBranch !== "main") {
+      await Prompts.askSwitchToBranch("main", initialBranch);
     }
   } catch (err) {
     console.error(colors.red(`\n☠  ${err.stack}`));
