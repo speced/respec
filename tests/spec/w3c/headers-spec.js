@@ -2396,6 +2396,31 @@ describe("W3C — Headers", () => {
       expect(history).toBeFalsy();
     });
 
+    it("excludes history if the latestVersion is null", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "WD",
+        latestVersion: null,
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeFalsy();
+    });
+
+    it("excludes history link if the latestVersion is null, but keeps commit history", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "WD",
+        latestVersion: null,
+        github: "w3c/respec",
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      const [commits] = contains(doc, ".head dd", "Commit history");
+      expect(commits).toBeTruthy();
+    });
+
     it("derives the historyURI automatically when it's missing, but the document is on TR", async () => {
       const ops = makeStandardOps({
         shortName: "payment-request",
