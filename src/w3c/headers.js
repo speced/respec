@@ -699,7 +699,10 @@ function validateCGBG(conf) {
   // Deal with final reports
   if (conf.isCGFinal) {
     // Final report require a w3.org URL.
-    if (latestVersionURL?.origin.endsWith("w3.org") === false) {
+    const isW3C =
+      latestVersionURL?.origin === "https://www.w3.org" ||
+      latestVersionURL?.origin === "https://w3.org/";
+    if (isW3C === false) {
       const msg = docLink`For ${reportType}, the ${"[latestVersion]"} URL must point to somewhere at https://www.w3.org/.`;
       const hint = `Ask a W3C Team Member for a W3C URL where the report can be published.`;
       showError(msg, name, { hint });
