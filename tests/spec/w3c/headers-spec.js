@@ -1607,67 +1607,6 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("wgPatentPolicy", () => {
-    it("supports wgPatentPolicy as string", async () => {
-      const ops = makeStandardOps({
-        wgPatentPolicy: "PP2020",
-      });
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(0);
-      const patentPolicyLink = doc.querySelector(
-        "#sotd a[href='https://www.w3.org/Consortium/Patent-Policy/']"
-      );
-      expect(patentPolicyLink).toBeTruthy();
-    });
-
-    it("supports wgPatentPolicy as an array", async () => {
-      const ops = makeStandardOps({
-        wgPatentPolicy: ["PP2020", "PP2020"],
-      });
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(0);
-      const patentPolicyLink = doc.querySelector(
-        "#sotd a[href='https://www.w3.org/Consortium/Patent-Policy/']"
-      );
-      expect(patentPolicyLink).toBeTruthy();
-    });
-
-    it("errors when the patent policy is invalid", async () => {
-      const ops = makeStandardOps({
-        wgPatentPolicy: "NOT A Patent Policy",
-      });
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(1);
-      const [error] = doc.respec.errors;
-      expect(error.plugin).toBe("w3c/headers");
-      expect(error.message).toContain("Invalid [`wgPatentPolicy`]");
-    });
-
-    it("errors when patent policies don't match", async () => {
-      const ops = makeStandardOps({
-        wgPatentPolicy: ["PP2017", "PP2020"],
-      });
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(1);
-      const [error] = doc.respec.errors;
-      expect(error.plugin).toBe("w3c/headers");
-      expect(error.message).toContain("must use the same patent policy");
-    });
-
-    it("errors when some patent policy is invalid", async () => {
-      const ops = makeStandardOps({
-        wgPatentPolicy: ["PP2020", "NOT A Patent Policy", "PP2017"],
-      });
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(2);
-      const [error1, error2] = doc.respec.errors;
-      expect(error1.plugin).toBe("w3c/headers");
-      expect(error1.message).toContain("Invalid [`wgPatentPolicy`]");
-      expect(error2.plugin).toBe("w3c/headers");
-      expect(error2.message).toContain("must use the same patent policy");
-    });
-  });
-
   describe("wgId, data-deliverer, and isNote", () => {
     it("only doesn't add data-deliverer for non-notes", async () => {
       const ops = makeStandardOps();
