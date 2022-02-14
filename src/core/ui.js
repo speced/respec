@@ -276,19 +276,19 @@ function rsErrorToHTML(err) {
     ? `<p class="respec-occurrences">Occurred <strong>${
         err.elements.length
       }</strong> times at:</p>
-    ${markdownToHtml(err.elements.map(generateMarkdownLink).join(""))}`
+    ${markdownToHtml(err.elements.map(generateMarkdownLink).join("\n"))}`
     : "";
   const details = err.details
     ? `\n\n<details>\n${err.details}\n</details>\n`
     : "";
   const msg = markdownToHtml(`**${err.message}**`, { inline: true });
-  const text = `${msg}${hint}${elements}${details}${plugin}`;
-  return text;
+  const result = `${msg}${hint}${elements}${details}${plugin}`;
+  return result;
 }
 
 /**
  * @param {Element} element
  */
 function generateMarkdownLink(element) {
-  return `\n * [\`<${element.localName}>\`](#${element.id}) element`;
+  return `* [\`<${element.localName}>\`](#${element.id}) element`;
 }
