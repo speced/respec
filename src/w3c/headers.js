@@ -649,8 +649,11 @@ export async function run(conf) {
 
 function validateIfAllowedOnTR(conf) {
   const latestVersionURL = new URL(conf.latestVersion);
+  const isW3C =
+    latestVersionURL.origin === "https://www.w3.org" ||
+    latestVersionURL.origin === "https://w3.org/";
   if (
-    latestVersionURL.origin.endsWith("w3.org") &&
+    isW3C &&
     latestVersionURL.pathname.startsWith("/TR/") &&
     ["ED", ...trStatus].includes(conf.specStatus) === false
   ) {
