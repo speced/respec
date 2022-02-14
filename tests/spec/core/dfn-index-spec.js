@@ -235,7 +235,6 @@ describe("Core — dfn-index", () => {
         "fully active",
         "iframe element",
         "responsible document",
-        "Window interface",
         "ASCII uppercase",
         "origin",
         "AbortError exception",

@@ -1405,29 +1405,22 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const windowAnchor = doc.querySelector("#link-test a[href$=window]");
+
     // Exposed=(Window)
-    expect(windowAnchor.href).toBe(
-      "https://html.spec.whatwg.org/multipage/window-object.html#window"
-    );
-    expect(windowAnchor.dataset.xrefType).toBe("interface");
+    const windowAnchor = doc.querySelector("#link-test a[href$=window]");
+    expect(windowAnchor).toBeNull();
+
     // Exposed=(Worker)
     const workerAnchor = doc.querySelector(
       "#link-test a[href$=workerglobalscope]"
     );
-    expect(workerAnchor.href).toBe(
-      "https://html.spec.whatwg.org/multipage/workers.html#workerglobalscope"
-    );
-    expect(workerAnchor.dataset.xrefType).toBe("interface");
+    expect(workerAnchor).toBeNull();
 
     // Exposed=(DedicatedWoker)
     const dedicatedWorkerAnchor = doc.querySelector(
       "#link-test a[href$=dedicatedworkerglobalscope]"
     );
-    expect(dedicatedWorkerAnchor.href).toBe(
-      "https://html.spec.whatwg.org/multipage/workers.html#dedicatedworkerglobalscope"
-    );
-    expect(dedicatedWorkerAnchor.dataset.xrefType).toBe("interface");
+    expect(dedicatedWorkerAnchor).toBeNull();
 
     // readonly attribute object bar;
     const objectAnchor = doc.querySelector("#link-test a[href$=idl-object]");
