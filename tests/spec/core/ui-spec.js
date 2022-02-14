@@ -33,7 +33,7 @@ describe("Core - UI", () => {
   });
 
   it("shows errors", async () => {
-    const doc = await makeRSDoc(makeStandardOps());
+    const doc = await makeRSDoc(makeStandardOps({ group: "webapps" }));
     const ui = doc.defaultView.respecUI;
 
     expect(doc.getElementById("respec-pill-error")).toBeNull();
