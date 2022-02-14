@@ -706,7 +706,7 @@ function validateCGBG(conf) {
 }
 
 async function deriveHistoryURI(conf) {
-  if (!conf.shortName || conf.historyURI === null) {
+  if (!conf.shortName || conf.historyURI === null || !conf.latestVersion) {
     return; // Nothing to do
   }
 
