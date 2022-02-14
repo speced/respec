@@ -1763,20 +1763,6 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("addPatentNote", () => {
-    it("takes addPatentNote into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        addPatentNote: "<strong>PATENTNOTE</strong>",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(doc.querySelector("#sotd p strong").textContent).toBe(
-        "PATENTNOTE"
-      );
-    });
-  });
-
   describe("CG/BG", () => {
     it("handles CG-DRAFT status", async () => {
       const ops = makeStandardOps();
