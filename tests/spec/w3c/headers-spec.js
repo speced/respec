@@ -1378,7 +1378,6 @@ describe("W3C — Headers", () => {
     });
   });
 
-
   describe("thisVersion", () => {
     for (let specStatus of recTrackStatus) {
       it(`computes thisVersion for correctly for TR doc with status "${specStatus}"`, async () => {
