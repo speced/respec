@@ -1378,6 +1378,26 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("thisVersion", () => {
+    for (let specStatus of recTrackStatus) {
+      it(`computes thisVersion for correctly for TR doc with status "${specStatus}"`, async () => {
+        const ops = makeStandardOps({
+          specStatus,
+          group: "webapps",
+          publishDate: "2020-12-31",
+          shortName: "test",
+        });
+        const doc = await makeRSDoc(ops);
+        // FPWD is a special case of "WD"...
+        specStatus = specStatus === "FPWD" ? "WD" : specStatus;
+        const expected = `https://www.w3.org/TR/2020/${specStatus}-test-20201231/`;
+        const anchor = doc.querySelector(".head a.u-url");
+        expect(anchor.href).toBe(expected);
+        expect(anchor.textContent).toBe(expected);
+      });
+    }
+  });
+
   describe("latestVersion", () => {
     it("adds a latest published version link", async () => {
       const ops = makeStandardOps({
@@ -1981,7 +2001,7 @@ describe("W3C — Headers", () => {
       { specStatus: "BG-FINAL", group: "publishingbg" },
     ];
     for (const { specStatus, group } of finalReportStatus) {
-      it("requires that the final report latestVersion be a w3c URL", async () => {
+      it("requires that the ${specStatus} latestVersion be a w3c URL", async () => {
         const ops = makeStandardOps({
           specStatus,
           group,
