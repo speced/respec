@@ -388,8 +388,10 @@ export async function run(conf) {
     const { shortName, publishDate } = conf;
     const date = concatDate(publishDate);
     const docVersion = `${maturity}-${shortName}-${date}`;
-    const year = publishDate.getUTCFullYear();
-    conf.thisVersion = w3Url(`${pubSpace}/${year}/${docVersion}/`);
+    const year = [...recTrackStatus, "Member-SUBM"].includes(conf.specStatus)
+      ? `${publishDate.getUTCFullYear()}/`
+      : "";
+    conf.thisVersion = w3Url(`${pubSpace}/${year}${docVersion}/`);
   }
 
   if (conf.isEd) conf.thisVersion = conf.edDraftURI;
@@ -666,7 +668,7 @@ function validateIfAllowedOnTR(conf) {
 }
 
 function derivePubSpace(conf) {
-  const { specStatus, group, publishDate } = conf;
+  const { specStatus, group } = conf;
   if (recTrackStatus.includes(specStatus) || conf.groupType === "wg") {
     return `/TR`;
   }
@@ -679,7 +681,7 @@ function derivePubSpace(conf) {
     case "draft-finding":
       return "/2001/tag/doc";
     case "Member-SUBM":
-      return `/Submission/${publishDate.getUTCFullYear()}`;
+      return `/Submission`;
   }
 
   return "";

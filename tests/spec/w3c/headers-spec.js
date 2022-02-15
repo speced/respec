@@ -2001,7 +2001,7 @@ describe("W3C — Headers", () => {
       { specStatus: "BG-FINAL", group: "publishingbg" },
     ];
     for (const { specStatus, group } of finalReportStatus) {
-      it("requires that the final report latestVersion be a w3c URL", async () => {
+      it("requires that the ${specStatus} latestVersion be a w3c URL", async () => {
         const ops = makeStandardOps({
           specStatus,
           group,
