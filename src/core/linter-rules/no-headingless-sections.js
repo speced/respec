@@ -26,22 +26,22 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
-const hasNoHeading = ({ firstElementChild: elem }) => {
-  return elem === null || /^h[1-6]$/.test(elem.localName) === false;
-};
-
 export function run(conf) {
   if (!conf.lint?.[ruleName]) {
     return;
   }
-
-  const offendingElements = [...document.querySelectorAll("section")].filter(
-    hasNoHeading
+  /** @type {NodeListOf<HTMLElement>} */
+  const sections = document.querySelectorAll(
+    "section:not(.head,#abstract,#sotd)"
   );
-  if (offendingElements.length) {
-    showWarning(l10n.msg, name, {
-      hint: l10n.hint,
-      elements: offendingElements,
-    });
-  }
+  const offendingElements = [...sections].filter(
+    ({ firstElementChild: e }) => !e || !e.matches(".header-wrapper")
+  );
+
+  if (!offendingElements.length) return;
+
+  showWarning(l10n.msg, name, {
+    hint: l10n.hint,
+    elements: offendingElements,
+  });
 }

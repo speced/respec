@@ -76,7 +76,7 @@ describe("W3C — Bibliographic References", () => {
 
   it("displays references correctly", async () => {
     const ref = doc.querySelector("#bib-evercookie + dd");
-    expect(ref.textContent).toBe(
+    expect(ref.textContent.trim()).toBe(
       "evercookie - virtually irrevocable persistent cookies. Samy Kamkar. September 2010. URL: https://samy.pl/evercookie/"
     );
   });
@@ -218,7 +218,17 @@ describe("W3C — Bibliographic References", () => {
     expect(badRefLink.getAttribute("href")).toBe("#bib-bad-ref");
     const badRef = doc.querySelector("#informative-references dd");
     expect(badRef).toBeTruthy();
-    expect(badRef.textContent).toBe("Reference not found.");
+    expect(badRef.textContent.trim()).toBe("Reference not found.");
+  });
+
+  it("shows a localized error if reference doesn't exist", async () => {
+    const body = `<p id="bad-ref">[[bad-ref]]</p>`;
+    const ops = makeStandardOps({ localBiblio }, body);
+    ops.htmlAttrs = { lang: "es" };
+    const doc = await makeRSDoc(ops);
+    const badRef = doc.querySelector("#referencias-informativas dd");
+    expect(badRef).toBeTruthy();
+    expect(badRef.textContent.trim()).toBe("Referencia no encontrada.");
   });
 
   it("uses cached results from IDB", async () => {
@@ -292,7 +302,7 @@ it("allows custom content in the references section", async () => {
     `,
   };
   const doc = await makeRSDoc(ops);
-  const { textContent: h2Text } = doc.querySelector("#references > h2");
+  const { textContent: h2Text } = doc.querySelector("#references h2");
   const { textContent: pText } = doc.querySelector("#references > p");
   const [normRef, infoRef] = doc.querySelectorAll("#references h3");
   expect(doc.documentElement.lang).toBe("nl");

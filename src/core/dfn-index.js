@@ -59,8 +59,8 @@ export function run() {
   document.head.appendChild(styleEl);
 
   index.classList.add("appendix");
-  if (!index.querySelector("h2")) {
-    index.prepend(html`<h2>${l10n.heading}</h2>`);
+  if (!index.querySelector("h2, h1")) {
+    index.prepend(html`<h1>${l10n.heading}</h1>`);
   }
 
   const localTermIndex = html`<section id="index-defined-here">

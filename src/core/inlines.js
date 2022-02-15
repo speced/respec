@@ -42,13 +42,17 @@ const localizationStrings = {
     rfc2119Keywords() {
       return joinRegex([
         /\bMUSS\b/,
+        /\bMÜSSEN\b/,
         /\bERFORDERLICH\b/,
         /\b(?:NICHT\s+)?NÖTIG\b/,
         /\bDARF(?:\s+NICHT)?\b/,
+        /\bDÜRFEN(?:\s+NICHT)?\b/,
         /\bVERBOTEN\b/,
         /\bSOLL(?:\s+NICHT)?\b/,
+        /\bSOLLEN(?:\s+NICHT)?\b/,
         /\b(?:NICHT\s+)?EMPFOHLEN\b/,
         /\bKANN\b/,
+        /\bKÖNNEN\b/,
         /\bOPTIONAL\b/,
       ]);
     },
@@ -120,9 +124,9 @@ function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   const ref = matched.slice(3, -3).trim();
   if (!ref.startsWith("#")) {
-    return html`<a data-cite="${ref}"></a>`;
+    return html`<a data-cite="${ref}" data-matched-text="${matched}"></a>`;
   }
-  return html`<a href="${ref}"></a>`;
+  return html`<a href="${ref}" data-matched-text="${matched}"></a>`;
 }
 
 /**

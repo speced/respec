@@ -267,26 +267,28 @@ function rsErrorToHTML(err) {
     ? `<p class="respec-plugin">(plugin: "${err.plugin}")</p>`
     : "";
   const hint = err.hint
-    ? `<p class="respec-hint">**How to fix:**  ${err.hint.trim()}</p>`
+    ? `\n<p class="respec-hint"><strong>How to fix:</strong> ${markdownToHtml(
+        err.hint,
+        { inline: true }
+      )}\n`
     : "";
   const elements = Array.isArray(err.elements)
-    ? `<p class="respec-occurrences">Occurred **${
+    ? `<p class="respec-occurrences">Occurred <strong>${
         err.elements.length
-      }** times at:</p>
-    ${err.elements.map(generateMarkdownLink)}
-    `
+      }</strong> times at:</p>
+    ${markdownToHtml(err.elements.map(generateMarkdownLink).join("\n"))}`
     : "";
   const details = err.details
     ? `\n\n<details>\n${err.details}\n</details>\n`
     : "";
-
-  const text = `**${err.message}**<br>${hint}${elements}${details}${plugin}`;
-  return markdownToHtml(text);
+  const msg = markdownToHtml(`**${err.message}**`, { inline: true });
+  const result = `${msg}${hint}${elements}${details}${plugin}`;
+  return result;
 }
 
 /**
  * @param {Element} element
  */
 function generateMarkdownLink(element) {
-  return `\n * [\`<${element.localName}>\`](#${element.id}) element`;
+  return `* [\`<${element.localName}>\`](#${element.id}) element`;
 }

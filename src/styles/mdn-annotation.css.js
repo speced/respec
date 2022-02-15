@@ -8,7 +8,7 @@ export default css`
   position: absolute;
   right: 0.3em;
   min-width: 0;
-  margin-top: 3em;
+  margin-top: 3rem;
 }
 
 .mdn details {

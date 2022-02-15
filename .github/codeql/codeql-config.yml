@@ -1,0 +1,4 @@
+paths-ignore:
+  - builds
+  - tests
+  - node_modules

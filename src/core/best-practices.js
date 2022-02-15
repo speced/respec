@@ -57,7 +57,7 @@ export function run() {
   });
   if (bps.length) {
     if (bpSummary) {
-      bpSummary.appendChild(html`<h2>Best Practices Summary</h2>`);
+      bpSummary.appendChild(html`<h1>Best Practices Summary</h1>`);
       bpSummary.appendChild(summaryItems);
     }
   } else if (bpSummary) {

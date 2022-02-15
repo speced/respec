@@ -16,10 +16,10 @@ describe("Core — dfn-index", () => {
 
     expect(index.querySelectorAll("h2")).toHaveSize(1);
     expect(index.querySelector("h2").textContent).toBe("A. Index");
-    expect(index.firstElementChild).toBe(index.querySelector("h2"));
-    expect(index.querySelector("h2 + a + p")).toEqual(
-      doc.getElementById("pass")
+    expect(index.firstElementChild.firstElementChild).toBe(
+      index.querySelector("h2")
     );
+    expect(index.querySelector("div + p")).toEqual(doc.getElementById("pass"));
   });
 
   it("doesn't override existing content in section#index", async () => {
@@ -33,7 +33,7 @@ describe("Core — dfn-index", () => {
 
     expect(index.querySelectorAll("h2")).toHaveSize(1);
     expect(index.querySelector("h2").textContent).toBe("A. el índex");
-    expect(index.firstElementChild).toBe(
+    expect(index.firstElementChild.firstElementChild).toBe(
       index.querySelector("h2#custom-heading")
     );
     expect(index.querySelector("p#custom-paragraph").textContent).toBe("PASS");
@@ -47,7 +47,7 @@ describe("Core — dfn-index", () => {
       "Terms defined by this specification"
     );
     expect(
-      localIndex.querySelector("h3 + a.self-link + ul.index")
+      localIndex.querySelector("div.header-wrapper + ul.index")
     ).toBeTruthy();
 
     const externalIndexHeading = externalIndex.querySelector("h3");
@@ -55,7 +55,7 @@ describe("Core — dfn-index", () => {
       "Terms defined by reference"
     );
     expect(
-      externalIndex.querySelector("h3 + a.self-link + ul.index")
+      externalIndex.querySelector("div.header-wrapper + ul.index")
     ).toBeTruthy();
   });
 
@@ -235,7 +235,6 @@ describe("Core — dfn-index", () => {
         "fully active",
         "iframe element",
         "responsible document",
-        "Window interface",
         "ASCII uppercase",
         "origin",
         "AbortError exception",
