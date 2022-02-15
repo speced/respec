@@ -388,7 +388,8 @@ export async function run(conf) {
     const { shortName, publishDate } = conf;
     const date = concatDate(publishDate);
     const docVersion = `${maturity}-${shortName}-${date}`;
-    conf.thisVersion = w3Url(`${pubSpace}/${docVersion}/`);
+    const year = publishDate.getUTCFullYear();
+    conf.thisVersion = w3Url(`${pubSpace}/${year}/${docVersion}/`);
   }
 
   if (conf.isEd) conf.thisVersion = conf.edDraftURI;
