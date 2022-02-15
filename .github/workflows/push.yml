@@ -2,8 +2,7 @@ name: Node CI (push)
 on:
   push:
     branches:
-      - develop
-      - gh-pages
+      - main
     paths-ignore:
       - "**"
       - "!**.js"
