@@ -108,7 +108,7 @@ const Prompts = {
       await this.askQuestion(promptOps);
     } catch (err) {
       const warning = colors.yellow(
-        "🚨 Make sure to run `git checkout main` and rest any changes."
+        "🚨 Make sure to run `git checkout main` and reset any changes."
       );
       console.warn(warning);
       throw err;
