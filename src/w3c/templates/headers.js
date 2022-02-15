@@ -192,31 +192,32 @@ export default (conf, options) => {
     const details = doc.querySelector(".head details");
     details.open = true;
   });
-
   return html`<div class="head">
-    ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
-    ${getSpecSubTitleElem(conf)}
+    ${conf.logos.length
+      ? html`<p class="logos">${conf.logos.map(showLogo)}</p>`
+      : ""}
+    ${document.querySelector("h1#title")} ${getSpecSubTitleElem(conf)}
     <p id="w3c-state">${renderSpecTitle(conf)}</p>
     <details open="${localStorage.getItem("tr-metadata") || "true"}">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
-        ${(conf.isTagFinding && !conf.isTagEditorFinding) || !conf.isNoTrack
-          ? html`
-              <dt>${l10n.this_version}</dt>
+        ${conf.thisVersion
+          ? html`<dt>${l10n.this_version}</dt>
               <dd>
                 <a class="u-url" href="${conf.thisVersion}"
                   >${conf.thisVersion}</a
                 >
-              </dd>
-              <dt>${l10n.latest_published_version}</dt>
+              </dd>`
+          : ""}
+        ${"latestVersion" in conf // latestVersion can be falsy
+          ? html`<dt>${l10n.latest_published_version}</dt>
               <dd>
                 ${conf.latestVersion
                   ? html`<a href="${conf.latestVersion}"
                       >${conf.latestVersion}</a
                     >`
                   : "none"}
-              </dd>
-            `
+              </dd>`
           : ""}
         ${conf.edDraftURI
           ? html`
@@ -224,7 +225,21 @@ export default (conf, options) => {
               <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
             `
           : ""}
-        ${renderHistory(conf)}
+        ${conf.historyURI || conf.github
+          ? html`<dt>${l10n.history}</dt>
+              ${conf.historyURI
+                ? html`<dd>
+                    <a href="${conf.historyURI}">${conf.historyURI}</a>
+                  </dd>`
+                : ""}
+              ${conf.github
+                ? html`<dd>
+                    <a href="${conf.github.commitHistoryURL}"
+                      >${l10n.commit_history}</a
+                    >
+                  </dd>`
+                : ""}`
+          : ""}
         ${conf.testSuiteURI
           ? html`
               <dt>${l10n.test_suite}</dt>
@@ -241,7 +256,7 @@ export default (conf, options) => {
               </dd>
             `
           : ""}
-        ${conf.isED && conf.prevED
+        ${conf.prevED
           ? html`
               <dt>${l10n.prev_editor_draft}</dt>
               <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
@@ -264,25 +279,32 @@ export default (conf, options) => {
               <dt>${l10n.latest_recommendation}</dt>
               <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
             `}
-        <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
-        ${showPeople(conf, "editors")}
-        ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
+        ${conf.editors.length
+          ? html`
+              <dt>${conf.editors.length > 1 ? l10n.editors : l10n.editor}</dt>
+              ${showPeople(conf, "editors")}
+            `
+          : ""}
+        ${conf.formerEditors.length
           ? html`
               <dt>
-                ${conf.multipleFormerEditors
+                ${conf.formerEditors.length > 1
                   ? l10n.former_editors
                   : l10n.former_editor}
               </dt>
               ${showPeople(conf, "formerEditors")}
             `
           : ""}
-        ${conf.authors
+        ${conf.authors.length
           ? html`
-              <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
+              <dt>${conf.authors.length > 1 ? l10n.authors : l10n.author}</dt>
               ${showPeople(conf, "authors")}
             `
           : ""}
-        ${renderFeedback(conf)}
+        ${conf.github || conf.wgPublicList
+          ? html`<dt>${l10n.feedback}</dt>
+              ${renderFeedback(conf)}`
+          : ""}
         ${conf.errata
           ? html`<dt>Errata:</dt>
               <dd><a href="${conf.errata}">Errata exists</a>.</dd>`
@@ -312,9 +334,7 @@ export default (conf, options) => {
 };
 
 function renderFeedback(conf) {
-  if (!conf.github && !conf.wgPublicList) return;
   const definitions = [];
-
   // Github feedback...
   if (conf.github) {
     const { repoURL, issuesURL, newIssuesURL, pullsURL, fullName } =
@@ -359,30 +379,7 @@ function renderFeedback(conf) {
       html`<dd>${mailingListLink} ${emailSubject} ${archiveLink}</dd>`
     );
   }
-  return html`<dt>${l10n.feedback}</dt>
-    ${definitions}`;
-}
-
-function renderHistory(conf) {
-  if (!conf.historyURI && !conf.github) return;
-  const ddElements = [];
-  if (conf.historyURI) {
-    const dd = html`<dd>
-      <a href="${conf.historyURI}">${conf.historyURI}</a>
-    </dd>`;
-    ddElements.push(dd);
-  }
-  if (conf.github) {
-    const dd = html`
-      <dd>
-        <a href="${conf.github.commitHistoryURL}">${l10n.commit_history}</a>
-      </dd>
-    `;
-    ddElements.push(dd);
-  }
-
-  return html`<dt>${l10n.history}</dt>
-    ${ddElements}`;
+  return definitions;
 }
 
 function renderSpecTitle(conf) {

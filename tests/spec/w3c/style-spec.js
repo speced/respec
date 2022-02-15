@@ -63,12 +63,12 @@ const statuses = [
   {
     specStatus: "BG-FINAL",
     expectedURL: "https://www.w3.org/StyleSheets/TR/2021/bg-final",
-    group: "wicg",
+    group: "autowebplatform",
   },
   {
     specStatus: "BG-DRAFT",
     expectedURL: "https://www.w3.org/StyleSheets/TR/2021/bg-draft",
-    group: "wicg",
+    group: "publishingbg",
   },
   {
     specStatus: "CR",
