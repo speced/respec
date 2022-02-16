@@ -268,12 +268,13 @@ function rsErrorToHTML(err) {
     ? `<p class="respec-plugin">(plugin: "${err.plugin}")</p>`
     : "";
 
-  const html = markdownToHtml(reindent(err.hint), {
-    inline: !err.hint.includes("\n"),
-  });
-
   const hint = err.hint
-    ? `\n<p class="respec-hint"><strong>How to fix:</strong> ${html}\n`
+    ? `\n<p class="respec-hint"><strong>How to fix:</strong> ${markdownToHtml(
+        reindent(err.hint),
+        {
+          inline: !err.hint.includes("\n"),
+        }
+      )}\n`
     : "";
   const elements = Array.isArray(err.elements)
     ? `<p class="respec-occurrences">Occurred <strong>${
