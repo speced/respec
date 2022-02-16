@@ -1,6 +1,7 @@
 "use strict";
 
 import {
+  cgStatus,
   cgbgStatus,
   licenses,
   noTrackStatus,
