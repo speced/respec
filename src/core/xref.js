@@ -456,9 +456,7 @@ function showErrors({ ambiguous, notFound }) {
   };
 
   const howToFix = (howToCiteURL, originalTerm) => {
-    return docLink`
-    [See search matches for "${originalTerm}"](${howToCiteURL}) or
-    ${"[Learn about this error|#error-term-not-found]"}.`;
+    return docLink`[See search matches for "${originalTerm}"](${howToCiteURL}) or ${"[Learn about this error|#error-term-not-found]"}.`;
   };
 
   for (const { query, elems } of notFound.values()) {
