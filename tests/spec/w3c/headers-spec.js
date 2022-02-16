@@ -2367,6 +2367,20 @@ describe("W3C — Headers", () => {
   });
 
   describe("Feedback", () => {
+    for (const specStatus of cgStatus) {
+      it(`includes feedback links for CG's ${specStatus} status`, async () => {
+        const ops = makeStandardOps({
+          specStatus,
+          github: "w3c/respec",
+          group: "wicg",
+        });
+        const doc = await makeRSDoc(ops);
+        const [dt] = contains(doc, ".head dt", "Feedback:");
+        const dd = dt.nextElementSibling;
+        expect(dd.querySelector("a[href^='https://github.com/']")).toBeTruthy();
+      });
+    }
+
     it("includes a Feedback: with a <dd> to github issues", async () => {
       const doc = await makeRSDoc(
         makeStandardOps({ github: "w3c/respec", specStatus: "WD" })

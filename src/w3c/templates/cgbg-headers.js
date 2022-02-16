@@ -1,6 +1,6 @@
 // @ts-check
+import { l10n, renderFeedback } from "./headers.js";
 import { html } from "../../core/import-maps.js";
-import { l10n } from "./headers.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
 
@@ -103,6 +103,10 @@ export default (conf, options) => {
             <dt>${conf.authors.length > 1 ? l10n.authors : l10n.author}</dt>
             ${showPeople(conf, "authors")}
           `
+        : ""}
+      ${conf.github || conf.wgPublicList
+        ? html`<dt>${l10n.feedback}</dt>
+            ${renderFeedback(conf)}`
         : ""}
     </dl>
     ${conf.alternateFormats
