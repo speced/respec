@@ -333,7 +333,7 @@ export default (conf, options) => {
   </div>`;
 };
 
-function renderFeedback(conf) {
+export function renderFeedback(conf) {
   const definitions = [];
   // Github feedback...
   if (conf.github) {
