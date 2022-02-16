@@ -269,8 +269,10 @@ function rsErrorToHTML(err) {
     : "";
 
   const hint = err.hint
-    ? `\n<p class="respec-hint"><strong>How to fix:</strong> ${markdownToHtml(
-        reindent(err.hint),
+    ? `\n${markdownToHtml(
+        `<p class="respec-hint"><strong>How to fix:</strong> ${reindent(
+          err.hint
+        )}`,
         {
           inline: !err.hint.includes("\n"),
         }
