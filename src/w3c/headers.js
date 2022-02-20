@@ -735,7 +735,8 @@ async function deriveHistoryURI(conf) {
   );
 
   // If it's on the Rec Track or it's TR worthy, then allow history override.
-  if (conf.historyURI && canShowHistory) {
+  // Also make a an exception for FPWD.
+  if ((conf.historyURI && canShowHistory) || conf.specStatus === "FPWD") {
     conf.historyURI = historyURL.href;
     return;
   }
