@@ -2505,6 +2505,23 @@ describe("W3C — Headers", () => {
       expect(historyLink.href).toBe("http://example.com/history");
     });
 
+    it("generates the history URL for FPWD without checking if it exists", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "FPWD",
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      expect(history.nextElementSibling).toBeTruthy();
+      const historyLink = history.nextElementSibling.querySelector("a");
+      expect(historyLink).toBeTruthy();
+      expect(historyLink.href).toBe(
+        "https://www.w3.org/standards/history/test"
+      );
+    });
+
     it("allowing removing the history entirely by nulling it out", async () => {
       const ops = makeStandardOps({
         shortName: "test",
