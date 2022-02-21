@@ -38,7 +38,7 @@ export function run(conf) {
     ({ firstElementChild: e }) =>
       !e ||
       // no header wrapper and the first child is not a heading
-      (!e.matches(".header-wrapper") && !(e instanceof HTMLHeadingElement))
+      !(e.matches(".header-wrapper") || e instanceof HTMLHeadingElement)
   );
 
   if (!offendingElements.length) return;
