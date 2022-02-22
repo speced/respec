@@ -5,15 +5,21 @@ const css = String.raw;
 // prettier-ignore
 export default css`
 .caniuse-stats {
+  margin-top: .3rem;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: baseline;
+  width: 75%;
 }
 
 button.caniuse-cell {
-  margin: 1px 1px 0 0;
+  margin: .1em 0;
   border: none;
+  border-radius: 1em;
+  padding: .2em;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .caniuse-browser {
@@ -59,21 +65,21 @@ button.caniuse-cell {
 
 /* a browser version */
 .caniuse-cell {
+  padding: .3rem .3rem;
   display: flex;
   font-size: 90%;
   height: 0.8cm;
   margin-right: 1px;
   margin-top: 0;
-  min-width: 3cm;
+  min-width: 2cm;
   overflow: visible;
-  justify-content: center;
   align-items: center;
 
-  --supported: #2a8436;
-  --no-support: #c44230;
-  --no-support-alt: #b43b2b;
-  --partial: #807301;
-  --partial-alt: #746c00;
+  --supported: #2a8436dd;
+  --no-support: #c44230dd;
+  --no-support-alt: #b43b2bdd;
+  --partial: #807301dd;
+  --partial-alt: #746c00dd;
 
   color: #fff;
   background: repeating-linear-gradient(
@@ -85,6 +91,12 @@ button.caniuse-cell {
     var(--caniuse-bg) 0.75em
   );
 }
+
+.caniuse-cell span.browser-version {
+  margin-left: 0.4em;
+  text-shadow: 0 0 0.1em #fff;
+}
+
 
 li.caniuse-cell {
   margin-bottom: 1px;

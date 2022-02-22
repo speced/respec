@@ -55,6 +55,10 @@ export function prepare(conf) {
   };
 }
 
+function logo(browser) {
+  return `https://cdnjs.cloudflare.com/ajax/libs/browser-logos/71.0.0/${browser}/${browser}.svg`;
+}
+
 export async function run(conf) {
   const options = conf.caniuse;
   if (!options?.feature) return;
@@ -65,7 +69,47 @@ export async function run(conf) {
   const contentPromise = (async () => {
     try {
       const stats = await conf.state[name].fetchPromise;
-      return html`${{ html: stats }}`;
+      const result = html`${{ html: stats }}`;
+      const frag = document.createDocumentFragment();
+      frag.append(...result.childNodes);
+      for (const button of frag.querySelectorAll("button")) {
+        const img = document.createElement("img");
+        img.alt = button.textContent;
+        switch (true) {
+          case button.textContent.startsWith("Chrome"):
+            img.src = logo("chrome");
+            break;
+          case button.textContent.startsWith("Edge"):
+            img.src = logo("edge");
+            break;
+          case button.textContent.startsWith("Firefox"):
+            img.src = logo("firefox");
+            break;
+          case button.textContent.startsWith("Safari"):
+            img.src = logo("safari");
+            break;
+        }
+        button.textContent = "";
+        img.width = 24;
+        img.height = 24;
+        const li = button.closest("div").querySelector("li");
+        const version = button.classList.contains("n")
+          ? "⛔️"
+          : li.textContent.split("–")[0];
+
+        const ariaLabel =
+          version === "⛔️"
+            ? `${button.textContent} is not supported in this browser.`
+            : `${button.textContent} is supported since version ${version}.`;
+        img.title = button.textContent;
+        button.append(
+          html`<span aria-label="${ariaLabel}" class="browser-version"
+            >${version}</span
+          >`
+        );
+        button.prepend(img);
+      }
+      return frag;
     } catch (err) {
       const msg = `Couldn't find feature "${options.feature}" on caniuse.com.`;
       const hint = docLink`Please check the feature key on [caniuse.com](https://caniuse.com) and update ${"[caniuse]"}`;
