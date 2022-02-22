@@ -35,7 +35,10 @@ export function run(conf) {
     "section:not(.head,#abstract,#sotd)"
   );
   const offendingElements = [...sections].filter(
-    ({ firstElementChild: e }) => !e || !e.matches(".header-wrapper")
+    ({ firstElementChild: e }) =>
+      !e ||
+      // no header wrapper and the first child is not a heading
+      !(e.matches(".header-wrapper") || e instanceof HTMLHeadingElement)
   );
 
   if (!offendingElements.length) return;
