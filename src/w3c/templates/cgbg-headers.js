@@ -1,5 +1,5 @@
 // @ts-check
-import { l10n, renderFeedback } from "./headers.js";
+import { getSpecSubTitleElem, l10n, renderFeedback } from "./headers.js";
 import { html } from "../../core/import-maps.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
@@ -17,8 +17,7 @@ export default (conf, options) => {
     ${conf.logos.length
       ? html`<p class="logos">${conf.logos.map(showLogo)}</p>`
       : ""}
-    ${specTitleElem}
-    ${conf.subtitle ? html`<h2 id="subtitle">${conf.subtitle}</h2>` : ""}
+    ${specTitleElem} ${getSpecSubTitleElem(conf)}
     <h2>
       ${conf.longStatus}
       <time class="dt-published" datetime="${conf.dashDate}"
