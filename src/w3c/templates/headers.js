@@ -167,7 +167,7 @@ const localizationStrings = {
 };
 export const l10n = getIntlData(localizationStrings);
 
-function getSpecSubTitleElem(conf) {
+export function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
 
   if (specSubTitleElem && specSubTitleElem.parentElement) {
