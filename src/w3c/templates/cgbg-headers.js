@@ -1,5 +1,6 @@
 // @ts-check
 import { getSpecSubTitleElem, l10n, renderFeedback } from "./headers.js";
+import { W3CDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
@@ -19,9 +20,11 @@ export default (conf, options) => {
       : ""}
     ${specTitleElem} ${getSpecSubTitleElem(conf)}
     <h2>
-      ${conf.longStatus}
+      <a href="https://www.w3.org/standards/types#reports"
+        >${conf.longStatus}</a
+      >
       <time class="dt-published" datetime="${conf.dashDate}"
-        >${conf.publishHumanDate}</time
+        >${W3CDate.format(conf.publishDate)}</time
       >
     </h2>
     <dl>
