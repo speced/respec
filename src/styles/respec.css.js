@@ -220,7 +220,7 @@ aside.example .marker > a.self-link {
 
 .header-wrapper {
   display: flex;
-  align-items: center;
+  align-items: baseline;
 }
 
 :is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2) {
@@ -233,7 +233,6 @@ aside.example .marker > a.self-link {
   order: -1;
   position: relative;
   left: -1.1em;
-  top: .8rem;
   font-size: 1rem;
   opacity: 0.5;
 }
@@ -244,12 +243,12 @@ aside.example .marker > a.self-link {
   color: var(--heading-text);
 }
 
-:is(h4, h5, h6) + a.self-link::before {
-  color: black;
+:is(h2, h3) + a.self-link {
+  top: -0.2em;
 }
 
-:is(h4, h5, h6) + a.self-link {
-  top: 0.6rem;
+:is(h4, h5, h6) + a.self-link::before {
+  color: black;
 }
 
 @media (max-width: 767px) {
