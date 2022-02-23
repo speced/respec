@@ -208,7 +208,7 @@ details.respec-tests-details > li {
   padding-left: 1em;
 }
 
-a[href].self-link:hover {
+.self-link:hover {
   opacity: 1;
   text-decoration: none;
   background-color: transparent;
@@ -218,33 +218,42 @@ aside.example .marker > a.self-link {
   color: inherit;
 }
 
-:is(h2, h3, h4, h5, h6) + a.self-link {
-  border: none;
-  color: inherit;
+.header-wrapper {
+  display: flex;
+  align-items: baseline;
+}
+
+:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2) {
   position: relative;
-  top: -2.75em;
-  left: -1.4em;
-  margin-bottom: -2em;
-  display: block;
-  font-size: 100%;
+  left: -.5em;
+}
+
+:is(h2, h3, h4, h5, h6):not(#toc h2) + a.self-link {
+  color: inherit;
+  order: -1;
+  position: relative;
+  left: -1.1em;
+  font-size: 1rem;
+  opacity: 0.5;
 }
 
 :is(h2, h3, h4, h5, h6) + a.self-link::before {
   content: "§";
-  opacity: 0.5;
   text-decoration: none;
-  line-height: 1.2em;
-  vertical-align: middle;
+  color: var(--heading-text);
+}
+
+:is(h2, h3) + a.self-link {
+  top: -0.2em;
+}
+
+:is(h4, h5, h6) + a.self-link::before {
+  color: black;
 }
 
 @media (max-width: 767px) {
   dd {
     margin-left: 0;
-  }
-
-  /* Don't position self-link in headings off-screen */
-  :is(h2, h3, h4, h5, h6) + a.self-link {
-    left: 101%;
   }
 }
 

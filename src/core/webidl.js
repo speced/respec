@@ -46,33 +46,17 @@ const templates = {
         html`<a data-xref-type="dfn" data-cite="WEBIDL">${keyword}</a>`;
   },
   reference(wrapped, unescaped, context) {
-    if (context.type === "extended-attribute" && context.name !== "Exposed") {
+    if (context.type === "extended-attribute") {
       return wrapped;
     }
     let type = "_IDL_";
     let cite = null;
     let lt;
     switch (unescaped) {
-      case "Window":
-        type = "interface";
-        cite = "HTML";
-        break;
       case "object":
         type = "interface";
-        cite = "WebIDL";
+        cite = "WEBIDL";
         break;
-      default: {
-        const isWorkerType = unescaped.includes("Worker");
-        if (isWorkerType && context.type === "extended-attribute") {
-          lt = `${unescaped}GlobalScope`;
-          type = "interface";
-          cite = ["Worker", "DedicatedWorker", "SharedWorker"].includes(
-            unescaped
-          )
-            ? "HTML"
-            : null;
-        }
-      }
     }
     return html`<a data-xref-type="${type}" data-cite="${cite}" data-lt="${lt}"
       >${wrapped}</a

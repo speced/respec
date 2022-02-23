@@ -166,27 +166,27 @@ describe("Core - Markdown", () => {
     const doc = await makeRSDoc(ops);
     const foo = doc.querySelector("#foo h2");
     expect(foo.textContent).toBe("1. Foo");
-    expect(foo.parentElement.localName).toBe("section");
+    expect(foo.parentElement.parentElement.localName).toBe("section");
 
     const bar = doc.querySelector("#bar h3");
     expect(bar.textContent).toBe("1.1 Bar");
-    expect(bar.parentElement.localName).toBe("section");
+    expect(bar.parentElement.parentElement.localName).toBe("section");
 
     const baz = doc.querySelector("#baz h3");
     expect(baz.textContent).toBe("1.2 Baz");
-    expect(baz.parentElement.localName).toBe("section");
+    expect(baz.parentElement.parentElement.localName).toBe("section");
 
     const foobar = doc.querySelector("#foobar h4");
     expect(foobar.textContent).toBe("1.2.1 Foobar");
-    expect(foobar.parentElement.localName).toBe("section");
+    expect(foobar.parentElement.parentElement.localName).toBe("section");
 
     const foobaz = doc.querySelector("#foobaz h5");
     expect(foobaz.textContent).toBe("1.2.1.1 Foobaz");
-    expect(foobaz.parentElement.localName).toBe("section");
+    expect(foobaz.parentElement.parentElement.localName).toBe("section");
 
     const zing = doc.querySelector("#zing h3");
     expect(zing.textContent).toBe("1.3 Zing");
-    expect(zing.parentElement.localName).toBe("section");
+    expect(zing.parentElement.parentElement.localName).toBe("section");
   });
 
   it("gracefully handles jumps in nested headers", async () => {
@@ -625,10 +625,10 @@ function getAnswer() {
     const ops = makeStandardOps({ format: "markdown" }, body);
     ops.abstract = null;
     const doc = await makeRSDoc(ops);
-    const headings = doc.querySelectorAll("body > section > h2");
+    const headings = doc.querySelectorAll(
+      "body > section > div.header-wrapper > h2"
+    );
     const headingTitles = [
-      "Abstract",
-      "Status of This Document",
       "1. First section",
       "2. Conformance",
       "3. Issue summary",

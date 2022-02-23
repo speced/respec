@@ -1,7 +1,6 @@
 // @ts-check
+import { l10n, renderFeedback } from "./headers.js";
 import { html } from "../../core/import-maps.js";
-import { l10n } from "./headers.js";
-import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
 
@@ -15,7 +14,10 @@ export default (conf, options) => {
   const specTitleElemClone = specTitleElem.cloneNode(true);
 
   return html`<div class="head">
-    ${conf.logos.map(showLogo)} ${specTitleElem}
+    ${conf.logos.length
+      ? html`<p class="logos">${conf.logos.map(showLogo)}</p>`
+      : ""}
+    ${specTitleElem}
     ${conf.subtitle ? html`<h2 id="subtitle">${conf.subtitle}</h2>` : ""}
     <h2>
       ${conf.longStatus}
@@ -25,22 +27,22 @@ export default (conf, options) => {
     </h2>
     <dl>
       ${conf.thisVersion
-        ? html`
-            <dt>${l10n.this_version}</dt>
+        ? html`<dt>${l10n.this_version}</dt>
             <dd>
               <a class="u-url" href="${conf.thisVersion}"
                 >${conf.thisVersion}</a
               >
-            </dd>
-          `
+            </dd>`
         : ""}
-      ${conf.latestVersion
-        ? html`
-            <dt>${l10n.latest_published_version}</dt>
+      ${"latestVersion" in conf // latestVersion can be falsy
+        ? html`<dt>${l10n.latest_published_version}</dt>
             <dd>
-              <a href="${conf.latestVersion}">${conf.latestVersion}</a>
-            </dd>
-          `
+              ${conf.latestVersion
+                ? html`<a href="${conf.latestVersion}"
+                    >${conf.latestVersion}</a
+                  >`
+                : "none"}
+            </dd>`
         : ""}
       ${conf.edDraftURI
         ? html`
@@ -80,25 +82,32 @@ export default (conf, options) => {
               : ""}
           `
         : ""}
-      <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
-      ${showPeople(conf, "editors")}
-      ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
+      ${conf.editors.length
+        ? html`
+            <dt>${conf.editors.length > 1 ? l10n.editors : l10n.editor}</dt>
+            ${showPeople(conf, "editors")}
+          `
+        : ""}
+      ${conf.formerEditors.length
         ? html`
             <dt>
-              ${conf.multipleFormerEditors
+              ${conf.formerEditors.length > 1
                 ? l10n.former_editors
                 : l10n.former_editor}
             </dt>
             ${showPeople(conf, "formerEditors")}
           `
         : ""}
-      ${conf.authors
+      ${conf.authors.length
         ? html`
-            <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
+            <dt>${conf.authors.length > 1 ? l10n.authors : l10n.author}</dt>
             ${showPeople(conf, "authors")}
           `
         : ""}
-      ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
+      ${conf.github || conf.wgPublicList
+        ? html`<dt>${l10n.feedback}</dt>
+            ${renderFeedback(conf)}`
+        : ""}
     </dl>
     ${conf.alternateFormats
       ? html`<p>

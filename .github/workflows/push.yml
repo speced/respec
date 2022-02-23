@@ -2,8 +2,7 @@ name: Node CI (push)
 on:
   push:
     branches:
-      - develop
-      - gh-pages
+      - main
     paths-ignore:
       - "**"
       - "!**.js"
@@ -38,8 +37,9 @@ jobs:
           npx brrr builds/respec-w3c.js -o builds
           file_size=$(stat -c%s "builds/respec-w3c.js")
           xfer_file_size=$(stat -c%s "builds/respec-w3c.js.br")
-          curl --fail -L -X PUT "https://respec.org/respec/size" \
+          curl -L -X PUT "https://respec.org/respec/size" \
             -H "Authorization: $RESPEC_SECRET" \
+            -s -w "HTTP Response Code: %{http_code}\n" \
             -d "size=$file_size" -d "xferSize=$xfer_file_size "\
             -d "sha=$GITHUB_SHA" -d "timestamp=$timestamp"
         env:

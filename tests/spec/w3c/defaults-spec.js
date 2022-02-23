@@ -3,12 +3,13 @@
 import { cgbgStatus, tagStatus } from "../../../src/w3c/headers.js";
 
 import {
+  errorFilters,
   flushIframes,
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
-  warningFilters,
 } from "../SpecHelper.js";
+const errorsFilter = errorFilters.filter("w3c/defaults");
 
 describe("W3C — Defaults", () => {
   afterAll(flushIframes);
@@ -80,7 +81,7 @@ describe("W3C — Defaults", () => {
     });
     expect(rsConf.highlightVars).toBe(false);
     expect(rsConf.license).toBe("c0");
-    expect(rsConf.specStatus).toBe("ED");
+    expect(rsConf.specStatus).toBe("base");
   });
 
   it("doesn't show the W3C logo if no group or an invalid group is specified", async () => {
@@ -130,33 +131,45 @@ describe("W3C — Defaults", () => {
   });
 
   it("warns when using a W3C specStatus, but no group is configured and defaults to 'base'", async () => {
-    const warningFilter = warningFilters.filter("w3c/defaults");
     const ops = makeStandardOps({ specStatus: "WD" });
     const doc = await makeRSDoc(ops);
-    const warnings = warningFilter(doc);
-    expect(warnings).toHaveSize(1);
-    expect(warnings[0].message).toContain(
+    const errors = errorsFilter(doc);
+    expect(errors).toHaveSize(1);
+    expect(errors[0].message).toContain(
       "Document is not associated with a [W3C group]"
     );
     const config = doc.defaultView.respecConfig;
     expect(config.specStatus).toBe("base");
   });
 
-  it("warns when specStatus is missing, and defaults to 'base' for the specStatus", async () => {
-    const warningFilter = warningFilters.filter("w3c/defaults");
+  it("errors when specStatus is missing, and defaults to 'base' for the specStatus", async () => {
     const ops = makeStandardOps({
-      config: {
-        editors: [{ name: "foo" }],
-      },
+      editors: [{ name: "foo" }],
       specStatus: "",
     });
     const doc = await makeRSDoc(ops);
-    const warnings = warningFilter(doc);
-    expect(warnings).toHaveSize(1);
-    expect(warnings[0].message).toContain(
+    const errors = errorsFilter(doc);
+    expect(errors).toHaveSize(1);
+    expect(errors[0].message).toContain(
       "#specStatus) configuration option is required"
     );
     const config = doc.defaultView.respecConfig;
     expect(config.specStatus).toBe("base");
+  });
+
+  it("requires that a group option be in the configuration", async () => {
+    for (const specStatus of cgbgStatus) {
+      const ops = makeStandardOps({
+        shortName: "foo",
+        specStatus,
+        latestVersion: "somewhere",
+      });
+      const doc = await makeRSDoc(ops);
+      const errors = errorsFilter(doc);
+      expect(errors).withContext(specStatus).toHaveSize(1);
+      expect(errors[0].message)
+        .withContext(specStatus)
+        .toContain("s not associated with a [W3C group](");
+    }
   });
 });

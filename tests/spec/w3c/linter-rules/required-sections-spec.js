@@ -23,7 +23,11 @@ describe("w3c — required-sections", () => {
   );
 
   it("does nothing if disabled", async () => {
-    const ops = makeStandardOps({ lint: { "required-sections": false } });
+    const ops = makeStandardOps({
+      lint: { "required-sections": false },
+      specStatus: "WD",
+      group: "webapps",
+    });
     const doc = await makeRSDoc(ops);
     const errors = errorsFilter(doc);
     const warnings = warningsFilter(doc);
@@ -32,7 +36,11 @@ describe("w3c — required-sections", () => {
   });
 
   it("allows using 'error' as the logger", async () => {
-    const ops = makeStandardOps({ lint: { "required-sections": "error" } });
+    const ops = makeStandardOps({
+      lint: { "required-sections": "error" },
+      specStatus: "WD",
+      group: "webapps",
+    });
     const doc = await makeRSDoc(ops);
     const errors = errorsFilter(doc);
     const warnings = warningsFilter(doc);
@@ -41,7 +49,11 @@ describe("w3c — required-sections", () => {
   });
 
   it("allows using 'warn' as the logger", async () => {
-    const ops = makeStandardOps({ lint: { "required-sections": "warn" } });
+    const ops = makeStandardOps({
+      lint: { "required-sections": "warn" },
+      specStatus: "WD",
+      group: "webapps",
+    });
     const doc = await makeRSDoc(ops);
     const errors = errorsFilter(doc);
     const warnings = warningsFilter(doc);
@@ -50,7 +62,7 @@ describe("w3c — required-sections", () => {
   });
 
   it("doesn't lint non-rec-track docs", async () => {
-    for (const specStatus of noTrackStatus) {
+    for (const specStatus of [...noTrackStatus, "ED"]) {
       const ops = makeStandardOps({
         lint: { "required-sections": true },
         specStatus,
@@ -68,7 +80,8 @@ describe("w3c — required-sections", () => {
     const ops = makeStandardOps({
       lint: { "required-sections": true },
       noRecTrack: true,
-      specStatus: "ED",
+      specStatus: "WD",
+      group: "webapps",
     });
     const doc = await makeRSDoc(ops);
     const errors = errorsFilter(doc);

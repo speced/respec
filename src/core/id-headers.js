@@ -29,7 +29,7 @@ const l10n = getIntlData(localizationStrings);
 export function run(conf) {
   /** @type {NodeListOf<HTMLElement>} */
   const headings = document.querySelectorAll(
-    `section:not(.head) h2, h3, h4, h5, h6`
+    `section:not(.head,#abstract,#sotd) h2, h3, h4, h5, h6`
   );
   for (const h of headings) {
     // prefer for ID: heading.id > parentElement.id > newly generated heading.id
@@ -43,9 +43,13 @@ export function run(conf) {
       h.closest(".appendix") ? "Appendix" : "Section",
       h.querySelector(":scope > bdi.secno")
     );
-    h.insertAdjacentElement(
-      "afterend",
-      html`<a href="${`#${id}`}" class="self-link" aria-label="${label}"></a>`
-    );
+    const wrapper = html`<div class="header-wrapper"></div>`;
+    h.replaceWith(wrapper);
+    const selfLink = html`<a
+      href="#${id}"
+      class="self-link"
+      aria-label="${label}"
+    ></a>`;
+    wrapper.append(h, selfLink);
   }
 }

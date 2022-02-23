@@ -1,6 +1,15 @@
 "use strict";
 
 import {
+  cgStatus,
+  cgbgStatus,
+  licenses,
+  noTrackStatus,
+  recTrackStatus,
+} from "../../../src/w3c/headers.js";
+
+import {
+  errorFilters,
   flushIframes,
   makeBasicConfig,
   makeDefaultBody,
@@ -8,7 +17,8 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
-import { licenses, recTrackStatus } from "../../../src/w3c/headers.js";
+const headerErrors = errorFilters.filter("w3c/headers");
+const defaultErrors = errorFilters.filter("w3c/defaults");
 
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
@@ -77,14 +87,15 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps();
       const newProps = {
         prevRecURI: "URI",
+        group: "webapps",
+        specStatus: "ED",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-
-      const terms = doc.querySelectorAll("dt");
-      expect(terms[4].textContent).toBe("Latest Recommendation:");
-      expect(terms[4].nextElementSibling.localName).toBe("dd");
-      expect(terms[4].nextElementSibling.textContent.trim()).toBe("URI");
+      const foundElements = contains(doc, ".head dt", "Latest Recommendation:");
+      expect(foundElements).toHaveSize(1);
+      const [link] = foundElements;
+      expect(link.nextElementSibling.textContent.trim()).toBe("URI");
     });
   });
   describe("specStatus", () => {
@@ -92,10 +103,11 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "ED",
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelector(".head p").textContent).toContain(
+      expect(doc.querySelector("#w3c-state").textContent).toContain(
         "W3C Editor's Draft"
       );
       expect(collapsedTextContent(doc.getElementById("sotd"))).toContain(
@@ -143,12 +155,13 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps({
         shortName: "test",
         specStatus: "editor-draft-finding",
+        group: "tag",
       });
       const doc = await makeRSDoc(ops);
-      const definitions = doc.querySelectorAll(".head dt");
-      const [firstDt] = definitions;
-
-      expect(firstDt.textContent).toContain("Latest editor's draft:");
+      const latestVersion = contains(doc, "dt", "Latest version:");
+      expect(latestVersion).toHaveSize(0);
+      const latestDraft = contains(doc, "dt", "Latest published version:");
+      expect(latestDraft).toHaveSize(0);
     });
 
     it("prefixes status text properly", async () => {
@@ -156,6 +169,7 @@ describe("W3C — Headers", () => {
         makeStandardOps({
           shortName: "test",
           specStatus: "ED",
+          group: "webapps",
         })
       );
       const [result] = contains(
@@ -1043,6 +1057,27 @@ describe("W3C — Headers", () => {
       const text = collapsedTextContent(dateStatusEl).trim();
       expect(text).toMatch(/15 March 1977$/);
     });
+
+    it("localizes modificationDate", async () => {
+      const ops = makeStandardOps({
+        publishDate: "1977-03-15",
+        modificationDate: "2022-01-27",
+      });
+      ops.htmlAttrs = {
+        lang: "de",
+      };
+      const doc = await makeRSDoc(ops);
+
+      const [dateStatusEl] = contains(
+        doc,
+        "p",
+        "zuletzt geändert am 27. Januar 2022"
+      );
+      const dateModified = dateStatusEl.querySelector(".dt-modified");
+      expect(dateModified).toBeTruthy();
+      expect(dateModified.localName).toBe("time");
+      expect(dateModified.getAttribute("datetime")).toBe("2022-01-27");
+    });
   });
 
   describe("previousPublishDate & previousMaturity", () => {
@@ -1179,19 +1214,19 @@ describe("W3C — Headers", () => {
         license: "",
       });
       const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(1);
-      const [error] = doc.respec.errors;
-      expect(error.plugin).toBe("w3c/headers");
+      const errors = headerErrors(doc);
+      expect(errors).toHaveSize(1);
+      const [error] = errors;
       expect(error.message).toContain("not supported");
     });
 
     it("shows an error when a w3c document a disallowed license", async () => {
       for (const license of ["cc-by", "cc0"]) {
-        const ops = makeStandardOps({ license });
+        const ops = makeStandardOps({ license, group: "webapps" });
         const doc = await makeRSDoc(ops, simpleSpecURL);
-        expect(doc.respec.errors).toHaveSize(1);
-        const [error] = doc.respec.errors;
-        expect(error.plugin).withContext(license).toBe("w3c/headers");
+        const errors = headerErrors(doc);
+        expect(errors).toHaveSize(1);
+        const [error] = errors;
         expect(error.message)
           .withContext(license)
           .toContain("not allowed for W3C Specifications");
@@ -1344,9 +1379,33 @@ describe("W3C — Headers", () => {
     });
   });
 
+  describe("thisVersion", () => {
+    for (let specStatus of recTrackStatus) {
+      it(`computes thisVersion for correctly for TR doc with status "${specStatus}"`, async () => {
+        const ops = makeStandardOps({
+          specStatus,
+          group: "webapps",
+          publishDate: "2020-12-31",
+          shortName: "test",
+        });
+        const doc = await makeRSDoc(ops);
+        // FPWD is a special case of "WD"...
+        specStatus = specStatus === "FPWD" ? "WD" : specStatus;
+        const expected = `https://www.w3.org/TR/2020/${specStatus}-test-20201231/`;
+        const anchor = doc.querySelector(".head a.u-url");
+        expect(anchor.href).toBe(expected);
+        expect(anchor.textContent).toBe(expected);
+      });
+    }
+  });
+
   describe("latestVersion", () => {
     it("adds a latest published version link", async () => {
-      const ops = makeStandardOps({ shortName: "foo", specStatus: "ED" });
+      const ops = makeStandardOps({
+        shortName: "foo",
+        specStatus: "WD",
+        group: "webapps",
+      });
       const doc = await makeRSDoc(ops);
 
       const terms = [...doc.querySelectorAll("dt")];
@@ -1362,7 +1421,11 @@ describe("W3C — Headers", () => {
     });
 
     it("allows skipping latest published version link in initial ED", async () => {
-      const ops = makeStandardOps({ specStatus: "ED", latestVersion: null });
+      const ops = makeStandardOps({
+        specStatus: "ED",
+        latestVersion: null,
+        group: "webapps",
+      });
       const doc = await makeRSDoc(ops);
 
       const terms = [...doc.querySelectorAll("dt")];
@@ -1422,6 +1485,85 @@ describe("W3C — Headers", () => {
         "https://www.w3.org/TR/its-here"
       );
     });
+
+    it(`sets the latestVersion URL for "CG-FINAL" status`, async () => {
+      const ops = makeStandardOps({
+        shortName: "some-report",
+        specStatus: "CG-FINAL",
+        group: "wicg",
+      });
+      const doc = await makeRSDoc(ops);
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      const anchor = latestVersion.nextElementSibling.querySelector("a");
+      expect(anchor.href).toBe(
+        `https://www.w3.org/community/reports/wicg/some-report/`
+      );
+      expect(anchor.textContent.trim()).toBe(
+        "https://www.w3.org/community/reports/wicg/some-report/"
+      );
+    });
+
+    it(`sets the latestVersion URL for "BG-FINAL" status`, async () => {
+      const ops = makeStandardOps({
+        shortName: "some-report",
+        specStatus: "BG-FINAL",
+        group: "publishingbg",
+      });
+      const doc = await makeRSDoc(ops);
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      const anchor = latestVersion.nextElementSibling.querySelector("a");
+      expect(anchor.href).toBe(
+        `https://www.w3.org/community/reports/publishingbg/some-report/`
+      );
+      expect(anchor.textContent.trim()).toBe(
+        "https://www.w3.org/community/reports/publishingbg/some-report/"
+      );
+    });
+
+    for (const specStatus of cgbgStatus.filter(s => s.endsWith("-DRAFT"))) {
+      it(`doesn't set latestVersion URL for ${specStatus} status`, async () => {
+        const ops = makeStandardOps({
+          shortName: "some-report",
+          specStatus,
+          group: "wicg",
+        });
+        const doc = await makeRSDoc(ops);
+        const terms = [...doc.querySelectorAll(".head dt")];
+        const latestVersion = terms.find(
+          el => el.textContent.trim() === "Latest published version:"
+        );
+        expect(latestVersion).toHaveSize(0);
+      });
+    }
+    for (const specStatus of noTrackStatus) {
+      it(`errors if ${specStatus} tries to use /TR/ space`, async () => {
+        const group = specStatus.includes("finding")
+          ? "tag"
+          : /^(CG)-/.test(specStatus)
+          ? "wicg"
+          : /^(BG)-/.test(specStatus)
+          ? "publishingbg"
+          : "webapps";
+        const ops = makeStandardOps({
+          shortName: "some-report",
+          specStatus,
+          group,
+          latestVersion: "/TR/some-report/",
+        });
+        const doc = await makeRSDoc(ops);
+        const errors = headerErrors(doc);
+        expect(errors).toHaveSize(1);
+        expect(errors[0].message).toContain(
+          `Documents with a status of \`"${specStatus}"\` can't be published on the W3C's /TR/ (Technical Report) space.`
+        );
+      });
+    }
   });
 
   describe("prevED", () => {
@@ -1586,67 +1728,6 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("wgPatentPolicy", () => {
-    it("supports wgPatentPolicy as string", async () => {
-      const ops = makeStandardOps({
-        wgPatentPolicy: "PP2020",
-      });
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(0);
-      const patentPolicyLink = doc.querySelector(
-        "#sotd a[href='https://www.w3.org/Consortium/Patent-Policy/']"
-      );
-      expect(patentPolicyLink).toBeTruthy();
-    });
-
-    it("supports wgPatentPolicy as an array", async () => {
-      const ops = makeStandardOps({
-        wgPatentPolicy: ["PP2020", "PP2020"],
-      });
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(0);
-      const patentPolicyLink = doc.querySelector(
-        "#sotd a[href='https://www.w3.org/Consortium/Patent-Policy/']"
-      );
-      expect(patentPolicyLink).toBeTruthy();
-    });
-
-    it("errors when the patent policy is invalid", async () => {
-      const ops = makeStandardOps({
-        wgPatentPolicy: "NOT A Patent Policy",
-      });
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(1);
-      const [error] = doc.respec.errors;
-      expect(error.plugin).toBe("w3c/headers");
-      expect(error.message).toContain("Invalid [`wgPatentPolicy`]");
-    });
-
-    it("errors when patent policies don't match", async () => {
-      const ops = makeStandardOps({
-        wgPatentPolicy: ["PP2017", "PP2020"],
-      });
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(1);
-      const [error] = doc.respec.errors;
-      expect(error.plugin).toBe("w3c/headers");
-      expect(error.message).toContain("must use the same patent policy");
-    });
-
-    it("errors when some patent policy is invalid", async () => {
-      const ops = makeStandardOps({
-        wgPatentPolicy: ["PP2020", "NOT A Patent Policy", "PP2017"],
-      });
-      const doc = await makeRSDoc(ops, simpleSpecURL);
-      expect(doc.respec.errors).toHaveSize(2);
-      const [error1, error2] = doc.respec.errors;
-      expect(error1.plugin).toBe("w3c/headers");
-      expect(error1.message).toContain("Invalid [`wgPatentPolicy`]");
-      expect(error2.plugin).toBe("w3c/headers");
-      expect(error2.message).toContain("must use the same patent policy");
-    });
-  });
-
   describe("wgId, data-deliverer, and isNote", () => {
     it("only doesn't add data-deliverer for non-notes", async () => {
       const ops = makeStandardOps();
@@ -1687,7 +1768,6 @@ describe("W3C — Headers", () => {
         implementationReportURI: "https://www.example.com/report.html",
         perEnd: "2014-12-01",
         specStatus: "PER",
-        wg: "WGNAME",
         wgPublicList: "WGLIST",
         subjectPrefix: "[The Prefix]",
         group: "webapps",
@@ -1711,10 +1791,10 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps();
       const newProps = {
         sotdAfterWGinfo: true,
-        wg: "WGNAME",
         wgPublicList: "WGLIST",
         subjectPrefix: "[The Prefix]",
         implementationReportURI: "",
+        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
@@ -1739,20 +1819,6 @@ describe("W3C — Headers", () => {
       const { textContent } = doc.querySelector("#sotd h2");
       expect(doc.documentElement.lang).toBe("es");
       expect(textContent).toContain("Estado de este Document");
-    });
-  });
-
-  describe("addPatentNote", () => {
-    it("takes addPatentNote into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        addPatentNote: "<strong>PATENTNOTE</strong>",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(doc.querySelector("#sotd p strong").textContent).toBe(
-        "PATENTNOTE"
-      );
     });
   });
 
@@ -1914,6 +1980,41 @@ describe("W3C — Headers", () => {
       const markupNode = elemWithSpecTitle.querySelector("code");
       expect(markupNode.textContent).toBe("markup");
     });
+
+    it("requires that a group option be in the configuration", async () => {
+      for (const specStatus of cgbgStatus) {
+        const ops = makeStandardOps({
+          shortName: "foo",
+          specStatus,
+          latestVersion: "somewhere",
+        });
+        const doc = await makeRSDoc(ops);
+        const errors = defaultErrors(doc);
+        expect(errors).withContext(specStatus).toHaveSize(1);
+        expect(errors[0].message)
+          .withContext(specStatus)
+          .toContain("s not associated with a [W3C group](");
+      }
+    });
+
+    const finalReportStatus = [
+      { specStatus: "CG-FINAL", group: "wicg" },
+      { specStatus: "BG-FINAL", group: "publishingbg" },
+    ];
+    for (const { specStatus, group } of finalReportStatus) {
+      it("requires that the ${specStatus} latestVersion be a w3c URL", async () => {
+        const ops = makeStandardOps({
+          specStatus,
+          group,
+          publishDate: "2019-01-01",
+          shortName: "respec",
+        });
+        const doc = await makeRSDoc(ops);
+        const query = `.head dd > a[href="https://www.w3.org/community/reports/${group}/${specStatus}-respec-20190101/"]`;
+        const a = doc.querySelector(query);
+        expect(a).withContext(`${specStatus} and ${group}`).toBeTruthy();
+      });
+    }
   });
 
   describe("Member-SUBM", () => {
@@ -1925,7 +2026,6 @@ describe("W3C — Headers", () => {
         submissionCommentNumber: "01",
         publishDate: "2018-05-25",
         shortName: "yolo",
-        group: "webapps",
       };
       Object.assign(ops.config, newProps);
       doc = await makeRSDoc(ops);
@@ -1969,10 +2069,10 @@ describe("W3C — Headers", () => {
     const doc = await makeRSDoc(ops);
     const sotd = doc.getElementById("sotd");
     expect(sotd).toBeTruthy();
+    const h2 = sotd.querySelector("h2");
+    expect(h2.textContent).toBe("Override");
     expect(sotd.firstElementChild.localName).toBe("h2");
-    expect(sotd.firstElementChild.textContent).toBe("Override");
-    expect(sotd.children.length).toBe(2);
-    expect(sotd.querySelector("a.self-link")).toBeTruthy();
+    expect(sotd.querySelector("a.self-link")).toBeFalsy();
   });
 
   it("allows custom sections and custom content, not just paragraphs", async () => {
@@ -2046,7 +2146,7 @@ describe("W3C — Headers", () => {
     theTest(await makeRSDoc(makeStandardOps({}, body)), "normal working group");
     theTest(
       await makeRSDoc(
-        makeStandardOps({ specStatus: "CG-DRAFT", wg: "WICG" }, body)
+        makeStandardOps({ specStatus: "CG-DRAFT", group: "wicg" }, body)
       ),
       "community group draft"
     );
@@ -2122,14 +2222,14 @@ describe("W3C — Headers", () => {
       ];
       Object.assign(ops.config, { logos, specStatus: "unofficial" });
       const doc = await makeRSDoc(ops);
-      const elems = doc.querySelectorAll("a.logo");
+      const elems = doc.querySelectorAll(".head p a.logo");
       expect(elems).toHaveSize(2);
     });
 
-    it("adds W3C logo for status EDs by default", async () => {
-      const ops = makeStandardOps({ specStatus: "ED" });
+    it("adds W3C logo for status EDs when in a working group", async () => {
+      const ops = makeStandardOps({ specStatus: "ED", group: "webapps" });
       const doc = await makeRSDoc(ops);
-      const logo = doc.querySelector("a.logo");
+      const logo = doc.querySelector(".head p > a.logo");
       expect(logo.href).toBe("https://www.w3.org/");
     });
 
@@ -2145,7 +2245,7 @@ describe("W3C — Headers", () => {
       }
     });
 
-    it("allows overriding logos for EDs", async () => {
+    it("doesn't show W3C logo for ED when not in a working group", async () => {
       const ops = makeStandardOps({
         specStatus: "ED",
         logos: [
@@ -2158,9 +2258,31 @@ describe("W3C — Headers", () => {
         ],
       });
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelectorAll("a.logo")).toHaveSize(1);
-      const logo = doc.querySelector("a.logo");
-      expect(logo.href).toBe("https://somewhere.else/");
+      const logos = doc.querySelectorAll("a.logo");
+      expect(logos).toHaveSize(1);
+      const [otherLogo] = logos;
+      expect(otherLogo.href).toBe("https://somewhere.else/");
+    });
+
+    it("allows overriding logos for EDs", async () => {
+      const ops = makeStandardOps({
+        specStatus: "ED",
+        logos: [
+          {
+            src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
+            alt: "Logo",
+            id: "logo",
+            url: "https://somewhere.else/",
+          },
+        ],
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(ops);
+      const logos = doc.querySelectorAll("a.logo");
+      expect(logos).toHaveSize(2);
+      const [w3cLogo, otherLogo] = logos;
+      expect(w3cLogo.href).toBe("https://www.w3.org/");
+      expect(otherLogo.href).toBe("https://somewhere.else/");
     });
 
     it("adds logos defined by configuration", async () => {
@@ -2194,7 +2316,7 @@ describe("W3C — Headers", () => {
       });
       const doc = await makeRSDoc(ops);
       // get logos
-      const logosAnchors = [...doc.querySelectorAll(".logo")];
+      const logosAnchors = [...doc.querySelectorAll(".head p.logos > a.logo")];
       expect(logos).toHaveSize(3);
 
       // remove W3C logo
@@ -2232,7 +2354,11 @@ describe("W3C — Headers", () => {
           alt: "some alt",
         },
       ];
-      const ops = makeStandardOps({ specStatus: "ED", logos });
+      const ops = makeStandardOps({
+        specStatus: "ED",
+        logos,
+        group: "webapps",
+      });
       const doc = await makeRSDoc(ops);
       expect(doc.respec.errors).toHaveSize(4);
       doc.respec.errors.every(
@@ -2242,6 +2368,20 @@ describe("W3C — Headers", () => {
   });
 
   describe("Feedback", () => {
+    for (const specStatus of cgStatus) {
+      it(`includes feedback links for CG's ${specStatus} status`, async () => {
+        const ops = makeStandardOps({
+          specStatus,
+          github: "w3c/respec",
+          group: "wicg",
+        });
+        const doc = await makeRSDoc(ops);
+        const [dt] = contains(doc, ".head dt", "Feedback:");
+        const dd = dt.nextElementSibling;
+        expect(dd.querySelector("a[href^='https://github.com/']")).toBeTruthy();
+      });
+    }
+
     it("includes a Feedback: with a <dd> to github issues", async () => {
       const doc = await makeRSDoc(
         makeStandardOps({ github: "w3c/respec", specStatus: "WD" })
@@ -2292,7 +2432,7 @@ describe("W3C — Headers", () => {
   describe("History", () => {
     it("shows the publication history of the spec", async () => {
       const ops = makeStandardOps({
-        shortName: "test",
+        shortName: "appmanifest",
         specStatus: "WD",
         group: "webapps",
       });
@@ -2303,17 +2443,17 @@ describe("W3C — Headers", () => {
       const historyLink = history.nextElementSibling.querySelector("a");
       expect(historyLink).toBeTruthy();
       expect(historyLink.href).toBe(
-        "https://www.w3.org/standards/history/test"
+        "https://www.w3.org/standards/history/appmanifest"
       );
       expect(historyLink.textContent).toContain(
-        "https://www.w3.org/standards/history/test"
+        "https://www.w3.org/standards/history/appmanifest"
       );
     });
 
     it("includes a dd for the commit history of the document", async () => {
       const ops = makeStandardOps({
         github: "w3c/respec",
-        shortName: "test",
+        shortName: "appmanifest",
         specStatus: "WD",
         group: "webapps",
       });
@@ -2324,8 +2464,8 @@ describe("W3C — Headers", () => {
       expect(commitHistory).toBeTruthy();
       const [publicationHistory] = contains(
         doc,
-        ".head dd>a[href='https://www.w3.org/standards/history/test']",
-        "https://www.w3.org/standards/history/test"
+        ".head dd>a[href='https://www.w3.org/standards/history/appmanifest']",
+        "https://www.w3.org/standards/history/appmanifest"
       );
       expect(publicationHistory).toBeTruthy();
     });
@@ -2336,6 +2476,7 @@ describe("W3C — Headers", () => {
           github: "my/some-repo",
           shortName: "test",
           specStatus,
+          group: "webapps",
         });
         const doc = await makeRSDoc(ops);
         const [commitHistory] = contains(doc, ".head dd>a", "Commit history");
@@ -2364,7 +2505,24 @@ describe("W3C — Headers", () => {
       expect(historyLink.href).toBe("http://example.com/history");
     });
 
-    it("allowing removing the history entirely buy nulling it out", async () => {
+    it("generates the history URL for FPWD without checking if it exists", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "FPWD",
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      expect(history.nextElementSibling).toBeTruthy();
+      const historyLink = history.nextElementSibling.querySelector("a");
+      expect(historyLink).toBeTruthy();
+      expect(historyLink.href).toBe(
+        "https://www.w3.org/standards/history/test"
+      );
+    });
+
+    it("allowing removing the history entirely by nulling it out", async () => {
       const ops = makeStandardOps({
         shortName: "test",
         specStatus: "WD",
@@ -2373,6 +2531,31 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
       expect(history).toBeFalsy();
+    });
+
+    it("excludes history if the latestVersion is null", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "WD",
+        latestVersion: null,
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeFalsy();
+    });
+
+    it("excludes history link if the latestVersion is null, but keeps commit history", async () => {
+      const ops = makeStandardOps({
+        shortName: "test",
+        specStatus: "WD",
+        latestVersion: null,
+        github: "w3c/respec",
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      const [commits] = contains(doc, ".head dd", "Commit history");
+      expect(commits).toBeTruthy();
     });
 
     it("derives the historyURI automatically when it's missing, but the document is on TR", async () => {
@@ -2393,7 +2576,7 @@ describe("W3C — Headers", () => {
 
     it("includes the history for all rec-track status docs", async () => {
       for (const specStatus of recTrackStatus) {
-        const shortName = `${specStatus}-test`;
+        const shortName = `push-api`;
         const ops = makeStandardOps({
           shortName,
           specStatus,
