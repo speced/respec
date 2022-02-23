@@ -939,72 +939,72 @@ describe("W3C — Headers", () => {
   });
 
   describe("subtitle", () => {
-    it("handles missing subtitle", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "REC",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(doc.getElementById("subtitle")).toBeNull();
-    });
+    const props = [
+      { group: "webapps", specStatus: "WD", template: "W3C" },
+      { group: "wicg", specStatus: "CG-DRAFT", template: "CG" },
+    ];
+    for (const { group, specStatus, template } of props) {
+      it(`handles missing subtitle for ${template} template`, async () => {
+        const ops = makeStandardOps({
+          specStatus,
+          group,
+        });
+        const doc = await makeRSDoc(ops);
+        expect(doc.getElementById("subtitle")).toBeNull();
+      });
 
-    it("uses existing h2#subtitle as subtitle", async () => {
-      const ops = makeStandardOps();
-      ops.body = `<h2 id='subtitle'><code>pass</code></h2>${makeDefaultBody()}`;
-      const doc = await makeRSDoc(ops);
+      it(`uses existing h2#subtitle as subtitle for ${template} template`, async () => {
+        const ops = makeStandardOps({ group, specStatus });
+        ops.body = `<h2 id='subtitle'><code>pass</code></h2>${makeDefaultBody()}`;
+        const doc = await makeRSDoc(ops);
 
-      const subTitleElements = doc.querySelectorAll("h2#subtitle");
-      expect(subTitleElements).toHaveSize(1);
+        const subTitleElements = doc.querySelectorAll("h2#subtitle");
+        expect(subTitleElements).toHaveSize(1);
 
-      const { subtitle } = doc.defaultView.respecConfig;
-      expect(subtitle).toBe("pass");
+        const { subtitle } = doc.defaultView.respecConfig;
+        expect(subtitle).toBe("pass");
 
-      const [h2Elem] = subTitleElements;
-      expect(h2Elem.textContent).toBe("pass");
+        const [h2Elem] = subTitleElements;
+        expect(h2Elem.textContent).toBe("pass");
 
-      // make sure it was relocated to head
-      expect(h2Elem.closest(".head")).toBeTruthy();
+        // make sure it was relocated to head
+        expect(h2Elem.closest(".head")).toBeTruthy();
 
-      expect(h2Elem.firstElementChild.localName).toBe("code");
-      expect(h2Elem.firstElementChild.textContent).toBe("pass");
-    });
+        expect(h2Elem.firstElementChild.localName).toBe("code");
+        expect(h2Elem.firstElementChild.textContent).toBe("pass");
+      });
 
-    it("overwrites conf.subtitle if it exists", async () => {
-      const ops = makeStandardOps();
-      ops.body = `<h2 id='subtitle'><code>pass</code></h2>${makeDefaultBody()}`;
-      const newProps = {
-        subtitle: "fail - this should have been overridden by the <h2>",
-      };
-      Object.assign(ops.config, newProps);
+      it(`overwrites conf.subtitle if it exists for ${template} template`, async () => {
+        const subtitle = "fail - this should have been overridden by the <h2>";
+        const ops = makeStandardOps(
+          { subtitle },
+          `<h2 id='subtitle'><code>pass</code></h2>`
+        );
+        const doc = await makeRSDoc(ops);
+        expect(doc.defaultView.respecConfig.subtitle).toBe("pass");
+      });
 
-      const doc = await makeRSDoc(ops);
+      it(`sets conf.subtitle if it doesn't exist, but h2#subtitle exists for ${template} template`, async () => {
+        const ops = makeStandardOps({ group, specStatus });
+        ops.body = `<h2 id='subtitle'><code>pass</code></h2>${makeDefaultBody()}`;
+        const doc = await makeRSDoc(ops);
 
-      const { subtitle } = doc.defaultView.respecConfig;
-      expect(subtitle).toBe("pass");
-    });
+        const { subtitle } = doc.defaultView.respecConfig;
+        expect(subtitle).toBe("pass");
+      });
 
-    it("sets conf.subtitle if it doesn't exist, but h2#subtitle exists", async () => {
-      const ops = makeStandardOps();
-      ops.body = `<h2 id='subtitle'><code>pass</code></h2>${makeDefaultBody()}`;
-      const doc = await makeRSDoc(ops);
-
-      const { subtitle } = doc.defaultView.respecConfig;
-      expect(subtitle).toBe("pass");
-    });
-
-    it("generates a subtitle from the `subtitle` configuration option", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "REC",
-        subtitle: "pass",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      const h2Elem = doc.getElementById("subtitle");
-      expect(h2Elem).toBeTruthy();
-      expect(h2Elem.textContent.trim()).toBe("pass");
-    });
+      it(`generates a subtitle from the subtitle configuration option for ${template} template`, async () => {
+        const ops = makeStandardOps({
+          group,
+          specStatus,
+          subtitle: "pass",
+        });
+        const doc = await makeRSDoc(ops);
+        const h2Elem = doc.getElementById("subtitle");
+        expect(h2Elem).toBeTruthy();
+        expect(h2Elem.textContent.trim()).toBe("pass");
+      });
+    }
   });
 
   describe("publishDate", () => {
