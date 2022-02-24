@@ -19,14 +19,14 @@ export default (conf, options) => {
       ? html`<p class="logos">${conf.logos.map(showLogo)}</p>`
       : ""}
     ${specTitleElem} ${getSpecSubTitleElem(conf)}
-    <h2>
+    <p id="w3c-state">
       <a href="https://www.w3.org/standards/types#reports"
         >${conf.longStatus}</a
       >
       <time class="dt-published" datetime="${conf.dashDate}"
         >${W3CDate.format(conf.publishDate)}</time
       >
-    </h2>
+    </p>
     <dl>
       ${conf.thisVersion
         ? html`<dt>${l10n.this_version}</dt>

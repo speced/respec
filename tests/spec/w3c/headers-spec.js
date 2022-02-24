@@ -1824,14 +1824,12 @@ describe("W3C — Headers", () => {
 
   describe("CG/BG", () => {
     it("handles CG-DRAFT status", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
+      const ops = makeStandardOps({
         specStatus: "CG-DRAFT",
         wgPublicList: "WGLIST",
         subjectPrefix: "[The Prefix]",
         group: "wicg",
-      };
-      Object.assign(ops.config, newProps);
+      });
       const doc = await makeRSDoc(ops);
       const c = doc.querySelector(".head .copyright");
       expect(
@@ -1845,7 +1843,7 @@ describe("W3C — Headers", () => {
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
         )
       ).toHaveSize(1);
-      expect(doc.querySelector(".head h2").textContent).toContain(
+      expect(doc.querySelector(".head p#w3c-state > a").textContent).toContain(
         "Draft Community Group Report"
       );
       const sotd = doc.getElementById("sotd");
@@ -1941,7 +1939,7 @@ describe("W3C — Headers", () => {
           ".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']"
         )
       ).toHaveSize(1);
-      expect(doc.querySelector(".head h2").textContent).toContain(
+      expect(doc.querySelector(".head p#w3c-state > a").textContent).toContain(
         "Final Business Group Report"
       );
       const terms = doc.querySelectorAll("dt");
