@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
-        with: { node-version: 14, cache: npm }
+        with: { node-version: 16, cache: npm }
       - name: install & build
         run: |
           npm ci
@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
-        with: { node-version: 14, cache: npm }
+        with: { node-version: 16, cache: npm }
       - name: install & build
         run: |
           npm ci
