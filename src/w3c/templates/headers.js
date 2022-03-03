@@ -154,7 +154,7 @@ const localizationStrings = {
       return `Dieses Dokument ist ebenfalls in ${
         plural
           ? "diesen nicht-normativen Formaten verfügbar"
-          : "in diesem nicht-normativen Format verfügbar"
+          : "diesem nicht-normativen Format verfügbar"
       }:`;
     },
     prev_editor_draft: "Vorheriger Entwurf:",
