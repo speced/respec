@@ -27,8 +27,8 @@ jobs:
           curl -sL https://api.github.com/repos/w3c/respec/pulls/${{ github.event.pull_request.number }}/files -o /tmp/pr_files.json
           cat /tmp/pr_files.json | jq -r '.[].filename' | grep -qE "^builds/" || exit 0
           echo "::error::Uh oh! builds/ was changed."; exit 1
-      - uses: actions/setup-node@v2
-        with: { node-version: 14, cache: npm }
+      - uses: actions/setup-node@v3
+        with: { node-version: 16, cache: npm }
       - run: npm ci
       - run: npm run lint
 
@@ -38,8 +38,8 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with: { node-version: 14, cache: npm }
+      - uses: actions/setup-node@v3
+        with: { node-version: 16, cache: npm }
       - run: npm ci
       - run: npm run test:build
       - run: npm run build:w3c
@@ -54,8 +54,8 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with: { node-version: 14, cache: npm }
+      - uses: actions/setup-node@v3
+        with: { node-version: 16, cache: npm }
       - name: install & build
         run: |
           npm ci
@@ -73,8 +73,8 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with: { node-version: 14, cache: npm }
+      - uses: actions/setup-node@v3
+        with: { node-version: 16, cache: npm }
       - name: install & build
         run: |
           npm ci
