@@ -14,8 +14,8 @@ import {
   showError,
   showWarning,
 } from "../../core/utils.js";
+import { W3CNotes, recTrackStatus } from "../headers.js";
 import { lang } from "../../core/l10n.js";
-import { recTrackStatus, W3CNotes } from "../headers.js";
 
 const ruleName = "required-sections";
 export const name = "w3c/linter-rules/required-sections";
