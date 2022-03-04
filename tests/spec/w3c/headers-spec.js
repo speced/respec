@@ -5,7 +5,7 @@ import {
   cgbgStatus,
   licenses,
   noTrackStatus,
-  recTrackStatus,
+  trStatus,
 } from "../../../src/w3c/headers.js";
 
 import {
@@ -1380,7 +1380,7 @@ describe("W3C — Headers", () => {
   });
 
   describe("thisVersion", () => {
-    for (let specStatus of recTrackStatus) {
+    for (let specStatus of trStatus) {
       it(`computes thisVersion for correctly for TR doc with status "${specStatus}"`, async () => {
         const ops = makeStandardOps({
           specStatus,
@@ -2572,8 +2572,8 @@ describe("W3C — Headers", () => {
       );
     });
 
-    it("includes the history for all rec-track status docs", async () => {
-      for (const specStatus of recTrackStatus) {
+    for (const specStatus of trStatus) {
+      it(`includes the history for "${specStatus}" rec-track status`, async () => {
         const shortName = `push-api`;
         const ops = makeStandardOps({
           shortName,
@@ -2585,12 +2585,12 @@ describe("W3C — Headers", () => {
         expect(history).withContext(specStatus).toBeTruthy();
         expect(history.nextElementSibling).withContext(specStatus).toBeTruthy();
         const historyLink = history.nextElementSibling.querySelector("a");
-        expect(historyLink).withContext(specStatus).toBeTruthy();
-        expect(historyLink.href)
-          .withContext(specStatus)
-          .toBe(`https://www.w3.org/standards/history/${shortName}`);
-      }
-    });
+        expect(historyLink).toBeTruthy();
+        expect(historyLink.href).toBe(
+          `https://www.w3.org/standards/history/${shortName}`
+        );
+      });
+    }
   });
 
   describe("Add Preview Status in title", () => {
