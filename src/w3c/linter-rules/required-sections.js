@@ -15,7 +15,7 @@ import {
   showWarning,
 } from "../../core/utils.js";
 import { lang } from "../../core/l10n.js";
-import { recTrackStatus } from "../headers.js";
+import { recTrackStatus, W3CNotes } from "../headers.js";
 
 const ruleName = "required-sections";
 export const name = "w3c/linter-rules/required-sections";
@@ -50,6 +50,8 @@ const l10n = getIntlData(localizationStrings);
 
 export const requiresSomeSectionStatus = new Set([...recTrackStatus]);
 requiresSomeSectionStatus.delete("DISC"); // "Discontinued Draft"
+// W3C notes do not require privacy or security considerations sections.
+W3CNotes.forEach(note => requiresSomeSectionStatus.delete(note));
 
 export function run(conf) {
   if (!conf.lint?.[ruleName]) {

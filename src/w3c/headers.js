@@ -177,15 +177,16 @@ export const status2track = {
 };
 export const W3CNotes = ["DNOTE", "NOTE", "STMT"];
 export const recTrackStatus = [
-  "FPWD",
-  "WD",
   "CR",
   "CRD",
-  "PR",
-  "PER",
-  "REC",
   "DISC",
+  "FPWD",
+  "PER",
+  "PR",
+  "REC",
   "RSCND",
+  "WD",
+  ...W3CNotes,
 ];
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const tagStatus = ["draft-finding", "finding", "editor-draft-finding"];
