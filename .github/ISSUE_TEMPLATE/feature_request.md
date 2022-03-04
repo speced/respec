@@ -24,6 +24,6 @@ ReSpec is a community maintained project, meaning it doesn't have any dedicated 
 There are two options to get your feature implemented. You can:
 
 1. contribute to the project yourself via a pull request. We will [guide](https://respec.org/docs/#developers-guide) you!
-2. fund a contributor to implement your feature (US$500+ depending on complexity).
-
+2. fund a contributor to prioritize your feature (usually US$500+ depending on complexity).
+3. wait for someone to get to it (usually a few months).
 Funding pays for the feature development, testing, documentation, server costs, etc. We have an open collective where development costs are tracked and shared. Please see our [Open Collective](https://opencollective.com/respec/).
