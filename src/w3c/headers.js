@@ -177,15 +177,15 @@ export const status2track = {
 };
 export const W3CNotes = ["DNOTE", "NOTE", "STMT"];
 export const recTrackStatus = [
-  "FPWD",
-  "WD",
   "CR",
   "CRD",
-  "PR",
-  "PER",
-  "REC",
   "DISC",
+  "FPWD",
+  "PER",
+  "PR",
+  "REC",
   "RSCND",
+  "WD",
 ];
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const tagStatus = ["draft-finding", "finding", "editor-draft-finding"];
@@ -388,7 +388,7 @@ export async function run(conf) {
     const { shortName, publishDate } = conf;
     const date = concatDate(publishDate);
     const docVersion = `${maturity}-${shortName}-${date}`;
-    const year = [...recTrackStatus, "Member-SUBM"].includes(conf.specStatus)
+    const year = [...trStatus, "Member-SUBM"].includes(conf.specStatus)
       ? `${publishDate.getUTCFullYear()}/`
       : "";
     conf.thisVersion = w3Url(`${pubSpace}/${year}${docVersion}/`);
