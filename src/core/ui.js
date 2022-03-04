@@ -42,7 +42,21 @@ const menu = html`<ul
   role="menu"
   aria-labelledby="respec-pill"
   hidden
-></ul>`;
+>
+  <p style="text-align: center; padding: 0 .3cm;">
+    Russia’s invasion of Ukraine is an act of aggression and human rights
+    catastrophe. The project maintainers stand in solidarity with the people of
+    Ukraine. Please consider making a donation through
+    <a
+      href="https://www.forbes.com/advisor/personal-finance/donate-relief-to-ukraine/"
+      >these</a
+    >
+    <a href="https://www.vox.com/future-perfect/22955885/donate-ukraine"
+      >options</a
+    >.
+  </p>
+  <hr />
+</ul>`;
 const closeButton = html`<button
   class="close-button"
   onclick=${() => ui.closeModal()}
@@ -60,7 +74,7 @@ const buttons = {};
 sub("start-all", () => document.body.prepend(respecUI), { once: true });
 sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
-const respecPill = html`<button id="respec-pill" disabled>ReSpec</button>`;
+const respecPill = html`<button id="respec-pill" disabled>ReSpec 🇺🇦</button>`;
 respecUI.appendChild(respecPill);
 respecPill.addEventListener("click", e => {
   e.stopPropagation();
