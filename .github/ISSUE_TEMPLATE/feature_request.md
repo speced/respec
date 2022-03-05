@@ -21,7 +21,7 @@ How are you currently working around this limitation?
 **Can you or your organization fund the work or help with development?**
 ReSpec is a community maintained project, meaning it doesn't have any dedicated staff or funding.
 
-There are two options to get your feature implemented. You can:
+There are three options to get your feature implemented. You can:
 
 1. contribute to the project yourself via a pull request. We will [guide](https://respec.org/docs/#developers-guide) you!
 2. fund a contributor to prioritize your feature (usually US$500+ depending on complexity).
