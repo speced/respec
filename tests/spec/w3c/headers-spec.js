@@ -5,6 +5,7 @@ import {
   cgbgStatus,
   licenses,
   noTrackStatus,
+  recTrackStatus,
   trStatus,
 } from "../../../src/w3c/headers.js";
 
@@ -495,6 +496,23 @@ describe("W3C — Headers", () => {
         "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (マイクロソフト (Microsoft))"
       );
     });
+    for (const specStatus of recTrackStatus) {
+      it(`shows an error if w3cid is missing for ${specStatus}`, async () => {
+        const ops = makeStandardOps({
+          specStatus,
+          editors: [{ name: "ok", w3cid: "12345" }, { name: "bad person" }],
+          group: "webapps",
+          github: "w3c/respec",
+          crEnd: "2019-01-01",
+        });
+        const doc = await makeRSDoc(ops, simpleSpecURL);
+        const errors = headerErrors(doc);
+        expect(errors).toHaveSize(1);
+        const [error] = errors;
+        expect(error.message).toContain("w3cid");
+        expect(error.message).toContain("bad person");
+      });
+    }
   });
 
   describe("formerEditors", () => {

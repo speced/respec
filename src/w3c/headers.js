@@ -450,6 +450,16 @@ export async function run(conf) {
     const msg = "At least one editor is required.";
     const hint = docLink`Add one or more editors using the ${"[editors]"} configuration option.`;
     showError(msg, name, { hint });
+  } else if (conf.editors.length && conf.isRecTrack) {
+    // check that every editor has w3cid
+    conf.editors.forEach((editor, i) => {
+      if (editor.w3cid) return;
+      const msg = docLink`Editor ${
+        editor.name ? `"${editor.name}"` : `number ${i + 1}`
+      } is missing their ${"[w3cid]"}.`;
+      const hint = docLink`Please add a ${"[w3cid]"}. See ${"[`w3cid`]"} for instructions for how to retrieve it.`;
+      showError(msg, name, { hint });
+    });
   }
 
   if (conf.alternateFormats?.some(({ uri, label }) => !uri || !label)) {
