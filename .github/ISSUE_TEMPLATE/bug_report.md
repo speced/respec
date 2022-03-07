@@ -6,13 +6,11 @@ labels: bug
 assignees: ""
 ---
 
-## Important info
-
-- URL to affected spec:
-- ReSpec version: Click the ReSpec pill in top-right corner (e.g., 25.12.0).
-- [x] I did a "hard refresh", but it's still busted.
-
 ## Description of problem
+
+**URL to affected spec or repo:**
+
+https://w3c.github.io/< some-repo >/
 
 **What happened (e.g., it crashed)?:**
 
