@@ -457,7 +457,7 @@ export async function run(conf) {
       const msg = docLink`Editor ${
         editor.name ? `"${editor.name}"` : `number ${i + 1}`
       } is missing their ${"[w3cid]"}.`;
-      const hint = docLink`Please add a ${"[w3cid]"}. See ${"[`w3cid`]"} for instructions for how to retrieve it.`;
+      const hint = docLink`See ${"[`w3cid`]"} for instructions for how to retrieve it and add it.`;
       showError(msg, name, { hint });
     });
   }
