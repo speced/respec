@@ -500,7 +500,7 @@ describe("W3C — Headers", () => {
       it(`shows an error if w3cid is missing for ${specStatus}`, async () => {
         const ops = makeStandardOps({
           specStatus,
-          editors: [{ name: "ok", w3cid: "12345" }, { name: "bad person" }],
+          editors: [{ name: "ok", w3cid: "12345" }, { name: "person 2" }],
           group: "webapps",
           github: "w3c/respec",
           crEnd: "2019-01-01",
@@ -510,7 +510,7 @@ describe("W3C — Headers", () => {
         expect(errors).toHaveSize(1);
         const [error] = errors;
         expect(error.message).toContain("w3cid");
-        expect(error.message).toContain("bad person");
+        expect(error.message).toContain("person 2");
       });
     }
   });
