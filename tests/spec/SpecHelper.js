@@ -199,6 +199,7 @@ export function makeBasicConfig(profile = "w3c") {
         editors: [
           {
             name: "Person Name",
+            w3cid: "12345",
           },
         ],
         specStatus: "ED",
