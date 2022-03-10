@@ -24,7 +24,7 @@ describe("Core — Can I Use", () => {
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
-    expect(caniuse.browsers).toBeUndefined(); // uses server default
+    expect(caniuse.browsers).toEqual([]);
   });
 
   it("allows overriding defaults", async () => {
