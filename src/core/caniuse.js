@@ -13,29 +13,39 @@ export const name = "core/caniuse";
 
 const API_URL = "https://respec.org/caniuse/";
 
-const BROWSERS = new Set([
-  "and_chr",
-  "and_ff",
-  "and_uc",
-  "android",
-  "bb",
-  "chrome",
-  "edge",
-  "firefox",
-  "ie",
-  "ios_saf",
-  "op_mini",
-  "op_mob",
-  "opera",
-  "safari",
-  "samsung",
+const BROWSERS = new Map([
+  ["and_chr", { name: "Android Chrome", path: "chrome" }],
+  ["and_ff", { name: "Android Firefox", path: "firefox" }],
+  ["and_uc", { name: "Android UC", path: "uc" }],
+  ["chrome", { name: "Chrome" }],
+  ["edge", { name: "Edge" }],
+  ["firefox", { name: "Firefox" }],
+  ["ios_saf", { name: "iOS Safari", path: "safari-ios" }],
+  [
+    "op_mini",
+    { name: "Opera Mini", path: "opera-mini", image: "opera-mini.png" },
+  ],
+  ["op_mob", { name: "Opera Mobile", path: "opera" }],
+  ["opera", { name: "Opera" }],
+  ["safari", { name: "Safari" }],
+  ["samsung", { name: "Samsung Internet", path: "samsung-internet" }],
+]);
+
+const statToText = new Map([
+  ["a", "almost supported (aka Partial support)"],
+  ["d", "disabled by default"],
+  ["n", "no support, or disabled by default"],
+  ["p", "no support, but has Polyfill"],
+  ["u", "unknown support"],
+  ["x", "requires prefix to work"],
+  ["y", "supported by default"],
 ]);
 
 export function prepare(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
   }
-  normalizeConf(conf);
+  normalizeCaniuseConf(conf);
   validateBrowsers(conf);
   const options = conf.caniuse;
   if (!options.feature) {
@@ -49,9 +59,15 @@ export function prepare(conf) {
     ${css}
   </style>`);
 }
-
+/**
+ * @param {string} browser
+ * @returns
+ */
 function getLogoSrc(browser) {
-  return `https://cdnjs.cloudflare.com/ajax/libs/browser-logos/71.0.0/${browser}/${browser}.svg`;
+  const details = BROWSERS.get(browser);
+  const path = details.path ? details.path : browser;
+  const image = details.image ? details.image : `${path}.svg`;
+  return `https://cdnjs.cloudflare.com/ajax/libs/browser-logos/71.0.0/${path}/${image}`;
 }
 
 export async function run(conf) {
@@ -60,18 +76,18 @@ export async function run(conf) {
 
   const featureURL = new URL(options.feature, "https://caniuse.com/").href;
   const headDlElem = document.querySelector(".head dl");
-  const definitionPair = html`<dt class="caniuse-title">
-      Browser support (caniuse.com):
-    </dt>
+  const contentPromise = fetchStats(conf.caniuse)
+    .then(json => processJson(json, options))
+    .catch(err => handleError(err, options, featureURL));
+  const definitionPair = html`<dt class="caniuse-title">Browser support:</dt>
     <dd class="caniuse-stats">
       ${{
-        any: fetchStats(conf.caniuse)
-          .catch(err => handleError(err, options, featureURL))
-          .then(json => processJson(json, options)),
+        any: contentPromise,
         placeholder: "Fetching data from caniuse.com...",
       }}
     </dd>`;
   headDlElem.append(...definitionPair.childNodes);
+  await contentPromise;
   pub("amend-user-config", { caniuse: options.feature });
   if (options.removeOnSave) {
     // Will remove the browser support cells.
@@ -97,14 +113,15 @@ function handleError(err, options, featureURL) {
  * returns normalized `conf.caniuse` configuration
  * @param {Object} conf   configuration settings
  */
-function normalizeConf(conf) {
-  const DEFAULTS = { removeOnSave: false, apiURL: API_URL, browsers: [] };
+function normalizeCaniuseConf(conf) {
+  const DEFAULTS = { removeOnSave: false, browsers: [] };
   if (typeof conf.caniuse === "string") {
     conf.caniuse = { feature: conf.caniuse, ...DEFAULTS };
     return;
   }
   conf.caniuse = { ...DEFAULTS, ...conf.caniuse };
 }
+
 function validateBrowsers({ caniuse }) {
   const { browsers } = caniuse;
   const invalidBrowsers = browsers.filter(browser => !BROWSERS.has(browser));
@@ -117,22 +134,33 @@ function validateBrowsers({ caniuse }) {
 
 async function processJson(json, { feature }) {
   const results = json.result;
-  const out = results.map(({ browser, version, caniuse }) => {
-    const ariaLabel =
-      caniuse === "u"
-        ? `${feature} is not supported in this browser.`
-        : `${feature} is supported since version ${version}.`;
-    return html`<li>
-      <img
-        width="24"
-        height="24"
-        src="${getLogoSrc(browser)}"
-        alt="${`${browser} ${version}`}"
-        title="${`${browser} ${version}`}"
-        area-label="${ariaLabel}"
-      />
-    </li>`;
+  const out = results.map(({ browser: browserId, version, caniuse }) => {
+    const { name } = BROWSERS.get(browserId);
+    const versionLong = version ? ` version ${version}` : "";
+    const browserName = `${name}${versionLong}`;
+    const supportLevel = statToText.get(caniuse);
+    const ariaLabel = `${feature} is ${supportLevel} in ${browserName}.`;
+    const cssClass = `caniuse-cell ${caniuse}`;
+    const title = capitalize(`${supportLevel} in ${browserName}.`);
+    const textVersion = version ? version : "—";
+    const src = getLogoSrc(browserId);
+    return html`
+      <div class="${cssClass}" title="${title}" area-label="${ariaLabel}">
+        <img
+          class="caniuse-browser"
+          width="20"
+          height="20"
+          src="${src}"
+          alt="${name} logo"
+        /><span class="browser-version">${textVersion}</span>
+      </div>
+    `;
   });
+  out.push(
+    html`<a class="caniuse-cell" href="https://caniuse.com/${feature}"
+      >More info</a
+    >`
+  );
   return out;
 }
 
@@ -142,13 +170,16 @@ async function processJson(json, { feature }) {
  */
 async function fetchStats(options) {
   const { feature, browsers, apiURL } = options;
-  const url = new URL(`./${feature}/`, apiURL);
+  const url = new URL(apiURL || `./${feature}`, API_URL);
   browsers.forEach(browser => url.searchParams.append("browsers", browser));
   const response = await fetch(url);
   if (!response.ok) {
     const { status, statusText } = response;
     throw new Error(`Failed to get caniuse data: (${status}) ${statusText}`);
   }
-  const stats = await response.json();
-  return stats;
+  return response.json();
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }

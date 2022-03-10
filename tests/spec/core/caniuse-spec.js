@@ -11,7 +11,7 @@ import {
 
 describe("Core — Can I Use", () => {
   afterAll(flushIframes);
-  const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.html`;
+  const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.json`;
 
   it("uses meaningful defaults", async () => {
     const ops = makeStandardOps({
@@ -21,11 +21,9 @@ describe("Core — Can I Use", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
-    expect(caniuse.versions).toBe(4);
     expect(caniuse.browsers).toBeUndefined(); // uses server default
   });
 
@@ -33,24 +31,20 @@ describe("Core — Can I Use", () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
-        versions: 10,
         browsers: ["firefox", "chrome"],
         apiURL,
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.browsers).toEqual(["firefox", "chrome"]);
-    expect(caniuse.versions).toBe(10);
   });
 
   it("does nothing if caniuse is not enabled", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
-    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse).toBeFalsy();
@@ -62,11 +56,10 @@ describe("Core — Can I Use", () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
-        apiURL: "DOES-NOT-EXIST",
+        apiURL: `${window.location.origin}/tests/data/caniuse/DOES-NOT-EXIST`,
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respec.ready;
 
     const link = doc.querySelector(".caniuse-stats a");
     expect(link.textContent).toBe("caniuse.com");
@@ -78,35 +71,44 @@ describe("Core — Can I Use", () => {
       caniuse: {
         feature: "FEATURE",
         apiURL,
-        browsers: ["firefox", "chrome", "opera"],
-        versions: 5,
+        browsers: ["chrome", "firefox", "ios_saf", "opera"],
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respec.ready;
-
     const stats = doc.querySelector(".caniuse-stats");
+    const cells = stats.querySelectorAll(".caniuse-cell");
+    expect(cells).toHaveSize(4);
 
-    const moreInfoLink = stats.querySelector("a");
+    // Check a cell
+    const [cell] = cells;
+    expect(cell.title).toBe(
+      "Supported by default in Android Chrome version 78."
+    );
+    expect(cell.getAttribute("area-label")).toBe(
+      "FEATURE is supported by default in Android Chrome version 78."
+    );
+
+    // The logo images
+    const [chrome, firefox, safari] =
+      stats.querySelectorAll(".caniuse-browser");
+    expect(firefox.src).toContain("firefox.svg");
+    expect(chrome.src).toContain("chrome.svg");
+    expect(safari.src).toContain("safari-ios.svg");
+    expect(firefox.width).toBe(20);
+    expect(firefox.height).toBe(20);
+    expect(chrome.alt).toBe("Android Chrome logo");
+
+    // The version numbers
+    const [chromeVersion, firefoxVersion, safariVersion] =
+      stats.querySelectorAll(".browser-version");
+    expect(chromeVersion.textContent).toBe("78");
+    expect(firefoxVersion.textContent).toBe("66");
+    expect(safariVersion.textContent).toBe("—");
+
+    // More info link
+    const moreInfoLink = cells.item(3);
     expect(moreInfoLink.href).toBe("https://caniuse.com/FEATURE");
     expect(moreInfoLink.textContent.trim()).toBe("More info");
-
-    const browsers = stats.querySelectorAll(".caniuse-browser");
-    expect(browsers).toHaveSize(2); // not 3, as there is no data for "opera"
-    const [firefox, chrome] = browsers;
-
-    const chromeVersions = chrome.querySelectorAll("ul li.caniuse-cell");
-    expect(chromeVersions).toHaveSize(2);
-
-    const firefoxVersions = firefox.querySelectorAll("ul li.caniuse-cell");
-    expect(firefoxVersions).toHaveSize(4);
-
-    const firefoxButton = firefox.querySelector("button");
-    expect(firefoxButton.textContent.trim()).toBe("Firefox 61");
-    expect(firefoxButton.classList.value).toBe("caniuse-cell y");
-
-    expect(firefoxVersions[0].textContent.trim()).toBe("60");
-    expect(firefoxVersions[0].classList.value).toBe("caniuse-cell n d");
   });
 
   it("removes irrelevant config for caniuse feature", async () => {
@@ -117,10 +119,9 @@ describe("Core — Can I Use", () => {
     opsWithCaniuse.config.publishDate = "1999-12-11";
     opsWithCaniuse.config.caniuse = {
       feature: "FEATURE",
-      apiURL: `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`,
+      apiURL,
     };
     const doc = await makeRSDoc(opsWithCaniuse);
-    await doc.respec.ready;
     const text = doc.getElementById("initialUserConfig").textContent;
     const json = JSON.parse(text);
     expect(json.caniuse).toBe("FEATURE");
