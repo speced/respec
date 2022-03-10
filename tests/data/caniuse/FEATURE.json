@@ -1,0 +1,18 @@
+{
+  "result": [
+    {
+      "browser": "and_chr",
+      "caniuse": "y",
+      "version": "78"
+    },
+    {
+      "browser": "firefox",
+      "caniuse": "a",
+      "version": "66"
+    },
+    {
+      "browser": "ios_saf",
+      "caniuse": "u"
+    }
+  ]
+}
