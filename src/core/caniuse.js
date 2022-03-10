@@ -102,7 +102,7 @@ export async function run(conf) {
 }
 
 function handleError(err, options, featureURL) {
-  const msg = `Couldn't find feature "${options.feature}".`;
+  const msg = `Failed to retrieve feature "${options.feature}".`;
   const hint = docLink`Please check the feature key on [caniuse.com](https://caniuse.com) and update ${"[caniuse]"}.`;
   showError(msg, name, { hint });
   console.error(err);
