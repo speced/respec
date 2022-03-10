@@ -84,7 +84,7 @@ describe("Core — Can I Use", () => {
     expect(cell.title).toBe(
       "Supported by default in Android Chrome version 78."
     );
-    expect(cell.getAttribute("area-label")).toBe(
+    expect(cell.getAttribute("aria-label")).toBe(
       "FEATURE is supported by default in Android Chrome version 78."
     );
 
