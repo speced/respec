@@ -93,7 +93,7 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
     padding: 0.5em;
   }
 
-  .caniuse-cell:is(.a,.d,.p,.x)::before {
+  .caniuse-cell:is(.a,.d,.p,.x,.u)::before {
     content: "⚠️";
     padding: 0.5em;
   }
