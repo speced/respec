@@ -26,7 +26,7 @@ const files = [
     included: false,
   },
   {
-    pattern: "tests/**/*.html",
+    pattern: "tests/**/*.@(html|json)",
     included: false,
   },
   {
