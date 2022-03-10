@@ -145,7 +145,7 @@ async function processJson(json, { feature }) {
     const textVersion = version ? version : "—";
     const src = getLogoSrc(browserId);
     return html`
-      <div class="${cssClass}" title="${title}" area-label="${ariaLabel}">
+      <div class="${cssClass}" title="${title}" aria-label="${ariaLabel}">
         <img
           class="caniuse-browser"
           width="20"
