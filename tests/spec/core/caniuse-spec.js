@@ -127,7 +127,7 @@ describe("Core — Can I Use", () => {
     expect(json.caniuse).toBe("FEATURE");
   });
 
-  it("includes caniuse by default in exported documents", async () => {
+  it("does not includes caniuse by default in exported documents", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
@@ -136,10 +136,7 @@ describe("Core — Can I Use", () => {
     });
     const exportedDoc = await getExportedDoc(await makeRSDoc(ops));
     // make sure there is a style element with id caniuse-stylesheet
-    const style = exportedDoc.querySelector("#caniuse-stylesheet");
-    expect(style).toBeTruthy();
-    // make sure that removeOnSave is not present in classlist
-    expect(style.classList.contains("removeOnSave")).toBeFalsy();
+    expect(exportedDoc.querySelector("#caniuse-stylesheet")).toBeFalsy();
   });
 
   it("includes caniuse cells via explicit removeOnSave being false", async () => {
