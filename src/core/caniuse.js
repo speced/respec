@@ -114,7 +114,7 @@ function handleError(err, options, featureURL) {
  * @param {Object} conf   configuration settings
  */
 function normalizeCaniuseConf(conf) {
-  const DEFAULTS = { removeOnSave: false, browsers: [] };
+  const DEFAULTS = { removeOnSave: true, browsers: [] };
   if (typeof conf.caniuse === "string") {
     conf.caniuse = { feature: conf.caniuse, ...DEFAULTS };
     return;
