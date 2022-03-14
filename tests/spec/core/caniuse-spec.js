@@ -84,14 +84,14 @@ describe("Core — Can I Use", () => {
     // Check a cell
     const [cell] = cells;
     expect(cell.title).toBe(
-      "Supported by default in Android Chrome version 78."
+      "Almost supported (aka Partial support) since Firefox version 66."
     );
     expect(cell.getAttribute("aria-label")).toBe(
-      "FEATURE is supported by default in Android Chrome version 78."
+      "FEATURE is almost supported (aka Partial support) since Firefox version 66 on desktop."
     );
 
-    // The logo images
-    const [chrome, firefox, safari] =
+    // The logo images (sorted by deskop/mobile)
+    const [firefox, chrome, safari] =
       stats.querySelectorAll(".caniuse-browser");
     expect(firefox.src).toContain("firefox.svg");
     expect(chrome.src).toContain("chrome.svg");
@@ -102,7 +102,7 @@ describe("Core — Can I Use", () => {
     expect(chrome.alt).toBe("Android Chrome logo");
 
     // The version numbers
-    const [chromeVersion, firefoxVersion, safariVersion] =
+    const [firefoxVersion, chromeVersion, safariVersion] =
       stats.querySelectorAll(".browser-version");
     expect(chromeVersion.textContent).toBe("78");
     expect(firefoxVersion.textContent).toBe("66");
@@ -198,5 +198,34 @@ describe("Core — Can I Use", () => {
       });
     await Promise.all(promises);
     expect(images.every(img => img.complete)).toBeTruthy();
+  });
+
+  it("visually groups results into desktop and mobile", async () => {
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "FEATURE",
+        apiURL,
+      },
+    });
+    const doc = await makeRSDoc(ops);
+    const stats = doc.querySelector(".caniuse-stats");
+    const groups = stats.querySelectorAll(".caniuse-group");
+    expect(groups).toHaveSize(2);
+    const [desktop, mobile] = groups;
+    const mobileBrowsers = mobile.querySelectorAll(".caniuse-browser");
+    expect(mobileBrowsers).toHaveSize(2);
+    const [chrome, safari] = mobileBrowsers;
+    expect(chrome.src).toContain("chrome.svg");
+    expect(safari.src).toContain("safari-ios.svg");
+    const desktopBrowsers = desktop.querySelectorAll(".caniuse-browser");
+    expect(desktopBrowsers).toHaveSize(1);
+    const [firefox] = desktopBrowsers;
+    expect(firefox.src).toContain("firefox.svg");
+    expect(desktop.querySelector(".caniuse-type > span").textContent).toBe(
+      "desktop"
+    );
+    expect(mobile.querySelector(".caniuse-type > span").textContent).toBe(
+      "mobile"
+    );
   });
 });
