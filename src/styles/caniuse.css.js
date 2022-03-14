@@ -7,7 +7,7 @@ export default css`
 
 .caniuse-stats {
   display: flex;
-  column-gap: 1cm;
+  column-gap: 2em;
 }
 
 .caniuse-group {
