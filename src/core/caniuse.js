@@ -142,7 +142,7 @@ async function processJson(json, { feature }) {
     .filter(([, arr]) => arr.length)
     .map(
       ([key, arr]) =>
-        html`<div class="${`caniuse-group`}">
+        html`<div class="caniuse-group">
           <div class="caniuse-browsers">${arr}</div>
           <div class="caniuse-type"><span>${key}</div>
         </div>`
