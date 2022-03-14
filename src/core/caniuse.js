@@ -21,15 +21,6 @@ export const BROWSERS = new Map([
   ["edge", { name: "Edge", type: "desktop" }],
   ["firefox", { name: "Firefox", type: "desktop" }],
   ["ios_saf", { name: "iOS Safari", path: "safari-ios", type: "mobile" }],
-  [
-    "op_mini",
-    {
-      name: "Opera Mini",
-      path: "opera-mini",
-      image: "opera-mini.png",
-      type: "mobile",
-    },
-  ],
   ["op_mob", { name: "Opera Mobile", path: "opera", type: "mobile" }],
   ["opera", { name: "Opera", type: "desktop" }],
   ["safari", { name: "Safari", type: "desktop" }],
@@ -72,10 +63,8 @@ export function prepare(conf) {
  * @returns
  */
 function getLogoSrc(browser) {
-  const details = BROWSERS.get(browser);
-  const path = details.path ? details.path : browser;
-  const image = details.image ? details.image : `${path}.svg`;
-  return `https://www.w3.org/browser-logos/${path}/${image}`;
+  const path = BROWSERS.get(browser).path ?? browser;
+  return `https://www.w3.org/browser-logos/${path}/${path}.svg`;
 }
 
 export async function run(conf) {
@@ -153,7 +142,7 @@ async function processJson(json, { feature }) {
     .filter(key => groups.get(key).length)
     .map(
       key =>
-        html`<div class="caniuse-group">
+        html`<div class="${`caniuse-group`}">
           <div class="caniuse-browsers">${groups.get(key)}</div>
           <div class="caniuse-type"><span>${key}</div>
         </div>`
