@@ -13,7 +13,7 @@ export const name = "core/caniuse";
 
 const API_URL = "https://respec.org/caniuse/";
 
-const BROWSERS = new Map([
+export const BROWSERS = new Map([
   ["and_chr", { name: "Android Chrome", path: "chrome", type: "mobile" }],
   ["and_ff", { name: "Android Firefox", path: "firefox", type: "mobile" }],
   ["and_uc", { name: "Android UC", path: "uc", type: "mobile" }],
@@ -141,12 +141,33 @@ function validateBrowsers({ caniuse }) {
 }
 
 async function processJson(json, { feature }) {
+  /** @type {Array} */
   const results = json.result;
-  const groups = {
-    desktop: [],
-    mobile: [],
-  };
-  results.forEach(({ browser: browserId, version, caniuse }) => {
+  const groups = new Map([
+    ["desktop", []],
+    ["mobile", []],
+  ]);
+  const toBrowserCell = browserCellRenderer(feature);
+  results.reduce(toBrowserCell, groups);
+  const out = [...groups.keys()]
+    .filter(key => groups.get(key).length)
+    .map(
+      key =>
+        html`<div class="${`caniuse-group`}">
+          <div class="caniuse-browsers">${groups.get(key)}</div>
+          <div class="caniuse-type"><span>${key}</div>
+        </div>`
+    );
+  out.push(
+    html`<a class="caniuse-cell" href="https://caniuse.com/${feature}"
+      >More info</a
+    >`
+  );
+  return out;
+}
+
+function browserCellRenderer(feature) {
+  return (groups, { browser: browserId, version, caniuse }) => {
     const { name, type } = BROWSERS.get(browserId);
     const versionLong = version ? ` version ${version}` : "";
     const browserName = `${name}${versionLong}`;
@@ -167,23 +188,9 @@ async function processJson(json, { feature }) {
         /><span class="browser-version">${textVersion}</span>
       </div>
     `;
-    groups[type].push(result);
-  });
-  const out = Object.keys(groups)
-    .filter(key => groups[key].length)
-    .map(
-      key =>
-        html`<div class="${`caniuse-group`}">
-          <div class="caniuse-browsers">${groups[key]}</div>
-          <div class="caniuse-type"><span>${key}</div>
-        </div>`
-    );
-  out.push(
-    html`<a class="caniuse-cell" href="https://caniuse.com/${feature}"
-      >More info</a
-    >`
-  );
-  return out;
+    groups.get(type).push(result);
+    return groups;
+  };
 }
 
 /**
