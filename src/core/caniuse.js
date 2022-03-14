@@ -138,12 +138,12 @@ async function processJson(json, { feature }) {
   ]);
   const toBrowserCell = browserCellRenderer(feature);
   results.reduce(toBrowserCell, groups);
-  const out = [...groups.keys()]
-    .filter(key => groups.get(key).length)
+  const out = [...groups]
+    .filter(([, arr]) => arr.length)
     .map(
-      key =>
+      ([key, arr]) =>
         html`<div class="${`caniuse-group`}">
-          <div class="caniuse-browsers">${groups.get(key)}</div>
+          <div class="caniuse-browsers">${arr}</div>
           <div class="caniuse-type"><span>${key}</div>
         </div>`
     );
