@@ -173,7 +173,7 @@ describe("Core — Can I Use", () => {
     expect(exportedDoc.querySelector(".caniuse-browser")).toBeFalsy();
   });
 
-  it("loads the image of every BROWSER from w3.org", async () => {
+  it("loads every BROWSER logo from w3.org", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "payment-request",
