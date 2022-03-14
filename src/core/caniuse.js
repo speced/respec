@@ -13,7 +13,7 @@ export const name = "core/caniuse";
 
 const API_URL = "https://respec.org/caniuse/";
 
-const BROWSERS = new Map([
+export const BROWSERS = new Map([
   ["and_chr", { name: "Android Chrome", path: "chrome" }],
   ["and_ff", { name: "Android Firefox", path: "firefox" }],
   ["and_uc", { name: "Android UC", path: "uc" }],
@@ -67,7 +67,7 @@ function getLogoSrc(browser) {
   const details = BROWSERS.get(browser);
   const path = details.path ? details.path : browser;
   const image = details.image ? details.image : `${path}.svg`;
-  return `https://cdnjs.cloudflare.com/ajax/libs/browser-logos/71.0.0/${path}/${image}`;
+  return `https://www.w3.org/browser-logos/${path}/${image}`;
 }
 
 export async function run(conf) {
