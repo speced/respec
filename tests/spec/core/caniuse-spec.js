@@ -9,6 +9,8 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
+import { BROWSERS } from "../../../src/core/caniuse.js";
+
 describe("Core — Can I Use", () => {
   afterAll(flushIframes);
   const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.json`;
@@ -94,6 +96,7 @@ describe("Core — Can I Use", () => {
     expect(firefox.src).toContain("firefox.svg");
     expect(chrome.src).toContain("chrome.svg");
     expect(safari.src).toContain("safari-ios.svg");
+
     expect(firefox.width).toBe(20);
     expect(firefox.height).toBe(20);
     expect(chrome.alt).toBe("Android Chrome logo");
@@ -168,5 +171,32 @@ describe("Core — Can I Use", () => {
     const style = exportedDoc.querySelector("#caniuse-stylesheet");
     expect(style).toBeNull();
     expect(exportedDoc.querySelector(".caniuse-browser")).toBeFalsy();
+  });
+
+  it("loads the image of every BROWSER from w3.org", async () => {
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "payment-request",
+        browsers: [...BROWSERS.keys()],
+      },
+    });
+    const doc = await makeRSDoc(ops);
+    const images = [
+      ...doc.querySelectorAll(
+        "img.caniuse-browser[src^='https://www.w3.org/browser-logos/']"
+      ),
+    ];
+    const promises = images
+      .filter(img => !img.complete)
+      .map(img => {
+        return new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = () => {
+            reject(new Error(`Image failed to load: ${img.src}`));
+          };
+        });
+      });
+    await Promise.all(promises);
+    expect(images.every(img => img.complete)).toBeTruthy();
   });
 });
