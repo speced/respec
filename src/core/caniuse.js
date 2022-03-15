@@ -14,21 +14,20 @@ export const name = "core/caniuse";
 const API_URL = "https://respec.org/caniuse/";
 
 export const BROWSERS = new Map([
-  ["and_chr", { name: "Android Chrome", path: "chrome" }],
-  ["and_ff", { name: "Android Firefox", path: "firefox" }],
-  ["and_uc", { name: "Android UC", path: "uc" }],
-  ["chrome", { name: "Chrome" }],
-  ["edge", { name: "Edge" }],
-  ["firefox", { name: "Firefox" }],
-  ["ios_saf", { name: "iOS Safari", path: "safari-ios" }],
+  ["and_chr", { name: "Android Chrome", path: "chrome", type: "mobile" }],
+  ["and_ff", { name: "Android Firefox", path: "firefox", type: "mobile" }],
+  ["and_uc", { name: "Android UC", path: "uc", type: "mobile" }],
+  ["chrome", { name: "Chrome", type: "desktop" }],
+  ["edge", { name: "Edge", type: "desktop" }],
+  ["firefox", { name: "Firefox", type: "desktop" }],
+  ["ios_saf", { name: "iOS Safari", path: "safari-ios", type: "mobile" }],
+  ["op_mob", { name: "Opera Mobile", path: "opera", type: "mobile" }],
+  ["opera", { name: "Opera", type: "desktop" }],
+  ["safari", { name: "Safari", type: "desktop" }],
   [
-    "op_mini",
-    { name: "Opera Mini", path: "opera-mini", image: "opera-mini.png" },
+    "samsung",
+    { name: "Samsung Internet", path: "samsung-internet", type: "mobile" },
   ],
-  ["op_mob", { name: "Opera Mobile", path: "opera" }],
-  ["opera", { name: "Opera" }],
-  ["safari", { name: "Safari" }],
-  ["samsung", { name: "Samsung Internet", path: "samsung-internet" }],
 ]);
 
 const statToText = new Map([
@@ -64,10 +63,8 @@ export function prepare(conf) {
  * @returns
  */
 function getLogoSrc(browser) {
-  const details = BROWSERS.get(browser);
-  const path = details.path ? details.path : browser;
-  const image = details.image ? details.image : `${path}.svg`;
-  return `https://www.w3.org/browser-logos/${path}/${image}`;
+  const path = BROWSERS.get(browser).path ?? browser;
+  return `https://www.w3.org/browser-logos/${path}/${path}.svg`;
 }
 
 export async function run(conf) {
@@ -133,18 +130,43 @@ function validateBrowsers({ caniuse }) {
 }
 
 async function processJson(json, { feature }) {
+  /** @type {Array} */
   const results = json.result;
-  const out = results.map(({ browser: browserId, version, caniuse }) => {
-    const { name } = BROWSERS.get(browserId);
+  const groups = new Map([
+    ["desktop", []],
+    ["mobile", []],
+  ]);
+  const toBrowserCell = browserCellRenderer(feature);
+  results.reduce(toBrowserCell, groups);
+  const out = [...groups]
+    .filter(([, arr]) => arr.length)
+    .map(
+      ([key, arr]) =>
+        html`<div class="caniuse-group">
+          <div class="caniuse-browsers">${arr}</div>
+          <div class="caniuse-type"><span>${key}</div>
+        </div>`
+    );
+  out.push(
+    html`<a class="caniuse-cell" href="https://caniuse.com/${feature}"
+      >More info</a
+    >`
+  );
+  return out;
+}
+
+function browserCellRenderer(feature) {
+  return (groups, { browser: browserId, version, caniuse }) => {
+    const { name, type } = BROWSERS.get(browserId);
     const versionLong = version ? ` version ${version}` : "";
     const browserName = `${name}${versionLong}`;
     const supportLevel = statToText.get(caniuse);
-    const ariaLabel = `${feature} is ${supportLevel} in ${browserName}.`;
+    const ariaLabel = `${feature} is ${supportLevel} since ${browserName} on ${type}.`;
     const cssClass = `caniuse-cell ${caniuse}`;
-    const title = capitalize(`${supportLevel} in ${browserName}.`);
+    const title = capitalize(`${supportLevel} since ${browserName}.`);
     const textVersion = version ? version : "—";
     const src = getLogoSrc(browserId);
-    return html`
+    const result = html`
       <div class="${cssClass}" title="${title}" aria-label="${ariaLabel}">
         <img
           class="caniuse-browser"
@@ -155,13 +177,9 @@ async function processJson(json, { feature }) {
         /><span class="browser-version">${textVersion}</span>
       </div>
     `;
-  });
-  out.push(
-    html`<a class="caniuse-cell" href="https://caniuse.com/${feature}"
-      >More info</a
-    >`
-  );
-  return out;
+    groups.get(type).push(result);
+    return groups;
+  };
 }
 
 /**

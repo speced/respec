@@ -4,11 +4,44 @@ const css = String.raw;
 // Prettier ignore only to keep code indented from level 0.
 // prettier-ignore
 export default css`
+
 .caniuse-stats {
   display: flex;
-  flex-wrap: wrap;
+  column-gap: 2em;
+}
+
+.caniuse-group {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-basis: auto;
+}
+
+.caniuse-browsers {
+  display: flex;
   align-items: baseline;
-  justify-content: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: .2em;
+  column-gap: .4em;
+  border-bottom: 1px solid #ccc;
+  row-gap: .4em;
+  padding-bottom: .4cm;
+}
+
+.caniuse-type {
+  align-self: center;
+  border-top: none;
+  text-transform: capitalize;
+  font-size: .8em;
+  margin-top: -.8em;
+  font-weight: bold;
+}
+
+.caniuse-type span {
+  background-color: white;
+  padding: 0 0.4em;
 }
 
 /* a browser version */
@@ -18,10 +51,9 @@ export default css`
   color: #fff;
   display: flex;
   font-size: 90%;
+  min-width: 1.5cm;
+  padding: .3rem;
   justify-content: space-evenly;
-  min-width: 1.7cm;
-  padding: .3rem .3rem;
-  margin: .25cm .5cm 0 0;
   --supported: #2a8436dd;
   --no-support: #c44230dd;
   --no-support-alt: #b43b2bdd;
@@ -46,11 +78,13 @@ img.caniuse-browser {
 .caniuse-cell span.browser-version {
   margin-left: 0.4em;
   text-shadow: 0 0 0.1em #fff;
+  font-weight: 100;
+  font-size: .9em;
 }
 
 .caniuse-stats a[href] {
   white-space: nowrap;
-  align-self: center;
+  align-self: flex-end;
 }
 
 /* supports */
