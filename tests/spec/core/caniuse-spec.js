@@ -183,7 +183,7 @@ describe("Core — Can I Use", () => {
     const doc = await makeRSDoc(ops);
     const images = [
       ...doc.querySelectorAll(
-        "img.caniuse-browser[src^='https://www.w3.org/browser-logos/']"
+        "img.caniuse-browser[src^='https://www.w3.org/Icons/browser-logos/']"
       ),
     ];
     const promises = images
