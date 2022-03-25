@@ -2,8 +2,8 @@
 // Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
+import { W3CNotes, recTrackStatus, registryTrackStatus } from "./headers.js";
 import { html } from "../core/import-maps.js";
-import { recTrackStatus } from "./headers.js";
 import { resolveRef } from "../core/biblio.js";
 import { showWarning } from "../core/utils.js";
 export const name = "w3c/seo";
@@ -21,7 +21,9 @@ const status2rdf = {
 };
 
 export const requiresCanonicalLink = new Set([
+  ...W3CNotes,
   ...recTrackStatus,
+  ...registryTrackStatus,
   "BG-FINAL",
   "CG-FINAL",
   "CRY",

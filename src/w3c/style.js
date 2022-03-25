@@ -4,7 +4,8 @@
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
-import { createResourceHint, linkCSS, showWarning } from "../core/utils.js";
+import { W3CNotes, recTrackStatus, registryTrackStatus } from "./headers.js";
+import { createResourceHint, linkCSS } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { sub } from "../core/pubsubhub.js";
 export const name = "w3c/style";
@@ -81,28 +82,32 @@ function styleMover(linkURL) {
 }
 
 export function run(conf) {
-  if (!conf.specStatus) {
-    const msg = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
-    conf.specStatus = "base";
-    showWarning(msg, name);
-  }
-
-  let styleFile = "W3C-";
+  const canonicalStatus = conf.specStatus?.toUpperCase() ?? "";
+  let styleFile = "";
+  const canUseW3CStyle =
+    [
+      ...recTrackStatus,
+      ...registryTrackStatus,
+      ...W3CNotes,
+      "ED",
+      "MEMBER-SUBM",
+    ].includes(canonicalStatus) && conf.wgId;
 
   // Figure out which style file to use.
-  switch (conf.specStatus.toUpperCase()) {
+  switch (canonicalStatus) {
     case "WD":
     case "FPWD":
-      styleFile = "W3C-WD";
+      styleFile = canUseW3CStyle ? "W3C-WD" : "base.css";
       break;
     case "CG-DRAFT":
     case "CG-FINAL":
     case "BG-DRAFT":
     case "BG-FINAL":
-      styleFile = conf.specStatus.toLowerCase();
+      styleFile = canonicalStatus.toLowerCase();
       break;
+    case "UD":
     case "UNOFFICIAL":
-      styleFile += "UD";
+      styleFile = "W3C-UD";
       break;
     case "FINDING":
     case "DRAFT-FINDING":
@@ -111,7 +116,7 @@ export function run(conf) {
       styleFile = "base.css";
       break;
     default:
-      styleFile += conf.specStatus;
+      styleFile = canUseW3CStyle ? `W3C-${conf.specStatus}` : "base.css";
   }
 
   // Attach W3C fixup script after we are done.

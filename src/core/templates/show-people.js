@@ -3,12 +3,12 @@
 const name = "core/templates/show-people";
 
 import {
-  humanDate,
+  W3CDate,
+  getIntlData,
   isValidConfDate,
   showError,
   showWarning,
 } from "../../core/utils.js";
-import { lang as defaultLang } from "../../core/l10n.js";
 import { html } from "../../core/import-maps.js";
 
 const localizationStrings = {
@@ -43,8 +43,7 @@ const localizationStrings = {
     },
   },
 };
-
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
+const l10n = getIntlData(localizationStrings);
 
 const orcidIcon = () => html`<svg
   width="16"
@@ -83,7 +82,6 @@ export default function showPeople(conf, propName) {
  * @param {Person} person
  */
 function personToHTML(person) {
-  const l10n = localizationStrings[lang];
   // The following are treated as opt-in HTML by hyperHTML
   // we need to deprecate this!
   const personName = [person.name];
@@ -123,10 +121,10 @@ function personToHTML(person) {
   if (person.extras) {
     contents.push(...person.extras.map(extra => html`, ${renderExtra(extra)}`));
   }
+  const { retiredDate } = person;
   if (person.retiredDate) {
-    const { retiredDate } = person;
     const time = html`<time datetime="${retiredDate}"
-      >${humanDate(retiredDate)}</time
+      >${W3CDate.format(new Date(retiredDate))}</time
     >`;
     contents.push(html` - ${l10n.until(time)} `);
   }

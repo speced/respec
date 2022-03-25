@@ -6,37 +6,14 @@
  * `wgURI`, and `wgPatentURI` options.
  */
 
-import {
-  codedJoinAnd,
-  docLink,
-  fetchAndCache,
-  showError,
-  showWarning,
-} from "../core/utils.js";
+import { docLink, fetchAndCache, showError } from "../core/utils.js";
 
 export const name = "w3c/group";
 
 const W3C_GROUPS_API = "https://respec.org/w3c/groups/";
-const LEGACY_OPTIONS = ["wg", "wgURI", "wgId", "wgPatentURI", "wgPatentPolicy"];
-
 export async function run(conf) {
-  const usedLegacyOptions = LEGACY_OPTIONS.filter(opt => conf[opt]);
-
   if (!conf.group) {
-    if (usedLegacyOptions.length) {
-      const outdatedOptionsStr = codedJoinAnd(LEGACY_OPTIONS);
-      const msg = `Configuration options ${outdatedOptionsStr} are deprecated.`;
-      const hint = docLink`Please use the ${"[group]"} configuration option instead.`;
-      showWarning(msg, name, { hint });
-    }
     return;
-  }
-
-  if (usedLegacyOptions.length) {
-    const outdatedOptionsStr = codedJoinAnd(usedLegacyOptions);
-    const msg = docLink`Configuration options ${outdatedOptionsStr} are superseded by ${"[group]"} and will be overridden by ReSpec.`;
-    const hint = docLink`Remove them from the document's ${"[respecConfig]"} to silence this warning.`;
-    showWarning(msg, name, { hint });
   }
 
   const { group } = conf;

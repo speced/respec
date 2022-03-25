@@ -4,78 +4,63 @@ const css = String.raw;
 // Prettier ignore only to keep code indented from level 0.
 // prettier-ignore
 export default css`
+
 .caniuse-stats {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  column-gap: 2em;
+}
+
+.caniuse-group {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-basis: auto;
+}
+
+.caniuse-browsers {
+  display: flex;
   align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: .2em;
+  column-gap: .4em;
+  border-bottom: 1px solid #ccc;
+  row-gap: .4em;
+  padding-bottom: .4cm;
 }
 
-button.caniuse-cell {
-  margin: 1px 1px 0 0;
-  border: none;
-}
-
-.caniuse-browser {
-  position: relative;
-}
-
-/* handle case when printing */
-@media print {
-  .caniuse-cell.y::before {
-    content: "✔️";
-    padding: 0.5em;
-  }
-
-  .caniuse-cell.n::before {
-    content: "❌";
-    padding: 0.5em;
-  }
-
-  .caniuse-cell:is(.a,.d,.p,.x)::before {
-    content: "⚠️";
-    padding: 0.5em;
-  }
-}
-
-/* reset styles, hide old versions by default */
-.caniuse-browser ul {
-  display: none;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  position: absolute;
-  left: 0;
-  z-index: 2;
-  background: #fff;
-  margin-top: 1px;
-}
-
-.caniuse-stats a[href] {
-  white-space: nowrap;
+.caniuse-type {
   align-self: center;
-  margin-left: 0.5em;
+  border-top: none;
+  text-transform: capitalize;
+  font-size: .8em;
+  margin-top: -.8em;
+  font-weight: bold;
+}
+
+.caniuse-type span {
+  background-color: white;
+  padding: 0 0.4em;
 }
 
 /* a browser version */
 .caniuse-cell {
+  align-items: center;
+  border-radius: 1cm;
+  color: #fff;
   display: flex;
   font-size: 90%;
-  height: 0.8cm;
-  margin-right: 1px;
-  margin-top: 0;
-  min-width: 3cm;
-  overflow: visible;
-  justify-content: center;
-  align-items: center;
+  min-width: 1.5cm;
+  padding: .3rem;
+  justify-content: space-evenly;
+  --supported: #2a8436dd;
+  --no-support: #c44230dd;
+  --no-support-alt: #b43b2bdd;
+  --partial: #807301dd;
+  --partial-alt: #746c00dd;
+  --unknown: #757575;
 
-  --supported: #2a8436;
-  --no-support: #c44230;
-  --no-support-alt: #b43b2b;
-  --partial: #807301;
-  --partial-alt: #746c00;
-
-  color: #fff;
   background: repeating-linear-gradient(
     var(--caniuse-angle, 45deg),
     var(--caniuse-bg) 0,
@@ -86,12 +71,20 @@ button.caniuse-cell {
   );
 }
 
-li.caniuse-cell {
-  margin-bottom: 1px;
+img.caniuse-browser {
+  filter: drop-shadow(0px 0px .1cm #666666);
 }
 
-.caniuse-cell:focus {
-  outline: none;
+.caniuse-cell span.browser-version {
+  margin-left: 0.4em;
+  text-shadow: 0 0 0.1em #fff;
+  font-weight: 100;
+  font-size: .9em;
+}
+
+.caniuse-stats a[href] {
+  white-space: nowrap;
+  align-self: flex-end;
 }
 
 /* supports */
@@ -106,6 +99,10 @@ li.caniuse-cell {
   --caniuse-bg-alt: var(--no-support-alt);
 }
 
+.caniuse-cell.u {
+  background: var(--unknown);
+}
+
 .caniuse-cell.d {
   --caniuse-angle: 180deg;
 }
@@ -118,9 +115,21 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
   --caniuse-bg-alt: var(--partial-alt);
 }
 
-/* show rest of the browser versions */
-.caniuse-stats button:focus + ul,
-.caniuse-stats .caniuse-browser:hover > ul {
-  display: block;
+/* handle case when printing */
+@media print {
+  .caniuse-cell.y::before {
+    content: "✔️";
+    padding: 0.5em;
+  }
+
+  .caniuse-cell.n::before {
+    content: "❌";
+    padding: 0.5em;
+  }
+
+  .caniuse-cell:is(.a,.d,.p,.x,.u)::before {
+    content: "⚠️";
+    padding: 0.5em;
+  }
 }
 `;

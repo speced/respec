@@ -28,6 +28,7 @@ const modules = [
   import("../src/core/data-cite.js"),
   import("../src/core/render-biblio.js"),
   import("../src/core/contrib.js"),
+  import("../src/core/sections.js"),
   import("../src/core/fix-headers.js"),
   import("../src/core/structure.js"),
   import("../src/core/informative.js"),

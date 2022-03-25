@@ -67,4 +67,27 @@ describe("W3C — Abstract", () => {
     const abs = doc.getElementById("abstract");
     expect(abs.querySelector("h2").textContent).toBe("Abstract");
   });
+
+  it("converts legacy div#abstract to section#abstract", async () => {
+    const doc = await makeRSDoc(null, "spec/w3c/abstract-legacy-div.html");
+    expect(doc.querySelector("div#abstract")).toBeNull();
+    expect(doc.querySelector("section#abstract.introductory")).toBeTruthy();
+    expect(doc.querySelector("section#abstract > h2").textContent).toBe(
+      "Abstract"
+    );
+    expect(doc.querySelector("section#abstract>p").textContent).toBe(
+      "The abstract."
+    );
+  });
+
+  it("gets upset if the abstract is not a section", async () => {
+    const ops = makeStandardOps();
+    ops.abstract = null;
+    ops.body = `<p id="abstract">`;
+    const doc = await makeRSDoc(ops);
+    const errors = errorFilters.filter("w3c/abstract")(doc);
+    expect(errors).toHaveSize(1);
+    const [error] = errors;
+    expect(error.message).toBe("The abstract should be a `<section>` element.");
+  });
 });
