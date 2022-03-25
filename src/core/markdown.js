@@ -9,39 +9,6 @@
  * We use marked for parsing Markdown:
  * https://github.com/chjj/marked
  *
- * Note that the content of SECTION elements, and elements with a
- * class name of "note", "issue" or "req" are also parsed.
- *
- * The HTML created by the Markdown parser is turned into a nested
- * structure of SECTION elements, following the structure given by
- * the headings. For example, the following markup:
- *
- *     Title
- *     -----
- *
- *     ### Subtitle ###
- *
- *     Here's some text.
- *
- *     ### Another subtitle ###
- *
- *     More text.
- *
- * will be transformed into:
- *
- *     <section>
- *       <h2>Title</h2>
- *       <section>
- *         <h3>Subtitle</h3>
- *         <p>Here's some text.</p>
- *       </section>
- *       <section>
- *         <h3>Another subtitle</h3>
- *         <p>More text.</p>
- *       </section>
- *     </section>
- *
- * The whitespace of pre elements are left alone.
  */
 
 import { getElementIndentation } from "./utils.js";
@@ -51,7 +18,6 @@ export const name = "core/markdown";
 
 const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
-
 class Renderer extends marked.Renderer {
   code(code, infoString, isEscaped) {
     const { language, ...metaData } = Renderer.parseInfoString(infoString);
@@ -61,7 +27,6 @@ class Renderer extends marked.Renderer {
       return `<pre class="idl">${code}</pre>`;
     }
 
-    // @ts-expect-error
     const html = super.code(code, language, isEscaped);
 
     const { example, illegalExample } = metaData;
@@ -101,29 +66,34 @@ class Renderer extends marked.Renderer {
       const [, textContent, id] = text.match(headingWithIdRegex);
       return `<h${level} id="${id}">${textContent}</h${level}>`;
     }
-    // @ts-expect-error
     return super.heading(text, level, raw, slugger);
   }
 }
 
+const config = {
+  sanitize: false,
+  gfm: true,
+  headerIds: false,
+  langPrefix: "",
+  renderer: new Renderer(),
+};
+
 /**
  * @param {string} text
+ * @param {object} options
+ * @param {boolean} options.inline
  */
-export function markdownToHtml(text) {
+export function markdownToHtml(text, options = { inline: false }) {
   const normalizedLeftPad = reindent(text);
   // As markdown is pulled from HTML, > and & are already escaped and
   // so blockquotes aren't picked up by the parser. This fixes it.
   const potentialMarkdown = normalizedLeftPad
     .replace(gtEntity, ">")
     .replace(ampEntity, "&");
-  // @ts-ignore
-  const result = marked(potentialMarkdown, {
-    sanitize: false,
-    gfm: true,
-    headerIds: false,
-    langPrefix: "",
-    renderer: new Renderer(),
-  });
+
+  const result = options.inline
+    ? marked.parseInline(potentialMarkdown, config)
+    : marked.parse(potentialMarkdown, config);
   return result;
 }
 
@@ -182,118 +152,6 @@ function workaroundBlockLevelMarkdown(element, selector) {
   }
 }
 
-class Builder {
-  constructor(doc) {
-    this.doc = doc;
-    this.root = doc.createDocumentFragment();
-    this.stack = [this.root];
-    this.current = this.root;
-  }
-  findPosition(header) {
-    return parseInt(header.tagName.charAt(1), 10);
-  }
-  findParent(position) {
-    let parent;
-    while (position > 0) {
-      position--;
-      parent = this.stack[position];
-      if (parent) return parent;
-    }
-  }
-  findHeader({ firstChild: node }) {
-    while (node) {
-      if (/H[1-6]/.test(node.tagName)) {
-        return node;
-      }
-      node = node.nextSibling;
-    }
-    return null;
-  }
-
-  addHeader(header) {
-    const section = this.doc.createElement("section");
-    const position = this.findPosition(header);
-
-    section.appendChild(header);
-    this.findParent(position).appendChild(section);
-    this.stack[position] = section;
-    this.stack.length = position + 1;
-    this.current = section;
-  }
-
-  addSection(node, process) {
-    const header = this.findHeader(node);
-    const position = header ? this.findPosition(header) : 1;
-    const parent = this.findParent(position);
-
-    if (header) {
-      node.removeChild(header);
-    }
-
-    node.appendChild(process(node));
-
-    if (header) {
-      node.prepend(header);
-    }
-
-    parent.appendChild(node);
-    this.current = parent;
-  }
-
-  addElement(node) {
-    this.current.appendChild(node);
-  }
-}
-
-function structure(fragment, doc) {
-  function process(root) {
-    const stack = new Builder(doc);
-    while (root.firstChild) {
-      const node = root.firstChild;
-      if (node.nodeType !== Node.ELEMENT_NODE) {
-        root.removeChild(node);
-        continue;
-      }
-      switch (node.localName) {
-        case "h1":
-        case "h2":
-        case "h3":
-        case "h4":
-        case "h5":
-        case "h6":
-          stack.addHeader(node);
-          break;
-        case "section":
-          stack.addSection(node, process);
-          break;
-        default:
-          stack.addElement(node);
-      }
-    }
-    return stack.root;
-  }
-  return process(fragment);
-}
-
-/**
- * Re-structure DOM around elem whose markdown has been processed.
- * @param {Element} elem
- */
-export function restructure(elem) {
-  const structuredInternals = structure(elem, elem.ownerDocument);
-  if (
-    structuredInternals.firstElementChild.localName === "section" &&
-    elem.localName === "section"
-  ) {
-    const section = structuredInternals.firstElementChild;
-    section.remove();
-    elem.append(...section.childNodes);
-  } else {
-    elem.textContent = "";
-  }
-  elem.appendChild(structuredInternals);
-}
-
 /**
  * @param {Iterable<Element>} elements
  */
@@ -317,9 +175,7 @@ export function run(conf) {
   }
   // Only has markdown-format sections
   if (!isMDFormat) {
-    for (const processedElem of processMDSections(document.body)) {
-      restructure(processedElem);
-    }
+    processMDSections(document.body);
     return;
   }
   // We transplant the UI to do the markdown processing
@@ -334,9 +190,7 @@ export function run(conf) {
   convertElement(newBody);
   // Remove links where class .nolinks
   substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
-  // Restructure the document properly
-  const fragment = structure(newBody, document);
   // Frankenstein the whole thing back together
-  newBody.append(rsUI, fragment);
+  newBody.append(rsUI);
   document.body.replaceWith(newBody);
 }

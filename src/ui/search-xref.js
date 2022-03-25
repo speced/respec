@@ -1,7 +1,7 @@
 // @ts-check
 // Module ui/search-xref
 // Search xref database
-import { lang as defaultLang } from "../core/l10n.js";
+import { getIntlData } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { ui } from "../core/ui.js";
 
@@ -21,8 +21,7 @@ const localizationStrings = {
     title: "搜索定义",
   },
 };
-const lang = defaultLang in localizationStrings ? defaultLang : "en";
-const l10n = localizationStrings[lang];
+const l10n = getIntlData(localizationStrings);
 
 const button = ui.addCommand(l10n.title, show, "Ctrl+Shift+Alt+x", "📚");
 

@@ -76,7 +76,7 @@ describe("Core - exporter", () => {
   });
 
   it("moves the W3C style sheet to be last thing in documents head", async () => {
-    const ops = makeStandardOps();
+    const ops = makeStandardOps({ specStatus: "ED", group: "webapps" });
     ops.body = `
       <!-- add WebIDL style -->
       <pre class="idl">

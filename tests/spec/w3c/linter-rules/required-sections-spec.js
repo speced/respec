@@ -1,5 +1,6 @@
 "use strict";
 
+import { W3CNotes, noTrackStatus } from "../../../../src/w3c/headers.js";
 import {
   errorFilters,
   flushIframes,
@@ -7,7 +8,6 @@ import {
   makeStandardOps,
   warningFilters,
 } from "../../SpecHelper.js";
-import { noTrackStatus } from "../../../../src/w3c/headers.js";
 import { requiresSomeSectionStatus } from "../../../../src/w3c/linter-rules/required-sections.js";
 
 describe("w3c — required-sections", () => {
@@ -23,51 +23,10 @@ describe("w3c — required-sections", () => {
   );
 
   it("does nothing if disabled", async () => {
-    const ops = makeStandardOps({ lint: { "required-sections": false } });
-    const doc = await makeRSDoc(ops);
-    const errors = errorsFilter(doc);
-    const warnings = warningsFilter(doc);
-    expect(errors).toHaveSize(0);
-    expect(warnings).toHaveSize(0);
-  });
-
-  it("allows using 'error' as the logger", async () => {
-    const ops = makeStandardOps({ lint: { "required-sections": "error" } });
-    const doc = await makeRSDoc(ops);
-    const errors = errorsFilter(doc);
-    const warnings = warningsFilter(doc);
-    expect(errors).toHaveSize(2);
-    expect(warnings).toHaveSize(0);
-  });
-
-  it("allows using 'warn' as the logger", async () => {
-    const ops = makeStandardOps({ lint: { "required-sections": "warn" } });
-    const doc = await makeRSDoc(ops);
-    const errors = errorsFilter(doc);
-    const warnings = warningsFilter(doc);
-    expect(errors).toHaveSize(0);
-    expect(warnings).toHaveSize(2);
-  });
-
-  it("doesn't lint non-rec-track docs", async () => {
-    for (const specStatus of noTrackStatus) {
-      const ops = makeStandardOps({
-        lint: { "required-sections": true },
-        specStatus,
-      });
-      const doc = await makeRSDoc(ops);
-      const errors = errorsFilter(doc);
-      const warnings = warningsFilter(doc);
-      expect(errors).withContext(specStatus).toHaveSize(0);
-      expect(warnings).withContext(specStatus).toHaveSize(0);
-    }
-  });
-
-  it("doesn't lint for when explicitly marked as noRecTrack", async () => {
     const ops = makeStandardOps({
-      lint: { "required-sections": true },
-      noRecTrack: true,
-      specStatus: "ED",
+      lint: { "required-sections": false },
+      specStatus: "WD",
+      group: "webapps",
     });
     const doc = await makeRSDoc(ops);
     const errors = errorsFilter(doc);
@@ -76,19 +35,75 @@ describe("w3c — required-sections", () => {
     expect(warnings).toHaveSize(0);
   });
 
-  it("generates warning by default when its a rec track document and both privacy and security sections are missing", async () => {
-    for (const specStatus of requiresSomeSectionStatus) {
+  it("allows using 'error' as the logger", async () => {
+    const ops = makeStandardOps({
+      lint: { "required-sections": "error" },
+      specStatus: "WD",
+      group: "webapps",
+    });
+    const doc = await makeRSDoc(ops);
+    const errors = errorsFilter(doc);
+    const warnings = warningsFilter(doc);
+    expect(errors).toHaveSize(2);
+    expect(warnings).toHaveSize(0);
+  });
+
+  it("allows using 'warn' as the logger", async () => {
+    const ops = makeStandardOps({
+      lint: { "required-sections": "warn" },
+      specStatus: "WD",
+      group: "webapps",
+    });
+    const doc = await makeRSDoc(ops);
+    const errors = errorsFilter(doc);
+    const warnings = warningsFilter(doc);
+    expect(errors).toHaveSize(0);
+    expect(warnings).toHaveSize(2);
+  });
+
+  for (const specStatus of [...noTrackStatus, "ED"]) {
+    it(`doesn't lint non-rec-track docs with status ${specStatus}`, async () => {
       const ops = makeStandardOps({
         lint: { "required-sections": true },
         specStatus,
+        group: "wicg",
       });
       const doc = await makeRSDoc(ops);
       const errors = errorsFilter(doc);
       const warnings = warningsFilter(doc);
-      expect(errors).withContext(specStatus).toHaveSize(0);
-      expect(warnings).withContext(specStatus).toHaveSize(2);
-    }
+      expect(errors).toHaveSize(0);
+      expect(warnings).toHaveSize(0);
+    });
+  }
+
+  it("doesn't lint for when explicitly marked as noRecTrack", async () => {
+    const ops = makeStandardOps({
+      lint: { "required-sections": true },
+      noRecTrack: true,
+      specStatus: "WD",
+      group: "webapps",
+    });
+    const doc = await makeRSDoc(ops);
+    const errors = errorsFilter(doc);
+    const warnings = warningsFilter(doc);
+    expect(errors).toHaveSize(0);
+    expect(warnings).toHaveSize(0);
   });
+
+  for (const specStatus of requiresSomeSectionStatus) {
+    it(`generates warning by default when it's a rec track document "${specStatus}" and both privacy and security sections are missing`, async () => {
+      const ops = makeStandardOps({
+        lint: { "required-sections": true },
+        specStatus,
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(ops);
+      const errors = errorsFilter(doc);
+      const warnings = warningsFilter(doc);
+      expect(errors).toHaveSize(0);
+      expect(warnings).toHaveSize(2);
+    });
+  }
 
   it("generates an error if privacy section if present, but security is missing", async () => {
     const body = `
@@ -100,6 +115,7 @@ describe("w3c — required-sections", () => {
     const conf = {
       lint: { "required-sections": "error" },
       specStatus: "WD",
+      group: "webapps",
     };
     const doc = await makeRSDoc(makeStandardOps(conf, body));
     const errors = errorsFilter(doc);
@@ -122,6 +138,7 @@ describe("w3c — required-sections", () => {
     const conf = {
       lint: { "required-sections": "error" },
       specStatus: "WD",
+      group: "webapps",
     };
     const doc = await makeRSDoc(makeStandardOps(conf, body));
     const errors = errorsFilter(doc);
@@ -148,6 +165,7 @@ describe("w3c — required-sections", () => {
     const conf = {
       lint: { "required-sections": true },
       specStatus: "WD",
+      group: "webapps",
     };
     const doc = await makeRSDoc(makeStandardOps(conf, body));
     const errors = errorsFilter(doc);
@@ -166,6 +184,7 @@ describe("w3c — required-sections", () => {
     const conf = {
       lint: { "required-sections": true },
       specStatus: "WD",
+      group: "webapps",
     };
     const opts = makeStandardOps(conf, body);
     opts.htmlAttrs = { lang: "es" };
@@ -182,6 +201,7 @@ describe("w3c — required-sections", () => {
     const conf = {
       lint: { "required-sections": true },
       specStatus: "WD",
+      group: "webapps",
     };
     const opts = makeStandardOps(conf);
     opts.htmlAttrs = { lang: "ab" }; // Abkhazian
@@ -191,4 +211,19 @@ describe("w3c — required-sections", () => {
     const warnings = warningsFilter(doc);
     expect(warnings).toHaveSize(0);
   });
+
+  for (const specStatus of W3CNotes) {
+    it(`doesn't generate a warning if the privacy and security sections are missing from W3C Notes of status ${specStatus}`, async () => {
+      const ops = makeStandardOps({
+        lint: { "required-sections": true },
+        specStatus,
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(ops);
+      const errors = errorsFilter(doc);
+      const warnings = warningsFilter(doc);
+      expect(errors).toHaveSize(0);
+      expect(warnings).toHaveSize(0);
+    });
+  }
 });

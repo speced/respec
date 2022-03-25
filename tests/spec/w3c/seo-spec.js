@@ -1,14 +1,15 @@
 "use strict";
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
-import { publicationSpaces } from "../../../src/w3c/headers.js";
 import { requiresCanonicalLink } from "../../../src/w3c/seo.js";
 
 describe("W3C - SEO", () => {
   afterAll(flushIframes);
 
   it("defaults to TR as canonical URI", async () => {
-    const doc = await makeRSDoc(makeStandardOps({ specStatus: "REC" }));
+    const doc = await makeRSDoc(
+      makeStandardOps({ specStatus: "REC", group: "webapps" })
+    );
     const href = "https://www.w3.org/TR/Foo/";
     expect(
       doc.querySelector(`link[rel='canonical'][href='${href}']`)
@@ -17,7 +18,13 @@ describe("W3C - SEO", () => {
 
   it("sets the canonical URI to TR URI when so configured", async () => {
     const href = "https://www.w3.org/TR/Foo/";
-    const ops = makeStandardOps({ canonicalURI: "TR" });
+    const ops = makeStandardOps({
+      github: "w3c/respec",
+      canonicalURI: "TR",
+      group: "webapps",
+      shortName: "Foo",
+      specStatus: "WD",
+    });
     const doc = await makeRSDoc(ops);
     expect(
       doc.querySelector(`link[rel='canonical'][href='${href}']`)
@@ -26,7 +33,7 @@ describe("W3C - SEO", () => {
 
   it("sets the canonical URI to editors draft when configured with 'edDraft'", async () => {
     const href = "https://foo.com/";
-    const ops = makeStandardOps({ canonicalURI: "edDraft" });
+    const ops = makeStandardOps({ canonicalURI: "edDraft", group: "webapps" });
     const doc = await makeRSDoc(ops);
     expect(
       doc.querySelector(`link[rel='canonical'][href='${href}']`)
@@ -63,9 +70,9 @@ describe("W3C - SEO", () => {
 
   it("handles tag documents correctly", async () => {
     for (const specStatus of ["finding", "draft-finding"]) {
-      const ops = makeStandardOps({ specStatus });
+      const ops = makeStandardOps({ specStatus, group: "tag" });
       const doc = await makeRSDoc(ops);
-      const path = publicationSpaces[specStatus];
+      const path = "/2001/tag/doc";
       const link = doc.querySelector("link[rel='canonical']");
       expect(link.href).withContext(specStatus).toContain(path);
     }
@@ -80,15 +87,19 @@ describe("W3C - SEO", () => {
     ).toBeTruthy();
   });
 
-  it("adds canonicalURI links for types that require them", async () => {
-    for (const specStatus of requiresCanonicalLink) {
-      const ops = makeStandardOps({ specStatus });
+  for (const specStatus of requiresCanonicalLink) {
+    it(`adds canonicalURI links for ${specStatus}`, async () => {
+      const ops = makeStandardOps({
+        specStatus,
+        group: "webapps",
+        latestVersion: "someURL",
+      });
       const doc = await makeRSDoc(ops);
       expect(doc.querySelector("link[rel='canonical']"))
         .withContext(specStatus)
         .toBeTruthy();
-    }
-  });
+    });
+  }
 
   const body = `
     <html>
@@ -117,6 +128,7 @@ describe("W3C - SEO", () => {
         name: "Shane McCarron",
       },
     ],
+    group: "webapps",
     shortName: "some-spec",
     publishDate: "2013-06-25",
     previousPublishDate: "2012-06-07",

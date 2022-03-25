@@ -20,7 +20,7 @@ describe("Core - Markdown", () => {
     Array.from(doc.querySelectorAll(".removeOnSave")).forEach(elem => {
       elem.remove();
     });
-    const foo = doc.getElementById("foo");
+    const foo = doc.querySelector("#foo h2");
     expect(foo).toBeTruthy();
     expect(foo.textContent).toBe("1. Foo");
   });
@@ -29,7 +29,7 @@ describe("Core - Markdown", () => {
     const body = `<section>\nFoo\n===\n</section>`;
     const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
-    const foo = doc.getElementById("foo");
+    const foo = doc.querySelector("#foo h2");
     expect(foo).toBeTruthy();
     expect(foo.textContent).toBe("1. Foo");
   });
@@ -166,27 +166,27 @@ describe("Core - Markdown", () => {
     const doc = await makeRSDoc(ops);
     const foo = doc.querySelector("#foo h2");
     expect(foo.textContent).toBe("1. Foo");
-    expect(foo.parentElement.localName).toBe("section");
+    expect(foo.parentElement.parentElement.localName).toBe("section");
 
     const bar = doc.querySelector("#bar h3");
     expect(bar.textContent).toBe("1.1 Bar");
-    expect(bar.parentElement.localName).toBe("section");
+    expect(bar.parentElement.parentElement.localName).toBe("section");
 
     const baz = doc.querySelector("#baz h3");
     expect(baz.textContent).toBe("1.2 Baz");
-    expect(baz.parentElement.localName).toBe("section");
+    expect(baz.parentElement.parentElement.localName).toBe("section");
 
     const foobar = doc.querySelector("#foobar h4");
     expect(foobar.textContent).toBe("1.2.1 Foobar");
-    expect(foobar.parentElement.localName).toBe("section");
+    expect(foobar.parentElement.parentElement.localName).toBe("section");
 
     const foobaz = doc.querySelector("#foobaz h5");
     expect(foobaz.textContent).toBe("1.2.1.1 Foobaz");
-    expect(foobaz.parentElement.localName).toBe("section");
+    expect(foobaz.parentElement.parentElement.localName).toBe("section");
 
     const zing = doc.querySelector("#zing h3");
     expect(zing.textContent).toBe("1.3 Zing");
-    expect(zing.parentElement.localName).toBe("section");
+    expect(zing.parentElement.parentElement.localName).toBe("section");
   });
 
   it("gracefully handles jumps in nested headers", async () => {
@@ -211,7 +211,7 @@ describe("Core - Markdown", () => {
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
-    const bar = doc.getElementById("bar");
+    const bar = doc.querySelector("#bar h2");
     expect(bar.textContent).toBe("2. Bar");
   });
 
@@ -265,7 +265,7 @@ describe("Core - Markdown", () => {
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
-    const bar = doc.getElementById("bar");
+    const bar = doc.querySelector("#bar h2");
     expect(bar.textContent).toBe("2. Bar");
     expect(doc.body.contains(bar)).toBeTruthy();
   });
@@ -574,5 +574,74 @@ function getAnswer() {
       expect(h2.textContent).toBe("1. header");
       expect(p.localName).toBe("p");
     });
+  });
+
+  it("retains heading order with generated sections", async () => {
+    const body = `
+    <section id="abstract">
+    Some abstract.
+    </section>
+
+    <section id="sotd">
+    Status.
+    </section>
+
+    # First section
+
+    This paragraph MUST.
+
+    <aside class="issue">
+    An issue.
+    </aside>
+
+    ## Sub section
+
+    This is sub-section paragraph.
+
+    <aside class="practice">
+      <p class="practicedesc">
+        <span class="practicelab">Best practice</span>
+      </p>
+    </aside>
+
+    <figure>
+      <figcaption>Figure caption</figcaption>
+    </figure>
+
+    <section id="conformance"></section>
+    <section id="issue-summary"></section>
+    <section id="bp-summary"></section>
+    <section id="tof"></section>
+    <section class="appendix">
+    # Acknowledgements
+
+    Thanks to everyone.
+    </section>
+    <section id="idl-index"></section>
+
+    <!-- References will appear last -->
+
+    `;
+    const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
+    const doc = await makeRSDoc(ops);
+    const headings = doc.querySelectorAll(
+      "body > section > div.header-wrapper > h2"
+    );
+    const headingTitles = [
+      "1. First section",
+      "2. Conformance",
+      "3. Issue summary",
+      "4. Best Practices Summary",
+      "5. List of Figures",
+      "A. Acknowledgements",
+      "B. IDL Index",
+      "C. References",
+    ];
+    expect(headings).toHaveSize(headingTitles.length);
+    for (const heading of headings) {
+      const title = heading.textContent.trim();
+      expect(title).toContain(headingTitles.shift());
+    }
   });
 });
