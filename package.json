@@ -86,7 +86,7 @@
   },
   "dependencies": {
     "colors": "1.4.0",
-    "finalhandler": "^1.1.2",
+    "finalhandler": "^1.2.0",
     "marked": "^4.0.12",
     "puppeteer": "^13.5.1",
     "sade": "^1.8.1",
