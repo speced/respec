@@ -309,8 +309,9 @@ describe("Core - Inlines", () => {
         [=environment
             settings
           object /
-          responsible
-          document =]
+          cross-origin
+          isolated
+          capability =]
         </p>
       </section>
     `;
@@ -325,8 +326,10 @@ describe("Core - Inlines", () => {
     const codedThingCodeElem = someCodedThing.querySelector("code");
     expect(codedThingCodeElem.textContent).toBe("Coded");
 
-    const responsibleDocLink = doc.querySelector("#multiline a");
-    expect(responsibleDocLink.hash).toBe("#responsible-document");
+    const crossIsoCapLink = doc.querySelector("#multiline a");
+    expect(crossIsoCapLink.hash).toBe(
+      "#concept-settings-object-cross-origin-isolated-capability"
+    );
   });
 
   it("proceseses `backticks` as code", async () => {

@@ -187,7 +187,7 @@ describe("Core — dfn-index", () => {
         </ul>
         <ul class="test">
           <li>[= Document/fully active =]</li>
-          <li>[= environment settings object/responsible document =]</li>
+          <li>[= environment settings object/cross-origin isolated capability =]</li>
           <li>{{ Event/type }}</li>
           <li>[^ iframe/allow ^]</li>
         </ul>
@@ -218,6 +218,7 @@ describe("Core — dfn-index", () => {
     });
 
     it("lists only external terms", () => {
+      /** @param {HTMLElement} el */
       const getTermAndType = el => el.textContent.trim().split(/\s\(/)[0];
       const terms = [...index.querySelectorAll(".index-term")].map(
         getTermAndType
@@ -231,10 +232,10 @@ describe("Core — dfn-index", () => {
         "parsing",
         "parsing",
         "allow attribute",
+        "cross-origin isolated capability",
         "EventHandler",
         "fully active",
         "iframe element",
-        "responsible document",
         "ASCII uppercase",
         "origin",
         "AbortError exception",
@@ -294,6 +295,7 @@ describe("Core — dfn-index", () => {
     it("suffixes terms with type information", () => {
       const [
         iframeAllowAttribute,
+        crossIsolatedCapability,
         eventHandlerDict,
         fullyActive,
         iframeElement,
@@ -301,6 +303,7 @@ describe("Core — dfn-index", () => {
         el => el.textContent
       );
       expect(iframeAllowAttribute).toMatch(/^allow attribute \(for/);
+      expect(crossIsolatedCapability).toMatch(/capability \(for/);
       expect(eventHandlerDict).toBe("EventHandler");
       expect(fullyActive).toMatch(/^fully active \(for/);
       expect(iframeElement).toBe("iframe element");
@@ -334,20 +337,20 @@ describe("Core — dfn-index", () => {
       expect(allow.textContent).toBe("allow");
       expect(iframe.textContent).toBe("iframe");
 
-      const fullyActive = termsInHTML[2];
+      const crossIsolatedCapability = termsInHTML[1];
+      expect(crossIsolatedCapability.textContent.trim()).toMatch(
+        /^cross-origin isolated capability/
+      );
+      expect(crossIsolatedCapability.textContent.trim()).toMatch(
+        /\(for environment settings object\)$/
+      );
+      expect(crossIsolatedCapability.querySelectorAll("code")).toHaveSize(0);
+
+      const fullyActive = termsInHTML[3];
       expect(fullyActive.textContent.trim()).toMatch(/^fully active/);
       expect(fullyActive.textContent.trim()).toMatch(/\(for Document\)$/);
       expect(fullyActive.querySelectorAll("code")).toHaveSize(1);
       expect(fullyActive.querySelector("code").textContent).toBe("Document");
-
-      const responsibleDocument = termsInHTML[4];
-      expect(responsibleDocument.textContent.trim()).toMatch(
-        /^responsible document/
-      );
-      expect(responsibleDocument.textContent.trim()).toMatch(
-        /\(for environment settings object\)$/
-      );
-      expect(responsibleDocument.querySelectorAll("code")).toHaveSize(0);
     });
 
     it("opens dfnPanel on term click", async () => {
