@@ -731,7 +731,7 @@ async function deriveHistoryURI(conf) {
 
   const canShowHistory = conf.isEd || trStatus.includes(conf.specStatus);
 
-  if (conf.historyURI && canShowHistory) {
+  if (conf.historyURI && !canShowHistory) {
     const msg = docLink`The ${"[historyURI]"} can't be used with non /TR/ documents.`;
     const hint = docLink`Please remove ${"[historyURI]"}.`;
     showError(msg, name, { hint });
@@ -745,8 +745,11 @@ async function deriveHistoryURI(conf) {
   );
 
   // If it's on the Rec Track or it's TR worthy, then allow history override.
-  // Also make a an exception for FPWD.
-  if ((conf.historyURI && canShowHistory) || conf.specStatus === "FPWD") {
+  // Also make a an exception for FPWD, DNOTE, NOTE and DRY.
+  if (
+    (conf.historyURI && canShowHistory) ||
+    ["FPWD", "DNOTE", "NOTE", "DRY"].includes(conf.specStatus)
+  ) {
     conf.historyURI = historyURL.href;
     return;
   }
