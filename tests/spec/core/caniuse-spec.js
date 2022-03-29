@@ -173,7 +173,7 @@ describe("Core — Can I Use", () => {
     expect(exportedDoc.querySelector(".caniuse-browser")).toBeFalsy();
   });
 
-  it("loads every BROWSER logo from w3.org", async () => {
+  it("loads every BROWSER logo from cdn.w3.org", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "payment-request",
@@ -183,9 +183,10 @@ describe("Core — Can I Use", () => {
     const doc = await makeRSDoc(ops);
     const images = [
       ...doc.querySelectorAll(
-        "img.caniuse-browser[src^='https://www.w3.org/Icons/browser-logos/']"
+        `.caniuse-stats img.caniuse-browser[src^='https://cdn.w3.org/assets/logos/browser-logos/']`
       ),
     ];
+    expect(images).toHaveSize(BROWSERS.size);
     const promises = images
       .filter(img => !img.complete)
       .map(img => {
