@@ -2511,6 +2511,7 @@ describe("W3C — Headers", () => {
         shortName: "test",
         specStatus: "WD",
         historyURI: "http://example.com/history",
+        group: "webapps",
       });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
