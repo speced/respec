@@ -187,7 +187,7 @@ describe("Core — dfn-index", () => {
         </ul>
         <ul class="test">
           <li>[= Document/fully active =]</li>
-          <li>[= environment settings object/responsible document =]</li>
+          <li>[= environment settings object/cross-origin isolated capability =]</li>
           <li>{{ Event/type }}</li>
           <li>[^ iframe/allow ^]</li>
         </ul>
@@ -218,6 +218,7 @@ describe("Core — dfn-index", () => {
     });
 
     it("lists only external terms", () => {
+      /** @param {HTMLElement} el */
       const getTermAndType = el => el.textContent.trim().split(/\s\(/)[0];
       const terms = [...index.querySelectorAll(".index-term")].map(
         getTermAndType
@@ -231,10 +232,10 @@ describe("Core — dfn-index", () => {
         "parsing",
         "parsing",
         "allow attribute",
+        "cross-origin isolated capability",
         "EventHandler",
         "fully active",
         "iframe element",
-        "responsible document",
         "ASCII uppercase",
         "origin",
         "AbortError exception",
