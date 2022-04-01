@@ -282,7 +282,7 @@ function renderException(details) {
   const { identifier } = details;
   const element = html`"<a
       data-link-type="idl"
-      data-cite="WebIDL"
+      data-cite="webidl"
       data-xref-type="exception"
       ><code>${identifier}</code></a
     >"`;
@@ -298,7 +298,7 @@ function renderIdlPrimitiveType(details) {
   const { identifier, nullable } = details;
   const element = html`<a
     data-link-type="idl"
-    data-cite="WebIDL"
+    data-cite="webidl"
     data-xref-type="interface"
     data-lt="${identifier}"
     ><code>${identifier + (nullable ? "?" : "")}</code></a
