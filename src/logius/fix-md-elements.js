@@ -44,12 +44,12 @@ function addFigureImg(conf) {
     return;
   }
 
-  [...document.querySelectorAll("section[data-format=markdown] img")]
+  [...document.querySelectorAll("img")]  
     .filter(img => !img.closest("figure"))
     .forEach(img => {
       const figure = document.createElement("figure");
-      const figcaption = document.createElement("figcaption");
-      figcaption.innerText = img.getAttribute("title");
+      const figcaption = document.createElement("figcaption");	  
+      figcaption.innerText = img.getAttribute("title");	  
       const cloneImg = img.cloneNode(false);
       figure.appendChild(cloneImg);
       figure.appendChild(figcaption);

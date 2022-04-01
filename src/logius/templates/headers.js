@@ -1,5 +1,5 @@
 // @ts-check
-import { getIntlData, humanDate, showWarning } from "../../core/utils.js";
+import { getIntlData, showWarning } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "./show-logo.js";
@@ -263,17 +263,6 @@ export default (conf, options) => {
     <hr title="Separator for header" />
   </div>`;
 };
-
-/**
- * @param {string} date document in-place edit date as YYYY-MM-DD
- * @returns {HTMLTimeElement}
- */
-function inPlaceModificationDate(date) {
-  const modificationHumanDate = humanDate(new Date(date));
-  return html`<time class="dt-modified" datetime="${date}"
-    >${modificationHumanDate}</time
-  >`;
-}
 
 /**
  * @param {string} text
