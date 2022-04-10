@@ -72,6 +72,7 @@
     "build:w3c": "node ./tools/builder.js w3c",
     "build:dini-debug": "node run build:dini -- --debug",
     "build:dini": "node ./tools/builder.js dini",
+    "build:webrecorder": "node ./tools/builder.js webrecorder",
     "builddeps": "rollup -c js/deps/rollup.config.js && rollup -c worker/rollup.config.js",
     "lint": "tsc -p src/jsconfig.json && eslint .",
     "prepare": "npm run builddeps",
