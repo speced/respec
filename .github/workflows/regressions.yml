@@ -16,7 +16,7 @@ jobs:
         with: { node-version: 16, cache: npm }
       - run: npm ci
       - run: npm run build:w3c
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: builds
           path: |
