@@ -232,12 +232,12 @@ function renderNotRec(conf) {
       if (conf.pubMode === "LS") {
         reviewPolicy = html`<p>
           Comments are welcome at any time but most especially before
-          ${W3CDate.format(conf.CREnd)}.
+          ${W3CDate.format(conf.crEnd)}.
         </p>`;
       } else {
         reviewPolicy = html`<p>
           This Candidate Recommendation is not expected to advance to Proposed
-          Recommendation any earlier than ${W3CDate.format(conf.CREnd)}.
+          Recommendation any earlier than ${W3CDate.format(conf.crEnd)}.
         </p>`;
       }
       break;
@@ -250,7 +250,7 @@ function renderNotRec(conf) {
           >WBS questionnaires</a
         >. Note that substantive technical comments were expected during the
         Candidate Recommendation review period that ended
-        ${W3CDate.format(conf.CREnd)}.
+        ${W3CDate.format(conf.crEnd)}.
       </p>`;
       break;
     case "DNOTE":
