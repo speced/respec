@@ -103,7 +103,7 @@ function processLogos(conf) {
 }
 
 function validateStatusForGroup(conf) {
-  const { specStatus, groupType, group } = conf;
+  const { specStatus, groupType } = conf;
 
   if (!specStatus) {
     const msg = docLink`The ${"[specStatus]"} configuration option is required.`;
