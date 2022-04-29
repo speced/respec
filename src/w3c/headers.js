@@ -679,7 +679,7 @@ function validateIfAllowedOnTR(conf) {
 
 function derivePubSpace(conf) {
   const { specStatus, group } = conf;
-  if (recTrackStatus.includes(specStatus) || conf.groupType === "wg") {
+  if (trStatus.includes(specStatus) || conf.groupType === "wg") {
     return `/TR`;
   }
 
