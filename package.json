@@ -88,7 +88,7 @@
     "colors": "1.4.0",
     "finalhandler": "^1.2.0",
     "marked": "^4.0.14",
-    "puppeteer": "^13.6.0",
+    "puppeteer": "^13.7.0",
     "sade": "^1.8.1",
     "serve-static": "^1.15.0"
   },
