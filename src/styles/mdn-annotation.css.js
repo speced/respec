@@ -121,7 +121,7 @@ export default css`
 }
 
 .mdn .safari::before {
-  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/safari/safari.svgg);
+  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/safari/safari.svg);
 }
 
 .mdn .safari_ios::before {
