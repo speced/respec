@@ -17,7 +17,6 @@ const MDN_BROWSERS = {
   edge_mobile: "Edge Mobile",
   firefox: "Firefox",
   firefox_android: "Firefox Android",
-  ie: "Internet Explorer",
   // nodejs: "Node.js", // no data for features in HTML
   opera: "Opera",
   opera_android: "Opera Android",
