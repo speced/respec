@@ -54,7 +54,9 @@ async function showContributors(editors, apiURL) {
       /** @type {Contributor[]} */
       const contributors = await res.json();
       return contributors.filter(
-        user => !editors.includes(user.name || user.login)
+        user =>
+          !editors.includes(user.name || user.login) &&
+          !(user.login.indexOf("[bot]") > 0)
       );
     } catch (error) {
       const msg = "Error loading contributors from GitHub.";
