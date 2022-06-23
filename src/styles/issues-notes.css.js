@@ -25,7 +25,8 @@ span.warning {
 }
 
 .issue.closed span.issue-number::after {
-  content: "(Closed)";
+  content: " (Closed)";
+  font-size: smaller;
 }
 
 .warning {
