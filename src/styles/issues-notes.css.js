@@ -24,6 +24,11 @@ span.warning {
   text-decoration: line-through;
 }
 
+.issue.closed span.issue-number::after {
+  content: " (Closed)";
+  font-size: smaller;
+}
+
 .warning {
   border-color: #f11;
   border-width: 0.2em;
