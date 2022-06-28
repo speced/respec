@@ -9,19 +9,15 @@ export function run(conf) {
   addClassCode(conf);
   addFigureImg(conf);
 }
-// todo check if algorithm is correct!
+
 function addClassTables(conf) {
-  // todo do nothing if this config is not set?
   if (!conf.nl_markdownTableClass) {
     conf.nl_markdownTableClass = "simple";
   }
-  [...document.querySelectorAll("[data-format=markdown]:not(body)")].forEach(
-    section =>
-      section.querySelectorAll("table").forEach(table => {
-        // table.classList.add("complex");
-        table.classList.add(conf.nl_markdownTableClass);
-      })
-  );
+  [...document.querySelectorAll("table")]
+  .forEach(table => {
+    table.classList.add(conf.nl_markdownTableClass);
+  });
 }
 
 // todo check if algorithm is correct!
@@ -30,13 +26,10 @@ function addClassCode(conf) {
   if (!conf.nl_markdownCodeClass) {
     return;
   }
-  [...document.querySelectorAll("[data-format=markdown]:not(body)")].forEach(
-    section =>
-      section.querySelectorAll("code").forEach(code => {
-        // table.classList.add("complex");
-        code.classList.add(conf.nl_markdownCodeClass);
-      })
-  );
+  [...document.querySelectorAll("code")]
+  .forEach(code => {
+    code.classList.add(conf.nl_markdownCodeClass);
+  });
 }
 
 function addFigureImg(conf) {

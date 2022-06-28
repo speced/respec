@@ -10,7 +10,6 @@ const modules = [
   import("../src/core/style.js"),
   import("../src/logius/style.js"), // done for now, still some wip  
   import("../src/core/github.js"),
-  import("../src/logius/github.js"), // try to revert some props
   import("../src/core/data-include.js"),
   import("../src/core/markdown.js"),
   import("../src/logius/fix-md-elements.js"), // todo check
