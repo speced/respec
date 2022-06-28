@@ -16,6 +16,9 @@ env:
   LC_ALL: en_US.UTF-8
   FORCE_COLOR: 1
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Check linting issues

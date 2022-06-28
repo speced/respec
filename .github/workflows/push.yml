@@ -18,6 +18,9 @@ env:
   # See https://github.com/w3c/respec/pull/3306
   LC_ALL: en_US.UTF-8
 
+permissions:
+  contents: read
+
 jobs:
   test-headless:
     name: Headless Tests
