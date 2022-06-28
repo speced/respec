@@ -22,6 +22,12 @@ const localizationStrings = {
     headlingLocal: "Terms defined by this specification",
     dfnOf: "definition of",
   },
+  nl: {
+    heading: "Index",
+    headingExternal: "Begrippen gedefinieerd door verwijzing",
+    headlingLocal: "Begrippen gedefinieerd door deze specificatie",
+    dfnOf: "definitie van",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
