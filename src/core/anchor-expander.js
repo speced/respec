@@ -108,16 +108,14 @@ function processTable(matchingElement, id, a) {
   }
   // remove the table's title if the table is numbered
   // otherwise, use the table's title
-  var children;
+  let children = [...makeSafeCopy(caption).childNodes];
   if (matchingElement.classList.contains("numbered")) {
-    children = [...makeSafeCopy(caption).childNodes].filter(
+    children = children.filter(
       // @ts-ignore
       node => !node.classList || !node.classList.contains("table-title")
     );
     // drop an empty space at the end.
     children.pop();
-  } else {
-    children = [...makeSafeCopy(caption).childNodes];
   }
   a.append(...children);
   a.classList.add("tab-ref");
