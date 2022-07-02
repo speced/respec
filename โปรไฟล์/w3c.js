@@ -1,4 +1,4 @@
-import * as ReSpec from "../src/respec.js";
+นำเข้า *  เป็น ReSpec  จาก "../src/respec.js" ;
 
 const modules = [
   // order is significant
