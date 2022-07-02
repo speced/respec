@@ -29,11 +29,11 @@ describe("Core - Tables", () => {
     expect(anchorTab.textContent).toBe("Table 1");
     expect(anchorTab.title).toBe("test table caption");
 
-    expect(anchorFigTitleSet.textContent).toBe("Table 1");
-    expect(anchorFigTitleSet.title).toBe("pass");
+    expect(anchorTabTitleSet.textContent).toBe("Table 1");
+    expect(anchorTabTitleSet.title).toBe("pass");
 
-    expect(anchorFigTitleEmpty.textContent).toBe("Table 1");
-    expect(anchorFigTitleEmpty.title).toBe("");
+    expect(anchorTabTitleEmpty.textContent).toBe("Table 1");
+    expect(anchorTabTitleEmpty.title).toBe("");
   });
 
   it("localizes the anchor of table", async () => {
@@ -48,9 +48,9 @@ describe("Core - Tables", () => {
        <a id='anchor-tab' href='#tab'></a>`,
     };
     const doc = await makeRSDoc(ops);
-    const anchorFig = doc.getElementById("anchor-tab");
-    expect(anchorFig.innerText).toBe("図 1");
-    expect(anchorFig.title).toBe("漢字と仮名のサイズの示し方");
+    const anchorTab = doc.getElementById("anchor-tab");
+    expect(anchorTab.innerText).toBe("図 1");
+    expect(anchorTab.title).toBe("漢字と仮名のサイズの示し方");
   });
 
   it("generates list of tables", async () => {
@@ -86,8 +86,8 @@ describe("Core - Tables", () => {
       body: `${makeDefaultBody()}<table id='tab' class='numbered'></table>`,
     };
     const doc = await makeRSDoc(ops);
-    const anchorFig = doc.getElementById("tab");
-    expect(anchorFig.classList).toContain("respec-offending-element");
+    const anchorTab = doc.getElementById("tab");
+    expect(anchorTab.classList).toContain("respec-offending-element");
   });
 
   it("excludes tables with no <caption>", async () => {
