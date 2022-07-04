@@ -15,16 +15,16 @@ describe("Core - Tables", () => {
        <table id='tab' class='numbered'>
         <caption>test table caption</caption>
        </table>
-       <a id='anchor-tab-title-empty' title='' href='#tab'></a>
-       <a id='anchor-tab-title-set' title='pass' href='#tab'></a>
-       <a id='anchor-tab' href='#tab'></a>
+       <a id='anchor-table-title-empty' title='' href='#tab'></a>
+       <a id='anchor-table-title-set' title='pass' href='#tab'></a>
+       <a id='anchor-table' href='#tab'></a>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
 
-    const anchorTab = doc.getElementById("anchor-tab");
-    const anchorTabTitleSet = doc.getElementById("anchor-tab-title-set");
-    const anchorTabTitleEmpty = doc.getElementById("anchor-tab-title-empty");
+    const anchorTab = doc.getElementById("anchor-table");
+    const anchorTabTitleSet = doc.getElementById("anchor-table-title-set");
+    const anchorTabTitleEmpty = doc.getElementById("anchor-table-title-empty");
 
     expect(anchorTab.textContent).toBe("Table 1");
     expect(anchorTab.title).toBe("test table caption");
@@ -36,23 +36,6 @@ describe("Core - Tables", () => {
     expect(anchorTabTitleEmpty.title).toBe("");
   });
 
-  it("localizes the anchor of table", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      htmlAttrs: {
-        lang: "ja",
-      },
-      body: `${makeDefaultBody()}<table id='tab' class='numbered'>
-        <caption>漢字と仮名のサイズの示し方</caption>
-       </table>
-       <a id='anchor-tab' href='#tab'></a>`,
-    };
-    const doc = await makeRSDoc(ops);
-    const anchorTab = doc.getElementById("anchor-tab");
-    expect(anchorTab.innerText).toBe("図 1");
-    expect(anchorTab.title).toBe("漢字と仮名のサイズの示し方");
-  });
-
   it("generates list of tables", async () => {
     const body = `
       <table class='numbered'>
@@ -61,50 +44,19 @@ describe("Core - Tables", () => {
       <table class='numbered'>
         <caption>test 2</caption>
       </table>
-      <section id=tot></section>
+      <section id='list-of-tables'></section>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const tot = doc.getElementById("tot");
-    const totHeader = tot.querySelector("h2");
-    const totItems = tot.querySelectorAll("ul li");
-    const tabLinks = tot.querySelectorAll("ul li a");
-    expect(tot.querySelector("caption")).toBeNull();
-    expect(totHeader).toBeTruthy();
-    expect(totHeader.textContent).toBe("1. List of Tables");
-    expect(totItems).toHaveSize(2);
-    expect(tabLinks[0].textContent).toBe("Table 1 test 1");
-    expect(tabLinks[1].textContent).toBe("Table 2 test 2");
-  });
-
-  it("warns when no <caption>", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      htmlAttrs: {
-        lang: "ja",
-      },
-      body: `${makeDefaultBody()}<table id='tab' class='numbered'></table>`,
-    };
-    const doc = await makeRSDoc(ops);
-    const anchorTab = doc.getElementById("tab");
-    expect(anchorTab.classList).toContain("respec-offending-element");
-  });
-
-  it("excludes tables with no <caption>", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      htmlAttrs: {
-        lang: "ja",
-      },
-      body: `${makeDefaultBody()}
-      <table class='numbered'></table>
-      <table class='numbered'><caption>Geralt of Rivia</caption</table>
-      <section id='tot'></section>`,
-    };
-    const doc = await makeRSDoc(ops);
-    const tot = doc.getElementById("tot");
-    const totItems = tot.querySelectorAll("ul li");
-    expect(tot.querySelector("caption")).toBeNull();
-    expect(totItems).toHaveSize(1);
+    const listOfTables = doc.getElementById("list-of-tables");
+    const listOfTablesHeader = listOfTables.querySelector("h2");
+    const listOfTablesItems = listOfTables.querySelectorAll("ul li");
+    const tableLinks = listOfTables.querySelectorAll("ul li a");
+    expect(listOfTables.querySelector("caption")).toBeNull();
+    expect(listOfTablesHeader).toBeTruthy();
+    expect(listOfTablesHeader.textContent).toBe("1. List of Tables");
+    expect(listOfTablesItems).toHaveSize(2);
+    expect(tableLinks[0].textContent).toBe("Table 1 test 1");
+    expect(tableLinks[1].textContent).toBe("Table 2 test 2");
   });
 });

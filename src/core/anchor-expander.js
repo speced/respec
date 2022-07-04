@@ -97,8 +97,11 @@ function processFigure(matchingElement, id, a) {
   }
 }
 
-function processTable(matchingElement, id, a) {
-  const caption = matchingElement.querySelector("caption");
+function processTable(matchingTable, id, a) {
+  if (!matchingTable.classList.contains("numbered")) {
+    return;
+  }
+  const caption = matchingTable.querySelector("caption");
   if (!caption) {
     a.textContent = a.getAttribute("href");
     const msg = `Found matching table "${id}", but table is lacking a \`<caption>\`.`;
@@ -106,19 +109,16 @@ function processTable(matchingElement, id, a) {
     showError(msg, name, { title, elements: [a] });
     return;
   }
-  // remove the table's title if the table is numbered
-  // otherwise, use the table's title
+  // remove the table's title
   let children = [...makeSafeCopy(caption).childNodes];
-  if (matchingElement.classList.contains("numbered")) {
-    children = children.filter(
-      // @ts-ignore
-      node => !node.classList || !node.classList.contains("table-title")
-    );
-    // drop an empty space at the end.
-    children.pop();
-  }
+  children = children.filter(
+    // @ts-ignore
+    node => !node.classList || !node.classList.contains("table-title")
+  );
+  // drop an empty space at the end.
+  children.pop();
   a.append(...children);
-  a.classList.add("tab-ref");
+  a.classList.add("table-ref");
   const tableTitle = caption.querySelector(".table-title");
   if (!a.hasAttribute("title") && tableTitle) {
     a.title = norm(tableTitle.textContent);

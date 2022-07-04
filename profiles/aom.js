@@ -23,7 +23,6 @@ const modules = [
   import("../src/core/issues-notes.js"),
   import("../src/core/best-practices.js"),
   import("../src/core/figures.js"),
-  import("../src/core/tables.js"),
   import("../src/core/biblio.js"),
   import("../src/core/link-to-dfn.js"),
   import("../src/core/data-cite.js"),

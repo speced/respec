@@ -1,7 +1,7 @@
 // @ts-check
 // Module core/tables
 // Handles tables in the document.
-// Generates a Table of Tables wherever there is a #tot element.
+// Generates a List of Tables wherever there is a #list-of-tables element.
 
 import {
   addId,
@@ -19,45 +19,21 @@ const localizationStrings = {
     list_of_tables: "List of Tables",
     table: "Table ",
   },
-  ja: {
-    table: "図 ",
-    list_of_tables: "図のリスト",
-  },
-  ko: {
-    table: "그림 ",
-    list_of_tables: "그림 목록",
-  },
-  nl: {
-    table: "Figuur ",
-    list_of_tables: "Lijst met figuren",
-  },
-  es: {
-    table: "Figura ",
-    list_of_tables: "Lista de Figuras",
-  },
-  zh: {
-    table: "图 ",
-    list_of_tables: "规范中包含的图",
-  },
-  de: {
-    table: "Abbildung",
-    list_of_tables: "Abbildungsverzeichnis",
-  },
 };
 
 const l10n = getIntlData(localizationStrings);
 
 export function run() {
-  const tot = collectTables();
+  const listOfTables = collectTables();
 
-  // Create a Table of Tables if a section with id 'tot' exists.
-  const totElement = document.getElementById("tot");
-  if (tot.length && totElement) {
-    decorateTableOfTables(totElement);
-    totElement.append(
+  // Create a List of Tables if a section with id 'list-of-tables' exists.
+  const listOfTablesElement = document.getElementById("list-of-tables");
+  if (listOfTables.length && listOfTablesElement) {
+    decorateListOfTables(listOfTablesElement);
+    listOfTablesElement.append(
       html`<h1>${l10n.list_of_tables}</h1>`,
-      html`<ul class="tot">
-        ${tot}
+      html`<ul class="list-of-tables">
+        ${listOfTables}
       </ul>`
     );
   }
@@ -68,24 +44,22 @@ export function run() {
  */
 function collectTables() {
   /** @type {HTMLElement[]} */
-  const tot = [];
-  document.querySelectorAll("table").forEach((table, i) => {
+  const listOfTables = [];
+  document.querySelectorAll("table.numbered").forEach((table, i) => {
     const caption = table.querySelector("caption");
 
+    // there is a linter rule to catch numbered tables without captions
     if (caption) {
       decorateTable(table, caption, i);
-      tot.push(getTableOfTablesListItem(table.id, caption));
-    } else {
-      const msg = "Found a `<table>` without a `<caption>`.";
-      showWarning(msg, name, { elements: [table] });
+      listOfTables.push(getListOfTablesListItem(table.id, caption));
     }
   });
-  return tot;
+  return listOfTables;
 }
 
 /**
- * @param {HTMLElement} table
- * @param {HTMLElement} caption
+ * @param {HTMLTableElement} table
+ * @param {HTMLTableCaptionElement} caption
  * @param {number} i
  */
 function decorateTable(table, caption, i) {
@@ -93,9 +67,7 @@ function decorateTable(table, caption, i) {
   addId(table, "table", title);
   // set proper caption title
   wrapInner(caption, html`<span class="table-title"></span>`);
-  if (table.classList.contains("numbered")) {
-    caption.prepend(l10n.table, html`<bdi class="tableno">${i + 1}</bdi>`, " ");
-  }
+  caption.prepend(l10n.table, html`<bdi class="tableno">${i + 1}</bdi>`, " ");
 }
 
 /**
@@ -103,13 +75,15 @@ function decorateTable(table, caption, i) {
  * @param {HTMLElement} caption
  * @return {HTMLElement}
  */
-function getTableOfTablesListItem(tableId, caption) {
-  const totCaption = caption.cloneNode(true);
-  totCaption.querySelectorAll("a").forEach(anchor => {
-    renameElement(anchor, "span").removeAttribute("href");
+function getListOfTablesListItem(tableId, caption) {
+  const listOfTablesCaption = caption.cloneNode(true);
+  listOfTablesCaption.querySelectorAll("a").forEach(anchor => {
+    let new_anchor = renameElement(anchor, "span");
+    new_anchor.removeAttribute("href");
+    new_anchor.removeAttribute("id");
   });
-  return html`<li class="totline">
-    <a class="tocxref" href="${`#${tableId}`}">${totCaption.childNodes}</a>
+  return html`<li>
+    <a class="tocxref" href="${`#${tableId}`}">${listOfTablesCaption.childNodes}</a>
   </li>`;
 }
 
@@ -120,20 +94,20 @@ function getTableOfTablesListItem(tableId, caption) {
  * if there is a preceding section sibling which is an appendix, make it appendix
  * @param {Element} totElement
  */
-function decorateTableOfTables(totElement) {
+function decorateListOfTables(listOfTablesElement) {
   if (
-    totElement.classList.contains("appendix") ||
-    totElement.classList.contains("introductory") ||
-    totElement.closest("section")
+    listOfTablesElement.classList.contains("appendix") ||
+    listOfTablesElement.classList.contains("introductory") ||
+    listOfTablesElement.closest("section")
   ) {
     return;
   }
 
-  const previousSections = getPreviousSections(totElement);
+  const previousSections = getPreviousSections(listOfTablesElement);
   if (previousSections.every(sec => sec.classList.contains("introductory"))) {
-    totElement.classList.add("introductory");
+    listOfTablesElement.classList.add("introductory");
   } else if (previousSections.some(sec => sec.classList.contains("appendix"))) {
-    totElement.classList.add("appendix");
+    listOfTablesElement.classList.add("appendix");
   }
 }
 
