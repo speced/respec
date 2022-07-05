@@ -26,14 +26,9 @@ export function run(conf) {
     return;
   }
   /** @type {NodeListOf<HTMLElement>} */
-  const tables = document.querySelectorAll(
-    "table.numbered"
-  );
+  const tables = document.querySelectorAll("table.numbered");
   const offendingElements = [...tables].filter(
-    ({ firstElementChild: e }) =>
-      !e ||
-      // the first child is not a caption
-      !(e instanceof HTMLTableCaptionElement)
+    table => !(table.firstElementChild instanceof HTMLTableCaptionElement)
   );
 
   if (!offendingElements.length) return;
