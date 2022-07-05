@@ -3,13 +3,7 @@
 // Handles tables in the document.
 // Generates a List of Tables wherever there is a #list-of-tables element.
 
-import {
-  addId,
-  getIntlData,
-  renameElement,
-  showWarning,
-  wrapInner,
-} from "./utils.js";
+import { addId, getIntlData, renameElement, wrapInner } from "./utils.js";
 import { html } from "./import-maps.js";
 
 export const name = "core/tables";
@@ -43,12 +37,13 @@ export function run() {
  * process all tables
  */
 function collectTables() {
-  /** @type {HTMLElement[]} */
+  /** @type {HTMLLIElement[]} */
   const listOfTables = [];
-  document.querySelectorAll("table.numbered").forEach((table, i) => {
+  /** @type {NodeListOf<HTMLTableElement>} */
+  const tables = document.querySelectorAll("table.numbered");
+  tables.forEach((table, i) => {
     const caption = table.querySelector("caption");
-
-    // there is a linter rule to catch numbered tables without captions
+    // there is a separate linter rule to catch numbered tables without captions
     if (caption) {
       decorateTable(table, caption, i);
       listOfTables.push(getListOfTablesListItem(table.id, caption));
@@ -72,18 +67,18 @@ function decorateTable(table, caption, i) {
 
 /**
  * @param {string} tableId
- * @param {HTMLElement} caption
- * @return {HTMLElement}
+ * @param {HTMLTableCaptionElement} caption
+ * @return {HTMLLIElement}
  */
 function getListOfTablesListItem(tableId, caption) {
   const listOfTablesCaption = caption.cloneNode(true);
-  listOfTablesCaption.querySelectorAll("a").forEach(anchor => {
-    let new_anchor = renameElement(anchor, "span");
-    new_anchor.removeAttribute("href");
-    new_anchor.removeAttribute("id");
-  });
+  for (const anchor of listOfTablesCaption.querySelectorAll("a")) {
+    renameElement(anchor, "span", { copyAttributes: false });
+  }
   return html`<li>
-    <a class="tocxref" href="${`#${tableId}`}">${listOfTablesCaption.childNodes}</a>
+    <a class="tocxref" href="${`#${tableId}`}"
+      >${listOfTablesCaption.childNodes}</a
+    >
   </li>`;
 }
 
@@ -92,12 +87,11 @@ function getListOfTablesListItem(tableId, caption) {
  * if it has a class of appendix or introductory, don't touch it
  * if all the preceding section siblings are introductory, make it introductory
  * if there is a preceding section sibling which is an appendix, make it appendix
- * @param {Element} totElement
+ * @param {Element} listOfTablesElement
  */
 function decorateListOfTables(listOfTablesElement) {
   if (
-    listOfTablesElement.classList.contains("appendix") ||
-    listOfTablesElement.classList.contains("introductory") ||
+    listOfTablesElement.matches(".appendix, .introductory") ||
     listOfTablesElement.closest("section")
   ) {
     return;
