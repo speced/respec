@@ -19,9 +19,7 @@ const l10n = getIntlData(localizationStrings);
 
 export function run() {
   const listOfTables = collectTables();
-
-  // Create a List of Tables if a section with id 'list-of-tables' exists.
-  const listOfTablesElement = document.getElementById("list-of-tables");
+  const listOfTablesElement = document.querySelector("section#list-of-tables");
   if (listOfTables.length && listOfTablesElement) {
     decorateListOfTables(listOfTablesElement);
     listOfTablesElement.append(

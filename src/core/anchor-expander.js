@@ -110,8 +110,7 @@ function processTable(matchingTable, id, a) {
     return;
   }
   // remove the table's title
-  let children = [...makeSafeCopy(caption).childNodes];
-  children = children.filter(
+  const children = [...makeSafeCopy(caption).childNodes].filter(
     // @ts-ignore
     node => !node.classList || !node.classList.contains("table-title")
   );
