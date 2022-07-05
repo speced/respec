@@ -1,12 +1,6 @@
 "use strict";
 
-import {
-  flushIframes,
-  makeBasicConfig,
-  makeDefaultBody,
-  makeRSDoc,
-  makeStandardOps,
-} from "../SpecHelper.js";
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 
 describe("Core - Tables", () => {
   afterAll(flushIframes);
