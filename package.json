@@ -56,7 +56,7 @@
     "rollup": "^2.75.7",
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "rollup-plugin-terser": "^7.0.2",
-    "serve": "^13.0.2",
+    "serve": "^13.0.4",
     "serve-handler": "^6.1.3",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^4.7.4",
