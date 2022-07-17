@@ -3,7 +3,7 @@
 // Handles tables in the document.
 // Generates a List of Tables wherever there is a #list-of-tables element.
 
-import { addId, getIntlData, renameElement, wrapInner } from "./utils.js";
+import { addId, getIntlData, getPreviousSections, renameElement, wrapInner } from "./utils.js";
 import { html } from "./import-maps.js";
 
 export const name = "core/tables";
@@ -20,7 +20,9 @@ const l10n = getIntlData(localizationStrings);
 export function run() {
   const listOfTables = collectTables();
   const listOfTablesElement = document.querySelector("section#list-of-tables");
+	console.log('foo');
   if (listOfTables.length && listOfTablesElement) {
+	  console.log('test');
     decorateListOfTables(listOfTablesElement);
     listOfTablesElement.append(
       html`<h1>${l10n.list_of_tables}</h1>`,
@@ -100,30 +102,5 @@ function decorateListOfTables(listOfTablesElement) {
     listOfTablesElement.classList.add("introductory");
   } else if (previousSections.some(sec => sec.classList.contains("appendix"))) {
     listOfTablesElement.classList.add("appendix");
-  }
-}
-
-/**
- * @param {Element} element
- */
-function getPreviousSections(element) {
-  /** @type {Element[]} */
-  const sections = [];
-  for (const previous of iteratePreviousElements(element)) {
-    if (previous.localName === "section") {
-      sections.push(previous);
-    }
-  }
-  return sections;
-}
-
-/**
- * @param {Element} element
- */
-function* iteratePreviousElements(element) {
-  let previous = element;
-  while (previous.previousElementSibling) {
-    previous = previous.previousElementSibling;
-    yield previous;
   }
 }
