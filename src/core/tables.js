@@ -3,7 +3,13 @@
 // Handles tables in the document.
 // Generates a List of Tables wherever there is a #list-of-tables element.
 
-import { addId, getIntlData, getPreviousSections, renameElement, wrapInner } from "./utils.js";
+import {
+  addId,
+  getIntlData,
+  getPreviousSections,
+  renameElement,
+  wrapInner
+} from "./utils.js";
 import { html } from "./import-maps.js";
 
 export const name = "core/tables";
