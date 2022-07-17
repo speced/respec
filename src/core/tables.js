@@ -20,9 +20,7 @@ const l10n = getIntlData(localizationStrings);
 export function run() {
   const listOfTables = collectTables();
   const listOfTablesElement = document.querySelector("section#list-of-tables");
-	console.log('foo');
   if (listOfTables.length && listOfTablesElement) {
-	  console.log('test');
     decorateListOfTables(listOfTablesElement);
     listOfTablesElement.append(
       html`<h1>${l10n.list_of_tables}</h1>`,
