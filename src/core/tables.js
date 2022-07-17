@@ -8,7 +8,7 @@ import {
   getIntlData,
   getPreviousSections,
   renameElement,
-  wrapInner
+  wrapInner,
 } from "./utils.js";
 import { html } from "./import-maps.js";
 
