@@ -45,13 +45,13 @@ function collectTables() {
   const listOfTables = [];
   /** @type {NodeListOf<HTMLTableElement>} */
   const tables = document.querySelectorAll("table.numbered");
-  tables.forEach((table, i) => {
-    const caption = table.querySelector("caption");
-    // there is a separate linter rule to catch numbered tables without captions
-    if (caption) {
+  tables
+  // there is a separate linter rule to catch numbered tables without captions
+    .filter((table) => !!table.querySelector("caption"))
+    .forEach((table, i) => {
+      const caption = table.querySelector("caption");
       decorateTable(table, caption, i);
       listOfTables.push(getListOfTablesListItem(table.id, caption));
-    }
   });
   return listOfTables;
 }
