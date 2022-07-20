@@ -52,7 +52,7 @@ function collectTables() {
       const caption = table.querySelector("caption");
       decorateTable(table, caption, i);
       listOfTables.push(getListOfTablesListItem(table.id, caption));
-  });
+    });
   return listOfTables;
 }
 
