@@ -624,6 +624,30 @@ export function wrapInner(outer, wrapper) {
 }
 
 /**
+ * @param {Element} element
+ */
+export function getPreviousSections(element) {
+  /** @type {Element[]} */
+  const sections = [];
+  for (const previous of iteratePreviousElements(element)) {
+    if (previous.localName === "section") {
+      sections.push(previous);
+    }
+  }
+  return sections;
+}
+
+/**
+ * @param {Element} element
+ */
+function* iteratePreviousElements(element) {
+  let previous = element;
+  while (previous.previousElementSibling) {
+    previous = previous.previousElementSibling;
+    yield previous;
+  }
+}
+/**
  * Applies the selector for all its ancestors.
  * @param {Element} element
  * @param {string} selector

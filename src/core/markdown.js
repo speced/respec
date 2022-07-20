@@ -37,6 +37,19 @@ class Renderer extends marked.Renderer {
     return html.replace("<pre>", `<pre title="${title}" class="${className}">`);
   }
 
+  image(href, title, text) {
+    if (!title) {
+      return super.image(href, title, text);
+    }
+    const html = String.raw;
+    return html`
+      <figure>
+        <img src="${href}" alt="${text}" />
+        <figcaption>${title}</figcaption>
+      </figure>
+    `;
+  }
+
   /**
    * @param {string} infoString
    */
