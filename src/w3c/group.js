@@ -70,10 +70,12 @@ async function getGroupDetails(group) {
   }
 
   const text = await res.text();
-  const message = `Failed to fetch group details (HTTP: ${res.status}). ${text}`;
-  const hint =
-    res.status === 404
-      ? docLink`See the list of [supported group names](https://respec.org/w3c/groups/) to use with the ${"[group]"} configuration option.`
-      : undefined;
+  let message = `Failed to fetch group details (HTTP: ${res.status}).`;
+  let hint;
+  if (res.status === 409) {
+    [message, hint] = text.split("\n", 2);
+  } else if (res.status === 404) {
+    hint = docLink`See the list of [supported group names](https://respec.org/w3c/groups/) to use with the ${"[group]"} configuration option.`;
+  }
   showError(message, name, { hint });
 }
