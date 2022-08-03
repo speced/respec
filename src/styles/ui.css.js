@@ -60,6 +60,12 @@ export default css`
   box-shadow: none;
 }
 
+@media (prefers-reduced-motion) {
+  #respec-pill:disabled {
+    animation: none;
+  }
+}
+
 #respec-pill:disabled,
 #respec-pill:disabled:after {
   border-radius: 50%;
