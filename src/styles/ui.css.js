@@ -55,14 +55,14 @@ export default css`
 }
 
 #respec-pill:not(:disabled) {
-  animation: respec-fadein 0.3s;
+  animation: respec-fadein 0.6s ease-in-out;
 }
 
 @keyframes respec-fadein {
   from {
     margin-top: -1.2em;
-    border: none;
     border-radius: 50%;
+    border: 0.2em solid rgba(100, 100, 100, 0.5);
     box-shadow: none;
     height: 4.8em;
   }
@@ -97,6 +97,10 @@ export default css`
 }
 
 @media (prefers-reduced-motion) {
+  #respec-pill:not(:disabled) {
+    animation: none;
+  }
+
   #respec-pill:disabled::after {
     animation: none;
     border-left: 0.2em solid rgba(100, 100, 100, 0.5);
