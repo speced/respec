@@ -42,6 +42,7 @@ export default css`
   border-radius: 2em;
   margin-right: 1em;
   min-width: 3.5em;
+  will-change: opacity;
 }
 
 .respec-info-button:focus,
