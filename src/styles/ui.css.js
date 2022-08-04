@@ -23,17 +23,8 @@ export default css`
   width: 202px;
   text-align: right;
   z-index: 9000;
-  animation: respec-fadein 0.3s;
 }
 
-@keyframes respec-fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
 #respec-pill,
 .respec-info-button {
@@ -61,6 +52,27 @@ export default css`
 
 #respec-pill {
   width: 4.8em;
+}
+
+#respec-pill:not(:disabled) {
+  animation: respec-fadein 0.3s;
+}
+
+@keyframes respec-fadein {
+  from {
+    margin-top: -1.2em;
+    border: none;
+    border-radius: 50%;
+    box-shadow: none;
+    height: 4.8em;
+  }
+  to {
+    margin-top: 0;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
+    height: 2.4em;
+  }
 }
 
 #respec-pill:disabled {
