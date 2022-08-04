@@ -49,28 +49,29 @@ export default css`
 }
 
 #respec-pill:disabled {
-  font-size: 2.8px;
-  text-indent: -9999em;
-  border-top: 1.1em solid rgba(40, 40, 40, 0.2);
-  border-right: 1.1em solid rgba(40, 40, 40, 0.2);
-  border-bottom: 1.1em solid rgba(40, 40, 40, 0.2);
-  border-left: 1.1em solid #ffffff;
-  transform: translateZ(0);
-  animation: respec-spin 0.5s infinite linear;
+  position: relative;
+  border: none;
   box-shadow: none;
+  border-radius: 50%;
+  width: 4em;
+  height: 4em;
+  padding: 0
+}
+
+#respec-pill:disabled::after {
+  position: absolute;
+  content: '';
+  inset: -0.2em;
+  border-radius: 50%;
+  border: 0.2em solid rgba(100, 100, 100, 0.5);
+  border-left: 0.2em solid transparent;
+  animation: respec-spin 0.5s infinite linear;
 }
 
 @media (prefers-reduced-motion) {
-  #respec-pill:disabled {
+  #respec-pill:disabled::after {
     animation: none;
   }
-}
-
-#respec-pill:disabled,
-#respec-pill:disabled:after {
-  border-radius: 50%;
-  width: 10em;
-  height: 10em;
 }
 
 @keyframes respec-spin {
