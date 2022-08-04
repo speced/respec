@@ -25,13 +25,15 @@ export default css`
   z-index: 9000;
 }
 
+
 #respec-pill,
 .respec-info-button {
+  height: 2.4em;
   background: #fff;
-  height: 2.5em;
   color: rgb(120, 120, 120);
   border: 1px solid #ccc;
   box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
+  padding: 0.2em 0em;
 }
 
 .respec-info-button {
@@ -40,6 +42,7 @@ export default css`
   border-radius: 2em;
   margin-right: 1em;
   min-width: 3.5em;
+  will-change: opacity;
 }
 
 .respec-info-button:focus,
@@ -48,23 +51,61 @@ export default css`
   transition: opacity 0.2s;
 }
 
-#respec-pill:disabled {
-  font-size: 2.8px;
-  text-indent: -9999em;
-  border-top: 1.1em solid rgba(40, 40, 40, 0.2);
-  border-right: 1.1em solid rgba(40, 40, 40, 0.2);
-  border-bottom: 1.1em solid rgba(40, 40, 40, 0.2);
-  border-left: 1.1em solid #ffffff;
-  transform: translateZ(0);
-  animation: respec-spin 0.5s infinite linear;
-  box-shadow: none;
+#respec-pill {
+  width: 4.8em;
 }
 
-#respec-pill:disabled,
-#respec-pill:disabled:after {
+#respec-pill:not(:disabled) {
+  animation: respec-fadein 0.6s ease-in-out;
+}
+
+@keyframes respec-fadein {
+  from {
+    margin-top: -1.2em;
+    border-radius: 50%;
+    border: 0.2em solid rgba(100, 100, 100, 0.5);
+    box-shadow: none;
+    height: 4.8em;
+  }
+  to {
+    margin-top: 0;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
+    height: 2.4em;
+  }
+}
+
+#respec-pill:disabled {
+  margin-top: -1.2em;
+  position: relative;
+  border: none;
+  box-shadow: none;
   border-radius: 50%;
-  width: 10em;
-  height: 10em;
+  width: 4.8em;
+  height: 4.8em;
+  padding: 0;
+}
+
+#respec-pill:disabled::after {
+  position: absolute;
+  content: '';
+  inset: -0.2em;
+  border-radius: 50%;
+  border: 0.2em solid rgba(100, 100, 100, 0.5);
+  border-left: 0.2em solid transparent;
+  animation: respec-spin 0.5s infinite linear;
+}
+
+@media (prefers-reduced-motion) {
+  #respec-pill:not(:disabled) {
+    animation: none;
+  }
+
+  #respec-pill:disabled::after {
+    animation: none;
+    border-left: 0.2em solid rgba(100, 100, 100, 0.5);
+  }
 }
 
 @keyframes respec-spin {
