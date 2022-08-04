@@ -23,6 +23,16 @@ export default css`
   width: 202px;
   text-align: right;
   z-index: 9000;
+  animation: respec-fadein 0.3s;
+}
+
+@keyframes respec-fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 #respec-pill,
