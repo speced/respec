@@ -37,11 +37,12 @@ export default css`
 
 #respec-pill,
 .respec-info-button {
+  height: 2.4em;
   background: #fff;
-  height: 2.5em;
   color: rgb(120, 120, 120);
   border: 1px solid #ccc;
   box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
+  padding: 0.2em 0em;
 }
 
 .respec-info-button {
@@ -58,14 +59,19 @@ export default css`
   transition: opacity 0.2s;
 }
 
+#respec-pill {
+  width: 4.8em;
+}
+
 #respec-pill:disabled {
+  margin-top: -1.2em;
   position: relative;
   border: none;
   box-shadow: none;
   border-radius: 50%;
-  width: 4em;
-  height: 4em;
-  padding: 0
+  width: 4.8em;
+  height: 4.8em;
+  padding: 0;
 }
 
 #respec-pill:disabled::after {
@@ -81,6 +87,7 @@ export default css`
 @media (prefers-reduced-motion) {
   #respec-pill:disabled::after {
     animation: none;
+    border-left: 0.2em solid rgba(100, 100, 100, 0.5);
   }
 }
 
