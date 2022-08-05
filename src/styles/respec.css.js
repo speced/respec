@@ -70,14 +70,6 @@ cite .bibref {
   font-style: normal;
 }
 
-code {
-  color: #c63501;
-}
-
-th code {
-  color: inherit;
-}
-
 a[href].orcid {
   padding-left: 4px;
   padding-right: 4px;
