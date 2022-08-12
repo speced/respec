@@ -94,7 +94,7 @@ const l10n = getIntlData(localizationStrings);
  * @property {string} bodyHTML
  * @property {GitHubLabel[]} labels
 
- * @param {NodeListOf<HTMLElement>} ins
+ * @param {HTMLElement[]} ins
  * @param {Map<string, GitHubIssue>} ghIssues
  * @param {*} conf
  */
@@ -371,9 +371,8 @@ export async function run(conf) {
   const allEls = document.querySelectorAll(query);
 
   const issuesAndNotes = Array.from(allEls).filter(itm => {
-    // Ignores any elements that were selected that is an ancestor of the
-    // <svg> element.
-    return !itm.closest("svg");
+    // Removes any elements that are not HTML Elements (e.g., SVG nodes)
+    return itm instanceof HTMLElement;
   });
 
   if (!issuesAndNotes.length) {
