@@ -368,7 +368,14 @@ async function fetchAndStoreGithubIssues(github) {
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
-  const issuesAndNotes = document.querySelectorAll(query);
+  const allEls = document.querySelectorAll(query);
+
+  const issuesAndNotes = Array.from(allEls).filter(itm => {
+    // Ignores any elements that were selected that is an ancestor of the
+    // <svg> element.
+    return !itm.closest("svg");
+  });
+
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
