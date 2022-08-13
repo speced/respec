@@ -94,7 +94,7 @@ const l10n = getIntlData(localizationStrings);
  * @property {string} bodyHTML
  * @property {GitHubLabel[]} labels
 
- * @param {NodeListOf<HTMLElement>} ins
+ * @param {HTMLElement[]} ins
  * @param {Map<string, GitHubIssue>} ghIssues
  * @param {*} conf
  */
@@ -368,7 +368,13 @@ async function fetchAndStoreGithubIssues(github) {
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
-  const issuesAndNotes = document.querySelectorAll(query);
+  const allEls = document.querySelectorAll(query);
+
+  const issuesAndNotes = Array.from(allEls).filter(itm => {
+    // Removes any elements that are not HTML Elements (e.g., SVG nodes)
+    return itm instanceof HTMLElement;
+  });
+
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
