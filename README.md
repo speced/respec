@@ -12,4 +12,4 @@ Om schrijvers op weg te helpen is er een [template](https://github.com/Logius-st
 
 ## Aanpassen
 
-Wie wil sleutelen aan ReSpec wordt aangeraden de Developers Guide te raadplegen. Vragen of opmerkingen zijn welkom in de [issues](https://github.com/Logius-standaarden/respec/issues).
+Wie wil sleutelen aan ReSpec wordt aangeraden de [Developers Guide](https://github.com/Logius-standaarden/respec/wiki/Developers-Guide) te raadplegen. Vragen of opmerkingen zijn welkom in de [issues](https://github.com/Logius-standaarden/respec/issues).
