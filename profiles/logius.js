@@ -8,7 +8,8 @@ const modules = [
   import("../src/core/l10n.js"),
   import("../src/logius/defaults.js"), // done, for now
   import("../src/core/style.js"),
-  import("../src/logius/style.js"), // done for now, still some wip  
+  import("../src/logius/style.js"), // done for now, still some wip
+  import("../src/logius/dynamic-sidebar.js"),
   import("../src/core/github.js"),
   import("../src/core/data-include.js"),
   import("../src/core/markdown.js"),
