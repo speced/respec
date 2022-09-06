@@ -6,7 +6,7 @@ export async function run(conf) {
 
 async function createSideLabel(conf) {
   const sideLabel = document.createElement("div");
-  sideLabel.innerHTML = `${conf.nl_organisationName} - ${conf.specType}`;
+  sideLabel.innerHTML = `${conf.nl_organisationName} - ${conf.specStatus}`;
   sideLabel.setAttribute("class", "sidelabel");
   sideLabel.setAttribute("style", `background-color: ${conf.labelColor};`);
   document.body.appendChild(sideLabel);
