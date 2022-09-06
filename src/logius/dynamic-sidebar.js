@@ -8,8 +8,7 @@ async function createSideLabel(conf) {
   const sideLabel = document.createElement("div");
   sideLabel.innerHTML = `${conf.nl_organisationName} - ${conf.specType}`;
   sideLabel.setAttribute("class", "sidelabel");
-  sideLabel.setAttribute("id", "label1");
-  sideLabel.setAttribute("style", `background-color: blue;`);
+  sideLabel.setAttribute("style", `background-color: ${conf.labelColor};`);
   document.body.appendChild(sideLabel);
 
   if (document.querySelector(".sidelabel")) {
