@@ -9,7 +9,6 @@ export default css`
     top: 0;
     left: 0;
     padding: 18px 1px 48px 0;
-    background-color: #184474;
     color: white;
     writing-mode: vertical-rl;
     text-orientation: mixed;
