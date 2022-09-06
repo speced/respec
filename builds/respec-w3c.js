@@ -8304,6 +8304,8 @@ for more information.`;
   const name$15 = "core/base-runner";
 
   async function runAll(plugs) {
+    const respecConfig2 = {...organisationConfig, ...documentConfig};
+    console.log(respecConfig2);
     init();
 
     pub("start-all", respecConfig);
