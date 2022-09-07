@@ -8,7 +8,7 @@ Het "NL-profiel" wordt periodiek in sync gehouden met de W3C-bron. Het profiel o
 
 ## Toepassen
 
-Om schrijvers op weg te helpen is er een [template](https://github.com/Logius-standaarden/respec-template) beschikbaar in een aparte repository. Indien u vragen heeft over het toepassen van ReSpec kunt daar de [issues](https://github.com/Logius-standaarden/ReSpec-template/issues?q=) bezoeken. Een uitgebreide Engelstalig overzicht van de algemene functies in ReSpec leest u op [respec.org](https://respec.org/docs/).
+Om schrijvers op weg te helpen is er een [template](https://github.com/Logius-standaarden/respec-template) beschikbaar in een aparte repository. Indien u vragen heeft over het toepassen van ReSpec kunt daar de [issues](https://github.com/Logius-standaarden/ReSpec-template/issues?q=) bezoeken. Een uitgebreid Engelstalig overzicht van de algemene functies in ReSpec leest u op [respec.org](https://respec.org/docs/).
 
 ## Aanpassen
 
