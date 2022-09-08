@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 const documentConfig = {
-  labelColor: "blue",
+  labelColor: "#154273",
   specType: "HR",
-  specStatus: "WV",
+  specStatus: "DEF",
+  govTextCode: "AA",
 
   // subtitle: "Hier komt een subtitle",
   shortName: "API-Design-Rules",
