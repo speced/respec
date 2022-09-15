@@ -3,22 +3,22 @@ import { getIntlData } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 
 export default (conf, opts) => {
-  const l10n = getIntlData(conf.sotdText);
+  const l10n_sotdText = getIntlData(conf.sotdText);
   return html`
-    <h2>${l10n.sotd}</h2>
+    <h2>${l10n_sotdText.sotd}</h2>
     ${conf.isPreview ? renderPreview(conf) : ""}
     ${conf.isDEF
-      ? l10n.def
+      ? l10n_sotdText.def
       : conf.isVV
-      ? l10n.vv
+      ? l10n_sotdText.vv
       : conf.isCV
-      ? html`${l10n.cv}<a href="${opts.emailCommentsMailto}"
+      ? html`${l10n_sotdText.cv}<a href="${opts.emailCommentsMailto}"
             >${opts.emailComments}</a
           >.`
       : conf.isWV
-      ? l10n.wv
+      ? l10n_sotdText.wv
       : conf.isBASIS
-      ? l10n.basis
+      ? l10n_sotdText.basis
       : ""}
     ${renderGovernance(conf)}
   `;
@@ -50,8 +50,9 @@ export function renderPreview(conf) {
 }
 
 function renderGovernance(conf) {
+  const l10n_governanceTypeText = getIntlData(conf.governanceTypeText);
   let govText = "";
   const govTextCode = conf.govTextCode.toLowerCase();
-  govText = conf.governanceTypeText[govTextCode];
+  govText = l10n_governanceTypeText[govTextCode];
   return html`<p>${govText}</p>`;
 }

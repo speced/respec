@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 const documentConfig = {
-  labelColor: "#154273",
   specType: "HR",
-  specStatus: "DEF",
+  specStatus: "def",
   govTextCode: "AA",
 
   // subtitle: "Hier komt een subtitle",
