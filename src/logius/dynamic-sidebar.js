@@ -1,6 +1,5 @@
-import { RespecError, getIntlData } from "../core/utils.js";
+import { getIntlData, showWarning } from "../core/utils.js";
 import css from "../styles/side-label.css.js";
-import { pub } from "../core/pubsubhub.js";
 
 export async function run(conf) {
   await createSideLabel(conf);
@@ -11,25 +10,19 @@ async function createSideLabel(conf) {
   const sideLabel = document.createElement("div");
 
   if (!conf.nl_organisationName) {
-    pub(
-      "warn",
-      new RespecError("Missing nl_organisationName", "createSideLabel", "")
-    );
+    showWarning("Missing nl_organisationName", "createSideLabel");
   }
   if (!conf.labelText) {
-    pub("warn", new RespecError("Missing labelText", "createSideLabel", ""));
+    showWarning("Missing labelText", "createSideLabel");
   }
   if (!l10n_labelText) {
-    pub(
-      "warn",
-      new RespecError("Missing labelText translation", "createSideLabel", "")
-    );
+    showWarning("Missing translated labelText", "createSideLabel");
   }
   if (!conf.specStatus) {
-    pub("warn", new RespecError("Missing specStatus", "createSideLabel", ""));
+    showWarning("Missing specStatus", "createSideLabel");
   }
   if (!conf.labelColorTable) {
-    pub("warn", new RespecError("Missing labelColor", "createSideLabel", ""));
+    showWarning("Missing labelColor", "createSideLabel");
   }
 
   const labelColor = conf.labelColorTable[conf.specStatus.toLowerCase()];
