@@ -245,7 +245,7 @@ export function run(conf) {
   // conf.isUnofficial = conf.specStatus === "unofficial";
 
   conf.isUnofficial = true;
-  if (!conf.logos) {
+  if (!conf.logos || !conf.useLogo) {
     // conf.isUnofficial
     conf.logos = [];
   }
