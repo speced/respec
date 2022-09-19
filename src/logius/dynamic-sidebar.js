@@ -6,6 +6,9 @@ export async function run(conf) {
 }
 
 async function createSideLabel(conf) {
+  if (!conf.useSideBar) {
+    return;
+  }
   const l10n_labelText = getIntlData(conf.labelText);
   const sideLabel = document.createElement("div");
 

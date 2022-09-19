@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const documentConfig = {
   useLogo: true,
+  useSideBar: true,
   specType: "HR",
   specStatus: "def",
   govTextCode: "AA",
