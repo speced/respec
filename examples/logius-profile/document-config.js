@@ -2,6 +2,7 @@
 const documentConfig = {
   useLogo: true,
   useSideBar: true,
+  license: "cc0",
   specType: "HR",
   specStatus: "def",
   govTextCode: "AA",
