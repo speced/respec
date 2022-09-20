@@ -58,6 +58,7 @@ const modules = [
   import("../src/core/anchor-expander.js"),
   import("../src/core/custom-elements/index.js"),
   import("../src/logius/dynamic-sidebar.js"),
+  import("../src/logius/missing-config-warner.js"),
   /* Linters must be the last thing to run */
   import("../src/core/linter-rules/check-charset.js"),
   import("../src/core/linter-rules/check-punctuation.js"),
