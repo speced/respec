@@ -1,0 +1,1264 @@
+<!DOCTYPE html><html lang="nl"><head>
+<meta charset="utf-8">
+<meta name="generator" content="ReSpec Developer Edition">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<style>
+
+.issue-label {
+  text-transform: initial;
+}
+
+.warning > p:first-child {
+  margin-top: 0;
+}
+.warning {
+  padding: 0.5em;
+  border-left-width: 0.5em;
+  border-left-style: solid;
+}
+span.warning {
+  padding: 0.1em 0.5em 0.15em;
+}
+
+.issue.closed span.issue-number {
+  text-decoration: line-through;
+}
+
+.issue.closed span.issue-number::after {
+  content: " (Closed)";
+  font-size: smaller;
+}
+
+.warning {
+  border-color: #f11;
+  border-width: 0.2em;
+  border-style: solid;
+  background: #fbe9e9;
+}
+
+.warning-title:before {
+  content: "⚠"; /*U+26A0 WARNING SIGN*/
+  font-size: 1.3em;
+  float: left;
+  padding-right: 0.3em;
+  margin-top: -0.3em;
+}
+
+li.task-list-item {
+  list-style: none;
+}
+
+input.task-list-item-checkbox {
+  margin: 0 0.35em 0.25em -1.6em;
+  vertical-align: middle;
+}
+
+.issue a.respec-gh-label {
+  padding: 5px;
+  margin: 0 2px 0 2px;
+  font-size: 10px;
+  text-transform: none;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 4px;
+  position: relative;
+  bottom: 2px;
+  border: none;
+  display: inline-block;
+}
+
+</style>
+<style>
+
+dfn {
+  cursor: pointer;
+}
+
+.dfn-panel {
+  position: absolute;
+  z-index: 35;
+  min-width: 300px;
+  max-width: 500px;
+  padding: 0.5em 0.75em;
+  margin-top: 0.6em;
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: small;
+  background: #fff;
+  color: black;
+  box-shadow: 0 1em 3em -0.4em rgba(0, 0, 0, 0.3),
+    0 0 1px 1px rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+}
+/* Triangle/caret */
+.dfn-panel:not(.docked) > .caret {
+  position: absolute;
+  top: -9px;
+}
+.dfn-panel:not(.docked) > .caret::before,
+.dfn-panel:not(.docked) > .caret::after {
+  content: "";
+  position: absolute;
+  border: 10px solid transparent;
+  border-top: 0;
+  border-bottom: 10px solid #fff;
+  top: 0;
+}
+.dfn-panel:not(.docked) > .caret::before {
+  border-bottom: 9px solid #a2a9b1;
+}
+
+.dfn-panel * {
+  margin: 0;
+}
+
+.dfn-panel b {
+  display: block;
+  color: #000;
+  margin-top: 0.25em;
+}
+
+.dfn-panel ul a[href] {
+  color: #333;
+}
+
+.dfn-panel > div {
+  display: flex;
+}
+
+.dfn-panel a.self-link {
+  font-weight: bold;
+  margin-right: auto;
+}
+
+.dfn-panel .marker {
+  padding: 0.1em;
+  margin-left: 0.5em;
+  border-radius: 0.2em;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 90%;
+  color: #040b1c;
+}
+
+.dfn-panel .marker.dfn-exported {
+  background: #d1edfd;
+  box-shadow: 0 0 0 0.125em #1ca5f940;
+}
+.dfn-panel .marker.idl-block {
+  background: #8ccbf2;
+  box-shadow: 0 0 0 0.125em #0670b161;
+}
+
+.dfn-panel a:not(:hover) {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.dfn-panel a[href]:hover {
+  border-bottom-width: 1px;
+}
+
+.dfn-panel ul {
+  padding: 0;
+}
+
+.dfn-panel li {
+  margin-left: 1em;
+}
+
+.dfn-panel.docked {
+  position: fixed;
+  left: 0.5em;
+  top: unset;
+  bottom: 2em;
+  margin: 0 auto;
+  /* 0.75em from padding (x2), 0.5em from left position, 0.2em border (x2) */
+  max-width: calc(100vw - 0.75em * 2 - 0.5em - 0.2em * 2);
+  max-height: 30vh;
+  overflow: auto;
+}
+
+</style>
+
+
+<title>Logius's testpage</title>
+
+
+
+
+
+<link rel="shortcut icon" type="image/x-icon" href="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/logius.ico">
+
+
+
+<script>
+    function include(utils, content, url) {
+      //alert(`utils:${utils}, content:${content}, url:${url}`);
+      return content;
+    }
+
+  </script>
+
+<style id="respec-mainstyle">
+
+@keyframes pop {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1.25, 1.25);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+/* --- INLINES --- */
+:is(h1, h2, h3, h4, h5, h6, a) abbr {
+  border: none;
+}
+
+dfn {
+  font-weight: bold;
+}
+
+a.internalDFN {
+  color: inherit;
+  border-bottom: 1px solid #99c;
+  text-decoration: none;
+}
+
+a.externalDFN {
+  color: inherit;
+  border-bottom: 1px dotted #ccc;
+  text-decoration: none;
+}
+
+a.bibref {
+  text-decoration: none;
+}
+
+.respec-offending-element:target {
+  animation: pop 0.25s ease-in-out 0s 1;
+}
+
+.respec-offending-element,
+a[href].respec-offending-element {
+  text-decoration: red wavy underline;
+}
+@supports not (text-decoration: red wavy underline) {
+  .respec-offending-element:not(pre) {
+    display: inline-block;
+  }
+  .respec-offending-element {
+    /* Red squiggly line */
+    background: url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=)
+      bottom repeat-x;
+  }
+}
+
+#references :target {
+  background: #eaf3ff;
+  animation: pop 0.4s ease-in-out 0s 1;
+}
+
+cite .bibref {
+  font-style: normal;
+}
+
+code {
+  color: #c63501;
+}
+
+th code {
+  color: inherit;
+}
+
+a[href].orcid {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+a[href].orcid > svg {
+  margin-bottom: -2px;
+}
+
+/* --- TOC --- */
+
+.toc a,
+.tof a {
+  text-decoration: none;
+}
+
+a .secno,
+a .figno {
+  color: #000;
+}
+
+ul.tof,
+ol.tof {
+  list-style: none outside none;
+}
+
+.caption {
+  margin-top: 0.5em;
+  font-style: italic;
+}
+
+/* --- TABLE --- */
+
+table.simple {
+  border-spacing: 0;
+  border-collapse: collapse;
+  border-bottom: 3px solid #005a9c;
+}
+
+.simple th {
+  background: #005a9c;
+  color: #fff;
+  padding: 3px 5px;
+  text-align: left;
+}
+
+.simple th a {
+  color: #fff;
+  padding: 3px 5px;
+  text-align: left;
+}
+
+.simple th[scope="row"] {
+  background: inherit;
+  color: inherit;
+  border-top: 1px solid #ddd;
+}
+
+.simple td {
+  padding: 3px 10px;
+  border-top: 1px solid #ddd;
+}
+
+.simple tr:nth-child(even) {
+  background: #f0f6ff;
+}
+
+/* --- DL --- */
+
+.section dd > p:first-child {
+  margin-top: 0;
+}
+
+.section dd > p:last-child {
+  margin-bottom: 0;
+}
+
+.section dd {
+  margin-bottom: 1em;
+}
+
+.section dl.attrs dd,
+.section dl.eldef dd {
+  margin-bottom: 0;
+}
+
+#issue-summary > ul {
+  column-count: 2;
+}
+
+#issue-summary li {
+  list-style: none;
+  display: inline-block;
+}
+
+details.respec-tests-details {
+  margin-left: 1em;
+  display: inline-block;
+  vertical-align: top;
+}
+
+details.respec-tests-details > * {
+  padding-right: 2em;
+}
+
+details.respec-tests-details[open] {
+  z-index: 999999;
+  position: absolute;
+  border: thin solid #cad3e2;
+  border-radius: 0.3em;
+  background-color: white;
+  padding-bottom: 0.5em;
+}
+
+details.respec-tests-details[open] > summary {
+  border-bottom: thin solid #cad3e2;
+  padding-left: 1em;
+  margin-bottom: 1em;
+  line-height: 2em;
+}
+
+details.respec-tests-details > ul {
+  width: 100%;
+  margin-top: -0.3em;
+}
+
+details.respec-tests-details > li {
+  padding-left: 1em;
+}
+
+.self-link:hover {
+  opacity: 1;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+aside.example .marker > a.self-link {
+  color: inherit;
+}
+
+.header-wrapper {
+  display: flex;
+  align-items: baseline;
+}
+
+:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2) {
+  position: relative;
+  left: -.5em;
+}
+
+:is(h2, h3, h4, h5, h6):not(#toc h2) + a.self-link {
+  color: inherit;
+  order: -1;
+  position: relative;
+  left: -1.1em;
+  font-size: 1rem;
+  opacity: 0.5;
+}
+
+:is(h2, h3, h4, h5, h6) + a.self-link::before {
+  content: "§";
+  text-decoration: none;
+  color: var(--heading-text);
+}
+
+:is(h2, h3) + a.self-link {
+  top: -0.2em;
+}
+
+:is(h4, h5, h6) + a.self-link::before {
+  color: black;
+}
+
+@media (max-width: 767px) {
+  dd {
+    margin-left: 0;
+  }
+}
+
+@media print {
+  .removeOnSave {
+    display: none;
+  }
+}
+
+</style>
+<style>
+
+ul.index {
+  columns: 30ch;
+  column-gap: 1.5em;
+}
+
+ul.index li {
+  list-style: inherit;
+}
+
+ul.index li span {
+  color: inherit;
+  cursor: pointer;
+  white-space: normal;
+}
+
+#index-defined-here ul.index li {
+  font-size: 0.9rem;
+}
+
+ul.index code {
+  color: inherit;
+}
+
+#index-defined-here .print-only {
+  display: none;
+}
+
+@media print {
+  #index-defined-here .print-only {
+    display: initial;
+  }
+}
+
+</style>
+<style>
+
+var {
+  position: relative;
+  cursor: pointer;
+}
+
+var[data-type]::before,
+var[data-type]::after {
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+
+/* the triangle or arrow or caret or whatever */
+var[data-type]::before {
+  content: "";
+  transform: translateX(-50%);
+  border-width: 4px 6px 0 6px;
+  border-style: solid;
+  border-color: transparent;
+  border-top-color: #000;
+}
+
+/* actual text */
+var[data-type]::after {
+  content: attr(data-type);
+  transform: translateX(-50%) translateY(-100%);
+  background: #000;
+  text-align: center;
+  /* additional styling */
+  font-family: "Dank Mono", "Fira Code", monospace;
+  font-style: normal;
+  padding: 6px;
+  border-radius: 3px;
+  color: #daca88;
+  text-indent: 0;
+  font-weight: normal;
+}
+
+var[data-type]:hover::after,
+var[data-type]:hover::before {
+  opacity: 1;
+}
+
+</style>
+<style>
+
+  .sidelabel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 18px 1px 48px 0;
+    color: white;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: scaleX(-1) scaleY(-1);
+    z-index: 1;
+  }
+
+</style>
+<script id="initialUserConfig" type="application/json">{
+  "nl_organisationName": "Logius",
+  "nl_organisationPrefix": "LS-",
+  "nl_organisationStylesURL": "https://publicatie.centrumvoorstandaarden.nl/respec/style/",
+  "nl_organisationPublishURL": "https://publicatie.centrumvoorstandaarden.nl/",
+  "nl_logo": {
+    "src": "https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/figure-logius.svg",
+    "alt": "Logius",
+    "id": "Logius",
+    "height": 77,
+    "width": 44,
+    "url": "https://www.logius.nl/standaarden"
+  },
+  "governanceTypeText": {
+    "nl": {
+      "aa": "De programmaraad van Geonovum heeft deze standaard goedgekeurd.",
+      "bb": "De programmaraad van Geonovum beoordeelt dit definitief concept. Keurt zij het goed, dan is er een nieuwe standaard.",
+      "cc": "Dit is de definitieve versie van de praktijkrichtlijn. Een praktijkrichtlijn is een product dat informatie geeft, vaak met een technisch karakter, dat nodig is voor het toepassen van een standaard. Een praktijkrichtlijn hoort altijd bij een standaard/norm.",
+      "dd": "Het OBDO heeft op advies van het Forum Standaardisatie deze versie vastgesteld."
+    },
+    "en": {
+      "aa": "The Geonovum program council has approved this standard.",
+      "bb": "The Geonovum program council assesses this final concept. If they approve, then there is a new standard.",
+      "cc": "This is the final version of the practice guideline. A practice guideline is a product that provides information, often of a technical nature, that is necessary for the application of a standard. A practical guideline always belongs to a standard/norm.",
+      "dd": "The OBDO has adopted this version on the advice of the Standardization Forum."
+    }
+  },
+  "sotdText": {
+    "nl": {
+      "sotd": "Status van dit document",
+      "def": "Dit is de definitieve versie van. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd.",
+      "wv": "Dit is een werkversie die op elk moment kan worden gewijzigd, verwijderd of vervangen door andere documenten. Het is geen door goedgekeurde consultatieversie.",
+      "cv": "Dit is een door goedgekeurde consultatieversie. Commentaar over dit document kan gestuurd worden naar ",
+      "vv": "Dit is een definitief concept van de nieuwe versie van. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd.",
+      "basis": "Dit is een document zonder officiële status."
+    },
+    "en": {
+      "sotd": "Status of This Document",
+      "def": "This is the definitive version of the. Edits resulting from consultations have been applied.",
+      "wv": "This is a draft that could be altered, removed or replaced by other documents. It is not a recommendation approved by.",
+      "cv": "This is a proposed recommendation approved by. Comments regarding this document may be sent to ",
+      "vv": "This is the definitive concept of the. Edits resulting from consultations have been applied.",
+      "basis": "This document has no official standing."
+    }
+  },
+  "labelText": {
+    "nl": {
+      "def": "Definitieve versie",
+      "wv": "Werkversie",
+      "cv": "Goedgekeurde consultatieversie",
+      "vv": "Definitief concept",
+      "basis": "Geen officiële status"
+    },
+    "en": {
+      "def": "Definitive version",
+      "wv": "Working version",
+      "cv": "Approved consultation version",
+      "vv": "Final draft",
+      "basis": "No official status"
+    }
+  },
+  "labelColorTable": {
+    "def": "#154273",
+    "wv": "#32a852",
+    "cv": "#2fdaed",
+    "vv": "#f00a0a",
+    "basis": "#8c8c8c"
+  },
+  "licenses": {
+    "cc0": {
+      "name": "Creative Commons 0 Public Domain Dedication",
+      "short": "CC0",
+      "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "image": "https://tools.geostandaarden.nl/respec/style/logos/CC-Licentie.svg"
+    },
+    "cc-by": {
+      "name": "Creative Commons Attribution 4.0 International Public License",
+      "short": "CC-BY",
+      "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "image": "https://tools.geostandaarden.nl/respec/style/logos/cc-by.svg"
+    },
+    "cc-by-nd": {
+      "name": "Creative Commons Naamsvermelding-GeenAfgeleideWerken 4.0 Internationaal",
+      "short": "CC-BY-ND",
+      "url": "https://creativecommons.org/licenses/by-nd/4.0/legalcode.nl",
+      "image": "https://tools.geostandaarden.nl/respec/style/logos/cc-by-nd.svg"
+    }
+  },
+  "headerLocalizationStrings": {
+    "en": {
+      "author": "Author:",
+      "authors": "Authors:",
+      "editor": "Editor:",
+      "editors": "Editors:",
+      "former_editor": "Former editor:",
+      "former_editors": "Former editors:",
+      "latest_editors_draft": "Latest editor's draft:",
+      "latest_published_version": "Latest published version:",
+      "edited_in_place": "edited in place",
+      "this_version": "This version:",
+      "test_suite": "Test suite:",
+      "implementation_report": "Implementation report:",
+      "prev_editor_draft": "Previous editor's draft:",
+      "prev_version": "Previous version:",
+      "prev_recommendation": "Previous Recommendation:",
+      "latest_recommendation": "Latest Recommendation:"
+    },
+    "ko": {
+      "author": "저자:",
+      "authors": "저자:",
+      "editor": "편집자:",
+      "editors": "편집자:",
+      "former_editor": "이전 편집자:",
+      "former_editors": "이전 편집자:",
+      "latest_editors_draft": "최신 편집 초안:",
+      "latest_published_version": "최신 버전:",
+      "this_version": "현재 버전:"
+    },
+    "zh": {
+      "author": "作者：",
+      "authors": "作者：",
+      "editor": "编辑：",
+      "editors": "编辑：",
+      "former_editor": "原编辑：",
+      "former_editors": "原编辑：",
+      "latest_editors_draft": "最新编辑草稿：",
+      "latest_published_version": "最新发布版本：",
+      "this_version": "本版本：",
+      "test_suite": "测试套件：",
+      "implementation_report": "实现报告：",
+      "prev_editor_draft": "上一版编辑草稿：",
+      "prev_version": "上一版：",
+      "prev_recommendation": "上一版正式推荐标准：",
+      "latest_recommendation": "最新发布的正式推荐标准："
+    },
+    "ja": {
+      "author": "著者：",
+      "authors": "著者：",
+      "editor": "編者：",
+      "editors": "編者：",
+      "former_editor": "以前の版の編者：",
+      "former_editors": "以前の版の編者：",
+      "latest_editors_draft": "最新の編集用草案：",
+      "latest_published_version": "最新バージョン：",
+      "this_version": "このバージョン：",
+      "test_suite": "テストスイート：",
+      "implementation_report": "実装レポート："
+    },
+    "nl": {
+      "author": "Auteur:",
+      "authors": "Auteurs:",
+      "editor": "Redacteur:",
+      "editors": "Redacteurs:",
+      "latest_editors_draft": "Laatste werkversie:",
+      "latest_published_version": "Laatst gepubliceerde versie:",
+      "this_version": "Deze versie:",
+      "prev_version": "Vorige versie",
+      "former_editor": "Voormalig redacteur",
+      "former_editors": "Voormalige redacteurs"
+    },
+    "es": {
+      "author": "Autor:",
+      "authors": "Autores:",
+      "editor": "Editor:",
+      "editors": "Editores:",
+      "latest_editors_draft": "Borrador de editor mas reciente:",
+      "latest_published_version": "Versión publicada mas reciente:",
+      "this_version": "Ésta versión:"
+    },
+    "de": {
+      "author": "Autor/in:",
+      "authors": "Autor/innen:",
+      "editor": "Redaktion:",
+      "editors": "Redaktion:",
+      "former_editor": "Frühere Mitwirkende:",
+      "former_editors": "Frühere Mitwirkende:",
+      "latest_editors_draft": "Letzter Entwurf:",
+      "latest_published_version": "Letzte publizierte Fassung:",
+      "this_version": "Diese Fassung:"
+    }
+  },
+  "useLogo": true,
+  "useSideBar": true,
+  "license": "cc0",
+  "specType": "HR",
+  "specStatus": "def",
+  "govTextCode": "AA",
+  "shortName": "API-Design-Rules",
+  "publishDate": "2020-09-20",
+  "previousPublishDate": "2018-10-07",
+  "previousMaturity": "DEF",
+  "pubDomain": "dk",
+  "pubSubDomain": "watisdk",
+  "nl_markdownTableClass": "simple",
+  "nl_markdownEmbedImageInFigure": true,
+  "editors": [
+    {
+      "name": "P H",
+      "mailto": "api@digikoppeling",
+      "company": "Logius",
+      "companyURL": "https://logius.nl/standaarden",
+      "url": "mailto:api@digikoppeling"
+    },
+    {
+      "name": "P H",
+      "url": "https://logius.nl/standaarden"
+    }
+  ],
+  "authors": [
+    {
+      "name": "P H",
+      "url": "https://logius.nl/standaarden"
+    }
+  ],
+  "github": "https://github.com/Logius-standaarden/API-Design-Rules",
+  "highlightVars": true,
+  "nl_emailcomments": "digikoppeling@logius.nl",
+  "addSectionLinks": true,
+  "a11y": false,
+  "maxTocLevel": 3,
+  "alternateFormats": [
+    {
+      "label": "html",
+      "uri": "https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.html"
+    },
+    {
+      "label": "pdf",
+      "uri": "https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.pdf"
+    }
+  ],
+  "nl_markdownSplitH1sections": false,
+  "nl_github": {
+    "issueBase": "https://github.com/Geonovum/KP-APIs/issues/",
+    "revision": "https://github.com/Logius-standaarden/API-Design-Rules/commits/",
+    "pullrequests": "https://github.com/Logius-standaarden/API-Design-Rules/pulls/"
+  },
+  "publishISODate": "2020-09-20T00:00:00.000Z",
+  "generatedSubtitle": "Vastgestelde versie 20 september 2020"
+}</script></head>
+
+<body class="h-entry"><div class="head">
+    <a class="logo" href="https://www.logius.nl/standaarden"><img alt="Logius" height="77" id="Logius" src="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/figure-logius.svg" width="44">
+  </a> <h1 id="title" class="title">Logius's testpage</h1>
+
+    <h2>
+      Logius Handreiking<br>
+      Vastgestelde versie
+      <time class="dt-published" datetime="2020-09-20">20 september 2020</time>
+    </h2>
+    <dl>
+      <dt>Deze versie:</dt><dd class="status">
+              <a class="u-url status" href="https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/def-hr-API-Design-Rules-20200920/">https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/def-hr-API-Design-Rules-20200920/</a>
+            </dd><dt>Laatst gepubliceerde versie:</dt><dd>
+              <a href="https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/">https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/</a>
+            </dd>
+      <dt>Laatste werkversie:</dt><dd><a href="https://logius-standaarden.github.io/API-Design-Rules/">https://logius-standaarden.github.io/API-Design-Rules/</a></dd>
+
+
+
+      <dt>Vorige versie</dt><dd><a href="https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/def-hr-API-Design-Rules-20181007/">https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/def-hr-API-Design-Rules-20181007/</a></dd>
+
+      <dt>Redacteurs:</dt>
+      <dd class="editor p-author h-card vcard">
+    <a class="ed_mailto u-email email p-name" href="mailto:api@digikoppeling">P H</a> (<a class="p-org org h-org" href="https://logius.nl/standaarden">Logius</a>)
+  </dd><dd class="editor p-author h-card vcard">
+    <a class="u-url url p-name fn" href="https://logius.nl/standaarden">P H</a>
+  </dd>
+
+      <dt>Auteur:</dt><dd class="editor p-author h-card vcard">
+    <a class="u-url url p-name fn" href="https://logius.nl/standaarden">P H</a>
+  </dd>
+      <dt>Doe mee:</dt><dd>
+    <a href="https://github.com/Logius-standaarden/API-Design-Rules/">GitHub Logius-standaarden/API-Design-Rules</a>
+  </dd><dd>
+    <a href="https://github.com/Logius-standaarden/API-Design-Rules/issues/">Dien een melding in</a>
+  </dd><dd>
+    <a href="https://github.com/Logius-standaarden/API-Design-Rules/commits/">Revisiehistorie</a>
+  </dd><dd>
+    <a href="https://github.com/Logius-standaarden/API-Design-Rules/pulls/">Pull requests</a>
+  </dd>
+    </dl>
+
+
+    <p lang="en">
+          This document is also available in these non-normative formats:
+          <a rel="alternate" href="https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.html">html</a> en <a rel="alternate" href="https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.pdf">pdf</a>
+        </p>
+    <p class="copyright" lang="en">
+          This document is licensed under a
+          <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/" class="subfoot">Creative Commons 0 Public Domain Dedication</a>.
+        </p>
+    <hr title="Separator for header">
+  </div>
+  <section id="abstract" class="introductory"><h2>Samenvatting</h2></section>
+
+  <section id="sotd" class="introductory"><h2>Status van dit document</h2>Dit is de definitieve versie van. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd.<p>De programmaraad van Geonovum heeft deze standaard goedgekeurd.</p></section>
+  <section class="introductory" id="overview">
+    <div class="header-wrapper"><h2 id="title">
+
+      Overview
+    </h2><a class="self-link" href="#title" aria-label="Permalink for this Section"></a></div>
+  </section>
+  <section class="informative" id="intro">
+    <div class="header-wrapper"><h2 id="x1-introduction"><bdi class="secno">1. </bdi>
+      Introduction
+    </h2><a class="self-link" href="#intro" aria-label="Permalink for Section 1."></a></div><p><em>Dit onderdeel is niet normatief.</em></p>
+    <p>
+      This section has a CSS class "<code>informative</code>", so it is
+      listed in the TOC. ReSpec will list this reference as non-normative
+      since this is an informative section [<cite><a class="bibref" data-link-type="biblio" href="#bib-dom" title="DOM Standard">DOM</a></cite>].
+    </p>
+
+  </section>
+  <section data-format="markdown" data-oninclude="include" id="doel-van-dit-document-en-leeswijzer"><div class="header-wrapper"><h2 id="x2-doel-van-dit-document-en-leeswijzer"><bdi class="secno">2. </bdi>Doel van dit document en leeswijzer</h2><a class="self-link" href="#doel-van-dit-document-en-leeswijzer" aria-label="Permalink for Section 2."></a></div>
+<h1>Inleiding</h1>
+<p>Digikoppeling is een MUST standaard voor <em class="rfc2119">MOET</em> <em class="rfc2119">ZOU</em> <em class="rfc2119">MOETEN</em> berichtuitwisseling [<cite><a class="bibref" data-link-type="biblio" href="#bib-html" title="HTML Standard">HTML</a></cite>] waarmee overheden op een veilige manier gegevens met elkaar kunnen uitwisselen.</p>
+<h1>Doel</h1>
+<p>De <em>Architectuur Digikoppeling</em> definieert de kaders – de gehanteerde principes en voorschriften - waarbinnen de berichtenuitwisseling op basis van Digikoppeling plaatsvindt en beschrijft de rol van intermediairs in de keten van berichtuitwisseling.</p>
+<h1>nog een toevoeging</h1>
+<p>lalalal
+issue: </p><div class="issue" id="issue-container-number-359"><div role="heading" class="issue-title marker" id="h-issue" aria-level="3"><a href="https://github.com/Logius-standaarden/API-Design-Rules/issues/359"><span class="issue-number">Issue 359</span></a></div><div class=""></div></div><p></p>
+<div class="header-wrapper"><h2 id="verantwoording">Verantwoording</h2><a class="self-link" href="#doel-van-dit-document-en-leeswijzer" aria-label="Permalink for this Section"></a></div>
+<p><figure id="fig-logius-logo"><img src="figure-logius.svg" alt="Logius" title="Logius Logo"><figcaption>Figuur <bdi class="figno">1</bdi> <span class="fig-title">Logius Logo</span></figcaption></figure></p>
+<p>De <em>Architectuur Digikoppeling</em> is tot stand gekomen in samenwerking met leden van het <code>Technisch Overleg Digikoppeling</code> en andere belanghebbenden.</p>
+<p>De <em>Architectuur Digikoppeling</em> is mede gebaseerd op:</p>
+<ul>
+<li><p>De <em>Digikoppeling-koppelvlakstandaarden.</em> Onderdelen uit deze documenten zijn hier samengevat om voor de lezer duidelijk te maken.</p>
+</li>
+<li><p>Het <em>hoofdstuk over de Digikoppeling</em> keten bevat elementen <em>uit De Architectuurschets</em>, de context voor gegevensuitwisseling binnen de overheid in algemene zin en voor Digikoppeling in het bijzonder. <em>De Architectuurschets</em> is een tijdelijk product; de essentiële elementen van <em>De Architectuurschets</em> worden opgenomen in het <em>NORA Katern Verbinden</em>.</p>
+</li>
+</ul>
+<p>De architectuur van Digikoppeling wordt regelmatig geactualiseerd om goed te blijven aansluiten op de behoeften van overheden en de wensen van de maatschappij.</p>
+<p><dfn id="dfn-logius" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">logius</dfn> en <dfn id="dfn-geonovum" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">geonovum</dfn></p>
+<div class="header-wrapper"><h2 id="digikoppeling-standaarden">Digikoppeling standaarden</h2><a class="self-link" href="#doel-van-dit-document-en-leeswijzer" aria-label="Permalink for this Section"></a></div>
+<p>De <em>Architectuur Digikoppeling</em> is onderdeel van de Digikoppeling-standaarden.
+De documentatie is als volgt opgebouwd:</p>
+<div class="header-wrapper"><h2 id="begrippen">Begrippen</h2><a class="self-link" href="#doel-van-dit-document-en-leeswijzer" aria-label="Permalink for this Section"></a></div>
+<p>Belangrijke begrippen en afkortingen zijn opgenomen in <em>Bijlage B: Begrippen</em>.</p>
+<div class="header-wrapper"><h2 id="leeswijzer">Leeswijzer</h2><a class="self-link" href="#doel-van-dit-document-en-leeswijzer" aria-label="Permalink for this Section"></a></div>
+<p>De Architectuur Digikoppeling is als volgt opgebouwd:</p>
+<table class="simple">
+<thead>
+<tr>
+<th>Hoofdstuk</th>
+<th>Titel</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hoofdstuk 2</td>
+<td>Wat is Digikoppeling?</td>
+</tr>
+<tr>
+<td>Hoofdstuk 3</td>
+<td>Digikoppeling architectuurprincipes</td>
+</tr>
+<tr>
+<td>Hoofdstuk 4</td>
+<td>De Digikoppeling-keten</td>
+</tr>
+<tr>
+<td>Hoofdstuk 5</td>
+<td>Digikoppeling-standaarden en Digikoppeling-voorschriften</td>
+</tr>
+<tr>
+<td>Hoofdstuk 6</td>
+<td>Digikoppeling-voorzieningen</td>
+</tr>
+<tr>
+<td>Hoofdstuk 7</td>
+<td>Digikoppeling use cases</td>
+</tr>
+<tr>
+<td>Hoofdstuk 8</td>
+<td>Implementatieaspecten</td>
+</tr>
+<tr>
+<td>Bijlage A</td>
+<td>Bronnen</td>
+</tr>
+<tr>
+<td>Bijlage B</td>
+<td>Begrippenlijst</td>
+</tr>
+<tr>
+<td>Bijlage C</td>
+<td>NORA-principes</td>
+</tr>
+<tr>
+<td>Bijlage D</td>
+<td>Eisen aan de standaard</td>
+</tr>
+</tbody></table>
+<p>Tabel 1: Leeswijzer</p>
+</section>
+
+
+  <section id="conformance"><div class="header-wrapper"><h2 id="x3-conformiteit"><bdi class="secno">3. </bdi>Conformiteit</h2><a class="self-link" href="#conformance" aria-label="Permalink for Section 3."></a></div><p>Naast onderdelen die als niet normatief gemarkeerd zijn, zijn ook alle diagrammen, voorbeelden, en noten in dit document niet normatief. Verder is alles in dit document normatief.</p><p>
+        De trefwoorden <em class="rfc2119">MOET</em>, <em class="rfc2119">MOETEN</em> en <em class="rfc2119">ZOU</em> in dit
+        document moeten worden geïnterpreteerd als in
+        <a href="https://tools.ietf.org/html/bcp14">BCP 14</a>
+        [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc2119" title="Key words for use in RFCs to Indicate Requirement Levels">RFC2119</a></cite>] [<cite><a class="bibref" data-link-type="biblio" href="#bib-rfc8174" title="Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words">RFC8174</a></cite>]
+        als, en alleen als deze in hoofdletters zijn weergegeven, zoals hier
+        getoond.
+      </p>
+
+  </section>
+
+  <section id="tof">
+
+  <div class="header-wrapper"><h2 id="x4-lijst-met-figuren"><bdi class="secno">4. </bdi>Lijst met figuren</h2><a class="self-link" href="#tof" aria-label="Permalink for Section 4."></a></div><ul class="tof">
+        <li class="tofline">
+    <a class="tocxref" href="#fig-logius-logo">Figuur <bdi class="figno">1</bdi> <span class="fig-title">Logius Logo</span></a>
+  </li>
+      </ul></section>
+
+  <nav id="toc"><h2 class="introductory" id="inhoudsopgave">Inhoudsopgave</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#abstract">Samenvatting</a></li><li class="tocline"><a class="tocxref" href="#sotd">Status van dit document</a></li><li class="tocline"><a class="tocxref" href="#title">
+
+      Overview
+    </a></li><li class="tocline"><a class="tocxref" href="#intro"><bdi class="secno">1. </bdi>
+      Introduction
+    </a></li><li class="tocline"><a class="tocxref" href="#doel-van-dit-document-en-leeswijzer"><bdi class="secno">2. </bdi>Doel van dit document en leeswijzer</a></li><li class="tocline"><a class="tocxref" href="#conformance"><bdi class="secno">3. </bdi>Conformiteit</a></li><li class="tocline"><a class="tocxref" href="#tof"><bdi class="secno">4. </bdi>Lijst met figuren</a></li><li class="tocline"><a class="tocxref" href="#index"><bdi class="secno">A. </bdi>Index</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#index-defined-here"><bdi class="secno">A.1 </bdi>Begrippen gedefinieerd door deze specificatie</a></li><li class="tocline"><a class="tocxref" href="#index-defined-elsewhere"><bdi class="secno">A.2 </bdi>Begrippen gedefinieerd door verwijzing</a></li></ol></li><li class="tocline"><a class="tocxref" href="#references"><bdi class="secno">B. </bdi>Referenties</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#normatieve-referenties"><bdi class="secno">B.1 </bdi>Normatieve referenties</a></li><li class="tocline"><a class="tocxref" href="#informatieve-referenties"><bdi class="secno">B.2 </bdi>Informatieve referenties</a></li></ol></li></ol></nav>
+
+  <section id="index" class="appendix"><div class="header-wrapper"><h2 id="a-index"><bdi class="secno">A. </bdi>Index</h2><a class="self-link" href="#index" aria-label="Permalink for Appendix A."></a></div>
+
+  <section id="index-defined-here">
+    <div class="header-wrapper"><h3 id="a-1-begrippen-gedefinieerd-door-deze-specificatie"><bdi class="secno">A.1 </bdi>Begrippen gedefinieerd door deze specificatie</h3><a class="self-link" href="#index-defined-here" aria-label="Permalink for Appendix A.1"></a></div>
+    <ul class="index">
+    <li>
+      <a class="index-term" href="#dfn-geonovum">geonovum</a>
+    <span class="print-only">§2.</span></li><li>
+      <a class="index-term" href="#dfn-logius">logius</a>
+    <span class="print-only">§2.</span></li>
+  </ul>
+  </section><section id="index-defined-elsewhere">
+    <div class="header-wrapper"><h3 id="a-2-begrippen-gedefinieerd-door-verwijzing"><bdi class="secno">A.2 </bdi>Begrippen gedefinieerd door verwijzing</h3><a class="self-link" href="#index-defined-elsewhere" aria-label="Permalink for Appendix A.2"></a></div>
+    <ul class="index">
+
+  </ul>
+  </section></section>
+
+
+
+
+<section id="references" class="appendix"><div class="header-wrapper"><h2 id="b-referenties"><bdi class="secno">B. </bdi>Referenties</h2><a class="self-link" href="#references" aria-label="Permalink for Appendix B."></a></div><section id="normatieve-referenties">
+    <div class="header-wrapper"><h3 id="b-1-normatieve-referenties"><bdi class="secno">B.1 </bdi>Normatieve referenties</h3><a class="self-link" href="#normatieve-referenties" aria-label="Permalink for Appendix B.1"></a></div>
+    <dl class="bibliography"><dt id="bib-html">[HTML]</dt><dd>
+      <a href="https://html.spec.whatwg.org/multipage/"><cite>HTML Standard</cite></a>. Anne van Kesteren; Domenic Denicola; Ian Hickson; Philip Jägenstedt; Simon Pieters.  WHATWG. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
+    </dd><dt id="bib-rfc2119">[RFC2119]</dt><dd>
+      <a href="https://www.rfc-editor.org/rfc/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. S. Bradner.  IETF. March 1997. Best Current Practice. URL: <a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>
+    </dd><dt id="bib-rfc8174">[RFC8174]</dt><dd>
+      <a href="https://www.rfc-editor.org/rfc/rfc8174"><cite>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</cite></a>. B. Leiba.  IETF. May 2017. Best Current Practice. URL: <a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>
+    </dd></dl>
+  </section><section id="informatieve-referenties">
+    <div class="header-wrapper"><h3 id="b-2-informatieve-referenties"><bdi class="secno">B.2 </bdi>Informatieve referenties</h3><a class="self-link" href="#informatieve-referenties" aria-label="Permalink for Appendix B.2"></a></div>
+    <dl class="bibliography"><dt id="bib-dom">[DOM]</dt><dd>
+      <a href="https://dom.spec.whatwg.org/"><cite>DOM Standard</cite></a>. Anne van Kesteren.  WHATWG. Living Standard. URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
+    </dd></dl>
+  </section></section><p role="navigation" id="back-to-top">
+    <a href="#title"><abbr title="Back to Top">↑</abbr></a>
+  </p><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-logius" aria-label="Links in this document to definition: logius">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-logius" aria-label="Permalink for definition: logius. Activate to close this dialog.">Permalink</a>
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-geonovum" aria-label="Links in this document to definition: geonovum">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-geonovum" aria-label="Permalink for definition: geonovum. Activate to close this dialog.">Permalink</a>
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><script id="respec-dfn-panel">// @ts-check
+if (document.respec) {
+  document.respec.ready.then(setupPanel);
+} else {
+  setupPanel();
+}
+
+function setupPanel() {
+  const listener = panelListener();
+  document.body.addEventListener("keydown", listener);
+  document.body.addEventListener("click", listener);
+}
+
+function panelListener() {
+  /** @type {HTMLElement} */
+  let panel = null;
+  return event => {
+    const { target, type } = event;
+
+    if (!(target instanceof HTMLElement)) return;
+
+    // For keys, we only care about Enter key to activate the panel
+    // otherwise it's activated via a click.
+    if (type === "keydown" && event.key !== "Enter") return;
+
+    const action = deriveAction(event);
+
+    switch (action) {
+      case "show": {
+        hidePanel(panel);
+        /** @type {HTMLElement} */
+        const dfn = target.closest("dfn, .index-term");
+        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
+        const coords = deriveCoordinates(event);
+        displayPanel(dfn, panel, coords);
+        break;
+      }
+      case "dock": {
+        panel.style.left = null;
+        panel.style.top = null;
+        panel.classList.add("docked");
+        break;
+      }
+      case "hide": {
+        hidePanel(panel);
+        panel = null;
+        break;
+      }
+    }
+  };
+}
+
+/**
+ * @param {MouseEvent|KeyboardEvent} event
+ */
+function deriveCoordinates(event) {
+  const target = /** @type HTMLElement */ (event.target);
+
+  // We prevent synthetic AT clicks from putting
+  // the dialog in a weird place. The AT events sometimes
+  // lack coordinates, so they have clientX/Y = 0
+  const rect = target.getBoundingClientRect();
+  if (
+    event instanceof MouseEvent &&
+    event.clientX >= rect.left &&
+    event.clientY >= rect.top
+  ) {
+    // The event probably happened inside the bounding rect...
+    return { x: event.clientX, y: event.clientY };
+  }
+
+  // Offset to the middle of the element
+  const x = rect.x + rect.width / 2;
+  // Placed at the bottom of the element
+  const y = rect.y + rect.height;
+  return { x, y };
+}
+
+/**
+ * @param {Event} event
+ */
+function deriveAction(event) {
+  const target = /** @type {HTMLElement} */ (event.target);
+  const hitALink = !!target.closest("a");
+  if (target.closest("dfn:not([data-cite]), .index-term")) {
+    return hitALink ? "none" : "show";
+  }
+  if (target.closest(".dfn-panel")) {
+    if (hitALink) {
+      return target.classList.contains("self-link") ? "hide" : "dock";
+    }
+    const panel = target.closest(".dfn-panel");
+    return panel.classList.contains("docked") ? "hide" : "none";
+  }
+  if (document.querySelector(".dfn-panel:not([hidden])")) {
+    return "hide";
+  }
+  return "none";
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {HTMLElement} panel
+ * @param {{ x: number, y: number }} clickPosition
+ */
+function displayPanel(dfn, panel, { x, y }) {
+  panel.hidden = false;
+  // distance (px) between edge of panel and the pointing triangle (caret)
+  const MARGIN = 20;
+
+  const dfnRects = dfn.getClientRects();
+  // Find the `top` offset when the `dfn` can be spread across multiple lines
+  let closestTop = 0;
+  let minDiff = Infinity;
+  for (const rect of dfnRects) {
+    const { top, bottom } = rect;
+    const diffFromClickY = Math.abs((top + bottom) / 2 - y);
+    if (diffFromClickY < minDiff) {
+      minDiff = diffFromClickY;
+      closestTop = top;
+    }
+  }
+
+  const top = window.scrollY + closestTop + dfnRects[0].height;
+  const left = x - MARGIN;
+  panel.style.left = `${left}px`;
+  panel.style.top = `${top}px`;
+
+  // Find if the panel is flowing out of the window
+  const panelRect = panel.getBoundingClientRect();
+  const SCREEN_WIDTH = Math.min(window.innerWidth, window.screen.width);
+  if (panelRect.right > SCREEN_WIDTH) {
+    const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
+    const newCaretOffset = left - newLeft;
+    panel.style.left = `${newLeft}px`;
+    /** @type {HTMLElement} */
+    const caret = panel.querySelector(".caret");
+    caret.style.left = `${newCaretOffset}px`;
+  }
+
+  // As it's a dialog, we trap focus.
+  // TODO: when <dialog> becomes a implemented, we should really
+  // use that.
+  trapFocus(panel, dfn);
+}
+
+/**
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function trapFocus(panel, dfn) {
+  /** @type NodeListOf<HTMLAnchorElement> elements */
+  const anchors = panel.querySelectorAll("a[href]");
+  // No need to trap focus
+  if (!anchors.length) return;
+
+  // Move focus to first anchor element
+  const first = anchors.item(0);
+  first.focus();
+
+  const trapListener = createTrapListener(anchors, panel, dfn);
+  panel.addEventListener("keydown", trapListener);
+
+  // Hiding the panel releases the trap
+  const mo = new MutationObserver(records => {
+    const [record] = records;
+    const target = /** @type HTMLElement */ (record.target);
+    if (target.hidden) {
+      panel.removeEventListener("keydown", trapListener);
+      mo.disconnect();
+    }
+  });
+  mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+}
+
+/**
+ *
+ * @param {NodeListOf<HTMLAnchorElement>} anchors
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function createTrapListener(anchors, panel, dfn) {
+  const lastIndex = anchors.length - 1;
+  let currentIndex = 0;
+  return event => {
+    switch (event.key) {
+      // Hitting "Tab" traps us in a nice loop around elements.
+      case "Tab": {
+        event.preventDefault();
+        currentIndex += event.shiftKey ? -1 : +1;
+        if (currentIndex < 0) {
+          currentIndex = lastIndex;
+        } else if (currentIndex > lastIndex) {
+          currentIndex = 0;
+        }
+        anchors.item(currentIndex).focus();
+        break;
+      }
+
+      // Hitting "Enter" on an anchor releases the trap.
+      case "Enter":
+        hidePanel(panel);
+        break;
+
+      // Hitting "Escape" returns focus to dfn.
+      case "Escape":
+        hidePanel(panel);
+        dfn.focus();
+        return;
+    }
+  };
+}
+
+/** @param {HTMLElement} panel */
+function hidePanel(panel) {
+  if (!panel) return;
+  panel.hidden = true;
+  panel.classList.remove("docked");
+}
+</script><div class="sidelabel" style="background-color: #154273;">Logius - Definitieve versie</div><script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script></body></html>

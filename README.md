@@ -13,3 +13,7 @@ Om schrijvers op weg te helpen is er een [template](https://github.com/Logius-st
 ## Aanpassen
 
 Wie wil sleutelen aan ReSpec wordt aangeraden de [Developers Guide](https://github.com/Logius-standaarden/respec/wiki/Developers-Guide) te raadplegen. Vragen of opmerkingen zijn welkom in de [issues](https://github.com/Logius-standaarden/respec/issues).
+
+## Test runnen
+
+Om mogelijke changes in de html te controleren na een update run `node test/test-html-build` Dit maakt een snapshot van een html pagina en vergelijkt hem met het origineel. Als er veranderingen zijn, geeft hij aan wat en waar.
