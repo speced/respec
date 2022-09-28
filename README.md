@@ -16,4 +16,5 @@ Wie wil sleutelen aan ReSpec wordt aangeraden de [Developers Guide](https://gith
 
 ## Test runnen
 
-Om mogelijke changes in de html te controleren na een update run `node test/test-html-build` Dit maakt een snapshot van een html pagina en vergelijkt hem met het origineel. Als er veranderingen zijn, geeft hij aan wat en waar.
+Om mogelijke changes in de html te controleren na een update run `node test/test-html-build`. Dit maakt een snapshot van een html pagina en vergelijkt hem met het origineel. Als er veranderingen zijn, geeft hij aan wat en waar.
+Voeg de `--createLog` vlag toe aan het commando om de veranderingen in een log file te printen ipv in de CMD prompt.
