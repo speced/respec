@@ -43,8 +43,7 @@ export default (conf, options) => {
       <time class="dt-published" datetime="${conf.dashDate}"
         >${conf.publishHumanDate}</time
       >${conf.modificationDate
-        ? html`, ${l10n.edited_in_place}${" "}
-          ${inPlaceModificationDate(conf.modificationDate)}`
+        ? html`, ${l10n.edited_in_place}${" "} $conf.modificationDate`
         : ""}
     </h2>
     <dl>
