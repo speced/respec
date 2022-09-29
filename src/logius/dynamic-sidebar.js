@@ -1,7 +1,6 @@
 import css from "../styles/side-label.css.js";
 import { getIntlData } from "../core/utils.js";
 
-
 export async function run(conf) {
   await createSideLabel(conf);
 }
