@@ -9,13 +9,12 @@ import {
   InsensitiveStringSet,
   docLink,
   getIntlData,
+  getIntlDataForKey,
   norm,
-  resolveLanguageAlias,
   showError,
   showWarning,
 } from "../../core/utils.js";
 import { W3CNotes, recTrackStatus } from "../headers.js";
-import { lang } from "../../core/l10n.js";
 
 const ruleName = "required-sections";
 export const name = "w3c/linter-rules/required-sections";
@@ -59,8 +58,10 @@ export function run(conf) {
   }
 
   // We can't check for headers unless we also have a translation
-  if (!localizationStrings[resolveLanguageAlias(lang)]) {
-    console.warn(`Missing localization strings for ${lang}.`);
+  if (!getIntlDataForKey(localizationStrings, "privacy_considerations")) {
+    const msg = `Cannot check for required sections as translations are not available.`;
+    const hint = `File an issue to add translations or use a supported language.`;
+    showWarning(msg, name, { hint });
     return;
   }
 
