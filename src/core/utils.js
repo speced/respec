@@ -5,6 +5,7 @@
 import { lang as docLang } from "./l10n.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
+import { reindent } from "./reindent.js";
 export const name = "core/utils";
 
 const dashes = /-/g;
@@ -27,6 +28,17 @@ export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   year: "numeric",
   month: "2-digit",
   day: "2-digit",
+});
+
+// We use an "Australian Date" because it omits the ","
+// after the day of the month, which is required by the W3C.
+const dateLang =
+  docLang === "en" || docLang.startsWith("en-") ? "en-AU" : docLang;
+export const W3CDate = new Intl.DateTimeFormat(dateLang, {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "long",
+  day: dateLang === "en-AU" ? "2-digit" : "numeric",
 });
 
 /** CSS selector for matching elements that are non-normative */
@@ -164,12 +176,13 @@ export function norm(str) {
 /**
  * @param {string} lang
  */
-function resolveLanguageAlias(lang) {
+export function resolveLanguageAlias(lang) {
+  const lCaseLang = lang.toLowerCase();
   const aliases = {
     "zh-hans": "zh",
     "zh-cn": "zh",
   };
-  return aliases[lang] || lang;
+  return aliases[lCaseLang] || lCaseLang;
 }
 
 /**
@@ -178,7 +191,7 @@ function resolveLanguageAlias(lang) {
  * @returns {T[keyof T]}
  */
 export function getIntlData(localizationStrings, lang = docLang) {
-  lang = resolveLanguageAlias(lang.toLowerCase());
+  lang = resolveLanguageAlias(lang);
   // Proxy return type is a known bug:
   // https://github.com/Microsoft/TypeScript/issues/20846
   // @ts-ignore
@@ -203,50 +216,6 @@ export function getIntlData(localizationStrings, lang = docLang) {
  */
 export function concatDate(date, sep = "") {
   return ISODate.format(date).replace(dashes, sep);
-}
-
-/**
- * Formats a date to "yyyy-mm-dd".
- * @param {Date} date
- */
-export function toShortIsoDate(date) {
-  return ISODate.format(date);
-}
-
-/**
- * Given either a Date object or a date in `YYYY-MM-DD` format, return a
- * human-formatted date suitable for use in the specification.
- * @param {Date | string} [date]
- */
-export function humanDate(
-  date = new Date(),
-  lang = document.documentElement.lang || "en"
-) {
-  if (!(date instanceof Date)) date = new Date(date);
-  const langs = [lang, "en"];
-  const day = date.toLocaleString(langs, {
-    day: "2-digit",
-    timeZone: "UTC",
-  });
-  const month = date.toLocaleString(langs, {
-    month: "long",
-    timeZone: "UTC",
-  });
-  const year = date.toLocaleString(langs, {
-    year: "numeric",
-    timeZone: "UTC",
-  });
-  // date month year
-  return `${day} ${month} ${year}`;
-}
-
-/**
- * Given either a Date object or a date in `YYYY-MM-DD` format, return an ISO
- * formatted date suitable for use in a xsd:datetime item
- * @param {Date | string} date
- */
-export function isoDate(date) {
-  return (date instanceof Date ? date : new Date(date)).toISOString();
 }
 
 /**
@@ -655,6 +624,30 @@ export function wrapInner(outer, wrapper) {
 }
 
 /**
+ * @param {Element} element
+ */
+export function getPreviousSections(element) {
+  /** @type {Element[]} */
+  const sections = [];
+  for (const previous of iteratePreviousElements(element)) {
+    if (previous.localName === "section") {
+      sections.push(previous);
+    }
+  }
+  return sections;
+}
+
+/**
+ * @param {Element} element
+ */
+function* iteratePreviousElements(element) {
+  let previous = element;
+  while (previous.previousElementSibling) {
+    previous = previous.previousElementSibling;
+    yield previous;
+  }
+}
+/**
  * Applies the selector for all its ancestors.
  * @param {Element} element
  * @param {string} selector
@@ -943,7 +936,7 @@ function addQuotes(item) {
  * @param {string[]} keys
  */
 export function docLink(strings, ...keys) {
-  return strings
+  const linkifiedStr = strings
     .map((s, i) => {
       const key = keys[i];
       if (!key) {
@@ -962,4 +955,5 @@ export function docLink(strings, ...keys) {
       return `${s}[\`${linkingText}\`](https://respec.org/docs/#${linkingText})`;
     })
     .join("");
+  return reindent(linkifiedStr);
 }

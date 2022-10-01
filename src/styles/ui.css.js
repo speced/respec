@@ -25,13 +25,15 @@ export default css`
   z-index: 9000;
 }
 
+
 #respec-pill,
 .respec-info-button {
+  height: 2.4em;
   background: #fff;
-  height: 2.5em;
   color: rgb(120, 120, 120);
   border: 1px solid #ccc;
   box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
+  padding: 0.2em 0em;
 }
 
 .respec-info-button {
@@ -40,6 +42,7 @@ export default css`
   border-radius: 2em;
   margin-right: 1em;
   min-width: 3.5em;
+  will-change: opacity;
 }
 
 .respec-info-button:focus,
@@ -48,23 +51,61 @@ export default css`
   transition: opacity 0.2s;
 }
 
-#respec-pill:disabled {
-  font-size: 2.8px;
-  text-indent: -9999em;
-  border-top: 1.1em solid rgba(40, 40, 40, 0.2);
-  border-right: 1.1em solid rgba(40, 40, 40, 0.2);
-  border-bottom: 1.1em solid rgba(40, 40, 40, 0.2);
-  border-left: 1.1em solid #ffffff;
-  transform: translateZ(0);
-  animation: respec-spin 0.5s infinite linear;
-  box-shadow: none;
+#respec-pill {
+  width: 4.8em;
 }
 
-#respec-pill:disabled,
-#respec-pill:disabled:after {
+#respec-pill:not(:disabled) {
+  animation: respec-fadein 0.6s ease-in-out;
+}
+
+@keyframes respec-fadein {
+  from {
+    margin-top: -1.2em;
+    border-radius: 50%;
+    border: 0.2em solid rgba(100, 100, 100, 0.5);
+    box-shadow: none;
+    height: 4.8em;
+  }
+  to {
+    margin-top: 0;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
+    height: 2.4em;
+  }
+}
+
+#respec-pill:disabled {
+  margin-top: -1.2em;
+  position: relative;
+  border: none;
+  box-shadow: none;
   border-radius: 50%;
-  width: 10em;
-  height: 10em;
+  width: 4.8em;
+  height: 4.8em;
+  padding: 0;
+}
+
+#respec-pill:disabled::after {
+  position: absolute;
+  content: '';
+  inset: -0.2em;
+  border-radius: 50%;
+  border: 0.2em solid rgba(100, 100, 100, 0.5);
+  border-left: 0.2em solid transparent;
+  animation: respec-spin 0.5s infinite linear;
+}
+
+@media (prefers-reduced-motion) {
+  #respec-pill:not(:disabled) {
+    animation: none;
+  }
+
+  #respec-pill:disabled::after {
+    animation: none;
+    border-left: 0.2em solid rgba(100, 100, 100, 0.5);
+  }
 }
 
 @keyframes respec-spin {
@@ -173,28 +214,37 @@ export default css`
 .respec-error-list {
   margin: 0;
   padding: 0;
-  list-style: none;
   font-family: sans-serif;
-  background-color: rgb(255, 251, 230);
   font-size: 0.85em;
 }
 
-.respec-warning-list > li,
-.respec-error-list > li {
-  padding: 0.4em 0.7em;
+.respec-warning-list {
+  background-color: rgb(255, 251, 230);
 }
 
-.respec-warning-list > li::before {
-  content: "⚠️";
-  padding-right: 0.5em;
+:is(.respec-warning-list,.respec-error-list) > li {
+  list-style-type: none;
+  margin: 0;
+  padding: .5em 0;
+  padding-left: 2em;
+  padding-right: .5em;
 }
-.respec-warning-list p,
-.respec-error-list p {
+
+:is(.respec-warning-list,.respec-error-list) > li + li {
+  margin-top: 0.5rem;
+}
+
+:is(.respec-warning-list,.respec-error-list) > li:before {
+  position: absolute;
+  left: .4em;
+}
+
+:is(.respec-warning-list,.respec-error-list) p {
   padding: 0;
   margin: 0;
 }
 
-.respec-warning-list li {
+.respec-warning-list > li {
   color: rgb(92, 59, 0);
   border-bottom: thin solid rgb(255, 245, 194);
 }
@@ -204,31 +254,20 @@ export default css`
   background-color: rgb(255, 240, 240);
 }
 
-.respec-error-list li::before {
-  content: "💥";
-  padding-right: 0.5em;
+.respec-warning-list > li::before {
+  content: "⚠️";
 }
 
-.respec-error-list li {
-  padding: 0.4em 0.7em;
+.respec-error-list > li::before {
+  content: "💥";
+}
+
+.respec-error-list > li {
   color: rgb(92, 59, 0);
   border-bottom: thin solid rgb(255, 215, 215);
 }
 
-.respec-error-list li > p {
-  margin: 0;
-  padding: 0;
-  display: inline-block;
-}
-
-.respec-error-list li > p:first-child,
-.respec-warning-list li > p:first-child {
-  display: inline;
-}
-
-.respec-warning-list > li li,
-.respec-error-list > li li {
-  margin: 0;
+:is(.respec-warning-list,.respec-error-list) > li li {
   list-style: disc;
 }
 
@@ -257,23 +296,19 @@ export default css`
   display: block;
   position: fixed;
   z-index: 11000;
-  margin: auto;
   top: 10%;
   background: #fff;
   border: 5px solid #666;
   min-width: 20%;
-  width: 79%;
   padding: 0;
   max-height: 80%;
   overflow-y: auto;
   margin: 0 -0.5cm;
+  left: 20%;
+  max-width: 75%;
+  min-width: 60%;
 }
 
-@media screen and (min-width: 78em) {
-  .respec-modal {
-    width: 62%;
-  }
-}
 
 .respec-modal h3 {
   margin: 0;
@@ -289,13 +324,8 @@ export default css`
   font-size: 1em;
 }
 
-.respec-modal .inside div p {
-  padding-left: 1cm;
-}
-
 #respec-menu button.respec-option {
   background: white;
-  padding: 0 0.2cm;
   border: none;
   width: 100%;
   text-align: left;
@@ -303,8 +333,7 @@ export default css`
   padding: 1.2em 1.2em;
 }
 
-#respec-menu button.respec-option:hover,
-#respec-menu button:focus {
+#respec-menu button.respec-option:hover {
   background-color: #eeeeee;
 }
 
@@ -312,9 +341,13 @@ export default css`
   padding-right: 0.5em;
 }
 
+#respec-ui button.respec-option:first-child {
+  margin-top: 0;
+}
 #respec-ui button.respec-option:last-child {
   border: none;
   border-radius: inherit;
+  margin-bottom: 0;
 }
 
 .respec-button-copy-paste {
@@ -358,5 +391,16 @@ export default css`
   float: right;
   margin: 0 0.5em 0.5em;
   border-bottom-width: 1px;
+}
+
+p:is(.respec-hint,.respec-occurrences) {
+  display: block;
+  margin-top: 0.5em;
+}
+
+.respec-plugin {
+  text-align: right;
+  color: rgb(120, 120, 120, .5);
+  font-size: 0.6em;
 }
 `;

@@ -1,9 +1,10 @@
 // @ts-check
-import { getIntlData, humanDate } from "../../core/utils.js";
+import { ISODate, W3CDate, getIntlData } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
+import { sub } from "../../core/pubsubhub.js";
 
 const localizationStrings = {
   en: {
@@ -24,6 +25,11 @@ const localizationStrings = {
     latest_recommendation: "Latest Recommendation:",
     message_topic: "… message topic …",
     more_details_about_this_doc: "More details about this document",
+    multiple_alternates(plural) {
+      return `This document is also available in ${
+        plural ? "these non-normative formats" : "this non-normative format"
+      }:`;
+    },
     prev_editor_draft: "Previous editor's draft:",
     prev_recommendation: "Previous Recommendation:",
     prev_version: "Previous version:",
@@ -47,32 +53,49 @@ const localizationStrings = {
   zh: {
     author: "作者：",
     authors: "作者：",
+    commit_history: "Git提交历史",
     editor: "编辑：",
     editors: "编辑：",
+    feedback: "反馈：",
     former_editor: "原编辑：",
     former_editors: "原编辑：",
+    history: "历史：",
+    implementation_report: "实现报告：",
     latest_editors_draft: "最新编辑草稿：",
     latest_published_version: "最新发布版本：",
-    this_version: "本版本：",
-    test_suite: "测试套件：",
-    implementation_report: "实现报告：",
-    prev_editor_draft: "上一版编辑草稿：",
-    prev_version: "上一版：",
-    prev_recommendation: "上一版正式推荐标准：",
     latest_recommendation: "最新发布的正式推荐标准：",
+    message_topic: "… 邮件主题 …",
+    prev_editor_draft: "上一版编辑草稿：",
+    prev_recommendation: "上一版正式推荐标准：",
+    prev_version: "上一版：",
+    test_suite: "测试套件：",
+    this_version: "本版本：",
   },
   ja: {
+    archives: "アーカイブ",
     author: "著者：",
     authors: "著者：",
+    commit_history: "更新履歴",
+    edited_in_place: "改版なく更新",
     editor: "編者：",
     editors: "編者：",
+    feedback: "フィードバック:",
     former_editor: "以前の版の編者：",
     former_editors: "以前の版の編者：",
+    history: "履歴:",
+    implementation_report: "実装レポート：",
     latest_editors_draft: "最新の編集用草案：",
     latest_published_version: "最新バージョン：",
-    this_version: "このバージョン：",
+    latest_recommendation: "最新の勧告版:",
+    message_topic: "… メール件名 …",
+    more_details_about_this_doc: "この文書についてのより詳細",
+    prev_editor_draft: "前回の編集用草案:",
+    prev_recommendation: "前回の勧告版:",
+    prev_version: "前回のバージョン:",
+    publication_history: "公表履歴",
     test_suite: "テストスイート：",
-    implementation_report: "実装レポート：",
+    this_version: "このバージョン：",
+    with_subject_line: "次の件名で",
   },
   nl: {
     author: "Auteur:",
@@ -111,21 +134,40 @@ const localizationStrings = {
     your_topic_here: "TU SUJETO AQUÍ",
   },
   de: {
+    archives: "Archiv",
     author: "Autor/in:",
     authors: "Autor/innen:",
+    commit_history: "Commit-Historie",
+    edited_in_place: "zuletzt geändert am",
     editor: "Redaktion:",
     editors: "Redaktion:",
+    feedback: "Feedback:",
     former_editor: "Frühere Mitwirkende:",
     former_editors: "Frühere Mitwirkende:",
+    history: "Verlauf:",
+    implementation_report: "Umsetzungsbericht:",
     latest_editors_draft: "Letzter Entwurf:",
     latest_published_version: "Letzte publizierte Fassung:",
+    latest_recommendation: "Aktuellste Empfehlung:",
+    more_details_about_this_doc: "Mehr Informationen über dieses Dokument",
+    multiple_alternates(plural) {
+      return `Dieses Dokument ist ebenfalls in ${
+        plural
+          ? "diesen nicht-normativen Formaten verfügbar"
+          : "diesem nicht-normativen Format verfügbar"
+      }:`;
+    },
+    prev_editor_draft: "Vorheriger Entwurf:",
+    prev_recommendation: "Vorherige Empfehlung:",
+    prev_version: "Vorherige Version:",
+    publication_history: "Veröffentlichungsverlauf",
+    test_suite: "Testumgebung:",
     this_version: "Diese Fassung:",
   },
 };
-
 export const l10n = getIntlData(localizationStrings);
 
-function getSpecSubTitleElem(conf) {
+export function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
 
   if (specSubTitleElem && specSubTitleElem.parentElement) {
@@ -143,30 +185,39 @@ function getSpecSubTitleElem(conf) {
 }
 
 export default (conf, options) => {
+  /**
+   * After export, we let fixup.js handle the <details>.
+   */
+  sub("beforesave", doc => {
+    const details = doc.querySelector(".head details");
+    details.open = true;
+  });
   return html`<div class="head">
-    ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
-    ${getSpecSubTitleElem(conf)}
+    ${conf.logos.length
+      ? html`<p class="logos">${conf.logos.map(showLogo)}</p>`
+      : ""}
+    ${document.querySelector("h1#title")} ${getSpecSubTitleElem(conf)}
     <p id="w3c-state">${renderSpecTitle(conf)}</p>
-    <details open="">
+    <details open="${localStorage.getItem("tr-metadata") || "true"}">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
-        ${(conf.isTagFinding && !conf.isTagEditorFinding) || !conf.isNoTrack
-          ? html`
-              <dt>${l10n.this_version}</dt>
+        ${conf.thisVersion
+          ? html`<dt>${l10n.this_version}</dt>
               <dd>
                 <a class="u-url" href="${conf.thisVersion}"
                   >${conf.thisVersion}</a
                 >
-              </dd>
-              <dt>${l10n.latest_published_version}</dt>
+              </dd>`
+          : ""}
+        ${"latestVersion" in conf // latestVersion can be falsy
+          ? html`<dt>${l10n.latest_published_version}</dt>
               <dd>
                 ${conf.latestVersion
                   ? html`<a href="${conf.latestVersion}"
                       >${conf.latestVersion}</a
                     >`
                   : "none"}
-              </dd>
-            `
+              </dd>`
           : ""}
         ${conf.edDraftURI
           ? html`
@@ -174,7 +225,21 @@ export default (conf, options) => {
               <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
             `
           : ""}
-        ${renderHistory(conf)}
+        ${conf.historyURI || conf.github
+          ? html`<dt>${l10n.history}</dt>
+              ${conf.historyURI
+                ? html`<dd>
+                    <a href="${conf.historyURI}">${conf.historyURI}</a>
+                  </dd>`
+                : ""}
+              ${conf.github
+                ? html`<dd>
+                    <a href="${conf.github.commitHistoryURL}"
+                      >${l10n.commit_history}</a
+                    >
+                  </dd>`
+                : ""}`
+          : ""}
         ${conf.testSuiteURI
           ? html`
               <dt>${l10n.test_suite}</dt>
@@ -191,7 +256,7 @@ export default (conf, options) => {
               </dd>
             `
           : ""}
-        ${conf.isED && conf.prevED
+        ${conf.prevED
           ? html`
               <dt>${l10n.prev_editor_draft}</dt>
               <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
@@ -214,25 +279,32 @@ export default (conf, options) => {
               <dt>${l10n.latest_recommendation}</dt>
               <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
             `}
-        <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
-        ${showPeople(conf, "editors")}
-        ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
+        ${conf.editors.length
+          ? html`
+              <dt>${conf.editors.length > 1 ? l10n.editors : l10n.editor}</dt>
+              ${showPeople(conf, "editors")}
+            `
+          : ""}
+        ${conf.formerEditors.length
           ? html`
               <dt>
-                ${conf.multipleFormerEditors
+                ${conf.formerEditors.length > 1
                   ? l10n.former_editors
                   : l10n.former_editor}
               </dt>
               ${showPeople(conf, "formerEditors")}
             `
           : ""}
-        ${conf.authors
+        ${conf.authors.length
           ? html`
-              <dt>${conf.multipleAuthors ? l10n.authors : l10n.author}</dt>
+              <dt>${conf.authors.length > 1 ? l10n.authors : l10n.author}</dt>
               ${showPeople(conf, "authors")}
             `
           : ""}
-        ${renderFeedback(conf)}
+        ${conf.github || conf.wgPublicList
+          ? html`<dt>${l10n.feedback}</dt>
+              ${renderFeedback(conf)}`
+          : ""}
         ${conf.errata
           ? html`<dt>Errata:</dt>
               <dd><a href="${conf.errata}">Errata exists</a>.</dd>`
@@ -252,9 +324,7 @@ export default (conf, options) => {
       : ""}
     ${conf.alternateFormats
       ? html`<p>
-          ${options.multipleAlternates
-            ? "This document is also available in these non-normative formats:"
-            : "This document is also available in this non-normative format:"}
+          ${l10n.multiple_alternates(options.multipleAlternates)}
           ${options.alternatesHTML}
         </p>`
       : ""}
@@ -263,10 +333,8 @@ export default (conf, options) => {
   </div>`;
 };
 
-function renderFeedback(conf) {
-  if (!conf.github && !conf.wgPublicList) return;
+export function renderFeedback(conf) {
   const definitions = [];
-
   // Github feedback...
   if (conf.github) {
     const { repoURL, issuesURL, newIssuesURL, pullsURL, fullName } =
@@ -311,30 +379,7 @@ function renderFeedback(conf) {
       html`<dd>${mailingListLink} ${emailSubject} ${archiveLink}</dd>`
     );
   }
-  return html`<dt>${l10n.feedback}</dt>
-    ${definitions}`;
-}
-
-function renderHistory(conf) {
-  if (!conf.historyURI && !conf.github) return;
-  const ddElements = [];
-  if (conf.historyURI) {
-    const dd = html`<dd>
-      <a href="${conf.historyURI}">${conf.historyURI}</a>
-    </dd>`;
-    ddElements.push(dd);
-  }
-  if (conf.github) {
-    const dd = html`
-      <dd>
-        <a href="${conf.github.commitHistoryURL}">${l10n.commit_history}</a>
-      </dd>
-    `;
-    ddElements.push(dd);
-  }
-
-  return html`<dt>${l10n.history}</dt>
-    ${ddElements}`;
+  return definitions;
 }
 
 function renderSpecTitle(conf) {
@@ -344,25 +389,17 @@ function renderSpecTitle(conf) {
         >W3C ${specType}</a
       >`
     : html`${specType}`;
-
   return html`${preamble}${" "}
     <time class="dt-published" datetime="${conf.dashDate}"
-      >${conf.publishHumanDate}</time
+      >${W3CDate.format(conf.publishDate)}</time
     >${conf.modificationDate
       ? html`, ${l10n.edited_in_place}${" "}
-        ${inPlaceModificationDate(conf.modificationDate)}`
+          <time
+            class="dt-modified"
+            datetime="${ISODate.format(conf.modificationDate)}"
+            >${W3CDate.format(conf.modificationDate)}</time
+          >`
       : ""}`;
-}
-
-/**
- * @param {string} date document in-place edit date as YYYY-MM-DD
- * @returns {HTMLTimeElement}
- */
-function inPlaceModificationDate(date) {
-  const modificationHumanDate = humanDate(new Date(date));
-  return html`<time class="dt-modified" datetime="${date}"
-    >${modificationHumanDate}</time
-  >`;
 }
 
 /**

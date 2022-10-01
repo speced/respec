@@ -56,6 +56,34 @@ export function makeRSDoc(opts, src, style = "") {
     iframes.push(ifr);
   });
 }
+/**
+ * Used to get errors and warnings from a spec.
+ */
+class UIMessageFilters {
+  /**
+   * @param {"warnings" | "errors"} type
+   */
+  constructor(type) {
+    this.cache = new Map();
+    this.type = type;
+  }
+  /**
+   * @param {string} pluginName
+   * @returns (Document) => Array<RespecError>
+   */
+  filter(pluginName) {
+    if (this.cache.has(pluginName)) {
+      return this.cache.get(pluginName);
+    }
+    const filter = doc => {
+      return doc.respec[this.type].filter(err => err.plugin === pluginName);
+    };
+    this.cache.set(pluginName, filter);
+    return filter;
+  }
+}
+export const errorFilters = new UIMessageFilters("errors");
+export const warningFilters = new UIMessageFilters("warnings");
 
 /**
  * @param {Document} doc
@@ -171,6 +199,7 @@ export function makeBasicConfig(profile = "w3c") {
         editors: [
           {
             name: "Person Name",
+            w3cid: "12345",
           },
         ],
         specStatus: "ED",

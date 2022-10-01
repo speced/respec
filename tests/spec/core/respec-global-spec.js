@@ -22,7 +22,10 @@ describe("Core — Respec Global - document.respec", () => {
   });
 
   it("has an array of errors and warnings", async () => {
-    const config = { lint: { "broken-refs-exist": true } };
+    const config = {
+      lint: { "broken-refs-exist": true },
+      specStatus: "unofficial",
+    };
     const body = `
       <div id="sotd"></div>
       <p><a id="test-warning" href="#non-existent">FAIL</a></p>

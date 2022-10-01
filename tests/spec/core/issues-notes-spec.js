@@ -23,24 +23,30 @@ describe("Core — Issues and Notes", () => {
         <div class="issue" id=override-123 data-number=123></div>
         <div class="issue" data-number=123></div>
         <p class="issue" data-number=123></p>
+        <aside class="issue" title="An issue"></aside>
       </section>
       <section id="issue-summary"></section>
     `;
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
     const issues = doc.querySelectorAll(".issue");
-    expect(issues).toHaveSize(3);
-    const [overriddenIdIssue, firstDuplicateIssue, secondDuplicateIssue] =
-      issues;
+    expect(issues).toHaveSize(4);
+    const [
+      overriddenIdIssue,
+      firstDuplicateIssue,
+      secondDuplicateIssue,
+      asideIssue,
+    ] = issues;
     expect(overriddenIdIssue.id).toBe("override-123");
     expect(firstDuplicateIssue.id).not.toBe(secondDuplicateIssue.id);
 
     const issueSummaryItems = doc.querySelectorAll("#issue-summary li a");
-    expect(issueSummaryItems).toHaveSize(3);
-    const [firstItem, secondItem, thirdItem] = issueSummaryItems;
+    expect(issueSummaryItems).toHaveSize(4);
+    const [firstItem, secondItem, thirdItem, fourthItem] = issueSummaryItems;
     expect(firstItem.hash).toBe(`#${overriddenIdIssue.id}`);
     expect(secondItem.hash).toBe(`#${firstDuplicateIssue.id}`);
     expect(thirdItem.hash).toBe(`#${secondDuplicateIssue.id}`);
+    expect(fourthItem.hash).toBe(`#${asideIssue.id}`);
   });
   it("should process issues and notes", async () => {
     const ops = {
@@ -360,7 +366,9 @@ describe("Core — Issues and Notes", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
-    const { textContent } = doc.querySelector("#issue-summary > h2");
+    const { textContent } = doc.querySelector(
+      "#issue-summary > div.header-wrapper > h2"
+    );
     expect(doc.documentElement.lang).toBe("es");
     expect(textContent).toContain("Resumen de la cuestión");
   });
@@ -379,7 +387,7 @@ describe("Core — Issues and Notes", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
-    const h2 = doc.querySelector("#issue-summary > h2");
+    const h2 = doc.querySelector("#issue-summary > div.header-wrapper > h2");
     expect(h2.innerText).toContain("Open Issues");
     const p = doc.querySelector("#issue-summary p");
     expect(p.innerText).toContain("Here you will find all open issues");
@@ -402,14 +410,32 @@ describe("Core — Issues and Notes", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
-    const h2 = doc.querySelector("#issue-summary > h2");
-    expect(h2.innerText).toContain("Issue Summary");
+    const h2 = doc.querySelector("#issue-summary > div.header-wrapper > h2");
+    expect(h2.innerText).toContain("Issue summary");
     const p = doc.querySelector("#issue-summary p");
     expect(p.innerText).toContain("Here you will find all issues summary");
-    const div = doc.querySelector("#issue-summary div");
+    const div = doc.querySelector("#issue-summary div:last-child");
     expect(div.innerText).toContain("This is a note");
     // Headings other than top level heading should not be detected as issue summary heading
     const h3 = doc.querySelector("#issue-summary section h3");
     expect(h3.innerText).toContain("This is not the heading of issue-summary");
+  });
+  it("should not produce HTML embedded within SVG", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `
+      <p class="note">This is a note that should be selected</p>
+      <svg version="1.1"
+           width="300" height="200"
+           xmlns="http://www.w3.org/2000/svg">
+        <!-- this element should not be selected even with the "note" class -->
+        <rect width="100%" height="100%" fill="red" class="note" />
+      </svg>`,
+    };
+
+    const doc = await makeRSDoc(ops);
+    // <div> is not a valid child of <svg>, so if it appears there it means ReSpec has added it.
+    const svgNote = doc.querySelector("svg div");
+    expect(svgNote).toBeNull();
   });
 });

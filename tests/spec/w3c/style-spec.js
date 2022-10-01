@@ -2,155 +2,164 @@
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 
-const specStatus = [
+const statuses = [
   {
-    status: "FPWD",
+    specStatus: undefined,
     expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
+    group: "webapps",
   },
   {
-    status: "NOTE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-NOTE",
-  },
-  {
-    status: "finding",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
-  },
-  {
-    status: "draft-finding",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
-  },
-  {
-    status: "editor-draft-finding",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
-  },
-  {
-    status: "unofficial",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-UD",
-  },
-  {
-    status: "base",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
-  },
-  {
-    status: "RSCND",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-RSCND",
-  },
-  {
-    status: "FAKE-TEST-TYPE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-FAKE-TEST-TYPE",
-  },
-  {
-    status: "CG-FINAL",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/cg-final",
-  },
-  {
-    status: "CG-DRAFT",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/cg-draft",
-  },
-  {
-    status: "BG-FINAL",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/bg-final",
-  },
-  {
-    status: "BG-DRAFT",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/bg-draft",
-  },
-  {
-    status: "CR",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-CR",
-  },
-  {
-    status: "CRD",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-CRD",
-  },
-  {
-    status: "CRY",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-CRY",
-  },
-  {
-    status: "CRYD",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-CRYD",
-  },
-  {
-    status: "DISC",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-DISC",
-  },
-  {
-    status: "DNOTE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-DNOTE",
-  },
-  {
-    status: "DRY",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-DRY",
-  },
-  {
-    status: "ED",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-ED",
-  },
-  {
-    status: "LC",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-LC",
-  },
-  {
-    status: "Member-SUBM",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-Member-SUBM",
-  },
-  {
-    status: "NOTE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-NOTE",
-  },
-  {
-    status: "PER",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-PER",
-  },
-  {
-    status: "PR",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-PR",
-  },
-  {
-    status: "REC",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-REC",
-  },
-  {
-    status: "RSCND",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-RSCND",
-  },
-  {
-    status: "RY",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-RY",
-  },
-  {
-    status: "STMT",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-STMT",
-  },
-  {
-    status: "Team-SUBM",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-Team-SUBM",
-  },
-  {
-    status: "UD",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-UD",
-  },
-  {
-    status: "WD",
+    specStatus: "FPWD",
     expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-WD",
+    group: "webapps",
   },
   {
-    status: "WG-NOTE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-WG-NOTE",
+    specStatus: "NOTE",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-NOTE",
+    group: "webapps",
+  },
+  {
+    specStatus: "finding",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
+    group: "tag",
+  },
+  {
+    specStatus: "draft-finding",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
+    group: "tag",
+  },
+  {
+    specStatus: "editor-draft-finding",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
+    group: "tag",
+  },
+  {
+    specStatus: "unofficial",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-UD",
+  },
+  {
+    specStatus: "base",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
+  },
+  {
+    specStatus: "RSCND",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-RSCND",
+    group: "webapps",
+  },
+  {
+    specStatus: "FAKE-TEST-TYPE",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/base.css",
+  },
+  {
+    specStatus: "CG-FINAL",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/cg-final",
+    group: "wicg",
+  },
+  {
+    specStatus: "CG-DRAFT",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/cg-draft",
+    group: "wicg",
+  },
+  {
+    specStatus: "BG-FINAL",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/bg-final",
+    group: "autowebplatform",
+  },
+  {
+    specStatus: "BG-DRAFT",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/bg-draft",
+    group: "publishingbg",
+  },
+  {
+    specStatus: "CR",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-CR",
+    group: "webapps",
+  },
+  {
+    specStatus: "CRD",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-CRD",
+    group: "webapps",
+  },
+  {
+    specStatus: "CRY",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-CRY",
+    group: "webapps",
+  },
+  {
+    specStatus: "CRYD",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-CRYD",
+    group: "webapps",
+  },
+  {
+    specStatus: "DISC",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-DISC",
+    group: "webapps",
+  },
+  {
+    specStatus: "DNOTE",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-DNOTE",
+    group: "webapps",
+  },
+  {
+    specStatus: "DRY",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-DRY",
+    group: "webapps",
+  },
+  {
+    specStatus: "ED",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-ED",
+    group: "webapps",
+  },
+  {
+    specStatus: "Member-SUBM",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-Member-SUBM",
+    group: "webapps",
+  },
+  {
+    specStatus: "NOTE",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-NOTE",
+    group: "webapps",
+  },
+  {
+    specStatus: "PER",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-PER",
+    group: "webapps",
+  },
+  {
+    specStatus: "PR",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-PR",
+    group: "webapps",
+  },
+  {
+    specStatus: "REC",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-REC",
+    group: "webapps",
+  },
+  {
+    specStatus: "RSCND",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-RSCND",
+    group: "webapps",
+  },
+  {
+    specStatus: "RY",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-RY",
+    group: "webapps",
+  },
+  {
+    specStatus: "STMT",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-STMT",
+    group: "webapps",
+  },
+  {
+    specStatus: "UD",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-UD",
+  },
+  {
+    specStatus: "WD",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-WD",
+    group: "webapps",
   },
 ];
-
-async function loadWithStatus(status, expectedURL) {
-  const ops = makeStandardOps({
-    specStatus: status,
-  });
-  const doc = await makeRSDoc(ops);
-  const query = `link[href^='${expectedURL}']`;
-  const elem = doc.querySelector(query);
-  expect(elem).withContext(specStatus).toBeTruthy();
-  expect(elem.href).withContext(specStatus).toBe(expectedURL);
-}
 
 describe("W3C - Style", () => {
   afterAll(flushIframes);
@@ -172,15 +181,20 @@ describe("W3C - Style", () => {
     expect(elem.content).toBe(expectedStr);
   });
 
-  it("should default to base when specStatus is missing", async () => {
-    await loadWithStatus("", "https://www.w3.org/StyleSheets/TR/2021/base.css");
-  });
-
-  specStatus.forEach(test => {
-    it(`should style according to spec status ${test.status}`, async () => {
-      await loadWithStatus(test.status, test.expectedURL);
+  for (const { specStatus, expectedURL, group } of statuses) {
+    it(`styles with specStatus: ${specStatus}; group: ${group}`, async () => {
+      const conf = {
+        specStatus,
+        group,
+      };
+      const ops = makeStandardOps(conf);
+      const doc = await makeRSDoc(ops);
+      const query = `link[href^='${expectedURL}']`;
+      const elem = doc.querySelector(query);
+      expect(elem).toBeTruthy();
+      expect(elem.href).toBe(expectedURL);
     });
-  });
+  }
 
   it("shouldn't include fixup.js when noToc is set", async () => {
     const ops = makeStandardOps();

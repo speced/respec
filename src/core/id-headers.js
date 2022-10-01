@@ -4,13 +4,32 @@
 // This is currently in core though it comes from a W3C rule. It may move in the future.
 
 export const name = "core/id-headers";
-import { addId } from "./utils.js";
+import { addId, getIntlData, norm } from "./utils.js";
 import { html } from "./import-maps.js";
+
+const localizationStrings = {
+  en: {
+    /**
+     *
+     * @param {"Appendix" | "Section"} sectionType
+     */
+    permalinkLabel(sectionType, sectionNumber) {
+      let label = `Permalink for${
+        !sectionNumber ? " this" : ""
+      } ${sectionType}`;
+      if (sectionNumber) {
+        label += ` ${norm(sectionNumber.textContent)}`;
+      }
+      return label;
+    },
+  },
+};
+const l10n = getIntlData(localizationStrings);
 
 export function run(conf) {
   /** @type {NodeListOf<HTMLElement>} */
   const headings = document.querySelectorAll(
-    `section:not(.head):not(.introductory) h2, h3, h4, h5, h6`
+    `section:not(.head,#abstract,#sotd) h2, h3, h4, h5, h6`
   );
   for (const h of headings) {
     // prefer for ID: heading.id > parentElement.id > newly generated heading.id
@@ -20,8 +39,17 @@ export function run(conf) {
       id = h.parentElement.id || h.id;
     }
     if (!conf.addSectionLinks) continue;
-    h.appendChild(html`
-      <a href="${`#${id}`}" class="self-link" aria-label="§"></a>
-    `);
+    const label = l10n.permalinkLabel(
+      h.closest(".appendix") ? "Appendix" : "Section",
+      h.querySelector(":scope > bdi.secno")
+    );
+    const wrapper = html`<div class="header-wrapper"></div>`;
+    h.replaceWith(wrapper);
+    const selfLink = html`<a
+      href="#${id}"
+      class="self-link"
+      aria-label="${label}"
+    ></a>`;
+    wrapper.append(h, selfLink);
   }
 }

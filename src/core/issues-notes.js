@@ -20,8 +20,6 @@ import {
 } from "./utils.js";
 import css from "../styles/issues-notes.css.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
-
 export const name = "core/issues-notes";
 
 const localizationStrings = {
@@ -29,7 +27,7 @@ const localizationStrings = {
     editors_note: "Editor's note",
     feature_at_risk: "(Feature at Risk) Issue",
     issue: "Issue",
-    issue_summary: "Issue Summary",
+    issue_summary: "Issue summary",
     no_issues_in_spec: "There are no issues listed in this specification.",
     note: "Note",
     warning: "Warning",
@@ -96,7 +94,7 @@ const l10n = getIntlData(localizationStrings);
  * @property {string} bodyHTML
  * @property {GitHubLabel[]} labels
 
- * @param {NodeListOf<HTMLElement>} ins
+ * @param {HTMLElement[]} ins
  * @param {Map<string, GitHubIssue>} ghIssues
  * @param {*} conf
  */
@@ -157,10 +155,7 @@ function handleIssues(ins, ghIssues, conf) {
             report.title = ghIssue.title;
           }
         }
-        if (report.number !== undefined) {
-          // Add entry to #issue-summary.
-          issueList.append(createIssueSummaryEntry(l10n.issue, report, div.id));
-        }
+        issueList.append(createIssueSummaryEntry(l10n.issue, report, div.id));
       }
       title.textContent = text;
       if (report.title) {
@@ -186,7 +181,6 @@ function handleIssues(ins, ghIssues, conf) {
       const level = parents(titleParent, "section").length + 2;
       titleParent.setAttribute("aria-level", level);
     }
-    pub(report.type, report);
   });
   makeIssueSectionSummary(issueList);
 }
@@ -259,7 +253,9 @@ function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
  * @param {Report} report
  */
 function createIssueSummaryEntry(l10nIssue, report, id) {
-  const issueNumberText = `${l10nIssue} ${report.number}`;
+  const issueNumberText = `${l10nIssue}${
+    report.number ? ` ${report.number}` : ""
+  }`;
   const title = report.title
     ? html`<span style="text-transform: none">: ${report.title}</span>`
     : "";
@@ -284,7 +280,7 @@ function makeIssueSectionSummary(issueList) {
   ) {
     issueSummaryElement.insertAdjacentHTML(
       "afterbegin",
-      `<h2>${l10n.issue_summary}</h2>`
+      `<h1>${l10n.issue_summary}</h1>`
     );
   }
 }
@@ -302,9 +298,18 @@ function createLabelsGroup(labels, title, repoURL) {
   return html`<span class="issue-label">: ${title}${labelsGroup}</span>`;
 }
 
-/** @param {string} bgColorHex background color as a hex value without '#' */
-function textColorFromBgColor(bgColorHex) {
-  return parseInt(bgColorHex, 16) > 0xffffff / 2 ? "#000" : "#fff";
+/**
+ * Based on https://stackoverflow.com/a/3943023
+ * See https://www.w3.org/WAI/WCAG21/Techniques/general/G18.html#tests
+ * @param {string} bg background color as a hex value without '#'
+ */
+function textColorFromBgColor(bg) {
+  const [r, g, b] = [bg.slice(0, 2), bg.slice(2, 4), bg.slice(4, 6)];
+  const [R, G, B] = [r, g, b]
+    .map(c => parseInt(c, 16) / 255)
+    .map(c => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  const L = 0.2126 * R + 0.7152 * G + 0.0722 * B;
+  return L > 0.179 ? "#000" : "#fff";
 }
 
 /**
@@ -363,7 +368,13 @@ async function fetchAndStoreGithubIssues(github) {
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
-  const issuesAndNotes = document.querySelectorAll(query);
+  const allEls = document.querySelectorAll(query);
+
+  const issuesAndNotes = Array.from(allEls).filter(itm => {
+    // Removes any elements that are not HTML Elements (e.g., SVG nodes)
+    return itm instanceof HTMLElement;
+  });
+
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }

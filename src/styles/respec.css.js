@@ -17,11 +17,6 @@ export default css`
   }
 }
 
-/* Override code highlighter background */
-.hljs {
-  background: transparent !important;
-}
-
 /* --- INLINES --- */
 :is(h1, h2, h3, h4, h5, h6, a) abbr {
   border: none;
@@ -73,14 +68,6 @@ a[href].respec-offending-element {
 
 cite .bibref {
   font-style: normal;
-}
-
-code {
-  color: #c63501;
-}
-
-th code {
-  color: inherit;
 }
 
 a[href].orcid {
@@ -213,53 +200,52 @@ details.respec-tests-details > li {
   padding-left: 1em;
 }
 
-a[href].self-link:hover {
+.self-link:hover {
   opacity: 1;
   text-decoration: none;
   background-color: transparent;
-}
-
-h2,
-h3,
-h4,
-h5,
-h6 {
-  position: relative;
 }
 
 aside.example .marker > a.self-link {
   color: inherit;
 }
 
-:is(h2, h3, h4, h5, h6) > a.self-link {
-  border: none;
-  color: inherit;
-  font-size: 83%;
-  height: 2em;
-  left: -1.6em;
-  opacity: 0.5;
-  position: absolute;
-  text-align: center;
-  text-decoration: none;
-  top: 0;
-  transition: opacity 0.2s;
-  width: 2em;
+.header-wrapper {
+  display: flex;
+  align-items: baseline;
 }
 
-:is(h2, h3, h4, h5, h6) > a.self-link::before{
+:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2) {
+  position: relative;
+  left: -.5em;
+}
+
+:is(h2, h3, h4, h5, h6):not(#toc h2) + a.self-link {
+  color: inherit;
+  order: -1;
+  position: relative;
+  left: -1.1em;
+  font-size: 1rem;
+  opacity: 0.5;
+}
+
+:is(h2, h3, h4, h5, h6) + a.self-link::before {
   content: "§";
-  display: block;
+  text-decoration: none;
+  color: var(--heading-text);
+}
+
+:is(h2, h3) + a.self-link {
+  top: -0.2em;
+}
+
+:is(h4, h5, h6) + a.self-link::before {
+  color: black;
 }
 
 @media (max-width: 767px) {
   dd {
     margin-left: 0;
-  }
-
-  /* Don't position self-link in headings off-screen */
-  :is(h2, h3, h4, h5, h6) > a.self-link {
-    left: auto;
-    top: auto;
   }
 }
 

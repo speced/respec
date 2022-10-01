@@ -5,6 +5,7 @@ import {
   makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
+  makeStandardOps,
 } from "../SpecHelper.js";
 
 describe("Core — Include config as JSON", () => {
@@ -38,15 +39,15 @@ describe("Core — Include config as JSON", () => {
     expect(conf.baz).toEqual([1, 2, 3]);
   });
   it("should have the same content for the config and the script's text", async () => {
-    const expectedObj = Object.assign(makeBasicConfig(), {
+    const ops = makeStandardOps({
       publishDate: "1999-12-11",
       publishISODate: "1999-12-11T00:00:00.000Z",
-      generatedSubtitle: "Editor's Draft 11 December 1999",
+      generatedSubtitle: "W3C Editor's Draft 11 December 1999",
+      group: "webapps",
     });
-    const expected = JSON.stringify(expectedObj, null, 2);
     const doc = await makeRSDoc(ops);
-    const text = doc.getElementById("initialUserConfig").innerHTML;
-    expect(text).toBe(expected);
+    const json = JSON.parse(doc.getElementById("initialUserConfig").innerText);
+    expect(json).toEqual(ops.config);
   });
   it("excludes security sensitive members", async () => {
     const ops = {

@@ -8,7 +8,7 @@ export default css`
   position: absolute;
   right: 0.3em;
   min-width: 0;
-  margin-top: 3em;
+  margin-top: 3rem;
 }
 
 .mdn details {
@@ -102,41 +102,37 @@ export default css`
 
 .mdn .chrome::before,
 .mdn .chrome_android::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/chrome.svg);
+  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/chrome/chrome.svg);
 }
 
 .mdn .edge::before,
 .mdn .edge_mobile::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/edge.svg);
+  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/edge/edge.svg);
 }
 
 .mdn .firefox::before,
 .mdn .firefox_android::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/firefox.png);
-}
-
-.mdn .ie::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/ie.png);
+  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/firefox/firefox.svg);
 }
 
 .mdn .opera::before,
 .mdn .opera_android::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/opera.svg);
+  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/opera/opera.svg);
 }
 
 .mdn .safari::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/safari.png);
+  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/safari/safari.svg);
 }
 
 .mdn .safari_ios::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/safari-ios.svg);
+  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/safari-ios/safari-ios.svg);
 }
 
 .mdn .samsunginternet_android::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/samsung.svg);
+  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/samsung-internet/samsung-internet.svg);
 }
 
 .mdn .webview_android::before {
-  background-image: url(https://resources.whatwg.org/browser-logos/android-webview.png);
+  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/android-webview/android-webview.png);
 }
 `;

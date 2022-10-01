@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<script class="remove">
+  const modifier1 = exportedDoc => {
+    const p = exportedDoc.createElement("p");
+    p.id = "p1";
+    p.textContent = "This is paragraph 1";
+    exportedDoc.body.appendChild(p);
+  };
+  const modifier2 = exportedDoc => {
+    const p = exportedDoc.createElement("p");
+    p.id = "p2";
+    p.textContent = "This is a sync paragraph";
+    exportedDoc.body.appendChild(p);
+  };
+  const respecConfig = {
+    specStatus: "unofficial",
+    shortName: "i",
+    editors: [
+      { name: "Foo", url: "https://foo.com/" },
+    ],
+    beforeSave: [modifier1, modifier2],
+  };
+</script>
+<section id="abstract">
+  <p>abstract.</p>
+</section>
+<section id="sotd">
+  <p>CUSTOM PARAGRAPH</p>
+</section>

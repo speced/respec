@@ -2,8 +2,7 @@ name: Node CI (push)
 on:
   push:
     branches:
-      - develop
-      - gh-pages
+      - main
     paths-ignore:
       - "**"
       - "!**.js"
@@ -15,17 +14,21 @@ on:
 env:
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
   PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+  FORCE_COLOR: 1
   # See https://github.com/w3c/respec/pull/3306
   LC_ALL: en_US.UTF-8
+
+permissions:
+  contents: read
 
 jobs:
   test-headless:
     name: Headless Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with: { node-version: 14, cache: npm }
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with: { node-version: 16, cache: npm }
       - name: install & build
         run: |
           npm ci
@@ -37,8 +40,9 @@ jobs:
           npx brrr builds/respec-w3c.js -o builds
           file_size=$(stat -c%s "builds/respec-w3c.js")
           xfer_file_size=$(stat -c%s "builds/respec-w3c.js.br")
-          curl --fail -L -X PUT "https://respec.org/respec/size" \
+          curl -L -X PUT "https://respec.org/respec/size" \
             -H "Authorization: $RESPEC_SECRET" \
+            -s -w "HTTP Response Code: %{http_code}\n" \
             -d "size=$file_size" -d "xferSize=$xfer_file_size "\
             -d "sha=$GITHUB_SHA" -d "timestamp=$timestamp"
         env:
@@ -48,9 +52,9 @@ jobs:
     name: Karma Unit Tests (Chrome)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with: { node-version: 14, cache: npm }
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with: { node-version: 16, cache: npm }
       - name: install & build
         run: |
           npm ci

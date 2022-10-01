@@ -13,6 +13,7 @@ const localizationStrings = {
     info_references: "Informative references",
     norm_references: "Normative references",
     references: "References",
+    reference_not_found: "Reference not found.",
   },
   ko: {
     references: "참조",
@@ -26,6 +27,7 @@ const localizationStrings = {
     info_references: "Referencias informativas",
     norm_references: "Referencias normativas",
     references: "Referencias",
+    reference_not_found: "Referencia no encontrada.",
   },
   ja: {
     info_references: "参照用参考文献",
@@ -71,8 +73,11 @@ export function run(conf) {
     document.querySelector("section#references") ||
     html`<section id="references"></section>`;
 
-  if (!document.querySelector("section#references > h2")) {
-    refSection.prepend(html`<h2>${l10n.references}</h2>`);
+  if (!document.querySelector("section#references > :is(h2, h1)")) {
+    // We use a h1 here because this could be structured from markdown
+    // which would otherwise end up in the wrong document order
+    // when the document is restructured.
+    refSection.prepend(html`<h1>${l10n.references}</h1>`);
   }
 
   refSection.classList.add("appendix");
@@ -191,21 +196,22 @@ export function renderInlineCitation(ref, linkText) {
 
 /**
  * renders a reference
- * @param {Ref} ref
+ * @param {Ref} reference
  */
-function showRef({ ref, refcontent }) {
+function showRef(reference) {
+  const { ref, refcontent } = reference;
   const refId = `bib-${ref.toLowerCase()}`;
-  if (refcontent) {
-    return html`
-      <dt id="${refId}">[${ref}]</dt>
-      <dd>${{ html: stringifyReference(refcontent) }}</dd>
-    `;
-  } else {
-    return html`
-      <dt id="${refId}">[${ref}]</dt>
-      <dd><em class="respec-offending-element">Reference not found.</em></dd>
-    `;
-  }
+  const result = html`
+    <dt id="${refId}">[${ref}]</dt>
+    <dd>
+      ${refcontent
+        ? { html: stringifyReference(refcontent) }
+        : html`<em class="respec-offending-element"
+            >${l10n.reference_not_found}</em
+          >`}
+    </dd>
+  `;
+  return result;
 }
 
 function endNormalizer(endStr) {
@@ -279,15 +285,17 @@ function decorateInlineReference(refs, aliases) {
 /**
  * warn about bad references
  */
-function warnBadRefs(badRefs) {
-  badRefs.forEach(({ ref }) => {
-    const badrefs = [
-      ...document.querySelectorAll(
-        `a.bibref[href="#bib-${ref.toLowerCase()}"]`
-      ),
-    ].filter(({ textContent: t }) => t.toLowerCase() === ref.toLowerCase());
-    const msg = `Bad reference: [\`${ref}\`] (appears ${badrefs.length} times)`;
-    showError(msg, name);
-    console.warn("Bad references: ", badrefs);
-  });
+function warnBadRefs(refs) {
+  for (const { ref } of refs) {
+    /** @type {NodeListOf<HTMLElement>} */
+    const links = document.querySelectorAll(
+      `a.bibref[href="#bib-${ref.toLowerCase()}"]`
+    );
+    const elements = [...links].filter(
+      ({ textContent: t }) => t.toLowerCase() === ref.toLowerCase()
+    );
+    const msg = `Reference "[${ref}]" not found.`;
+    const hint = `Search for ["${ref}"](https://www.specref.org?q=${ref}) on Specref to see if it exists or if it's misspelled.`;
+    showError(msg, name, { hint, elements });
+  }
 }

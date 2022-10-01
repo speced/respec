@@ -9,7 +9,6 @@
 import { addId, getIntlData } from "./utils.js";
 import css from "../styles/examples.css.js";
 import { html } from "./import-maps.js";
-import { pub } from "./pubsubhub.js";
 
 export const name = "core/examples";
 
@@ -93,7 +92,6 @@ export function run() {
       const id = addId(example, "example", title || String(number));
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
-      pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
       if (!inAside) ++number;
@@ -113,7 +111,6 @@ export function run() {
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${div.id}`;
       example.replaceWith(div);
-      if (!inAside) pub("example", report);
     }
   });
 }

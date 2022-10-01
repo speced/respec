@@ -7,6 +7,7 @@
 import {
   addId,
   getIntlData,
+  getPreviousSections,
   renameElement,
   showWarning,
   wrapInner,
@@ -58,7 +59,7 @@ export function run() {
   if (tof.length && tofElement) {
     decorateTableOfFigures(tofElement);
     tofElement.append(
-      html`<h2>${l10n.list_of_figures}</h2>`,
+      html`<h1>${l10n.list_of_figures}</h1>`,
       html`<ul class="tof">
         ${tof}
       </ul>`
@@ -147,30 +148,5 @@ function decorateTableOfFigures(tofElement) {
     tofElement.classList.add("introductory");
   } else if (previousSections.some(sec => sec.classList.contains("appendix"))) {
     tofElement.classList.add("appendix");
-  }
-}
-
-/**
- * @param {Element} element
- */
-function getPreviousSections(element) {
-  /** @type {Element[]} */
-  const sections = [];
-  for (const previous of iteratePreviousElements(element)) {
-    if (previous.localName === "section") {
-      sections.push(previous);
-    }
-  }
-  return sections;
-}
-
-/**
- * @param {Element} element
- */
-function* iteratePreviousElements(element) {
-  let previous = element;
-  while (previous.previousElementSibling) {
-    previous = previous.previousElementSibling;
-    yield previous;
   }
 }
