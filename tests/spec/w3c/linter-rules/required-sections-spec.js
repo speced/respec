@@ -209,7 +209,8 @@ describe("w3c — required-sections", () => {
     const errors = errorsFilter(doc);
     expect(errors).toHaveSize(0);
     const warnings = warningsFilter(doc);
-    expect(warnings).toHaveSize(0);
+    expect(warnings).toHaveSize(1);
+    expect(warnings[0]).toMatch(/translations are not available/);
   });
 
   for (const specStatus of W3CNotes) {
