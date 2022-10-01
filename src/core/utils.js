@@ -204,7 +204,7 @@ export function getIntlDataForKey(localizationStrings, key, lang = docLang) {
   lang = lang.toLowerCase();
   return (
     localizationStrings[lang]?.[key] ||
-    localizationStrings[lang.split("-", 2)[0]]?.[key]
+    localizationStrings[lang.match(/^(\w{2,3})-.+$/)?.[1]]?.[key]
   );
 }
 
