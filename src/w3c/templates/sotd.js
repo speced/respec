@@ -451,22 +451,6 @@ function linkToWorkingGroup(conf) {
   }
   let changes = null;
   if (conf.isRec && conf.revisionTypes && conf.revisionTypes.length) {
-    // if (conf.revisionTypes.includes("proposed-addition")) {
-    //   if (conf.revisionTypes.includes("proposed-correction")) {
-    //     proposedChanges = html`It includes
-    //       <a href="${processLink}#proposed-amendments">proposed amendments</a>,
-    //       introducing substantive changes and new features since the previous
-    //       Recommendation.`;
-    //   } else {
-    //     proposedChanges = html`It includes
-    //       <a href="${processLink}#proposed-addition">proposed additions</a>,
-    //       introducing new features since the previous Recommendation.`;
-    //   }
-    // } else if (conf.revisionTypes.includes("proposed-correction")) {
-    //   proposedChanges = html`It includes
-    //     <a href="${processLink}#proposed-correction">proposed corrections</a>.`;
-    // }
-
     const pa = conf.revisionTypes.includes("proposed-addition");
     const pc = conf.revisionTypes.includes("proposed-correction");
     const ca = conf.revisionTypes.includes("addition");
