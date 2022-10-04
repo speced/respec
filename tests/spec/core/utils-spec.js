@@ -279,6 +279,7 @@ describe("Core - Utils", () => {
     const localizationStrings = {
       en: { foo: "EN Foo", bar: "EN Bar" },
       ko: { foo: "KO Foo" },
+      "en-us": { foo: "EN-US Foo" },
     };
 
     it("returns localized string in given language", () => {
@@ -287,6 +288,9 @@ describe("Core - Utils", () => {
 
       const intlEn = getIntlData(localizationStrings, "EN");
       expect(intlEn.foo).toBe("EN Foo");
+
+      const intlEnUs = getIntlData(localizationStrings, "en-US");
+      expect(intlEnUs.foo).toBe(localizationStrings["en-us"].foo);
     });
 
     it("falls back to English string if key does not exist in language", () => {
@@ -299,9 +303,42 @@ describe("Core - Utils", () => {
       expect(intl.bar).toBe("EN Bar");
     });
 
+    it("falls back to primary language subtag", () => {
+      const intl = getIntlData(localizationStrings, "en-US");
+      expect(intl.bar).toBe(localizationStrings.en.bar);
+      expect(() => intl.baz).toThrowError(/No l10n data for key/);
+    });
+
     it("throws error if key doesn't exist in either doc lang and English", () => {
       const intl = getIntlData(localizationStrings, "de");
       expect(() => intl.baz).toThrowError(/No l10n data for key/);
+    });
+  });
+
+  describe("getIntlDataForKey", () => {
+    const { getIntlDataForKey } = utils;
+    const localizationStrings = {
+      en: { foo: "EN Foo", bar: "EN Bar" },
+      zh: { foo: "KO Foo" },
+      "zh-hans": { foo: "EN-US Foo" },
+    };
+    const get = (key, lang) =>
+      getIntlDataForKey(localizationStrings, key, lang);
+
+    it("uses lang or subtag only; never falls back to `en`", () => {
+      expect(get("foo", "zh-hans")).toBe(localizationStrings["zh-hans"].foo);
+      expect(get("foo", "zh")).toBe(localizationStrings.zh.foo);
+
+      expect(get("bar", "zh-hans")).toBe(localizationStrings.zh.bar);
+      expect(get("bar", "zh")).toBe(localizationStrings.zh.bar);
+
+      expect(get("baz", "zh-hans")).toBeUndefined();
+      expect(get("baz", "zh")).toBeUndefined();
+
+      expect(get("foo", "en-US")).toBe(localizationStrings.en.foo);
+      expect(get("baz", "en-US")).toBeUndefined();
+
+      expect(get("foo", "ko")).toBeUndefined();
     });
   });
 
