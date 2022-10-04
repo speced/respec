@@ -59,6 +59,7 @@ export function run(conf) {
 
   // We can't check for headers unless we also have a translation
   if (!getIntlDataForKey(localizationStrings, "privacy_considerations")) {
+    // We can't check for headers unless we also have a translation
     const msg = `Cannot check for required sections as translations are not available.`;
     const hint = `File an issue to add translations or use a supported language.`;
     showWarning(msg, name, { hint });
