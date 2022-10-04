@@ -294,11 +294,21 @@ function renderIsRec(conf) {
     </p>
     ${revisionTypes.includes("addition")
       ? html`<p class="addition">
-          Proposed additions are marked in the document.
+          Candidate additions are marked in the document.
         </p>`
       : ""}
     ${revisionTypes.includes("correction")
       ? html`<p class="correction">
+          Candidate corrections are marked in the document.
+        </p>`
+      : ""}
+    ${revisionTypes.includes("proposed-addition")
+      ? html`<p class="addition proposed">
+          Proposed additions are marked in the document.
+        </p>`
+      : ""}
+    ${revisionTypes.includes("proposed-correction")
+      ? html`<p class="correction proposed">
           Proposed corrections are marked in the document.
         </p>`
       : ""}
@@ -439,22 +449,42 @@ function linkToWorkingGroup(conf) {
   if (!conf.wg) {
     return;
   }
-  let proposedChanges = null;
+  let changes = null;
   if (conf.isRec && conf.revisionTypes && conf.revisionTypes.length) {
-    if (conf.revisionTypes.includes("addition")) {
-      if (conf.revisionTypes.includes("correction")) {
-        proposedChanges = html`It includes
-          <a href="${processLink}#proposed-amendments">proposed amendments</a>,
-          introducing substantive changes and new features since the previous
-          Recommendation.`;
-      } else {
-        proposedChanges = html`It includes
-          <a href="${processLink}#proposed-addition">proposed additions</a>,
-          introducing new features since the previous Recommendation.`;
-      }
-    } else if (conf.revisionTypes.includes("correction")) {
-      proposedChanges = html`It includes
-        <a href="${processLink}#proposed-correction">proposed corrections</a>.`;
+    const pa = conf.revisionTypes.includes("proposed-addition");
+    const pc = conf.revisionTypes.includes("proposed-correction");
+    const ca = conf.revisionTypes.includes("addition");
+    const cc = conf.revisionTypes.includes("correction");
+    if ((pa && pc) || (ca && cc)) {
+      changes = html`It includes
+      ${pa
+        ? html`<a href="${processLink}#proposed-amendments">
+            proposed amendments
+          </a>`
+        : html`<a href="${processLink}#candidate-amendments">
+            candidate amendments
+          </a>`},
+      introducing substantive changes and new features since the previous
+      Recommendation.`;
+    } else if (pa || ca) {
+      changes = html`It includes
+      ${pa
+        ? html`<a href="${processLink}#proposed-addition">
+            proposed additions
+          </a>`
+        : html`<a href="${processLink}#candidate-addition">
+            candidate additions
+          </a>`},
+      introducing new features since the previous Recommendation.`;
+    } else if (pc || cc) {
+      changes = html`It includes
+      ${pc
+        ? html`<a href="${processLink}#proposed-correction">
+            proposed corrections
+          </a>`
+        : html`<a href="${processLink}#candidate-correction">
+            candidate corrections
+          </a>`}.`;
     }
   }
   const track = status2track[conf.specStatus]
@@ -465,7 +495,7 @@ function linkToWorkingGroup(conf) {
     : "";
   return html`<p>
     This document was published by ${conf.wgHTML} as
-    ${prefix(conf.longStatus)}${track}. ${proposedChanges}
+    ${prefix(conf.longStatus)}${track}. ${changes}
   </p>`;
 }
 

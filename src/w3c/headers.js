@@ -596,7 +596,12 @@ export async function run(conf) {
   }
 
   conf.updateableRec = sotd.classList.contains("updateable-rec");
-  const revisionTypes = ["addition", "correction"];
+  const revisionTypes = [
+    "addition",
+    "correction",
+    "proposed-addition",
+    "proposed-correction",
+  ];
   if (conf.isRec && conf.revisionTypes?.length > 0) {
     if (conf.revisionTypes.some(x => !revisionTypes.includes(x))) {
       const unknownRevisionTypes = conf.revisionTypes.filter(
@@ -610,8 +615,12 @@ export async function run(conf) {
       )}.`;
       showError(msg, name, { hint });
     }
-    if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
-      const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as a allowing new features.`;
+    if (
+      (conf.revisionTypes.includes("proposed-addition") ||
+        conf.revisionTypes.includes("addition")) &&
+      !conf.updateableRec
+    ) {
+      const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as allowing new features.`;
       showError(msg, name);
     }
   }

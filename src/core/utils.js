@@ -174,37 +174,38 @@ export function norm(str) {
 }
 
 /**
- * @param {string} lang
- */
-export function resolveLanguageAlias(lang) {
-  const lCaseLang = lang.toLowerCase();
-  const aliases = {
-    "zh-hans": "zh",
-    "zh-cn": "zh",
-  };
-  return aliases[lCaseLang] || lCaseLang;
-}
-
-/**
  * @template {Record<string, Record<string, string|Function>>} T
  * @param {T} localizationStrings
  * @returns {T[keyof T]}
  */
 export function getIntlData(localizationStrings, lang = docLang) {
-  lang = resolveLanguageAlias(lang);
+  lang = lang.toLowerCase();
   // Proxy return type is a known bug:
   // https://github.com/Microsoft/TypeScript/issues/20846
-  // @ts-ignore
+  // @ts-expect-error
   return new Proxy(localizationStrings, {
     /** @param {string} key */
     get(data, key) {
-      const result = (data[lang] && data[lang][key]) || data.en[key];
+      const result = getIntlDataForKey(data, key, lang) || data.en[key];
       if (!result) {
         throw new Error(`No l10n data for key: "${key}"`);
       }
       return result;
     },
   });
+}
+
+/**
+ * @template {Record<string, Record<string, string|Function>>} T
+ * @param {T} localizationStrings
+ * @param {string} key
+ */
+export function getIntlDataForKey(localizationStrings, key, lang = docLang) {
+  lang = lang.toLowerCase();
+  return (
+    localizationStrings[lang]?.[key] ||
+    localizationStrings[lang.match(/^(\w{2,3})-.+$/)?.[1]]?.[key]
+  );
 }
 
 // --- DATE HELPERS -------------------------------------------------------------------------------
