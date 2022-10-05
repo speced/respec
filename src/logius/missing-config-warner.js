@@ -7,6 +7,8 @@ const requiredConfigs = [
   "labelColorTable",
   "governanceTypeText",
   "sotdText",
+  "licenses",
+  "headerLocalizationStrings",
 ];
 
 export async function run(conf) {

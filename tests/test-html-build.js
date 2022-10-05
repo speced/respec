@@ -8,6 +8,7 @@ const currentHtmlPath = path.join(__dirname, "testIndexStable.html");
 const stableHtmlPath = path.join(__dirname, "testIndex.html");
 const logFilePath = path.join(__dirname, "./html-test.log");
 const writeStream = fs.createWriteStream(logFilePath, { flags: "w" });
+
 let writeToLog = false;
 
 const args = process.argv.slice(2);
