@@ -7,6 +7,7 @@
 
 import {
   createResourceHint,
+  linkCSS,
   showWarning,
   toKeyValuePairs,
 } from "../core/utils.js";
@@ -53,7 +54,7 @@ function getBaseStyleURI() {
     ? respecConfig.nl_organisationStylesURL
     : "https://www.w3.org/StyleSheets/TR/2016/";
   if (!baseStyle.endsWith("/")) baseStyle += "/";
-  return `${baseStyle}/base.css`;
+  return `${baseStyle}base.css`;
 }
 
 function createBaseStyle() {
@@ -106,6 +107,13 @@ if (!document.head.querySelector("meta[name=viewport]")) {
   elements.prepend(createMetaViewport());
 }
 
+function styleMover(linkURL) {
+  return exportDoc => {
+    const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
+    exportDoc.querySelector("head").append(w3cStyle);
+  };
+}
+
 document.head.prepend(elements);
 
 export function run(conf) {
@@ -143,6 +151,11 @@ export function run(conf) {
   if (!conf.noToc) {
     sub("end-all", attachFixupScript, { once: true });
   }
+
+  const finalStyleURL = getBaseStyleURI();
+  linkCSS(document, finalStyleURL);
+  const moveStyle = styleMover(finalStyleURL);
+  sub("beforesave", moveStyle);
 
   // code hierboven mogenlijk overbodig?
 }
