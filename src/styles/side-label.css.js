@@ -6,15 +6,16 @@ const css = String.raw;
 export default css`
   .sidelabel {
     position: fixed;
-    top: 200px;
-    left: 30px;
-    padding: 4px 50px 4px 4px;
+    -webkit-transform-origin: top right;
+    right: 100%;
+    top: 0;
+    -webkit-transform: rotate(-90deg);
+    padding: 4px 50px 4px 10px;
     color: white;
     //writing-mode: vertical-rl;
     //text-orientation: mixed;
     //transform: scaleX(-1) scaleY(-1);
-    transform-origin: bottom left;
-    transform: rotate(-90deg);
+    white-space: nowrap;
     z-index: 1;
   }
 `;

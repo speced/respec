@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const organisationConfig = {
-  nl_organisationName: "Logius",
+  nl_organisationName: "Rick de Bruijn",
   nl_organisationPrefix: "LS-",
   nl_organisationStylesURL:
     "https://publicatie.centrumvoorstandaarden.nl/respec/style/",
