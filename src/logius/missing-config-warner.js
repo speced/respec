@@ -27,11 +27,9 @@ export async function run(conf) {
 async function errorMissingConfigs(conf) {
   requiredConfigs.forEach(element => {
     if (!conf[element]) {
-      showError(
-        `Missing config option ${element}`,
-        "errorMissingConfigs",
-        { hint: wikiURL + element }
-      );
+      showError(`Missing config option ${element}`, "errorMissingConfigs", {
+        hint: wikiURL + element,
+      });
     }
   });
 }
@@ -39,11 +37,9 @@ async function errorMissingConfigs(conf) {
 async function warnMissingConfigs(conf) {
   recommendedConfigs.forEach(element => {
     if (!conf[element]) {
-      showWarning(
-        `Missing config option ${element}`,
-        "warnMissingConfigs",
-        { hint: wikiURL + element }
-      );
+      showWarning(`Missing config option ${element}`, "warnMissingConfigs", {
+        hint: wikiURL + element,
+      });
     }
   });
 }
