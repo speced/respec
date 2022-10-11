@@ -1,4 +1,4 @@
-import { showWarning } from "../core/utils.js";
+import { showError, showWarning } from "../core/utils.js";
 
 const requiredConfigs = [
   "labelColorTable",
@@ -27,8 +27,8 @@ export async function run(conf) {
 async function errorMissingConfigs(conf) {
   requiredConfigs.forEach(element => {
     if (!conf[element]) {
-      showWarning(
-        `Error, missing config option ${element}`,
+      showError(
+        `Missing config option ${element}`,
         "errorMissingConfigs",
         { hint: wikiURL + element }
       );
@@ -40,7 +40,7 @@ async function warnMissingConfigs(conf) {
   recommendedConfigs.forEach(element => {
     if (!conf[element]) {
       showWarning(
-        `Warning, missing config option ${element}`,
+        `Missing config option ${element}`,
         "warnMissingConfigs",
         { hint: wikiURL + element }
       );
