@@ -200,28 +200,6 @@ const status2long = {
 };
 
 const noTrackStatus = []; // empty? or only "GN-BASIS"?
-// Thijs Brentjens: default licenses for Geonovum to version 4.0
-// todo make fixed, static urls flexible
-const licenses = {
-  cc0: {
-    name: "Creative Commons 0 Public Domain Dedication",
-    short: "CC0",
-    url: "https://creativecommons.org/publicdomain/zero/1.0/",
-    image: "https://tools.geostandaarden.nl/respec/style/logos/CC-Licentie.svg",
-  },
-  "cc-by": {
-    name: "Creative Commons Attribution 4.0 International Public License",
-    short: "CC-BY",
-    url: "https://creativecommons.org/licenses/by/4.0/legalcode",
-    image: "https://tools.geostandaarden.nl/respec/style/logos/cc-by.svg",
-  },
-  "cc-by-nd": {
-    name: "Creative Commons Naamsvermelding-GeenAfgeleideWerken 4.0 Internationaal",
-    short: "CC-BY-ND",
-    url: "https://creativecommons.org/licenses/by-nd/4.0/legalcode.nl",
-    image: "https://tools.geostandaarden.nl/respec/style/logos/cc-by-nd.svg",
-  },
-};
 
 /**
  * @param {*} conf
@@ -245,7 +223,7 @@ export function run(conf) {
   // conf.isUnofficial = conf.specStatus === "unofficial";
 
   conf.isUnofficial = true;
-  if (!conf.logos) {
+  if (!conf.logos || !conf.useLogo) {
     // conf.isUnofficial
     conf.logos = [];
   }
@@ -258,12 +236,12 @@ export function run(conf) {
   conf.specType = conf.specType ? conf.specType.toUpperCase() : "";
 
   conf.pubDomain = conf.pubDomain ? conf.pubDomain.toLowerCase() : "";
-  conf.hasBeenPublished = conf.publishDate ? true : false;
+  conf.hasBeenPublished = !!conf.publishDate;
   // Thijs Brentjens: TODO: document license types for Geonovum
   conf.isCCBY = conf.license === "cc-by";
   conf.isCCBYND = conf.license === "cc-by-nd";
 
-  conf.licenseInfo = licenses[conf.license];
+  conf.licenseInfo = conf.licenses[conf.license.toLowerCase()];
   conf.isBasic = conf.specStatus === "base";
   // Thijs Brentjens: TODO: for a GN-BASIS document, is it necesary to deal differently with URIs? Especially for "Laatst gepubliceerde versie"
   // Deal with all current GN specStatusses the same. This is mostly seen in the links in the header for Last editor's draft etc
@@ -700,34 +678,7 @@ function populateSoTD(conf, sotd) {
       }
       return `${article} ${conf.typeStatus.toLowerCase()}`;
     },
-    get operationalCommittee() {
-      let operationalCommittee = "";
-
-      switch (conf.nl_organisationName.toLowerCase()) {
-        case "logius":
-          operationalCommittee = "het Technisch Overleg";
-          break;
-        default:
-          // Geonovum = 1
-          operationalCommittee = "de werkgroep";
-          break;
-      }
-      return operationalCommittee;
-    },
     get emailComments() {
-      if (!conf.nl_emailcomments && !conf.emailcomments) {
-        switch (conf.nl_organisationName.toLowerCase()) {
-          case "logius": // Logius
-            conf.nl_emailcomments = "api@logius.nl";
-            break;
-          case "geonovum":
-          default:
-            // Geonovum
-            conf.nl_emailcomments = "geo-standaarden@geonovum.nl";
-            conf.emailcomments = "geo-standaarden@geonovum.nl";
-            break;
-        }
-      }
       return `${conf.nl_emailcomments}`;
     },
     get emailCommentsMailto() {

@@ -14,8 +14,7 @@ function addClassTables(conf) {
   if (!conf.nl_markdownTableClass) {
     conf.nl_markdownTableClass = "simple";
   }
-  [...document.querySelectorAll("table")]
-  .forEach(table => {
+  [...document.querySelectorAll("table")].forEach(table => {
     table.classList.add(conf.nl_markdownTableClass);
   });
 }
@@ -26,8 +25,7 @@ function addClassCode(conf) {
   if (!conf.nl_markdownCodeClass) {
     return;
   }
-  [...document.querySelectorAll("code")]
-  .forEach(code => {
+  [...document.querySelectorAll("code")].forEach(code => {
     code.classList.add(conf.nl_markdownCodeClass);
   });
 }
@@ -37,12 +35,12 @@ function addFigureImg(conf) {
     return;
   }
 
-  [...document.querySelectorAll("img")]  
+  [...document.querySelectorAll("img")]
     .filter(img => !img.closest("figure"))
     .forEach(img => {
       const figure = document.createElement("figure");
-      const figcaption = document.createElement("figcaption");	  
-      figcaption.innerText = img.getAttribute("title");	  
+      const figcaption = document.createElement("figcaption");
+      figcaption.innerText = img.getAttribute("title");
       const cloneImg = img.cloneNode(false);
       figure.appendChild(cloneImg);
       figure.appendChild(figcaption);

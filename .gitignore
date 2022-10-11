@@ -14,3 +14,4 @@ js/deps/builds
 !.vscode/tasks.json
 pnpm-lock.yaml
 *.log
+test/testIndex.html

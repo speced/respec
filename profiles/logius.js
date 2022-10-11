@@ -8,7 +8,7 @@ const modules = [
   import("../src/core/l10n.js"),
   import("../src/logius/defaults.js"), // done, for now
   import("../src/core/style.js"),
-  import("../src/logius/style.js"), // done for now, still some wip  
+  import("../src/logius/style.js"), // done for now, still some wip
   import("../src/core/github.js"),
   import("../src/core/data-include.js"),
   import("../src/core/markdown.js"),
@@ -57,6 +57,8 @@ const modules = [
   import("../src/core/algorithms.js"),
   import("../src/core/anchor-expander.js"),
   import("../src/core/custom-elements/index.js"),
+  import("../src/logius/dynamic-sidebar.js"),
+  import("../src/logius/missing-config-warner.js"),
   /* Linters must be the last thing to run */
   import("../src/core/linter-rules/check-charset.js"),
   import("../src/core/linter-rules/check-punctuation.js"),
