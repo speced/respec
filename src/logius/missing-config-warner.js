@@ -1,10 +1,6 @@
 import { showError, showWarning } from "../core/utils.js";
 
-const requiredConfigs = [
-  "labelColorTable",
-  "headerLocalizationStrings",
-  "licenses",
-];
+const requiredConfigs = ["headerLocalizationStrings", "licenses"];
 
 const recommendedConfigs = [
   "specStatus",
@@ -17,7 +13,8 @@ const wikiURL = "https://github.com/Logius-standaarden/respec/wiki/";
 
 export async function run(conf) {
   if (conf.useSideBar) {
-    recommendedConfigs.push("labelText");
+    requiredConfigs.push("labelText");
+    requiredConfigs.push("labelColorTable");
   }
 
   await errorMissingConfigs(conf);
