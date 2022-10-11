@@ -1,26 +1,48 @@
 import { showWarning } from "../core/utils.js";
 
 const requiredConfigs = [
-  "nl_organisationName",
-  "labelText",
-  "specStatus",
   "labelColorTable",
-  "governanceTypeText",
-  "sotdText",
-  "licenses",
   "headerLocalizationStrings",
+  "licenses",
 ];
 
+const recommendedConfigs = [
+  "specStatus",
+  "nl_organisationName",
+  "governanceTypeText",
+  "sotdText",
+];
+
+const wikiURL = "https://github.com/Logius-standaarden/respec/wiki/";
+
 export async function run(conf) {
+  if (conf.useSideBar) {
+    recommendedConfigs.push("labelText");
+  }
+
+  await errorMissingConfigs(conf);
   await warnMissingConfigs(conf);
 }
 
-async function warnMissingConfigs(conf) {
+async function errorMissingConfigs(conf) {
   requiredConfigs.forEach(element => {
     if (!conf[element]) {
       showWarning(
+        `Error, missing config option ${element}`,
+        "errorMissingConfigs",
+        { hint: wikiURL + element }
+      );
+    }
+  });
+}
+
+async function warnMissingConfigs(conf) {
+  recommendedConfigs.forEach(element => {
+    if (!conf[element]) {
+      showWarning(
         `Warning, missing config option ${element}`,
-        "warnMissingConfigs"
+        "warnMissingConfigs",
+        { hint: wikiURL + element }
       );
     }
   });

@@ -38,7 +38,7 @@ export default (conf, options) => {
     <h2>
       ${conf.nl_organisationName
         ? `${conf.nl_organisationName} `
-        : "Geonovum "}${conf.isRegular ? html` ${conf.typeStatus}<br /> ` : ""}
+        : ""}${conf.isRegular ? html` ${conf.typeStatus}<br /> ` : ""}
       ${conf.textStatus}
       <time class="dt-published" datetime="${conf.dashDate}"
         >${conf.publishHumanDate}</time
