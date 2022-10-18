@@ -1,12 +1,14 @@
-import css from "../styles/side-label.css.js";
+import css from "../styles/label.css.js";
 import { getIntlData } from "../core/utils.js";
 
+export const name = "logius/label";
+
 export async function run(conf) {
-  await createSideLabel(conf);
+  await createLabel(conf);
 }
 
-async function createSideLabel(conf) {
-  if (!conf.useSideBar) {
+async function createLabel(conf) {
+  if (!conf.useLabel) {
     return;
   }
   const l10n_labelText = getIntlData(conf.labelText);

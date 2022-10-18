@@ -1,5 +1,7 @@
 import { showError, showWarning } from "../core/utils.js";
 
+export const name = "logius/missing-config-warner";
+
 const requiredConfigs = ["headerLocalizationStrings", "licenses"];
 
 const recommendedConfigs = [

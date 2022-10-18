@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const documentConfig = {
   useLogo: true,
-  useSideBar: true,
+  useLabel: true,
   license: "cc0",
   specType: "HR",
   specStatus: "cv",
