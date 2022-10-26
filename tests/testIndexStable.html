@@ -179,18 +179,18 @@ dfn {
 }
 
 </style>
-
-
+  
+  
 <title>Logius's testpage</title>
-
-
-
-
-
+  
+  
+  
+  
+  
 <link rel="shortcut icon" type="image/x-icon" href="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/logius.ico">
 
 
-
+  
 <script>
     function include(utils, content, url) {
       //alert(`utils:${utils}, content:${content}, url:${url}`);
@@ -265,14 +265,6 @@ a[href].respec-offending-element {
 
 cite .bibref {
   font-style: normal;
-}
-
-code {
-  color: #c63501;
-}
-
-th code {
-  color: inherit;
 }
 
 a[href].orcid {
@@ -550,19 +542,22 @@ var[data-type]:hover::before {
 
   .sidelabel {
     position: fixed;
+    -webkit-transform-origin: top right;
+    right: 100%;
     top: 0;
-    left: 0;
-    padding: 18px 1px 48px 0;
+    -webkit-transform: rotate(-90deg);
+    padding: 4px 50px 4px 10px;
     color: white;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: scaleX(-1) scaleY(-1);
+    //writing-mode: vertical-rl;
+    //text-orientation: mixed;
+    //transform: scaleX(-1) scaleY(-1);
+    white-space: nowrap;
     z-index: 1;
   }
 
 </style>
 <script id="initialUserConfig" type="application/json">{
-  "nl_organisationName": "Logius",
+  "nl_organisationName": "Rick de Bruijn",
   "nl_organisationPrefix": "LS-",
   "nl_organisationStylesURL": "https://publicatie.centrumvoorstandaarden.nl/respec/style/",
   "nl_organisationPublishURL": "https://publicatie.centrumvoorstandaarden.nl/",
@@ -743,10 +738,10 @@ var[data-type]:hover::before {
     }
   },
   "useLogo": true,
-  "useSideBar": true,
+  "useLabel": true,
   "license": "cc0",
   "specType": "HR",
-  "specStatus": "def",
+  "specStatus": "cv",
   "govTextCode": "AA",
   "shortName": "API-Design-Rules",
   "publishDate": "2020-09-20",
@@ -798,37 +793,38 @@ var[data-type]:hover::before {
     "pullrequests": "https://github.com/Logius-standaarden/API-Design-Rules/pulls/"
   },
   "publishISODate": "2020-09-20T00:00:00.000Z",
-  "generatedSubtitle": "Vastgestelde versie 20 september 2020"
-}</script></head>
+  "generatedSubtitle": "Consultatieversie 20 september 2020"
+}</script>
+<link rel="stylesheet" href="https://publicatie.centrumvoorstandaarden.nl/respec/style/base.css"></head>
 
-<body class="h-entry"><div class="head">
+<body class="h-entry toc-inline"><div class="head">
     <a class="logo" href="https://www.logius.nl/standaarden"><img alt="Logius" height="77" id="Logius" src="https://publicatie.centrumvoorstandaarden.nl/respec/style/logos/figure-logius.svg" width="44">
   </a> <h1 id="title" class="title">Logius's testpage</h1>
-
+    
     <h2>
-      Logius Handreiking<br>
-      Vastgestelde versie
+      Rick de Bruijn Handreiking<br>
+      Consultatieversie
       <time class="dt-published" datetime="2020-09-20">20 september 2020</time>
     </h2>
     <dl>
       <dt>Deze versie:</dt><dd class="status">
-              <a class="u-url status" href="https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/def-hr-API-Design-Rules-20200920/">https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/def-hr-API-Design-Rules-20200920/</a>
+              <a class="u-url status" href="https://logius-standaarden.github.io/API-Design-Rules/">https://logius-standaarden.github.io/API-Design-Rules/</a>
             </dd><dt>Laatst gepubliceerde versie:</dt><dd>
               <a href="https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/">https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/</a>
             </dd>
       <dt>Laatste werkversie:</dt><dd><a href="https://logius-standaarden.github.io/API-Design-Rules/">https://logius-standaarden.github.io/API-Design-Rules/</a></dd>
-
-
-
+      
+      
+      
       <dt>Vorige versie</dt><dd><a href="https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/def-hr-API-Design-Rules-20181007/">https://publicatie.centrumvoorstandaarden.nl/dk/API-Design-Rules/def-hr-API-Design-Rules-20181007/</a></dd>
-
+      
       <dt>Redacteurs:</dt>
       <dd class="editor p-author h-card vcard">
     <a class="ed_mailto u-email email p-name" href="mailto:api@digikoppeling">P H</a> (<a class="p-org org h-org" href="https://logius.nl/standaarden">Logius</a>)
   </dd><dd class="editor p-author h-card vcard">
     <a class="u-url url p-name fn" href="https://logius.nl/standaarden">P H</a>
   </dd>
-
+      
       <dt>Auteur:</dt><dd class="editor p-author h-card vcard">
     <a class="u-url url p-name fn" href="https://logius.nl/standaarden">P H</a>
   </dd>
@@ -842,8 +838,8 @@ var[data-type]:hover::before {
     <a href="https://github.com/Logius-standaarden/API-Design-Rules/pulls/">Pull requests</a>
   </dd>
     </dl>
-
-
+    
+    
     <p lang="en">
           This document is also available in these non-normative formats:
           <a rel="alternate" href="https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.html">html</a> en <a rel="alternate" href="https://publicatie.centrumvoorstandaarden.nl/api/oauth/static.pdf">pdf</a>
@@ -855,11 +851,11 @@ var[data-type]:hover::before {
     <hr title="Separator for header">
   </div>
   <section id="abstract" class="introductory"><h2>Samenvatting</h2></section>
-
-  <section id="sotd" class="introductory"><h2>Status van dit document</h2>Dit is de definitieve versie van. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd.<p>De programmaraad van Geonovum heeft deze standaard goedgekeurd.</p></section>
+  
+  <section id="sotd" class="introductory"><h2>Status van dit document</h2>Dit is een door goedgekeurde consultatieversie. Commentaar over dit document kan gestuurd worden naar <a href="mailto:digikoppeling@logius.nl">digikoppeling@logius.nl</a>.<p>De programmaraad van Geonovum heeft deze standaard goedgekeurd.</p></section>
   <section class="introductory" id="overview">
     <div class="header-wrapper"><h2 id="title">
-
+      
       Overview
     </h2><a class="self-link" href="#title" aria-label="Permalink for this Section"></a></div>
   </section>
@@ -883,7 +879,12 @@ var[data-type]:hover::before {
 <p>lalalal
 issue: </p><div class="issue" id="issue-container-number-359"><div role="heading" class="issue-title marker" id="h-issue" aria-level="3"><a href="https://github.com/Logius-standaarden/API-Design-Rules/issues/359"><span class="issue-number">Issue 359</span></a></div><div class=""></div></div><p></p>
 <div class="header-wrapper"><h2 id="verantwoording">Verantwoording</h2><a class="self-link" href="#doel-van-dit-document-en-leeswijzer" aria-label="Permalink for this Section"></a></div>
-<p><figure id="fig-logius-logo"><img src="figure-logius.svg" alt="Logius" title="Logius Logo"><figcaption>Figuur <bdi class="figno">1</bdi> <span class="fig-title">Logius Logo</span></figcaption></figure></p>
+<p>
+      </p><figure id="fig-logius-logo">
+        <img src="figure-logius.svg" alt="Logius">
+        <figcaption>Figuur <bdi class="figno">1</bdi> <span class="fig-title">Logius Logo</span></figcaption>
+      </figure>
+    <p></p>
 <p>De <em>Architectuur Digikoppeling</em> is tot stand gekomen in samenwerking met leden van het <code>Technisch Overleg Digikoppeling</code> en andere belanghebbenden.</p>
 <p>De <em>Architectuur Digikoppeling</em> is mede gebaseerd op:</p>
 <ul>
@@ -956,7 +957,7 @@ De documentatie is als volgt opgebouwd:</p>
 <p>Tabel 1: Leeswijzer</p>
 </section>
 
-
+  
   <section id="conformance"><div class="header-wrapper"><h2 id="x3-conformiteit"><bdi class="secno">3. </bdi>Conformiteit</h2><a class="self-link" href="#conformance" aria-label="Permalink for Section 3."></a></div><p>Naast onderdelen die als niet normatief gemarkeerd zijn, zijn ook alle diagrammen, voorbeelden, en noten in dit document niet normatief. Verder is alles in dit document normatief.</p><p>
         De trefwoorden <em class="rfc2119">MOET</em>, <em class="rfc2119">MOETEN</em> en <em class="rfc2119">ZOU</em> in dit
         document moeten worden geïnterpreteerd als in
@@ -965,11 +966,11 @@ De documentatie is als volgt opgebouwd:</p>
         als, en alleen als deze in hoofdletters zijn weergegeven, zoals hier
         getoond.
       </p>
-
+    
   </section>
 
   <section id="tof">
-
+    
   <div class="header-wrapper"><h2 id="x4-lijst-met-figuren"><bdi class="secno">4. </bdi>Lijst met figuren</h2><a class="self-link" href="#tof" aria-label="Permalink for Section 4."></a></div><ul class="tof">
         <li class="tofline">
     <a class="tocxref" href="#fig-logius-logo">Figuur <bdi class="figno">1</bdi> <span class="fig-title">Logius Logo</span></a>
@@ -977,27 +978,27 @@ De documentatie is als volgt opgebouwd:</p>
       </ul></section>
 
   <nav id="toc"><h2 class="introductory" id="inhoudsopgave">Inhoudsopgave</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#abstract">Samenvatting</a></li><li class="tocline"><a class="tocxref" href="#sotd">Status van dit document</a></li><li class="tocline"><a class="tocxref" href="#title">
-
+      
       Overview
     </a></li><li class="tocline"><a class="tocxref" href="#intro"><bdi class="secno">1. </bdi>
       Introduction
     </a></li><li class="tocline"><a class="tocxref" href="#doel-van-dit-document-en-leeswijzer"><bdi class="secno">2. </bdi>Doel van dit document en leeswijzer</a></li><li class="tocline"><a class="tocxref" href="#conformance"><bdi class="secno">3. </bdi>Conformiteit</a></li><li class="tocline"><a class="tocxref" href="#tof"><bdi class="secno">4. </bdi>Lijst met figuren</a></li><li class="tocline"><a class="tocxref" href="#index"><bdi class="secno">A. </bdi>Index</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#index-defined-here"><bdi class="secno">A.1 </bdi>Begrippen gedefinieerd door deze specificatie</a></li><li class="tocline"><a class="tocxref" href="#index-defined-elsewhere"><bdi class="secno">A.2 </bdi>Begrippen gedefinieerd door verwijzing</a></li></ol></li><li class="tocline"><a class="tocxref" href="#references"><bdi class="secno">B. </bdi>Referenties</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#normatieve-referenties"><bdi class="secno">B.1 </bdi>Normatieve referenties</a></li><li class="tocline"><a class="tocxref" href="#informatieve-referenties"><bdi class="secno">B.2 </bdi>Informatieve referenties</a></li></ol></li></ol></nav>
 
   <section id="index" class="appendix"><div class="header-wrapper"><h2 id="a-index"><bdi class="secno">A. </bdi>Index</h2><a class="self-link" href="#index" aria-label="Permalink for Appendix A."></a></div>
-
+    
   <section id="index-defined-here">
     <div class="header-wrapper"><h3 id="a-1-begrippen-gedefinieerd-door-deze-specificatie"><bdi class="secno">A.1 </bdi>Begrippen gedefinieerd door deze specificatie</h3><a class="self-link" href="#index-defined-here" aria-label="Permalink for Appendix A.1"></a></div>
     <ul class="index">
     <li>
-      <a class="index-term" href="#dfn-geonovum">geonovum</a>
+      <a class="index-term" href="#dfn-geonovum">geonovum</a> 
     <span class="print-only">§2.</span></li><li>
-      <a class="index-term" href="#dfn-logius">logius</a>
+      <a class="index-term" href="#dfn-logius">logius</a> 
     <span class="print-only">§2.</span></li>
   </ul>
   </section><section id="index-defined-elsewhere">
     <div class="header-wrapper"><h3 id="a-2-begrippen-gedefinieerd-door-verwijzing"><bdi class="secno">A.2 </bdi>Begrippen gedefinieerd door verwijzing</h3><a class="self-link" href="#index-defined-elsewhere" aria-label="Permalink for Appendix A.2"></a></div>
     <ul class="index">
-
+    
   </ul>
   </section></section>
 
@@ -1024,7 +1025,7 @@ De documentatie is als volgt opgebouwd:</p>
       <span class="caret"></span>
       <div>
         <a class="self-link" href="#dfn-logius" aria-label="Permalink for definition: logius. Activate to close this dialog.">Permalink</a>
-
+         
       </div>
       <p><b>Referenced in:</b></p>
       <ul>
@@ -1034,7 +1035,7 @@ De documentatie is als volgt opgebouwd:</p>
       <span class="caret"></span>
       <div>
         <a class="self-link" href="#dfn-geonovum" aria-label="Permalink for definition: geonovum. Activate to close this dialog.">Permalink</a>
-
+         
       </div>
       <p><b>Referenced in:</b></p>
       <ul>
@@ -1261,4 +1262,4 @@ function hidePanel(panel) {
   panel.hidden = true;
   panel.classList.remove("docked");
 }
-</script><div class="sidelabel" style="background-color: #154273;">Logius - Definitieve versie</div><script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script></body></html>
+</script><div class="sidelabel" style="background-color: #2fdaed;">Rick de Bruijn - Goedgekeurde consultatieversie</div><script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script></body></html>
