@@ -88,6 +88,7 @@
     "colors": "1.4.0",
     "dom-compare": "^0.6.0",
     "finalhandler": "^1.2.0",
+    "html-compare": "^0.0.1",
     "marked": "^4.1.1",
     "puppeteer": "^18.2.1",
     "sade": "^1.8.1",

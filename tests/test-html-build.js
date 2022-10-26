@@ -5,7 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const htmlCompare = require("html-compare");
 const currentHtmlPath = path.join(__dirname, "testIndexStable.html");
-const stableHtmlPath = path.join(__dirname, "testIndex.html");
+const stableHtmlPath = path.join(__dirname, "testIndexStable.html");
 const logFilePath = path.join(__dirname, "./html-test.log");
 const writeStream = fs.createWriteStream(logFilePath, { flags: "w" });
 
@@ -18,7 +18,7 @@ if (args[0] === "--createLog") {
 
 // create snapshot
 execSync(
-  "npx respec --localhost --src examples/logius-profile/logius-voorbeeld.html --out tests/testIndex.html",
+  "npx respec --localhost --src examples/logius-profile/logius-voorbeeld.html --out tests/testIndexStable.html",
   (error, stdout, stderr) => {
     console.log(error);
     console.log(stdout);
