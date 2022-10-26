@@ -22,11 +22,15 @@ describe("Core — Can I Use", () => {
         apiURL,
       },
     });
+    const defaultBrowsers = new Set(BROWSERS.keys());
+    defaultBrowsers.delete("op_mob");
+    defaultBrowsers.delete("opera");
+
     const doc = await makeRSDoc(ops);
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
-    expect(caniuse.browsers).toEqual([]);
+    expect(caniuse.browsers).toEqual([...defaultBrowsers]);
   });
 
   it("allows overriding defaults", async () => {

@@ -38,6 +38,10 @@ export function run() {
         processFigure(matchingElement, id, a);
         break;
       }
+      case "table": {
+        processTable(matchingElement, id, a);
+        break;
+      }
       case "aside":
       case "div": {
         processBox(matchingElement, id, a);
@@ -90,6 +94,33 @@ function processFigure(matchingElement, id, a) {
   const figTitle = figcaption.querySelector(".fig-title");
   if (!a.hasAttribute("title") && figTitle) {
     a.title = norm(figTitle.textContent);
+  }
+}
+
+function processTable(matchingTable, id, a) {
+  if (!matchingTable.classList.contains("numbered")) {
+    return;
+  }
+  const caption = matchingTable.querySelector("caption");
+  if (!caption) {
+    a.textContent = a.getAttribute("href");
+    const msg = `Found matching table "${id}", but table is lacking a \`<caption>\`.`;
+    const title = "Missing caption in referenced table.";
+    showError(msg, name, { title, elements: [a] });
+    return;
+  }
+  // remove the table's title
+  const children = [...makeSafeCopy(caption).childNodes].filter(
+    // @ts-ignore
+    node => !node.classList || !node.classList.contains("table-title")
+  );
+  // drop an empty space at the end.
+  children.pop();
+  a.append(...children);
+  a.classList.add("table-ref");
+  const tableTitle = caption.querySelector(".table-title");
+  if (!a.hasAttribute("title") && tableTitle) {
+    a.title = norm(tableTitle.textContent);
   }
 }
 
