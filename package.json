@@ -39,7 +39,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "highlight.js": "^11.6.0",
     "hyperhtml": "^2.34.2",
-    "idb": "^7.1.0",
+    "idb": "^7.1.1",
     "jasmine": "^4.4.0",
     "jasmine-core": "^4.4.0",
     "karma": "^6.4.1",
