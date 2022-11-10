@@ -8,6 +8,7 @@ const recommendedConfigs = [
   "specStatus",
   "nl_organisationName",
   "governanceTypeText",
+  "govTextCode",
   "sotdText",
 ];
 
