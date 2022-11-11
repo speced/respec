@@ -114,8 +114,8 @@ function renderGovernance(conf) {
     case 21: // Geonovum + PR
       govText = `Dit is de definitieve versie van de praktijkrichtlijn. Een praktijkrichtlijn is een product dat informatie geeft, vaak met een technisch karakter, dat nodig is voor het toepassen van een standaard. Een praktijkrichtlijn hoort altijd bij een standaard/norm.`;
       break;
-    case 112: // Logius + ST + DEF
-      govText = `Het OBDO heeft op advies van het Forum Standaardisatie deze versie vastgesteld.`;
+    //case 112: // Logius + ST + DEF
+    //  govText = `Het OBDO heeft op advies van het Forum Standaardisatie deze versie vastgesteld.`;
       break;
     default:
       break;
