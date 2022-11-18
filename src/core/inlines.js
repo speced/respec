@@ -98,7 +98,11 @@ function inlineElementMatches(matched) {
     }
   })();
   return html`<code
-    ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
+    ><a
+      data-xref-type="${xrefType}"
+      data-xref-for="${xrefFor}"
+      data-link-type="${xrefType}"
+      data-link-for="${xrefFor}"
       >${textContent}</a
     ></code
   >`;
