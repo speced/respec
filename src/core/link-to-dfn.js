@@ -121,27 +121,31 @@ function collectDfns(title) {
   const duplicates = [];
   for (const dfn of definitionMap.get(title)) {
     const { dfnFor = "", dfnType = "dfn" } = dfn.dataset;
-    // check for potential duplicate definition
-    if (result.has(dfnFor) && result.get(dfnFor).has(dfnType)) {
-      const oldDfn = result.get(dfnFor).get(dfnType);
-      // We want <dfn> definitions to take precedence over
-      // definitions from WebIDL. WebIDL definitions wind
-      // up as <span>s instead of <dfn>.
-      const oldIsDfn = oldDfn.localName === "dfn";
-      const newIsDfn = dfn.localName === "dfn";
-      const isSameDfnType = dfnType === (oldDfn.dataset.dfnType || "dfn");
-      const isSameDfnFor = dfnFor === (oldDfn.dataset.dfnFor || "");
-      if (oldIsDfn && newIsDfn && isSameDfnType && isSameDfnFor) {
-        duplicates.push(dfn);
-        continue;
+    for (const _for of dfnFor.split(",")) {
+      // check for potential duplicate definition
+      if (result.has(_for) && result.get(_for).has(dfnType)) {
+        const oldDfn = result.get(_for).get(dfnType);
+        // We want <dfn> definitions to take precedence over
+        // definitions from WebIDL. WebIDL definitions wind
+        // up as <span>s instead of <dfn>.
+        const oldIsDfn = oldDfn.localName === "dfn";
+        const newIsDfn = dfn.localName === "dfn";
+        const isSameDfnType = dfnType === (oldDfn.dataset.dfnType || "dfn");
+        const isSameDfnFor = (oldDfn.dataset.dfnFor || "")
+          .split(",")
+          .includes(_for);
+        if (oldIsDfn && newIsDfn && isSameDfnType && isSameDfnFor) {
+          duplicates.push(dfn);
+          continue;
+        }
       }
+      const type = "idl" in dfn.dataset || dfnType !== "dfn" ? "idl" : "dfn";
+      if (!result.has(_for)) {
+        result.set(_for, new Map());
+      }
+      result.get(_for).set(type, dfn);
+      addId(dfn, "dfn", title);
     }
-    const type = "idl" in dfn.dataset || dfnType !== "dfn" ? "idl" : "dfn";
-    if (!result.has(dfnFor)) {
-      result.set(dfnFor, new Map());
-    }
-    result.get(dfnFor).set(type, dfn);
-    addId(dfn, "dfn", title);
   }
 
   return { result, duplicates };
@@ -184,7 +188,12 @@ function processAnchor(anchor, dfn, titleToDfns) {
   const { dfnFor } = dfn.dataset;
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
-  } else if (linkFor && !titleToDfns.get(linkFor) && linkFor !== dfnFor) {
+  } else if (
+    linkFor &&
+    !titleToDfns.get(linkFor) &&
+    dfnFor &&
+    !dfnFor.split(",").includes(linkFor)
+  ) {
     noLocalMatch = true;
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
