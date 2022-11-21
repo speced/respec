@@ -45,7 +45,7 @@ const knownTypesMap = new Map([
     "element-state",
     {
       requiresFor: true,
-      associateWith: "an markup attribute",
+      associateWith: "a markup attribute",
       validator: validateCommonName,
     },
   ],
