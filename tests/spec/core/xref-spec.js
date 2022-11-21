@@ -583,7 +583,7 @@ describe("Core — xref", () => {
 
       const [windowLink, eventTargetLink] = doc.querySelectorAll("#link1 a");
       expect(windowLink.href).toBe(
-        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+        "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window"
       );
       expect(eventTargetLink.href).toBe(
         "https://dom.spec.whatwg.org/#eventtarget"
@@ -680,7 +680,7 @@ describe("Core — xref", () => {
 
       const [link1a, link1b] = [...doc.querySelectorAll("#link1 a")];
       expect(link1a.href).toBe(
-        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+        "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window"
       );
       expect(link1b.href).toBe("https://dom.spec.whatwg.org/#dom-window-event");
       expect(link1a.firstElementChild.localName).toBe("code");
@@ -845,7 +845,7 @@ describe("Core — xref", () => {
 
       const externalLinks = [...doc.querySelectorAll("#link-external a")];
       expect(externalLinks[0].href).toBe(
-        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+        "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window"
       );
       expect(externalLinks[1].href).toBe(
         "https://dom.spec.whatwg.org/#dom-window-event"
