@@ -46,7 +46,7 @@ describe("Core - Validators", () => {
       for (const attribute of attributes) {
         const context = `attribute name: ${attribute}`;
         const dfn = document.createElement("dfn");
-        expect(validateDOMName(attribute, "attribute", dfn, "foo/bar"))
+        expect(validateDOMName(attribute, "element-attr", dfn, "foo/bar"))
           .withContext(context)
           .toBeTrue();
         expect(dfn.classList.contains("respec-offending-element"))
@@ -60,7 +60,7 @@ describe("Core - Validators", () => {
       for (const attribute of attributes) {
         const context = `attribute name: ${attribute}`;
         const dfn = document.createElement("dfn");
-        expect(validateDOMName(attribute, "attribute", dfn, "foo/bar"))
+        expect(validateDOMName(attribute, "element-attr", dfn, "foo/bar"))
           .withContext(context)
           .toBeFalse();
         expect(dfn.classList.contains("respec-offending-element"))

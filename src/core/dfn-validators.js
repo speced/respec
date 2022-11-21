@@ -24,12 +24,12 @@ export function validateMimeType(text, type, elem, pluginName) {
 
 /**
  * Validates the names of DOM attribute and elements.
- * @param {"attribute" | "element"} type
+ * @param {"element-attr" | "element"} type
  * @type {DefinitionValidator} */
 export function validateDOMName(text, type, elem, pluginName) {
   try {
     switch (type) {
-      case "attribute":
+      case "element-attr":
         document.createAttribute(text);
         return true;
       case "element":
