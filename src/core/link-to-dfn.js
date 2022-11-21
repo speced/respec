@@ -131,9 +131,7 @@ function collectDfns(title) {
         const oldIsDfn = oldDfn.localName === "dfn";
         const newIsDfn = dfn.localName === "dfn";
         const isSameDfnType = dfnType === (oldDfn.dataset.dfnType || "dfn");
-        const isSameDfnFor = (oldDfn.dataset.dfnFor || "")
-          .split(",")
-          .includes(dfnFor);
+        const isSameDfnFor = oldDfn.dataset.dfnFor?.split(",").includes(dfnFor);
         if (oldIsDfn && newIsDfn && isSameDfnType && isSameDfnFor) {
           duplicates.push(dfn);
           continue;
