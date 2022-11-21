@@ -415,7 +415,7 @@ describe("Core — Definitions", () => {
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
       const dfn = doc.querySelector("#attributes dfn");
-      expect(dfn.dataset.dfnType).toBe("attribute");
+      expect(dfn.dataset.dfnType).toBe("element-attr");
       expect(dfn.dataset.export).toBe("");
 
       // Check validation error
