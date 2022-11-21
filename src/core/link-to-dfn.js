@@ -120,11 +120,11 @@ function collectDfns(title) {
   const result = new Map();
   const duplicates = [];
   for (const dfn of definitionMap.get(title)) {
-    const { dfnFor = "", dfnType = "dfn" } = dfn.dataset;
-    for (const _for of dfnFor.split(",")) {
+    const { dfnType = "dfn" } = dfn.dataset;
+    for (const dfnFor of dfn.dataset.dfnFor?.split(",")) {
       // check for potential duplicate definition
-      if (result.has(_for) && result.get(_for).has(dfnType)) {
-        const oldDfn = result.get(_for).get(dfnType);
+      if (result.has(dfnFor) && result.get(dfnFor).has(dfnType)) {
+        const oldDfn = result.get(dfnFor).get(dfnType);
         // We want <dfn> definitions to take precedence over
         // definitions from WebIDL. WebIDL definitions wind
         // up as <span>s instead of <dfn>.
@@ -133,17 +133,17 @@ function collectDfns(title) {
         const isSameDfnType = dfnType === (oldDfn.dataset.dfnType || "dfn");
         const isSameDfnFor = (oldDfn.dataset.dfnFor || "")
           .split(",")
-          .includes(_for);
+          .includes(dfnFor);
         if (oldIsDfn && newIsDfn && isSameDfnType && isSameDfnFor) {
           duplicates.push(dfn);
           continue;
         }
       }
       const type = "idl" in dfn.dataset || dfnType !== "dfn" ? "idl" : "dfn";
-      if (!result.has(_for)) {
-        result.set(_for, new Map());
+      if (!result.has(dfnFor)) {
+        result.set(dfnFor, new Map());
       }
-      result.get(_for).set(type, dfn);
+      result.get(dfnFor).set(type, dfn);
       addId(dfn, "dfn", title);
     }
   }
