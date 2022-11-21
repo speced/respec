@@ -132,7 +132,7 @@ function collectDfns(title) {
         const oldIsDfn = oldDfn.localName === "dfn";
         const newIsDfn = dfn.localName === "dfn";
         const isSameDfnType = dfnType === (oldDfn.dataset.dfnType || "dfn");
-        const isSameDfnFor = oldDfn.dataset.dfnFor?.split(",").includes(dfnFor);
+        const isSameDfnFor = oldDfn.dataset.dfnFor?.split(",").map(s => s.trim()).includes(dfnFor);
         if (oldIsDfn && newIsDfn && isSameDfnType && isSameDfnFor) {
           duplicates.push(dfn);
           continue;
@@ -191,7 +191,7 @@ function processAnchor(anchor, dfn, titleToDfns) {
     linkFor &&
     !titleToDfns.get(linkFor) &&
     dfnFor &&
-    !dfnFor.split(",").includes(linkFor)
+    !dfnFor.split(",").map(s => s.trim()).includes(linkFor)
   ) {
     noLocalMatch = true;
   } else if (dfn.classList.contains("externalDFN")) {

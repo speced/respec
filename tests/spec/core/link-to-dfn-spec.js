@@ -120,7 +120,7 @@ describe("Core — Link to definitions", () => {
         <h2>Test Section</h2>
         <p>There are 2 elements: <dfn class="element">foo</dfn> and <dfn class="element">bar</dfn></p>
         <p>They both accept a <dfn class="element-attr" id=baz data-dfn-for="foo,bar">baz</dfn> attribute.</p>
-        <p id="dfn-link">[^ foo/bar ^] takes integer values.</p>
+        <p id="dfn-link">[^ foo/baz ^] takes integer values.</p>
       </section>`;
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
