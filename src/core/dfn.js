@@ -25,21 +25,27 @@ export const name = "core/dfn";
 /** @type {Map<string, { requiresFor: boolean, validator?: DefinitionValidator, associateWith?: string}>}  */
 const knownTypesMap = new Map([
   ["abstract-op", { requiresFor: false }],
-  ["attribute", { requiresFor: false, validator: validateDOMName }],
   [
     "attr-value",
     {
       requiresFor: true,
-      associateWith: "an HTML attribute",
+      associateWith: "a markup attribute",
       validator: validateCommonName,
     },
   ],
   ["element", { requiresFor: false, validator: validateDOMName }],
   [
+    "element-attr",
+    {
+      requiresFor: false,
+      validator: validateDOMName,
+    },
+  ],
+  [
     "element-state",
     {
       requiresFor: true,
-      associateWith: "an HTML attribute",
+      associateWith: "a markup attribute",
       validator: validateCommonName,
     },
   ],
