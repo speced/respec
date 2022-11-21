@@ -121,8 +121,8 @@ function collectDfns(title) {
   const duplicates = [];
   for (const dfn of definitionMap.get(title)) {
     const { dfnType = "dfn" } = dfn.dataset;
-    for (const dfnFor of dfn.dataset.dfnFor?.split(",").map(s => s.trim()) ??
-      []) {
+    const dfnFors = dfn.dataset.dfnFor?.split(",").map(s => s.trim()) ?? [];
+    for (const dfnFor of dfnFors) {
       // check for potential duplicate definition
       if (result.has(dfnFor) && result.get(dfnFor).has(dfnType)) {
         const oldDfn = result.get(dfnFor).get(dfnType);
