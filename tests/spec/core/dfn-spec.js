@@ -405,10 +405,10 @@ describe("Core — Definitions", () => {
         <section>
           <h2>Attributes</h2>
           <p id="attributes">
-            <dfn class="attribute">some-attribute</dfn>
+            <dfn class="element-attr">some-attribute</dfn>
           </p>
           <p id="attribute-bad">
-            <dfn class="attribute">-attribute</dfn>
+            <dfn class="element-attr">-attribute</dfn>
           </p>
         </section>
       `;
