@@ -121,7 +121,7 @@ function collectDfns(title) {
   const duplicates = [];
   for (const dfn of definitionMap.get(title)) {
     const { dfnType = "dfn" } = dfn.dataset;
-    const dfnFors = dfn.dataset.dfnFor?.split(",").map(s => s.trim()) ?? [];
+    const dfnFors = dfn.dataset.dfnFor?.split(",").map(s => s.trim()) ?? [""];
     for (const dfnFor of dfnFors) {
       // check for potential duplicate definition
       if (result.has(dfnFor) && result.get(dfnFor).has(dfnType)) {
@@ -132,7 +132,12 @@ function collectDfns(title) {
         const oldIsDfn = oldDfn.localName === "dfn";
         const newIsDfn = dfn.localName === "dfn";
         const isSameDfnType = dfnType === (oldDfn.dataset.dfnType || "dfn");
-        const isSameDfnFor = oldDfn.dataset.dfnFor?.split(",").map(s => s.trim()).includes(dfnFor);
+        const isSameDfnFor =
+          (!dfnFor && !oldDfn.dataset.dfnFor) ||
+          oldDfn.dataset.dfnFor
+            ?.split(",")
+            .map(s => s.trim())
+            .includes(dfnFor);
         if (oldIsDfn && newIsDfn && isSameDfnType && isSameDfnFor) {
           duplicates.push(dfn);
           continue;
@@ -191,7 +196,10 @@ function processAnchor(anchor, dfn, titleToDfns) {
     linkFor &&
     !titleToDfns.get(linkFor) &&
     dfnFor &&
-    !dfnFor.split(",").map(s => s.trim()).includes(linkFor)
+    !dfnFor
+      .split(",")
+      .map(s => s.trim())
+      .includes(linkFor)
   ) {
     noLocalMatch = true;
   } else if (dfn.classList.contains("externalDFN")) {
