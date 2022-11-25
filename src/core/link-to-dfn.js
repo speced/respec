@@ -70,6 +70,10 @@ export async function run(conf) {
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
   );
   for (const anchor of localAnchors) {
+    if (!anchor.dataset?.linkType && anchor.dataset?.xrefType) {
+      possibleExternalLinks.push(anchor);
+      continue;
+    }
     const dfn = findMatchingDfn(anchor, titleToDfns);
     if (dfn) {
       const foundLocalMatch = processAnchor(anchor, dfn, titleToDfns);

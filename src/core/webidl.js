@@ -58,7 +58,11 @@ const templates = {
         cite = "WEBIDL";
         break;
     }
-    return html`<a data-xref-type="${type}" data-cite="${cite}" data-lt="${lt}"
+    return html`<a
+      data-link-type="${type === "_IDL_" ? "idl" : type}"
+      data-xref-type="${type}"
+      data-cite="${cite}"
+      data-lt="${lt}"
       >${wrapped}</a
     >`;
   },
