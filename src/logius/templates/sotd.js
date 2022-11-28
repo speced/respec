@@ -50,9 +50,7 @@ export function renderPreview(conf) {
 }
 
 function renderGovernance(conf) {
-  const l10n_governanceTypeText = getIntlData(conf.governanceTypeText);
-  let govText = "";
   const govTextCode = conf.govTextCode.toLowerCase();
-  govText = l10n_governanceTypeText[govTextCode];
+  const govText = getIntlData(conf.governanceTypeText)[govTextCode];
   return html`<p>${govText}</p>`;
 }

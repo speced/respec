@@ -4,12 +4,12 @@ const documentConfig = {
   useLabel: true,
   license: "cc0",
   specType: "HR",
-  specStatus: "cv",
+  specStatus: "WV",
   govTextCode: "AA",
 
   // subtitle: "Hier komt een subtitle",
   shortName: "API-Design-Rules",
-
+  publishVersion: "1.1.0",
   publishDate: "2020-09-20",
   previousPublishDate: "2018-10-07",
   // Zie https://github.com/w3c/respec/wiki/previousMaturity. Dit moet een

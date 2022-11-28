@@ -111,93 +111,12 @@ import sotdTmpl from "./templates/sotd.js";
 
 export const name = "logius/headers";
 
-const localizationStrings = {
-  en: {
-    sotd: "Status of This Document",
-    wv: "Draft",
-    cv: "Recommendation",
-    vv: "Proposed recommendation",
-    def: "Definitive version",
-    basis: "Document",
-    eo: "Outdated version",
-    tg: "Rescinded version",
-    no: "Norm",
-    st: "Standard",
-    im: "Information model",
-    pr: "Guideline",
-    hr: "Guide",
-    wa: "Proposed recommendation",
-    al: "General",
-    bd: "Governance documentation",
-    bp: "Best practice",
-  },
-  nl: {
-    sotd: "Status van dit document",
-    wv: "Werkversie",
-    cv: "Consultatieversie",
-    vv: "Versie ter vaststelling",
-    def: "Vastgestelde versie",
-    basis: "Document",
-    eo: "Verouderde versie",
-    tg: "Teruggetrokken versie",
-    no: "Norm",
-    st: "Standaard",
-    im: "Informatiemodel",
-    pr: "Praktijkrichtlijn",
-    hr: "Handreiking",
-    wa: "Werkafspraak",
-    al: "Algemeen",
-    bd: "Beheerdocumentatie",
-    bp: "Best practice",
-  },
-};
-
-export const l10n = getIntlData(localizationStrings);
-
 const NLRespecDate = new Intl.DateTimeFormat(["nl"], {
   timeZone: "UTC",
   year: "numeric",
   month: "long",
   day: "2-digit",
 });
-
-// Thijs Brentjens: added Geonovum statusses
-// https://github.com/Logius-standaarden/respec/wiki/specStatus
-// pieter hering inserted generic names and added two statuses
-const status2text = {
-  WV: l10n.wv,
-  CV: l10n.cv,
-  VV: l10n.vv,
-  DEF: l10n.def,
-  BASIS: l10n.basis,
-  EO: l10n.eo,
-  TG: l10n.tg,
-  "GN-WV": "Werkversie",
-  "GN-CV": "Consultatieversie",
-  "GN-VV": "Versie ter vaststelling",
-  "GN-DEF": "Vastgestelde versie",
-  "GN-BASIS": "Document",
-};
-
-// Thijs Brentjens: added Geonovum types
-// https://github.com/Logius-standaarden/respec/wiki/specType
-// pieter hering inserted generic names and added two statuses
-const type2text = {
-  NO: l10n.no,
-  ST: l10n.st,
-  IM: l10n.im,
-  PR: l10n.pr,
-  HR: l10n.hr,
-  WA: l10n.wa,
-  AL: l10n.al,
-  BD: l10n.bd,
-  BP: l10n.bp,
-};
-
-const status2long = {
-  // "FPWD-NOTE": "First Public Working Group Note",
-  // "LC-NOTE": "Last Call Working Draft",
-};
 
 const noTrackStatus = []; // empty? or only "GN-BASIS"?
 
@@ -219,8 +138,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf) {
-  // Thijs Brentjens: TODO: decide by default unofficial?
-  // conf.isUnofficial = conf.specStatus === "unofficial";
+  const l10n = getIntlData(conf.localizationStrings);
 
   conf.isUnofficial = true;
   if (!conf.logos || !conf.useLogo) {
@@ -242,18 +160,12 @@ export function run(conf) {
   conf.isCCBYND = conf.license === "cc-by-nd";
 
   conf.licenseInfo = conf.licenses[conf.license.toLowerCase()];
-  conf.isBasic = conf.specStatus === "base";
-  // Thijs Brentjens: TODO: for a GN-BASIS document, is it necesary to deal differently with URIs? Especially for "Laatst gepubliceerde versie"
-  // Deal with all current GN specStatusses the same. This is mostly seen in the links in the header for Last editor's draft etc
-  // conf.isRegular = conf.specStatus !== "GN-BASIS";
-  conf.isRegular = true;
-  conf.isOfficial = conf.specStatus === "GN-DEF" || conf.specStatus === "DEF";
 
   if (!conf.specStatus) {
     const msg = "Missing required configuration: `specStatus`";
     showError(msg, name);
   }
-  if (conf.isRegular && !conf.shortName) {
+  if (!conf.shortName) {
     const msg = "Missing required configuration: `shortName`";
     showError(msg, name);
   }
@@ -277,7 +189,6 @@ export function run(conf) {
   }
   // end insertion from w3c
 
-  conf.title = document.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
     conf,
@@ -292,7 +203,6 @@ export function run(conf) {
   );
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
 
-  // todo fixed, static url
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
     // Thijs Brentjens: deal with editors draft links based on Github URIs
@@ -309,6 +219,7 @@ export function run(conf) {
       showWarning(msg, name);
     }
   }
+
   // Version URLs
   // Thijs Brentjens: changed this to Geonovum specific format. See https://github.com/Geonovum/respec/issues/126
   if (!conf.nl_organisationPublishURL) {
@@ -325,7 +236,7 @@ export function run(conf) {
     ? conf.specStatus.substr(3).toLowerCase()
     : conf.specStatus.toLowerCase();
   // eslint-disable-next-line prettier/prettier
-  if (conf.isRegular && conf.specStatus !== "GN-WV" && conf.specStatus !== "WV" && conf.specStatus == "DEF") // pieter added: only link to publication server when specStatus == "DEF
+  if (conf.specStatus !== "GN-WV" && conf.specStatus !== "WV" && conf.specStatus == "DEF") // pieter added: only link to publication server when specStatus == "DEF
   {
     if (!conf.publishVersion) {
       // eslint-disable-next-line prettier/prettier
@@ -340,7 +251,7 @@ export function run(conf) {
 
   // Only show latestVersion if a publishDate has been set. see issue https://github.com/Geonovum/respec/issues/93
   // todo check path generation
-  if (conf.isRegular && conf.hasBeenPublished)
+  if (conf.hasBeenPublished)
     // Thijs Brentjens: see
     conf.latestVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${conf.shortName}/`;
 
@@ -429,14 +340,8 @@ export function run(conf) {
   }
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  for (const k in status2text) {
-    if (status2long[k]) continue;
-    status2long[k] = status2text[k];
-  }
-  conf.longStatus = status2long[conf.specStatus];
-  conf.textStatus = status2text[conf.specStatus];
-  // Thijs: added typeStatus
-  conf.typeStatus = type2text[conf.specType];
+  conf.statusText = l10n[conf.specStatus.toLowerCase()];
+  conf.typeText = l10n[conf.specType.toLowerCase()];
 
   conf.showThisVersion = !conf.isNoTrack; // || conf.isTagFinding;
   // Thijs Brentjens: adapted for Geonovum document tyoes
@@ -622,13 +527,6 @@ export function run(conf) {
       "CR, PR, and REC documents need to have an `implementationReportURI` defined."
     );
   }
-
-  // Requested by https://github.com/w3c/respec/issues/504
-  // Makes a record of a few auto-generated things.
-  pub("amend-user-config", {
-    publishISODate: conf.publishISODate,
-    generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
-  });
 }
 
 // todo: pieter commented out

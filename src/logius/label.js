@@ -1,5 +1,5 @@
 import css from "../styles/label.css.js";
-import { getIntlData } from "../core/utils.js";
+import { showWarning } from "../core/utils.js";
 
 export const name = "logius/label";
 
@@ -11,13 +11,15 @@ async function createLabel(conf) {
   if (!conf.useLabel) {
     return;
   }
-  const l10n_labelText = getIntlData(conf.labelText);
   const sideLabel = document.createElement("div");
 
-  const labelColor = conf.labelColorTable[conf.specStatus.toLowerCase()];
-  sideLabel.innerHTML = `${conf.nl_organisationName} - ${
-    l10n_labelText[conf.specStatus.toLowerCase()]
-  }`;
+  let labelColor = conf.labelColor[conf.specStatus.toLowerCase()];
+  if (typeof labelColor == "undefined") {
+    showWarning(`Missing labelColor for specStatus ${conf.specStatus}`);
+    labelColor = "Black";
+  }
+
+  sideLabel.innerHTML = `${conf.nl_organisationName} ${conf.typeText} - ${conf.statusText}`;
 
   sideLabel.setAttribute("class", "sidelabel");
   sideLabel.setAttribute("style", `background-color: ${labelColor};`);

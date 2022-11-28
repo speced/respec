@@ -122,31 +122,6 @@ export function run(conf) {
     conf.specStatus = "base";
     showWarning(msg, name);
   }
-  if (!conf.nl_organisationStylesURL) {
-    // defaulting to Geonovum
-    conf.nl_organisationStylesURL =
-      "https://tools.geostandaarden.nl/respec/style/";
-    // override nl_organisationPrefix
-    conf.nl_organisationPrefix = "GN-";
-    let msg = `respecConfig.nl_organisationStylesURL missing. Defaulting to '${conf.nl_organisationStylesURL}'.`;
-    showWarning(msg, name);
-    msg = `respecConfig.nl_organisationPrefix missing. Defaulting to 'GN-.'`;
-    showWarning(msg, name);
-  }
-  if (!conf.nl_organisationPrefix) {
-    // default to geonovum
-    conf.nl_organisationPrefix = "GN-";
-    const msg = `respecConfig.nl_organisationPrefix missing. Defaulting to 'GN-.'`;
-    showWarning(msg, name);
-  }
-
-  if (!conf.nl_organisationStylesURL) {
-    // defaulting to Geonovum
-    conf.nl_organisationStylesURL =
-      "https://tools.geostandaarden.nl/respec/style/";
-    const msg = `respecConfig.nl_organisationStylesURL missing. Defaulting to '${conf.nl_organisationStylesURL}'.`;
-    showWarning(msg, name);
-  }
 
   if (!conf.noToc) {
     sub("end-all", attachFixupScript, { once: true });

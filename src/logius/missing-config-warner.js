@@ -2,7 +2,7 @@ import { showError, showWarning } from "../core/utils.js";
 
 export const name = "logius/missing-config-warner";
 
-const requiredConfigs = ["headerLocalizationStrings", "licenses"];
+const requiredConfigs = ["licenses"];
 
 const recommendedConfigs = [
   "specStatus",
@@ -15,9 +15,8 @@ const recommendedConfigs = [
 const wikiURL = "https://github.com/Logius-standaarden/respec/wiki/";
 
 export async function run(conf) {
-  if (conf.useSideBar) {
-    requiredConfigs.push("labelText");
-    requiredConfigs.push("labelColorTable");
+  if (conf.useLabel) {
+    requiredConfigs.push("labelColor");
   }
 
   await errorMissingConfigs(conf);
