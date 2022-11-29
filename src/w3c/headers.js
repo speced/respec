@@ -630,6 +630,9 @@ export async function run(conf) {
     conf.updateableRec &&
     conf.revisionTypes &&
     conf.revisionTypes.length > 0 &&
+    ["proposed-addition", "proposed-correction"].some(type =>
+      conf.revisionTypes.includes(type)
+    ) &&
     !conf.revisedRecEnd
   ) {
     const msg = docLink`${"[specStatus]"} is "REC" with proposed corrections or additions but no ${"[revisedRecEnd]"} is specified in the ${"[respecConfig]"}.`;
