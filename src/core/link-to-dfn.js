@@ -70,6 +70,10 @@ export async function run(conf) {
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
   );
   for (const anchor of localAnchors) {
+    if (!anchor.dataset?.linkType && anchor.dataset?.xrefType) {
+      possibleExternalLinks.push(anchor);
+      continue;
+    }
     const dfn = findMatchingDfn(anchor, titleToDfns);
     if (dfn) {
       const foundLocalMatch = processAnchor(anchor, dfn, titleToDfns);
@@ -136,11 +140,15 @@ function collectDfns(title) {
         continue;
       }
     }
-    const type = "idl" in dfn.dataset || dfnType !== "dfn" ? "idl" : "dfn";
     if (!result.has(dfnFor)) {
       result.set(dfnFor, new Map());
     }
-    result.get(dfnFor).set(type, dfn);
+    result.get(dfnFor).set(dfnType, dfn);
+    // We register non-dfn terms under the generic "idl" type as well
+    // for backwards-compatibility
+    if ("idl" in dfn.dataset || dfnType !== "dfn") {
+      result.get(dfnFor).set("idl", dfn);
+    }
     addId(dfn, "dfn", title);
   }
 
@@ -164,8 +172,7 @@ function findMatchingDfn(anchor, titleToDfns) {
   const dfnsByType = titleToDfns.get(target.title).get(target.for);
   const { linkType } = anchor.dataset;
   if (linkType) {
-    const type = linkType === "dfn" ? "dfn" : "idl";
-    return dfnsByType.get(type) || dfnsByType.get("dfn");
+    return dfnsByType.get(linkType) || dfnsByType.get("dfn");
   } else {
     // Assumption: if it's for something, it's more likely IDL.
     const type = target.for ? "idl" : "dfn";
