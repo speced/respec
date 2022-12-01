@@ -25,7 +25,6 @@ import {
   nonNormativeSelector,
   norm as normalize,
   showError,
-  showWarning,
 } from "./utils.js";
 import { possibleExternalLinks } from "./link-to-dfn.js";
 import { sub } from "./pubsubhub.js";
@@ -37,6 +36,8 @@ const profiles = {
 };
 
 export const API_URL = "https://respec.org/xref/";
+
+export const informativeRefsInNormative = [];
 
 if (
   !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
@@ -439,9 +440,8 @@ function addToReferences(elem, cite, normative, term, conf) {
     return;
   }
 
-  const msg = `Normative reference to "${term}" found but term is defined "informatively" in "${cite}".`;
-  const title = "Normative reference to non-normative term.";
-  showWarning(msg, name, { title, elements: [elem] });
+  // This is used by the informative-dfn linter
+  informativeRefsInNormative.push({ term, cite, element: elem });
 }
 
 /** @param {Errors} errors */
