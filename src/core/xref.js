@@ -37,7 +37,7 @@ const profiles = {
 
 export const API_URL = "https://respec.org/xref/";
 
-/** @type {{ term: string; spec: string; element: HTMLAnchorElement }[]} */
+/** @type {{ term: string; spec: string; element: HTMLElement }[]} */
 export const informativeRefsInNormative = [];
 
 if (
