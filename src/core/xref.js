@@ -37,6 +37,7 @@ const profiles = {
 
 export const API_URL = "https://respec.org/xref/";
 
+/** @type {{ term: string; spec: string; element: HTMLAnchorElement }[]} */
 export const informativeRefsInNormative = [];
 
 if (
@@ -441,7 +442,7 @@ function addToReferences(elem, cite, normative, term, conf) {
   }
 
   // This is used by the informative-dfn linter
-  informativeRefsInNormative.push({ term, cite, element: elem });
+  informativeRefsInNormative.push({ term, spec: cite, element: elem });
 }
 
 /** @param {Errors} errors */

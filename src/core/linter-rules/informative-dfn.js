@@ -34,9 +34,9 @@ export function run(conf) {
   if (!conf.lint?.[ruleName]) return;
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
 
-  informativeRefsInNormative.forEach(({ term, cite, element }) => {
+  informativeRefsInNormative.forEach(({ term, spec, element }) => {
     if (element.classList.contains("lint-ignore")) return;
-    logger(l10n.msg(term, cite), name, {
+    logger(l10n.msg(term, spec), name, {
       title: "Normative reference to non-normative term.",
       elements: [element],
       hint: l10n.hint,
