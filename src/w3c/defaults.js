@@ -37,6 +37,7 @@ const w3cDefaults = {
     "privsec-section": false,
     "required-sections": true,
     "wpt-tests-exist": false,
+    "informative-dfn": "warn",
     "no-unused-dfns": "warn",
     a11y: false,
   },
