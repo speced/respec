@@ -74,6 +74,7 @@ const modules = [
   import("../src/core/linter-rules/wpt-tests-exist.js"),
   import("../src/core/linter-rules/no-http-props.js"),
   import("../src/core/linter-rules/a11y.js"),
+  import("../src/core/linter-rules/informative-dfn.js"),
 ];
 
 Promise.all(modules)
