@@ -19,15 +19,12 @@ function addClassTables(conf) {
   });
 }
 
-// todo check if algorithm is correct!
 function addClassCode(conf) {
-  // todo do nothing if this config is not set?
-  if (!conf.nl_markdownCodeClass) {
-    return;
+  if (conf.nl_markdownCodeClass !== undefined) {
+    [...document.querySelectorAll("code")].forEach(code => {
+      code.classList.add(conf.nl_markdownCodeClass);
+    });
   }
-  [...document.querySelectorAll("code")].forEach(code => {
-    code.classList.add(conf.nl_markdownCodeClass);
-  });
 }
 
 function addFigureImg(conf) {
