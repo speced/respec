@@ -11,12 +11,12 @@ const modules = [
   import("../src/core/github.js"),
   import("../src/core/data-include.js"),
   import("../src/core/markdown.js"),
-  import("../src/logius/fix-md-elements.js"), // todo check
+  import("../src/logius/fix-md-elements.js"),
   import("../src/core/reindent.js"), // nothing changed but this module is in geonovum profile at line 3
   import("../src/logius/title.js"),
   import("../src/core/title.js"),
-  import("../src/w3c/level.js"), // todo check if this must be skipped
-  import("../src/w3c/group.js"), // todo check if this must be skipped
+  import("../src/w3c/level.js"),
+  import("../src/w3c/group.js"),
   import("../src/logius/headers.js"),
   import("../src/w3c/abstract.js"),
   import("../src/core/data-transform.js"),
