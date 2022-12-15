@@ -1,6 +1,5 @@
 // @ts-check
 // Module logius/headers
-// todo strip w3c specific content
 // Generate the headers material based on the provided configuration.
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
@@ -89,7 +88,6 @@
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
 
-/* pieter hering start synced with w3c version */
 import {
   ISODate,
   concatDate,
@@ -104,10 +102,6 @@ import { html } from "../core/import-maps.js";
 import { lang } from "../core/l10n.js";
 import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
-/* pieter hering end synced with w3c version */
-
-// Thijs Brentjens: customize in the logius/templates directory
-// (see above)
 
 export const name = "logius/headers";
 
@@ -155,9 +149,6 @@ export function run(conf) {
 
   conf.pubDomain = conf.pubDomain ? conf.pubDomain.toLowerCase() : "";
   conf.hasBeenPublished = !!conf.publishDate;
-  // Thijs Brentjens: TODO: document license types for Geonovum
-  conf.isCCBY = conf.license === "cc-by";
-  conf.isCCBYND = conf.license === "cc-by-nd";
 
   conf.licenseInfo = conf.licenses[conf.license.toLowerCase()];
 
@@ -170,8 +161,6 @@ export function run(conf) {
     showError(msg, name);
   }
 
-  // inserted from w3c or skip this part
-  // todo check fixed, static urls
   if (conf.testSuiteURI) {
     const url = new URL(conf.testSuiteURI, location.href);
     const { host, pathname } = url;
@@ -187,7 +176,6 @@ export function run(conf) {
       showWarning(msg, name, { hint });
     }
   }
-  // end insertion from w3c
 
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
@@ -212,11 +200,6 @@ export function run(conf) {
       // https://github.com/{org}/{repo} should be rewritten to https://{org}.github.io/{repo}/
       const githubParts = conf.github.split("github.com/")[1].split("/");
       conf.edDraftURI = `https://${githubParts[0]}.github.io/${githubParts[1]}`;
-    }
-    // todo no clear 'ED' status in this version
-    if (conf.specStatus === "ED") {
-      const msg = "Editor's Drafts should set edDraftURI.";
-      showWarning(msg, name);
     }
   }
 
@@ -250,7 +233,6 @@ export function run(conf) {
   }
 
   // Only show latestVersion if a publishDate has been set. see issue https://github.com/Geonovum/respec/issues/93
-  // todo check path generation
   if (conf.hasBeenPublished)
     // Thijs Brentjens: see
     conf.latestVersion = `${conf.nl_organisationPublishURL}${conf.pubDomain}/${conf.shortName}/`;
@@ -316,19 +298,7 @@ export function run(conf) {
       showError(msg, name);
     }
   });
-  /*
-  conf.multipleAlternates =
-    conf.alternateFormats && conf.alternateFormats.length > 1;
-  conf.alternatesHTML =
-    conf.alternateFormats &&
-    htmlJoinAnd(conf.alternateFormats, alt => {
-      let optional =
-        alt.hasOwnProperty("lang") && alt.lang ? ` hreflang='${alt.lang}'` : "";
-      optional +=
-        alt.hasOwnProperty("type") && alt.type ? ` type='${alt.type}'` : "";
-      return `<a rel='alternate' href='${alt.uri}'${optional}>${alt.label}</a>`;
-    });
-*/
+
   if (conf.bugTracker) {
     if (conf.bugTracker.new && conf.bugTracker.open) {
       conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>${conf.l10n.file_a_bug}</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${conf.l10n.open_bugs}</a>${conf.l10n.close_parens}`;
@@ -344,68 +314,12 @@ export function run(conf) {
   conf.typeText = l10n[conf.specType.toLowerCase()];
 
   conf.showThisVersion = !conf.isNoTrack; // || conf.isTagFinding;
-  // Thijs Brentjens: adapted for Geonovum document tyoes
-  // TODO: add an extra check, because now it seems that showPreviousVersion is true in (too) many cases?
   conf.showPreviousVersion = !conf.isNoTrack && !conf.isSubmission;
-  // Thijs Brentjens: only show if prevVersion is available
-  // todo check GN STATUSES in templates
   if (!conf.prevVersion) conf.showPreviousVersion = false;
-  // Thijs: get specStatus from Geonovum list https://github.com/Logius-standaarden/respec/wiki/specStatus
-  // Pieter: added generic checks
-  conf.isDEF = conf.specStatus === "GN-DEF" || conf.specStatus === "DEF";
-  conf.isWV = conf.specStatus === "GN-WV" || conf.specStatus === "WV";
-  conf.isCV = conf.specStatus === "GN-CV" || conf.specStatus === "CV";
-  conf.isVV = conf.specStatus === "GN-VV" || conf.specStatus === "VV";
-  conf.isBASIS = conf.specStatus === "GN-BASIS" || conf.specStatus === "BASIS";
-
-  // added two extra conf parameters
-  // todo check if logius will still use
-  conf.isNLEO = conf.specStatus === "EO";
-  conf.isGNTG = conf.specStatus === "TG";
 
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
-
-  // todo Pieter: do we need these?
-  Object.defineProperty(conf, "wgId", {
-    get() {
-      if (!this.hasOwnProperty("wgPatentURI")) {
-        return "";
-      }
-      // it's always at "pp-impl" + 1
-      const urlParts = this.wgPatentURI.split("/");
-      const pos = urlParts.findIndex(item => item === "pp-impl") + 1;
-      return urlParts[pos] || "";
-    },
-  });
-  // configuration done - yay!
-
-  /*
-  const options = {
-    get multipleAlternates() {
-      return conf.alternateFormats && conf.alternateFormats.length > 1;
-    },
-    get alternatesHTML() {
-      return (
-        conf.alternateFormats &&
-        htmlJoinAnd(conf.alternateFormats, alt => {
-          const lang = alt.hasOwnProperty("lang") && alt.lang ? alt.lang : null;
-          const type = alt.hasOwnProperty("type") && alt.type ? alt.type : null;
-          return html`<a
-            rel="alternate"
-            href="${alt.uri}"
-            hreflang="${lang}"
-            type="${type}"
-            >${alt.label}</a
-          >`;
-        })
-      );
-    },
-  };
-
-*/
-  // w3c version
 
   const options = {
     get multipleAlternates() {
@@ -449,43 +363,6 @@ export function run(conf) {
   sotd.id = sotd.id || "stod";
   sotd.classList.add("introductory");
 
-  // todo Pieter: is the comment below valid in this version?
-  // NOTE:
-  //  When arrays, wg and wgURI have to be the same length (and in the same order).
-  //  Technically wgURI could be longer but the rest is ignored.
-  //  However wgPatentURI can be shorter. This covers the case where multiple groups
-  //  publish together but some aren't used for patent policy purposes (typically this
-  //  happens when one is foolish enough to do joint work with the TAG). In such cases,
-  //  the groups whose patent policy applies need to be listed first, and wgPatentURI
-  //  can be shorter — but it still needs to be an array.
-  const wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
-  if (
-    wgPotentialArray.some(item => Array.isArray(item)) &&
-    !wgPotentialArray.every(item => Array.isArray(item))
-  ) {
-    pub(
-      "error",
-      "If one of '`wg`', '`wgURI`', or '`wgPatentURI`' is an array, they all have to be."
-    );
-  }
-  // todo Pieter valid?
-  if (Array.isArray(conf.wg)) {
-    conf.multipleWGs = conf.wg.length > 1;
-    conf.wgHTML = htmlJoinAnd(conf.wg, (wg, idx) => {
-      return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
-    });
-    const pats = [];
-    for (let i = 0, n = conf.wg.length; i < n; i++) {
-      pats.push(
-        `a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>` +
-          `public list of any patent disclosures  (${conf.wg[i]})</a>`
-      );
-    }
-    conf.wgPatentHTML = htmlJoinAnd(pats);
-  } else {
-    conf.multipleWGs = false;
-    conf.wgHTML = `the <a href='${conf.wgURI}'>${conf.wg}</a>`;
-  }
   if (conf.specStatus === "PR" && !conf.crEnd) {
     pub(
       "error",
@@ -529,36 +406,6 @@ export function run(conf) {
   }
 }
 
-// todo: pieter commented out
-/**
- * @param {*} conf
- * @param {HTMLElement} sotd
- */
-// function populateSoTD(conf, sotd) {
-
-//   const sotdClone = sotd.cloneNode(true);
-//   const additionalNodes = document.createDocumentFragment();
-//   const additionalContent = document.createElement("temp");
-//   // we collect everything until we hit a section,
-//   // that becomes the custom content.
-//   while (sotdClone.hasChildNodes()) {
-//     if (
-//       sotdClone.firstChild.nodeType !== Node.ELEMENT_NODE ||
-//       sotdClone.firstChild.localName !== "section"
-//     ) {
-//       additionalNodes.appendChild(sotdClone.firstChild);
-//       continue;
-//     }
-//     break;
-//   }
-//   additionalContent.appendChild(additionalNodes);
-//   conf.additionalContent = additionalContent.innerHTML;
-//   // Whatever sections are left, we throw at the end.
-//   conf.additionalSections = sotdClone.innerHTML;
-//   return sotdTmpl(conf);
-// }
-
-// todo revert geonvum alterations
 /**
  * @param {*} conf
  * @param {HTMLElement} sotd
