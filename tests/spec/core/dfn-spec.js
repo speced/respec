@@ -1,6 +1,7 @@
 "use strict";
 
 import {
+  errorFilters,
   flushIframes,
   makeBasicConfig,
   makeDefaultBody,
@@ -655,5 +656,20 @@ describe("Core — Definitions", () => {
       expect(errors[0].message).toContain("Declares both");
       expect(errors[1].message).toContain("but also has a");
     });
+  });
+
+  it("adds definition contract before any linters run", async () => {
+    const body = `<section>
+      <h2>Test Section</h2>
+      <p>There is 1 element: <dfn class="element">foo</dfn></p>
+    </section>`;
+    const ops = makeStandardOps({ lint: { "no-unused-dfns": "error" } }, body);
+    const doc = await makeRSDoc(ops);
+
+    const findUnusedDfnErrors = errorFilters.filter(
+      "core/linter-rules/no-unused-dfns"
+    );
+    const unusedDfnErrors = findUnusedDfnErrors(doc);
+    expect(unusedDfnErrors).toHaveSize(0);
   });
 });

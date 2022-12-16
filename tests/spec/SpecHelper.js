@@ -69,7 +69,7 @@ class UIMessageFilters {
   }
   /**
    * @param {string} pluginName
-   * @returns (Document) => Array<RespecError>
+   * @returns {(Document) => Array<RespecError>}
    */
   filter(pluginName) {
     if (this.cache.has(pluginName)) {
