@@ -21,9 +21,26 @@ export async function runAll(plugs) {
   await preProcess(respecConfig);
 
   const runnables = plugs.filter(p => isRunnableModule(p));
-  runnables.forEach(
-    plug => !plug.name && console.warn("Plugin lacks name:", plug)
+  runnables.forEach((plug, i) => {
+    if (!plug.name) {
+      console.warn("Plugin lacks name:", plug);
+      plug.name = `unamed-plugin-${i}`;
+    }
+  });
+
+  // insert a plugin just to emit "start-linters" event
+  const firstLinterIdx = runnables.findIndex(p =>
+    p.name.includes("linter-rules/")
   );
+  if (firstLinterIdx !== -1) {
+    runnables.splice(firstLinterIdx, 0, {
+      name: "start-linters",
+      run() {
+        pub("start-linters");
+      },
+    });
+  }
+
   respecConfig.state = {};
   await executePreparePass(runnables, respecConfig);
   await executeRunPass(runnables, respecConfig);

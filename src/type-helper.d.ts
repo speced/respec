@@ -226,10 +226,11 @@ type PersonExtras = {
 type EventTopic =
   | "amend-user-config"
   | "beforesave"
-  | "end-all"
   | "error"
-  | "plugins-done"
   | "start-all"
+  | "start-linters"
+  | "plugins-done"
+  | "end-all"
   | "toc"
   | "warn";
 
