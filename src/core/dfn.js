@@ -78,7 +78,7 @@ export function run() {
     }
     dfn.dataset.lt = titles.join("|");
   }
-  sub("plugins-done", addContractDefaults);
+  sub("start-linters", addContractDefaults);
 }
 
 /**
