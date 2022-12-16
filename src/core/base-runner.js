@@ -27,19 +27,7 @@ export async function runAll(plugs) {
       plug.name = `unamed-plugin-${i}`;
     }
   });
-
-  // insert a plugin just to emit "start-linters" event
-  const firstLinterIdx = runnables.findIndex(p =>
-    p.name.includes("linter-rules/")
-  );
-  if (firstLinterIdx !== -1) {
-    runnables.splice(firstLinterIdx, 0, {
-      name: "start-linters",
-      run() {
-        pub("start-linters");
-      },
-    });
-  }
+  addEmitStartLintersPlugin(runnables);
 
   respecConfig.state = {};
   await executePreparePass(runnables, respecConfig);
@@ -56,6 +44,22 @@ export async function runAll(plugs) {
 
 function isRunnableModule(plug) {
   return plug && (plug.run || plug.Plugin);
+}
+
+/**
+ * Insert a plugin just to emit "start-linters" event.
+ * Mutates {@linkcode runnables} parameter.
+ */
+function addEmitStartLintersPlugin(runnables) {
+  const emitStartLintersPlugin = {
+    name: "emit-start-linters",
+    run: () => pub("start-linters"),
+  };
+  const firstLinterIdx = runnables.findIndex(p =>
+    p.name.includes("linter-rules/")
+  );
+  const insertAt = firstLinterIdx !== -1 ? firstLinterIdx : runnables.length;
+  runnables.splice(insertAt, 0, emitStartLintersPlugin);
 }
 
 async function executePreparePass(runnables, config) {
