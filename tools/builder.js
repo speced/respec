@@ -80,12 +80,12 @@ const Builder = {
           warn(warning);
         }
       },
-      inlineDynamicImports: true,
     };
 
     /** @type {import("rollup").OutputOptions} */
     const outputOptions = {
       file: outPath,
+      inlineDynamicImports: true,
       format: "iife",
       sourcemap: true,
       banner: `window.respecVersion = "${version}";\n`,
