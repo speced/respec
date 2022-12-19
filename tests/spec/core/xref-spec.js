@@ -520,8 +520,6 @@ describe("Core — xref", () => {
     expect(badLink.href).toBe(
       "https://www.w3.org/TR/css-values-4/#bearing-angle"
     );
-    expect(badLink.classList).toContain("respec-offending-element");
-    expect(badLink.title).toBe("Normative reference to non-normative term.");
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
     expect(normRefs).toHaveSize(1); // excludes `css-values` of `#invalid`
