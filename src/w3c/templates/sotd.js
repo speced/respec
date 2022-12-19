@@ -458,32 +458,32 @@ function linkToWorkingGroup(conf) {
       changes = html`It includes
       ${pa
         ? html`<a href="${processLink}#proposed-amendments">
-            proposed amendments
-          </a>`
+            proposed amendments</a
+          >`
         : html`<a href="${processLink}#candidate-amendments">
-            candidate amendments
-          </a>`},
+            candidate amendments</a
+          >`},
       introducing substantive changes and new features since the previous
       Recommendation.`;
     } else if (pa || ca) {
       changes = html`It includes
       ${pa
         ? html`<a href="${processLink}#proposed-addition">
-            proposed additions
-          </a>`
+            proposed additions</a
+          >`
         : html`<a href="${processLink}#candidate-addition">
-            candidate additions
-          </a>`},
+            candidate additions</a
+          >`},
       introducing new features since the previous Recommendation.`;
     } else if (pc || cc) {
       changes = html`It includes
       ${pc
         ? html`<a href="${processLink}#proposed-correction">
-            proposed corrections
-          </a>`
+            proposed corrections</a
+          >`
         : html`<a href="${processLink}#candidate-correction">
-            candidate corrections
-          </a>`}.`;
+            candidate corrections</a
+          >`}.`;
     }
   }
   const track = status2track[conf.specStatus]

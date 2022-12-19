@@ -112,7 +112,7 @@ describe("W3C — Defaults", () => {
   });
 
   it("allows W3C TAG to show logos", async () => {
-    for (const specStatus of tagStatus) {
+    for (const specStatus of [...tagStatus, "ED"]) {
       const ops = makeStandardOps({
         specStatus,
         group: "tag",
