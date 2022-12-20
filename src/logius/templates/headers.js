@@ -47,9 +47,11 @@ const localizationStrings = {
     prev_version: "Previous version:",
     prev_recommendation: "Previous Recommendation:",
     latest_recommendation: "Latest Recommendation:",
-	alt_format: "This document is also available in these non-normative format:",
-	alt_formats: "This document is also available in these non-normative formats:",
-	licensed: "This document is licensed under ",
+    alt_format:
+      "This document is also available in these non-normative format:",
+    alt_formats:
+      "This document is also available in these non-normative formats:",
+    licensed: "This document is licensed under ",
   },
   ko: {
     author: "저자:",
@@ -103,9 +105,11 @@ const localizationStrings = {
     prev_version: "Vorige versie",
     former_editor: "Voormalig redacteur",
     former_editors: "Voormalige redacteurs",
-	alt_format: "Dit document is ook beschikbaar in dit niet-normatieve formaat:",
-	alt_formats: "Dit document is ook beschikbaar in deze niet-normatieve formaten:",
-	licensed: "Dit document is gelicentieerd onder ",
+    alt_format:
+      "Dit document is ook beschikbaar in dit niet-normatieve formaat:",
+    alt_formats:
+      "Dit document is ook beschikbaar in deze niet-normatieve formaten:",
+    licensed: "Dit document is gelicentieerd onder ",
   },
   es: {
     author: "Autor:",
@@ -257,9 +261,7 @@ export default (conf, options) => {
       : ""}
     ${conf.alternateFormats
       ? html`<p>
-          ${options.multipleAlternates
-            ? l10n.alt_formats
-            : l10n.alt_format}
+          ${options.multipleAlternates ? l10n.alt_formats : l10n.alt_format}
           ${options.alternatesHTML}
         </p>`
       : ""}
