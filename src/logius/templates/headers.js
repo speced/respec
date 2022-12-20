@@ -109,7 +109,7 @@ const localizationStrings = {
       "Dit document is ook beschikbaar in dit niet-normatieve formaat:",
     alt_formats:
       "Dit document is ook beschikbaar in deze niet-normatieve formaten:",
-    licensed: "Dit document is gelicentieerd onder ",
+    licensed: "Dit document valt onder de volgende licentie: ",
   },
   es: {
     author: "Autor:",
