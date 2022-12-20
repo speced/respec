@@ -2,15 +2,9 @@ import { showError, showWarning } from "../core/utils.js";
 
 export const name = "logius/missing-config-warner";
 
-const requiredConfigs = ["licenses"];
+const requiredConfigs = ["licenses", "license"];
 
-const recommendedConfigs = [
-  "specStatus",
-  "nl_organisationName",
-  "governanceTypeText",
-  "govTextCode",
-  "sotdText",
-];
+const recommendedConfigs = ["specStatus", "nl_organisationName", "sotdText"];
 
 const wikiURL = "https://github.com/Logius-standaarden/respec/wiki/";
 
