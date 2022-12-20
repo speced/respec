@@ -457,7 +457,7 @@ export async function run(conf) {
       const msg = docLink`Editor ${
         editor.name ? `"${editor.name}"` : `number ${i + 1}`
       } is missing their ${"[w3cid]"}.`;
-      const hint = docLink`See ${"[`w3cid`]"} for instructions for how to retrieve it and add it.`;
+      const hint = docLink`See ${"[w3cid]"} for instructions for how to retrieve it and add it.`;
       showError(msg, name, { hint });
     });
   }
@@ -596,7 +596,12 @@ export async function run(conf) {
   }
 
   conf.updateableRec = sotd.classList.contains("updateable-rec");
-  const revisionTypes = ["addition", "correction"];
+  const revisionTypes = [
+    "addition",
+    "correction",
+    "proposed-addition",
+    "proposed-correction",
+  ];
   if (conf.isRec && conf.revisionTypes?.length > 0) {
     if (conf.revisionTypes.some(x => !revisionTypes.includes(x))) {
       const unknownRevisionTypes = conf.revisionTypes.filter(
@@ -610,8 +615,12 @@ export async function run(conf) {
       )}.`;
       showError(msg, name, { hint });
     }
-    if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
-      const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as a allowing new features.`;
+    if (
+      (conf.revisionTypes.includes("proposed-addition") ||
+        conf.revisionTypes.includes("addition")) &&
+      !conf.updateableRec
+    ) {
+      const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as allowing new features.`;
       showError(msg, name);
     }
   }
@@ -621,6 +630,9 @@ export async function run(conf) {
     conf.updateableRec &&
     conf.revisionTypes &&
     conf.revisionTypes.length > 0 &&
+    ["proposed-addition", "proposed-correction"].some(type =>
+      conf.revisionTypes.includes(type)
+    ) &&
     !conf.revisedRecEnd
   ) {
     const msg = docLink`${"[specStatus]"} is "REC" with proposed corrections or additions but no ${"[revisedRecEnd]"} is specified in the ${"[respecConfig]"}.`;

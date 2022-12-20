@@ -98,7 +98,11 @@ function inlineElementMatches(matched) {
     }
   })();
   return html`<code
-    ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
+    ><a
+      data-xref-type="${xrefType}"
+      data-xref-for="${xrefFor}"
+      data-link-type="${xrefType}"
+      data-link-for="${xrefFor}"
       >${textContent}</a
     ></code
   >`;
@@ -270,7 +274,7 @@ export function run(conf) {
 
   // PROCESSING
   // Don't gather text nodes for these:
-  const exclusions = ["#respec-ui", ".head", "pre"];
+  const exclusions = ["#respec-ui", ".head", "pre", "svg"];
   const txts = getTextNodes(document.body, exclusions, {
     wsNodes: false, // we don't want nodes with just whitespace
   });

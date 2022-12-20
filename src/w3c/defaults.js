@@ -37,6 +37,7 @@ const w3cDefaults = {
     "privsec-section": false,
     "required-sections": true,
     "wpt-tests-exist": false,
+    "informative-dfn": "warn",
     "no-unused-dfns": "warn",
     a11y: false,
   },
@@ -154,10 +155,10 @@ function validateStatusForGroup(conf) {
     case "other":
       if (
         group === "tag" &&
-        ![...trStatus, ...tagStatus].includes(specStatus)
+        !["ED", ...trStatus, ...tagStatus].includes(specStatus)
       ) {
         const msg = docLink`The W3C Technical Architecture Group's documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
-        const supportedStatus = codedJoinOr([...trStatus, ...tagStatus], {
+        const supportedStatus = codedJoinOr(["ED", ...trStatus, ...tagStatus], {
           quotes: true,
         });
         const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"unofficial"\`.`;

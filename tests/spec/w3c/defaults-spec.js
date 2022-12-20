@@ -32,6 +32,7 @@ describe("W3C — Defaults", () => {
       "wpt-tests-exist": false,
       "no-unused-dfns": "warn",
       "required-sections": true,
+      "informative-dfn": "warn",
       a11y: false,
     });
     expect(rsConf.highlightVars).toBe(true);
@@ -53,6 +54,7 @@ describe("W3C — Defaults", () => {
           "fake-linter-rule": "foo",
           "check-internal-slots": true,
           "no-unused-dfns": "error",
+          "informative-dfn": false,
           "required-sections": "warn",
         },
         license: "c0",
@@ -71,6 +73,7 @@ describe("W3C — Defaults", () => {
       "no-unused-vars": false,
       "local-refs-exist": true,
       "check-punctuation": false,
+      "informative-dfn": false,
       "fake-linter-rule": "foo",
       "check-internal-slots": true,
       "check-charset": false,
@@ -109,7 +112,7 @@ describe("W3C — Defaults", () => {
   });
 
   it("allows W3C TAG to show logos", async () => {
-    for (const specStatus of tagStatus) {
+    for (const specStatus of [...tagStatus, "ED"]) {
       const ops = makeStandardOps({
         specStatus,
         group: "tag",

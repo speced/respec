@@ -200,6 +200,7 @@ function renderInternalSlot(details) {
   const lt = `[[${identifier}]]${textArgs}`;
   const element = html`${parent && renderParent ? "." : ""}<a
       data-xref-type="${slotType}"
+      data-link-type="${slotType}"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
       data-lt="${lt}"
