@@ -7,7 +7,7 @@ export const name = "logius/fix-md-elements";
 export function run(conf) {
   addClassTables(conf);
   addClassCode(conf);
-  addFigureImg(conf);
+  addFigureImg();
 }
 
 function addClassTables(conf) {
@@ -27,11 +27,7 @@ function addClassCode(conf) {
   }
 }
 
-function addFigureImg(conf) {
-  if (!conf.nl_markdownEmbedImageInFigure) {
-    return;
-  }
-
+function addFigureImg() {
   [...document.querySelectorAll("img")]
     .filter(img => !img.closest("figure"))
     .forEach(img => {
