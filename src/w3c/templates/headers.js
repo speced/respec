@@ -447,7 +447,7 @@ function renderOfficialCopyright(conf) {
     ${conf.additionalCopyrightHolders
       ? html` ${[conf.additionalCopyrightHolders]} &amp; `
       : ""}
-    <a href="https://www.w3.org/">World Wide Web Consortium, Inc.</a>.
+    <a href="https://www.w3.org/">World Wide Web Consortium</a>.
     <abbr title="World Wide Web Consortium">W3C</abbr><sup>&reg;</sup>
     <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer"
       >liability</a
