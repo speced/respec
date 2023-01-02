@@ -1610,7 +1610,7 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(doc.querySelector(".head .copyright").textContent).toMatch(
-        /XXX\s+&\s+W3C/
+        /XXX\s+&\s+World Wide Web Consortium/
       );
     });
     it("takes additionalCopyrightHolders into account for CG drafts", async () => {
