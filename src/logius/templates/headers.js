@@ -47,6 +47,11 @@ const localizationStrings = {
     prev_version: "Previous version:",
     prev_recommendation: "Previous Recommendation:",
     latest_recommendation: "Latest Recommendation:",
+    alt_format:
+      "This document is also available in these non-normative format:",
+    alt_formats:
+      "This document is also available in these non-normative formats:",
+    licensed: "This document is licensed under ",
   },
   ko: {
     author: "저자:",
@@ -100,6 +105,11 @@ const localizationStrings = {
     prev_version: "Vorige versie",
     former_editor: "Voormalig redacteur",
     former_editors: "Voormalige redacteurs",
+    alt_format:
+      "Dit document is ook beschikbaar in dit niet-normatieve formaat:",
+    alt_formats:
+      "Dit document is ook beschikbaar in deze niet-normatieve formaten:",
+    licensed: "Dit document valt onder de volgende licentie: ",
   },
   es: {
     author: "Autor:",
@@ -250,10 +260,8 @@ export default (conf, options) => {
         </p>`
       : ""}
     ${conf.alternateFormats
-      ? html`<p lang="en">
-          ${options.multipleAlternates
-            ? "This document is also available in these non-normative formats:"
-            : "This document is also available in this non-normative format:"}
+      ? html`<p>
+          ${options.multipleAlternates ? l10n.alt_formats : l10n.alt_format}
           ${options.alternatesHTML}
         </p>`
       : ""}
@@ -289,8 +297,8 @@ function renderCopyright(conf) {
       ? html`<p class="copyright">${[conf.additionalCopyrightHolders]}</p>`
       : conf.overrideCopyright
       ? [conf.overrideCopyright]
-      : html`<p class="copyright" lang="en">
-          This document is licensed under a
+      : html`<p class="copyright">
+          ${l10n.licensed}
           ${linkLicense(
             conf.licenses[conf.license.toLowerCase()].name,
             conf.licenses[conf.license.toLowerCase()].url,

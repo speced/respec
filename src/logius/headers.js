@@ -99,7 +99,6 @@ import {
 } from "../core/utils.js";
 import headersTmpl from "./templates/headers.js";
 import { html } from "../core/import-maps.js";
-import { lang } from "../core/l10n.js";
 import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
 
@@ -396,7 +395,7 @@ export function run(conf) {
   if (conf.subjectPrefix !== "")
     conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
 
-  html.bind(sotd)`${populateSoTD(conf, sotd)}`;
+  html.bind(sotd)`${populateSoTD(conf)}`;
 
   if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
     pub(
@@ -408,73 +407,11 @@ export function run(conf) {
 
 /**
  * @param {*} conf
- * @param {HTMLElement} sotd
  */
-function populateSoTD(conf, sotd) {
+function populateSoTD(conf) {
   if (!conf.nl_organisationName) {
     conf.nl_organisationName = "";
   }
-  const options = {
-    ...collectSotdContent(sotd, conf),
-    get specDocument() {
-      let article = "";
-      if (lang.toLowerCase() == "nl") {
-        conf.specType == "IM" ? (article = "het ") : (article = "de ");
-      }
-      return `${article} ${conf.typeStatus.toLowerCase()}`;
-    },
-    get emailComments() {
-      return `${conf.nl_emailcomments}`;
-    },
-    get emailCommentsMailto() {
-      return `mailto:${this.emailComments}`;
-    },
-    get emailCommentsMailtoSubject() {
-      const fragment = conf.subjectPrefix
-        ? `?subject=${encodeURIComponent(conf.subjectPrefix)}`
-        : "";
-      return this.emailCommentsMailto + fragment;
-    },
-  };
   const template = sotdTmpl;
-  return template(conf, options);
-}
-
-/**
- * @param {HTMLElement} sotd
- */
-function collectSotdContent(sotd, { isTagFinding = false }) {
-  const sotdClone = sotd.cloneNode(true);
-  const additionalContent = document.createDocumentFragment();
-  // we collect everything until we hit a section,
-  // that becomes the custom content.
-  while (sotdClone.hasChildNodes()) {
-    if (
-      isElement(sotdClone.firstChild) &&
-      sotdClone.firstChild.localName === "section"
-    ) {
-      break;
-    }
-    additionalContent.appendChild(sotdClone.firstChild);
-  }
-  if (isTagFinding && !additionalContent.hasChildNodes()) {
-    pub(
-      "warn",
-      "ReSpec does not support automated SotD generation for TAG findings, " +
-        "please add the prerequisite content in the 'sotd' section"
-    );
-  }
-  return {
-    additionalContent,
-    // Whatever sections are left, we throw at the end.
-    additionalSections: sotdClone.childNodes,
-  };
-}
-
-/**
- * @param {Node} node
- * @return {node is Element}
- */
-function isElement(node) {
-  return node.nodeType === Node.ELEMENT_NODE;
+  return template(conf);
 }
