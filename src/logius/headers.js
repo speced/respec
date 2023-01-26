@@ -131,7 +131,6 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf) {
-  const l10n = getIntlData(conf.localizationStrings);
 
   conf.isUnofficial = true;
   if (!conf.logos || !conf.useLogo) {
@@ -298,19 +297,10 @@ export function run(conf) {
     }
   });
 
-  if (conf.bugTracker) {
-    if (conf.bugTracker.new && conf.bugTracker.open) {
-      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>${conf.l10n.file_a_bug}</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${conf.l10n.open_bugs}</a>${conf.l10n.close_parens}`;
-    } else if (conf.bugTracker.open) {
-      conf.bugTrackerHTML = `<a href='${conf.bugTracker.open}'>open bugs</a>`;
-    } else if (conf.bugTracker.new) {
-      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>file a bug</a>`;
-    }
-  }
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  conf.statusText = l10n[conf.specStatus.toLowerCase()];
-  conf.typeText = l10n[conf.specType.toLowerCase()];
+  conf.statusText = getIntlData(conf.specStatusText)[conf.specStatus.toLowerCase()];
+  conf.typeText = getIntlData(conf.specTypeText)[conf.specType.toLowerCase()];
 
   conf.showThisVersion = !conf.isNoTrack; // || conf.isTagFinding;
   conf.showPreviousVersion = !conf.isNoTrack && !conf.isSubmission;
