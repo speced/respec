@@ -97,6 +97,7 @@ async function runIncludes(root, currentDepth) {
       const text = await response.text();
       processResponse(text, id, url);
       if (currentDepth < 3) {
+        // For performance reasons, only allow limited nesting.
         await runIncludes(el, currentDepth + 1);
       }
     } catch (err) {
