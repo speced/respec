@@ -184,7 +184,7 @@ cli
   .option("--localhost", "Spin up a local server to perform processing.", false)
   .option("--port", "Port override for --localhost.", 3000);
 
-cli.action((source, destination, opts) => {
+cli.action(async (source, destination, opts) => {
   source = source || opts.src;
   destination = destination || opts.out;
   const log = new Logger(opts.verbose);
@@ -195,10 +195,13 @@ cli.action((source, destination, opts) => {
     process.exit(1);
   }
 
-  return run(source, destination, opts, log).catch(err => {
-    log.fatal(err);
+  try {
+    await run(source, destination, opts, log);
+    process.exit(0);
+  } catch (error) {
+    log.fatal(error);
     process.exit(1);
-  });
+  }
 });
 
 // https://github.com/lukeed/sade/issues/28#issuecomment-516104013
