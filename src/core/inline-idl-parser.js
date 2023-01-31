@@ -6,7 +6,18 @@ import { htmlJoinComma, showError } from "./utils.js";
 import { html } from "./import-maps.js";
 const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+\??$/; // {{unrestricted double?}} {{ double }}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
-const methodRegex = /(\w+)\((.*)\)$/;
+
+/**
+ * Matches following patterns:
+ * - `identifier(arg1, moreArgs)`
+ * - `identifier()`
+ * - `identifier(arg1, moreArgs)|text`
+ * - `identifier(arg1, moreArgs)|text()`
+ * - `identifier(arg1, moreArgs)|text(argA, moreArgs)`
+ *
+ * Groups: identifier, args, [text, [textArgs]]
+ */
+const methodRegex = /^(\w+)\(([^\\)]*)\)(?:\|(\w+)(?:\((?:([^\\)]*))\))?)?$/;
 
 export const slotRegex = /\[\[(\w+(?: +\w+)*)\]\](\([^)]*\))?$/;
 // matches: `value` or `[[value]]`
@@ -45,6 +56,8 @@ const isProbablySlotRegex = /\[\[.+\]\]/;
  * @property {"method"} type
  * @property {string} identifier
  * @property {string[]} args
+ * @property {string | undefined} renderText
+ * @property {string[] | undefined} renderArgs
  * @property {boolean} renderParent
  * @property {InlineIdl | null} [parent]
  *
@@ -96,9 +109,19 @@ function parseInlineIDL(str) {
     const value = tokens.pop();
     // Method
     if (methodRegex.test(value)) {
-      const [, identifier, allArgs] = value.match(methodRegex);
+      const [, identifier, allArgs, altText, altArgs] =
+        value.match(methodRegex);
       const args = allArgs.split(/,\s*/).filter(arg => arg);
-      results.push({ type: "method", identifier, args, renderParent });
+      const renderText = altText?.trim();
+      const renderArgs = altArgs?.split(/,\s*/).filter(arg => arg);
+      results.push({
+        type: "method",
+        identifier,
+        args,
+        renderParent,
+        renderText,
+        renderArgs,
+      });
       continue;
     }
     // Enum["enum value"]
@@ -240,8 +263,9 @@ function renderAttribute(details) {
  */
 function renderMethod(details) {
   const { args, identifier, type, parent, renderParent } = details;
+  const { renderText: text, renderArgs: textArgs } = details;
   const { identifier: linkFor } = parent || {};
-  const argsText = htmlJoinComma(args, htmlArgMapper);
+  const argsText = htmlJoinComma(textArgs || args, htmlArgMapper);
   const searchText = `${identifier}(${args.join(", ")})`;
   const element = html`${parent && renderParent ? "." : ""}<a
       data-link-type="idl"
@@ -249,8 +273,8 @@ function renderMethod(details) {
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
       data-lt="${searchText}"
-      ><code>${identifier}</code></a
-    ><code>(${argsText})</code>`;
+      ><code>${text || identifier}</code></a
+    >${!text || textArgs ? html`<code>(${argsText})</code>` : ""}`;
   return element;
 }
 
