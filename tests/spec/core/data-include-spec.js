@@ -14,6 +14,8 @@ describe("Core — Data Include", () => {
   // important should provide more tests
   const url = "/tests/spec/core/includer.html";
 
+  const html = String.raw;
+
   /**
    * @param {string} text
    */
@@ -62,6 +64,68 @@ describe("Core — Data Include", () => {
     const container = doc.getElementById("empty-include");
     expect(container).toBeTruthy();
     expect(container.textContent).toBe("");
+  });
+
+  it("handles nested data-includes", async () => {
+    const body = html`<section
+      id="include-level-1"
+      data-include="${generateDataUrl(
+        html`<p>level 1</p>
+          <div
+            id="include-level-2"
+            data-include="${generateDataUrl(html`<p>level 2</p>`)}"
+            data-include-replace="true"
+          ></div>`
+      )}"
+    ></section>`;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+
+    const container = doc.querySelector("#include-level-1");
+    expect(container).toBeTruthy();
+    expect(container.children).toHaveSize(2);
+    expect(container.querySelectorAll(":scope > p")).toHaveSize(2);
+    const [p1, p2] = container.querySelectorAll("p");
+    expect(p1.textContent).toBe("level 1");
+    expect(p2.textContent).toBe("level 2");
+  });
+
+  it("handles nested data-includes upto depth 3", async () => {
+    const body = html`<section
+      id="include-level-1"
+      data-include="${generateDataUrl(
+        html`<p>level 1</p>
+          <div
+            data-include="${generateDataUrl(html`<p>level 2</p>
+              <div
+                data-include="${generateDataUrl(html`<p>level 3</p>
+                  <div
+                    id="data-include-unused"
+                    data-include="${generateDataUrl(html`<p>level 4</p>`)}"
+                  ></div>`)}"
+              ></div>`)}"
+          ></div>`
+      )}"
+    ></section>`;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+
+    const container = doc.querySelector("#include-level-1");
+    expect(container).toBeTruthy();
+
+    expect(container.querySelectorAll("p")).toHaveSize(3);
+    const [p1, p2, p3] = container.querySelectorAll("p");
+    expect(p1.textContent).toBe("level 1");
+    expect(p2.textContent).toBe("level 2");
+    expect(p3.textContent).toBe("level 3");
+
+    expect(container.textContent).not.toContain("level 4");
+    expect(container.querySelector("#data-include-unused")).toBeTruthy();
+    expect(
+      container
+        .querySelector("#data-include-unused")
+        .hasAttribute("data-include")
+    ).toBeTrue();
   });
 
   it("includes text when data-include-format is 'text'", async () => {
