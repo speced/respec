@@ -265,10 +265,9 @@ function renderNotRec(conf) {
 function renderIsRec(conf) {
   const { updateableRec, revisionTypes = [], revisedRecEnd } = conf;
   let reviewTarget = "";
-  if (revisionTypes.includes("addition")) {
+  if (revisionTypes.includes("proposed-addition")) {
     reviewTarget = "additions";
-  }
-  if (revisionTypes.includes("correction") && !reviewTarget) {
+  } else if (revisionTypes.includes("proposed-correction")) {
     reviewTarget = "corrections";
   }
   return html`
