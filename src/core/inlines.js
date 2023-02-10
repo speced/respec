@@ -223,7 +223,7 @@ function inlineAnchorMatches(matched) {
   const processedContent = processInlineContent(text);
   const forContext = isFor ? norm(isFor) : null;
   return html`<a
-    data-link-type="dfn"
+    data-link-type="dfn|abstract-op"
     data-link-for="${forContext}"
     data-xref-for="${forContext}"
     data-lt="${linkingText}"
