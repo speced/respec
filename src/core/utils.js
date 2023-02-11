@@ -23,7 +23,8 @@ function hashString(text) {
   return String(hash);
 }
 
-export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
+// https://stackoverflow.com/a/58633686
+export const ISODate = new Intl.DateTimeFormat(["sv-SE"], {
   timeZone: "UTC",
   year: "numeric",
   month: "2-digit",
