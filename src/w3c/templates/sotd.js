@@ -243,7 +243,7 @@ function renderNotRec(conf) {
     case "PR":
       reviewPolicy = html`<p>
         The W3C Membership and other interested parties are invited to review
-        the document and send comments through ${W3CDate.format(conf.PREnd)}.
+        the document and send comments through ${W3CDate.format(conf.prEnd)}.
         Advisory Committee Representatives should consult their
         <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
           >WBS questionnaires</a
