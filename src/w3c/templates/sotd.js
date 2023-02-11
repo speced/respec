@@ -243,7 +243,7 @@ function renderNotRec(conf) {
     case "PR":
       reviewPolicy = html`<p>
         The W3C Membership and other interested parties are invited to review
-        the document and send comments through ${W3CDate.format(conf.PREnd)}.
+        the document and send comments through ${W3CDate.format(conf.prEnd)}.
         Advisory Committee Representatives should consult their
         <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
           >WBS questionnaires</a
@@ -265,10 +265,9 @@ function renderNotRec(conf) {
 function renderIsRec(conf) {
   const { updateableRec, revisionTypes = [], revisedRecEnd } = conf;
   let reviewTarget = "";
-  if (revisionTypes.includes("addition")) {
+  if (revisionTypes.includes("proposed-addition")) {
     reviewTarget = "additions";
-  }
-  if (revisionTypes.includes("correction") && !reviewTarget) {
+  } else if (revisionTypes.includes("proposed-correction")) {
     reviewTarget = "corrections";
   }
   return html`
