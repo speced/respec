@@ -109,13 +109,18 @@ function processTable(matchingTable, id, a) {
     showError(msg, name, { title, elements: [a] });
     return;
   }
-  // remove the table's title
-  const children = [...makeSafeCopy(caption).childNodes].filter(
+
+  // get table label and remove the fig-number class
+  const children = [
+    ...makeSafeCopy(caption.querySelector(".self-link")).childNodes,
+  ].map(node => {
     // @ts-ignore
-    node => !node.classList || !node.classList.contains("table-title")
-  );
-  // drop an empty space at the end.
-  children.pop();
+    if (node.classList && node.classList.contains("tableno")) {
+      // @ts-ignore
+      node.classList.remove("tableno");
+    }
+    return node;
+  });
   a.append(...children);
   a.classList.add("table-ref");
   const tableTitle = caption.querySelector(".table-title");
