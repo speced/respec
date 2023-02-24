@@ -82,13 +82,17 @@ function processFigure(matchingElement, id, a) {
     showError(msg, name, { title, elements: [a] });
     return;
   }
-  // remove the figure's title
-  const children = [...makeSafeCopy(figcaption).childNodes].filter(
+  // get figure label and remove the fig-number class
+  const children = [
+    ...makeSafeCopy(figcaption.querySelector(".self-link")).childNodes,
+  ].map(node => {
     // @ts-ignore
-    node => !node.classList || !node.classList.contains("fig-title")
-  );
-  // drop an empty space at the end.
-  children.pop();
+    if (node.classList && node.classList.contains("figno")) {
+      // @ts-ignore
+      node.classList.remove("figno");
+    }
+    return node;
+  });
   a.append(...children);
   a.classList.add("fig-ref");
   const figTitle = figcaption.querySelector(".fig-title");
