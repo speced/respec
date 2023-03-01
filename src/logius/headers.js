@@ -82,7 +82,6 @@
 
 import {
   ISODate,
-  concatDate,
   docLink,
   getIntlData,
   htmlJoinAnd,
@@ -283,31 +282,29 @@ export function run(conf) {
   };
 
   function createUrlFromArray(input) {
-    let url = ""
+    let url = "";
     input.forEach(i => {
-      if(!conf[i]){
-        url += i
+      if (!conf[i]) {
+        url += i;
+      } else {
+        if (i === "github") {
+          url += conf.github.repoURL;
+        } else if (i === "publishDate") {
+          let shortDate = conf.publishDate.toISOString().slice(0, 10);
+          shortDate = shortDate.replace(/-/g, "");
+          url += shortDate;
+        } else {
+          url += conf[i];
+        }
       }
-      else{
-        if (i === "github"){
-          url+= conf.github.repoURL
-        }
-        else if (i === "publishDate"){
-          url+= conf.shortISODate
-        }
-        else {
-          url += conf[i]
-        }
-      }
-
-    })
-    return url
+    });
+    return url.toLowerCase();
   }
 
-  conf.thisVersion = createUrlFromArray(conf.thisVersion)
-  conf.latestVersion = createUrlFromArray(conf.latestVersion)
-  conf.edDraftURI = createUrlFromArray(conf.edDraftURI)
-  conf.prevVersion = createUrlFromArray(conf.prevVersion)
+  conf.thisVersion = createUrlFromArray(conf.thisVersion);
+  conf.latestVersion = createUrlFromArray(conf.latestVersion);
+  conf.edDraftURI = createUrlFromArray(conf.edDraftURI);
+  conf.prevVersion = createUrlFromArray(conf.prevVersion);
 
   // insert into document
   const header = headersTmpl(conf, options);
