@@ -185,13 +185,6 @@ export function run(conf) {
       conf.nl_organisationPublishURL += "/";
   }
 
-  // pieter added subdomain
-  const subdomain = conf.shortName ? `${conf.shortName}/` : ``;
-
-  const specStatus = conf.specStatus.includes("GN")
-    ? conf.specStatus.substr(3).toLowerCase()
-    : conf.specStatus.toLowerCase();
-
   // Thijs Brentjens: support previousMaturity as previousStatus
   if (conf.previousMaturity && !conf.previousStatus)
     conf.previousStatus = conf.previousMaturity;
