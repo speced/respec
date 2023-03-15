@@ -122,7 +122,6 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf) {
-
   conf.isUnofficial = true;
   if (!conf.logos || !conf.useLogo) {
     // conf.isUnofficial
@@ -174,6 +173,10 @@ export function run(conf) {
   );
   conf.publishYear = conf.publishDate.getUTCFullYear();
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
+
+  conf.publishHumanDate = NLRespecDate.format(
+    conf.specStatus != "WV" ? conf.publishDate : new Date(document.lastModified)
+  );
 
   // Version URLs
   // Thijs Brentjens: changed this to Geonovum specific format. See https://github.com/Geonovum/respec/issues/126
@@ -228,7 +231,9 @@ export function run(conf) {
 
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  conf.statusText = getIntlData(conf.specStatusText)[conf.specStatus.toLowerCase()];
+  conf.statusText = getIntlData(conf.specStatusText)[
+    conf.specStatus.toLowerCase()
+  ];
   conf.typeText = getIntlData(conf.specTypeText)[conf.specType.toLowerCase()];
 
   conf.showThisVersion = !conf.isNoTrack; // || conf.isTagFinding;
