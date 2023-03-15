@@ -10,10 +10,10 @@ import {
 } from "../../SpecHelper.js";
 
 const body = (firstLinkClass = "") => html`
-  <section class="normative">
+  <section class="normative" data-cite="accname-1.2">
     <h2>Heading</h2>
-    <p><a class="${firstLinkClass}" data-cite="i18n-glossary">unicode</a></p>
-    <p><a data-cite="i18n-glossary">surrogate pair</a></p>
+    <p><a class="${firstLinkClass}">accessible name</a></p>
+    <p><a>accessible description</a></p>
   </section>
 `;
 
@@ -75,6 +75,6 @@ describe("Core — linter-rules - informative-dfn", () => {
     expect(errors).toHaveSize(0);
     expect(warnings).toHaveSize(1);
     const [warning] = warnings;
-    expect(warning.message).toContain('"surrogate pair"');
+    expect(warning.message).toContain('"accessible description"');
   });
 });
