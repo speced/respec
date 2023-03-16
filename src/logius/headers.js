@@ -277,10 +277,8 @@ export function run(conf) {
       } else {
         if (i === "github") {
           url += conf.github.repoURL;
-        } else if (i === "publishDate") {
-          let shortDate = conf.publishDate.toISOString().slice(0, 10);
-          shortDate = shortDate.replace(/-/g, "");
-          url += shortDate;
+        } else if (i === "publishDate" || i === "previousPublishDate") {
+          url += ISODate.format(conf[i]);
         } else {
           url += conf[i];
         }
