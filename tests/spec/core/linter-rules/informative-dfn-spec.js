@@ -3,18 +3,19 @@
 import {
   errorFilters,
   flushIframes,
+  html,
   makeRSDoc,
   makeStandardOps,
   warningFilters,
 } from "../../SpecHelper.js";
 
-const body = (firstLinkClass = "") => `
-      <section class=normative>
-        <h2>Heading</h2>
-        <p><a class="${firstLinkClass}" data-cite="rdf11-concepts">resources</a></p>
-        <p><a data-cite="rdf11-concepts">denotes</a></p>
-      </section>
-    `;
+const body = (firstLinkClass = "") => html`
+  <section class="normative" data-cite="accname-1.2">
+    <h2>Heading</h2>
+    <p><a class="${firstLinkClass}">accessible name</a></p>
+    <p><a>accessible description</a></p>
+  </section>
+`;
 
 describe("Core — linter-rules - informative-dfn", () => {
   const name = "core/linter-rules/informative-dfn";
@@ -74,6 +75,6 @@ describe("Core — linter-rules - informative-dfn", () => {
     expect(errors).toHaveSize(0);
     expect(warnings).toHaveSize(1);
     const [warning] = warnings;
-    expect(warning.message).toContain('"denotes"');
+    expect(warning.message).toContain('"accessible description"');
   });
 });

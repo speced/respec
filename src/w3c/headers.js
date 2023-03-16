@@ -467,7 +467,7 @@ export async function run(conf) {
     showError(msg, name);
   }
   if (conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
-  if (conf.isRec && !conf.errata) {
+  if (conf.isRec && !conf.errata && !conf.revisionTypes?.length) {
     const msg = "Recommendations must have an errata link.";
     const hint = docLink`Add an ${"[errata]"} URL to your ${"[respecConfig]"}.`;
     showError(msg, name, { hint });

@@ -525,7 +525,9 @@ describe("Core - Inlines", () => {
 
     const [localLink, conceptLink] = doc.querySelectorAll("#test a");
     expect(localLink.hash).toBe("#dfn-foo-bar");
-    expect(conceptLink.hash).toBe("#multipart/form-data-encoding-algorithm");
+    expect(decodeURIComponent(conceptLink.hash)).toBe(
+      "#multipart/form-data-encoding-algorithm"
+    );
   });
 
   it("processes {{ forContext/term }} IDL", async () => {
