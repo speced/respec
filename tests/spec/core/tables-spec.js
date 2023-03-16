@@ -30,6 +30,22 @@ describe("Core - Tables", () => {
     expect(anchorTabTitleEmpty.title).toBe("");
   });
 
+  it("creates autolinks from the caption to the table", async () => {
+    const body = `
+       <table id='tab' class='numbered'>
+        <caption>test table caption</caption>
+       </table>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const caption = doc.getElementsByTagName("caption")[0];
+    const link = caption.querySelector("a");
+
+    expect(link.classList).toContain("self-link");
+    expect(link.href).toMatch(/#tab$/);
+  });
+
   it("generates list of tables", async () => {
     const body = `
       <table class='numbered'>
