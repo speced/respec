@@ -87,10 +87,7 @@ function processFigure(matchingElement, id, a) {
     ...makeSafeCopy(figcaption.querySelector(".self-link")).childNodes,
   ].map(node => {
     // @ts-ignore
-    if (node.classList && node.classList.contains("figno")) {
-      // @ts-ignore
-      node.classList.remove("figno");
-    }
+    node.classList?.remove("figno");
     return node;
   });
   a.append(...children);
