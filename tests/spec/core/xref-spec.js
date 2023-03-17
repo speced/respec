@@ -575,7 +575,7 @@ describe("Core — xref", () => {
         }} , i.e. should trim the whitespace.</p>
       </section>
       `;
-      const config = { xref: true, localBiblio };
+      const config = { xref: "web-platform", localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 

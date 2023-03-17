@@ -321,7 +321,7 @@ describe("Core - Inlines", () => {
     expect(badOne.textContent).toBe("#does-not-exist");
   });
 
-  it("proceseses backticks inside [= =] inline links", async () => {
+  it("processes backticks inside [= =] inline links", async () => {
     const body = `
       <section>
         <p>
@@ -341,7 +341,9 @@ describe("Core - Inlines", () => {
         </p>
       </section>
     `;
-    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const doc = await makeRSDoc(
+      makeStandardOps({ xref: "web-platform" }, body)
+    );
     const [linkElement, someCodedThing] = doc.querySelectorAll("#inlines a");
 
     expect(linkElement.getAttribute("href")).toBe("#dfn-link-element");
