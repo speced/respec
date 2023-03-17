@@ -49,7 +49,7 @@ describe("Core - Figures", () => {
     const link = caption.querySelector("a");
 
     expect(link.classList).toContain("self-link");
-    expect(link.href).toMatch(/#fig$/);
+    expect(link.href).toBe("#fig");
   });
 
   it("localizes the anchor of figure", async () => {

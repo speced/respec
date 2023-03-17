@@ -116,10 +116,8 @@ function processTable(matchingTable, id, a) {
     ...makeSafeCopy(caption.querySelector(".self-link")).childNodes,
   ].map(node => {
     // @ts-ignore
-    if (node.classList && node.classList.contains("tableno")) {
-      // @ts-ignore
-      node.classList.remove("tableno");
-    }
+    // @ts-ignore
+    node.classList?.remove("tableno");
     return node;
   });
   a.append(...children);

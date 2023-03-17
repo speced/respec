@@ -43,7 +43,7 @@ describe("Core - Tables", () => {
     const link = caption.querySelector("a");
 
     expect(link.classList).toContain("self-link");
-    expect(link.href).toMatch(/#tab$/);
+    expect(link.href).toBe("#tab");
   });
 
   it("generates list of tables", async () => {
