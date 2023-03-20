@@ -66,7 +66,12 @@ function decorateTable(table, caption, i) {
   addId(table, "table", title);
   // set proper caption title
   wrapInner(caption, html`<span class="table-title"></span>`);
-  caption.prepend(l10n.table, html`<bdi class="tableno">${i + 1}</bdi>`, " ");
+  caption.prepend(
+    html`<a class="self-link" href="#${table.id}"
+      >${l10n.table}<bdi class="tableno">${i + 1}</bdi></a
+    >`,
+    " "
+  );
 }
 
 /**

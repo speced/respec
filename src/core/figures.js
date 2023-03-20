@@ -97,7 +97,12 @@ function decorateFigure(figure, caption, i) {
   addId(figure, "fig", title);
   // set proper caption title
   wrapInner(caption, html`<span class="fig-title"></span>`);
-  caption.prepend(l10n.fig, html`<bdi class="figno">${i + 1}</bdi>`, " ");
+  caption.prepend(
+    html`<a class="self-link" href="#${figure.id}"
+      >${l10n.fig}<bdi class="figno">${i + 1}</bdi></a
+    >`,
+    " "
+  );
 }
 
 /**
