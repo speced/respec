@@ -231,10 +231,12 @@ export function run(conf) {
 
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  conf.statusText = getIntlData(conf.specStatusText)[
+  conf.statusText = getIntlData(conf.localizationStrings)[
     conf.specStatus.toLowerCase()
   ];
-  conf.typeText = getIntlData(conf.specTypeText)[conf.specType.toLowerCase()];
+  conf.typeText = getIntlData(conf.localizationStrings)[
+    conf.specType.toLowerCase()
+  ];
 
   conf.showThisVersion = !conf.isNoTrack; // || conf.isTagFinding;
   conf.showPreviousVersion = !conf.isNoTrack && !conf.isSubmission;
