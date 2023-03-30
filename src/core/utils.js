@@ -69,6 +69,9 @@ export function createResourceHint(opts) {
       if ("as" in opts) {
         linkElem.setAttribute("as", opts.as);
       }
+      if ("crossorigin" in opts) {
+        linkElem.crossOrigin = opts.crossorigin;
+      }
       break;
   }
   linkElem.href = href;
