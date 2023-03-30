@@ -45,7 +45,7 @@ function createResourceHints() {
       hint: "preload", // all specs show the logo.
       href: "https://www.w3.org/StyleSheets/TR/2021/logos/W3C",
       as: "image",
-      crossorigin: "",
+      corsMode: "anonymous",
     },
   ];
   const resourceHints = document.createDocumentFragment();
