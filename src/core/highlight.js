@@ -23,7 +23,9 @@ async function highlightElement(elem) {
   const languages = getLanguageHint(elem.classList);
   let response;
   try {
-    response = await sendHighlightRequest(elem.innerText, languages);
+    // Safari return "" for innerText when the document is hidden
+    const code = elem.innerText ? elem.innerText : elem.textContent;
+    response = await sendHighlightRequest(code, languages);
   } catch (err) {
     console.error(err);
     return;

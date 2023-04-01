@@ -20,7 +20,7 @@ describe("Core — Seo", () => {
     expect(hasMetaDesc).toHaveSize(0);
   });
 
-  it("inserts a meta element for the description after processing", async () => {
+  it("inserts a meta element for the description", async () => {
     const ops = {
       config: makeBasicConfig(),
       abstract: `<p>
@@ -30,9 +30,9 @@ describe("Core — Seo", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);
-    const hasMetaDesc = doc.querySelectorAll("meta[name=description]").length;
-    expect(hasMetaDesc).toBe(1);
-    const meta = doc.head.querySelector("meta[name=description]");
+    const metas = doc.querySelectorAll("meta[name=description]");
+    expect(metas).toHaveSize(1);
+    const [meta] = metas;
     expect(meta.content).toBe("Pass");
   });
 });

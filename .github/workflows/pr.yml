@@ -53,7 +53,11 @@ jobs:
     strategy:
       matrix:
         browser: [ChromeHeadless, FirefoxHeadless]
-    runs-on: ubuntu-latest
+        os: [ubuntu-latest]
+        include:
+          - browser: Safari
+            os: macos-latest
+    runs-on: ${{ matrix.os }}
     needs: lint
     steps:
       - uses: actions/checkout@v3
