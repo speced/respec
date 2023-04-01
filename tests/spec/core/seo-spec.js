@@ -30,7 +30,7 @@ describe("Core — Seo", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);
-    const metas = doc.querySelectorAll("meta[name=description]"); 
+    const metas = doc.querySelectorAll("meta[name=description]");
     expect(metas).toHaveSize(1);
     const [meta] = metas;
     expect(meta.content).toBe("Pass");
