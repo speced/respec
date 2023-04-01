@@ -177,15 +177,15 @@ export const status2track = {
 };
 export const W3CNotes = ["DNOTE", "NOTE", "STMT"];
 export const recTrackStatus = [
-  "FPWD",
-  "WD",
   "CR",
   "CRD",
-  "PR",
-  "PER",
-  "REC",
   "DISC",
+  "FPWD",
+  "PER",
+  "PR",
+  "REC",
   "RSCND",
+  "WD",
 ];
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const tagStatus = ["draft-finding", "finding", "editor-draft-finding"];
@@ -388,7 +388,7 @@ export async function run(conf) {
     const { shortName, publishDate } = conf;
     const date = concatDate(publishDate);
     const docVersion = `${maturity}-${shortName}-${date}`;
-    const year = [...recTrackStatus, "Member-SUBM"].includes(conf.specStatus)
+    const year = [...trStatus, "Member-SUBM"].includes(conf.specStatus)
       ? `${publishDate.getUTCFullYear()}/`
       : "";
     conf.thisVersion = w3Url(`${pubSpace}/${year}${docVersion}/`);
@@ -450,6 +450,16 @@ export async function run(conf) {
     const msg = "At least one editor is required.";
     const hint = docLink`Add one or more editors using the ${"[editors]"} configuration option.`;
     showError(msg, name, { hint });
+  } else if (conf.editors.length && conf.isRecTrack) {
+    // check that every editor has w3cid
+    conf.editors.forEach((editor, i) => {
+      if (editor.w3cid) return;
+      const msg = docLink`Editor ${
+        editor.name ? `"${editor.name}"` : `number ${i + 1}`
+      } is missing their ${"[w3cid]"}.`;
+      const hint = docLink`See ${"[w3cid]"} for instructions for how to retrieve it and add it.`;
+      showError(msg, name, { hint });
+    });
   }
 
   if (conf.alternateFormats?.some(({ uri, label }) => !uri || !label)) {
@@ -457,7 +467,7 @@ export async function run(conf) {
     showError(msg, name);
   }
   if (conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
-  if (conf.isRec && !conf.errata) {
+  if (conf.isRec && !conf.errata && !conf.revisionTypes?.length) {
     const msg = "Recommendations must have an errata link.";
     const hint = docLink`Add an ${"[errata]"} URL to your ${"[respecConfig]"}.`;
     showError(msg, name, { hint });
@@ -586,7 +596,12 @@ export async function run(conf) {
   }
 
   conf.updateableRec = sotd.classList.contains("updateable-rec");
-  const revisionTypes = ["addition", "correction"];
+  const revisionTypes = [
+    "addition",
+    "correction",
+    "proposed-addition",
+    "proposed-correction",
+  ];
   if (conf.isRec && conf.revisionTypes?.length > 0) {
     if (conf.revisionTypes.some(x => !revisionTypes.includes(x))) {
       const unknownRevisionTypes = conf.revisionTypes.filter(
@@ -600,8 +615,12 @@ export async function run(conf) {
       )}.`;
       showError(msg, name, { hint });
     }
-    if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
-      const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as a allowing new features.`;
+    if (
+      (conf.revisionTypes.includes("proposed-addition") ||
+        conf.revisionTypes.includes("addition")) &&
+      !conf.updateableRec
+    ) {
+      const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as allowing new features.`;
       showError(msg, name);
     }
   }
@@ -611,6 +630,9 @@ export async function run(conf) {
     conf.updateableRec &&
     conf.revisionTypes &&
     conf.revisionTypes.length > 0 &&
+    ["proposed-addition", "proposed-correction"].some(type =>
+      conf.revisionTypes.includes(type)
+    ) &&
     !conf.revisedRecEnd
   ) {
     const msg = docLink`${"[specStatus]"} is "REC" with proposed corrections or additions but no ${"[revisedRecEnd]"} is specified in the ${"[respecConfig]"}.`;
@@ -669,7 +691,7 @@ function validateIfAllowedOnTR(conf) {
 
 function derivePubSpace(conf) {
   const { specStatus, group } = conf;
-  if (recTrackStatus.includes(specStatus) || conf.groupType === "wg") {
+  if (trStatus.includes(specStatus) || conf.groupType === "wg") {
     return `/TR`;
   }
 
@@ -721,7 +743,7 @@ async function deriveHistoryURI(conf) {
 
   const canShowHistory = conf.isEd || trStatus.includes(conf.specStatus);
 
-  if (conf.historyURI && canShowHistory) {
+  if (conf.historyURI && !canShowHistory) {
     const msg = docLink`The ${"[historyURI]"} can't be used with non /TR/ documents.`;
     const hint = docLink`Please remove ${"[historyURI]"}.`;
     showError(msg, name, { hint });
@@ -735,8 +757,11 @@ async function deriveHistoryURI(conf) {
   );
 
   // If it's on the Rec Track or it's TR worthy, then allow history override.
-  // Also make a an exception for FPWD.
-  if ((conf.historyURI && canShowHistory) || conf.specStatus === "FPWD") {
+  // Also make a an exception for FPWD, DNOTE, NOTE and DRY.
+  if (
+    (conf.historyURI && canShowHistory) ||
+    ["FPWD", "DNOTE", "NOTE", "DRY"].includes(conf.specStatus)
+  ) {
     conf.historyURI = historyURL.href;
     return;
   }

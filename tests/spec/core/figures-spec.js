@@ -36,6 +36,22 @@ describe("Core - Figures", () => {
     expect(anchorFigTitleEmpty.title).toBe("");
   });
 
+  it("creates autolinks from the caption to the figure", async () => {
+    const body = `
+       <figure id='fig'>
+        <figcaption>test figure caption</figcaption>
+       </figure>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const caption = doc.getElementsByTagName("figcaption")[0];
+    const link = caption.querySelector("a");
+
+    expect(link.classList).toContain("self-link");
+    expect(link.hash).toBe("#fig");
+  });
+
   it("localizes the anchor of figure", async () => {
     const ops = {
       config: makeBasicConfig(),

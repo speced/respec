@@ -1,5 +1,6 @@
 // @ts-check
-import { l10n, renderFeedback } from "./headers.js";
+import { getSpecSubTitleElem, l10n, renderFeedback } from "./headers.js";
+import { W3CDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
@@ -17,14 +18,15 @@ export default (conf, options) => {
     ${conf.logos.length
       ? html`<p class="logos">${conf.logos.map(showLogo)}</p>`
       : ""}
-    ${specTitleElem}
-    ${conf.subtitle ? html`<h2 id="subtitle">${conf.subtitle}</h2>` : ""}
-    <h2>
-      ${conf.longStatus}
-      <time class="dt-published" datetime="${conf.dashDate}"
-        >${conf.publishHumanDate}</time
+    ${specTitleElem} ${getSpecSubTitleElem(conf)}
+    <p id="w3c-state">
+      <a href="https://www.w3.org/standards/types#reports"
+        >${conf.longStatus}</a
       >
-    </h2>
+      <time class="dt-published" datetime="${conf.dashDate}"
+        >${W3CDate.format(conf.publishDate)}</time
+      >
+    </p>
     <dl>
       ${conf.thisVersion
         ? html`<dt>${l10n.this_version}</dt>

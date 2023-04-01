@@ -420,4 +420,22 @@ describe("Core — Issues and Notes", () => {
     const h3 = doc.querySelector("#issue-summary section h3");
     expect(h3.innerText).toContain("This is not the heading of issue-summary");
   });
+  it("should not produce HTML embedded within SVG", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `
+      <p class="note">This is a note that should be selected</p>
+      <svg version="1.1"
+           width="300" height="200"
+           xmlns="http://www.w3.org/2000/svg">
+        <!-- this element should not be selected even with the "note" class -->
+        <rect width="100%" height="100%" fill="red" class="note" />
+      </svg>`,
+    };
+
+    const doc = await makeRSDoc(ops);
+    // <div> is not a valid child of <svg>, so if it appears there it means ReSpec has added it.
+    const svgNote = doc.querySelector("svg div");
+    expect(svgNote).toBeNull();
+  });
 });

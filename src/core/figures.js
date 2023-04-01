@@ -7,6 +7,7 @@
 import {
   addId,
   getIntlData,
+  getPreviousSections,
   renameElement,
   showWarning,
   wrapInner,
@@ -96,7 +97,12 @@ function decorateFigure(figure, caption, i) {
   addId(figure, "fig", title);
   // set proper caption title
   wrapInner(caption, html`<span class="fig-title"></span>`);
-  caption.prepend(l10n.fig, html`<bdi class="figno">${i + 1}</bdi>`, " ");
+  caption.prepend(
+    html`<a class="self-link" href="#${figure.id}"
+      >${l10n.fig}<bdi class="figno">${i + 1}</bdi></a
+    >`,
+    " "
+  );
 }
 
 /**
@@ -147,30 +153,5 @@ function decorateTableOfFigures(tofElement) {
     tofElement.classList.add("introductory");
   } else if (previousSections.some(sec => sec.classList.contains("appendix"))) {
     tofElement.classList.add("appendix");
-  }
-}
-
-/**
- * @param {Element} element
- */
-function getPreviousSections(element) {
-  /** @type {Element[]} */
-  const sections = [];
-  for (const previous of iteratePreviousElements(element)) {
-    if (previous.localName === "section") {
-      sections.push(previous);
-    }
-  }
-  return sections;
-}
-
-/**
- * @param {Element} element
- */
-function* iteratePreviousElements(element) {
-  let previous = element;
-  while (previous.previousElementSibling) {
-    previous = previous.previousElementSibling;
-    yield previous;
   }
 }

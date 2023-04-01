@@ -94,7 +94,7 @@ const l10n = getIntlData(localizationStrings);
  * @property {string} bodyHTML
  * @property {GitHubLabel[]} labels
 
- * @param {NodeListOf<HTMLElement>} ins
+ * @param {HTMLElement[]} ins
  * @param {Map<string, GitHubIssue>} ghIssues
  * @param {*} conf
  */
@@ -298,9 +298,18 @@ function createLabelsGroup(labels, title, repoURL) {
   return html`<span class="issue-label">: ${title}${labelsGroup}</span>`;
 }
 
-/** @param {string} bgColorHex background color as a hex value without '#' */
-function textColorFromBgColor(bgColorHex) {
-  return parseInt(bgColorHex, 16) > 0xffffff / 2 ? "#000" : "#fff";
+/**
+ * Based on https://stackoverflow.com/a/3943023
+ * See https://www.w3.org/WAI/WCAG21/Techniques/general/G18.html#tests
+ * @param {string} bg background color as a hex value without '#'
+ */
+function textColorFromBgColor(bg) {
+  const [r, g, b] = [bg.slice(0, 2), bg.slice(2, 4), bg.slice(4, 6)];
+  const [R, G, B] = [r, g, b]
+    .map(c => parseInt(c, 16) / 255)
+    .map(c => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  const L = 0.2126 * R + 0.7152 * G + 0.0722 * B;
+  return L > 0.179 ? "#000" : "#fff";
 }
 
 /**
@@ -359,7 +368,13 @@ async function fetchAndStoreGithubIssues(github) {
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
-  const issuesAndNotes = document.querySelectorAll(query);
+  const allEls = document.querySelectorAll(query);
+
+  const issuesAndNotes = Array.from(allEls).filter(itm => {
+    // Removes any elements that are not HTML Elements (e.g., SVG nodes)
+    return itm instanceof HTMLElement;
+  });
+
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }

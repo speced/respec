@@ -154,7 +154,7 @@ const localizationStrings = {
       return `Dieses Dokument ist ebenfalls in ${
         plural
           ? "diesen nicht-normativen Formaten verfügbar"
-          : "in diesem nicht-normativen Format verfügbar"
+          : "diesem nicht-normativen Format verfügbar"
       }:`;
     },
     prev_editor_draft: "Vorheriger Entwurf:",
@@ -167,7 +167,7 @@ const localizationStrings = {
 };
 export const l10n = getIntlData(localizationStrings);
 
-function getSpecSubTitleElem(conf) {
+export function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
 
   if (specSubTitleElem && specSubTitleElem.parentElement) {
@@ -447,18 +447,8 @@ function renderOfficialCopyright(conf) {
     ${conf.additionalCopyrightHolders
       ? html` ${[conf.additionalCopyrightHolders]} &amp; `
       : ""}
-    <a href="https://www.w3.org/"
-      ><abbr title="World Wide Web Consortium">W3C</abbr></a
-    ><sup>&reg;</sup> (<a href="https://www.csail.mit.edu/"
-      ><abbr title="Massachusetts Institute of Technology">MIT</abbr></a
-    >,
-    <a href="https://www.ercim.eu/"
-      ><abbr
-        title="European Research Consortium for Informatics and Mathematics"
-        >ERCIM</abbr
-      ></a
-    >, <a href="https://www.keio.ac.jp/">Keio</a>,
-    <a href="https://ev.buaa.edu.cn/">Beihang</a>). W3C
+    <a href="https://www.w3.org/">World Wide Web Consortium</a>.
+    <abbr title="World Wide Web Consortium">W3C</abbr><sup>&reg;</sup>
     <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer"
       >liability</a
     >,

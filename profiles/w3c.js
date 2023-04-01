@@ -26,6 +26,7 @@ const modules = [
   import("../src/core/issues-notes.js"),
   import("../src/core/best-practices.js"),
   import("../src/core/figures.js"),
+  import("../src/core/tables.js"),
   import("../src/core/webidl.js"),
   import("../src/core/biblio.js"),
   import("../src/core/link-to-dfn.js"),
@@ -53,10 +54,10 @@ const modules = [
   import("../src/core/data-tests.js"),
   import("../src/core/list-sorter.js"),
   import("../src/core/highlight-vars.js"),
-  import("../src/core/dfn-panel.js"),
   import("../src/core/data-type.js"),
   import("../src/core/algorithms.js"),
   import("../src/core/anchor-expander.js"),
+  import("../src/core/dfn-panel.js"),
   import("../src/core/custom-elements/index.js"),
   import("../src/core/web-monetization.js"),
   import("../src/core/before-save.js"),
@@ -65,6 +66,7 @@ const modules = [
   import("../src/core/linter-rules/check-punctuation.js"),
   import("../src/core/linter-rules/check-internal-slots.js"),
   import("../src/core/linter-rules/local-refs-exist.js"),
+  import("../src/core/linter-rules/no-captionless-tables.js"),
   import("../src/core/linter-rules/no-unused-dfns.js"),
   import("../src/core/linter-rules/no-headingless-sections.js"),
   import("../src/core/linter-rules/no-unused-vars.js"),
@@ -72,6 +74,7 @@ const modules = [
   import("../src/core/linter-rules/wpt-tests-exist.js"),
   import("../src/core/linter-rules/no-http-props.js"),
   import("../src/core/linter-rules/a11y.js"),
+  import("../src/core/linter-rules/informative-dfn.js"),
 ];
 
 Promise.all(modules)

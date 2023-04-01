@@ -9,13 +9,12 @@ import {
   InsensitiveStringSet,
   docLink,
   getIntlData,
+  getIntlDataForKey,
   norm,
-  resolveLanguageAlias,
   showError,
   showWarning,
 } from "../../core/utils.js";
-import { lang } from "../../core/l10n.js";
-import { recTrackStatus } from "../headers.js";
+import { W3CNotes, recTrackStatus } from "../headers.js";
 
 const ruleName = "required-sections";
 export const name = "w3c/linter-rules/required-sections";
@@ -50,6 +49,8 @@ const l10n = getIntlData(localizationStrings);
 
 export const requiresSomeSectionStatus = new Set([...recTrackStatus]);
 requiresSomeSectionStatus.delete("DISC"); // "Discontinued Draft"
+// W3C notes do not require privacy or security considerations sections.
+W3CNotes.forEach(note => requiresSomeSectionStatus.delete(note));
 
 export function run(conf) {
   if (!conf.lint?.[ruleName]) {
@@ -57,8 +58,11 @@ export function run(conf) {
   }
 
   // We can't check for headers unless we also have a translation
-  if (!localizationStrings[resolveLanguageAlias(lang)]) {
-    console.warn(`Missing localization strings for ${lang}.`);
+  if (!getIntlDataForKey(localizationStrings, "privacy_considerations")) {
+    // We can't check for headers unless we also have a translation
+    const msg = `Cannot check for required sections as translations are not available.`;
+    const hint = `File an issue to add translations or use a supported language.`;
+    showWarning(msg, name, { hint });
     return;
   }
 

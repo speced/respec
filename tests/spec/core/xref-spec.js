@@ -520,8 +520,6 @@ describe("Core — xref", () => {
     expect(badLink.href).toBe(
       "https://www.w3.org/TR/css-values-4/#bearing-angle"
     );
-    expect(badLink.classList).toContain("respec-offending-element");
-    expect(badLink.title).toBe("Normative reference to non-normative term.");
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
     expect(normRefs).toHaveSize(1); // excludes `css-values` of `#invalid`
@@ -583,7 +581,7 @@ describe("Core — xref", () => {
 
       const [windowLink, eventTargetLink] = doc.querySelectorAll("#link1 a");
       expect(windowLink.href).toBe(
-        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+        "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window"
       );
       expect(eventTargetLink.href).toBe(
         "https://dom.spec.whatwg.org/#eventtarget"
@@ -656,6 +654,64 @@ describe("Core — xref", () => {
       expect(link3b.firstElementChild.localName).toBe("code");
     });
 
+    it("links methods with aliasing", async () => {
+      const body = `
+      <section id="test">
+        <p id="link1">{{ EventTarget/addEventListener(type, callback)|addEventListener(type) }}</p>
+        <p id="link2">{{ EventTarget/addEventListener(type, callback)|addEventListener }}</p>
+        <p id="link3">{{ ChildNode/after(...nodes)|aliased() }}</p>
+        <p id="link4">{{ ChildNode/after(...nodes)|aliased(arg) }}</p>
+      </section>
+      `;
+      const config = { xref: true, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      expect(doc.querySelector("#link1").textContent).toBe(
+        "addEventListener(type)"
+      );
+      expect(doc.querySelectorAll("#link1 a")).toHaveSize(1);
+      const link1 = doc.querySelector("#link1 a");
+      expect(link1.href).toBe(
+        "https://dom.spec.whatwg.org/#dom-eventtarget-addeventlistener"
+      );
+      expect(link1.firstElementChild.localName).toBe("code");
+      const vars1 = [...doc.querySelectorAll("#link1 var")];
+      expect(vars1).toHaveSize(1);
+      expect(vars1[0].textContent).toBe("type");
+
+      expect(doc.querySelector("#link2").textContent).toBe("addEventListener");
+      expect(doc.querySelectorAll("#link2 a")).toHaveSize(1);
+      const link2 = doc.querySelector("#link2 a");
+      expect(link2.href).toBe(
+        "https://dom.spec.whatwg.org/#dom-eventtarget-addeventlistener"
+      );
+      expect(link2.firstElementChild.localName).toBe("code");
+      const vars2 = [...doc.querySelectorAll("#link2 var")];
+      expect(vars2).toHaveSize(0);
+
+      expect(doc.querySelector("#link3").textContent).toBe("aliased()");
+      expect(doc.querySelectorAll("#link3 a")).toHaveSize(1);
+      const link3 = doc.querySelector("#link3 a");
+      expect(link3.href).toBe(
+        "https://dom.spec.whatwg.org/#dom-childnode-after"
+      );
+      expect(link3.firstElementChild.localName).toBe("code");
+      const vars3 = [...doc.querySelectorAll("#link3 var")];
+      expect(vars3).toHaveSize(0);
+
+      expect(doc.querySelector("#link4").textContent).toBe("aliased(arg)");
+      expect(doc.querySelectorAll("#link4 a")).toHaveSize(1);
+      const link4 = doc.querySelector("#link4 a");
+      expect(link4.href).toBe(
+        "https://dom.spec.whatwg.org/#dom-childnode-after"
+      );
+      expect(link4.firstElementChild.localName).toBe("code");
+      const vars4 = [...doc.querySelectorAll("#link4 var")];
+      expect(vars4).toHaveSize(1);
+      expect(vars4[0].textContent).toBe("arg");
+    });
+
     it("links attribute and dict-member", async () => {
       const body = `
       <section>
@@ -680,7 +736,7 @@ describe("Core — xref", () => {
 
       const [link1a, link1b] = [...doc.querySelectorAll("#link1 a")];
       expect(link1a.href).toBe(
-        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+        "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window"
       );
       expect(link1b.href).toBe("https://dom.spec.whatwg.org/#dom-window-event");
       expect(link1a.firstElementChild.localName).toBe("code");
@@ -845,7 +901,7 @@ describe("Core — xref", () => {
 
       const externalLinks = [...doc.querySelectorAll("#link-external a")];
       expect(externalLinks[0].href).toBe(
-        "https://html.spec.whatwg.org/multipage/window-object.html#window"
+        "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window"
       );
       expect(externalLinks[1].href).toBe(
         "https://dom.spec.whatwg.org/#dom-window-event"
