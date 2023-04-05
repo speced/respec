@@ -24,9 +24,9 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@rollup/plugin-alias": "^4.0.3",
+    "@rollup/plugin-alias": "^5.0.0",
     "@rollup/plugin-commonjs": "^24.0.1",
-    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.2",
     "@types/marked": "^4.0.8",
     "@types/pluralize": "0.0.29",
     "boxen": "^7.0.2",
@@ -60,7 +60,7 @@
     "serve": "^14.2.0",
     "serve-handler": "^6.1.5",
     "sniffy-mimetype": "^1.1.1",
-    "typescript": "^5.0.2",
+    "typescript": "^5.0.3",
     "vnu-jar": "^22.9.29",
     "webidl2": "^24.2.2"
   },
@@ -90,7 +90,7 @@
     "colors": "1.4.0",
     "finalhandler": "^1.2.0",
     "marked": "^4.3.0",
-    "puppeteer": "^19.8.2",
+    "puppeteer": "^19.8.3",
     "sade": "^1.8.1",
     "serve-static": "^1.15.0"
   },
