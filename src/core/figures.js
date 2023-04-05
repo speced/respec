@@ -127,6 +127,7 @@ function normalizeImages(doc) {
     )
     .forEach(img => {
       if (img.naturalHeight === 0 || img.naturalWidth === 0) return;
+      if (img.src.startsWith("data:image/svg+xml;")) return;
       img.height = img.naturalHeight;
       img.width = img.naturalWidth;
     });
