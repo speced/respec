@@ -12,6 +12,7 @@
     "respec2html": "tools/respec2html.js"
   },
   "main": "./tools/respecDocWriter.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git://github.com/w3c/respec.git"
@@ -65,24 +66,25 @@
   },
   "scripts": {
     "build:aom-debug": "pnpm build:aom -- --debug",
-    "build:aom": "node ./tools/builder.js aom",
+    "build:aom": "pnpm builder aom",
     "build:geonovum-debug": "pnpm build:geonovum -- --debug",
-    "build:geonovum": "node ./tools/builder.js geonovum",
+    "build:geonovum": "pnpm builder geonovum",
     "build:w3c-debug": "pnpm build:w3c -- --debug",
-    "build:w3c": "node ./tools/builder.js w3c",
-    "build:dini-debug": "node run build:dini -- --debug",
-    "build:dini": "node ./tools/builder.js dini",
+    "build:w3c": "pnpm builder w3c",
+    "build:dini-debug": "pnpm build:dini -- --debug",
+    "build:dini": "pnpm builder dini",
     "builddeps": "rollup -c js/deps/rollup.config.js --bundleConfigAsCjs && rollup -c worker/rollup.config.js --bundleConfigAsCjs",
     "lint": "tsc -p src/jsconfig.json && eslint .",
     "prepare": "pnpm builddeps",
-    "release": "node ./tools/release.js",
+    "builder": "node ./tools/builder.cjs",
+    "release": "node ./tools/release.cjs",
     "server": "serve",
-    "start": "node ./tools/dev-server.js",
-    "test:build": "jasmine --random=false ./tests/test-build.js",
-    "test:headless": "jasmine --random=false ./tests/headless.js",
+    "start": "node ./tools/dev-server.cjs",
+    "test:build": "jasmine --random=false ./tests/test-build.cjs",
+    "test:headless": "jasmine --random=false ./tests/headless.cjs",
     "test": "pnpm test:unit && pnpm test:integration",
-    "test:unit": "karma start ./tests/unit/karma.conf.js --single-run",
-    "test:integration": "karma start ./tests/spec/karma.conf.js --single-run"
+    "test:unit": "karma start ./tests/unit/karma.conf.cjs --single-run",
+    "test:integration": "karma start ./tests/spec/karma.conf.cjs --single-run"
   },
   "dependencies": {
     "colors": "1.4.0",

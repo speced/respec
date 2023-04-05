@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // @ts-check
-const { Builder } = require("./builder.js");
+const { Builder } = require("./builder.cjs");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
 const { exec } = require("child_process");

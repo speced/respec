@@ -18,7 +18,7 @@ const serve = require("serve-handler");
 const colors = require("colors");
 const sade = require("sade");
 const serveConfig = require("../serve.json");
-const { Builder } = require("./builder.js");
+const { Builder } = require("./builder.cjs");
 
 const KARMA_PORT = 9876;
 const SERVE_PORT = 8000;
@@ -32,11 +32,11 @@ class KarmaServer {
     const browsers = browser ? [browser] : undefined;
 
     const files = [
-      ...require("../tests/karma.conf.base.js").files,
-      ...require("../tests/unit/karma.conf.js").additionalFiles,
-      ...require("../tests/spec/karma.conf.js").additionalFiles,
+      ...require("../tests/karma.conf.base.cjs").files,
+      ...require("../tests/unit/karma.conf.cjs").additionalFiles,
+      ...require("../tests/spec/karma.conf.cjs").additionalFiles,
     ];
-    const configFile = require.resolve("../tests/karma.conf.base.js");
+    const configFile = require.resolve("../tests/karma.conf.base.cjs");
 
     this._karmaConfig = karma.config.parseConfig(configFile, {
       browsers,
