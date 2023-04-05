@@ -1,13 +1,14 @@
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: weekly
-      time: "10:00"
-    open-pull-requests-limit: 10
-    labels: [dependencies]
-    versioning-strategy: increase
+  # # pnpm support coming soon: https://github.com/dependabot/dependabot-core/issues/1736#issuecomment-1489987159
+  # - package-ecosystem: npm
+  #   directory: "/"
+  #   schedule:
+  #     interval: weekly
+  #     time: "10:00"
+  #   open-pull-requests-limit: 10
+  #   labels: [dependencies]
+  #   versioning-strategy: increase
 
   - package-ecosystem: github-actions
     directory: "/"
