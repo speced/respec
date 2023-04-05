@@ -1,17 +1,18 @@
 {
   "name": "respec",
-  "version": "32.8.1",
+  "version": "33.0.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
-    "node": ">=16",
-    "npm": ">=7"
+    "node": ">=18.14"
   },
+  "packageManager": "pnpm@8.1.1",
   "bin": {
     "respec": "tools/respec2html.js",
     "respec2html": "tools/respec2html.js"
   },
   "main": "./tools/respecDocWriter.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git://github.com/w3c/respec.git"
@@ -64,25 +65,26 @@
     "webidl2": "^24.2.2"
   },
   "scripts": {
-    "build:aom-debug": "npm run build:aom -- --debug",
-    "build:aom": "node ./tools/builder.js aom",
-    "build:geonovum-debug": "npm run build:geonovum -- --debug",
-    "build:geonovum": "node ./tools/builder.js geonovum",
-    "build:w3c-debug": "npm run build:w3c -- --debug",
-    "build:w3c": "node ./tools/builder.js w3c",
-    "build:dini-debug": "node run build:dini -- --debug",
-    "build:dini": "node ./tools/builder.js dini",
+    "build:aom-debug": "pnpm build:aom -- --debug",
+    "build:aom": "pnpm builder aom",
+    "build:geonovum-debug": "pnpm build:geonovum -- --debug",
+    "build:geonovum": "pnpm builder geonovum",
+    "build:w3c-debug": "pnpm build:w3c -- --debug",
+    "build:w3c": "pnpm builder w3c",
+    "build:dini-debug": "pnpm build:dini -- --debug",
+    "build:dini": "pnpm builder dini",
     "builddeps": "rollup -c js/deps/rollup.config.js --bundleConfigAsCjs && rollup -c worker/rollup.config.js --bundleConfigAsCjs",
     "lint": "tsc -p src/jsconfig.json && eslint .",
-    "prepare": "npm run builddeps",
-    "release": "node ./tools/release.js",
+    "prepare": "pnpm builddeps",
+    "builder": "node ./tools/builder.cjs",
+    "release": "node ./tools/release.cjs",
     "server": "serve",
-    "start": "node ./tools/dev-server.js",
-    "test:build": "jasmine --random=false ./tests/test-build.js",
-    "test:headless": "jasmine --random=false ./tests/headless.js",
-    "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "karma start ./tests/unit/karma.conf.js --single-run",
-    "test:integration": "karma start ./tests/spec/karma.conf.js --single-run"
+    "start": "node ./tools/dev-server.cjs",
+    "test:build": "jasmine --random=false ./tests/test-build.cjs",
+    "test:headless": "jasmine --random=false ./tests/headless.cjs",
+    "test": "pnpm test:unit && pnpm test:integration",
+    "test:unit": "karma start ./tests/unit/karma.conf.cjs --single-run",
+    "test:integration": "karma start ./tests/spec/karma.conf.cjs --single-run"
   },
   "dependencies": {
     "colors": "1.4.0",

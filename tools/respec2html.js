@@ -1,14 +1,13 @@
 #!/usr/bin/env node
-const path = require("path");
-const http = require("http");
-const serveStatic = require("serve-static");
-const finalhandler = require("finalhandler");
-const sade = require("sade");
-const colors = require("colors");
-const { marked } = require("marked");
-
-const { writeFile } = require("fs").promises;
-const { toHTML } = require("./respecDocWriter.js");
+import colors from "colors";
+import finalhandler from "finalhandler";
+import http from "http";
+import { marked } from "marked";
+import path from "path";
+import sade from "sade";
+import serveStatic from "serve-static";
+import { toHTML } from "./respecDocWriter.js";
+import { writeFile } from "fs/promises";
 
 class Renderer extends marked.Renderer {
   strong(text) {

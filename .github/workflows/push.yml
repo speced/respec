@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - "**"
       - "!**.js"
+      - "!**.cjs"
       - "!**.json"
       - "!**.css"
       - "!**.html"
@@ -27,13 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
-        with: { node-version: 16, cache: npm }
-      - name: install & build
-        run: |
-          npm ci
-          npm run build:w3c
-      - run: npm run test:headless
+        with: { node-version: 18, cache: pnpm }
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm build:w3c
+      - run: pnpm test:headless
       - name: Calculate size and update on server
         run: |
           timestamp=$(git show --no-patch --pretty='%cd' --date='format:%s')
@@ -53,12 +53,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
-        with: { node-version: 16, cache: npm }
-      - name: install & build
-        run: |
-          npm ci
-          npm run build:w3c & npm run build:geonovum
-      - run: npm test
+        with: { node-version: 18, cache: pnpm }
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm build:w3c & pnpm build:geonovum
+      - run: pnpm test
         env:
           BROWSERS: ChromeHeadless
