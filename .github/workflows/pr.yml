@@ -4,6 +4,7 @@ on:
     paths-ignore:
       - "**"
       - "!**.js"
+      - "!**.cjs"
       - "!**.json"
       - "!**.css"
       - "!**.html"

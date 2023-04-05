@@ -5,7 +5,7 @@ const {
 } = require("fs");
 const { execSync } = require("child_process");
 const path = require("path");
-const { Builder } = require("../tools/builder.js");
+const { Builder } = require("../tools/builder.cjs");
 
 async function fileExists(filePath) {
   try {
