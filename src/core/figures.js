@@ -123,7 +123,7 @@ function getTableOfFiguresListItem(figureId, caption) {
 function normalizeImages(doc) {
   doc
     .querySelectorAll(
-      ":not(picture)>img:not([width]):not([height]):not([srcset]):not([src*='.svg'])"
+      ":not(picture)>img:not([width]):not([height]):not([srcset]):not([src$='.svg'])"
     )
     .forEach(img => {
       if (img.naturalHeight === 0 || img.naturalWidth === 0) return;
