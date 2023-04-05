@@ -2063,7 +2063,7 @@ describe("W3C — Headers", () => {
     });
     it("links the right submitting members", async () => {
       const anchor = doc.querySelector(
-        "#sotd a[href='https://www.w3.org/Submission/2018/Member-SUBM-yolo-20180525/']"
+        "#sotd a[href='https://www.w3.org/Submission/2018/SUBM-yolo-20180525/']"
       );
       expect(anchor).toBeTruthy();
     });
