@@ -114,6 +114,7 @@ const status2maturity = {
   LS: "WD",
   LD: "WD",
   FPWD: "WD",
+  "Member-SUBM": "SUBM",
 };
 
 export const status2text = {
