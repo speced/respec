@@ -96,7 +96,7 @@ module.exports = config => {
       require.resolve("../tools/github-action-reporter.js"),
     ];
     options.reporters.push("respec-github-action");
-    options.plugins = ["karma-*"].concat(localPlugins);
+    options.plugins = options.plugins.concat(localPlugins);
   }
 
   config.set(options);
