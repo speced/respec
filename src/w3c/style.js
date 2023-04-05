@@ -116,6 +116,9 @@ export function run(conf) {
     case "BASE":
       styleFile = "base.css";
       break;
+    case "MEMBER-SUBM":
+      styleFile = "W3C-Member-SUBM";
+      break;
     default:
       styleFile = canUseW3CStyle ? `W3C-${conf.specStatus}` : "base.css";
   }
