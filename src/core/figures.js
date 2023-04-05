@@ -126,7 +126,13 @@ function normalizeImages(doc) {
       ":not(picture)>img:not([width]):not([height]):not([srcset])"
     )
     .forEach(img => {
+      // Don't add width and height to SVGs
+      // https://github.com/w3c/respec/issues/3435
+      if (img.src.startsWith("data:image/svg+xml;")) return;
+      if (img.src.endsWith(".svg")) return;
+
       if (img.naturalHeight === 0 || img.naturalWidth === 0) return;
+
       img.height = img.naturalHeight;
       img.width = img.naturalWidth;
     });
