@@ -30,10 +30,11 @@ jobs:
           curl -sL https://api.github.com/repos/w3c/respec/pulls/${{ github.event.pull_request.number }}/files -o /tmp/pr_files.json
           cat /tmp/pr_files.json | jq -r '.[].filename' | grep -qE "^builds/" || exit 0
           echo "::error::Uh oh! builds/ was changed."; exit 1
+      - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
-        with: { node-version: 16, cache: npm }
-      - run: npm ci
-      - run: npm run lint
+        with: { node-version: 18, cache: pnpm }
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm lint
 
   test-headless:
     name: Headless Tests
@@ -41,12 +42,13 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
-        with: { node-version: 16, cache: npm }
-      - run: npm ci
-      - run: npm run test:build
-      - run: npm run build:w3c
-      - run: npm run test:headless
+        with: { node-version: 18, cache: pnpm }
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm test:build
+      - run: pnpm build:w3c
+      - run: pnpm test:headless
 
   test-karma:
     name: Karma Unit Tests (${{ matrix.browser }})
@@ -57,16 +59,15 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
-        with: { node-version: 16, cache: npm }
-      - name: install & build
-        run: |
-          npm ci
-          npm run build:w3c & npm run build:geonovum
-      - run: npm run test:unit
+        with: { node-version: 18, cache: pnpm }
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm build:w3c & pnpm build:geonovum
+      - run: pnpm test:unit
         env:
           BROWSERS: ${{ matrix.browser }}
-      - run: npm run test:integration
+      - run: pnpm test:integration
         env:
           BROWSERS: ${{ matrix.browser }}
 
@@ -76,12 +77,11 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
-        with: { node-version: 16, cache: npm }
-      - name: install & build
-        run: |
-          npm ci
-          npm run build:w3c
+        with: { node-version: 18, cache: pnpm }
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm build:w3c
       - name: run validator
         run: |
           vnu=$(node -p "require('vnu-jar')")

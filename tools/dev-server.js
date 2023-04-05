@@ -1,8 +1,8 @@
 /**
  * This tools lets one effectively run:
- *  $ npm run build:w3c
- *  $ npm run server
- *  $ npm run test:unit + test:integration
+ *  $ pnpm build:w3c
+ *  $ pnpm run server
+ *  $ pnpm test:unit + test:integration
  * with ability to:
  *  - build/test when a file changes
  *  - build/test on a single keypress (interactive mode)
