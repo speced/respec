@@ -137,6 +137,8 @@ describe("Core - Figures", () => {
          <img id="image-with-height-only" height=100 src="${imgDataURL}">
          <img id="image-with-width-only" width=200 src="${imgDataURL}">
          <img id="image-with-srcset" srcset="${imgDataURL}">
+         <img id="image-svg-url" src="/img/foo.svg">
+         <img id="image-svg-data-uri" src="data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>">
          <picture>
           <img id="image-inside-picture" src="${imgDataURL}">
          </picture>
@@ -191,6 +193,18 @@ describe("Core - Figures", () => {
       expect(image).toBeTruthy();
       expect(image.hasAttribute("height")).toBeFalsy();
       expect(image.hasAttribute("width")).toBeFalsy();
+    });
+
+    it("doesn't set height or width to SVG images", async () => {
+      const imageSvgUrl = doc.getElementById("image-svg-url");
+      expect(imageSvgUrl).toBeTruthy();
+      expect(imageSvgUrl.hasAttribute("height")).toBeFalsy();
+      expect(imageSvgUrl.hasAttribute("width")).toBeFalsy();
+
+      const imageSvgDataUri = doc.getElementById("image-svg-data-uri");
+      expect(imageSvgDataUri).toBeTruthy();
+      expect(imageSvgDataUri.hasAttribute("height")).toBeFalsy();
+      expect(imageSvgDataUri.hasAttribute("width")).toBeFalsy();
     });
   });
   it("localizes list of figures", async () => {
