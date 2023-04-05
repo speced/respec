@@ -376,7 +376,7 @@ const run = async () => {
     console.log(colors.green(" Build Seems good... ✅"));
 
     // 4. Commit your changes
-    await git("add builds package.json package-lock.json");
+    await git("add builds package.json pnpm-lock.yaml");
     await git(`commit -m "v${version}"`);
     await git(`tag "v${version}"`);
 
