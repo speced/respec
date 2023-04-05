@@ -11,8 +11,8 @@ dependencies:
     specifier: ^4.3.0
     version: 4.3.0
   puppeteer:
-    specifier: ^19.8.2
-    version: 19.8.2(typescript@5.0.2)
+    specifier: ^19.8.3
+    version: 19.8.3(typescript@5.0.3)
   sade:
     specifier: ^1.8.1
     version: 1.8.1
@@ -22,14 +22,14 @@ dependencies:
 
 devDependencies:
   '@rollup/plugin-alias':
-    specifier: ^4.0.3
-    version: 4.0.3(rollup@3.20.2)
+    specifier: ^5.0.0
+    version: 5.0.0(rollup@3.20.2)
   '@rollup/plugin-commonjs':
     specifier: ^24.0.1
     version: 24.0.1(rollup@3.20.2)
   '@rollup/plugin-node-resolve':
-    specifier: ^15.0.1
-    version: 15.0.1(rollup@3.20.2)
+    specifier: ^15.0.2
+    version: 15.0.2(rollup@3.20.2)
   '@types/marked':
     specifier: ^4.0.8
     version: 4.0.8
@@ -130,8 +130,8 @@ devDependencies:
     specifier: ^1.1.1
     version: 1.1.1
   typescript:
-    specifier: ^5.0.2
-    version: 5.0.2
+    specifier: ^5.0.3
+    version: 5.0.3
   vnu-jar:
     specifier: ^22.9.29
     version: 22.9.29
@@ -276,8 +276,8 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@puppeteer/browsers@0.3.1(typescript@5.0.2):
-    resolution: {integrity: sha512-WTFVqWY7ipI+CsJRb6vEddYJ/lMl2bHYP5BjFDBM9JMKPjJNT4psXz6DLuJpi3EkG80Q0ef5Azzv3gKu9MvMUg==}
+  /@puppeteer/browsers@0.3.2(typescript@5.0.3):
+    resolution: {integrity: sha512-YAwrqy68PskkCDnSsv0afR8l8u90KhodcIFXCage5NLAoeWm0STGmtVugLBp2wc5PnhnCapCKkMjp9fYjvJl2g==}
     engines: {node: '>=14.1.0'}
     hasBin: true
     peerDependencies:
@@ -292,15 +292,15 @@ packages:
       progress: 2.0.3
       proxy-from-env: 1.1.0
       tar-fs: 2.1.1
-      typescript: 5.0.2
+      typescript: 5.0.3
       unbzip2-stream: 1.4.3
       yargs: 17.7.1
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@rollup/plugin-alias@4.0.3(rollup@3.20.2):
-    resolution: {integrity: sha512-ZuDWE1q4PQDhvm/zc5Prun8sBpLJy41DMptYrS6MhAy9s9kL/doN1613BWfEchGVfKxzliJ3BjbOPizXX38DbQ==}
+  /@rollup/plugin-alias@5.0.0(rollup@3.20.2):
+    resolution: {integrity: sha512-l9hY5chSCjuFRPsnRm16twWBiSApl2uYFLsepQYwtBuAxNMQ/1dJqADld40P0Jkqm65GRTLy/AC6hnpVebtLsA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^1.20.0||^2.0.0||^3.0.0
@@ -330,8 +330,8 @@ packages:
       rollup: 3.20.2
     dev: true
 
-  /@rollup/plugin-node-resolve@15.0.1(rollup@3.20.2):
-    resolution: {integrity: sha512-ReY88T7JhJjeRVbfCyNj+NXAG3IIsVMsX9b5/9jC98dRP8/yxlZdz7mHZbHk5zHr24wZZICS5AcXsFZAXYUQEg==}
+  /@rollup/plugin-node-resolve@15.0.2(rollup@3.20.2):
+    resolution: {integrity: sha512-Y35fRGUjC3FaurG722uhUuG8YHOJRJQbI6/CkbRkdPotSpDj9NtIN85z1zrcyDcCQIW4qp5mgG72U+gJ0TAFEg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^2.78.0||^3.0.0
@@ -342,7 +342,7 @@ packages:
       '@rollup/pluginutils': 5.0.2(rollup@3.20.2)
       '@types/resolve': 1.20.2
       deepmerge: 4.2.2
-      is-builtin-module: 3.2.0
+      is-builtin-module: 3.2.1
       is-module: 1.0.0
       resolve: 1.22.1
       rollup: 3.20.2
@@ -2055,8 +2055,8 @@ packages:
       has-tostringtag: 1.0.0
     dev: true
 
-  /is-builtin-module@3.2.0:
-    resolution: {integrity: sha512-phDA4oSGt7vl1n5tJvTWooWWAsXLY+2xCnxNqvKhGEzujg+A43wPlPOyDg3C8XQHN+6k/JTQWJ/j0dQh/qr+Hw==}
+  /is-builtin-module@3.2.1:
+    resolution: {integrity: sha512-BSLE3HnV2syZ0FK0iMA/yUGplUeMmNz4AW5fnTunbCIqZi4vG3WjJT9FHMy5D69xmAYBHXQhJdALdpwVxV501A==}
     engines: {node: '>=6'}
     dependencies:
       builtin-modules: 3.3.0
@@ -2065,12 +2065,6 @@ packages:
   /is-callable@1.2.7:
     resolution: {integrity: sha512-1BC0BVFhS/p0qtw6enp8e+8OD0UrK0oFLztSjNzhcKA3WDuJxxAPXzPuPtKkjEY9UUoEWlX/8fgKeu2S8i9JTA==}
     engines: {node: '>= 0.4'}
-    dev: true
-
-  /is-core-module@2.10.0:
-    resolution: {integrity: sha512-Erxj2n/LDAZ7H8WNJXd9tw38GYM3dv8rk8Zcs+jJuxYTW7sozH+SS8NtrSjVL1/vpLvWi1hxy96IzjJ3EHTJJg==}
-    dependencies:
-      has: 1.0.3
     dev: true
 
   /is-core-module@2.11.0:
@@ -2831,8 +2825,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /puppeteer-core@19.8.1(typescript@5.0.2):
-    resolution: {integrity: sha512-7yPMzusYRvJ/laLaMFIQ01E9WakKkJJXLsMAymH6y5EKqYe5hhn68/SbvF+1YJMb843GftU7gT86Fw8y5jkn3w==}
+  /puppeteer-core@19.8.3(typescript@5.0.3):
+    resolution: {integrity: sha512-+gPT43K3trUIr+7+tNjCg95vMgM9RkFIeeyck3SXUTBpGkrf6sxfWckncqY8MnzHfRcyapvztKNmqvJ+Ngukyg==}
     engines: {node: '>=14.14.0'}
     peerDependencies:
       typescript: '>= 4.7.4'
@@ -2848,7 +2842,7 @@ packages:
       https-proxy-agent: 5.0.1
       proxy-from-env: 1.1.0
       tar-fs: 2.1.1
-      typescript: 5.0.2
+      typescript: 5.0.3
       unbzip2-stream: 1.4.3
       ws: 8.13.0
     transitivePeerDependencies:
@@ -2858,16 +2852,16 @@ packages:
       - utf-8-validate
     dev: false
 
-  /puppeteer@19.8.2(typescript@5.0.2):
-    resolution: {integrity: sha512-LPdNVYMR6ddp4YS3GK1bqKsasCJj1aZjt9dNOKcnzKezuMoishlHY6bCnFLjTc34iqnGzIrJp07TQ9M+aML2+g==}
+  /puppeteer@19.8.3(typescript@5.0.3):
+    resolution: {integrity: sha512-sKtt3aDRAcWuemeEtRaJqWKRlQ72OyKVcxX3Ur3KyFUEEzb2sEHpFc2mBlTMPmzOiNg5dB4dnxfelV9/xypJrA==}
     requiresBuild: true
     dependencies:
-      '@puppeteer/browsers': 0.3.1(typescript@5.0.2)
+      '@puppeteer/browsers': 0.3.2(typescript@5.0.3)
       cosmiconfig: 8.1.3
       https-proxy-agent: 5.0.1
       progress: 2.0.3
       proxy-from-env: 1.1.0
-      puppeteer-core: 19.8.1(typescript@5.0.2)
+      puppeteer-core: 19.8.3(typescript@5.0.3)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -2997,7 +2991,7 @@ packages:
     resolution: {integrity: sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==}
     hasBin: true
     dependencies:
-      is-core-module: 2.10.0
+      is-core-module: 2.11.0
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
     dev: true
@@ -3503,8 +3497,8 @@ packages:
     hasBin: true
     dev: true
 
-  /typescript@5.0.2:
-    resolution: {integrity: sha512-wVORMBGO/FAs/++blGNeAVdbNKtIh1rbBL2EyQ1+J9lClJ93KiiKe8PmFIVdXhHcyv44SL9oglmfeSsndo0jRw==}
+  /typescript@5.0.3:
+    resolution: {integrity: sha512-xv8mOEDnigb/tN9PSMTwSEqAnUvkoXMQlicOb0IUVDBSQCgBSaAAROUZYy2IcUy5qU6XajK5jjjO7TMWqBTKZA==}
     engines: {node: '>=12.20'}
     hasBin: true
 
