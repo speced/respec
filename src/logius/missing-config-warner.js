@@ -4,7 +4,14 @@ export const name = "logius/missing-config-warner";
 
 const requiredConfigs = ["licenses", "license"];
 
-const recommendedConfigs = ["specStatus", "nl_organisationName", "sotdText"];
+const recommendedConfigs = [
+  "specStatus",
+  "nl_organisationName",
+  "sotdText",
+  "thisVersion",
+  "latestVersion",
+  "prevVersion",
+];
 
 const wikiURL = "https://github.com/Logius-standaarden/respec/wiki/";
 
@@ -20,9 +27,13 @@ export async function run(conf) {
 async function errorMissingConfigs(conf) {
   requiredConfigs.forEach(element => {
     if (!conf[element]) {
-      showError(`Missing config option ${element}`, "errorMissingConfigs", {
-        hint: wikiURL + element,
-      });
+      showError(
+        `Missing config option <code>${element}</code>`,
+        "errorMissingConfigs",
+        {
+          hint: wikiURL + element,
+        }
+      );
     }
   });
 }
@@ -30,9 +41,13 @@ async function errorMissingConfigs(conf) {
 async function warnMissingConfigs(conf) {
   recommendedConfigs.forEach(element => {
     if (!conf[element]) {
-      showWarning(`Missing config option ${element}`, "warnMissingConfigs", {
-        hint: wikiURL + element,
-      });
+      showWarning(
+        `Missing config option <code>${element}</code>`,
+        "warnMissingConfigs",
+        {
+          hint: wikiURL + element,
+        }
+      );
     }
   });
 }

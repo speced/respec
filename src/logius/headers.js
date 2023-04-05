@@ -289,10 +289,48 @@ export function run(conf) {
     return url.toLowerCase();
   }
 
+  if (!conf.thisVersion) {
+    conf.thisVersion = [
+      "nl_organisationPublishURL",
+      "pubDomain",
+      "/",
+      "specStatus",
+      "-",
+      "specType",
+      "-",
+      "shortName",
+      "-",
+      "publishDate",
+    ];
+  }
   conf.thisVersion = createUrlFromArray(conf.thisVersion);
+  if (!conf.latestVersion) {
+    conf.latestVersion = [
+      "nl_organisationPublishURL",
+      "pubDomain",
+      "/",
+      "shortName",
+    ];
+  }
   conf.latestVersion = createUrlFromArray(conf.latestVersion);
-  conf.edDraftURI = createUrlFromArray(conf.edDraftURI);
+  if (!conf.prevVersion) {
+    conf.prevVersion = [
+      "nl_organisationPublishURL",
+      "pubDomain",
+      "/",
+      "previousMaturity",
+      "-",
+      "specType",
+      "-",
+      "shortName",
+      "-",
+      "previousPublishDate",
+    ];
+  }
   conf.prevVersion = createUrlFromArray(conf.prevVersion);
+  if (Array.isArray(conf.edDraftURI)) {
+    conf.edDraftURI = createUrlFromArray(conf.edDraftURI);
+  }
 
   // insert into document
   const header = headersTmpl(conf, options);
