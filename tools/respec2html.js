@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import { readFile, writeFile } from "fs/promises";
 import colors from "colors";
+import { fileURLToPath } from "url";
 import finalhandler from "finalhandler";
 import http from "http";
 import { marked } from "marked";
@@ -7,7 +9,8 @@ import path from "path";
 import sade from "sade";
 import serveStatic from "serve-static";
 import { toHTML } from "./respecDocWriter.js";
-import { writeFile } from "fs/promises";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 class Renderer extends marked.Renderer {
   strong(text) {
@@ -204,8 +207,9 @@ cli.action(async (source, destination, opts) => {
 });
 
 // https://github.com/lukeed/sade/issues/28#issuecomment-516104013
-cli._version = () => {
-  const { version } = require("../package.json");
+cli._version = async () => {
+  const packageJson = path.join(__dirname, "..", "package.json");
+  const { version } = JSON.parse(await readFile(packageJson));
   console.log(version);
 };
 
