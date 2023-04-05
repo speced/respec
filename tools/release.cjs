@@ -179,7 +179,7 @@ const Prompts = {
       // drop the hash
       .map(line => line.substr(line.indexOf(" ") + 1))
       .map(line => {
-        if (/^breaking/i.test(line)) {
+        if (/^breaking/i.test(line) || /^[a-z]+(\(.+\))?!:.+/i.test(line)) {
           return "major";
         }
         if (/^feat/i.test(line)) {
