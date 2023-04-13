@@ -31,7 +31,7 @@ const localizationStrings = {
         /\bMUST(?:\s+NOT)?\b/,
         /\bSHOULD(?:\s+NOT)?\b/,
         /\bSHALL(?:\s+NOT)?\b/,
-        /\bMAY?\b/,
+        /\bMAY\b/,
         /\b(?:NOT\s+)?REQUIRED\b/,
         /\b(?:NOT\s+)?RECOMMENDED\b/,
         /\bOPTIONAL\b/,
