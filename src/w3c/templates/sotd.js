@@ -253,9 +253,11 @@ function renderNotRec(conf) {
       </p>`;
       break;
     case "DNOTE":
-    case "NOTE":
       endorsement = html`${conf.textStatus}s are not endorsed by
         <abbr title="World Wide Web Consortium">W3C</abbr> nor its Members.`;
+    case "NOTE":
+      endorsement = html`This ${conf.textStatus} is endorsed by ${conf.wgHTML}, but is not endorsed by <abbr title="World Wide Web Consortium">W3C</abbr> itself nor its Members.`;
+
       break;
   }
   return html`<p>${endorsement} ${statusExplanation}</p>
