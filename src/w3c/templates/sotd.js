@@ -1,5 +1,5 @@
 // @ts-check
-import { W3CDate, getIntlData } from "../../core/utils.js";
+import { W3CDate, getIntlData, htmlJoinAnd } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import { status2track } from "../headers.js";
 const localizationStrings = {
@@ -253,9 +253,14 @@ function renderNotRec(conf) {
       </p>`;
       break;
     case "DNOTE":
-    case "NOTE":
       endorsement = html`${conf.textStatus}s are not endorsed by
         <abbr title="World Wide Web Consortium">W3C</abbr> nor its Members.`;
+      break;
+    case "NOTE":
+      endorsement = html`This ${conf.textStatus} is endorsed by
+        ${getWgHTML(conf)}, but is not endorsed by
+        <abbr title="World Wide Web Consortium">W3C</abbr> itself nor its
+        Members.`;
       break;
   }
   return html`<p>${endorsement} ${statusExplanation}</p>
@@ -492,9 +497,19 @@ function linkToWorkingGroup(conf) {
         >`
     : "";
   return html`<p>
-    This document was published by ${conf.wgHTML} as
+    This document was published by ${getWgHTML(conf)} as
     ${prefix(conf.longStatus)}${track}. ${changes}
   </p>`;
+}
+
+function getWgHTML(conf) {
+  if (Array.isArray(conf.wg)) {
+    return htmlJoinAnd(conf.wg, (wg, idx) => {
+      return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
+    });
+  } else if (conf.wg) {
+    return html`the <a href="${conf.wgURI}">${conf.wg}</a>`;
+  }
 }
 
 export function linkToCommunity(conf, opts) {
