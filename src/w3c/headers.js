@@ -548,10 +548,6 @@ export async function run(conf) {
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
-    conf.wgHTML = htmlJoinAnd(conf.wg, (wg, idx) => {
-      return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
-    });
-
     conf.wgPatentHTML = htmlJoinAnd(conf.wg, (wg, i) => {
       return html`a
         <a href="${conf.wgPatentURI[i]}" rel="disclosure"
@@ -560,9 +556,6 @@ export async function run(conf) {
     });
   } else {
     conf.multipleWGs = false;
-    if (conf.wg) {
-      conf.wgHTML = html`the <a href="${conf.wgURI}">${conf.wg}</a>`;
-    }
   }
   if (conf.isPR && !conf.crEnd) {
     const msg = docLink`${"[specStatus]"} is "PR" but no ${"[crEnd]"} is specified in the ${"[respecConfig]"} (needed to indicate end of previous CR).`;

@@ -11,8 +11,8 @@ dependencies:
     specifier: ^4.3.0
     version: 4.3.0
   puppeteer:
-    specifier: ^19.8.3
-    version: 19.8.3(typescript@5.0.3)
+    specifier: ^19.9.0
+    version: 19.9.0(typescript@5.0.4)
   sade:
     specifier: ^1.8.1
     version: 1.8.1
@@ -23,13 +23,13 @@ dependencies:
 devDependencies:
   '@rollup/plugin-alias':
     specifier: ^5.0.0
-    version: 5.0.0(rollup@3.20.2)
+    version: 5.0.0(rollup@3.20.4)
   '@rollup/plugin-commonjs':
-    specifier: ^24.0.1
-    version: 24.0.1(rollup@3.20.2)
+    specifier: ^24.1.0
+    version: 24.1.0(rollup@3.20.4)
   '@rollup/plugin-node-resolve':
     specifier: ^15.0.2
-    version: 15.0.2(rollup@3.20.2)
+    version: 15.0.2(rollup@3.20.4)
   '@types/marked':
     specifier: ^4.0.8
     version: 4.0.8
@@ -49,20 +49,20 @@ devDependencies:
     specifier: ^1.0.0
     version: 1.0.0
   eslint:
-    specifier: ^8.37.0
-    version: 8.37.0
+    specifier: ^8.38.0
+    version: 8.38.0
   eslint-config-prettier:
     specifier: ^8.8.0
-    version: 8.8.0(eslint@8.37.0)
+    version: 8.8.0(eslint@8.38.0)
   eslint-plugin-import:
     specifier: ^2.27.5
-    version: 2.27.5(eslint@8.37.0)
+    version: 2.27.5(eslint@8.38.0)
   eslint-plugin-jasmine:
     specifier: ^4.1.3
     version: 4.1.3
   eslint-plugin-prettier:
     specifier: ^4.2.1
-    version: 4.2.1(eslint-config-prettier@8.8.0)(eslint@8.37.0)(prettier@2.8.7)
+    version: 4.2.1(eslint-config-prettier@8.8.0)(eslint@8.38.0)(prettier@2.8.7)
   highlight.js:
     specifier: ^11.7.0
     version: 11.7.0
@@ -112,14 +112,14 @@ devDependencies:
     specifier: ^1.3.0
     version: 1.3.0
   rollup:
-    specifier: ^3.20.2
-    version: 3.20.2
+    specifier: ^3.20.4
+    version: 3.20.4
   rollup-plugin-minify-html-literals:
     specifier: ^1.2.6
-    version: 1.2.6(rollup@3.20.2)
+    version: 1.2.6(rollup@3.20.4)
   rollup-plugin-terser:
     specifier: ^7.0.2
-    version: 7.0.2(rollup@3.20.2)
+    version: 7.0.2(rollup@3.20.4)
   serve:
     specifier: ^14.2.0
     version: 14.2.0
@@ -130,11 +130,11 @@ devDependencies:
     specifier: ^1.1.1
     version: 1.1.1
   typescript:
-    specifier: ^5.0.3
-    version: 5.0.3
+    specifier: ^5.0.4
+    version: 5.0.4
   vnu-jar:
-    specifier: ^22.9.29
-    version: 22.9.29
+    specifier: ^23.4.11
+    version: 23.4.11
   webidl2:
     specifier: ^24.2.2
     version: 24.2.2
@@ -161,13 +161,13 @@ packages:
     engines: {node: '>=0.1.90'}
     dev: true
 
-  /@eslint-community/eslint-utils@4.2.0(eslint@8.37.0):
+  /@eslint-community/eslint-utils@4.2.0(eslint@8.38.0):
     resolution: {integrity: sha512-gB8T4H4DEfX2IV9zGDJPOBgP1e/DbfCPDTtEqUMckpvzS1OYtva8JdFYBqMwYk7xAQ429WGF/UPqn8uQ//h2vQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
     dependencies:
-      eslint: 8.37.0
+      eslint: 8.38.0
       eslint-visitor-keys: 3.4.0
     dev: true
 
@@ -193,8 +193,8 @@ packages:
       - supports-color
     dev: true
 
-  /@eslint/js@8.37.0:
-    resolution: {integrity: sha512-x5vzdtOOGgFVDCUs81QRB2+liax8rFg3+7hqM+QhBG0/G3F1ZsoYl97UrqgHgQ9KKT7G6c4V+aTUCgu/n22v1A==}
+  /@eslint/js@8.38.0:
+    resolution: {integrity: sha512-IoD2MfUnOV58ghIHCiil01PcohxjbYR/qCxsoC+xNgUwh1EY8jOOrYmu3d3a71+tJJ23uscEV4X2HJWMsPJu4g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
@@ -276,8 +276,8 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@puppeteer/browsers@0.3.2(typescript@5.0.3):
-    resolution: {integrity: sha512-YAwrqy68PskkCDnSsv0afR8l8u90KhodcIFXCage5NLAoeWm0STGmtVugLBp2wc5PnhnCapCKkMjp9fYjvJl2g==}
+  /@puppeteer/browsers@0.4.1(typescript@5.0.4):
+    resolution: {integrity: sha512-4IICvy1McAkT/HyNZHIs7sp8ngBX1dmO0TPQ+FWq9ATQMqI8p+Ulm5A3kS2wYDh5HDHHkYrrETOu6rlj64VuTw==}
     engines: {node: '>=14.1.0'}
     hasBin: true
     peerDependencies:
@@ -292,14 +292,14 @@ packages:
       progress: 2.0.3
       proxy-from-env: 1.1.0
       tar-fs: 2.1.1
-      typescript: 5.0.3
+      typescript: 5.0.4
       unbzip2-stream: 1.4.3
       yargs: 17.7.1
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@rollup/plugin-alias@5.0.0(rollup@3.20.2):
+  /@rollup/plugin-alias@5.0.0(rollup@3.20.4):
     resolution: {integrity: sha512-l9hY5chSCjuFRPsnRm16twWBiSApl2uYFLsepQYwtBuAxNMQ/1dJqADld40P0Jkqm65GRTLy/AC6hnpVebtLsA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -308,12 +308,12 @@ packages:
       rollup:
         optional: true
     dependencies:
-      rollup: 3.20.2
+      rollup: 3.20.4
       slash: 4.0.0
     dev: true
 
-  /@rollup/plugin-commonjs@24.0.1(rollup@3.20.2):
-    resolution: {integrity: sha512-15LsiWRZk4eOGqvrJyu3z3DaBu5BhXIMeWnijSRvd8irrrg9SHpQ1pH+BUK4H6Z9wL9yOxZJMTLU+Au86XHxow==}
+  /@rollup/plugin-commonjs@24.1.0(rollup@3.20.4):
+    resolution: {integrity: sha512-eSL45hjhCWI0jCCXcNtLVqM5N1JlBGvlFfY0m6oOYnLCJ6N0qEXoZql4sY2MOUArzhH4SA/qBpTxvvZp2Sc+DQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^2.68.0||^3.0.0
@@ -321,16 +321,16 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.20.2)
+      '@rollup/pluginutils': 5.0.2(rollup@3.20.4)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.0.3
       is-reference: 1.2.1
       magic-string: 0.27.0
-      rollup: 3.20.2
+      rollup: 3.20.4
     dev: true
 
-  /@rollup/plugin-node-resolve@15.0.2(rollup@3.20.2):
+  /@rollup/plugin-node-resolve@15.0.2(rollup@3.20.4):
     resolution: {integrity: sha512-Y35fRGUjC3FaurG722uhUuG8YHOJRJQbI6/CkbRkdPotSpDj9NtIN85z1zrcyDcCQIW4qp5mgG72U+gJ0TAFEg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -339,16 +339,16 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.20.2)
+      '@rollup/pluginutils': 5.0.2(rollup@3.20.4)
       '@types/resolve': 1.20.2
       deepmerge: 4.2.2
       is-builtin-module: 3.2.1
       is-module: 1.0.0
       resolve: 1.22.1
-      rollup: 3.20.2
+      rollup: 3.20.4
     dev: true
 
-  /@rollup/pluginutils@5.0.2(rollup@3.20.2):
+  /@rollup/pluginutils@5.0.2(rollup@3.20.4):
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -360,7 +360,7 @@ packages:
       '@types/estree': 1.0.0
       estree-walker: 2.0.2
       picomatch: 2.3.1
-      rollup: 3.20.2
+      rollup: 3.20.4
     dev: true
 
   /@socket.io/base64-arraybuffer@1.0.2:
@@ -1309,13 +1309,13 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /eslint-config-prettier@8.8.0(eslint@8.37.0):
+  /eslint-config-prettier@8.8.0(eslint@8.38.0):
     resolution: {integrity: sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==}
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
     dependencies:
-      eslint: 8.37.0
+      eslint: 8.38.0
     dev: true
 
   /eslint-import-resolver-node@0.3.7:
@@ -1328,7 +1328,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-module-utils@2.7.4(eslint-import-resolver-node@0.3.7)(eslint@8.37.0):
+  /eslint-module-utils@2.7.4(eslint-import-resolver-node@0.3.7)(eslint@8.38.0):
     resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -1350,13 +1350,13 @@ packages:
         optional: true
     dependencies:
       debug: 3.2.7
-      eslint: 8.37.0
+      eslint: 8.38.0
       eslint-import-resolver-node: 0.3.7
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /eslint-plugin-import@2.27.5(eslint@8.37.0):
+  /eslint-plugin-import@2.27.5(eslint@8.38.0):
     resolution: {integrity: sha512-LmEt3GVofgiGuiE+ORpnvP+kAm3h6MLZJ4Q5HCyHADofsb4VzXFsRiWj3c0OFiV+3DWFh0qg3v9gcPlfc3zRow==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -1371,9 +1371,9 @@ packages:
       array.prototype.flatmap: 1.3.1
       debug: 3.2.7
       doctrine: 2.1.0
-      eslint: 8.37.0
+      eslint: 8.38.0
       eslint-import-resolver-node: 0.3.7
-      eslint-module-utils: 2.7.4(eslint-import-resolver-node@0.3.7)(eslint@8.37.0)
+      eslint-module-utils: 2.7.4(eslint-import-resolver-node@0.3.7)(eslint@8.38.0)
       has: 1.0.3
       is-core-module: 2.11.0
       is-glob: 4.0.3
@@ -1393,7 +1393,7 @@ packages:
     engines: {node: '>=8', npm: '>=6'}
     dev: true
 
-  /eslint-plugin-prettier@4.2.1(eslint-config-prettier@8.8.0)(eslint@8.37.0)(prettier@2.8.7):
+  /eslint-plugin-prettier@4.2.1(eslint-config-prettier@8.8.0)(eslint@8.38.0)(prettier@2.8.7):
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -1404,8 +1404,8 @@ packages:
       eslint-config-prettier:
         optional: true
     dependencies:
-      eslint: 8.37.0
-      eslint-config-prettier: 8.8.0(eslint@8.37.0)
+      eslint: 8.38.0
+      eslint-config-prettier: 8.8.0(eslint@8.38.0)
       prettier: 2.8.7
       prettier-linter-helpers: 1.0.0
     dev: true
@@ -1423,15 +1423,15 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /eslint@8.37.0:
-    resolution: {integrity: sha512-NU3Ps9nI05GUoVMxcZx1J8CNR6xOvUT4jAUMH5+z8lpp3aEdPVCImKw6PWG4PY+Vfkpr+jvMpxs/qoE7wq0sPw==}
+  /eslint@8.38.0:
+    resolution: {integrity: sha512-pIdsD2jwlUGf/U38Jv97t8lq6HpaU/G9NKbYmpWpZGw3LdTNhZLbJePqxOXGB5+JEKfOPU/XLxYxFh03nr1KTg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     hasBin: true
     dependencies:
-      '@eslint-community/eslint-utils': 4.2.0(eslint@8.37.0)
+      '@eslint-community/eslint-utils': 4.2.0(eslint@8.38.0)
       '@eslint-community/regexpp': 4.4.0
       '@eslint/eslintrc': 2.0.2
-      '@eslint/js': 8.37.0
+      '@eslint/js': 8.38.0
       '@humanwhocodes/config-array': 0.11.8
       '@humanwhocodes/module-importer': 1.0.1
       '@nodelib/fs.walk': 1.2.8
@@ -2825,8 +2825,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /puppeteer-core@19.8.3(typescript@5.0.3):
-    resolution: {integrity: sha512-+gPT43K3trUIr+7+tNjCg95vMgM9RkFIeeyck3SXUTBpGkrf6sxfWckncqY8MnzHfRcyapvztKNmqvJ+Ngukyg==}
+  /puppeteer-core@19.9.0(typescript@5.0.4):
+    resolution: {integrity: sha512-IJYfCE0oFpi5dTvNFqOwo8Dey6zzx7hANy7z6K2bjpCux9oPOSOIubq40awNhaHlfi8soYtgU4qabnzMXB7xBQ==}
     engines: {node: '>=14.14.0'}
     peerDependencies:
       typescript: '>= 4.7.4'
@@ -2834,6 +2834,7 @@ packages:
       typescript:
         optional: true
     dependencies:
+      '@puppeteer/browsers': 0.4.1(typescript@5.0.4)
       chromium-bidi: 0.4.6(devtools-protocol@0.0.1107588)
       cross-fetch: 3.1.5
       debug: 4.3.4
@@ -2842,7 +2843,7 @@ packages:
       https-proxy-agent: 5.0.1
       proxy-from-env: 1.1.0
       tar-fs: 2.1.1
-      typescript: 5.0.3
+      typescript: 5.0.4
       unbzip2-stream: 1.4.3
       ws: 8.13.0
     transitivePeerDependencies:
@@ -2852,16 +2853,16 @@ packages:
       - utf-8-validate
     dev: false
 
-  /puppeteer@19.8.3(typescript@5.0.3):
-    resolution: {integrity: sha512-sKtt3aDRAcWuemeEtRaJqWKRlQ72OyKVcxX3Ur3KyFUEEzb2sEHpFc2mBlTMPmzOiNg5dB4dnxfelV9/xypJrA==}
+  /puppeteer@19.9.0(typescript@5.0.4):
+    resolution: {integrity: sha512-JDx8WwGlkdQYTaa3OMYDF+uFWimiwNnacg5FGEC5J6+VxDsLK30wHKU/Db2LqEhtAoIu4RwS+BRH4zRPlCsFpA==}
     requiresBuild: true
     dependencies:
-      '@puppeteer/browsers': 0.3.2(typescript@5.0.3)
+      '@puppeteer/browsers': 0.4.1(typescript@5.0.4)
       cosmiconfig: 8.1.3
       https-proxy-agent: 5.0.1
       progress: 2.0.3
       proxy-from-env: 1.1.0
-      puppeteer-core: 19.8.3(typescript@5.0.3)
+      puppeteer-core: 19.9.0(typescript@5.0.4)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3025,17 +3026,17 @@ packages:
       glob: 7.2.0
     dev: true
 
-  /rollup-plugin-minify-html-literals@1.2.6(rollup@3.20.2):
+  /rollup-plugin-minify-html-literals@1.2.6(rollup@3.20.4):
     resolution: {integrity: sha512-JRq2fjlCTiw0zu+1Sy3ClHGCxA79dWGr4HLHWSQgd060StVW9fBVksuj8Xw/suPkNSGClJf/4xNQ1MF6JeXPaw==}
     peerDependencies:
       rollup: ^0.65.2 || ^1.0.0 || ^2.0.0
     dependencies:
       minify-html-literals: 1.3.5
-      rollup: 3.20.2
+      rollup: 3.20.4
       rollup-pluginutils: 2.8.2
     dev: true
 
-  /rollup-plugin-terser@7.0.2(rollup@3.20.2):
+  /rollup-plugin-terser@7.0.2(rollup@3.20.4):
     resolution: {integrity: sha512-w3iIaU4OxcF52UUXiZNsNeuXIMDvFrr+ZXK6bFZ0Q60qyVfq4uLptoS4bbq3paG3x216eQllFZX7zt6TIImguQ==}
     deprecated: This package has been deprecated and is no longer maintained. Please use @rollup/plugin-terser
     peerDependencies:
@@ -3043,7 +3044,7 @@ packages:
     dependencies:
       '@babel/code-frame': 7.10.4
       jest-worker: 26.3.0
-      rollup: 3.20.2
+      rollup: 3.20.4
       serialize-javascript: 4.0.0
       terser: 5.14.2
     dev: true
@@ -3054,8 +3055,8 @@ packages:
       estree-walker: 0.6.1
     dev: true
 
-  /rollup@3.20.2:
-    resolution: {integrity: sha512-3zwkBQl7Ai7MFYQE0y1MeQ15+9jsi7XxfrqwTb/9EK8D9C9+//EBR4M+CuA1KODRaNbFez/lWxA5vhEGZp4MUg==}
+  /rollup@3.20.4:
+    resolution: {integrity: sha512-n7J4tuctZXUErM9Uc916httwqmTc63zzCr2+TLCiSCpfO/Xuk3g/marGN1IlRJZi+QF3XMYx75PxXRfZDVgaRw==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3497,8 +3498,8 @@ packages:
     hasBin: true
     dev: true
 
-  /typescript@5.0.3:
-    resolution: {integrity: sha512-xv8mOEDnigb/tN9PSMTwSEqAnUvkoXMQlicOb0IUVDBSQCgBSaAAROUZYy2IcUy5qU6XajK5jjjO7TMWqBTKZA==}
+  /typescript@5.0.4:
+    resolution: {integrity: sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==}
     engines: {node: '>=12.20'}
     hasBin: true
 
@@ -3576,8 +3577,8 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
-  /vnu-jar@22.9.29:
-    resolution: {integrity: sha512-AM0mnQEXT5UgT/YoCGy/4KE0i0A4iz9MWUIevzUlYb36UMnsHHQQYnA0ptm971JyaQ5Dg+z3u8AyobotmwkZUQ==}
+  /vnu-jar@23.4.11:
+    resolution: {integrity: sha512-lI5dzBYXtxhilNI7EeQ5iUduYnNBq7YWx4UjfBVLXfBQHnXYZSf3y3bpM0bSyDU6jy/+OyKV7nw4tzpR5lXSZg==}
     engines: {node: '>=0.10'}
     dev: true
 
