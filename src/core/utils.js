@@ -177,8 +177,8 @@ export function norm(str) {
   return str
     .trim()
     .replace(/\s+/g, " ")
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 /**
