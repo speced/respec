@@ -174,7 +174,11 @@ export function xmlEscape(str) {
  * @param {string} str
  */
 export function norm(str) {
-  return str.trim().replace(/\s+/g, " ").replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return str
+      .trim()
+      .replace(/\s+/g, " ")
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
 }
 
 /**
