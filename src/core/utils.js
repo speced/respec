@@ -175,10 +175,10 @@ export function xmlEscape(str) {
  */
 export function norm(str) {
   return str
-      .trim()
-      .replace(/\s+/g, " ")
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 /**
