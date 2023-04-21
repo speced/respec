@@ -179,7 +179,11 @@ cli
     false
   )
   .option("-e, --haltonerror", "Abort if the spec has any errors.", false)
-  .option("-w, --haltonwarn", "Abort if ReSpec generates warnings.", false)
+  .option(
+    "-w, --haltonwarn",
+    "Abort if ReSpec generates warnings (or errors).",
+    false
+  )
   .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
   .option("--devtools", "Enable debugging and show Chrome's DevTools.", false)
   .option("--verbose", "Log processing status to stdout.", false)
@@ -248,7 +252,8 @@ async function run(source, destination, options, log) {
   });
 
   const exitOnError = errors.length && options.haltonerror;
-  const exitOnWarning = warnings.length && options.haltonwarn;
+  const exitOnWarning =
+    (warnings.length || errors.length) && options.haltonwarn;
   if (exitOnError || exitOnWarning) {
     throw new Error(
       `${exitOnError ? "Errors" : "Warnings"} found during processing.`
