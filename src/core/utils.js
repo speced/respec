@@ -174,9 +174,7 @@ export function xmlEscape(str) {
  * @param {string} str
  */
 export function norm(str) {
-  return str
-    .trim()
-    .replace(/\s+/g, " ");
+  return str.trim().replace(/\s+/g, " ");
 }
 
 /**
