@@ -175,6 +175,7 @@ describe("Core — dfn-index", () => {
           </pre>
           <dfn id="local-idl-1">name</dfn>
           <dfn id="local-idl-2">onpay</dfn>
+          <dfn data-cite="ttml2#profile-vocabulary-feature"><code>&lt;ttp:feature&gt;</code></dfn>
         </div>
         <p class="test" data-link-for="Employee">
           {{ name }} {{ onpay }}
@@ -201,6 +202,7 @@ describe("Core — dfn-index", () => {
             <dfn data-cite="ECMASCRIPT/#sec-json.stringify">JSON.stringify</dfn>
           </li>
           <li><a>JSON.stringify</a></li>
+          <li><a><code>&lt;ttp:feature&gt;</code></a></li>
         </ul>
         <ul class="test" data-testid="possible-duplicate-id">
         <li><a data-cite="ECMASCRIPT#sec-json.parse">parsing</a></li>
@@ -238,6 +240,7 @@ describe("Core — dfn-index", () => {
         "iframe element",
         "ASCII uppercase",
         "origin",
+        "<ttp:feature>",
         "AbortError exception",
         "boolean type",
         "[Default] extended attribute",
@@ -252,7 +255,7 @@ describe("Core — dfn-index", () => {
 
     it("lists terms grouped by specs", () => {
       const bySpecs = index.querySelectorAll("ul.index > li");
-      expect(bySpecs).toHaveSize(6);
+      expect(bySpecs).toHaveSize(7);
       expect(bySpecs[0].textContent.trim()).toMatch(
         /\[DOM\] defines the following:/
       );
@@ -266,6 +269,7 @@ describe("Core — dfn-index", () => {
         "HTML",
         "INFRA",
         "RFC6454",
+        "TTML2",
         "WEBIDL",
       ]);
 
