@@ -255,7 +255,7 @@ describe("Core — dfn-index", () => {
 
     it("lists terms grouped by specs", () => {
       const bySpecs = index.querySelectorAll("ul.index > li");
-      expect(bySpecs).toHaveSize(6);
+      expect(bySpecs).toHaveSize(7);
       expect(bySpecs[0].textContent.trim()).toMatch(
         /\[DOM\] defines the following:/
       );
