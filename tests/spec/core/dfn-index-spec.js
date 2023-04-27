@@ -208,6 +208,9 @@ describe("Core — dfn-index", () => {
         <li><a data-cite="ECMASCRIPT#sec-json.parse">parsing</a></li>
         <li><a data-cite="ECMASCRIPT#sec-15.12.2">parsing</a></li>
         </ul>
+        <ul class="test" data-testid="ignore-spec-refs">
+          <li>[[[RDF11-CONCEPTS]]]</li>
+        </ul>
       </section>
       <section id="index"></section>`;
 

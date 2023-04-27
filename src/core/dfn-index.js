@@ -265,6 +265,11 @@ function collectExternalTerms() {
     if (!elem.dataset.cite) {
       continue;
     }
+    const { cite, xrefType, linkType } = elem.dataset;
+    if (!(xrefType || linkType || cite.includes("#"))) {
+      // Not a reference to a definition
+      continue;
+    }
     const uniqueID = elem.href;
     if (uniqueReferences.has(uniqueID)) {
       continue;
