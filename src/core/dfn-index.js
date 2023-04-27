@@ -265,8 +265,8 @@ function collectExternalTerms() {
     if (!elem.dataset.cite) {
       continue;
     }
-    const { cite, xrefType, linkType } = elem.dataset;
-    if (!(xrefType || linkType || cite.includes("#"))) {
+    const { cite, citeFrag, xrefType, linkType } = elem.dataset;
+    if (!(xrefType || linkType || cite.includes("#") || citeFrag)) {
       // Not a reference to a definition
       continue;
     }
