@@ -161,7 +161,7 @@ export default (conf, options) => {
             </dd>
           `
         : ""}
-	  ${!conf.isNoTrack && conf.latestVersion
+      ${!conf.isNoTrack && conf.latestVersion
         ? html`
             <dt>${l10n.latest_published_version}</dt>
             <dd>

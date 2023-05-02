@@ -273,15 +273,15 @@ export function run(conf) {
 
   function createUrlFromArray(input) {
     let url = "";
-	if (!Array.isArray(input)) {
-		if (input != "") {
-			showError(
-				`URI config option expected to be an array. Input: <code>${input}</code>`,
-				"headers.js",
-			  );
-		}
-		return;
-	}
+    if (!Array.isArray(input)) {
+      if (input != "") {
+        showError(
+          `URI config option expected to be an array. Input: <code>${input}</code>`,
+          "headers.js"
+        );
+      }
+      return;
+    }
     input.forEach(i => {
       if (!conf[i]) {
         url += i;
@@ -339,6 +339,9 @@ export function run(conf) {
   conf.prevVersion = createUrlFromArray(conf.prevVersion);
   if (Array.isArray(conf.edDraftURI)) {
     conf.edDraftURI = createUrlFromArray(conf.edDraftURI);
+  }
+  if (conf.specStatus == "WV") {
+    conf.thisVersion = conf.edDraftURI;
   }
 
   // insert into document
