@@ -151,7 +151,7 @@ export default (conf, options) => {
         : ""}
     </h2>
     <dl>
-      ${!conf.isNoTrack
+      ${!conf.isNoTrack && conf.thisVersion
         ? html`
             <dt>${l10n.this_version}</dt>
             <dd class="status">
@@ -159,6 +159,10 @@ export default (conf, options) => {
                 >${conf.thisVersion}</a
               >
             </dd>
+          `
+        : ""}
+	  ${!conf.isNoTrack && conf.latestVersion
+        ? html`
             <dt>${l10n.latest_published_version}</dt>
             <dd>
               ${conf.latestVersion
@@ -197,7 +201,7 @@ export default (conf, options) => {
             <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
           `
         : ""}
-      ${conf.showPreviousVersion
+      ${conf.showPreviousVersion && conf.prevVersion
         ? html`
             <dt>${l10n.prev_version}</dt>
             <dd><a href="${conf.prevVersion}">${conf.prevVersion}</a></dd>

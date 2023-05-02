@@ -273,6 +273,15 @@ export function run(conf) {
 
   function createUrlFromArray(input) {
     let url = "";
+	if (!Array.isArray(input)) {
+		if (input != "") {
+			showError(
+				`URI config option expected to be an array. Input: <code>${input}</code>`,
+				"headers.js",
+			  );
+		}
+		return;
+	}
     input.forEach(i => {
       if (!conf[i]) {
         url += i;
