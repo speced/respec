@@ -152,6 +152,24 @@ describe("Core — Link to definitions", () => {
     expect([...idlLinks].map(a => a.hash)).toEqual(Array(2).fill("#idl-card"));
   });
 
+  it("recognizes inline links to abstract-op definitions", async () => {
+    const body = `
+      <section>
+        theeee <dfn id="dfn-algo" class="abstract-op">make-me-a-sandwich algorithm</dfn> is an algorithm.
+        <div id="dfn-links">
+          When hungry, use the [= make-me-a-sandwich algorithm =]; the <a data-link-type="abstract-op">make-me-a-sandwich algorithm</a> is less useful when thirsty
+        </div>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const conceptLinks = doc.querySelectorAll("#dfn-links a");
+    expect([...conceptLinks].map(a => a.hash)).toEqual(
+      Array(2).fill("#dfn-algo")
+    );
+  });
+
   it("treats internal slots as idl", async () => {
     const body = `
       <section id="test">

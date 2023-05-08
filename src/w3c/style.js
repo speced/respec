@@ -45,6 +45,7 @@ function createResourceHints() {
       hint: "preload", // all specs show the logo.
       href: "https://www.w3.org/StyleSheets/TR/2021/logos/W3C",
       as: "image",
+      corsMode: "anonymous",
     },
   ];
   const resourceHints = document.createDocumentFragment();
@@ -114,6 +115,9 @@ export function run(conf) {
     case "EDITOR-DRAFT-FINDING":
     case "BASE":
       styleFile = "base.css";
+      break;
+    case "MEMBER-SUBM":
+      styleFile = "W3C-Member-SUBM";
       break;
     default:
       styleFile = canUseW3CStyle ? `W3C-${conf.specStatus}` : "base.css";

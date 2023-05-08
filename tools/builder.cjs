@@ -133,7 +133,7 @@ const Builder = {
 
 exports.Builder = Builder;
 if (require.main === module) {
-  sade("./tools/builder.js <profile>", true)
+  sade("./tools/builder.cjs <profile>", true)
     .describe(
       "Builder builds a ReSpec profile. Profile must be in the profiles/ folder (e.g., w3c.js)"
     )
