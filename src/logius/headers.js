@@ -82,6 +82,7 @@
 
 import {
   ISODate,
+  concatDate,
   docLink,
   getIntlData,
   htmlJoinAnd,
@@ -289,7 +290,7 @@ export function run(conf) {
         if (i === "github") {
           url += conf.github.repoURL;
         } else if (i === "publishDate" || i === "previousPublishDate") {
-          url += ISODate.format(conf[i]);
+          url += concatDate(conf[i]);
         } else {
           url += conf[i];
         }
