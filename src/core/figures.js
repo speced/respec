@@ -50,8 +50,6 @@ const localizationStrings = {
 const l10n = getIntlData(localizationStrings);
 
 export function run() {
-  normalizeImages(document);
-
   const tof = collectFigures();
 
   // Create a Table of Figures if a section with id 'tof' exists.
@@ -97,7 +95,12 @@ function decorateFigure(figure, caption, i) {
   addId(figure, "fig", title);
   // set proper caption title
   wrapInner(caption, html`<span class="fig-title"></span>`);
-  caption.prepend(l10n.fig, html`<bdi class="figno">${i + 1}</bdi>`, " ");
+  caption.prepend(
+    html`<a class="self-link" href="#${figure.id}"
+      >${l10n.fig}<bdi class="figno">${i + 1}</bdi></a
+    >`,
+    " "
+  );
 }
 
 /**
@@ -113,18 +116,6 @@ function getTableOfFiguresListItem(figureId, caption) {
   return html`<li class="tofline">
     <a class="tocxref" href="${`#${figureId}`}">${tofCaption.childNodes}</a>
   </li>`;
-}
-
-function normalizeImages(doc) {
-  doc
-    .querySelectorAll(
-      ":not(picture)>img:not([width]):not([height]):not([srcset])"
-    )
-    .forEach(img => {
-      if (img.naturalHeight === 0 || img.naturalWidth === 0) return;
-      img.height = img.naturalHeight;
-      img.width = img.naturalWidth;
-    });
 }
 
 /**

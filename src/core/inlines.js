@@ -31,7 +31,7 @@ const localizationStrings = {
         /\bMUST(?:\s+NOT)?\b/,
         /\bSHOULD(?:\s+NOT)?\b/,
         /\bSHALL(?:\s+NOT)?\b/,
-        /\bMAY?\b/,
+        /\bMAY\b/,
         /\b(?:NOT\s+)?REQUIRED\b/,
         /\b(?:NOT\s+)?RECOMMENDED\b/,
         /\bOPTIONAL\b/,
@@ -238,7 +238,7 @@ function inlineAnchorMatches(matched) {
   const processedContent = processInlineContent(text);
   const forContext = isFor ? norm(isFor) : null;
   return html`<a
-    data-link-type="dfn"
+    data-link-type="dfn|abstract-op"
     data-link-for="${forContext}"
     data-xref-for="${forContext}"
     data-lt="${linkingText}"

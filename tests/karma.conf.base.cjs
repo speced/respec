@@ -92,11 +92,9 @@ module.exports = config => {
   }
 
   if (process.env.GITHUB_WORKFLOW) {
-    const localPlugins = [
-      require.resolve("../tools/github-action-reporter.js"),
-    ];
+    const localPlugins = [require("../tools/github-action-reporter.cjs")];
     options.reporters.push("respec-github-action");
-    options.plugins = ["karma-*"].concat(localPlugins);
+    options.plugins = options.plugins.concat(localPlugins);
   }
 
   config.set(options);

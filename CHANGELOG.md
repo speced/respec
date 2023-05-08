@@ -1,5 +1,11 @@
 # Changelog
 
+Changelog for versions after v32.1.10 is available in [Releases](https://github.com/w3c/respec/releases).
+
+Changelog for `v26.8.12...v32.1.9` is not available. You can view Git Commit History instead.
+
+---
+
 ## [v26.8.11](https://github.com/w3c/respec/tree/v26.8.11) (2021-06-07)
 
 [Full Changelog](https://github.com/w3c/respec/compare/v26.8.10...v26.8.11)
