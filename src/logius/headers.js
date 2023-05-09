@@ -273,6 +273,7 @@ export function run(conf) {
   };
 
   function createUrlFromArray(input) {
+    let unresolved = false;
     let url = "";
     if (!Array.isArray(input)) {
       if (input != "") {
@@ -285,6 +286,13 @@ export function run(conf) {
     }
     input.forEach(i => {
       if (!conf[i]) {
+        if (i.length > 3) {
+          showWarning(
+            `URI config option expected <code>${i}</code> to be in config.`,
+            "headers.js"
+          );
+          unresolved = true;
+        }
         url += i;
       } else {
         if (i === "github") {
@@ -296,6 +304,9 @@ export function run(conf) {
         }
       }
     });
+    if (unresolved) {
+      return;
+    }
     return url.toLowerCase();
   }
 
