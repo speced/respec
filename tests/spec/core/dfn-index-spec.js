@@ -175,6 +175,7 @@ describe("Core — dfn-index", () => {
           </pre>
           <dfn id="local-idl-1">name</dfn>
           <dfn id="local-idl-2">onpay</dfn>
+          <dfn data-cite="ttml2#profile-vocabulary-feature"><code>&lt;ttp:feature&gt;</code></dfn>
         </div>
         <p class="test" data-link-for="Employee">
           {{ name }} {{ onpay }}
@@ -197,14 +198,17 @@ describe("Core — dfn-index", () => {
         </ul>
         <ul class="test">
           <li><a data-cite="rfc6454#section-3.2">origin</a></li>
-          <li>
-            <dfn data-cite="ECMASCRIPT/#sec-json.stringify">JSON.stringify</dfn>
-          </li>
-          <li><a>JSON.stringify</a></li>
+          <li><dfn data-cite="ECMASCRIPT/#sec-json.stringify">JSON.stringify</dfn></li>
+          <li><a>JSON.stringify</a> is referenced again.</li>
+          <li><dfn data-cite="RDF11-CONCEPTS#dfn-predicate">predicate</dfn></li>
+          <li><a><code>&lt;ttp:feature&gt;</code></a></li>
         </ul>
         <ul class="test" data-testid="possible-duplicate-id">
         <li><a data-cite="ECMASCRIPT#sec-json.parse">parsing</a></li>
         <li><a data-cite="ECMASCRIPT#sec-15.12.2">parsing</a></li>
+        </ul>
+        <ul class="test" data-testid="ignore-spec-refs">
+          <li>[[[RDF11-CONCEPTS]]]</li>
         </ul>
       </section>
       <section id="index"></section>`;
@@ -237,7 +241,9 @@ describe("Core — dfn-index", () => {
         "fully active",
         "iframe element",
         "ASCII uppercase",
+        "predicate",
         "origin",
+        "<ttp:feature>",
         "AbortError exception",
         "boolean type",
         "[Default] extended attribute",
@@ -252,7 +258,7 @@ describe("Core — dfn-index", () => {
 
     it("lists terms grouped by specs", () => {
       const bySpecs = index.querySelectorAll("ul.index > li");
-      expect(bySpecs).toHaveSize(6);
+      expect(bySpecs).toHaveSize(8);
       expect(bySpecs[0].textContent.trim()).toMatch(
         /\[DOM\] defines the following:/
       );
@@ -265,7 +271,9 @@ describe("Core — dfn-index", () => {
         "ECMASCRIPT",
         "HTML",
         "INFRA",
+        "RDF11-CONCEPTS",
         "RFC6454",
+        "TTML2",
         "WEBIDL",
       ]);
 

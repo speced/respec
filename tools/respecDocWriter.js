@@ -1,10 +1,13 @@
 /**
  * Exports toHTML() method, allowing programmatic control of the spec generator.
  */
-const puppeteer = require("puppeteer");
-const path = require("path");
-const { mkdtemp, readFile } = require("fs").promises;
-const { tmpdir } = require("os");
+import { mkdtemp, readFile } from "fs/promises";
+import { fileURLToPath } from "url";
+import path from "path";
+import puppeteer from "puppeteer";
+import { tmpdir } from "os";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const noop = () => {};
 
@@ -22,7 +25,7 @@ const noop = () => {};
  * @return {Promise<{ html: string, errors: RsError[], warnings: RsError[] }>}
  * @throws {Error} If failed to process.
  */
-async function toHTML(src, options = {}) {
+export async function toHTML(src, options = {}) {
   const {
     timeout = 300000,
     disableSandbox = false,
@@ -345,5 +348,3 @@ function createTimer(duration) {
     },
   };
 }
-
-exports.toHTML = toHTML;

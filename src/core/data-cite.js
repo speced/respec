@@ -88,6 +88,9 @@ function linkElem(elem, linkProps, citeDetails) {
     case "dfn": {
       const anchor = document.createElement("a");
       anchor.href = href;
+      anchor.dataset.cite = citeDetails.key;
+      anchor.dataset.citePath = citeDetails.path;
+      anchor.dataset.citeFrag = citeDetails.frag;
       if (!elem.textContent) {
         anchor.textContent = title;
         elem.append(anchor);

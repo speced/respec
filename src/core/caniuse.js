@@ -64,7 +64,7 @@ export function prepare(conf) {
  */
 function getLogoSrc(browser) {
   const path = BROWSERS.get(browser).path ?? browser;
-  return `https://cdn.w3.org/assets/logos/browser-logos/${path}/${path}.svg`;
+  return `https://www.w3.org/assets/logos/browser-logos/${path}/${path}.svg`;
 }
 
 export async function run(conf) {

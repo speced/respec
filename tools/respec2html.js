@@ -1,14 +1,16 @@
 #!/usr/bin/env node
-const path = require("path");
-const http = require("http");
-const serveStatic = require("serve-static");
-const finalhandler = require("finalhandler");
-const sade = require("sade");
-const colors = require("colors");
-const { marked } = require("marked");
+import { readFile, writeFile } from "fs/promises";
+import colors from "colors";
+import { fileURLToPath } from "url";
+import finalhandler from "finalhandler";
+import http from "http";
+import { marked } from "marked";
+import path from "path";
+import sade from "sade";
+import serveStatic from "serve-static";
+import { toHTML } from "./respecDocWriter.js";
 
-const { writeFile } = require("fs").promises;
-const { toHTML } = require("./respecDocWriter.js");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 class Renderer extends marked.Renderer {
   strong(text) {
@@ -177,7 +179,11 @@ cli
     false
   )
   .option("-e, --haltonerror", "Abort if the spec has any errors.", false)
-  .option("-w, --haltonwarn", "Abort if ReSpec generates warnings.", false)
+  .option(
+    "-w, --haltonwarn",
+    "Abort if ReSpec generates warnings (or errors).",
+    false
+  )
   .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
   .option("--devtools", "Enable debugging and show Chrome's DevTools.", false)
   .option("--verbose", "Log processing status to stdout.", false)
@@ -205,8 +211,9 @@ cli.action(async (source, destination, opts) => {
 });
 
 // https://github.com/lukeed/sade/issues/28#issuecomment-516104013
-cli._version = () => {
-  const { version } = require("../package.json");
+cli._version = async () => {
+  const packageJson = path.join(__dirname, "..", "package.json");
+  const { version } = JSON.parse(await readFile(packageJson));
   console.log(version);
 };
 
@@ -245,7 +252,8 @@ async function run(source, destination, options, log) {
   });
 
   const exitOnError = errors.length && options.haltonerror;
-  const exitOnWarning = warnings.length && options.haltonwarn;
+  const exitOnWarning =
+    (warnings.length || errors.length) && options.haltonwarn;
   if (exitOnError || exitOnWarning) {
     throw new Error(
       `${exitOnError ? "Errors" : "Warnings"} found during processing.`

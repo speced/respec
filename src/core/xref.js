@@ -25,6 +25,7 @@ import {
   nonNormativeSelector,
   norm as normalize,
   showError,
+  xmlEscape,
 } from "./utils.js";
 import { possibleExternalLinks } from "./link-to-dfn.js";
 import { sub } from "./pubsubhub.js";
@@ -189,7 +190,7 @@ function getRequestEntry(elem) {
 export function getTermFromElement(elem) {
   const { lt: linkingText } = elem.dataset;
   let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
-  term = normalize(term);
+  term = xmlEscape(normalize(term));
   return term === "the-empty-string" ? "" : term;
 }
 
