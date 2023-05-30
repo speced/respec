@@ -279,8 +279,19 @@ export default (conf, options) => {
  * @param {string} url
  * @param {string=} cssClass
  */
-function linkLicense(text, url, cssClass) {
-  return html`<a rel="license" href="${url}" class="${cssClass}">${text}</a>`;
+function linkLicense(text, url, image, cssClass) {
+  let imageInsert = "";
+  if (image) {
+    imageInsert = html`<img
+        style="float: left; padding-right: 5px;"
+        src="${image}"
+        alt="Logo ${text}"
+      />
+      <br />`;
+  }
+  return html`<a rel="license" href="${url}" class="${cssClass}"
+    >${imageInsert} ${text}</a
+  >`;
 }
 
 function renderCopyright(conf) {
@@ -306,8 +317,9 @@ function renderCopyright(conf) {
           ${linkLicense(
             conf.licenses[conf.license.toLowerCase()].name,
             conf.licenses[conf.license.toLowerCase()].url,
+            conf.licenses[conf.license.toLowerCase()].image,
             "subfoot"
-          )}.
+          )}
         </p>`
     : conf.overrideCopyright
     ? [conf.overrideCopyright]
