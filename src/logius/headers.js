@@ -281,10 +281,7 @@ export function run(conf) {
     let url = "";
     if (!Array.isArray(input)) {
       if (input != "") {
-        showError(
-          `URI config option expected to be an array. Input: <code>${input}</code>`,
-          "headers.js"
-        );
+        return input;
       }
       return;
     }
