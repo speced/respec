@@ -96,7 +96,7 @@ import sotdTmpl from "./templates/sotd.js";
 
 export const name = "logius/headers";
 
-const NLRespecDate = new Intl.DateTimeFormat(["nl"], {
+const NLRespecDate = new Intl.DateTimeFormat([document.documentElement.lang], {
   timeZone: "UTC",
   year: "numeric",
   month: "long",
