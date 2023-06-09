@@ -2,6 +2,7 @@
 import { getSpecSubTitleElem, l10n, renderFeedback } from "./headers.js";
 import { W3CDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
+import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
 
@@ -110,6 +111,7 @@ export default (conf, options) => {
         ? html`<dt>${l10n.feedback}</dt>
             ${renderFeedback(conf)}`
         : ""}
+      ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
     </dl>
     ${conf.alternateFormats
       ? html`<p>
