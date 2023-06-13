@@ -8,7 +8,7 @@ import { renameElement } from "./utils.js";
 export const name = "core/fix-headers";
 
 export function run() {
-  [...document.querySelectorAll("section:not(.introductory)")]
+  [...document.querySelectorAll("section")]
     .map(sec => sec.querySelector("h1, h2, h3, h4, h5, h6"))
     .filter(h => h)
     .forEach(heading => {

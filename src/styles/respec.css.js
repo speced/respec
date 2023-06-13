@@ -213,9 +213,6 @@ aside.example .marker > a.self-link {
 .header-wrapper {
   display: flex;
   align-items: baseline;
-}
-
-:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2) {
   position: relative;
   left: -.5em;
 }
@@ -224,7 +221,7 @@ aside.example .marker > a.self-link {
   color: inherit;
   order: -1;
   position: relative;
-  left: -1.1em;
+  left: -.7em;
   font-size: 1rem;
   opacity: 0.5;
 }
