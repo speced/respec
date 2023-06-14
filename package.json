@@ -27,7 +27,7 @@
     "@rollup/plugin-alias": "^5.0.0",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
-    "@types/marked": "^4.3.0",
+    "@types/marked": "^5.0.0",
     "@types/pluralize": "0.0.29",
     "boxen": "^7.1.0",
     "chokidar": "^3.5.3",
@@ -89,7 +89,7 @@
   "dependencies": {
     "colors": "1.4.0",
     "finalhandler": "^1.2.0",
-    "marked": "^4.3.0",
+    "marked": "^5.1.0",
     "puppeteer": "^20.5.0",
     "sade": "^1.8.1",
     "serve-static": "^1.15.0"
