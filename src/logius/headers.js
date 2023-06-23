@@ -171,7 +171,7 @@ export function run(conf) {
     "publishDate",
     document.lastModified
   );
-  conf.publishYear = conf.publishDate.getUTCFullYear(); 
+  conf.publishYear = conf.publishDate.getUTCFullYear();
 
   conf.publishHumanDate = NLRespecDate.format(
     conf.specStatus != "WV" ? conf.publishDate : new Date(document.lastModified)
@@ -285,7 +285,7 @@ export function run(conf) {
     }
     input.forEach(i => {
       if (!conf[i]) {
-        if (i.length > 3) {
+        if (i.length > 3 && !i.startsWith("http")) {
           console.warn(
             `URI config option expected ${i} to be in config. Removing version link from document header.`
           );
