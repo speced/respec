@@ -63,7 +63,12 @@ export async function toHTML(src, options = {}) {
   if (disableSandbox) args.push("--no-sandbox");
 
   log("Launching browser");
-  const browser = await puppeteer.launch({ userDataDir, args, devtools });
+  const browser = await puppeteer.launch({
+    userDataDir,
+    args,
+    devtools,
+    headless: "new",
+  });
 
   try {
     const page = await browser.newPage();
