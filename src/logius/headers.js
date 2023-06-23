@@ -103,8 +103,6 @@ const NLRespecDate = new Intl.DateTimeFormat([document.documentElement.lang], {
   day: "2-digit",
 });
 
-const noTrackStatus = []; // empty? or only "GN-BASIS"?
-
 /**
  * @param {*} conf
  * @param {string} prop
@@ -167,13 +165,13 @@ export function run(conf) {
   }
 
   if (!conf.subtitle) conf.subtitle = "";
+  conf.isNoTrack = !conf.publishDate;
   conf.publishDate = validateDateAndRecover(
     conf,
     "publishDate",
     document.lastModified
   );
-  conf.publishYear = conf.publishDate.getUTCFullYear();
-  conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
+  conf.publishYear = conf.publishDate.getUTCFullYear(); 
 
   conf.publishHumanDate = NLRespecDate.format(
     conf.specStatus != "WV" ? conf.publishDate : new Date(document.lastModified)
@@ -288,9 +286,8 @@ export function run(conf) {
     input.forEach(i => {
       if (!conf[i]) {
         if (i.length > 3) {
-          showWarning(
-            `URI config option expected <code>${i}</code> to be in config.`,
-            "headers.js"
+          console.warn(
+            `URI config option expected ${i} to be in config. Removing version link from document header.`
           );
           unresolved = true;
         }
