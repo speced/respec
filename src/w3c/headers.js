@@ -746,7 +746,7 @@ async function deriveHistoryURI(conf) {
   }
 
   const historyURL = new URL(
-    conf.historyURI ?? conf.shortName,
+    conf.historyURI ?? `${conf.shortName}/`,
     "https://www.w3.org/standards/history/"
   );
 
