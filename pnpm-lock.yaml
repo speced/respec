@@ -11,8 +11,8 @@ dependencies:
     specifier: ^4.3.0
     version: 4.3.0
   puppeteer:
-    specifier: ^20.7.3
-    version: 20.7.3(typescript@5.1.3)
+    specifier: ^20.7.4
+    version: 20.7.4(typescript@5.1.3)
   sade:
     specifier: ^1.8.1
     version: 1.8.1
@@ -295,8 +295,8 @@ packages:
     dev: true
     optional: true
 
-  /@puppeteer/browsers@1.4.2(typescript@5.1.3):
-    resolution: {integrity: sha512-5MLU1RFaJh1Beb9FH6raowtZErcsZ0ojYJvdG3OWXfnc3wZiDAa0PgXU2QOKtbW2S+Z731K/2n3YczGA3KbLbQ==}
+  /@puppeteer/browsers@1.4.3(typescript@5.1.3):
+    resolution: {integrity: sha512-8Jfkpb8qhPQhMsNBmIY8b6+ic2kvcmHZlyvifmcNKBC5jNZf3MAKq3gryKfmrjFAYFl3naPjiKljPUq5wuolfQ==}
     engines: {node: '>=16.3.0'}
     hasBin: true
     peerDependencies:
@@ -309,7 +309,7 @@ packages:
       extract-zip: 2.0.1
       progress: 2.0.3
       proxy-agent: 6.2.1
-      tar-fs: 3.0.2
+      tar-fs: 3.0.3
       typescript: 5.1.3
       unbzip2-stream: 1.4.3
       yargs: 17.7.1
@@ -861,8 +861,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /chromium-bidi@0.4.12(devtools-protocol@0.0.1135028):
-    resolution: {integrity: sha512-yl0ngMHtYUGJa2G0lkcbPvbnUZ9WMQyMNSfYmlrGD1nHRNyI9KOGw3dOaofFugXHHToneUaSmF9iUdgCBamCjA==}
+  /chromium-bidi@0.4.16(devtools-protocol@0.0.1135028):
+    resolution: {integrity: sha512-7ZbXdWERxRxSwo3txsBjjmc/NLxqb1Bk30mRb0BMS4YIaiV6zvKZqL/UAH+DdqcDYayDWk2n/y8klkBDODrPvA==}
     peerDependencies:
       devtools-protocol: '*'
     dependencies:
@@ -3064,8 +3064,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /puppeteer-core@20.7.3(typescript@5.1.3):
-    resolution: {integrity: sha512-OraI71GPPfUMosLqaOsDGbp/ZLoxLTm0BAda0uE6G+H3onmljfoaJcIPm8X5y1LMq1K1HF1bipcCI7hWGkd3bQ==}
+  /puppeteer-core@20.7.4(typescript@5.1.3):
+    resolution: {integrity: sha512-7YZ1LmTo+5yM9uBNFTMJpE+lJjcIoNjKVarsYIk7o5WhgQNI9o5XgiQK5f71y1vWwr7sT/eGG75HXAehjnTBTg==}
     engines: {node: '>=16.3.0'}
     peerDependencies:
       typescript: '>= 4.7.4'
@@ -3073,8 +3073,8 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@puppeteer/browsers': 1.4.2(typescript@5.1.3)
-      chromium-bidi: 0.4.12(devtools-protocol@0.0.1135028)
+      '@puppeteer/browsers': 1.4.3(typescript@5.1.3)
+      chromium-bidi: 0.4.16(devtools-protocol@0.0.1135028)
       cross-fetch: 3.1.6
       debug: 4.3.4
       devtools-protocol: 0.0.1135028
@@ -3087,14 +3087,14 @@ packages:
       - utf-8-validate
     dev: false
 
-  /puppeteer@20.7.3(typescript@5.1.3):
-    resolution: {integrity: sha512-3tw12ykFRLvzTRc9PyUOE5xeHQhhLEcKEOVjSfNtRmZqlAnvfhAP8ue+mjojy8NJ1LIfF6fps7OKzSc4JSJSlA==}
+  /puppeteer@20.7.4(typescript@5.1.3):
+    resolution: {integrity: sha512-4JLZeRLXQAjQwWa6yv8cpjEgVapgrvDjBBcI/UCJ+EM6na6aR7hQFnQV4ffjFlUKPpvB2Y1vztVqOEhjfC+yUQ==}
     engines: {node: '>=16.3.0'}
     requiresBuild: true
     dependencies:
-      '@puppeteer/browsers': 1.4.2(typescript@5.1.3)
+      '@puppeteer/browsers': 1.4.3(typescript@5.1.3)
       cosmiconfig: 8.2.0
-      puppeteer-core: 20.7.3(typescript@5.1.3)
+      puppeteer-core: 20.7.4(typescript@5.1.3)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3640,8 +3640,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /tar-fs@3.0.2:
-    resolution: {integrity: sha512-mLQ5iTTCv2tt3a4BwvD8QX1YFVBL/94/Nd+U2il38wt2+zaJSusp1VwJSNkBmB48FeTdOqptf1DAUIosXQBRrQ==}
+  /tar-fs@3.0.3:
+    resolution: {integrity: sha512-ZK36riGYnFI6LujIBfBRoDfeaaWUkStIFKwtPjnDWCKnsDE9kuQthG09aQjLjpzoRtVElEMZ/AIAURNb7N9mkA==}
     dependencies:
       mkdirp-classic: 0.5.3
       pump: 3.0.0
