@@ -2459,10 +2459,10 @@ describe("W3C — Headers", () => {
       const historyLink = history.nextElementSibling.querySelector("a");
       expect(historyLink).toBeTruthy();
       expect(historyLink.href).toBe(
-        "https://www.w3.org/standards/history/appmanifest"
+        "https://www.w3.org/standards/history/appmanifest/"
       );
       expect(historyLink.textContent).toContain(
-        "https://www.w3.org/standards/history/appmanifest"
+        "https://www.w3.org/standards/history/appmanifest/"
       );
     });
 
@@ -2480,8 +2480,8 @@ describe("W3C — Headers", () => {
       expect(commitHistory).toBeTruthy();
       const [publicationHistory] = contains(
         doc,
-        ".head dd>a[href='https://www.w3.org/standards/history/appmanifest']",
-        "https://www.w3.org/standards/history/appmanifest"
+        ".head dd>a[href='https://www.w3.org/standards/history/appmanifest/']",
+        "https://www.w3.org/standards/history/appmanifest/"
       );
       expect(publicationHistory).toBeTruthy();
     });
@@ -2535,7 +2535,7 @@ describe("W3C — Headers", () => {
       const historyLink = history.nextElementSibling.querySelector("a");
       expect(historyLink).toBeTruthy();
       expect(historyLink.href).toBe(
-        "https://www.w3.org/standards/history/test"
+        "https://www.w3.org/standards/history/test/"
       );
     });
 
@@ -2587,7 +2587,7 @@ describe("W3C — Headers", () => {
       const historyLink = history.nextElementSibling.querySelector("a");
       expect(historyLink).toBeTruthy();
       expect(historyLink.href).toBe(
-        "https://www.w3.org/standards/history/payment-request"
+        "https://www.w3.org/standards/history/payment-request/"
       );
     });
 
@@ -2606,7 +2606,7 @@ describe("W3C — Headers", () => {
         const historyLink = history.nextElementSibling.querySelector("a");
         expect(historyLink).toBeTruthy();
         expect(historyLink.href).toBe(
-          `https://www.w3.org/standards/history/${shortName}`
+          `https://www.w3.org/standards/history/${shortName}/`
         );
       });
     }

@@ -178,7 +178,7 @@ describe("W3C - SEO", () => {
       "https://www.w3.org/TR/2012/REC-some-spec-20120607/"
     );
     expect(jsonld.license).toBe(
-      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
+      "https://www.w3.org/Consortium/Legal/2023/software-license"
     );
     expect(jsonld.name).toBe("Basic Title");
     expect(jsonld.copyrightHolder).toEqual({
