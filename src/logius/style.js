@@ -11,6 +11,7 @@ import {
   showWarning,
   toKeyValuePairs,
 } from "../core/utils.js";
+import css from "../styles/license.css.js";
 import { html } from "../core/import-maps.js";
 import { sub } from "../core/pubsubhub.js";
 export const name = "logius/style";
@@ -116,6 +117,14 @@ function styleMover(linkURL) {
 
 document.head.prepend(elements);
 
+function insertStyle() {
+  const styleElement = document.createElement("style");
+  styleElement.id = "respec-nlgov";
+  styleElement.textContent = css;
+  document.head.appendChild(styleElement);
+  return styleElement;
+}
+
 export function run(conf) {
   if (!conf.specStatus) {
     const msg = "`respecConfig.specStatus` missing. Defaulting to 'base'";
@@ -133,4 +142,5 @@ export function run(conf) {
   sub("beforesave", moveStyle);
 
   // code hierboven mogenlijk overbodig?
+  insertStyle();
 }

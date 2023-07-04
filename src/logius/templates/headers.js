@@ -282,11 +282,7 @@ export default (conf, options) => {
 function linkLicense(text, url, image, cssClass) {
   let imageInsert = "";
   if (image) {
-    imageInsert = html`<img
-        style="float: left; padding-right: 5px;"
-        src="${image}"
-        alt="Logo ${text}"
-      />
+    imageInsert = html`<img class="license" src="${image}" alt="Logo ${text}" />
       <br />`;
   }
   return html`<a rel="license" href="${url}" class="${cssClass}"
