@@ -54,7 +54,7 @@ const localizationStrings = {
 
 export const l10n = getIntlData(localizationStrings);
 
-const processLink = "https://www.w3.org/2021/Process-20211102/";
+const processLink = "https://www.w3.org/2023/Process-20230612/";
 
 function prefix(word) {
   return /^[aeiou]/i.test(word) ? `an ${word}` : `a ${word}`;
@@ -85,7 +85,7 @@ export default (conf, opts) => {
                 <p>
                   This document is governed by the
                   <a id="w3c_process_revision" href="${processLink}"
-                    >2 November 2021 W3C Process Document</a
+                    >12 June 2023 W3C Process Document</a
                   >.
                 </p>
               `}
