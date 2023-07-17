@@ -18,11 +18,13 @@ export function run(conf) {
   const { removeOnSave, paymentPointer } = canonicalizeConfig(monetization);
 
   const cssClass = removeOnSave ? "removeOnSave" : null;
-  document.head.append(html`<meta
-    name="monetization"
-    content="${paymentPointer}"
-    class="${cssClass}"
-  />`);
+  document.head.append(
+    html`<meta
+      name="monetization"
+      content="${paymentPointer}"
+      class="${cssClass}"
+    />`
+  );
 }
 
 /**
