@@ -136,8 +136,8 @@ devDependencies:
     specifier: ^23.4.11
     version: 23.4.11
   webidl2:
-    specifier: ^24.3.0
-    version: 24.3.0
+    specifier: ^24.4.1
+    version: 24.4.1
 
 packages:
 
@@ -3865,8 +3865,8 @@ packages:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
     dev: false
 
-  /webidl2@24.3.0:
-    resolution: {integrity: sha512-u42I31V2xQSBPCLtjFdk98cb06gTVnfPmq8eNDmcM3iaqtDdvY+GF5ZLPg3hEL/h6K50fsgPt+2YXFysSq8wcw==}
+  /webidl2@24.4.1:
+    resolution: {integrity: sha512-cPToqvZlxTAlaMucZyU28XtFLJz3XPdTdIWK/r3IaP1jfkjqne3OTniJS8DZqfzee1aBUQn80d6s2vYert50kg==}
     engines: {node: '>= 14'}
     dev: true
 
