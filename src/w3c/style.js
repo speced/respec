@@ -58,11 +58,13 @@ function createResourceHints() {
 const elements = createResourceHints();
 
 // Opportunistically apply base style
-elements.appendChild(html`<link
-  rel="stylesheet"
-  href="https://www.w3.org/StyleSheets/TR/2021/base.css"
-  class="removeOnSave"
-/>`);
+elements.appendChild(
+  html`<link
+    rel="stylesheet"
+    href="https://www.w3.org/StyleSheets/TR/2021/base.css"
+    class="removeOnSave"
+  />`
+);
 if (!document.head.querySelector("meta[name=viewport]")) {
   // Make meta viewport the first element in the head.
   elements.prepend(

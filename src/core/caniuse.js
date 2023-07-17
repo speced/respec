@@ -51,12 +51,14 @@ export function prepare(conf) {
     return; // no feature to show
   }
 
-  document.head.appendChild(html`<style
-    id="caniuse-stylesheet"
-    class="${options.removeOnSave ? "removeOnSave" : ""}"
-  >
-    ${css}
-  </style>`);
+  document.head.appendChild(
+    html`<style
+      id="caniuse-stylesheet"
+      class="${options.removeOnSave ? "removeOnSave" : ""}"
+    >
+      ${css}
+    </style>`
+  );
 }
 /**
  * @param {string} browser
