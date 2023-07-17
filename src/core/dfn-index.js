@@ -240,16 +240,16 @@ function createExternalTermIndex() {
     specA.localeCompare(specB)
   );
   return html`<ul class="index">
-    ${dataSortedBySpec.map(
-      ([spec, entries]) => html`<li data-spec="${spec}">
+    ${dataSortedBySpec.map(([spec, entries]) => {
+      return html`<li data-spec="${spec}">
         ${renderInlineCitation(spec)} defines the following:
         <ul>
           ${entries
             .sort((a, b) => a.term.localeCompare(b.term))
             .map(renderExternalTermEntry)}
         </ul>
-      </li>`
-    )}
+      </li>`;
+    })}
   </ul>`;
 }
 
