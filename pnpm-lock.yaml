@@ -73,8 +73,8 @@ devDependencies:
     specifier: ^7.1.1
     version: 7.1.1
   jasmine:
-    specifier: ^5.0.2
-    version: 5.0.2
+    specifier: ^5.1.0
+    version: 5.1.0
   jasmine-core:
     specifier: ^5.0.1
     version: 5.0.1
@@ -2394,12 +2394,16 @@ packages:
     resolution: {integrity: sha512-D4bRej8CplwNtNGyTPD++cafJlZUphzZNV+MSAnbD3er4D0NjL4x9V+mu/SI+5129utnCBen23JwEuBZA9vlpQ==}
     dev: true
 
-  /jasmine@5.0.2:
-    resolution: {integrity: sha512-fXgPcWfDhENJJVktFZc/JJ+TpdOQIMJTbn6BgSOIneBagrHtKvnyA8Ag6uD8eF2m7cSESG7K/Hfj/Hk5asAwNg==}
+  /jasmine-core@5.1.0:
+    resolution: {integrity: sha512-bFMMwpKuTZXCuGd51yClFobw5SOtad1kmdWnYO8dNwYV8i01Xj0C2+nyQpSKl1EKxiPfyd1ZgBl/rsusL3aS6w==}
+    dev: true
+
+  /jasmine@5.1.0:
+    resolution: {integrity: sha512-prmJlC1dbLhti4nE4XAPDWmfJesYO15sjGXVp7Cs7Ym5I9Xtwa/hUHxxJXjnpfLO72+ySttA0Ztf8g/RiVnUKw==}
     hasBin: true
     dependencies:
       glob: 10.2.7
-      jasmine-core: 5.0.1
+      jasmine-core: 5.1.0
     dev: true
 
   /jest-worker@26.3.0:
