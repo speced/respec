@@ -1,11 +1,10 @@
 /**
  * Exports toHTML() method, allowing programmatic control of the spec generator.
  */
-import { mkdtemp, readFile } from "fs/promises";
 import { fileURLToPath } from "url";
 import path from "path";
 import puppeteer from "puppeteer";
-import { tmpdir } from "os";
+import { readFile } from "fs/promises";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
