@@ -58,13 +58,11 @@ export async function toHTML(src, options = {}) {
     options.onWarning(warning);
   };
 
-  const userDataDir = await mkdtemp(`${tmpdir()}/respec2html-`);
   const args = [];
   if (disableSandbox) args.push("--no-sandbox");
 
   log("Launching browser");
   const browser = await puppeteer.launch({
-    userDataDir,
     args,
     devtools,
     headless: "new",
