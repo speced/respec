@@ -1,11 +1,10 @@
 /**
  * Exports toHTML() method, allowing programmatic control of the spec generator.
  */
-import { mkdtemp, readFile } from "fs/promises";
 import { fileURLToPath } from "url";
 import path from "path";
 import puppeteer from "puppeteer";
-import { tmpdir } from "os";
+import { readFile } from "fs/promises";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -58,13 +57,11 @@ export async function toHTML(src, options = {}) {
     options.onWarning(warning);
   };
 
-  const userDataDir = await mkdtemp(`${tmpdir()}/respec2html-`);
   const args = [];
   if (disableSandbox) args.push("--no-sandbox");
 
   log("Launching browser");
   const browser = await puppeteer.launch({
-    userDataDir,
     args,
     devtools,
     headless: "new",
