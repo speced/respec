@@ -42,7 +42,7 @@
     "hyperhtml": "^2.34.2",
     "idb": "^7.1.1",
     "jasmine": "^5.1.0",
-    "jasmine-core": "^5.1.0",
+    "jasmine-core": "^5.1.1",
     "karma": "^6.4.2",
     "karma-chrome-launcher": "^3.2.0",
     "karma-firefox-launcher": "^2.1.2",

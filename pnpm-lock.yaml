@@ -76,8 +76,8 @@ devDependencies:
     specifier: ^5.1.0
     version: 5.1.0
   jasmine-core:
-    specifier: ^5.1.0
-    version: 5.1.0
+    specifier: ^5.1.1
+    version: 5.1.1
   karma:
     specifier: ^6.4.2
     version: 6.4.2
@@ -92,7 +92,7 @@ devDependencies:
     version: 5.1.0(karma@6.4.2)
   karma-jasmine-html-reporter:
     specifier: ^2.1.0
-    version: 2.1.0(jasmine-core@5.1.0)(karma-jasmine@5.1.0)(karma@6.4.2)
+    version: 2.1.0(jasmine-core@5.1.1)(karma-jasmine@5.1.0)(karma@6.4.2)
   karma-mocha-reporter:
     specifier: ^2.2.5
     version: 2.2.5(karma@6.4.2)
@@ -2457,8 +2457,8 @@ packages:
     resolution: {integrity: sha512-O236+gd0ZXS8YAjFx8xKaJ94/erqUliEkJTDedyE7iHvv4ZVqi+q+8acJxu05/WJDKm512EUNn809In37nWlAQ==}
     dev: true
 
-  /jasmine-core@5.1.0:
-    resolution: {integrity: sha512-bFMMwpKuTZXCuGd51yClFobw5SOtad1kmdWnYO8dNwYV8i01Xj0C2+nyQpSKl1EKxiPfyd1ZgBl/rsusL3aS6w==}
+  /jasmine-core@5.1.1:
+    resolution: {integrity: sha512-UrzO3fL7nnxlQXlvTynNAenL+21oUQRlzqQFsA2U11ryb4+NLOCOePZ70PTojEaUKhiFugh7dG0Q+I58xlPdWg==}
     dev: true
 
   /jasmine@5.1.0:
@@ -2466,7 +2466,7 @@ packages:
     hasBin: true
     dependencies:
       glob: 10.2.7
-      jasmine-core: 5.1.0
+      jasmine-core: 5.1.1
     dev: true
 
   /jest-worker@26.3.0:
@@ -2537,14 +2537,14 @@ packages:
       which: 2.0.2
     dev: true
 
-  /karma-jasmine-html-reporter@2.1.0(jasmine-core@5.1.0)(karma-jasmine@5.1.0)(karma@6.4.2):
+  /karma-jasmine-html-reporter@2.1.0(jasmine-core@5.1.1)(karma-jasmine@5.1.0)(karma@6.4.2):
     resolution: {integrity: sha512-sPQE1+nlsn6Hwb5t+HHwyy0A1FNCVKuL1192b+XNauMYWThz2kweiBVW1DqloRpVvZIJkIoHVB7XRpK78n1xbQ==}
     peerDependencies:
       jasmine-core: ^4.0.0 || ^5.0.0
       karma: ^6.0.0
       karma-jasmine: ^5.0.0
     dependencies:
-      jasmine-core: 5.1.0
+      jasmine-core: 5.1.1
       karma: 6.4.2
       karma-jasmine: 5.1.0(karma@6.4.2)
     dev: true
