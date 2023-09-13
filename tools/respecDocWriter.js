@@ -305,7 +305,7 @@ async function evaluateHTML(version, timer) {
 function handleConsoleMessages(page, onError, onWarning) {
   /** @param {import('puppeteer').JSHandle<any>} handle */
   async function stringifyJSHandle(handle) {
-    return await handle.executionContext().evaluate(obj => {
+    return await handle.evaluate(obj => {
       if (typeof obj === "string") {
         // Old ReSpec versions might report errors as strings.
         return JSON.stringify({ message: String(obj) });
