@@ -27,7 +27,7 @@ jobs:
     name: Headless Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with: { node-version: 18, cache: pnpm }
@@ -52,7 +52,7 @@ jobs:
     name: Karma Unit Tests (Chrome)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with: { node-version: 18, cache: pnpm }
