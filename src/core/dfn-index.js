@@ -5,7 +5,7 @@
  * current document.
  */
 
-import { addId, getIntlData, norm } from "./utils.js";
+import { addId, getIntlData, norm, xmlEscape } from "./utils.js";
 import css from "../styles/dfn-index.css.js";
 import { getTermFromElement } from "./xref.js";
 import { html } from "./import-maps.js";
@@ -340,7 +340,7 @@ const TYPE_TERMS = new Set([
 /** @param {Entry} entry */
 function getTermText(entry) {
   const { term, type, linkFor } = entry;
-  let text = term;
+  let text = xmlEscape(term);
 
   if (CODE_TYPES.has(type)) {
     if (type === "extended-attribute") {
