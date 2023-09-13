@@ -55,7 +55,7 @@ const Builder = {
     const inputOptions = {
       input: require.resolve(`../profiles/${name}.js`),
       plugins: [
-        !debug && require("rollup-plugin-terser").terser(),
+        !debug && require("@rollup/plugin-terser").default(),
         alias({
           entries: [{ find: /^text!(.*)/, replacement: "./$1" }],
         }),
