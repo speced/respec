@@ -23,7 +23,7 @@ class Renderer extends marked.Renderer {
     return colors.underline(unescape(text));
   }
   paragraph(text) {
-    return text;
+    return unescape(text);
   }
   link(href, _title, text) {
     return `[${text}](${colors.blue.dim.underline(href)})`;

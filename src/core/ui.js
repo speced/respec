@@ -13,6 +13,7 @@ import css from "../styles/ui.css.js";
 import { markdownToHtml } from "./markdown.js";
 import { reindent } from "./reindent.js";
 import { sub } from "./pubsubhub.js";
+import { xmlEscape } from "./utils.js";
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
@@ -287,7 +288,7 @@ function rsErrorToHTML(err) {
   const details = err.details
     ? `\n\n<details>\n${err.details}\n</details>\n`
     : "";
-  const msg = markdownToHtml(`**${err.message}**`, { inline: true });
+  const msg = markdownToHtml(`**${xmlEscape(err.message)}**`, { inline: true });
   const result = `${msg}${hint}${elements}${details}${plugin}`;
   return result;
 }
