@@ -90,7 +90,7 @@
     "colors": "1.4.0",
     "finalhandler": "^1.2.0",
     "marked": "^4.3.0",
-    "puppeteer": "^21.2.0",
+    "puppeteer": "^21.2.1",
     "sade": "^1.8.1",
     "serve-static": "^1.15.0"
   },
