@@ -29,7 +29,7 @@
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@rollup/plugin-terser": "^0.4.3",
     "@types/marked": "^4.3.1",
-    "@types/pluralize": "0.0.30",
+    "@types/pluralize": "0.0.31",
     "boxen": "^7.1.1",
     "chokidar": "^3.5.3",
     "clean-css": "^5.3.2",

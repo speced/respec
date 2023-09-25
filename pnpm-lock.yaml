@@ -41,8 +41,8 @@ devDependencies:
     specifier: ^4.3.1
     version: 4.3.1
   '@types/pluralize':
-    specifier: 0.0.30
-    version: 0.0.30
+    specifier: 0.0.31
+    version: 0.0.31
   boxen:
     specifier: ^7.1.1
     version: 7.1.1
@@ -465,8 +465,8 @@ packages:
   /@types/node@12.11.7:
     resolution: {integrity: sha512-JNbGaHFCLwgHn/iCckiGSOZ1XYHsKFwREtzPwSGCVld1SGhOlmZw2D4ZI94HQCrBHbADzW9m4LER/8olJTRGHA==}
 
-  /@types/pluralize@0.0.30:
-    resolution: {integrity: sha512-kVww6xZrW/db5BR9OqiT71J9huRdQ+z/r+LbDuT7/EK50mCmj5FoaIARnVv0rvjUS/YpDox0cDU9lpQT011VBA==}
+  /@types/pluralize@0.0.31:
+    resolution: {integrity: sha512-MQh69PPwFlYAL2qz/Mw5Zc34VTdt7pTck0Xbb6pbPSzdt5oaLB87iyJJxEMS5Dco/s7lXHunEezAvQurZZdrsQ==}
     dev: true
 
   /@types/relateurl@0.2.28:
