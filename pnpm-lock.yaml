@@ -12,8 +12,8 @@ dependencies:
     specifier: ^1.2.0
     version: 1.2.0
   marked:
-    specifier: ^4.3.0
-    version: 4.3.0
+    specifier: ^9.0.3
+    version: 9.0.3
   puppeteer:
     specifier: ^21.2.0
     version: 21.2.0(typescript@5.2.2)
@@ -2843,9 +2843,9 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /marked@4.3.0:
-    resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
-    engines: {node: '>= 12'}
+  /marked@9.0.3:
+    resolution: {integrity: sha512-pI/k4nzBG1PEq1J3XFEHxVvjicfjl8rgaMaqclouGSMPhk7Q3Ejb2ZRxx/ZQOcQ1909HzVoWCFYq6oLgtL4BpQ==}
+    engines: {node: '>= 16'}
     hasBin: true
     dev: false
 
