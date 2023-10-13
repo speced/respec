@@ -101,6 +101,16 @@ describe("W3C - SEO", () => {
     });
   }
 
+  it("documents a revision in a meta element when set", async () => {
+    const gitRevision = "11223344556677889900aabbccddeeffaabbccddeeff";
+    const doc = await makeRSDoc(
+      makeStandardOps({ specStatus: "ED", group: "webapps", gitRevision })
+    );
+    expect(
+      doc.querySelector(`meta[name='revision'][content='${gitRevision}']`)
+    ).toBeTruthy();
+  });
+
   const body = `
     <html>
     <title>Basic Title</title>

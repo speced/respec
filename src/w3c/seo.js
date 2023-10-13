@@ -33,6 +33,18 @@ export const requiresCanonicalLink = new Set([
 ]);
 
 export async function run(conf) {
+  if (conf.gitRevision) {
+    // This allows to set a git revision of the source used to produce
+    // the generated content
+    // 'revision' is the name recommended in https://wiki.whatwg.org/wiki/MetaExtensions
+    // typically, this would be set when generating the static HTML
+    const metaElem = html`<meta
+      name="revision"
+      content="${conf.gitRevision}"
+    />`;
+    document.head.appendChild(metaElem);
+  }
+
   // Don't include a canonical URL for documents that haven't been published.
   if (
     (!conf.canonicalURI && !requiresCanonicalLink.has(conf.specStatus)) ||
