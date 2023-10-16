@@ -1,11 +1,10 @@
 /**
  * Exports toHTML() method, allowing programmatic control of the spec generator.
  */
-import { mkdtemp, readFile } from "fs/promises";
 import { fileURLToPath } from "url";
 import path from "path";
 import puppeteer from "puppeteer";
-import { tmpdir } from "os";
+import { readFile } from "fs/promises";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -58,12 +57,15 @@ export async function toHTML(src, options = {}) {
     options.onWarning(warning);
   };
 
-  const userDataDir = await mkdtemp(`${tmpdir()}/respec2html-`);
   const args = [];
   if (disableSandbox) args.push("--no-sandbox");
 
   log("Launching browser");
-  const browser = await puppeteer.launch({ userDataDir, args, devtools });
+  const browser = await puppeteer.launch({
+    args,
+    devtools,
+    headless: "new",
+  });
 
   try {
     const page = await browser.newPage();
@@ -303,7 +305,7 @@ async function evaluateHTML(version, timer) {
 function handleConsoleMessages(page, onError, onWarning) {
   /** @param {import('puppeteer').JSHandle<any>} handle */
   async function stringifyJSHandle(handle) {
-    return await handle.executionContext().evaluate(obj => {
+    return await handle.evaluate(obj => {
       if (typeof obj === "string") {
         // Old ReSpec versions might report errors as strings.
         return JSON.stringify({ message: String(obj) });
