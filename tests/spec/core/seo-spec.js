@@ -5,6 +5,7 @@ import {
   makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
+  makeStandardOps,
 } from "../SpecHelper.js";
 
 describe("Core — Seo", () => {
@@ -34,5 +35,15 @@ describe("Core — Seo", () => {
     expect(hasMetaDesc).toBe(1);
     const meta = doc.head.querySelector("meta[name=description]");
     expect(meta.content).toBe("Pass");
+  });
+
+  it("documents a revision in a meta element when set", async () => {
+    const gitRevision = "11223344556677889900aabbccddeeffaabbccddeeff";
+    const doc = await makeRSDoc(
+      makeStandardOps({ specStatus: "ED", group: "webapps", gitRevision })
+    );
+    expect(
+      doc.querySelector(`meta[name='revision'][content='${gitRevision}']`)
+    ).toBeTruthy();
   });
 });
