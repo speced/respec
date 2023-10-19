@@ -96,14 +96,18 @@ describe("Core — Data Include", () => {
       data-include="${generateDataUrl(
         html`<p>level 1</p>
           <div
-            data-include="${generateDataUrl(html`<p>level 2</p>
-              <div
-                data-include="${generateDataUrl(html`<p>level 3</p>
-                  <div
-                    id="data-include-unused"
-                    data-include="${generateDataUrl(html`<p>level 4</p>`)}"
-                  ></div>`)}"
-              ></div>`)}"
+            data-include="${generateDataUrl(
+              html`<p>level 2</p>
+                <div
+                  data-include="${generateDataUrl(
+                    html`<p>level 3</p>
+                      <div
+                        id="data-include-unused"
+                        data-include="${generateDataUrl(html`<p>level 4</p>`)}"
+                      ></div>`
+                  )}"
+                ></div>`
+            )}"
           ></div>`
       )}"
     ></section>`;
