@@ -34,7 +34,7 @@
     "chokidar": "^3.5.3",
     "clean-css": "^5.3.2",
     "epipebomb": "^1.0.0",
-    "eslint": "^8.51.0",
+    "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-jasmine": "^4.1.3",
