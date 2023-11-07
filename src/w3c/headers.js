@@ -81,7 +81,7 @@
 //          intended to be pushed to the WHATWG.
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", (default) the W3C Software and Document License
-//            https://www.w3.org/Consortium/Legal/2023/software-license
+//            https://www.w3.org/copyright/software-license-2023/
 import {
   ISODate,
   codedJoinAnd,
@@ -223,7 +223,7 @@ export const licenses = new Map([
     {
       name: "W3C Software Notice and License",
       short: "W3C Software",
-      url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
+      url: "https://www.w3.org/copyright/software-license-2002/",
     },
   ],
   [
@@ -231,7 +231,7 @@ export const licenses = new Map([
     {
       name: "W3C Software and Document Notice and License",
       short: "permissive document license",
-      url: "https://www.w3.org/Consortium/Legal/2023/software-license",
+      url: "https://www.w3.org/copyright/software-license-2023/",
     },
   ],
   [
@@ -247,7 +247,7 @@ export const licenses = new Map([
     {
       name: "W3C Document License",
       short: "document use",
-      url: "https://www.w3.org/Consortium/Legal/copyright-documents",
+      url: "https://www.w3.org/copyright/document-license/",
     },
   ],
   [

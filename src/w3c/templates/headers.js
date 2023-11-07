@@ -439,7 +439,7 @@ function renderCopyright(conf) {
 
 function renderOfficialCopyright(conf) {
   return html`<p class="copyright">
-    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
+    <a href="https://www.w3.org/policies/#copyright"
       >Copyright</a
     >
     &copy;
@@ -449,10 +449,10 @@ function renderOfficialCopyright(conf) {
       : ""}
     <a href="https://www.w3.org/">World Wide Web Consortium</a>.
     <abbr title="World Wide Web Consortium">W3C</abbr><sup>&reg;</sup>
-    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer"
+    <a href="https://www.w3.org/policies/#Legal_Disclaimer"
       >liability</a
     >,
-    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks"
+    <a href="https://www.w3.org/policies/#W3C_Trademarks"
       >trademark</a
     >${linkLicense(conf.licenseInfo)}
   </p>`;
