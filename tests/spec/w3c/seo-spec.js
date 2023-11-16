@@ -221,7 +221,7 @@ describe("W3C - SEO", () => {
     });
   });
 
-("describes citations", async () => {
+  it("describes citations", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
 
