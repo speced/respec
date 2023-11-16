@@ -133,8 +133,8 @@ describe("W3C - SEO", () => {
     publishDate: "2013-06-25",
     previousPublishDate: "2012-06-07",
     previousMaturity: "REC",
-    specStatus: "PER",
-    perEnd: "2014-06-25",
+    specStatus: "CR",
+    crEnd: "2014-06-25",
     wgPatentURI: "http://www.w3.org/fake-patent-uri",
     doJsonLd: true,
     localBiblio: {
@@ -170,7 +170,7 @@ describe("W3C - SEO", () => {
     expect(jsonld["@context"]).toContain("http://schema.org");
     expect(jsonld.id).toBe("https://www.w3.org/TR/some-spec/");
     expect(jsonld.type).toContain("TechArticle");
-    expect(jsonld.type).toContain("w3p:PER");
+    expect(jsonld.type).toContain("w3p:CR");
     expect(jsonld.datePublished).toBe("2013-06-25");
     expect(jsonld.description).toContain("test abstract");
     expect(jsonld.inLanguage).toBe("en");
@@ -220,8 +220,9 @@ describe("W3C - SEO", () => {
       name: "Shane McCarron",
     });
   });
-
-  it("describes citations", async () => {
+CE
+  i
+("describes citations", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
 
