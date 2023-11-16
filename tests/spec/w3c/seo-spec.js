@@ -220,8 +220,8 @@ describe("W3C - SEO", () => {
       name: "Shane McCarron",
     });
   });
-
-  it("describes citations", async () => {
+  
+("describes citations", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
 
