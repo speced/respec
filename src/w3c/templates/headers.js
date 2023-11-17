@@ -271,14 +271,14 @@ export default (conf, options) => {
         ${!conf.prevRecURI
           ? ""
           : conf.isRec
-          ? html`
-              <dt>${l10n.prev_recommendation}</dt>
-              <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-            `
-          : html`
-              <dt>${l10n.latest_recommendation}</dt>
-              <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-            `}
+            ? html`
+                <dt>${l10n.prev_recommendation}</dt>
+                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+              `
+            : html`
+                <dt>${l10n.latest_recommendation}</dt>
+                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+              `}
         ${conf.editors.length
           ? html`
               <dt>${conf.editors.length > 1 ? l10n.editors : l10n.editor}</dt>

@@ -219,19 +219,19 @@ function getIssueType(inno) {
   const type = isIssue
     ? "issue"
     : isWarning
-    ? "warning"
-    : isEdNote
-    ? "ednote"
-    : "note";
+      ? "warning"
+      : isEdNote
+        ? "ednote"
+        : "note";
   const displayType = isIssue
     ? isFeatureAtRisk
       ? l10n.feature_at_risk
       : l10n.issue
     : isWarning
-    ? l10n.warning
-    : isEdNote
-    ? l10n.editors_note
-    : l10n.note;
+      ? l10n.warning
+      : isEdNote
+        ? l10n.editors_note
+        : l10n.note;
   return { type, displayType, isFeatureAtRisk };
 }
 

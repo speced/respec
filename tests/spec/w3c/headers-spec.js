@@ -1563,10 +1563,10 @@ describe("W3C — Headers", () => {
         const group = specStatus.includes("finding")
           ? "tag"
           : /^(CG)-/.test(specStatus)
-          ? "wicg"
-          : /^(BG)-/.test(specStatus)
-          ? "publishingbg"
-          : "webapps";
+            ? "wicg"
+            : /^(BG)-/.test(specStatus)
+              ? "publishingbg"
+              : "webapps";
         const ops = makeStandardOps({
           shortName: "some-report",
           specStatus,

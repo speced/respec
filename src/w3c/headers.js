@@ -626,9 +626,7 @@ export async function run(conf) {
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
 
   if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
-    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${
-      conf.specStatus
-    }") puts it on the W3C Rec Track.`;
+    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${conf.specStatus}") puts it on the W3C Rec Track.`;
     const notAllowed = codedJoinOr(recTrackStatus, { quotes: true });
     const hint = `Status **can't** be any of: ${notAllowed}.`;
     showError(msg, name, { hint });
