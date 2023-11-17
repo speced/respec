@@ -16,7 +16,6 @@ const status2rdf = {
   CRD: "w3p:CRD",
   PR: "w3p:PR",
   REC: "w3p:REC",
-  PER: "w3p:PER",
   RSCND: "w3p:RSCND",
 };
 
