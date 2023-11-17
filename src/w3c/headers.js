@@ -131,7 +131,6 @@ export const status2text = {
   CR: "Candidate Recommendation",
   CRD: "Candidate Recommendation",
   PR: "Proposed Recommendation",
-  PER: "Proposed Edited Recommendation",
   REC: "Recommendation",
   DISC: "Discontinued Draft",
   RSCND: "Rescinded Recommendation",
@@ -182,7 +181,6 @@ export const recTrackStatus = [
   "CRD",
   "DISC",
   "FPWD",
-  "PER",
   "PR",
   "REC",
   "RSCND",
@@ -333,7 +331,6 @@ export async function run(conf) {
   conf.isMO = conf.specStatus === "MO";
   conf.isNote = W3CNotes.includes(conf.specStatus);
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
-  conf.isPER = conf.specStatus === "PER";
   conf.isPR = conf.specStatus === "PR";
   conf.isRecTrack = recTrackStatus.includes(conf.specStatus);
   conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
@@ -574,12 +571,6 @@ export async function run(conf) {
   }
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
 
-  if (conf.isPER && !conf.perEnd) {
-    const msg = docLink`${"[specStatus]"} is "PER", but no ${"[perEnd]"} is specified.`;
-    showError(msg, name);
-  }
-  conf.perEnd = validateDateAndRecover(conf, "perEnd");
-
   if (conf.hasOwnProperty("updateableRec")) {
     const msg = "Configuration option `updateableRec` is deprecated.";
     const hint = docLink`Add an ${"[`updateable-rec`|#updateable-rec-class]"} CSS class to the Status of This Document section instead.`;
@@ -635,9 +626,7 @@ export async function run(conf) {
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
 
   if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
-    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${
-      conf.specStatus
-    }") puts it on the W3C Rec Track.`;
+    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${conf.specStatus}") puts it on the W3C Rec Track.`;
     const notAllowed = codedJoinOr(recTrackStatus, { quotes: true });
     const hint = `Status **can't** be any of: ${notAllowed}.`;
     showError(msg, name, { hint });

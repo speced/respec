@@ -121,11 +121,6 @@ const statuses = [
     group: "webapps",
   },
   {
-    specStatus: "PER",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-PER",
-    group: "webapps",
-  },
-  {
     specStatus: "PR",
     expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-PR",
     group: "webapps",
