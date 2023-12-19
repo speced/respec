@@ -284,7 +284,7 @@ describe("Core — Data Include", () => {
       expect(p.textContent).toBe("A paragraph.");
 
       const pre = doc.querySelector("#includes > pre");
-      expect(pre.querySelector("code").classList).toContain("html");
+      expect(pre.querySelector("code").classList).toContain("language-html");
       expect(pre.textContent).toContain("<!DOCTYPE html>");
 
       expect(doc.querySelector("#includes .note")).toBeFalsy();
