@@ -23,7 +23,7 @@ export async function runAll(plugs) {
   const runnables = plugs.filter(p => isRunnableModule(p));
   runnables.forEach((plug, i) => {
     if (!plug.name) {
-      console.warn("Plugin lacks name:", plug);
+      console.warn(`Plugin ${i} lacks name:`, plug);
       plug.name = `unamed-plugin-${i}`;
     }
   });
