@@ -51,12 +51,14 @@ export function prepare(conf) {
     return; // no feature to show
   }
 
-  document.head.appendChild(html`<style
-    id="caniuse-stylesheet"
-    class="${options.removeOnSave ? "removeOnSave" : ""}"
-  >
-    ${css}
-  </style>`);
+  document.head.appendChild(
+    html`<style
+      id="caniuse-stylesheet"
+      class="${options.removeOnSave ? "removeOnSave" : ""}"
+    >
+      ${css}
+    </style>`
+  );
 }
 /**
  * @param {string} browser
@@ -64,7 +66,7 @@ export function prepare(conf) {
  */
 function getLogoSrc(browser) {
   const path = BROWSERS.get(browser).path ?? browser;
-  return `https://cdn.w3.org/assets/logos/browser-logos/${path}/${path}.svg`;
+  return `https://www.w3.org/assets/logos/browser-logos/${path}/${path}.svg`;
 }
 
 export async function run(conf) {

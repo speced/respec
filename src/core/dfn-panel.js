@@ -149,12 +149,14 @@ function referencesToHTML(id, links) {
    * @param {[string, string[]]} entry
    * @returns {HTMLLIElement}
    */
-  const listItemToHTML = entry => html`<li>
-    ${toLinkProps(entry).map(
-      link =>
-        html`<a href="#${link.id}" title="${link.title}">${link.text}</a>${" "}`
-    )}
-  </li>`;
+  const listItemToHTML = entry => {
+    return html`<li>
+      ${toLinkProps(entry).map(link => {
+        return html`<a href="#${link.id}" title="${link.title}">${link.text}</a
+          >${" "}`;
+      })}
+    </li>`;
+  };
 
   return html`<ul>
     ${[...titleToIDs].map(listItemToHTML)}

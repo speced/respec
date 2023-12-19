@@ -1109,7 +1109,6 @@ describe("W3C — Headers", () => {
         previousPublishDate: "197-123131-15",
         crEnd: "bad date",
         prEnd: "next wednesday",
-        perEnd: "today",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1564,10 +1563,10 @@ describe("W3C — Headers", () => {
         const group = specStatus.includes("finding")
           ? "tag"
           : /^(CG)-/.test(specStatus)
-          ? "wicg"
-          : /^(BG)-/.test(specStatus)
-          ? "publishingbg"
-          : "webapps";
+            ? "wicg"
+            : /^(BG)-/.test(specStatus)
+              ? "publishingbg"
+              : "webapps";
         const ops = makeStandardOps({
           shortName: "some-report",
           specStatus,
@@ -1610,7 +1609,7 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(doc.querySelector(".head .copyright").textContent).toMatch(
-        /XXX\s+&\s+W3C/
+        /XXX\s+&\s+World Wide Web Consortium/
       );
     });
     it("takes additionalCopyrightHolders into account for CG drafts", async () => {
@@ -1773,34 +1772,6 @@ describe("W3C — Headers", () => {
           "The W3C Patent Policy does not carry any licensing requirements or commitments on this document."
         );
       }
-    });
-  });
-
-  describe("perEnd", () => {
-    it("correctly flags a PER", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        previousMaturity: "REC",
-        previousPublishDate: "2014-01-01",
-        prevRecURI: "https://www.example.com/rec.html",
-        implementationReportURI: "https://www.example.com/report.html",
-        perEnd: "2014-12-01",
-        specStatus: "PER",
-        wgPublicList: "WGLIST",
-        subjectPrefix: "[The Prefix]",
-        group: "webapps",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      const sotd = doc.getElementById("sotd");
-      const f = contains(sotd, "p", "Proposed Edited Recommendation");
-      expect(f).toHaveSize(2);
-      const questionnaires = doc
-        .getElementById("sotd")
-        .querySelector(
-          "a[href='https://www.w3.org/2002/09/wbs/myQuestionnaires']"
-        );
-      expect(questionnaires).toBeNull();
     });
   });
 
@@ -2063,7 +2034,7 @@ describe("W3C — Headers", () => {
     });
     it("links the right submitting members", async () => {
       const anchor = doc.querySelector(
-        "#sotd a[href='https://www.w3.org/Submission/2018/Member-SUBM-yolo-20180525/']"
+        "#sotd a[href='https://www.w3.org/Submission/2018/SUBM-yolo-20180525/']"
       );
       expect(anchor).toBeTruthy();
     });
@@ -2459,10 +2430,10 @@ describe("W3C — Headers", () => {
       const historyLink = history.nextElementSibling.querySelector("a");
       expect(historyLink).toBeTruthy();
       expect(historyLink.href).toBe(
-        "https://www.w3.org/standards/history/appmanifest"
+        "https://www.w3.org/standards/history/appmanifest/"
       );
       expect(historyLink.textContent).toContain(
-        "https://www.w3.org/standards/history/appmanifest"
+        "https://www.w3.org/standards/history/appmanifest/"
       );
     });
 
@@ -2480,8 +2451,8 @@ describe("W3C — Headers", () => {
       expect(commitHistory).toBeTruthy();
       const [publicationHistory] = contains(
         doc,
-        ".head dd>a[href='https://www.w3.org/standards/history/appmanifest']",
-        "https://www.w3.org/standards/history/appmanifest"
+        ".head dd>a[href='https://www.w3.org/standards/history/appmanifest/']",
+        "https://www.w3.org/standards/history/appmanifest/"
       );
       expect(publicationHistory).toBeTruthy();
     });
@@ -2535,7 +2506,7 @@ describe("W3C — Headers", () => {
       const historyLink = history.nextElementSibling.querySelector("a");
       expect(historyLink).toBeTruthy();
       expect(historyLink.href).toBe(
-        "https://www.w3.org/standards/history/test"
+        "https://www.w3.org/standards/history/test/"
       );
     });
 
@@ -2587,7 +2558,7 @@ describe("W3C — Headers", () => {
       const historyLink = history.nextElementSibling.querySelector("a");
       expect(historyLink).toBeTruthy();
       expect(historyLink.href).toBe(
-        "https://www.w3.org/standards/history/payment-request"
+        "https://www.w3.org/standards/history/payment-request/"
       );
     });
 
@@ -2606,7 +2577,7 @@ describe("W3C — Headers", () => {
         const historyLink = history.nextElementSibling.querySelector("a");
         expect(historyLink).toBeTruthy();
         expect(historyLink.href).toBe(
-          `https://www.w3.org/standards/history/${shortName}`
+          `https://www.w3.org/standards/history/${shortName}/`
         );
       });
     }

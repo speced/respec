@@ -85,6 +85,9 @@ class UIMessageFilters {
 export const errorFilters = new UIMessageFilters("errors");
 export const warningFilters = new UIMessageFilters("warnings");
 
+/** For syntax highlighting in IDE */
+export const html = String.raw;
+
 /**
  * @param {Document} doc
  * @returns {Promise<Document>}

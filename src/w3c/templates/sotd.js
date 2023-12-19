@@ -1,5 +1,5 @@
 // @ts-check
-import { W3CDate, getIntlData } from "../../core/utils.js";
+import { W3CDate, getIntlData, htmlJoinAnd } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import { status2track } from "../headers.js";
 const localizationStrings = {
@@ -54,7 +54,7 @@ const localizationStrings = {
 
 export const l10n = getIntlData(localizationStrings);
 
-const processLink = "https://www.w3.org/2021/Process-20211102/";
+const processLink = "https://www.w3.org/2023/Process-20231103/";
 
 function prefix(word) {
   return /^[aeiou]/i.test(word) ? `an ${word}` : `a ${word}`;
@@ -67,29 +67,29 @@ export default (conf, opts) => {
     ${conf.isUnofficial
       ? renderIsUnofficial(opts)
       : conf.isTagFinding
-      ? opts.additionalContent
-      : conf.isNoTrack
-      ? renderIsNoTrack(conf, opts)
-      : html`
-          <p><em>${l10n.status_at_publication}</em></p>
-          ${conf.isMemberSubmission
-            ? noteForSubmission(conf, opts)
-            : html`
-                ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-                ${!conf.overrideStatus
-                  ? html` ${linkToWorkingGroup(conf)} `
-                  : ""}
-                ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-                ${conf.isRec ? renderIsRec(conf) : renderNotRec(conf)}
-                ${renderDeliverer(conf)}
-                <p>
-                  This document is governed by the
-                  <a id="w3c_process_revision" href="${processLink}"
-                    >2 November 2021 W3C Process Document</a
-                  >.
-                </p>
-              `}
-        `}
+        ? opts.additionalContent
+        : conf.isNoTrack
+          ? renderIsNoTrack(conf, opts)
+          : html`
+              <p><em>${l10n.status_at_publication}</em></p>
+              ${conf.isMemberSubmission
+                ? noteForSubmission(conf, opts)
+                : html`
+                    ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
+                    ${!conf.overrideStatus
+                      ? html` ${linkToWorkingGroup(conf)} `
+                      : ""}
+                    ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
+                    ${conf.isRec ? renderIsRec(conf) : renderNotRec(conf)}
+                    ${renderDeliverer(conf)}
+                    <p>
+                      This document is governed by the
+                      <a id="w3c_process_revision" href="${processLink}"
+                        >03 November 2023 W3C Process Document</a
+                      >.
+                    </p>
+                  `}
+            `}
     ${opts.additionalSections}
   `;
 };
@@ -243,7 +243,7 @@ function renderNotRec(conf) {
     case "PR":
       reviewPolicy = html`<p>
         The W3C Membership and other interested parties are invited to review
-        the document and send comments through ${W3CDate.format(conf.PREnd)}.
+        the document and send comments through ${W3CDate.format(conf.prEnd)}.
         Advisory Committee Representatives should consult their
         <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
           >WBS questionnaires</a
@@ -253,9 +253,14 @@ function renderNotRec(conf) {
       </p>`;
       break;
     case "DNOTE":
-    case "NOTE":
       endorsement = html`${conf.textStatus}s are not endorsed by
         <abbr title="World Wide Web Consortium">W3C</abbr> nor its Members.`;
+      break;
+    case "NOTE":
+      endorsement = html`This ${conf.textStatus} is endorsed by
+        ${getWgHTML(conf)}, but is not endorsed by
+        <abbr title="World Wide Web Consortium">W3C</abbr> itself nor its
+        Members.`;
       break;
   }
   return html`<p>${endorsement} ${statusExplanation}</p>
@@ -265,10 +270,9 @@ function renderNotRec(conf) {
 function renderIsRec(conf) {
   const { updateableRec, revisionTypes = [], revisedRecEnd } = conf;
   let reviewTarget = "";
-  if (revisionTypes.includes("addition")) {
+  if (revisionTypes.includes("proposed-addition")) {
     reviewTarget = "additions";
-  }
-  if (revisionTypes.includes("correction") && !reviewTarget) {
+  } else if (revisionTypes.includes("proposed-correction")) {
     reviewTarget = "corrections";
   }
   return html`
@@ -493,9 +497,19 @@ function linkToWorkingGroup(conf) {
         >`
     : "";
   return html`<p>
-    This document was published by ${conf.wgHTML} as
+    This document was published by ${getWgHTML(conf)} as
     ${prefix(conf.longStatus)}${track}. ${changes}
   </p>`;
+}
+
+function getWgHTML(conf) {
+  if (Array.isArray(conf.wg)) {
+    return htmlJoinAnd(conf.wg, (wg, idx) => {
+      return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
+    });
+  } else if (conf.wg) {
+    return html`the <a href="${conf.wgURI}">${conf.wg}</a>`;
+  }
 }
 
 export function linkToCommunity(conf, opts) {

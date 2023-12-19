@@ -5,7 +5,7 @@
  * current document.
  */
 
-import { addId, getIntlData, norm } from "./utils.js";
+import { addId, getIntlData, norm, xmlEscape } from "./utils.js";
 import css from "../styles/dfn-index.css.js";
 import { getTermFromElement } from "./xref.js";
 import { html } from "./import-maps.js";
@@ -240,16 +240,16 @@ function createExternalTermIndex() {
     specA.localeCompare(specB)
   );
   return html`<ul class="index">
-    ${dataSortedBySpec.map(
-      ([spec, entries]) => html`<li data-spec="${spec}">
+    ${dataSortedBySpec.map(([spec, entries]) => {
+      return html`<li data-spec="${spec}">
         ${renderInlineCitation(spec)} defines the following:
         <ul>
           ${entries
             .sort((a, b) => a.term.localeCompare(b.term))
             .map(renderExternalTermEntry)}
         </ul>
-      </li>`
-    )}
+      </li>`;
+    })}
   </ul>`;
 }
 
@@ -263,6 +263,11 @@ function collectExternalTerms() {
   const elements = document.querySelectorAll(`a[data-cite]`);
   for (const elem of elements) {
     if (!elem.dataset.cite) {
+      continue;
+    }
+    const { cite, citeFrag, xrefType, linkType } = elem.dataset;
+    if (!(xrefType || linkType || cite.includes("#") || citeFrag)) {
+      // Not a reference to a definition
       continue;
     }
     const uniqueID = elem.href;
@@ -335,7 +340,7 @@ const TYPE_TERMS = new Set([
 /** @param {Entry} entry */
 function getTermText(entry) {
   const { term, type, linkFor } = entry;
-  let text = term;
+  let text = xmlEscape(term);
 
   if (CODE_TYPES.has(type)) {
     if (type === "extended-attribute") {
