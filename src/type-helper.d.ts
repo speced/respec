@@ -24,7 +24,7 @@ interface AxeViolation {
   nodes: { failureSummary: string; element: HTMLElement }[];
 }
 
-declare var respecConfig: any;
+declare var respecConfig: Conf;
 interface Window {
   respecVersion: string;
   respecUI: {
@@ -110,15 +110,42 @@ interface BiblioData {
   etAl?: boolean;
   expires: number;
 }
+
+type ProcessFn = (config: Conf, doc: Document) => Promise<void> | void;
+
+/** Configuration object type */
 interface Conf {
   authors?: Person[];
+  /** Object containing bibliographic data */
   biblio: Record<string, BiblioData>;
   editors?: Person[];
   formerEditors?: Person[];
+  /** Set of informative references */
   informativeReferences: Set<string>;
   localBiblio?: Record<string, BiblioData>;
+  /** Set of normative references */
   normativeReferences: Set<string>;
   shortName: string;
+  preProcess?: ProcessFn[];
+  postProcess?: ProcessFn[];
+  afterEnd?: ProcessFn;
+  specStatus?: string;
+  wgId?: string;
+  noToc: boolean;
+
+  /** Indicates whether the document is a preview */
+  isPreview?: boolean;
+  /** The pull request number, if applicable */
+  prNumber?: number;
+  /** The URL of the pull request, if applicable */
+  prUrl?: string;
+  /** The GitHub configuration object */
+  github?: {
+    /** The URL of the GitHub repository */
+    repoURL: string;
+  };
+  /** The title of the document */
+  title?: string;
 }
 
 type LicenseInfo = {
@@ -159,14 +186,18 @@ type ResourceHintOption = {
   dontRemove?: boolean;
 };
 
+/** Represents a request to the core/xref module */
 module "core/xref" {
   import { IDBPDatabase, DBSchema } from "idb";
 
+  /** Represents a single request entry */
   export interface RequestEntry {
     term: string;
     id: string;
     types: string[];
+    /** Spec URLs to restrict the search to */
     specs?: string[][];
+    /** The context in which the term appears */
     for?: string;
   }
 
@@ -243,3 +274,50 @@ type DefinitionValidator = (
   /** The name of the plugin originating the validation. */
   pluginName: string
 ) => boolean;
+
+declare class RespecError extends Error {
+  constructor(
+    message: string,
+    pluginName: string,
+    options: {
+      isWarning: boolean;
+      elements?: HTMLElement[];
+      title?: string;
+    }
+  );
+  toJSON(): {
+    message: string;
+    name: string;
+    plugin: string;
+    hint?: string;
+    elements?: any[];
+    title?: string;
+    details?: any;
+    stack?: string;
+  };
+}
+
+/**
+ * Localization strings for different languages.
+ *
+ */
+type LocalizationStrings = {
+  de: Record<string, string>;
+  en: Record<string, string>;
+  ja: Record<string, string>;
+  nl: Record<string, string>;
+  zh: Record<string, string>;
+};
+
+interface LinkProps {
+  href: string;
+  title: string;
+}
+
+interface CiteDetails {
+  key: string;
+  isNormative: boolean;
+  frag: string;
+  path: string;
+  href?: string;
+}
