@@ -682,6 +682,5 @@ describe("Core — Definitions", () => {
       expect(desc2.dataset.defines).toBe("#dfn-different-convention");
       expect(desc3.dataset.defines).toBe("#dfn-local-convention");
     });
-
   });
 });
