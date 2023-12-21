@@ -240,7 +240,7 @@ function addContractDefaults() {
 
   // - Sets data-defines on well-known definition content patterns
 
-  // A dt with class dfn-desc (on in a dl with such a class)
+  // A dt with class dfn-desc (or in a dl with such a class)
   // containing a definition
   // indicates that the following dd or div element contains its prose content
   /** @type NodeListOf<HTMLElement> */
