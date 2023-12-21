@@ -248,7 +248,7 @@ function addContractDefaults() {
     "dl.dfn-desc dt:has(dfn[data-dfn-type]), dt.dfn-desc:has(dfn[data-dfn-type])"
   );
   for (const dt of describedDTs) {
-    const dfnId = dt.querySelector("dfn[id]").id;
+    const dfnId = dt.querySelector("dfn[data-dfn-type]").id;
 
     const dfnContent = /** @type {HTMLElement | null} */ (
       dt.nextElementSibling
@@ -265,7 +265,7 @@ function addContractDefaults() {
     ":not(dt):not(dl).dfn-desc:has(dfn[data-dfn-type])"
   );
   for (const el of otherDescriptionContainers) {
-    const dfnId = el.querySelector("dfn[id]").id;
+    const dfnId = el.querySelector("dfn[data-dfn-type]").id;
     if (dfnId) {
       el.dataset.defines = `#${dfnId}`;
     }
