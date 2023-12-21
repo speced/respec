@@ -237,4 +237,26 @@ function addContractDefaults() {
   for (const dfn of exportableDfns) {
     dfn.dataset.export = "";
   }
+
+  // - Sets data-defines on well-known definition content patterns
+
+  // A dt with class dfn-desc (on in a dl with such a class)
+  // containing a definition
+  // indicates that the following dd or div element contains its prose content
+  for (const dt of document.querySelectorAll("dl.dfn-desc dt:has(dfn[data-dfn-type]), dt.dfn-desc:has(dfn[data-dfn-type])")) {
+    const dfnId = dt.querySelector("dfn[id]").id;
+    const dfnContent = dt.nextElementSibling;
+    if (dfnId && ["DIV", "DD"].includes(dfnContent.tagName)) {
+      dfnContent.dataset.defines = `#${dfnId}`;
+    }
+  }
+
+  // a non-dt element with class dfn-desc containing a definition
+  // indicates that the said element contains its prose content
+  for (const el of document.querySelectorAll(":not(dt):not(dl).dfn-desc:has(dfn[data-dfn-type])")) {
+    const dfnId = el.querySelector("dfn[id]").id;
+    if (dfnId) {
+      el.dataset.defines = `#${dfnId}`;
+    }
+  }
 }
