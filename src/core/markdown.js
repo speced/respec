@@ -73,13 +73,13 @@ class Renderer extends marked.Renderer {
     return { language, ...metaData };
   }
 
-  heading(text, level, raw) {
+  heading(text, level, raw, slugger) {
     const headingWithIdRegex = /(.+)\s+{#([\w-]+)}$/;
     if (headingWithIdRegex.test(text)) {
       const [, textContent, id] = text.match(headingWithIdRegex);
       return `<h${level} id="${id}">${textContent}</h${level}>`;
     }
-    return super.heading(text, level, raw);
+    return super.heading(text, level, raw, slugger);
   }
 }
 

@@ -12,8 +12,8 @@ dependencies:
     specifier: ^1.2.0
     version: 1.2.0
   marked:
-    specifier: ^11.1.0
-    version: 11.1.0
+    specifier: ^4.3.0
+    version: 4.3.0
   puppeteer:
     specifier: ^21.6.1
     version: 21.6.1(typescript@5.3.3)
@@ -38,8 +38,8 @@ devDependencies:
     specifier: ^0.4.4
     version: 0.4.4(rollup@4.9.1)
   '@types/marked':
-    specifier: ^5.0.2
-    version: 5.0.2
+    specifier: ^4.3.2
+    version: 4.3.2
   '@types/pluralize':
     specifier: 0.0.33
     version: 0.0.33
@@ -537,8 +537,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/marked@5.0.2:
-    resolution: {integrity: sha512-OucS4KMHhFzhz27KxmWg7J+kIYqyqoW5kdIEI319hqARQQUTqhao3M/F+uFnDXD0Rg72iDDZxZNxq5gvctmLlg==}
+  /@types/marked@4.3.2:
+    resolution: {integrity: sha512-a79Yc3TOk6dGdituy8hmTTJXjOkZ7zsFYV10L337ttq/rec8lRMDBpV7fL3uLx6TgbFCa5DU/h8FmIBQPSbU0w==}
     dev: true
 
   /@types/node@20.10.5:
@@ -2815,9 +2815,9 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /marked@11.1.0:
-    resolution: {integrity: sha512-fvKJWAPEafVj1dwGwcPI5mBB/0pvViL6NlCbNDG1HOIRwwAU/jeMoFxfbRLuirO1wRH7m4yPvBqD/O1wyWvayw==}
-    engines: {node: '>= 18'}
+  /marked@4.3.0:
+    resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
+    engines: {node: '>= 12'}
     hasBin: true
     dev: false
 
