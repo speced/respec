@@ -660,15 +660,15 @@ describe("Core — Definitions", () => {
       const body = `
         <section>
           <h2>Definition and its description</h2>
-          <p id="desc1" class="dfn-desc">
+          <p id="desc1" class="definition">
             A <dfn>definition</dfn> can also have an associated description
           </p>
-          <dl class="dfn-desc">
+          <dl class="definition">
             <dt><dfn>different convention</dfn></dt>
             <dd id="desc2">Different conventions can be applied to associate a term with its description</dd>
           </dl>
           <dl>
-            <dt class="dfn-desc"><dfn>local convention</dfn></dt>
+            <dt class="definition"><dfn>local convention</dfn></dt>
             <dd id="desc3">The local convention can be applied to a dt individually</dd>
           </dl>
         </section>

@@ -78,7 +78,7 @@ export function run() {
     }
     dfn.dataset.lt = titles.join("|");
   }
-  sub("plugins-done", addContractDefaults);
+  sub("plugins-done", completeDefinitionMarkup);
 }
 
 /**
@@ -216,6 +216,11 @@ function processAsInternalSlot(title, dfn) {
   return dfnType;
 }
 
+function completeDefinitionMarkup() {
+  addContractDefaults();
+  addDefinitionPointers();
+}
+
 function addContractDefaults() {
   // Find all dfns that don't have a type and default them to "dfn".
   /** @type NodeListOf<HTMLElement> */
@@ -237,15 +242,16 @@ function addContractDefaults() {
   for (const dfn of exportableDfns) {
     dfn.dataset.export = "";
   }
+}
 
-  // - Sets data-defines on well-known definition content patterns
-
-  // A dt with class dfn-desc (or in a dl with such a class)
+// - Sets data-defines on well-known definition content patterns
+function addDefinitionPointers() {
+  // A dt with class definition (or in a dl with such a class)
   // containing a definition
   // indicates that the following dd or div element contains its prose content
   /** @type NodeListOf<HTMLElement> */
   const describedDTs = document.querySelectorAll(
-    "dl.dfn-desc dt:has(dfn[data-dfn-type]), dt.dfn-desc:has(dfn[data-dfn-type])"
+    "dl.definition dt:has(dfn[data-dfn-type]), dt.definition:has(dfn[data-dfn-type])"
   );
   for (const dt of describedDTs) {
     const dfnId = dt.querySelector("dfn[data-dfn-type]").id;
@@ -258,11 +264,11 @@ function addContractDefaults() {
     }
   }
 
-  // a non-dt element with class dfn-desc containing a definition
+  // a non-dt element with class definition containing a definition
   // indicates that the said element contains its prose content
   /** @type NodeListOf<HTMLElement> */
   const otherDescriptionContainers = document.querySelectorAll(
-    ":not(dt):not(dl).dfn-desc:has(dfn[data-dfn-type])"
+    ":not(dt):not(dl).definition:has(dfn[data-dfn-type])"
   );
   for (const el of otherDescriptionContainers) {
     const dfnId = el.querySelector("dfn[data-dfn-type]").id;
