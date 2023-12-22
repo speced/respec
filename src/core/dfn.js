@@ -249,9 +249,7 @@ function addDefinitionPointers() {
   // A dl with class hasdefinitions marks all next siblings of dt with the class
   // definition
   /** @type NodeListOf<HTMLElement> */
-  const describedDTs = document.querySelectorAll(
-    "dl.hasdefinitions dt"
-  );
+  const describedDTs = document.querySelectorAll("dl.hasdefinitions dt");
   for (const dt of describedDTs) {
     dt.nextElementSibling.classList.add("definition");
   }
@@ -260,16 +258,14 @@ function addDefinitionPointers() {
   // found either it the element itself, or in the closest previous sibling with
   // a defined term
   /** @type NodeListOf<HTMLElement> */
-  const definitionContainers = document.querySelectorAll(
-    ".definition"
-  );
+  const definitionContainers = document.querySelectorAll(".definition");
   for (const el of definitionContainers) {
     let curEl = el;
     let dfn;
     while (curEl) {
       dfn = curEl.querySelector("dfn[data-dfn-type]");
       if (dfn) break;
-      curEl = curEl.previousElementSibling;
+      curEl = /** @type {HTMLElement | null} */ (curEl.previousElementSibling);
     }
     if (dfn?.id) {
       el.dataset.defines = `#${dfn.id}`;
