@@ -246,34 +246,33 @@ function addContractDefaults() {
 
 // - Sets data-defines on well-known definition content patterns
 function addDefinitionPointers() {
-  // A dt with class definition (or in a dl with such a class)
-  // containing a definition
-  // indicates that the following dd or div element contains its prose content
+  // A dl with class hasdefinitions marks all next siblings of dt with the class
+  // definition
   /** @type NodeListOf<HTMLElement> */
   const describedDTs = document.querySelectorAll(
-    "dl.definition dt:has(dfn[data-dfn-type]), dt.definition:has(dfn[data-dfn-type])"
+    "dl.hasdefinitions dt"
   );
   for (const dt of describedDTs) {
-    const dfnId = dt.querySelector("dfn[data-dfn-type]").id;
-
-    const dfnContent = /** @type {HTMLElement | null} */ (
-      dt.nextElementSibling
-    );
-    if (dfnContent && dfnId && ["DIV", "DD"].includes(dfnContent.tagName)) {
-      dfnContent.dataset.defines = `#${dfnId}`;
-    }
+    dt.nextElementSibling.classList.add("definition");
   }
 
-  // a non-dt element with class definition containing a definition
-  // indicates that the said element contains its prose content
+  // an element with class "definition" is marked as defining the term
+  // found either it the element itself, or in the closest previous sibling with
+  // a defined term
   /** @type NodeListOf<HTMLElement> */
-  const otherDescriptionContainers = document.querySelectorAll(
-    ":not(dt):not(dl).definition:has(dfn[data-dfn-type])"
+  const definitionContainers = document.querySelectorAll(
+    ".definition"
   );
-  for (const el of otherDescriptionContainers) {
-    const dfnId = el.querySelector("dfn[data-dfn-type]").id;
-    if (dfnId) {
-      el.dataset.defines = `#${dfnId}`;
+  for (const el of definitionContainers) {
+    let curEl = el;
+    let dfn;
+    while (curEl) {
+      dfn = curEl.querySelector("dfn[data-dfn-type]");
+      if (dfn) break;
+      curEl = curEl.previousElementSibling;
+    }
+    if (dfn?.id) {
+      el.dataset.defines = `#${dfn.id}`;
     }
   }
 }
