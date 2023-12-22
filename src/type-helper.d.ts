@@ -243,3 +243,16 @@ type DefinitionValidator = (
   /** The name of the plugin originating the validation. */
   pluginName: string
 ) => boolean;
+
+interface LinkProps {
+  href: string;
+  title: string;
+}
+
+interface CiteDetails {
+  key: string;
+  isNormative: boolean;
+  frag: string;
+  path: string;
+  href?: string;
+}
