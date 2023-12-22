@@ -9,7 +9,7 @@
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2020
+    "ecmaVersion": 2023
   },
   "rules": {
     "import/extensions": ["error", "always", {
