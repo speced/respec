@@ -20,6 +20,7 @@ const noop = () => {};
  * @param {(warning: RsError) => void} [options.onWarning] What to do if a ReSpec processing has a warning. Does nothing by default.
  * @param {(msg: string, timeRemaining: number) => void} [options.onProgress]
  * @param {boolean} [options.disableSandbox] See https://peter.sh/experiments/chromium-command-line-switches/#no-sandbox
+ * @param {boolean} [options.disableGPU] See https://developer.chrome.com/blog/headless-chrome/#starting_headless_cli
  * @param {boolean} [options.devtools] Show the Chromium window with devtools open for debugging.
  * @return {Promise<{ html: string, errors: RsError[], warnings: RsError[] }>}
  * @throws {Error} If failed to process.
@@ -28,6 +29,7 @@ export async function toHTML(src, options = {}) {
   const {
     timeout = 300000,
     disableSandbox = false,
+    disableGPU = false,
     devtools = false,
     useLocal = false,
   } = options;
@@ -59,6 +61,7 @@ export async function toHTML(src, options = {}) {
 
   const args = [];
   if (disableSandbox) args.push("--no-sandbox");
+  if (disableGPU) args.push("--disable-gpu");
 
   log("Launching browser");
   const browser = await puppeteer.launch({
