@@ -9,7 +9,9 @@
 
 import { getIntlData, showError } from "../core/utils.js";
 export const name = "w3c/level";
-
+/**
+ * @type {LocalizationStrings}
+ */
 const localizationStrings = {
   en: {
     level: "Level",
@@ -28,6 +30,11 @@ const localizationStrings = {
   },
 };
 
+/**
+ * Localization data based on the user's language preference.
+ *
+ * @type {{ level: string }}
+ */
 const l10n = getIntlData(localizationStrings);
 
 /**
