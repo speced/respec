@@ -132,7 +132,8 @@ interface Conf {
   specStatus?: string;
   wgId?: string;
   noToc: boolean;
-
+  /** Disables injecting ReSpec styles */
+  noReSpecCSS?: boolean;
   /** Indicates whether the document is a preview */
   isPreview?: boolean;
   /** The pull request number, if applicable */
