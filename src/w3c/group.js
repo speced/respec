@@ -1,16 +1,20 @@
 // @ts-check
 /**
  * @module w3c/group
- *
- * `group` is a shorthand configuration option for specifying `wg`, `wgId`,
- * `wgURI`, and `wgPatentURI` options.
+ * The purpose of this module is to fetch and set the working group configuration details
+ * for the document using the W3C's groups API.
  */
-
 import { docLink, fetchAndCache, showError } from "../core/utils.js";
 
 export const name = "w3c/group";
 
 const W3C_GROUPS_API = "https://respec.org/w3c/groups/";
+
+/**
+ * Fetches the group configuration details and adds them to the document's configuration.
+ * @param {Conf} conf The document configuration object.
+ * @return {Promise<void>} Resolves after setting the group configuration details.
+ */
 export async function run(conf) {
   if (!conf.group) {
     return;
@@ -23,7 +27,11 @@ export async function run(conf) {
   Object.assign(conf, groupDetails);
 }
 
-/** @param {string[]} groups */
+/**
+ * Fetches configuration details for multiple groups concurrently.
+ * @param {string[]} groups An array of group identifiers.
+ * @return {Promise<object>} Resolves to an object containing the configuration details for each group.
+ */
 async function getMultipleGroupDetails(groups) {
   const details = await Promise.all(groups.map(getGroupDetails));
   /** @type {{ [key in keyof GroupDetails]: GroupDetails[key][] }} */
@@ -35,7 +43,7 @@ async function getMultipleGroupDetails(groups) {
     wgPatentPolicy: [],
     groupType: [],
   };
-  for (const groupDetails of details.filter(o => o)) {
+  for (const groupDetails of details.filter(Boolean)) {
     for (const key of Object.keys(result)) {
       result[key].push(groupDetails[key]);
     }
@@ -44,9 +52,10 @@ async function getMultipleGroupDetails(groups) {
 }
 
 /**
- * @param {string} group
- * @typedef {{ wgId: number, wg: string, wgURI: string, wgPatentURI: string, wgPatentPolicy: string, groupType: W3CGroupType }} GroupDetails
- * @returns {Promise<GroupDetails|undefined>}
+ * Fetches configuration details for a single group.
+ * @param {string} group A group identifier.
+ * @typedef {{ wgId: number, wg: string, wgURI: string, wgPatentURI: string, wgPatentPolicy: string, groupType: string }} GroupDetails
+ * @return {Promise<GroupDetails|undefined>} Resolves to an object containing the group's configuration details, or undefined if the group could not be fetched.
  */
 async function getGroupDetails(group) {
   let type = "";

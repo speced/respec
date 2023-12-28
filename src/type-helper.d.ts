@@ -146,7 +146,19 @@ interface Conf {
   };
   /** The title of the document */
   title?: string;
+
+  /** Group */
+  group?: string | string[];
 }
+
+type GroupDetails = {
+  wgId: number;
+  wg: string;
+  wgURI: string;
+  wgPatentURI: string;
+  wgPatentPolicy: string;
+  groupType: string;
+};
 
 type LicenseInfo = {
   /**
