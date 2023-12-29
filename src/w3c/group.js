@@ -54,7 +54,6 @@ async function getMultipleGroupDetails(groups) {
 /**
  * Fetches configuration details for a single group.
  * @param {string} group A group identifier.
- * @typedef {{ wgId: number, wg: string, wgURI: string, wgPatentURI: string, wgPatentPolicy: string, groupType: string }} GroupDetails
  * @return {Promise<GroupDetails|undefined>} Resolves to an object containing the group's configuration details, or undefined if the group could not be fetched.
  */
 async function getGroupDetails(group) {
