@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * @module w3c/group
- * The purpose of this module is to fetch and set the working group configuration details
+ * The purpose of this module is to fetch and set the working group configuration details.
  */
 import { docLink, fetchAndCache, showError } from "../core/utils.js";
 
