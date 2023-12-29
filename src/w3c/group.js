@@ -2,7 +2,6 @@
 /**
  * @module w3c/group
  * The purpose of this module is to fetch and set the working group configuration details
- * for the document using the W3C's groups API.
  */
 import { docLink, fetchAndCache, showError } from "../core/utils.js";
 
