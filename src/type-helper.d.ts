@@ -147,7 +147,7 @@ interface Conf {
   /** The title of the document */
   title?: string;
 
-  /** Group */
+  /** W3C Group - see https://respec.org/w3c/groups */
   group?: string | string[];
 }
 
