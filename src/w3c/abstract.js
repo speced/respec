@@ -13,11 +13,7 @@ import { html } from "../core/import-maps.js";
 
 export const name = "w3c/abstract";
 
-/**
- * Localization strings for different languages.
- *
- * @type {LocalizationStrings}
- */
+/** @type {LocalizationStrings} */
 const localizationStrings = {
   en: { abstract: "Abstract" },
   ko: { abstract: "요약" },
