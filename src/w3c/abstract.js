@@ -23,12 +23,6 @@ const localizationStrings = {
   es: { abstract: "Resumen" },
   de: { abstract: "Zusammenfassung" },
 };
-
-/**
- * Localization data based on the user's language preference.
- *
- * @type {{ abstract: string }}
- */
 const l10n = getIntlData(localizationStrings);
 
 /**
