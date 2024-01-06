@@ -146,7 +146,19 @@ interface Conf {
   };
   /** The title of the document */
   title?: string;
+
+  /** W3C Group - see https://respec.org/w3c/groups */
+  group?: string | string[];
 }
+
+type GroupDetails = {
+  wgId: number;
+  wg: string;
+  wgURI: string;
+  wgPatentURI: string;
+  wgPatentPolicy: string;
+  groupType: string;
+};
 
 type LicenseInfo = {
   /**
