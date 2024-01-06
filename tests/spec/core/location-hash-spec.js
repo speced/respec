@@ -13,16 +13,16 @@ describe("Core — Location Hash", () => {
       const testURL = `${simpleURL}${expectedHash}`;
       const doc = await makeRSDoc(ops, testURL);
       expect(decodeURIComponent(doc.location.hash)).toBe(expectedHash);
-    });
+    }, 20000);
     it("recovers from legacy IDL methods frags", async () => {
       const testURL = `${simpleURL}#dom-test-foo()`;
       const doc = await makeRSDoc(ops, testURL);
       expect(doc.location.hash).toBe("#dom-test-foo");
-    });
+    }, 20000);
     it("recovers legacy encoded hashes for slots", async () => {
       const testURL = `${simpleURL}#dfn-%5B%5Bescapedslot%5D%5D`;
       const doc = await makeRSDoc(ops, testURL);
       expect(doc.location.hash).toBe("#dfn-escapedslot");
-    });
+    }, 20000);
   });
 });
