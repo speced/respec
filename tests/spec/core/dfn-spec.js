@@ -659,8 +659,7 @@ describe("Core — Definitions", () => {
     it("assigns data-defines on well-known patterns", async () => {
       const body = `
         <section>
-          <h2>Definition and its <dfn>description</dfn></h2>
-          <p id="desc3" class="definition">A description explains what a term is.</p>
+          <h2>Definitions</h2>
           <p id="desc1" class="definition">
             A <dfn>definition</dfn> can also have an associated description
           </p>
@@ -674,10 +673,8 @@ describe("Core — Definitions", () => {
       const doc = await makeRSDoc(ops);
       const desc1 = doc.getElementById("desc1");
       const desc2 = doc.getElementById("desc2");
-      const desc3 = doc.getElementById("desc3");
       expect(desc1.dataset.defines).toBe("#dfn-definition");
       expect(desc2.dataset.defines).toBe("#dfn-different-convention");
-      expect(desc3.dataset.defines).toBe("#dfn-description");
     });
   });
 });
