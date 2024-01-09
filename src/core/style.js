@@ -1,21 +1,26 @@
 // @ts-check
 // Module core/style
-// Inserts the CSS that ReSpec uses into the document.
-//
-// IMPORTANT NOTE
-//  To add you own styles, create a plugin that declares the css as a dependency
-//  and create a build of your new ReSpec profile.
-//
-// CONFIGURATION
-//  - noReSpecCSS: if you're using a profile that loads this module but you don't want
-//    the style, set this to true
-import css from "../styles/respec.css.js";
+// The purpose of this module is to insert the default ReSpec CSS into the document.
+// If you don't want to use the default ReSpec CSS, set the `noReSpecCSS` configuration
+// option to `true`. If you want to use your own styles, create a ReSpec profile that
+// includes your own styles and sets the `noReSpecCSS` configuration option to `true`.
 
+/**
+ * Module Name.
+ * @type {string}
+ */
 export const name = "core/style";
 
-// Opportunistically inserts the style, with the chance to reduce some FOUC
+import css from "../styles/respec.css.js";
+
+// Opportunistically inserts the style to reduce some FOUC.
+/** @type {HTMLStyleElement} */
 const styleElement = insertStyle();
 
+/**
+ * Inserts the ReSpec CSS as a `style` element into the document's `head`.
+ * @return {HTMLStyleElement} The `style` element that was inserted.
+ */
 function insertStyle() {
   const styleElement = document.createElement("style");
   styleElement.id = "respec-mainstyle";
@@ -24,6 +29,10 @@ function insertStyle() {
   return styleElement;
 }
 
+/**
+ * Removes the ReSpec CSS if the `noReSpecCSS` configuration option is `true`.
+ * @param {Conf} conf The document configuration object.
+ */
 export function run(conf) {
   if (conf.noReSpecCSS) {
     styleElement.remove();

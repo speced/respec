@@ -1,8 +1,8 @@
 // @ts-check
-// Module w3c/style
-// Inserts a link to the appropriate W3C style for the specification's maturity level.
-// CONFIGURATION
-//  - specStatus: the short code for the specification's maturity level or type (required)
+/**
+ * Module w3c/style
+ * Inserts a link to the appropriate W3C style for the specification's maturity level.
+ * */
 
 import { W3CNotes, recTrackStatus, registryTrackStatus } from "./headers.js";
 import { createResourceHint, linkCSS } from "../core/utils.js";
@@ -24,8 +24,10 @@ function attachFixupScript() {
   document.body.appendChild(script);
 }
 
+// Creates a collection of resource hints to improve the loading performance
+// of the W3C resources.
 function createResourceHints() {
-  /** @type ResourceHintOption[]  */
+  /** @type {ResourceHintOption[]}  */
   const opts = [
     {
       hint: "preconnect", // for W3C styles and scripts.
@@ -54,6 +56,7 @@ function createResourceHints() {
   }
   return resourceHints;
 }
+
 // Collect elements for insertion (document fragment)
 const elements = createResourceHints();
 
@@ -77,6 +80,10 @@ if (!document.head.querySelector("meta[name=viewport]")) {
 
 document.head.prepend(elements);
 
+/**
+ * @param {URL} linkURL
+ * @returns {(exportDoc: Document) => void}
+ */
 function styleMover(linkURL) {
   return exportDoc => {
     const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
@@ -84,6 +91,9 @@ function styleMover(linkURL) {
   };
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   const canonicalStatus = conf.specStatus?.toUpperCase() ?? "";
   let styleFile = "";

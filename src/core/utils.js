@@ -5,7 +5,6 @@
 import { lang as docLang } from "./l10n.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
-import { reindent } from "./reindent.js";
 export const name = "core/utils";
 
 const dashes = /-/g;
@@ -961,4 +960,25 @@ export function docLink(strings, ...keys) {
     })
     .join("");
   return reindent(linkifiedStr);
+}
+
+/**
+ * Takes a text string, trims it, splits it into lines,
+ * finds the common indentation level, and then de-indents every line
+ * by that common indentation level.
+ *
+ * @param {string} text - The text to be re-indented.
+ * @returns {string} The re-indented text.
+ */
+export function reindent(text) {
+  if (!text) {
+    return text;
+  }
+  const lines = text.trimEnd().split("\n");
+  while (lines.length && !lines[0].trim()) {
+    lines.shift();
+  }
+  const indents = lines.filter(s => s.trim()).map(s => s.search(/[^\s]/));
+  const leastIndent = Math.min(...indents);
+  return lines.map(s => s.slice(leastIndent)).join("\n");
 }

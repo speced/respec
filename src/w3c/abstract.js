@@ -1,42 +1,40 @@
-// @ts-check
-// Module w3c/abstract
-// Handle the abstract section properly.
+/**
+ * Module w3c/abstract
+ *
+ * This module handles the abstract section properly by adding necessary elements and
+ * performing validations.
+ *
+ * @module w3c/abstract
+ */
+
 import { getIntlData, norm, renameElement, showError } from "../core/utils.js";
+import { lang as docLang } from "../core/l10n.js";
 import { html } from "../core/import-maps.js";
+
 export const name = "w3c/abstract";
 
+/** @type {LocalizationStrings} */
 const localizationStrings = {
-  en: {
-    abstract: "Abstract",
-  },
-  ko: {
-    abstract: "요약",
-  },
-  zh: {
-    abstract: "摘要",
-  },
-  ja: {
-    abstract: "要約",
-  },
-  nl: {
-    abstract: "Samenvatting",
-  },
-  es: {
-    abstract: "Resumen",
-  },
-  de: {
-    abstract: "Zusammenfassung",
-  },
+  en: { abstract: "Abstract" },
+  ko: { abstract: "요약" },
+  zh: { abstract: "摘要" },
+  ja: { abstract: "要約" },
+  nl: { abstract: "Samenvatting" },
+  es: { abstract: "Resumen" },
+  de: { abstract: "Zusammenfassung" },
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * Handles the abstract section of the document.
+ */
 export async function run() {
   const abstract = findAbstract();
   if (!abstract) {
-    const msg = 'Document must have one `<section id="abstract">`.';
-    showError(msg, name);
+    showError('Document must have one `<section id="abstract">`.', name);
     return;
   }
+
   abstract.classList.add("introductory");
   abstract.id = "abstract";
   if (!abstract.querySelector("h2")) {
@@ -44,15 +42,18 @@ export async function run() {
   }
 }
 
+/**
+ * Finds the abstract section in the document.
+ *
+ * @returns {HTMLElement | null} The abstract section element.
+ */
 function findAbstract() {
-  /** @type {HTMLElement} */
-  const abstract = document.querySelector("#abstract");
+  const abstract = document.getElementById("abstract");
   if (abstract) {
     switch (abstract.localName) {
       case "section":
         return abstract;
       case "div":
-        // Legacy documents may use a div
         return renameElement(abstract, "section");
       default:
         showError("The abstract should be a `<section>` element.", name, {
@@ -62,15 +63,12 @@ function findAbstract() {
     }
   }
 
-  // Let's try find it by checking the headings.
-  // This can happen if the document was generated
-  // using markdown.
-  const searchString = l10n.abstract.toLowerCase();
+  const searchString = l10n.abstract.toLocaleLowerCase(docLang);
   for (const header of document.querySelectorAll("h2, h3, h4, h5, h6")) {
-    const contents = norm(header.textContent).toLowerCase();
-    if (contents === searchString) {
+    if (norm(header.textContent).toLocaleLowerCase(docLang) === searchString) {
       return header.closest("section");
     }
   }
-  return null;
+
+  return abstract;
 }

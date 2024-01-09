@@ -11,9 +11,8 @@
  *
  */
 
-import { getElementIndentation } from "./utils.js";
+import { getElementIndentation, reindent } from "./utils.js";
 import { marked } from "./import-maps.js";
-import { reindent } from "./reindent.js";
 export const name = "core/markdown";
 
 const gtEntity = /&gt;/gm;

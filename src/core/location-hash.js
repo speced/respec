@@ -1,28 +1,46 @@
 // @ts-check
 // Module core/location-hash
-// Resets window.location.hash to jump to the right point in the document
+// As ReSpec injects a bunch of stuff async, the scroll position is not always
+// at the right place when we are done processing. The purpose of this module
+// is to reset window's location hash, which will cause the browser to scroll
+// the window to the correct point in the document when processing is done.
 
 export const name = "core/location-hash";
 
 export function run() {
-  if (!location.hash) {
+  if (!window.location.hash) {
     return;
   }
+
+  // We have to use .then() here because otherwise we would get stuck
+  // awaiting this plugin to finish.
   document.respec.ready.then(() => {
-    let hash = decodeURIComponent(location.hash).substr(1);
-    const hasLink = document.getElementById(hash);
-    const isLegacyFrag = /\W/.test(hash);
+    const hash = decodeURIComponent(window.location.hash).slice(1);
+
+    let newHash = hash;
+    /** @type {HTMLElement|null} */
+    const element = document.getElementById(newHash);
+
+    // Check if hash contains any non-word character.
+    const isLegacyFrag = /\W/.test(newHash);
+
     // Allow some degree of recovery for legacy fragments format.
     // See https://github.com/w3c/respec/issues/1353
-    if (!hasLink && isLegacyFrag) {
-      const id = hash
+    if (!element && isLegacyFrag) {
+      const id = newHash
+        // Replace all non-word characters with a dash.
         .replace(/[\W]+/gim, "-")
+        // Remove any leading dashes.
         .replace(/^-+/, "")
+        // Remove any trailing dashes.
         .replace(/-+$/, "");
-      if (document.getElementById(id)) {
-        hash = id;
+
+      /** @type {HTMLElement|null} */
+      const updatedElement = document.getElementById(id);
+      if (updatedElement) {
+        newHash = id;
       }
     }
-    location.hash = `#${hash}`;
+    window.location.hash = `#${newHash}`;
   });
 }
