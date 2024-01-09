@@ -9,9 +9,7 @@
 
 import { getIntlData, showError } from "../core/utils.js";
 export const name = "w3c/level";
-/**
- * @type {LocalizationStrings}
- */
+/** @type {LocalizationStrings} */
 const localizationStrings = {
   en: {
     level: "Level",
