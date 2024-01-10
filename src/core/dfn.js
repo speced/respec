@@ -250,7 +250,7 @@ function addDefinitionPointers() {
   // the definition in the following sibling element
   /** @type NodeListOf<HTMLElement> */
   const describedDTs = document.querySelectorAll(
-    "dl.hasdefinitions dt:has(dfn[data-dfn-type])"
+    "dl.definitions dt:has(dfn[data-dfn-type])"
   );
   for (const dt of describedDTs) {
     const dfnId = dt.querySelector("dfn[data-dfn-type]").id;

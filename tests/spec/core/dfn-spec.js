@@ -663,7 +663,7 @@ describe("Core — Definitions", () => {
           <p id="desc1" class="definition">
             A <dfn>definition</dfn> can also have an associated description
           </p>
-          <dl class="hasdefinitions">
+          <dl class="definitions">
             <dt><dfn>different convention</dfn></dt>
             <dd id="desc2">Different conventions can be applied to associate a term with its description</dd>
           </dl>
