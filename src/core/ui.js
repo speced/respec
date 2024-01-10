@@ -9,11 +9,10 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 import { html, pluralize } from "./import-maps.js";
+import { reindent, xmlEscape } from "./utils.js";
 import css from "../styles/ui.css.js";
 import { markdownToHtml } from "./markdown.js";
-import { reindent } from "./reindent.js";
 import { sub } from "./pubsubhub.js";
-import { xmlEscape } from "./utils.js";
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
