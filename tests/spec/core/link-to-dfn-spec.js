@@ -114,6 +114,21 @@ describe("Core — Link to definitions", () => {
     expect(dfn.dataset.dfnFor).toBe("Foo");
   });
 
+  it("recognizes data-dfn-for with multiple targets and accepts matching micro-syntax links", async () => {
+    const bodyText = `
+      <section>
+        <h2>Test Section</h2>
+        <p>There are 2 elements: <dfn class="element">foo</dfn> and <dfn class="element">bar</dfn></p>
+        <p>They both accept a <dfn class="element-attr" id=baz data-dfn-for="foo,bar">baz</dfn> attribute.</p>
+        <p id="dfn-link">[^ foo/baz ^] takes integer values.</p>
+      </section>`;
+    const ops = makeStandardOps(null, bodyText);
+    const doc = await makeRSDoc(ops);
+    const attrLink = doc.querySelector("#dfn-link a");
+    expect(attrLink.dataset.linkType).toBe("element-attr");
+    expect(attrLink.hash).toBe("#baz");
+  });
+
   it("uses data-dfn-type in linking", async () => {
     const body = `
       <section>
@@ -135,6 +150,24 @@ describe("Core — Link to definitions", () => {
 
     const idlLinks = doc.querySelectorAll("#idl-links a");
     expect([...idlLinks].map(a => a.hash)).toEqual(Array(2).fill("#idl-card"));
+  });
+
+  it("recognizes inline links to abstract-op definitions", async () => {
+    const body = `
+      <section>
+        theeee <dfn id="dfn-algo" class="abstract-op">make-me-a-sandwich algorithm</dfn> is an algorithm.
+        <div id="dfn-links">
+          When hungry, use the [= make-me-a-sandwich algorithm =]; the <a data-link-type="abstract-op">make-me-a-sandwich algorithm</a> is less useful when thirsty
+        </div>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const conceptLinks = doc.querySelectorAll("#dfn-links a");
+    expect([...conceptLinks].map(a => a.hash)).toEqual(
+      Array(2).fill("#dfn-algo")
+    );
   });
 
   it("treats internal slots as idl", async () => {

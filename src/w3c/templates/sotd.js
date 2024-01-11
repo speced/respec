@@ -1,5 +1,5 @@
 // @ts-check
-import { W3CDate, getIntlData } from "../../core/utils.js";
+import { W3CDate, getIntlData, htmlJoinAnd } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import { status2track } from "../headers.js";
 const localizationStrings = {
@@ -21,9 +21,8 @@ const localizationStrings = {
   },
   zh: {
     sotd: "关于本文档",
-    status_at_publication: html`本章节描述了本文档的发布状态。W3C的文档列
-      表和最新版本可通过<a href="https://www.w3.org/TR/">W3C技术报告</a
-      >索引访问。`,
+    // eslint-disable-next-line prettier/prettier
+    status_at_publication: html`本章节描述了本文档的发布状态。W3C的文档列表和最新版本可通过<a href="https://www.w3.org/TR/">W3C技术报告</a>索引访问。`,
   },
   ja: {
     sotd: "この文書の位置付け",
@@ -55,7 +54,7 @@ const localizationStrings = {
 
 export const l10n = getIntlData(localizationStrings);
 
-const processLink = "https://www.w3.org/2021/Process-20211102/";
+const processLink = "https://www.w3.org/2023/Process-20231103/";
 
 function prefix(word) {
   return /^[aeiou]/i.test(word) ? `an ${word}` : `a ${word}`;
@@ -68,29 +67,29 @@ export default (conf, opts) => {
     ${conf.isUnofficial
       ? renderIsUnofficial(opts)
       : conf.isTagFinding
-      ? opts.additionalContent
-      : conf.isNoTrack
-      ? renderIsNoTrack(conf, opts)
-      : html`
-          <p><em>${l10n.status_at_publication}</em></p>
-          ${conf.isMemberSubmission
-            ? noteForSubmission(conf, opts)
-            : html`
-                ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-                ${!conf.overrideStatus
-                  ? html` ${linkToWorkingGroup(conf)} `
-                  : ""}
-                ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-                ${conf.isRec ? renderIsRec(conf) : renderNotRec(conf)}
-                ${renderDeliverer(conf)}
-                <p>
-                  This document is governed by the
-                  <a id="w3c_process_revision" href="${processLink}"
-                    >2 November 2021 W3C Process Document</a
-                  >.
-                </p>
-              `}
-        `}
+        ? opts.additionalContent
+        : conf.isNoTrack
+          ? renderIsNoTrack(conf, opts)
+          : html`
+              <p><em>${l10n.status_at_publication}</em></p>
+              ${conf.isMemberSubmission
+                ? noteForSubmission(conf, opts)
+                : html`
+                    ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
+                    ${!conf.overrideStatus
+                      ? html` ${linkToWorkingGroup(conf)} `
+                      : ""}
+                    ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
+                    ${conf.isRec ? renderIsRec(conf) : renderNotRec(conf)}
+                    ${renderDeliverer(conf)}
+                    <p>
+                      This document is governed by the
+                      <a id="w3c_process_revision" href="${processLink}"
+                        >03 November 2023 W3C Process Document</a
+                      >.
+                    </p>
+                  `}
+            `}
     ${opts.additionalSections}
   `;
 };
@@ -232,31 +231,36 @@ function renderNotRec(conf) {
       if (conf.pubMode === "LS") {
         reviewPolicy = html`<p>
           Comments are welcome at any time but most especially before
-          ${W3CDate.format(conf.CREnd)}.
+          ${W3CDate.format(conf.crEnd)}.
         </p>`;
       } else {
         reviewPolicy = html`<p>
           This Candidate Recommendation is not expected to advance to Proposed
-          Recommendation any earlier than ${W3CDate.format(conf.CREnd)}.
+          Recommendation any earlier than ${W3CDate.format(conf.crEnd)}.
         </p>`;
       }
       break;
     case "PR":
       reviewPolicy = html`<p>
         The W3C Membership and other interested parties are invited to review
-        the document and send comments through ${W3CDate.format(conf.PREnd)}.
+        the document and send comments through ${W3CDate.format(conf.prEnd)}.
         Advisory Committee Representatives should consult their
         <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
           >WBS questionnaires</a
         >. Note that substantive technical comments were expected during the
         Candidate Recommendation review period that ended
-        ${W3CDate.format(conf.CREnd)}.
+        ${W3CDate.format(conf.crEnd)}.
       </p>`;
       break;
     case "DNOTE":
-    case "NOTE":
       endorsement = html`${conf.textStatus}s are not endorsed by
         <abbr title="World Wide Web Consortium">W3C</abbr> nor its Members.`;
+      break;
+    case "NOTE":
+      endorsement = html`This ${conf.textStatus} is endorsed by
+        ${getWgHTML(conf)}, but is not endorsed by
+        <abbr title="World Wide Web Consortium">W3C</abbr> itself nor its
+        Members.`;
       break;
   }
   return html`<p>${endorsement} ${statusExplanation}</p>
@@ -266,10 +270,9 @@ function renderNotRec(conf) {
 function renderIsRec(conf) {
   const { updateableRec, revisionTypes = [], revisedRecEnd } = conf;
   let reviewTarget = "";
-  if (revisionTypes.includes("addition")) {
+  if (revisionTypes.includes("proposed-addition")) {
     reviewTarget = "additions";
-  }
-  if (revisionTypes.includes("correction") && !reviewTarget) {
+  } else if (revisionTypes.includes("proposed-correction")) {
     reviewTarget = "corrections";
   }
   return html`
@@ -294,11 +297,21 @@ function renderIsRec(conf) {
     </p>
     ${revisionTypes.includes("addition")
       ? html`<p class="addition">
-          Proposed additions are marked in the document.
+          Candidate additions are marked in the document.
         </p>`
       : ""}
     ${revisionTypes.includes("correction")
       ? html`<p class="correction">
+          Candidate corrections are marked in the document.
+        </p>`
+      : ""}
+    ${revisionTypes.includes("proposed-addition")
+      ? html`<p class="addition proposed">
+          Proposed additions are marked in the document.
+        </p>`
+      : ""}
+    ${revisionTypes.includes("proposed-correction")
+      ? html`<p class="correction proposed">
           Proposed corrections are marked in the document.
         </p>`
       : ""}
@@ -439,22 +452,42 @@ function linkToWorkingGroup(conf) {
   if (!conf.wg) {
     return;
   }
-  let proposedChanges = null;
+  let changes = null;
   if (conf.isRec && conf.revisionTypes && conf.revisionTypes.length) {
-    if (conf.revisionTypes.includes("addition")) {
-      if (conf.revisionTypes.includes("correction")) {
-        proposedChanges = html`It includes
-          <a href="${processLink}#proposed-amendments">proposed amendments</a>,
-          introducing substantive changes and new features since the previous
-          Recommendation.`;
-      } else {
-        proposedChanges = html`It includes
-          <a href="${processLink}#proposed-addition">proposed additions</a>,
-          introducing new features since the previous Recommendation.`;
-      }
-    } else if (conf.revisionTypes.includes("correction")) {
-      proposedChanges = html`It includes
-        <a href="${processLink}#proposed-correction">proposed corrections</a>.`;
+    const pa = conf.revisionTypes.includes("proposed-addition");
+    const pc = conf.revisionTypes.includes("proposed-correction");
+    const ca = conf.revisionTypes.includes("addition");
+    const cc = conf.revisionTypes.includes("correction");
+    if ((pa && pc) || (ca && cc)) {
+      changes = html`It includes
+      ${pa
+        ? html`<a href="${processLink}#proposed-amendments">
+            proposed amendments</a
+          >`
+        : html`<a href="${processLink}#candidate-amendments">
+            candidate amendments</a
+          >`},
+      introducing substantive changes and new features since the previous
+      Recommendation.`;
+    } else if (pa || ca) {
+      changes = html`It includes
+      ${pa
+        ? html`<a href="${processLink}#proposed-addition">
+            proposed additions</a
+          >`
+        : html`<a href="${processLink}#candidate-addition">
+            candidate additions</a
+          >`},
+      introducing new features since the previous Recommendation.`;
+    } else if (pc || cc) {
+      changes = html`It includes
+      ${pc
+        ? html`<a href="${processLink}#proposed-correction">
+            proposed corrections</a
+          >`
+        : html`<a href="${processLink}#candidate-correction">
+            candidate corrections</a
+          >`}.`;
     }
   }
   const track = status2track[conf.specStatus]
@@ -464,9 +497,19 @@ function linkToWorkingGroup(conf) {
         >`
     : "";
   return html`<p>
-    This document was published by ${conf.wgHTML} as
-    ${prefix(conf.longStatus)}${track}. ${proposedChanges}
+    This document was published by ${getWgHTML(conf)} as
+    ${prefix(conf.longStatus)}${track}. ${changes}
   </p>`;
+}
+
+function getWgHTML(conf) {
+  if (Array.isArray(conf.wg)) {
+    return htmlJoinAnd(conf.wg, (wg, idx) => {
+      return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
+    });
+  } else if (conf.wg) {
+    return html`the <a href="${conf.wgURI}">${conf.wg}</a>`;
+  }
 }
 
 export function linkToCommunity(conf, opts) {

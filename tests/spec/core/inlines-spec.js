@@ -124,6 +124,32 @@ describe("Core - Inlines", () => {
     expect(abbr.title).toBe("included abbr");
   });
 
+  it("excludes generating abbr elements in svg content", async () => {
+    const body = `
+      <section>
+        <h2>
+          <abbr title="expanded abbreviation">
+            EA
+          </abbr>
+        </h2>
+        <div id="test">
+          <svg version="1.1"
+            xmlns="http://www.w3.org/2000/svg">
+            <text>SVG EA</text>
+          </svg>
+          <p>HTML EA</p>
+        </div>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const abbrs = doc.querySelectorAll("#test abbr");
+    expect(abbrs).toHaveSize(1);
+
+    const abbr = abbrs.item(0);
+    expect(abbr.title).toBe("expanded abbreviation");
+  });
+
   it("processes inline variable syntax", async () => {
     const body = `
       <section>
@@ -309,8 +335,9 @@ describe("Core - Inlines", () => {
         [=environment
             settings
           object /
-          responsible
-          document =]
+          cross-origin
+          isolated
+          capability =]
         </p>
       </section>
     `;
@@ -325,8 +352,10 @@ describe("Core - Inlines", () => {
     const codedThingCodeElem = someCodedThing.querySelector("code");
     expect(codedThingCodeElem.textContent).toBe("Coded");
 
-    const responsibleDocLink = doc.querySelector("#multiline a");
-    expect(responsibleDocLink.hash).toBe("#responsible-document");
+    const crossIsoCapLink = doc.querySelector("#multiline a");
+    expect(crossIsoCapLink.hash).toBe(
+      "#concept-settings-object-cross-origin-isolated-capability"
+    );
   });
 
   it("proceseses `backticks` as code", async () => {
@@ -496,7 +525,9 @@ describe("Core - Inlines", () => {
 
     const [localLink, conceptLink] = doc.querySelectorAll("#test a");
     expect(localLink.hash).toBe("#dfn-foo-bar");
-    expect(conceptLink.hash).toBe("#multipart/form-data-encoding-algorithm");
+    expect(decodeURIComponent(conceptLink.hash)).toBe(
+      "#multipart/form-data-encoding-algorithm"
+    );
   });
 
   it("processes {{ forContext/term }} IDL", async () => {

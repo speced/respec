@@ -1,8 +1,8 @@
 // @ts-check
-// Module w3c/style
-// Inserts a link to the appropriate W3C style for the specification's maturity level.
-// CONFIGURATION
-//  - specStatus: the short code for the specification's maturity level or type (required)
+/**
+ * Module w3c/style
+ * Inserts a link to the appropriate W3C style for the specification's maturity level.
+ * */
 
 import { W3CNotes, recTrackStatus, registryTrackStatus } from "./headers.js";
 import { createResourceHint, linkCSS } from "../core/utils.js";
@@ -24,8 +24,10 @@ function attachFixupScript() {
   document.body.appendChild(script);
 }
 
+// Creates a collection of resource hints to improve the loading performance
+// of the W3C resources.
 function createResourceHints() {
-  /** @type ResourceHintOption[]  */
+  /** @type {ResourceHintOption[]}  */
   const opts = [
     {
       hint: "preconnect", // for W3C styles and scripts.
@@ -45,6 +47,7 @@ function createResourceHints() {
       hint: "preload", // all specs show the logo.
       href: "https://www.w3.org/StyleSheets/TR/2021/logos/W3C",
       as: "image",
+      corsMode: "anonymous",
     },
   ];
   const resourceHints = document.createDocumentFragment();
@@ -53,15 +56,18 @@ function createResourceHints() {
   }
   return resourceHints;
 }
+
 // Collect elements for insertion (document fragment)
 const elements = createResourceHints();
 
 // Opportunistically apply base style
-elements.appendChild(html`<link
-  rel="stylesheet"
-  href="https://www.w3.org/StyleSheets/TR/2021/base.css"
-  class="removeOnSave"
-/>`);
+elements.appendChild(
+  html`<link
+    rel="stylesheet"
+    href="https://www.w3.org/StyleSheets/TR/2021/base.css"
+    class="removeOnSave"
+  />`
+);
 if (!document.head.querySelector("meta[name=viewport]")) {
   // Make meta viewport the first element in the head.
   elements.prepend(
@@ -74,6 +80,10 @@ if (!document.head.querySelector("meta[name=viewport]")) {
 
 document.head.prepend(elements);
 
+/**
+ * @param {URL} linkURL
+ * @returns {(exportDoc: Document) => void}
+ */
 function styleMover(linkURL) {
   return exportDoc => {
     const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
@@ -81,6 +91,9 @@ function styleMover(linkURL) {
   };
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   const canonicalStatus = conf.specStatus?.toUpperCase() ?? "";
   let styleFile = "";
@@ -114,6 +127,9 @@ export function run(conf) {
     case "EDITOR-DRAFT-FINDING":
     case "BASE":
       styleFile = "base.css";
+      break;
+    case "MEMBER-SUBM":
+      styleFile = "W3C-Member-SUBM";
       break;
     default:
       styleFile = canUseW3CStyle ? `W3C-${conf.specStatus}` : "base.css";

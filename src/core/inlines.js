@@ -31,7 +31,7 @@ const localizationStrings = {
         /\bMUST(?:\s+NOT)?\b/,
         /\bSHOULD(?:\s+NOT)?\b/,
         /\bSHALL(?:\s+NOT)?\b/,
-        /\bMAY?\b/,
+        /\bMAY\b/,
         /\b(?:NOT\s+)?REQUIRED\b/,
         /\b(?:NOT\s+)?RECOMMENDED\b/,
         /\bOPTIONAL\b/,
@@ -98,7 +98,11 @@ function inlineElementMatches(matched) {
     }
   })();
   return html`<code
-    ><a data-xref-type="${xrefType}" data-xref-for="${xrefFor}"
+    ><a
+      data-xref-type="${xrefType}"
+      data-xref-for="${xrefFor}"
+      data-link-type="${xrefType}"
+      data-link-for="${xrefFor}"
       >${textContent}</a
     ></code
   >`;
@@ -219,7 +223,7 @@ function inlineAnchorMatches(matched) {
   const processedContent = processInlineContent(text);
   const forContext = isFor ? norm(isFor) : null;
   return html`<a
-    data-link-type="dfn"
+    data-link-type="dfn|abstract-op"
     data-link-for="${forContext}"
     data-xref-for="${forContext}"
     data-lt="${linkingText}"
@@ -270,7 +274,7 @@ export function run(conf) {
 
   // PROCESSING
   // Don't gather text nodes for these:
-  const exclusions = ["#respec-ui", ".head", "pre"];
+  const exclusions = ["#respec-ui", ".head", "pre", "svg"];
   const txts = getTextNodes(document.body, exclusions, {
     wsNodes: false, // we don't want nodes with just whitespace
   });
@@ -351,6 +355,7 @@ export function run(conf) {
  *
  */
 function splitByFor(str) {
+  /** @param {string} str */
   const cleanUp = str => str.replace("%%", "/").split("/").map(norm).join("/");
   const safeStr = str.replace("\\/", "%%");
   const lastSlashIdx = safeStr.lastIndexOf("/");

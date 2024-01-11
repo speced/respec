@@ -44,6 +44,24 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
     expect(warnings).toHaveSize(0);
   });
 
+  it("doesn't show a warning when sections have unwrapped headings", async () => {
+    const body = `
+      <section>
+        <h2>test</h2>
+        <section>
+          <h3>Test</h3>
+          <section>
+            <h4>Test</h4>
+          </section>
+        </section>
+      </section>
+    `;
+    const opts = makeStandardOps({ addSectionLinks: false, ...config }, body);
+    const doc = await makeRSDoc(opts);
+    const warnings = warningsFilter(doc);
+    expect(warnings).toHaveSize(0);
+  });
+
   it("complains when a nested section doesn't have a heading", async () => {
     const body = `
         <section>

@@ -175,6 +175,7 @@ describe("Core — dfn-index", () => {
           </pre>
           <dfn id="local-idl-1">name</dfn>
           <dfn id="local-idl-2">onpay</dfn>
+          <dfn data-cite="ttml2#profile-vocabulary-feature"><code>&lt;ttp:feature&gt;</code></dfn>
         </div>
         <p class="test" data-link-for="Employee">
           {{ name }} {{ onpay }}
@@ -187,7 +188,7 @@ describe("Core — dfn-index", () => {
         </ul>
         <ul class="test">
           <li>[= Document/fully active =]</li>
-          <li>[= environment settings object/responsible document =]</li>
+          <li>[= environment settings object/cross-origin isolated capability =]</li>
           <li>{{ Event/type }}</li>
           <li>[^ iframe/allow ^]</li>
         </ul>
@@ -197,14 +198,17 @@ describe("Core — dfn-index", () => {
         </ul>
         <ul class="test">
           <li><a data-cite="rfc6454#section-3.2">origin</a></li>
-          <li>
-            <dfn data-cite="ECMASCRIPT/#sec-json.stringify">JSON.stringify</dfn>
-          </li>
-          <li><a>JSON.stringify</a></li>
+          <li><dfn data-cite="ECMASCRIPT/#sec-json.stringify">JSON.stringify</dfn></li>
+          <li><a>JSON.stringify</a> is referenced again.</li>
+          <li><dfn data-cite="RDF11-CONCEPTS#dfn-predicate">predicate</dfn></li>
+          <li><a><code>&lt;ttp:feature&gt;</code></a></li>
         </ul>
         <ul class="test" data-testid="possible-duplicate-id">
         <li><a data-cite="ECMASCRIPT#sec-json.parse">parsing</a></li>
         <li><a data-cite="ECMASCRIPT#sec-15.12.2">parsing</a></li>
+        </ul>
+        <ul class="test" data-testid="ignore-spec-refs">
+          <li>[[[RDF11-CONCEPTS]]]</li>
         </ul>
       </section>
       <section id="index"></section>`;
@@ -218,6 +222,7 @@ describe("Core — dfn-index", () => {
     });
 
     it("lists only external terms", () => {
+      /** @param {HTMLElement} el */
       const getTermAndType = el => el.textContent.trim().split(/\s\(/)[0];
       const terms = [...index.querySelectorAll(".index-term")].map(
         getTermAndType
@@ -231,12 +236,14 @@ describe("Core — dfn-index", () => {
         "parsing",
         "parsing",
         "allow attribute",
+        "cross-origin isolated capability",
         "EventHandler",
         "fully active",
         "iframe element",
-        "responsible document",
         "ASCII uppercase",
+        "predicate",
         "origin",
+        "<ttp:feature>",
         "AbortError exception",
         "boolean type",
         "[Default] extended attribute",
@@ -251,7 +258,7 @@ describe("Core — dfn-index", () => {
 
     it("lists terms grouped by specs", () => {
       const bySpecs = index.querySelectorAll("ul.index > li");
-      expect(bySpecs).toHaveSize(6);
+      expect(bySpecs).toHaveSize(8);
       expect(bySpecs[0].textContent.trim()).toMatch(
         /\[DOM\] defines the following:/
       );
@@ -264,7 +271,9 @@ describe("Core — dfn-index", () => {
         "ECMASCRIPT",
         "HTML",
         "INFRA",
+        "RDF11-CONCEPTS",
         "RFC6454",
+        "TTML2",
         "WEBIDL",
       ]);
 
@@ -294,6 +303,7 @@ describe("Core — dfn-index", () => {
     it("suffixes terms with type information", () => {
       const [
         iframeAllowAttribute,
+        crossIsolatedCapability,
         eventHandlerDict,
         fullyActive,
         iframeElement,
@@ -301,6 +311,7 @@ describe("Core — dfn-index", () => {
         el => el.textContent
       );
       expect(iframeAllowAttribute).toMatch(/^allow attribute \(for/);
+      expect(crossIsolatedCapability).toMatch(/capability \(for/);
       expect(eventHandlerDict).toBe("EventHandler");
       expect(fullyActive).toMatch(/^fully active \(for/);
       expect(iframeElement).toBe("iframe element");
@@ -334,20 +345,20 @@ describe("Core — dfn-index", () => {
       expect(allow.textContent).toBe("allow");
       expect(iframe.textContent).toBe("iframe");
 
-      const fullyActive = termsInHTML[2];
+      const crossIsolatedCapability = termsInHTML[1];
+      expect(crossIsolatedCapability.textContent.trim()).toMatch(
+        /^cross-origin isolated capability/
+      );
+      expect(crossIsolatedCapability.textContent.trim()).toMatch(
+        /\(for environment settings object\)$/
+      );
+      expect(crossIsolatedCapability.querySelectorAll("code")).toHaveSize(0);
+
+      const fullyActive = termsInHTML[3];
       expect(fullyActive.textContent.trim()).toMatch(/^fully active/);
       expect(fullyActive.textContent.trim()).toMatch(/\(for Document\)$/);
       expect(fullyActive.querySelectorAll("code")).toHaveSize(1);
       expect(fullyActive.querySelector("code").textContent).toBe("Document");
-
-      const responsibleDocument = termsInHTML[4];
-      expect(responsibleDocument.textContent.trim()).toMatch(
-        /^responsible document/
-      );
-      expect(responsibleDocument.textContent.trim()).toMatch(
-        /\(for environment settings object\)$/
-      );
-      expect(responsibleDocument.querySelectorAll("code")).toHaveSize(0);
     });
 
     it("opens dfnPanel on term click", async () => {

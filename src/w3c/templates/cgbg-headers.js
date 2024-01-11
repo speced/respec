@@ -1,6 +1,8 @@
 // @ts-check
+import { getSpecSubTitleElem, l10n, renderFeedback } from "./headers.js";
+import { W3CDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
-import { l10n } from "./headers.js";
+import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
 
@@ -17,14 +19,15 @@ export default (conf, options) => {
     ${conf.logos.length
       ? html`<p class="logos">${conf.logos.map(showLogo)}</p>`
       : ""}
-    ${specTitleElem}
-    ${conf.subtitle ? html`<h2 id="subtitle">${conf.subtitle}</h2>` : ""}
-    <h2>
-      ${conf.longStatus}
-      <time class="dt-published" datetime="${conf.dashDate}"
-        >${conf.publishHumanDate}</time
+    ${specTitleElem} ${getSpecSubTitleElem(conf)}
+    <p id="w3c-state">
+      <a href="https://www.w3.org/standards/types#reports"
+        >${conf.longStatus}</a
       >
-    </h2>
+      <time class="dt-published" datetime="${conf.dashDate}"
+        >${W3CDate.format(conf.publishDate)}</time
+      >
+    </p>
     <dl>
       ${conf.thisVersion
         ? html`<dt>${l10n.this_version}</dt>
@@ -104,6 +107,11 @@ export default (conf, options) => {
             ${showPeople(conf, "authors")}
           `
         : ""}
+      ${conf.github || conf.wgPublicList
+        ? html`<dt>${l10n.feedback}</dt>
+            ${renderFeedback(conf)}`
+        : ""}
+      ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
     </dl>
     ${conf.alternateFormats
       ? html`<p>
@@ -116,9 +124,7 @@ export default (conf, options) => {
     ${existingCopyright
       ? existingCopyright
       : html`<p class="copyright">
-          <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
-            >Copyright</a
-          >
+          <a href="https://www.w3.org/policies/#copyright">Copyright</a>
           &copy;
           ${conf.copyrightStart
             ? `${conf.copyrightStart}-`

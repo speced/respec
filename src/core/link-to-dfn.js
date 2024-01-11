@@ -70,6 +70,10 @@ export async function run(conf) {
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
   );
   for (const anchor of localAnchors) {
+    if (!anchor.dataset?.linkType && anchor.dataset?.xrefType) {
+      possibleExternalLinks.push(anchor);
+      continue;
+    }
     const dfn = findMatchingDfn(anchor, titleToDfns);
     if (dfn) {
       const foundLocalMatch = processAnchor(anchor, dfn, titleToDfns);
@@ -120,28 +124,40 @@ function collectDfns(title) {
   const result = new Map();
   const duplicates = [];
   for (const dfn of definitionMap.get(title)) {
-    const { dfnFor = "", dfnType = "dfn" } = dfn.dataset;
-    // check for potential duplicate definition
-    if (result.has(dfnFor) && result.get(dfnFor).has(dfnType)) {
-      const oldDfn = result.get(dfnFor).get(dfnType);
-      // We want <dfn> definitions to take precedence over
-      // definitions from WebIDL. WebIDL definitions wind
-      // up as <span>s instead of <dfn>.
-      const oldIsDfn = oldDfn.localName === "dfn";
-      const newIsDfn = dfn.localName === "dfn";
-      const isSameDfnType = dfnType === (oldDfn.dataset.dfnType || "dfn");
-      const isSameDfnFor = dfnFor === (oldDfn.dataset.dfnFor || "");
-      if (oldIsDfn && newIsDfn && isSameDfnType && isSameDfnFor) {
-        duplicates.push(dfn);
-        continue;
+    const { dfnType = "dfn" } = dfn.dataset;
+    const dfnFors = dfn.dataset.dfnFor?.split(",").map(s => s.trim()) ?? [""];
+    for (const dfnFor of dfnFors) {
+      // check for potential duplicate definition
+      if (result.has(dfnFor) && result.get(dfnFor).has(dfnType)) {
+        const oldDfn = result.get(dfnFor).get(dfnType);
+        // We want <dfn> definitions to take precedence over
+        // definitions from WebIDL. WebIDL definitions wind
+        // up as <span>s instead of <dfn>.
+        const oldIsDfn = oldDfn.localName === "dfn";
+        const newIsDfn = dfn.localName === "dfn";
+        const isSameDfnType = dfnType === (oldDfn.dataset.dfnType || "dfn");
+        const isSameDfnFor =
+          (!dfnFor && !oldDfn.dataset.dfnFor) ||
+          oldDfn.dataset.dfnFor
+            ?.split(",")
+            .map(s => s.trim())
+            .includes(dfnFor);
+        if (oldIsDfn && newIsDfn && isSameDfnType && isSameDfnFor) {
+          duplicates.push(dfn);
+          continue;
+        }
       }
+      if (!result.has(dfnFor)) {
+        result.set(dfnFor, new Map());
+      }
+      result.get(dfnFor).set(dfnType, dfn);
+      // We register non-dfn terms under the generic "idl" type as well
+      // for backwards-compatibility
+      if ("idl" in dfn.dataset || dfnType !== "dfn") {
+        result.get(dfnFor).set("idl", dfn);
+      }
+      addId(dfn, "dfn", title);
     }
-    const type = "idl" in dfn.dataset || dfnType !== "dfn" ? "idl" : "dfn";
-    if (!result.has(dfnFor)) {
-      result.set(dfnFor, new Map());
-    }
-    result.get(dfnFor).set(type, dfn);
-    addId(dfn, "dfn", title);
   }
 
   return { result, duplicates };
@@ -164,8 +180,12 @@ function findMatchingDfn(anchor, titleToDfns) {
   const dfnsByType = titleToDfns.get(target.title).get(target.for);
   const { linkType } = anchor.dataset;
   if (linkType) {
-    const type = linkType === "dfn" ? "dfn" : "idl";
-    return dfnsByType.get(type) || dfnsByType.get("dfn");
+    for (const type of linkType.split("|")) {
+      if (dfnsByType.get(type)) {
+        return dfnsByType.get(type);
+      }
+    }
+    return dfnsByType.get("dfn");
   } else {
     // Assumption: if it's for something, it's more likely IDL.
     const type = target.for ? "idl" : "dfn";
@@ -184,7 +204,15 @@ function processAnchor(anchor, dfn, titleToDfns) {
   const { dfnFor } = dfn.dataset;
   if (dfn.dataset.cite) {
     anchor.dataset.cite = dfn.dataset.cite;
-  } else if (linkFor && !titleToDfns.get(linkFor) && linkFor !== dfnFor) {
+  } else if (
+    linkFor &&
+    !titleToDfns.get(linkFor) &&
+    dfnFor &&
+    !dfnFor
+      .split(",")
+      .map(s => s.trim())
+      .includes(linkFor)
+  ) {
     noLocalMatch = true;
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references

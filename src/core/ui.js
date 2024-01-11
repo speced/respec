@@ -9,6 +9,7 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 import { html, pluralize } from "./import-maps.js";
+import { reindent, xmlEscape } from "./utils.js";
 import css from "../styles/ui.css.js";
 import { markdownToHtml } from "./markdown.js";
 import { sub } from "./pubsubhub.js";
@@ -266,10 +267,15 @@ function rsErrorToHTML(err) {
   const plugin = err.plugin
     ? `<p class="respec-plugin">(plugin: "${err.plugin}")</p>`
     : "";
+
   const hint = err.hint
-    ? `\n<p class="respec-hint"><strong>How to fix:</strong> ${markdownToHtml(
-        err.hint,
-        { inline: true }
+    ? `\n${markdownToHtml(
+        `<p class="respec-hint"><strong>How to fix:</strong> ${reindent(
+          err.hint
+        )}`,
+        {
+          inline: !err.hint.includes("\n"),
+        }
       )}\n`
     : "";
   const elements = Array.isArray(err.elements)
@@ -281,7 +287,7 @@ function rsErrorToHTML(err) {
   const details = err.details
     ? `\n\n<details>\n${err.details}\n</details>\n`
     : "";
-  const msg = markdownToHtml(`**${err.message}**`, { inline: true });
+  const msg = markdownToHtml(`**${xmlEscape(err.message)}**`, { inline: true });
   const result = `${msg}${hint}${elements}${details}${plugin}`;
   return result;
 }

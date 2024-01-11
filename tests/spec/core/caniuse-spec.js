@@ -9,9 +9,11 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
+import { BROWSERS } from "../../../src/core/caniuse.js";
+
 describe("Core — Can I Use", () => {
   afterAll(flushIframes);
-  const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.html`;
+  const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.json`;
 
   it("uses meaningful defaults", async () => {
     const ops = makeStandardOps({
@@ -20,37 +22,35 @@ describe("Core — Can I Use", () => {
         apiURL,
       },
     });
+    const defaultBrowsers = new Set(BROWSERS.keys());
+    defaultBrowsers.delete("op_mob");
+    defaultBrowsers.delete("opera");
+
     const doc = await makeRSDoc(ops);
-    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
-    expect(caniuse.versions).toBe(4);
-    expect(caniuse.browsers).toBeUndefined(); // uses server default
+    expect(caniuse.browsers).toEqual([...defaultBrowsers]);
   });
 
   it("allows overriding defaults", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
-        versions: 10,
         browsers: ["firefox", "chrome"],
         apiURL,
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.browsers).toEqual(["firefox", "chrome"]);
-    expect(caniuse.versions).toBe(10);
   });
 
   it("does nothing if caniuse is not enabled", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
-    await doc.respec.ready;
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse).toBeFalsy();
@@ -62,11 +62,10 @@ describe("Core — Can I Use", () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
-        apiURL: "DOES-NOT-EXIST",
+        apiURL: `${window.location.origin}/tests/data/caniuse/DOES-NOT-EXIST`,
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respec.ready;
 
     const link = doc.querySelector(".caniuse-stats a");
     expect(link.textContent).toBe("caniuse.com");
@@ -78,35 +77,45 @@ describe("Core — Can I Use", () => {
       caniuse: {
         feature: "FEATURE",
         apiURL,
-        browsers: ["firefox", "chrome", "opera"],
-        versions: 5,
+        browsers: ["chrome", "firefox", "ios_saf", "opera"],
       },
     });
     const doc = await makeRSDoc(ops);
-    await doc.respec.ready;
-
     const stats = doc.querySelector(".caniuse-stats");
+    const cells = stats.querySelectorAll(".caniuse-cell");
+    expect(cells).toHaveSize(4);
 
-    const moreInfoLink = stats.querySelector("a");
+    // Check a cell
+    const [cell] = cells;
+    expect(cell.title).toBe(
+      "Almost supported (aka Partial support) since Firefox version 66."
+    );
+    expect(cell.getAttribute("aria-label")).toBe(
+      "FEATURE is almost supported (aka Partial support) since Firefox version 66 on desktop."
+    );
+
+    // The logo images (sorted by deskop/mobile)
+    const [firefox, chrome, safari] =
+      stats.querySelectorAll(".caniuse-browser");
+    expect(firefox.src).toContain("firefox.svg");
+    expect(chrome.src).toContain("chrome.svg");
+    expect(safari.src).toContain("safari-ios.svg");
+
+    expect(firefox.width).toBe(20);
+    expect(firefox.height).toBe(20);
+    expect(chrome.alt).toBe("Android Chrome logo");
+
+    // The version numbers
+    const [firefoxVersion, chromeVersion, safariVersion] =
+      stats.querySelectorAll(".browser-version");
+    expect(chromeVersion.textContent).toBe("78");
+    expect(firefoxVersion.textContent).toBe("66");
+    expect(safariVersion.textContent).toBe("—");
+
+    // More info link
+    const moreInfoLink = cells.item(3);
     expect(moreInfoLink.href).toBe("https://caniuse.com/FEATURE");
     expect(moreInfoLink.textContent.trim()).toBe("More info");
-
-    const browsers = stats.querySelectorAll(".caniuse-browser");
-    expect(browsers).toHaveSize(2); // not 3, as there is no data for "opera"
-    const [firefox, chrome] = browsers;
-
-    const chromeVersions = chrome.querySelectorAll("ul li.caniuse-cell");
-    expect(chromeVersions).toHaveSize(2);
-
-    const firefoxVersions = firefox.querySelectorAll("ul li.caniuse-cell");
-    expect(firefoxVersions).toHaveSize(4);
-
-    const firefoxButton = firefox.querySelector("button");
-    expect(firefoxButton.textContent.trim()).toBe("Firefox 61");
-    expect(firefoxButton.classList.value).toBe("caniuse-cell y");
-
-    expect(firefoxVersions[0].textContent.trim()).toBe("60");
-    expect(firefoxVersions[0].classList.value).toBe("caniuse-cell n d");
   });
 
   it("removes irrelevant config for caniuse feature", async () => {
@@ -117,16 +126,15 @@ describe("Core — Can I Use", () => {
     opsWithCaniuse.config.publishDate = "1999-12-11";
     opsWithCaniuse.config.caniuse = {
       feature: "FEATURE",
-      apiURL: `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`,
+      apiURL,
     };
     const doc = await makeRSDoc(opsWithCaniuse);
-    await doc.respec.ready;
     const text = doc.getElementById("initialUserConfig").textContent;
     const json = JSON.parse(text);
     expect(json.caniuse).toBe("FEATURE");
   });
 
-  it("includes caniuse by default in exported documents", async () => {
+  it("does not includes caniuse by default in exported documents", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
@@ -135,10 +143,7 @@ describe("Core — Can I Use", () => {
     });
     const exportedDoc = await getExportedDoc(await makeRSDoc(ops));
     // make sure there is a style element with id caniuse-stylesheet
-    const style = exportedDoc.querySelector("#caniuse-stylesheet");
-    expect(style).toBeTruthy();
-    // make sure that removeOnSave is not present in classlist
-    expect(style.classList.contains("removeOnSave")).toBeFalsy();
+    expect(exportedDoc.querySelector("#caniuse-stylesheet")).toBeFalsy();
   });
 
   it("includes caniuse cells via explicit removeOnSave being false", async () => {
@@ -170,5 +175,62 @@ describe("Core — Can I Use", () => {
     const style = exportedDoc.querySelector("#caniuse-stylesheet");
     expect(style).toBeNull();
     expect(exportedDoc.querySelector(".caniuse-browser")).toBeFalsy();
+  });
+
+  it("loads every BROWSER logo from www.w3.org", async () => {
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "payment-request",
+        browsers: [...BROWSERS.keys()],
+      },
+    });
+    const doc = await makeRSDoc(ops);
+    const images = [
+      ...doc.querySelectorAll(
+        `.caniuse-stats img.caniuse-browser[src^='https://www.w3.org/assets/logos/browser-logos/']`
+      ),
+    ];
+    expect(images).toHaveSize(BROWSERS.size);
+    const promises = images
+      .filter(img => !img.complete)
+      .map(img => {
+        return new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = () => {
+            reject(new Error(`Image failed to load: ${img.src}`));
+          };
+        });
+      });
+    await Promise.all(promises);
+    expect(images.every(img => img.complete)).toBeTruthy();
+  });
+
+  it("visually groups results into desktop and mobile", async () => {
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "FEATURE",
+        apiURL,
+      },
+    });
+    const doc = await makeRSDoc(ops);
+    const stats = doc.querySelector(".caniuse-stats");
+    const groups = stats.querySelectorAll(".caniuse-group");
+    expect(groups).toHaveSize(2);
+    const [desktop, mobile] = groups;
+    const mobileBrowsers = mobile.querySelectorAll(".caniuse-browser");
+    expect(mobileBrowsers).toHaveSize(2);
+    const [chrome, safari] = mobileBrowsers;
+    expect(chrome.src).toContain("chrome.svg");
+    expect(safari.src).toContain("safari-ios.svg");
+    const desktopBrowsers = desktop.querySelectorAll(".caniuse-browser");
+    expect(desktopBrowsers).toHaveSize(1);
+    const [firefox] = desktopBrowsers;
+    expect(firefox.src).toContain("firefox.svg");
+    expect(desktop.querySelector(".caniuse-type > span").textContent).toBe(
+      "desktop"
+    );
+    expect(mobile.querySelector(".caniuse-type > span").textContent).toBe(
+      "mobile"
+    );
   });
 });

@@ -55,7 +55,7 @@ const Builder = {
     const inputOptions = {
       input: require.resolve(`../profiles/${name}.js`),
       plugins: [
-        !debug && require("rollup-plugin-terser").terser(),
+        !debug && require("@rollup/plugin-terser").default(),
         alias({
           entries: [{ find: /^text!(.*)/, replacement: "./$1" }],
         }),
@@ -80,12 +80,12 @@ const Builder = {
           warn(warning);
         }
       },
-      inlineDynamicImports: true,
     };
 
     /** @type {import("rollup").OutputOptions} */
     const outputOptions = {
       file: outPath,
+      inlineDynamicImports: true,
       format: "iife",
       sourcemap: true,
       banner: `window.respecVersion = "${version}";\n`,
@@ -133,7 +133,7 @@ const Builder = {
 
 exports.Builder = Builder;
 if (require.main === module) {
-  sade("./tools/builder.js <profile>", true)
+  sade("./tools/builder.cjs <profile>", true)
     .describe(
       "Builder builds a ReSpec profile. Profile must be in the profiles/ folder (e.g., w3c.js)"
     )

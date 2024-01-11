@@ -3,12 +3,15 @@
  * Module core/data-cite
  *
  * Allows citing other specifications using anchor elements. Simply add
- * "data-cite" and key of specification.
+ * "data-cite" and key of the specification.
  *
  * This module links elements that have `data-cite` attributes by converting
  * `data-cite` to `href` attributes. `data-cite` attributes are added to markup
  * directly by the author as well as via other modules like core/xref.
+ *
+ * @module core/data-cite
  */
+
 import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
 import {
   refTypeFromContext,
@@ -20,18 +23,22 @@ import { sub } from "./pubsubhub.js";
 export const name = "core/data-cite";
 
 /**
- * An arbitrary constant value used as an alias to current spec's shortname. It
+ * An arbitrary constant value used as an alias to the current spec's shortname. It
  * exists to simplify code as passing `conf.shortName` everywhere gets clumsy.
+ * @type {string}
  */
 export const THIS_SPEC = "__SPEC__";
 
 /**
- * @param {CiteDetails} citeDetails
+ * Gets the link properties for the given citation details.
+ * @param {CiteDetails} citeDetails - The citation details.
+ * @returns {Promise<LinkProps|null>} The link properties or null if not found.
  */
 async function getLinkProps(citeDetails) {
   const { key, frag, path, href: canonicalHref } = citeDetails;
   let href = "";
   let title = "";
+
   // This is just referring to this document
   if (key === THIS_SPEC) {
     href = document.location.href;
@@ -44,6 +51,7 @@ async function getLinkProps(citeDetails) {
     href = entry.href;
     title = entry.title;
   }
+
   if (canonicalHref) {
     // Xref gave us a canonical link, so let's use that.
     href = canonicalHref;
@@ -57,15 +65,15 @@ async function getLinkProps(citeDetails) {
       href = new URL(frag, href).href;
     }
   }
+
   return { href, title };
 }
 
 /**
- * @param {HTMLElement} elem
- * @param {object} linkProps
- * @param {string} linkProps.href
- * @param {string} linkProps.title
- * @param {CiteDetails} citeDetails
+ * Links the given element with the provided link properties and citation details.
+ * @param {HTMLElement} elem - The element to link.
+ * @param {LinkProps} linkProps - The link properties.
+ * @param {CiteDetails} citeDetails - The citation details.
  */
 function linkElem(elem, linkProps, citeDetails) {
   const { href, title } = linkProps;
@@ -88,6 +96,9 @@ function linkElem(elem, linkProps, citeDetails) {
     case "dfn": {
       const anchor = document.createElement("a");
       anchor.href = href;
+      anchor.dataset.cite = citeDetails.key;
+      anchor.dataset.citePath = citeDetails.path;
+      anchor.dataset.citeFrag = citeDetails.frag;
       if (!elem.textContent) {
         anchor.textContent = title;
         elem.append(anchor);
@@ -100,7 +111,7 @@ function linkElem(elem, linkProps, citeDetails) {
         elem.append(cite);
       }
       if ("export" in elem.dataset) {
-        const msg = "Exporting an linked external definition is not allowed.";
+        const msg = "Exporting a linked external definition is not allowed.";
         const hint = "Please remove the `data-export` attribute.";
         showError(msg, name, { hint, elements: [elem] });
         delete elem.dataset.export;
@@ -127,14 +138,9 @@ const findFrag = makeComponentFinder("#");
 const findPath = makeComponentFinder("/");
 
 /**
- * @typedef {object} CiteDetails
- * @property {string} key
- * @property {boolean} isNormative
- * @property {string} frag
- * @property {string} path
- * @property {string} [href] - canonical href coming from xref
- * @param {HTMLElement} elem
- * @return {CiteDetails};
+ * Converts the given raw key to citation details.
+ * @param {HTMLElement} elem - The element containing the citation details.
+ * @returns {CiteDetails} The citation details.
  */
 export function toCiteDetails(elem) {
   const { dataset } = elem;
@@ -151,9 +157,10 @@ export function toCiteDetails(elem) {
       ? toCiteDetails(closest)
       : { key: THIS_SPEC, isNormative: false };
     dataset.cite = closestIsNormative ? parentKey : `?${parentKey}`;
-    dataset.citeFrag = rawKey.replace("#", ""); // the key is acting as fragment
+    dataset.citeFrag = rawKey.replace("#", ""); // the key is acting as a fragment
     return toCiteDetails(elem);
   }
+
   const frag = citeFrag ? `#${citeFrag}` : findFrag(rawKey);
   const path = citePath || findPath(rawKey).split("#")[0]; // path is always before "#"
   const { type } = refTypeFromContext(rawKey, elem);
@@ -165,6 +172,9 @@ export function toCiteDetails(elem) {
   return details;
 }
 
+/**
+ * Runs the data-cite processing on elements with the data-cite attribute.
+ */
 export async function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
@@ -192,8 +202,8 @@ export async function run() {
 }
 
 /**
- * Fetch and update `biblio` with entries corresponding to given elements
- * @param {HTMLElement[]} elems
+ * Fetches and updates `biblio` with entries corresponding to the given elements.
+ * @param {HTMLElement[]} elems - The elements requiring biblio entries.
  */
 async function updateBiblio(elems) {
   const promisesForBibEntries = elems.map(toCiteDetails).map(async entry => {
@@ -212,7 +222,10 @@ async function updateBiblio(elems) {
   }
 }
 
-/** @param {Document} doc */
+/**
+ * Cleans up the data-cite attributes from the document.
+ * @param {Document} doc - The document to cleanup.
+ */
 function cleanup(doc) {
   const attrToRemove = ["data-cite", "data-cite-frag", "data-cite-path"];
   const elems = doc.querySelectorAll("a[data-cite], dfn[data-cite]");

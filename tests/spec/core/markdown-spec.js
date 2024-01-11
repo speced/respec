@@ -315,9 +315,7 @@ describe("Core - Markdown", () => {
     expect(webidlBlock.querySelector(".respec-button-copy-paste")).toBeTruthy();
 
     expect(jsBlock.firstElementChild.localName).toBe("code");
-    expect(
-      jsBlock.querySelector("code.hljs").classList.contains("js")
-    ).toBeTruthy();
+    expect(jsBlock.querySelector("code.hljs").classList).toContain("js");
     expect(jsBlock.querySelector("code.hljs span")).not.toBeNull();
     expect(jsBlock.querySelector(".respec-button-copy-paste")).toBeNull();
 
@@ -574,6 +572,44 @@ function getAnswer() {
       expect(h2.textContent).toBe("1. header");
       expect(p.localName).toBe("p");
     });
+  });
+
+  it("renders image as <figure> if title is present", async () => {
+    const body = `
+      ## pass
+
+      <div id="test">
+
+      ![img alt](regular-img.png)
+      ![figure alt](figure.png "This is figcaption")
+      </div>
+    `;
+    const ops = makeStandardOps({ format: "markdown" }, body);
+    ops.abstract = null;
+    const doc = await makeRSDoc(ops);
+
+    const [img, figure] = doc.querySelectorAll(
+      "#test > p > img, #test > figure"
+    );
+    expect(img).toBeTruthy();
+    expect(figure).toBeTruthy();
+
+    expect(img.localName).toBe("img");
+    expect(img.getAttribute("src")).toBe("regular-img.png");
+    expect(img.getAttribute("alt")).toBe("img alt");
+    expect(img.getAttribute("title")).toBeNull();
+    expect(img.querySelector("figcaption")).toBeNull();
+
+    expect(figure.localName).toBe("figure");
+    const figImg = figure.querySelector("img");
+    expect(figImg).not.toBeNull();
+    expect(figImg.getAttribute("src")).toBe("figure.png");
+    expect(figImg.getAttribute("alt")).toBe("figure alt");
+    expect(figImg.getAttribute("title")).toBeNull();
+    const figCaption = figure.querySelector("figcaption");
+    expect(figCaption).not.toBeNull();
+    expect(figCaption.textContent).toContain("This is figcaption");
+    expect(figCaption.textContent).not.toContain("figure alt");
   });
 
   it("retains heading order with generated sections", async () => {

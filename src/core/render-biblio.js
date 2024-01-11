@@ -53,7 +53,6 @@ const REF_STATUSES = new Map([
   ["ED", "W3C Editor's Draft"],
   ["LCWD", "W3C Last Call Working Draft"],
   ["NOTE", "W3C Working Group Note"],
-  ["PER", "W3C Proposed Edited Recommendation"],
   ["PR", "W3C Proposed Recommendation"],
   ["REC", "W3C Recommendation"],
   ["WD", "W3C Working Draft"],

@@ -38,6 +38,10 @@ export function run() {
         processFigure(matchingElement, id, a);
         break;
       }
+      case "table": {
+        processTable(matchingElement, id, a);
+        break;
+      }
       case "aside":
       case "div": {
         processBox(matchingElement, id, a);
@@ -78,18 +82,49 @@ function processFigure(matchingElement, id, a) {
     showError(msg, name, { title, elements: [a] });
     return;
   }
-  // remove the figure's title
-  const children = [...makeSafeCopy(figcaption).childNodes].filter(
+  // get figure label and remove the fig-number class
+  const children = [
+    ...makeSafeCopy(figcaption.querySelector(".self-link")).childNodes,
+  ].map(node => {
     // @ts-ignore
-    node => !node.classList || !node.classList.contains("fig-title")
-  );
-  // drop an empty space at the end.
-  children.pop();
+    node.classList?.remove("figno");
+    return node;
+  });
   a.append(...children);
   a.classList.add("fig-ref");
   const figTitle = figcaption.querySelector(".fig-title");
   if (!a.hasAttribute("title") && figTitle) {
     a.title = norm(figTitle.textContent);
+  }
+}
+
+function processTable(matchingTable, id, a) {
+  if (!matchingTable.classList.contains("numbered")) {
+    return;
+  }
+  const caption = matchingTable.querySelector("caption");
+  if (!caption) {
+    a.textContent = a.getAttribute("href");
+    const msg = `Found matching table "${id}", but table is lacking a \`<caption>\`.`;
+    const title = "Missing caption in referenced table.";
+    showError(msg, name, { title, elements: [a] });
+    return;
+  }
+
+  // get table label and remove the fig-number class
+  const children = [
+    ...makeSafeCopy(caption.querySelector(".self-link")).childNodes,
+  ].map(node => {
+    // @ts-ignore
+    // @ts-ignore
+    node.classList?.remove("tableno");
+    return node;
+  });
+  a.append(...children);
+  a.classList.add("table-ref");
+  const tableTitle = caption.querySelector(".table-title");
+  if (!a.hasAttribute("title") && tableTitle) {
+    a.title = norm(tableTitle.textContent);
   }
 }
 

@@ -9,5 +9,9 @@
   },
   {
     "login": "buzz_aldrin"
+  },
+  {
+    "login": "anotherBot[bot]",
+    "name": "Another Robot"
   }
 ]

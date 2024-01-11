@@ -81,7 +81,7 @@
 //          intended to be pushed to the WHATWG.
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", (default) the W3C Software and Document License
-//            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+//            https://www.w3.org/copyright/software-license-2023/
 import {
   ISODate,
   codedJoinAnd,
@@ -114,6 +114,7 @@ const status2maturity = {
   LS: "WD",
   LD: "WD",
   FPWD: "WD",
+  "Member-SUBM": "SUBM",
 };
 
 export const status2text = {
@@ -130,7 +131,6 @@ export const status2text = {
   CR: "Candidate Recommendation",
   CRD: "Candidate Recommendation",
   PR: "Proposed Recommendation",
-  PER: "Proposed Edited Recommendation",
   REC: "Recommendation",
   DISC: "Discontinued Draft",
   RSCND: "Rescinded Recommendation",
@@ -177,15 +177,14 @@ export const status2track = {
 };
 export const W3CNotes = ["DNOTE", "NOTE", "STMT"];
 export const recTrackStatus = [
-  "FPWD",
-  "WD",
   "CR",
   "CRD",
-  "PR",
-  "PER",
-  "REC",
   "DISC",
+  "FPWD",
+  "PR",
+  "REC",
   "RSCND",
+  "WD",
 ];
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const tagStatus = ["draft-finding", "finding", "editor-draft-finding"];
@@ -222,7 +221,7 @@ export const licenses = new Map([
     {
       name: "W3C Software Notice and License",
       short: "W3C Software",
-      url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
+      url: "https://www.w3.org/copyright/software-license-2002/",
     },
   ],
   [
@@ -230,7 +229,7 @@ export const licenses = new Map([
     {
       name: "W3C Software and Document Notice and License",
       short: "permissive document license",
-      url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+      url: "https://www.w3.org/copyright/software-license-2023/",
     },
   ],
   [
@@ -246,7 +245,7 @@ export const licenses = new Map([
     {
       name: "W3C Document License",
       short: "document use",
-      url: "https://www.w3.org/Consortium/Legal/copyright-documents",
+      url: "https://www.w3.org/copyright/document-license/",
     },
   ],
   [
@@ -332,7 +331,6 @@ export async function run(conf) {
   conf.isMO = conf.specStatus === "MO";
   conf.isNote = W3CNotes.includes(conf.specStatus);
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
-  conf.isPER = conf.specStatus === "PER";
   conf.isPR = conf.specStatus === "PR";
   conf.isRecTrack = recTrackStatus.includes(conf.specStatus);
   conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
@@ -388,7 +386,7 @@ export async function run(conf) {
     const { shortName, publishDate } = conf;
     const date = concatDate(publishDate);
     const docVersion = `${maturity}-${shortName}-${date}`;
-    const year = [...recTrackStatus, "Member-SUBM"].includes(conf.specStatus)
+    const year = [...trStatus, "Member-SUBM"].includes(conf.specStatus)
       ? `${publishDate.getUTCFullYear()}/`
       : "";
     conf.thisVersion = w3Url(`${pubSpace}/${year}${docVersion}/`);
@@ -450,6 +448,16 @@ export async function run(conf) {
     const msg = "At least one editor is required.";
     const hint = docLink`Add one or more editors using the ${"[editors]"} configuration option.`;
     showError(msg, name, { hint });
+  } else if (conf.editors.length && conf.isRecTrack) {
+    // check that every editor has w3cid
+    conf.editors.forEach((editor, i) => {
+      if (editor.w3cid) return;
+      const msg = docLink`Editor ${
+        editor.name ? `"${editor.name}"` : `number ${i + 1}`
+      } is missing their ${"[w3cid]"}.`;
+      const hint = docLink`See ${"[w3cid]"} for instructions for how to retrieve it and add it.`;
+      showError(msg, name, { hint });
+    });
   }
 
   if (conf.alternateFormats?.some(({ uri, label }) => !uri || !label)) {
@@ -457,7 +465,7 @@ export async function run(conf) {
     showError(msg, name);
   }
   if (conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
-  if (conf.isRec && !conf.errata) {
+  if (conf.isRec && !conf.errata && !conf.revisionTypes?.length) {
     const msg = "Recommendations must have an errata link.";
     const hint = docLink`Add an ${"[errata]"} URL to your ${"[respecConfig]"}.`;
     showError(msg, name, { hint });
@@ -537,10 +545,6 @@ export async function run(conf) {
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
-    conf.wgHTML = htmlJoinAnd(conf.wg, (wg, idx) => {
-      return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
-    });
-
     conf.wgPatentHTML = htmlJoinAnd(conf.wg, (wg, i) => {
       return html`a
         <a href="${conf.wgPatentURI[i]}" rel="disclosure"
@@ -549,9 +553,6 @@ export async function run(conf) {
     });
   } else {
     conf.multipleWGs = false;
-    if (conf.wg) {
-      conf.wgHTML = html`the <a href="${conf.wgURI}">${conf.wg}</a>`;
-    }
   }
   if (conf.isPR && !conf.crEnd) {
     const msg = docLink`${"[specStatus]"} is "PR" but no ${"[crEnd]"} is specified in the ${"[respecConfig]"} (needed to indicate end of previous CR).`;
@@ -570,12 +571,6 @@ export async function run(conf) {
   }
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
 
-  if (conf.isPER && !conf.perEnd) {
-    const msg = docLink`${"[specStatus]"} is "PER", but no ${"[perEnd]"} is specified.`;
-    showError(msg, name);
-  }
-  conf.perEnd = validateDateAndRecover(conf, "perEnd");
-
   if (conf.hasOwnProperty("updateableRec")) {
     const msg = "Configuration option `updateableRec` is deprecated.";
     const hint = docLink`Add an ${"[`updateable-rec`|#updateable-rec-class]"} CSS class to the Status of This Document section instead.`;
@@ -586,7 +581,12 @@ export async function run(conf) {
   }
 
   conf.updateableRec = sotd.classList.contains("updateable-rec");
-  const revisionTypes = ["addition", "correction"];
+  const revisionTypes = [
+    "addition",
+    "correction",
+    "proposed-addition",
+    "proposed-correction",
+  ];
   if (conf.isRec && conf.revisionTypes?.length > 0) {
     if (conf.revisionTypes.some(x => !revisionTypes.includes(x))) {
       const unknownRevisionTypes = conf.revisionTypes.filter(
@@ -600,8 +600,12 @@ export async function run(conf) {
       )}.`;
       showError(msg, name, { hint });
     }
-    if (conf.revisionTypes.includes("addition") && !conf.updateableRec) {
-      const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as a allowing new features.`;
+    if (
+      (conf.revisionTypes.includes("proposed-addition") ||
+        conf.revisionTypes.includes("addition")) &&
+      !conf.updateableRec
+    ) {
+      const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as allowing new features.`;
       showError(msg, name);
     }
   }
@@ -611,6 +615,9 @@ export async function run(conf) {
     conf.updateableRec &&
     conf.revisionTypes &&
     conf.revisionTypes.length > 0 &&
+    ["proposed-addition", "proposed-correction"].some(type =>
+      conf.revisionTypes.includes(type)
+    ) &&
     !conf.revisedRecEnd
   ) {
     const msg = docLink`${"[specStatus]"} is "REC" with proposed corrections or additions but no ${"[revisedRecEnd]"} is specified in the ${"[respecConfig]"}.`;
@@ -619,9 +626,7 @@ export async function run(conf) {
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
 
   if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
-    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${
-      conf.specStatus
-    }") puts it on the W3C Rec Track.`;
+    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${conf.specStatus}") puts it on the W3C Rec Track.`;
     const notAllowed = codedJoinOr(recTrackStatus, { quotes: true });
     const hint = `Status **can't** be any of: ${notAllowed}.`;
     showError(msg, name, { hint });
@@ -669,7 +674,7 @@ function validateIfAllowedOnTR(conf) {
 
 function derivePubSpace(conf) {
   const { specStatus, group } = conf;
-  if (recTrackStatus.includes(specStatus) || conf.groupType === "wg") {
+  if (trStatus.includes(specStatus) || conf.groupType === "wg") {
     return `/TR`;
   }
 
@@ -721,7 +726,7 @@ async function deriveHistoryURI(conf) {
 
   const canShowHistory = conf.isEd || trStatus.includes(conf.specStatus);
 
-  if (conf.historyURI && canShowHistory) {
+  if (conf.historyURI && !canShowHistory) {
     const msg = docLink`The ${"[historyURI]"} can't be used with non /TR/ documents.`;
     const hint = docLink`Please remove ${"[historyURI]"}.`;
     showError(msg, name, { hint });
@@ -730,12 +735,16 @@ async function deriveHistoryURI(conf) {
   }
 
   const historyURL = new URL(
-    conf.historyURI ?? conf.shortName,
+    conf.historyURI ?? `${conf.shortName}/`,
     "https://www.w3.org/standards/history/"
   );
 
   // If it's on the Rec Track or it's TR worthy, then allow history override.
-  if (conf.historyURI && canShowHistory) {
+  // Also make a an exception for FPWD, DNOTE, NOTE and DRY.
+  if (
+    (conf.historyURI && canShowHistory) ||
+    ["FPWD", "DNOTE", "NOTE", "DRY"].includes(conf.specStatus)
+  ) {
     conf.historyURI = historyURL.href;
     return;
   }

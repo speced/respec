@@ -154,7 +154,7 @@ const localizationStrings = {
       return `Dieses Dokument ist ebenfalls in ${
         plural
           ? "diesen nicht-normativen Formaten verfügbar"
-          : "in diesem nicht-normativen Format verfügbar"
+          : "diesem nicht-normativen Format verfügbar"
       }:`;
     },
     prev_editor_draft: "Vorheriger Entwurf:",
@@ -167,7 +167,7 @@ const localizationStrings = {
 };
 export const l10n = getIntlData(localizationStrings);
 
-function getSpecSubTitleElem(conf) {
+export function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
 
   if (specSubTitleElem && specSubTitleElem.parentElement) {
@@ -271,14 +271,14 @@ export default (conf, options) => {
         ${!conf.prevRecURI
           ? ""
           : conf.isRec
-          ? html`
-              <dt>${l10n.prev_recommendation}</dt>
-              <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-            `
-          : html`
-              <dt>${l10n.latest_recommendation}</dt>
-              <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-            `}
+            ? html`
+                <dt>${l10n.prev_recommendation}</dt>
+                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+              `
+            : html`
+                <dt>${l10n.latest_recommendation}</dt>
+                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+              `}
         ${conf.editors.length
           ? html`
               <dt>${conf.editors.length > 1 ? l10n.editors : l10n.editor}</dt>
@@ -333,7 +333,7 @@ export default (conf, options) => {
   </div>`;
 };
 
-function renderFeedback(conf) {
+export function renderFeedback(conf) {
   const definitions = [];
   // Github feedback...
   if (conf.github) {
@@ -439,31 +439,16 @@ function renderCopyright(conf) {
 
 function renderOfficialCopyright(conf) {
   return html`<p class="copyright">
-    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
-      >Copyright</a
-    >
+    <a href="https://www.w3.org/policies/#copyright">Copyright</a>
     &copy;
     ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
     ${conf.additionalCopyrightHolders
       ? html` ${[conf.additionalCopyrightHolders]} &amp; `
       : ""}
-    <a href="https://www.w3.org/"
-      ><abbr title="World Wide Web Consortium">W3C</abbr></a
-    ><sup>&reg;</sup> (<a href="https://www.csail.mit.edu/"
-      ><abbr title="Massachusetts Institute of Technology">MIT</abbr></a
-    >,
-    <a href="https://www.ercim.eu/"
-      ><abbr
-        title="European Research Consortium for Informatics and Mathematics"
-        >ERCIM</abbr
-      ></a
-    >, <a href="https://www.keio.ac.jp/">Keio</a>,
-    <a href="https://ev.buaa.edu.cn/">Beihang</a>). W3C
-    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer"
-      >liability</a
-    >,
-    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks"
-      >trademark</a
+    <a href="https://www.w3.org/">World Wide Web Consortium</a>.
+    <abbr title="World Wide Web Consortium">W3C</abbr><sup>&reg;</sup>
+    <a href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>,
+    <a href="https://www.w3.org/policies/#W3C_Trademarks">trademark</a
     >${linkLicense(conf.licenseInfo)}
   </p>`;
 }

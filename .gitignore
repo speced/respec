@@ -12,5 +12,6 @@ js/deps/builds
 !js/profile-w3c.js
 .vscode/*
 !.vscode/tasks.json
-pnpm-lock.yaml
+package-lock.json
+yarn.lock
 *.log
