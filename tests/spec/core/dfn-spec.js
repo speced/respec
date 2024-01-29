@@ -655,5 +655,26 @@ describe("Core — Definitions", () => {
       expect(errors[0].message).toContain("Declares both");
       expect(errors[1].message).toContain("but also has a");
     });
+
+    it("assigns data-defines on well-known patterns", async () => {
+      const body = `
+        <section>
+          <h2>Definitions</h2>
+          <p id="desc1" class="definition">
+            A <dfn>definition</dfn> can also have an associated description
+          </p>
+          <dl class="definitions">
+            <dt><dfn>different convention</dfn></dt>
+            <dd id="desc2">Different conventions can be applied to associate a term with its description</dd>
+          </dl>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const desc1 = doc.getElementById("desc1");
+      const desc2 = doc.getElementById("desc2");
+      expect(desc1.dataset.defines).toBe("#dfn-definition");
+      expect(desc2.dataset.defines).toBe("#dfn-different-convention");
+    });
   });
 });

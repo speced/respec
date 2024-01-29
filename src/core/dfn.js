@@ -78,7 +78,7 @@ export function run() {
     }
     dfn.dataset.lt = titles.join("|");
   }
-  sub("plugins-done", addContractDefaults);
+  sub("plugins-done", completeDefinitionMarkup);
 }
 
 /**
@@ -216,6 +216,11 @@ function processAsInternalSlot(title, dfn) {
   return dfnType;
 }
 
+function completeDefinitionMarkup() {
+  addContractDefaults();
+  addDefinitionPointers();
+}
+
 function addContractDefaults() {
   // Find all dfns that don't have a type and default them to "dfn".
   /** @type NodeListOf<HTMLElement> */
@@ -236,5 +241,37 @@ function addContractDefaults() {
   );
   for (const dfn of exportableDfns) {
     dfn.dataset.export = "";
+  }
+}
+
+// - Sets data-defines on well-known definition content patterns
+function addDefinitionPointers() {
+  // A dl with class hasdefinitions associated the dfn in each dt
+  // the definition in the following sibling element
+  /** @type NodeListOf<HTMLElement> */
+  const describedDTs = document.querySelectorAll(
+    "dl.definitions dt:has(dfn[data-dfn-type])"
+  );
+  for (const dt of describedDTs) {
+    const dfnId = dt.querySelector("dfn[data-dfn-type]").id;
+    const dfnContent = /** @type {HTMLElement | null} */ (
+      dt.nextElementSibling
+    );
+    if (dfnContent && !dfnContent.dataset.defines && dfnId) {
+      dfnContent.dataset.defines = `#${dfnId}`;
+    }
+  }
+
+  // an element with class "definition" is marked as defining the term
+  // found in the element
+  /** @type NodeListOf<HTMLElement> */
+  const definitionContainers = document.querySelectorAll(
+    ".definition:has(dfn[data-dfn-type])"
+  );
+  for (const el of definitionContainers) {
+    const dfn = el.querySelector("dfn[data-dfn-type]");
+    if (dfn.id && !el.dataset.defines) {
+      el.dataset.defines = `#${dfn.id}`;
+    }
   }
 }
