@@ -14,17 +14,28 @@ describe("Core - highlightVars", () => {
       <ol>
         <li><var id="section1-bar">bar</var>
         <li><var>a
-         foo</foo>
+         foo</var>
       </ol>
     </section>
 
     <section id="section2">
       <p><var id="section2-foo">a foo</var></p>
       <ol>
-        <li><var>a foo</foo>
+        <li><var>a foo</var>
         <li><var id="section2-bar">bar</var>
       </ol>
     </section>
+
+    <section id="section3">
+      <ol class="algorithm">
+        <li><var id="section3-foo">a foo</var></li>
+        <li><var>a foo</var>
+      </ol>
+      <ol class="algorithm">
+        <li><var>a foo</var>
+      </ol>
+    </section>
+
 
     <section id="overmatch">
       <p><var id="level-1">foo</var></p>
@@ -72,6 +83,13 @@ describe("Core - highlightVars", () => {
     doc.getElementById("section2-foo").click();
     highlightedSec2 = doc.querySelectorAll("#section2 var.respec-hl");
     expect(highlightedSec2).toHaveSize(2);
+  });
+
+  it("highlights variables only in current algorithm container", async () => {
+    const doc = await makeDoc();
+    doc.getElementById("section3-foo").click();
+    const highlightedSec3 = doc.querySelectorAll("#section3 var.respec-hl");
+    expect(highlightedSec3).toHaveSize(2);
   });
 
   it("doesn't overmatch outside its own section's vars", async () => {

@@ -32,7 +32,7 @@ jobs:
           cat /tmp/pr_files.json | jq -r '.[].filename' | grep -qE "^builds/" || exit 0
           echo "::error::Uh oh! builds/ was changed."; exit 1
       - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with: { node-version: 18, cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm lint
@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with: { node-version: 18, cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm test:build
@@ -61,7 +61,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with: { node-version: 18, cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm build:w3c & pnpm build:geonovum
@@ -79,7 +79,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with: { node-version: 18, cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm build:w3c

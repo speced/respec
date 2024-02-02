@@ -24,10 +24,8 @@ export async function runAll(plugs) {
   runnables.forEach(
     plug => !plug.name && console.warn("Plugin lacks name:", plug)
   );
-  respecConfig.state = {};
   await executePreparePass(runnables, respecConfig);
   await executeRunPass(runnables, respecConfig);
-  respecConfig.state = {};
   pub("plugins-done", respecConfig);
 
   await postProcess(respecConfig);

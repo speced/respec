@@ -315,9 +315,7 @@ describe("Core - Markdown", () => {
     expect(webidlBlock.querySelector(".respec-button-copy-paste")).toBeTruthy();
 
     expect(jsBlock.firstElementChild.localName).toBe("code");
-    expect(
-      jsBlock.querySelector("code.hljs").classList.contains("js")
-    ).toBeTruthy();
+    expect(jsBlock.querySelector("code.hljs").classList).toContain("js");
     expect(jsBlock.querySelector("code.hljs span")).not.toBeNull();
     expect(jsBlock.querySelector(".respec-button-copy-paste")).toBeNull();
 

@@ -1109,7 +1109,6 @@ describe("W3C — Headers", () => {
         previousPublishDate: "197-123131-15",
         crEnd: "bad date",
         prEnd: "next wednesday",
-        perEnd: "today",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
@@ -1564,10 +1563,10 @@ describe("W3C — Headers", () => {
         const group = specStatus.includes("finding")
           ? "tag"
           : /^(CG)-/.test(specStatus)
-          ? "wicg"
-          : /^(BG)-/.test(specStatus)
-          ? "publishingbg"
-          : "webapps";
+            ? "wicg"
+            : /^(BG)-/.test(specStatus)
+              ? "publishingbg"
+              : "webapps";
         const ops = makeStandardOps({
           shortName: "some-report",
           specStatus,
@@ -1773,34 +1772,6 @@ describe("W3C — Headers", () => {
           "The W3C Patent Policy does not carry any licensing requirements or commitments on this document."
         );
       }
-    });
-  });
-
-  describe("perEnd", () => {
-    it("correctly flags a PER", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        previousMaturity: "REC",
-        previousPublishDate: "2014-01-01",
-        prevRecURI: "https://www.example.com/rec.html",
-        implementationReportURI: "https://www.example.com/report.html",
-        perEnd: "2014-12-01",
-        specStatus: "PER",
-        wgPublicList: "WGLIST",
-        subjectPrefix: "[The Prefix]",
-        group: "webapps",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      const sotd = doc.getElementById("sotd");
-      const f = contains(sotd, "p", "Proposed Edited Recommendation");
-      expect(f).toHaveSize(2);
-      const questionnaires = doc
-        .getElementById("sotd")
-        .querySelector(
-          "a[href='https://www.w3.org/2002/09/wbs/myQuestionnaires']"
-        );
-      expect(questionnaires).toBeNull();
     });
   });
 

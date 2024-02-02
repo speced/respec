@@ -10,7 +10,9 @@
 export const name = "core/l10n";
 
 const html = document.documentElement;
-if (html && !html.hasAttribute("lang")) {
+// Explicitly default lang and dir on <html> if not set.
+// We assume English and ltr as default for international standards.
+if (!html?.hasAttribute("lang")) {
   html.lang = "en";
   if (!html.hasAttribute("dir")) {
     html.dir = "ltr";
@@ -19,7 +21,7 @@ if (html && !html.hasAttribute("lang")) {
 
 export const l10n = {};
 
-export const lang = html.lang;
+export const lang = html?.lang ?? "en";
 
 export function run(config) {
   config.l10n = l10n[lang] || l10n.en;
