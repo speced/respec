@@ -30,7 +30,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@types/pluralize": "0.0.33",
     "boxen": "^7.1.1",
-    "chokidar": "^3.5.3",
+    "chokidar": "^3.6.0",
     "clean-css": "^5.3.3",
     "epipebomb": "^1.0.0",
     "eslint": "^8.56.0",
