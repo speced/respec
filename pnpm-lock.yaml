@@ -83,8 +83,8 @@ devDependencies:
     specifier: ^5.1.1
     version: 5.1.1
   karma:
-    specifier: ^6.4.2
-    version: 6.4.2
+    specifier: ^6.4.3
+    version: 6.4.3
   karma-chrome-launcher:
     specifier: ^3.2.0
     version: 3.2.0
@@ -93,16 +93,16 @@ devDependencies:
     version: 2.1.2
   karma-jasmine:
     specifier: ^5.1.0
-    version: 5.1.0(karma@6.4.2)
+    version: 5.1.0(karma@6.4.3)
   karma-jasmine-html-reporter:
     specifier: ^2.1.0
-    version: 2.1.0(jasmine-core@5.1.1)(karma-jasmine@5.1.0)(karma@6.4.2)
+    version: 2.1.0(jasmine-core@5.1.1)(karma-jasmine@5.1.0)(karma@6.4.3)
   karma-mocha-reporter:
     specifier: ^2.2.5
-    version: 2.2.5(karma@6.4.2)
+    version: 2.2.5(karma@6.4.3)
   karma-safari-launcher:
     specifier: ^1.0.0
-    version: 1.0.0(karma@6.4.2)
+    version: 1.0.0(karma@6.4.3)
   loading-indicator:
     specifier: ^2.0.0
     version: 2.0.0
@@ -2668,7 +2668,7 @@ packages:
       which: 2.0.2
     dev: true
 
-  /karma-jasmine-html-reporter@2.1.0(jasmine-core@5.1.1)(karma-jasmine@5.1.0)(karma@6.4.2):
+  /karma-jasmine-html-reporter@2.1.0(jasmine-core@5.1.1)(karma-jasmine@5.1.0)(karma@6.4.3):
     resolution: {integrity: sha512-sPQE1+nlsn6Hwb5t+HHwyy0A1FNCVKuL1192b+XNauMYWThz2kweiBVW1DqloRpVvZIJkIoHVB7XRpK78n1xbQ==}
     peerDependencies:
       jasmine-core: ^4.0.0 || ^5.0.0
@@ -2676,41 +2676,41 @@ packages:
       karma-jasmine: ^5.0.0
     dependencies:
       jasmine-core: 5.1.1
-      karma: 6.4.2
-      karma-jasmine: 5.1.0(karma@6.4.2)
+      karma: 6.4.3
+      karma-jasmine: 5.1.0(karma@6.4.3)
     dev: true
 
-  /karma-jasmine@5.1.0(karma@6.4.2):
+  /karma-jasmine@5.1.0(karma@6.4.3):
     resolution: {integrity: sha512-i/zQLFrfEpRyQoJF9fsCdTMOF5c2dK7C7OmsuKg2D0YSsuZSfQDiLuaiktbuio6F2wiCsZSnSnieIQ0ant/uzQ==}
     engines: {node: '>=12'}
     peerDependencies:
       karma: ^6.0.0
     dependencies:
       jasmine-core: 4.6.0
-      karma: 6.4.2
+      karma: 6.4.3
     dev: true
 
-  /karma-mocha-reporter@2.2.5(karma@6.4.2):
+  /karma-mocha-reporter@2.2.5(karma@6.4.3):
     resolution: {integrity: sha512-Hr6nhkIp0GIJJrvzY8JFeHpQZNseuIakGac4bpw8K1+5F0tLb6l7uvXRa8mt2Z+NVwYgCct4QAfp2R2QP6o00w==}
     peerDependencies:
       karma: '>=0.13'
     dependencies:
       chalk: 2.4.2
-      karma: 6.4.2
+      karma: 6.4.3
       log-symbols: 2.2.0
       strip-ansi: 4.0.0
     dev: true
 
-  /karma-safari-launcher@1.0.0(karma@6.4.2):
+  /karma-safari-launcher@1.0.0(karma@6.4.3):
     resolution: {integrity: sha512-qmypLWd6F2qrDJfAETvXDfxHvKDk+nyIjpH9xIeI3/hENr0U3nuqkxaftq73PfXZ4aOuOChA6SnLW4m4AxfRjQ==}
     peerDependencies:
       karma: '>=0.9'
     dependencies:
-      karma: 6.4.2
+      karma: 6.4.3
     dev: true
 
-  /karma@6.4.2:
-    resolution: {integrity: sha512-C6SU/53LB31BEgRg+omznBEMY4SjHU3ricV6zBcAe1EeILKkeScr+fZXtaI5WyDbkVowJxxAI6h73NcFPmXolQ==}
+  /karma@6.4.3:
+    resolution: {integrity: sha512-LuucC/RE92tJ8mlCwqEoRWXP38UMAqpnq98vktmS9SznSoUPPUJQbc91dHcxcunROvfQjdORVA/YFviH+Xci9Q==}
     engines: {node: '>= 10'}
     hasBin: true
     dependencies:
