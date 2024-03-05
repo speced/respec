@@ -86,11 +86,6 @@ a[href].orcid > svg {
   text-decoration: none;
 }
 
-a .secno,
-a .figno {
-  color: #000;
-}
-
 ul.tof,
 ol.tof {
   list-style: none outside none;

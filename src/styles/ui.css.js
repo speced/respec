@@ -30,9 +30,12 @@ export default css`
 .respec-info-button {
   height: 2.4em;
   background: #fff;
+  background: var(--bg, #fff);
   color: rgb(120, 120, 120);
+  color: var(--tocnav-normal-text, rgb(120, 120, 120));
   border: 1px solid #ccc;
   box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
+  box-shadow: 1px 1px 8px 0 var(--tocsidebar-shadow, rgba(100, 100, 100, 0.5));
   padding: 0.2em 0em;
 }
 
@@ -141,7 +144,8 @@ export default css`
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background: #fff;
+  background: var(--bg, #fff);
+  color: var(--text, black);
   box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
   width: 200px;
   display: none;
@@ -169,8 +173,8 @@ export default css`
 
 .respec-save-button:link {
   padding-top: 16px;
-  color: rgb(240, 240, 240);
-  background: rgb(42, 90, 168);
+  color: var(--def-text, white);
+  background: var(--def-bg, rgb(42, 90, 168));
   justify-self: stretch;
   height: 1cm;
   text-decoration: none;
@@ -181,8 +185,8 @@ export default css`
 }
 
 .respec-save-button:link:hover {
-  color: white;
-  background: rgb(42, 90, 168);
+  color: var(--def-text, white);
+  background: var(--defrow-border, rgb(42, 90, 168));
   padding: 0;
   margin: 0;
   border: 0;
@@ -190,7 +194,8 @@ export default css`
 }
 
 .respec-save-button:link:focus {
-  background: #193766;
+  background: var(--tocnav-active-bg, #193766);
+  color: var(--tocnav-active-text, black);
 }
 
 #respec-ui button:focus,
@@ -297,8 +302,10 @@ export default css`
   position: fixed;
   z-index: 11000;
   top: 10%;
-  background: #fff;
+  background: var(--bg, #fff);
+  color: var(--text, black);
   border: 5px solid #666;
+  border-color: var(--tocsidebar-shadow, #666);
   min-width: 20%;
   padding: 0;
   max-height: 80%;
@@ -313,19 +320,16 @@ export default css`
 .respec-modal h3 {
   margin: 0;
   padding: 0.2em;
+  left: 0 !important;
   text-align: center;
-  color: black;
-  background: linear-gradient(
-    to bottom,
-    rgba(238, 238, 238, 1) 0%,
-    rgba(238, 238, 238, 1) 50%,
-    rgba(204, 204, 204, 1) 100%
-  );
+  background: var(--tocsidebar-shadow, #ddd);
+  color: var(--text, black);
   font-size: 1em;
 }
 
 #respec-menu button.respec-option {
-  background: white;
+  background: var(--bg, white);
+  color: var(--text, black);
   border: none;
   width: 100%;
   text-align: left;
@@ -334,7 +338,8 @@ export default css`
 }
 
 #respec-menu button.respec-option:hover {
-  background-color: #eeeeee;
+  background-color: var(--tocnav-hover-bg, #eee);
+  color: var(--tocnav-hover-text, black);
 }
 
 .respec-cmd-icon {
