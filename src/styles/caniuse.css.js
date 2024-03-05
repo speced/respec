@@ -40,7 +40,7 @@ export default css`
 }
 
 .caniuse-type span {
-  background-color: white;
+  background-color: var(--bg, white);
   padding: 0 0.4em;
 }
 
@@ -73,6 +73,7 @@ export default css`
 
 img.caniuse-browser {
   filter: drop-shadow(0px 0px .1cm #666666);
+  background: transparent;
 }
 
 .caniuse-cell span.browser-version {
