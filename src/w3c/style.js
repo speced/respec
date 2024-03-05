@@ -42,12 +42,12 @@ function createResourceHints() {
     },
     {
       hint: "preload", // all specs include on base.css.
-      href: "https://www.w3.org/StyleSheets/TR/2021/base.css",
+      href: getStyleUrl("base.css").href,
       as: "style",
     },
     {
       hint: "preload",
-      href: "https://www.w3.org/StyleSheets/TR/2021/dark.css",
+      href: getStyleUrl("dark.css").href,
       as: "style",
     },
     {
