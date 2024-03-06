@@ -42,7 +42,12 @@ function createResourceHints() {
     },
     {
       hint: "preload", // all specs include on base.css.
-      href: "https://www.w3.org/StyleSheets/TR/2021/base.css",
+      href: getStyleUrl("base.css").href,
+      as: "style",
+    },
+    {
+      hint: "preload",
+      href: getStyleUrl("dark.css").href,
       as: "style",
     },
     {
@@ -108,6 +113,26 @@ export function run(conf) {
   );
   // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
   sub("beforesave", styleMover(finalStyleURL));
+
+  if (conf.darkMode) {
+    const darkModeStyleUrl = getStyleUrl("dark.css");
+    document.head.appendChild(
+      html`<style>
+        :root {
+          color-scheme: light dark;
+        }
+      </style>`
+    );
+    document.head.appendChild(
+      html`<link
+        rel="stylesheet"
+        href="${darkModeStyleUrl.href}"
+        media="(prefers-color-scheme: dark)"
+      />`
+    );
+    // As required by W3C Pub Rules.
+    sub("beforesave", styleMover(darkModeStyleUrl));
+  }
 }
 
 /** @param {Conf} conf */

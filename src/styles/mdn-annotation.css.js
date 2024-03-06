@@ -25,8 +25,15 @@ export default css`
   min-width: 25ch;
   max-width: 32ch;
   background: #fff;
-  box-shadow: 0 1em 3em -0.4em rgba(0, 0, 0, 0.3),
+  background: var(--indextable-hover-bg, #fff);
+  color: black;
+  color: var(--indextable-hover-text, black);
+  box-shadow:
+    0 1em 3em -0.4em rgba(0, 0, 0, 0.3),
     0 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 1em 3em -0.4em var(--tocsidebar-shadow, rgba(0, 0, 0, 0.3)),
+    0 0 1px 1px var(--tocsidebar-shadow, rgba(0, 0, 0, 0.05));
   border-radius: 2px;
   z-index: 11;
   margin-bottom: 0.4em;
@@ -41,7 +48,9 @@ export default css`
 .mdn summary span {
   font-family: zillaslab, Palatino, "Palatino Linotype", serif;
   color: #fff;
+  color: var(--bg, #fff);
   background-color: #000;
+  background-color: var(--text, #000);
   display: inline-block;
   padding: 3px;
 }
