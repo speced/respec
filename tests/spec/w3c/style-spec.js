@@ -1,6 +1,11 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  getExportedDoc,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
 
 const statuses = [
   {
@@ -190,6 +195,42 @@ describe("W3C - Style", () => {
       expect(elem.href).toBe(expectedURL);
     });
   }
+
+  it("should add W3C stylesheet at the end", async () => {
+    const ops = makeStandardOps({});
+    const doc = await getExportedDoc(await makeRSDoc(ops));
+    const url = "https://www.w3.org/StyleSheets/TR/2021/base";
+    const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
+    expect(elem).toBeTruthy();
+    expect(elem.nextElementSibling).toBeFalsy();
+  });
+
+  it("should add dark mode stylesheet", async () => {
+    const ops = makeStandardOps({ darkMode: true });
+    const doc = await makeRSDoc(ops);
+    const url = "https://www.w3.org/StyleSheets/TR/2021/dark.css";
+    const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
+    expect(elem).toBeTruthy();
+    expect(elem.href).toBe(url);
+    expect(elem.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
+  });
+
+  it("should add W3C darkmode stylesheet at the end", async () => {
+    const ops = makeStandardOps({ darkMode: true });
+    const doc = await getExportedDoc(await makeRSDoc(ops));
+    const linkBase = doc.querySelector(
+      `link[href^='https://www.w3.org/StyleSheets/TR/2021/base'][rel="stylesheet"]`
+    );
+    expect(linkBase).toBeTruthy();
+    expect(linkBase.nextElementSibling).toBeTruthy();
+
+    const linkDarkMode = doc.querySelector(
+      `link[href^='https://www.w3.org/StyleSheets/TR/2021/dark.css'][rel="stylesheet"]`
+    );
+    expect(linkDarkMode).toBeTruthy();
+    expect(linkDarkMode.nextElementSibling).toBeFalsy();
+    expect(linkBase.nextElementSibling).toBe(linkDarkMode);
+  });
 
   it("shouldn't include fixup.js when noToc is set", async () => {
     const ops = makeStandardOps();
