@@ -15,8 +15,8 @@ dependencies:
     specifier: ^12.0.1
     version: 12.0.1
   puppeteer:
-    specifier: ^22.4.0
-    version: 22.4.0(typescript@5.4.2)
+    specifier: ^22.4.1
+    version: 22.4.1(typescript@5.4.2)
   sade:
     specifier: ^1.8.1
     version: 1.8.1
@@ -3386,8 +3386,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /puppeteer-core@22.4.0:
-    resolution: {integrity: sha512-MZttAbttrxi6O/B//rY6zQihjFe/vXeCLb5YvKH2xG6yrcVESo0Hc5/Cv49omwZyZzAJ1BK8BnDeatDsj+3hMw==}
+  /puppeteer-core@22.4.1:
+    resolution: {integrity: sha512-l9nf8NcirYOHdID12CIMWyy7dqcJCVtgVS+YAiJuUJHg8+9yjgPiG2PcNhojIEEpCkvw3FxvnyITVfKVmkWpjA==}
     engines: {node: '>=18'}
     dependencies:
       '@puppeteer/browsers': 2.1.0
@@ -3403,15 +3403,15 @@ packages:
       - utf-8-validate
     dev: false
 
-  /puppeteer@22.4.0(typescript@5.4.2):
-    resolution: {integrity: sha512-tR+JsDbA2qD1DqRX4F9k9SxQhk6UzcaCN+Qux7+WrDceS7wcR7tlFmMNB8+g8zE4Fmr/iRTOtf5wNnTW9cGUFQ==}
+  /puppeteer@22.4.1(typescript@5.4.2):
+    resolution: {integrity: sha512-Mag1wRLanzwS4yEUyrDRBUgsKlH3dpL6oAfVwNHG09oxd0+ySsatMvYj7HwjynWy/S+Hg+XHLgjyC/F6CsL/lg==}
     engines: {node: '>=18'}
     hasBin: true
     requiresBuild: true
     dependencies:
       '@puppeteer/browsers': 2.1.0
       cosmiconfig: 9.0.0(typescript@5.4.2)
-      puppeteer-core: 22.4.0
+      puppeteer-core: 22.4.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4217,6 +4217,7 @@ packages:
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+    requiresBuild: true
 
   /universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
