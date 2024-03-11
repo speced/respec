@@ -42,6 +42,7 @@ const modules = [
   import("../src/core/algorithms.js"),
   import("../src/core/anchor-expander.js"),
   import("../src/core/dfn-panel.js"),
+  import("../src/core/dfn-contract.js"),
   /* Linter must be the last thing to run */
   import("../src/core/linter-rules/check-charset.js"),
   import("../src/core/linter-rules/check-punctuation.js"),
