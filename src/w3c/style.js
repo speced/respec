@@ -124,6 +124,9 @@ export function run(conf) {
       </style>`
     );
     document.head.appendChild(
+      html`<meta name="color-scheme" content="light dark" />`
+    );
+    document.head.appendChild(
       html`<link
         rel="stylesheet"
         href="${darkModeStyleUrl.href}"
