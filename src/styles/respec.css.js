@@ -18,14 +18,6 @@ export default css`
 }
 
 /* --- INLINES --- */
-:is(h1, h2, h3, h4, h5, h6, a) abbr {
-  border: none;
-}
-
-dfn {
-  font-weight: bold;
-}
-
 a.internalDFN {
   color: inherit;
   border-bottom: 1px solid #99c;
@@ -79,13 +71,7 @@ a[href].orcid > svg {
   margin-bottom: -2px;
 }
 
-/* --- TOC --- */
-
-.toc a,
-.tof a {
-  text-decoration: none;
-}
-
+/* --- TOF --- */
 ul.tof,
 ol.tof {
   list-style: none outside none;
@@ -95,62 +81,6 @@ ol.tof {
   margin-top: 0.5em;
   font-style: italic;
 }
-
-/* --- TABLE --- */
-
-table.simple {
-  border-spacing: 0;
-  border-collapse: collapse;
-  border-bottom: 3px solid #005a9c;
-}
-
-.simple th {
-  background: #005a9c;
-  color: #fff;
-  padding: 3px 5px;
-  text-align: left;
-}
-
-.simple th a {
-  color: #fff;
-  padding: 3px 5px;
-  text-align: left;
-}
-
-.simple th[scope="row"] {
-  background: inherit;
-  color: inherit;
-  border-top: 1px solid #ddd;
-}
-
-.simple td {
-  padding: 3px 10px;
-  border-top: 1px solid #ddd;
-}
-
-.simple tr:nth-child(even) {
-  background: #f0f6ff;
-}
-
-/* --- DL --- */
-
-.section dd > p:first-child {
-  margin-top: 0;
-}
-
-.section dd > p:last-child {
-  margin-bottom: 0;
-}
-
-.section dd {
-  margin-bottom: 1em;
-}
-
-.section dl.attrs dd,
-.section dl.eldef dd {
-  margin-bottom: 0;
-}
-
 #issue-summary > ul {
   column-count: 2;
 }
