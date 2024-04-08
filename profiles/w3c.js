@@ -60,6 +60,7 @@ const modules = [
   import("../src/core/dfn-panel.js"),
   import("../src/core/custom-elements/index.js"),
   import("../src/core/web-monetization.js"),
+  import("../src/core/dfn-contract.js"),
   import("../src/core/before-save.js"),
   /* Linters must be the last thing to run */
   import("../src/core/linter-rules/check-charset.js"),

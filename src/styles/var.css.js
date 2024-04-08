@@ -14,6 +14,12 @@ var.respec-hl {
   box-shadow: 0 0 0px 2px var(--bg-color);
 }
 
+@media (prefers-color-scheme: dark) {
+  var.respec-hl {
+    filter: saturate(0.9) brightness(0.9)
+  }
+}
+
 /* highlight colors
   https://github.com/w3c/tr-design/issues/152
 */

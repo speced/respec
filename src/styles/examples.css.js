@@ -24,21 +24,9 @@ div.illegal-example p {
   color: black;
 }
 
-:is(aside,div).example {
-  border-left-width: 0.5em;
-  border-left-style: solid;
-  border-color: #e0cb52;
-  background: #fcfaee;
-}
-
 aside.example div.example {
   border-left-width: 0.1em;
   border-color: #999;
   background: #fff;
-}
-
-
-.example pre {
-  background-color: rgba(0, 0, 0, 0.03);
 }
 `;

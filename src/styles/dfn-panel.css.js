@@ -22,9 +22,13 @@ dfn {
   font-family: "Helvetica Neue", sans-serif;
   font-size: small;
   background: #fff;
+  background: var(--indextable-hover-bg, #fff);
   color: black;
+  color: var(--text, black);
   box-shadow: 0 1em 3em -0.4em rgba(0, 0, 0, 0.3),
     0 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1em 3em -0.4em var(--tocsidebar-shadow, rgba(0, 0, 0, 0.3)),
+    0 0 1px 1px var(--tocsidebar-shadow, rgba(0, 0, 0, 0.05));
   border-radius: 2px;
 }
 /* Triangle/caret */
@@ -39,10 +43,13 @@ dfn {
   border: 10px solid transparent;
   border-top: 0;
   border-bottom: 10px solid #fff;
+  border-bottom-color: var(--indextable-hover-bg, #fff);
   top: 0;
 }
 .dfn-panel:not(.docked) > .caret::before {
   border-bottom: 9px solid #a2a9b1;
+  /* TODO: need slightly darker shade */
+  border-bottom-color: var(--indextable-hover-bg, #a2a9b1);
 }
 
 .dfn-panel * {
@@ -52,11 +59,13 @@ dfn {
 .dfn-panel b {
   display: block;
   color: #000;
+  color: var(--text, #000);
   margin-top: 0.25em;
 }
 
 .dfn-panel ul a[href] {
   color: #333;
+  color: var(--text, #333);
 }
 
 .dfn-panel > div {

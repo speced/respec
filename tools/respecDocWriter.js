@@ -67,7 +67,7 @@ export async function toHTML(src, options = {}) {
   const browser = await puppeteer.launch({
     args,
     devtools,
-    headless: "new",
+    headless: true,
   });
 
   try {
