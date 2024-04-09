@@ -203,6 +203,9 @@ describe("W3C - Style", () => {
     const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
     expect(elem).toBeTruthy();
     expect(elem.nextElementSibling).toBeFalsy();
+
+    const colorSchemaMeta = doc.querySelector("meta[name='color-scheme']");
+    expect(colorSchemaMeta).toBeFalsy();
   });
 
   it("should add dark mode stylesheet", async () => {
@@ -213,6 +216,9 @@ describe("W3C - Style", () => {
     expect(elem).toBeTruthy();
     expect(elem.href).toBe(url);
     expect(elem.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
+    const colorSchemaMeta = doc.querySelector("meta[name='color-scheme']");
+    expect(colorSchemaMeta).toBeTruthy();
+    expect(colorSchemaMeta.content).toBe("light dark");
   });
 
   it("should add W3C darkmode stylesheet at the end", async () => {
