@@ -4,9 +4,9 @@
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
-    "node": ">=18.14"
+    "node": ">=20.12.1"
   },
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@8.15.6",
   "bin": {
     "respec": "tools/respec2html.js",
     "respec2html": "tools/respec2html.js"
