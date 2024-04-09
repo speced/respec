@@ -132,7 +132,7 @@ export async function toHTML(src, options = {}) {
 async function useLocalReSpec(page, log) {
   await page.setRequestInterception(true);
 
-  page.on("request", async function requestInterceptor(request) {
+  page.on("request", async request => {
     if (!isRespecScript(request)) {
       await request.continue();
       return;
@@ -148,9 +148,6 @@ async function useLocalReSpec(page, log) {
       contentType: "text/javascript; charset=utf-8",
       body: await readFile(localPath),
     });
-    // Workaround for https://github.com/puppeteer/puppeteer/issues/4208
-    page.off("request", requestInterceptor);
-    await page.setRequestInterception(false);
   });
 }
 
@@ -163,9 +160,7 @@ function isRespecScript(req) {
   const { host, pathname: path } = new URL(req.url());
   switch (host) {
     case "www.w3.org":
-      return (
-        path.startsWith("/Tools/respec/") && !path.includes("respec-highlight")
-      );
+      return path.startsWith("/Tools/respec/");
     case "w3c.github.io":
       return path.startsWith("/respec/builds/");
     default:
