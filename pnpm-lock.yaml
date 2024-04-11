@@ -16,7 +16,7 @@ dependencies:
     version: 12.0.1
   puppeteer:
     specifier: ^22.6.3
-    version: 22.6.3(typescript@5.4.4)
+    version: 22.6.3(typescript@5.4.5)
   sade:
     specifier: ^1.8.1
     version: 1.8.1
@@ -131,8 +131,8 @@ devDependencies:
     specifier: ^1.1.1
     version: 1.1.1
   typescript:
-    specifier: ^5.4.4
-    version: 5.4.4
+    specifier: ^5.4.5
+    version: 5.4.5
   vnu-jar:
     specifier: ^23.4.11
     version: 23.4.11
@@ -1260,7 +1260,7 @@ packages:
       vary: 1.1.2
     dev: true
 
-  /cosmiconfig@9.0.0(typescript@5.4.4):
+  /cosmiconfig@9.0.0(typescript@5.4.5):
     resolution: {integrity: sha512-itvL5h8RETACmOTFc4UfIyB2RfEHi71Ax6E/PivVxq9NseKbOWpeyHEOIbmAw1rs8Ak0VursQNww7lf7YtUwzg==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -1273,7 +1273,7 @@ packages:
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       parse-json: 5.2.0
-      typescript: 5.4.4
+      typescript: 5.4.5
     dev: false
 
   /cross-spawn@7.0.3:
@@ -3398,14 +3398,14 @@ packages:
       - utf-8-validate
     dev: false
 
-  /puppeteer@22.6.3(typescript@5.4.4):
+  /puppeteer@22.6.3(typescript@5.4.5):
     resolution: {integrity: sha512-KZOnthMbvr4+7cPKFeeOCJPe8DzOKGC0GbMXmZKOP/YusXQ6sqxA0vt6frstZq3rUJ277qXHlZNFf01VVwdHKw==}
     engines: {node: '>=18'}
     hasBin: true
     requiresBuild: true
     dependencies:
       '@puppeteer/browsers': 2.2.1
-      cosmiconfig: 9.0.0(typescript@5.4.4)
+      cosmiconfig: 9.0.0(typescript@5.4.5)
       devtools-protocol: 0.0.1262051
       puppeteer-core: 22.6.3
     transitivePeerDependencies:
@@ -4169,8 +4169,8 @@ packages:
     hasBin: true
     dev: true
 
-  /typescript@5.4.4:
-    resolution: {integrity: sha512-dGE2Vv8cpVvw28v8HCPqyb08EzbBURxDpuhJvTrusShUfGnhHBafDsLdS1EhhxyL6BJQE+2cT3dDPAv+MQ6oLw==}
+  /typescript@5.4.5:
+    resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
