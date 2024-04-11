@@ -175,6 +175,7 @@ function createTocListItem(header, id) {
 
 /**
  * Replaces any child <a> and <dfn> with <span>.
+ * Removes footnotes and issues
  * @param {HTMLElement} h
  */
 function filterHeader(h) {
@@ -187,6 +188,9 @@ function filterHeader(h) {
     const span = renameElement(dfn, "span");
     span.removeAttribute("id");
   });
+  h.querySelectorAll("span.footnote, span.issue").forEach(elem =>
+    elem.remove()
+  );
 }
 
 export function run(conf) {
