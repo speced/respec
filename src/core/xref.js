@@ -110,7 +110,7 @@ function findExplicitExternalLinks() {
  */
 function normalizeConfig(xref) {
   const defaults = {
-    url: API_URL,
+    url: new URL("search/", API_URL).href,
     specs: null,
   };
 
@@ -313,24 +313,23 @@ async function getData(queryKeys, apiUrl) {
 }
 
 /**
- * @param {RequestEntry[]} keys
+ * @param {RequestEntry[]} queries
  * @param {string} url
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
-async function fetchFromNetwork(keys, url) {
-  if (!keys.length) return new Map();
+async function fetchFromNetwork(queries, url) {
+  if (!queries.length) return new Map();
 
-  const query = { keys };
   const options = {
     method: "POST",
-    body: JSON.stringify(query),
+    body: JSON.stringify({ queries }),
     headers: {
       "Content-Type": "application/json",
     },
   };
   const response = await fetch(url, options);
   const json = await response.json();
-  return new Map(json.result);
+  return new Map(json.results.map(({ id, result }) => [id, result]));
 }
 
 /**
