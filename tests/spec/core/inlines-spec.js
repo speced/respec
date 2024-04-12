@@ -160,6 +160,7 @@ describe("Core - Inlines", () => {
       </section>
       <section>
         <p id="a4">TEXT |with spaces :  Type with spaces| TEXT</p>
+        <p id="a5">TEXT |typeWithQuotes: "valid" or "invalid"| TEXT</p>
         <p id="b">TEXT |variable| TEXT</p>
         <p id="c">TEXT | ignored | TEXT</p>
         <p id="d">TEXT|ignore: Ignore|TEXT</p>
@@ -189,6 +190,10 @@ describe("Core - Inlines", () => {
     const a4 = doc.querySelector("#a4 var");
     expect(a4.textContent).toBe("with spaces");
     expect(a4.dataset.type).toBe("Type with spaces");
+
+    const a5 = doc.querySelector("#a5 var");
+    expect(a5.textContent).toBe("typeWithQuotes");
+    expect(a5.dataset.type).toBe(`"valid" or "invalid"`);
 
     const b = doc.querySelector("#b var");
     expect(b.textContent).toBe("variable");
