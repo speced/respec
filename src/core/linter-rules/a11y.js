@@ -89,7 +89,7 @@ async function getViolations(opts) {
 function importAxe() {
   const script = document.createElement("script");
   script.classList.add("remove");
-  script.src = "https://unpkg.com/axe-core@4/axe.min.js";
+  script.src = "https://cdn.jsdelivr.net/npm/axe-core@4/axe.min.js";
   document.head.appendChild(script);
   return new Promise((resolve, reject) => {
     script.onload = () => resolve(window.axe);
