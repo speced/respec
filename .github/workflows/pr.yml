@@ -33,7 +33,7 @@ jobs:
           echo "::error::Uh oh! builds/ was changed."; exit 1
       - uses: pnpm/action-setup@v3
       - uses: actions/setup-node@v4
-        with: { node-version: 18, cache: pnpm }
+        with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm lint
 
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
       - uses: actions/setup-node@v4
-        with: { node-version: 18, cache: pnpm }
+        with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm test:build
       - run: pnpm build:w3c
@@ -62,7 +62,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
       - uses: actions/setup-node@v4
-        with: { node-version: 18, cache: pnpm }
+        with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm build:w3c & pnpm build:geonovum
       - run: pnpm test:unit
@@ -80,7 +80,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
       - uses: actions/setup-node@v4
-        with: { node-version: 18, cache: pnpm }
+        with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm build:w3c
       - name: run validator

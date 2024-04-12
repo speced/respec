@@ -9,7 +9,7 @@
  *      want to be using a new module with your own profile.
  *  - afterEnd: final thing that is called.
  */
-import { showError } from "./utils.js";
+import { makePluginUtils, showError } from "./utils.js";
 
 export const name = "core/post-process";
 
@@ -24,9 +24,11 @@ export async function run(config) {
         }
         return isFunction;
       })
-      .map(async f => {
+      .map(async (f, i) => {
+        const fnName = `${name}/${f.name || `[${i}]`}`;
+        const utils = makePluginUtils(fnName);
         try {
-          return await f(config, document);
+          return await f(config, document, utils);
         } catch (err) {
           const msg = `Function ${f.name} threw an error during \`postProcess\`.`;
           const hint = "See developer console.";
