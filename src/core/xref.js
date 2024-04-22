@@ -456,7 +456,7 @@ function showErrors({ ambiguous, notFound }) {
   };
 
   const howToFix = (howToCiteURL, originalTerm) => {
-    return docLink`[See search matches for "${originalTerm}"](${howToCiteURL}) or ${"[Learn about this error|#error-term-not-found]"}.`;
+    return `[See search matches for "${originalTerm}"](${howToCiteURL}) or ${"[Learn about this error|#error-term-not-found]"}.`;
   };
 
   for (const { query, elems } of notFound.values()) {
@@ -472,6 +472,7 @@ function showErrors({ ambiguous, notFound }) {
   }
 
   for (const { query, elems, results } of ambiguous.values()) {
+    debugger;
     const specs = [...new Set(results.map(entry => entry.shortname))].sort();
     const specsString = joinAnd(specs, s => `**[${s}]**`);
     const originalTerm = getTermFromElement(elems[0]);
@@ -479,8 +480,8 @@ function showErrors({ ambiguous, notFound }) {
     const forParent = query.for ? `, for **"${query.for}"**, ` : "";
     const moreInfo = howToFix(formUrl, originalTerm);
     const hint = docLink`To fix, use the ${"[data-cite]"} attribute to pick the one you mean from the appropriate specification. ${moreInfo}.`;
-    const msg = `The term "**${originalTerm}**"${forParent} is ambiguous because it's defined in ${specsString}.`;
-    const title = "Definition is ambiguous.";
+    const msg = docLink`The term "**${originalTerm}**"${forParent} is defined by multiple specifications: ${specsString}.`;
+    const title = `Definition for "**${originalTerm}**"${forParent} is ambiguous.`;
     showError(msg, name, { title, elements: elems, hint });
   }
 }

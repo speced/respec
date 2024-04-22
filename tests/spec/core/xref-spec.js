@@ -151,7 +151,7 @@ describe("Core — xref", () => {
 
     const link = doc.querySelector("#test a");
     expect(link.classList).toContain("respec-offending-element");
-    expect(link.title).toBe("Definition is ambiguous.");
+    expect(link.title).toBe(`Definition for "**script**" is ambiguous.`);
   });
 
   it("uses data-cite fallbacks", async () => {
