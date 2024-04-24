@@ -196,33 +196,41 @@ describe("W3C - Style", () => {
     });
   }
 
-  it("should add W3C stylesheet at the end", async () => {
+  it("should add W3C stylesheets at end", async () => {
     const ops = makeStandardOps({});
     const doc = await getExportedDoc(await makeRSDoc(ops));
     const url = "https://www.w3.org/StyleSheets/TR/2021/base";
     const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
-    expect(elem).toBeTruthy();
-    expect(elem.nextElementSibling).toBeFalsy();
+    const colorSchemaMeta = doc.querySelector("link[media='(prefers-color-scheme: dark)']");
+    expect(elem?.nextElementSibling).toBe(colorSchemaMeta);
+    expect(colorSchemaMeta?.nextElementSibling).toBe(null);
+  });
 
-    const colorSchemaMeta = doc.querySelector("meta[name='color-scheme']");
-    expect(colorSchemaMeta).toBeFalsy();
+  it("should respect existing color scheme", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
+    const elem = doc.querySelector("meta[name='color-scheme']");
+    expect(elem).toBeTruthy();
+    expect(elem.content).toBe("dark");
   });
 
   it("should add dark mode stylesheet", async () => {
-    const ops = makeStandardOps({ darkMode: true });
+    const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
     const url = "https://www.w3.org/StyleSheets/TR/2021/dark.css";
+    /** @type HTMLLinkElement? */
     const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
     expect(elem).toBeTruthy();
-    expect(elem.href).toBe(url);
-    expect(elem.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
+    expect(elem?.href).toBe(url);
+    expect(elem?.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
+    /** @type HTMLMetaElement? */
     const colorSchemaMeta = doc.querySelector("meta[name='color-scheme']");
     expect(colorSchemaMeta).toBeTruthy();
-    expect(colorSchemaMeta.content).toBe("light dark");
+    expect(colorSchemaMeta?.content).toBe("light dark");
   });
 
   it("should add W3C darkmode stylesheet at the end", async () => {
-    const ops = makeStandardOps({ darkMode: true });
+    const ops = makeStandardOps();
     const doc = await getExportedDoc(await makeRSDoc(ops));
     const linkBase = doc.querySelector(
       `link[href^='https://www.w3.org/StyleSheets/TR/2021/base'][rel="stylesheet"]`
