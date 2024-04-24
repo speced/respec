@@ -201,7 +201,9 @@ describe("W3C - Style", () => {
     const doc = await getExportedDoc(await makeRSDoc(ops));
     const url = "https://www.w3.org/StyleSheets/TR/2021/base";
     const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
-    const colorSchemaMeta = doc.querySelector("link[media='(prefers-color-scheme: dark)']");
+    const colorSchemaMeta = doc.querySelector(
+      "link[media='(prefers-color-scheme: dark)']"
+    );
     expect(elem?.nextElementSibling).toBe(colorSchemaMeta);
     expect(colorSchemaMeta?.nextElementSibling).toBe(null);
   });
