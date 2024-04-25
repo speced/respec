@@ -209,7 +209,7 @@ describe("W3C - Style", () => {
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
     const elem = doc.querySelector("meta[name='color-scheme']");
     expect(elem).toBeTruthy();
-    expect(elem.content).toBe("dark");
+    expect(elem.content).toBe("dark light");
   });
 
   it("respects includes light color scheme by default", async () => {
@@ -229,10 +229,6 @@ describe("W3C - Style", () => {
     expect(link).toBeTruthy();
     expect(link?.href).toBe(url);
     expect(link?.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
-    /** @type HTMLMetaElement? */
-    const colorSchemeMeta = doc.querySelector("meta[name='color-scheme']");
-    expect(colorSchemeMeta).toBeTruthy();
-    expect(colorSchemeMeta?.content).toBe("dark");
   });
 
   it("adds W3C darkmode stylesheet at the end", async () => {
@@ -254,7 +250,7 @@ describe("W3C - Style", () => {
     expect(linkBase.nextElementSibling).toBe(linkDarkMode);
   });
 
-  it("ensures correct CSS rules are embedded in style", async () => {
+  it("ensures correct color scheme CSS rules are embedded in style", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
 
@@ -267,7 +263,7 @@ describe("W3C - Style", () => {
 
     // Check if the style content includes the correct color-scheme value
     const actualCSSContent = styleElem?.textContent;
-    expect(actualCSSContent?.includes("color-scheme: dark")).toBeTruthy();
+    expect(actualCSSContent?.includes("color-scheme: dark light")).toBeTruthy();
   });
 
   it("shouldn't include fixup.js when noToc is set", async () => {
