@@ -114,30 +114,34 @@ export function run(conf) {
   // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
   sub("beforesave", styleMover(finalStyleURL));
 
+  // Add color scheme meta tag and style
   /** @type HTMLMetaElement */
   let colorScheme = document.querySelector("head meta[name=color-scheme]");
   if (!colorScheme) {
-    colorScheme = html`<meta name="color-scheme" content="light dark" />`;
+    // Default to light mode during transitional period.
+    colorScheme = html`<meta name="color-scheme" content="light" />`;
     document.head.appendChild(colorScheme);
   }
-  const darkModeStyleUrl = getStyleUrl("dark.css");
   const css = `:root {
     color-scheme: ${colorScheme.content};
   }`;
   document.head.appendChild(
-    html`<style>
+    html`<style id="respec-color-scheme-declaration">
       ${css}
     </style>`
   );
-  document.head.appendChild(
-    html`<link
-      rel="stylesheet"
-      href="${darkModeStyleUrl.href}"
-      media="(prefers-color-scheme: dark)"
-    />`
-  );
-  // As required by W3C Pub Rules.
-  sub("beforesave", styleMover(darkModeStyleUrl));
+  if (colorScheme.content.includes("dark")) {
+    const darkModeStyleUrl = getStyleUrl("dark.css");
+    document.head.appendChild(
+      html`<link
+        rel="stylesheet"
+        href="${darkModeStyleUrl.href}"
+        media="(prefers-color-scheme: dark)"
+      />`
+    );
+    // As required by W3C Pub Rules.
+    sub("beforesave", styleMover(darkModeStyleUrl));
+  }
 }
 
 /** @param {Conf} conf */

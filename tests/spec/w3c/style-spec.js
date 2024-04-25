@@ -201,14 +201,10 @@ describe("W3C - Style", () => {
     const doc = await getExportedDoc(await makeRSDoc(ops));
     const url = "https://www.w3.org/StyleSheets/TR/2021/base";
     const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
-    const colorSchemaMeta = doc.querySelector(
-      "link[media='(prefers-color-scheme: dark)']"
-    );
-    expect(elem?.nextElementSibling).toBe(colorSchemaMeta);
-    expect(colorSchemaMeta?.nextElementSibling).toBe(null);
+    expect(elem?.nextElementSibling).toBe(null);
   });
 
-  it("should respect existing color scheme", async () => {
+  it("respects existing color scheme", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
     const elem = doc.querySelector("meta[name='color-scheme']");
@@ -216,24 +212,34 @@ describe("W3C - Style", () => {
     expect(elem.content).toBe("dark");
   });
 
-  it("should add dark mode stylesheet", async () => {
+  it("respects includes light color scheme by default", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
-    const url = "https://www.w3.org/StyleSheets/TR/2021/dark.css";
-    /** @type HTMLLinkElement? */
-    const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
+    const elem = doc.querySelector("meta[name='color-scheme']");
     expect(elem).toBeTruthy();
-    expect(elem?.href).toBe(url);
-    expect(elem?.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
-    /** @type HTMLMetaElement? */
-    const colorSchemaMeta = doc.querySelector("meta[name='color-scheme']");
-    expect(colorSchemaMeta).toBeTruthy();
-    expect(colorSchemaMeta?.content).toBe("light dark");
+    expect(elem.content).toBe("light");
   });
 
-  it("should add W3C darkmode stylesheet at the end", async () => {
+  it("add dark mode stylesheet", async () => {
     const ops = makeStandardOps();
-    const doc = await getExportedDoc(await makeRSDoc(ops));
+    const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
+    const url = "https://www.w3.org/StyleSheets/TR/2021/dark.css";
+    /** @type HTMLLinkElement? */
+    const link = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
+    expect(link).toBeTruthy();
+    expect(link?.href).toBe(url);
+    expect(link?.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
+    /** @type HTMLMetaElement? */
+    const colorSchemeMeta = doc.querySelector("meta[name='color-scheme']");
+    expect(colorSchemeMeta).toBeTruthy();
+    expect(colorSchemeMeta?.content).toBe("dark");
+  });
+
+  it("adds W3C darkmode stylesheet at the end", async () => {
+    const ops = makeStandardOps();
+    const doc = await getExportedDoc(
+      await makeRSDoc(ops, "spec/core/color-scheme.html")
+    );
     const linkBase = doc.querySelector(
       `link[href^='https://www.w3.org/StyleSheets/TR/2021/base'][rel="stylesheet"]`
     );
@@ -246,6 +252,22 @@ describe("W3C - Style", () => {
     expect(linkDarkMode).toBeTruthy();
     expect(linkDarkMode.nextElementSibling).toBeFalsy();
     expect(linkBase.nextElementSibling).toBe(linkDarkMode);
+  });
+
+  it("ensures correct CSS rules are embedded in style", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
+
+    // Select the embedded style element
+    /** @type HTMLStyleElement? */
+    const styleElem = doc.querySelector(
+      "style#respec-color-scheme-declaration"
+    );
+    expect(styleElem).toBeTruthy();
+
+    // Check if the style content includes the correct color-scheme value
+    const actualCSSContent = styleElem?.textContent;
+    expect(actualCSSContent?.includes("color-scheme: dark")).toBeTruthy();
   });
 
   it("shouldn't include fixup.js when noToc is set", async () => {
