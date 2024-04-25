@@ -202,7 +202,7 @@ describe("W3C - Style", () => {
     const url = "https://www.w3.org/StyleSheets/TR/2021/base";
     const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
     expect(elem).toBeTruthy();
-    expect(elem?.nextElementSibling).toBe(null);
+    expect(elem.nextElementSibling).toBe(null);
   });
 
   it("respects existing color scheme", async () => {
