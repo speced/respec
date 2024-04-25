@@ -213,7 +213,7 @@ describe("W3C - Style", () => {
     expect(elem.content).toBe("dark light");
   });
 
-  it("respects includes light color scheme by default", async () => {
+  it("sets the document to light color scheme by default", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
     const elem = doc.querySelector("meta[name='color-scheme']");
@@ -221,7 +221,7 @@ describe("W3C - Style", () => {
     expect(elem.content).toBe("light");
   });
 
-  it("add dark mode stylesheet", async () => {
+  it("adds dark mode stylesheet", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
     const url = "https://www.w3.org/StyleSheets/TR/2021/dark.css";
@@ -232,7 +232,7 @@ describe("W3C - Style", () => {
     expect(link?.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
   });
 
-  it("adds W3C darkmode stylesheet at the end", async () => {
+  it("adds darkmode stylesheet at the end", async () => {
     const ops = makeStandardOps();
     const doc = await getExportedDoc(
       await makeRSDoc(ops, "spec/core/color-scheme.html")
@@ -251,7 +251,7 @@ describe("W3C - Style", () => {
     expect(linkBase.nextElementSibling).toBe(linkDarkMode);
   });
 
-  it("ensures correct color scheme CSS rules are embedded in style", async () => {
+  it("includes the color-scheme CSS rule in a style tag", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
 
