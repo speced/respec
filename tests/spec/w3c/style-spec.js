@@ -196,11 +196,12 @@ describe("W3C - Style", () => {
     });
   }
 
-  it("should add W3C stylesheets at end", async () => {
+  it("should add W3C stylesheet at the end", async () => {
     const ops = makeStandardOps({});
     const doc = await getExportedDoc(await makeRSDoc(ops));
     const url = "https://www.w3.org/StyleSheets/TR/2021/base";
     const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
+    expect(elem).toBeTruthy();
     expect(elem?.nextElementSibling).toBe(null);
   });
 
