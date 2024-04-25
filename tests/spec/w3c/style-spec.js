@@ -229,7 +229,7 @@ describe("W3C - Style", () => {
     const link = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
     expect(link).toBeTruthy();
     expect(link?.href).toBe(url);
-    expect(link?.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
+    expect(link?.media).toBe("(prefers-color-scheme: dark)");
   });
 
   it("adds darkmode stylesheet at the end", async () => {
