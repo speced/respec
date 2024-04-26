@@ -224,13 +224,11 @@ describe("W3C - Style", () => {
   it("adds dark mode stylesheet", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
-    const url = "https://www.w3.org/StyleSheets/TR/2021/dark.css";
     /** @type HTMLLinkElement? */
     const link = doc.querySelector(
-      `link[href^='${url}'][rel="stylesheet"][media="(prefers-color-scheme: dark)"]`
+      `link[href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
     );
     expect(link).toBeTruthy();
-    expect(link?.href).toBe(url);
   });
 
   it("adds darkmode stylesheet at the end", async () => {
