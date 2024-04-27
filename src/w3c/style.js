@@ -122,14 +122,6 @@ export function run(conf) {
     colorScheme = html`<meta name="color-scheme" content="light" />`;
     document.head.appendChild(colorScheme);
   }
-  const css = `:root {
-    color-scheme: ${colorScheme.content};
-  }`;
-  document.head.appendChild(
-    html`<style id="respec-color-scheme-declaration">
-      ${css}
-    </style>`
-  );
   if (colorScheme.content.includes("dark")) {
     const darkModeStyleUrl = getStyleUrl("dark.css");
     document.head.appendChild(

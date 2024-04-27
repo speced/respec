@@ -250,21 +250,6 @@ describe("W3C - Style", () => {
     expect(linkBase.nextElementSibling).toBe(linkDarkMode);
   });
 
-  it("includes the color-scheme CSS rule in a style tag", async () => {
-    const ops = makeStandardOps();
-    const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
-
-    // Select the embedded style element
-    /** @type HTMLStyleElement? */
-    const styleElem = doc.querySelector(
-      "style#respec-color-scheme-declaration"
-    );
-    expect(styleElem).toBeTruthy();
-
-    // Check if the style content includes the correct color-scheme value
-    const actualCSSContent = styleElem?.textContent;
-    expect(actualCSSContent?.includes("color-scheme: dark light")).toBeTruthy();
-  });
 
   it("shouldn't include fixup.js when noToc is set", async () => {
     const ops = makeStandardOps();
