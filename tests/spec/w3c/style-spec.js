@@ -250,7 +250,6 @@ describe("W3C - Style", () => {
     expect(linkBase.nextElementSibling).toBe(linkDarkMode);
   });
 
-
   it("shouldn't include fixup.js when noToc is set", async () => {
     const ops = makeStandardOps();
     const newProps = {
