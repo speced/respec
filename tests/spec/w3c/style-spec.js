@@ -202,28 +202,40 @@ describe("W3C - Style", () => {
     const url = "https://www.w3.org/StyleSheets/TR/2021/base";
     const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
     expect(elem).toBeTruthy();
-    expect(elem.nextElementSibling).toBeFalsy();
-
-    const colorSchemaMeta = doc.querySelector("meta[name='color-scheme']");
-    expect(colorSchemaMeta).toBeFalsy();
+    expect(elem.nextElementSibling).toBe(null);
   });
 
-  it("should add dark mode stylesheet", async () => {
-    const ops = makeStandardOps({ darkMode: true });
-    const doc = await makeRSDoc(ops);
-    const url = "https://www.w3.org/StyleSheets/TR/2021/dark.css";
-    const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
+  it("respects existing color scheme", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
+    const elem = doc.querySelector("meta[name='color-scheme']");
     expect(elem).toBeTruthy();
-    expect(elem.href).toBe(url);
-    expect(elem.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
-    const colorSchemaMeta = doc.querySelector("meta[name='color-scheme']");
-    expect(colorSchemaMeta).toBeTruthy();
-    expect(colorSchemaMeta.content).toBe("light dark");
+    expect(elem.content).toBe("dark light");
   });
 
-  it("should add W3C darkmode stylesheet at the end", async () => {
-    const ops = makeStandardOps({ darkMode: true });
-    const doc = await getExportedDoc(await makeRSDoc(ops));
+  it("sets the document to light color scheme by default", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops);
+    const elem = doc.querySelector("meta[name='color-scheme']");
+    expect(elem).toBeTruthy();
+    expect(elem.content).toBe("light");
+  });
+
+  it("adds dark mode stylesheet", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
+    /** @type HTMLLinkElement? */
+    const link = doc.querySelector(
+      `link[href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+    );
+    expect(link).toBeTruthy();
+  });
+
+  it("adds darkmode stylesheet at the end", async () => {
+    const ops = makeStandardOps();
+    const doc = await getExportedDoc(
+      await makeRSDoc(ops, "spec/core/color-scheme.html")
+    );
     const linkBase = doc.querySelector(
       `link[href^='https://www.w3.org/StyleSheets/TR/2021/base'][rel="stylesheet"]`
     );
