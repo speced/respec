@@ -114,18 +114,16 @@ export function run(conf) {
   // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
   sub("beforesave", styleMover(finalStyleURL));
 
-  if (conf.darkMode) {
+  // Add color scheme meta tag and style
+  /** @type HTMLMetaElement */
+  let colorScheme = document.querySelector("head meta[name=color-scheme]");
+  if (!colorScheme) {
+    // Default to light mode during transitional period.
+    colorScheme = html`<meta name="color-scheme" content="light" />`;
+    document.head.appendChild(colorScheme);
+  }
+  if (colorScheme.content.includes("dark")) {
     const darkModeStyleUrl = getStyleUrl("dark.css");
-    document.head.appendChild(
-      html`<style>
-        :root {
-          color-scheme: light dark;
-        }
-      </style>`
-    );
-    document.head.appendChild(
-      html`<meta name="color-scheme" content="light dark" />`
-    );
     document.head.appendChild(
       html`<link
         rel="stylesheet"
