@@ -31,7 +31,7 @@ jobs:
           curl -sL https://api.github.com/repos/w3c/respec/pulls/${{ github.event.pull_request.number }}/files -o /tmp/pr_files.json
           cat /tmp/pr_files.json | jq -r '.[].filename' | grep -qE "^builds/" || exit 0
           echo "::error::Uh oh! builds/ was changed."; exit 1
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
@@ -43,7 +43,7 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
@@ -60,7 +60,7 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
@@ -78,7 +78,7 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
