@@ -31,9 +31,13 @@ span.warning {
 
 .warning {
   border-color: #f11;
+  border-color: var(--warning-border, #f11);
   border-width: 0.2em;
   border-style: solid;
   background: #fbe9e9;
+  background: var(--warning-bg, #fbe9e9);
+  color: black;
+  color: var(--text, black);
 }
 
 .warning-title:before {

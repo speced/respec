@@ -3,19 +3,38 @@
  * of a spec when there is a valid level configuration.
  *
  * Levels should be integers >= 0.
+ *
+ * @module w3c/level
  */
 
 import { getIntlData, showError } from "../core/utils.js";
 export const name = "w3c/level";
-
+/** @type {LocalizationStrings} */
 const localizationStrings = {
   en: {
     level: "Level",
+  },
+  ja: {
+    level: "レベル",
+  },
+  nl: {
+    level: "Niveau",
+  },
+  de: {
+    level: "Stufe",
+  },
+  zh: {
+    level: "级别",
   },
 };
 
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * Updates the title and shortName of a spec based on the level configuration.
+ *
+ * @param {Conf} conf - The configuration object.
+ */
 export function run(conf) {
   if (!conf.hasOwnProperty("level")) return;
 

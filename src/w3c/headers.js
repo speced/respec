@@ -81,7 +81,7 @@
 //          intended to be pushed to the WHATWG.
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", (default) the W3C Software and Document License
-//            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+//            https://www.w3.org/copyright/software-license-2023/
 import {
   ISODate,
   codedJoinAnd,
@@ -114,6 +114,7 @@ const status2maturity = {
   LS: "WD",
   LD: "WD",
   FPWD: "WD",
+  "Member-SUBM": "SUBM",
 };
 
 export const status2text = {
@@ -130,7 +131,6 @@ export const status2text = {
   CR: "Candidate Recommendation",
   CRD: "Candidate Recommendation",
   PR: "Proposed Recommendation",
-  PER: "Proposed Edited Recommendation",
   REC: "Recommendation",
   DISC: "Discontinued Draft",
   RSCND: "Rescinded Recommendation",
@@ -181,7 +181,6 @@ export const recTrackStatus = [
   "CRD",
   "DISC",
   "FPWD",
-  "PER",
   "PR",
   "REC",
   "RSCND",
@@ -222,7 +221,7 @@ export const licenses = new Map([
     {
       name: "W3C Software Notice and License",
       short: "W3C Software",
-      url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
+      url: "https://www.w3.org/copyright/software-license-2002/",
     },
   ],
   [
@@ -230,7 +229,7 @@ export const licenses = new Map([
     {
       name: "W3C Software and Document Notice and License",
       short: "permissive document license",
-      url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+      url: "https://www.w3.org/copyright/software-license-2023/",
     },
   ],
   [
@@ -246,7 +245,7 @@ export const licenses = new Map([
     {
       name: "W3C Document License",
       short: "document use",
-      url: "https://www.w3.org/Consortium/Legal/copyright-documents",
+      url: "https://www.w3.org/copyright/document-license/",
     },
   ],
   [
@@ -332,7 +331,6 @@ export async function run(conf) {
   conf.isMO = conf.specStatus === "MO";
   conf.isNote = W3CNotes.includes(conf.specStatus);
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
-  conf.isPER = conf.specStatus === "PER";
   conf.isPR = conf.specStatus === "PR";
   conf.isRecTrack = recTrackStatus.includes(conf.specStatus);
   conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
@@ -467,7 +465,7 @@ export async function run(conf) {
     showError(msg, name);
   }
   if (conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
-  if (conf.isRec && !conf.errata) {
+  if (conf.isRec && !conf.errata && !conf.revisionTypes?.length) {
     const msg = "Recommendations must have an errata link.";
     const hint = docLink`Add an ${"[errata]"} URL to your ${"[respecConfig]"}.`;
     showError(msg, name, { hint });
@@ -547,10 +545,6 @@ export async function run(conf) {
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
-    conf.wgHTML = htmlJoinAnd(conf.wg, (wg, idx) => {
-      return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
-    });
-
     conf.wgPatentHTML = htmlJoinAnd(conf.wg, (wg, i) => {
       return html`a
         <a href="${conf.wgPatentURI[i]}" rel="disclosure"
@@ -559,9 +553,6 @@ export async function run(conf) {
     });
   } else {
     conf.multipleWGs = false;
-    if (conf.wg) {
-      conf.wgHTML = html`the <a href="${conf.wgURI}">${conf.wg}</a>`;
-    }
   }
   if (conf.isPR && !conf.crEnd) {
     const msg = docLink`${"[specStatus]"} is "PR" but no ${"[crEnd]"} is specified in the ${"[respecConfig]"} (needed to indicate end of previous CR).`;
@@ -579,12 +570,6 @@ export async function run(conf) {
     showError(msg, name);
   }
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
-
-  if (conf.isPER && !conf.perEnd) {
-    const msg = docLink`${"[specStatus]"} is "PER", but no ${"[perEnd]"} is specified.`;
-    showError(msg, name);
-  }
-  conf.perEnd = validateDateAndRecover(conf, "perEnd");
 
   if (conf.hasOwnProperty("updateableRec")) {
     const msg = "Configuration option `updateableRec` is deprecated.";
@@ -641,9 +626,7 @@ export async function run(conf) {
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
 
   if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
-    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${
-      conf.specStatus
-    }") puts it on the W3C Rec Track.`;
+    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${conf.specStatus}") puts it on the W3C Rec Track.`;
     const notAllowed = codedJoinOr(recTrackStatus, { quotes: true });
     const hint = `Status **can't** be any of: ${notAllowed}.`;
     showError(msg, name, { hint });
@@ -752,7 +735,7 @@ async function deriveHistoryURI(conf) {
   }
 
   const historyURL = new URL(
-    conf.historyURI ?? conf.shortName,
+    conf.historyURI ?? `${conf.shortName}/`,
     "https://www.w3.org/standards/history/"
   );
 

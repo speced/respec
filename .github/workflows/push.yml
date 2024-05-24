@@ -6,13 +6,14 @@ on:
     paths-ignore:
       - "**"
       - "!**.js"
+      - "!**.cjs"
       - "!**.json"
       - "!**.css"
       - "!**.html"
       - "!.github/workflows/**"
 
 env:
-  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+  PUPPETEER_SKIP_DOWNLOAD: 1
   PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
   FORCE_COLOR: 1
   # See https://github.com/w3c/respec/pull/3306
@@ -26,14 +27,13 @@ jobs:
     name: Headless Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with: { node-version: 16, cache: npm }
-      - name: install & build
-        run: |
-          npm ci
-          npm run build:w3c
-      - run: npm run test:headless
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+      - uses: actions/setup-node@v4
+        with: { node-version-file: '.nvmrc', cache: pnpm }
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm build:w3c
+      - run: pnpm test:headless
       - name: Calculate size and update on server
         run: |
           timestamp=$(git show --no-patch --pretty='%cd' --date='format:%s')
@@ -52,13 +52,12 @@ jobs:
     name: Karma Unit Tests (Chrome)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with: { node-version: 16, cache: npm }
-      - name: install & build
-        run: |
-          npm ci
-          npm run build:w3c & npm run build:geonovum
-      - run: npm test
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+      - uses: actions/setup-node@v4
+        with: { node-version-file: '.nvmrc', cache: pnpm }
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm build:w3c & pnpm build:geonovum
+      - run: pnpm test
         env:
           BROWSERS: ChromeHeadless

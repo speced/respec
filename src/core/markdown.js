@@ -7,17 +7,18 @@
  * property of the configuration object to "markdown."
  *
  * We use marked for parsing Markdown:
- * https://github.com/chjj/marked
+ * https://github.com/markedjs/marked
  *
  */
 
-import { getElementIndentation } from "./utils.js";
+import { getElementIndentation, reindent } from "./utils.js";
 import { marked } from "./import-maps.js";
-import { reindent } from "./reindent.js";
+
 export const name = "core/markdown";
 
 const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
+
 class Renderer extends marked.Renderer {
   code(code, infoString, isEscaped) {
     const { language, ...metaData } = Renderer.parseInfoString(infoString);
@@ -27,7 +28,9 @@ class Renderer extends marked.Renderer {
       return `<pre class="idl">${code}</pre>`;
     }
 
-    const html = super.code(code, language, isEscaped);
+    const html = super
+      .code(code, language, isEscaped)
+      .replace(`class="language-`, `class="`);
 
     const { example, illegalExample } = metaData;
     if (!example && !illegalExample) return html;
@@ -73,21 +76,19 @@ class Renderer extends marked.Renderer {
     return { language, ...metaData };
   }
 
-  heading(text, level, raw, slugger) {
+  heading(text, level, raw) {
     const headingWithIdRegex = /(.+)\s+{#([\w-]+)}$/;
     if (headingWithIdRegex.test(text)) {
       const [, textContent, id] = text.match(headingWithIdRegex);
       return `<h${level} id="${id}">${textContent}</h${level}>`;
     }
-    return super.heading(text, level, raw, slugger);
+    return super.heading(text, level, raw);
   }
 }
 
+/** @type {import('marked').MarkedOptions} */
 const config = {
-  sanitize: false,
   gfm: true,
-  headerIds: false,
-  langPrefix: "",
   renderer: new Renderer(),
 };
 

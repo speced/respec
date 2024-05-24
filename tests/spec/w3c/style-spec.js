@@ -1,6 +1,11 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  getExportedDoc,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
 
 const statuses = [
   {
@@ -121,11 +126,6 @@ const statuses = [
     group: "webapps",
   },
   {
-    specStatus: "PER",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-PER",
-    group: "webapps",
-  },
-  {
     specStatus: "PR",
     expectedURL: "https://www.w3.org/StyleSheets/TR/2021/W3C-PR",
     group: "webapps",
@@ -195,6 +195,60 @@ describe("W3C - Style", () => {
       expect(elem.href).toBe(expectedURL);
     });
   }
+
+  it("should add W3C stylesheet at the end", async () => {
+    const ops = makeStandardOps({});
+    const doc = await getExportedDoc(await makeRSDoc(ops));
+    const url = "https://www.w3.org/StyleSheets/TR/2021/base";
+    const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
+    expect(elem).toBeTruthy();
+    expect(elem.nextElementSibling).toBe(null);
+  });
+
+  it("respects existing color scheme", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
+    const elem = doc.querySelector("meta[name='color-scheme']");
+    expect(elem).toBeTruthy();
+    expect(elem.content).toBe("dark light");
+  });
+
+  it("sets the document to light color scheme by default", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops);
+    const elem = doc.querySelector("meta[name='color-scheme']");
+    expect(elem).toBeTruthy();
+    expect(elem.content).toBe("light");
+  });
+
+  it("adds dark mode stylesheet", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
+    /** @type HTMLLinkElement? */
+    const link = doc.querySelector(
+      `link[href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+    );
+    expect(link).toBeTruthy();
+  });
+
+  it("adds darkmode stylesheet at the end", async () => {
+    const ops = makeStandardOps();
+    const doc = await getExportedDoc(
+      await makeRSDoc(ops, "spec/core/color-scheme.html")
+    );
+    const linkBase = doc.querySelector(
+      `link[href^='https://www.w3.org/StyleSheets/TR/2021/base'][rel="stylesheet"]`
+    );
+    expect(linkBase).toBeTruthy();
+    expect(linkBase.nextElementSibling).toBeTruthy();
+
+    const linkDarkMode = doc.querySelector(
+      `link[href^='https://www.w3.org/StyleSheets/TR/2021/dark.css'][rel="stylesheet"]`
+    );
+    expect(linkDarkMode).toBeTruthy();
+    expect(linkDarkMode.nextElementSibling).toBeFalsy();
+    expect(linkBase.nextElementSibling).toBe(linkDarkMode);
+  });
 
   it("shouldn't include fixup.js when noToc is set", async () => {
     const ops = makeStandardOps();

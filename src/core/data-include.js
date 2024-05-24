@@ -75,20 +75,31 @@ function removeIncludeAttributes(el) {
 }
 
 export async function run() {
-  /** @type {NodeListOf<HTMLElement>} */
-  const includables = document.querySelectorAll("[data-include]");
+  await runIncludes(document, 1);
+}
 
+/**
+ * @param {HTMLElement | Document} root
+ * @param {number} currentDepth
+ */
+async function runIncludes(root, currentDepth) {
+  /** @type {NodeListOf<HTMLElement>} */
+  const includables = root.querySelectorAll("[data-include]");
   const promisesToInclude = Array.from(includables).map(async el => {
     const url = el.dataset.include;
     if (!url) {
       return; // just skip it
     }
-    const id = `include-${String(Math.random()).substr(2)}`;
+    const id = `include-${String(Math.random()).slice(2)}`;
     el.dataset.includeId = id;
     try {
       const response = await fetch(url);
       const text = await response.text();
       processResponse(text, id, url);
+      if (currentDepth < 3) {
+        // For performance reasons, only allow limited nesting.
+        await runIncludes(el, currentDepth + 1);
+      }
     } catch (err) {
       const msg = `\`data-include\` failed: \`${url}\` (${err.message}).`;
       console.error(msg, el, err);

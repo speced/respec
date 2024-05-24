@@ -18,7 +18,6 @@ import {
 } from "./dfn-validators.js";
 import { registerDefinition } from "./dfn-map.js";
 import { slotRegex } from "./inline-idl-parser.js";
-import { sub } from "./pubsubhub.js";
 
 export const name = "core/dfn";
 
@@ -78,7 +77,6 @@ export function run() {
     }
     dfn.dataset.lt = titles.join("|");
   }
-  sub("plugins-done", addContractDefaults);
 }
 
 /**
@@ -214,27 +212,4 @@ function processAsInternalSlot(title, dfn) {
     return "dfn";
   }
   return dfnType;
-}
-
-function addContractDefaults() {
-  // Find all dfns that don't have a type and default them to "dfn".
-  /** @type NodeListOf<HTMLElement> */
-  const dfnsWithNoType = document.querySelectorAll(
-    "dfn:is([data-dfn-type=''],:not([data-dfn-type]))"
-  );
-  for (const dfn of dfnsWithNoType) {
-    dfn.dataset.dfnType = "dfn";
-  }
-
-  // Per "the contract", export all definitions, except where:
-  //  - Explicitly marked with data-noexport.
-  //  - The type is "dfn" and not explicitly marked for export (i.e., just a regular definition).
-  //  - definitions was included via (legacy) data-cite="foo#bar".
-  /** @type NodeListOf<HTMLElement> */
-  const exportableDfns = document.querySelectorAll(
-    "dfn:not([data-noexport], [data-export], [data-dfn-type='dfn'], [data-cite])"
-  );
-  for (const dfn of exportableDfns) {
-    dfn.dataset.export = "";
-  }
 }

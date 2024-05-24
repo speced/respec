@@ -180,7 +180,12 @@ function findMatchingDfn(anchor, titleToDfns) {
   const dfnsByType = titleToDfns.get(target.title).get(target.for);
   const { linkType } = anchor.dataset;
   if (linkType) {
-    return dfnsByType.get(linkType) || dfnsByType.get("dfn");
+    for (const type of linkType.split("|")) {
+      if (dfnsByType.get(type)) {
+        return dfnsByType.get(type);
+      }
+    }
+    return dfnsByType.get("dfn");
   } else {
     // Assumption: if it's for something, it's more likely IDL.
     const type = target.for ? "idl" : "dfn";

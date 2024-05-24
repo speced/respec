@@ -5,7 +5,6 @@
 import { lang as docLang } from "./l10n.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
-import { reindent } from "./reindent.js";
 export const name = "core/utils";
 
 const dashes = /-/g;
@@ -23,7 +22,8 @@ function hashString(text) {
   return String(hash);
 }
 
-export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
+// https://stackoverflow.com/a/58633686
+export const ISODate = new Intl.DateTimeFormat(["sv-SE"], {
   timeZone: "UTC",
   year: "numeric",
   month: "2-digit",
@@ -67,6 +67,9 @@ export function createResourceHint(opts) {
     case "preload":
       if ("as" in opts) {
         linkElem.setAttribute("as", opts.as);
+      }
+      if (opts.corsMode) {
+        linkElem.crossOrigin = opts.corsMode;
       }
       break;
   }
@@ -894,6 +897,21 @@ export function showWarning(message, pluginName, options = {}) {
 }
 
 /**
+ * Creates showError, showWarning utilities for use in custom pre-process and
+ * post-process plugins.
+ * @param {string} pluginName
+ */
+export function makePluginUtils(pluginName) {
+  /** @typedef {Parameters<typeof showError>[2]} Options */
+  return {
+    /** @type {(message: string, options?: Options) => void} */
+    showError: (msg, options) => showError(msg, pluginName, options),
+    /** @type {(message: string, options?: Options) => void} */
+    showWarning: (msg, options) => showWarning(msg, pluginName, options),
+  };
+}
+
+/**
  * Makes a string `coded`.
  *
  * @param {string} item
@@ -957,4 +975,25 @@ export function docLink(strings, ...keys) {
     })
     .join("");
   return reindent(linkifiedStr);
+}
+
+/**
+ * Takes a text string, trims it, splits it into lines,
+ * finds the common indentation level, and then de-indents every line
+ * by that common indentation level.
+ *
+ * @param {string} text - The text to be re-indented.
+ * @returns {string} The re-indented text.
+ */
+export function reindent(text) {
+  if (!text) {
+    return text;
+  }
+  const lines = text.trimEnd().split("\n");
+  while (lines.length && !lines[0].trim()) {
+    lines.shift();
+  }
+  const indents = lines.filter(s => s.trim()).map(s => s.search(/[^\s]/));
+  const leastIndent = Math.min(...indents);
+  return lines.map(s => s.slice(leastIndent)).join("\n");
 }

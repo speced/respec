@@ -25,14 +25,14 @@ var[data-type]::before {
   border-width: 4px 6px 0 6px;
   border-style: solid;
   border-color: transparent;
-  border-top-color: #000;
+  border-top-color: #222;
 }
 
 /* actual text */
 var[data-type]::after {
   content: attr(data-type);
   transform: translateX(-50%) translateY(-100%);
-  background: #000;
+  background: #222;
   text-align: center;
   /* additional styling */
   font-family: "Dank Mono", "Fira Code", monospace;

@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * Module core/highlight-vars
- * Highlights occurrences of a <var> within a section on click.
+ * Highlights occurrences of a <var> within the algorithm or the encompassing section on click.
  * Set `conf.highlightVars = true` to enable.
  * Removes highlights from <var> if clicked anywhere else.
  * All is done while keeping in mind that exported html stays clean
@@ -73,12 +73,13 @@ function getHighlightColor(target) {
 
 function highlightVars(varElem) {
   const textContent = norm(varElem.textContent);
-  const parent = varElem.closest("section");
+  const parent = varElem.closest(".algorithm, section");
   const highlightColor = getHighlightColor(varElem);
 
   const varsToHighlight = [...parent.querySelectorAll("var")].filter(
     el =>
-      norm(el.textContent) === textContent && el.closest("section") === parent
+      norm(el.textContent) === textContent &&
+      el.closest(".algorithm, section") === parent
   );
 
   // update availability of highlight color

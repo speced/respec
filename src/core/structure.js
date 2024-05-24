@@ -76,8 +76,8 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
     let secno = section.isIntro
       ? ""
       : appendixMode
-      ? appendixNumber(index - lastNonAppendix + 1)
-      : prefix + index;
+        ? appendixNumber(index - lastNonAppendix + 1)
+        : prefix + index;
     const level = secno.split(".").length;
     if (level === 1) {
       secno += ".";

@@ -1,6 +1,6 @@
 // @ts-check
 /* eslint-env node */
-const baseConfig = require("../karma.conf.base.js");
+const baseConfig = require("../karma.conf.base.cjs");
 
 /** @type {import("karma").ConfigOptions["files"]} */
 const additionalFiles = [

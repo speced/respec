@@ -25,8 +25,15 @@ export default css`
   min-width: 25ch;
   max-width: 32ch;
   background: #fff;
-  box-shadow: 0 1em 3em -0.4em rgba(0, 0, 0, 0.3),
+  background: var(--indextable-hover-bg, #fff);
+  color: black;
+  color: var(--indextable-hover-text, black);
+  box-shadow:
+    0 1em 3em -0.4em rgba(0, 0, 0, 0.3),
     0 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 1em 3em -0.4em var(--tocsidebar-shadow, rgba(0, 0, 0, 0.3)),
+    0 0 1px 1px var(--tocsidebar-shadow, rgba(0, 0, 0, 0.05));
   border-radius: 2px;
   z-index: 11;
   margin-bottom: 0.4em;
@@ -41,7 +48,9 @@ export default css`
 .mdn summary span {
   font-family: zillaslab, Palatino, "Palatino Linotype", serif;
   color: #fff;
+  color: var(--bg, #fff);
   background-color: #000;
+  background-color: var(--text, #000);
   display: inline-block;
   padding: 3px;
 }
@@ -102,37 +111,37 @@ export default css`
 
 .mdn .chrome::before,
 .mdn .chrome_android::before {
-  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/chrome/chrome.svg);
+  background-image: url(https://www.w3.org/assets/logos/browser-logos/chrome/chrome.svg);
 }
 
 .mdn .edge::before,
 .mdn .edge_mobile::before {
-  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/edge/edge.svg);
+  background-image: url(https://www.w3.org/assets/logos/browser-logos/edge/edge.svg);
 }
 
 .mdn .firefox::before,
 .mdn .firefox_android::before {
-  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/firefox/firefox.svg);
+  background-image: url(https://www.w3.org/assets/logos/browser-logos/firefox/firefox.svg);
 }
 
 .mdn .opera::before,
 .mdn .opera_android::before {
-  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/opera/opera.svg);
+  background-image: url(https://www.w3.org/assets/logos/browser-logos/opera/opera.svg);
 }
 
 .mdn .safari::before {
-  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/safari/safari.svg);
+  background-image: url(https://www.w3.org/assets/logos/browser-logos/safari/safari.svg);
 }
 
 .mdn .safari_ios::before {
-  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/safari-ios/safari-ios.svg);
+  background-image: url(https://www.w3.org/assets/logos/browser-logos/safari-ios/safari-ios.svg);
 }
 
 .mdn .samsunginternet_android::before {
-  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/samsung-internet/samsung-internet.svg);
+  background-image: url(https://www.w3.org/assets/logos/browser-logos/samsung-internet/samsung-internet.svg);
 }
 
 .mdn .webview_android::before {
-  background-image: url(https://cdn.w3.org/assets/logos/browser-logos/android-webview/android-webview.png);
+  background-image: url(https://www.w3.org/assets/logos/browser-logos/android-webview/android-webview.png);
 }
 `;

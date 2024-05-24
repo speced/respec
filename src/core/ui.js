@@ -9,9 +9,9 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 import { html, pluralize } from "./import-maps.js";
+import { reindent, xmlEscape } from "./utils.js";
 import css from "../styles/ui.css.js";
 import { markdownToHtml } from "./markdown.js";
-import { reindent } from "./reindent.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
 
@@ -287,7 +287,7 @@ function rsErrorToHTML(err) {
   const details = err.details
     ? `\n\n<details>\n${err.details}\n</details>\n`
     : "";
-  const msg = markdownToHtml(`**${err.message}**`, { inline: true });
+  const msg = markdownToHtml(`**${xmlEscape(err.message)}**`, { inline: true });
   const result = `${msg}${hint}${elements}${details}${plugin}`;
   return result;
 }

@@ -15,6 +15,11 @@ function preAsyncFunc() {
   });
 }
 
+function preWithWarning(_conf, _doc, utils) {
+  document.getElementById("pre-warning").innerHTML = "pass";
+  utils.showWarning("This is a warning");
+}
+
 function postSyncFunc() {
   document.getElementById("post-sync").innerHTML = "pass";
 }
@@ -25,6 +30,17 @@ function postAsyncFunc() {
       document.getElementById("post-async").innerHTML = "pass";
       resolve();
     }, 4);
+  });
+}
+
+function postWithDetailedError(_conf, _doc, utils) {
+  const el = document.getElementById("post-error");
+  el.innerHTML = "pass";
+  utils.showError("This is an error", {
+    hint: "This is a hint",
+    title: "This is a title",
+    details: "This is a detailed error message",
+    elements: [el],
   });
 }
 
@@ -50,11 +66,13 @@ respecConfig.preProcess = [
   preSyncFunc,
   preAsyncFunc,
   noOp, {},
+  preWithWarning
 ];
 
 respecConfig.postProcess = [
   postSyncFunc,
   postAsyncFunc,
+  postWithDetailedError,
   noOp, {},
 ];
 respecConfig.afterEnd = afterEnd;
@@ -72,7 +90,9 @@ respecConfig.afterEnd = afterEnd;
 <section>
   <p id="pre-sync">FAIL</p>
   <p id="pre-async">FAIL</p>
+  <p id="pre-warning">FAIL</p>
   <p id="post-sync">FAIL</p>
+  <p id="post-error">FAIL</p>
   <p id="post-async">FAIL</p>
   <p id="afterend">FAIL</p>
 </section>
