@@ -184,7 +184,12 @@ cli
     "Abort if ReSpec generates warnings (or errors).",
     false
   )
-  .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
+  .option(
+    "--sandbox",
+    "Disable Chromium sandboxing if needed, with --no-sandbox.",
+    true
+  )
+  .option("--disable-sandbox", "Alias of --no-sandbox.", false)
   .option("--devtools", "Enable debugging and show Chrome's DevTools.", false)
   .option("--verbose", "Log processing status to stdout.", false)
   .option("--localhost", "Spin up a local server to perform processing.", false)
@@ -199,6 +204,11 @@ cli.action(async (source, destination, opts) => {
     log.fatal("A source is required.");
     cli.help();
     process.exit(1);
+  }
+
+  if (opts["disable-sandbox"]) {
+    opts.sandbox = false;
+    delete opts["disable-sandbox"];
   }
 
   try {
@@ -247,7 +257,7 @@ async function run(source, destination, options, log) {
     onError: log.error.bind(log),
     onWarning: log.warn.bind(log),
     onProgress: log.info.bind(log),
-    disableSandbox: options["disable-sandbox"],
+    disableSandbox: !options.sandbox,
     devtools: options.devtools,
   });
 
