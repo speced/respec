@@ -13,7 +13,7 @@ on:
 env:
   PUPPETEER_SKIP_DOWNLOAD: 1
   PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
-  # See https://github.com/w3c/respec/pull/3306
+  # See https://github.com/speced/respec/pull/3306
   LC_ALL: en_US.UTF-8
   FORCE_COLOR: 1
 
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Ensure builds/ has not changed
         run: |
-          curl -sL https://api.github.com/repos/w3c/respec/pulls/${{ github.event.pull_request.number }}/files -o /tmp/pr_files.json
+          curl -sL https://api.github.com/repos/speced/respec/pulls/${{ github.event.pull_request.number }}/files -o /tmp/pr_files.json
           cat /tmp/pr_files.json | jq -r '.[].filename' | grep -qE "^builds/" || exit 0
           echo "::error::Uh oh! builds/ was changed."; exit 1
       - uses: pnpm/action-setup@v3

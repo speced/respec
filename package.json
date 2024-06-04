@@ -15,7 +15,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git://github.com/w3c/respec.git"
+    "url": "git://github.com/speced/respec.git"
   },
   "contributors": [
     "Marcos Cáceres <marcos@marcosc.com> (https://marcosc.com/)",
