@@ -57,7 +57,7 @@ async function getLinkProps(citeDetails) {
     href = canonicalHref;
   } else {
     if (path) {
-      // See: https://github.com/w3c/respec/issues/1856#issuecomment-429579475
+      // See: https://github.com/speced/respec/issues/1856#issuecomment-429579475
       const relPath = path.startsWith("/") ? `.${path}` : path;
       href = new URL(relPath, href).href;
     }

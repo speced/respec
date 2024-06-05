@@ -16,7 +16,7 @@ env:
   PUPPETEER_SKIP_DOWNLOAD: 1
   PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
   FORCE_COLOR: 1
-  # See https://github.com/w3c/respec/pull/3306
+  # See https://github.com/speced/respec/pull/3306
   LC_ALL: en_US.UTF-8
 
 permissions:

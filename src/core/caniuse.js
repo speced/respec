@@ -2,7 +2,7 @@
 /**
  * Module: "core/caniuse"
  * Adds a caniuse support table for a "feature" #1238
- * Usage options: https://github.com/w3c/respec/wiki/caniuse
+ * Usage options: https://github.com/speced/respec/wiki/caniuse
  */
 import { codedJoinAnd, docLink, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";

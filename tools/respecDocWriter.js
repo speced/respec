@@ -116,12 +116,13 @@ export async function toHTML(src, options = {}) {
  * useful in CI env or when you want to pin the ReSpec version.
  *
  * @assumption The ReSpec script being used in the document is hosted on either
- * w3.org or w3c.github.io. If this assumption doesn't hold true (interception
- * fails), this function will timeout.
+ * w3.org or w3c.github.io or speced.github.io. If this assumption doesn't hold
+ * true (interception fails), this function will timeout.
  *
  * The following ReSpec URLs are supported:
  * https://www.w3.org/Tools/respec/${profile}
  * https://w3c.github.io/respec/builds/${profile}.js
+ * https://speced.github.io/respec/builds/${profile}.js
  * file:///home/path-to-respec/builds/${profile}.js
  * http://localhost:PORT/builds/${profile}.js
  * https://example.com/builds/${profile}.js
@@ -162,6 +163,7 @@ function isRespecScript(req) {
     case "www.w3.org":
       return path.startsWith("/Tools/respec/");
     case "w3c.github.io":
+    case "speced.github.io":
       return path.startsWith("/respec/builds/");
     default:
       // localhost, file://, and everything else
@@ -226,7 +228,7 @@ async function generateHTML(page, timer, version, url) {
     const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${`${
       `Specification: ${url}\n` +
       `ReSpec version: ${version.join(".")}\n` +
-      "File a bug: https://github.com/w3c/respec/\n"
+      "File a bug: https://github.com/speced/respec/\n"
     }${err ? `Error: ${err.stack}\n` : ""}`}`;
     throw new Error(msg);
   }

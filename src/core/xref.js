@@ -7,7 +7,7 @@
  * Searches for the terms which do not have a local definition at xref API and
  * for each query, adds `data-cite` attributes to respective elements.
  * `core/data-cite` later converts these data-cite attributes to actual links.
- * https://github.com/w3c/respec/issues/1662
+ * https://github.com/speced/respec/issues/1662
  */
 /**
  * @typedef {import('core/xref').RequestEntry} RequestEntry

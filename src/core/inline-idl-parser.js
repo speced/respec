@@ -26,7 +26,7 @@ const attributeRegex = /^((?:\[\[)?(?:\w+(?: +\w+)*)(?:\]\])?)$/;
 const baseRegex = /^(?:\w+)\??$/;
 const enumRegex = /^(\w+)\["([\w- ]*)"\]$/;
 // TODO: const splitRegex = /(?<=\]\]|\b)\./
-// https://github.com/w3c/respec/pull/1848/files#r225087385
+// https://github.com/speced/respec/pull/1848/files#r225087385
 const methodSplitRegex = /\.?(\w+\(.*\)$)/;
 const slotSplitRegex = /\/(.+)/;
 const isProbablySlotRegex = /\[\[.+\]\]/;
