@@ -320,7 +320,7 @@ function handleConsoleMessages(page, onError, onWarning) {
     const text = args.filter(msg => msg !== "undefined")[0] || "";
     const type = message.type();
     if (
-      (type === "error" || type === "warning") &&
+      (type === "error" || type === "warning" || type === "warn") &&
       msgText && // browser errors have text
       !message.args().length // browser errors/warnings have no arguments
     ) {
