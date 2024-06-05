@@ -117,7 +117,7 @@ function buildHTML(profiles, specsByProfile) {
     </style>
   </head>
   <body>
-    <form action="https://respec-preview.netlify.com/">
+    <form action="https://respec-preview.netlify.app/">
       <h2>${title}</h2>
       <h3>Commit: ${COMMIT_REF}</h3>
       <fieldset>
