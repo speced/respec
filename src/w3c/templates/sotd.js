@@ -22,7 +22,10 @@ const localizationStrings = {
   zh: {
     sotd: "关于本文档",
     // eslint-disable-next-line prettier/prettier
-    status_at_publication: html`本章节描述了本文档的发布状态。W3C的文档列表和最新版本可通过<a href="https://www.w3.org/TR/">W3C技术报告</a>索引访问。`,
+    status_at_publication: html`本章节描述了本文档的发布状态。W3C的文档列表和最新版本可通过<a
+        href="https://www.w3.org/TR/"
+        >W3C技术报告</a
+      >索引访问。`,
   },
   ja: {
     sotd: "この文書の位置付け",
@@ -145,6 +148,7 @@ function renderIsNoTrack(conf, opts) {
 }
 
 function renderNotRec(conf) {
+  const updatableRec = document.querySelector("#sotd.updateable-rec");
   let statusExplanation = null;
   let reviewPolicy = null;
   let endorsement = html`Publication as ${prefix(conf.textStatus)} does not
@@ -153,7 +157,7 @@ function renderNotRec(conf) {
     This is a draft document and may be updated, replaced or obsoleted by other
     documents at any time. It is inappropriate to cite this document as other
     than work in progress.
-    ${conf.updateableRec
+    ${updatableRec
       ? html`Future updates to this specification may incorporate
           <a href="${processLink}#allow-new-features">new features</a>.`
       : ""}
@@ -224,7 +228,7 @@ function renderNotRec(conf) {
           >royalty-free licensing</a
         >
         for implementations.`;
-      updatePolicy = html`${conf.updateableRec
+      updatePolicy = html`${updatableRec
         ? html`Future updates to this specification may incorporate
             <a href="${processLink}#allow-new-features">new features</a>.`
         : ""}`;
@@ -268,11 +272,12 @@ function renderNotRec(conf) {
 }
 
 function renderIsRec(conf) {
-  const { updateableRec, revisionTypes = [], revisedRecEnd } = conf;
+  const { revisedRecEnd } = conf;
+  const updatableRec = document.querySelector("#sotd.updateable-rec");
   let reviewTarget = "";
-  if (revisionTypes.includes("proposed-addition")) {
+  if (document.querySelector(".proposed-addition")) {
     reviewTarget = "additions";
-  } else if (revisionTypes.includes("proposed-correction")) {
+  } else if (document.querySelector(".proposed-correction")) {
     reviewTarget = "corrections";
   }
   return html`
@@ -290,27 +295,27 @@ function renderIsRec(conf) {
         >royalty-free licensing</a
       >
       for implementations.
-      ${updateableRec
+      ${updatableRec
         ? html`Future updates to this Recommendation may incorporate
             <a href="${processLink}#allow-new-features">new features</a>.`
         : ""}
     </p>
-    ${revisionTypes.includes("addition")
+    ${document.querySelector(".addition")
       ? html`<p class="addition">
           Candidate additions are marked in the document.
         </p>`
       : ""}
-    ${revisionTypes.includes("correction")
+    ${document.querySelector(".correction")
       ? html`<p class="correction">
           Candidate corrections are marked in the document.
         </p>`
       : ""}
-    ${revisionTypes.includes("proposed-addition")
+    ${document.querySelector(".proposed-addition")
       ? html`<p class="addition proposed">
           Proposed additions are marked in the document.
         </p>`
       : ""}
-    ${revisionTypes.includes("proposed-correction")
+    ${document.querySelector(".proposed-correction")
       ? html`<p class="correction proposed">
           Proposed corrections are marked in the document.
         </p>`
@@ -453,14 +458,19 @@ function linkToWorkingGroup(conf) {
     return;
   }
   let changes = null;
-  if (conf.isRec && conf.revisionTypes && conf.revisionTypes.length) {
-    const pa = conf.revisionTypes.includes("proposed-addition");
-    const pc = conf.revisionTypes.includes("proposed-correction");
-    const ca = conf.revisionTypes.includes("addition");
-    const cc = conf.revisionTypes.includes("correction");
-    if ((pa && pc) || (ca && cc)) {
+  const proposedAdditions = document.querySelector(".proposed-addition");
+  const proposedCorrections = document.querySelector(".proposed-correction");
+  const additions = document.querySelector(".addition");
+  const corrections = document.querySelector(".correction");
+  const hasRevisions =
+    proposedAdditions || proposedCorrections || additions || corrections;
+  if (conf.isRec && hasRevisions) {
+    if (
+      (proposedAdditions && proposedCorrections) ||
+      (additions && corrections)
+    ) {
       changes = html`It includes
-      ${pa
+      ${proposedAdditions
         ? html`<a href="${processLink}#proposed-amendments">
             proposed amendments</a
           >`
@@ -469,9 +479,9 @@ function linkToWorkingGroup(conf) {
           >`},
       introducing substantive changes and new features since the previous
       Recommendation.`;
-    } else if (pa || ca) {
+    } else if (proposedAdditions || additions) {
       changes = html`It includes
-      ${pa
+      ${proposedAdditions
         ? html`<a href="${processLink}#proposed-addition">
             proposed additions</a
           >`
@@ -479,9 +489,9 @@ function linkToWorkingGroup(conf) {
             candidate additions</a
           >`},
       introducing new features since the previous Recommendation.`;
-    } else if (pc || cc) {
+    } else if (proposedCorrections || corrections) {
       changes = html`It includes
-      ${pc
+      ${proposedCorrections
         ? html`<a href="${processLink}#proposed-correction">
             proposed corrections</a
           >`
