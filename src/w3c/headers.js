@@ -591,6 +591,7 @@ export async function run(conf) {
   }
 
   if (
+    conf.isRec &&
     isUpdatableRec &&
     (hasProposedAdditions || hasProposedCorrections) &&
     !conf.revisedRecEnd
