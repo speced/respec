@@ -621,7 +621,7 @@ export async function run(conf) {
     showWarning(msg, name);
   }
 
-  // Requested by https://github.com/w3c/respec/issues/504
+  // Requested by https://github.com/speced/respec/issues/504
   // Makes a record of a few auto-generated things.
   pub("amend-user-config", {
     publishISODate: conf.publishISODate,

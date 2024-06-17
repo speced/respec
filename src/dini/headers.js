@@ -73,7 +73,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
     return new Date(formattedDate);
   }
   const msg =
-    `[\`${prop}\`](https://github.com/w3c/respec/wiki/${prop}) ` +
+    `[\`${prop}\`](https://github.com/speced/respec/wiki/${prop}) ` +
     `is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
   showError(msg, name);
   return new Date(ISODate.format(new Date()));
@@ -155,7 +155,7 @@ export function run(conf) {
   document.body.prepend(header);
   document.body.classList.add("h-entry");
 
-  // Requested by https://github.com/w3c/respec/issues/504
+  // Requested by https://github.com/speced/respec/issues/504
   // Makes a record of a few auto-generated things.
   pub("amend-user-config", {
     publishISODate: conf.publishISODate,

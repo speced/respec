@@ -59,7 +59,7 @@ function show() {
   </p>
   <p>
     <a href='https://respec.org/docs'>Documentation</a>,
-    <a href='https://github.com/w3c/respec/issues'>Bugs</a>.
+    <a href='https://github.com/speced/respec/issues'>Bugs</a>.
   </p>
   <table border="1" width="100%" hidden="${entries.length ? false : true}">
     <caption>
@@ -82,7 +82,7 @@ function show() {
 }
 
 function perfEntryToTR({ name, duration }) {
-  const moduleURL = `https://github.com/w3c/respec/blob/develop/src/${name}.js`;
+  const moduleURL = `https://github.com/speced/respec/blob/develop/src/${name}.js`;
   return html`
     <tr>
       <td><a href="${moduleURL}">${name}</a></td>

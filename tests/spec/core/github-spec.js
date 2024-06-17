@@ -11,7 +11,7 @@ describe("Core - Github", () => {
   afterAll(flushIframes);
   const stringOpt = {
     config: Object.assign(makeBasicConfig(), {
-      github: "https://github.com/w3c/respec/",
+      github: "https://github.com/speced/respec/",
       excludeGithubLinks: false,
     }),
     body: makeDefaultBody(),
@@ -19,7 +19,7 @@ describe("Core - Github", () => {
   const objOpt = {
     config: Object.assign(makeBasicConfig(), {
       github: {
-        repoURL: "https://github.com/w3c/respec/",
+        repoURL: "https://github.com/speced/respec/",
         branch: "develop",
       },
       excludeGithubLinks: false,
@@ -37,9 +37,9 @@ describe("Core - Github", () => {
       expect(conf.hasOwnProperty("githubAPI")).toBe(true);
       expect(conf.githubAPI).toBe("https://respec.org/github");
       expect(conf.hasOwnProperty("issueBase")).toBe(true);
-      expect(conf.issueBase).toBe("https://github.com/w3c/respec/issues/");
+      expect(conf.issueBase).toBe("https://github.com/speced/respec/issues/");
       expect(conf.hasOwnProperty("edDraftURI")).toBe(true);
-      expect(conf.edDraftURI).toBe("https://w3c.github.io/respec/");
+      expect(conf.edDraftURI).toBe("https://speced.github.io/respec/");
       expect(conf.hasOwnProperty("shortName")).toBe(true);
       expect(conf.shortName).toBe("respec");
     }
@@ -66,7 +66,7 @@ describe("Core - Github", () => {
     it("doesn't override issueBase, edDraftURI, shortName members if present (from string)", async () => {
       const opts = {
         config: Object.assign(makeBasicConfig(), dontOverrideTheseOps, {
-          github: "https://github.com/w3c/respec/",
+          github: "https://github.com/speced/respec/",
         }),
       };
       const doc = await makeRSDoc(opts);
@@ -75,7 +75,7 @@ describe("Core - Github", () => {
     it("doesn't override issueBase, edDraftURI, shortName members if present (from object)", async () => {
       const opts = {
         config: Object.assign(makeBasicConfig(), dontOverrideTheseOps, {
-          github: { repoURL: "https://github.com/w3c/respec/" },
+          github: { repoURL: "https://github.com/speced/respec/" },
         }),
       };
       const doc = await makeRSDoc(opts);
@@ -98,25 +98,25 @@ describe("Core - Github", () => {
       );
       expect(fileABug).toBeTruthy();
       expect(fileABug.querySelector("a").href).toBe(
-        "https://github.com/w3c/respec/issues/"
+        "https://github.com/speced/respec/issues/"
       );
       const commitHistory = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "Revisiehistorie"
       );
       expect(commitHistory).toBeTruthy();
       const ghLink = Array.from(doc.querySelectorAll("dd")).find(
-        elem => elem.textContent.trim() === "GitHub w3c/respec"
+        elem => elem.textContent.trim() === "GitHub speced/respec"
       );
       const pullRequests = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "Pull requests"
       );
       expect(pullRequests).toBeTruthy();
       expect(pullRequests.querySelector("a").href).toBe(
-        "https://github.com/w3c/respec/pulls/"
+        "https://github.com/speced/respec/pulls/"
       );
       expect(ghLink).toBeTruthy();
       expect(ghLink.querySelector("a").href).toBe(
-        "https://github.com/w3c/respec/"
+        "https://github.com/speced/respec/"
       );
       // This differs between the string and the object tests, so we return it
       return commitHistory;
@@ -125,14 +125,14 @@ describe("Core - Github", () => {
       const doc = await makeRSDoc({ ...l10n, ...stringOpt });
       const commitHistory = definitionListTest(doc);
       expect(commitHistory.querySelector("a").href).toBe(
-        "https://github.com/w3c/respec/commits/"
+        "https://github.com/speced/respec/commits/"
       );
     });
     it("generates a participate set of links (from object)", async () => {
       const doc = await makeRSDoc({ ...l10n, ...objOpt });
       const commitHistory = definitionListTest(doc);
       expect(commitHistory.querySelector("a").href).toBe(
-        "https://github.com/w3c/respec/commits/develop"
+        "https://github.com/speced/respec/commits/develop"
       );
     });
   });

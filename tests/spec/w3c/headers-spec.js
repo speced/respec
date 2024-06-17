@@ -502,7 +502,7 @@ describe("W3C — Headers", () => {
           specStatus,
           editors: [{ name: "ok", w3cid: "12345" }, { name: "person 2" }],
           group: "webapps",
-          github: "w3c/respec",
+          github: "speced/respec",
           crEnd: "2019-01-01",
         });
         const doc = await makeRSDoc(ops, simpleSpecURL);
@@ -1162,7 +1162,7 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps({
         specStatus: "WD",
         license: "unknown",
-        github: "w3c/respec",
+        github: "speced/respec",
         group: "webapps",
       });
       const doc = await makeRSDoc(ops, simpleSpecURL);
@@ -2359,7 +2359,7 @@ describe("W3C — Headers", () => {
       it(`includes feedback links for CG's ${specStatus} status`, async () => {
         const ops = makeStandardOps({
           specStatus,
-          github: "w3c/respec",
+          github: "speced/respec",
           group: "wicg",
         });
         const doc = await makeRSDoc(ops);
@@ -2371,7 +2371,7 @@ describe("W3C — Headers", () => {
 
     it("includes a Feedback: with a <dd> to github issues", async () => {
       const doc = await makeRSDoc(
-        makeStandardOps({ github: "w3c/respec", specStatus: "WD" })
+        makeStandardOps({ github: "speced/respec", specStatus: "WD" })
       );
       const [dt] = contains(doc, ".head dt", "Feedback:");
       const dd = dt.nextElementSibling;
@@ -2379,22 +2379,22 @@ describe("W3C — Headers", () => {
     });
 
     it("includes links for to new issue, pull requests, open issues", async () => {
-      const doc = await makeRSDoc(makeStandardOps({ github: "w3c/respec" }));
+      const doc = await makeRSDoc(makeStandardOps({ github: "speced/respec" }));
       const [prLink] = contains(
         doc,
-        ".head a[href='https://github.com/w3c/respec/pulls/']",
+        ".head a[href='https://github.com/speced/respec/pulls/']",
         "pull requests"
       );
       expect(prLink).toBeTruthy();
       const [openIssue] = contains(
         doc,
-        ".head a[href='https://github.com/w3c/respec/issues/']",
+        ".head a[href='https://github.com/speced/respec/issues/']",
         "open issues"
       );
       expect(openIssue).toBeTruthy();
       const [newIssue] = contains(
         doc,
-        ".head a[href='https://github.com/w3c/respec/issues/new/choose']",
+        ".head a[href='https://github.com/speced/respec/issues/new/choose']",
         "new issue"
       );
       expect(newIssue).toBeTruthy();
@@ -2439,14 +2439,14 @@ describe("W3C — Headers", () => {
 
     it("includes a dd for the commit history of the document", async () => {
       const ops = makeStandardOps({
-        github: "w3c/respec",
+        github: "speced/respec",
         shortName: "appmanifest",
         specStatus: "WD",
         group: "webapps",
       });
       const doc = await makeRSDoc(ops);
       const commitHistory = doc.querySelector(
-        ".head dd>a[href='https://github.com/w3c/respec/commits/']"
+        ".head dd>a[href='https://github.com/speced/respec/commits/']"
       );
       expect(commitHistory).toBeTruthy();
       const [publicationHistory] = contains(
@@ -2537,7 +2537,7 @@ describe("W3C — Headers", () => {
         shortName: "test",
         specStatus: "WD",
         latestVersion: null,
-        github: "w3c/respec",
+        github: "speced/respec",
       });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
