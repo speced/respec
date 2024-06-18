@@ -77,6 +77,7 @@ describe("Core — xref", () => {
     expect(link.href).toBe(
       "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
     );
+    expect(link.dataset.linkType).toBe("dfn");
     expect(link.classList.contains("respec-offending-element")).toBeFalsy();
 
     const dfn = doc.querySelector("#external-dfn dfn a");
