@@ -57,7 +57,7 @@ const localizationStrings = {
 
 export const l10n = getIntlData(localizationStrings);
 
-const processLink = "https://www.w3.org/2023/Process-20231103/";
+const processLink = "https://www.w3.org/policies/process/20231103/";
 
 function prefix(word) {
   return /^[aeiou]/i.test(word) ? `an ${word}` : `a ${word}`;
@@ -224,7 +224,7 @@ function renderNotRec(conf) {
         gather
         <a href="${conf.implementationReportURI}">implementation experience</a>,
         and has commitments from Working Group members to
-        <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements"
+        <a href="https://www.w3.org/policies/patent-policy/#sec-Requirements"
           >royalty-free licensing</a
         >
         for implementations.`;
@@ -291,7 +291,7 @@ function renderIsRec(conf) {
       consensus-building, is endorsed by
       <abbr title="World Wide Web Consortium">W3C</abbr> and its Members, and
       has commitments from Working Group members to
-      <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements"
+      <a href="https://www.w3.org/policies/patent-policy/#sec-Requirements"
         >royalty-free licensing</a
       >
       for implementations.
@@ -348,7 +348,7 @@ function renderDeliverer(conf) {
   const patentPolicyURL =
     wgPatentPolicy === "PP2017"
       ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
-      : "https://www.w3.org/Consortium/Patent-Policy/";
+      : "https://www.w3.org/policies/patent-policy/";
 
   const producers = !(isNote || isRegistry)
     ? html`
@@ -411,7 +411,7 @@ function noteForMemberSubmission(conf) {
   const patentPolicyURL =
     conf.wgPatentPolicy === "PP2017"
       ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
-      : "https://www.w3.org/Consortium/Patent-Policy/";
+      : "https://www.w3.org/policies/patent-policy/";
 
   return html`<p>
     By publishing this document, W3C acknowledges that the
@@ -421,7 +421,7 @@ function noteForMemberSubmission(conf) {
     will be allocating any resources to the issues addressed by it. This
     document is not the product of a chartered W3C group, but is published as
     potential input to the
-    <a href="https://www.w3.org/Consortium/Process">W3C Process</a>. A
+    <a href="https://www.w3.org/policies/process/">W3C Process</a>. A
     <a href="${teamComment}">W3C Team Comment</a> has been published in
     conjunction with this Member Submission. Publication of acknowledged Member
     Submissions at the W3C site is one of the benefits of

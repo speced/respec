@@ -613,11 +613,11 @@ export async function run(conf) {
 
   if (!conf.implementationReportURI && conf.isCR) {
     const msg = docLink`Missing ${"[implementationReportURI]"} configuration option in ${"[respecConfig]"}.`;
-    const hint = docLink`CR documents must have an ${"[implementationReportURI]"} that describes the [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).`;
+    const hint = docLink`CR documents must have an ${"[implementationReportURI]"} that describes the [implementation experience](https://www.w3.org/policies/process/#implementation-experience).`;
     showError(msg, name, { hint });
   }
   if (!conf.implementationReportURI && conf.isPR) {
-    const msg = docLink`PR documents should include an ${"[implementationReportURI]"}, which needs to link to a document that describes the [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).`;
+    const msg = docLink`PR documents should include an ${"[implementationReportURI]"}, which needs to link to a document that describes the [implementation experience](https://www.w3.org/policies/process-20190301/#implementation-experience).`;
     showWarning(msg, name);
   }
 
