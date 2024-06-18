@@ -22,7 +22,10 @@ const localizationStrings = {
   zh: {
     sotd: "关于本文档",
     // eslint-disable-next-line prettier/prettier
-    status_at_publication: html`本章节描述了本文档的发布状态。W3C的文档列表和最新版本可通过<a href="https://www.w3.org/TR/">W3C技术报告</a>索引访问。`,
+    status_at_publication: html`本章节描述了本文档的发布状态。W3C的文档列表和最新版本可通过<a
+        href="https://www.w3.org/TR/"
+        >W3C技术报告</a
+      >索引访问。`,
   },
   ja: {
     sotd: "この文書の位置付け",
@@ -54,7 +57,7 @@ const localizationStrings = {
 
 export const l10n = getIntlData(localizationStrings);
 
-const processLink = "https://www.w3.org/2023/Process-20231103/";
+const processLink = "https://www.w3.org/policies/process/20231103/";
 
 function prefix(word) {
   return /^[aeiou]/i.test(word) ? `an ${word}` : `a ${word}`;
@@ -145,6 +148,7 @@ function renderIsNoTrack(conf, opts) {
 }
 
 function renderNotRec(conf) {
+  const updatableRec = document.querySelector("#sotd.updateable-rec");
   let statusExplanation = null;
   let reviewPolicy = null;
   let endorsement = html`Publication as ${prefix(conf.textStatus)} does not
@@ -153,7 +157,7 @@ function renderNotRec(conf) {
     This is a draft document and may be updated, replaced or obsoleted by other
     documents at any time. It is inappropriate to cite this document as other
     than work in progress.
-    ${conf.updateableRec
+    ${updatableRec
       ? html`Future updates to this specification may incorporate
           <a href="${processLink}#allow-new-features">new features</a>.`
       : ""}
@@ -220,11 +224,11 @@ function renderNotRec(conf) {
         gather
         <a href="${conf.implementationReportURI}">implementation experience</a>,
         and has commitments from Working Group members to
-        <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements"
+        <a href="https://www.w3.org/policies/patent-policy/#sec-Requirements"
           >royalty-free licensing</a
         >
         for implementations.`;
-      updatePolicy = html`${conf.updateableRec
+      updatePolicy = html`${updatableRec
         ? html`Future updates to this specification may incorporate
             <a href="${processLink}#allow-new-features">new features</a>.`
         : ""}`;
@@ -268,11 +272,12 @@ function renderNotRec(conf) {
 }
 
 function renderIsRec(conf) {
-  const { updateableRec, revisionTypes = [], revisedRecEnd } = conf;
+  const { revisedRecEnd } = conf;
+  const updatableRec = document.querySelector("#sotd.updateable-rec");
   let reviewTarget = "";
-  if (revisionTypes.includes("proposed-addition")) {
+  if (document.querySelector(".proposed-addition")) {
     reviewTarget = "additions";
-  } else if (revisionTypes.includes("proposed-correction")) {
+  } else if (document.querySelector(".proposed-correction")) {
     reviewTarget = "corrections";
   }
   return html`
@@ -286,31 +291,31 @@ function renderIsRec(conf) {
       consensus-building, is endorsed by
       <abbr title="World Wide Web Consortium">W3C</abbr> and its Members, and
       has commitments from Working Group members to
-      <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-Requirements"
+      <a href="https://www.w3.org/policies/patent-policy/#sec-Requirements"
         >royalty-free licensing</a
       >
       for implementations.
-      ${updateableRec
+      ${updatableRec
         ? html`Future updates to this Recommendation may incorporate
             <a href="${processLink}#allow-new-features">new features</a>.`
         : ""}
     </p>
-    ${revisionTypes.includes("addition")
+    ${document.querySelector(".addition")
       ? html`<p class="addition">
           Candidate additions are marked in the document.
         </p>`
       : ""}
-    ${revisionTypes.includes("correction")
+    ${document.querySelector(".correction")
       ? html`<p class="correction">
           Candidate corrections are marked in the document.
         </p>`
       : ""}
-    ${revisionTypes.includes("proposed-addition")
+    ${document.querySelector(".proposed-addition")
       ? html`<p class="addition proposed">
           Proposed additions are marked in the document.
         </p>`
       : ""}
-    ${revisionTypes.includes("proposed-correction")
+    ${document.querySelector(".proposed-correction")
       ? html`<p class="correction proposed">
           Proposed corrections are marked in the document.
         </p>`
@@ -343,7 +348,7 @@ function renderDeliverer(conf) {
   const patentPolicyURL =
     wgPatentPolicy === "PP2017"
       ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
-      : "https://www.w3.org/Consortium/Patent-Policy/";
+      : "https://www.w3.org/policies/patent-policy/";
 
   const producers = !(isNote || isRegistry)
     ? html`
@@ -406,7 +411,7 @@ function noteForMemberSubmission(conf) {
   const patentPolicyURL =
     conf.wgPatentPolicy === "PP2017"
       ? "https://www.w3.org/Consortium/Patent-Policy-20170801/"
-      : "https://www.w3.org/Consortium/Patent-Policy/";
+      : "https://www.w3.org/policies/patent-policy/";
 
   return html`<p>
     By publishing this document, W3C acknowledges that the
@@ -416,7 +421,7 @@ function noteForMemberSubmission(conf) {
     will be allocating any resources to the issues addressed by it. This
     document is not the product of a chartered W3C group, but is published as
     potential input to the
-    <a href="https://www.w3.org/Consortium/Process">W3C Process</a>. A
+    <a href="https://www.w3.org/policies/process/">W3C Process</a>. A
     <a href="${teamComment}">W3C Team Comment</a> has been published in
     conjunction with this Member Submission. Publication of acknowledged Member
     Submissions at the W3C site is one of the benefits of
@@ -453,14 +458,19 @@ function linkToWorkingGroup(conf) {
     return;
   }
   let changes = null;
-  if (conf.isRec && conf.revisionTypes && conf.revisionTypes.length) {
-    const pa = conf.revisionTypes.includes("proposed-addition");
-    const pc = conf.revisionTypes.includes("proposed-correction");
-    const ca = conf.revisionTypes.includes("addition");
-    const cc = conf.revisionTypes.includes("correction");
-    if ((pa && pc) || (ca && cc)) {
+  const proposedAdditions = document.querySelector(".proposed-addition");
+  const proposedCorrections = document.querySelector(".proposed-correction");
+  const additions = document.querySelector(".addition");
+  const corrections = document.querySelector(".correction");
+  const hasRevisions =
+    proposedAdditions || proposedCorrections || additions || corrections;
+  if (conf.isRec && hasRevisions) {
+    if (
+      (proposedAdditions && proposedCorrections) ||
+      (additions && corrections)
+    ) {
       changes = html`It includes
-      ${pa
+      ${proposedAdditions
         ? html`<a href="${processLink}#proposed-amendments">
             proposed amendments</a
           >`
@@ -469,9 +479,9 @@ function linkToWorkingGroup(conf) {
           >`},
       introducing substantive changes and new features since the previous
       Recommendation.`;
-    } else if (pa || ca) {
+    } else if (proposedAdditions || additions) {
       changes = html`It includes
-      ${pa
+      ${proposedAdditions
         ? html`<a href="${processLink}#proposed-addition">
             proposed additions</a
           >`
@@ -479,9 +489,9 @@ function linkToWorkingGroup(conf) {
             candidate additions</a
           >`},
       introducing new features since the previous Recommendation.`;
-    } else if (pc || cc) {
+    } else if (proposedCorrections || corrections) {
       changes = html`It includes
-      ${pc
+      ${proposedCorrections
         ? html`<a href="${processLink}#proposed-correction">
             proposed corrections</a
           >`
