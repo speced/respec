@@ -11,6 +11,7 @@ pre.idl {
 
 pre.idl > code {
   color: black;
+  color: var(--text, black);
 }
 
 @media print {
@@ -23,7 +24,10 @@ pre.idl > code {
   display: block;
   width: 150px;
   background: #8ccbf2;
+  background: var(--def-border, #8ccbf2);
   color: #fff;
+  /* TODO: need a better color here */
+  color: var(--defrow-border, #fff);
   font-family: sans-serif;
   font-weight: bold;
   margin: -1em 0 1em -1em;
@@ -35,6 +39,7 @@ pre.idl > code {
   margin-left: 0.3cm;
   text-decoration: none;
   border-bottom: none;
+  color: inherit;
 }
 
 .idlID {

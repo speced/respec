@@ -16,7 +16,7 @@ env:
   PUPPETEER_SKIP_DOWNLOAD: 1
   PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
   FORCE_COLOR: 1
-  # See https://github.com/w3c/respec/pull/3306
+  # See https://github.com/speced/respec/pull/3306
   LC_ALL: en_US.UTF-8
 
 permissions:
@@ -28,9 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 18, cache: pnpm }
+        with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm build:w3c
       - run: pnpm test:headless
@@ -53,9 +53,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 18, cache: pnpm }
+        with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm build:w3c & pnpm build:geonovum
       - run: pnpm test

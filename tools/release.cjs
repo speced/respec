@@ -10,7 +10,7 @@ const vnu = require("vnu-jar");
 const path = require("path");
 const os = require("os");
 
-// See: https://github.com/w3c/respec/issues/645
+// See: https://github.com/speced/respec/issues/645
 require("epipebomb")();
 
 const loadOps = {

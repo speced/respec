@@ -1,20 +1,82 @@
-# ReSpec - NL Profiel
+# ReSpec
 
-ReSpec is een JavaScript library voor het publiceren van technische documenten in een [toegankelijk](https://digitaaltoegankelijk.pleio.nl/cms/view/649ed793-7f0d-4676-bb10-f66fbd8a13c6/digitale-toegankelijkheid-bij-geonovum) HTML formaat. Deze repository is een fork van [w3c/respec](https://github.com/w3c/respec).
+[![Backers on Open Collective](https://opencollective.com/respec/backers/badge.svg)](#backers)
+[![Sponsors on Open Collective](https://opencollective.com/respec/sponsors/badge.svg)](#sponsors)
+[![Build Status](https://github.com/speced/respec/workflows/Node%20CI/badge.svg?branch=develop)](https://github.com/speced/respec/actions?query=workflow%3A%22Node+CI%22+branch%3Adevelop)
+[![Website status](https://img.shields.io/github/workflow/status/marcoscaceres/respec.org/Health%20Check?label=respec.org&logo=curl)](https://github.com/marcoscaceres/respec.org/actions?query=workflow%3A%22Health+Check%22)
 
-Momenteel bevat het een Geonovum profiel en daaruit afgeleid een Logius profiel. Logius en Geonovum werken samen aan een meer configureerbaar profiel dat door meerdere Nederlandse organisaties toegepast kan worden. Het "NL-profiel" wordt open ontwikkeld. Iedereen is welkom om pull requests of issues in te dienen.
+ReSpec is a JS library that makes it easier to write technical specifications, or documents
+that tend to be technical in nature in general. It was originally designed for the purpose
+of writing W3C specifications, but has since grown to be able to support other outputs as
+well.
 
-Het "NL-profiel" wordt periodiek in sync gehouden met de W3C-bron. Het profiel onderscheidt zich onder andere door de nadruk op zowel configureerbaarheid als het gebruik van Markdown. 
+## Getting started
 
-## Toepassen
+If you are just interested in writing a spec, you can grab the [starter spec](examples/starter.html).
 
-Om schrijvers op weg te helpen is er een [template](https://github.com/Logius-standaarden/respec-template) beschikbaar in een aparte repository. Indien u vragen heeft over het toepassen van ReSpec kunt daar de [issues](https://github.com/Logius-standaarden/ReSpec-template/issues?q=) bezoeken. Een uitgebreid Engelstalig overzicht van de algemene functies in ReSpec leest u op [respec.org](https://respec.org/docs/).
+We have extensive documentation on [how to use ReSpec](https://github.com/speced/respec/wiki) in our wiki, including:
 
-## Aanpassen
+  * [User's guide](https://github.com/speced/respec/wiki/ReSpec-Editor's-Guide)
+  * [WebIDL guide](https://github.com/speced/respec/wiki/WebIDL-Guide)
 
-Wie wil sleutelen aan ReSpec wordt aangeraden de [Developers Guide](https://github.com/Logius-standaarden/respec/wiki/Developers-Guide) te raadplegen. Vragen of opmerkingen zijn welkom in de [issues](https://github.com/Logius-standaarden/respec/issues).
+**You don't need to check-out or fork this repository.**
 
-## Test runnen
+If you are new to spec writing, we strongly encourage you to read:
 
-Om mogelijke changes in de html te controleren na een update run `node test/test-html-build`. Dit maakt een snapshot van een html pagina en vergelijkt hem met het origineel. Als er veranderingen zijn, geeft hij aan wat en waar.
-Voeg de `--createLog` vlag toe aan het commando om de veranderingen in een log file te printen ipv in de CMD prompt.
+  * [API Design Principles](https://w3ctag.github.io/design-principles/)
+  * [Writing Promise-Using Specifications](https://www.w3.org/2001/tag/doc/promises-guide)
+  * [Privacy and Security Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/)
+  * [Short i18n review checklist](https://www.w3.org/International/techniques/shortchecklist.html)
+  * [Adding another permission? A guide](https://github.com/w3cping/adding-permissions/blob/master/README.md)
+
+## Getting help
+
+If you experience issues, please email [spec-prod@w3.org](mailto:spec-prod@w3.org) or
+if you think something is broken, [file a bug](https://github.com/speced/respec/issues).
+
+**Please note:** ReSpec is not endorsed by W3C and nobody should expect the W3C Webmaster to provide advice on
+problems encountered with ReSpec, or on why it may be failing to produce pubrules-compliant
+content.
+
+## Bibliographical references
+
+Bibliographical references have been moved out of ReSpec. You want to use
+[specref.org](http://www.specref.org/).
+
+## Want to see complete documentation?
+
+[Documentation for ReSpec](https://github.com/speced/respec/wiki) is available in our wiki.
+
+## Contribute
+
+Please see our [developer guide](https://github.com/speced/respec/wiki/Developers-Guide).
+
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
+## Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/speced/respec/graphs/contributors"><img src="https://opencollective.com/respec/contributors.svg?width=890&button=false" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/respec#backer)]
+
+<a href="https://opencollective.com/respec#backers" target="_blank"><img src="https://opencollective.com/respec/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/respec#sponsor)]
+
+<a href="https://opencollective.com/respec/sponsor/0/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/1/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/2/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/3/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/4/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/5/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/6/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/7/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/8/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/respec/sponsor/9/website" target="_blank"><img src="https://opencollective.com/respec/sponsor/9/avatar.svg"></a>

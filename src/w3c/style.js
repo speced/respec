@@ -5,13 +5,15 @@
  * */
 
 import { W3CNotes, recTrackStatus, registryTrackStatus } from "./headers.js";
-import { createResourceHint, linkCSS } from "../core/utils.js";
+import { createResourceHint } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { sub } from "../core/pubsubhub.js";
+
 export const name = "w3c/style";
 
 function attachFixupScript() {
-  const script = html`<script src="https://www.w3.org/scripts/TR/2021/fixup.js">`;
+  const script = document.createElement("script");
+  script.src = "https://www.w3.org/scripts/TR/2021/fixup.js";
   if (location.hash) {
     script.addEventListener(
       "load",
@@ -40,7 +42,12 @@ function createResourceHints() {
     },
     {
       hint: "preload", // all specs include on base.css.
-      href: "https://www.w3.org/StyleSheets/TR/2021/base.css",
+      href: getStyleUrl("base.css").href,
+      as: "style",
+    },
+    {
+      hint: "preload",
+      href: getStyleUrl("dark.css").href,
       as: "style",
     },
     {
@@ -81,7 +88,7 @@ if (!document.head.querySelector("meta[name=viewport]")) {
 document.head.prepend(elements);
 
 /**
- * @param {URL} linkURL
+ * @param {URL|string} linkURL
  * @returns {(exportDoc: Document) => void}
  */
 function styleMover(linkURL) {
@@ -95,6 +102,42 @@ function styleMover(linkURL) {
  * @param {Conf} conf
  */
 export function run(conf) {
+  // Attach W3C fixup script after we are done.
+  if (!conf.noToc) {
+    sub("end-all", attachFixupScript, { once: true });
+  }
+
+  const finalStyleURL = getStyleUrl(getStyleFile(conf));
+  document.head.appendChild(
+    html`<link rel="stylesheet" href="${finalStyleURL.href}" />`
+  );
+  // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
+  sub("beforesave", styleMover(finalStyleURL));
+
+  // Add color scheme meta tag and style
+  /** @type HTMLMetaElement */
+  let colorScheme = document.querySelector("head meta[name=color-scheme]");
+  if (!colorScheme) {
+    // Default to light mode during transitional period.
+    colorScheme = html`<meta name="color-scheme" content="light" />`;
+    document.head.appendChild(colorScheme);
+  }
+  if (colorScheme.content.includes("dark")) {
+    const darkModeStyleUrl = getStyleUrl("dark.css");
+    document.head.appendChild(
+      html`<link
+        rel="stylesheet"
+        href="${darkModeStyleUrl.href}"
+        media="(prefers-color-scheme: dark)"
+      />`
+    );
+    // As required by W3C Pub Rules.
+    sub("beforesave", styleMover(darkModeStyleUrl));
+  }
+}
+
+/** @param {Conf} conf */
+function getStyleFile(conf) {
   const canonicalStatus = conf.specStatus?.toUpperCase() ?? "";
   let styleFile = "";
   const canUseW3CStyle =
@@ -135,16 +178,9 @@ export function run(conf) {
       styleFile = canUseW3CStyle ? `W3C-${conf.specStatus}` : "base.css";
   }
 
-  // Attach W3C fixup script after we are done.
-  if (!conf.noToc) {
-    sub("end-all", attachFixupScript, { once: true });
-  }
-  const finalStyleURL = new URL(
-    `/StyleSheets/TR/2021/${styleFile}`,
-    "https://www.w3.org/"
-  );
-  linkCSS(document, finalStyleURL.href);
-  // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
-  const moveStyle = styleMover(finalStyleURL);
-  sub("beforesave", moveStyle);
+  return styleFile;
+}
+
+function getStyleUrl(styleFile = "base.css") {
+  return new URL(`/StyleSheets/TR/2021/${styleFile}`, "https://www.w3.org/");
 }

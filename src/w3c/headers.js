@@ -465,11 +465,6 @@ export async function run(conf) {
     showError(msg, name);
   }
   if (conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
-  if (conf.isRec && !conf.errata && !conf.revisionTypes?.length) {
-    const msg = "Recommendations must have an errata link.";
-    const hint = docLink`Add an ${"[errata]"} URL to your ${"[respecConfig]"}.`;
-    showError(msg, name, { hint });
-  }
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
@@ -571,53 +566,34 @@ export async function run(conf) {
   }
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
 
-  if (conf.hasOwnProperty("updateableRec")) {
-    const msg = "Configuration option `updateableRec` is deprecated.";
-    const hint = docLink`Add an ${"[`updateable-rec`|#updateable-rec-class]"} CSS class to the Status of This Document section instead.`;
-    showWarning(msg, name, { hint });
-    if (conf.updateableRec) {
-      sotd.classList.add("updateable-rec");
-    }
+  const isUpdatableRec = sotd.classList.contains("updateable-rec");
+  const hasCorrections = document.querySelector(".correction") !== null;
+  const hasProposedCorrections =
+    document.querySelector(".proposed-correction") !== null;
+  const hasAdditions = document.querySelector(".addition") !== null;
+  const hasProposedAdditions =
+    document.querySelector(".proposed-addition") !== null;
+  const hasRevisions =
+    hasCorrections ||
+    hasAdditions ||
+    hasProposedAdditions ||
+    hasProposedCorrections;
+
+  if (conf.isRec && !conf.errata && !hasRevisions) {
+    const msg = "Recommendations must have an errata link.";
+    const hint = docLink`Add an ${"[errata]"} URL to your ${"[respecConfig]"}.`;
+    showError(msg, name, { hint });
   }
 
-  conf.updateableRec = sotd.classList.contains("updateable-rec");
-  const revisionTypes = [
-    "addition",
-    "correction",
-    "proposed-addition",
-    "proposed-correction",
-  ];
-  if (conf.isRec && conf.revisionTypes?.length > 0) {
-    if (conf.revisionTypes.some(x => !revisionTypes.includes(x))) {
-      const unknownRevisionTypes = conf.revisionTypes.filter(
-        x => !revisionTypes.includes(x)
-      );
-      const msg = docLink`${"[specStatus]"} is "REC" with unknown ${"[revisionTypes]"}: '${codedJoinOr(
-        unknownRevisionTypes
-      )}'.`;
-      const hint = docLink`The valid values for ${"[revisionTypes]"} are: ${codedJoinOr(
-        revisionTypes
-      )}.`;
-      showError(msg, name, { hint });
-    }
-    if (
-      (conf.revisionTypes.includes("proposed-addition") ||
-        conf.revisionTypes.includes("addition")) &&
-      !conf.updateableRec
-    ) {
-      const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as allowing new features.`;
-      showError(msg, name);
-    }
+  if (!isUpdatableRec && (hasAdditions || hasCorrections)) {
+    const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as allowing new features.`;
+    showError(msg, name);
   }
 
   if (
-    conf.specStatus === "REC" &&
-    conf.updateableRec &&
-    conf.revisionTypes &&
-    conf.revisionTypes.length > 0 &&
-    ["proposed-addition", "proposed-correction"].some(type =>
-      conf.revisionTypes.includes(type)
-    ) &&
+    conf.isRec &&
+    isUpdatableRec &&
+    (hasProposedAdditions || hasProposedCorrections) &&
     !conf.revisedRecEnd
   ) {
     const msg = docLink`${"[specStatus]"} is "REC" with proposed corrections or additions but no ${"[revisedRecEnd]"} is specified in the ${"[respecConfig]"}.`;
@@ -637,15 +613,15 @@ export async function run(conf) {
 
   if (!conf.implementationReportURI && conf.isCR) {
     const msg = docLink`Missing ${"[implementationReportURI]"} configuration option in ${"[respecConfig]"}.`;
-    const hint = docLink`CR documents must have an ${"[implementationReportURI]"} that describes the [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).`;
+    const hint = docLink`CR documents must have an ${"[implementationReportURI]"} that describes the [implementation experience](https://www.w3.org/policies/process/#implementation-experience).`;
     showError(msg, name, { hint });
   }
   if (!conf.implementationReportURI && conf.isPR) {
-    const msg = docLink`PR documents should include an ${"[implementationReportURI]"}, which needs to link to a document that describes the [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience).`;
+    const msg = docLink`PR documents should include an ${"[implementationReportURI]"}, which needs to link to a document that describes the [implementation experience](https://www.w3.org/policies/process-20190301/#implementation-experience).`;
     showWarning(msg, name);
   }
 
-  // Requested by https://github.com/w3c/respec/issues/504
+  // Requested by https://github.com/speced/respec/issues/504
   // Makes a record of a few auto-generated things.
   pub("amend-user-config", {
     publishISODate: conf.publishISODate,

@@ -190,7 +190,7 @@ export default (conf, options) => {
    */
   sub("beforesave", doc => {
     const details = doc.querySelector(".head details");
-    details.open = true;
+    if (details) details.open = true;
   });
   return html`<div class="head">
     ${conf.logos.length

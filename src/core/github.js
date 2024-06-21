@@ -2,7 +2,7 @@
 /**
  * core/github
  *
- * @see https://github.com/w3c/respec/wiki/github
+ * @see https://github.com/speced/respec/wiki/github
  */
 
 import { docLink, getIntlData, showError, showWarning } from "../core/utils.js";

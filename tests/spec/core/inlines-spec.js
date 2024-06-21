@@ -160,6 +160,7 @@ describe("Core - Inlines", () => {
       </section>
       <section>
         <p id="a4">TEXT |with spaces :  Type with spaces| TEXT</p>
+        <p id="a5">TEXT |typeWithQuotes: "valid" or "invalid"| TEXT</p>
         <p id="b">TEXT |variable| TEXT</p>
         <p id="c">TEXT | ignored | TEXT</p>
         <p id="d">TEXT|ignore: Ignore|TEXT</p>
@@ -170,7 +171,7 @@ describe("Core - Inlines", () => {
         <p id="h"> TEXT |var: Generic&lt;int&gt;| TEXT |var2: Generic&lt;unsigned short int&gt;| </p>
       </section>
       <section>
-        <p id="nulls"> |var 1: null type spaces?| and |var 2 : NullableType?| </p>
+        <p id="nulls"> |var 1: null type spaces?| and |var 2 : NullableType?| and |var 3: Generic&lt;NullableType?&gt;|</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
@@ -189,6 +190,10 @@ describe("Core - Inlines", () => {
     const a4 = doc.querySelector("#a4 var");
     expect(a4.textContent).toBe("with spaces");
     expect(a4.dataset.type).toBe("Type with spaces");
+
+    const a5 = doc.querySelector("#a5 var");
+    expect(a5.textContent).toBe("typeWithQuotes");
+    expect(a5.dataset.type).toBe(`"valid" or "invalid"`);
 
     const b = doc.querySelector("#b var");
     expect(b.textContent).toBe("variable");
@@ -218,11 +223,14 @@ describe("Core - Inlines", () => {
     expect(h[1].textContent).toBe("var2");
     expect(h[1].dataset.type).toBe("Generic<unsigned short int>");
 
-    const [nullVar1, nullVar2] = doc.querySelectorAll("#nulls > var");
-    expect(nullVar1.textContent).toBe("var 1");
-    expect(nullVar1.dataset.type).toBe("null type spaces?");
-    expect(nullVar2.textContent).toBe("var 2");
-    expect(nullVar2.dataset.type).toBe("NullableType?");
+    const nulls = doc.querySelectorAll("#nulls > var");
+    expect(nulls).toHaveSize(3);
+    expect(nulls[0].textContent).toBe("var 1");
+    expect(nulls[0].dataset.type).toBe("null type spaces?");
+    expect(nulls[1].textContent).toBe("var 2");
+    expect(nulls[1].dataset.type).toBe("NullableType?");
+    expect(nulls[2].textContent).toBe("var 3");
+    expect(nulls[2].dataset.type).toBe("Generic<NullableType?>");
   });
 
   it("expands inline references and they get classified as normative/informative correctly", async () => {
