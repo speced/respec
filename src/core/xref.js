@@ -7,7 +7,7 @@
  * Searches for the terms which do not have a local definition at xref API and
  * for each query, adds `data-cite` attributes to respective elements.
  * `core/data-cite` later converts these data-cite attributes to actual links.
- * https://github.com/w3c/respec/issues/1662
+ * https://github.com/speced/respec/issues/1662
  */
 /**
  * @typedef {import('core/xref').RequestEntry} RequestEntry
@@ -110,7 +110,7 @@ function findExplicitExternalLinks() {
  */
 function normalizeConfig(xref) {
   const defaults = {
-    url: API_URL,
+    url: new URL("search/", API_URL).href,
     specs: null,
   };
 
@@ -313,24 +313,23 @@ async function getData(queryKeys, apiUrl) {
 }
 
 /**
- * @param {RequestEntry[]} keys
+ * @param {RequestEntry[]} queries
  * @param {string} url
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
-async function fetchFromNetwork(keys, url) {
-  if (!keys.length) return new Map();
+async function fetchFromNetwork(queries, url) {
+  if (!queries.length) return new Map();
 
-  const query = { keys };
   const options = {
     method: "POST",
-    body: JSON.stringify(query),
+    body: JSON.stringify({ queries }),
     headers: {
       "Content-Type": "application/json",
     },
   };
   const response = await fetch(url, options);
   const json = await response.json();
-  return new Map(json.result);
+  return new Map(json.results.map(({ id, result }) => [id, result]));
 }
 
 /**
@@ -479,7 +478,9 @@ function showErrors({ ambiguous, notFound }) {
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const forParent = query.for ? `, for **"${query.for}"**, ` : "";
     const moreInfo = howToFix(formUrl, originalTerm);
-    const hint = docLink`To fix, use the ${"[data-cite]"} attribute to pick the one you mean from the appropriate specification. ${moreInfo}.`;
+    const hint =
+      docLink`To fix, use the ${"[data-cite]"} attribute to pick the one you mean from the appropriate specification.` +
+      String.raw` ${moreInfo}`;
     const msg = `The term "**${originalTerm}**"${forParent} is ambiguous because it's defined in ${specsString}.`;
     const title = "Definition is ambiguous.";
     showError(msg, name, { title, elements: elems, hint });

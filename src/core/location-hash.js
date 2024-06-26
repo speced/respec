@@ -25,7 +25,7 @@ export function run() {
     const isLegacyFrag = /\W/.test(newHash);
 
     // Allow some degree of recovery for legacy fragments format.
-    // See https://github.com/w3c/respec/issues/1353
+    // See https://github.com/speced/respec/issues/1353
     if (!element && isLegacyFrag) {
       const id = newHash
         // Replace all non-word characters with a dash.

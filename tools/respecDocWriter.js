@@ -67,7 +67,7 @@ export async function toHTML(src, options = {}) {
   const browser = await puppeteer.launch({
     args,
     devtools,
-    headless: "new",
+    headless: true,
   });
 
   try {
@@ -116,12 +116,13 @@ export async function toHTML(src, options = {}) {
  * useful in CI env or when you want to pin the ReSpec version.
  *
  * @assumption The ReSpec script being used in the document is hosted on either
- * w3.org or w3c.github.io. If this assumption doesn't hold true (interception
- * fails), this function will timeout.
+ * w3.org or w3c.github.io or speced.github.io. If this assumption doesn't hold
+ * true (interception fails), this function will timeout.
  *
  * The following ReSpec URLs are supported:
  * https://www.w3.org/Tools/respec/${profile}
  * https://w3c.github.io/respec/builds/${profile}.js
+ * https://speced.github.io/respec/builds/${profile}.js
  * file:///home/path-to-respec/builds/${profile}.js
  * http://localhost:PORT/builds/${profile}.js
  * https://example.com/builds/${profile}.js
@@ -132,7 +133,7 @@ export async function toHTML(src, options = {}) {
 async function useLocalReSpec(page, log) {
   await page.setRequestInterception(true);
 
-  page.on("request", async function requestInterceptor(request) {
+  page.on("request", async request => {
     if (!isRespecScript(request)) {
       await request.continue();
       return;
@@ -148,9 +149,6 @@ async function useLocalReSpec(page, log) {
       contentType: "text/javascript; charset=utf-8",
       body: await readFile(localPath),
     });
-    // Workaround for https://github.com/puppeteer/puppeteer/issues/4208
-    page.off("request", requestInterceptor);
-    await page.setRequestInterception(false);
   });
 }
 
@@ -163,10 +161,9 @@ function isRespecScript(req) {
   const { host, pathname: path } = new URL(req.url());
   switch (host) {
     case "www.w3.org":
-      return (
-        path.startsWith("/Tools/respec/") && !path.includes("respec-highlight")
-      );
+      return path.startsWith("/Tools/respec/");
     case "w3c.github.io":
+    case "speced.github.io":
       return path.startsWith("/respec/builds/");
     default:
       // localhost, file://, and everything else
@@ -231,7 +228,7 @@ async function generateHTML(page, timer, version, url) {
     const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${`${
       `Specification: ${url}\n` +
       `ReSpec version: ${version.join(".")}\n` +
-      "File a bug: https://github.com/w3c/respec/\n"
+      "File a bug: https://github.com/speced/respec/\n"
     }${err ? `Error: ${err.stack}\n` : ""}`}`;
     throw new Error(msg);
   }
@@ -325,7 +322,7 @@ function handleConsoleMessages(page, onError, onWarning) {
     const text = args.filter(msg => msg !== "undefined")[0] || "";
     const type = message.type();
     if (
-      (type === "error" || type === "warning") &&
+      (type === "error" || type === "warning" || type === "warn") &&
       msgText && // browser errors have text
       !message.args().length // browser errors/warnings have no arguments
     ) {

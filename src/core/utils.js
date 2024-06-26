@@ -897,6 +897,21 @@ export function showWarning(message, pluginName, options = {}) {
 }
 
 /**
+ * Creates showError, showWarning utilities for use in custom pre-process and
+ * post-process plugins.
+ * @param {string} pluginName
+ */
+export function makePluginUtils(pluginName) {
+  /** @typedef {Parameters<typeof showError>[2]} Options */
+  return {
+    /** @type {(message: string, options?: Options) => void} */
+    showError: (msg, options) => showError(msg, pluginName, options),
+    /** @type {(message: string, options?: Options) => void} */
+    showWarning: (msg, options) => showWarning(msg, pluginName, options),
+  };
+}
+
+/**
  * Makes a string `coded`.
  *
  * @param {string} item
