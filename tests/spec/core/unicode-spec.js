@@ -15,10 +15,7 @@ describe("Core — unicode", () => {
       <span class="hx" lang="fr">00E9</span>
       <span class="ch" lang="fr">é</span>
     </div>`;
-    const doc = await makeRSDoc(
-      makeStandardOps(null, body),
-      "/tests/spec/core/simple.html"
-    );
+    const doc = await makeRSDoc(makeStandardOps(null, body));
 
     const expanded = doc.querySelectorAll("#test .codepoint");
     expect(expanded).toHaveSize(2);
@@ -49,10 +46,7 @@ describe("Core — unicode", () => {
       <span class="hx" lang="hi">0928 093F</span>
       <span class="ch" lang="hi">नि</span>
     </div>`;
-    const doc = await makeRSDoc(
-      makeStandardOps(null, body),
-      "/tests/spec/core/simple.html"
-    );
+    const doc = await makeRSDoc(makeStandardOps(null, body));
 
     const expanded = doc.querySelectorAll("#test .codepoint");
     expect(expanded).toHaveSize(2);
