@@ -3,7 +3,7 @@
 // Get a list of all the test files to include
 const testFiles = Object.keys(window.__karma__.files)
   // ends with "-spec.js"
-  .filter(file => /unicode-spec\.js$/.test(file));
+  .filter(file => /-spec\.js$/.test(file));
 
 // Allows tests to be loaded asynchronously
 // TODO: Remove this when browsers add support for top level await
