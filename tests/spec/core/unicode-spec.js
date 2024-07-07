@@ -83,7 +83,7 @@ describe("Core — unicode", () => {
       expect(uname2.getAttribute("class")).withContext(context).toBe("uname");
       expect(uname2.textContent)
         .withContext(context)
-        .toBe("U+093F DEVANAGARI VOWEL SIGN I​");
+        .toBe("U+093F DEVANAGARI VOWEL SIGN I");
     }
   });
 });

@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * @module core/unicode
  *
@@ -6,18 +7,18 @@
  * Based on https://github.com/r12a/scripts/blob/gh-pages/common29/functions.js
  */
 
+import { lang as docLang } from "./l10n.js";
+import { html } from "./import-maps.js";
 import { showError } from "./utils.js";
 
 export const name = "core/unicode";
+
+const DEFAULT_API_URL = "http://localhost:8001/api/unicode/names";
 
 /**
  * @param {Conf} conf
  */
 export async function run(conf) {
-  expandCharMarkup();
-}
-
-function expandCharMarkup() {
   // convert char markup to .codepoint spans (has to be done before the indexing)
   // the .ch and .hx classes should only be used for characters in the
   // spreadsheet.  For other characters, generate the markup in a picker
@@ -30,187 +31,191 @@ function expandCharMarkup() {
   // coda puts a dotted circle after the item - used for closed syllables
   // noname prevents the production of the Unicode name
 
-  expandCharMarkupHx();
-  expandCharMarkupCh();
+  /** @type {NodeListOf<HTMLElement>} */
+  const elements = document.querySelectorAll(".ch, .hx");
+  if (!elements.length) {
+    return;
+  }
+
+  /** @type {Set<string>} */
+  const queryHex = new Set();
+  /** @type {Map<HTMLElement, Array<ParsedData>>} */
+  const elementMap = new Map();
+
+  for (const elem of elements) {
+    const parsed = elem.classList.contains("ch")
+      ? parseCh(elem)
+      : parseHx(elem);
+
+    parsed.forEach(p => queryHex.add(p.hex));
+    elementMap.set(elem, parsed);
+  }
+
+  if (!queryHex.size) {
+    return;
+  }
+  const apiUrl = conf.unicode?.apiUrl || DEFAULT_API_URL;
+  const result = await getData(
+    [...queryHex].map(hex => ({ hex })),
+    apiUrl
+  );
+  const dataByHex = new Map(
+    Object.values(result.data).map(d => [d.query.hex, d.result])
+  );
+
+  for (const elem of elements) {
+    const parsedData = elementMap.get(elem);
+    const hexMap = new Map(parsedData.map(e => [e.hex, dataByHex.get(e.hex)]));
+    expandCharMarkup(elem, parsedData, hexMap);
+  }
 }
 
-// convert .hx markup (one or more hex codes)
-function expandCharMarkupHx() {
-  /** @type {NodeListOf<HTMLElement>} */
-  const elements = document.querySelectorAll(".hx");
-  for (const elem of elements) {
-    const split = elem.classList.contains("split");
-    const svg = elem.classList.contains("svg");
-    const img = elem.classList.contains("img");
-    const initial = elem.classList.contains("init");
-    const medial = elem.classList.contains("medi");
-    const final = elem.classList.contains("fina");
-    const skipDiacritic = elem.classList.contains("skip");
-    const circle = elem.classList.contains("circle");
-    const coda = elem.classList.contains("coda") ? "◌" : "";
-    const noname = elem.classList.contains("noname");
-    const lang = window.langTag || elem.lang;
+/**
+ * @param {HTMLElement} elem
+ * @param {ParsedData[]} parsedData
+ * @param {Map<string, Result | null>} hexMap
+ */
+function expandCharMarkup(elem, parsedData, hexMap) {
+  console.log(elem, ...parsedData);
 
-    const charlist = elem.textContent.trim().split(" ");
-    if (charlist[0] === "") {
+  const split = elem.classList.contains("split");
+  // const _svg = elem.classList.contains("svg");
+  // const img = elem.classList.contains("img");
+  const initial = elem.classList.contains("init");
+  const medial = elem.classList.contains("medi");
+  const final = elem.classList.contains("fina");
+  // const skipDiacritic = elem.classList.contains("skip");
+  const circle = elem.classList.contains("circle");
+  const coda = elem.classList.contains("coda") ? "◌" : "";
+  // const noname = elem.classList.contains("noname");
+  const lang = elem.lang || docLang;
+
+  const isHex = elem.classList.contains("hx");
+  const isCh = elem.classList.contains("ch");
+
+  /** @type {string[]} */
+  const unicodeChars = [];
+  /** @type {(HTMLElement | Text)[]} */
+  const unicodeNames = [];
+  let chars = "";
+
+  if (final || medial) {
+    chars += isCh ? " \u200D" : "\u200D"; // the space is needed for Safari to work
+  }
+  if (isHex) {
+    if (circle) {
+      chars = `\u25CC${chars}`;
+    }
+  }
+
+  for (const [i, entry] of parsedData.entries()) {
+    chars += isHex ? `&#x${entry.hex};` : entry.ch;
+    // todo: support images
+
+    if (split) {
+      unicodeChars.push(chars);
+      chars = "";
+    }
+
+    const res = hexMap.get(entry.hex);
+    if (!res?.name) {
+      showError(`No name found for ${entry.hex}`, name, { elements: [elem] });
       continue;
     }
-
-    let unicodeNames = "";
-    let unicodeChars = "";
-    let out = "";
-
-    if (final || medial) {
-      unicodeChars += "\u200D"; // the space is needed for Safari to work
+    const text = `U+${entry.hex} ${res.name}`;
+    unicodeNames.push(html`<span class="uname">${text}</span>`);
+    if (i < parsedData.length - 1) {
+      unicodeNames.push(new Text(" + "));
     }
-    if (circle) {
-      unicodeChars = `\u25CC${unicodeChars}`;
-    }
-    for (let i = 0; i < charlist.length; i++) {
-      const hex = charlist[i];
-      const dec = parseInt(hex, 16);
-      if (Number.isNaN(dec)) {
-        showError(
-          `The link text "${elem.textContent}" is not a number!`,
-          name,
-          { elements: [elem] }
-        );
-        continue;
-      }
-      const ch = String.fromCodePoint(dec);
-
-      if (!charData[ch]) {
-        showError(
-          `The character "${ch}" (U+${hex}) is not in the database!`,
-          name,
-          { elements: [elem] }
-        );
-        unicodeChars += ch;
-        continue;
-      }
-
-      if (hex !== "25CC") {
-        if (i > 0) {
-          unicodeNames += "</span> + <span class='uname'>";
-        }
-        unicodeNames += `U+${hex} `;
-        unicodeNames += charData[ch].replace(/:/, "");
-      }
-
-      if (split && i > 0) {
-        unicodeChars += `</bdi> + <bdi lang="${lang}">`;
-      }
-      if (svg) {
-        // block = getScriptGroup(dec, false);
-        // unicodeChars += `<img src="../../c/${block}/${hex}.svg" alt="${ch}" style="height:2rem;">`;
-      } else if (img) {
-        // block = getScriptGroup(dec, false);
-        // unicodeChars += `<img src="../../c/${block}/large/${hex}.png" alt="${ch}" style="height:2rem;">`;
-      } else {
-        unicodeChars += `&#x${hex};`;
-      }
-      if (skipDiacritic && i == 0) {
-        unicodeChars += "&#x200D;";
-      }
-    }
-
-    if (initial || medial) {
-      unicodeChars += "\u200D ";
-    }
-
-    out += `<span class="codepoint" translate="no"><bdi lang="${lang}"`;
-    if (img || svg) {
-      out += ' style="margin:0;" ';
-    }
-    out += `>${unicodeChars}${coda}</bdi>`;
-    if (noname) {
-      // ok
-    } else {
-      out += `<span class="uname">${unicodeNames}</span>`;
-    }
-    out += "</span>";
-
-    elem.outerHTML = out;
   }
+  if (chars) {
+    unicodeChars.push(chars);
+  }
+
+  if (isHex) {
+    if (initial || medial) {
+      chars += "\u200D ";
+    }
+  }
+  if (isCh) {
+    if (circle) {
+      chars = `\u25CC${chars}`;
+    }
+  }
+  chars += coda;
+
+  const expanded = document.createElement("span");
+  expanded.classList.add("codepoint");
+  expanded.setAttribute("translate", "no");
+  for (const text of unicodeChars) {
+    const bdi = document.createElement("bdi");
+    bdi.lang = lang;
+    bdi.innerHTML = text;
+    expanded.append(bdi);
+  }
+  for (const entry of unicodeNames) {
+    expanded.append(entry);
+  }
+
+  elem.replaceWith(expanded);
 }
 
-// convert .ch markup (one or more characters using Unicode code points)
-function expandCharMarkupCh() {
-  /** @type {NodeListOf<HTMLElement>} */
-  const elements = document.querySelectorAll(".ch");
-  for (const elem of elements) {
-    const split = elem.classList.contains("split");
-    const svg = elem.classList.contains("svg");
-    const img = elem.classList.contains("img");
-    const initial = elem.classList.contains("init");
-    const medial = elem.classList.contains("medi");
-    const final = elem.classList.contains("fina");
-    const circle = elem.classList.contains("circle");
-    const coda = elem.classList.contains("coda") ? "◌" : "";
-    const noname = elem.classList.contains("noname");
-    const language = window.langTag || elem.lang;
+/**
+ * @typedef {{ ch: string; hex: string; dec: number }} ParsedData
+ * @typedef {{ hex: string }} Query
+ * @typedef {{ name: string }} Result
+ * @typedef {{
+ *  data: Array<{ query: Query; result: Result | null }>;
+ *  metadata: { lastParsedAt: string; dataSource: string };
+ * }} ResponseData
+ *
+ * @param {Query[]} queries
+ * @param {string} apiUrl
+ * @return {Promise<ResponseData>}
+ */
+async function getData(queries, apiUrl) {
+  const res = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ queries }),
+  });
+  const data = await res.json();
+  return data;
+}
 
-    const charlist = [...elem.textContent];
-    let unicodeNames = "";
-    let unicodeChars = "";
-    let out = "";
-
-    if (final || medial) {
-      unicodeChars += " \u200D";
-    }
-    for (let i = 0; i < charlist.length; i++) {
-      const dec = charlist[i].codePointAt(0);
-      const hex = dec.toString(16).toUpperCase().padStart(4, "0");
-
-      if (!charData[charlist[i]]) {
-        unicodeChars += charlist[i];
-        unicodeNames += `<span style="color:red"> ${charlist[i]} NOT IN DB!</span> `;
-        continue;
-      }
-
-      if (i > 0) {
-        unicodeNames += "</span> + <span class='uname'>";
-      }
-      unicodeNames += `U+${hex} `;
-      unicodeNames += charData[charlist[i]].replace(/:/, "");
-
-      if (split && i > 0) {
-        unicodeChars += `</bdi> + <bdi lang="${language}">`;
-      }
-
-      if (svg) {
-        // block = getScriptGroup(dec, false);
-        // unicodeChars += `<img src="../../c/${block}/${hex}.svg" alt="${charlist[i]}" style="height:2rem;">`;
-      } else if (img) {
-        // block = getScriptGroup(dec, false);
-        // unicodeChars += `<img src="../../c/${block}/large/${hex}.png" alt="${charlist[i]}" style="height:2rem;">`;
-      } else {
-        unicodeChars += charlist[i];
-      }
-    }
-
-    if (initial || medial) {
-      unicodeChars += "\u200D ";
-    }
-    if (circle) {
-      unicodeChars = `\u25CC${unicodeChars}`;
-    }
-
-    out += `<span class="codepoint" translate="no"><bdi lang="${language}"`;
-    // if (blockDirection === "rtl") {
-    // out += ` dir="rtl"`;
-    // }
-    if (img || svg) {
-      out += ' style="margin:0;" ';
-    }
-    out += `>${unicodeChars}${coda}</bdi>`;
-    if (noname) {
-      // ok
-    } else {
-      out += `<span class="uname">${unicodeNames}</span>`;
-    }
-    out += "</span>";
-
-    elem.outerHTML = out;
+/**
+ * @param {HTMLElement} elem
+ * @returns {ParsedData[]}
+ */
+function parseCh(elem) {
+  const result = [];
+  const charlist = [...elem.textContent];
+  for (let i = 0; i < charlist.length; i++) {
+    const ch = charlist[i];
+    const dec = ch.codePointAt(0);
+    const hex = dec.toString(16).toUpperCase().padStart(4, "0");
+    result.push({ ch, hex, dec });
   }
+  return result;
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @returns {ParsedData[]}
+ */
+function parseHx(elem) {
+  const charlist = elem.textContent.trim().split(" ");
+  if (charlist[0] === "") {
+    return [];
+  }
+  const result = [];
+  for (let i = 0; i < charlist.length; i++) {
+    const ch = charlist[i];
+    const hex = ch;
+    const dec = parseInt(hex, 16);
+    result.push({ ch, hex, dec });
+  }
+  return result;
 }
