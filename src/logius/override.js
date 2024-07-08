@@ -8,8 +8,8 @@ export function run(conf) {
         try {
             const l10n = getIntlData(conf.localizationStrings);
             const content = html`<p>${l10n.conformance}</p>`;
-            conformance.querySelector("p").remove();
-            conformance.querySelector("p").replaceWith(content);
+            const heading = conformance.querySelector("h2");
+            conformance.replaceChildren(heading, content);
         } catch {
             // no custom conformance text
         };
