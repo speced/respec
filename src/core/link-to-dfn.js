@@ -67,7 +67,7 @@ export async function run(conf) {
 
   /** @type {NodeListOf<HTMLAnchorElement>} */
   const localAnchors = document.querySelectorAll(
-    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
+    "a[data-cite=''], a:not([href]):not([id]):not([data-cite]):not(.logo):not(.externalDFN)"
   );
   for (const anchor of localAnchors) {
     if (!anchor.dataset?.linkType && anchor.dataset?.xrefType) {
