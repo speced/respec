@@ -310,10 +310,19 @@ function handleConsoleMessages(page, onError, onWarning) {
         // Old ReSpec versions might report errors as strings.
         return JSON.stringify({ message: String(obj) });
       } else if (obj instanceof Error && !obj.plugin) {
+        let cause;
+        if (obj.cause instanceof Error) {
+          cause = {
+            name: obj.cause.name,
+            message: obj.cause.message,
+            stack: obj.cause.stack,
+          };
+        }
         return JSON.stringify({
           message: obj.message,
           plugin: "unknown",
           name: obj.name,
+          cause,
           stack: obj.stack?.replace(
             obj.message,
             `${obj.message.slice(0, 30)}…`
