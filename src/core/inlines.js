@@ -148,7 +148,7 @@ function inlineXrefMatches(matched, text) {
   // If it's inside a dfn or a `a`, it should just be coded, not linked.
   // This is because dfn elements are treated as links by ReSpec via role=link.
   const renderAsCode =
-    !!text.parentElement.closest("dfn") || !!text.parentElement.closest("a");
+    !!text.parentElement.closest("dfn,a");
   return renderAsCode ? inlineCodeMatches(`\`${node.textContent}\``) : node;
 }
 
