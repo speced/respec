@@ -1051,6 +1051,8 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const [specLink] = doc.querySelectorAll("#test a");
-    expect(specLink.href).toBe("https://w3c.github.io/reporting/network-reporting.html#endpoint-group");
+    expect(specLink.href).toBe(
+      "https://w3c.github.io/reporting/network-reporting.html#endpoint-group"
+    );
   });
 });
