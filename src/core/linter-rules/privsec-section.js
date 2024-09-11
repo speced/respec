@@ -19,6 +19,12 @@ const localizationStrings = {
       "Add a privacy and/or security considerations section. " +
       "See the [Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/).",
   },
+  it: {
+    msg: "Il documento deve avere una sezione 'Considerazioni sulla privacy e/o sulla sicurezza'.",
+    hint:
+      "Aggiungi una sezione di considerazioni sulla privacy e/o sulla sicurezza. " +
+      "Consulta il [Questionario di auto-valutazione](https://w3ctag.github.io/security-questionnaire/).",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
