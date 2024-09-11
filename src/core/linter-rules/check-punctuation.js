@@ -15,6 +15,10 @@ const localizationStrings = {
     msg: "`p` elements should end with a punctuation mark.",
     hint: `Please make sure \`p\` elements end with one of: ${humanMarks}.`,
   },
+  it: {
+    msg: "Gli elementi `p` dovrebbero terminare con un segno di punteggiatura.",
+    hint: `Assicurati che gli elementi \`p\` terminino con uno dei seguenti: ${humanMarks}.`,
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
