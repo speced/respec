@@ -38,6 +38,23 @@ const localizationStrings = {
       ]);
     },
   },
+  it: {
+    rfc2119Keywords() {
+      return joinRegex([
+        /\b(?:\s+NON)?DEVE\b/,
+        /\b(?:\s+NON)?DEVONO\b/,
+        /\b(?:\s+NON)?DOVREBBE\b/,
+        /\b(?:\s+NON)?DOVREBBERO\b/,
+        /\b(?:\s+NON)?DOVRÀ\b/,
+        /\b(?:\s+NON)?DOVRANNO\b/,
+        /\b(?:\s+NON)?PUÒ\b/,
+        /\b(?:\s+NON)?POSSONO\b/,
+        /\b(?:NON\s+)?OBBLIGATORIO\b/,
+        /\b(?:NON\s+)?RACCOMANDATO\b/,
+        /\bFACOLTATIVO\b/,
+      ]);
+    },
+  },
   de: {
     rfc2119Keywords() {
       return joinRegex([
