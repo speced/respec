@@ -29,6 +29,15 @@ const localizationStrings = {
     },
     duplicateTitle: "This is defined more than once in the document.",
   },
+  it: {
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `Definizione(i) duplicata(e) di '${title}'`;
+    },
+    duplicateTitle: "Questo è definito più di una volta nel documento.",
+  },
   ja: {
     /**
      * @param {string} title
