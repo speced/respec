@@ -12,6 +12,10 @@ const localizationStrings = {
     msg: `Document must only contain one \`<meta>\` tag with charset set to 'utf-8'`,
     hint: `Add this line in your document \`<head>\` section - \`<meta charset="utf-8">\` or set charset to "utf-8" if not set already.`,
   },
+  it: {
+    msg: `Il documento deve contenere solo un tag \`<meta>\` con charset impostato su 'utf-8'`,
+    hint: `Aggiungi questa riga nella sezione \`<head>\` del tuo documento - \`<meta charset="utf-8">\` o imposta il charset su "utf-8" se non è già impostato.`,
+  },
   zh: {
     msg: `文档只能包含一个 charset 属性为 utf-8 的 \`<meta>\` 标签`,
     hint: `将此行添加到文档的 \`<head>\` 部分—— \`<meta charset="utf-8">\` 或将 charset 设置为 utf-8（如果尚未设置）。`,
