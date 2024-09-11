@@ -13,6 +13,10 @@ const localizationStrings = {
     msg: "The following test could not be found in Web Platform Tests:",
     hint: "Check [wpt.live](https://wpt.live) to see if it was deleted or renamed.",
   },
+  it: {
+    msg: "Il seguente test non è stato trovato in Web Platform Tests:",
+    hint: "Controlla [wpt.live](https://wpt.live) per vedere se è stato eliminato o rinominato.",
+  }
 };
 const l10n = getIntlData(localizationStrings);
 
