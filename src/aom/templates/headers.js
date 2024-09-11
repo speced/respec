@@ -18,6 +18,18 @@ const localizationStrings = {
     this_version: "This version:",
     issue_tracker: "Issue Tracker:",
   },
+  it: {
+    author: "Autore:",
+    authors: "Autori:",
+    editor: "Curatore:",
+    editors: "Curatori:",
+    former_editor: "Ex curatore:",
+    former_editors: "Ex curatori:",
+    latest_editors_draft: "Ultima bozza del curatore:",
+    latest_published_version: "Ultima versione approvata:",
+    this_version: "Questa versione:",
+    issue_tracker: "Tracker dei problemi:",
+  },
 };
 
 export const l10n = getIntlData(localizationStrings);
