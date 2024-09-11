@@ -15,6 +15,10 @@ const localizationStrings = {
     msg: "Variable was defined, but never used.",
     hint: "Add a `data-ignore-unused` attribute to the `<var>`.",
   },
+  it: {
+    msg: "La variabile è stata definita, ma non è mai stata utilizzata.",
+    hint: "Aggiungi un attributo `data-ignore-unused` al tag `<var>`.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
