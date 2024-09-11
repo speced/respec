@@ -23,6 +23,11 @@ const localizationStrings = {
     tests: "tests",
     test: "test",
   },
+  it: {
+    missing_test_suite_uri: docLink`Trovati test nella tua specifica, ma manca ${"[testSuiteURI]"} nella tua configurazione ReSpec.`,
+    tests: "test",
+    test: "test",
+  },
   ja: {
     missing_test_suite_uri: docLink`この仕様内にテストの項目を検出しましたが，ReSpec の設定に ${"[testSuiteURI]"} が見つかりません．`,
     tests: "テスト",
