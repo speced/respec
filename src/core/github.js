@@ -25,6 +25,11 @@ const localizationStrings = {
     participate: "Participate:",
     commit_history: "Commit history",
   },
+  it: {
+    file_a_bug: "Segnala un problema",
+    participate: "Partecipa:",
+    commit_history: "Cronologia dei commit",
+  },
   ko: {
     participate: "참여",
   },
