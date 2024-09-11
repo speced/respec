@@ -13,6 +13,10 @@ const localizationStrings = {
     msg: docLink`Insecure URLs are not allowed in ${"[respecConfig]"}.`,
     hint: "Please change the following properties to 'https://': ",
   },
+  it: {
+    msg: docLink`Gli URL non sicuri non sono consentiti in ${"[respecConfig]"}.`,
+    hint: "Si prega di cambiare le seguenti proprietà in 'https://': ",
+  },
   zh: {
     msg: docLink`${"[respecConfig]"} 中不允许使用不安全的URL.`,
     hint: "请将以下属性更改为 https://：",
