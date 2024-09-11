@@ -16,6 +16,7 @@ export const name = "w3c/abstract";
 /** @type {LocalizationStrings} */
 const localizationStrings = {
   en: { abstract: "Abstract" },
+  it: { abstract: "Sommario" },
   ko: { abstract: "요약" },
   zh: { abstract: "摘要" },
   ja: { abstract: "要約" },
