@@ -14,6 +14,9 @@ const localizationStrings = {
   en: {
     level: "Level",
   },
+  it: {
+    level: "Livello",
+  },
   ja: {
     level: "レベル",
   },
