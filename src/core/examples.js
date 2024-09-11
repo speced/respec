@@ -16,6 +16,9 @@ const localizationStrings = {
   en: {
     example: "Example",
   },
+  it: {
+    example: "Esempio",
+  },
   nl: {
     example: "Voorbeeld",
   },
