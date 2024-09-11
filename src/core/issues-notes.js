@@ -32,6 +32,15 @@ const localizationStrings = {
     note: "Note",
     warning: "Warning",
   },
+  it: {
+    editors_note: "Nota del curatore",
+    feature_at_risk: "(Funzionalità a rischio) Problema",
+    issue: "Problema",
+    issue_summary: "Sintesi del problema",
+    no_issues_in_spec: "Non ci sono problemi elencati in questa specifica.",
+    note: "Nota",
+    warning: "Avviso",
+  },
   ja: {
     note: "注",
     editors_note: "編者注",
