@@ -39,6 +39,38 @@ const localizationStrings = {
     with_subject_line: "with subject line",
     your_topic_here: "YOUR TOPIC HERE",
   },
+  it: {
+    archives: "archivi",
+    author: "Autore:",
+    authors: "Autori:",
+    commit_history: "Cronologia dei commit",
+    edited_in_place: "modificato in loco",
+    editor: "Curatore:",
+    editors: "Curatori:",
+    feedback: "Feedback:",
+    former_editor: "Ex curatore:",
+    former_editors: "Ex curatori:",
+    history: "Cronologia:",
+    implementation_report: "Report di implementazione:",
+    latest_editors_draft: "Ultima bozza del curatore:",
+    latest_published_version: "Ultima versione pubblicata:",
+    latest_recommendation: "Ultima Raccomandazione:",
+    message_topic: "… argomento del messaggio …",
+    more_details_about_this_doc: "Maggiori dettagli su questo documento",
+    multiple_alternates(plural) {
+      return `Questo documento è disponibile anche in ${
+        plural ? "questi formati non normativi" : "questo formato non normativo"
+      }:`;
+    },
+    prev_editor_draft: "Bozza precedente del curatore:",
+    prev_recommendation: "Raccomandazione precedente:",
+    prev_version: "Versione precedente:",
+    publication_history: "Storia della pubblicazione",
+    test_suite: "Suite di test:",
+    this_version: "Questa versione:",
+    with_subject_line: "con oggetto",
+    your_topic_here: "IL TUO ARGOMENTO VA QUI",
+  },
   ko: {
     author: "저자:",
     authors: "저자:",
