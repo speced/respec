@@ -27,6 +27,19 @@ const localizationStrings = {
         To silence this warning entirely, set \`lint: { "${ruleName}": false }\` in your \`respecConfig\`.`;
     },
   },
+  it: {
+    msg(term, cite) {
+      return `Riferimento normativo a "${term}" trovato, ma il termine è definito "informativamente" in "${cite}".`;
+    },
+    get hint() {
+      return docLink`
+        Puoi fare una delle seguenti cose...
+          * Far diventare la definizione sorgente normativa
+          * Aggiungere un attributo \`class="lint-ignore"\` al link.
+          * Usare un proxy normativo locale per la definizione, ad esempio \`<dfn data-cite="spec">termine</dfn>\`
+        Per silenziare completamente questo avviso, imposta \`lint: { "${ruleName}": false }\` nel tuo \`respecConfig\`.`;
+    },
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
