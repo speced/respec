@@ -12,6 +12,10 @@ const localizationStrings = {
     msg: "Internal slots should be preceded by a '.'",
     hint: "Add a '.' between the elements mentioned.",
   },
+  it: {
+    msg: "Gli slot interni dovrebbero essere preceduti da un '.'",
+    hint: "Aggiungi un '.' tra gli elementi menzionati.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
