@@ -21,6 +21,10 @@ const localizationStrings = {
     list_of_figures: "List of Figures",
     fig: "Figure ",
   },
+  it: {
+    list_of_figures: "Elenco di Figure",
+    fig: "Figura ",
+  },
   ja: {
     fig: "図 ",
     list_of_figures: "図のリスト",
