@@ -8,6 +8,9 @@ const localizationStrings = {
   en: {
     abstract: "Abstract",
   },
+  it: {
+    abstract: "Sommario",
+  },
   ko: {
     abstract: "요약",
   },
