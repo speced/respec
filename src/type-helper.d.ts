@@ -316,8 +316,9 @@ declare class RespecError extends Error {
  *
  */
 type LocalizationStrings = {
-  de: Record<string, string>;
   en: Record<string, string>;
+  it: Record<string, string>;
+  de: Record<string, string>;
   ja: Record<string, string>;
   nl: Record<string, string>;
   zh: Record<string, string>;
