@@ -11,6 +11,9 @@ const localizationStrings = {
   en: {
     title: "Search definitions",
   },
+  it: {
+    title: "Cerca definizioni",
+  },
   ja: {
     title: "定義検索",
   },
