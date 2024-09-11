@@ -18,6 +18,9 @@ const localizationStrings = {
   en: {
     default_title: "No Title",
   },
+  it: {
+    default_title: "Nessun Titolo",
+  },
   de: {
     default_title: "Kein Titel",
   },
