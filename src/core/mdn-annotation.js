@@ -34,6 +34,10 @@ const localizationStrings = {
     inAllEngines: "This feature is in all major engines.",
     inSomeEngines: "This feature has limited support.",
   },
+  it: {
+    inAllEngines: "Questa funzionalità è presente in tutti i principali motori.",
+    inSomeEngines: "Questa funzionalità ha un supporto limitato.",
+  },
   zh: {
     inAllEngines: "所有主要引擎均支持此特性。",
     inSomeEngines: "此功能支持有限。",
