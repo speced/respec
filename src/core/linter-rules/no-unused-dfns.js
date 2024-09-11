@@ -31,6 +31,19 @@ const localizationStrings = {
         To silence this warning entirely, set \`lint: { "no-unused-dfns": false }\` in your \`respecConfig\`.`;
     },
   },
+  it: {
+    msg(text) {
+      return `Trovata una definizione per "${text}", ma non è collegata a nulla. Questo è solitamente un bug nella specifica!`;
+    },
+    get hint() {
+      return docLink`
+        Puoi fare una delle seguenti cose...
+          * Aggiungi un attributo \`class="lint-ignore"\` alla definizione.
+          * Rimuovi la definizione o cambia \`<dfn>\` con un altro tipo di elemento HTML.
+          * Se intendevi ${"[export|#data-export]"} la definizione, aggiungi \`class="export"\` alla definizione.
+        Per silenziare completamente questo avviso, imposta \`lint: { "no-unused-dfns": false }\` nel tuo \`respecConfig\`.`;
+    },
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
