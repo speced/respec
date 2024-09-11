@@ -17,6 +17,11 @@ const localizationStrings = {
       return html` Until ${date} `;
     },
   },
+  it: {
+    until(date) {
+      return html` Fino a ${date} `;
+    },
+  },
   es: {
     until(date) {
       return html` Hasta ${date} `;
