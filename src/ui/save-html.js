@@ -12,6 +12,9 @@ const localizationStrings = {
   en: {
     save_snapshot: "Export",
   },
+  it: {
+    save_snapshot: "Esporta",
+  },
   nl: {
     save_snapshot: "Bewaar Snapshot",
   },
