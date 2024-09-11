@@ -9,6 +9,9 @@ const localizationStrings = {
   en: {
     about_respec: "About",
   },
+  it: {
+    about_respec: "Riguardo",
+  },
   zh: {
     about_respec: "关于",
   },
