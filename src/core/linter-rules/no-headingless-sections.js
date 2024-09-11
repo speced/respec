@@ -15,6 +15,10 @@ const localizationStrings = {
     msg: "All sections must start with a `h2-6` element.",
     hint: "Add a `h2-6` to the offending section or use a `<div>`.",
   },
+  it: {
+    msg: "Tutte le sezioni devono iniziare con un elemento `h2-6`.",
+    hint: "Aggiungi un `h2-6` alla sezione in questione o usa un `<div>`.",
+  },
   nl: {
     msg: "Alle secties moeten beginnen met een `h2-6` element.",
     hint: "Voeg een `h2-6` toe aan de conflicterende sectie of gebruik een `<div>`.",
