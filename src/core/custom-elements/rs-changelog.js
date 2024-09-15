@@ -34,7 +34,9 @@ export const element = class ChangelogElement extends HTMLElement {
       ${{
         any: fetchCommits(from, to, filter)
           .then(commits => toHTML(commits))
-          .catch(error => showError(error.message, name, { elements: [this] }))
+          .catch(error =>
+            showError(error.message, name, { elements: [this], cause: error })
+          )
           .finally(() => {
             this.dispatchEvent(new CustomEvent("done"));
           }),
@@ -70,8 +72,7 @@ async function fetchCommits(from, to, filter) {
     commits = commits.filter(filter);
   } catch (error) {
     const msg = `Error loading commits from GitHub. ${error.message}`;
-    console.error(error);
-    throw new Error(msg);
+    throw new Error(msg, { cause: error });
   }
   return commits;
 }

@@ -90,15 +90,32 @@ class Logger {
 
   /** @param {import("./respecDocWriter").ReSpecError} rsError */
   _printDetails(rsError) {
+    const shouldPrintStacktrace = this._shouldPrintStacktrace(rsError);
     const print = (title, value) => {
       if (!value) return;
-      const padWidth = "Plugin".length + 1; // "Plugin" is the longest title
+      const longestTitle = shouldPrintStacktrace ? "Stacktrace" : "Plugin";
+      const padWidth = longestTitle.length + 1;
       const paddedTitle = `${title}:`.padStart(padWidth);
       console.error(" ", colors.bold(paddedTitle), this._formatMarkdown(value));
     };
     print("Count", rsError.elements && String(rsError.elements.length));
     print("Plugin", rsError.plugin);
     print("Hint", rsError.hint);
+    if (shouldPrintStacktrace) {
+      let stacktrace = `${rsError.stack}`;
+      if (rsError.cause) {
+        stacktrace += `\n    ${colors.bold("Caused by:")} ${rsError.cause.stack.split("\n").join("\n   ")}`;
+      }
+      print("Stacktrace", stacktrace);
+    }
+  }
+
+  _shouldPrintStacktrace(rsError) {
+    return (
+      this.verbose &&
+      !!rsError.stack &&
+      (!!rsError.cause?.stack || rsError.plugin === "unknown")
+    );
   }
 }
 

@@ -32,8 +32,7 @@ export async function run(config) {
         } catch (err) {
           const msg = `Function ${f.name} threw an error during \`postProcess\`.`;
           const hint = "See developer console.";
-          showError(msg, name, { hint });
-          console.error(err);
+          showError(msg, name, { hint, cause: err });
         }
       });
     await Promise.all(promises);

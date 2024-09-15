@@ -294,8 +294,7 @@ export function runTransforms(content, flist, ...funcArgs) {
         } catch (e) {
           const msg = `call to \`${meth}()\` failed with: ${e}.`;
           const hint = "See developer console for stack trace.";
-          showWarning(msg, "utils/runTransforms", { hint });
-          console.error(e);
+          showWarning(msg, "utils/runTransforms", { hint, cause: e });
         }
       }
     }
@@ -850,7 +849,7 @@ export class RespecError extends Error {
    * @param {Parameters<typeof showError>[2] & { isWarning: boolean }} options
    */
   constructor(message, plugin, options) {
-    super(message);
+    super(message, { ...(options.cause && { cause: options.cause }) });
     const name = options.isWarning ? "ReSpecWarning" : "ReSpecError";
     Object.assign(this, { message, plugin, name, ...options });
     if (options.elements) {
@@ -864,7 +863,23 @@ export class RespecError extends Error {
     const { message, name, stack } = this;
     // @ts-expect-error https://github.com/microsoft/TypeScript/issues/26792
     const { plugin, hint, elements, title, details } = this;
-    return { message, name, plugin, hint, elements, title, details, stack };
+    return {
+      message,
+      name,
+      plugin,
+      hint,
+      elements,
+      title,
+      details,
+      stack,
+      ...(this.cause instanceof Error && {
+        cause: {
+          name: this.cause.name,
+          message: this.cause.message,
+          stack: this.cause.stack,
+        },
+      }),
+    };
   }
 }
 
@@ -876,6 +891,7 @@ export class RespecError extends Error {
  * @param {HTMLElement[]} [options.elements] Offending elements.
  * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
  * @param {string} [options.details] Any further details/context.
+ * @param {Error} [options.cause] The error that caused this one.
  */
 export function showError(message, pluginName, options = {}) {
   const opts = { ...options, isWarning: false };
@@ -890,6 +906,7 @@ export function showError(message, pluginName, options = {}) {
  * @param {HTMLElement[]} [options.elements] Offending elements.
  * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
  * @param {string} [options.details] Any further details/context.
+ * @param {Error} [options.cause] The error that caused this one.
  */
 export function showWarning(message, pluginName, options = {}) {
   const opts = { ...options, isWarning: true };

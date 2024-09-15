@@ -309,6 +309,25 @@ function handleConsoleMessages(page, onError, onWarning) {
       if (typeof obj === "string") {
         // Old ReSpec versions might report errors as strings.
         return JSON.stringify({ message: String(obj) });
+      } else if (obj instanceof Error && !obj.plugin) {
+        let cause;
+        if (obj.cause instanceof Error) {
+          cause = {
+            name: obj.cause.name,
+            message: obj.cause.message,
+            stack: obj.cause.stack,
+          };
+        }
+        return JSON.stringify({
+          message: obj.message,
+          plugin: "unknown",
+          name: obj.name,
+          cause,
+          stack: obj.stack?.replace(
+            obj.message,
+            `${obj.message.slice(0, 30)}…`
+          ),
+        });
       } else {
         // Ideally: `obj instanceof RsError` and `RsError instanceof Error`.
         return JSON.stringify(obj);
@@ -335,6 +354,7 @@ function handleConsoleMessages(page, onError, onWarning) {
     switch (type) {
       case "error":
         return onError(JSON.parse(text));
+      case "warn":
       case "warning":
         return onWarning(JSON.parse(text));
     }
