@@ -405,7 +405,7 @@ function addDataCite(elem, query, result, conf) {
   // a filename. That filename must be preserved if there's no specific path.
   if (citePath === "/") citePath = "";
   const citeFrag = url.hash.slice(1);
-  const dataset = { cite, citePath, citeFrag, type };
+  const dataset = { cite, citePath, citeFrag, linkType: type };
   if (forContext) dataset.linkFor = forContext[0];
   if (url.origin && url.origin !== "https://partial") {
     dataset.citeHref = url.href;
