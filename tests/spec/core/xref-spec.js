@@ -1044,4 +1044,16 @@ describe("Core — xref", () => {
     const test2 = doc.getElementById("test2");
     expect(test2.classList).toContain("respec-offending-element");
   });
+
+  it("preserves the filename in the URL of an external term", async () => {
+    const body = `<section id="test">
+      <p data-cite="network-reporting">[=endpoint group=]</p>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const [specLink] = doc.querySelectorAll("#test a");
+    expect(specLink.href).toBe(
+      "https://w3c.github.io/reporting/network-reporting.html#endpoint-group"
+    );
+  });
 });

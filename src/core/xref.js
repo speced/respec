@@ -400,7 +400,10 @@ function addDataCite(elem, query, result, conf) {
   // but sometimes we get lucky and we get an absolute URL from xref
   // which we can then use in other places (e.g., data-cite.js)
   const url = new URL(uri, "https://partial");
-  const { pathname: citePath } = url;
+  let { pathname: citePath } = url;
+  // final resolution will be against the URL of the spec, which may end with
+  // a filename. That filename must be preserved if there's no specific path.
+  if (citePath === "/") citePath = "";
   const citeFrag = url.hash.slice(1);
   const dataset = { cite, citePath, citeFrag, linkType: type };
   if (forContext) dataset.linkFor = forContext[0];
