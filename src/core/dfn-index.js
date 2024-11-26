@@ -277,7 +277,7 @@ function collectExternalTerms() {
       continue;
     }
 
-    const { type, linkFor } = elem.dataset;
+    const { linkType: type, linkFor } = elem.dataset;
     const term = getTermFromElement(elem);
     if (!term) {
       continue; // <a data-cite="SPEC"></a>
