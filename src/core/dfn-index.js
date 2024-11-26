@@ -224,7 +224,9 @@ function getLocalTermSuffix(dfn, type, term = "") {
 function appendSectionNumbers() {
   const getSectionNumber = id => {
     const dfn = document.getElementById(id);
-    const sectionNumberEl = dfn.closest("section").querySelector(".secno");
+    const sectionNumberEl = dfn
+      .closest("section:not(.notoc)")
+      .querySelector(".secno");
     const secNum = `§${sectionNumberEl.textContent.trim()}`;
     return html`<span class="print-only">${secNum}</span>`;
   };
@@ -275,7 +277,7 @@ function collectExternalTerms() {
       continue;
     }
 
-    const { type, linkFor } = elem.dataset;
+    const { linkType: type, linkFor } = elem.dataset;
     const term = getTermFromElement(elem);
     if (!term) {
       continue; // <a data-cite="SPEC"></a>
