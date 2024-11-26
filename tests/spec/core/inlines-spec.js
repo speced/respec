@@ -623,7 +623,7 @@ describe("Core - Inlines", () => {
     expect(primitiveAnchor.hash).toBe("#idl-unsigned-short");
 
     const primitiveData = primitiveAnchor.dataset;
-    expect(primitiveData.linkType).toBe("idl");
+    expect(primitiveData.linkType).toBe("interface");
     expect(primitiveData.cite).toBe("webidl");
     expect(primitiveData.xrefType).toBe("interface");
     expect(primitiveData.lt).toBe("unsigned short");
