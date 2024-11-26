@@ -77,6 +77,7 @@ describe("Core — xref", () => {
     expect(link.href).toBe(
       "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
     );
+    expect(link.dataset.linkType).toBe("dfn");
     expect(link.classList.contains("respec-offending-element")).toBeFalsy();
 
     const dfn = doc.querySelector("#external-dfn dfn a");
@@ -1042,5 +1043,17 @@ describe("Core — xref", () => {
     expect(test1.classList).not.toContain("respec-offending-element");
     const test2 = doc.getElementById("test2");
     expect(test2.classList).toContain("respec-offending-element");
+  });
+
+  it("preserves the filename in the URL of an external term", async () => {
+    const body = `<section id="test">
+      <p data-cite="network-reporting">[=endpoint group=]</p>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const [specLink] = doc.querySelectorAll("#test a");
+    expect(specLink.href).toBe(
+      "https://w3c.github.io/reporting/network-reporting.html#endpoint-group"
+    );
   });
 });
