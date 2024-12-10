@@ -177,7 +177,7 @@ function renderNotRec(conf) {
     case "STMT":
       endorsement = html`<p>
         A W3C Statement is a specification that, after extensive
-        consensus-building, has received the endorsement of the
+        consensus-building, is endorsed by
         <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.
       </p>`;
       break;
@@ -185,7 +185,7 @@ function renderNotRec(conf) {
       endorsement = html`<p>W3C recommends the wide usage of this registry.</p>
         <p>
           A W3C Registry is a specification that, after extensive
-          consensus-building, has received the endorsement of the
+          consensus-building, is endorsed by
           <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.
         </p>`;
       break;
