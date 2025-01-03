@@ -492,7 +492,7 @@ function linkToWorkingGroup(conf) {
     } else if (proposedCorrections || corrections) {
       changes = html`It includes
       ${proposedCorrections
-        ? html`<a href="${processLink}#proposed-correction">
+        ? html`<a href="${processLink}#proposed-corrections">
             proposed corrections</a
           >`
         : html`<a href="${processLink}#candidate-correction">
