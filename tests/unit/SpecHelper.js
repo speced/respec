@@ -20,7 +20,7 @@ export function makePluginDoc(
     "/src/core/dfn.js", // Needed for "plugins-done" event,
     ...plugins,
   ];
-  return getDoc(html`
+  return getDoc(`
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -45,20 +45,15 @@ export function makePluginDoc(
                   value: { ready: Promise.reject(err) },
                 });
               }
-              await document.respec.ready;
             }
           }
           run(${JSON.stringify(plugins)});
         </script>
       </head>
-      <body>
-        ${body}
-      </body>
+      <body>${body}</body>
     </html>
   `);
 }
-
-export const html = String.raw;
 
 /**
  * @param {string} html
