@@ -30,9 +30,10 @@ export async function run(conf) {
   // remove highlights, cleanup empty class/style attributes
   sub("beforesave", (/** @type {Document} */ outputDoc) => {
     outputDoc.querySelectorAll("var.respec-hl").forEach(el => {
-      el.classList.remove("respec-hl");
-      const classNames = el.classList.toString().replaceAll(/respec-hl-c*/, "");
-      el.classList.value = classNames.trim();
+      const classesToRemove = [...el.classList.values()].filter(cls =>
+        cls.startsWith("respec-hl")
+      );
+      el.classList.remove(...classesToRemove);
       if (!el.classList.length) el.removeAttribute("class");
     });
   });
