@@ -210,14 +210,14 @@ export default (conf, options) => {
       ${!conf.prevRecURI
         ? ""
         : conf.isRec
-        ? html`
-            <dt>${l10n.prev_recommendation}</dt>
-            <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-          `
-        : html`
-            <dt>${l10n.latest_recommendation}</dt>
-            <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-          `}
+          ? html`
+              <dt>${l10n.prev_recommendation}</dt>
+              <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+            `
+          : html`
+              <dt>${l10n.latest_recommendation}</dt>
+              <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+            `}
       <dt>${conf.multipleEditors ? l10n.editors : l10n.editor}</dt>
       ${showPeople(conf, "editors")}
       ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
@@ -307,19 +307,19 @@ function renderCopyright(conf) {
     ? conf.additionalCopyrightHolders
       ? html`<p class="copyright">${[conf.additionalCopyrightHolders]}</p>`
       : conf.overrideCopyright
-      ? [conf.overrideCopyright]
-      : html`<p class="copyright">
-          ${l10n.licensed}
-          ${linkLicense(
-            conf.licenses[conf.license.toLowerCase()].name,
-            conf.licenses[conf.license.toLowerCase()].url,
-            conf.licenses[conf.license.toLowerCase()].image,
-            "subfoot"
-          )}
-        </p>`
+        ? [conf.overrideCopyright]
+        : html`<p class="copyright">
+            ${l10n.licensed}
+            ${linkLicense(
+              conf.licenses[conf.license.toLowerCase()].name,
+              conf.licenses[conf.license.toLowerCase()].url,
+              conf.licenses[conf.license.toLowerCase()].image,
+              "subfoot"
+            )}
+          </p>`
     : conf.overrideCopyright
-    ? [conf.overrideCopyright]
-    : renderOfficialCopyright(conf);
+      ? [conf.overrideCopyright]
+      : renderOfficialCopyright(conf);
 }
 
 function renderOfficialCopyright(conf) {
