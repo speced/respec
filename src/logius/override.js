@@ -6,15 +6,15 @@ export function run(conf) {
   if (!conf.override) {
     return;
   }
+  const conformance = document.querySelector("section#conformance");
   if (conformance && !conformance.classList.contains("override")) {
-    overrideConformance(conf);
+    overrideConformance(conf.override, conformance);
   }
 }
 
-function overrideConformance(conf) {
-  const conformance = document.querySelector("section#conformance");
+function overrideConformance(override, conformance) {
   try {
-    const l10n = getIntlData(conf.override);
+    const l10n = getIntlData(override);
     const content = html`<p>${l10n.conformance}</p>`;
     const heading = conformance.querySelector("h2");
     conformance.replaceChildren(heading, content);
