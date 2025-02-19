@@ -8,6 +8,7 @@
 export const name = "core/pubsubhub";
 
 import { expose } from "./expose-modules.js";
+import { showError } from "./utils.js";
 
 const subscriptions = new EventTarget();
 
@@ -36,7 +37,15 @@ export function pub(topic, detail) {
  *                               used for unsubscribing from messages.
  */
 export function sub(topic, cb, options = { once: false }) {
-  const listener = e => cb(e.detail);
+  /** @param {CustomEvent} ev */
+  const listener = async ev => {
+    try {
+      await cb(ev.detail);
+    } catch (error) {
+      const msg = `Error in handler for topic "${topic}": ${error.message}`;
+      showError(msg, `sub:${topic}`, { cause: error });
+    }
+  };
   subscriptions.addEventListener(topic, listener, options);
 }
 

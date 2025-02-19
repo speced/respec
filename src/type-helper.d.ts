@@ -151,6 +151,9 @@ interface Conf {
 
   /** W3C Group - see https://respec.org/w3c/groups */
   group?: string | string[];
+
+  /** URL of Dutch organisation styles, if applicable */
+  nl_organisationStylesURL?: string;
 }
 
 type GroupDetails = {
