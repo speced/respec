@@ -49,20 +49,11 @@ function createMetaViewport() {
   return meta;
 }
 
-// get base.css from pubdomain if present else W3c
-function getBaseStyleURI() {
-  let baseStyle = respecConfig.nl_organisationStylesURL
-    ? respecConfig.nl_organisationStylesURL
-    : "https://www.w3.org/StyleSheets/TR/2016/";
-  if (!baseStyle.endsWith("/")) baseStyle += "/";
-  return `${baseStyle}base.css`;
-}
-
 function createBaseStyle() {
   const link = document.createElement("link");
 
   link.rel = "stylesheet";
-  link.href = getBaseStyleURI();
+  link.href = getStyleUrl();
   link.classList.add("removeOnSave");
   return link;
 }
@@ -82,7 +73,12 @@ function createResourceHints() {
     {
       hint: "preload", // all specs include on base.css.
       // href: "https://www.w3.org/StyleSheets/TR/2016/base.css",
-      href: getBaseStyleURI(),
+      href: getStyleUrl("base.css"),
+      as: "style",
+    },
+    {
+      hint: "preload",
+      href: getStyleUrl("dark.css"),
       as: "style",
     },
     // {
@@ -136,11 +132,42 @@ export function run(conf) {
     sub("end-all", attachFixupScript, { once: true });
   }
 
-  const finalStyleURL = getBaseStyleURI();
+  const finalStyleURL = getStyleUrl();
   linkCSS(document, finalStyleURL);
   const moveStyle = styleMover(finalStyleURL);
   sub("beforesave", moveStyle);
 
   // code hierboven mogenlijk overbodig?
   insertStyle();
+
+  // Add color scheme meta tag and style
+  /** @type HTMLMetaElement */
+  let colorScheme = document.querySelector("head meta[name=color-scheme]");
+  if (!colorScheme) {
+    // Default to light mode during transitional period.
+    colorScheme = html`<meta name="color-scheme" content="light" />`;
+    document.head.appendChild(colorScheme);
+  }
+  if (colorScheme.content.includes("dark")) {
+    const darkModeStyleUrl = getStyleUrl("dark.css");
+    document.head.appendChild(
+      html`<link
+        rel="stylesheet"
+        href="${darkModeStyleUrl}"
+        media="(prefers-color-scheme: dark)"
+      />`
+    );
+    // As required by W3C Pub Rules.
+    sub("beforesave", styleMover(darkModeStyleUrl));
+  }
+}
+
+function getStyleUrl(styleFile = "base.css") {
+  let baseStyle = respecConfig.nl_organisationStylesURL
+    ? respecConfig.nl_organisationStylesURL
+    : "https://www.w3.org/StyleSheets/TR/2021/";
+  if (!baseStyle.endsWith("/")) {
+    baseStyle += "/";
+  }
+  return new URL(`/${styleFile}`, baseStyle).href;
 }
