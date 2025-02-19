@@ -169,5 +169,5 @@ function getStyleUrl(styleFile = "base.css") {
   if (!baseStyle.endsWith("/")) {
     baseStyle += "/";
   }
-  return new URL(`/${styleFile}`, baseStyle).href;
+  return new URL(styleFile, baseStyle).href;
 }
