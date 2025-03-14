@@ -18,7 +18,7 @@ const localizationStrings = {
       return html`<p>
         The key word${plural ? "s" : ""} ${keywords} in this document
         ${plural ? "are" : "is"} to be interpreted as described in
-        <a href="https://datatracker.ietf.org/doc/html/bcp14">BCP 14</a>
+        <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>
         ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
         when, and only when, they appear in all capitals, as shown here.
       </p>`;
@@ -34,7 +34,7 @@ const localizationStrings = {
       return html`<p>
         ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in
         diesem Dokument ${plural ? "sind" : "ist"} gemäß
-        <a href="https://datatracker.ietf.org/doc/html/bcp14">BCP 14</a>
+        <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>
         ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
         und unter Berücksichtigung von
         <a href="https://github.com/adfinis-sygroup/2119/blob/master/2119de.rst"
