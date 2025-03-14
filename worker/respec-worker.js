@@ -15,6 +15,11 @@ self.addEventListener("message", ({ data: originalData }) => {
       self.hljs.registerLanguage(lang, self[propName]);
       break;
     }
+    case "highlight-load-lang-self-registration": {
+      const { langURL } = data;
+      importScripts(langURL);
+      break;
+    }
     case "highlight": {
       const { code } = data;
       const langs = data.languages.length ? data.languages : undefined;
