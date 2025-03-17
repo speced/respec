@@ -7,5 +7,6 @@ export default css`
 img.license {
   float: left;
   padding-right: 5px;
+  background: none;
 }
 `;
