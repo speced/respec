@@ -127,7 +127,7 @@ export const biblioDB = {
     const objectStore = db.transaction("alias", "readonly").store;
     const range = IDBKeyRange.only(id);
     const result = await objectStore.openCursor(range);
-    return result ? result.value.aliasOf : result;
+    return result ? result.value.aliasOf : null;
   },
   /**
    * Get a reference or alias out of the database.
@@ -147,7 +147,7 @@ export const biblioDB = {
     const objectStore = db.transaction(type, "readonly").store;
     const range = IDBKeyRange.only(id);
     const result = await objectStore.openCursor(range);
-    return result ? result.value : result;
+    return result ? result.value : null;
   },
   /**
    * Adds references and aliases to database. This is usually the data from
