@@ -8,7 +8,8 @@ const localizationStrings = {
     status_at_publication: html`This section describes the status of this
       document at the time of its publication. A list of current W3C
       publications and the latest revision of this technical report can be found
-      in the <a href="https://www.w3.org/TR/">W3C standards and drafts index</a> at
+      in the
+      <a href="https://www.w3.org/TR/">W3C standards and drafts index</a> at
       https://www.w3.org/TR/.`,
   },
   ko: {
@@ -50,7 +51,8 @@ const localizationStrings = {
     status_at_publication: html`Dieser Abschnitt beschreibt den Status des
       Dokuments zum Zeitpunkt der Publikation. Eine Liste der aktuellen
       Publikatinen des W3C und die aktuellste Fassung dieser Spezifikation kann
-      im <a href="https://www.w3.org/TR/">W3C standards and drafts index</a> unter
+      im
+      <a href="https://www.w3.org/TR/">W3C standards and drafts index</a> unter
       https://www.w3.org/TR/ abgerufen werden.`,
   },
 };
