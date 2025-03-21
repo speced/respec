@@ -330,6 +330,9 @@ function handleConsoleMessages(page, onError, onWarning) {
         });
       } else {
         // Ideally: `obj instanceof RsError` and `RsError instanceof Error`.
+        if (obj === null || obj === undefined) {
+          return JSON.stringify({message: obj});
+        }
         return JSON.stringify(obj);
       }
     }, handle);
