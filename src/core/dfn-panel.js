@@ -29,7 +29,11 @@ export async function run() {
     el.tabIndex = 0;
     el.setAttribute("aria-haspopup", "dialog");
   }
-  document.body.append(panels);
+  if (document.body.querySelector("script")) {
+    document.body.querySelector("script").before(panels);
+  } else {
+    document.body.append(panels);
+  }
 
   const script = document.createElement("script");
   script.id = "respec-dfn-panel";
