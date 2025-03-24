@@ -17,7 +17,7 @@ import { sub } from "../core/pubsubhub.js";
 export const name = "logius/style";
 
 function attachFixupScript() {
-  const script = html`<script src="https://www.w3.org/scripts/TR/2021/fixup.js">`;
+  const script = html`<script src="https://gitdocumentatie.logius.nl/publicatie/respec/fixup.js">`;
   if (location.hash) {
     script.addEventListener(
       "load",

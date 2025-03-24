@@ -59,7 +59,7 @@ a[href].respec-offending-element {
 }
 
 cite .bibref {
-  font-style: normal;
+  font-style: italic;
 }
 
 a[href].orcid {
