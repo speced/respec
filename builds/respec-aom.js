@@ -304,7 +304,7 @@ dd{margin-left:0}
         ${t?"are":"is"} to be interpreted as described in
         <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>
         ${so("RFC2119")} ${so("RFC8174")}
-        when, and only when, they appear in all capitals, as shown here.
+        when, and only when, it appears in all capitals, as shown here.
       </p>`}});function Io(e,t){const n=[...Object.keys(uo)];n.length&&(t.normativeReferences.add("RFC2119"),t.normativeReferences.add("RFC8174"));const r=(o=n.sort(),[].concat(gt(o,(e=>rt`<em class="rfc2119">${e}</em>`))).map((e=>"string"==typeof e?rt`${e}`:e)));var o;const s=n.length>1,i=rt`
     <h1>${Oo.conformance}</h1>
     <p>${Oo.normativity}</p>
