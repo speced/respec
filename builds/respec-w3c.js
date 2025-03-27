@@ -821,7 +821,7 @@ dd{margin-left:0}
         ${t?"are":"is"} to be interpreted as described in
         <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>
         ${xi("RFC2119")} ${xi("RFC8174")}
-        when, and only when, it appears in all capitals, as shown here.
+        when, and only when, they appear in all capitals, as shown here.
       </p>`},de:{conformance:"Anforderungen",normativity:"Neben den explizit als nicht-normativ gekennzeichneten Abschnitten sind auch alle Diagramme, Beispiele und Hinweise in diesem Dokument nicht normativ. Alle anderen Angaben sind normativ.",keywordInterpretation:(e,t)=>$n`<p>
         ${t?"Die Schlüsselwörter":"Das Schlüsselwort"} ${e} in
         diesem Dokument ${t?"sind":"ist"} gemäß
