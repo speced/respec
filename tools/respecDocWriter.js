@@ -338,7 +338,7 @@ function handleConsoleMessages(page, onError, onWarning) {
   page.on("console", async message => {
     const args = await Promise.all(message.args().map(stringifyJSHandle));
     const msgText = message.text();
-    const text = args.filter(msg => msg !== "undefined")[0] || "";
+    const text = args.filter(msg => msg !== "undefined") || [{}];
     const type = message.type();
     if (
       (type === "error" || type === "warning" || type === "warn") &&
@@ -351,12 +351,16 @@ function handleConsoleMessages(page, onError, onWarning) {
       // https://github.com/GoogleChrome/puppeteer/issues/1939
       return;
     }
-    switch (type) {
-      case "error":
-        return onError(JSON.parse(text));
-      case "warn":
-      case "warning":
-        return onWarning(JSON.parse(text));
+    for (const textParts of text) {
+      switch (type) {
+        case "error":
+          onError(JSON.parse(textParts));
+          break;
+        case "warn":
+        case "warning":
+          onWarning(JSON.parse(textParts));
+          break;
+      }
     }
   });
 }
