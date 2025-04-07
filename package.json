@@ -59,7 +59,7 @@
     "serve": "^14.2.4",
     "serve-handler": "^6.1.6",
     "sniffy-mimetype": "^1.1.1",
-    "typescript": "^5.8.2",
+    "typescript": "^5.8.3",
     "vnu-jar": "^24.10.17",
     "webidl2": "^24.4.1"
   },
