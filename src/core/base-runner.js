@@ -1,4 +1,4 @@
-// @ts-check
+//
 // Module core/base-runner
 // The module in charge of running the whole processing pipeline.
 import { run as includeConfig } from "./include-config.js";
