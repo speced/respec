@@ -156,7 +156,7 @@ function renderNotRec(conf) {
   let endorsement = html`Publication as ${prefix(conf.textStatus)} does not
   imply endorsement by W3C and its Members.`;
   let updatePolicy = html`<p>
-    This is a draft document and may be updated, replaced or obsoleted by other
+    This is a draft document and may be updated, replaced, or obsoleted by other
     documents at any time. It is inappropriate to cite this document as other
     than work in progress.
     ${updatableRec
