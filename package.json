@@ -37,7 +37,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jasmine": "^4.2.2",
-    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-prettier": "^5.4.0",
     "highlight.js": "^11.11.1",
     "hyperhtml": "^2.34.2",
     "idb": "^8.0.2",
