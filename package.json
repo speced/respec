@@ -102,6 +102,11 @@
     "trailingComma": "es5",
     "arrowParens": "avoid"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "puppeteer"
+    ]
+  },
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/respec"
