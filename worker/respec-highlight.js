@@ -6,10 +6,11 @@ import http from "highlight.js/lib/languages/http";
 import javascript from "highlight.js/lib/languages/javascript";
 import json from "highlight.js/lib/languages/json";
 import xml from "highlight.js/lib/languages/xml";
+import yaml from "highlight.js/lib/languages/yaml";
 
 highlight.configure({
   tabReplace: "  ", // 2 spaces
-  languages: ["abnf", "css", "http", "javascript", "json", "xml"],
+  languages: ["abnf", "css", "http", "javascript", "json", "xml", "yaml"],
 });
 
 highlight.registerLanguage("abnf", abnf);
@@ -18,5 +19,6 @@ highlight.registerLanguage("http", http);
 highlight.registerLanguage("javascript", javascript);
 highlight.registerLanguage("json", json);
 highlight.registerLanguage("xml", xml);
+highlight.registerLanguage("yaml", yaml);
 
 export default highlight;
