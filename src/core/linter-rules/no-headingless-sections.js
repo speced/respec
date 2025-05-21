@@ -23,6 +23,10 @@ const localizationStrings = {
     msg: "所有章节（section）都必须以 `h2-6` 元素开头。",
     hint: "将 `h2-6` 添加到有问题的章节或使用 `<div>`。",
   },
+  cs: {
+    msg: "Všechny sekce musí začínat elementem `h2-6`.",
+    hint: "Přidejte do problematické sekce `h2-6` nebo použijte `<div>`.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
