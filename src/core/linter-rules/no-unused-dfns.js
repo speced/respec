@@ -31,6 +31,21 @@ const localizationStrings = {
         To silence this warning entirely, set \`lint: { "no-unused-dfns": false }\` in your \`respecConfig\`.`;
     },
   },
+  cs: {
+    msg(text) {
+      return `Nalezena definice pro "${text}", ale nic na ni neodkazuje. Toto je obvykle chyba ve specifikaci!`;
+    },
+    get hint() {
+      return docLink`
+        Můžete udělat jedno z následujícího...
+
+          * Přidejte k definici atribut \`class="lint-ignore"\`.
+          * Definici buď odstraňte, nebo změňte \`<dfn>\` na jiný typ HTML elementu.
+          * Pokud jste chtěli ${"[export|#data-export]"} tuto definici, přidejte k ní \`class="export"\`.
+
+        Pro úplné potlačení tohoto varování nastavte \`lint: { "no-unused-dfns": false }\` ve vaší \`respecConfig\`.`;
+    },
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

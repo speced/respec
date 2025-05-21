@@ -18,6 +18,10 @@ const localizationStrings = {
     msg: "All tables marked with class='numbered' must start with a caption element.",
     hint: "Add a `caption` to the offending table.",
   },
+  cs: {
+    msg: "Všechny tabulky označené class='numbered' musí začínat elementem caption.",
+    hint: "Přidejte k dané tabulce element `caption`.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

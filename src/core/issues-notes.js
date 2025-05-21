@@ -73,6 +73,15 @@ const localizationStrings = {
     note: "注",
     warning: "警告",
   },
+  cs: {
+    editors_note: "Poznámka editora",
+    feature_at_risk: "(Funkce v ohrožení) Problém",
+    issue: "Problém",
+    issue_summary: "Souhrn problémů",
+    no_issues_in_spec: "V této specifikaci nejsou uvedeny žádné problémy.",
+    note: "Poznámka",
+    warning: "Varování",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

@@ -55,6 +55,14 @@ const localizationStrings = {
       <a href="https://www.w3.org/TR/">W3C standards and drafts index</a> unter
       https://www.w3.org/TR/ abgerufen werden.`,
   },
+  cs: {
+    sotd: "Stav tohoto dokumentu",
+    status_at_publication: html`Tato sekce popisuje stav tohoto dokumentu v době
+      jeho zveřejnění. Seznam aktuálních publikací W3C a nejnovější verzi této
+      technické zprávy najdete v
+      <a href="https://www.w3.org/TR/">indexu standardů a návrhů W3C</a>
+      na https://www.w3.org/TR/.`,
+  },
 };
 
 export const l10n = getIntlData(localizationStrings);

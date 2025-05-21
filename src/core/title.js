@@ -24,6 +24,9 @@ const localizationStrings = {
   zh: {
     default_title: "无标题",
   },
+  cs: {
+    default_title: "Bez názvu",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

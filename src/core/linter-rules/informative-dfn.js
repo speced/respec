@@ -27,6 +27,21 @@ const localizationStrings = {
         To silence this warning entirely, set \`lint: { "${ruleName}": false }\` in your \`respecConfig\`.`;
     },
   },
+  cs: {
+    msg(term, cite) {
+      return `Nalezen normativní odkaz na \"${term}\", ale pojem je definován pouze informativně v \"${cite}\".`;
+    },
+    get hint() {
+      return docLink`
+        Můžete udělat jedno z následujícího...
+
+          * Požádejte o to, aby zdrojová definice byla normativní
+          * Přidejte atribut \`class=\"lint-ignore\"\` k odkazu.
+          * Použijte lokální normativní proxy pro definici, např. \`<dfn data-cite=\"spec\">term</dfn>\`
+
+        Pro úplné potlačení tohoto varování nastavte \`lint: { \"${ruleName}\": false }\` ve vaší \`respecConfig\`.`;
+    },
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
