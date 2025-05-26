@@ -274,7 +274,7 @@ export function run(conf) {
 
   // PROCESSING
   // Don't gather text nodes for these:
-  const exclusions = ["#respec-ui", ".head", "pre", "svg"];
+  const exclusions = ["#respec-ui", ".head", "pre", "svg", "script", "style"];
   const txts = getTextNodes(document.body, exclusions, {
     wsNodes: false, // we don't want nodes with just whitespace
   });
