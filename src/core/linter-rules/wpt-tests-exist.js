@@ -33,7 +33,7 @@ export async function run(conf) {
   for (const elem of testables) {
     elem.dataset.tests
       .split(/,/gm)
-      .map(test => test.trim().split("#")[0])
+      .map(test => test.trim().split(/\?|#/)[0])
       .filter(test => test && !filesInWPT.has(test))
       .map(missingTest => {
         showWarning(`${l10n.msg} \`${missingTest}\`.`, name, {
