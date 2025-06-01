@@ -11,13 +11,23 @@ describe("Core - preProcess, postProcess, afterEnd", () => {
     doc = await makeRSDoc(ops, "spec/core/pre-process-spec.html");
   });
 
-  it("runs the preProcess and postProces arrays", () => {
-    expect(doc.getElementById("pre-sync").innerHTML).toBe("pass");
-    expect(doc.getElementById("pre-async").innerHTML).toBe("pass");
-    expect(doc.getElementById("post-sync").innerHTML).toBe("pass");
-    expect(doc.getElementById("post-async").innerHTML).toBe("pass");
-    expect(doc.getElementById("pre-warning").innerHTML).toBe("pass");
-    expect(doc.getElementById("post-error").innerHTML).toBe("pass");
+  it("runs the preProcess and postProcess arrays", () => {
+    expect(doc.getElementById("pre-sync").innerHTML).toContain("pass");
+    expect(doc.getElementById("pre-async").innerHTML).toContain("pass");
+    expect(doc.getElementById("post-sync").innerHTML).toContain("pass");
+    expect(doc.getElementById("post-async").innerHTML).toContain("pass");
+    expect(doc.getElementById("pre-warning").innerHTML).toContain("pass");
+    expect(doc.getElementById("post-error").innerHTML).toContain("pass");
+  });
+
+  it("runs preProcess, postProcess, and afterEnd in order", () => {
+    expect(doc.getElementById("pre-sync").innerHTML).toBe("pass 1");
+    expect(doc.getElementById("pre-async").innerHTML).toBe("pass 2");
+    expect(doc.getElementById("pre-warning").innerHTML).toBe("pass 3");
+    expect(doc.getElementById("post-sync").innerHTML).toBe("pass 4");
+    expect(doc.getElementById("post-async").innerHTML).toBe("pass 5");
+    expect(doc.getElementById("post-error").innerHTML).toBe("pass 6");
+    expect(doc.getElementById("afterend").innerHTML).toBe("pass 7");
   });
 
   it("can show warnings and errors", () => {
@@ -48,6 +58,6 @@ describe("Core - preProcess, postProcess, afterEnd", () => {
   });
 
   it("runs afterEnd method", () => {
-    expect(doc.getElementById("afterend").innerHTML).toBe("pass");
+    expect(doc.getElementById("afterend").innerHTML).toContain("pass");
   });
 });
