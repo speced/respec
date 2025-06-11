@@ -267,6 +267,7 @@ function renderNotRec(conf) {
         ${getWgHTML(conf)}, but is not endorsed by
         <abbr title="World Wide Web Consortium">W3C</abbr> itself nor its
         Members.`;
+      updatePolicy = "";
       break;
   }
   return html`<p>${endorsement} ${statusExplanation}</p>
