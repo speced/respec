@@ -38,6 +38,10 @@ const localizationStrings = {
     inAllEngines: "所有主要引擎均支持此特性。",
     inSomeEngines: "此功能支持有限。",
   },
+  cs: {
+    inAllEngines: "Tato funkce je podporována ve všech hlavních prohlížečích.",
+    inSomeEngines: "Tato funkce má omezenou podporu.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

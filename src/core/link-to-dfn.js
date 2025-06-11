@@ -57,6 +57,15 @@ const localizationStrings = {
     },
     duplicateTitle: "在文档中有重复的定义。",
   },
+  cs: {
+    /**
+     * @param {string} title
+     */
+    duplicateMsg(title) {
+      return `Duplicitní definice '${title}'`;
+    },
+    duplicateTitle: "Toto je v dokumentu definováno vícekrát.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
