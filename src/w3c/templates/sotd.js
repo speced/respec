@@ -48,8 +48,7 @@ const localizationStrings = {
     status_at_publication: html`Dieser Abschnitt beschreibt den Status des
       Dokuments zum Zeitpunkt der Publikation. Eine Liste der aktuellen
       Publikatinen des W3C und die aktuellste Fassung dieser Spezifikation kann
-      im
-      <a href="https://www.w3.org/TR/">W3C standards and drafts index</a>.`,
+      im <a href="https://www.w3.org/TR/">W3C standards and drafts index</a>.`,
   },
 };
 
