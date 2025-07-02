@@ -12,6 +12,10 @@ const localizationStrings = {
     msg: "Internal slots should be preceded by a '.'",
     hint: "Add a '.' between the elements mentioned.",
   },
+  cs: {
+    msg: "Interní sloty by měly být uvedeny s tečkou '.' před názvem",
+    hint: "Přidejte tečku '.' mezi uvedené prvky.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

@@ -22,6 +22,48 @@ const localizationStrings = {
     headlingLocal: "Terms defined by this specification",
     dfnOf: "definition of",
   },
+  cs: {
+    heading: "Glosář",
+    headingExternal: "Termíny definované odkazem",
+    headlingLocal: "Termíny definované touto specifikací",
+    dfnOf: "definice",
+  },
+  de: {
+    heading: "Index",
+    headingExternal: "Begriffe, die durch Verweis definiert sind",
+    headlingLocal: "Begriffe, die in dieser Spezifikation definiert sind",
+    dfnOf: "Definition von",
+  },
+  es: {
+    heading: "Índice",
+    headingExternal: "Términos definidos por referencia",
+    headlingLocal: "Términos definidos por esta especificación",
+    dfnOf: "definición de",
+  },
+  ja: {
+    heading: "索引",
+    headingExternal: "参照によって定義された用語",
+    headlingLocal: "この仕様で定義された用語",
+    dfnOf: "の定義",
+  },
+  ko: {
+    heading: "색인",
+    headingExternal: "참조로 정의된 용어",
+    headlingLocal: "이 명세서에서 정의된 용어",
+    dfnOf: "정의",
+  },
+  nl: {
+    heading: "Index",
+    headingExternal: "Termen gedefinieerd door verwijzing",
+    headlingLocal: "Termen gedefinieerd door deze specificatie",
+    dfnOf: "definitie van",
+  },
+  zh: {
+    heading: "索引",
+    headingExternal: "通过引用定义的术语",
+    headlingLocal: "由本规范定义的术语",
+    dfnOf: "的定义",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
