@@ -72,7 +72,8 @@ export function run() {
     computeExport(dfn);
 
     // Only add `lt`s that are different from the text content and local-lts
-    const lt = titles.filter(t => !((dfn.dataset.localLt || "").split("|").includes(t)));
+    const localLt = (dfn.dataset.localLt || "").split("|");
+    const lt = titles.filter(t => !localLt.includes(t));
     if (lt.length > 1 || linkingText !== norm(dfn.textContent)) {
       dfn.dataset.lt = lt.join("|");
     }
