@@ -321,6 +321,7 @@ type LocalizationStrings = {
   ja: Record<string, string>;
   nl: Record<string, string>;
   zh: Record<string, string>;
+  cs: Record<string, string>;
 };
 
 interface LinkProps {
@@ -335,3 +336,4 @@ interface CiteDetails {
   path: string;
   href?: string;
 }
+

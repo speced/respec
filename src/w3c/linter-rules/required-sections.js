@@ -44,6 +44,19 @@ const localizationStrings = {
     privacy_considerations: "Consideraciones de privacidad",
     security_considerations: "Consideraciones de Seguridad",
   },
+  cs: {
+    msg(sectionTitle) {
+      return `Dokumenty na "W3C Recommendation track" vyžadují samostatnou sekci "${sectionTitle}".`;
+    },
+    hint(sectionTitle) {
+      return docLink`Přidejte \`<section>\` s nadpisem "${sectionTitle}". Viz [Horizontal review guidelines](https://www.w3.org/Guide/documentreview/#how_to_get_horizontal_review).
+        Pokud dokument není určen pro "W3C Recommendation track", nastavte ${"[noRecTrack]"} na \`true\`
+        nebo vypněte linter pravidlo ${`[${ruleName}]`}.
+      `;
+    },
+    privacy_considerations: "Zásady ochrany soukromí",
+    security_considerations: "Zásady bezpečnosti",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

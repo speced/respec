@@ -17,6 +17,10 @@ const localizationStrings = {
     msg: docLink`${"[respecConfig]"} 中不允许使用不安全的URL.`,
     hint: "请将以下属性更改为 https://：",
   },
+  cs: {
+    msg: docLink`V ${"[respecConfig]"} nejsou povoleny nezabezpečené URL adresy.`,
+    hint: "Změňte prosím následující vlastnosti na 'https://': ",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

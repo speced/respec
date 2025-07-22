@@ -16,6 +16,10 @@ const localizationStrings = {
     msg: `文档只能包含一个 charset 属性为 utf-8 的 \`<meta>\` 标签`,
     hint: `将此行添加到文档的 \`<head>\` 部分—— \`<meta charset="utf-8">\` 或将 charset 设置为 utf-8（如果尚未设置）。`,
   },
+  cs: {
+    msg: `Dokument smí obsahovat pouze jeden tag \`<meta>\` s charset nastaveným na 'utf-8'`,
+    hint: `Přidejte tento řádek do sekce \`<head>\` vašeho dokumentu - \`<meta charset=\"utf-8\">\` nebo nastavte charset na \"utf-8\", pokud ještě není nastaven.`,
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

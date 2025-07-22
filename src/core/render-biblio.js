@@ -44,6 +44,12 @@ const localizationStrings = {
     norm_references: "规范性引用",
     references: "参考文献",
   },
+  cs: {
+    info_references: "Informativní odkazy",
+    norm_references: "Normativní odkazy",
+    references: "Odkazy",
+    reference_not_found: "Odkaz nebyl nalezen.",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);
