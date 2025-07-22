@@ -71,11 +71,11 @@ export function run() {
     computeType(dfn, linkingText);
     computeExport(dfn);
 
-    // Only add `lt`s that are different from the text content
-    if (titles.length === 1 && linkingText === norm(dfn.textContent)) {
-      continue;
+    // Only add `lt`s that are different from the text content and local-lts
+    const lt = titles.filter(t => !((dfn.dataset.localLt || "").split("|").includes(t)));
+    if (lt.length > 1 || linkingText !== norm(dfn.textContent)) {
+      dfn.dataset.lt = lt.join("|");
     }
-    dfn.dataset.lt = titles.join("|");
   }
 }
 
