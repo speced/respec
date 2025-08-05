@@ -54,7 +54,7 @@ const localizationStrings = {
 
 export const l10n = getIntlData(localizationStrings);
 
-const processLink = "https://www.w3.org/policies/process/20231103/";
+const processLink = "https://www.w3.org/policies/process/20250818/";
 
 function prefix(word) {
   return /^[aeiou]/i.test(word) ? `an ${word}` : `a ${word}`;
@@ -85,7 +85,7 @@ export default (conf, opts) => {
                     <p>
                       This document is governed by the
                       <a id="w3c_process_revision" href="${processLink}"
-                        >03 November 2023 W3C Process Document</a
+                        >18 August 2025 W3C Process Document</a
                       >.
                     </p>
                   `}
@@ -155,7 +155,7 @@ function renderNotRec(conf) {
     documents at any time. It is inappropriate to cite this document as other
     than a work in progress.
     ${updatableRec
-      ? html`Future updates to this specification may incorporate
+      ? html`Future updates to this upcoming Recommendation may incorporate
           <a href="${processLink}#allow-new-features">new features</a>.`
       : ""}
   </p>`;
@@ -226,7 +226,7 @@ function renderNotRec(conf) {
         >
         for implementations.`;
       updatePolicy = html`${updatableRec
-        ? html`Future updates to this specification may incorporate
+        ? html`Future updates to this upcoming Recommendation may incorporate
             <a href="${processLink}#allow-new-features">new features</a>.`
         : ""}`;
       if (conf.pubMode === "LS") {
