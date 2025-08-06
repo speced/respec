@@ -112,6 +112,49 @@ describe("Core — sections", () => {
     expect(section6.classList.contains("appendix")).toBeFalse();
   });
 
+  it("treats informative section as non-nornative section", async () => {
+    const body = `
+      <h2 id="h2" class="informative">Informative Section</h2>
+      <p>Testing</p>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const section = doc.getElementById("h2").closest("section");
+    expect(section.classList.contains("informative")).toBeTrue();
+
+    // Expect the first p to be "This section is non-normative."
+    const em = section.querySelector("p");
+    expect(em.textContent).toBe("This section is non-normative.");
+
+    // check second child of section is the p with the content.
+    const p = em.nextElementSibling;
+    expect(p.localName).toBe("p");
+    expect(p.textContent).toBe("Testing");
+  });
+
+  it("treats informative appendix as an appendix", async () => {
+    const body = `
+      <h2 id="h2" class="appendix informative">Appendix A</h2>
+      <p>Testing</p>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const section = doc.getElementById("h2").closest("section");
+    expect(section.classList.contains("appendix")).toBeTrue();
+
+    const heading = section.querySelector("#h2");
+    expect(heading.localName).toBe("h2");
+    expect(heading.textContent).toBe("A. Appendix A");
+
+    const pNonNormative = section.querySelector("p:first-of-type");
+    expect(pNonNormative.textContent).toBe("This section is non-normative.");
+
+    // Expect the first p to be "This section is non-normative."
+    const p = section.querySelector("p:last-of-type");
+    expect(p.localName).toBe("p");
+    expect(p.textContent).toBe("Testing");
+  });
+
   it("doesn't wrap the spec title", async () => {
     const body = `
       <h1 id="title">Spec title</h1>
