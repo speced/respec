@@ -2,7 +2,7 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import { addId, getIntlData, showError } from "./utils.js";
+import { addId, getIntlData, showError, showWarning } from "./utils.js";
 import { biblio } from "./biblio.js";
 import { html } from "./import-maps.js";
 
@@ -81,12 +81,20 @@ export function run(conf) {
 
   refSection.classList.add("appendix");
 
+  if (conf.flattenRefs && norms.length) {
+    const trim = (a) => a.slice(0, 3).concat(a.length > 3 ? ["..."] : []).join(", ");
+    const msg = `flattenRefs is not compatible with having both normative and informative references`;
+    const details = `Normative references: ${trim(norms)}; informative references: ${trim(informs)}`;
+    const hint = `Disable the flattenRefs option or remove references.`;
+    showWarning(msg, name, { hint, details });
+  }
+
   if (norms.length) {
-    const sec = createReferencesSection(norms, l10n.norm_references);
+    const sec = createReferencesSection(norms, l10n.norm_references, conf.flattenRefs);
     refSection.appendChild(sec);
   }
   if (informs.length) {
-    const sec = createReferencesSection(informs, l10n.info_references);
+    const sec = createReferencesSection(informs, l10n.info_references, conf.flattenRefs);
     refSection.appendChild(sec);
   }
 
@@ -96,9 +104,10 @@ export function run(conf) {
 /**
  * @param {string[]} refs
  * @param {string} title
+ * @param {bool} flatten - disables the section heading
  * @returns {HTMLElement}
  */
-function createReferencesSection(refs, title) {
+function createReferencesSection(refs, title, flatten) {
   const { goodRefs, badRefs } = groupRefs(refs.map(toRefContent));
   const uniqueRefs = getUniqueRefs(goodRefs);
 
@@ -108,11 +117,16 @@ function createReferencesSection(refs, title) {
       a.ref.toLocaleLowerCase().localeCompare(b.ref.toLocaleLowerCase())
     );
 
-  const sec = html`<section>
-    <h3>${title}</h3>
-    <dl class="bibliography">${refsToShow.map(showRef)}</dl>
-  </section>`;
-  addId(sec, "", title);
+  let sec;
+  if (flatten) {
+    sec = html`<dl class="bibliography">${refsToShow.map(showRef)}</dl>`;
+  } else {
+    sec = html`<section>
+     <h3>${title}</h3>
+      <dl class="bibliography">${refsToShow.map(showRef)}</dl>
+    </section>`;
+    addId(sec, "", title);
+  }
 
   const aliases = getAliases(goodRefs);
   decorateInlineReference(uniqueRefs, aliases);
