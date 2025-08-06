@@ -1,12 +1,17 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  html,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
 
 describe("Core — sections", () => {
   afterAll(flushIframes);
 
   it("wraps headings in sections elements and assigns an id", async () => {
-    const body = `
+    const body = html`
       <h2 id="h2">Section 2</h2>
       <h3 id="h3">Section 3</h3>
       <h4 id="h4">Section 4</h4>
@@ -25,7 +30,7 @@ describe("Core — sections", () => {
   });
 
   it("handles when some headings are wrapped", async () => {
-    const body = `
+    const body = html`
       <h2 id="h2">Section 2</h2>
       <section>
         <h3 id="h3">Section 3</h3>
@@ -76,7 +81,7 @@ describe("Core — sections", () => {
   });
 
   it("copies only special header classes from the header to the section", async () => {
-    const body = `
+    const body = html`
       <h2 id="h2" class="appendix informative nocopy">Section 2</h2>
       <h3 id="h3" class="notoc">Section 3</h3>
       <h4 id="h4" class="informative">Section 4</h4>
@@ -87,40 +92,40 @@ describe("Core — sections", () => {
     const doc = await makeRSDoc(ops);
 
     const section2 = doc.getElementById("h2").closest("section");
-    expect(section2.classList.contains("appendix")).toBeTrue();
-    expect(section2.classList.contains("informative")).toBeTrue();
-    expect(section2.classList.contains("nocopy")).toBeFalse();
+    expect(section2.classList).toContain("appendix");
+    expect(section2.classList).toContain("informative");
+    expect(section2.classList).not.toContain("nocopy");
 
     const section3 = doc.getElementById("h3").closest("section");
-    expect(section3.classList.contains("notoc")).toBeTrue();
-    expect(section3.classList.contains("appendix")).toBeFalse();
-    expect(section3.classList.contains("informative")).toBeFalse();
+    expect(section3.classList).toContain("notoc");
+    expect(section3.classList).not.toContain("appendix");
+    expect(section3.classList).not.toContain("informative");
 
     const section4 = doc.getElementById("h4").closest("section");
-    expect(section4.classList.contains("informative")).toBeTrue();
-    expect(section4.classList.contains("appendix")).toBeFalse();
-    expect(section4.classList.contains("notoc")).toBeFalse();
+    expect(section4.classList).toContain("informative");
+    expect(section4.classList).not.toContain("appendix");
+    expect(section4.classList).not.toContain("notoc");
 
     const section5 = doc.getElementById("h5").closest("section");
-    expect(section5.classList.contains("appendix")).toBeTrue();
-    expect(section5.classList.contains("informative")).toBeFalse();
-    expect(section5.classList.contains("notoc")).toBeFalse();
+    expect(section5.classList).toContain("appendix");
+    expect(section5.classList).not.toContain("informative");
+    expect(section5.classList).not.toContain("notoc");
 
     const section6 = doc.getElementById("h6").closest("section");
-    expect(section6.classList.contains("notoc")).toBeTrue();
-    expect(section6.classList.contains("informative")).toBeTrue();
-    expect(section6.classList.contains("appendix")).toBeFalse();
+    expect(section6.classList).toContain("notoc");
+    expect(section6.classList).toContain("informative");
+    expect(section6.classList).not.toContain("appendix");
   });
 
   it("treats informative section as non-normative section", async () => {
-    const body = `
+    const body = html`
       <h2 id="h2" class="informative">Informative Section</h2>
       <p>Testing</p>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const section = doc.getElementById("h2").closest("section");
-    expect(section.classList.contains("informative")).toBeTrue();
+    expect(section.classList).toContain("informative");
 
     // Expect the first p to be "This section is non-normative."
     const em = section.querySelector("p");
@@ -133,14 +138,14 @@ describe("Core — sections", () => {
   });
 
   it("treats informative appendix as an appendix", async () => {
-    const body = `
+    const body = html`
       <h2 id="h2" class="appendix informative">Appendix A</h2>
       <p>Testing</p>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const section = doc.getElementById("h2").closest("section");
-    expect(section.classList.contains("appendix")).toBeTrue();
+    expect(section.classList).toContain("appendix");
 
     const heading = section.querySelector("#h2");
     expect(heading.localName).toBe("h2");
@@ -156,7 +161,7 @@ describe("Core — sections", () => {
   });
 
   it("doesn't wrap the spec title", async () => {
-    const body = `
+    const body = html`
       <h1 id="title">Spec title</h1>
       <h2 id="other">Some section</h2>
     `;
