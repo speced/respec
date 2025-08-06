@@ -112,7 +112,7 @@ describe("Core — sections", () => {
     expect(section6.classList.contains("appendix")).toBeFalse();
   });
 
-  it("treats informative section as non-nornative section", async () => {
+  it("treats informative section as non-normative section", async () => {
     const body = `
       <h2 id="h2" class="informative">Informative Section</h2>
       <p>Testing</p>
