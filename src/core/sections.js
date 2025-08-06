@@ -12,6 +12,9 @@ class DOMBuilder {
     this.stack = [this.root];
     this.current = this.root;
   }
+
+  static sectionClasses = new Set(["appendix", "informative", "notoc"]);
+
   findPosition(header) {
     return parseInt(header.tagName.charAt(1), 10);
   }
@@ -46,9 +49,7 @@ class DOMBuilder {
   }
 
   processHeader(header, section) {
-    const sectionClasses = ["appendix", "informative", "notoc"];
-    sectionClasses
-      .filter(className => header.classList.contains(className))
+    DOMBuilder.sectionClasses.intersection(new Set(header.classList))
       .forEach(className => {
         section.classList.add(className)
       });
