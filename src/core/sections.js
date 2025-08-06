@@ -42,6 +42,16 @@ class DOMBuilder {
     this.stack[position] = section;
     this.stack.length = position + 1;
     this.current = section;
+    this.processHeader(header, section);
+  }
+
+  processHeader(header, section) {
+    const sectionClasses = ["appendix", "informative", "notoc"];
+    sectionClasses
+      .filter(className => header.classList.contains(className))
+      .forEach(className => {
+        section.classList.add(className)
+      });
   }
 
   addSection(node) {

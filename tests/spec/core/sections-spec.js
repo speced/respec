@@ -75,6 +75,43 @@ describe("Core — sections", () => {
     }
   });
 
+  it("copies only special header classes from the header to the section", async () => {
+    const body = `
+      <h2 id="h2" class="appendix informative nocopy">Section 2</h2>
+      <h3 id="h3" class="notoc">Section 3</h3>
+      <h4 id="h4" class="informative">Section 4</h4>
+      <h5 id="h5" class="appendix">Section 5</h5>
+      <h6 id="h6" class="notoc informative">Section 6</h6>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const section2 = doc.getElementById("h2").closest("section");
+    expect(section2.classList.contains("appendix")).toBeTrue();
+    expect(section2.classList.contains("informative")).toBeTrue();
+    expect(section2.classList.contains("nocopy")).toBeFalse();
+    
+    const section3 = doc.getElementById("h3").closest("section");
+    expect(section3.classList.contains("notoc")).toBeTrue();
+    expect(section3.classList.contains("appendix")).toBeFalse();
+    expect(section3.classList.contains("informative")).toBeFalse();
+
+    const section4 = doc.getElementById("h4").closest("section");
+    expect(section4.classList.contains("informative")).toBeTrue();
+    expect(section4.classList.contains("appendix")).toBeFalse();
+    expect(section4.classList.contains("notoc")).toBeFalse();
+
+    const section5 = doc.getElementById("h5").closest("section");
+    expect(section5.classList.contains("appendix")).toBeTrue();
+    expect(section5.classList.contains("informative")).toBeFalse();
+    expect(section5.classList.contains("notoc")).toBeFalse();
+    
+    const section6 = doc.getElementById("h6").closest("section");
+    expect(section6.classList.contains("notoc")).toBeTrue();
+    expect(section6.classList.contains("informative")).toBeTrue();
+    expect(section6.classList.contains("appendix")).toBeFalse();
+  });
+
   it("doesn't wrap the spec title", async () => {
     const body = `
       <h1 id="title">Spec title</h1>
