@@ -2,7 +2,7 @@
 
 [![Backers on Open Collective](https://opencollective.com/respec/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/respec/sponsors/badge.svg)](#sponsors)
-[![Build Status](https://github.com/w3c/respec/workflows/Node%20CI/badge.svg?branch=develop)](https://github.com/w3c/respec/actions?query=workflow%3A%22Node+CI%22+branch%3Adevelop)
+[![Build Status](https://github.com/speced/respec/workflows/Node%20CI/badge.svg?branch=develop)](https://github.com/speced/respec/actions?query=workflow%3A%22Node+CI%22+branch%3Adevelop)
 [![Website status](https://img.shields.io/github/workflow/status/marcoscaceres/respec.org/Health%20Check?label=respec.org&logo=curl)](https://github.com/marcoscaceres/respec.org/actions?query=workflow%3A%22Health+Check%22)
 
 ReSpec is a JS library that makes it easier to write technical specifications, or documents
@@ -14,10 +14,10 @@ well.
 
 If you are just interested in writing a spec, you can grab the [starter spec](examples/starter.html).
 
-We have extensive documentation on [how to use ReSpec](https://github.com/w3c/respec/wiki) in our wiki, including:
+We have extensive documentation on [how to use ReSpec](https://github.com/speced/respec/wiki) in our wiki, including:
 
-  * [User's guide](https://github.com/w3c/respec/wiki/ReSpec-Editor's-Guide)
-  * [WebIDL guide](https://github.com/w3c/respec/wiki/WebIDL-Guide)
+  * [User's guide](https://github.com/speced/respec/wiki/ReSpec-Editor's-Guide)
+  * [WebIDL guide](https://github.com/speced/respec/wiki/WebIDL-Guide)
 
 **You don't need to check-out or fork this repository.**
 
@@ -32,7 +32,7 @@ If you are new to spec writing, we strongly encourage you to read:
 ## Getting help
 
 If you experience issues, please email [spec-prod@w3.org](mailto:spec-prod@w3.org) or
-if you think something is broken, [file a bug](https://github.com/w3c/respec/issues).
+if you think something is broken, [file a bug](https://github.com/speced/respec/issues).
 
 **Please note:** ReSpec is not endorsed by W3C and nobody should expect the W3C Webmaster to provide advice on
 problems encountered with ReSpec, or on why it may be failing to produce pubrules-compliant
@@ -45,18 +45,18 @@ Bibliographical references have been moved out of ReSpec. You want to use
 
 ## Want to see complete documentation?
 
-[Documentation for ReSpec](https://github.com/w3c/respec/wiki) is available in our wiki.
+[Documentation for ReSpec](https://github.com/speced/respec/wiki) is available in our wiki.
 
 ## Contribute
 
-Please see our [developer guide](https://github.com/w3c/respec/wiki/Developers-Guide).
+Please see our [developer guide](https://github.com/speced/respec/wiki/Developers-Guide).
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 ## Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/w3c/respec/graphs/contributors"><img src="https://opencollective.com/respec/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/speced/respec/graphs/contributors"><img src="https://opencollective.com/respec/contributors.svg?width=890&button=false" /></a>
 
 
 ## Backers

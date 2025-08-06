@@ -65,7 +65,7 @@ const l10n = getIntlData(localizationStrings);
 // add support.
 const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
 const inlineIdlReference = /(?:{{[^}]+\?*}})/; // {{ WebIDLThing }}, {{ WebIDLThing? }}
-const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;"<>]+\??)?\|\B/; // |var : Type?|
+const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;"?<>]+\??)?\|\B/; // |var : Type?|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citation]]
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
@@ -145,9 +145,9 @@ function inlineXrefMatches(matched, text) {
   }
 
   const node = idlStringToHtml(ref);
-  // If it's inside a dfn, it should just be coded, not linked.
+  // If it's inside a dfn or a `a`, it should just be coded, not linked.
   // This is because dfn elements are treated as links by ReSpec via role=link.
-  const renderAsCode = !!text.parentElement.closest("dfn");
+  const renderAsCode = !!text.parentElement.closest("dfn,a");
   return renderAsCode ? inlineCodeMatches(`\`${node.textContent}\``) : node;
 }
 
@@ -274,7 +274,7 @@ export function run(conf) {
 
   // PROCESSING
   // Don't gather text nodes for these:
-  const exclusions = ["#respec-ui", ".head", "pre", "svg"];
+  const exclusions = ["#respec-ui", ".head", "pre", "svg", "script", "style"];
   const txts = getTextNodes(document.body, exclusions, {
     wsNodes: false, // we don't want nodes with just whitespace
   });

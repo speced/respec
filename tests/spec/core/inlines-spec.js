@@ -171,7 +171,7 @@ describe("Core - Inlines", () => {
         <p id="h"> TEXT |var: Generic&lt;int&gt;| TEXT |var2: Generic&lt;unsigned short int&gt;| </p>
       </section>
       <section>
-        <p id="nulls"> |var 1: null type spaces?| and |var 2 : NullableType?| </p>
+        <p id="nulls"> |var 1: null type spaces?| and |var 2 : NullableType?| and |var 3: Generic&lt;NullableType?&gt;|</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
@@ -223,11 +223,14 @@ describe("Core - Inlines", () => {
     expect(h[1].textContent).toBe("var2");
     expect(h[1].dataset.type).toBe("Generic<unsigned short int>");
 
-    const [nullVar1, nullVar2] = doc.querySelectorAll("#nulls > var");
-    expect(nullVar1.textContent).toBe("var 1");
-    expect(nullVar1.dataset.type).toBe("null type spaces?");
-    expect(nullVar2.textContent).toBe("var 2");
-    expect(nullVar2.dataset.type).toBe("NullableType?");
+    const nulls = doc.querySelectorAll("#nulls > var");
+    expect(nulls).toHaveSize(3);
+    expect(nulls[0].textContent).toBe("var 1");
+    expect(nulls[0].dataset.type).toBe("null type spaces?");
+    expect(nulls[1].textContent).toBe("var 2");
+    expect(nulls[1].dataset.type).toBe("NullableType?");
+    expect(nulls[2].textContent).toBe("var 3");
+    expect(nulls[2].dataset.type).toBe("Generic<NullableType?>");
   });
 
   it("expands inline references and they get classified as normative/informative correctly", async () => {
@@ -620,13 +623,13 @@ describe("Core - Inlines", () => {
     expect(primitiveAnchor.hash).toBe("#idl-unsigned-short");
 
     const primitiveData = primitiveAnchor.dataset;
-    expect(primitiveData.linkType).toBe("idl");
+    expect(primitiveData.linkType).toBe("interface");
     expect(primitiveData.cite).toBe("webidl");
     expect(primitiveData.xrefType).toBe("interface");
     expect(primitiveData.lt).toBe("unsigned short");
   });
 
-  it("doesn't link processed inline WebIDL if inside a definition", async () => {
+  it("doesn't link processed inline WebIDL if inside a definition or a link", async () => {
     const body = `
       <section>
         <dfn id="dfn">
@@ -636,14 +639,18 @@ describe("Core - Inlines", () => {
           {{ ReferrerPolicy/"no-referrer" }}
           123
         </dfn>
+        <a id="link" href="#dfn">A link containing an IDL reference {{Window}}</a>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
     const dfn = doc.getElementById("dfn");
     expect(dfn.querySelector("a")).toBeNull();
+    const link = doc.getElementById("link");
+    expect(link.querySelector("a")).toBeNull();
 
     const codeElements = dfn.querySelectorAll("code");
     expect(codeElements).toHaveSize(3);
+    expect(link.querySelectorAll("code")).toHaveSize(1);
 
     const [eventListen, event, noRef] = codeElements;
     expect(eventListen.textContent).toBe("addEventListener(type, callback)");

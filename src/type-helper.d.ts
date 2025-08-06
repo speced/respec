@@ -134,8 +134,6 @@ interface Conf {
   noToc: boolean;
   /** Disables injecting ReSpec styles */
   noReSpecCSS?: boolean;
-  /** Inject dark mode styles */
-  darkMode?: boolean;
 
   /** Indicates whether the document is a preview */
   isPreview?: boolean;

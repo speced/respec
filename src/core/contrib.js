@@ -60,8 +60,7 @@ async function showContributors(editors, apiURL) {
       );
     } catch (error) {
       const msg = "Error loading contributors from GitHub.";
-      showError(msg, name);
-      console.error(error);
+      showError(msg, name, { cause: error });
       return null;
     }
   }

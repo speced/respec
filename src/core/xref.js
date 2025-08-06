@@ -7,7 +7,7 @@
  * Searches for the terms which do not have a local definition at xref API and
  * for each query, adds `data-cite` attributes to respective elements.
  * `core/data-cite` later converts these data-cite attributes to actual links.
- * https://github.com/w3c/respec/issues/1662
+ * https://github.com/speced/respec/issues/1662
  */
 /**
  * @typedef {import('core/xref').RequestEntry} RequestEntry
@@ -400,9 +400,12 @@ function addDataCite(elem, query, result, conf) {
   // but sometimes we get lucky and we get an absolute URL from xref
   // which we can then use in other places (e.g., data-cite.js)
   const url = new URL(uri, "https://partial");
-  const { pathname: citePath } = url;
+  let { pathname: citePath } = url;
+  // final resolution will be against the URL of the spec, which may end with
+  // a filename. That filename must be preserved if there's no specific path.
+  if (citePath === "/") citePath = "";
   const citeFrag = url.hash.slice(1);
-  const dataset = { cite, citePath, citeFrag, type };
+  const dataset = { cite, citePath, citeFrag, linkType: type };
   if (forContext) dataset.linkFor = forContext[0];
   if (url.origin && url.origin !== "https://partial") {
     dataset.citeHref = url.href;
@@ -478,7 +481,9 @@ function showErrors({ ambiguous, notFound }) {
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const forParent = query.for ? `, for **"${query.for}"**, ` : "";
     const moreInfo = howToFix(formUrl, originalTerm);
-    const hint = docLink`To fix, use the ${"[data-cite]"} attribute to pick the one you mean from the appropriate specification. ${moreInfo}.`;
+    const hint =
+      docLink`To fix, use the ${"[data-cite]"} attribute to pick the one you mean from the appropriate specification.` +
+      String.raw` ${moreInfo}`;
     const msg = `The term "**${originalTerm}**"${forParent} is ambiguous because it's defined in ${specsString}.`;
     const title = "Definition is ambiguous.";
     showError(msg, name, { title, elements: elems, hint });

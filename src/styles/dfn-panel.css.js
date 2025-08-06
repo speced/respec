@@ -1,6 +1,6 @@
 /* dfn popup panel that list all local references to a dfn */
 /**
- * TODO: Revert changes due to https://github.com/w3c/respec/pull/2888 when
+ * TODO: Revert changes due to https://github.com/speced/respec/pull/2888 when
  * https://github.com/w3c/css-validator/pull/111 is fixed.
  */
 const css = String.raw;

@@ -2,7 +2,7 @@
 /**
  * Module: "core/caniuse"
  * Adds a caniuse support table for a "feature" #1238
- * Usage options: https://github.com/w3c/respec/wiki/caniuse
+ * Usage options: https://github.com/speced/respec/wiki/caniuse
  */
 import { codedJoinAnd, docLink, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
@@ -103,8 +103,7 @@ export async function run(conf) {
 function handleError(err, options, featureURL) {
   const msg = `Failed to retrieve feature "${options.feature}".`;
   const hint = docLink`Please check the feature key on [caniuse.com](https://caniuse.com) and update ${"[caniuse]"}.`;
-  showError(msg, name, { hint });
-  console.error(err);
+  showError(msg, name, { hint, cause: err });
   return html`<a href="${featureURL}">caniuse.com</a>`;
 }
 
