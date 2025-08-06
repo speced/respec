@@ -221,6 +221,7 @@ describe("Core — Definitions", () => {
 
     const dfnOnlyLocalLt = doc.querySelector("#only-local-lt dfn");
     expect(dfnOnlyLocalLt.id).toBe("dfn-install");
+    expect(dfnOnlyLocalLt.dataset.lt).toBe(undefined);
     for (const el of [...doc.querySelectorAll("#only-local-lt a")]) {
       expect(el.hash).toBe("#dfn-install");
     }
