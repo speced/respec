@@ -20,7 +20,6 @@ const localizationStrings = {
   },
   zh: {
     sotd: "关于本文档",
-    // eslint-disable-next-line prettier/prettier
     status_at_publication: html`本章节描述了本文档的发布状态。W3C的文档列表和最新版本可通过<a
         href="https://www.w3.org/TR/"
         >W3C技术报告</a
