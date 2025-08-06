@@ -29,7 +29,7 @@ export async function run(config) {
       try {
         await f(config, document, utils);
       } catch (err) {
-        const msg = `Function ${f.name} threw an error during \`postProcess\`.`;
+        const msg = `Function ${fnName} threw an error during \`postProcess\`.`;
         const hint = "See developer console.";
         showError(msg, name, { hint, cause: err });
       }

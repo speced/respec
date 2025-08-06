@@ -28,7 +28,7 @@ export async function run(config) {
       try {
         await f(config, document, utils);
       } catch (err) {
-        const msg = `Function ${f.name} threw an error during \`preProcess\`.`;
+        const msg = `Function ${fnName} threw an error during \`preProcess\`.`;
         const hint = "See developer console.";
         showError(msg, name, { hint, cause: err });
       }
