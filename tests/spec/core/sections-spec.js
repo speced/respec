@@ -90,7 +90,7 @@ describe("Core — sections", () => {
     expect(section2.classList.contains("appendix")).toBeTrue();
     expect(section2.classList.contains("informative")).toBeTrue();
     expect(section2.classList.contains("nocopy")).toBeFalse();
-    
+
     const section3 = doc.getElementById("h3").closest("section");
     expect(section3.classList.contains("notoc")).toBeTrue();
     expect(section3.classList.contains("appendix")).toBeFalse();
@@ -105,7 +105,7 @@ describe("Core — sections", () => {
     expect(section5.classList.contains("appendix")).toBeTrue();
     expect(section5.classList.contains("informative")).toBeFalse();
     expect(section5.classList.contains("notoc")).toBeFalse();
-    
+
     const section6 = doc.getElementById("h6").closest("section");
     expect(section6.classList.contains("notoc")).toBeTrue();
     expect(section6.classList.contains("informative")).toBeTrue();

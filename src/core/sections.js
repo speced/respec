@@ -49,9 +49,10 @@ class DOMBuilder {
   }
 
   processHeader(header, section) {
-    DOMBuilder.sectionClasses.intersection(new Set(header.classList))
+    DOMBuilder.sectionClasses
+      .intersection(new Set(header.classList))
       .forEach(className => {
-        section.classList.add(className)
+        section.classList.add(className);
       });
   }
 
