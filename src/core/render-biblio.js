@@ -104,7 +104,7 @@ export function run(conf) {
 /**
  * @param {string[]} refs
  * @param {string} title
- * @param {bool} flatten - disables the section heading
+ * @param {boolean} flatten - disables the section heading
  * @returns {HTMLElement}
  */
 function createReferencesSection(refs, title, flatten) {
