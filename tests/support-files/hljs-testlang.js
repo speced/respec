@@ -1,4 +1,4 @@
-var module = module ? module : {}; // eslint-disable-line
+var module = module ? module : {};
 
 function testLang() {
   return {
