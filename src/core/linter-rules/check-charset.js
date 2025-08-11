@@ -18,7 +18,7 @@ const localizationStrings = {
   },
   cs: {
     msg: `Dokument smí obsahovat pouze jeden tag \`<meta>\` s charset nastaveným na 'utf-8'`,
-    hint: `Přidejte tento řádek do sekce \`<head>\` vašeho dokumentu - \`<meta charset=\"utf-8\">\` nebo nastavte charset na \"utf-8\", pokud ještě není nastaven.`,
+    hint: `Přidejte tento řádek do sekce \`<head>\` vašeho dokumentu - \`<meta charset="utf-8">\` nebo nastavte charset na "utf-8", pokud ještě není nastaven.`,
   },
 };
 const l10n = getIntlData(localizationStrings);

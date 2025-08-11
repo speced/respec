@@ -29,7 +29,7 @@ const localizationStrings = {
   },
   cs: {
     msg(term, cite) {
-      return `Nalezen normativní odkaz na \"${term}\", ale pojem je definován pouze informativně v \"${cite}\".`;
+      return `Nalezen normativní odkaz na "${term}", ale pojem je definován pouze informativně v "${cite}".`;
     },
     get hint() {
       return docLink`
