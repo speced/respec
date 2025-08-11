@@ -34,7 +34,7 @@
     "clean-css": "^5.3.3",
     "epipebomb": "^1.0.0",
     "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.2",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jasmine": "^4.2.2",
     "eslint-plugin-prettier": "^5.5.3",
@@ -61,7 +61,7 @@
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^5.9.2",
     "vnu-jar": "^24.10.17",
-    "webidl2": "^24.4.1"
+    "webidl2": "^24.5.0"
   },
   "scripts": {
     "build:aom-debug": "pnpm build:aom -- --debug",
