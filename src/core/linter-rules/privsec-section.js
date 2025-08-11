@@ -19,6 +19,12 @@ const localizationStrings = {
       "Add a privacy and/or security considerations section. " +
       "See the [Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/).",
   },
+  cs: {
+    msg: "Dokument musí obsahovat sekci 'Zásady ochrany soukromí a/nebo bezpečnosti'.",
+    hint:
+      "Přidejte sekci o zásadách ochrany soukromí a/nebo bezpečnosti. " +
+      "Viz [Dotazník pro sebehodnocení](https://w3ctag.github.io/security-questionnaire/).",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

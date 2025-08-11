@@ -19,8 +19,50 @@ const localizationStrings = {
   en: {
     heading: "Index",
     headingExternal: "Terms defined by reference",
-    headlingLocal: "Terms defined by this specification",
+    headingLocal: "Terms defined by this specification",
     dfnOf: "definition of",
+  },
+  cs: {
+    heading: "Glosář",
+    headingExternal: "Termíny definované odkazem",
+    headingLocal: "Termíny definované touto specifikací",
+    dfnOf: "definice",
+  },
+  de: {
+    heading: "Index",
+    headingExternal: "Begriffe, die durch Verweis definiert sind",
+    headingLocal: "Begriffe, die in dieser Spezifikation definiert sind",
+    dfnOf: "Definition von",
+  },
+  es: {
+    heading: "Índice",
+    headingExternal: "Términos definidos por referencia",
+    headingLocal: "Términos definidos por esta especificación",
+    dfnOf: "definición de",
+  },
+  ja: {
+    heading: "索引",
+    headingExternal: "参照によって定義された用語",
+    headingLocal: "この仕様で定義された用語",
+    dfnOf: "の定義",
+  },
+  ko: {
+    heading: "색인",
+    headingExternal: "참조로 정의된 용어",
+    headingLocal: "이 명세서에서 정의된 용어",
+    dfnOf: "정의",
+  },
+  nl: {
+    heading: "Index",
+    headingExternal: "Termen gedefinieerd door verwijzing",
+    headingLocal: "Termen gedefinieerd door deze specificatie",
+    dfnOf: "definitie van",
+  },
+  zh: {
+    heading: "索引",
+    headingExternal: "通过引用定义的术语",
+    headingLocal: "由本规范定义的术语",
+    dfnOf: "的定义",
   },
 };
 const l10n = getIntlData(localizationStrings);
@@ -64,7 +106,7 @@ export function run() {
   }
 
   const localTermIndex = html`<section id="index-defined-here">
-    <h3>${l10n.headlingLocal}</h3>
+    <h3>${l10n.headingLocal}</h3>
     ${createLocalTermIndex()}
   </section>`;
   index.append(localTermIndex);
