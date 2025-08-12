@@ -1,53 +1,58 @@
 <!doctype html>
 <script class='remove'>
+let counter = 0;
+
+function pass(id) {
+  document.getElementById(id).innerHTML = `pass ${++counter}`;
+}
+
 function noOp() {}
 
 function preSyncFunc() {
-  document.getElementById("pre-sync").innerHTML = "pass";
+  pass("pre-sync");
 }
 
 function preAsyncFunc() {
   return new Promise(resolve => {
     setTimeout(() => {
-      document.getElementById("pre-async").innerHTML = "pass";
+      pass("pre-async");
       resolve();
     }, 4);
   });
 }
 
 function preWithWarning(_conf, _doc, utils) {
-  document.getElementById("pre-warning").innerHTML = "pass";
+  pass("pre-warning");
   utils.showWarning("This is a warning");
 }
 
 function postSyncFunc() {
-  document.getElementById("post-sync").innerHTML = "pass";
+  pass("post-sync");
 }
 
 function postAsyncFunc() {
   return new Promise(resolve => {
     setTimeout(() => {
-      document.getElementById("post-async").innerHTML = "pass";
+      pass("post-async");
       resolve();
     }, 4);
   });
 }
 
 function postWithDetailedError(_conf, _doc, utils) {
-  const el = document.getElementById("post-error");
-  el.innerHTML = "pass";
+  pass("post-error");
   utils.showError("This is an error", {
     hint: "This is a hint",
     title: "This is a title",
     details: "This is a detailed error message",
-    elements: [el],
+    elements: [document.getElementById("post-error")],
   });
 }
 
 function afterEnd() {
   return new Promise(resolve => {
     setTimeout(() => {
-      document.getElementById("afterend").innerHTML = "pass";
+      pass("afterend");
       resolve();
     }, 4);
   });

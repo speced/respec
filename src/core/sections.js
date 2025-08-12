@@ -12,6 +12,9 @@ class DOMBuilder {
     this.stack = [this.root];
     this.current = this.root;
   }
+
+  static sectionClasses = new Set(["appendix", "informative", "notoc"]);
+
   findPosition(header) {
     return parseInt(header.tagName.charAt(1), 10);
   }
@@ -42,6 +45,15 @@ class DOMBuilder {
     this.stack[position] = section;
     this.stack.length = position + 1;
     this.current = section;
+    this.processHeader(header, section);
+  }
+
+  processHeader(header, section) {
+    DOMBuilder.sectionClasses
+      .intersection(new Set(header.classList))
+      .forEach(className => {
+        section.classList.add(className);
+      });
   }
 
   addSection(node) {
