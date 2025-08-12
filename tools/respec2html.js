@@ -287,7 +287,37 @@ async function run(source, destination, options, log) {
     );
   }
 
-  await write(destination, html);
+  // Patch to address Mermaid issue https://github.com/mermaid-js/mermaid/issues/1766.
+  let reduceHTML = html;
+  let svgSafeHTML = "";
+
+  // Keep going until no more SVG tags.
+  while (reduceHTML !== "") {
+    const svgStart = reduceHTML.search(/<svg( [\S\s]*?|)>/);
+    if (svgStart !== -1) {
+      svgSafeHTML += reduceHTML.slice(0, svgStart);
+      reduceHTML = reduceHTML.slice(svgStart);
+
+      let svgEnd = reduceHTML.search("</svg>");
+
+      // SVG closing tag should exist, but check anyway.
+      if (svgEnd !== -1) {
+        svgEnd += 6;
+
+        // Replace all <br> tags within SVG with <br />.
+        svgSafeHTML += reduceHTML.slice(0, svgEnd).replace(/<br>/g, "<br />");
+        reduceHTML = reduceHTML.slice(svgEnd);
+      } else {
+        svgSafeHTML += reduceHTML;
+        reduceHTML = "";
+      }
+    } else {
+      svgSafeHTML += reduceHTML;
+      reduceHTML = "";
+    }
+  }
+
+  await write(destination, svgSafeHTML);
 
   if (staticServer) await staticServer.stop();
 }
