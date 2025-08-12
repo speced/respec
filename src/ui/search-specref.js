@@ -23,6 +23,9 @@ const localizationStrings = {
   zh: {
     search_specref: "搜索 Specref",
   },
+  cs: {
+    search_specref: "Hledat ve Specref",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

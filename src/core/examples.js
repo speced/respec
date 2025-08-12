@@ -34,6 +34,9 @@ const localizationStrings = {
   zh: {
     example: "例",
   },
+  cs: {
+    example: "Příklad",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

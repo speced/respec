@@ -20,6 +20,9 @@ const localizationStrings = {
   zh: {
     title: "搜索定义",
   },
+  cs: {
+    title: "Hledat definice",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 

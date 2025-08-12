@@ -164,6 +164,36 @@ const localizationStrings = {
     test_suite: "Testumgebung:",
     this_version: "Diese Fassung:",
   },
+  cs: {
+    archives: "archivy",
+    author: "Autor:",
+    authors: "Autoři:",
+    commit_history: "Historie změn",
+    edited_in_place: "upraveno přímo",
+    editor: "Editor:",
+    editors: "Editoři:",
+    feedback: "Zpětná vazba:",
+    former_editor: "Bývalý editor:",
+    former_editors: "Bývalí editoři:",
+    history: "Historie:",
+    implementation_report: "Implementační zpráva:",
+    latest_editors_draft: "Nejnovější pracovní verze:",
+    latest_published_version: "Nejnovější publikovaná verze:",
+    latest_recommendation: "Nejnovější doporučení:",
+    message_topic: "… předmět zprávy …",
+    more_details_about_this_doc: "Více informací o tomto dokumentu",
+    multiple_alternates(plural) {
+      return `Tento dokument je také dostupný v ${plural ? "těchto ne-normativních formátech" : "tomto ne-normativním formátu"}:`;
+    },
+    prev_editor_draft: "Předchozí pracovní verze:",
+    prev_recommendation: "Předchozí doporučení:",
+    prev_version: "Předchozí verze:",
+    publication_history: "Historie publikací",
+    test_suite: "Testovací sada:",
+    this_version: "Tato verze:",
+    with_subject_line: "s předmětem",
+    your_topic_here: "VÁŠ PŘEDMĚT ZDE",
+  },
 };
 export const l10n = getIntlData(localizationStrings);
 
