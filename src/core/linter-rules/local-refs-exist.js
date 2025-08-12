@@ -13,6 +13,10 @@ const localizationStrings = {
     msg: "Broken local reference found in document.",
     hint: "Please fix the links mentioned.",
   },
+  cs: {
+    msg: "V dokumentu byla nalezena nefunkční lokální reference.",
+    hint: "Opravte prosím uvedené odkazy.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
