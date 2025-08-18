@@ -11,7 +11,7 @@ jobs:
     name: Build W3C profile
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with: { node-version-file: '.nvmrc', cache: pnpm }
@@ -41,7 +41,7 @@ jobs:
           - https://w3c.github.io/geolocation-api/
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with: { node-version-file: '.nvmrc', cache: pnpm }
