@@ -19,7 +19,7 @@ importers:
         version: 12.0.2
       puppeteer:
         specifier: ^24.16.1
-        version: 24.16.1(typescript@5.9.2)
+        version: 24.16.1(typescript@5.9.3)
       sade:
         specifier: ^1.8.1
         version: 1.8.1
@@ -133,8 +133,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       typescript:
-        specifier: ^5.9.2
-        version: 5.9.2
+        specifier: ^5.9.3
+        version: 5.9.3
       vnu-jar:
         specifier: ^24.10.17
         version: 24.10.17
@@ -2448,8 +2448,8 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
 
-  typescript@5.9.2:
-    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -3286,14 +3286,14 @@ snapshots:
       object-assign: 4.1.1
       vary: 1.1.2
 
-  cosmiconfig@9.0.0(typescript@5.9.2):
+  cosmiconfig@9.0.0(typescript@5.9.3):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
       js-yaml: 4.1.0
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 5.9.2
+      typescript: 5.9.3
 
   cross-spawn@7.0.6:
     dependencies:
@@ -4614,11 +4614,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  puppeteer@24.16.1(typescript@5.9.2):
+  puppeteer@24.16.1(typescript@5.9.3):
     dependencies:
       '@puppeteer/browsers': 2.10.6
       chromium-bidi: 7.3.1(devtools-protocol@0.0.1475386)
-      cosmiconfig: 9.0.0(typescript@5.9.2)
+      cosmiconfig: 9.0.0(typescript@5.9.3)
       devtools-protocol: 0.0.1475386
       puppeteer-core: 24.16.1
       typed-query-selector: 2.12.0
@@ -5178,7 +5178,7 @@ snapshots:
 
   typescript@4.9.5: {}
 
-  typescript@5.9.2: {}
+  typescript@5.9.3: {}
 
   ua-parser-js@0.7.37: {}
 
