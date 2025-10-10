@@ -292,9 +292,9 @@ function createExternalTermIndex() {
   const dataSortedBySpec = [...data.entries()].sort(([specA], [specB]) =>
     specA.localeCompare(specB)
   );
+  const indexSection = document.querySelector("section#index");
   return html`<ul class="index">
     ${dataSortedBySpec.map(([spec, entries]) => {
-      const indexSection = document.querySelector("section#index");
       const useFullTitle = indexSection?.classList.contains("prefer-full-spec-title");
       let citationElement;
 
