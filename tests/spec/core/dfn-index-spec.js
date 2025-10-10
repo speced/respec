@@ -164,14 +164,14 @@ describe("Core — dfn-index", () => {
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
       const localIndex = doc.getElementById("index-defined-here");
-      
+
       // Local terms should not be affected by prefer-full-spec-title class
       // They should still show just the term names without any spec citations
       const terms = [...localIndex.querySelectorAll("ul.index > li")].map(
         term => term.textContent.trim().split(/\s/)[0]
       );
       expect(terms).toEqual(["bar", "hello"]);
-      
+
       // Verify no citation elements are present in local terms
       expect(localIndex.querySelectorAll("cite")).toHaveSize(0);
       expect(localIndex.querySelectorAll(".bibref")).toHaveSize(0);
@@ -309,7 +309,7 @@ describe("Core — dfn-index", () => {
       expect(bySpecs[0].textContent.trim()).toMatch(
         /\[DOM\] defines the following:/
       );
-      
+
       // Test with a different language
       const body = ` <section id="content">
           <p>{{ Event }}</p>
@@ -336,7 +336,7 @@ describe("Core — dfn-index", () => {
       const doc = await makeRSDoc(ops);
       const fullTitleIndex = doc.getElementById("index-defined-elsewhere");
       const bySpecs = fullTitleIndex.querySelectorAll("ul.index > li");
-      
+
       if (bySpecs.length > 0) {
         // Should use full title instead of just [DOM]
         expect(bySpecs[0].textContent.trim()).toMatch(

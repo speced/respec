@@ -6,13 +6,13 @@
  */
 
 import { addId, getIntlData, norm, xmlEscape } from "./utils.js";
+import { biblio } from "./biblio.js";
 import css from "../styles/dfn-index.css.js";
 import { getTermFromElement } from "./xref.js";
 import { html } from "./import-maps.js";
 import { renderInlineCitation } from "./render-biblio.js";
 import { sub } from "./pubsubhub.js";
 import { toCiteDetails } from "./data-cite.js";
-import { biblio } from "./biblio.js";
 
 export const name = "core/dfn-index";
 
@@ -295,7 +295,9 @@ function createExternalTermIndex() {
   const indexSection = document.querySelector("section#index");
   return html`<ul class="index">
     ${dataSortedBySpec.map(([spec, entries]) => {
-      const useFullTitle = indexSection?.classList.contains("prefer-full-spec-title");
+      const useFullTitle = indexSection?.classList.contains(
+        "prefer-full-spec-title"
+      );
       let citationElement;
 
       if (useFullTitle && biblio[spec]?.title) {
