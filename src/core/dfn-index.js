@@ -6,6 +6,7 @@
  */
 
 import { addId, getIntlData, norm, xmlEscape } from "./utils.js";
+import { biblio } from "./biblio.js";
 import css from "../styles/dfn-index.css.js";
 import { getTermFromElement } from "./xref.js";
 import { html } from "./import-maps.js";
@@ -21,48 +22,56 @@ const localizationStrings = {
     headingExternal: "Terms defined by reference",
     headingLocal: "Terms defined by this specification",
     dfnOf: "definition of",
+    definesFollowing: "defines the following:",
   },
   cs: {
     heading: "Glosář",
     headingExternal: "Termíny definované odkazem",
     headingLocal: "Termíny definované touto specifikací",
     dfnOf: "definice",
+    definesFollowing: "definuje následující:",
   },
   de: {
     heading: "Index",
     headingExternal: "Begriffe, die durch Verweis definiert sind",
     headingLocal: "Begriffe, die in dieser Spezifikation definiert sind",
     dfnOf: "Definition von",
+    definesFollowing: "definiert Folgendes:",
   },
   es: {
     heading: "Índice",
     headingExternal: "Términos definidos por referencia",
     headingLocal: "Términos definidos por esta especificación",
     dfnOf: "definición de",
+    definesFollowing: "define lo siguiente:",
   },
   ja: {
     heading: "索引",
     headingExternal: "参照によって定義された用語",
     headingLocal: "この仕様で定義された用語",
     dfnOf: "の定義",
+    definesFollowing: "以下を定義します:",
   },
   ko: {
     heading: "색인",
     headingExternal: "참조로 정의된 용어",
     headingLocal: "이 명세서에서 정의된 용어",
     dfnOf: "정의",
+    definesFollowing: "다음을 정의합니다:",
   },
   nl: {
     heading: "Index",
     headingExternal: "Termen gedefinieerd door verwijzing",
     headingLocal: "Termen gedefinieerd door deze specificatie",
     dfnOf: "definitie van",
+    definesFollowing: "definieert het volgende:",
   },
   zh: {
     heading: "索引",
     headingExternal: "通过引用定义的术语",
     headingLocal: "由本规范定义的术语",
     dfnOf: "的定义",
+    definesFollowing: "定义以下内容:",
   },
 };
 const l10n = getIntlData(localizationStrings);
@@ -283,10 +292,21 @@ function createExternalTermIndex() {
   const dataSortedBySpec = [...data.entries()].sort(([specA], [specB]) =>
     specA.localeCompare(specB)
   );
+  const indexSection = document.querySelector("section#index");
+  const useFullTitle = !!indexSection?.classList.contains(
+    "prefer-full-spec-title"
+  );
   return html`<ul class="index">
     ${dataSortedBySpec.map(([spec, entries]) => {
+      let citationElement;
+      if (useFullTitle && biblio[spec]?.title) {
+        citationElement = renderInlineCitation(spec, biblio[spec].title);
+      } else {
+        citationElement = renderInlineCitation(spec);
+      }
+
       return html`<li data-spec="${spec}">
-        ${renderInlineCitation(spec)} defines the following:
+        ${citationElement} ${l10n.definesFollowing}
         <ul>
           ${entries
             .sort((a, b) => a.term.localeCompare(b.term))
