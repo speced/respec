@@ -24,24 +24,35 @@ export const name = "core/structure";
 const localizationStrings = {
   en: {
     toc: "Table of Contents",
+    back_to_top: "Back to Top",
   },
   zh: {
     toc: "内容大纲",
+    back_to_top: "返回顶部",
   },
   ko: {
     toc: "목차",
+    back_to_top: "맨 위로",
   },
   ja: {
     toc: "目次",
+    back_to_top: "先頭に戻る",
   },
   nl: {
     toc: "Inhoudsopgave",
+    back_to_top: "Terug naar boven",
   },
   es: {
     toc: "Tabla de Contenidos",
+    back_to_top: "Volver arriba",
   },
   de: {
     toc: "Inhaltsverzeichnis",
+    back_to_top: "Zurück nach oben",
+  },
+  cs: {
+    toc: "Obsah",
+    back_to_top: "Zpět na začátek",
   },
 };
 
@@ -288,7 +299,7 @@ function createTableOfContents(ol) {
   }
 
   const link = html`<p role="navigation" id="back-to-top">
-    <a href="#title"><abbr title="Back to Top">&uarr;</abbr></a>
+    <a href="#title"><abbr title="${l10n.back_to_top}">&uarr;</abbr></a>
   </p>`;
   document.body.append(link);
 }

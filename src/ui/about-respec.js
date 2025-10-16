@@ -21,6 +21,9 @@ const localizationStrings = {
   de: {
     about_respec: "Über",
   },
+  cs: {
+    about_respec: "O aplikaci",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
