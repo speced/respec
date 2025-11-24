@@ -189,7 +189,7 @@ describe("W3C — Headers", () => {
       const [result2] = contains(
         dNoteDoc,
         "p",
-        "This document was published by the Web Performance Working Group as a Group Draft Note using the Note track."
+        "This document was published by the Web Performance Working Group as a Group Note Draft using the Note track."
       );
       expect(result2).toBeTruthy();
     });
