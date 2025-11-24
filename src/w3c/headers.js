@@ -665,6 +665,13 @@ function derivePubSpace(conf) {
       return `/Submission`;
   }
 
+  if (
+    (conf.group === "tag" || conf.group === "ab") &&
+    conf.canonicalURI === "TR"
+  ) {
+    return `/TR`;
+  }
+
   return "";
 }
 
