@@ -11,10 +11,6 @@ import {
 describe("Core — Algorithm Lists", () => {
   afterAll(flushIframes);
 
-  const localBiblio = {
-    INFRA: { id: "INFRA", href: "https://infra.spec.whatwg.org/" },
-  };
-
   it("adds 'assert' CSS class to Assert: in ordered lists that are marked as algorithms", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -40,7 +36,7 @@ describe("Core — Algorithm Lists", () => {
         <li>Assert: two <a href="#test">a link to be preserved</a>.</li>
       </ol>
     </section>`;
-    const doc = await makeRSDoc(makeStandardOps({ localBiblio }, body));
+    const doc = await makeRSDoc(makeStandardOps(null, body));
 
     expect(doc.querySelectorAll("li.assert")).toHaveSize(2);
     const [first, second] = [...doc.querySelectorAll("li.assert")];
