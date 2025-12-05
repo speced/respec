@@ -1,0 +1,7 @@
+/* Style for a Working Group Release Candidate Draft */
+
+@import "base.css";
+
+body {
+  background-image: url(UD-watermark.png);
+}
