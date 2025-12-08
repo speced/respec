@@ -1,0 +1,123 @@
+  $("figure.message", doc).each(
+    function () {
+      let $fig = $(this);
+      let $tbl = undefined;
+      let json = {};
+      if ($fig.attr("id")) {
+        json.figName = $fig.attr("id").replace(/^fig-/, "");
+      } else if ($fig.attr("title")) {
+        json.figName = $fig.attr("title");
+      } else if ($("figcaption", this)) {
+        json.figName = $("figcaption", this).text();
+      } else {
+        json.figName = "unnamed-" + figNum;
+        figNum++;
+      }
+      json.figName = json.figName.toLowerCase()
+        .replace(/^\s+/, "")
+        .replace(/\s+$/, "")
+        .replace(/[^\-.0-9a-z_]+/ig, "-")
+        .replace(/^-+/, "")
+        .replace(/-+$/, "")
+        .replace(/\.$/, ".x")
+        .replace(/^([^a-z])/i, "x$1")
+        .replace(/^$/, "generatedID");
+      if (!$fig.attr("id")) {
+        $fig.attr("id", "fig-" + json.figName);
+      }
+      pub("start", "core/regpict figure.message id='" + $fig.attr("id") + "'");
+
+      json.forceFit = true;
+
+      let temp = $fig.attr("data-json");
+      if (temp !== null && temp !== undefined && temp !== "") {
+        let temp2 = {};
+        try {
+          temp2 = JSON.parse(temp);
+          $.extend(true, json, temp2);
+        } catch (e) {
+          $fig.before("<p class=\"issue\">Invalid data-json attribute in next figure.message</p>");
+          $fig.addclass("respec-error");
+        }
+      }
+
+      temp = $fig.attr("data-width");
+      if (temp !== null && temp !== undefined && temp !== "") {
+        json.width = temp;
+      }
+
+      temp = $fig.attr("data-unused");
+      if (temp !== null && temp !== undefined && temp !== "") {
+        json.defaultUnused = temp;
+      }
+
+      $("pre.json,div.json,span.json", $fig).each(function () {
+        let temp2 = {};
+        try {
+          temp2 = JSON.parse(this.textContent);
+          $.extend(true, json, temp2);
+          $(this).hide();
+        } catch (e) {
+          $tbl.before("<p class=\"issue\">Invalid JSON in pre.json, div.json, or span.json</p>");
+          $(this).addclass("respec-error");
+        }
+      });
+
+      // invent a div to hold the svg, if necessary
+      let $divsvg = $("div.svg", this).last();
+      if ($divsvg.length === 0) {
+        let $cap = $("figcaption", this);
+        if ($cap.length > 0) {
+          //console.log("inserting div.svg before <figcaption>");
+          $cap.before('<div class="svg"></div>');
+        } else {
+          //console.log("inserting div.svg at end of <figure>");
+          $(this).append('<div class="svg"></div>');
+        }
+        $divsvg = $("div.svg", this).last();
+      }
+
+      function merge_json(result, me) {
+        let $me = $(me);
+        let parents = $me.attr("data-parents");
+        if (parents !== null && parents !== undefined && parents !== "") {
+          // console.log("parents = \"" + parents + "\"");
+          parents = parents.split(/\s+/);
+          let i;
+          for (i = 0; i < parents.length; i++) {
+            let $temp = $("#" + parents[i]);
+            // console.log("merging: #" + parents[i]);
+            if ($temp.length > 0) {
+              // console.log("merge_json: adding \"" + $temp[0].textContent + "\"");
+              merge_json(result, $temp[0]);
+              //$.extend(true, result, JSON.parse($temp[0].textContent));
+              // console.log("result=" + JSON.stringify(result, null, 2));
+              $temp.hide();
+            }
+          }
+        }
+        // console.log("merge_json: adding \"" + me.textContent + "\"");
+        let temp2 = {};
+        try {
+          temp2 = JSON.parse(me.textContent);
+          $.extend(true, result, temp2);
+          // console.log("result=" + JSON.stringify(result, null, 2));
+          $(me).hide();
+        } catch (e) {
+          $tbl.before("<p class=\"issue\">Invalid JSON in next merge_json</p>");
+          $(me).addclass("respec-error");
+        }
+      }
+
+      if (json !== null) {
+        $divsvg.last().svg(function (svg) {
+          draw_regpict(this, svg, json);
+        });
+      } else {
+        pub("warn",
+          "core/regpict: no register definition " + $fig.get(0).outerHTML);
+      }
+
+      pub("end", "core/regpict figure.message id='" + $fig.attr("id") + "'");
+    });
+
