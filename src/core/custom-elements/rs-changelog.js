@@ -5,6 +5,9 @@
  * function is provided by the user, it is used to filter the commits that are
  * to be shown. Otherwise, all commits are shown.
  *
+ * Optionally, a `path` parameter can be provided to filter commits to only
+ * those that affected a specific file or folder (useful for monorepos).
+ *
  * @typedef {{message: string, hash: string}} Commit
  */
 import { github } from "../github.js";
@@ -19,6 +22,7 @@ export const element = class ChangelogElement extends HTMLElement {
     this.props = {
       from: this.getAttribute("from"),
       to: this.getAttribute("to") || "HEAD",
+      path: this.getAttribute("path"),
       /** @type {(commit: Commit) => boolean} */
       filter:
         typeof window[this.getAttribute("filter")] === "function"
@@ -28,11 +32,11 @@ export const element = class ChangelogElement extends HTMLElement {
   }
 
   connectedCallback() {
-    const { from, to, filter } = this.props;
+    const { from, to, filter, path } = this.props;
     html.bind(this)`
       <ul>
       ${{
-        any: fetchCommits(from, to, filter)
+        any: fetchCommits(from, to, filter, path)
           .then(commits => toHTML(commits))
           .catch(error =>
             showError(error.message, name, { elements: [this], cause: error })
@@ -47,7 +51,7 @@ export const element = class ChangelogElement extends HTMLElement {
   }
 };
 
-async function fetchCommits(from, to, filter) {
+async function fetchCommits(from, to, filter, path) {
   /** @type {Commit[]} */
   let commits;
   try {
@@ -58,6 +62,9 @@ async function fetchCommits(from, to, filter) {
     const url = new URL("commits", `${gh.apiBase}/${gh.fullName}/`);
     url.searchParams.set("from", from);
     url.searchParams.set("to", to);
+    if (path) {
+      url.searchParams.set("path", path);
+    }
 
     const res = await fetch(url.href);
     if (!res.ok) {
