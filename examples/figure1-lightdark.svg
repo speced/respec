@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 464 80">
+  <style>
+    :root { --bg: #fff; --solid: #eee; --fg: #000 }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #000; --solid: #333; --fg: #eee }
+    }
+    svg { background-color: var(--bg); stroke: none }
+    ellipse { stroke: var(--fg); fill: var(--solid) }
+    path.arrow { stroke: var(--fg); marker-end: url(#arrowhead) }
+    #arrowhead { fill: var(--fg) }
+    text { fill: var(--fg); font-family: Helvetica, sans-serif }
+    text.middle { text-anchor: middle }
+  </style>
+
+  <defs>
+    <marker id="arrowhead" orient="auto-start-reverse" markerWidth="10" markerHeight="10"
+            refX="0" refY="5">
+      <path d="M0,0 V10 L10,5 Z" fill="context-stroke" />
+    </marker>
+  </defs>
+
+  <g transform="translate(104 40)">
+    <g>
+      <ellipse rx="70" ry="26"/>
+      <text class="middle" y="5" font-size="16">Foo</text>
+    </g>
+    <g transform="translate(70 0)">
+      <text class="middle" x="52" y="-5" font-size="16">bar</text>
+      <path d="M0,0 100,0" class="arrow"/>
+    </g>
+    <g transform="translate(251 0)">
+      <ellipse rx="70" ry="26"/>
+      <text class="middle" y="5" font-size="16">Baz</text>
+    </g>
+  </g>
+
+</svg>
