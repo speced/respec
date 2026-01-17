@@ -54,6 +54,8 @@ const modules = [
   import("../src/core/data-tests.js"),
   import("../src/core/list-sorter.js"),
   import("../src/core/highlight-vars.js"),
+  import("../src/core/dfn-panel.js"),
+  import("../src/core/sortable-table.js"),
   import("../src/core/data-type.js"),
   import("../src/core/algorithms.js"),
   import("../src/core/anchor-expander.js"),
