@@ -94,7 +94,7 @@ export async function run(conf) {
   const branch = conf.github.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
   
-  // Allow custom pullsURL and commitsURL for monorepo scenarios
+  // Allow custom pullsURL and commitHistoryURL for monorepo scenarios
   let pullsURL;
   if (typeof conf.github === "object" && !conf.github.hasOwnProperty("pullsURL")) {
     pullsURL = new URL("./pulls/", ghURL).href;
@@ -102,11 +102,53 @@ export async function run(conf) {
     pullsURL = conf.github.pullsURL;
   }
   
+  // Validate pullsURL if it's provided
+  if (pullsURL) {
+    try {
+      const pullsURLObj = new URL(pullsURL);
+      if (pullsURLObj.origin !== "https://github.com") {
+        const msg = docLink`${"[github.pullsURL]"} must be HTTPS and pointing to GitHub. (${pullsURL}).`;
+        rejectGithubPromise(msg);
+        return;
+      }
+      if (!pullsURLObj.pathname.includes("/pulls")) {
+        const msg = docLink`${"[github.pullsURL]"} must point to pull requests. (${pullsURL}).`;
+        rejectGithubPromise(msg);
+        return;
+      }
+    } catch {
+      const msg = docLink`${"[github.pullsURL]"} is not a valid URL. (${pullsURL}).`;
+      rejectGithubPromise(msg);
+      return;
+    }
+  }
+  
   let commitHistoryURL;
   if (typeof conf.github === "object" && !conf.github.hasOwnProperty("commitHistoryURL")) {
     commitHistoryURL = new URL(`./commits/${branch}`, ghURL.href).href;
   } else {
     commitHistoryURL = conf.github.commitHistoryURL;
+  }
+  
+  // Validate commitHistoryURL if it's provided
+  if (commitHistoryURL) {
+    try {
+      const commitURLObj = new URL(commitHistoryURL);
+      if (commitURLObj.origin !== "https://github.com") {
+        const msg = docLink`${"[github.commitHistoryURL]"} must be HTTPS and pointing to GitHub. (${commitHistoryURL}).`;
+        rejectGithubPromise(msg);
+        return;
+      }
+      if (!commitURLObj.pathname.includes("/commit")) {
+        const msg = docLink`${"[github.commitHistoryURL]"} must point to commits. (${commitHistoryURL}).`;
+        rejectGithubPromise(msg);
+        return;
+      }
+    } catch {
+      const msg = docLink`${"[github.commitHistoryURL]"} is not a valid URL. (${commitHistoryURL}).`;
+      rejectGithubPromise(msg);
+      return;
+    }
   }
   
   const newProps = {
