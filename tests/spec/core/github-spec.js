@@ -81,6 +81,29 @@ describe("Core - Github", () => {
       const doc = await makeRSDoc(opts);
       doesntOverrideTest(doc);
     });
+    it("normalizes github object with custom pullsURL and commitsURL", async () => {
+      const opts = {
+        config: Object.assign(makeBasicConfig(), {
+          github: {
+            repoURL: "https://github.com/w3c/core-aam/",
+            pullsURL: "https://github.com/w3c/aria/pulls/",
+            commitsURL: "https://github.com/w3c/aria/commits/",
+          },
+        }),
+        body: makeDefaultBody(),
+      };
+      delete opts.config.edDraftURI;
+      delete opts.config.shortName;
+      
+      const doc = await makeRSDoc(opts);
+      const { respecConfig: conf } = doc.defaultView;
+      
+      // Check that the github object is normalized correctly
+      expect(conf.github.pullsURL).toBe("https://github.com/w3c/aria/pulls/");
+      expect(conf.github.commitHistoryURL).toBe("https://github.com/w3c/aria/commits/");
+      expect(conf.github.issuesURL).toBe("https://github.com/w3c/core-aam/issues/");
+      expect(conf.github.repoURL).toBe("https://github.com/w3c/core-aam/");
+    });
   });
   describe("the definition list items (localized)", () => {
     const l10n = {
@@ -133,6 +156,53 @@ describe("Core - Github", () => {
       const commitHistory = definitionListTest(doc);
       expect(commitHistory.querySelector("a").href).toBe(
         "https://github.com/speced/respec/commits/develop"
+      );
+    });
+    it("supports custom pullsURL and commitsURL for monorepo scenarios", async () => {
+      const customOpt = {
+        config: Object.assign(makeBasicConfig(), {
+          github: {
+            repoURL: "https://github.com/w3c/core-aam/",
+            pullsURL: "https://github.com/w3c/aria/pulls/",
+            commitsURL: "https://github.com/w3c/aria/commits/",
+          },
+          excludeGithubLinks: false,
+        }),
+        body: makeDefaultBody(),
+        htmlAttrs: {
+          lang: "nl",
+        },
+      };
+      delete customOpt.config.edDraftURI;
+      delete customOpt.config.shortName;
+      
+      const doc = await makeRSDoc(customOpt);
+      
+      // Check that the custom pull request URL is used
+      const pullRequests = Array.from(doc.querySelectorAll("dd")).find(
+        elem => elem.textContent.trim() === "Pull requests"
+      );
+      expect(pullRequests).toBeTruthy();
+      expect(pullRequests.querySelector("a").href).toBe(
+        "https://github.com/w3c/aria/pulls/"
+      );
+      
+      // Check that the custom commit history URL is used
+      const commitHistory = Array.from(doc.querySelectorAll("dd")).find(
+        elem => elem.textContent.trim() === "Revisiehistorie"
+      );
+      expect(commitHistory).toBeTruthy();
+      expect(commitHistory.querySelector("a").href).toBe(
+        "https://github.com/w3c/aria/commits/"
+      );
+      
+      // Issue base should still use repoURL
+      const fileABug = Array.from(doc.querySelectorAll("dd")).find(
+        elem => elem.textContent.trim() === "Dien een melding in"
+      );
+      expect(fileABug).toBeTruthy();
+      expect(fileABug.querySelector("a").href).toBe(
+        "https://github.com/w3c/core-aam/issues/"
       );
     });
   });
