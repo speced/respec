@@ -167,8 +167,10 @@ describe("Core - Github", () => {
         config: Object.assign(makeBasicConfig(), {
           github: {
             repoURL: "https://github.com/w3c/core-aam/",
-            pullsURL: "https://github.com/w3c/aria/pulls?q=+label%3A%22spec%3Acore-aam%22is%3Apr+is%3Aopen+",
-            commitHistoryURL: "https://github.com/w3c/aria/commits/main/core-aam",
+            pullsURL:
+              "https://github.com/w3c/aria/pulls?q=+label%3A%22spec%3Acore-aam%22is%3Apr+is%3Aopen+",
+            commitHistoryURL:
+              "https://github.com/w3c/aria/commits/main/core-aam",
           },
           excludeGithubLinks: false,
         }),
