@@ -133,7 +133,10 @@ export async function run(conf) {
   ) {
     commitHistoryURL = conf.github.commitHistoryURL;
   } else {
-    commitHistoryURL = new URL(`./commits/${conf.github.branch ?? ""}`, ghURL.href);
+    commitHistoryURL = new URL(
+      `./commits/${conf.github.branch ?? ""}`,
+      ghURL.href
+    );
   }
 
   // Validate commitHistoryURL if it's provided
