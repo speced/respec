@@ -98,11 +98,11 @@ export async function run(conf) {
   let pullsURL;
   if (
     typeof conf.github === "object" &&
-    !conf.github.hasOwnProperty("pullsURL")
+    conf.github.hasOwnProperty("pullsURL")
   ) {
-    pullsURL = new URL("./pulls/", ghURL).href;
-  } else {
     pullsURL = conf.github.pullsURL;
+  } else {
+    pullsURL = new URL("./pulls/", ghURL).href;
   }
 
   // Validate pullsURL if it's provided
