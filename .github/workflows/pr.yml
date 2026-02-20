@@ -85,6 +85,6 @@ jobs:
       - run: pnpm build:w3c
       - name: run validator
         run: |
-          vnu=$(node -p "require('vnu-jar')")
+          vnu=$(node -p "require('vnu-jar').toString()")
           ./tools/respec2html.js examples/basic.built.html /tmp/basic.built.html --verbose --timeout 30
           java -jar $vnu /tmp/basic.built.html
