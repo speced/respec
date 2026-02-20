@@ -145,7 +145,7 @@ export async function run(conf) {
         rejectGithubPromise(msg);
         return;
       }
-      if (!commitURLObj.pathname.includes("/commit")) {
+      if (!commitURLObj.pathname.includes("/commits")) {
         const msg = docLink`${"[github.commitHistoryURL]"} must point to commits. (${commitHistoryURL}).`;
         rejectGithubPromise(msg);
         return;
