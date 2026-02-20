@@ -87,7 +87,7 @@ describe("Core - Github", () => {
           github: {
             repoURL: "https://github.com/w3c/core-aam/",
             pullsURL: "https://github.com/w3c/aria/pulls/",
-            commitsURL: "https://github.com/w3c/aria/commits/",
+            commitHistoryURL: "https://github.com/w3c/aria/commits/",
           },
         }),
         body: makeDefaultBody(),
