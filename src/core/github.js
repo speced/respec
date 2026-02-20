@@ -129,11 +129,11 @@ export async function run(conf) {
   let commitHistoryURL;
   if (
     typeof conf.github === "object" &&
-    !conf.github.hasOwnProperty("commitHistoryURL")
+    conf.github.hasOwnProperty("commitHistoryURL")
   ) {
-    commitHistoryURL = new URL(`./commits/${branch}`, ghURL.href).href;
-  } else {
     commitHistoryURL = conf.github.commitHistoryURL;
+  } else {
+    commitHistoryURL = new URL(`./commits/${branch}`, ghURL.href).href;
   }
 
   // Validate commitHistoryURL if it's provided
