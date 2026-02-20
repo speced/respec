@@ -81,7 +81,7 @@ describe("Core - Github", () => {
       const doc = await makeRSDoc(opts);
       doesntOverrideTest(doc);
     });
-    it("normalizes github object with custom pullsURL and commitsURL", async () => {
+    it("normalizes github object with custom pullsURL and commitHistoryURL", async () => {
       const opts = {
         config: Object.assign(makeBasicConfig(), {
           github: {
@@ -162,13 +162,13 @@ describe("Core - Github", () => {
         "https://github.com/speced/respec/commits/develop"
       );
     });
-    it("supports custom pullsURL and commitsURL for monorepo scenarios", async () => {
+    it("supports custom pullsURL and commitHistoryURL for monorepo scenarios", async () => {
       const customOpt = {
         config: Object.assign(makeBasicConfig(), {
           github: {
             repoURL: "https://github.com/w3c/core-aam/",
-            pullsURL: "https://github.com/w3c/aria/pulls/",
-            commitsURL: "https://github.com/w3c/aria/commits/",
+            pullsURL: "https://github.com/w3c/aria/pulls?q=+label%3A%22spec%3Acore-aam%22is%3Apr+is%3Aopen+",
+            commitHistoryURL: "https://github.com/w3c/aria/commits/main/core-aam",
           },
           excludeGithubLinks: false,
         }),
@@ -182,13 +182,13 @@ describe("Core - Github", () => {
 
       const doc = await makeRSDoc(customOpt);
 
-      // Check that the custom pull request URL is used
+      // Check that the custom pull request URL with parameters is used
       const pullRequests = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "Pull requests"
       );
       expect(pullRequests).toBeTruthy();
       expect(pullRequests.querySelector("a").href).toBe(
-        "https://github.com/w3c/aria/pulls/"
+        "https://github.com/w3c/aria/pulls?q=+label%3A%22spec%3Acore-aam%22is%3Apr+is%3Aopen+"
       );
 
       // Check that the custom commit history URL is used
@@ -197,7 +197,7 @@ describe("Core - Github", () => {
       );
       expect(commitHistory).toBeTruthy();
       expect(commitHistory.querySelector("a").href).toBe(
-        "https://github.com/w3c/aria/commits/"
+        "https://github.com/w3c/aria/commits/main/core-aam"
       );
 
       // Issue base should still use repoURL
