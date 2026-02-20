@@ -93,15 +93,18 @@ export async function run(conf) {
   }
   const branch = conf.github.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
-  
+
   // Allow custom pullsURL and commitHistoryURL for monorepo scenarios
   let pullsURL;
-  if (typeof conf.github === "object" && !conf.github.hasOwnProperty("pullsURL")) {
+  if (
+    typeof conf.github === "object" &&
+    !conf.github.hasOwnProperty("pullsURL")
+  ) {
     pullsURL = new URL("./pulls/", ghURL).href;
   } else {
     pullsURL = conf.github.pullsURL;
   }
-  
+
   // Validate pullsURL if it's provided
   if (pullsURL) {
     try {
@@ -122,14 +125,17 @@ export async function run(conf) {
       return;
     }
   }
-  
+
   let commitHistoryURL;
-  if (typeof conf.github === "object" && !conf.github.hasOwnProperty("commitHistoryURL")) {
+  if (
+    typeof conf.github === "object" &&
+    !conf.github.hasOwnProperty("commitHistoryURL")
+  ) {
     commitHistoryURL = new URL(`./commits/${branch}`, ghURL.href).href;
   } else {
     commitHistoryURL = conf.github.commitHistoryURL;
   }
-  
+
   // Validate commitHistoryURL if it's provided
   if (commitHistoryURL) {
     try {
@@ -150,7 +156,7 @@ export async function run(conf) {
       return;
     }
   }
-  
+
   const newProps = {
     edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubToken: undefined,
@@ -206,9 +212,9 @@ export async function run(conf) {
     apiBase: githubAPI,
     fullName: `${org}/${repo}`,
     issuesURL: issueBase,
-    pullsURL: pullsURL,
+    pullsURL,
     newIssuesURL: new URL("./new/choose", issueBase).href,
-    commitHistoryURL: commitHistoryURL,
+    commitHistoryURL,
   };
   resolveGithubPromise(normalizedGHObj);
 

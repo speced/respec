@@ -94,14 +94,18 @@ describe("Core - Github", () => {
       };
       delete opts.config.edDraftURI;
       delete opts.config.shortName;
-      
+
       const doc = await makeRSDoc(opts);
       const { respecConfig: conf } = doc.defaultView;
-      
+
       // Check that the github object is normalized correctly
       expect(conf.github.pullsURL).toBe("https://github.com/w3c/aria/pulls/");
-      expect(conf.github.commitHistoryURL).toBe("https://github.com/w3c/aria/commits/");
-      expect(conf.github.issuesURL).toBe("https://github.com/w3c/core-aam/issues/");
+      expect(conf.github.commitHistoryURL).toBe(
+        "https://github.com/w3c/aria/commits/"
+      );
+      expect(conf.github.issuesURL).toBe(
+        "https://github.com/w3c/core-aam/issues/"
+      );
       expect(conf.github.repoURL).toBe("https://github.com/w3c/core-aam/");
     });
   });
@@ -175,9 +179,9 @@ describe("Core - Github", () => {
       };
       delete customOpt.config.edDraftURI;
       delete customOpt.config.shortName;
-      
+
       const doc = await makeRSDoc(customOpt);
-      
+
       // Check that the custom pull request URL is used
       const pullRequests = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "Pull requests"
@@ -186,7 +190,7 @@ describe("Core - Github", () => {
       expect(pullRequests.querySelector("a").href).toBe(
         "https://github.com/w3c/aria/pulls/"
       );
-      
+
       // Check that the custom commit history URL is used
       const commitHistory = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "Revisiehistorie"
@@ -195,7 +199,7 @@ describe("Core - Github", () => {
       expect(commitHistory.querySelector("a").href).toBe(
         "https://github.com/w3c/aria/commits/"
       );
-      
+
       // Issue base should still use repoURL
       const fileABug = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "Dien een melding in"
