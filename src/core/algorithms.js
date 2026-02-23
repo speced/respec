@@ -3,7 +3,6 @@
 Currently used only for adding 'assert' class to algorithm lists
 */
 import css from "../styles/algorithms.css.js";
-import { html } from "./import-maps.js";
 
 export const name = "core/algorithms";
 
@@ -20,17 +19,21 @@ export function run() {
   for (const li of elements) {
     li.classList.add("assert");
 
-    // Link "Assert" to https://infra.spec.whatwg.org/#assert
+    // Link "Assert" to infra spec using [=Assert=] syntax
+    // Add data-cite="infra" to the li if not already citing infra in the tree
     const textNode = li.firstChild;
     if (
       textNode instanceof Text &&
       textNode.textContent.startsWith("Assert: ")
     ) {
-      textNode.textContent = textNode.textContent.replace("Assert: ", "");
-      li.prepend(
-        html`<a href="https://infra.spec.whatwg.org/#assert">Assert</a>`,
-        ": "
+      textNode.textContent = textNode.textContent.replace(
+        "Assert: ",
+        "[=Assert=]: "
       );
+      // Add data-cite if infra is not already cited in the ancestor tree
+      if (!li.closest("[data-cite~='INFRA' i], [data-cite~='infra' i]")) {
+        li.dataset.cite = "INFRA";
+      }
     }
   }
 
