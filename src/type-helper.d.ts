@@ -120,6 +120,9 @@ interface Conf {
   biblio: Record<string, BiblioData>;
   editors?: Person[];
   formerEditors?: Person[];
+  unicode?: {
+    apiUrl?: string;
+  };
   /** Set of informative references */
   informativeReferences: Set<string>;
   localBiblio?: Record<string, BiblioData>;
