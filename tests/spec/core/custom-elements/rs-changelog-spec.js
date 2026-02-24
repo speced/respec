@@ -48,4 +48,18 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
     expect(commitLink.href).toBe("https://github.com/org/repo/commit/276f4ba");
     expect(prLink.href).toBe("https://github.com/org/repo/pull/869");
   });
+
+  it("uses custom repo parameter to override config", async () => {
+    const body = `<rs-changelog from="CR2" to="HEAD" repo="custom/other-repo"></rs-changelog>`;
+    const ops = makeStandardOps(conf, body);
+    const doc = await makeRSDoc(ops);
+
+    const commits = doc.querySelectorAll("rs-changelog li");
+    expect(commits).toHaveSize(8);
+    const firstCommit = commits[0];
+    // Verify links point to the custom repo, not the config repo
+    const links = firstCommit.querySelectorAll("a");
+    expect(links).toHaveSize(1);
+    expect(links[0].href).toBe("https://github.com/custom/other-repo/commit/80aad0a");
+  });
 });
