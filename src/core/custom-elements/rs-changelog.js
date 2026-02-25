@@ -60,22 +60,12 @@ async function fetchCommits(from, to, filter, repo, path) {
   /** @type {Commit[]} */
   let commits;
   try {
-    let apiBase, fullName;
-    
-    if (repo) {
-      // Use repo provided as attribute (e.g., "owner/repo")
-      apiBase = "https://respec.org/github";
-      fullName = repo;
-    } else {
-      // Fall back to respecConfig.github
-      const gh = await github;
-      if (!gh) {
-        throw new Error("`respecConfig.github` is not set");
-      }
-      apiBase = gh.apiBase;
-      fullName = gh.fullName;
+    const gh = await github;
+    if (!gh) {
+      throw new Error("`respecConfig.github` is not set");
     }
-    
+    const apiBase = gh.apiBase;
+    const fullName = repo || gh.fullName;
     const url = new URL("commits", `${apiBase}/${fullName}/`);
     url.searchParams.set("from", from);
     url.searchParams.set("to", to);
