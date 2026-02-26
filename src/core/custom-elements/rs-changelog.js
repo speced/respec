@@ -42,7 +42,7 @@ export const element = class ChangelogElement extends HTMLElement {
       <ul>
       ${{
         any: fetchCommits(from, to, filter, repo, path)
-          .then(commits => toHTML(commits, repo))
+          .then(commits => toHTML(commits))
           .catch(error =>
             showError(error.message, name, { elements: [this], cause: error })
           )
@@ -64,9 +64,8 @@ async function fetchCommits(from, to, filter, repo, path) {
     if (!gh) {
       throw new Error("`respecConfig.github` is not set");
     }
-    const apiBase = gh.apiBase;
     const fullName = repo || gh.fullName;
-    const url = new URL("commits", `${apiBase}/${fullName}/`);
+    const url = new URL("commits", `${gh.apiBase}/${fullName}/`);
     url.searchParams.set("from", from);
     url.searchParams.set("to", to);
     if (path) {
@@ -91,18 +90,8 @@ async function fetchCommits(from, to, filter, repo, path) {
   return commits;
 }
 
-async function toHTML(commits, repo) {
-  let repoURL;
-  
-  if (repo) {
-    // Construct repoURL from repo (e.g., "owner/repo" -> "https://github.com/owner/repo/")
-    repoURL = `https://github.com/${repo}/`;
-  } else {
-    // Use the default repoURL from respecConfig.github
-    const gh = await github;
-    repoURL = gh.repoURL;
-  }
-  
+async function toHTML(commits) {
+  const { repoURL } = await github;
   return commits.map(commit => {
     const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
     const commitURL = `${repoURL}commit/${commit.hash}`;
