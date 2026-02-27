@@ -55,11 +55,13 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
     const doc = await makeRSDoc(ops);
 
     const commits = doc.querySelectorAll("rs-changelog li");
-    expect(commits).toHaveSize(8);
+    expect(commits).toHaveSize(2);
     const firstCommit = commits[0];
     // Verify links point to the custom repo, not the config repo
     const links = firstCommit.querySelectorAll("a");
-    expect(links).toHaveSize(1);
-    expect(links[0].href).toBe("https://github.com/org/corp/commit/80aad0a");
+    expect(links).toHaveSize(2);
+    const [commitLink, prLink] = links;
+    expect(commitLink.href).toBe("https://github.com/corp/repo/commit/80aad0a");
+    expect(prLink.href).toBe("https://github.com/corp/repo/pull/869");
   });
 });
