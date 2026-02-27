@@ -92,9 +92,7 @@ async function fetchCommits(from, to, filter, repo, path) {
 
 async function toHTML(commits, repo) {
   const gh = await github;
-  const repoURL = repo
-    ? `https://github.com/${repo}/`
-    : gh.repoURL;
+  const repoURL = repo ? `https://github.com/${repo}/` : gh.repoURL;
   return commits.map(commit => {
     const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
     const commitURL = `${repoURL}commit/${commit.hash}`;
