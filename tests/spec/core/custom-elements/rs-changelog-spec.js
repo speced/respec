@@ -50,7 +50,7 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
   });
 
   it("uses custom repo parameter to override config", async () => {
-    const body = `<rs-changelog from="CR2" to="HEAD" repo="org/repo"></rs-changelog>`;
+    const body = `<rs-changelog from="CR2" to="HEAD" repo="corp/repo"></rs-changelog>`;
     const ops = makeStandardOps(conf, body);
     const doc = await makeRSDoc(ops);
 
