@@ -42,7 +42,7 @@ export const element = class ChangelogElement extends HTMLElement {
       <ul>
       ${{
         any: fetchCommits(from, to, filter, repo, path)
-          .then(commits => toHTML(commits))
+          .then(commits => toHTML(commits, repo))
           .catch(error =>
             showError(error.message, name, { elements: [this], cause: error })
           )
@@ -90,8 +90,11 @@ async function fetchCommits(from, to, filter, repo, path) {
   return commits;
 }
 
-async function toHTML(commits) {
-  const { repoURL } = await github;
+async function toHTML(commits, repo) {
+  const gh = await github;
+  const repoURL = repo
+    ? `https://github.com/${repo}/`
+    : gh.repoURL;
   return commits.map(commit => {
     const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
     const commitURL = `${repoURL}commit/${commit.hash}`;
