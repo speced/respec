@@ -60,6 +60,6 @@ describe("Core - Custom Elements - <rs-changelog>", () => {
     // Verify links point to the custom repo, not the config repo
     const links = firstCommit.querySelectorAll("a");
     expect(links).toHaveSize(1);
-    expect(links[0].href).toBe("https://github.com/org/repo/commit/80aad0a");
+    expect(links[0].href).toBe("https://github.com/org/corp/commit/80aad0a");
   });
 });
