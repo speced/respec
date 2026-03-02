@@ -244,7 +244,7 @@ function renderNotRec(conf) {
         </p>`;
       } else {
         reviewPolicy = html`<p>
-          This Candidate Recommendation is not expected to advance to Proposed
+          This Candidate Recommendation is not expected to advance to
           Recommendation any earlier than ${W3CDate.format(conf.crEnd)}.
         </p>`;
       }
