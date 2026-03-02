@@ -27,9 +27,9 @@ jobs:
     name: Headless Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm build:w3c
@@ -52,9 +52,9 @@ jobs:
     name: Karma Unit Tests (Chrome)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm build:w3c & pnpm build:geonovum

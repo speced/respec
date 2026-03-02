@@ -5,6 +5,13 @@
  * function is provided by the user, it is used to filter the commits that are
  * to be shown. Otherwise, all commits are shown.
  *
+ * Optionally, a `path` parameter can be provided to filter commits to only
+ * those that affected a specific file or folder (useful for monorepos).
+ *
+ * Optionally, a `repo` parameter can be provided (e.g., "owner/repo") to
+ * fetch commits from a specific repository, overriding the default repository
+ * from respecConfig.github.
+ *
  * @typedef {{message: string, hash: string}} Commit
  */
 import { github } from "../github.js";
@@ -19,6 +26,8 @@ export const element = class ChangelogElement extends HTMLElement {
     this.props = {
       from: this.getAttribute("from"),
       to: this.getAttribute("to") || "HEAD",
+      repo: this.getAttribute("repo"),
+      path: this.getAttribute("path"),
       /** @type {(commit: Commit) => boolean} */
       filter:
         typeof window[this.getAttribute("filter")] === "function"
@@ -28,12 +37,12 @@ export const element = class ChangelogElement extends HTMLElement {
   }
 
   connectedCallback() {
-    const { from, to, filter } = this.props;
+    const { from, to, filter, repo, path } = this.props;
     html.bind(this)`
       <ul>
       ${{
-        any: fetchCommits(from, to, filter)
-          .then(commits => toHTML(commits))
+        any: fetchCommits(from, to, filter, repo, path)
+          .then(commits => toHTML(commits, repo))
           .catch(error =>
             showError(error.message, name, { elements: [this], cause: error })
           )
@@ -47,7 +56,7 @@ export const element = class ChangelogElement extends HTMLElement {
   }
 };
 
-async function fetchCommits(from, to, filter) {
+async function fetchCommits(from, to, filter, repo, path) {
   /** @type {Commit[]} */
   let commits;
   try {
@@ -55,9 +64,13 @@ async function fetchCommits(from, to, filter) {
     if (!gh) {
       throw new Error("`respecConfig.github` is not set");
     }
-    const url = new URL("commits", `${gh.apiBase}/${gh.fullName}/`);
+    const fullName = repo || gh.fullName;
+    const url = new URL("commits", `${gh.apiBase}/${fullName}/`);
     url.searchParams.set("from", from);
     url.searchParams.set("to", to);
+    if (path) {
+      url.searchParams.set("path", path);
+    }
 
     const res = await fetch(url.href);
     if (!res.ok) {
@@ -77,8 +90,9 @@ async function fetchCommits(from, to, filter) {
   return commits;
 }
 
-async function toHTML(commits) {
-  const { repoURL } = await github;
+async function toHTML(commits, repo) {
+  const gh = await github;
+  const repoURL = repo ? `https://github.com/${repo}/` : gh.repoURL;
   return commits.map(commit => {
     const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
     const commitURL = `${repoURL}commit/${commit.hash}`;

@@ -118,7 +118,7 @@ const status2maturity = {
 };
 
 export const status2text = {
-  DNOTE: "Group Draft Note",
+  DNOTE: "Group Note Draft",
   NOTE: "Group Note",
   STMT: "Statement",
   "Member-SUBM": "Member Submission",
@@ -134,7 +134,7 @@ export const status2text = {
   REC: "Recommendation",
   DISC: "Discontinued Draft",
   RSCND: "Rescinded Recommendation",
-  DRY: "Draft Registry",
+  DRY: "Registry Draft",
   CRYD: "Candidate Registry",
   CRY: "Candidate Registry",
   RY: "Registry",
@@ -663,6 +663,13 @@ function derivePubSpace(conf) {
       return "/2001/tag/doc";
     case "Member-SUBM":
       return `/Submission`;
+  }
+
+  if (
+    (conf.group === "tag" || conf.group === "ab") &&
+    conf.canonicalURI === "TR"
+  ) {
+    return `/TR`;
   }
 
   return "";
