@@ -20,16 +20,16 @@ const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
 
 class Renderer extends marked.Renderer {
-  code(code, infoString, isEscaped) {
-    const { language, ...metaData } = Renderer.parseInfoString(infoString);
+  code({ text, lang, escaped }) {
+    const { language, ...metaData } = Renderer.parseInfoString(lang || "");
 
     // regex to check whether the language is webidl
     if (/(^webidl$)/i.test(language)) {
-      return `<pre class="idl">${code}</pre>`;
+      return `<pre class="idl">${text}</pre>`;
     }
 
     const html = super
-      .code(code, language, isEscaped)
+      .code({ text, lang: language, escaped })
       .replace(`class="language-`, `class="`);
 
     const { example, illegalExample } = metaData;
@@ -40,9 +40,9 @@ class Renderer extends marked.Renderer {
     return html.replace("<pre>", `<pre title="${title}" class="${className}">`);
   }
 
-  image(href, title, text) {
+  image({ href, title, text, tokens }) {
     if (!title) {
-      return super.image(href, title, text);
+      return super.image({ href, title, text, tokens });
     }
     const html = String.raw;
     return html`
@@ -76,20 +76,20 @@ class Renderer extends marked.Renderer {
     return { language, ...metaData };
   }
 
-  heading(text, level, raw) {
+  heading({ tokens, depth, text }) {
     const headingWithIdRegex = /(.+)\s+{#([\w-]+)}$/;
     if (headingWithIdRegex.test(text)) {
       const [, textContent, id] = text.match(headingWithIdRegex);
-      return `<h${level} id="${id}">${textContent}</h${level}>`;
+      return `<h${depth} id="${id}">${textContent}</h${depth}>`;
     }
-    return super.heading(text, level, raw);
+    return super.heading({ tokens, depth });
   }
 }
 
 /** @type {import('marked').MarkedOptions} */
 const config = {
   gfm: true,
-  renderer: new Renderer(),
+  renderer: /** @type {any} */ (new Renderer()),
 };
 
 /**
