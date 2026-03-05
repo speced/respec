@@ -11,7 +11,7 @@
  *
  */
 
-import { getElementIndentation, reindent } from "./utils.js";
+import { getElementIndentation } from "./utils.js";
 import { marked } from "./import-maps.js";
 
 export const name = "core/markdown";
@@ -93,12 +93,36 @@ const config = {
 };
 
 /**
+ * Normalize indentation of text by stripping the leading whitespace determined
+ * from the first non-empty line. This handles mixed-indentation HTML content
+ * where some lines (e.g., from rendered markdown inside sections) may have less
+ * indentation than the outer HTML structure.
+ * @param {string} text
+ */
+function normalizeIndent(text) {
+  if (!text) return text;
+  const lines = text.trimEnd().split("\n");
+  while (lines.length && !lines[0].trim()) {
+    lines.shift();
+  }
+  if (!lines.length) return "";
+  // After the while loop, lines[0] is guaranteed to have non-whitespace content,
+  // so search() will return a non-negative index (0 means no leading whitespace).
+  const firstIndent = lines[0].search(/[^\s]/);
+  if (firstIndent < 1) return lines.join("\n");
+  const prefix = " ".repeat(firstIndent);
+  return lines
+    .map(s => (s.startsWith(prefix) ? s.slice(firstIndent) : s))
+    .join("\n");
+}
+
+/**
  * @param {string} text
  * @param {object} options
  * @param {boolean} options.inline
  */
 export function markdownToHtml(text, options = { inline: false }) {
-  const normalizedLeftPad = reindent(text);
+  const normalizedLeftPad = normalizeIndent(text);
   // As markdown is pulled from HTML, > and & are already escaped and
   // so blockquotes aren't picked up by the parser. This fixes it.
   const potentialMarkdown = normalizedLeftPad
