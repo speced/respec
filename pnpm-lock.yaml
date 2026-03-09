@@ -136,8 +136,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vnu-jar:
-        specifier: ^26.2.19
-        version: 26.2.19
+        specifier: ^26.3.8
+        version: 26.3.8
       webidl2:
         specifier: ^24.5.0
         version: 24.5.0
@@ -657,6 +657,7 @@ packages:
   basic-ftp@5.0.5:
     resolution: {integrity: sha512-4Bcg1P8xhUuqcii/S0Z9wiHIrQVPMermM1any+MX5GeGD7faD3/msQUDGLol9wOcz4/jbg/WJnGqoJF6LiBdtg==}
     engines: {node: '>=10.0.0'}
+    deprecated: Security vulnerability fixed in 5.2.0, please upgrade
 
   binary-extensions@2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
@@ -2542,8 +2543,8 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
-  vnu-jar@26.2.19:
-    resolution: {integrity: sha512-vGjiQPhnPDAuqezRODROI0qn3AwqEs9o6z7kyf2427IlF1ADge/6ytX6sQSpfyVXQ85IDVMNT/0PHVauU1B3gw==}
+  vnu-jar@26.3.8:
+    resolution: {integrity: sha512-kPxPFNo7YgfvzqFOaA7/imj8yfJs+BxtLlxH1h/iZeLUkBdqBbaC/r2/FK6KSlcRRmiSJ2EBojpndMkElHejeg==}
     engines: {node: '>=0.10'}
     hasBin: true
 
@@ -5287,7 +5288,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vnu-jar@26.2.19: {}
+  vnu-jar@26.3.8: {}
 
   void-elements@2.0.1: {}
 
