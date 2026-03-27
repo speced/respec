@@ -2607,7 +2607,7 @@ describe("W3C — Headers", () => {
         const historyLink = history.nextElementSibling.querySelector("a");
         expect(historyLink).withContext(specStatus).toBeTruthy();
         expect(historyLink.href).toBe(
-          `https://www.w3.org/standards/history/${shortName}`
+          `https://www.w3.org/standards/history/${shortName}/`
         );
       });
     }
