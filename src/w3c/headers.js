@@ -412,9 +412,9 @@ export async function run(conf) {
       : pubSpace
         ? w3Url(`${pubSpace}/${conf.shortName}/`)
         : "";
-    if (conf.latestVersion) {
+    if (conf.latestVersion && !conf.isNoTrack) {
       const exists = await resourceExists(conf.latestVersion);
-      if (!exists && conf.specStatus !== "FPWD") {
+      if (exists === null && conf.specStatus !== "FPWD") {
         const msg = `The "Latest published version:" header link points to a URL that does not exist.`;
         const hint = docLink`Check that the ${"[shortname]"} is correct and you are using the right ${"[specStatus]"} for this kind of document.`;
         showWarning(msg, name, { hint });
@@ -499,7 +499,10 @@ export async function run(conf) {
   conf.shortISODate = ISODate.format(conf.publishDate);
   validatePatentPolicies(conf);
 
-  conf.historyURI = await deriveHistoryURI(conf);
+  // Only derive historyURI if not explicitly suppressed by the user (null).
+  if (conf.historyURI !== null) {
+    conf.historyURI = await deriveHistoryURI(conf);
+  }
 
   if (conf.isTagEditorFinding) {
     delete conf.thisVersion;
@@ -785,24 +788,23 @@ async function deriveHistoryURI(conf) {
     // @ts-expect-error -- specStatus is always set by defaults
     ["FPWD", "DNOTE", "NOTE", "DRY"].includes(conf.specStatus)
   ) {
-    conf.historyURI = historyURL.href;
-    return;
+    return historyURL.href;
   }
 
   // Let's get the history from the W3C.
   // Do a fetch HEAD request to see if the history exists...
   // We don't discriminate... if it's on the W3C website with a history,
   // we show it.
-  const exists = await resourceExists(historyURL);
-  return exists ? historyURL.href : null;
+  return await resourceExists(historyURL);
 }
 
+/** @returns {Promise<string|null>} Final URL after redirects, or null if unreachable. */
 async function resourceExists(url) {
   try {
     const response = await fetch(url, { method: "HEAD" });
-    return response.ok;
+    return response.ok ? response.url : null;
   } catch {
-    return false;
+    return null;
   }
 }
 
