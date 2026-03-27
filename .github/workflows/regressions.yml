@@ -17,7 +17,7 @@ jobs:
         with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
       - run: pnpm build:w3c
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: builds
           path: |
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/setup-node@v6
         with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: builds
           path: ./builds/
