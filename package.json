@@ -105,6 +105,9 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "puppeteer"
+    ],
+    "ignoredBuiltDependencies": [
+      "vnu-jar"
     ]
   },
   "funding": {
