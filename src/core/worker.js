@@ -39,7 +39,10 @@ async function createWorker() {
   // Inject the highlight URL so the worker loads hljs from the same location
   // as the ReSpec bundle rather than always fetching from www.w3.org.
   const blob = new Blob(
-    [`self.RESPEC_HIGHLIGHT_URL = ${JSON.stringify(highlightHref)};\n`, workerScript],
+    [
+      `self.RESPEC_HIGHLIGHT_URL = ${JSON.stringify(highlightHref)};\n`,
+      workerScript,
+    ],
     { type: "application/javascript" }
   );
   return new Worker(URL.createObjectURL(blob));
