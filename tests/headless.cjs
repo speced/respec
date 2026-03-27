@@ -4,7 +4,7 @@ const { exec } = require("child_process");
 const http = require("http");
 const serveHandler = require("serve-handler");
 
-const port = 5000;
+const port = 8000;
 const timeout = 30; // seconds
 
 describe("Headless (examples)", () => {
