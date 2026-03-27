@@ -57,11 +57,14 @@ async function createWorker() {
   ]);
 
   // If we fetched the script, inline it directly (no importScripts needed).
-  // Otherwise inject the URL so the worker can importScripts() it.
+  // Otherwise fall back to the canonical production URL for importScripts().
+  // We don't use highlightHref here because in source-module mode (e.g. dev
+  // server) import.meta.url resolves to the module file, not the bundle, so
+  // the derived URL would be wrong.
   const preamble =
     highlightScript !== null
       ? `${highlightScript}\n`
-      : `self.RESPEC_HIGHLIGHT_URL = ${JSON.stringify(highlightHref)};\n`;
+      : `self.RESPEC_HIGHLIGHT_URL = "https://www.w3.org/Tools/respec/respec-highlight";\n`;
 
   const blob = new Blob([preamble, workerScript], {
     type: "application/javascript",
