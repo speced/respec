@@ -82,8 +82,9 @@ class Renderer extends marked.Renderer {
     const text = this.parser.parseInline(token.tokens);
     const level = token.depth;
     const headingWithIdRegex = /(.+)\s+{#([\w-]+)}$/;
-    if (headingWithIdRegex.test(text)) {
-      const [, textContent, id] = text.match(headingWithIdRegex);
+    const match = text.match(headingWithIdRegex);
+    if (match) {
+      const [, textContent, id] = match;
       return `<h${level} id="${id}">${textContent}</h${level}>`;
     }
     return super.heading(token);
@@ -108,14 +109,13 @@ const config = {
 function normalizeIndent(text) {
   if (!text) return text;
   const lines = text.trimEnd().split("\n");
-  while (lines.length && !lines[0].trim()) {
-    lines.shift();
-  }
-  if (!lines.length) return "";
-  const firstIndent = lines[0].search(/[^\s]/);
-  if (firstIndent < 1) return lines.join("\n");
+  const firstNonEmpty = lines.findIndex(l => l.trim());
+  if (firstNonEmpty === -1) return "";
+  const nonEmptyLines = lines.slice(firstNonEmpty);
+  const firstIndent = nonEmptyLines[0].search(/[^\s]/);
+  if (firstIndent < 1) return nonEmptyLines.join("\n");
   const prefix = " ".repeat(firstIndent);
-  return lines
+  return nonEmptyLines
     .map(s => (s.startsWith(prefix) ? s.slice(firstIndent) : s))
     .join("\n");
 }
