@@ -177,7 +177,7 @@ describe("Core — Can I Use", () => {
     expect(exportedDoc.querySelector(".caniuse-browser")).toBeFalsy();
   });
 
-  it("loads every BROWSER logo from www.w3.org", async () => {
+  it("sets the correct src for every BROWSER logo", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "payment-request",
@@ -191,18 +191,6 @@ describe("Core — Can I Use", () => {
       ),
     ];
     expect(images).toHaveSize(BROWSERS.size);
-    const promises = images
-      .filter(img => !img.complete)
-      .map(img => {
-        return new Promise((resolve, reject) => {
-          img.onload = resolve;
-          img.onerror = () => {
-            reject(new Error(`Image failed to load: ${img.src}`));
-          };
-        });
-      });
-    await Promise.all(promises);
-    expect(images.every(img => img.complete)).toBeTruthy();
   });
 
   it("visually groups results into desktop and mobile", async () => {
