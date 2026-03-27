@@ -16,6 +16,13 @@ import { fetchBase } from "./text-loader.js";
 // import.meta.url resolves to the script element's src (captured at load time).
 const highlightHref = new URL("respec-highlight.js", import.meta.url).href;
 
+// Canonical production URL used as the importScripts() fallback. This differs
+// from highlightHref because in source-module mode (dev server, headless tests)
+// import.meta.url resolves to the module file rather than the bundle, making
+// the derived URL wrong. The production URL is always correct for importScripts.
+const PRODUCTION_HIGHLIGHT_URL =
+  "https://www.w3.org/Tools/respec/respec-highlight";
+
 /** @type ResourceHintOption */
 const hint = {
   hint: "preload",
@@ -56,15 +63,12 @@ async function createWorker() {
     fetchHighlightScript(),
   ]);
 
-  // If we fetched the script, inline it directly (no importScripts needed).
-  // Otherwise fall back to the canonical production URL for importScripts().
-  // We don't use highlightHref here because in source-module mode (e.g. dev
-  // server) import.meta.url resolves to the module file, not the bundle, so
-  // the derived URL would be wrong.
+  // Inline the highlight script if fetched (no importScripts needed).
+  // Fall back to the production URL for importScripts() if the fetch failed.
   const preamble =
     highlightScript !== null
       ? `${highlightScript}\n`
-      : `self.RESPEC_HIGHLIGHT_URL = "https://www.w3.org/Tools/respec/respec-highlight";\n`;
+      : `self.RESPEC_HIGHLIGHT_URL = "${PRODUCTION_HIGHLIGHT_URL}";\n`;
 
   const blob = new Blob([preamble, workerScript], {
     type: "application/javascript",
