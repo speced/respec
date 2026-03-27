@@ -11,11 +11,16 @@ export const name = "core/worker";
 import { createResourceHint } from "./utils.js";
 import { expose } from "./expose-modules.js";
 import { fetchBase } from "./text-loader.js";
-// Opportunistically preload syntax highlighter
+
+// Derive the highlight URL from the ReSpec bundle location so tests can load
+// it locally instead of always fetching from www.w3.org. In the IIFE bundle,
+// import.meta.url resolves to the script element's src (captured at load time).
+const highlightHref = new URL("respec-highlight.js", import.meta.url).href;
+
 /** @type ResourceHintOption */
 const hint = {
   hint: "preload",
-  href: "https://www.w3.org/Tools/respec/respec-highlight",
+  href: highlightHref,
   as: "script",
 };
 const link = createResourceHint(hint);
@@ -31,10 +36,13 @@ async function loadWorkerScript() {
 
 async function createWorker() {
   const workerScript = await loadWorkerScript();
-  const workerURL = URL.createObjectURL(
-    new Blob([workerScript], { type: "application/javascript" })
+  // Inject the highlight URL so the worker loads hljs from the same location
+  // as the ReSpec bundle rather than always fetching from www.w3.org.
+  const blob = new Blob(
+    [`self.RESPEC_HIGHLIGHT_URL = ${JSON.stringify(highlightHref)};\n`, workerScript],
+    { type: "application/javascript" }
   );
-  return new Worker(workerURL);
+  return new Worker(URL.createObjectURL(blob));
 }
 
 export const workerPromise = createWorker();
