@@ -2422,6 +2422,7 @@ describe("W3C — Headers", () => {
         shortName: "appmanifest",
         specStatus: "WD",
         group: "webapps",
+        historyURI: "https://www.w3.org/standards/history/appmanifest/",
       });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
@@ -2443,6 +2444,7 @@ describe("W3C — Headers", () => {
         shortName: "appmanifest",
         specStatus: "WD",
         group: "webapps",
+        historyURI: "https://www.w3.org/standards/history/appmanifest/",
       });
       const doc = await makeRSDoc(ops);
       const commitHistory = doc.querySelector(
@@ -2546,10 +2548,12 @@ describe("W3C — Headers", () => {
       expect(commits).toBeTruthy();
     });
 
-    it("derives the historyURI automatically when it's missing, but the document is on TR", async () => {
+    it("shows the history link for ED docs on TR", async () => {
       const ops = makeStandardOps({
         shortName: "payment-request",
         specStatus: "ED",
+        group: "webapps",
+        historyURI: "https://www.w3.org/standards/history/payment-request/",
       });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
@@ -2569,6 +2573,7 @@ describe("W3C — Headers", () => {
           shortName,
           specStatus,
           group: "webapps",
+          historyURI: `https://www.w3.org/standards/history/${shortName}/`,
         });
         const doc = await makeRSDoc(ops);
         const [history] = contains(doc, ".head dt", "History:");
