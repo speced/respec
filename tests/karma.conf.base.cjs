@@ -46,7 +46,7 @@ module.exports = config => {
       require("karma-jasmine-html-reporter"),
       require("karma-chrome-launcher"),
       require("karma-firefox-launcher"),
-      require("karma-safari-launcher"),
+      require("./karma.safari.cjs"),
     ],
     frameworks: ["jasmine"],
     files,
