@@ -873,8 +873,6 @@ interface ReadOnlySetLike {
     const target = doc.querySelector("#comments-basic > code");
     // Remove the header, as we are not interested in it.
     const text =
-      // eslint-disable-next-line prettier/prettier
-      // eslint-disable-next-line prefer-template
       `
 [Exposed=Window]
 interface SuperStar {
@@ -883,7 +881,6 @@ interface SuperStar {
   /* This one
      has
      three. */` +
-      // eslint-disable-next-line no-useless-escape
       "\n  \n" +
       `};`;
     expect(target.textContent).toBe(text.trim());
