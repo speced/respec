@@ -91,6 +91,10 @@ dfn {
   background: #d1edfd;
   box-shadow: 0 0 0 0.125em #1ca5f940;
 }
+.dfn-panel .marker.dfn-noexport {
+  background: #fde8d1;
+  box-shadow: 0 0 0 0.125em #f9a04040;
+}
 .dfn-panel .marker.idl-block {
   background: #8ccbf2;
   box-shadow: 0 0 0 0.125em #0670b161;

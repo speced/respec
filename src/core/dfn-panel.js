@@ -79,6 +79,13 @@ function createPanel(dfn) {
 
 /** @param {HTMLElement} dfn */
 function dfnExportedMarker(dfn) {
+  if (dfn.matches("dfn[data-noexport]")) {
+    return html`<span
+      class="marker dfn-noexport"
+      title="Definition is not exported and cannot be referenced by other specifications"
+      >not exported</span
+    >`;
+  }
   if (!dfn.matches("dfn[data-export]")) return null;
   return html`<span
     class="marker dfn-exported"

@@ -226,6 +226,21 @@ describe("Core — dfnPanel", () => {
     expect(panelDfnNotExported.querySelector(".dfn-exported")).toBeFalsy();
   });
 
+  it("renders a 'not exported' marker on data-noexport definitions", async () => {
+    const body = `
+      <section>
+        <h2>heading</h2>
+        <p><dfn data-noexport>hidden term</dfn></p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const panel = doc.getElementById(getPanelId("dfn-hidden-term"));
+    const marker = panel.querySelector(".marker.dfn-noexport");
+    expect(marker).toBeTruthy();
+    expect(marker.textContent).toBe("not exported");
+    expect(panel.querySelector(".dfn-exported")).toBeFalsy();
+  });
+
   it("renders a link to jump to IDL block", async () => {
     const body = `
       <section data-dfn-for="Foo">
