@@ -84,13 +84,6 @@ function SafariLauncher(logger, baseBrowserDecorator) {
     safariDriver.stderr.on("data", d =>
       log.debug("safaridriver:", d.toString().trim())
     );
-    safariDriver.on("error", err => {
-      log.error(
-        "safaridriver failed to start — is it installed and enabled? Run: sudo safaridriver --enable",
-        err.message
-      );
-      this._done("failure");
-    });
     safariDriver.on("exit", (code, signal) => {
       if (sessionId) {
         log.error(
@@ -99,8 +92,24 @@ function SafariLauncher(logger, baseBrowserDecorator) {
       }
     });
 
-    // Wait for safaridriver to be ready
-    await new Promise(r => setTimeout(r, 500));
+    // Wait for safaridriver to be ready, but reject immediately if the
+    // process errors (e.g. not installed or not enabled).
+    try {
+      await new Promise((resolve, reject) => {
+        safariDriver.on("error", err => {
+          log.error(
+            "safaridriver failed to start — is it installed and enabled? Run: sudo safaridriver --enable",
+            err.message
+          );
+          reject(err);
+        });
+        setTimeout(resolve, 500);
+      });
+    } catch {
+      await cleanup();
+      this._done("failure");
+      return;
+    }
 
     try {
       // Create a W3C WebDriver session (opens a new Safari window)
