@@ -350,6 +350,17 @@ describe("Core - Inlines", () => {
     expect(badOne.textContent).toBe("#does-not-exist");
   });
 
+  it("does not process [[[#id#invalid]]] with multiple hash fragments", async () => {
+    const body = `
+      <section id="section"><h2>Section</h2></section>
+      <p id="output">[[[#section#invalid]]]</p>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const output = doc.getElementById("output");
+    expect(output.querySelector("a")).toBeNull();
+    expect(output.textContent.trim()).toBe("[[[#section#invalid]]]");
+  });
+
   it("proceseses backticks inside [= =] inline links", async () => {
     const body = `
       <section>
