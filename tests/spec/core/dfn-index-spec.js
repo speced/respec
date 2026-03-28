@@ -156,7 +156,7 @@ describe("Core — dfn-index", () => {
     });
 
     it("does not crash when a dfn is in an unnumbered section (e.g. abstract)", async () => {
-      // Regression test for https://github.com/speced/respec/issues/XXXX
+      // Regression test for https://github.com/speced/respec/issues/5133
       // dfn-index.js:appendSectionNumbers() was crashing with
       // "Cannot read properties of null (reading 'textContent')"
       // when a <dfn> appeared in the abstract or other unnumbered section.
@@ -176,8 +176,8 @@ describe("Core — dfn-index", () => {
       expect(index).toBeTruthy();
 
       // The term should appear in the index
-      const terms = [...index.querySelectorAll("ul.index > li")].map(li =>
-        li.textContent.trim().split(/\s/)[0]
+      const terms = [...index.querySelectorAll("ul.index > li")].map(
+        li => li.textContent.trim().split(/\s/)[0]
       );
       expect(terms).toContain("my-concept");
 
