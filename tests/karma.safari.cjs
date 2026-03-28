@@ -24,6 +24,7 @@ function webdriver(method, path, body) {
         port: SAFARIDRIVER_PORT,
         path,
         method,
+        timeout: 10000,
         headers: {
           "Content-Type": "application/json",
           ...(data ? { "Content-Length": Buffer.byteLength(data) } : {}),
@@ -33,6 +34,14 @@ function webdriver(method, path, body) {
         let raw = "";
         res.on("data", chunk => (raw += chunk));
         res.on("end", () => {
+          if (res.statusCode >= 400) {
+            reject(
+              new Error(
+                `WebDriver ${method} ${path} → ${res.statusCode}: ${raw}`
+              )
+            );
+            return;
+          }
           try {
             resolve(JSON.parse(raw));
           } catch {
@@ -42,6 +51,11 @@ function webdriver(method, path, body) {
       }
     );
     req.on("error", reject);
+    req.on("timeout", () => {
+      req.destroy(
+        new Error(`WebDriver request timed out: ${method} ${path}`)
+      );
+    });
     if (data) req.write(data);
     req.end();
   });
@@ -54,12 +68,36 @@ function SafariLauncher(logger, baseBrowserDecorator) {
   let safariDriver = null;
   let sessionId = null;
 
+  const cleanup = async () => {
+    if (sessionId) {
+      await webdriver("DELETE", `/session/${sessionId}`).catch(() => {});
+      sessionId = null;
+    }
+    if (safariDriver) {
+      safariDriver.kill();
+      safariDriver = null;
+    }
+  };
+
   this._start = async url => {
-    // Start safaridriver
     safariDriver = spawn("safaridriver", ["--port", String(SAFARIDRIVER_PORT)]);
     safariDriver.stderr.on("data", d =>
       log.debug("safaridriver:", d.toString().trim())
     );
+    safariDriver.on("error", err => {
+      log.error(
+        "safaridriver failed to start — is it installed and enabled? Run: sudo safaridriver --enable",
+        err.message
+      );
+      this._done("failure");
+    });
+    safariDriver.on("exit", (code, signal) => {
+      if (sessionId) {
+        log.error(
+          `safaridriver exited unexpectedly (code=${code} signal=${signal})`
+        );
+      }
+    });
 
     // Wait for safaridriver to be ready
     await new Promise(r => setTimeout(r, 500));
@@ -77,19 +115,13 @@ function SafariLauncher(logger, baseBrowserDecorator) {
       log.info("Safari launched at", url);
     } catch (err) {
       log.error("Failed to start Safari:", err.message);
+      await cleanup();
       this._done("failure");
     }
   };
 
   this.on("kill", async done => {
-    if (sessionId) {
-      await webdriver("DELETE", `/session/${sessionId}`).catch(() => {});
-      sessionId = null;
-    }
-    if (safariDriver) {
-      safariDriver.kill();
-      safariDriver = null;
-    }
+    await cleanup();
     done();
   });
 }
