@@ -1,5 +1,5 @@
 "use strict";
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { flushIframes, makeRSDoc, makeStandardOps } from "../../SpecHelper.js";
 
 describe("Core — no-dfn-in-abstract", () => {
   afterAll(flushIframes);
@@ -10,7 +10,8 @@ describe("Core — no-dfn-in-abstract", () => {
         <p>This spec defines <dfn>my-term</dfn>.</p>
       </section>
       <section id="content"><h2>Content</h2></section>`;
-    const ops = makeStandardOps(null, body);
+    // lint: true enables the linter but this rule is not opted in — verifies opt-in behaviour
+    const ops = makeStandardOps({ lint: true }, body);
     const doc = await makeRSDoc(ops);
     expect(
       doc.respec.warnings.filter(w => w.plugin.includes("no-dfn-in-abstract"))
