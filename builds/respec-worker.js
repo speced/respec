@@ -1,12 +1,8 @@
 // ReSpec Worker v1.0.0
-// hljs is either inlined by core/worker.js (preferred) or loaded below via
-// importScripts as a fallback when the inline fetch was not possible.
-if (typeof self.hljs === "undefined" && self.RESPEC_HIGHLIGHT_URL) {
-  try {
-    importScripts(self.RESPEC_HIGHLIGHT_URL);
-  } catch (err) {
-    console.error("Network error loading highlighter", err);
-  }
+try {
+  importScripts("https://www.w3.org/Tools/respec/respec-highlight");
+} catch (err) {
+  console.error("Network error loading highlighter", err);
 }
 
 self.addEventListener("message", ({ data: originalData }) => {
