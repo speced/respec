@@ -68,7 +68,7 @@ function createPanel(dfn) {
           aria-label="Permalink for definition: ${definition}. Activate to close this dialog."
           >Permalink</a
         >
-        ${dfnExportedMarker(dfn)} ${idlMarker(dfn, links)}
+        ${dfnExportMarker(dfn)} ${idlMarker(dfn, links)}
       </div>
       <p><b>Referenced in:</b></p>
       ${referencesToHTML(id, links)}
@@ -78,7 +78,7 @@ function createPanel(dfn) {
 }
 
 /** @param {HTMLElement} dfn */
-function dfnExportedMarker(dfn) {
+function dfnExportMarker(dfn) {
   if (dfn.matches("dfn[data-noexport]")) {
     return html`<span
       class="marker dfn-noexport"
