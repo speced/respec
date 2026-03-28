@@ -1,5 +1,5 @@
 // @ts-check
-import { fetchAndCache, getIntlData, showError } from "./utils.js";
+import { docLink, fetchAndCache, getIntlData, showError } from "./utils.js";
 import css from "../styles/mdn-annotation.css.js";
 import { html } from "./import-maps.js";
 
@@ -177,7 +177,7 @@ async function getMdnData(key, mdnConf) {
   const res = await fetchAndCache(url, maxAge);
   if (res.status === 404) {
     const msg = `Could not find MDN data associated with key "${key}".`;
-    const hint = "Please add a valid key to `respecConfig.mdn`";
+    const hint = docLink`If using \`mdn: true\`, check that ${"[shortName]"} is set correctly — the MDN key defaults to the spec's shortName. Otherwise, search for your spec's URL in the [MDN spec links map](https://github.com/w3c/mdn-spec-links/blob/main/SPECMAP.json) to find the correct key, then set ${"[mdn]"} to it.`;
     showError(msg, name, { hint });
     return;
   }
