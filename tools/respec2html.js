@@ -13,25 +13,28 @@ import { toHTML } from "./respecDocWriter.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 class Renderer extends marked.Renderer {
-  strong(text) {
-    return colors.bold(text);
+  strong(token) {
+    return colors.bold(this.parser.parseInline(token.tokens));
   }
-  em(text) {
-    return colors.italic(text);
+  em(token) {
+    return colors.italic(this.parser.parseInline(token.tokens));
   }
-  codespan(text) {
-    return colors.underline(unescape(text));
+  codespan(token) {
+    return colors.underline(unescape(token.text));
   }
-  paragraph(text) {
-    return unescape(text);
+  paragraph(token) {
+    return unescape(this.parser.parseInline(token.tokens));
   }
-  link(href, _title, text) {
-    return `[${text}](${colors.blue.dim.underline(href)})`;
+  link(token) {
+    const text = this.parser.parseInline(token.tokens);
+    return `[${text}](${colors.blue.dim.underline(token.href)})`;
   }
-  list(body, _orderered) {
+  list(token) {
+    const body = token.items.map(item => this.listitem(item)).join("");
     return `\n${body}`;
   }
-  listitem(text) {
+  listitem(token) {
+    const text = this.parser.parseInline(token.tokens);
     return `* ${text}\n`;
   }
 }
@@ -85,7 +88,7 @@ class Logger {
 
   _formatMarkdown(str) {
     if (typeof str !== "string") return str;
-    return marked(str, { smartypants: true, renderer: new Renderer() });
+    return marked(str, { renderer: new Renderer() });
   }
 
   /** @param {import("./respecDocWriter").ReSpecError} rsError */
