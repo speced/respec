@@ -11,11 +11,22 @@ export const name = "core/worker";
 import { createResourceHint } from "./utils.js";
 import { expose } from "./expose-modules.js";
 import { fetchBase } from "./text-loader.js";
-// Opportunistically preload syntax highlighter
+
+// Derive the highlight URL from the ReSpec bundle location. In the IIFE bundle,
+// import.meta.url resolves to the script element's src (captured at load time).
+const highlightHref = new URL("respec-highlight.js", import.meta.url).href;
+
+// Canonical production URL used as the importScripts() fallback. This differs
+// from highlightHref because in source-module mode (dev server, headless tests)
+// import.meta.url resolves to the module file rather than the bundle, making
+// the derived URL wrong. The production URL is always correct for importScripts.
+const PRODUCTION_HIGHLIGHT_URL =
+  "https://www.w3.org/Tools/respec/respec-highlight";
+
 /** @type ResourceHintOption */
 const hint = {
   hint: "preload",
-  href: "https://www.w3.org/Tools/respec/respec-highlight",
+  href: highlightHref,
   as: "script",
 };
 const link = createResourceHint(hint);
@@ -29,12 +40,40 @@ async function loadWorkerScript() {
   }
 }
 
+/**
+ * Fetch the highlight script in the main thread so it can be inlined directly
+ * into the worker blob. This avoids importScripts() from a blob worker, which
+ * Firefox blocks for cross-origin URLs in some environments.
+ * Falls back to injecting the URL for importScripts() if the fetch fails
+ * (e.g. cross-origin without CORS headers in production).
+ */
+async function fetchHighlightScript() {
+  try {
+    const response = await fetch(highlightHref);
+    if (response.ok) return await response.text();
+  } catch {
+    // Network unavailable or CORS error — fall back to URL injection
+  }
+  return null;
+}
+
 async function createWorker() {
-  const workerScript = await loadWorkerScript();
-  const workerURL = URL.createObjectURL(
-    new Blob([workerScript], { type: "application/javascript" })
-  );
-  return new Worker(workerURL);
+  const [workerScript, highlightScript] = await Promise.all([
+    loadWorkerScript(),
+    fetchHighlightScript(),
+  ]);
+
+  // Inline the highlight script if fetched (no importScripts needed).
+  // Fall back to the production URL for importScripts() if the fetch failed.
+  const preamble =
+    highlightScript !== null
+      ? `${highlightScript}\n`
+      : `self.RESPEC_HIGHLIGHT_URL = "${PRODUCTION_HIGHLIGHT_URL}";\n`;
+
+  const blob = new Blob([preamble, workerScript], {
+    type: "application/javascript",
+  });
+  return new Worker(URL.createObjectURL(blob));
 }
 
 export const workerPromise = createWorker();
