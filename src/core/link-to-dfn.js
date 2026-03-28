@@ -5,6 +5,7 @@
 import {
   CaseInsensitiveMap,
   addId,
+  docLink,
   getIntlData,
   getLinkTargets,
   showError,
@@ -312,7 +313,14 @@ function showLinkingError(elems) {
   elems.forEach(elem => {
     const msg = `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``;
     const title = "Linking error: not matching `<dfn>`";
-    showWarning(msg, name, { title, elements: [elem] });
+    // Check if the link is inside a data-dfn-for section — a common footgun
+    // where [=global-term=] gets scoped to the interface and fails.
+    const scopedSection = elem.closest("[data-dfn-for]");
+    const scopingNote = scopedSection
+      ? ` This link is inside a \`data-dfn-for="${scopedSection.dataset.dfnFor}"\` section — \`[=term=]\` links are scoped to that context. Use \`<a>term</a>\` for global concepts instead.`
+      : "";
+    const hint = `Add a matching \`<dfn>\` element, ${docLink`use ${"[data-cite]"} to link to an external definition, or enable ${"[xref]"} for automatic cross-spec linking.`}${scopingNote}`;
+    showWarning(msg, name, { title, hint, elements: [elem] });
   });
 }
 
