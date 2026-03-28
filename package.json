@@ -60,7 +60,7 @@
     "serve-handler": "^6.1.6",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^5.9.3",
-    "vnu-jar": "^26.2.19",
+    "vnu-jar": "^26.3.24",
     "webidl2": "^24.5.0"
   },
   "scripts": {
