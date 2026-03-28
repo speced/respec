@@ -155,6 +155,39 @@ describe("Core — dfn-index", () => {
       expect(item.textContent.endsWith("§1.")).toBeTrue();
     });
 
+    it("does not crash when a dfn is in an unnumbered section (e.g. abstract)", async () => {
+      // Regression test for https://github.com/speced/respec/issues/XXXX
+      // dfn-index.js:appendSectionNumbers() was crashing with
+      // "Cannot read properties of null (reading 'textContent')"
+      // when a <dfn> appeared in the abstract or other unnumbered section.
+      const bodyWithAbstractDfn = `
+        <section id="abstract">
+          <p>This spec defines the <dfn>my-concept</dfn>.</p>
+        </section>
+        <section id="content">
+          <h2>Content</h2>
+          <p>[=my-concept=] is used here.</p>
+        </section>
+        <section id="index"></section>`;
+      const ops = makeStandardOps(null, bodyWithAbstractDfn);
+      // Should not throw
+      const doc = await makeRSDoc(ops);
+      const index = doc.getElementById("index-defined-here");
+      expect(index).toBeTruthy();
+
+      // The term should appear in the index
+      const terms = [...index.querySelectorAll("ul.index > li")].map(li =>
+        li.textContent.trim().split(/\s/)[0]
+      );
+      expect(terms).toContain("my-concept");
+
+      // But it should NOT have a §N section number (no .secno in abstract)
+      const myConceptItem = [...index.querySelectorAll("ul.index > li")].find(
+        li => li.textContent.includes("my-concept")
+      );
+      expect(myConceptItem.querySelector(".print-only")).toBeNull();
+    });
+
     it("prefer-full-spec-title class doesn't affect local terms", async () => {
       const body = `<section id="content">
           <h2>Whatever</h2>
