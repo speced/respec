@@ -194,6 +194,17 @@ describe("W3C — Headers", () => {
       expect(result2).toBeTruthy();
     });
 
+    it("does not require crEnd for CRD", async () => {
+      const ops = makeStandardOps({
+        specStatus: "CRD",
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const crEndError = errors.find(e => e.message.includes("crEnd"));
+      expect(crEndError).toBeUndefined();
+    });
+
     describe("specStatus - base", () => {
       it("doesn't add 'w3c' to header when status is base", async () => {
         const ops = makeStandardOps({
