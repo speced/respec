@@ -1,5 +1,5 @@
 // @ts-check
-/* eslint-env node */
+
 const path = require("path");
 
 /** @type {import("karma").ConfigOptions["files"]} */
