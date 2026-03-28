@@ -284,6 +284,27 @@ describe("Core - Inlines", () => {
     expect(notFound.textContent).toBe("[[[not-found]]]");
   });
 
+  it("links to specific section of another spec using [[[SPEC#id]]] syntax", async () => {
+    const config = {
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch#data-fetch]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    expect(anchor.textContent).toBe("Fetch Standard");
+  });
+
   it("allows [[[#...]]] to be a general expander for ids in document", async () => {
     /** @param {string} text */
     function generateDataIncludeUrl(text) {
