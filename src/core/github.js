@@ -192,7 +192,7 @@ export async function run(conf) {
         },
         {
           value: l10n.file_a_bug,
-          href: newProps.issueBase,
+          href: new URL("./new/choose", issueBase).href,
         },
         {
           value: l10n.commit_history,
