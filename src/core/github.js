@@ -72,10 +72,8 @@ export async function run(conf) {
   let tempURL = conf.github.repoURL || conf.github;
   if (!tempURL.endsWith("/")) tempURL += "/";
   /** @type URL */
-  let ghURL;
-  try {
-    ghURL = new URL(tempURL, "https://github.com");
-  } catch {
+  const ghURL = URL.parse(tempURL, "https://github.com");
+  if (!ghURL) {
     const msg = docLink`${"[github]"} configuration option is not a valid URL? (${tempURL}).`;
     rejectGithubPromise(msg);
     return;
@@ -107,20 +105,19 @@ export async function run(conf) {
 
   // Validate pullsURL if it's provided
   if (pullsURL) {
-    try {
-      const pullsURLObj = new URL(pullsURL);
-      if (pullsURLObj.origin !== "https://github.com") {
-        const msg = docLink`${"[github.pullsURL]"} must be HTTPS and pointing to GitHub. (${pullsURL}).`;
-        rejectGithubPromise(msg);
-        return;
-      }
-      if (!pullsURLObj.pathname.includes("/pulls")) {
-        const msg = docLink`${"[github.pullsURL]"} must point to pull requests. (${pullsURL}).`;
-        rejectGithubPromise(msg);
-        return;
-      }
-    } catch {
+    const pullsURLObj = URL.parse(pullsURL);
+    if (!pullsURLObj) {
       const msg = docLink`${"[github.pullsURL]"} is not a valid URL. (${pullsURL}).`;
+      rejectGithubPromise(msg);
+      return;
+    }
+    if (pullsURLObj.origin !== "https://github.com") {
+      const msg = docLink`${"[github.pullsURL]"} must be HTTPS and pointing to GitHub. (${pullsURL}).`;
+      rejectGithubPromise(msg);
+      return;
+    }
+    if (!pullsURLObj.pathname.includes("/pulls")) {
+      const msg = docLink`${"[github.pullsURL]"} must point to pull requests. (${pullsURL}).`;
       rejectGithubPromise(msg);
       return;
     }
@@ -141,20 +138,19 @@ export async function run(conf) {
 
   // Validate commitHistoryURL if it's provided
   if (commitHistoryURL) {
-    try {
-      const commitURLObj = new URL(commitHistoryURL);
-      if (commitURLObj.origin !== "https://github.com") {
-        const msg = docLink`${"[github.commitHistoryURL]"} must be HTTPS and pointing to GitHub. (${commitHistoryURL}).`;
-        rejectGithubPromise(msg);
-        return;
-      }
-      if (!commitURLObj.pathname.includes("/commits")) {
-        const msg = docLink`${"[github.commitHistoryURL]"} must point to commits. (${commitHistoryURL}).`;
-        rejectGithubPromise(msg);
-        return;
-      }
-    } catch {
+    const commitURLObj = URL.parse(commitHistoryURL);
+    if (!commitURLObj) {
       const msg = docLink`${"[github.commitHistoryURL]"} is not a valid URL. (${commitHistoryURL}).`;
+      rejectGithubPromise(msg);
+      return;
+    }
+    if (commitURLObj.origin !== "https://github.com") {
+      const msg = docLink`${"[github.commitHistoryURL]"} must be HTTPS and pointing to GitHub. (${commitHistoryURL}).`;
+      rejectGithubPromise(msg);
+      return;
+    }
+    if (!commitURLObj.pathname.includes("/commits")) {
+      const msg = docLink`${"[github.commitHistoryURL]"} must point to commits. (${commitHistoryURL}).`;
       rejectGithubPromise(msg);
       return;
     }

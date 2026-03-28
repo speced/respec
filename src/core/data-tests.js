@@ -119,12 +119,13 @@ export function run(conf) {
 function toTestURLs(tests, testSuiteURI, elem) {
   return tests
     .map(test => {
-      try {
-        return new URL(test, testSuiteURI).href;
-      } catch {
+      const parsed = URL.parse(test, testSuiteURI);
+      if (!parsed) {
         const msg = docLink`Invalid URL in ${"[data-tests]"} attribute: ${test}.`;
         showWarning(msg, name, { elements: [elem] });
+        return;
       }
+      return parsed.href;
     })
     .filter(href => href);
 }

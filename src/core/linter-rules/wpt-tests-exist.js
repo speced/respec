@@ -54,8 +54,8 @@ export async function run(conf) {
  */
 async function getFilesInWPT(testSuiteURI, githubAPIBase) {
   let wptDirectory;
-  try {
-    const testSuiteURL = new URL(testSuiteURI);
+  const testSuiteURL = URL.parse(testSuiteURI);
+  if (testSuiteURL) {
     if (
       testSuiteURL.pathname.startsWith("/web-platform-tests/wpt/tree/master/")
     ) {
@@ -64,10 +64,9 @@ async function getFilesInWPT(testSuiteURI, githubAPIBase) {
     } else {
       wptDirectory = testSuiteURL.pathname.replace(/\//g, "");
     }
-  } catch (error) {
+  } else {
     const msg = "Failed to parse WPT directory from testSuiteURI";
     showWarning(msg, `linter/${name}`);
-    console.error(error);
     return null;
   }
 
