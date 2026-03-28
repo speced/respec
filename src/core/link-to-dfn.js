@@ -312,12 +312,13 @@ function shouldWrapByCode(elem, term = "") {
 function showLinkingError(elems) {
   elems.forEach(elem => {
     const msg = `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``;
-    const title = "Linking error: not matching `<dfn>`";
+    const title = "Linking error: no matching `<dfn>`";
     // Check if the link is inside a data-dfn-for section — a common footgun
-    // where [=global-term=] gets scoped to the interface and fails.
+    // where authors expect [=term=] to be scoped to the interface, but
+    // data-dfn-for does NOT scope link resolution (data-link-for does).
     const scopedSection = elem.closest("[data-dfn-for]");
     const scopingNote = scopedSection
-      ? ` This link is inside a \`data-dfn-for="${scopedSection.dataset.dfnFor}"\` section — \`[=term=]\` links are scoped to that context. Use \`<a>term</a>\` for global concepts instead.`
+      ? ` This link is inside a \`data-dfn-for="${scopedSection.dataset.dfnFor}"\` section. Note: \`data-dfn-for\` does not scope links — to link to a member, use \`[=${scopedSection.dataset.dfnFor}/term=]\` or add \`data-link-for="${scopedSection.dataset.dfnFor}"\` to the \`<a>\`.`
       : "";
     const hint = `Add a matching \`<dfn>\` element, ${docLink`use ${"[data-cite]"} to link to an external definition, or enable ${"[xref]"} for automatic cross-spec linking.`}${scopingNote}`;
     showWarning(msg, name, { title, hint, elements: [elem] });
