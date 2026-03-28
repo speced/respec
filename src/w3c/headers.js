@@ -403,11 +403,11 @@ export async function run(conf) {
     conf.latestVersion = conf.latestVersion
       ? w3Url(conf.latestVersion)
       : w3Url(`${pubSpace}/${conf.shortName}/`);
-    if (!conf.isNoTrack) {
+    if (!conf.isNoTrack && conf.specStatus !== "FPWD") {
       const exists = await resourceExists(conf.latestVersion);
-      if (exists === null && conf.specStatus !== "FPWD") {
+      if (exists === null) {
         const msg = `The "Latest published version:" header link points to a URL that does not exist.`;
-        const hint = docLink`Check that the ${"[shortname]"} is correct and you are using the right ${"[specStatus]"} for this kind of document.`;
+        const hint = docLink`Check that the ${"[shortName]"} is correct and you are using the right ${"[specStatus]"} for this kind of document.`;
         showWarning(msg, name, { hint });
       }
     }
@@ -735,7 +735,7 @@ async function deriveHistoryURI(conf) {
     const msg = docLink`The ${"[historyURI]"} can't be used with non-standards track documents.`;
     const hint = docLink`Please remove ${"[historyURI]"}.`;
     showError(msg, name, { hint });
-    return conf.historyURI;
+    return null;
   }
 
   const historyURL = new URL(

@@ -1572,7 +1572,7 @@ describe("W3C — Headers", () => {
       );
     });
 
-    for (const specStatus of cgStatus.filter(s => s.endsWith("-DRAFT"))) {
+    for (const specStatus of cgbgStatus.filter(s => s.endsWith("-DRAFT"))) {
       it(`doesn't set latestVersion URL for ${specStatus} status`, async () => {
         const ops = makeStandardOps({
           shortName: "some-report",
