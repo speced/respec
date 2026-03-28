@@ -12,7 +12,8 @@ Grab the [starter spec](examples/starter.html), change the title, add your name 
 
 - [Editor's Guide](https://respec.org/docs/) — complete walkthrough for new spec editors
 - [WebIDL guide](https://respec.org/docs/#WebIDL-Guide) — for JavaScript API specifications
-- [How Do I…](https://github.com/speced/respec/wiki/How-Do-I) — quick answers to common tasks
+
+For quick answers to common tasks, see the [How Do I…](https://github.com/speced/respec/wiki/How-Do-I) wiki page.
 
 > **This repository is for ReSpec's development.** You don't need to clone or fork it to write a spec — just use the starter template above.
 
