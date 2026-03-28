@@ -57,7 +57,7 @@
     "rollup": "^4.57.1",
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "serve": "^14.2.5",
-    "serve-handler": "^6.1.6",
+    "serve-handler": "^6.1.7",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^5.9.3",
     "vnu-jar": "^26.2.19",
