@@ -281,9 +281,9 @@ function renderIsRec(conf) {
   const { revisedRecEnd } = conf;
   const updatableRec = document.querySelector("#sotd.updateable-rec");
   let reviewTarget = "";
-  if (document.querySelector(".proposed-addition")) {
+  if (document.querySelector(".proposed.addition")) {
     reviewTarget = "additions";
-  } else if (document.querySelector(".proposed-correction")) {
+  } else if (document.querySelector(".proposed.correction")) {
     reviewTarget = "corrections";
   }
   return html`
