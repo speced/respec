@@ -306,22 +306,22 @@ function renderIsRec(conf) {
             <a href="${processLink}#allow-new-features">new features</a>.`
         : ""}
     </p>
-    ${document.querySelector(".addition")
+    ${document.querySelector(".addition:not(.proposed)")
       ? html`<p class="addition">
           Candidate additions are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".correction")
+    ${document.querySelector(".correction:not(.proposed)")
       ? html`<p class="correction">
           Candidate corrections are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".proposed-addition")
+    ${document.querySelector(".proposed.addition")
       ? html`<p class="addition proposed">
           Proposed additions are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".proposed-correction")
+    ${document.querySelector(".proposed.correction")
       ? html`<p class="correction proposed">
           Proposed corrections are marked in the document.
         </p>`
@@ -464,8 +464,8 @@ function linkToWorkingGroup(conf) {
     return;
   }
   let changes = null;
-  const proposedAdditions = document.querySelector(".proposed-addition");
-  const proposedCorrections = document.querySelector(".proposed-correction");
+  const proposedAdditions = document.querySelector(".proposed.addition");
+  const proposedCorrections = document.querySelector(".proposed.correction");
   const additions = document.querySelector(".addition");
   const corrections = document.querySelector(".correction");
   const hasRevisions =
