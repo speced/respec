@@ -37,10 +37,10 @@ export default (conf, options) => {
               >
             </dd>`
         : ""}
-      ${"latestVersion" in conf // latestVersion can be falsy
+      ${conf.latestVersion !== null
         ? html`<dt>${l10n.latest_published_version}</dt>
             <dd>
-              ${conf.latestVersion
+              ${conf.latestVersion !== ""
                 ? html`<a href="${conf.latestVersion}"
                     >${conf.latestVersion}</a
                   >`
