@@ -15,7 +15,7 @@
  * Best practice: define terms in a numbered section such as
  * "Terminology" or "Definitions".
  */
-import { docLink, getIntlData, showWarning } from "../utils.js";
+import { docLink, getIntlData, norm, showWarning } from "../utils.js";
 
 const ruleName = "no-dfn-in-abstract";
 export const name = `core/linter-rules/${ruleName}`;
@@ -26,7 +26,7 @@ const localizationStrings = {
       return `Definition "${text}" is in an unnumbered section (e.g. abstract or SotD).`;
     },
     get hint() {
-      return docLink`Definitions in unnumbered sections (abstract, SotD) are semantically out of place and appear in the terms index without a section number. Move this definition to a numbered section such as "Terminology". See ${"[data-export]"}.`;
+      return docLink`Definitions in unnumbered sections (abstract, SotD) are semantically out of place and appear in the terms index without a section number. Move this definition to a numbered section such as "Terminology". See ${"[export|#data-export]"}.`;
     },
   },
 };
@@ -50,7 +50,7 @@ export function run(conf) {
   );
 
   offenders.forEach(dfn => {
-    const text = dfn.textContent.trim();
+    const text = norm(dfn.textContent);
     showWarning(l10n.msg(text), name, {
       hint: l10n.hint,
       elements: [dfn],
