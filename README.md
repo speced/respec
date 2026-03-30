@@ -1,57 +1,46 @@
 # ReSpec
 
-[![Backers on Open Collective](https://opencollective.com/respec/backers/badge.svg)](#backers)
-[![Sponsors on Open Collective](https://opencollective.com/respec/sponsors/badge.svg)](#sponsors)
 [![Build Status](https://github.com/speced/respec/workflows/Node%20CI/badge.svg?branch=develop)](https://github.com/speced/respec/actions?query=workflow%3A%22Node+CI%22+branch%3Adevelop)
-[![Website status](https://img.shields.io/github/workflow/status/marcoscaceres/respec.org/Health%20Check?label=respec.org&logo=curl)](https://github.com/marcoscaceres/respec.org/actions?query=workflow%3A%22Health+Check%22)
 
-ReSpec is a JS library that makes it easier to write technical specifications, or documents
-that tend to be technical in nature in general. It was originally designed for the purpose
-of writing W3C specifications, but has since grown to be able to support other outputs as
-well.
+ReSpec is a tool for writing [W3C](https://www.w3.org/) specifications and other technical documents. Write your content in HTML, add a `<script>` tag, and ReSpec handles the boilerplate, formatting, cross-references, bibliography, and validation automatically.
+
+**You don't need to install anything.** Write an HTML file, open it in a browser, done.
 
 ## Getting started
 
-If you are just interested in writing a spec, you can grab the [starter spec](examples/starter.html).
+Grab the [starter spec](examples/starter.html), change the title, add your name as editor, and start writing. Full documentation is at **[respec.org/docs](https://respec.org/docs/)**, including:
 
-We have extensive documentation on [how to use ReSpec](https://github.com/speced/respec/wiki) in our wiki, including:
+- [Editor's Guide](https://respec.org/docs/) — complete walkthrough for new spec editors
+- [WebIDL guide](https://respec.org/docs/#WebIDL-Guide) — for JavaScript API specifications
 
-  * [User's guide](https://github.com/speced/respec/wiki/ReSpec-Editor's-Guide)
-  * [WebIDL guide](https://github.com/speced/respec/wiki/WebIDL-Guide)
+For quick answers to common tasks, see the [How Do I…](https://github.com/speced/respec/wiki/How-Do-I) wiki page.
 
-**You don't need to check-out or fork this repository.**
+> **This repository is for ReSpec's development.** You don't need to clone or fork it to write a spec — just use the starter template above.
 
-If you are new to spec writing, we strongly encourage you to read:
+## New to spec writing?
 
-  * [API Design Principles](https://w3ctag.github.io/design-principles/)
-  * [Writing Promise-Using Specifications](https://www.w3.org/2001/tag/doc/promises-guide)
-  * [Privacy and Security Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/)
-  * [Short i18n review checklist](https://www.w3.org/International/techniques/shortchecklist.html)
-  * [Adding another permission? A guide](https://github.com/w3cping/adding-permissions/blob/master/README.md)
+These resources will help you write better specs:
+
+- [API Design Principles](https://w3ctag.github.io/design-principles/) — what makes a good web API
+- [Writing Promise-Using Specifications](https://www.w3.org/2001/tag/doc/promises-guide) — async patterns for specs
+- [Security & Privacy Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/) — audit your spec before publishing
+- [Short i18n review checklist](https://www.w3.org/International/techniques/shortchecklist.html) — internationalization basics
+- [Adding another permission?](https://github.com/w3cping/adding-permissions/blob/master/README.md) — before adding a new permission type
+
+## Bibliography
+
+Use [specref.org](https://www.specref.org/) to look up and cite other specifications in your bibliography. ReSpec resolves `[[SPEC-ID]]` references automatically.
 
 ## Getting help
 
-If you experience issues, please email [spec-prod@w3.org](mailto:spec-prod@w3.org) or
-if you think something is broken, [file a bug](https://github.com/speced/respec/issues).
+- Email [spec-prod@w3.org](mailto:spec-prod@w3.org) for general questions
+- [File a bug](https://github.com/speced/respec/issues) if something is broken
 
-**Please note:** ReSpec is not endorsed by W3C and nobody should expect the W3C Webmaster to provide advice on
-problems encountered with ReSpec, or on why it may be failing to produce pubrules-compliant
-content.
-
-## Bibliographical references
-
-Bibliographical references have been moved out of ReSpec. You want to use
-[specref.org](http://www.specref.org/).
-
-## Want to see complete documentation?
-
-[Documentation for ReSpec](https://github.com/speced/respec/wiki) is available in our wiki.
+> ReSpec is not endorsed by W3C. For W3C publication requirements, consult the [W3C Publication Rules](https://www.w3.org/pubrules/).
 
 ## Contribute
 
-Please see our [developer guide](https://github.com/speced/respec/wiki/Developers-Guide).
-
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+See our [developer guide](https://github.com/speced/respec/wiki/Developers-Guide) and [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Contributors
 
