@@ -93,7 +93,7 @@ function SafariLauncher(logger, baseBrowserDecorator) {
     });
 
     // Wait for safaridriver to be ready, but reject immediately if the
-    // process errors (e.g. not installed or not enabled).
+    // process errors or exits early (e.g. port in use, not enabled, invalid args).
     try {
       await new Promise((resolve, reject) => {
         safariDriver.on("error", err => {
@@ -102,6 +102,13 @@ function SafariLauncher(logger, baseBrowserDecorator) {
             err.message
           );
           reject(err);
+        });
+        safariDriver.once("exit", (code, signal) => {
+          reject(
+            new Error(
+              `safaridriver exited before ready (code=${code} signal=${signal}) — port may be in use or safaridriver not enabled`
+            )
+          );
         });
         setTimeout(resolve, 500);
       });
