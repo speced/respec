@@ -554,7 +554,7 @@ export async function run(conf) {
     showError(msg, name);
   }
 
-  if (conf.isCR && !conf.crEnd) {
+  if (conf.isCR && !conf.isCRDraft && !conf.crEnd) {
     const msg = docLink`${"[specStatus]"} is "CR", but no ${"[crEnd]"} is specified in the ${"[respecConfig]"}.`;
     showError(msg, name);
   }

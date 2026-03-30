@@ -1,4 +1,3 @@
-/* eslint-env node */
 const {
   constants: { F_OK },
   promises: { readFile, access },
