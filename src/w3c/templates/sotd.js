@@ -316,12 +316,12 @@ function renderIsRec(conf) {
           Candidate corrections are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".addition.proposed)
+    ${document.querySelector(".addition.proposed")
       ? html`<p class="addition proposed">
           Proposed additions are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector("correction.proposed")
+    ${document.querySelector(".correction.proposed")
       ? html`<p class="correction proposed">
           Proposed corrections are marked in the document.
         </p>`

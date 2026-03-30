@@ -2658,7 +2658,10 @@ describe("W3C — Headers", () => {
         <div class="addition proposed">A proposed addition.</div>
       </section>
     `;
-      const ops = makeStandardOps({ specStatus: "REC", group: "webapps" }, body);
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd");
       expect(sotd.querySelector("p.addition.proposed")).toBeTruthy();
@@ -2673,7 +2676,10 @@ describe("W3C — Headers", () => {
         <div class="correction proposed">A proposed correction.</div>
       </section>
     `;
-      const ops = makeStandardOps({ specStatus: "REC", group: "webapps" }, body);
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd");
       expect(sotd.querySelector("p.correction.proposed")).toBeTruthy();
