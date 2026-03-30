@@ -58,6 +58,12 @@ function afterEnd() {
   });
 }
 
+function amendConfiguration(_conf, _doc, utils) {
+  utils.amendConfiguration({
+    newValue: '42',
+  });
+}
+
 const respecConfig = {
   specStatus: "unofficial",
   shortName: "i",
@@ -71,7 +77,8 @@ respecConfig.preProcess = [
   preSyncFunc,
   preAsyncFunc,
   noOp, {},
-  preWithWarning
+  preWithWarning,
+  amendConfiguration,
 ];
 
 respecConfig.postProcess = [
