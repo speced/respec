@@ -60,4 +60,9 @@ describe("Core - preProcess, postProcess, afterEnd", () => {
   it("runs afterEnd method", () => {
     expect(doc.getElementById("afterend").innerHTML).toContain("pass");
   });
+
+  it("can amend user configuration in preProcess", () => {
+    const obj = JSON.parse(doc.getElementById("initialUserConfig").innerHTML);
+    expect(obj.newValue).toBe("42");
+  });
 });
