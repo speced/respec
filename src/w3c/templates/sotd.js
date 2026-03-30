@@ -281,9 +281,9 @@ function renderIsRec(conf) {
   const { revisedRecEnd } = conf;
   const updatableRec = document.querySelector("#sotd.updateable-rec");
   let reviewTarget = "";
-  if (document.querySelector(".proposed.addition")) {
+  if (document.querySelector(".addition.proposed")) {
+    reviewTarget = "additions";
   } else if (document.querySelector(".correction.proposed")) {
-  } else if (document.querySelector(".proposed.correction")) {
     reviewTarget = "corrections";
   }
   return html`
@@ -316,12 +316,12 @@ function renderIsRec(conf) {
           Candidate corrections are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".proposed.addition")
+    ${document.querySelector(".addition.proposed)
       ? html`<p class="addition proposed">
           Proposed additions are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".proposed.correction")
+    ${document.querySelector("correction.proposed")
       ? html`<p class="correction proposed">
           Proposed corrections are marked in the document.
         </p>`
@@ -464,8 +464,8 @@ function linkToWorkingGroup(conf) {
     return;
   }
   let changes = null;
-  const proposedAdditions = document.querySelector(".proposed.addition");
-  const proposedCorrections = document.querySelector(".proposed.correction");
+  const proposedAdditions = document.querySelector(".addition.proposed");
+  const proposedCorrections = document.querySelector(".correction.proposed");
   const additions = document.querySelector(".addition");
   const corrections = document.querySelector(".correction");
   const hasRevisions =
