@@ -284,6 +284,27 @@ describe("Core - Inlines", () => {
     expect(notFound.textContent).toBe("[[[not-found]]]");
   });
 
+  it("links to specific section of another spec using [[[SPEC#id]]] syntax", async () => {
+    const config = {
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch#data-fetch]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    expect(anchor.textContent).toBe("Fetch Standard");
+  });
+
   it("allows [[[#...]]] to be a general expander for ids in document", async () => {
     /** @param {string} text */
     function generateDataIncludeUrl(text) {
@@ -327,6 +348,17 @@ describe("Core - Inlines", () => {
 
     const badOne = doc.querySelector("#output a.respec-offending-element");
     expect(badOne.textContent).toBe("#does-not-exist");
+  });
+
+  it("does not process [[[#id#invalid]]] with multiple hash fragments", async () => {
+    const body = `
+      <section id="section"><h2>Section</h2></section>
+      <p id="output">[[[#section#invalid]]]</p>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const output = doc.getElementById("output");
+    expect(output.querySelector("a")).toBeNull();
+    expect(output.textContent.trim()).toBe("[[[#section#invalid]]]");
   });
 
   it("proceseses backticks inside [= =] inline links", async () => {
