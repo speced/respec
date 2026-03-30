@@ -33,6 +33,6 @@ describe("Core — Informative", () => {
     };
     const doc = await makeRSDoc(ops);
     const em = doc.querySelector("#info > p > em");
-    expect(em.textContent).toBe("Dit onderdeel is niet normatief.");
+    expect(em.textContent).toBe("Dit onderdeel is niet-normatief.");
   });
 });
