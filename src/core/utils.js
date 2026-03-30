@@ -921,7 +921,7 @@ export function showWarning(message, pluginName, options = {}) {
 export function makePluginUtils(pluginName) {
   /** @typedef {Parameters<typeof showError>[2]} Options */
   return {
-    /** @type {(configUpdates: Object) => void} */
+    /** @type {(configUpdates: Record<string, unknown>) => void} */
     amendConfiguration: configUpdates =>
       pub("amend-user-config", configUpdates),
     /** @type {(message: string, options?: Options) => void} */
