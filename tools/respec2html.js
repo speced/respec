@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { readFile, writeFile } from "fs/promises";
 import colors from "colors";
-import { fileURLToPath } from "url";
 import finalhandler from "finalhandler";
 import http from "http";
 import { marked } from "marked";
@@ -10,7 +9,7 @@ import sade from "sade";
 import serveStatic from "serve-static";
 import { toHTML } from "./respecDocWriter.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = import.meta.dirname;
 
 class Renderer extends marked.Renderer {
   strong(token) {
