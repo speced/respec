@@ -11,7 +11,7 @@
  *
  */
 
-import { getElementIndentation, reindent } from "./utils.js";
+import { getElementIndentation } from "./utils.js";
 import { marked } from "./import-maps.js";
 
 export const name = "core/markdown";
@@ -20,7 +20,8 @@ const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
 
 class Renderer extends marked.Renderer {
-  code(code, infoString, isEscaped) {
+  code(token) {
+    const { text: code, lang: infoString = "" } = token;
     const { language, ...metaData } = Renderer.parseInfoString(infoString);
 
     // regex to check whether the language is webidl
@@ -29,7 +30,7 @@ class Renderer extends marked.Renderer {
     }
 
     const html = super
-      .code(code, language, isEscaped)
+      .code({ ...token, lang: language })
       .replace(`class="language-`, `class="`);
 
     const { example, illegalExample } = metaData;
@@ -40,9 +41,10 @@ class Renderer extends marked.Renderer {
     return html.replace("<pre>", `<pre title="${title}" class="${className}">`);
   }
 
-  image(href, title, text) {
+  image(token) {
+    const { href, title, text } = token;
     if (!title) {
-      return super.image(href, title, text);
+      return super.image(token);
     }
     const html = String.raw;
     return html`
@@ -77,21 +79,47 @@ class Renderer extends marked.Renderer {
     return { language, ...metaData };
   }
 
-  heading(text, level, raw) {
+  heading(token) {
+    const text = this.parser.parseInline(token.tokens);
+    const level = token.depth;
     const headingWithIdRegex = /(.+)\s+{#([\w-]+)}$/;
-    if (headingWithIdRegex.test(text)) {
-      const [, textContent, id] = text.match(headingWithIdRegex);
+    const match = text.match(headingWithIdRegex);
+    if (match) {
+      const [, textContent, id] = match;
       return `<h${level} id="${id}">${textContent}</h${level}>`;
     }
-    return super.heading(text, level, raw);
+    return super.heading(token);
   }
 }
 
 /** @type {import('marked').MarkedOptions} */
 const config = {
   gfm: true,
-  renderer: new Renderer(),
+  renderer: /** @type {any} */ (new Renderer()),
 };
+
+/**
+ * Normalize indentation by stripping the leading whitespace determined from
+ * the first non-empty line. This handles mixed-indentation HTML content where
+ * some lines (e.g., from rendered markdown inside sections) may have less
+ * indentation than the outer HTML structure. marked v16 is stricter: HTML
+ * indented 4+ spaces is treated as a code block, so we must strip outer
+ * indentation even when inner content has lines at column 0.
+ * @param {string} text
+ */
+function normalizeIndent(text) {
+  if (!text) return text;
+  const lines = text.trimEnd().split("\n");
+  const firstNonEmpty = lines.findIndex(l => l.trim());
+  if (firstNonEmpty === -1) return "";
+  const nonEmptyLines = lines.slice(firstNonEmpty);
+  const firstIndent = nonEmptyLines[0].search(/[^\s]/);
+  if (firstIndent < 1) return nonEmptyLines.join("\n");
+  const prefix = " ".repeat(firstIndent);
+  return nonEmptyLines
+    .map(s => (s.startsWith(prefix) ? s.slice(firstIndent) : s))
+    .join("\n");
+}
 
 /**
  * @param {string} text
@@ -99,7 +127,7 @@ const config = {
  * @param {boolean} options.inline
  */
 export function markdownToHtml(text, options = { inline: false }) {
-  const normalizedLeftPad = reindent(text);
+  const normalizedLeftPad = normalizeIndent(text);
   // As markdown is pulled from HTML, > and & are already escaped and
   // so blockquotes aren't picked up by the parser. This fixes it.
   const potentialMarkdown = normalizedLeftPad

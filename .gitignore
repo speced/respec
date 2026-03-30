@@ -15,3 +15,5 @@ js/deps/builds
 package-lock.json
 yarn.lock
 *.log
+.worktrees/
+CLAUDE.md

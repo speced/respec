@@ -1,5 +1,5 @@
 // @ts-check
-/* eslint-env node */
+
 const { exec } = require("child_process");
 const http = require("http");
 const serveHandler = require("serve-handler");
