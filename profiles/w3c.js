@@ -71,6 +71,7 @@ const modules = [
   import("../src/core/linter-rules/no-unused-dfns.js"),
   import("../src/core/linter-rules/no-headingless-sections.js"),
   import("../src/core/linter-rules/no-unused-vars.js"),
+  import("../src/core/linter-rules/no-dfn-in-abstract.js"),
   import("../src/w3c/linter-rules/required-sections.js"),
   import("../src/core/linter-rules/wpt-tests-exist.js"),
   import("../src/core/linter-rules/no-http-props.js"),
