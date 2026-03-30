@@ -177,7 +177,7 @@ async function getMdnData(key, mdnConf) {
   const res = await fetchAndCache(url, maxAge);
   if (res.status === 404) {
     const msg = `Could not find MDN data associated with key "${key}".`;
-    const hint = "Please add a valid key to `respecConfig.mdn`";
+    const hint = `Could not find MDN data for key "${key}". Browse available keys at https://w3c.github.io/mdn-spec-links/SPECMAP.json and set respecConfig.mdn to the matching key.`;
     showError(msg, name, { hint });
     return;
   }
