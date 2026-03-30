@@ -189,9 +189,20 @@ describe("W3C — Headers", () => {
       const [result2] = contains(
         dNoteDoc,
         "p",
-        "This document was published by the Web Performance Working Group as a Group Draft Note using the Note track."
+        "This document was published by the Web Performance Working Group as a Group Note Draft using the Note track."
       );
       expect(result2).toBeTruthy();
+    });
+
+    it("does not require crEnd for CRD", async () => {
+      const ops = makeStandardOps({
+        specStatus: "CRD",
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const crEndError = errors.find(e => e.message.includes("crEnd"));
+      expect(crEndError).toBeUndefined();
     });
 
     describe("specStatus - base", () => {
@@ -2422,6 +2433,7 @@ describe("W3C — Headers", () => {
         shortName: "appmanifest",
         specStatus: "WD",
         group: "webapps",
+        historyURI: "https://www.w3.org/standards/history/appmanifest/",
       });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
@@ -2443,6 +2455,7 @@ describe("W3C — Headers", () => {
         shortName: "appmanifest",
         specStatus: "WD",
         group: "webapps",
+        historyURI: "https://www.w3.org/standards/history/appmanifest/",
       });
       const doc = await makeRSDoc(ops);
       const commitHistory = doc.querySelector(
@@ -2546,10 +2559,12 @@ describe("W3C — Headers", () => {
       expect(commits).toBeTruthy();
     });
 
-    it("derives the historyURI automatically when it's missing, but the document is on TR", async () => {
+    it("shows the history link for ED docs on TR", async () => {
       const ops = makeStandardOps({
         shortName: "payment-request",
         specStatus: "ED",
+        group: "webapps",
+        historyURI: "https://www.w3.org/standards/history/payment-request/",
       });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
@@ -2569,6 +2584,7 @@ describe("W3C — Headers", () => {
           shortName,
           specStatus,
           group: "webapps",
+          historyURI: `https://www.w3.org/standards/history/${shortName}/`,
         });
         const doc = await makeRSDoc(ops);
         const [history] = contains(doc, ".head dt", "History:");
@@ -2627,6 +2643,46 @@ describe("W3C — Headers", () => {
       expect(h1.textContent).toContain("Preview of PR #123:");
       expect(h1.textContent).toContain("Simple Spec");
       expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
+    });
+  });
+  describe("updateable-rec proposed markers", () => {
+    // Note: "updateable" is intentionally misspelled to match
+    // the class name used in sotd.js — do not "fix" this.
+
+    it("renders proposed additions paragraph when .addition.proposed element is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition proposed">A proposed addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      expect(sotd.querySelector("p.addition.proposed")).toBeTruthy();
+    });
+
+    it("renders proposed corrections paragraph when .correction.proposed element is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="correction proposed">A proposed correction.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      expect(sotd.querySelector("p.correction.proposed")).toBeTruthy();
     });
   });
 });

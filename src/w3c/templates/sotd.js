@@ -9,20 +9,18 @@ const localizationStrings = {
       document at the time of its publication. A list of current W3C
       publications and the latest revision of this technical report can be found
       in the
-      <a href="https://www.w3.org/TR/">W3C standards and drafts index</a> at
-      https://www.w3.org/TR/.`,
+      <a href="https://www.w3.org/TR/">W3C standards and drafts index</a>.`,
   },
   ko: {
     sotd: "현재 문서의 상태",
     status_at_publication: html`이 부분은 현재 문서의 발행 당시 상태에 대해
-      기술합니다. W3C 발행 문서의 최신 목록 및 테크니컬 리포트 최신판을
-      https://www.w3.org/TR/ 의
+      기술합니다. W3C 발행 문서의 최신 목록 및 테크니컬 리포트 최신판의
       <a href="https://www.w3.org/TR/">W3C standards and drafts index</a> 에서
       열람할 수 있습니다.`,
   },
   zh: {
     sotd: "关于本文档",
-    // eslint-disable-next-line prettier/prettier
+
     status_at_publication: html`本章节描述了本文档的发布状态。W3C的文档列表和最新版本可通过<a
         href="https://www.w3.org/TR/"
         >W3C技术报告</a
@@ -31,8 +29,7 @@ const localizationStrings = {
   ja: {
     sotd: "この文書の位置付け",
     status_at_publication: html`この節には、公開時点でのこの文書の位置づけが記されている。現時点でのW3Cの発行文書とこのテクニカルレポートの最新版は、下記から参照できる。
-      <a href="https://www.w3.org/TR/">W3C standards and drafts index</a>
-      (https://www.w3.org/TR/)`,
+      <a href="https://www.w3.org/TR/">W3C standards and drafts index</a>`,
   },
   nl: {
     sotd: "Status van dit document",
@@ -42,7 +39,7 @@ const localizationStrings = {
     status_at_publication: html`Esta sección describe el estado del presente
       documento al momento de su publicación. Una lista de las publicaciones
       actuales del W3C y la última revisión del presente informe técnico puede
-      hallarse en http://www.w3.org/TR/
+      hallarse en
       <a href="https://www.w3.org/TR/">el índice de normas y borradores</a> del
       W3C.`,
   },
@@ -51,15 +48,21 @@ const localizationStrings = {
     status_at_publication: html`Dieser Abschnitt beschreibt den Status des
       Dokuments zum Zeitpunkt der Publikation. Eine Liste der aktuellen
       Publikatinen des W3C und die aktuellste Fassung dieser Spezifikation kann
-      im
-      <a href="https://www.w3.org/TR/">W3C standards and drafts index</a> unter
-      https://www.w3.org/TR/ abgerufen werden.`,
+      im <a href="https://www.w3.org/TR/">W3C standards and drafts index</a>.`,
+  },
+  cs: {
+    sotd: "Stav tohoto dokumentu",
+    status_at_publication: html`Tato sekce popisuje stav tohoto dokumentu v době
+      jeho zveřejnění. Seznam aktuálních publikací W3C a nejnovější verzi této
+      technické zprávy najdete v
+      <a href="https://www.w3.org/TR/">indexu standardů a návrhů W3C</a>
+      na https://www.w3.org/TR/.`,
   },
 };
 
 export const l10n = getIntlData(localizationStrings);
 
-const processLink = "https://www.w3.org/policies/process/20231103/";
+const processLink = "https://www.w3.org/policies/process/20250818/";
 
 function prefix(word) {
   return /^[aeiou]/i.test(word) ? `an ${word}` : `a ${word}`;
@@ -90,7 +93,7 @@ export default (conf, opts) => {
                     <p>
                       This document is governed by the
                       <a id="w3c_process_revision" href="${processLink}"
-                        >03 November 2023 W3C Process Document</a
+                        >18 August 2025 W3C Process Document</a
                       >.
                     </p>
                   `}
@@ -158,9 +161,9 @@ function renderNotRec(conf) {
   let updatePolicy = html`<p>
     This is a draft document and may be updated, replaced, or obsoleted by other
     documents at any time. It is inappropriate to cite this document as other
-    than work in progress.
+    than a work in progress.
     ${updatableRec
-      ? html`Future updates to this specification may incorporate
+      ? html`Future updates to this upcoming Recommendation may incorporate
           <a href="${processLink}#allow-new-features">new features</a>.`
       : ""}
   </p>`;
@@ -231,7 +234,7 @@ function renderNotRec(conf) {
         >
         for implementations.`;
       updatePolicy = html`${updatableRec
-        ? html`Future updates to this specification may incorporate
+        ? html`Future updates to this upcoming Recommendation may incorporate
             <a href="${processLink}#allow-new-features">new features</a>.`
         : ""}`;
       if (conf.pubMode === "LS") {
@@ -241,7 +244,7 @@ function renderNotRec(conf) {
         </p>`;
       } else {
         reviewPolicy = html`<p>
-          This Candidate Recommendation is not expected to advance to Proposed
+          This Candidate Recommendation is not expected to advance to
           Recommendation any earlier than ${W3CDate.format(conf.crEnd)}.
         </p>`;
       }
@@ -267,6 +270,7 @@ function renderNotRec(conf) {
         ${getWgHTML(conf)}, but is not endorsed by
         <abbr title="World Wide Web Consortium">W3C</abbr> itself nor its
         Members.`;
+      updatePolicy = "";
       break;
   }
   return html`<p>${endorsement} ${statusExplanation}</p>
@@ -277,9 +281,9 @@ function renderIsRec(conf) {
   const { revisedRecEnd } = conf;
   const updatableRec = document.querySelector("#sotd.updateable-rec");
   let reviewTarget = "";
-  if (document.querySelector(".proposed-addition")) {
+  if (document.querySelector(".addition.proposed")) {
     reviewTarget = "additions";
-  } else if (document.querySelector(".proposed-correction")) {
+  } else if (document.querySelector(".correction.proposed")) {
     reviewTarget = "corrections";
   }
   return html`
@@ -302,22 +306,22 @@ function renderIsRec(conf) {
             <a href="${processLink}#allow-new-features">new features</a>.`
         : ""}
     </p>
-    ${document.querySelector(".addition")
+    ${document.querySelector(".addition:not(.proposed)")
       ? html`<p class="addition">
           Candidate additions are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".correction")
+    ${document.querySelector(".correction:not(.proposed)")
       ? html`<p class="correction">
           Candidate corrections are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".proposed-addition")
+    ${document.querySelector(".addition.proposed")
       ? html`<p class="addition proposed">
           Proposed additions are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".proposed-correction")
+    ${document.querySelector(".correction.proposed")
       ? html`<p class="correction proposed">
           Proposed corrections are marked in the document.
         </p>`
@@ -387,7 +391,7 @@ function renderDeliverer(conf) {
             ? "each group; these pages also include"
             : "the group; that page also includes"}
           instructions for disclosing a patent. An individual who has actual
-          knowledge of a patent which the individual believes contains
+          knowledge of a patent that the individual believes contains
           <a href="${patentPolicyURL}#def-essential">Essential Claim(s)</a>
           must disclose the information in accordance with
           <a href="${patentPolicyURL}#sec-Disclosure"
@@ -460,8 +464,8 @@ function linkToWorkingGroup(conf) {
     return;
   }
   let changes = null;
-  const proposedAdditions = document.querySelector(".proposed-addition");
-  const proposedCorrections = document.querySelector(".proposed-correction");
+  const proposedAdditions = document.querySelector(".addition.proposed");
+  const proposedCorrections = document.querySelector(".correction.proposed");
   const additions = document.querySelector(".addition");
   const corrections = document.querySelector(".correction");
   const hasRevisions =

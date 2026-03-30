@@ -1,12 +1,12 @@
 {
   "name": "respec",
-  "version": "35.4.0",
+  "version": "35.9.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
-    "node": ">=20.12.1"
+    "node": ">=24"
   },
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.30.1",
   "bin": {
     "respec": "tools/respec2html.js",
     "respec2html": "tools/respec2html.js"
@@ -25,43 +25,45 @@
   ],
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.1",
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-commonjs": "^29.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^1.0.0",
     "@types/pluralize": "0.0.33",
+    "@eslint/js": "^9.8.0",
     "boxen": "^8.0.1",
-    "chokidar": "^4.0.3",
+    "chokidar": "^5.0.0",
     "clean-css": "^5.3.3",
     "epipebomb": "^1.0.0",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.31.0",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jasmine": "^4.2.2",
-    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.4.0",
     "highlight.js": "^11.11.1",
     "hyperhtml": "^2.34.2",
     "idb": "^8.0.3",
-    "jasmine": "^5.7.1",
-    "jasmine-core": "^5.7.1",
+    "jasmine": "^6.1.0",
+    "jasmine-core": "^6.1.0",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
     "karma-firefox-launcher": "^2.1.3",
     "karma-jasmine": "^5.1.0",
-    "karma-jasmine-html-reporter": "^2.1.0",
+    "karma-jasmine-html-reporter": "^2.2.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
     "loading-indicator": "^2.0.0",
     "pluralize": "^8.0.0",
-    "prettier": "^3.5.3",
+    "prettier": "^3.8.1",
     "prompt": "^1.3.0",
-    "rollup": "^4.40.2",
+    "rollup": "^4.60.1",
     "rollup-plugin-minify-html-literals": "^1.2.6",
-    "serve": "^14.2.4",
-    "serve-handler": "^6.1.6",
+    "serve": "^14.2.6",
+    "serve-handler": "^6.1.7",
     "sniffy-mimetype": "^1.1.1",
-    "typescript": "^5.8.3",
-    "vnu-jar": "^24.10.17",
-    "webidl2": "^24.4.1"
+    "typescript": "^5.9.3",
+    "vnu-jar": "^26.3.8",
+    "webidl2": "^24.5.0"
   },
   "scripts": {
     "build:aom-debug": "pnpm build:aom -- --debug",
@@ -87,11 +89,11 @@
   },
   "dependencies": {
     "colors": "1.4.0",
-    "finalhandler": "^2.1.0",
-    "marked": "^12.0.2",
-    "puppeteer": "^24.8.2",
+    "finalhandler": "^2.1.1",
+    "marked": "^17.0.5",
+    "puppeteer": "^24.40.0",
     "sade": "^1.8.1",
-    "serve-static": "^2.2.0"
+    "serve-static": "^2.2.1"
   },
   "files": [
     "builds/",
@@ -105,6 +107,9 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "puppeteer"
+    ],
+    "ignoredBuiltDependencies": [
+      "vnu-jar"
     ]
   },
   "funding": {

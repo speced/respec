@@ -13,6 +13,10 @@ const localizationStrings = {
     msg: "The following test could not be found in Web Platform Tests:",
     hint: "Check [wpt.live](https://wpt.live) to see if it was deleted or renamed.",
   },
+  cs: {
+    msg: "Následující test nebyl nalezen ve Web Platform Tests:",
+    hint: "Zkontrolujte [wpt.live](https://wpt.live), zda nebyl smazán nebo přejmenován.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
@@ -33,7 +37,7 @@ export async function run(conf) {
   for (const elem of testables) {
     elem.dataset.tests
       .split(/,/gm)
-      .map(test => test.trim().split("#")[0])
+      .map(test => test.trim().split(/\?|#/)[0])
       .filter(test => test && !filesInWPT.has(test))
       .map(missingTest => {
         showWarning(`${l10n.msg} \`${missingTest}\`.`, name, {
