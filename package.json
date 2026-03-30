@@ -39,7 +39,7 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jasmine": "^4.2.2",
     "eslint-plugin-prettier": "^5.5.5",
-    "globals": "^16.0.0",
+    "globals": "^17.4.0",
     "highlight.js": "^11.11.1",
     "hyperhtml": "^2.34.2",
     "idb": "^8.0.3",
@@ -91,7 +91,7 @@
     "colors": "1.4.0",
     "finalhandler": "^2.1.1",
     "marked": "^16.3.0",
-    "puppeteer": "^24.37.5",
+    "puppeteer": "^24.40.0",
     "sade": "^1.8.1",
     "serve-static": "^2.2.1"
   },
