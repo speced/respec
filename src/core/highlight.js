@@ -23,7 +23,7 @@ async function highlightElement(elem) {
   const languages = getLanguageHint(elem.classList);
   let response;
   try {
-    response = await sendHighlightRequest(elem.innerText, languages);
+    response = await sendHighlightRequest(elem.textContent, languages);
   } catch (err) {
     console.error(err);
     return;
