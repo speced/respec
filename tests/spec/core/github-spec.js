@@ -125,7 +125,7 @@ describe("Core - Github", () => {
       );
       expect(fileABug).toBeTruthy();
       expect(fileABug.querySelector("a").href).toBe(
-        "https://github.com/speced/respec/issues/"
+        "https://github.com/speced/respec/issues/new/choose"
       );
       const commitHistory = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "Revisiehistorie"
@@ -208,7 +208,7 @@ describe("Core - Github", () => {
       );
       expect(fileABug).toBeTruthy();
       expect(fileABug.querySelector("a").href).toBe(
-        "https://github.com/w3c/core-aam/issues/"
+        "https://github.com/w3c/core-aam/issues/new/choose"
       );
     });
   });

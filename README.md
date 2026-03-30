@@ -14,10 +14,10 @@ well.
 
 If you are just interested in writing a spec, you can grab the [starter spec](examples/starter.html).
 
-We have extensive documentation on [how to use ReSpec](https://github.com/speced/respec/wiki) in our wiki, including:
+We have extensive documentation on [how to use ReSpec](https://respec.org/docs/) at respec.org/docs, including:
 
-  * [User's guide](https://github.com/speced/respec/wiki/ReSpec-Editor's-Guide)
-  * [WebIDL guide](https://github.com/speced/respec/wiki/WebIDL-Guide)
+  * [User's guide](https://respec.org/docs/)
+  * [WebIDL guide](https://respec.org/docs/#WebIDL-Guide)
 
 **You don't need to check-out or fork this repository.**
 
@@ -41,7 +41,7 @@ content.
 ## Bibliographical references
 
 Bibliographical references have been moved out of ReSpec. You want to use
-[specref.org](http://www.specref.org/).
+[specref.org](https://www.specref.org/).
 
 ## Want to see complete documentation?
 
