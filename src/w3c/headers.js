@@ -587,7 +587,7 @@ export async function run(conf) {
   const hasCorrections =
     document.querySelector(".correction:not(.proposed)") !== null;
   const hasProposedCorrections =
-    document.querySelector(".proposedcorrection.proposed") !== null;
+    document.querySelector(".correction.proposed") !== null;
   const hasAdditions =
     document.querySelector(".addition:not(.proposed)") !== null;
   const hasProposedAdditions =
