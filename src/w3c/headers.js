@@ -584,10 +584,12 @@ export async function run(conf) {
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
 
   const isUpdatableRec = sotd.classList.contains("updateable-rec");
-  const hasCorrections = document.querySelector(".correction:not(.proposed)") !== null;
+  const hasCorrections =
+    document.querySelector(".correction:not(.proposed)") !== null;
   const hasProposedCorrections =
     document.querySelector(".proposedcorrection.proposed") !== null;
-  const hasAdditions = document.querySelector(".addition:not(.proposed)") !== null;
+  const hasAdditions =
+    document.querySelector(".addition:not(.proposed)") !== null;
   const hasProposedAdditions =
     document.querySelector(".addition.proposed") !== null;
   const hasRevisions =
