@@ -914,8 +914,8 @@ export function showWarning(message, pluginName, options = {}) {
 }
 
 /**
- * Creates showError, showWarning utilities for use in custom pre-process and
- * post-process plugins.
+ * Creates showError, showWarning and amendConfiguration utilities for
+ * use in custom pre-process and post-process plugins.
  * @param {string} pluginName
  */
 export function makePluginUtils(pluginName) {
