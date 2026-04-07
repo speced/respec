@@ -58,6 +58,12 @@ a[href].respec-offending-element {
   animation: pop 0.4s ease-in-out 0s 1;
 }
 
+@media (prefers-color-scheme: dark) {
+  #references :target {
+    background: rgb(255 255 255 / 30%);
+  }
+}
+
 cite .bibref {
   font-style: italic;
 }
