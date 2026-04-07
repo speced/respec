@@ -62,7 +62,7 @@ describe("Core - preProcess, postProcess, afterEnd", () => {
   });
 
   it("can amend user configuration in preProcess", () => {
-    const obj = JSON.parse(doc.getElementById("initialUserConfig").innerHTML);
+    const obj = JSON.parse(doc.getElementById("initialUserConfig").textContent);
     expect(obj.newValue).toBe("42");
   });
 });
