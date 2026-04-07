@@ -37,7 +37,7 @@ describe("W3C — Group", () => {
     ]);
   });
 
-  it("when a multiple groups are specified, it pluralizes the groups", async () => {
+  it("when multiple groups are specified, it pluralizes the groups", async () => {
     const ops = makeStandardOps({
       group: ["payments", "webapps"],
       specStatus: "NOTE",
@@ -48,6 +48,28 @@ describe("W3C — Group", () => {
       "by the Web Payments Working Group and the Web Applications Working Group as a Group Note using the Note track"
     );
   });
+
+  for (const specStatus of ["CRD", "CRYD"]) {
+    it(`when one group is specified in a ${specStatus}, "Working Group" is singular`, async () => {
+      const ops = makeStandardOps({
+        group: "payments",
+        specStatus,
+      });
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd").textContent.replace(/\s+/g, " ");
+      expect(sotd).toContain("that the Working Group intends to include in");
+    });
+
+    it(`when multiple groups are specified in a ${specStatus}, "Working Groups" are plural`, async () => {
+      const ops = makeStandardOps({
+        group: ["payments", "webapps"],
+        specStatus,
+      });
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd").textContent.replace(/\s+/g, " ");
+      expect(sotd).toContain("that the Working Groups intend to include in");
+    });
+  }
 
   it("overrides superseded options", async () => {
     const inputConf = { group: "payments", wg: "foo", wgId: "1234" };
