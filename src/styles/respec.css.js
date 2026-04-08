@@ -60,7 +60,11 @@ a[href].respec-offending-element {
 
 @media (prefers-color-scheme: dark) {
   #references :target {
-    background: rgb(255 255 255 / 30%);
+    background: color-mix(
+      in srgb,
+      var(--borderedblock-bg) 70%,
+      transparent
+    );
   }
 }
 
