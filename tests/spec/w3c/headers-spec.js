@@ -194,6 +194,17 @@ describe("W3C — Headers", () => {
       expect(result2).toBeTruthy();
     });
 
+    it("does not require crEnd for CRD", async () => {
+      const ops = makeStandardOps({
+        specStatus: "CRD",
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const crEndError = errors.find(e => e.message.includes("crEnd"));
+      expect(crEndError).toBeUndefined();
+    });
+
     describe("specStatus - base", () => {
       it("doesn't add 'w3c' to header when status is base", async () => {
         const ops = makeStandardOps({
@@ -2632,6 +2643,46 @@ describe("W3C — Headers", () => {
       expect(h1.textContent).toContain("Preview of PR #123:");
       expect(h1.textContent).toContain("Simple Spec");
       expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
+    });
+  });
+  describe("updateable-rec proposed markers", () => {
+    // Note: "updateable" is intentionally misspelled to match
+    // the class name used in sotd.js — do not "fix" this.
+
+    it("renders proposed additions paragraph when .addition.proposed element is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition proposed">A proposed addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      expect(sotd.querySelector("p.addition.proposed")).toBeTruthy();
+    });
+
+    it("renders proposed corrections paragraph when .correction.proposed element is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="correction proposed">A proposed correction.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      expect(sotd.querySelector("p.correction.proposed")).toBeTruthy();
     });
   });
 });
