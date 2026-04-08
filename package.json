@@ -111,7 +111,6 @@
       "vnu-jar"
     ],
     "overrides": {
-      "cookie": ">=0.7.0",
       "flatted": ">=3.4.2",
       "jasmine>glob": ">=10.5.0",
       "lodash": ">=4.18.0",
