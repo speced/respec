@@ -50,7 +50,7 @@ describe("W3C — Group", () => {
   });
 
   for (const specStatus of ["CRD", "CRYD"]) {
-    it(`when one group is specified in a ${specStatus}, "Working Group" is singular`, async () => {
+    it(`${specStatus}: writes "Working Group intends" for a single group`, async () => {
       const ops = makeStandardOps({
         group: "payments",
         specStatus,
@@ -60,7 +60,17 @@ describe("W3C — Group", () => {
       expect(sotd).toContain("that the Working Group intends to include in");
     });
 
-    it(`when multiple groups are specified in a ${specStatus}, "Working Groups" are plural`, async () => {
+    it(`${specStatus}: writes "Working Group intends" for a single group in an array`, async () => {
+      const ops = makeStandardOps({
+        group: ["payments"],
+        specStatus,
+      });
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd").textContent.replace(/\s+/g, " ");
+      expect(sotd).toContain("that the Working Group intends to include in");
+    });
+
+    it(`${specStatus}: writes "Working Groups intend" for multiple groups`, async () => {
       const ops = makeStandardOps({
         group: ["payments", "webapps"],
         specStatus,

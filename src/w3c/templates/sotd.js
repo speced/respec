@@ -197,7 +197,7 @@ function renderNotRec(conf) {
     case "CRD":
       statusExplanation = html`A Candidate Recommendation Draft integrates
       changes from the previous Candidate Recommendation that the Working
-      Group${Array.isArray(conf.wg) ? "s intend" : " intends"} to include in a
+      Group${conf.multipleWGs ? "s intend" : " intends"} to include in a
       subsequent Candidate Recommendation Snapshot.`;
       if (conf.pubMode === "LS") {
         updatePolicy = lsUpdatePolicy;
@@ -206,7 +206,7 @@ function renderNotRec(conf) {
     case "CRYD":
       statusExplanation = html`A Candidate Registry Draft integrates changes
       from the previous Candidate Registry Snapshot that the Working
-      Group${Array.isArray(conf.wg) ? "s intend" : " intends"} to include in a
+      Group${conf.multipleWGs ? "s intend" : " intends"} to include in a
       subsequent Candidate Registry Snapshot.`;
       if (conf.pubMode === "LS") {
         updatePolicy = lsUpdatePolicy;
