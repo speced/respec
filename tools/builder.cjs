@@ -5,7 +5,25 @@ const colors = require("colors");
 const { readFileSync } = require("fs");
 const path = require("path");
 const rollup = require("rollup");
-const alias = require("@rollup/plugin-alias");
+
+/** @param {{ entries: Array<{ find: string | RegExp, replacement: string }> }} opts */
+function alias({ entries }) {
+  return {
+    name: "alias",
+    resolveId(source, importer) {
+      for (const { find, replacement } of entries) {
+        if (find instanceof RegExp ? find.test(source) : source === find) {
+          const resolved = source.replace(find, replacement);
+          if (importer && resolved.startsWith(".")) {
+            return path.resolve(path.dirname(importer), resolved);
+          }
+          return resolved;
+        }
+      }
+      return null;
+    },
+  };
+}
 
 const rel = p => path.relative(process.cwd(), p);
 
