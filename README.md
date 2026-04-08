@@ -38,6 +38,30 @@ if you think something is broken, [file a bug](https://github.com/speced/respec/
 problems encountered with ReSpec, or on why it may be failing to produce pubrules-compliant
 content.
 
+## MCP server
+
+ReSpec now ships a stdio MCP companion entrypoint, `respec-mcp`, for AI-assisted
+spec authoring and validation. The MCP server discovers repo-local configuration from
+`respec-mcp.config.json` and `respec-mcp/profiles/*.json`, so Community Groups and
+other spec repos can add local policy without forking ReSpec.
+
+Use:
+
+```bash
+respec-mcp --repo-root /path/to/spec-repo
+```
+
+Or via Docker:
+
+```bash
+docker build -t respec-mcp:local .
+docker run --rm -i -v "$PWD":/workspace -w /workspace respec-mcp:local
+```
+
+See [docs/MCP.md](docs/MCP.md) for the config contract, tool list, and AI client examples.
+For LLM-assisted authoring guidance, including W3C/Community Group report patterns,
+see [docs/MCP_LLM_AUTHORING_GUIDE.md](docs/MCP_LLM_AUTHORING_GUIDE.md).
+
 ## Bibliographical references
 
 Bibliographical references have been moved out of ReSpec. You want to use

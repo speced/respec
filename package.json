@@ -9,7 +9,8 @@
   "packageManager": "pnpm@10.30.1",
   "bin": {
     "respec": "tools/respec2html.js",
-    "respec2html": "tools/respec2html.js"
+    "respec2html": "tools/respec2html.js",
+    "respec-mcp": "tools/respec-mcp.js"
   },
   "main": "./tools/respecDocWriter.js",
   "type": "module",
@@ -82,21 +83,27 @@
     "server": "serve",
     "start": "node ./tools/dev-server.cjs",
     "test:build": "jasmine --random=false ./tests/test-build.cjs",
+    "test:mcp": "jasmine --random=false ./tests/mcp.cjs",
     "test:headless": "jasmine --random=false ./tests/headless.cjs",
-    "test": "pnpm test:unit && pnpm test:integration",
+    "test": "pnpm test:unit && pnpm test:integration && pnpm test:mcp",
     "test:unit": "karma start ./tests/unit/karma.conf.cjs --single-run",
     "test:integration": "karma start ./tests/spec/karma.conf.cjs --single-run"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.21.0",
     "colors": "1.4.0",
     "finalhandler": "^2.1.1",
     "marked": "^17.0.5",
     "puppeteer": "^24.40.0",
     "sade": "^1.8.1",
-    "serve-static": "^2.2.1"
+    "serve-static": "^2.2.1",
+    "zod": "^3.25.76"
   },
   "files": [
     "builds/",
+    "tools/respec-mcp.js",
+    "tools/respecMcpCore.js",
+    "tools/respecMcpServer.js",
     "tools/respec2html.js",
     "tools/respecDocWriter.js"
   ],
