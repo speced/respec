@@ -23,7 +23,7 @@ export const name = `core/linter-rules/${ruleName}`;
 const localizationStrings = {
   en: {
     msg(text) {
-      return `Definition "${text}" is in an unnumbered section (e.g. abstract or SotD).`;
+      return `Definition \`${text}\` is in an unnumbered section (e.g. abstract or SotD).`;
     },
     get hint() {
       return docLink`Definitions in unnumbered sections (abstract, SotD) are semantically out of place and appear in the terms index without a section number. Move this definition to a numbered section such as "Terminology". See ${"[export|#data-export]"}.`;
