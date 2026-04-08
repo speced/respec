@@ -24,7 +24,6 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.0",
@@ -62,7 +61,7 @@
     "serve-handler": "^6.1.7",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^5.9.3",
-    "vnu-jar": "^26.3.8",
+    "vnu-jar": "^26.4.2",
     "webidl2": "^24.5.0"
   },
   "scripts": {
@@ -90,7 +89,7 @@
   "dependencies": {
     "colors": "1.4.0",
     "finalhandler": "^2.1.1",
-    "marked": "^17.0.5",
+    "marked": "^17.0.6",
     "puppeteer": "^24.40.0",
     "sade": "^1.8.1",
     "serve-static": "^2.2.1"
@@ -110,7 +109,25 @@
     ],
     "ignoredBuiltDependencies": [
       "vnu-jar"
-    ]
+    ],
+    "overrides": {
+      "flatted": ">=3.4.2",
+      "jasmine>glob": ">=10.5.0",
+      "lodash": ">=4.18.0",
+      "qs": ">=6.14.2",
+      "socket.io-parser": ">=4.2.6",
+      "tmp": ">=0.2.4",
+      "ws": ">=8.17.1",
+      "eslint-plugin-import>minimatch": "^3.1.4",
+      "eslint>minimatch": "^3.1.4",
+      "eslint>brace-expansion": "^1.1.13",
+      "minimatch>brace-expansion": "^1.1.13",
+      "karma>minimatch": "^3.1.4",
+      "jasmine>minimatch": "^9.0.7",
+      "@rollup/pluginutils>picomatch": "^2.3.2",
+      "@rollup/plugin-commonjs>picomatch": "^4.0.4",
+      "anymatch>picomatch": "^2.3.2"
+    }
   },
   "funding": {
     "type": "opencollective",
