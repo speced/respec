@@ -52,9 +52,7 @@ function webdriver(method, path, body) {
     );
     req.on("error", reject);
     req.on("timeout", () => {
-      req.destroy(
-        new Error(`WebDriver request timed out: ${method} ${path}`)
-      );
+      req.destroy(new Error(`WebDriver request timed out: ${method} ${path}`));
     });
     if (data) req.write(data);
     req.end();
