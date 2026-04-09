@@ -106,7 +106,7 @@ function findExplicitExternalLinks() {
 }
 
 /**
- * @param {any} xref
+ * @param {boolean | string | string[] | { profile?: string; url?: string; specs?: string[] }} xref
  * converts conf.xref to object with url and spec properties
  */
 function normalizeConfig(xref) {
@@ -122,34 +122,41 @@ function normalizeConfig(xref) {
     case "boolean":
       // using defaults already, as above
       break;
-    case "string":
-      if (xref.toLowerCase() in profiles) {
+    case "string": {
+      const xrefStr = /** @type {string} */ (xref);
+      if (xrefStr.toLowerCase() in profiles) {
         Object.assign(config, {
           specs: /** @type {Record<string, string[]>} */ (profiles)[
-            xref.toLowerCase()
+            xrefStr.toLowerCase()
           ],
         });
       } else {
-        invalidProfileError(xref);
+        invalidProfileError(xrefStr);
       }
       break;
+    }
     case "array":
       Object.assign(config, { specs: xref });
       break;
-    case "object":
-      Object.assign(config, xref);
-      if (xref.profile) {
-        const profile = xref.profile.toLowerCase();
+    case "object": {
+      const xrefObj =
+        /** @type {{ profile?: string; url?: string; specs?: string[] }} */ (
+          xref
+        );
+      Object.assign(config, xrefObj);
+      if (xrefObj.profile) {
+        const profile = xrefObj.profile.toLowerCase();
         if (profile in profiles) {
-          const specs = (xref.specs ?? []).concat(
+          const specs = (xrefObj.specs ?? []).concat(
             /** @type {Record<string, string[]>} */ (profiles)[profile]
           );
           Object.assign(config, { specs });
         } else {
-          invalidProfileError(xref.profile);
+          invalidProfileError(xrefObj.profile);
         }
       }
       break;
+    }
     default: {
       const msg = `Invalid value for \`xref\` configuration option. Received: "${xref}".`;
       showError(msg, name);
@@ -157,7 +164,7 @@ function normalizeConfig(xref) {
   }
   return config;
 
-  /** @param {any} profile */
+  /** @param {string} profile */
   function invalidProfileError(profile) {
     const supportedProfiles = joinOr(Object.keys(profiles), s => `"${s}"`);
     const msg =
@@ -471,7 +478,7 @@ function addToReferences(elem, cite, normative, term, conf) {
 function showErrors({ ambiguous, notFound }) {
   /**
    * @param {string} term
-   * @param {any} query
+   * @param {RequestEntry} query
    * @param {string[]} specs
    */
   const getPrefilledFormURL = (term, query, specs = []) => {
@@ -519,7 +526,7 @@ function showErrors({ ambiguous, notFound }) {
   }
 }
 
-/** @param {any} obj */
+/** @param {RequestEntry} obj */
 function objectHash(obj) {
   const str = JSON.stringify(obj, Object.keys(obj).sort());
   const buffer = new TextEncoder().encode(str);
@@ -529,7 +536,7 @@ function objectHash(obj) {
 /** @param {ArrayBuffer} buffer */
 function bufferToHexString(buffer) {
   const byteArray = new Uint8Array(buffer);
-  return [...byteArray].map(v => v.toString(16).padStart(2, "0")).join("");
+  return byteArray.toHex();
 }
 
 /** @param {Document} doc */

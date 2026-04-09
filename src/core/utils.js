@@ -82,7 +82,7 @@ export function createResourceHint(opts) {
 
 // RESPEC STUFF
 /**
- * @param {Document} doc
+ * @param {Document | Element} doc
  */
 export function removeReSpec(doc) {
   doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
@@ -771,7 +771,7 @@ export class InsensitiveStringSet extends Set {
   getCanonicalKey(key) {
     return super.has(key)
       ? key
-      : [...this.keys()].find(
+      : this.keys().find(
           existingKey => existingKey.toLowerCase() === key.toLowerCase()
         );
   }

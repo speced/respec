@@ -13,14 +13,14 @@ function setupVarHighlighter() {
 }
 
 /**
- * @param {any} ev
+ * @param {MouseEvent} ev
  */
 function highlightListener(ev) {
   ev.stopPropagation();
   const { target: varElem } = ev;
-  const hightligtedElems = highlightVars(varElem);
+  const hightligtedElems = highlightVars(/** @type {HTMLElement} */ (varElem));
   const resetListener = () => {
-    const hlColor = getHighlightColor(varElem);
+    const hlColor = getHighlightColor(/** @type {HTMLElement} */ (varElem));
     hightligtedElems.forEach((/** @type {any} */ el) =>
       removeHighlight(el, hlColor)
     );
@@ -43,7 +43,7 @@ const HL_COLORS = new Map([
 ]);
 
 /**
- * @param {any} target
+ * @param {HTMLElement} target
  */
 function getHighlightColor(target) {
   // return current colors if applicable
@@ -56,20 +56,22 @@ function getHighlightColor(target) {
   if (HL_COLORS.get("respec-hl-c1") === true) return "respec-hl-c1";
 
   // otherwise get some other available color
-  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) || "respec-hl-c1";
+  return HL_COLORS.keys().find(c => HL_COLORS.get(c)) || "respec-hl-c1";
 }
 
 /**
- * @param {any} varElem
+ * @param {HTMLElement} varElem
  */
 function highlightVars(varElem) {
   const textContent = norm(varElem.textContent);
   const parent = varElem.closest(".algorithm, section");
   const highlightColor = getHighlightColor(varElem);
 
-  const varsToHighlight = [...parent.querySelectorAll("var")].filter(
+  const varsToHighlight = [
+    .../** @type {Element} */ (parent).querySelectorAll("var"),
+  ].filter(
     /**
-     * @param {any} el
+     * @param {HTMLElement} el
      */
     el =>
       norm(el.textContent) === textContent &&
@@ -82,12 +84,12 @@ function highlightVars(varElem) {
 
   // highlight vars
   if (colorStatus) {
-    varsToHighlight.forEach((/** @type {any} */ el) =>
+    varsToHighlight.forEach((/** @type {HTMLElement} */ el) =>
       removeHighlight(el, highlightColor)
     );
     return [];
   } else {
-    varsToHighlight.forEach((/** @type {any} */ el) =>
+    varsToHighlight.forEach((/** @type {HTMLElement} */ el) =>
       addHighlight(el, highlightColor)
     );
   }
@@ -95,8 +97,8 @@ function highlightVars(varElem) {
 }
 
 /**
- * @param {any} el
- * @param {any} highlightColor
+ * @param {HTMLElement} el
+ * @param {string} highlightColor
  */
 function removeHighlight(el, highlightColor) {
   el.classList.remove("respec-hl", highlightColor);
@@ -105,8 +107,8 @@ function removeHighlight(el, highlightColor) {
 }
 
 /**
- * @param {any} elem
- * @param {any} highlightColor
+ * @param {HTMLElement} elem
+ * @param {string} highlightColor
  */
 function addHighlight(elem, highlightColor) {
   elem.classList.add("respec-hl", highlightColor);
