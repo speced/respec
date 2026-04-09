@@ -209,7 +209,7 @@ export function run(conf) {
   renameSectionHeaders();
 
   // makeTOC
-  if (!conf.noToc) {
+  if (!conf.noTOC) {
     skipFromToC();
     const sectionTree = getSectionTree(document.body);
     const result = scanSections(

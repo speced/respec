@@ -515,6 +515,7 @@ describe("W3C — Headers", () => {
           group: "webapps",
           github: "speced/respec",
           crEnd: "2019-01-01",
+          prEnd: "2019-01-01",
         });
         const doc = await makeRSDoc(ops, simpleSpecURL);
         const errors = headerErrors(doc);

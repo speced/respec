@@ -117,7 +117,8 @@ interface Conf {
   afterEnd?: ProcessFn;
   specStatus?: string;
   wgId?: string;
-  noToc: boolean;
+  noToc?: boolean;
+  noTOC?: boolean;
   /** Disables injecting ReSpec styles */
   noReSpecCSS?: boolean;
 
