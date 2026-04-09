@@ -15,7 +15,7 @@ export function run(config) {
   /**
    * @param {any} newValues
    */
-  const amendConfig = (newValues) => Object.assign(userConfig, newValues);
+  const amendConfig = newValues => Object.assign(userConfig, newValues);
 
   amendConfig(config);
   sub("amend-user-config", amendConfig);

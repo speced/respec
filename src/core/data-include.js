@@ -103,7 +103,10 @@ async function runIncludes(root, currentDepth) {
       }
     } catch (err) {
       const msg = `\`data-include\` failed: \`${url}\` (${/** @type {Error} */ (err).message}).`;
-      showError(msg, name, { elements: [el], cause: /** @type {Error} */ (err) });
+      showError(msg, name, {
+        elements: [el],
+        cause: /** @type {Error} */ (err),
+      });
     }
   });
   await Promise.all(promisesToInclude);

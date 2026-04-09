@@ -40,7 +40,7 @@ export function sub(topic, cb, options = { once: false }) {
   /**
    * @param {any} ev
    */
-  const listener = async (ev) => {
+  const listener = async ev => {
     try {
       await cb(ev.detail);
     } catch (error) {

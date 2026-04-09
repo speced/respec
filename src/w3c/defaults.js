@@ -123,7 +123,10 @@ function validateStatusForGroup(conf) {
     return;
   }
 
-  if ((/** @type {Record<string, string>} */ (status2text))[specStatus] === undefined) {
+  if (
+    /** @type {Record<string, string>} */ (status2text)[specStatus] ===
+    undefined
+  ) {
     const msg = docLink`The ${"[specStatus]"} "\`${specStatus}\`" is not supported at for this type of document.`;
     const choices = codedJoinOr(Object.keys(status2text), { quotes: true });
     const hint = docLink`set ${"[specStatus]"} to one of: ${choices}.`;

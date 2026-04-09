@@ -17,7 +17,7 @@ function panelListener() {
   /**
    * @param {any} event
    */
-  return (event) => {
+  return event => {
     const { target, type } = event;
 
     if (!(target instanceof HTMLElement)) return;
@@ -97,7 +97,9 @@ function deriveAction(event) {
       return target.classList.contains("self-link") ? "hide" : "dock";
     }
     const panel = target.closest(".dfn-panel");
-    return (/** @type {HTMLElement} */ (panel)).classList.contains("docked") ? "hide" : "none";
+    return /** @type {HTMLElement} */ (panel).classList.contains("docked")
+      ? "hide"
+      : "none";
   }
   if (document.querySelector(".dfn-panel:not([hidden])")) {
     return "hide";
@@ -194,7 +196,7 @@ function createTrapListener(anchors, panel, dfn) {
   /**
    * @param {KeyboardEvent} event
    */
-  return (event) => {
+  return event => {
     switch (event.key) {
       // Hitting "Tab" traps us in a nice loop around elements.
       case "Tab": {

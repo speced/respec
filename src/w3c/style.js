@@ -121,7 +121,9 @@ export function run(conf) {
   let colorScheme = document.querySelector("head meta[name=color-scheme]");
   if (!colorScheme) {
     // Default to light mode during transitional period.
-    colorScheme = /** @type {HTMLMetaElement} */ (html`<meta name="color-scheme" content="light" />`);
+    colorScheme = /** @type {HTMLMetaElement} */ (
+      html`<meta name="color-scheme" content="light" />`
+    );
     document.head.appendChild(colorScheme);
   }
   if (colorScheme?.content.includes("dark")) {

@@ -32,7 +32,7 @@ function show() {
   /**
    * @param {any} e
    */
-  const onLoad = (e) => e.target.classList.add("ready");
+  const onLoad = e => e.target.classList.add("ready");
   const xrefSearchUI = html`
     <iframe class="respec-iframe" src="${URL}" onload="${onLoad}"></iframe>
     <a href="${URL}" target="_blank">Open Search UI in a new tab</a>

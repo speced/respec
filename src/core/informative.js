@@ -35,7 +35,11 @@ const l10n = getIntlData(localizationStrings);
 export function run() {
   Array.from(document.querySelectorAll("section.informative"))
     .map(informative => informative.querySelector("h2, h3, h4, h5, h6"))
-    .filter(/** @type {(h: Element | null) => h is Element} */ (heading => heading !== null))
+    .filter(
+      /** @type {(h: Element | null) => h is Element} */ (
+        heading => heading !== null
+      )
+    )
     .forEach(heading => {
       heading.after(html`<p><em>${l10n.informative}</em></p>`);
     });

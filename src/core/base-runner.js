@@ -23,9 +23,12 @@ export async function runAll(plugs) {
   performance.mark(`${name}-start`);
   await preProcess(respecConfig);
 
-  const runnables = plugs.filter(/** @param {any} p */ p => isRunnableModule(p));
+  const runnables = plugs.filter(
+    /** @param {any} p */ p => isRunnableModule(p)
+  );
   runnables.forEach(
-    /** @param {any} plug */ plug => !plug.name && console.warn("Plugin lacks name:", plug)
+    /** @param {any} plug */ plug =>
+      !plug.name && console.warn("Plugin lacks name:", plug)
   );
   await executePreparePass(runnables, respecConfig);
   await executeRunPass(runnables, respecConfig);

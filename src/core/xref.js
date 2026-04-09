@@ -124,7 +124,11 @@ function normalizeConfig(xref) {
       break;
     case "string":
       if (xref.toLowerCase() in profiles) {
-        Object.assign(config, { specs: /** @type {Record<string, string[]>} */ (profiles)[xref.toLowerCase()] });
+        Object.assign(config, {
+          specs: /** @type {Record<string, string[]>} */ (profiles)[
+            xref.toLowerCase()
+          ],
+        });
       } else {
         invalidProfileError(xref);
       }
@@ -137,7 +141,9 @@ function normalizeConfig(xref) {
       if (xref.profile) {
         const profile = xref.profile.toLowerCase();
         if (profile in profiles) {
-          const specs = (xref.specs ?? []).concat(/** @type {Record<string, string[]>} */ (profiles)[profile]);
+          const specs = (xref.specs ?? []).concat(
+            /** @type {Record<string, string[]>} */ (profiles)[profile]
+          );
           Object.assign(config, { specs });
         } else {
           invalidProfileError(xref.profile);
@@ -209,7 +215,9 @@ function getSpecContext(elem) {
 
   // Traverse up towards the root element, adding levels of lower priority specs
   while (dataciteElem) {
-    const cite = (dataciteElem.dataset.cite ?? "").toLowerCase().replace(/[!?]/g, "");
+    const cite = (dataciteElem.dataset.cite ?? "")
+      .toLowerCase()
+      .replace(/[!?]/g, "");
     const cites = cite.split(/\s+/).filter(s => s);
     if (cites.length) {
       specs.push(cites);
@@ -265,7 +273,7 @@ function getForContext(elem, isIDL) {
 
   if (isIDL) {
     /** @type {HTMLElement | null} */
-  const dataXrefForElem = elem.closest("[data-xref-for]");
+    const dataXrefForElem = elem.closest("[data-xref-for]");
     if (dataXrefForElem) {
       return normalize(dataXrefForElem.dataset.xrefFor ?? "");
     }
@@ -331,7 +339,12 @@ async function fetchFromNetwork(queries, url) {
   };
   const response = await fetch(url, options);
   const json = await response.json();
-  return new Map(json.results.map((/** @type {{id: any, result: any}} */ { id, result }) => [id, result]));
+  return new Map(
+    json.results.map((/** @type {{id: any, result: any}} */ { id, result }) => [
+      id,
+      result,
+    ])
+  );
 }
 
 /**
@@ -407,7 +420,12 @@ function addDataCite(elem, query, result, conf) {
   // a filename. That filename must be preserved if there's no specific path.
   if (citePath === "/") citePath = "";
   const citeFrag = url.hash.slice(1);
-  const dataset = /** @type {Record<string, string>} */ ({ cite, citePath, citeFrag, linkType: type });
+  const dataset = /** @type {Record<string, string>} */ ({
+    cite,
+    citePath,
+    citeFrag,
+    linkType: type,
+  });
   if (forContext) dataset.linkFor = forContext[0];
   if (url.origin && url.origin !== "https://partial") {
     dataset.citeHref = url.href;
@@ -520,7 +538,9 @@ function cleanup(doc) {
     "a[data-xref-for], a[data-xref-type], a[data-link-for]"
   );
   const attrToRemove = ["data-xref-for", "data-xref-type", "data-link-for"];
-  elems.forEach(/** @param {Element} el */ el => {
-    attrToRemove.forEach(attr => el.removeAttribute(attr));
-  });
+  elems.forEach(
+    /** @param {Element} el */ el => {
+      attrToRemove.forEach(attr => el.removeAttribute(attr));
+    }
+  );
 }

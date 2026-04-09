@@ -135,7 +135,7 @@ function collectDfns(title) {
   /** @type {Map<string, Map<string, HTMLElement>>} */
   const result = new Map();
   const duplicates = [];
-  for (const dfn of (definitionMap.get(title) ?? [])) {
+  for (const dfn of definitionMap.get(title) ?? []) {
     const { dfnType = "dfn" } = dfn.dataset;
     const dfnFors = dfn.dataset.dfnFor?.split(",").map(s => s.trim()) ?? [""];
     for (const dfnFor of dfnFors) {
@@ -315,11 +315,13 @@ function shouldWrapByCode(elem, term = "") {
  * @param {HTMLElement[]} elems
  */
 function showLinkingError(elems) {
-  elems.forEach(/** @param {HTMLElement} elem */ elem => {
-    const msg = `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``;
-    const title = "Linking error: not matching `<dfn>`";
-    showWarning(msg, name, { title, elements: [elem] });
-  });
+  elems.forEach(
+    /** @param {HTMLElement} elem */ elem => {
+      const msg = `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``;
+      const title = "Linking error: not matching `<dfn>`";
+      showWarning(msg, name, { title, elements: [elem] });
+    }
+  );
 }
 
 /**
@@ -340,7 +342,10 @@ function updateReferences(conf) {
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );
   for (const elem of elems) {
-    elem.dataset.cite = (elem.dataset.cite ?? "").replace(regex, `$1${THIS_SPEC}$2`);
+    elem.dataset.cite = (elem.dataset.cite ?? "").replace(
+      regex,
+      `$1${THIS_SPEC}$2`
+    );
     const { key, isNormative } = toCiteDetails(elem);
     if (key === THIS_SPEC) continue;
 

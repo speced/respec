@@ -140,7 +140,9 @@ export function run(conf) {
   // });
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  conf.textStatus = (/** @type {Record<string, string>} */ (status2text))[conf.specStatus];
+  conf.textStatus = /** @type {Record<string, string>} */ (status2text)[
+    conf.specStatus
+  ];
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   // configuration done - yay!

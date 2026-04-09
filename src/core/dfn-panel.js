@@ -129,7 +129,8 @@ function referencesToHTML(id, links) {
     const linkID = link.id || `ref-for-${id}-${i + 1}`;
     if (!link.id) link.id = linkID;
     const title = getReferenceTitle(link) ?? "";
-    const ids = titleToIDs.get(title) ?? (titleToIDs.set(title, []).get(title) ?? []);
+    const ids =
+      titleToIDs.get(title) ?? titleToIDs.set(title, []).get(title) ?? [];
     ids.push(linkID);
   });
 

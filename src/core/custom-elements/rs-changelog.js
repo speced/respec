@@ -24,9 +24,13 @@ export const element = class ChangelogElement extends HTMLElement {
   constructor() {
     super();
     const filterAttr = this.getAttribute("filter");
-    const filterFn = filterAttr && typeof (/** @type {any} */ (window))[filterAttr] === "function"
-      ? /** @type {(commit: Commit) => boolean} */ ((/** @type {any} */ (window))[filterAttr])
-      : /** @type {(commit: Commit) => boolean} */ (() => true);
+    const filterFn =
+      filterAttr &&
+      typeof (/** @type {any} */ (window)[filterAttr]) === "function"
+        ? /** @type {(commit: Commit) => boolean} */ (
+            /** @type {any} */ (window)[filterAttr]
+          )
+        : /** @type {(commit: Commit) => boolean} */ (() => true);
     this.props = {
       from: this.getAttribute("from"),
       to: this.getAttribute("to") || "HEAD",

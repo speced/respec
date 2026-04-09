@@ -29,13 +29,11 @@ export function run(conf) {
 
   /** @type {NodeListOf<HTMLAnchorElement>} */
   const elems = document.querySelectorAll("var+a");
-  const offendingElements = [...elems].filter(
-    elem => {
-      const nodeName = elem.previousSibling?.nodeName;
-      const isPrevVar = nodeName && nodeName === "VAR";
-      return isPrevVar;
-    }
-  );
+  const offendingElements = [...elems].filter(elem => {
+    const nodeName = elem.previousSibling?.nodeName;
+    const isPrevVar = nodeName && nodeName === "VAR";
+    return isPrevVar;
+  });
 
   if (!offendingElements.length) {
     return;

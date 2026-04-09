@@ -82,7 +82,7 @@ export async function run(conf) {
  * @param {Document} doc
  */
 async function addJSONLDInfo(conf, doc) {
-  const rdfStatus = (/** @type {any} */ (status2rdf))[conf.specStatus];
+  const rdfStatus = /** @type {any} */ (status2rdf)[conf.specStatus];
   // Content for JSON
   const type = ["TechArticle"];
   if (rdfStatus) type.push(rdfStatus);

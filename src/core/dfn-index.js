@@ -223,7 +223,7 @@ function getLocalTermType(dfn) {
 function getLocalTermParentContext(dfn) {
   /** @type {HTMLElement | null} */
   const dfnFor = dfn.closest("[data-dfn-for]:not([data-dfn-for=''])");
-  return dfnFor ? dfnFor.dataset.dfnFor ?? "" : "";
+  return dfnFor ? (dfnFor.dataset.dfnFor ?? "") : "";
 }
 
 /**
@@ -281,7 +281,7 @@ function appendSectionNumbers() {
   /**
    * @param {string} id
    */
-  const getSectionNumber = (id) => {
+  const getSectionNumber = id => {
     const dfn = document.getElementById(id);
     const sectionNumberEl = dfn
       ?.closest("section:not(.notoc)")
@@ -428,7 +428,9 @@ function getTermText(entry) {
     text = `<code>${text}</code>`;
   }
 
-  const typeSuffix = TYPE_TERMS.has(term) ? "type" : TYPED_TYPES.get(type ?? "");
+  const typeSuffix = TYPE_TERMS.has(term)
+    ? "type"
+    : TYPED_TYPES.get(type ?? "");
   if (typeSuffix) {
     text += ` ${typeSuffix}`;
   }

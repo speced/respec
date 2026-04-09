@@ -111,9 +111,13 @@ function parseInlineIDL(str) {
     if (methodRegex.test(value)) {
       const [, identifier, allArgs, altText, altArgs] =
         /** @type {RegExpMatchArray} */ (value.match(methodRegex));
-      const args = (allArgs ?? "").split(/,\s*/).filter(/** @param {string} arg */ arg => arg);
+      const args = (allArgs ?? "")
+        .split(/,\s*/)
+        .filter(/** @param {string} arg */ arg => arg);
       const renderText = altText?.trim();
-      const renderArgs = altArgs?.split(/,\s*/).filter(/** @param {string} arg */ arg => arg);
+      const renderArgs = altArgs
+        ?.split(/,\s*/)
+        .filter(/** @param {string} arg */ arg => arg);
       results.push({
         type: "method",
         identifier: identifier ?? "",
@@ -126,29 +130,47 @@ function parseInlineIDL(str) {
     }
     // Enum["enum value"]
     if (enumRegex.test(value)) {
-      const [, identifier, enumValue] = /** @type {RegExpMatchArray} */ (value.match(enumRegex));
-      results.push({ type: "enum", identifier: identifier ?? "", enumValue: enumValue ?? "", renderParent });
+      const [, identifier, enumValue] = /** @type {RegExpMatchArray} */ (
+        value.match(enumRegex)
+      );
+      results.push({
+        type: "enum",
+        identifier: identifier ?? "",
+        enumValue: enumValue ?? "",
+        renderParent,
+      });
       continue;
     }
     // Exception - "NotAllowedError"
     // Or alternate enum syntax: {{ EnumContainer / "some enum value" }}
     if (exceptionRegex.test(value)) {
-      const [, identifier] = /** @type {RegExpMatchArray} */ (value.match(exceptionRegex));
+      const [, identifier] = /** @type {RegExpMatchArray} */ (
+        value.match(exceptionRegex)
+      );
       if (renderParent) {
         results.push({ type: "exception", identifier: identifier ?? "" });
       } else {
-        results.push({ type: "enum", enumValue: identifier ?? "", renderParent });
+        results.push({
+          type: "enum",
+          enumValue: identifier ?? "",
+          renderParent,
+        });
       }
       continue;
     }
     // internal slot
     if (slotRegex.test(value)) {
-      const [, identifier, allArgs] = /** @type {RegExpMatchArray} */ (value.match(slotRegex));
-      const slotType = /** @type {"method"|"attribute"} */ (allArgs ? "method" : "attribute");
-      const args = allArgs
-        ?.slice(1, -1)
-        .split(/,\s*/)
-        .filter(/** @param {string} arg */ arg => arg) ?? [];
+      const [, identifier, allArgs] = /** @type {RegExpMatchArray} */ (
+        value.match(slotRegex)
+      );
+      const slotType = /** @type {"method"|"attribute"} */ (
+        allArgs ? "method" : "attribute"
+      );
+      const args =
+        allArgs
+          ?.slice(1, -1)
+          .split(/,\s*/)
+          .filter(/** @param {string} arg */ arg => arg) ?? [];
       results.push({
         type: "internal-slot",
         slotType,
@@ -160,8 +182,14 @@ function parseInlineIDL(str) {
     }
     // attribute
     if (attributeRegex.test(value) && tokens.length) {
-      const [, identifier] = /** @type {RegExpMatchArray} */ (value.match(attributeRegex));
-      results.push({ type: "attribute", identifier: identifier ?? "", renderParent });
+      const [, identifier] = /** @type {RegExpMatchArray} */ (
+        value.match(attributeRegex)
+      );
+      results.push({
+        type: "attribute",
+        identifier: identifier ?? "",
+        renderParent,
+      });
       continue;
     }
     if (idlPrimitiveRegex.test(value)) {
@@ -349,7 +377,10 @@ export function idlStringToHtml(str) {
   } catch (error) {
     const el = html`<span>{{ ${str} }}</span>`;
     const title = "Error: Invalid inline IDL string.";
-    showError(/** @type {Error} */ (error).message, "core/inlines", { title, elements: [el] });
+    showError(/** @type {Error} */ (error).message, "core/inlines", {
+      title,
+      elements: [el],
+    });
     return el;
   }
   const render = html(document.createDocumentFragment());

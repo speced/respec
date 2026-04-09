@@ -44,7 +44,9 @@ async function getMultipleGroupDetails(groups) {
   };
   for (const groupDetails of details.filter(Boolean)) {
     for (const key of Object.keys(result)) {
-      (/** @type {Record<string, any[]>} */ (result))[key].push((/** @type {Record<string, any>} */ (groupDetails))[key]);
+      /** @type {Record<string, any[]>} */ (result)[key].push(
+        /** @type {Record<string, any>} */ (groupDetails)[key]
+      );
     }
   }
   return result;

@@ -207,8 +207,7 @@ export function getIntlDataForKey(localizationStrings, key, lang = docLang) {
   lang = lang.toLowerCase();
   const shortLang = lang.match(/^(\w{2,3})-.+$/)?.[1] ?? "";
   return (
-    localizationStrings[lang]?.[key] ||
-    localizationStrings[shortLang]?.[key]
+    localizationStrings[lang]?.[key] || localizationStrings[shortLang]?.[key]
   );
 }
 
@@ -254,7 +253,7 @@ export function toKeyValuePairs(obj, delimiter = ", ", separator = "=") {
  */
 export function linkCSS(doc, urls) {
   /** @type {string[]} */
-  const stylesArray = (/** @type {any} */ ([])).concat(urls);
+  const stylesArray = /** @type {any} */ ([]).concat(urls);
   const frag = stylesArray
     .map(url => {
       const link = doc.createElement("link");
@@ -287,7 +286,7 @@ export function runTransforms(content, flist, ...funcArgs) {
   if (flist) {
     const methods = flist.split(/\s+/);
     for (const meth of methods) {
-      const method = (/** @type {any} */ (window))[meth];
+      const method = /** @type {any} */ (window)[meth];
       if (method) {
         // the initial call passed |this| directly, so we keep it that way
         try {
@@ -295,7 +294,10 @@ export function runTransforms(content, flist, ...funcArgs) {
         } catch (e) {
           const msg = `call to \`${meth}()\` failed with: ${e}.`;
           const hint = "See developer console for stack trace.";
-          showWarning(msg, "utils/runTransforms", { hint, cause: /** @type {Error} */ (e) });
+          showWarning(msg, "utils/runTransforms", {
+            hint,
+            cause: /** @type {Error} */ (e),
+          });
         }
       }
     }
@@ -379,7 +381,7 @@ export function htmlJoinComma(array, mapper = item => item) {
  */
 export function htmlJoinAnd(array, mapper) {
   /** @type {any[]} */
-  const result = (/** @type {any} */ ([])).concat(conjunction(array, mapper));
+  const result = /** @type {any} */ ([]).concat(conjunction(array, mapper));
   return result.map(item => (typeof item === "string" ? html`${item}` : item));
 }
 
@@ -454,7 +456,7 @@ export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
   /**
    * @param {Text} node
    */
-  const acceptNodeFn = (node) => {
+  const acceptNodeFn = node => {
     if (!options.wsNodes && !node.data.trim()) {
       return NodeFilter.FILTER_REJECT;
     }
@@ -504,7 +506,8 @@ export function getDfnTitles(elem) {
   } else if (
     elem.childNodes.length === 1 &&
     elem.getElementsByTagName("abbr").length === 1 &&
-    child && child.title
+    child &&
+    child.title
   ) {
     titleSet.add(child.title);
   } else if (elem.textContent === '""') {
@@ -545,7 +548,7 @@ export function getDfnTitles(elem) {
 export function getLinkTargets(elem) {
   /** @type {HTMLElement | null} */
   const linkForElem = elem.closest("[data-link-for]");
-  const linkFor = linkForElem ? linkForElem.dataset.linkFor ?? "" : "";
+  const linkFor = linkForElem ? (linkForElem.dataset.linkFor ?? "") : "";
   const titles = getDfnTitles(elem);
   /** @type {LinkTarget[]} */
   const results = titles.reduce((result, title) => {

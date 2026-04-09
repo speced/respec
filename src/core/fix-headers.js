@@ -10,7 +10,9 @@ export const name = "core/fix-headers";
 export function run() {
   [...document.querySelectorAll("section:not(.introductory)")]
     .map(sec => sec.querySelector("h1, h2, h3, h4, h5, h6"))
-    .filter(/** @type {(h: Element | null) => h is Element} */ (h => h !== null))
+    .filter(
+      /** @type {(h: Element | null) => h is Element} */ (h => h !== null)
+    )
     .forEach(heading => {
       const depth = Math.min(getParents(heading, "section").length + 1, 6);
       renameElement(heading, `h${depth}`);

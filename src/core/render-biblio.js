@@ -277,20 +277,32 @@ function decorateInlineReference(refs, aliases) {
   refs
     .map((/** @type {Ref} */ { ref, refcontent }) => {
       const refUrl = `#bib-${ref.toLowerCase()}`;
-      const selectors = aliases
-        .get(refcontent?.id ?? "")
-        ?.map((/** @type {string} */ alias) => `a.bibref[href="#bib-${alias.toLowerCase()}"]`)
-        .join(",") ?? "";
+      const selectors =
+        aliases
+          .get(refcontent?.id ?? "")
+          ?.map(
+            (/** @type {string} */ alias) =>
+              `a.bibref[href="#bib-${alias.toLowerCase()}"]`
+          )
+          .join(",") ?? "";
       const elems = document.querySelectorAll(selectors);
       return { refUrl, elems, refcontent };
     })
-    .forEach((/** @type {{ refUrl: string, elems: NodeListOf<Element>, refcontent: any }} */ { refUrl, elems, refcontent }) => {
-      elems.forEach((/** @type {Element} */ a) => {
-        a.setAttribute("href", refUrl);
-        a.setAttribute("title", refcontent.title);
-        (/** @type {any} */ (a)).dataset.linkType = "biblio";
-      });
-    });
+    .forEach(
+      (
+        /** @type {{ refUrl: string, elems: NodeListOf<Element>, refcontent: any }} */ {
+          refUrl,
+          elems,
+          refcontent,
+        }
+      ) => {
+        elems.forEach((/** @type {Element} */ a) => {
+          a.setAttribute("href", refUrl);
+          a.setAttribute("title", refcontent.title);
+          /** @type {any} */ (a).dataset.linkType = "biblio";
+        });
+      }
+    );
 }
 
 /**

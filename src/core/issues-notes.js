@@ -149,7 +149,9 @@ function handleIssues(ins, ghIssues, conf) {
           text += ` ${report.number}`;
         }
         if (inno.dataset.hasOwnProperty("number")) {
-          const link = linkToIssueTracker(dataNum ?? "", conf, { isFeatureAtRisk });
+          const link = linkToIssueTracker(dataNum ?? "", conf, {
+            isFeatureAtRisk,
+          });
           if (link) {
             title.before(link);
             link.append(title);
@@ -199,7 +201,7 @@ function createIssueNumberGetter() {
     /**
      * @param {HTMLElement} element
      */
-    return (element) => {
+    return element => {
       if (element.dataset.number) {
         return Number(element.dataset.number);
       }
@@ -210,7 +212,7 @@ function createIssueNumberGetter() {
   /**
    * @param {HTMLElement} element
    */
-  return (element) => {
+  return element => {
     if (element.classList.contains("issue") && element.localName !== "span") {
       return ++issueNumber;
     }

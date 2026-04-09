@@ -232,10 +232,13 @@ export default (conf, options) => {
   /**
    * After export, we let fixup.js handle the <details>.
    */
-  sub("beforesave", /** @param {Document} doc */ doc => {
-    const details = doc.querySelector(".head details");
-    if (details) /** @type {HTMLDetailsElement} */ (details).open = true;
-  });
+  sub(
+    "beforesave",
+    /** @param {Document} doc */ doc => {
+      const details = doc.querySelector(".head details");
+      if (details) /** @type {HTMLDetailsElement} */ (details).open = true;
+    }
+  );
   return html`<div class="head">
     ${conf.logos.length
       ? html`<p class="logos">${conf.logos.map(showLogo)}</p>`

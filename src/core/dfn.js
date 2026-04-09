@@ -91,7 +91,9 @@ function computeType(dfn, linkingText) {
     // class defined type (e.g., "<dfn class="element">)
     case knownTypes.some(name => dfn.classList.contains(name)):
       // First one wins
-      type = [...dfn.classList].find(className => knownTypesMap.has(className)) ?? "";
+      type =
+        [...dfn.classList].find(className => knownTypesMap.has(className)) ??
+        "";
       validateDefinition(linkingText, type, dfn);
       break;
 

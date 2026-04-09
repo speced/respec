@@ -56,7 +56,10 @@ export async function updateFromNetwork(
   const oneHourFromNow = Date.now() + 1000 * 60 * 60 * 1;
   try {
     const expires = response.headers.has("Expires")
-      ? Math.min(Date.parse(response.headers.get("Expires") ?? ""), oneHourFromNow)
+      ? Math.min(
+          Date.parse(response.headers.get("Expires") ?? ""),
+          oneHourFromNow
+        )
       : oneHourFromNow;
     await biblioDB.addAll(data, expires);
   } catch (err) {

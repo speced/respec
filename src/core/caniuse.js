@@ -66,7 +66,7 @@ export function prepare(conf) {
  * @returns
  */
 function getLogoSrc(browser) {
-  const path = (BROWSERS.get(browser)?.path) ?? browser;
+  const path = BROWSERS.get(browser)?.path ?? browser;
   return `https://www.w3.org/assets/logos/browser-logos/${path}/${path}.svg`;
 }
 
@@ -95,10 +95,13 @@ export async function run(conf) {
     headDlElem
       ?.querySelectorAll(".caniuse-browser")
       .forEach(elem => elem.classList.add("removeOnSave"));
-    sub("beforesave", /** @param {any} outputDoc */ outputDoc => {
-      html.bind(outputDoc.querySelector(".caniuse-stats"))`
+    sub(
+      "beforesave",
+      /** @param {any} outputDoc */ outputDoc => {
+        html.bind(outputDoc.querySelector(".caniuse-stats"))`
         <a href="${featureURL}">caniuse.com</a>`;
-    });
+      }
+    );
   }
 }
 
@@ -173,31 +176,33 @@ async function processJson(json, { feature }) {
 
 /** @param {any} feature */
 function browserCellRenderer(feature) {
-  return /** @type {(groups: any, arg: { browser: any, version: any, caniuse: any }) => any} */ ((groups, { browser: browserId, version, caniuse }) => {
-    const entry = BROWSERS.get(browserId);
-    const { name, type } = entry ?? { name: browserId, type: "desktop" };
-    const versionLong = version ? ` version ${version}` : "";
-    const browserName = `${name}${versionLong}`;
-    const supportLevel = statToText.get(caniuse);
-    const ariaLabel = `${feature} is ${supportLevel} since ${browserName} on ${type}.`;
-    const cssClass = `caniuse-cell ${caniuse}`;
-    const title = capitalize(`${supportLevel} since ${browserName}.`);
-    const textVersion = version ? version : "—";
-    const src = getLogoSrc(browserId);
-    const result = html`
-      <div class="${cssClass}" title="${title}" aria-label="${ariaLabel}">
-        <img
-          class="caniuse-browser"
-          width="20"
-          height="20"
-          src="${src}"
-          alt="${name} logo"
-        /><span class="browser-version">${textVersion}</span>
-      </div>
-    `;
-    groups.get(type).push(result);
-    return groups;
-  });
+  return /** @type {(groups: any, arg: { browser: any, version: any, caniuse: any }) => any} */ (
+    (groups, { browser: browserId, version, caniuse }) => {
+      const entry = BROWSERS.get(browserId);
+      const { name, type } = entry ?? { name: browserId, type: "desktop" };
+      const versionLong = version ? ` version ${version}` : "";
+      const browserName = `${name}${versionLong}`;
+      const supportLevel = statToText.get(caniuse);
+      const ariaLabel = `${feature} is ${supportLevel} since ${browserName} on ${type}.`;
+      const cssClass = `caniuse-cell ${caniuse}`;
+      const title = capitalize(`${supportLevel} since ${browserName}.`);
+      const textVersion = version ? version : "—";
+      const src = getLogoSrc(browserId);
+      const result = html`
+        <div class="${cssClass}" title="${title}" aria-label="${ariaLabel}">
+          <img
+            class="caniuse-browser"
+            width="20"
+            height="20"
+            src="${src}"
+            alt="${name} logo"
+          /><span class="browser-version">${textVersion}</span>
+        </div>
+      `;
+      groups.get(type).push(result);
+      return groups;
+    }
+  );
 }
 
 /**
@@ -208,7 +213,10 @@ function browserCellRenderer(feature) {
 async function fetchStats(options) {
   const { feature, browsers, apiURL } = options;
   const url = new URL(apiURL || `./${feature}`, API_URL);
-  browsers.forEach(/** @param {string} browser */ browser => url.searchParams.append("browsers", browser));
+  browsers.forEach(
+    /** @param {string} browser */ browser =>
+      url.searchParams.append("browsers", browser)
+  );
   const response = await fetch(url);
   if (!response.ok) {
     const { status, statusText } = response;

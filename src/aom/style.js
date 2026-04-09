@@ -101,7 +101,7 @@ function styleMover(linkURL) {
   /**
    * @param {any} exportDoc
    */
-  return (exportDoc) => {
+  return exportDoc => {
     const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
     exportDoc.querySelector("head").append(w3cStyle);
   };

@@ -110,7 +110,7 @@ function getSpecSubTitleElem(conf) {
 /**
  * @param {any} conf
  */
-export default (conf) => {
+export default conf => {
   return html`<div class="head">
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}

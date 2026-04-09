@@ -54,7 +54,7 @@ export function run(conf) {
       ? false
       : {
           ...coreDefaults.lint,
-          ...(/** @type {any} */ (aomDefaults)).lint,
+          .../** @type {any} */ (aomDefaults).lint,
           ...conf.lint,
         };
   Object.assign(conf, {

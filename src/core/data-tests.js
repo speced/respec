@@ -109,8 +109,14 @@ export function run(conf) {
   }
 
   for (const elem of testables) {
-    const tests = (elem.dataset.tests ?? "").split(/,/gm).map(url => url.trim());
-    const testURLs = toTestURLs(tests, conf.testSuiteURI, elem).filter(/** @type {(u: string | undefined) => u is string} */ (u => u !== undefined));
+    const tests = (elem.dataset.tests ?? "")
+      .split(/,/gm)
+      .map(url => url.trim());
+    const testURLs = toTestURLs(tests, conf.testSuiteURI, elem).filter(
+      /** @type {(u: string | undefined) => u is string} */ (
+        u => u !== undefined
+      )
+    );
     handleDuplicates(testURLs, elem);
     const details = toHTML(testURLs);
     elem.append(details);

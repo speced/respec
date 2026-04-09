@@ -94,7 +94,9 @@ function processFigure(matchingElement, id, a) {
   }
   // get figure label and remove the fig-number class
   const children = [
-    ...makeSafeCopy(/** @type {HTMLElement} */ (figcaption.querySelector(".self-link"))).childNodes,
+    ...makeSafeCopy(
+      /** @type {HTMLElement} */ (figcaption.querySelector(".self-link"))
+    ).childNodes,
   ].map(node => {
     // @ts-ignore
     node.classList?.remove("figno");
@@ -128,7 +130,9 @@ function processTable(matchingTable, id, a) {
 
   // get table label and remove the fig-number class
   const children = [
-    ...makeSafeCopy(/** @type {HTMLElement} */ (caption.querySelector(".self-link"))).childNodes,
+    ...makeSafeCopy(
+      /** @type {HTMLElement} */ (caption.querySelector(".self-link"))
+    ).childNodes,
   ].map(node => {
     // @ts-ignore
     // @ts-ignore
@@ -180,13 +184,15 @@ function processHeading(heading, a) {
     a.lastChild.textContent = (a.lastChild.textContent ?? "").trimEnd();
   }
   // Replace all inner anchors for span elements (see bug #3136)
-  a.querySelectorAll("a").forEach(/** @param {HTMLElement} a */ a => {
-    const span = renameElement(a, "span");
-    // Remove the old attributes
-    for (const attr of [...span.attributes]) {
-      span.removeAttributeNode(attr);
+  a.querySelectorAll("a").forEach(
+    /** @param {HTMLElement} a */ a => {
+      const span = renameElement(a, "span");
+      // Remove the old attributes
+      for (const attr of [...span.attributes]) {
+        span.removeAttributeNode(attr);
+      }
     }
-  });
+  );
 }
 
 /**
@@ -213,6 +219,9 @@ function localize(matchingElement, newElement) {
     )
       continue;
     // Otherwise, set it.
-    newElement.setAttribute(attrName, matchingClosest.getAttribute(attrName) ?? "");
+    newElement.setAttribute(
+      attrName,
+      matchingClosest.getAttribute(attrName) ?? ""
+    );
   }
 }

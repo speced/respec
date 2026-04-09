@@ -207,64 +207,66 @@ export const noTrackStatus = [
   "unofficial",
 ];
 /** @type {Map<string, LicenseInfo>} */
-export const licenses = /** @type {any} */ (new Map([
-  [
-    "cc0",
-    {
-      name: "Creative Commons 0 Public Domain Dedication",
-      short: "CC0",
-      url: "https://creativecommons.org/publicdomain/zero/1.0/",
-    },
-  ],
-  [
-    "w3c-software",
-    {
-      name: "W3C Software Notice and License",
-      short: "W3C Software",
-      url: "https://www.w3.org/copyright/software-license-2002/",
-    },
-  ],
-  [
-    "w3c-software-doc",
-    {
-      name: "W3C Software and Document Notice and License",
-      short: "permissive document license",
-      url: "https://www.w3.org/copyright/software-license-2023/",
-    },
-  ],
-  [
-    "cc-by",
-    {
-      name: "Creative Commons Attribution 4.0 International Public License",
-      short: "CC-BY",
-      url: "https://creativecommons.org/licenses/by/4.0/legalcode",
-    },
-  ],
-  [
-    "document",
-    {
-      name: "W3C Document License",
-      short: "document use",
-      url: "https://www.w3.org/copyright/document-license/",
-    },
-  ],
-  [
-    "dual",
-    {
-      name: "W3C Dual License",
-      short: "dual license",
-      url: "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html",
-    },
-  ],
-  [
-    undefined,
-    {
-      name: "unlicensed",
-      url: null,
-      short: "UNLICENSED",
-    },
-  ],
-]));
+export const licenses = /** @type {any} */ (
+  new Map([
+    [
+      "cc0",
+      {
+        name: "Creative Commons 0 Public Domain Dedication",
+        short: "CC0",
+        url: "https://creativecommons.org/publicdomain/zero/1.0/",
+      },
+    ],
+    [
+      "w3c-software",
+      {
+        name: "W3C Software Notice and License",
+        short: "W3C Software",
+        url: "https://www.w3.org/copyright/software-license-2002/",
+      },
+    ],
+    [
+      "w3c-software-doc",
+      {
+        name: "W3C Software and Document Notice and License",
+        short: "permissive document license",
+        url: "https://www.w3.org/copyright/software-license-2023/",
+      },
+    ],
+    [
+      "cc-by",
+      {
+        name: "Creative Commons Attribution 4.0 International Public License",
+        short: "CC-BY",
+        url: "https://creativecommons.org/licenses/by/4.0/legalcode",
+      },
+    ],
+    [
+      "document",
+      {
+        name: "W3C Document License",
+        short: "document use",
+        url: "https://www.w3.org/copyright/document-license/",
+      },
+    ],
+    [
+      "dual",
+      {
+        name: "W3C Dual License",
+        short: "dual license",
+        url: "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html",
+      },
+    ],
+    [
+      undefined,
+      {
+        name: "unlicensed",
+        url: null,
+        short: "UNLICENSED",
+      },
+    ],
+  ])
+);
 
 const patentPolicies = ["PP2017", "PP2020"];
 
@@ -343,8 +345,8 @@ export async function run(conf) {
   conf.isUnofficial = conf.specStatus === "unofficial";
   conf.licenseInfo = deriveLicenseInfo(conf);
   conf.prependW3C = !conf.isBasic && !conf.isUnofficial;
-  conf.longStatus = (/** @type {any} */ (status2long))[conf.specStatus];
-  conf.textStatus = (/** @type {any} */ (status2text))[conf.specStatus];
+  conf.longStatus = /** @type {any} */ (status2long)[conf.specStatus];
+  conf.textStatus = /** @type {any} */ (status2text)[conf.specStatus];
   conf.showPreviousVersion = false;
 
   if (conf.isRegular && !conf.shortName) {
@@ -384,7 +386,8 @@ export async function run(conf) {
 
   const pubSpace = derivePubSpace(conf);
   if (pubSpace && !conf.thisVersion) {
-    const maturity = (/** @type {any} */ (status2maturity))[conf.specStatus] || conf.specStatus;
+    const maturity =
+      /** @type {any} */ (status2maturity)[conf.specStatus] || conf.specStatus;
     const { shortName, publishDate } = conf;
     const date = concatDate(publishDate);
     const docVersion = `${maturity}-${shortName}-${date}`;
@@ -417,7 +420,8 @@ export async function run(conf) {
     );
 
     const prevMaturity =
-      (/** @type {any} */ (status2maturity))[conf.previousMaturity] ?? conf.previousMaturity;
+      /** @type {any} */ (status2maturity)[conf.previousMaturity] ??
+      conf.previousMaturity;
     if (conf.isTagFinding && conf.latestVersion) {
       const pubDate = ISODate.format(conf.publishDate);
       conf.thisVersion = w3Url(`${latestPath}-${pubDate}`);
@@ -452,17 +456,23 @@ export async function run(conf) {
     showError(msg, name, { hint });
   } else if (conf.editors.length && conf.isRecTrack) {
     // check that every editor has w3cid
-    conf.editors.forEach((/** @type {any} */ editor, /** @type {number} */ i) => {
-      if (editor.w3cid) return;
-      const msg = docLink`Editor ${
-        editor.name ? `"${editor.name}"` : `number ${i + 1}`
-      } is missing their ${"[w3cid]"}.`;
-      const hint = docLink`See ${"[w3cid]"} for instructions for how to retrieve it and add it.`;
-      showError(msg, name, { hint });
-    });
+    conf.editors.forEach(
+      (/** @type {any} */ editor, /** @type {number} */ i) => {
+        if (editor.w3cid) return;
+        const msg = docLink`Editor ${
+          editor.name ? `"${editor.name}"` : `number ${i + 1}`
+        } is missing their ${"[w3cid]"}.`;
+        const hint = docLink`See ${"[w3cid]"} for instructions for how to retrieve it and add it.`;
+        showError(msg, name, { hint });
+      }
+    );
   }
 
-  if (conf.alternateFormats?.some((/** @type {{uri: any, label: any}} */ { uri, label }) => !uri || !label)) {
+  if (
+    conf.alternateFormats?.some(
+      (/** @type {{uri: any, label: any}} */ { uri, label }) => !uri || !label
+    )
+  ) {
     const msg = docLink`Every ${"[`alternateFormats`]"} entry must have a \`uri\` and a \`label\`.`;
     showError(msg, name);
   }
@@ -546,12 +556,15 @@ export async function run(conf) {
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
-    conf.wgPatentHTML = htmlJoinAnd(conf.wg, (/** @type {any} */ wg, /** @type {number} */ i) => {
-      return html`a
-        <a href="${conf.wgPatentURI[i]}" rel="disclosure"
-          >public list of any patent disclosures (${wg})</a
-        >`;
-    });
+    conf.wgPatentHTML = htmlJoinAnd(
+      conf.wg,
+      (/** @type {any} */ wg, /** @type {number} */ i) => {
+        return html`a
+          <a href="${conf.wgPatentURI[i]}" rel="disclosure"
+            >public list of any patent disclosures (${wg})</a
+          >`;
+      }
+    );
   } else {
     conf.multipleWGs = false;
   }
@@ -685,7 +698,7 @@ function derivePubSpace(conf) {
 
 /** @param {any} conf */
 function validateCGBG(conf) {
-  const reportType = (/** @type {any} */ (status2text))[conf.specStatus];
+  const reportType = /** @type {any} */ (status2text)[conf.specStatus];
   const latestVersionURL = conf.latestVersion
     ? new URL(w3Url(conf.latestVersion))
     : null;
@@ -765,7 +778,7 @@ function validatePatentPolicies(conf) {
     ![...policies].every(policy => patentPolicies.includes(policy))
   ) {
     /** @type {string[]} */
-    const invalidPolicies = (/** @type {any[]} */ ([...policies])).filter(
+    const invalidPolicies = /** @type {any[]} */ ([...policies]).filter(
       policy => !patentPolicies.includes(policy)
     );
     const msg = docLink`Invalid ${"[wgPatentPolicy]"} value(s): ${codedJoinAnd(
@@ -828,7 +841,9 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
     ) {
       break;
     }
-    additionalContent.appendChild(/** @type {ChildNode} */ (sotdClone.firstChild));
+    additionalContent.appendChild(
+      /** @type {ChildNode} */ (sotdClone.firstChild)
+    );
   }
   if (isTagFinding && !additionalContent.hasChildNodes()) {
     const msg = docLink`ReSpec does not support automated SotD generation for TAG findings.`;

@@ -150,9 +150,8 @@ export function toCiteDetails(elem) {
   if ((rawKey ?? "").startsWith("#") && !citeFrag) {
     // Closes data-cite not starting with "#"
     /** @type {HTMLElement | null} */
-    const closest = elem.parentElement?.closest(
-      `[data-cite]:not([data-cite^="#"])`
-    ) ?? null;
+    const closest =
+      elem.parentElement?.closest(`[data-cite]:not([data-cite^="#"])`) ?? null;
     const { key: parentKey, isNormative: closestIsNormative } = closest
       ? toCiteDetails(closest)
       : { key: THIS_SPEC, isNormative: false };
@@ -167,7 +166,9 @@ export function toCiteDetails(elem) {
   const isNormative = type === "normative";
   // key is before "/" and "#" but after "!" or "?" (e.g., ?key/path#frag)
   const hasPrecedingMark = /^[?|!]/.test(rawKey ?? "");
-  const key = (rawKey ?? "").split(/[/|#]/)[0].substring(Number(hasPrecedingMark));
+  const key = (rawKey ?? "")
+    .split(/[/|#]/)[0]
+    .substring(Number(hasPrecedingMark));
   const details = { key, isNormative, frag, path, href: citeHref };
   return details;
 }

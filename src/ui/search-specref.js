@@ -40,7 +40,7 @@ function show() {
   /**
    * @param {any} e
    */
-  const onLoad = (e) => e.target.classList.add("ready");
+  const onLoad = e => e.target.classList.add("ready");
   /** @type {HTMLElement} */
   const specrefSearchUI = html`
     <iframe class="respec-iframe" src="${URL}" onload=${onLoad}></iframe>

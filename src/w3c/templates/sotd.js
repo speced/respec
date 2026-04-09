@@ -530,10 +530,10 @@ function linkToWorkingGroup(conf) {
           >`}.`;
     }
   }
-  const track = (/** @type {any} */ (status2track))[conf.specStatus]
+  const track = /** @type {any} */ (status2track)[conf.specStatus]
     ? html` using the
         <a href="${processLink}#recs-and-notes"
-          >${(/** @type {any} */ (status2track))[conf.specStatus]} track</a
+          >${/** @type {any} */ (status2track)[conf.specStatus]} track</a
         >`
     : "";
   return html`<p>

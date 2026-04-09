@@ -116,7 +116,7 @@ function inlineRFC2119Matches(matched) {
   const value = norm(matched);
   const nodeElement = html`<em class="rfc2119">${value}</em>`;
   // remember which ones were used
-  (/** @type {any} */ (rfc2119Usage))[value] = true;
+  /** @type {any} */ (rfc2119Usage)[value] = true;
   return nodeElement;
 }
 
@@ -165,7 +165,10 @@ function inlineBibrefMatches(matched, txt, conf) {
   }
 
   const [spec, linkText] = ref.split("|").map(norm);
-  const { type, illegal } = refTypeFromContext(spec, /** @type {HTMLElement} */ (txt.parentElement));
+  const { type, illegal } = refTypeFromContext(
+    spec,
+    /** @type {HTMLElement} */ (txt.parentElement)
+  );
   const cite = renderInlineCitation(spec, linkText);
   const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {

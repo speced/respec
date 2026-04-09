@@ -96,7 +96,9 @@ function buildBrowserSupportTable(support) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
     return html`<tr class="${classList}">
-      <td>${(/** @type {Record<string, string>} */ (MDN_BROWSERS))[browserId]}</td>
+      <td>
+        ${/** @type {Record<string, string>} */ (MDN_BROWSERS)[browserId]}
+      </td>
       <td>${version ? version : displayStatus}</td>
     </tr>`;
   }

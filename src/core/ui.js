@@ -71,12 +71,15 @@ sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
 const respecPill = html`<button id="respec-pill" disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
-respecPill.addEventListener("click", /** @param {MouseEvent} e */ e => {
-  e.stopPropagation();
-  respecPill.setAttribute("aria-expanded", String(menu.hidden));
-  toggleMenu();
-  menu.querySelector("li:first-child button").focus();
-});
+respecPill.addEventListener(
+  "click",
+  /** @param {MouseEvent} e */ e => {
+    e.stopPropagation();
+    respecPill.setAttribute("aria-expanded", String(menu.hidden));
+    toggleMenu();
+    menu.querySelector("li:first-child button").focus();
+  }
+);
 
 document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
@@ -85,13 +88,16 @@ document.documentElement.addEventListener("click", () => {
 });
 respecUI.appendChild(menu);
 
-menu.addEventListener("keydown", /** @param {KeyboardEvent} e */ e => {
-  if (e.key === "Escape" && !menu.hidden) {
-    respecPill.setAttribute("aria-expanded", String(menu.hidden));
-    toggleMenu();
-    respecPill.focus();
+menu.addEventListener(
+  "keydown",
+  /** @param {KeyboardEvent} e */ e => {
+    if (e.key === "Escape" && !menu.hidden) {
+      respecPill.setAttribute("aria-expanded", String(menu.hidden));
+      toggleMenu();
+      respecPill.focus();
+    }
   }
-});
+);
 
 function toggleMenu() {
   menu.classList.toggle("respec-hidden");
@@ -107,7 +113,9 @@ function trapFocus(element) {
     "a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])"
   );
   const firstFocusableEl = /** @type {HTMLElement} */ (focusableEls[0]);
-  const lastFocusableEl = /** @type {HTMLElement} */ (focusableEls[focusableEls.length - 1]);
+  const lastFocusableEl = /** @type {HTMLElement} */ (
+    focusableEls[focusableEls.length - 1]
+  );
   if (firstFocusableEl) {
     firstFocusableEl.focus();
   }
@@ -179,7 +187,9 @@ function createWarnButton(butName, arr, title) {
       const li = document.createElement("li");
       // if it's only a single element, just copy the contents into li
       if (fragment.firstElementChild === fragment.lastElementChild) {
-        li.append(.../** @type {Element} */ (fragment.firstElementChild).childNodes);
+        li.append(
+          .../** @type {Element} */ (fragment.firstElementChild).childNodes
+        );
         // Otherwise, take everything.
       } else {
         li.appendChild(fragment);
@@ -278,9 +288,16 @@ export const ui = {
     </div>`;
     const ariaMap = new Map([["labelledby", headingId]]);
     ariaDecorate(modal, ariaMap);
-    document.body.append(/** @type {HTMLElement} */ (overlay), /** @type {HTMLElement} */ (modal));
-    /** @type {HTMLElement} */ (overlay).addEventListener("click", () => this.closeModal(currentOwner));
-    /** @type {HTMLElement} */ (overlay).classList.toggle("respec-show-overlay");
+    document.body.append(
+      /** @type {HTMLElement} */ (overlay),
+      /** @type {HTMLElement} */ (modal)
+    );
+    /** @type {HTMLElement} */ (overlay).addEventListener("click", () =>
+      this.closeModal(currentOwner)
+    );
+    /** @type {HTMLElement} */ (overlay).classList.toggle(
+      "respec-show-overlay"
+    );
     /** @type {HTMLElement} */ (modal).hidden = false;
     trapFocus(/** @type {HTMLElement} */ (modal));
   },

@@ -64,7 +64,6 @@ interface Node {
 
 declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
 
-
 interface BibliographyMap extends Record<string, BiblioData> {}
 
 interface BiblioData {
@@ -305,4 +304,3 @@ interface CiteDetails {
   path: string;
   href?: string;
 }
-
