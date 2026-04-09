@@ -52,7 +52,7 @@ const localizationStrings = {
   },
 };
 
-const l10n = getIntlData(localizationStrings);
+const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
 const REF_STATUSES = new Map([
   ["CR", "W3C Candidate Recommendation"],
@@ -139,7 +139,7 @@ function toRefContent(ref) {
   const circular = new Set([key]);
   while (refcontent && refcontent.aliasOf) {
     if (circular.has(refcontent.aliasOf)) {
-      refcontent = null;
+      refcontent = /** @type {any} */ (null);
       const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
       showError(msg, name);
     } else {
@@ -173,10 +173,10 @@ function getUniqueRefs(refs) {
   /** @type {Map<string, Ref>} */
   const uniqueRefs = new Map();
   for (const ref of refs) {
-    if (!uniqueRefs.has(ref.refcontent.id)) {
+    if (!uniqueRefs.has(ref.refcontent?.id ?? "")) {
       // the condition ensures that only the first used [[TERM]]
       // shows up in #references section
-      uniqueRefs.set(ref.refcontent.id, ref);
+      uniqueRefs.set(ref.refcontent?.id ?? "", ref);
     }
   }
   return [...uniqueRefs.values()];
@@ -219,8 +219,11 @@ function showRef(reference) {
   return result;
 }
 
+/**
+ * @param {string} endStr
+ */
 function endNormalizer(endStr) {
-  return str => {
+  return /** @param {string} str */ str => {
     const trimmed = str.trim();
     const result =
       !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
@@ -251,14 +254,15 @@ function stringifyReference(ref) {
 
 /**
  * get aliases for a reference "key"
+ * @param {Ref[]} refs
  */
 function getAliases(refs) {
-  return refs.reduce((aliases, ref) => {
-    const key = ref.refcontent.id;
+  return refs.reduce((/** @type {Map<string, string[]>} */ aliases, ref) => {
+    const key = ref.refcontent?.id ?? "";
     const keys = !aliases.has(key)
       ? aliases.set(key, []).get(key)
       : aliases.get(key);
-    keys.push(ref.ref);
+    keys?.push(ref.ref);
     return aliases;
   }, new Map());
 }
@@ -266,29 +270,32 @@ function getAliases(refs) {
 /**
  * fix biblio reference URLs
  * Add title attribute to references
+ * @param {Ref[]} refs
+ * @param {Map<string, string[]>} aliases
  */
 function decorateInlineReference(refs, aliases) {
   refs
-    .map(({ ref, refcontent }) => {
+    .map((/** @type {Ref} */ { ref, refcontent }) => {
       const refUrl = `#bib-${ref.toLowerCase()}`;
       const selectors = aliases
-        .get(refcontent.id)
-        .map(alias => `a.bibref[href="#bib-${alias.toLowerCase()}"]`)
-        .join(",");
+        .get(refcontent?.id ?? "")
+        ?.map((/** @type {string} */ alias) => `a.bibref[href="#bib-${alias.toLowerCase()}"]`)
+        .join(",") ?? "";
       const elems = document.querySelectorAll(selectors);
       return { refUrl, elems, refcontent };
     })
-    .forEach(({ refUrl, elems, refcontent }) => {
-      elems.forEach(a => {
+    .forEach((/** @type {{ refUrl: string, elems: NodeListOf<Element>, refcontent: any }} */ { refUrl, elems, refcontent }) => {
+      elems.forEach((/** @type {Element} */ a) => {
         a.setAttribute("href", refUrl);
         a.setAttribute("title", refcontent.title);
-        a.dataset.linkType = "biblio";
+        (/** @type {any} */ (a)).dataset.linkType = "biblio";
       });
     });
 }
 
 /**
  * warn about bad references
+ * @param {Ref[]} refs
  */
 function warnBadRefs(refs) {
   for (const { ref } of refs) {

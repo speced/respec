@@ -8,7 +8,9 @@
 import { docLink, getIntlData, showError, showWarning } from "../core/utils.js";
 export const name = "core/github";
 
+/** @type {(value: { apiBase: string, fullName: string, branch: string, repoURL: string } | null) => void} */
 let resolveGithubPromise;
+/** @type {(message: string) => void} */
 let rejectGithubPromise;
 /** @type {Promise<{ apiBase: string, fullName: string, branch: string, repoURL: string } | null>} */
 export const github = new Promise((resolve, reject) => {
@@ -53,8 +55,11 @@ const localizationStrings = {
     participate: "Mitmachen:",
   },
 };
-const l10n = getIntlData(localizationStrings);
+const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
+/**
+ * @param {any} conf
+ */
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
     // nothing to do, bail out.

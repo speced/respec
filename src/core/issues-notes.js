@@ -84,13 +84,13 @@ const localizationStrings = {
   },
 };
 
-const l10n = getIntlData(localizationStrings);
+const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
 /**
  * @typedef {object} Report
  * @property {string} type
  * @property {boolean} inline
- * @property {number} number
+ * @property {number | undefined} number
  * @property {string} title
 
  * @typedef {object} GitHubLabel
@@ -142,20 +142,20 @@ function handleIssues(ins, ghIssues, conf) {
           report.number ? `number-${report.number}` : ""
         );
       }
-      /** @type {GitHubIssue} */
+      /** @type {GitHubIssue | undefined} */
       let ghIssue;
       if (isIssue) {
         if (report.number !== undefined) {
           text += ` ${report.number}`;
         }
         if (inno.dataset.hasOwnProperty("number")) {
-          const link = linkToIssueTracker(dataNum, conf, { isFeatureAtRisk });
+          const link = linkToIssueTracker(dataNum ?? "", conf, { isFeatureAtRisk });
           if (link) {
             title.before(link);
             link.append(title);
           }
           title.classList.add("issue-number");
-          ghIssue = ghIssues.get(dataNum);
+          ghIssue = ghIssues.get(dataNum ?? "");
           if (!ghIssue) {
             const msg = `Failed to fetch issue number ${dataNum}.`;
             showWarning(msg, name);
@@ -196,7 +196,10 @@ function handleIssues(ins, ghIssues, conf) {
 
 function createIssueNumberGetter() {
   if (document.querySelector(".issue[data-number]")) {
-    return element => {
+    /**
+     * @param {HTMLElement} element
+     */
+    return (element) => {
       if (element.dataset.number) {
         return Number(element.dataset.number);
       }
@@ -204,7 +207,10 @@ function createIssueNumberGetter() {
   }
 
   let issueNumber = 0;
-  return element => {
+  /**
+   * @param {HTMLElement} element
+   */
+  return (element) => {
     if (element.classList.contains("issue") && element.localName !== "span") {
       return ++issueNumber;
     }
@@ -260,6 +266,7 @@ function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
 /**
  * @param {string} l10nIssue
  * @param {Report} report
+ * @param {string} id
  */
 function createIssueSummaryEntry(l10nIssue, report, id) {
   const issueNumberText = `${l10nIssue}${
@@ -343,6 +350,7 @@ function createLabel(label, repoURL) {
 
 /**
  * @returns {Promise<Map<string, GitHubIssue>>}
+ * @param {any} github
  */
 async function fetchAndStoreGithubIssues(github) {
   if (!github || !github.apiBase) {
@@ -352,7 +360,7 @@ async function fetchAndStoreGithubIssues(github) {
   /** @type {NodeListOf<HTMLElement>} */
   const specIssues = document.querySelectorAll(".issue[data-number]");
   const issueNumbers = [...specIssues]
-    .map(elem => Number.parseInt(elem.dataset.number, 10))
+    .map(elem => Number.parseInt(elem.dataset.number ?? "", 10))
     .filter(issueNumber => issueNumber);
 
   if (!issueNumbers.length) {
@@ -374,6 +382,9 @@ async function fetchAndStoreGithubIssues(github) {
   return new Map(Object.entries(issues));
 }
 
+/**
+ * @param {any} conf
+ */
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */

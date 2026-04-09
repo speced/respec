@@ -37,10 +37,10 @@ interface Window {
       keyShort?: string,
       icon?: string
     ): any;
-    error(msg: string): void;
-    warning(msg: string): void;
+    error(msg: any): void;
+    warning(msg: any): void;
     closeModal(owner?: Element): void;
-    freshModal(title: string, content: string, currentOwner: Element): void;
+    freshModal(title: string, content: Node, currentOwner: Element): void;
   };
   require?: {
     (deps: string[], callback: (...modules: any[]) => void): void;
@@ -56,20 +56,7 @@ interface Document {
     readonly version: string;
     readonly ready: Promise<void>;
   };
-  createNodeIterator<T>(
-    root: Node,
-    whatToShow?: number,
-    filter?: (node: T) => number | null
-  ): NodeIterator<T>;
-  createTreeWalker<T>(
-    root: Node,
-    whatToShow?: number,
-    filter?: (node: T) => boolean | null
-  ): TreeWalker<T>;
 }
-
-interface NodeIterator<T extends Node> {}
-interface TreeWalker<T extends Node> {}
 
 interface Node {
   cloneNode<T extends Node = this>(deep?: boolean): T;
@@ -77,24 +64,6 @@ interface Node {
 
 declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
 
-declare namespace Intl {
-  class ListFormat {
-    formatToParts(items: string[]): {
-      type: "element" | "literal";
-      value: string;
-    }[];
-    constructor(
-      locales?: string | string[],
-      options?: {
-        localeMatcher?: "lookup" | "best fit";
-        style: "long" | "narrow";
-        type: "conjunction" | "disjunction" | "unit";
-      }
-    );
-
-    format(items: Iterable<string>): string;
-  }
-}
 
 interface BibliographyMap extends Record<string, BiblioData> {}
 
@@ -201,7 +170,7 @@ type ResourceHintOption = {
 };
 
 /** Represents a request to the core/xref module */
-module "core/xref" {
+declare module "core/xref" {
   import { IDBPDatabase, DBSchema } from "idb";
 
   /** Represents a single request entry */
@@ -242,7 +211,7 @@ module "core/xref" {
   export type XrefDatabase = IDBPDatabase<XrefDBScheme>;
 }
 
-enum W3CGroupType {
+declare enum W3CGroupType {
   "bg",
   "cg",
   "ig",

@@ -79,6 +79,9 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   if (!conf.specStatus) {
     const msg = "Missing required configuration: `specStatus`";
@@ -95,6 +98,9 @@ export function run(conf) {
   conf.issueTracker = `https://github.com/AOMediaCodec/${conf.shortName}/issues/`;
   conf.publishYear = conf.publishDate.getUTCFullYear();
   conf.publishHumanDate = AOMDate.format(conf.publishDate);
+  /**
+   * @param {any} it
+   */
   const peopCheck = function (it) {
     if (!it.name) {
       const msg = "All authors and editors must have a name.";
@@ -134,7 +140,7 @@ export function run(conf) {
   // });
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  conf.textStatus = status2text[conf.specStatus];
+  conf.textStatus = (/** @type {Record<string, string>} */ (status2text))[conf.specStatus];
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   // configuration done - yay!

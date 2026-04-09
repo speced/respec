@@ -94,7 +94,7 @@ document.head.prepend(elements);
 function styleMover(linkURL) {
   return exportDoc => {
     const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
-    exportDoc.querySelector("head").append(w3cStyle);
+    exportDoc.querySelector("head")?.append(w3cStyle ?? "");
   };
 }
 
@@ -115,14 +115,14 @@ export function run(conf) {
   sub("beforesave", styleMover(finalStyleURL));
 
   // Add color scheme meta tag and style
-  /** @type HTMLMetaElement */
+  /** @type {HTMLMetaElement | null} */
   let colorScheme = document.querySelector("head meta[name=color-scheme]");
   if (!colorScheme) {
     // Default to light mode during transitional period.
-    colorScheme = html`<meta name="color-scheme" content="light" />`;
+    colorScheme = /** @type {HTMLMetaElement} */ (html`<meta name="color-scheme" content="light" />`);
     document.head.appendChild(colorScheme);
   }
-  if (colorScheme.content.includes("dark")) {
+  if (colorScheme?.content.includes("dark")) {
     const darkModeStyleUrl = getStyleUrl("dark.css");
     document.head.appendChild(
       html`<link

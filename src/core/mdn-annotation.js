@@ -96,7 +96,7 @@ function buildBrowserSupportTable(support) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
     return html`<tr class="${classList}">
-      <td>${MDN_BROWSERS[browserId]}</td>
+      <td>${(/** @type {Record<string, string>} */ (MDN_BROWSERS))[browserId]}</td>
       <td>${version ? version : displayStatus}</td>
     </tr>`;
   }
@@ -128,6 +128,9 @@ function buildBrowserSupportTable(support) {
   </table>`;
 }
 
+/**
+ * @param {any} conf
+ */
 export async function run(conf) {
   const mdnKey = getMdnKey(conf);
   if (!mdnKey) return;
@@ -149,7 +152,10 @@ export async function run(conf) {
   }
 }
 
-/** @returns {string} */
+/** @returns {string | undefined} */
+/**
+ * @param {any} conf
+ */
 function getMdnKey(conf) {
   const { shortName, mdn } = conf;
   if (!mdn) return;

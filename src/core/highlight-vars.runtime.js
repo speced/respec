@@ -12,13 +12,16 @@ function setupVarHighlighter() {
     .forEach(varElem => varElem.addEventListener("click", highlightListener));
 }
 
+/**
+ * @param {any} ev
+ */
 function highlightListener(ev) {
   ev.stopPropagation();
   const { target: varElem } = ev;
   const hightligtedElems = highlightVars(varElem);
   const resetListener = () => {
     const hlColor = getHighlightColor(varElem);
-    hightligtedElems.forEach(el => removeHighlight(el, hlColor));
+    hightligtedElems.forEach((/** @type {any} */ el) => removeHighlight(el, hlColor));
     [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
   };
   if (hightligtedElems.length) {
@@ -37,6 +40,9 @@ const HL_COLORS = new Map([
   ["respec-hl-c7", true],
 ]);
 
+/**
+ * @param {any} target
+ */
 function getHighlightColor(target) {
   // return current colors if applicable
   const { value } = target.classList;
@@ -51,13 +57,19 @@ function getHighlightColor(target) {
   return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) || "respec-hl-c1";
 }
 
+/**
+ * @param {any} varElem
+ */
 function highlightVars(varElem) {
   const textContent = norm(varElem.textContent);
   const parent = varElem.closest(".algorithm, section");
   const highlightColor = getHighlightColor(varElem);
 
   const varsToHighlight = [...parent.querySelectorAll("var")].filter(
-    el =>
+    /**
+     * @param {any} el
+     */
+    (el) =>
       norm(el.textContent) === textContent &&
       el.closest(".algorithm, section") === parent
   );
@@ -68,20 +80,28 @@ function highlightVars(varElem) {
 
   // highlight vars
   if (colorStatus) {
-    varsToHighlight.forEach(el => removeHighlight(el, highlightColor));
+    varsToHighlight.forEach((/** @type {any} */ el) => removeHighlight(el, highlightColor));
     return [];
   } else {
-    varsToHighlight.forEach(el => addHighlight(el, highlightColor));
+    varsToHighlight.forEach((/** @type {any} */ el) => addHighlight(el, highlightColor));
   }
   return varsToHighlight;
 }
 
+/**
+ * @param {any} el
+ * @param {any} highlightColor
+ */
 function removeHighlight(el, highlightColor) {
   el.classList.remove("respec-hl", highlightColor);
   // clean up empty class attributes so they don't come in export
   if (!el.classList.length) el.removeAttribute("class");
 }
 
+/**
+ * @param {any} elem
+ * @param {any} highlightColor
+ */
 function addHighlight(elem, highlightColor) {
   elem.classList.add("respec-hl", highlightColor);
 }

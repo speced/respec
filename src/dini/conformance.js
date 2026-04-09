@@ -14,6 +14,10 @@ const localizationStrings = {
       "As well as sections marked as non-normative, all authoring guidelines, " +
       "diagrams, examples, and notes in this specification are non-normative. " +
       "Everything else in this specification is normative.",
+    /**
+     * @param {any} keywords
+     * @param {boolean} plural
+     */
     keywordInterpretation(keywords, plural) {
       return html`<p>
         The key word${plural ? "s" : ""} ${keywords} in this document
@@ -31,6 +35,10 @@ const localizationStrings = {
       "Neben den explizit als nicht-normativ gekennzeichneten Abschnitten " +
       "sind auch alle Diagramme, Beispiele und Hinweise in diesem Dokument " +
       "nicht normativ. Alle anderen Angaben sind normativ.",
+    /**
+     * @param {any} keywords
+     * @param {boolean} plural
+     */
     keywordInterpretation(keywords, plural) {
       return html`<p>
         ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in
@@ -74,6 +82,9 @@ function processConformance(conformance, conf) {
   conformance.prepend(...content.childNodes);
 }
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   const conformance = document.querySelector("section#conformance");
   if (conformance && !conformance.classList.contains("override")) {

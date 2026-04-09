@@ -44,6 +44,9 @@ const l10n = getIntlData(localizationStrings);
 
 export const name = "core/data-tests";
 
+/**
+ * @param {string} href
+ */
 function toListItem(href) {
   const emojiList = [];
   const [testFile] = new URL(href).pathname.split("/").reverse();
@@ -89,6 +92,9 @@ function toListItem(href) {
   return testList;
 }
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll("[data-tests]");
@@ -103,8 +109,8 @@ export function run(conf) {
   }
 
   for (const elem of testables) {
-    const tests = elem.dataset.tests.split(/,/gm).map(url => url.trim());
-    const testURLs = toTestURLs(tests, conf.testSuiteURI, elem);
+    const tests = (elem.dataset.tests ?? "").split(/,/gm).map(url => url.trim());
+    const testURLs = toTestURLs(tests, conf.testSuiteURI, elem).filter(/** @type {(u: string | undefined) => u is string} */ (u => u !== undefined));
     handleDuplicates(testURLs, elem);
     const details = toHTML(testURLs);
     elem.append(details);

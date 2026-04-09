@@ -9,6 +9,9 @@ import css from "../styles/datatype.css.js";
 
 export const name = "core/data-type";
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   if (!conf.highlightVars) {
     return;

@@ -48,7 +48,7 @@ async function getLinkProps(citeDetails) {
     if (!entry) {
       return null;
     }
-    href = entry.href;
+    href = entry.href ?? "";
     title = entry.title;
   }
 
@@ -147,27 +147,27 @@ export function toCiteDetails(elem) {
   const { cite: rawKey, citeFrag, citePath, citeHref } = dataset;
 
   // The key is a fragment, resolve using the shortName as key
-  if (rawKey.startsWith("#") && !citeFrag) {
+  if ((rawKey ?? "").startsWith("#") && !citeFrag) {
     // Closes data-cite not starting with "#"
-    /** @type {HTMLElement} */
-    const closest = elem.parentElement.closest(
+    /** @type {HTMLElement | null} */
+    const closest = elem.parentElement?.closest(
       `[data-cite]:not([data-cite^="#"])`
-    );
+    ) ?? null;
     const { key: parentKey, isNormative: closestIsNormative } = closest
       ? toCiteDetails(closest)
       : { key: THIS_SPEC, isNormative: false };
     dataset.cite = closestIsNormative ? parentKey : `?${parentKey}`;
-    dataset.citeFrag = rawKey.replace("#", ""); // the key is acting as a fragment
+    dataset.citeFrag = (rawKey ?? "").replace("#", ""); // the key is acting as a fragment
     return toCiteDetails(elem);
   }
 
-  const frag = citeFrag ? `#${citeFrag}` : findFrag(rawKey);
-  const path = citePath || findPath(rawKey).split("#")[0]; // path is always before "#"
-  const { type } = refTypeFromContext(rawKey, elem);
+  const frag = citeFrag ? `#${citeFrag}` : findFrag(rawKey ?? "");
+  const path = citePath || findPath(rawKey ?? "").split("#")[0]; // path is always before "#"
+  const { type } = refTypeFromContext(rawKey ?? "", elem);
   const isNormative = type === "normative";
   // key is before "/" and "#" but after "!" or "?" (e.g., ?key/path#frag)
-  const hasPrecedingMark = /^[?|!]/.test(rawKey);
-  const key = rawKey.split(/[/|#]/)[0].substring(Number(hasPrecedingMark));
+  const hasPrecedingMark = /^[?|!]/.test(rawKey ?? "");
+  const key = (rawKey ?? "").split(/[/|#]/)[0].substring(Number(hasPrecedingMark));
   const details = { key, isNormative, frag, path, href: citeHref };
   return details;
 }

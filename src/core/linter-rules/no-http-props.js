@@ -24,6 +24,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   if (!conf.lint?.[ruleName]) {
     return;

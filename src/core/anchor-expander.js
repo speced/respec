@@ -11,7 +11,7 @@ export function run() {
   );
   const anchors = [...anchorElements].filter(a => a.textContent.trim() === "");
   for (const a of anchors) {
-    const id = a.getAttribute("href").slice(1);
+    const id = (a.getAttribute("href") ?? "").slice(1);
     const matchingElement = document.getElementById(id);
     if (!matchingElement) {
       a.textContent = a.getAttribute("href");
@@ -59,6 +59,11 @@ export function run() {
   }
 }
 
+/**
+ * @param {HTMLElement} matchingElement
+ * @param {string} id
+ * @param {HTMLElement} a
+ */
 function processBox(matchingElement, id, a) {
   const selfLink = matchingElement.querySelector(".marker .self-link");
   if (!selfLink) {
@@ -68,11 +73,16 @@ function processBox(matchingElement, id, a) {
     showError(msg, name, { title, elements: [a] });
     return;
   }
-  const copy = makeSafeCopy(selfLink);
+  const copy = makeSafeCopy(/** @type {HTMLElement} */ (selfLink));
   a.append(...copy.childNodes);
   a.classList.add("box-ref");
 }
 
+/**
+ * @param {HTMLElement} matchingElement
+ * @param {string} id
+ * @param {HTMLElement} a
+ */
 function processFigure(matchingElement, id, a) {
   const figcaption = matchingElement.querySelector("figcaption");
   if (!figcaption) {
@@ -84,7 +94,7 @@ function processFigure(matchingElement, id, a) {
   }
   // get figure label and remove the fig-number class
   const children = [
-    ...makeSafeCopy(figcaption.querySelector(".self-link")).childNodes,
+    ...makeSafeCopy(/** @type {HTMLElement} */ (figcaption.querySelector(".self-link"))).childNodes,
   ].map(node => {
     // @ts-ignore
     node.classList?.remove("figno");
@@ -98,6 +108,11 @@ function processFigure(matchingElement, id, a) {
   }
 }
 
+/**
+ * @param {HTMLElement} matchingTable
+ * @param {string} id
+ * @param {HTMLElement} a
+ */
 function processTable(matchingTable, id, a) {
   if (!matchingTable.classList.contains("numbered")) {
     return;
@@ -113,7 +128,7 @@ function processTable(matchingTable, id, a) {
 
   // get table label and remove the fig-number class
   const children = [
-    ...makeSafeCopy(caption.querySelector(".self-link")).childNodes,
+    ...makeSafeCopy(/** @type {HTMLElement} */ (caption.querySelector(".self-link"))).childNodes,
   ].map(node => {
     // @ts-ignore
     // @ts-ignore
@@ -128,6 +143,11 @@ function processTable(matchingTable, id, a) {
   }
 }
 
+/**
+ * @param {HTMLElement} matchingElement
+ * @param {string} id
+ * @param {HTMLElement} a
+ */
 function processSection(matchingElement, id, a) {
   const heading = matchingElement.querySelector("h6, h5, h4, h3, h2");
   if (!heading) {
@@ -138,10 +158,14 @@ function processSection(matchingElement, id, a) {
     showError(msg, name, { title, elements: [a] });
     return;
   }
-  processHeading(heading, a);
-  localize(heading, a);
+  processHeading(/** @type {HTMLElement} */ (heading), a);
+  localize(/** @type {HTMLElement} */ (heading), a);
 }
 
+/**
+ * @param {HTMLElement} heading
+ * @param {HTMLElement} a
+ */
 function processHeading(heading, a) {
   const hadSelfLink = heading.querySelector(".self-link");
   const children = [...makeSafeCopy(heading).childNodes].filter(
@@ -152,11 +176,11 @@ function processHeading(heading, a) {
   if (hadSelfLink) a.prepend("§\u00A0");
   a.classList.add("sec-ref");
   // Trim stray whitespace of the last text node (see bug #3265).
-  if (a.lastChild.nodeType === Node.TEXT_NODE) {
-    a.lastChild.textContent = a.lastChild.textContent.trimEnd();
+  if (a.lastChild && a.lastChild.nodeType === Node.TEXT_NODE) {
+    a.lastChild.textContent = (a.lastChild.textContent ?? "").trimEnd();
   }
   // Replace all inner anchors for span elements (see bug #3136)
-  a.querySelectorAll("a").forEach(a => {
+  a.querySelectorAll("a").forEach(/** @param {HTMLElement} a */ a => {
     const span = renameElement(a, "span");
     // Remove the old attributes
     for (const attr of [...span.attributes]) {
@@ -165,6 +189,10 @@ function processHeading(heading, a) {
   });
 }
 
+/**
+ * @param {HTMLElement} matchingElement
+ * @param {HTMLElement} newElement
+ */
 function localize(matchingElement, newElement) {
   for (const attrName of ["dir", "lang"]) {
     // Already set on element, don't override.
@@ -185,6 +213,6 @@ function localize(matchingElement, newElement) {
     )
       continue;
     // Otherwise, set it.
-    newElement.setAttribute(attrName, matchingClosest.getAttribute(attrName));
+    newElement.setAttribute(attrName, matchingClosest.getAttribute(attrName) ?? "");
   }
 }

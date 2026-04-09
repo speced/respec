@@ -160,7 +160,7 @@ function getSectionTree(parent) {
       continue;
     }
     const title = header.textContent;
-    addId(section, null, title);
+    addId(section, undefined, title);
     sections.push({
       element: section,
       header,
@@ -200,6 +200,7 @@ function filterHeader(h) {
   });
 }
 
+/** @param {any} conf */
 export function run(conf) {
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = Infinity;
@@ -218,7 +219,7 @@ export function run(conf) {
   }
 
   // See core/dfn-index
-  pub("toc");
+  pub("toc", undefined);
 }
 
 function renameSectionHeaders() {
@@ -250,7 +251,7 @@ function skipFromToC() {
   /** @type {NodeListOf<HTMLElement>} */
   const sections = document.querySelectorAll("section[data-max-toc]");
   for (const section of sections) {
-    const maxToc = parseInt(section.dataset.maxToc, 10);
+    const maxToc = parseInt(section.dataset.maxToc ?? "", 10);
     if (maxToc < 0 || maxToc > 6 || Number.isNaN(maxToc)) {
       const msg = "`data-max-toc` must have a value between 0-6 (inclusive).";
       showError(msg, name, { elements: [section] });

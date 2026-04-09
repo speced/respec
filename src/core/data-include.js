@@ -49,8 +49,9 @@ function fillWithText(el, data, { replace }) {
  * @param {string} url
  */
 function processResponse(rawData, id, url) {
-  /** @type {HTMLElement} */
+  /** @type {HTMLElement | null} */
   const el = document.querySelector(`[data-include-id=${id}]`);
+  if (!el) return;
   const data = runTransforms(rawData, el.dataset.oninclude, url);
   const replace = typeof el.dataset.includeReplace === "string";
   fillWithText(el, data, { replace });
@@ -101,8 +102,8 @@ async function runIncludes(root, currentDepth) {
         await runIncludes(el, currentDepth + 1);
       }
     } catch (err) {
-      const msg = `\`data-include\` failed: \`${url}\` (${err.message}).`;
-      showError(msg, name, { elements: [el], cause: err });
+      const msg = `\`data-include\` failed: \`${url}\` (${/** @type {Error} */ (err).message}).`;
+      showError(msg, name, { elements: [el], cause: /** @type {Error} */ (err) });
     }
   });
   await Promise.all(promisesToInclude);

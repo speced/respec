@@ -54,6 +54,9 @@ const w3cDefaults = {
   authors: [],
 };
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   // assign the defaults
   const lint =
@@ -80,6 +83,9 @@ export function run(conf) {
   processLogos(conf);
 }
 
+/**
+ * @param {any} conf
+ */
 function processLogos(conf) {
   // Primarily include the W3C logo and license for W3C Recommendation track
   // that have an actual working group.
@@ -103,6 +109,9 @@ function processLogos(conf) {
   }
 }
 
+/**
+ * @param {any} conf
+ */
 function validateStatusForGroup(conf) {
   const { specStatus, groupType, group } = conf;
 
@@ -114,7 +123,7 @@ function validateStatusForGroup(conf) {
     return;
   }
 
-  if (status2text[specStatus] === undefined) {
+  if ((/** @type {Record<string, string>} */ (status2text))[specStatus] === undefined) {
     const msg = docLink`The ${"[specStatus]"} "\`${specStatus}\`" is not supported at for this type of document.`;
     const choices = codedJoinOr(Object.keys(status2text), { quotes: true });
     const hint = docLink`set ${"[specStatus]"} to one of: ${choices}.`;

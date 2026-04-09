@@ -13,37 +13,55 @@ import { html } from "../../core/import-maps.js";
 
 const localizationStrings = {
   en: {
+    /**
+     * @param {any} date
+     */
     until(date) {
       return html` Until ${date} `;
     },
   },
   es: {
+    /**
+     * @param {any} date
+     */
     until(date) {
       return html` Hasta ${date} `;
     },
   },
   ko: {
+    /**
+     * @param {any} date
+     */
     until(date) {
       return html` ${date} 이전 `;
     },
   },
   ja: {
+    /**
+     * @param {any} date
+     */
     until(date) {
       return html` ${date} 以前 `;
     },
   },
   de: {
+    /**
+     * @param {any} date
+     */
     until(date) {
       return html` bis ${date} `;
     },
   },
   zh: {
+    /**
+     * @param {any} date
+     */
     until(date) {
       return html` 直到 ${date} `;
     },
   },
 };
-const l10n = getIntlData(localizationStrings);
+const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
 const orcidIcon = () =>
   html`<svg
@@ -125,7 +143,7 @@ function personToHTML(person) {
   const { retiredDate } = person;
   if (person.retiredDate) {
     const time = html`<time datetime="${retiredDate}"
-      >${W3CDate.format(new Date(retiredDate))}</time
+      >${W3CDate.format(new Date(retiredDate ?? ""))}</time
     >`;
     contents.push(html` - ${l10n.until(time)} `);
   }
@@ -138,6 +156,9 @@ function personToHTML(person) {
   return dd;
 }
 
+/**
+ * @param {any} extra
+ */
 function renderExtra(extra) {
   const classVal = extra.class || null;
   const { name, href } = extra;
@@ -209,7 +230,7 @@ function personValidator(prop) {
 
     if (
       person.hasOwnProperty("extras") &&
-      !validateExtras(person.extras, seePersonHint, preamble)
+      !validateExtras(person.extras ?? [], seePersonHint, preamble)
     ) {
       return false;
     }

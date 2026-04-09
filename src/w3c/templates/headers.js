@@ -25,6 +25,9 @@ const localizationStrings = {
     latest_recommendation: "Latest Recommendation:",
     message_topic: "… message topic …",
     more_details_about_this_doc: "More details about this document",
+    /**
+     * @param {boolean} plural
+     */
     multiple_alternates(plural) {
       return `This document is also available in ${
         plural ? "these non-normative formats" : "this non-normative format"
@@ -150,6 +153,9 @@ const localizationStrings = {
     latest_published_version: "Letzte publizierte Fassung:",
     latest_recommendation: "Aktuellste Empfehlung:",
     more_details_about_this_doc: "Mehr Informationen über dieses Dokument",
+    /**
+     * @param {boolean} plural
+     */
     multiple_alternates(plural) {
       return `Dieses Dokument ist ebenfalls in ${
         plural
@@ -182,6 +188,9 @@ const localizationStrings = {
     latest_recommendation: "Nejnovější doporučení:",
     message_topic: "… předmět zprávy …",
     more_details_about_this_doc: "Více informací o tomto dokumentu",
+    /**
+     * @param {boolean} plural
+     */
     multiple_alternates(plural) {
       return `Tento dokument je také dostupný v ${plural ? "těchto ne-normativních formátech" : "tomto ne-normativním formátu"}:`;
     },
@@ -195,8 +204,9 @@ const localizationStrings = {
     your_topic_here: "VÁŠ PŘEDMĚT ZDE",
   },
 };
-export const l10n = getIntlData(localizationStrings);
+export const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
+/** @param {any} conf */
 export function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
 
@@ -214,13 +224,17 @@ export function getSpecSubTitleElem(conf) {
   return specSubTitleElem;
 }
 
+/**
+ * @param {any} conf
+ * @param {any} options
+ */
 export default (conf, options) => {
   /**
    * After export, we let fixup.js handle the <details>.
    */
-  sub("beforesave", doc => {
+  sub("beforesave", /** @param {Document} doc */ doc => {
     const details = doc.querySelector(".head details");
-    if (details) details.open = true;
+    if (details) /** @type {HTMLDetailsElement} */ (details).open = true;
   });
   return html`<div class="head">
     ${conf.logos.length
@@ -363,6 +377,7 @@ export default (conf, options) => {
   </div>`;
 };
 
+/** @param {any} conf */
 export function renderFeedback(conf) {
   const definitions = [];
   // Github feedback...
@@ -412,6 +427,7 @@ export function renderFeedback(conf) {
   return definitions;
 }
 
+/** @param {any} conf */
 function renderSpecTitle(conf) {
   const specType = conf.isCR || conf.isCRY ? conf.longStatus : conf.textStatus;
   const preamble = conf.prependW3C
@@ -444,6 +460,7 @@ function linkLicense(licenseInfo) {
     <a rel="license" href="${url}" title="${name}">${short}</a> rules apply.`;
 }
 
+/** @param {any} conf */
 function renderCopyright(conf) {
   // If there is already a copyright, let's relocate it.
   const existingCopyright = document.querySelector(".copyright");
@@ -467,6 +484,7 @@ function renderCopyright(conf) {
   return renderOfficialCopyright(conf);
 }
 
+/** @param {any} conf */
 function renderOfficialCopyright(conf) {
   return html`<p class="copyright">
     <a href="https://www.w3.org/policies/#copyright">Copyright</a>

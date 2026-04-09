@@ -207,7 +207,7 @@ export const noTrackStatus = [
   "unofficial",
 ];
 /** @type {Map<string, LicenseInfo>} */
-export const licenses = new Map([
+export const licenses = /** @type {any} */ (new Map([
   [
     "cc0",
     {
@@ -264,7 +264,7 @@ export const licenses = new Map([
       short: "UNLICENSED",
     },
   ],
-]);
+]));
 
 const patentPolicies = ["PP2017", "PP2020"];
 
@@ -285,6 +285,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
+/** @param {any} conf */
 function deriveLicenseInfo(conf) {
   let license = undefined;
   if (typeof conf.license === "string") {
@@ -319,6 +320,7 @@ function deriveLicenseInfo(conf) {
   return licenseInfo;
 }
 
+/** @param {any} conf */
 export async function run(conf) {
   conf.isBasic = conf.specStatus === "base";
   conf.isCGBG = cgbgStatus.includes(conf.specStatus);
@@ -341,8 +343,8 @@ export async function run(conf) {
   conf.isUnofficial = conf.specStatus === "unofficial";
   conf.licenseInfo = deriveLicenseInfo(conf);
   conf.prependW3C = !conf.isBasic && !conf.isUnofficial;
-  conf.longStatus = status2long[conf.specStatus];
-  conf.textStatus = status2text[conf.specStatus];
+  conf.longStatus = (/** @type {any} */ (status2long))[conf.specStatus];
+  conf.textStatus = (/** @type {any} */ (status2text))[conf.specStatus];
   conf.showPreviousVersion = false;
 
   if (conf.isRegular && !conf.shortName) {
@@ -382,7 +384,7 @@ export async function run(conf) {
 
   const pubSpace = derivePubSpace(conf);
   if (pubSpace && !conf.thisVersion) {
-    const maturity = status2maturity[conf.specStatus] || conf.specStatus;
+    const maturity = (/** @type {any} */ (status2maturity))[conf.specStatus] || conf.specStatus;
     const { shortName, publishDate } = conf;
     const date = concatDate(publishDate);
     const docVersion = `${maturity}-${shortName}-${date}`;
@@ -415,7 +417,7 @@ export async function run(conf) {
     );
 
     const prevMaturity =
-      status2maturity[conf.previousMaturity] ?? conf.previousMaturity;
+      (/** @type {any} */ (status2maturity))[conf.previousMaturity] ?? conf.previousMaturity;
     if (conf.isTagFinding && conf.latestVersion) {
       const pubDate = ISODate.format(conf.publishDate);
       conf.thisVersion = w3Url(`${latestPath}-${pubDate}`);
@@ -450,7 +452,7 @@ export async function run(conf) {
     showError(msg, name, { hint });
   } else if (conf.editors.length && conf.isRecTrack) {
     // check that every editor has w3cid
-    conf.editors.forEach((editor, i) => {
+    conf.editors.forEach((/** @type {any} */ editor, /** @type {number} */ i) => {
       if (editor.w3cid) return;
       const msg = docLink`Editor ${
         editor.name ? `"${editor.name}"` : `number ${i + 1}`
@@ -460,7 +462,7 @@ export async function run(conf) {
     });
   }
 
-  if (conf.alternateFormats?.some(({ uri, label }) => !uri || !label)) {
+  if (conf.alternateFormats?.some((/** @type {{uri: any, label: any}} */ { uri, label }) => !uri || !label)) {
     const msg = docLink`Every ${"[`alternateFormats`]"} entry must have a \`uri\` and a \`label\`.`;
     showError(msg, name);
   }
@@ -488,7 +490,11 @@ export async function run(conf) {
         conf.alternateFormats &&
         htmlJoinAnd(
           // We need to pass a string here...
-          conf.alternateFormats.map(({ label }) => label),
+          conf.alternateFormats.map((/** @type {any} */ { label }) => label),
+          /**
+           * @param {any} _
+           * @param {number} i
+           */
           (_, i) => {
             const alt = conf.alternateFormats[i];
             return html`<a
@@ -540,7 +546,7 @@ export async function run(conf) {
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
-    conf.wgPatentHTML = htmlJoinAnd(conf.wg, (wg, i) => {
+    conf.wgPatentHTML = htmlJoinAnd(conf.wg, (/** @type {any} */ wg, /** @type {number} */ i) => {
       return html`a
         <a href="${conf.wgPatentURI[i]}" rel="disclosure"
           >public list of any patent disclosures (${wg})</a
@@ -631,6 +637,7 @@ export async function run(conf) {
   });
 }
 
+/** @param {any} conf */
 function validateIfAllowedOnTR(conf) {
   const latestVersionURL = new URL(conf.latestVersion);
   const isW3C =
@@ -648,6 +655,7 @@ function validateIfAllowedOnTR(conf) {
   }
 }
 
+/** @param {any} conf */
 function derivePubSpace(conf) {
   const { specStatus, group } = conf;
   if (trStatus.includes(specStatus) || conf.groupType === "wg") {
@@ -675,8 +683,9 @@ function derivePubSpace(conf) {
   return "";
 }
 
+/** @param {any} conf */
 function validateCGBG(conf) {
-  const reportType = status2text[conf.specStatus];
+  const reportType = (/** @type {any} */ (status2text))[conf.specStatus];
   const latestVersionURL = conf.latestVersion
     ? new URL(w3Url(conf.latestVersion))
     : null;
@@ -702,6 +711,7 @@ function validateCGBG(conf) {
   }
 }
 
+/** @param {any} conf */
 async function deriveHistoryURI(conf) {
   if (!conf.shortName || conf.historyURI === null || !conf.latestVersion) {
     return; // Nothing to do
@@ -746,6 +756,7 @@ async function deriveHistoryURI(conf) {
   }
 }
 
+/** @param {any} conf */
 function validatePatentPolicies(conf) {
   if (!conf.wgPatentPolicy) return;
   const policies = new Set([].concat(conf.wgPatentPolicy));
@@ -753,7 +764,8 @@ function validatePatentPolicies(conf) {
     policies.size &&
     ![...policies].every(policy => patentPolicies.includes(policy))
   ) {
-    const invalidPolicies = [...policies].filter(
+    /** @type {string[]} */
+    const invalidPolicies = (/** @type {any[]} */ ([...policies])).filter(
       policy => !patentPolicies.includes(policy)
     );
     const msg = docLink`Invalid ${"[wgPatentPolicy]"} value(s): ${codedJoinAnd(
@@ -775,7 +787,7 @@ function validatePatentPolicies(conf) {
 }
 
 /**
- * @param {*} conf
+ * @param {any} conf
  * @param {HTMLElement} sotd
  */
 function populateSoTD(conf, sotd) {
@@ -785,6 +797,7 @@ function populateSoTD(conf, sotd) {
     get mailToWGPublicList() {
       return `mailto:${conf.wgPublicList}@w3.org`;
     },
+    /** @returns {string} */
     get mailToWGPublicListWithSubject() {
       const fragment = conf.subjectPrefix
         ? `?subject=${encodeURIComponent(conf.subjectPrefix)}`
@@ -815,7 +828,7 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
     ) {
       break;
     }
-    additionalContent.appendChild(sotdClone.firstChild);
+    additionalContent.appendChild(/** @type {ChildNode} */ (sotdClone.firstChild));
   }
   if (isTagFinding && !additionalContent.hasChildNodes()) {
     const msg = docLink`ReSpec does not support automated SotD generation for TAG findings.`;

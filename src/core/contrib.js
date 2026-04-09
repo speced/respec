@@ -8,6 +8,9 @@ import { docLink, fetchAndCache, joinAnd, showError } from "./utils.js";
 import { html } from "./import-maps.js";
 export const name = "core/contrib";
 
+/**
+ * @param {any} conf
+ */
 export async function run(conf) {
   const ghContributors = document.getElementById("gh-contributors");
   if (!ghContributors) {
@@ -20,7 +23,7 @@ export async function run(conf) {
     return;
   }
 
-  const editors = conf.editors.map(editor => editor.name);
+  const editors = conf.editors.map((/** @type {any} */ editor) => editor.name);
   const apiURL = `${conf.github.apiBase}/${conf.github.fullName}/`;
   await showContributors(editors, apiURL);
 }
@@ -60,7 +63,7 @@ async function showContributors(editors, apiURL) {
       );
     } catch (error) {
       const msg = "Error loading contributors from GitHub.";
-      showError(msg, name, { cause: error });
+      showError(msg, name, { cause: /** @type {Error} */ (error) });
       return null;
     }
   }

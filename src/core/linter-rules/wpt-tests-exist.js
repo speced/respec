@@ -20,6 +20,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {any} conf
+ */
 export async function run(conf) {
   if (!conf.lint?.[ruleName]) {
     return;
@@ -35,7 +38,7 @@ export async function run(conf) {
   const testables = [...elems].filter(elem => elem.dataset.tests);
 
   for (const elem of testables) {
-    elem.dataset.tests
+    (elem.dataset.tests ?? "")
       .split(/,/gm)
       .map(test => test.trim().split(/\?|#/)[0])
       .filter(test => test && !filesInWPT.has(test))
@@ -60,7 +63,7 @@ async function getFilesInWPT(testSuiteURI, githubAPIBase) {
       testSuiteURL.pathname.startsWith("/web-platform-tests/wpt/tree/master/")
     ) {
       const re = /web-platform-tests\/wpt\/tree\/master\/(.+)/;
-      wptDirectory = testSuiteURL.pathname.match(re)[1].replace(/\//g, "");
+      wptDirectory = (testSuiteURL.pathname.match(re)?.[1] ?? "").replace(/\//g, "");
     } else {
       wptDirectory = testSuiteURL.pathname.replace(/\//g, "");
     }

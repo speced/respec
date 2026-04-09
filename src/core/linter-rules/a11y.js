@@ -14,6 +14,9 @@ const DISABLED_RULES = [
   "region",
 ];
 
+/**
+ * @param {any} conf
+ */
 export async function run(conf) {
   if (!conf.lint?.a11y && /** legacy */ !conf.a11y) {
     return;
@@ -35,7 +38,7 @@ export async function run(conf) {
       const elements =
         groupedBySummary.get(failureSummary) ||
         groupedBySummary.set(failureSummary, []).get(failureSummary);
-      elements.push(element);
+      elements?.push(element);
     }
 
     const { id, help, description, helpUrl } = violation;
@@ -49,7 +52,7 @@ export async function run(conf) {
 }
 
 /**
- * @param {object} opts Options as described at https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#options-parameter
+ * @param {any} opts Options as described at https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#options-parameter
  */
 async function getViolations(opts) {
   const { rules, ...otherOptions } = opts;
@@ -75,8 +78,8 @@ async function getViolations(opts) {
   }
 
   try {
-    const result = await axe.run(document, options);
-    return result.violations;
+    const result = await axe?.run(document, options);
+    return result?.violations ?? [];
   } catch (error) {
     const msg = "Error while looking for a11y issues.";
     showError(msg, name);

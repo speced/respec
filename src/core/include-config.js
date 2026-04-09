@@ -6,9 +6,16 @@ export const name = "core/include-config";
 
 const removeList = ["githubToken", "githubUser"];
 
+/**
+ * @param {any} config
+ */
 export function run(config) {
+  /** @type {Record<string, any>} */
   const userConfig = {};
-  const amendConfig = newValues => Object.assign(userConfig, newValues);
+  /**
+   * @param {any} newValues
+   */
+  const amendConfig = (newValues) => Object.assign(userConfig, newValues);
 
   amendConfig(config);
   sub("amend-user-config", amendConfig);

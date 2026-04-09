@@ -40,6 +40,7 @@ const statToText = new Map([
   ["y", "supported by default"],
 ]);
 
+/** @param {any} conf */
 export function prepare(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
@@ -65,10 +66,11 @@ export function prepare(conf) {
  * @returns
  */
 function getLogoSrc(browser) {
-  const path = BROWSERS.get(browser).path ?? browser;
+  const path = (BROWSERS.get(browser)?.path) ?? browser;
   return `https://www.w3.org/assets/logos/browser-logos/${path}/${path}.svg`;
 }
 
+/** @param {any} conf */
 export async function run(conf) {
   const options = conf.caniuse;
   if (!options?.feature) return;
@@ -85,21 +87,26 @@ export async function run(conf) {
         placeholder: "Fetching data from caniuse.com...",
       }}
     </dd>`;
-  headDlElem.append(...definitionPair.childNodes);
+  headDlElem?.append(...definitionPair.childNodes);
   await contentPromise;
   pub("amend-user-config", { caniuse: options.feature });
   if (options.removeOnSave) {
     // Will remove the browser support cells.
     headDlElem
-      .querySelectorAll(".caniuse-browser")
+      ?.querySelectorAll(".caniuse-browser")
       .forEach(elem => elem.classList.add("removeOnSave"));
-    sub("beforesave", outputDoc => {
+    sub("beforesave", /** @param {any} outputDoc */ outputDoc => {
       html.bind(outputDoc.querySelector(".caniuse-stats"))`
         <a href="${featureURL}">caniuse.com</a>`;
     });
   }
 }
 
+/**
+ * @param {any} err
+ * @param {any} options
+ * @param {string} featureURL
+ */
 function handleError(err, options, featureURL) {
   const msg = `Failed to retrieve feature "${options.feature}".`;
   const hint = docLink`Please check the feature key on [caniuse.com](https://caniuse.com) and update ${"[caniuse]"}.`;
@@ -109,7 +116,7 @@ function handleError(err, options, featureURL) {
 
 /**
  * returns normalized `conf.caniuse` configuration
- * @param {Object} conf   configuration settings
+ * @param {any} conf   configuration settings
  */
 function normalizeCaniuseConf(conf) {
   const defaultBrowsers = new Set(BROWSERS.keys());
@@ -123,6 +130,7 @@ function normalizeCaniuseConf(conf) {
   conf.caniuse = { ...DEFAULTS, ...conf.caniuse };
 }
 
+/** @param {{ caniuse: { browsers: any[] } }} conf */
 function validateBrowsers({ caniuse }) {
   const { browsers } = caniuse;
   const invalidBrowsers = browsers.filter(browser => !BROWSERS.has(browser));
@@ -133,8 +141,12 @@ function validateBrowsers({ caniuse }) {
   }
 }
 
+/**
+ * @param {any} json
+ * @param {{ feature: any }} arg1
+ */
 async function processJson(json, { feature }) {
-  /** @type {Array} */
+  /** @type {any[]} */
   const results = json.result;
   const groups = new Map([
     ["desktop", []],
@@ -159,9 +171,11 @@ async function processJson(json, { feature }) {
   return out;
 }
 
+/** @param {any} feature */
 function browserCellRenderer(feature) {
-  return (groups, { browser: browserId, version, caniuse }) => {
-    const { name, type } = BROWSERS.get(browserId);
+  return /** @type {(groups: any, arg: { browser: any, version: any, caniuse: any }) => any} */ ((groups, { browser: browserId, version, caniuse }) => {
+    const entry = BROWSERS.get(browserId);
+    const { name, type } = entry ?? { name: browserId, type: "desktop" };
     const versionLong = version ? ` version ${version}` : "";
     const browserName = `${name}${versionLong}`;
     const supportLevel = statToText.get(caniuse);
@@ -183,17 +197,18 @@ function browserCellRenderer(feature) {
     `;
     groups.get(type).push(result);
     return groups;
-  };
+  });
 }
 
 /**
  * @typedef {Record<string, [string, string[]][]>} ApiResponse
  * @throws {Error} on failure
  */
+/** @param {any} options */
 async function fetchStats(options) {
   const { feature, browsers, apiURL } = options;
   const url = new URL(apiURL || `./${feature}`, API_URL);
-  browsers.forEach(browser => url.searchParams.append("browsers", browser));
+  browsers.forEach(/** @param {string} browser */ browser => url.searchParams.append("browsers", browser));
   const response = await fetch(url);
   if (!response.ok) {
     const { status, statusText } = response;
@@ -202,6 +217,7 @@ async function fetchStats(options) {
   return response.json();
 }
 
+/** @param {string} str */
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }

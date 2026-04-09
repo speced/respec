@@ -12,9 +12,12 @@ function setupPanel() {
 }
 
 function panelListener() {
-  /** @type {HTMLElement} */
+  /** @type {HTMLElement | null} */
   let panel = null;
-  return event => {
+  /**
+   * @param {any} event
+   */
+  return (event) => {
     const { target, type } = event;
 
     if (!(target instanceof HTMLElement)) return;
@@ -28,17 +31,19 @@ function panelListener() {
     switch (action) {
       case "show": {
         hidePanel(panel);
-        /** @type {HTMLElement} */
+        /** @type {HTMLElement | null} */
         const dfn = target.closest("dfn, .index-term");
-        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
+        panel = document.getElementById(`dfn-panel-for-${/** @type {HTMLElement} */ (dfn)?.id}`);
         const coords = deriveCoordinates(event);
-        displayPanel(dfn, panel, coords);
+        displayPanel(/** @type {HTMLElement} */ (dfn), /** @type {HTMLElement} */ (panel), coords);
         break;
       }
       case "dock": {
-        panel.style.left = null;
-        panel.style.top = null;
-        panel.classList.add("docked");
+        if (panel) {
+          panel.style.left = "";
+          panel.style.top = "";
+          panel.classList.add("docked");
+        }
         break;
       }
       case "hide": {
@@ -90,7 +95,7 @@ function deriveAction(event) {
       return target.classList.contains("self-link") ? "hide" : "dock";
     }
     const panel = target.closest(".dfn-panel");
-    return panel.classList.contains("docked") ? "hide" : "none";
+    return (/** @type {HTMLElement} */ (panel)).classList.contains("docked") ? "hide" : "none";
   }
   if (document.querySelector(".dfn-panel:not([hidden])")) {
     return "hide";
@@ -133,9 +138,9 @@ function displayPanel(dfn, panel, { x, y }) {
     const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
     const newCaretOffset = left - newLeft;
     panel.style.left = `${newLeft}px`;
-    /** @type {HTMLElement} */
+    /** @type {HTMLElement | null} */
     const caret = panel.querySelector(".caret");
-    caret.style.left = `${newCaretOffset}px`;
+    if (caret) caret.style.left = `${newCaretOffset}px`;
   }
 
   // As it's a dialog, we trap focus.
@@ -184,7 +189,10 @@ function trapFocus(panel, dfn) {
 function createTrapListener(anchors, panel, dfn) {
   const lastIndex = anchors.length - 1;
   let currentIndex = 0;
-  return event => {
+  /**
+   * @param {KeyboardEvent} event
+   */
+  return (event) => {
     switch (event.key) {
       // Hitting "Tab" traps us in a nice loop around elements.
       case "Tab": {
@@ -213,7 +221,7 @@ function createTrapListener(anchors, panel, dfn) {
   };
 }
 
-/** @param {HTMLElement} panel */
+/** @param {HTMLElement | null} panel */
 function hidePanel(panel) {
   if (!panel) return;
   panel.hidden = true;

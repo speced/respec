@@ -60,14 +60,19 @@ const localizationStrings = {
   },
 };
 
-export const l10n = getIntlData(localizationStrings);
+export const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
 const processLink = "https://www.w3.org/policies/process/20250818/";
 
+/** @param {string} word */
 function prefix(word) {
   return /^[aeiou]/i.test(word) ? `an ${word}` : `a ${word}`;
 }
 
+/**
+ * @param {any} conf
+ * @param {any} opts
+ */
 export default (conf, opts) => {
   return html`
     <h2>${l10n.sotd}</h2>
@@ -102,6 +107,7 @@ export default (conf, opts) => {
   `;
 };
 
+/** @param {any} conf */
 export function renderPreview(conf) {
   const { prUrl, prNumber, edDraftURI } = conf;
   return html`<details class="annoying-warning" open="">
@@ -127,6 +133,7 @@ export function renderPreview(conf) {
   </details>`;
 }
 
+/** @param {any} opts */
 function renderIsUnofficial(opts) {
   const { additionalContent } = opts;
   return html`
@@ -139,6 +146,10 @@ function renderIsUnofficial(opts) {
   `;
 }
 
+/**
+ * @param {any} conf
+ * @param {any} opts
+ */
 function renderIsNoTrack(conf, opts) {
   const { isMO } = conf;
   const { additionalContent } = opts;
@@ -152,6 +163,7 @@ function renderIsNoTrack(conf, opts) {
   `;
 }
 
+/** @param {any} conf */
 function renderNotRec(conf) {
   const updatableRec = document.querySelector("#sotd.updateable-rec");
   let statusExplanation = null;
@@ -277,6 +289,7 @@ function renderNotRec(conf) {
     ${updatePolicy} ${reviewPolicy}`;
 }
 
+/** @param {any} conf */
 function renderIsRec(conf) {
   const { revisedRecEnd } = conf;
   const updatableRec = document.querySelector("#sotd.updateable-rec");
@@ -340,6 +353,7 @@ function renderIsRec(conf) {
   `;
 }
 
+/** @param {any} conf */
 function renderDeliverer(conf) {
   const {
     isNote,
@@ -402,6 +416,10 @@ function renderDeliverer(conf) {
   </p>`;
 }
 
+/**
+ * @param {any} conf
+ * @param {any} opts
+ */
 function noteForSubmission(conf, opts) {
   return html`
     ${opts.additionalContent}
@@ -409,6 +427,7 @@ function noteForSubmission(conf, opts) {
   `;
 }
 
+/** @param {any} conf */
 function noteForMemberSubmission(conf) {
   const teamComment = `https://www.w3.org/Submission/${conf.publishDate.getUTCFullYear()}/${
     conf.submissionCommentNumber
@@ -443,6 +462,10 @@ function noteForMemberSubmission(conf) {
   </p>`;
 }
 
+/**
+ * @param {any} conf
+ * @param {any} opts
+ */
 export function renderPublicList(conf, opts) {
   const { mailToWGPublicListWithSubject, mailToWGPublicListSubscription } =
     opts;
@@ -459,6 +482,7 @@ export function renderPublicList(conf, opts) {
   </p>`;
 }
 
+/** @param {any} conf */
 function linkToWorkingGroup(conf) {
   if (!conf.wg) {
     return;
@@ -506,10 +530,10 @@ function linkToWorkingGroup(conf) {
           >`}.`;
     }
   }
-  const track = status2track[conf.specStatus]
+  const track = (/** @type {any} */ (status2track))[conf.specStatus]
     ? html` using the
         <a href="${processLink}#recs-and-notes"
-          >${status2track[conf.specStatus]} track</a
+          >${(/** @type {any} */ (status2track))[conf.specStatus]} track</a
         >`
     : "";
   return html`<p>
@@ -518,6 +542,7 @@ function linkToWorkingGroup(conf) {
   </p>`;
 }
 
+/** @param {any} conf */
 function getWgHTML(conf) {
   if (Array.isArray(conf.wg)) {
     return htmlJoinAnd(conf.wg, (wg, idx) => {
@@ -528,6 +553,10 @@ function getWgHTML(conf) {
   }
 }
 
+/**
+ * @param {any} conf
+ * @param {any} opts
+ */
 export function linkToCommunity(conf, opts) {
   if (!conf.github && !conf.wgPublicList) {
     return;

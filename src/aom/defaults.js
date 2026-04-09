@@ -35,12 +35,18 @@ const aomDefaults = {
   license: "aom",
 };
 
+/**
+ * @param {any} conf
+ */
 function computeProps(conf) {
   return {
     licenseInfo: licenses.get(conf.license),
   };
 }
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   // assign the defaults
   const lint =
@@ -48,7 +54,7 @@ export function run(conf) {
       ? false
       : {
           ...coreDefaults.lint,
-          ...aomDefaults.lint,
+          ...(/** @type {any} */ (aomDefaults)).lint,
           ...conf.lint,
         };
   Object.assign(conf, {

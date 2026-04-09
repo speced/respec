@@ -12,40 +12,51 @@ export const name = "core/highlight";
 
 const nextMsgId = msgIdGenerator("highlight");
 
+/**
+ * @param {DOMTokenList} classList
+ */
 function getLanguageHint(classList) {
   return Array.from(classList)
     .filter(item => item !== "highlight" && item !== "nolinks")
     .map(item => item.toLowerCase());
 }
 
+/**
+ * @param {Element} elem
+ */
 async function highlightElement(elem) {
-  elem.setAttribute("aria-busy", "true");
-  const languages = getLanguageHint(elem.classList);
+  const htmlElem = /** @type {HTMLElement} */ (elem);
+  htmlElem.setAttribute("aria-busy", "true");
+  const languages = getLanguageHint(htmlElem.classList);
   let response;
   try {
-    response = await sendHighlightRequest(elem.innerText, languages);
+    response = await sendHighlightRequest(htmlElem.innerText, languages);
   } catch (err) {
     console.error(err);
     return;
   }
   const { language, value } = response;
-  switch (elem.localName) {
+  switch (htmlElem.localName) {
     case "pre":
-      elem.classList.remove(language);
-      elem.innerHTML = `<code class="hljs${
+      htmlElem.classList.remove(language);
+      htmlElem.innerHTML = `<code class="hljs${
         language ? ` ${language}` : ""
       }">${value}</code>`;
-      if (!elem.classList.length) elem.removeAttribute("class");
+      if (!htmlElem.classList.length) htmlElem.removeAttribute("class");
       break;
     case "code":
-      elem.innerHTML = value;
-      elem.classList.add("hljs");
-      if (language) elem.classList.add(language);
+      htmlElem.innerHTML = value;
+      htmlElem.classList.add("hljs");
+      if (language) htmlElem.classList.add(language);
       break;
   }
-  elem.setAttribute("aria-busy", "false");
+  htmlElem.setAttribute("aria-busy", "false");
 }
 
+/**
+ * @param {string} code
+ * @param {string[]} languages
+ */
 async function sendHighlightRequest(code, languages) {
   const msg = {
     action: "highlight",
@@ -71,6 +82,9 @@ async function sendHighlightRequest(code, languages) {
   });
 }
 
+/**
+ * @param {any} conf
+ */
 export async function run(conf) {
   // Nothing to highlight
   if (conf.noHighlightCSS) return;

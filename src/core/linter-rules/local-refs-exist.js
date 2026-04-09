@@ -20,6 +20,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   if (!conf.lint?.[ruleName]) {
     return;
@@ -36,8 +39,11 @@ export function run(conf) {
   }
 }
 
+/**
+ * @param {HTMLAnchorElement} elem
+ */
 function isBrokenHyperlink(elem) {
-  const id = elem.getAttribute("href").substring(1);
+  const id = (elem.getAttribute("href") ?? "").substring(1);
   const doc = elem.ownerDocument;
   return !doc.getElementById(id) && !doc.getElementsByName(id).length;
 }

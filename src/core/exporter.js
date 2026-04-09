@@ -36,6 +36,10 @@ export function rsDocToDataURL(mimeType, doc = document) {
   return `data:${mimeType};charset=utf-8,${encodedString}`;
 }
 
+/**
+ * @param {any} format
+ * @param {any} doc
+ */
 export function serialize(format, doc) {
   const cloneDoc = doc.cloneNode(true);
   cleanup(cloneDoc);
@@ -55,13 +59,16 @@ export function serialize(format, doc) {
   return result;
 }
 
+/**
+ * @param {any} cloneDoc
+ */
 function cleanup(cloneDoc) {
   const { head, body, documentElement } = cloneDoc;
   removeCommentNodes(cloneDoc);
 
   cloneDoc
     .querySelectorAll(".removeOnSave, #toc-nav")
-    .forEach(elem => elem.remove());
+    .forEach((/** @type {Element} */ elem) => elem.remove());
   body.classList.remove("toc-sidebar");
   removeReSpec(documentElement);
 

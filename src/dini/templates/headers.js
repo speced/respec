@@ -85,8 +85,11 @@ const localizationStrings = {
   },
 };
 
-export const l10n = getIntlData(localizationStrings);
+export const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
+/**
+ * @param {any} conf
+ */
 function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
 
@@ -104,7 +107,10 @@ function getSpecSubTitleElem(conf) {
   return specSubTitleElem;
 }
 
-export default conf => {
+/**
+ * @param {any} conf
+ */
+export default (conf) => {
   return html`<div class="head">
     ${conf.logos.map(showLogo)} ${document.querySelector("h1#title")}
     ${getSpecSubTitleElem(conf)}
@@ -149,6 +155,9 @@ function linkLicense(text, url, cssClass) {
   return html`<a rel="license" href="${url}" class="${cssClass}">${text}</a>`;
 }
 
+/**
+ * @param {any} conf
+ */
 function renderCopyright(conf) {
   // If there is already a copyright, let's relocate it.
   const existingCopyright = document.querySelector(".copyright");

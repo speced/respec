@@ -49,12 +49,18 @@ const diniDefaults = {
   showPreviousVersion: false,
 };
 
+/**
+ * @param {any} conf
+ */
 function computeProps(conf) {
   return {
     licenseInfo: licenses.get(conf.license),
   };
 }
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   // assign the defaults
   const lint =

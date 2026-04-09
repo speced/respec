@@ -13,9 +13,12 @@ import { makePluginUtils, showError } from "./utils.js";
 
 export const name = "core/post-process";
 
+/**
+ * @param {any} config
+ */
 export async function run(config) {
   if (Array.isArray(config.postProcess)) {
-    const functions = config.postProcess.filter(f => {
+    const functions = config.postProcess.filter((/** @type {any} */ f) => {
       const isFunction = typeof f === "function";
       if (!isFunction) {
         const msg = "Every item in `postProcess` must be a JS function.";
@@ -31,7 +34,7 @@ export async function run(config) {
       } catch (err) {
         const msg = `Function ${fnName} threw an error during \`postProcess\`.`;
         const hint = "See developer console.";
-        showError(msg, name, { hint, cause: err });
+        showError(msg, name, { hint, cause: /** @type {Error} */ (err) });
       }
     }
   }

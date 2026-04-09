@@ -23,6 +23,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   if (!conf.lint?.[ruleName]) {
     return;
@@ -32,7 +35,7 @@ export function run(conf) {
   const metas = document.querySelectorAll("meta[charset]");
   const val = [];
   for (const meta of metas) {
-    val.push(meta.getAttribute("charset").trim().toLowerCase());
+    val.push((meta.getAttribute("charset") ?? "").trim().toLowerCase());
   }
   const utfExists = val.includes("utf-8");
 

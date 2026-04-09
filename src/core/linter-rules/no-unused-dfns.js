@@ -17,6 +17,9 @@ export const name = "core/linter-rules/no-unused-dfns";
 
 const localizationStrings = {
   en: {
+    /**
+     * @param {string} text
+     */
     msg(text) {
       return `Found definition for "${text}", but nothing links to it. This is usually a spec bug!`;
     },
@@ -32,6 +35,9 @@ const localizationStrings = {
     },
   },
   cs: {
+    /**
+     * @param {string} text
+     */
     msg(text) {
       return `Nalezena definice pro "${text}", ale nic na ni neodkazuje. Toto je obvykle chyba ve specifikaci!`;
     },
@@ -49,6 +55,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   if (!conf.lint?.[ruleName]) return;
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
@@ -67,6 +76,9 @@ export function run(conf) {
   });
 }
 
+/**
+ * @param {HTMLElement} dfn
+ */
 function isDfnUnused(dfn) {
   // Not in the index
   // and not the "self-link" box

@@ -28,6 +28,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {any} doc
+ */
 function hasPriSecConsiderations(doc) {
   return Array.from(doc.querySelectorAll("h2, h3, h4, h5, h6")).some(
     ({ textContent: text }) => {
@@ -38,6 +41,9 @@ function hasPriSecConsiderations(doc) {
   );
 }
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   if (!conf.lint?.[ruleName]) {
     return;

@@ -21,6 +21,7 @@ const link = createResourceHint({
   href: bibrefsURL.origin,
 });
 document.head.appendChild(link);
+/** @type {(value: Conf['biblio']) => void} */
 let doneResolver;
 
 /** @type {Promise<Conf['biblio']>} */
@@ -28,6 +29,7 @@ const done = new Promise(resolve => {
   doneResolver = resolve;
 });
 
+/** @param {string[]} refs */
 export async function updateFromNetwork(
   refs,
   options = { forceUpdate: false }
@@ -54,7 +56,7 @@ export async function updateFromNetwork(
   const oneHourFromNow = Date.now() + 1000 * 60 * 60 * 1;
   try {
     const expires = response.headers.has("Expires")
-      ? Math.min(Date.parse(response.headers.get("Expires")), oneHourFromNow)
+      ? Math.min(Date.parse(response.headers.get("Expires") ?? ""), oneHourFromNow)
       : oneHourFromNow;
     await biblioDB.addAll(data, expires);
   } catch (err) {
@@ -65,7 +67,7 @@ export async function updateFromNetwork(
 
 /**
  * @param {string} key
- * @returns {Promise<BiblioData>}
+ * @returns {Promise<BiblioData | null>}
  */
 export async function resolveRef(key) {
   const biblio = await done;
@@ -139,9 +141,9 @@ export class Plugin {
     }
     this.conf.biblio = biblio;
     const localAliases = Object.keys(this.conf.localBiblio)
-      .filter(key => this.conf.localBiblio[key].hasOwnProperty("aliasOf"))
-      .map(key => this.conf.localBiblio[key].aliasOf)
-      .filter(key => !this.conf.localBiblio.hasOwnProperty(key));
+      .filter(key => this.conf.localBiblio?.[key]?.hasOwnProperty("aliasOf"))
+      .map(key => this.conf.localBiblio?.[key]?.aliasOf)
+      .filter(key => key && !this.conf.localBiblio?.hasOwnProperty(key));
     this.normalizeReferences();
     const allRefs = this.getRefKeys();
     const neededRefs = Array.from(
@@ -149,9 +151,9 @@ export class Plugin {
         allRefs.normativeReferences
           .concat(allRefs.informativeReferences)
           // Filter, as to not go to network for local refs
-          .filter(key => !this.conf.localBiblio.hasOwnProperty(key))
+          .filter(key => !this.conf.localBiblio?.hasOwnProperty(key))
           // but include local aliases which refer to external specs
-          .concat(localAliases)
+          .concat(/** @type {string[]} */ (localAliases.filter(Boolean)))
           .sort()
       )
     );
@@ -159,12 +161,13 @@ export class Plugin {
     const idbRefs = neededRefs.length
       ? await getReferencesFromIdb(neededRefs)
       : [];
+    /** @type {{ hasData: { id: string, data: BiblioData | null }[], noData: { id: string, data: BiblioData | null }[] }} */
     const split = { hasData: [], noData: [] };
     idbRefs.forEach(ref => {
       (ref.data ? split.hasData : split.noData).push(ref);
     });
     split.hasData.forEach(ref => {
-      biblio[ref.id] = ref.data;
+      if (ref.data) biblio[ref.id] = ref.data;
     });
     const externalRefs = split.noData.map(item => item.id);
     if (externalRefs.length) {

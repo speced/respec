@@ -23,16 +23,16 @@ export const name = "rs-changelog";
 export const element = class ChangelogElement extends HTMLElement {
   constructor() {
     super();
+    const filterAttr = this.getAttribute("filter");
+    const filterFn = filterAttr && typeof (/** @type {any} */ (window))[filterAttr] === "function"
+      ? /** @type {(commit: Commit) => boolean} */ ((/** @type {any} */ (window))[filterAttr])
+      : /** @type {(commit: Commit) => boolean} */ (() => true);
     this.props = {
       from: this.getAttribute("from"),
       to: this.getAttribute("to") || "HEAD",
       repo: this.getAttribute("repo"),
       path: this.getAttribute("path"),
-      /** @type {(commit: Commit) => boolean} */
-      filter:
-        typeof window[this.getAttribute("filter")] === "function"
-          ? window[this.getAttribute("filter")]
-          : () => true,
+      filter: filterFn,
     };
   }
 
@@ -56,6 +56,13 @@ export const element = class ChangelogElement extends HTMLElement {
   }
 };
 
+/**
+ * @param {string | null} from
+ * @param {string} to
+ * @param {(commit: Commit) => boolean} filter
+ * @param {string | null} repo
+ * @param {string | null} path
+ */
 async function fetchCommits(from, to, filter, repo, path) {
   /** @type {Commit[]} */
   let commits;
@@ -66,7 +73,7 @@ async function fetchCommits(from, to, filter, repo, path) {
     }
     const fullName = repo || gh.fullName;
     const url = new URL("commits", `${gh.apiBase}/${fullName}/`);
-    url.searchParams.set("from", from);
+    url.searchParams.set("from", from ?? "");
     url.searchParams.set("to", to);
     if (path) {
       url.searchParams.set("path", path);
@@ -84,16 +91,20 @@ async function fetchCommits(from, to, filter, repo, path) {
     }
     commits = commits.filter(filter);
   } catch (error) {
-    const msg = `Error loading commits from GitHub. ${error.message}`;
+    const msg = `Error loading commits from GitHub. ${/** @type {Error} */ (error).message}`;
     throw new Error(msg, { cause: error });
   }
   return commits;
 }
 
+/**
+ * @param {Commit[]} commits
+ * @param {string | null} repo
+ */
 async function toHTML(commits, repo) {
   const gh = await github;
-  const repoURL = repo ? `https://github.com/${repo}/` : gh.repoURL;
-  return commits.map(commit => {
+  const repoURL = repo ? `https://github.com/${repo}/` : gh?.repoURL;
+  return commits.map((/** @type {Commit} */ commit) => {
     const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
     const commitURL = `${repoURL}commit/${commit.hash}`;
     const prURL = prNumber ? `${repoURL}pull/${prNumber}` : null;

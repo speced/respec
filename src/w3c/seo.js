@@ -31,6 +31,7 @@ export const requiresCanonicalLink = new Set([
   "finding",
 ]);
 
+/** @param {any} conf */
 export async function run(conf) {
   // Don't include a canonical URL for documents that haven't been published.
   if (
@@ -76,12 +77,17 @@ export async function run(conf) {
   }
 }
 
+/**
+ * @param {any} conf
+ * @param {Document} doc
+ */
 async function addJSONLDInfo(conf, doc) {
-  const rdfStatus = status2rdf[conf.specStatus];
+  const rdfStatus = (/** @type {any} */ (status2rdf))[conf.specStatus];
   // Content for JSON
   const type = ["TechArticle"];
   if (rdfStatus) type.push(rdfStatus);
 
+  /** @type {any} */
   const jsonld = {
     "@context": [
       "http://schema.org",
@@ -119,14 +125,14 @@ async function addJSONLDInfo(conf, doc) {
       : [conf.additionalCopyrightHolders];
     jsonld.copyrightHolder = [
       jsonld.copyrightHolder,
-      ...addl.map(h => ({ name: h })),
+      ...addl.map((/** @type {any} */ h) => ({ name: h })),
     ];
   }
 
   // description from meta description
   const description = doc.head.querySelector("meta[name=description]");
   if (description) {
-    jsonld.description = description.content;
+    jsonld.description = /** @type {HTMLMetaElement} */ (description).content;
   }
 
   // Editors
@@ -157,8 +163,10 @@ async function addJSONLDInfo(conf, doc) {
 
 /**
  * Turn editors and authors into a list of JSON-LD relationships
+ * @param {{ name: any, url: any, mailto: any, company: any, companyURL: any }} arg0
  */
 function addPerson({ name, url, mailto, company, companyURL }) {
+  /** @type {any} */
   const ed = {
     type: "Person",
     name,
@@ -176,9 +184,11 @@ function addPerson({ name, url, mailto, company, companyURL }) {
 
 /**
  * Create a reference URL from the ref
+ * @param {any} ref
  */
 function addRef(ref) {
   const { href: id, title: name, href: url } = ref;
+  /** @type {any} */
   const jsonld = {
     id,
     type: "TechArticle",
@@ -186,7 +196,7 @@ function addRef(ref) {
     url,
   };
   if (ref.authors) {
-    jsonld.creator = ref.authors.map(a => ({ name: a }));
+    jsonld.creator = ref.authors.map((/** @type {any} */ a) => ({ name: a }));
   }
   if (ref.rawDate) {
     jsonld.publishedDate = ref.rawDate;

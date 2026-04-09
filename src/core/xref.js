@@ -51,7 +51,7 @@ if (
 }
 
 /**
- * @param {Object} conf respecConfig
+ * @param {any} conf respecConfig
  */
 export async function run(conf) {
   if (!conf.xref) {
@@ -98,7 +98,7 @@ function findExplicitExternalLinks() {
     .filter(el => {
       // ignore empties
       if (el.textContent.trim() === "") return false;
-      /** @type {HTMLElement} */
+      /** @type {HTMLElement | null} */
       const closest = el.closest("[data-cite]");
       return !closest || closest.dataset.cite !== "";
     })
@@ -106,6 +106,7 @@ function findExplicitExternalLinks() {
 }
 
 /**
+ * @param {any} xref
  * converts conf.xref to object with url and spec properties
  */
 function normalizeConfig(xref) {
@@ -123,7 +124,7 @@ function normalizeConfig(xref) {
       break;
     case "string":
       if (xref.toLowerCase() in profiles) {
-        Object.assign(config, { specs: profiles[xref.toLowerCase()] });
+        Object.assign(config, { specs: /** @type {Record<string, string[]>} */ (profiles)[xref.toLowerCase()] });
       } else {
         invalidProfileError(xref);
       }
@@ -136,7 +137,7 @@ function normalizeConfig(xref) {
       if (xref.profile) {
         const profile = xref.profile.toLowerCase();
         if (profile in profiles) {
-          const specs = (xref.specs ?? []).concat(profiles[profile]);
+          const specs = (xref.specs ?? []).concat(/** @type {Record<string, string[]>} */ (profiles)[profile]);
           Object.assign(config, { specs });
         } else {
           invalidProfileError(xref.profile);
@@ -150,6 +151,7 @@ function normalizeConfig(xref) {
   }
   return config;
 
+  /** @param {any} profile */
   function invalidProfileError(profile) {
     const supportedProfiles = joinOr(Object.keys(profiles), s => `"${s}"`);
     const msg =
@@ -202,18 +204,18 @@ function getSpecContext(elem) {
   /** @type {string[][]} */
   const specs = [];
 
-  /** @type {HTMLElement} */
+  /** @type {HTMLElement | null} */
   let dataciteElem = elem.closest("[data-cite]");
 
   // Traverse up towards the root element, adding levels of lower priority specs
   while (dataciteElem) {
-    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
+    const cite = (dataciteElem.dataset.cite ?? "").toLowerCase().replace(/[!?]/g, "");
     const cites = cite.split(/\s+/).filter(s => s);
     if (cites.length) {
       specs.push(cites);
     }
     if (dataciteElem === elem) break;
-    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
+    dataciteElem = dataciteElem.parentElement?.closest("[data-cite]") ?? null;
   }
 
   // If element itself contains data-cite, we don't take inline context into
@@ -262,10 +264,10 @@ function getForContext(elem, isIDL) {
   }
 
   if (isIDL) {
-    /** @type {HTMLElement} */
-    const dataXrefForElem = elem.closest("[data-xref-for]");
+    /** @type {HTMLElement | null} */
+  const dataXrefForElem = elem.closest("[data-xref-for]");
     if (dataXrefForElem) {
-      return normalize(dataXrefForElem.dataset.xrefFor);
+      return normalize(dataXrefForElem.dataset.xrefFor ?? "");
     }
   }
 
@@ -329,7 +331,7 @@ async function fetchFromNetwork(queries, url) {
   };
   const response = await fetch(url, options);
   const json = await response.json();
-  return new Map(json.results.map(({ id, result }) => [id, result]));
+  return new Map(json.results.map((/** @type {{id: any, result: any}} */ { id, result }) => [id, result]));
 }
 
 /**
@@ -370,7 +372,7 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
     const query = queryKeys[i];
 
     const { id } = query;
-    const results = data.get(id);
+    const results = data.get(id) ?? [];
     if (results.length === 1) {
       addDataCite(elem, query, results[0], conf);
     } else {
@@ -378,7 +380,7 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
       if (!collector.has(id)) {
         collector.set(id, { elems: [], results, query });
       }
-      collector.get(id).elems.push(elem);
+      collector.get(id)?.elems.push(elem);
     }
   }
 
@@ -405,7 +407,7 @@ function addDataCite(elem, query, result, conf) {
   // a filename. That filename must be preserved if there's no specific path.
   if (citePath === "/") citePath = "";
   const citeFrag = url.hash.slice(1);
-  const dataset = { cite, citePath, citeFrag, linkType: type };
+  const dataset = /** @type {Record<string, string>} */ ({ cite, citePath, citeFrag, linkType: type });
   if (forContext) dataset.linkFor = forContext[0];
   if (url.origin && url.origin !== "https://partial") {
     dataset.citeHref = url.href;
@@ -449,6 +451,11 @@ function addToReferences(elem, cite, normative, term, conf) {
 
 /** @param {Errors} errors */
 function showErrors({ ambiguous, notFound }) {
+  /**
+   * @param {string} term
+   * @param {any} query
+   * @param {string[]} specs
+   */
   const getPrefilledFormURL = (term, query, specs = []) => {
     const url = new URL(API_URL);
     url.searchParams.set("term", term);
@@ -458,6 +465,10 @@ function showErrors({ ambiguous, notFound }) {
     return url.href;
   };
 
+  /**
+   * @param {string} howToCiteURL
+   * @param {string} originalTerm
+   */
   const howToFix = (howToCiteURL, originalTerm) => {
     return docLink`[See search matches for "${originalTerm}"](${howToCiteURL}) or ${"[Learn about this error|#error-term-not-found]"}.`;
   };
@@ -490,6 +501,7 @@ function showErrors({ ambiguous, notFound }) {
   }
 }
 
+/** @param {any} obj */
 function objectHash(obj) {
   const str = JSON.stringify(obj, Object.keys(obj).sort());
   const buffer = new TextEncoder().encode(str);
@@ -502,12 +514,13 @@ function bufferToHexString(buffer) {
   return [...byteArray].map(v => v.toString(16).padStart(2, "0")).join("");
 }
 
+/** @param {Document} doc */
 function cleanup(doc) {
   const elems = doc.querySelectorAll(
     "a[data-xref-for], a[data-xref-type], a[data-link-for]"
   );
   const attrToRemove = ["data-xref-for", "data-xref-type", "data-link-for"];
-  elems.forEach(el => {
+  elems.forEach(/** @param {Element} el */ el => {
     attrToRemove.forEach(attr => el.removeAttribute(attr));
   });
 }

@@ -66,7 +66,7 @@ export function createResourceHint(opts) {
       break;
     case "preload":
       if ("as" in opts) {
-        linkElem.setAttribute("as", opts.as);
+        linkElem.setAttribute("as", opts.as || "");
       }
       if (opts.corsMode) {
         linkElem.crossOrigin = opts.corsMode;
@@ -140,7 +140,7 @@ const disjunction = joinFactory("disjunction");
 /**
  *
  * @param {string[]} items
- * @param {(value: undefined, index: number, array: undefined[]) => string} [mapper]
+ * @param {(value: string, index: number, array: string[]) => string} [mapper]
  */
 export function joinAnd(items, mapper) {
   return conjunction(items, mapper).join("");
@@ -149,7 +149,7 @@ export function joinAnd(items, mapper) {
 /**
  *
  * @param {string[]} items
- * @param {(value: undefined, index: number, array: undefined[]) => string} [mapper]
+ * @param {(value: string, index: number, array: string[]) => string} [mapper]
  */
 export function joinOr(items, mapper) {
   return disjunction(items, mapper).join("");
@@ -205,9 +205,10 @@ export function getIntlData(localizationStrings, lang = docLang) {
  */
 export function getIntlDataForKey(localizationStrings, key, lang = docLang) {
   lang = lang.toLowerCase();
+  const shortLang = lang.match(/^(\w{2,3})-.+$/)?.[1] ?? "";
   return (
     localizationStrings[lang]?.[key] ||
-    localizationStrings[lang.match(/^(\w{2,3})-.+$/)?.[1]]?.[key]
+    localizationStrings[shortLang]?.[key]
   );
 }
 
@@ -252,7 +253,8 @@ export function toKeyValuePairs(obj, delimiter = ", ", separator = "=") {
  * @param {string | string[]} urls
  */
 export function linkCSS(doc, urls) {
-  const stylesArray = [].concat(urls);
+  /** @type {string[]} */
+  const stylesArray = (/** @type {any} */ ([])).concat(urls);
   const frag = stylesArray
     .map(url => {
       const link = doc.createElement("link");
@@ -278,15 +280,14 @@ export function linkCSS(doc, urls) {
  * @this {any}
  * @param {string} content
  * @param {string} [flist] List of global function names.
- * @param {unknown[]} [funcArgs] Arguments to pass to each function.
+ * @param {...any} funcArgs Arguments to pass to each function.
  */
 export function runTransforms(content, flist, ...funcArgs) {
-  const args = [this, content, ...funcArgs];
+  const args = [this, content, ...(funcArgs || [])];
   if (flist) {
     const methods = flist.split(/\s+/);
     for (const meth of methods) {
-      /** @type {any} */
-      const method = window[meth];
+      const method = (/** @type {any} */ (window))[meth];
       if (method) {
         // the initial call passed |this| directly, so we keep it that way
         try {
@@ -294,7 +295,7 @@ export function runTransforms(content, flist, ...funcArgs) {
         } catch (e) {
           const msg = `call to \`${meth}()\` failed with: ${e}.`;
           const hint = "See developer console for stack trace.";
-          showWarning(msg, "utils/runTransforms", { hint, cause: e });
+          showWarning(msg, "utils/runTransforms", { hint, cause: /** @type {Error} */ (e) });
         }
       }
     }
@@ -324,7 +325,7 @@ export async function fetchAndCache(input, maxAge = 24 * 60 * 60 * 1000) {
       cachedResponse = await cache.match(request);
       if (
         cachedResponse &&
-        new Date(cachedResponse.headers.get("Expires")) > new Date()
+        new Date(cachedResponse.headers.get("Expires") ?? "") > new Date()
       ) {
         return cachedResponse;
       }
@@ -364,7 +365,7 @@ export async function fetchAndCache(input, maxAge = 24 * 60 * 60 * 1000) {
  * Separates each item with proper commas.
  * @template T
  * @param {T[]} array
- * @param {(item: T) => any} [mapper]
+ * @param {(item: T, index: number, array: T[]) => any} [mapper]
  */
 export function htmlJoinComma(array, mapper = item => item) {
   const items = array.map(mapper);
@@ -374,10 +375,11 @@ export function htmlJoinComma(array, mapper = item => item) {
 /**
  *
  * @param {string[]} array
- * @param {(item: any) => any[]} [mapper]
+ * @param {(item: any, index: number, array: string[]) => any[]} [mapper]
  */
 export function htmlJoinAnd(array, mapper) {
-  const result = [].concat(conjunction(array, mapper));
+  /** @type {any[]} */
+  const result = (/** @type {any} */ ([])).concat(conjunction(array, mapper));
   return result.map(item => (typeof item === "string" ? html`${item}` : item));
 }
 
@@ -449,11 +451,14 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
  */
 export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
   const exclusionQuery = exclusions.join(", ");
-  const acceptNode = (/** @type {Text} */ node) => {
+  /**
+   * @param {Text} node
+   */
+  const acceptNodeFn = (node) => {
     if (!options.wsNodes && !node.data.trim()) {
       return NodeFilter.FILTER_REJECT;
     }
-    if (exclusionQuery && node.parentElement.closest(exclusionQuery)) {
+    if (exclusionQuery && node.parentElement?.closest(exclusionQuery)) {
       return NodeFilter.FILTER_REJECT;
     }
     return NodeFilter.FILTER_ACCEPT;
@@ -461,7 +466,7 @@ export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
   const nodeIterator = document.createNodeIterator(
     el,
     NodeFilter.SHOW_TEXT,
-    acceptNode
+    /** @type {NodeFilter} */ ({ acceptNode: acceptNodeFn })
   );
   /** @type {Text[]} */
   const textNodes = [];
@@ -499,7 +504,7 @@ export function getDfnTitles(elem) {
   } else if (
     elem.childNodes.length === 1 &&
     elem.getElementsByTagName("abbr").length === 1 &&
-    child.title
+    child && child.title
   ) {
     titleSet.add(child.title);
   } else if (elem.textContent === '""') {
@@ -538,10 +543,11 @@ export function getDfnTitles(elem) {
  * @returns {LinkTarget[]}
  */
 export function getLinkTargets(elem) {
-  /** @type {HTMLElement} */
+  /** @type {HTMLElement | null} */
   const linkForElem = elem.closest("[data-link-for]");
-  const linkFor = linkForElem ? linkForElem.dataset.linkFor : "";
+  const linkFor = linkForElem ? linkForElem.dataset.linkFor ?? "" : "";
   const titles = getDfnTitles(elem);
+  /** @type {LinkTarget[]} */
   const results = titles.reduce((result, title) => {
     // supports legacy <dfn>Foo.Bar()</dfn> definitions
     const split = title.split(".");
@@ -556,7 +562,7 @@ export function getLinkTargets(elem) {
     // Finally, we can try to match without link for
     if (linkFor !== "") result.push({ for: "", title });
     return result;
-  }, []);
+  }, /** @type {LinkTarget[]} */ ([]));
   return results;
 }
 
@@ -682,11 +688,11 @@ export function getElementIndentation(element) {
   if (!previousSibling || previousSibling.nodeType !== Node.TEXT_NODE) {
     return "";
   }
-  const index = previousSibling.textContent.lastIndexOf("\n");
+  const index = (previousSibling.textContent ?? "").lastIndexOf("\n");
   if (index === -1) {
     return "";
   }
-  const slice = previousSibling.textContent.slice(index + 1);
+  const slice = (previousSibling.textContent ?? "").slice(index + 1);
   if (/\S/.test(slice)) {
     return "";
   }
@@ -701,6 +707,10 @@ export function getElementIndentation(element) {
  */
 export function msgIdGenerator(namespace, counter = 0) {
   /** @returns {Generator<string, never, never>}  */
+  /**
+   * @param {string} namespace
+   * @param {number} counter
+   */
   function* idGenerator(namespace, counter) {
     while (true) {
       yield `${namespace}:${counter}`;
@@ -750,7 +760,7 @@ export class InsensitiveStringSet extends Set {
   delete(key) {
     return super.has(key)
       ? super.delete(key)
-      : super.delete(this.getCanonicalKey(key));
+      : super.delete(this.getCanonicalKey(key) ?? key);
   }
   /**
    * @param {string} key
@@ -784,18 +794,17 @@ export function makeSafeCopy(node) {
 export function removeCommentNodes(node) {
   const walker = document.createTreeWalker(node, NodeFilter.SHOW_COMMENT);
   for (const comment of [...walkTree(walker)]) {
-    comment.remove();
+    /** @type {ChildNode} */ (comment).remove();
   }
 }
 
 /**
- * @template {Node} T
- * @param {TreeWalker<T>} walker
- * @return {IterableIterator<T>}
+ * @param {TreeWalker} walker
+ * @return {IterableIterator<Node>}
  */
 function* walkTree(walker) {
   while (walker.nextNode()) {
-    yield /** @type {T} */ (walker.currentNode);
+    yield walker.currentNode;
   }
 }
 
@@ -960,6 +969,7 @@ export function codedJoinAnd(array, { quotes } = { quotes: false }) {
   return joinAnd(array, quotes ? s => toMDCode(addQuotes(s)) : toMDCode);
 }
 
+/** @param {string} item */
 function addQuotes(item) {
   return String(item) ? `"${item}"` : "";
 }

@@ -6,6 +6,10 @@ import showLink from "../../core/templates/show-link.js";
 import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
 
+/**
+ * @param {any} conf
+ * @param {any} options
+ */
 export default (conf, options) => {
   const existingCopyright = document.querySelector(".copyright");
   if (existingCopyright) {
@@ -13,7 +17,7 @@ export default (conf, options) => {
   }
 
   const specTitleElem = document.querySelector("h1#title");
-  const specTitleElemClone = specTitleElem.cloneNode(true);
+  const specTitleElemClone = specTitleElem?.cloneNode(true);
 
   return html`<div class="head">
     ${conf.logos.length
@@ -132,7 +136,7 @@ export default (conf, options) => {
           ${conf.additionalCopyrightHolders
             ? html` ${[conf.additionalCopyrightHolders]} &amp; `
             : ""}
-          the Contributors to the ${specTitleElemClone.childNodes}
+          the Contributors to the ${specTitleElemClone?.childNodes}
           Specification, published by the
           <a href="${conf.wgURI}">${conf.wg}</a> under the
           ${conf.isCGFinal

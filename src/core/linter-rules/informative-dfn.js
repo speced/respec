@@ -13,6 +13,10 @@ export const name = "core/linter-rules/informative-dfn";
 
 const localizationStrings = {
   en: {
+    /**
+     * @param {string} term
+     * @param {string} cite
+     */
     msg(term, cite) {
       return `Normative reference to "${term}" found but term is defined "informatively" in "${cite}".`;
     },
@@ -28,6 +32,10 @@ const localizationStrings = {
     },
   },
   cs: {
+    /**
+     * @param {string} term
+     * @param {string} cite
+     */
     msg(term, cite) {
       return `Nalezen normativní odkaz na "${term}", ale pojem je definován pouze informativně v "${cite}".`;
     },
@@ -43,8 +51,11 @@ const localizationStrings = {
     },
   },
 };
-const l10n = getIntlData(localizationStrings);
+const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
+/**
+ * @param {any} conf
+ */
 export function run(conf) {
   if (!conf.lint?.[ruleName]) return;
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;

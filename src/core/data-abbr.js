@@ -42,12 +42,15 @@ function processDfnElement(dfn) {
     .join("|");
 }
 
+/**
+ * @param {HTMLElement} elem
+ */
 function generateAbbreviation(elem) {
   if (elem.dataset.abbr) return elem.dataset.abbr;
   // Generates abbreviation from textContent
   // e.g., "Permanent Account Number" -> "PAN"
-  return elem.textContent
+  return (elem.textContent ?? "")
     .match(/\b([a-z])/gi)
-    .join("")
-    .toUpperCase();
+    ?.join("")
+    .toUpperCase() ?? "";
 }

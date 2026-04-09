@@ -57,7 +57,7 @@ async function openIdb() {
       /** @type {BiblioData} */
       const entry = result.value;
       if (entry.expires === undefined || entry.expires < now) {
-        await store.delete(entry.id);
+        await store.delete(entry.id ?? "");
       }
       result = await result.continue();
     }
@@ -79,7 +79,7 @@ export const biblioDB = {
    */
   async find(id) {
     if (await this.isAlias(id)) {
-      id = await this.resolveAlias(id);
+      id = (await this.resolveAlias(id)) ?? id;
     }
     return await this.get("reference", id);
   },
@@ -116,7 +116,7 @@ export const biblioDB = {
    * Resolves an alias to its corresponding reference id.
    *
    * @param {String} id The id of the alias to look up.
-   * @return {Promise<String>} The id of the resolved reference.
+   * @return {Promise<String | null>} The id of the resolved reference.
    */
   async resolveAlias(id) {
     if (!id) {
@@ -160,6 +160,7 @@ export const biblioDB = {
     if (!data) {
       return;
     }
+    /** @type {{ alias: BiblioData[], reference: BiblioData[] }} */
     const aliasesAndRefs = { alias: [], reference: [] };
     for (const id of Object.keys(data)) {
       /** @type {BiblioData} */
@@ -192,14 +193,14 @@ export const biblioDB = {
       throw new TypeError("Invalid alias object.");
     }
     const db = await this.ready;
-    let isInDB = await this.has(type, details.id);
+    let isInDB = await this.has(type, details.id ?? "");
     // update or add, depending of already having it in db
     // or if it's expired
     if (isInDB) {
-      const entry = await this.get(type, details.id);
-      if (entry?.expires < Date.now()) {
+      const entry = await this.get(type, details.id ?? "");
+      if (entry && entry.expires !== undefined && entry.expires < Date.now()) {
         const { store } = db.transaction(type, "readwrite");
-        await store.delete(details.id);
+        await store.delete(details.id ?? "");
         isInDB = false;
       }
     }

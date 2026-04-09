@@ -11,6 +11,9 @@ import { removeReSpec } from "./utils.js";
 
 export const name = "core/base-runner";
 
+/**
+ * @param {any[]} plugs
+ */
 export async function runAll(plugs) {
   initReSpecGlobal();
 
@@ -20,27 +23,34 @@ export async function runAll(plugs) {
   performance.mark(`${name}-start`);
   await preProcess(respecConfig);
 
-  const runnables = plugs.filter(p => isRunnableModule(p));
+  const runnables = plugs.filter(/** @param {any} p */ p => isRunnableModule(p));
   runnables.forEach(
-    plug => !plug.name && console.warn("Plugin lacks name:", plug)
+    /** @param {any} plug */ plug => !plug.name && console.warn("Plugin lacks name:", plug)
   );
   await executePreparePass(runnables, respecConfig);
   await executeRunPass(runnables, respecConfig);
   pub("plugins-done", respecConfig);
 
   await postProcess(respecConfig);
-  pub("end-all");
+  pub("end-all", undefined);
   removeReSpec(document);
   performance.mark(`${name}-end`);
   performance.measure(name, `${name}-start`, `${name}-end`);
 }
 
+/**
+ * @param {any} plug
+ */
 function isRunnableModule(plug) {
   return plug && (plug.run || plug.Plugin);
 }
 
+/**
+ * @param {any[]} runnables
+ * @param {any} config
+ */
 async function executePreparePass(runnables, config) {
-  for (const plug of runnables.filter(p => p.prepare)) {
+  for (const plug of runnables.filter(/** @param {any} p */ p => p.prepare)) {
     try {
       await plug.prepare(config);
     } catch (err) {
@@ -49,6 +59,10 @@ async function executePreparePass(runnables, config) {
   }
 }
 
+/**
+ * @param {any[]} runnables
+ * @param {any} config
+ */
 async function executeRunPass(runnables, config) {
   for (const plug of runnables) {
     const name = plug.name || "";
@@ -66,10 +80,10 @@ async function executeRunPass(runnables, config) {
         try {
           if (plug.Plugin) {
             await new plug.Plugin(config).run();
-            resolve();
+            resolve(undefined);
           } else if (plug.run) {
             await plug.run(config);
-            resolve();
+            resolve(undefined);
           }
         } catch (err) {
           reject(err);

@@ -13,6 +13,9 @@ import { sub } from "./pubsubhub.js";
 
 export const name = "core/highlight-vars";
 
+/**
+ * @param {any} conf
+ */
 export async function run(conf) {
   if (!conf.highlightVars) {
     return;
