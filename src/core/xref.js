@@ -51,7 +51,7 @@ if (
 }
 
 /**
- * @param {any} conf respecConfig
+ * @param {Conf} conf respecConfig
  */
 export async function run(conf) {
   if (!conf.xref) {
@@ -379,7 +379,7 @@ function isNormative(elem) {
  * @param {HTMLElement[]} elems
  * @param {RequestEntry[]} queryKeys
  * @param {Map<string, SearchResultEntry[]>} data
- * @param {any} conf
+ * @param {Conf} conf
  */
 function addDataCiteToTerms(elems, queryKeys, data, conf) {
   /** @type {Errors} */
@@ -411,7 +411,7 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
  * @param {HTMLElement} elem
  * @param {RequestEntry} query
  * @param {SearchResultEntry} result
- * @param {any} conf
+ * @param {Conf} conf
  */
 function addDataCite(elem, query, result, conf) {
   const { term, specs = [] } = query;
@@ -448,7 +448,7 @@ function addDataCite(elem, query, result, conf) {
  * @param {string} cite
  * @param {boolean} normative
  * @param {string} term
- * @param {any} conf
+ * @param {Conf} conf
  */
 function addToReferences(elem, cite, normative, term, conf) {
   const isNormRef = isNormative(elem);
@@ -463,7 +463,7 @@ function addToReferences(elem, cite, normative, term, conf) {
     // If it was originally informative, we move the existing
     // key to be normative.
     const existingKey = conf.informativeReferences.has(cite)
-      ? conf.informativeReferences.getCanonicalKey(cite)
+      ? (conf.informativeReferences.getCanonicalKey(cite) ?? cite)
       : cite;
     conf.normativeReferences.add(existingKey);
     conf.informativeReferences.delete(existingKey);

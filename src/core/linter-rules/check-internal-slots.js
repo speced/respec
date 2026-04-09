@@ -20,9 +20,10 @@ const localizationStrings = {
 const l10n = getIntlData(localizationStrings);
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
+  // @ts-ignore -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }

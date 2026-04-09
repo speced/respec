@@ -37,11 +37,13 @@ export function rsDocToDataURL(mimeType, doc = document) {
 }
 
 /**
- * @param {any} format
- * @param {any} doc
+ * @param {string} format
+ * @param {Document} doc
  */
 export function serialize(format, doc) {
-  const cloneDoc = doc.cloneNode(true);
+  const cloneDoc = /** @type {Document} */ (
+    /** @type {unknown} */ (doc.cloneNode(true))
+  );
   cleanup(cloneDoc);
   let result = "";
   switch (format) {
@@ -60,7 +62,7 @@ export function serialize(format, doc) {
 }
 
 /**
- * @param {any} cloneDoc
+ * @param {Document} cloneDoc
  */
 function cleanup(cloneDoc) {
   const { head, body, documentElement } = cloneDoc;
@@ -87,7 +89,7 @@ function cleanup(cloneDoc) {
   if (!metaCharset) {
     metaCharset = html`<meta charset="utf-8" />`;
   }
-  insertions.appendChild(metaCharset);
+  insertions.appendChild(/** @type {Element} */ (metaCharset));
 
   // Add meta generator
   const respecVersion = `ReSpec ${window.respecVersion || "Developer Channel"}`;

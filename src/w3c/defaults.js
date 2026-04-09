@@ -55,7 +55,7 @@ const w3cDefaults = {
 };
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   // assign the defaults
@@ -65,6 +65,7 @@ export function run(conf) {
       : {
           ...coreDefaults.lint,
           ...w3cDefaults.lint,
+          // @ts-ignore -- lint is the object form here (false case handled above)
           ...conf.lint,
         };
 
@@ -84,7 +85,7 @@ export function run(conf) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 function processLogos(conf) {
   // Primarily include the W3C logo and license for W3C Recommendation track
@@ -96,21 +97,25 @@ function processLogos(conf) {
     ...W3CNotes,
     ...tagStatus,
     "ED",
+    // @ts-ignore -- specStatus may be undefined but Array.includes handles it
   ].includes(specStatus);
   const inWorkingGroup = wg && wg.length && isWgStatus;
   // Member submissions don't need to be in a Working Group.
+  // @ts-ignore -- specStatus may be undefined but Array.includes handles it
   const doesNotNeedWG = ["Member-SUBM"].includes(specStatus);
   const canShowW3CLogo = inWorkingGroup || doesNotNeedWG;
   if (canShowW3CLogo) {
+    // @ts-ignore -- conf.logos is always set by defaults before this runs
     conf.logos.unshift(w3cLogo);
     if (specStatus === "Member-SUBM") {
+      // @ts-ignore -- conf.logos is always set by defaults before this runs
       conf.logos.push(memSubmissionLogo);
     }
   }
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 function validateStatusForGroup(conf) {
   const { specStatus, groupType, group } = conf;
@@ -181,6 +186,7 @@ function validateStatusForGroup(conf) {
     default:
       if (
         !conf.wgId &&
+        // @ts-ignore -- specStatus may be undefined but Array.includes handles it
         !["unofficial", "base", "UD", "Member-SUBM"].includes(conf.specStatus)
       ) {
         const msg =

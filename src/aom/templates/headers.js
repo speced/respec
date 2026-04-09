@@ -23,7 +23,7 @@ const localizationStrings = {
 export const l10n = getIntlData(localizationStrings);
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
@@ -43,11 +43,11 @@ function getSpecSubTitleElem(conf) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export default conf => {
   return html`<div class="head">
-    ${conf.specStatus !== "PD" ? conf.logos.map(showLogo) : ""}
+    ${conf.specStatus !== "PD" ? (conf.logos ?? []).map(showLogo) : ""}
     ${document.querySelector("h1#title")} ${getSpecSubTitleElem(conf)}
     <h2>
       ${conf.textStatus} -
@@ -90,7 +90,7 @@ export default conf => {
 };
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 function renderCopyright(conf) {
   // If there is already a copyright, let's relocate it.

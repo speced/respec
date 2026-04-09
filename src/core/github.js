@@ -58,7 +58,7 @@ const localizationStrings = {
 const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
@@ -74,6 +74,7 @@ export async function run(conf) {
     rejectGithubPromise(msg);
     return;
   }
+  // @ts-ignore -- conf.github can be string or object; .repoURL only exists on object form
   let tempURL = conf.github.repoURL || conf.github;
   if (!tempURL.endsWith("/")) tempURL += "/";
   /** @type URL */
@@ -96,6 +97,7 @@ export async function run(conf) {
     rejectGithubPromise(msg);
     return;
   }
+  // @ts-ignore -- conf.github is string | object; .branch only exists on object form
   const branch = conf.github.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
 
@@ -139,6 +141,7 @@ export async function run(conf) {
     commitHistoryURL = conf.github.commitHistoryURL;
   } else {
     commitHistoryURL = new URL(
+      // @ts-ignore -- conf.github is string | object; .branch only exists on object form
       `./commits/${conf.github.branch ?? ""}`,
       ghURL.href
     ).href;

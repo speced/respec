@@ -13,8 +13,8 @@ import {
 import { sub } from "../core/pubsubhub.js";
 export const name = "aom/style";
 /**
- * @param {any} doc
- * @param {any} version
+ * @param {Document} doc
+ * @param {string} version
  */
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
@@ -95,20 +95,21 @@ if (!document.head.querySelector("meta[name=viewport]")) {
 document.head.prepend(elements);
 
 /**
- * @param {any} linkURL
+ * @param {string} linkURL
  */
 function styleMover(linkURL) {
   /**
-   * @param {any} exportDoc
+   * @param {Document} exportDoc
    */
   return exportDoc => {
     const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
+    // @ts-ignore -- head always exists in a valid document
     exportDoc.querySelector("head").append(w3cStyle);
   };
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   if (!conf.specStatus) {

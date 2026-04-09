@@ -8,7 +8,7 @@ import { html } from "../core/import-maps.js";
 export const name = "core/seo";
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   if (conf.gitRevision) {

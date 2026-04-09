@@ -14,7 +14,7 @@ import { html } from "../../core/import-maps.js";
 const localizationStrings = {
   en: {
     /**
-     * @param {any} date
+     * @param {HTMLElement} date
      */
     until(date) {
       return html` Until ${date} `;
@@ -22,7 +22,7 @@ const localizationStrings = {
   },
   es: {
     /**
-     * @param {any} date
+     * @param {HTMLElement} date
      */
     until(date) {
       return html` Hasta ${date} `;
@@ -30,7 +30,7 @@ const localizationStrings = {
   },
   ko: {
     /**
-     * @param {any} date
+     * @param {HTMLElement} date
      */
     until(date) {
       return html` ${date} 이전 `;
@@ -38,7 +38,7 @@ const localizationStrings = {
   },
   ja: {
     /**
-     * @param {any} date
+     * @param {HTMLElement} date
      */
     until(date) {
       return html` ${date} 以前 `;
@@ -46,7 +46,7 @@ const localizationStrings = {
   },
   de: {
     /**
-     * @param {any} date
+     * @param {HTMLElement} date
      */
     until(date) {
       return html` bis ${date} `;
@@ -54,7 +54,7 @@ const localizationStrings = {
   },
   zh: {
     /**
-     * @param {any} date
+     * @param {HTMLElement} date
      */
     until(date) {
       return html` 直到 ${date} `;
@@ -157,7 +157,7 @@ function personToHTML(person) {
 }
 
 /**
- * @param {any} extra
+ * @param {PersonExtras} extra
  */
 function renderExtra(extra) {
   const classVal = extra.class || null;

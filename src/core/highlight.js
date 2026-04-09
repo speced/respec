@@ -83,7 +83,7 @@ async function sendHighlightRequest(code, languages) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export async function run(conf) {
   // Nothing to highlight

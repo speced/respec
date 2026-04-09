@@ -12,7 +12,7 @@ const localizationStrings = {
     /**
      *
      * @param {"Appendix" | "Section"} sectionType
-     * @param {any} sectionNumber
+     * @param {HTMLElement | null} sectionNumber
      */
     permalinkLabel(sectionType, sectionNumber) {
       let label = `Permalink for${
@@ -28,7 +28,7 @@ const localizationStrings = {
 const l10n = getIntlData(localizationStrings);
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   /** @type {NodeListOf<HTMLElement>} */

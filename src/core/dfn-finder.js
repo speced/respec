@@ -267,7 +267,7 @@ function getDfns(name, parent, originalName, type) {
 
 /**
  * @return {string}
- * @param {any} idlStruct
+ * @param {{ idlType?: string | any[]; generic?: string; union?: boolean }} [idlStruct]
  */
 function getDataType(idlStruct = {}) {
   const { idlType, generic, union } = idlStruct;
@@ -276,5 +276,6 @@ function getDataType(idlStruct = {}) {
   if (generic) return generic;
   // join on "|" handles for "unsigned short" etc.
   if (union) return idlType.map(getDataType).join("|");
+  // @ts-ignore -- idlType is an array of idlStruct objects at this point
   return getDataType(idlType);
 }

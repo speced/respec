@@ -38,7 +38,7 @@ export function pub(topic, detail) {
 export function sub(topic, cb, options = { once: false }) {
   /** @param {CustomEvent} ev */
   /**
-   * @param {any} ev
+   * @param {CustomEvent} ev
    */
   const listener = async ev => {
     try {

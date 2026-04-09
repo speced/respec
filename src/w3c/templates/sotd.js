@@ -64,14 +64,18 @@ export const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
 const processLink = "https://www.w3.org/policies/process/20250818/";
 
+/**
+ * @typedef {{ additionalContent: DocumentFragment; additionalSections: NodeList; mailToWGPublicList?: string; mailToWGPublicListWithSubject?: string; mailToWGPublicListSubscription?: string }} SotdOpts
+ */
+
 /** @param {string} word */
 function prefix(word) {
   return /^[aeiou]/i.test(word) ? `an ${word}` : `a ${word}`;
 }
 
 /**
- * @param {any} conf
- * @param {any} opts
+ * @param {Conf} conf
+ * @param {SotdOpts} opts
  */
 export default (conf, opts) => {
   return html`
@@ -107,7 +111,7 @@ export default (conf, opts) => {
   `;
 };
 
-/** @param {any} conf */
+/** @param {Conf} conf */
 export function renderPreview(conf) {
   const { prUrl, prNumber, edDraftURI } = conf;
   return html`<details class="annoying-warning" open="">
@@ -133,7 +137,7 @@ export function renderPreview(conf) {
   </details>`;
 }
 
-/** @param {any} opts */
+/** @param {SotdOpts} opts */
 function renderIsUnofficial(opts) {
   const { additionalContent } = opts;
   return html`
@@ -147,8 +151,8 @@ function renderIsUnofficial(opts) {
 }
 
 /**
- * @param {any} conf
- * @param {any} opts
+ * @param {Conf} conf
+ * @param {SotdOpts} opts
  */
 function renderIsNoTrack(conf, opts) {
   const { isMO } = conf;
@@ -163,13 +167,14 @@ function renderIsNoTrack(conf, opts) {
   `;
 }
 
-/** @param {any} conf */
+/** @param {Conf} conf */
 function renderNotRec(conf) {
   const updatableRec = document.querySelector("#sotd.updateable-rec");
   let statusExplanation = null;
   let reviewPolicy = null;
-  let endorsement = html`Publication as ${prefix(conf.textStatus)} does not
-  imply endorsement by W3C and its Members.`;
+  let endorsement = html`Publication as
+  ${prefix(/** @type {string} */ (conf.textStatus))} does not imply endorsement
+  by W3C and its Members.`;
   let updatePolicy = html`<p>
     This is a draft document and may be updated, replaced, or obsoleted by other
     documents at any time. It is inappropriate to cite this document as other
@@ -252,25 +257,27 @@ function renderNotRec(conf) {
       if (conf.pubMode === "LS") {
         reviewPolicy = html`<p>
           Comments are welcome at any time but most especially before
-          ${W3CDate.format(conf.crEnd)}.
+          ${W3CDate.format(/** @type {Date} */ (conf.crEnd))}.
         </p>`;
       } else {
         reviewPolicy = html`<p>
           This Candidate Recommendation is not expected to advance to
-          Recommendation any earlier than ${W3CDate.format(conf.crEnd)}.
+          Recommendation any earlier than
+          ${W3CDate.format(/** @type {Date} */ (conf.crEnd))}.
         </p>`;
       }
       break;
     case "PR":
       reviewPolicy = html`<p>
         The W3C Membership and other interested parties are invited to review
-        the document and send comments through ${W3CDate.format(conf.prEnd)}.
-        Advisory Committee Representatives should consult their
+        the document and send comments through
+        ${W3CDate.format(/** @type {Date} */ (conf.prEnd))}. Advisory Committee
+        Representatives should consult their
         <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
           >WBS questionnaires</a
         >. Note that substantive technical comments were expected during the
         Candidate Recommendation review period that ended
-        ${W3CDate.format(conf.crEnd)}.
+        ${W3CDate.format(/** @type {Date} */ (conf.crEnd))}.
       </p>`;
       break;
     case "DNOTE":
@@ -289,7 +296,7 @@ function renderNotRec(conf) {
     ${updatePolicy} ${reviewPolicy}`;
 }
 
-/** @param {any} conf */
+/** @param {Conf} conf */
 function renderIsRec(conf) {
   const { revisedRecEnd } = conf;
   const updatableRec = document.querySelector("#sotd.updateable-rec");
@@ -343,8 +350,8 @@ function renderIsRec(conf) {
       ? html`<p>
           The W3C Membership and other interested parties are invited to review
           the proposed ${reviewTarget} and send comments through
-          ${W3CDate.format(revisedRecEnd)}. Advisory Committee Representatives
-          should consult their
+          ${W3CDate.format(/** @type {Date} */ (revisedRecEnd))}. Advisory
+          Committee Representatives should consult their
           <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
             >WBS questionnaires</a
           >.
@@ -353,7 +360,7 @@ function renderIsRec(conf) {
   `;
 }
 
-/** @param {any} conf */
+/** @param {Conf} conf */
 function renderDeliverer(conf) {
   const {
     isNote,
@@ -417,8 +424,8 @@ function renderDeliverer(conf) {
 }
 
 /**
- * @param {any} conf
- * @param {any} opts
+ * @param {Conf} conf
+ * @param {SotdOpts} opts
  */
 function noteForSubmission(conf, opts) {
   return html`
@@ -427,9 +434,9 @@ function noteForSubmission(conf, opts) {
   `;
 }
 
-/** @param {any} conf */
+/** @param {Conf} conf */
 function noteForMemberSubmission(conf) {
-  const teamComment = `https://www.w3.org/Submission/${conf.publishDate.getUTCFullYear()}/${
+  const teamComment = `https://www.w3.org/Submission/${/** @type {Date} */ (conf.publishDate).getUTCFullYear()}/${
     conf.submissionCommentNumber
   }/Comment/`;
 
@@ -463,8 +470,8 @@ function noteForMemberSubmission(conf) {
 }
 
 /**
- * @param {any} conf
- * @param {any} opts
+ * @param {Conf} conf
+ * @param {SotdOpts} opts
  */
 export function renderPublicList(conf, opts) {
   const { mailToWGPublicListWithSubject, mailToWGPublicListSubscription } =
@@ -482,7 +489,7 @@ export function renderPublicList(conf, opts) {
   </p>`;
 }
 
-/** @param {any} conf */
+/** @param {Conf} conf */
 function linkToWorkingGroup(conf) {
   if (!conf.wg) {
     return;
@@ -530,22 +537,29 @@ function linkToWorkingGroup(conf) {
           >`}.`;
     }
   }
+  // @ts-ignore -- specStatus is always set by this point
   const track = /** @type {any} */ (status2track)[conf.specStatus]
     ? html` using the
         <a href="${processLink}#recs-and-notes"
-          >${/** @type {any} */ (status2track)[conf.specStatus]} track</a
+          >${
+            /** @type {any} */ (status2track)[
+              /** @type {string} */ (conf.specStatus)
+            ]
+          }
+          track</a
         >`
     : "";
   return html`<p>
     This document was published by ${getWgHTML(conf)} as
-    ${prefix(conf.longStatus)}${track}. ${changes}
+    ${prefix(/** @type {string} */ (conf.longStatus))}${track}. ${changes}
   </p>`;
 }
 
-/** @param {any} conf */
+/** @param {Conf} conf */
 function getWgHTML(conf) {
   if (Array.isArray(conf.wg)) {
     return htmlJoinAnd(conf.wg, (wg, idx) => {
+      // @ts-ignore -- conf.wgURI is always set when conf.wg is an array
       return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
     });
   } else if (conf.wg) {
@@ -554,8 +568,8 @@ function getWgHTML(conf) {
 }
 
 /**
- * @param {any} conf
- * @param {any} opts
+ * @param {Conf} conf
+ * @param {SotdOpts} opts
  */
 export function linkToCommunity(conf, opts) {
   if (!conf.github && !conf.wgPublicList) {

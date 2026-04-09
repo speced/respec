@@ -13,7 +13,7 @@ import { makePluginUtils, showError } from "./utils.js";
 export const name = "core/pre-process";
 
 /**
- * @param {any} config
+ * @param {Conf} config
  */
 export async function run(config) {
   if (Array.isArray(config.preProcess)) {

@@ -54,10 +54,12 @@ const localizationStrings = {
 const l10n = /** @type {any} */ (getIntlData(localizationStrings));
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
+  // @ts-ignore -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) return;
+  // @ts-ignore -- at this point lint is truthy (object form), safe to index
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
 
   informativeRefsInNormative.forEach(({ term, spec, element }) => {

@@ -70,7 +70,7 @@ const localizationStrings = {
 const l10n = getIntlData(localizationStrings);
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export async function run(conf) {
   const titleToDfns = mapTitleToDfns();
@@ -329,7 +329,7 @@ function showLinkingError(elems) {
  *
  * Also, make sure self-citing doesn't cause current document getting added to
  * bibliographic references section.
- * @param {any} conf
+ * @param {Conf} conf
  */
 function updateReferences(conf) {
   const { shortName = "" } = conf;

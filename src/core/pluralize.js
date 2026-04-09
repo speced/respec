@@ -11,7 +11,7 @@ import { registerDefinition } from "./dfn-map.js";
 export const name = "core/pluralize";
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   if (!conf.pluralize) return;

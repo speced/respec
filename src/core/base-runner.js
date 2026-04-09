@@ -12,7 +12,11 @@ import { removeReSpec } from "./utils.js";
 export const name = "core/base-runner";
 
 /**
- * @param {any[]} plugs
+ * @typedef {{ name?: string; run?: (conf: Conf) => Promise<void> | void; Plugin?: new (conf: Conf) => { run(): Promise<void> | void }; prepare?: (conf: Conf) => Promise<void> | void }} ReSpecPlugin
+ */
+
+/**
+ * @param {ReSpecPlugin[]} plugs
  */
 export async function runAll(plugs) {
   initReSpecGlobal();
@@ -24,10 +28,10 @@ export async function runAll(plugs) {
   await preProcess(respecConfig);
 
   const runnables = plugs.filter(
-    /** @param {any} p */ p => isRunnableModule(p)
+    /** @param {ReSpecPlugin} p */ p => isRunnableModule(p)
   );
   runnables.forEach(
-    /** @param {any} plug */ plug =>
+    /** @param {ReSpecPlugin} plug */ plug =>
       !plug.name && console.warn("Plugin lacks name:", plug)
   );
   await executePreparePass(runnables, respecConfig);
@@ -42,20 +46,22 @@ export async function runAll(plugs) {
 }
 
 /**
- * @param {any} plug
+ * @param {ReSpecPlugin} plug
  */
 function isRunnableModule(plug) {
   return plug && (plug.run || plug.Plugin);
 }
 
 /**
- * @param {any[]} runnables
- * @param {any} config
+ * @param {ReSpecPlugin[]} runnables
+ * @param {Conf} config
  */
 async function executePreparePass(runnables, config) {
-  for (const plug of runnables.filter(/** @param {any} p */ p => p.prepare)) {
+  for (const plug of runnables.filter(
+    /** @param {ReSpecPlugin} p */ p => p.prepare
+  )) {
     try {
-      await plug.prepare(config);
+      await plug.prepare?.(config);
     } catch (err) {
       console.error(err);
     }
@@ -63,8 +69,8 @@ async function executePreparePass(runnables, config) {
 }
 
 /**
- * @param {any[]} runnables
- * @param {any} config
+ * @param {ReSpecPlugin[]} runnables
+ * @param {Conf} config
  */
 async function executeRunPass(runnables, config) {
   for (const plug of runnables) {

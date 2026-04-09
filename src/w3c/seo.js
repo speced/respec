@@ -31,10 +31,11 @@ export const requiresCanonicalLink = new Set([
   "finding",
 ]);
 
-/** @param {any} conf */
+/** @param {Conf} conf */
 export async function run(conf) {
   // Don't include a canonical URL for documents that haven't been published.
   if (
+    // @ts-ignore -- specStatus may be undefined but Set.has handles it
     (!conf.canonicalURI && !requiresCanonicalLink.has(conf.specStatus)) ||
     !conf.shortName
   ) {
@@ -78,10 +79,11 @@ export async function run(conf) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  * @param {Document} doc
  */
 async function addJSONLDInfo(conf, doc) {
+  // @ts-ignore -- specStatus may be undefined but that's fine for indexing
   const rdfStatus = /** @type {any} */ (status2rdf)[conf.specStatus];
   // Content for JSON
   const type = ["TechArticle"];
@@ -152,7 +154,10 @@ async function addJSONLDInfo(conf, doc) {
     citationIds.map(ref => resolveRef(ref))
   );
   jsonld.citation = citationContents
-    .filter(ref => typeof ref === "object")
+    .filter(
+      /** @param {BiblioData | null} ref */ ref =>
+        ref !== null && typeof ref === "object"
+    )
     .map(addRef);
 
   const script = doc.createElement("script");
@@ -163,7 +168,7 @@ async function addJSONLDInfo(conf, doc) {
 
 /**
  * Turn editors and authors into a list of JSON-LD relationships
- * @param {{ name: any, url: any, mailto: any, company: any, companyURL: any }} arg0
+ * @param {Person} arg0
  */
 function addPerson({ name, url, mailto, company, companyURL }) {
   /** @type {any} */
@@ -184,7 +189,7 @@ function addPerson({ name, url, mailto, company, companyURL }) {
 
 /**
  * Create a reference URL from the ref
- * @param {any} ref
+ * @param {BiblioData} ref
  */
 function addRef(ref) {
   const { href: id, title: name, href: url } = ref;

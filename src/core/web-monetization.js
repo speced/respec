@@ -10,7 +10,7 @@ import { html } from "./import-maps.js";
 export const name = "core/web-monetization";
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   if (conf.monetization === false) {
@@ -18,6 +18,7 @@ export function run(conf) {
   }
   const { monetization } = conf;
 
+  // @ts-ignore -- monetization has been confirmed truthy and non-false above
   const { removeOnSave, paymentPointer } = canonicalizeConfig(monetization);
 
   const cssClass = removeOnSave ? "removeOnSave" : null;
@@ -31,7 +32,7 @@ export function run(conf) {
 }
 
 /**
- * @param {any} rawConfig
+ * @param {string | { paymentPointer?: string; removeOnSave?: boolean } | undefined} rawConfig
  * - {string} paymentPointer - The payment pointer to use.
  * - {boolean} removeOnSave - Whether to remove the meta tag when the document is saved.
  */

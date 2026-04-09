@@ -93,7 +93,7 @@ function toListItem(href) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   /** @type {NodeListOf<HTMLElement>} */

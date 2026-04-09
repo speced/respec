@@ -7,8 +7,8 @@ import showLogo from "../../core/templates/show-logo.js";
 import showPeople from "../../core/templates/show-people.js";
 
 /**
- * @param {any} conf
- * @param {any} options
+ * @param {Conf} conf
+ * @param {{ multipleAlternates: boolean; alternatesHTML: unknown }} options
  */
 export default (conf, options) => {
   const existingCopyright = document.querySelector(".copyright");
@@ -20,8 +20,8 @@ export default (conf, options) => {
   const specTitleElemClone = specTitleElem?.cloneNode(true);
 
   return html`<div class="head">
-    ${conf.logos.length
-      ? html`<p class="logos">${conf.logos.map(showLogo)}</p>`
+    ${(conf.logos ?? []).length
+      ? html`<p class="logos">${(conf.logos ?? []).map(showLogo)}</p>`
       : ""}
     ${specTitleElem} ${getSpecSubTitleElem(conf)}
     <p id="w3c-state">
@@ -89,25 +89,29 @@ export default (conf, options) => {
               : ""}
           `
         : ""}
-      ${conf.editors.length
+      ${(conf.editors ?? []).length
         ? html`
-            <dt>${conf.editors.length > 1 ? l10n.editors : l10n.editor}</dt>
+            <dt>
+              ${(conf.editors ?? []).length > 1 ? l10n.editors : l10n.editor}
+            </dt>
             ${showPeople(conf, "editors")}
           `
         : ""}
-      ${conf.formerEditors.length
+      ${(conf.formerEditors ?? []).length
         ? html`
             <dt>
-              ${conf.formerEditors.length > 1
+              ${(conf.formerEditors ?? []).length > 1
                 ? l10n.former_editors
                 : l10n.former_editor}
             </dt>
             ${showPeople(conf, "formerEditors")}
           `
         : ""}
-      ${conf.authors.length
+      ${(conf.authors ?? []).length
         ? html`
-            <dt>${conf.authors.length > 1 ? l10n.authors : l10n.author}</dt>
+            <dt>
+              ${(conf.authors ?? []).length > 1 ? l10n.authors : l10n.author}
+            </dt>
             ${showPeople(conf, "authors")}
           `
         : ""}

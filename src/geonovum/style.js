@@ -13,8 +13,8 @@ import {
 import { sub } from "../core/pubsubhub.js";
 export const name = "geonovum/style";
 /**
- * @param {any} doc
- * @param {any} version
+ * @param {Document} doc
+ * @param {string} version
  */
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
@@ -51,7 +51,7 @@ function createMetaViewport() {
 }
 
 /**
- * @param {any} css_name
+ * @param {string} css_name
  */
 function createStyle(css_name) {
   const link = document.createElement("link");
@@ -114,7 +114,7 @@ document.head.prepend(elements);
 
 // export function run(conf, doc, cb) {
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   if (!conf.specStatus) {

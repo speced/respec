@@ -352,7 +352,7 @@ function createLabel(label, repoURL) {
 
 /**
  * @returns {Promise<Map<string, GitHubIssue>>}
- * @param {any} github
+ * @param {{ apiBase: string, fullName: string } | null} github
  */
 async function fetchAndStoreGithubIssues(github) {
   if (!github || !github.apiBase) {
@@ -385,7 +385,7 @@ async function fetchAndStoreGithubIssues(github) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
@@ -400,7 +400,11 @@ export async function run(conf) {
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
-  const ghIssues = await fetchAndStoreGithubIssues(conf.github);
+  const ghIssues = await fetchAndStoreGithubIssues(
+    /** @type {{ apiBase: string, fullName: string } | null} */ (
+      conf.github ?? null
+    )
+  );
   const { head: headElem } = document;
   headElem.insertBefore(
     html`<style>

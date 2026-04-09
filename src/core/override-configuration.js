@@ -10,7 +10,7 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/override-configuration";
 
 /**
- * @param {any} config
+ * @param {Conf} config
  */
 export function run(config) {
   const params = new URLSearchParams(document.location.search);

@@ -14,7 +14,7 @@ import { makePluginUtils, showError } from "./utils.js";
 export const name = "core/post-process";
 
 /**
- * @param {any} config
+ * @param {Conf} config
  */
 export async function run(config) {
   if (Array.isArray(config.postProcess)) {

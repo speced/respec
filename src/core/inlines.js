@@ -154,7 +154,7 @@ function inlineXrefMatches(matched, text) {
 /**
  * @param {string} matched
  * @param {Text} txt
- * @param {any} conf
+ * @param {Conf} conf
  * @return {Iterable<string | Node>}
  */
 function inlineBibrefMatches(matched, txt, conf) {
@@ -259,7 +259,7 @@ function processInlineContent(text) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   const abbrMap = new Map();
@@ -271,7 +271,8 @@ export function run(conf) {
   conf.normativeReferences = new InsensitiveStringSet();
   conf.informativeReferences = new InsensitiveStringSet();
 
-  if (!conf.respecRFC2119) conf.respecRFC2119 = rfc2119Usage;
+  if (!conf.respecRFC2119)
+    conf.respecRFC2119 = /** @type {Record<string, boolean>} */ (rfc2119Usage);
 
   // PRE-PROCESSING
   /** @type {NodeListOf<HTMLElement>} */

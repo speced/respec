@@ -148,8 +148,8 @@ const ariaMap = new Map([
 ariaDecorate(respecPill, ariaMap);
 
 /**
- * @param {any} err
- * @param {any[]} arr
+ * @param {RespecError | string} err
+ * @param {(RespecError | string)[]} arr
  * @param {string} butName
  * @param {string} title
  */
@@ -238,11 +238,11 @@ export const ui = {
     menu.appendChild(menuItem);
     return button;
   },
-  /** @param {any} rsError */
+  /** @param {RespecError | string} rsError */
   error(rsError) {
     errWarn(rsError, errors, "error", "ReSpec Errors");
   },
-  /** @param {any} rsError */
+  /** @param {RespecError | string} rsError */
   warning(rsError) {
     errWarn(rsError, warnings, "warning", "ReSpec Warnings");
   },
@@ -308,11 +308,17 @@ document.addEventListener("keydown", ev => {
   }
 });
 window.respecUI = ui;
-sub("error", /** @param {any} details */ details => ui.error(details));
-sub("warn", /** @param {any} details */ details => ui.warning(details));
+sub(
+  "error",
+  /** @param {RespecError | string} details */ details => ui.error(details)
+);
+sub(
+  "warn",
+  /** @param {RespecError | string} details */ details => ui.warning(details)
+);
 
 /**
- * @param {any} err
+ * @param {RespecError | string} err
  */
 function rsErrorToHTML(err) {
   if (typeof err === "string") {

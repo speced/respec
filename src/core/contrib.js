@@ -9,7 +9,7 @@ import { html } from "./import-maps.js";
 export const name = "core/contrib";
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export async function run(conf) {
   const ghContributors = document.getElementById("gh-contributors");
@@ -23,7 +23,10 @@ export async function run(conf) {
     return;
   }
 
-  const editors = conf.editors.map((/** @type {any} */ editor) => editor.name);
+  const editors = (conf.editors ?? []).map(
+    (/** @type {any} */ editor) => editor.name
+  );
+  // @ts-ignore -- conf.github is normalized to object form before run() is called
   const apiURL = `${conf.github.apiBase}/${conf.github.fullName}/`;
   await showContributors(editors, apiURL);
 }

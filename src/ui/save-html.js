@@ -65,7 +65,7 @@ const downloadLinks = [
 
 /**
  * @param {typeof downloadLinks[0]} details
- * @param {any} conf
+ * @param {Conf} conf
  */
 function toDownloadLink(details, conf) {
   const { id, href, ext, title, type } = details;
@@ -83,12 +83,12 @@ function toDownloadLink(details, conf) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   const saveDialog = {
     /**
-     * @param {any} button
+     * @param {HTMLElement} button
      */
     async show(button) {
       await document.respec.ready;

@@ -200,7 +200,7 @@ function filterHeader(h) {
   });
 }
 
-/** @param {any} conf */
+/** @param {Conf} conf */
 export function run(conf) {
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = Infinity;
@@ -209,10 +209,14 @@ export function run(conf) {
   renameSectionHeaders();
 
   // makeTOC
-  if (!conf.noTOC) {
+  if (!conf.noToc) {
     skipFromToC();
     const sectionTree = getSectionTree(document.body);
-    const result = scanSections(sectionTree, conf.maxTocLevel);
+    const result = scanSections(
+      sectionTree,
+      // @ts-ignore -- maxTocLevel is always set above (either from conf or to Infinity)
+      conf.maxTocLevel
+    );
     if (result) {
       createTableOfContents(result);
     }

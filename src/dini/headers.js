@@ -80,7 +80,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   conf.isUnofficial = conf.specStatus === "unofficial";
@@ -99,7 +99,7 @@ export function run(conf) {
   conf.publishYear = conf.publishDate.getUTCFullYear();
   conf.publishHumanDate = DINIDate.format(conf.publishDate);
   /**
-   * @param {any} it
+   * @param {Person} it
    */
   const peopCheck = function (it) {
     if (!it.name) {
@@ -152,6 +152,7 @@ export function run(conf) {
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
   conf.textStatus = /** @type {Record<string, string>} */ (status2text)[
+    // @ts-ignore -- specStatus is always set by this point
     conf.specStatus
   ];
   conf.dashDate = ISODate.format(conf.publishDate);

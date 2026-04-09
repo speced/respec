@@ -36,16 +36,17 @@ const aomDefaults = {
 };
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 function computeProps(conf) {
   return {
+    // @ts-ignore -- conf.license is always set by defaults before this runs
     licenseInfo: licenses.get(conf.license),
   };
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   // assign the defaults
@@ -55,6 +56,7 @@ export function run(conf) {
       : {
           ...coreDefaults.lint,
           .../** @type {any} */ (aomDefaults).lint,
+          // @ts-ignore -- lint is the object form here (false case handled above)
           ...conf.lint,
         };
   Object.assign(conf, {

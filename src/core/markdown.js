@@ -21,8 +21,10 @@ const ampEntity = /&amp;/gm;
 
 class Renderer extends marked.Renderer {
   /**
-   * @param {any} token
+   * @param {import('marked').Tokens.Code} token
+   * @returns {string}
    */
+  // @ts-ignore - our token signature is compatible at runtime; marked's d.ts is minified
   code(token) {
     const { text: code, lang: infoString = "" } = token;
     const { language, ...metaData } = Renderer.parseInfoString(infoString);
@@ -33,7 +35,7 @@ class Renderer extends marked.Renderer {
     }
 
     const html = super
-      .code({ ...token, lang: language })
+      .code(/** @type {any} */ ({ ...token, lang: language }))
       .replace(`class="language-`, `class="`);
 
     const { example, illegalExample } = metaData;
@@ -45,7 +47,7 @@ class Renderer extends marked.Renderer {
   }
 
   /**
-   * @param {any} token
+   * @param {import('marked').Tokens.Image} token
    */
   image(token) {
     const { href, title, text } = token;
@@ -85,7 +87,7 @@ class Renderer extends marked.Renderer {
   }
 
   /**
-   * @param {any} token
+   * @param {import('marked').Tokens.Heading} token
    */
   heading(token) {
     const text = this.parser.parseInline(token.tokens);
@@ -217,7 +219,7 @@ const blockLevelElements =
   "[data-format=markdown], section, div, address, article, aside, figure, header, main";
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   const hasMDSections = !!document.querySelector(

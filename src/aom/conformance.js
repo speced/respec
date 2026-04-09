@@ -15,7 +15,7 @@ const localizationStrings = {
       "diagrams, examples, and notes in this specification are non-normative. " +
       "Everything else in this specification is normative.",
     /**
-     * @param {any} keywords
+     * @param {Element[]} keywords
      * @param {boolean} plural
      */
     keywordInterpretation(keywords, plural) {
@@ -58,7 +58,7 @@ function processConformance(conformance, conf) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export function run(conf) {
   const conformance = document.querySelector("section#conformance");

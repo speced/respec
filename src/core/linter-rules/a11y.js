@@ -15,12 +15,14 @@ const DISABLED_RULES = [
 ];
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export async function run(conf) {
+  // @ts-ignore -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.a11y && /** legacy */ !conf.a11y) {
     return;
   }
+  // @ts-ignore -- at this point lint is truthy (object form), safe to index
   const config = conf.lint?.a11y || /** legacy */ conf.a11y;
 
   const options = config === true ? {} : config;
@@ -52,7 +54,7 @@ export async function run(conf) {
 }
 
 /**
- * @param {any} opts Options as described at https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#options-parameter
+ * @param {{ rules?: Record<string, unknown>, [key: string]: unknown }} opts Options as described at https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#options-parameter
  */
 async function getViolations(opts) {
   const { rules, ...otherOptions } = opts;

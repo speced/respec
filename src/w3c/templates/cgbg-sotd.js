@@ -8,8 +8,8 @@ import {
 import { html } from "../../core/import-maps.js";
 
 /**
- * @param {any} conf
- * @param {any} opts
+ * @param {Conf} conf
+ * @param {{ additionalContent: DocumentFragment; additionalSections: NodeList; mailToWGPublicListWithSubject?: string; mailToWGPublicListSubscription?: string }} opts
  */
 export default (conf, opts) => {
   return html`

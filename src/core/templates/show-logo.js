@@ -8,12 +8,12 @@ const name = "core/templates/show-logo";
  * Logo mapper. Takes a logo structure and converts it to HTML.
  *
  * @param {object} logo
- * @param {string} logo.src
- * @param {string} logo.url
- * @param {string} logo.alt
+ * @param {string} [logo.src]
+ * @param {string} [logo.url]
+ * @param {string} [logo.alt]
  * @param {string} [logo.id]
- * @param {number} [logo.width]
- * @param {number} [logo.height]
+ * @param {number | string} [logo.width]
+ * @param {number | string} [logo.height]
  * @param {number} index
  */
 export default function showLogo(logo, index) {

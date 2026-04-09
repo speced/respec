@@ -15,7 +15,7 @@ function panelListener() {
   /** @type {HTMLElement | null} */
   let panel = null;
   /**
-   * @param {any} event
+   * @param {Event} event
    */
   return event => {
     const { target, type } = event;
@@ -24,7 +24,11 @@ function panelListener() {
 
     // For keys, we only care about Enter key to activate the panel
     // otherwise it's activated via a click.
-    if (type === "keydown" && event.key !== "Enter") return;
+    if (
+      type === "keydown" &&
+      /** @type {KeyboardEvent} */ (event).key !== "Enter"
+    )
+      return;
 
     const action = deriveAction(event);
 
@@ -36,7 +40,9 @@ function panelListener() {
         if (!dfn?.id) break;
         panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
         if (!panel) break;
-        const coords = deriveCoordinates(event);
+        const coords = deriveCoordinates(
+          /** @type {MouseEvent|KeyboardEvent} */ (event)
+        );
         displayPanel(dfn, panel, coords);
         break;
       }

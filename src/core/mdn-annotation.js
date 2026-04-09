@@ -131,12 +131,13 @@ function buildBrowserSupportTable(support) {
 }
 
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 export async function run(conf) {
   const mdnKey = getMdnKey(conf);
   if (!mdnKey) return;
 
+  // @ts-ignore -- conf.mdn is truthy here; getMdnData handles string/object/boolean
   const mdnSpecJson = await getMdnData(mdnKey, conf.mdn);
   if (!mdnSpecJson) return;
 
@@ -156,12 +157,13 @@ export async function run(conf) {
 
 /** @returns {string | undefined} */
 /**
- * @param {any} conf
+ * @param {Conf} conf
  */
 function getMdnKey(conf) {
   const { shortName, mdn } = conf;
   if (!mdn) return;
   if (typeof mdn === "string") return mdn;
+  // @ts-ignore -- mdn is true | object here; .key only exists on object form
   return mdn.key || shortName;
 }
 
