@@ -329,13 +329,16 @@ function showLinkingError(elems) {
  *
  * Also, make sure self-citing doesn't cause current document getting added to
  * bibliographic references section.
- * @param {Conf} conf
+ * @param {any} conf
  */
 function updateReferences(conf) {
   const { shortName = "" } = conf;
   // Match shortName in a data-cite (with optional leading ?!), while skipping shortName as prefix.
   // https://regex101.com/r/rsZyIJ/5
-  const regex = new RegExp(String.raw`^([?!])?${shortName}\b([^-])`, "i");
+  const regex = new RegExp(
+    String.raw`^([?!])?${RegExp.escape(shortName)}\b([^-])`,
+    "i"
+  );
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(

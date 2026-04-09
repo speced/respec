@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es2022",
+    "target": "es2025",
     "moduleResolution": "bundler",
     "noImplicitThis": true,
     "module": "es2022",
-    "checkJs": false
+    "checkJs": false,
+    "stableTypeOrdering": true
   }
 }

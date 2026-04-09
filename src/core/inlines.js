@@ -282,7 +282,9 @@ export function run(conf) {
     abbrMap.set(key, value);
   }
   const abbrRx = abbrMap.size
-    ? new RegExp(`(?:\\b${[...abbrMap.keys()].join("\\b)|(?:\\b")}\\b)`)
+    ? new RegExp(
+        `(?:\\b${[...abbrMap.keys()].map(k => RegExp.escape(k)).join("\\b)|(?:\\b")}\\b)`
+      )
     : null;
 
   // PROCESSING
