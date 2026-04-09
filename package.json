@@ -51,6 +51,7 @@
     "karma-jasmine-html-reporter": "^2.2.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
+    "lint-staged": "^16.4.0",
     "loading-indicator": "^2.0.0",
     "pluralize": "^8.0.0",
     "prettier": "^3.8.1",
@@ -59,6 +60,7 @@
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "serve": "^14.2.6",
     "serve-handler": "^6.1.7",
+    "simple-git-hooks": "^2.13.1",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^5.9.3",
     "vnu-jar": "^26.4.2",
@@ -128,6 +130,13 @@
       "@rollup/plugin-commonjs>picomatch": "^4.0.4",
       "anymatch>picomatch": "^2.3.2"
     }
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.js": "eslint --fix",
+    "*.{js,json,md,html,css}": "prettier --write"
   },
   "funding": {
     "type": "opencollective",
