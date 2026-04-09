@@ -536,7 +536,10 @@ function objectHash(obj) {
 /** @param {ArrayBuffer} buffer */
 function bufferToHexString(buffer) {
   const byteArray = new Uint8Array(buffer);
-  return byteArray.toHex();
+  return (
+    byteArray.toHex?.() ??
+    [...byteArray].map(v => v.toString(16).padStart(2, "0")).join("")
+  );
 }
 
 /** @param {Document} doc */

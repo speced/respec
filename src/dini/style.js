@@ -103,8 +103,9 @@ function styleMover(linkURL) {
    */
   return exportDoc => {
     const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
-    // @ts-ignore -- head always exists in a valid document
-    exportDoc.querySelector("head").append(w3cStyle);
+    if (w3cStyle) {
+      exportDoc.querySelector("head")?.append(w3cStyle);
+    }
   };
 }
 

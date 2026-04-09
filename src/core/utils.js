@@ -10,6 +10,13 @@ export const name = "core/utils";
 const dashes = /-/g;
 
 /**
+ * Polyfill for RegExp.escape() (ES2025). Escapes a string for use in a RegExp.
+ * @param {string} str
+ */
+export const regExpEscape =
+  RegExp.escape ?? (str => str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&"));
+
+/**
  * Hashes a string from char code. Can return a negative number.
  * Based on https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
  * @param {String} text

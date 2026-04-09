@@ -65,11 +65,10 @@ function getHighlightColor(target) {
 function highlightVars(varElem) {
   const textContent = norm(varElem.textContent);
   const parent = varElem.closest(".algorithm, section");
+  if (!parent) return [];
   const highlightColor = getHighlightColor(varElem);
 
-  const varsToHighlight = [
-    .../** @type {Element} */ (parent).querySelectorAll("var"),
-  ].filter(
+  const varsToHighlight = [...parent.querySelectorAll("var")].filter(
     /**
      * @param {HTMLElement} el
      */

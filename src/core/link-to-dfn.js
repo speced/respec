@@ -7,6 +7,7 @@ import {
   addId,
   getIntlData,
   getLinkTargets,
+  regExpEscape,
   showError,
   showWarning,
   wrapInner,
@@ -336,7 +337,7 @@ function updateReferences(conf) {
   // Match shortName in a data-cite (with optional leading ?!), while skipping shortName as prefix.
   // https://regex101.com/r/rsZyIJ/5
   const regex = new RegExp(
-    String.raw`^([?!])?${RegExp.escape(shortName)}\b([^-])`,
+    String.raw`^([?!])?${regExpEscape(shortName)}\b([^-])`,
     "i"
   );
 

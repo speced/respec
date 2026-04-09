@@ -12,6 +12,7 @@ import {
   getTextNodes,
   norm,
   refTypeFromContext,
+  regExpEscape,
   showWarning,
 } from "./utils.js";
 import { html } from "./import-maps.js";
@@ -284,7 +285,7 @@ export function run(conf) {
   }
   const abbrRx = abbrMap.size
     ? new RegExp(
-        `(?:\\b${[...abbrMap.keys()].map(k => RegExp.escape(k)).join("\\b)|(?:\\b")}\\b)`
+        `(?:\\b${[...abbrMap.keys()].map(k => regExpEscape(k)).join("\\b)|(?:\\b")}\\b)`
       )
     : null;
 
