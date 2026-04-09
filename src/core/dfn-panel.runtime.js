@@ -33,9 +33,11 @@ function panelListener() {
         hidePanel(panel);
         /** @type {HTMLElement | null} */
         const dfn = target.closest("dfn, .index-term");
-        panel = document.getElementById(`dfn-panel-for-${/** @type {HTMLElement} */ (dfn)?.id}`);
+        if (!dfn?.id) break;
+        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
+        if (!panel) break;
         const coords = deriveCoordinates(event);
-        displayPanel(/** @type {HTMLElement} */ (dfn), /** @type {HTMLElement} */ (panel), coords);
+        displayPanel(dfn, panel, coords);
         break;
       }
       case "dock": {

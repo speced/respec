@@ -22,8 +22,8 @@ function makeSorter(direction) {
  * Shallow sort list items in OL, and UL elements.
  *
  * @param {HTMLUListElement} elem
- * @returns {DocumentFragment}
  * @param {string} dir
+ * @returns {DocumentFragment}
  */
 export function sortListItems(elem, dir) {
   const elements = [...elem.querySelectorAll(":scope > li")];
@@ -38,8 +38,8 @@ export function sortListItems(elem, dir) {
  * Shallow sort a definition list based on its definition terms (dt) elements.
  *
  * @param {HTMLDListElement} dl
- * @returns {DocumentFragment}
  * @param {string} dir
+ * @returns {DocumentFragment}
  */
 export function sortDefinitionTerms(dl, dir) {
   const elements = [...dl.querySelectorAll(":scope > dt")];

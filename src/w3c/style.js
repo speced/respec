@@ -94,7 +94,9 @@ document.head.prepend(elements);
 function styleMover(linkURL) {
   return exportDoc => {
     const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
-    exportDoc.querySelector("head")?.append(w3cStyle ?? "");
+    if (w3cStyle) {
+      exportDoc.querySelector("head")?.append(w3cStyle);
+    }
   };
 }
 
