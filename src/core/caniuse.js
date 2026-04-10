@@ -162,7 +162,6 @@ function validateBrowsers({ caniuse }) {
  * @param {{ feature: string }} arg1
  */
 async function processJson(json, { feature }) {
-  /** @type {any[]} */
   const results = json.result;
   const groups = new Map([
     ["desktop", []],
@@ -226,10 +225,7 @@ function browserCellRenderer(feature) {
 async function fetchStats(options) {
   const { feature, browsers, apiURL } = options;
   const url = new URL(apiURL || `./${feature}`, API_URL);
-  browsers.forEach(
-    /** @param {string} browser */ browser =>
-      url.searchParams.append("browsers", browser)
-  );
+  browsers.forEach(browser => url.searchParams.append("browsers", browser));
   const response = await fetch(url);
   if (!response.ok) {
     const { status, statusText } = response;

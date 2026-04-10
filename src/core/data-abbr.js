@@ -54,8 +54,8 @@ function generateAbbreviation(elem) {
   // Generates abbreviation from textContent
   // e.g., "Permanent Account Number" -> "PAN"
   return (
-    (elem.textContent ?? "")
-      .match(/\b([a-z])/gi)
+    elem.textContent
+      ?.match(/\b([a-z])/gi)
       ?.join("")
       .toUpperCase() ?? ""
   );
