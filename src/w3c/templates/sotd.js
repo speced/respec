@@ -537,7 +537,7 @@ function linkToWorkingGroup(conf) {
           >`}.`;
     }
   }
-  // @ts-ignore -- specStatus is always set by this point
+  // @ts-expect-error -- specStatus is always set by this point
   const track = /** @type {any} */ (status2track)[conf.specStatus]
     ? html` using the
         <a href="${processLink}#recs-and-notes"
@@ -559,7 +559,7 @@ function linkToWorkingGroup(conf) {
 function getWgHTML(conf) {
   if (Array.isArray(conf.wg)) {
     return htmlJoinAnd(conf.wg, (wg, idx) => {
-      // @ts-ignore -- conf.wgURI is always set when conf.wg is an array
+      // @ts-expect-error -- conf.wgURI is always set when conf.wg is an array
       return html`the <a href="${conf.wgURI[idx]}">${wg}</a>`;
     });
   } else if (conf.wg) {

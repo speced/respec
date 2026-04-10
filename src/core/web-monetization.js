@@ -18,7 +18,7 @@ export function run(conf) {
   }
   const { monetization } = conf;
 
-  // @ts-ignore -- monetization has been confirmed truthy and non-false above
+  // @ts-expect-error -- monetization has been confirmed truthy and non-false above
   const { removeOnSave, paymentPointer } = canonicalizeConfig(monetization);
 
   const cssClass = removeOnSave ? "removeOnSave" : null;

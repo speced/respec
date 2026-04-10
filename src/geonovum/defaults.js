@@ -57,7 +57,7 @@ const geonovumDefaults = {
 function computeProps(conf) {
   return {
     isCCBY: conf.license === "cc-by",
-    // @ts-ignore -- conf.license is always set by defaults before this runs
+    // @ts-expect-error -- conf.license is always set by defaults before this runs
     licenseInfo: licenses.get(conf.license),
     isBasic: conf.specStatus === "GN-BASIS",
     isRegular: conf.specStatus === "GN-BASIS",
@@ -75,7 +75,6 @@ export function run(conf) {
       : {
           ...coreDefaults.lint,
           ...geonovumDefaults.lint,
-          // @ts-ignore -- lint is the object form here (false case handled above)
           ...conf.lint,
         };
   Object.assign(conf, {

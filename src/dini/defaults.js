@@ -54,7 +54,7 @@ const diniDefaults = {
  */
 function computeProps(conf) {
   return {
-    // @ts-ignore -- conf.license is always set by defaults before this runs
+    // @ts-expect-error -- conf.license is always set by defaults before this runs
     licenseInfo: licenses.get(conf.license),
   };
 }
@@ -70,7 +70,6 @@ export function run(conf) {
       : {
           ...coreDefaults.lint,
           ...diniDefaults.lint,
-          // @ts-ignore -- lint is the object form here (false case handled above)
           ...conf.lint,
         };
   Object.assign(conf, {

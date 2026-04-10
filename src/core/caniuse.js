@@ -46,9 +46,8 @@ export function prepare(conf) {
     return; // nothing to do.
   }
   normalizeCaniuseConf(conf);
-  // @ts-ignore -- validateBrowsers expects the normalized shape; conf.caniuse is normalized above
+  // @ts-expect-error -- conf is normalized above but Conf type doesn't reflect it
   validateBrowsers(conf);
-  // @ts-ignore -- after normalizeCaniuseConf, caniuse is always the object form
   const options =
     /** @type {{ feature?: string; removeOnSave?: boolean; browsers?: string[] }} */ (
       conf.caniuse
@@ -77,19 +76,18 @@ function getLogoSrc(browser) {
 
 /** @param {Conf} conf */
 export async function run(conf) {
-  // @ts-ignore -- normalizeCaniuseConf called in prepare() normalizes to object form
   const options = conf.caniuse;
-  // @ts-ignore -- after normalizeCaniuseConf, options.feature is always a string if set
+  // @ts-expect-error -- after normalizeCaniuseConf, options.feature is always a string if set
   if (!options?.feature) return;
 
-  // @ts-ignore -- options is the normalized object form
+  // @ts-expect-error -- options is the normalized object form
   const featureURL = new URL(options.feature, "https://caniuse.com/").href;
   const headDlElem = document.querySelector(".head dl");
-  // @ts-ignore -- options and conf.caniuse are the normalized object form
+  // @ts-expect-error -- options and conf.caniuse are the normalized object form
   const contentPromise = fetchStats(conf.caniuse)
-    // @ts-ignore -- options is object form
+    // @ts-expect-error -- options is object form
     .then(json => processJson(json, options))
-    // @ts-ignore -- options is object form
+    // @ts-expect-error -- options is object form
     .catch(err => handleError(err, options, featureURL));
   const definitionPair = html`<dt class="caniuse-title">Browser support:</dt>
     <dd class="caniuse-stats">
@@ -100,9 +98,9 @@ export async function run(conf) {
     </dd>`;
   headDlElem?.append(...definitionPair.childNodes);
   await contentPromise;
-  // @ts-ignore -- options is the normalized object form
+  // @ts-expect-error -- options is the normalized object form
   pub("amend-user-config", { caniuse: options.feature });
-  // @ts-ignore -- options is the normalized object form
+  // @ts-expect-error -- options is the normalized object form
   if (options.removeOnSave) {
     // Will remove the browser support cells.
     headDlElem

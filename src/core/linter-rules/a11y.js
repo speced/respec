@@ -18,11 +18,11 @@ const DISABLED_RULES = [
  * @param {Conf} conf
  */
 export async function run(conf) {
-  // @ts-ignore -- LintConfig can be false; ?. only short-circuits null/undefined in TS
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.a11y && /** legacy */ !conf.a11y) {
     return;
   }
-  // @ts-ignore -- at this point lint is truthy (object form), safe to index
+  // @ts-expect-error -- at this point lint is truthy (object form), safe to index
   const config = conf.lint?.a11y || /** legacy */ conf.a11y;
 
   const options = config === true ? {} : config;

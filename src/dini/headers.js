@@ -152,7 +152,7 @@ export function run(conf) {
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
   conf.textStatus = /** @type {Record<string, string>} */ (status2text)[
-    // @ts-ignore -- specStatus is always set by this point
+    // @ts-expect-error -- specStatus is always set by this point
     conf.specStatus
   ];
   conf.dashDate = ISODate.format(conf.publishDate);

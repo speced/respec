@@ -24,13 +24,12 @@ export const element = class ChangelogElement extends HTMLElement {
   constructor() {
     super();
     const filterAttr = this.getAttribute("filter");
+    /** @type {(commit: Commit) => boolean} */
     const filterFn =
       filterAttr &&
       typeof (/** @type {any} */ (window)[filterAttr]) === "function"
-        ? /** @type {(commit: Commit) => boolean} */ (
-            /** @type {any} */ (window)[filterAttr]
-          )
-        : /** @type {(commit: Commit) => boolean} */ (() => true);
+        ? /** @type {any} */ (window)[filterAttr]
+        : () => true;
     this.props = {
       from: this.getAttribute("from"),
       to: this.getAttribute("to") || "HEAD",

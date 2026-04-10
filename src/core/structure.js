@@ -214,7 +214,7 @@ export function run(conf) {
     const sectionTree = getSectionTree(document.body);
     const result = scanSections(
       sectionTree,
-      // @ts-ignore -- maxTocLevel is always set above (either from conf or to Infinity)
+      // @ts-expect-error -- maxTocLevel is always set above (either from conf or to Infinity)
       conf.maxTocLevel
     );
     if (result) {

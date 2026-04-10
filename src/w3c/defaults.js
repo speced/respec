@@ -65,7 +65,6 @@ export function run(conf) {
       : {
           ...coreDefaults.lint,
           ...w3cDefaults.lint,
-          // @ts-ignore -- lint is the object form here (false case handled above)
           ...conf.lint,
         };
 
@@ -97,18 +96,18 @@ function processLogos(conf) {
     ...W3CNotes,
     ...tagStatus,
     "ED",
-    // @ts-ignore -- specStatus may be undefined but Array.includes handles it
+    // @ts-expect-error -- specStatus may be undefined but Array.includes handles it
   ].includes(specStatus);
   const inWorkingGroup = wg && wg.length && isWgStatus;
   // Member submissions don't need to be in a Working Group.
-  // @ts-ignore -- specStatus may be undefined but Array.includes handles it
+  // @ts-expect-error -- specStatus may be undefined but Array.includes handles it
   const doesNotNeedWG = ["Member-SUBM"].includes(specStatus);
   const canShowW3CLogo = inWorkingGroup || doesNotNeedWG;
   if (canShowW3CLogo) {
-    // @ts-ignore -- conf.logos is always set by defaults before this runs
+    // @ts-expect-error -- conf.logos is always set by defaults before this runs
     conf.logos.unshift(w3cLogo);
     if (specStatus === "Member-SUBM") {
-      // @ts-ignore -- conf.logos is always set by defaults before this runs
+      // @ts-expect-error -- conf.logos is always set by defaults before this runs
       conf.logos.push(memSubmissionLogo);
     }
   }
@@ -186,7 +185,7 @@ function validateStatusForGroup(conf) {
     default:
       if (
         !conf.wgId &&
-        // @ts-ignore -- specStatus may be undefined but Array.includes handles it
+        // @ts-expect-error -- specStatus may be undefined but Array.includes handles it
         !["unofficial", "base", "UD", "Member-SUBM"].includes(conf.specStatus)
       ) {
         const msg =

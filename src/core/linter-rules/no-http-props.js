@@ -28,7 +28,7 @@ const l10n = getIntlData(localizationStrings);
  * @param {Conf} conf
  */
 export function run(conf) {
-  // @ts-ignore -- LintConfig can be false; ?. only short-circuits null/undefined in TS
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }
@@ -41,11 +41,11 @@ export function run(conf) {
 
   const offendingMembers = Object.getOwnPropertyNames(conf)
     // this check is cheap, "prevED" is w3c exception.
-    // @ts-ignore -- dynamic string indexing of Conf to inspect all URL properties
+    // @ts-expect-error -- dynamic string indexing of Conf to inspect all URL properties
     .filter(key => (key.endsWith("URI") && conf[key]) || key === "prevED")
     // this check is expensive, so separate step
     .filter(key =>
-      // @ts-ignore -- dynamic string indexing of Conf to inspect all URL properties
+      // @ts-expect-error -- dynamic string indexing of Conf to inspect all URL properties
       new URL(conf[key], parent.location.href).href.startsWith("http://")
     );
 

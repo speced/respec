@@ -87,7 +87,7 @@ W3CNotes.forEach(note => requiresSomeSectionStatus.delete(note));
  * @param {Conf} conf
  */
 export function run(conf) {
-  // @ts-ignore -- LintConfig can be false; ?. only short-circuits null/undefined in TS
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }
@@ -101,12 +101,12 @@ export function run(conf) {
     return;
   }
 
-  // @ts-ignore -- specStatus is always set by defaults before linter rules run
+  // @ts-expect-error -- specStatus is always set by defaults before linter rules run
   if (conf.noRecTrack || !requiresSomeSectionStatus.has(conf.specStatus)) {
     return;
   }
 
-  // @ts-ignore -- at this point lint is truthy (object form), safe to index
+  // @ts-expect-error -- at this point lint is truthy (object form), safe to index
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
 
   const missingRequiredSections = new InsensitiveStringSet([

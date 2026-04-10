@@ -577,3 +577,10 @@ interface CiteDetails {
   path: string;
   href?: string;
 }
+
+interface ReSpecPlugin {
+  name?: string;
+  run?: (conf: Conf) => Promise<void> | void;
+  Plugin?: new (conf: Conf) => { run(): Promise<void> | void };
+  prepare?: (conf: Conf) => Promise<void> | void;
+}

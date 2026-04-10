@@ -276,6 +276,6 @@ function getDataType(idlStruct = {}) {
   if (generic) return generic;
   // join on "|" handles for "unsigned short" etc.
   if (union) return idlType.map(getDataType).join("|");
-  // @ts-ignore -- idlType is an array of idlStruct objects at this point
+  // @ts-expect-error -- idlType is an array of idlStruct objects at this point
   return getDataType(idlType);
 }

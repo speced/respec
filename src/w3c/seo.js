@@ -35,7 +35,7 @@ export const requiresCanonicalLink = new Set([
 export async function run(conf) {
   // Don't include a canonical URL for documents that haven't been published.
   if (
-    // @ts-ignore -- specStatus may be undefined but Set.has handles it
+    // @ts-expect-error -- specStatus may be undefined but Set.has handles it
     (!conf.canonicalURI && !requiresCanonicalLink.has(conf.specStatus)) ||
     !conf.shortName
   ) {
@@ -83,7 +83,7 @@ export async function run(conf) {
  * @param {Document} doc
  */
 async function addJSONLDInfo(conf, doc) {
-  // @ts-ignore -- specStatus may be undefined but that's fine for indexing
+  // @ts-expect-error -- specStatus may be undefined but that's fine for indexing
   const rdfStatus = /** @type {any} */ (status2rdf)[conf.specStatus];
   // Content for JSON
   const type = ["TechArticle"];

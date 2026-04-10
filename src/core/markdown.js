@@ -24,7 +24,7 @@ class Renderer extends marked.Renderer {
    * @param {import('marked').Tokens.Code} token
    * @returns {string}
    */
-  // @ts-ignore - our token signature is compatible at runtime; marked's d.ts is minified
+  // @ts-expect-error - our token signature is compatible at runtime; marked's d.ts is minified
   code(token) {
     const { text: code, lang: infoString = "" } = token;
     const { language, ...metaData } = Renderer.parseInfoString(infoString);

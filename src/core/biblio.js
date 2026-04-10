@@ -55,12 +55,10 @@ export async function updateFromNetwork(
   // https://github.com/tobie/specref#hourly-auto-updating
   const oneHourFromNow = Date.now() + 1000 * 60 * 60 * 1;
   try {
-    const expires = response.headers.has("Expires")
-      ? Math.min(
-          Date.parse(response.headers.get("Expires") ?? ""),
-          oneHourFromNow
-        )
-      : oneHourFromNow;
+    const expiresValue = Date.parse(response.headers.get("Expires") || "");
+    const expires = Number.isNaN(expiresValue)
+      ? oneHourFromNow
+      : Math.min(expiresValue, oneHourFromNow);
     await biblioDB.addAll(data, expires);
   } catch (err) {
     console.error(err);

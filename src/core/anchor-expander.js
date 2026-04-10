@@ -98,7 +98,7 @@ function processFigure(matchingElement, id, a) {
       /** @type {HTMLElement} */ (figcaption.querySelector(".self-link"))
     ).childNodes,
   ].map(node => {
-    // @ts-ignore
+    // @ts-expect-error
     node.classList?.remove("figno");
     return node;
   });
@@ -134,8 +134,7 @@ function processTable(matchingTable, id, a) {
       /** @type {HTMLElement} */ (caption.querySelector(".self-link"))
     ).childNodes,
   ].map(node => {
-    // @ts-ignore
-    // @ts-ignore
+    // @ts-expect-error
     node.classList?.remove("tableno");
     return node;
   });
@@ -173,7 +172,7 @@ function processSection(matchingElement, id, a) {
 function processHeading(heading, a) {
   const hadSelfLink = heading.querySelector(".self-link");
   const children = [...makeSafeCopy(heading).childNodes].filter(
-    // @ts-ignore
+    // @ts-expect-error
     node => !node.classList || !node.classList.contains("self-link")
   );
   a.append(...children);

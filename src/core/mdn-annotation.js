@@ -137,7 +137,7 @@ export async function run(conf) {
   const mdnKey = getMdnKey(conf);
   if (!mdnKey) return;
 
-  // @ts-ignore -- conf.mdn is truthy here; getMdnData handles string/object/boolean
+  // @ts-expect-error -- conf.mdn is truthy here; getMdnData handles string/object/boolean
   const mdnSpecJson = await getMdnData(mdnKey, conf.mdn);
   if (!mdnSpecJson) return;
 
@@ -163,7 +163,7 @@ function getMdnKey(conf) {
   const { shortName, mdn } = conf;
   if (!mdn) return;
   if (typeof mdn === "string") return mdn;
-  // @ts-ignore -- mdn is true | object here; .key only exists on object form
+  // @ts-expect-error -- mdn is true | object here; .key only exists on object form
   return mdn.key || shortName;
 }
 

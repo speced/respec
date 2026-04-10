@@ -26,7 +26,7 @@ export async function run(conf) {
   const editors = (conf.editors ?? []).map(
     (/** @type {any} */ editor) => editor.name
   );
-  // @ts-ignore -- conf.github is normalized to object form before run() is called
+  // @ts-expect-error -- conf.github is normalized to object form before run() is called
   const apiURL = `${conf.github.apiBase}/${conf.github.fullName}/`;
   await showContributors(editors, apiURL);
 }

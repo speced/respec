@@ -12,10 +12,6 @@ import { removeReSpec } from "./utils.js";
 export const name = "core/base-runner";
 
 /**
- * @typedef {{ name?: string; run?: (conf: Conf) => Promise<void> | void; Plugin?: new (conf: Conf) => { run(): Promise<void> | void }; prepare?: (conf: Conf) => Promise<void> | void }} ReSpecPlugin
- */
-
-/**
  * @param {ReSpecPlugin[]} plugs
  */
 export async function runAll(plugs) {
@@ -27,12 +23,9 @@ export async function runAll(plugs) {
   performance.mark(`${name}-start`);
   await preProcess(respecConfig);
 
-  const runnables = plugs.filter(
-    /** @param {ReSpecPlugin} p */ p => isRunnableModule(p)
-  );
+  const runnables = plugs.filter(p => isRunnableModule(p));
   runnables.forEach(
-    /** @param {ReSpecPlugin} plug */ plug =>
-      !plug.name && console.warn("Plugin lacks name:", plug)
+    plug => !plug.name && console.warn("Plugin lacks name:", plug)
   );
   await executePreparePass(runnables, respecConfig);
   await executeRunPass(runnables, respecConfig);

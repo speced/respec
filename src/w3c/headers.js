@@ -313,14 +313,14 @@ function deriveLicenseInfo(conf) {
   }
 
   // W3C docs can't be CC-BY or CC0
-  // @ts-ignore -- license may be undefined; includes() safely returns false
+  // @ts-expect-error -- license may be undefined; includes() safely returns false
   if (!conf.isUnofficial && ["cc-by", "cc0"].includes(license)) {
-    // @ts-ignore -- license is defined at this point (guarded above)
+    // @ts-expect-error -- license is defined at this point (guarded above)
     const msg = docLink`License "\`${conf.license}\`" is not allowed for W3C Specifications.`;
     const hint = docLink`Please set ${"[license]"} to \`"w3c-software-doc"\` instead.`;
     showError(msg, name, { hint });
   }
-  // @ts-ignore -- licenses.get accepts string | undefined key
+  // @ts-expect-error -- licenses.get accepts string | undefined key
   const licenseInfo = licenses.get(license);
   return licenseInfo;
 }
@@ -394,12 +394,10 @@ export async function run(conf) {
     const maturity =
       /** @type {any} */ (status2maturity)[specStatus] || specStatus;
     const { shortName, publishDate } = conf;
-    // @ts-ignore -- publishDate is always set above (via validateDateAndRecover)
     const date = concatDate(publishDate);
     const docVersion = `${maturity}-${shortName}-${date}`;
     const year = [...trStatus, "Member-SUBM"].includes(specStatus)
-      ? // @ts-ignore -- publishDate is always set above (via validateDateAndRecover)
-        `${publishDate.getUTCFullYear()}/`
+      ? `${publishDate.getUTCFullYear()}/`
       : "";
     conf.thisVersion = w3Url(`${pubSpace}/${year}${docVersion}/`);
   }
@@ -427,7 +425,7 @@ export async function run(conf) {
     );
 
     const prevMaturity =
-      // @ts-ignore -- previousMaturity may be undefined; indexing returns undefined which is handled by ??
+      // @ts-expect-error -- previousMaturity may be undefined; indexing returns undefined which is handled by ??
       /** @type {any} */ (status2maturity)[conf.previousMaturity] ??
       conf.previousMaturity;
     if (conf.isTagFinding && conf.latestVersion) {
@@ -508,7 +506,6 @@ export async function run(conf) {
     },
     get alternatesHTML() {
       return (
-        // @ts-ignore -- alternateFormats existence is checked inline
         conf.alternateFormats &&
         htmlJoinAnd(
           // We need to pass a string here...
@@ -518,7 +515,7 @@ export async function run(conf) {
            * @param {number} i
            */
           (_, i) => {
-            // @ts-ignore -- alternateFormats existence checked by the outer && guard
+            // @ts-expect-error -- alternateFormats existence checked by the outer && guard
             const alt = conf.alternateFormats[i];
             return html`<a
               rel="alternate"
@@ -665,7 +662,7 @@ export async function run(conf) {
 
 /** @param {Conf} conf */
 function validateIfAllowedOnTR(conf) {
-  // @ts-ignore -- latestVersion is always a string at this point
+  // @ts-expect-error -- latestVersion is always a string at this point
   const latestVersionURL = new URL(conf.latestVersion);
   const isW3C =
     latestVersionURL.origin === "https://www.w3.org" ||
@@ -673,10 +670,10 @@ function validateIfAllowedOnTR(conf) {
   if (
     isW3C &&
     latestVersionURL.pathname.startsWith("/TR/") &&
-    // @ts-ignore -- specStatus is always set by defaults
+    // @ts-expect-error -- specStatus is always set by defaults
     ["ED", ...trStatus].includes(conf.specStatus) === false
   ) {
-    // @ts-ignore -- specStatus is always set by defaults
+    // @ts-expect-error -- specStatus is always set by defaults
     const msg = docLink`Documents with a status of \`"${conf.specStatus}"\` can't be published on the W3C's /TR/ (Technical Report) space.`;
     const hint = docLink`Ask a W3C Team Member for a W3C URL where the report can be published and change ${"[latestVersion]"} to something else.`;
     showError(msg, name, { hint });
@@ -714,7 +711,7 @@ function derivePubSpace(conf) {
 
 /** @param {Conf} conf */
 function validateCGBG(conf) {
-  // @ts-ignore -- specStatus is always set by defaults
+  // @ts-expect-error -- specStatus is always set by defaults
   const reportType = /** @type {any} */ (status2text)[conf.specStatus];
   const latestVersionURL = conf.latestVersion
     ? new URL(w3Url(conf.latestVersion))
@@ -747,7 +744,7 @@ async function deriveHistoryURI(conf) {
     return; // Nothing to do
   }
 
-  // @ts-ignore -- specStatus is always set by defaults
+  // @ts-expect-error -- specStatus is always set by defaults
   const canShowHistory = conf.isEd || trStatus.includes(conf.specStatus);
 
   if (conf.historyURI && !canShowHistory) {
@@ -767,7 +764,7 @@ async function deriveHistoryURI(conf) {
   // Also make a an exception for FPWD, DNOTE, NOTE and DRY.
   if (
     (conf.historyURI && canShowHistory) ||
-    // @ts-ignore -- specStatus is always set by defaults
+    // @ts-expect-error -- specStatus is always set by defaults
     ["FPWD", "DNOTE", "NOTE", "DRY"].includes(conf.specStatus)
   ) {
     conf.historyURI = historyURL.href;
@@ -792,7 +789,7 @@ async function deriveHistoryURI(conf) {
 function validatePatentPolicies(conf) {
   if (!conf.wgPatentPolicy) return;
   const policies = new Set(
-    // @ts-ignore -- wgPatentPolicy is string | string[] here (checked above)
+    // @ts-expect-error -- wgPatentPolicy is string | string[] here (checked above)
     [].concat(conf.wgPatentPolicy)
   );
   if (
@@ -858,7 +855,7 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
   while (sotdClone.hasChildNodes()) {
     if (
       sotdClone.nodeType === Node.ELEMENT_NODE &&
-      // @ts-ignore
+      // @ts-expect-error
       sotdClone.firstChild.localName === "section"
     ) {
       break;

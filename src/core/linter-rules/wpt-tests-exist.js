@@ -24,12 +24,12 @@ const l10n = getIntlData(localizationStrings);
  * @param {Conf} conf
  */
 export async function run(conf) {
-  // @ts-ignore -- LintConfig can be false; ?. only short-circuits null/undefined in TS
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }
 
-  // @ts-ignore -- testSuiteURI may be undefined; getFilesInWPT handles it gracefully
+  // @ts-expect-error -- testSuiteURI may be undefined; getFilesInWPT handles it gracefully
   const filesInWPT = await getFilesInWPT(conf.testSuiteURI, conf.githubAPI);
   if (!filesInWPT) {
     return;

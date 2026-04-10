@@ -392,7 +392,7 @@ export function renderFeedback(conf) {
   const definitions = [];
   // Github feedback...
   if (conf.github) {
-    // @ts-ignore -- conf.github is normalized to object form before templates run
+    // @ts-expect-error -- conf.github is normalized to object form before templates run
     const { repoURL, issuesURL, newIssuesURL, pullsURL, fullName } =
       conf.github;
     definitions.push(
