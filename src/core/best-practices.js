@@ -58,7 +58,7 @@ export function run() {
   if (bps.length) {
     if (bpSummary) {
       bpSummary.appendChild(html`<h1>Best Practices Summary</h1>`);
-      bpSummary.appendChild(summaryItems ?? document.createDocumentFragment());
+      if (summaryItems) bpSummary.appendChild(summaryItems);
     }
   } else if (bpSummary) {
     const msg = `Using best practices summary (#bp-summary) but no best practices found.`;

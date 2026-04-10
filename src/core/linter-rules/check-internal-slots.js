@@ -32,7 +32,7 @@ export function run(conf) {
   const elems = document.querySelectorAll("var+a");
   const offendingElements = [...elems].filter(elem => {
     const nodeName = elem.previousSibling?.nodeName;
-    const isPrevVar = nodeName && nodeName === "VAR";
+    const isPrevVar = nodeName === "VAR";
     return isPrevVar;
   });
 

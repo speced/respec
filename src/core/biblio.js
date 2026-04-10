@@ -164,7 +164,7 @@ export class Plugin {
     const idbRefs = neededRefs.length
       ? await getReferencesFromIdb(neededRefs)
       : [];
-    /** @type {{ hasData: { id: string, data: BiblioData | null }[], noData: { id: string, data: BiblioData | null }[] }} */
+    /** @type {Record<'hasData' | 'noData', { id: string, data: BiblioData | null}[]>} */
     const split = { hasData: [], noData: [] };
     idbRefs.forEach(ref => {
       (ref.data ? split.hasData : split.noData).push(ref);

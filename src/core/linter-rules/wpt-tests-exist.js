@@ -40,8 +40,8 @@ export async function run(conf) {
   const testables = [...elems].filter(elem => elem.dataset.tests);
 
   for (const elem of testables) {
-    (elem.dataset.tests ?? "")
-      .split(/,/gm)
+    elem.dataset.tests
+      ?.split(/,/gm)
       .map(test => test.trim().split(/\?|#/)[0])
       .filter(test => test && !filesInWPT.has(test))
       .map(missingTest => {
