@@ -8,13 +8,13 @@ ReSpec is a tool for writing [W3C](https://www.w3.org/) specifications and other
 
 ## Getting started
 
-Grab the [starter spec](examples/starter.html), change the title, add your name as editor, and start writing. Full documentation is at **[respec.org/docs](https://respec.org/docs/)**, including:
+Grab the [starter spec](examples/starter.html), change the title, add your name as editor, and start writing. Full documentation is at **[respec.org/docs](https://respec.org/docs/)**:
 
 - [Editor's Guide](https://respec.org/docs/) — complete walkthrough for new spec editors
 - [WebIDL guide](https://respec.org/docs/#WebIDL-Guide) — for JavaScript API specifications
+- [How Do I…](https://github.com/speced/respec/wiki/How-Do-I) — quick answers to common tasks
 
-For quick answers to common tasks, see the [How Do I…](https://github.com/speced/respec/wiki/How-Do-I) wiki page.
-
+> [!NOTE]
 > **This repository is for ReSpec's development.** You don't need to clone or fork it to write a spec — just use the starter template above.
 
 ## New to spec writing?
@@ -29,7 +29,7 @@ These resources will help you write better specs:
 
 ## Bibliography
 
-Use [specref.org](https://www.specref.org/) to look up and cite other specifications in your bibliography. ReSpec resolves `[[SPEC-ID]]` references automatically.
+Use [specref.org](https://www.specref.org/) to look up and cite other specifications in your bibliography. ReSpec resolves `[[SPEC-ID]]` references automatically. You can also search specref directly from the ReSpec pill menu in any spec.
 
 ## Getting help
 
