@@ -3,6 +3,9 @@
  * Module: "core/caniuse"
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/speced/respec/wiki/caniuse
+ *
+ * @typedef {{ browser: string; version: string; caniuse: string }} CaniuseResult
+ * @typedef {(groups: Map<string, HTMLElement[]>, result: CaniuseResult) => Map<string, HTMLElement[]>} BrowserCellReducer
  */
 import { codedJoinAnd, docLink, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
@@ -156,7 +159,7 @@ function validateBrowsers({ caniuse }) {
 }
 
 /**
- * @param {{ result: { browser: string; version: string; caniuse: string }[] }} json
+ * @param {{ result: CaniuseResult[] }} json
  * @param {{ feature: string }} arg1
  */
 async function processJson(json, { feature }) {
@@ -186,7 +189,7 @@ async function processJson(json, { feature }) {
 
 /** @param {string} feature */
 function browserCellRenderer(feature) {
-  return /** @type {(groups: any, arg: { browser: any, version: any, caniuse: any }) => any} */ (
+  return /** @type {BrowserCellReducer} */ (
     (groups, { browser: browserId, version, caniuse }) => {
       const entry = BROWSERS.get(browserId);
       const { name, type } = entry ?? { name: browserId, type: "desktop" };
@@ -209,7 +212,7 @@ function browserCellRenderer(feature) {
           /><span class="browser-version">${textVersion}</span>
         </div>
       `;
-      groups.get(type).push(result);
+      groups.get(type)?.push(result);
       return groups;
     }
   );

@@ -54,10 +54,10 @@ async function openIdb() {
     const range = IDBKeyRange.lowerBound(now);
     let result = await store.openCursor(range);
     while (result?.value) {
-      /** @type {BiblioData} */
+      /** @type {StoredBiblioEntry} */
       const entry = result.value;
       if (entry.expires === undefined || entry.expires < now) {
-        await store.delete(entry.id ?? "");
+        await store.delete(entry.id);
       }
       result = await result.continue();
     }
@@ -160,10 +160,10 @@ export const biblioDB = {
     if (!data) {
       return;
     }
-    /** @type {{ alias: BiblioData[], reference: BiblioData[] }} */
+    /** @type {{ alias: StoredBiblioEntry[], reference: StoredBiblioEntry[] }} */
     const aliasesAndRefs = { alias: [], reference: [] };
     for (const id of Object.keys(data)) {
-      /** @type {BiblioData} */
+      /** @type {StoredBiblioEntry} */
       const obj = { id, ...data[id], expires };
       if (obj.aliasOf) {
         aliasesAndRefs.alias.push(obj);
@@ -180,7 +180,7 @@ export const biblioDB = {
    * Adds a reference or alias to the database.
    *
    * @param {AllowedType} type The type as per ALLOWED_TYPES.
-   * @param {BiblioData} details The object to store.
+   * @param {StoredBiblioEntry} details The object to store.
    */
   async add(type, details) {
     if (!ALLOWED_TYPES.has(type)) {
@@ -193,14 +193,14 @@ export const biblioDB = {
       throw new TypeError("Invalid alias object.");
     }
     const db = await this.ready;
-    let isInDB = await this.has(type, details.id ?? "");
+    let isInDB = await this.has(type, details.id);
     // update or add, depending of already having it in db
     // or if it's expired
     if (isInDB) {
-      const entry = await this.get(type, details.id ?? "");
+      const entry = await this.get(type, details.id);
       if (entry && entry.expires !== undefined && entry.expires < Date.now()) {
         const { store } = db.transaction(type, "readwrite");
-        await store.delete(details.id ?? "");
+        await store.delete(details.id);
         isInDB = false;
       }
     }

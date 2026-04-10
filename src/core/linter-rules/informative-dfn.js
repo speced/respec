@@ -11,12 +11,9 @@ import { informativeRefsInNormative } from "../xref.js";
 const ruleName = "informative-dfn";
 export const name = "core/linter-rules/informative-dfn";
 
+/** @type {Record<string, { msg(term: string, cite: string): string; readonly hint: string }>} */
 const localizationStrings = {
   en: {
-    /**
-     * @param {string} term
-     * @param {string} cite
-     */
     msg(term, cite) {
       return `Normative reference to "${term}" found but term is defined "informatively" in "${cite}".`;
     },
@@ -32,10 +29,6 @@ const localizationStrings = {
     },
   },
   cs: {
-    /**
-     * @param {string} term
-     * @param {string} cite
-     */
     msg(term, cite) {
       return `Nalezen normativní odkaz na "${term}", ale pojem je definován pouze informativně v "${cite}".`;
     },
@@ -51,7 +44,7 @@ const localizationStrings = {
     },
   },
 };
-const l10n = /** @type {any} */ (getIntlData(localizationStrings));
+const l10n = getIntlData(localizationStrings);
 
 /**
  * @param {Conf} conf

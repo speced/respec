@@ -11,57 +11,40 @@ import {
 } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 
+/** @type {Record<string, { until(date: HTMLElement): HTMLElement }>} */
 const localizationStrings = {
   en: {
-    /**
-     * @param {HTMLElement} date
-     */
     until(date) {
       return html` Until ${date} `;
     },
   },
   es: {
-    /**
-     * @param {HTMLElement} date
-     */
     until(date) {
       return html` Hasta ${date} `;
     },
   },
   ko: {
-    /**
-     * @param {HTMLElement} date
-     */
     until(date) {
       return html` ${date} 이전 `;
     },
   },
   ja: {
-    /**
-     * @param {HTMLElement} date
-     */
     until(date) {
       return html` ${date} 以前 `;
     },
   },
   de: {
-    /**
-     * @param {HTMLElement} date
-     */
     until(date) {
       return html` bis ${date} `;
     },
   },
   zh: {
-    /**
-     * @param {HTMLElement} date
-     */
     until(date) {
       return html` 直到 ${date} `;
     },
   },
 };
-const l10n = /** @type {any} */ (getIntlData(localizationStrings));
+const l10n = getIntlData(localizationStrings);
 
 const orcidIcon = () =>
   html`<svg

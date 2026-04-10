@@ -89,6 +89,11 @@ interface BiblioData {
   expires: number;
 }
 
+/** A BiblioData entry stored in IndexedDB (always has an id). */
+interface StoredBiblioEntry extends BiblioData {
+  id: string;
+}
+
 /**
  * Linting configuration for ReSpec.
  * Can be `false` to disable all linting, or an object mapping rule names to
@@ -323,15 +328,7 @@ interface Conf {
 
   // Array properties
   /** Logos to display in the header */
-  logos?: Array<{
-    src?: string;
-    alt?: string;
-    height?: number | string;
-    width?: number | string;
-    url?: string;
-    href?: string;
-    id?: string;
-  }>;
+  logos?: ReSpecLogo[];
   /** Other links to include in the header */
   otherLinks?: Array<{
     key: string;
@@ -576,6 +573,16 @@ interface CiteDetails {
   frag: string;
   path: string;
   href?: string;
+}
+
+interface ReSpecLogo {
+  src?: string;
+  alt?: string;
+  height?: number | string;
+  width?: number | string;
+  url?: string;
+  href?: string;
+  id?: string;
 }
 
 interface ReSpecPlugin {
