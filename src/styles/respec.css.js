@@ -179,4 +179,17 @@ aside.example .marker > a.self-link {
     display: none;
   }
 }
+
+/**
+ * Control prefers-color-scheme behavior in linked SVGs:
+ * - use light when no dark scheme present, or light scheme is checked.
+ * - use dark when dark scheme is checked.
+ */
+head:not(:has(meta[name='color-scheme'][content~='dark'])) + body,
+body:has(input[name='color-scheme'][value='light']:checked) {
+  color-scheme: light;
+}
+body:has(input[name='color-scheme'][value='dark']:checked) {
+  color-scheme: dark;
+}
 `;
