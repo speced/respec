@@ -171,13 +171,18 @@ function browserCellRenderer(feature) {
     const textVersion = version ? version : "—";
     const src = getLogoSrc(browserId);
     const result = html`
-      <div class="${cssClass}" title="${title}" aria-label="${ariaLabel}">
+      <div
+        class="${cssClass}"
+        role="img"
+        title="${title}"
+        aria-label="${ariaLabel}"
+      >
         <img
           class="caniuse-browser"
           width="20"
           height="20"
           src="${src}"
-          alt="${name} logo"
+          alt=""
         /><span class="browser-version">${textVersion}</span>
       </div>
     `;
