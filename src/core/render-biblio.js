@@ -8,6 +8,13 @@ import { html } from "./import-maps.js";
 
 export const name = "core/render-biblio";
 
+/** Generates a fragment-safe HTML ID for a bibliography reference.
+ * @param {string} ref
+ */
+function bibRefId(ref) {
+  return `bib-${ref.toLowerCase().replace(/\s+/g, "-")}`;
+}
+
 const localizationStrings = {
   en: {
     info_references: "Informative references",
@@ -191,7 +198,7 @@ function getUniqueRefs(refs) {
  */
 export function renderInlineCitation(ref, linkText) {
   const key = ref.replace(/^(!|\?)/, "");
-  const href = `#bib-${key.toLowerCase()}`;
+  const href = `#${bibRefId(key)}`;
   const text = linkText || key;
   const elem = html`<cite
     ><a class="bibref" href="${href}" data-link-type="biblio">${text}</a></cite
@@ -205,7 +212,7 @@ export function renderInlineCitation(ref, linkText) {
  */
 function showRef(reference) {
   const { ref, refcontent } = reference;
-  const refId = `bib-${ref.toLowerCase()}`;
+  const refId = bibRefId(ref);
   const result = html`
     <dt id="${refId}">[${ref}]</dt>
     <dd>
@@ -270,10 +277,10 @@ function getAliases(refs) {
 function decorateInlineReference(refs, aliases) {
   refs
     .map(({ ref, refcontent }) => {
-      const refUrl = `#bib-${ref.toLowerCase()}`;
+      const refUrl = `#${bibRefId(ref)}`;
       const selectors = aliases
         .get(refcontent.id)
-        .map(alias => `a.bibref[href="#bib-${alias.toLowerCase()}"]`)
+        .map(alias => `a.bibref[href="#${bibRefId(alias)}"]`)
         .join(",");
       const elems = document.querySelectorAll(selectors);
       return { refUrl, elems, refcontent };
@@ -294,7 +301,7 @@ function warnBadRefs(refs) {
   for (const { ref } of refs) {
     /** @type {NodeListOf<HTMLElement>} */
     const links = document.querySelectorAll(
-      `a.bibref[href="#bib-${ref.toLowerCase()}"]`
+      `a.bibref[href="#${bibRefId(ref)}"]`
     );
     const elements = [...links].filter(
       ({ textContent: t }) => t.toLowerCase() === ref.toLowerCase()
