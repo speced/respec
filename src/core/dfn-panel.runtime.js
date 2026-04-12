@@ -15,7 +15,7 @@ function panelListener() {
   /** @type {HTMLElement | null} */
   let panel = null;
   /**
-   * @param {Event} event
+   * @param {KeyboardEvent|MouseEvent} event
    */
   return event => {
     const { target, type } = event;

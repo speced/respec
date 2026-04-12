@@ -94,7 +94,7 @@ const CODE_TYPES = new Set([
 ]);
 
 /**
- * @typedef {{ term: string, type: string | undefined, linkFor: string | undefined, elem: HTMLAnchorElement }} Entry
+ * @typedef {{ term: string, type?: string, linkFor?: string, elem: HTMLAnchorElement }} Entry
  */
 
 export function run() {
@@ -223,7 +223,7 @@ function getLocalTermType(dfn) {
 function getLocalTermParentContext(dfn) {
   /** @type {HTMLElement | null} */
   const dfnFor = dfn.closest("[data-dfn-for]:not([data-dfn-for=''])");
-  return dfnFor ? (dfnFor.dataset.dfnFor ?? "") : "";
+  return dfnFor?.dataset.dfnFor || "";
 }
 
 /**

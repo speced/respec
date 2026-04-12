@@ -51,7 +51,7 @@ function isRunnableModule(plug) {
  */
 async function executePreparePass(runnables, config) {
   for (const plug of runnables.filter(
-    /** @param {ReSpecPlugin} p */ p => p.prepare
+    p => p.prepare
   )) {
     try {
       await plug.prepare?.(config);
