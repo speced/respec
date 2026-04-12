@@ -241,6 +241,12 @@ function stringifyReference(ref) {
   output = ref.href ? `<a href="${ref.href}">${output}</a>. ` : `${output}. `;
 
   if (ref.authors && ref.authors.length) {
+    if (!Array.isArray(ref.authors)) {
+      const msg = `The "authors" field in reference "${ref.id || ref.title}" must be an array.`;
+      const hint = `Use \`authors: ["${ref.authors}"]\` instead of \`authors: "${ref.authors}"\`.`;
+      showError(msg, name, { hint });
+      ref.authors = [ref.authors];
+    }
     output += ref.authors.join("; ");
     if (ref.etAl) output += " et al";
     if (!output.endsWith(".")) output += ". ";
