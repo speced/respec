@@ -1790,4 +1790,24 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(errors).toHaveSize(1);
     expect(errors[0].details).toContain("Promise&lt;void&gt;");
   });
+
+  it("gives unique IDs to partial namespaces", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          namespace Foo { undefined bar(); };
+          partial namespace Foo { undefined baz(); };
+          partial namespace Foo { undefined qux(); };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const idls = doc.querySelectorAll("pre.idl");
+    const ids = [...idls].map(el => el.id);
+    const uniqueIds = new Set(ids);
+    expect(uniqueIds.size).toBe(ids.length);
+    expect(doc.getElementById("idl-def-foo-partial-1")).toBeTruthy();
+    expect(doc.getElementById("idl-def-foo-partial-2")).toBeTruthy();
+  });
 });
