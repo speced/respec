@@ -187,9 +187,12 @@ async function processJson(json, { feature }) {
   return out;
 }
 
-/** @param {string} feature */
+/**
+ * @param {string} feature
+ * @returns {BrowserCellReducer}
+ */
 function browserCellRenderer(feature) {
-  return /** @type {BrowserCellReducer} */ (
+  return (
     (groups, { browser: browserId, version, caniuse }) => {
       const entry = BROWSERS.get(browserId);
       const { name, type } = entry ?? { name: browserId, type: "desktop" };
