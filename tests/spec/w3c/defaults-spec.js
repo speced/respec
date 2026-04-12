@@ -34,6 +34,7 @@ describe("W3C — Defaults", () => {
       "required-sections": true,
       "informative-dfn": "warn",
       a11y: false,
+      "no-dfn-in-abstract": false,
     });
     expect(rsConf.highlightVars).toBe(true);
     expect(rsConf.license).toBe("w3c-software-doc");
@@ -81,6 +82,7 @@ describe("W3C — Defaults", () => {
       "no-unused-dfns": "error",
       "required-sections": "warn",
       a11y: false,
+      "no-dfn-in-abstract": false,
     });
     expect(rsConf.highlightVars).toBe(false);
     expect(rsConf.license).toBe("c0");
