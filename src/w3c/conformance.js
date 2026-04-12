@@ -1,7 +1,12 @@
 // @ts-check
 // Module w3c/conformance
 // Handle the conformance section properly.
-import { getIntlData, htmlJoinAnd, showWarning } from "../core/utils.js";
+import {
+  getIntlData,
+  htmlJoinAnd,
+  showError,
+  showWarning,
+} from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";
@@ -76,8 +81,16 @@ function processConformance(conformance, conf) {
 
 export function run(conf) {
   const conformance = document.querySelector("section#conformance");
-  if (conformance && !conformance.classList.contains("override")) {
-    processConformance(conformance, conf);
+  if (conformance) {
+    if (conformance.classList.contains("informative")) {
+      const msg = "The conformance section cannot be marked as informative.";
+      const hint =
+        'Remove `class="informative"` from `<section id="conformance">`. Conformance sections are normative by definition.';
+      showError(msg, name, { hint, elements: [conformance] });
+    }
+    if (!conformance.classList.contains("override")) {
+      processConformance(conformance, conf);
+    }
   }
   // Warn when there are RFC2119/RFC8174 keywords, but not conformance section
   if (!conformance && Object.keys(rfc2119Usage).length) {
