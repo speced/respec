@@ -20,7 +20,7 @@ const localizationStrings = {
   },
   zh: {
     sotd: "关于本文档",
-    // eslint-disable-next-line prettier/prettier
+
     status_at_publication: html`本章节描述了本文档的发布状态。W3C的文档列表和最新版本可通过<a
         href="https://www.w3.org/TR/"
         >W3C技术报告</a
@@ -281,9 +281,9 @@ function renderIsRec(conf) {
   const { revisedRecEnd } = conf;
   const updatableRec = document.querySelector("#sotd.updateable-rec");
   let reviewTarget = "";
-  if (document.querySelector(".proposed-addition")) {
+  if (document.querySelector(".addition.proposed")) {
     reviewTarget = "additions";
-  } else if (document.querySelector(".proposed-correction")) {
+  } else if (document.querySelector(".correction.proposed")) {
     reviewTarget = "corrections";
   }
   return html`
@@ -306,22 +306,22 @@ function renderIsRec(conf) {
             <a href="${processLink}#allow-new-features">new features</a>.`
         : ""}
     </p>
-    ${document.querySelector(".addition")
+    ${document.querySelector(".addition:not(.proposed)")
       ? html`<p class="addition">
           Candidate additions are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".correction")
+    ${document.querySelector(".correction:not(.proposed)")
       ? html`<p class="correction">
           Candidate corrections are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".proposed-addition")
+    ${document.querySelector(".addition.proposed")
       ? html`<p class="addition proposed">
           Proposed additions are marked in the document.
         </p>`
       : ""}
-    ${document.querySelector(".proposed-correction")
+    ${document.querySelector(".correction.proposed")
       ? html`<p class="correction proposed">
           Proposed corrections are marked in the document.
         </p>`
@@ -464,8 +464,8 @@ function linkToWorkingGroup(conf) {
     return;
   }
   let changes = null;
-  const proposedAdditions = document.querySelector(".proposed-addition");
-  const proposedCorrections = document.querySelector(".proposed-correction");
+  const proposedAdditions = document.querySelector(".addition.proposed");
+  const proposedCorrections = document.querySelector(".correction.proposed");
   const additions = document.querySelector(".addition");
   const corrections = document.querySelector(".correction");
   const hasRevisions =

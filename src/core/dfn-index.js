@@ -277,14 +277,21 @@ function appendSectionNumbers() {
     const dfn = document.getElementById(id);
     const sectionNumberEl = dfn
       .closest("section:not(.notoc)")
-      .querySelector(".secno");
+      ?.querySelector(".secno");
+    if (!sectionNumberEl) {
+      // dfn is in an unnumbered section (e.g. abstract, introductory) — skip
+      return null;
+    }
     const secNum = `§${sectionNumberEl.textContent.trim()}`;
     return html`<span class="print-only">${secNum}</span>`;
   };
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll("#index-defined-here li[data-id]");
-  elems.forEach(el => el.append(getSectionNumber(el.dataset.id)));
+  elems.forEach(el => {
+    const span = getSectionNumber(el.dataset.id);
+    if (span) el.append(span);
+  });
 }
 
 function createExternalTermIndex() {

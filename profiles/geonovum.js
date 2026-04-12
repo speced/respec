@@ -45,6 +45,7 @@ const modules = [
   import("../src/core/dfn-contract.js"),
   /* Linter must be the last thing to run */
   import("../src/core/linter-rules/check-charset.js"),
+  import("../src/core/linter-rules/no-dfn-in-abstract.js"),
   import("../src/core/linter-rules/check-punctuation.js"),
   import("../src/core/linter-rules/local-refs-exist.js"),
   import("../src/core/linter-rules/no-headingless-sections.js"),
