@@ -11,7 +11,7 @@ const localizationStrings = {
     informative: "This section is non-normative.",
   },
   nl: {
-    informative: "Dit onderdeel is niet normatief.",
+    informative: "Dit onderdeel is niet-normatief.",
   },
   ko: {
     informative: "이 부분은 비규범적입니다.",
