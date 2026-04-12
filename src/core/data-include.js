@@ -70,7 +70,7 @@ function removeIncludeAttributes(el) {
     "data-include-format",
     "data-include-replace",
     "data-include-id",
-    "oninclude",
+    "data-oninclude",
   ].forEach(attr => el.removeAttribute(attr));
 }
 
