@@ -21,6 +21,7 @@ describe("Geonovum — Defaults", () => {
       "check-punctuation": false,
       "check-internal-slots": false,
       "check-charset": false,
+      "no-dfn-in-abstract": false,
     });
     expect(rsConf.highlightVars).toBe(true);
     expect(rsConf.license).toBe("cc-by");
@@ -60,6 +61,7 @@ describe("Geonovum — Defaults", () => {
       "fake-linter-rule": "foo",
       "check-internal-slots": true,
       "check-charset": false,
+      "no-dfn-in-abstract": false,
     });
     expect(rsConf.highlightVars).toBe(false);
     expect(rsConf.license).toBe("cc-by-nd");
