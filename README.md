@@ -15,6 +15,7 @@ Grab the [starter spec](examples/starter.html), change the title, add your name 
 - [How Do I…](https://github.com/speced/respec/wiki/How-Do-I) — quick answers to common tasks
 
 > [!NOTE]
+> [!note]
 > **This repository is for ReSpec's development.** You don't need to clone or fork it to write a spec — just use the starter template above.
 
 ## New to spec writing?
