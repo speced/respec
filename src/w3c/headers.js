@@ -650,6 +650,9 @@ function validateIfAllowedOnTR(conf) {
 
 function derivePubSpace(conf) {
   const { specStatus, group } = conf;
+  if (conf.isNoTrack && !conf.isCGBG && !conf.isTagFinding) {
+    return "";
+  }
   if (trStatus.includes(specStatus) || conf.groupType === "wg") {
     return `/TR`;
   }
