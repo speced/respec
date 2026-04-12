@@ -317,7 +317,7 @@ function showLinkingError(elems) {
     // where [=global-term=] gets scoped to the interface and fails.
     const scopedSection = elem.closest("[data-link-for]");
     const scopingNote = scopedSection
-      ? ` This link is inside a \`data-link-for="${scopedSection.dataset.linkFor}"\` section — \`[=term=]\` links are scoped to that context. To link to a global concept instead, either add \`data-link-for=""\` on this <a>, move it outside the scoped section, or use a plain \`<a>term</a>\` link.`
+      ? ` This link is inside a \`data-link-for="${scopedSection.dataset.linkFor}"\` section — \`[=term=]\` links are scoped to that context. To link to a global concept instead, either add \`data-link-for=""\` on this \`<a>\` or move it outside the scoped section.`
       : "";
     const hint = `Add a matching \`<dfn>\` element, ${docLink`use ${"[data-cite]"} to link to an external definition, or enable ${"[xref]"} for automatic cross-spec linking.`}${scopingNote}`;
     showWarning(msg, name, { title, hint, elements: [elem] });
