@@ -14,6 +14,7 @@ export const coreDefaults = {
     "check-internal-slots": false,
     "check-charset": false,
     "privsec-section": false,
+    "no-dfn-in-abstract": false,
   },
   pluralize: true,
   specStatus: "base",
