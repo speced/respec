@@ -8,9 +8,7 @@ import { html } from "./import-maps.js";
 
 export const name = "core/render-biblio";
 
-/** Generates a fragment-safe HTML ID for a bibliography reference.
- * @param {string} ref
- */
+/** @param {string} ref */
 function bibRefId(ref) {
   return `bib-${ref.toLowerCase().replace(/\s+/g, "-")}`;
 }
