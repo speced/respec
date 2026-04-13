@@ -1592,6 +1592,28 @@ describe("W3C — Headers", () => {
         );
       });
     }
+
+    for (const specStatus of ["unofficial", "MO", "base"]) {
+      it(`does not auto-generate /TR/ URL for no-track "${specStatus}" even with WG group`, async () => {
+        const ops = makeStandardOps({
+          shortName: "some-report",
+          specStatus,
+          group: "wg/json-ld",
+        });
+        const doc = await makeRSDoc(ops);
+        const terms = [...doc.querySelectorAll(".head dt")];
+        const latestVersion = terms.find(
+          el => el.textContent.trim() === "Latest published version:"
+        );
+        if (latestVersion) {
+          const dd = latestVersion.nextElementSibling;
+          const link = dd.querySelector("a");
+          if (link) {
+            expect(link.href).not.toContain("/TR/");
+          }
+        }
+      });
+    }
   });
 
   describe("prevED", () => {
