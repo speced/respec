@@ -332,6 +332,32 @@ describe("Core - Inlines", () => {
     expect(noAliasAnchor.textContent).toBe("Fetch Standard");
   });
 
+  it("supports alias text with [[[SPEC|text]]] syntax (no fragment)", async () => {
+    const config = {
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="alias">[[[fetch|Custom Fetch Link]]]</p>
+        <p id="no-alias">[[[fetch]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const aliasAnchor = doc.querySelector("#alias a[href]");
+    expect(aliasAnchor).toBeTruthy();
+    expect(aliasAnchor.href).toBe("https://fetch.spec.whatwg.org/");
+    expect(aliasAnchor.textContent).toBe("Custom Fetch Link");
+
+    const noAliasAnchor = doc.querySelector("#no-alias a[href]");
+    expect(noAliasAnchor).toBeTruthy();
+    expect(noAliasAnchor.textContent).toBe("Fetch Standard");
+  });
+
   it("supports alias text with [[[#id|text]]] for in-document links", async () => {
     const body = `
       <section id="my-section">
