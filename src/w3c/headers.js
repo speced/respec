@@ -605,13 +605,14 @@ export async function run(conf) {
   }
 
   if (
+    conf.isRec &&
     !isUpdatableRec &&
     (hasAdditions ||
       hasCorrections ||
       hasProposedAdditions ||
       hasProposedCorrections)
   ) {
-    const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as allowing new features.`;
+    const msg = docLink`${"[specStatus]"} is "REC" with additions or corrections, but the Recommendation is not marked as allowing revisions.`;
     showError(msg, name);
   }
 
