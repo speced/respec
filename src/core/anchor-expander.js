@@ -167,7 +167,7 @@ function processSection(matchingElement, id, a) {
 
 /**
  * @param {HTMLElement} heading
- * @param {HTMLElement} a
+ * @param {HTMLAnchorElement} a
  */
 function processHeading(heading, a) {
   const hadSelfLink = heading.querySelector(".self-link");
