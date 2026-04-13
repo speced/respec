@@ -64,6 +64,25 @@ describe("W3C — Conformance", () => {
     expect(doc.querySelectorAll("#conformance .rfc2119")).toHaveSize(0);
   });
 
+  it("errors when the conformance section is marked informative", async () => {
+    const body = `
+      <section id="conformance" class="informative">
+        <p>CONFORMANCE</p>
+      </section>
+      <section>
+        <h2>my section</h2>
+        <p>MUST be tested.</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps({}, body));
+    const errors = doc.respec.errors.filter(
+      e => e.plugin === "w3c/conformance"
+    );
+    expect(errors).toHaveSize(1);
+    expect(errors[0].message).toContain("cannot be marked as informative");
+    expect(errors[0].hint).toContain("informative");
+  });
+
   it("allows conformance section to be completely overridden via .override css class", async () => {
     const body = `
       <section>
