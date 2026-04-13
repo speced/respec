@@ -1807,7 +1807,9 @@ describe("W3C — Headers", () => {
       const sotd = doc.querySelector("#sotd");
       const link = sotd.querySelector("a[rel='disclosure']");
       expect(link).toBeNull();
-      expect(sotd.textContent).toContain("public list of any patent disclosures");
+      expect(sotd.textContent).toContain(
+        "public list of any patent disclosures"
+      );
     });
   });
 
