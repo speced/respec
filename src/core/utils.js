@@ -933,13 +933,16 @@ export function showWarning(message, pluginName, options = {}) {
 }
 
 /**
- * Creates showError, showWarning utilities for use in custom pre-process and
- * post-process plugins.
+ * Creates showError, showWarning and amendConfiguration utilities for
+ * use in custom pre-process and post-process plugins.
  * @param {string} pluginName
  */
 export function makePluginUtils(pluginName) {
   /** @typedef {Parameters<typeof showError>[2]} Options */
   return {
+    /** @type {(configUpdates: Record<string, unknown>) => void} */
+    amendConfiguration: configUpdates =>
+      pub("amend-user-config", configUpdates),
     /** @type {(message: string, options?: Options) => void} */
     showError: (msg, options) => showError(msg, pluginName, options),
     /** @type {(message: string, options?: Options) => void} */
