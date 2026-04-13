@@ -140,7 +140,7 @@ aside.example .marker > a.self-link {
   align-items: baseline;
 }
 
-:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2) {
+:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2):has(+ a.self-link) {
   position: relative;
   left: -.5em;
 }
