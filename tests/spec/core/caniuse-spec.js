@@ -103,7 +103,11 @@ describe("Core — Can I Use", () => {
 
     expect(firefox.width).toBe(20);
     expect(firefox.height).toBe(20);
-    expect(chrome.alt).toBe("Android Chrome logo");
+    expect(chrome.alt).toBe("");
+
+    // The parent cell has role=img with aria-label for accessibility
+    const firstCell = cells[0];
+    expect(firstCell.getAttribute("role")).toBe("img");
 
     // The version numbers
     const [firefoxVersion, chromeVersion, safariVersion] =
