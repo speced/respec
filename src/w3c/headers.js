@@ -612,7 +612,7 @@ export async function run(conf) {
       hasProposedAdditions ||
       hasProposedCorrections)
   ) {
-    const msg = docLink`${"[specStatus]"} is "REC" with additions or corrections, but the Recommendation is not marked as allowing revisions.`;
+    const msg = docLink`${"[specStatus]"} is "REC" with amendments, but the Recommendation is not marked as allowing revisions.`;
     showError(msg, name);
   }
 
