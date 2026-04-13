@@ -184,11 +184,13 @@ export async function run() {
 
   await updateBiblio([...elems]);
 
-  // Collect elements that need heading text (triple-bracket cross-spec links)
+  // Pre-compute cite details for each element (avoids double toCiteDetails calls)
+  const citeDetailsMap = new Map();
   const headingQueries = [];
-  const headingElements = new Map();
   for (const elem of elems) {
     const citeDetails = toCiteDetails(elem);
+    citeDetailsMap.set(elem, citeDetails);
+    // Collect elements that need heading text (triple-bracket cross-spec links)
     if (
       elem.localName === "a" &&
       elem.textContent === "" &&
@@ -199,7 +201,6 @@ export async function run() {
       const spec = citeDetails.key.replace(/^[!?]/, "").toLowerCase();
       const id = citeDetails.frag.replace("#", "");
       headingQueries.push({ spec, id });
-      headingElements.set(`${spec}#${id}`, elem);
     }
   }
 
@@ -208,7 +209,7 @@ export async function run() {
 
   for (const elem of elems) {
     const originalKey = elem.dataset.cite;
-    const citeDetails = toCiteDetails(elem);
+    const citeDetails = citeDetailsMap.get(elem);
     const linkProps = await getLinkProps(citeDetails);
     if (linkProps) {
       // Use alias text (data-lt) if present
@@ -217,24 +218,22 @@ export async function run() {
         delete elem.dataset.lt;
       }
       // Use heading text for cross-spec section links
-      const spec = citeDetails.key.replace(/^[!?]/, "").toLowerCase();
-      const id = citeDetails.frag?.replace("#", "");
-      const headingKey = `${spec}#${id}`;
-      const heading = headings.get(headingKey);
-      if (heading && elem.textContent === "") {
-        const { title, number, specTitle } = heading;
-        const secNum = number ? `§\u00A0${number} ` : "§ ";
-        elem.textContent = `${secNum}${title}`;
-        // Wrap the spec title in a cite element after linkElem sets href
-        elem.dataset.headingSpecTitle = specTitle;
+      let headingSpecTitle = null;
+      if (citeDetails.frag && elem.textContent === "") {
+        const spec = citeDetails.key.replace(/^[!?]/, "").toLowerCase();
+        const id = citeDetails.frag.replace("#", "");
+        const heading = headings.get(`${spec}#${id}`);
+        if (heading) {
+          const secNum = heading.number ? `§\u00A0${heading.number} ` : "§ ";
+          elem.textContent = `${secNum}${heading.title}`;
+          headingSpecTitle = heading.specTitle;
+        }
       }
       linkElem(elem, linkProps, citeDetails);
       // Add spec title cite element for heading links
-      if (elem.dataset.headingSpecTitle) {
-        const specTitle = elem.dataset.headingSpecTitle;
-        delete elem.dataset.headingSpecTitle;
+      if (headingSpecTitle) {
         const cite = document.createElement("cite");
-        cite.textContent = specTitle;
+        cite.textContent = headingSpecTitle;
         elem.before(cite);
         cite.after(" ");
       }
