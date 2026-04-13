@@ -70,7 +70,7 @@ const inlineIdlReference = /(?:{{[^}]+\?*}})/; // {{ WebIDLThing }}, {{ WebIDLTh
 const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;"?<>]+\??)?\|\B/; // |var : Type?|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citation]]
 const inlineExpansion =
-  /(?:\[\[\[(?:!|\\|\?)?(?:#[\w-.]+|[\w-.]+(?:#[\w-.]+)?)\]\]\])/; // [[[expand]]], [[[#id]]], or [[[SPEC#id]]]
+  /(?:\[\[\[(?:!|\\|\?)?(?:#[\w-.]+|[\w-.]+(?:#[\w-.]+)?)(?:\|[^\]]+)?\]\]\])/; // [[[expand]]], [[[#id]]], [[[SPEC#id]]], or [[[SPEC#id|text]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
 const inlineCddlReference = /(?:\{\^[^}^]+\^\})/; // {^cddl-type^}, {^type/key^}
@@ -170,11 +170,21 @@ function inlineRFC2119Matches(matched) {
  */
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
-  const ref = matched.slice(3, -3).trim();
+  let ref = matched.slice(3, -3).trim();
+  const pipeIdx = ref.indexOf("|");
+  const linkText = pipeIdx !== -1 ? ref.slice(pipeIdx + 1).trim() : null;
+  if (pipeIdx !== -1) ref = ref.slice(0, pipeIdx).trim();
+
   if (!ref.startsWith("#")) {
-    return html`<a data-cite="${ref}" data-matched-text="${matched}"></a>`;
+    return html`<a
+      data-cite="${ref}"
+      data-matched-text="${matched}"
+      data-lt="${linkText || null}"
+    ></a>`;
   }
-  return html`<a href="${ref}" data-matched-text="${matched}"></a>`;
+  return linkText
+    ? html`<a href="${ref}" data-matched-text="${matched}">${linkText}</a>`
+    : html`<a href="${ref}" data-matched-text="${matched}"></a>`;
 }
 
 /**

@@ -184,12 +184,60 @@ export async function run() {
 
   await updateBiblio([...elems]);
 
+  // Collect elements that need heading text (triple-bracket cross-spec links)
+  const headingQueries = [];
+  const headingElements = new Map();
+  for (const elem of elems) {
+    const citeDetails = toCiteDetails(elem);
+    if (
+      elem.localName === "a" &&
+      elem.textContent === "" &&
+      !elem.dataset.lt &&
+      citeDetails.frag &&
+      citeDetails.key !== THIS_SPEC
+    ) {
+      const spec = citeDetails.key.replace(/^[!?]/, "").toLowerCase();
+      const id = citeDetails.frag.replace("#", "");
+      headingQueries.push({ spec, id });
+      headingElements.set(`${spec}#${id}`, elem);
+    }
+  }
+
+  // Batch-fetch heading text from the headings API
+  const headings = await fetchHeadings(headingQueries);
+
   for (const elem of elems) {
     const originalKey = elem.dataset.cite;
     const citeDetails = toCiteDetails(elem);
     const linkProps = await getLinkProps(citeDetails);
     if (linkProps) {
+      // Use alias text (data-lt) if present
+      if (elem.dataset.lt) {
+        elem.textContent = elem.dataset.lt;
+        delete elem.dataset.lt;
+      }
+      // Use heading text for cross-spec section links
+      const spec = citeDetails.key.replace(/^[!?]/, "").toLowerCase();
+      const id = citeDetails.frag?.replace("#", "");
+      const headingKey = `${spec}#${id}`;
+      const heading = headings.get(headingKey);
+      if (heading && elem.textContent === "") {
+        const { title, number, specTitle } = heading;
+        const secNum = number ? `§\u00A0${number} ` : "§ ";
+        elem.textContent = `${secNum}${title}`;
+        // Wrap the spec title in a cite element after linkElem sets href
+        elem.dataset.headingSpecTitle = specTitle;
+      }
       linkElem(elem, linkProps, citeDetails);
+      // Add spec title cite element for heading links
+      if (elem.dataset.headingSpecTitle) {
+        const specTitle = elem.dataset.headingSpecTitle;
+        delete elem.dataset.headingSpecTitle;
+        const cite = document.createElement("cite");
+        cite.textContent = specTitle;
+        elem.before(cite);
+        cite.after(" ");
+      }
     } else {
       const msg = `Couldn't find a match for "${originalKey}"`;
       if (elem.dataset.matchedText) {
@@ -200,6 +248,40 @@ export async function run() {
   }
 
   sub("beforesave", cleanup);
+}
+
+const HEADINGS_API_URL = "https://respec.org/xref/headings/";
+
+/**
+ * Fetches heading text from the headings API for cross-spec section links.
+ * @param {{ spec: string; id: string }[]} queries
+ * @returns {Promise<Map<string, { title: string; number?: string; specTitle: string }>>}
+ */
+async function fetchHeadings(queries) {
+  const results = new Map();
+  if (!queries.length) return results;
+
+  try {
+    const response = await fetch(HEADINGS_API_URL, {
+      method: "POST",
+      body: JSON.stringify({ queries }),
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) return results;
+    const { result } = await response.json();
+    for (const entry of result) {
+      if (!entry.error) {
+        results.set(`${entry.spec}#${entry.id}`, {
+          title: entry.title,
+          number: entry.number,
+          specTitle: entry.specTitle,
+        });
+      }
+    }
+  } catch {
+    // Headings API unavailable; fall back to spec title
+  }
+  return results;
 }
 
 /**
