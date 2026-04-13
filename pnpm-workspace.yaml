@@ -1,0 +1,3 @@
+allowBuilds:
+  puppeteer: true
+  vnu-jar: true
