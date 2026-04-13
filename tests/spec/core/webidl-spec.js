@@ -1803,14 +1803,15 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const foo = doc.getElementById("idl-def-foo");
-    const partial1 = doc.getElementById("idl-def-foo-partial-1");
-    const partial2 = doc.getElementById("idl-def-foo-partial-2");
-    expect(foo).toBeTruthy();
-    expect(partial1).toBeTruthy();
-    expect(partial2).toBeTruthy();
-    // Verify all three IDs are distinct elements
-    const ids = new Set([foo.id, partial1.id, partial2.id]);
-    expect(ids.size).toBe(3);
+    const idls = [
+      ...doc.querySelectorAll("pre.idl code [data-idl][id]"),
+    ].filter(el => /^idl-def-foo(?:-partial-[12])?$/.test(el.id));
+    expect(idls).toHaveSize(3);
+    const ids = idls.map(el => el.id);
+    const uniqueIds = new Set(ids);
+    expect(uniqueIds.size).toBe(ids.length);
+    expect(ids).toContain("idl-def-foo");
+    expect(ids).toContain("idl-def-foo-partial-1");
+    expect(ids).toContain("idl-def-foo-partial-2");
   });
 });
