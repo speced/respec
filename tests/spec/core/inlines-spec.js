@@ -305,6 +305,50 @@ describe("Core - Inlines", () => {
     expect(anchor.textContent).toBe("Fetch Standard");
   });
 
+  it("supports alias text with [[[SPEC#id|text]]] syntax", async () => {
+    const config = {
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="alias">[[[fetch#data-fetch|fetching data]]]</p>
+        <p id="no-alias">[[[fetch#data-fetch]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const aliasAnchor = doc.querySelector("#alias a[href]");
+    expect(aliasAnchor).toBeTruthy();
+    expect(aliasAnchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    expect(aliasAnchor.textContent).toBe("fetching data");
+
+    const noAliasAnchor = doc.querySelector("#no-alias a[href]");
+    expect(noAliasAnchor).toBeTruthy();
+    // Without headings API, falls back to spec title
+    expect(noAliasAnchor.textContent).toBe("Fetch Standard");
+  });
+
+  it("supports alias text with [[[#id|text]]] for in-document links", async () => {
+    const body = `
+      <section id="my-section">
+        <h2>My Section Heading</h2>
+        <p>Some content.</p>
+      </section>
+      <section>
+        <h2>References</h2>
+        <p id="output">[[[#my-section|see this section]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const anchor = doc.querySelector("#output a[href='#my-section']");
+    expect(anchor).toBeTruthy();
+    expect(anchor.textContent).toBe("see this section");
+  });
+
   it("allows [[[#...]]] to be a general expander for ids in document", async () => {
     /** @param {string} text */
     function generateDataIncludeUrl(text) {
