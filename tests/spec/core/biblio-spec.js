@@ -246,14 +246,15 @@ describe("W3C — Bibliographic References", () => {
     const ops = makeStandardOps({ localBiblio }, body);
     const doc = await makeRSDoc(ops);
 
-    // dt IDs must not contain spaces
+    // dt IDs must not contain spaces or characters that break CSS selectors
     const rubyDt = doc.getElementById("bib-ruby-tts-req");
     expect(rubyDt).withContext("dt#bib-ruby-tts-req should exist").toBeTruthy();
     expect(rubyDt.textContent.trim()).toBe("[Ruby TTS Req]");
 
-    const tokyoDt = doc.getElementById("bib-tokyo-ghoul:-re");
+    // colon+space in "Tokyo Ghoul: re" should both be collapsed to a single hyphen
+    const tokyoDt = doc.getElementById("bib-tokyo-ghoul-re");
     expect(tokyoDt)
-      .withContext("dt#bib-tokyo-ghoul:-re should exist")
+      .withContext("dt#bib-tokyo-ghoul-re should exist")
       .toBeTruthy();
     expect(tokyoDt.textContent.trim()).toBe("[Tokyo Ghoul: re]");
 
@@ -262,7 +263,7 @@ describe("W3C — Bibliographic References", () => {
     expect(rubyLink.getAttribute("href")).toBe("#bib-ruby-tts-req");
 
     const tokyoLink = doc.querySelector("#ref-tokyo a.bibref");
-    expect(tokyoLink.getAttribute("href")).toBe("#bib-tokyo-ghoul:-re");
+    expect(tokyoLink.getAttribute("href")).toBe("#bib-tokyo-ghoul-re");
   });
 
   it("shows a localized error if reference doesn't exist", async () => {

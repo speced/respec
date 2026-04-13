@@ -2,7 +2,7 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import { addId, getIntlData, showError } from "./utils.js";
+import { addId, getIntlData, showError, toId } from "./utils.js";
 import { biblio } from "./biblio.js";
 import { html } from "./import-maps.js";
 
@@ -10,7 +10,7 @@ export const name = "core/render-biblio";
 
 /** @param {string} ref */
 function bibRefId(ref) {
-  return `bib-${ref.toLowerCase().replace(/\s+/g, "-")}`;
+  return `bib-${toId(ref)}`;
 }
 
 const localizationStrings = {
