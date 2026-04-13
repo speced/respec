@@ -1601,17 +1601,20 @@ describe("W3C — Headers", () => {
           group: "wg/json-ld",
         });
         const doc = await makeRSDoc(ops);
+        const { latestVersion } = doc.defaultView.respecConfig;
+        // Must have a latestVersion URL, but it must NOT be in the /TR/ space
+        expect(latestVersion).toBeTruthy();
+        expect(latestVersion).not.toContain("/TR/");
+        // Also confirm the rendered link in the header matches
         const terms = [...doc.querySelectorAll(".head dt")];
-        const latestVersion = terms.find(
+        const latestVersionDt = terms.find(
           el => el.textContent.trim() === "Latest published version:"
         );
-        if (latestVersion) {
-          const dd = latestVersion.nextElementSibling;
-          const link = dd.querySelector("a");
-          if (link) {
-            expect(link.href).not.toContain("/TR/");
-          }
-        }
+        expect(latestVersionDt).toBeTruthy();
+        const latestVersionLink =
+          latestVersionDt.nextElementSibling.querySelector("a");
+        expect(latestVersionLink).toBeTruthy();
+        expect(latestVersionLink.href).not.toContain("/TR/");
       });
     }
   });
