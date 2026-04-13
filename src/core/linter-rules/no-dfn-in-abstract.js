@@ -20,6 +20,7 @@ import { docLink, getIntlData, norm, showWarning } from "../utils.js";
 const ruleName = "no-dfn-in-abstract";
 export const name = `core/linter-rules/${ruleName}`;
 
+/** @type {Record<string, { msg(text: string): string; readonly hint: string }>} */
 const localizationStrings = {
   en: {
     msg(text) {
@@ -39,7 +40,11 @@ const UNNUMBERED_SECTION_SELECTOR = [
   "section.introductory",
 ].join(", ");
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) return;
 
   /** @type {NodeListOf<HTMLElement>} */

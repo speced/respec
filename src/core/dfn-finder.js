@@ -217,9 +217,11 @@ export function decorateDfn(dfnElem, idlAst, parent, name) {
   switch (idlAst.type) {
     case "attribute":
     case "constructor":
-    case "operation":
-      addAlternativeNames(dfnElem, getAlternativeNames(idlAst, parent, name));
+    case "operation": {
+      const names = getAlternativeNames(idlAst, parent, name);
+      if (names) addAlternativeNames(dfnElem, names);
       break;
+    }
   }
 
   return dfnElem;

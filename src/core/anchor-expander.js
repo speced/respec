@@ -149,7 +149,7 @@ function processTable(matchingTable, id, a) {
 /**
  * @param {HTMLElement} matchingElement
  * @param {string} id
- * @param {HTMLElement} a
+ * @param {HTMLAnchorElement} a
  */
 function processSection(matchingElement, id, a) {
   const heading = matchingElement.querySelector("h6, h5, h4, h3, h2");
