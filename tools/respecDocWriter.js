@@ -231,7 +231,7 @@ async function generateHTML(page, timer, version, url) {
       `Specification: ${url}\n` +
       `ReSpec version: ${version.join(".")}\n` +
       "File a bug: https://github.com/speced/respec/\n"
-    }${err ? `Error: ${err.stack || err}\n` : ""}`}`;
+    }${err ? `Error: ${err.stack}\n` : ""}`}`;
     throw new Error(msg);
   }
 }
@@ -278,7 +278,7 @@ async function evaluateHTML(version, timer) {
     return new Promise((resolve, reject) => {
       promise.then(resolve, reject);
       const msg = `Timeout: document.respec.ready didn't resolve in ${ms}ms.`;
-      setTimeout(() => reject(msg), ms);
+      setTimeout(() => reject(new Error(msg)), ms);
     });
   }
 }
