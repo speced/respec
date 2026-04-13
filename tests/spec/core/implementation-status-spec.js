@@ -231,4 +231,27 @@ describe("Core — Implementation Status", () => {
     // Badge should have browser pills, not just a plain link
     expect(dd.querySelector(".baseline-browsers")).toBeTruthy();
   });
+
+  it("accepts string shorthand config for explicit feature ID", async () => {
+    const ops = makeStandardOps({
+      implementationStatus: "test-feature",
+    });
+    const doc = await makeRSDoc(ops);
+    const { implementationStatus } = doc.defaultView.respecConfig;
+
+    expect(implementationStatus.feature).toBe("test-feature");
+    expect(implementationStatus.removeOnSave).toBeFalse();
+  });
+
+  it("accepts boolean true config for auto-detect", async () => {
+    const ops = makeStandardOps({
+      edDraftURI: "https://w3c.github.io/test-spec/",
+      implementationStatus: true,
+    });
+    const doc = await makeRSDoc(ops);
+    const { implementationStatus } = doc.defaultView.respecConfig;
+
+    expect(implementationStatus.feature).toBeNull();
+    expect(implementationStatus.removeOnSave).toBeFalse();
+  });
 });
