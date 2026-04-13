@@ -196,8 +196,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       marked:
-        specifier: ^17.0.6
-        version: 17.0.6
+        specifier: ^18.0.0
+        version: 18.0.0
       puppeteer:
         specifier: ^24.40.0
         version: 24.40.0(typescript@5.9.3)
@@ -251,7 +251,7 @@ importers:
         specifier: ^5.5.5
         version: 5.5.5(eslint-config-prettier@10.1.8(eslint@9.39.4))(eslint@9.39.4)(prettier@3.8.2)
       globals:
-        specifier: ^17.4.0
+        specifier: ^17.5.0
         version: 17.5.0
       highlight.js:
         specifier: ^11.11.1
@@ -263,7 +263,7 @@ importers:
         specifier: ^8.0.3
         version: 8.0.3
       jasmine:
-        specifier: ^6.1.0
+        specifier: ^6.2.0
         version: 6.2.0
       jasmine-core:
         specifier: ^6.2.0
@@ -296,7 +296,7 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       prettier:
-        specifier: ^3.8.1
+        specifier: ^3.8.2
         version: 3.8.2
       prompt:
         specifier: ^1.3.0
@@ -320,7 +320,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vnu-jar:
-        specifier: ^26.4.2
+        specifier: ^26.4.11
         version: 26.4.11
       webidl2:
         specifier: ^24.5.0
@@ -1953,8 +1953,8 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
-  marked@17.0.6:
-    resolution: {integrity: sha512-gB0gkNafnonOw0obSTEGZTT86IuhILt2Wfx0mWH/1Au83kybTayroZ/V6nS25mN7u8ASy+5fMhgB3XPNrOZdmA==}
+  marked@18.0.0:
+    resolution: {integrity: sha512-2e7Qiv/HJSXj8rDEpgTvGKsP8yYtI9xXHKDnrftrmnrJPaFNM7VRb2YCzWaX4BP1iCJ/XPduzDJZMFoqTCcIMA==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -4568,7 +4568,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  marked@17.0.6: {}
+  marked@18.0.0: {}
 
   math-intrinsics@1.1.0: {}
 
