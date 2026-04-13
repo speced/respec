@@ -17,10 +17,10 @@ function setupVarHighlighter() {
  */
 function highlightListener(ev) {
   ev.stopPropagation();
-  const { target: varElem } = ev;
-  const hightligtedElems = highlightVars(/** @type {HTMLElement} */ (varElem));
+  const varElem = /** @type {HTMLElement} */ (ev.target);
+  const hightligtedElems = highlightVars(varElem);
   const resetListener = () => {
-    const hlColor = getHighlightColor(/** @type {HTMLElement} */ (varElem));
+    const hlColor = getHighlightColor(varElem);
     hightligtedElems.forEach((/** @type {any} */ el) =>
       removeHighlight(el, hlColor)
     );
@@ -64,14 +64,13 @@ function getHighlightColor(target) {
  */
 function highlightVars(varElem) {
   const textContent = norm(varElem.textContent);
-  const parent = varElem.closest(".algorithm, section");
+  const parent = /** @type {HTMLElement} */ (
+    varElem.closest(".algorithm, section")
+  );
   if (!parent) return [];
   const highlightColor = getHighlightColor(varElem);
 
   const varsToHighlight = [...parent.querySelectorAll("var")].filter(
-    /**
-     * @param {HTMLElement} el
-     */
     el =>
       norm(el.textContent) === textContent &&
       el.closest(".algorithm, section") === parent

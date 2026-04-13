@@ -218,12 +218,7 @@ export function decorateDfn(dfnElem, idlAst, parent, name) {
     case "attribute":
     case "constructor":
     case "operation":
-      addAlternativeNames(
-        dfnElem,
-        /** @type {Record<"local" | "exportable", string[]>} */ (
-          getAlternativeNames(idlAst, parent, name)
-        )
-      );
+      addAlternativeNames(dfnElem, getAlternativeNames(idlAst, parent, name));
       break;
   }
 

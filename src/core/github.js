@@ -74,8 +74,9 @@ export async function run(conf) {
     rejectGithubPromise(msg);
     return;
   }
-  // @ts-expect-error -- conf.github can be string or object; .repoURL only exists on object form
-  let tempURL = conf.github.repoURL || conf.github;
+  /** @type {{ repoURL?: string; branch?: string; pullsURL?: string; commitHistoryURL?: string }} */
+  const ghConf = typeof conf.github === "string" ? {} : conf.github;
+  let tempURL = ghConf.repoURL || String(conf.github);
   if (!tempURL.endsWith("/")) tempURL += "/";
   /** @type URL */
   let ghURL;
@@ -97,8 +98,7 @@ export async function run(conf) {
     rejectGithubPromise(msg);
     return;
   }
-  // @ts-expect-error -- conf.github is string | object; .branch only exists on object form
-  const branch = conf.github.branch || "gh-pages";
+  const branch = ghConf.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
 
   // Allow custom pullsURL and commitHistoryURL for monorepo scenarios
@@ -141,8 +141,7 @@ export async function run(conf) {
     commitHistoryURL = conf.github.commitHistoryURL;
   } else {
     commitHistoryURL = new URL(
-      // @ts-expect-error -- conf.github is string | object; .branch only exists on object form
-      `./commits/${conf.github.branch ?? ""}`,
+      `./commits/${ghConf.branch ?? ""}`,
       ghURL.href
     ).href;
   }

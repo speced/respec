@@ -5,7 +5,7 @@ import { makeSafeCopy, norm, renameElement, showError } from "./utils.js";
 export const name = "core/anchor-expander";
 
 export function run() {
-  /** @type {NodeListOf<HTMLElement>} */
+  /** @type {NodeListOf<HTMLAnchorElement>} */
   const anchorElements = document.querySelectorAll(
     "a[href^='#']:not(.self-link):not([href$='the-empty-string'])"
   );
