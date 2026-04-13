@@ -15,8 +15,28 @@ self.addEventListener("message", ({ data: originalData }) => {
   switch (data.action) {
     case "highlight-load-lang": {
       const { langURL, propName, lang } = data;
-      importScripts(langURL);
-      self.hljs.registerLanguage(lang, self[propName]);
+      try {
+        const parsedURL = new URL(langURL, self.location.href);
+        const isAllowedProtocol =
+          parsedURL.protocol === "https:" || parsedURL.protocol === "http:";
+        const isSameOrigin = parsedURL.origin === self.location.origin;
+        const isJavaScriptFile = parsedURL.pathname.endsWith(".js");
+        const isValidPropName = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(propName);
+
+        if (!isAllowedProtocol || !isSameOrigin || !isJavaScriptFile || !isValidPropName) {
+          throw new Error("Invalid language module request");
+        }
+
+        importScripts(parsedURL.href);
+
+        if (typeof self[propName] !== "function") {
+          throw new Error("Loaded language module did not expose a valid language definition");
+        }
+
+        self.hljs.registerLanguage(lang, self[propName]);
+      } catch (err) {
+        console.error("Invalid language load request", err);
+      }
       break;
     }
     case "highlight": {
