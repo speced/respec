@@ -80,6 +80,7 @@ function processConformance(conformance, conf) {
 }
 
 export function run(conf) {
+  /** @type {HTMLElement | null} */
   const conformance = document.querySelector("section#conformance");
   if (conformance) {
     if (conformance.classList.contains("informative")) {
