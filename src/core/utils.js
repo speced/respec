@@ -289,7 +289,7 @@ export function linkCSS(doc, urls) {
  * @param {...any} funcArgs Arguments to pass to each function.
  */
 export function runTransforms(content, flist, ...funcArgs) {
-  const args = [this, content, ...(funcArgs || [])];
+  const args = [this, content, ...funcArgs];
   if (flist) {
     const methods = flist.split(/\s+/);
     for (const meth of methods) {
