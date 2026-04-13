@@ -377,8 +377,10 @@ it("handles authors as a string instead of array", async () => {
   expect(ref).toBeTruthy();
   expect(ref.textContent).toContain("Jane Doe");
 
-  const errors = doc.respec.errors.filter(e => e.message.includes("authors"));
+  const errors = doc.respec.errors.filter(
+    e => e.plugin === "core/render-biblio" && e.message.includes('"authors"')
+  );
   expect(errors).toHaveSize(1);
   expect(errors[0].message).toContain("must be an array");
-  expect(errors[0].hint).toContain("authors:");
+  expect(errors[0].hint).toContain('authors: ["Jane Doe"]');
 });
