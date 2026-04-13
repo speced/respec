@@ -141,7 +141,7 @@ function inlineXrefMatches(matched, text) {
   // slices "{{" at the beginning and "}}" at the end
   const ref = norm(matched.slice(2, -2));
   if (ref.startsWith("\\")) {
-    return matched.replace("\\", "");
+    return matched.slice(0, 2) + matched.slice(3);
   }
 
   const node = idlStringToHtml(ref);
