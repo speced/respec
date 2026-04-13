@@ -3,7 +3,7 @@
 const { Builder } = require("./builder.cjs");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
-const { exec } = require("child_process");
+const { execFile } = require("child_process");
 const loading = require("loading-indicator");
 const DEBUG = false;
 const vnu = require("vnu-jar");
@@ -35,8 +35,15 @@ const loadOps = {
   delay: 100,
 };
 
+function splitArgs(input) {
+  return input.match(/(?:[^\s"]+|"[^"]*")+/g)?.map(part => part.replace(/^"|"$/g, "")) ?? [];
+}
+
 /** @param {string} program */
 function commandRunner(program) {
+  const programParts = splitArgs(program);
+  const file = programParts[0];
+  const baseArgs = programParts.slice(1);
   /**
    * @param {string} cmd
    * @param {{showOutput: boolean}} [options ]
@@ -46,7 +53,8 @@ function commandRunner(program) {
     if (DEBUG) {
       return Promise.resolve("");
     }
-    return toExecPromise(`${program} ${cmd}`, { ...options, timeout: 200000 });
+    const args = [...baseArgs, ...splitArgs(cmd)];
+    return toExecFilePromise(file, args, { ...options, timeout: 200000 });
   };
   return runner;
 }
@@ -253,17 +261,18 @@ const Prompts = {
 
 /**
  *
- * @param {string} cmd
+ * @param {string} file
+ * @param {string[]} args
  * @param {{ timeout: number, showOutput: boolean }} options
  * @returns {Promise<string>}
  */
-function toExecPromise(cmd, { timeout, showOutput }) {
+function toExecFilePromise(file, args, { timeout, showOutput }) {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
-      reject(new Error(`Command took too long: ${cmd}`));
+      reject(new Error(`Command took too long: ${file} ${args.join(" ")}`));
       proc.kill("SIGTERM");
     }, timeout);
-    const proc = exec(cmd, (err, stdout) => {
+    const proc = execFile(file, args, (err, stdout) => {
       clearTimeout(id);
       if (err) {
         return reject(err);
