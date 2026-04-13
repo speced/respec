@@ -604,7 +604,7 @@ export async function run(conf) {
     showError(msg, name, { hint });
   }
 
-  if (!isUpdatableRec && (hasAdditions || hasCorrections)) {
+  if (!isUpdatableRec && (hasAdditions || hasCorrections || hasProposedAdditions || hasProposedCorrections)) {
     const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as allowing new features.`;
     showError(msg, name);
   }
