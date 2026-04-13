@@ -503,6 +503,73 @@ describe("Core - Utils", () => {
       });
     });
 
+    describe("toId", () => {
+      const { toId } = utils;
+
+      it("lowercases the input", () => {
+        expect(toId("HELLO")).toBe("hello");
+        expect(toId("MixedCase")).toBe("mixedcase");
+      });
+
+      it("trims leading and trailing whitespace", () => {
+        expect(toId("  hello  ")).toBe("hello");
+        expect(toId("\nhello\t")).toBe("hello");
+      });
+
+      it("replaces spaces with hyphens", () => {
+        expect(toId("hello world")).toBe("hello-world");
+        expect(toId("Ruby TTS Req")).toBe("ruby-tts-req");
+      });
+
+      it("collapses multiple non-word characters into a single hyphen", () => {
+        expect(toId("Tokyo Ghoul: re")).toBe("tokyo-ghoul-re");
+        expect(toId("foo   bar")).toBe("foo-bar");
+        expect(toId("a--b")).toBe("a-b");
+      });
+
+      it("removes leading and trailing hyphens after substitution", () => {
+        expect(toId(": leading colon")).toBe("leading-colon");
+        expect(toId("trailing colon:")).toBe("trailing-colon");
+        expect(toId(":surrounded:")).toBe("surrounded");
+      });
+
+      it("strips diacritics", () => {
+        expect(toId("Ré")).toBe("re");
+        expect(toId("café")).toBe("cafe");
+        expect(toId("naïve")).toBe("naive");
+      });
+
+      it("handles punctuation like colons, parens, brackets", () => {
+        expect(toId("foo(bar)")).toBe("foo-bar");
+        expect(toId("foo[bar]")).toBe("foo-bar");
+        expect(toId("foo: bar (baz)")).toBe("foo-bar-baz");
+      });
+
+      it("preserves hyphens and underscores within the string", () => {
+        expect(toId("CSSOM-VIEW")).toBe("cssom-view");
+        expect(toId("it_contains")).toBe("it_contains");
+      });
+
+      it("preserves digits", () => {
+        expect(toId("dom4")).toBe("dom4");
+        expect(toId("cssom-view-1")).toBe("cssom-view-1");
+      });
+
+      it("skips lowercasing when noLC is true", () => {
+        expect(toId("Hello World", true)).toBe("Hello-World");
+        expect(toId("MixedCase", true)).toBe("MixedCase");
+      });
+
+      it("handles an empty string gracefully", () => {
+        expect(toId("")).toBe("");
+      });
+
+      it("handles strings that are only non-word characters", () => {
+        expect(toId(":::")).toBe("");
+        expect(toId("   ")).toBe("");
+      });
+    });
+
     describe("addId", () => {
       it("addId - creates an id from the content of an elements", () => {
         const { addId } = utils;
