@@ -243,7 +243,8 @@ function stringifyReference(ref) {
   if (ref.authors && ref.authors.length) {
     if (!Array.isArray(ref.authors)) {
       const msg = `The "authors" field in reference "${ref.id || ref.title}" must be an array.`;
-      const hint = `Use \`authors: ["${ref.authors}"]\` instead of \`authors: "${ref.authors}"\`.`;
+      const safeAuthors = JSON.stringify(String(ref.authors));
+      const hint = `Use \`authors: [${safeAuthors}]\` instead of \`authors: ${safeAuthors}\`.`;
       showError(msg, name, { hint });
       ref.authors = [ref.authors];
     }
