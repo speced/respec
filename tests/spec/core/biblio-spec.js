@@ -356,3 +356,29 @@ it("allows custom content in the references section", async () => {
   expect(normRef.textContent).toContain("Normatieve referenties");
   expect(infoRef.textContent).toContain("Informatieve referenties");
 });
+
+it("handles authors as a string instead of array", async () => {
+  const body = `
+    <section id="conformance">
+      <p>[[StringAuthorRef]]</p>
+    </section>
+  `;
+  const localBiblio = {
+    StringAuthorRef: {
+      title: "String Author Test",
+      href: "https://example.com",
+      authors: "Jane Doe",
+    },
+  };
+  const ops = makeStandardOps({ localBiblio }, body);
+  const doc = await makeRSDoc(ops);
+
+  const ref = doc.querySelector("#bib-stringauthorref + dd");
+  expect(ref).toBeTruthy();
+  expect(ref.textContent).toContain("Jane Doe");
+
+  const errors = doc.respec.errors.filter(e => e.message.includes("authors"));
+  expect(errors).toHaveSize(1);
+  expect(errors[0].message).toContain("must be an array");
+  expect(errors[0].hint).toContain("authors:");
+});
