@@ -64,7 +64,7 @@ class Renderer extends marked.Renderer {
   }
 
   /**
-   * @param {string} infoString
+   * @param {string | undefined} infoString
    */
   static parseInfoString(infoString) {
     const str = infoString || "";

@@ -12,7 +12,10 @@
 const { spawn } = require("child_process");
 const http = require("http");
 
-const SAFARIDRIVER_PORT = 4445;
+const SAFARIDRIVER_PORT = Number.parseInt(
+  process.env.SAFARIDRIVER_PORT || "4445",
+  10
+);
 
 /** Simple W3C WebDriver client using Node's built-in http module. */
 function webdriver(method, path, body) {
@@ -87,6 +90,9 @@ function SafariLauncher(logger, baseBrowserDecorator) {
         log.error(
           `safaridriver exited unexpectedly (code=${code} signal=${signal})`
         );
+        sessionId = null;
+        safariDriver = null;
+        this._done("failure");
       }
     });
 
