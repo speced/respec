@@ -17,8 +17,14 @@ const SAFARIDRIVER_PORT = Number.parseInt(
   10
 );
 
-/** Simple W3C WebDriver client using Node's built-in http module. */
-function webdriver(method, path, body) {
+/**
+ * Simple W3C WebDriver client using Node's built-in http module.
+ * @param {string} method
+ * @param {string} path
+ * @param {object} [body]
+ * @param {number} [timeoutMs]
+ */
+function webdriver(method, path, body, timeoutMs = 10000) {
   return new Promise((resolve, reject) => {
     const data = body ? JSON.stringify(body) : null;
     const req = http.request(
@@ -27,7 +33,7 @@ function webdriver(method, path, body) {
         port: SAFARIDRIVER_PORT,
         path,
         method,
-        timeout: 10000,
+        timeout: timeoutMs,
         headers: {
           "Content-Type": "application/json",
           ...(data ? { "Content-Length": Buffer.byteLength(data) } : {}),
@@ -59,6 +65,53 @@ function webdriver(method, path, body) {
     });
     if (data) req.write(data);
     req.end();
+  });
+}
+
+/**
+ * Poll GET /status until safaridriver is accepting connections, or until
+ * maxMs have elapsed.  Retries on ECONNREFUSED (driver not yet listening).
+ * @param {number} [maxMs]
+ */
+function waitForReady(maxMs = 15000) {
+  return new Promise((resolve, reject) => {
+    const deadline = Date.now() + maxMs;
+    const attempt = () => {
+      const req = http.request(
+        {
+          hostname: "localhost",
+          port: SAFARIDRIVER_PORT,
+          path: "/status",
+          method: "GET",
+          timeout: 2000,
+        },
+        res => {
+          res.resume(); // drain the body
+          if (res.statusCode < 400) {
+            resolve();
+          } else if (Date.now() < deadline) {
+            setTimeout(attempt, 250);
+          } else {
+            reject(
+              new Error(
+                `safaridriver not ready after ${maxMs}ms (last status ${res.statusCode})`
+              )
+            );
+          }
+        }
+      );
+      req.on("error", err => {
+        // ECONNREFUSED — driver not listening yet; keep retrying
+        if (Date.now() < deadline) {
+          setTimeout(attempt, 250);
+        } else {
+          reject(new Error(`safaridriver not ready after ${maxMs}ms: ${err.message}`));
+        }
+      });
+      req.on("timeout", () => req.destroy());
+      req.end();
+    };
+    attempt();
   });
 }
 
@@ -100,21 +153,44 @@ function SafariLauncher(logger, baseBrowserDecorator) {
     // process errors or exits early (e.g. port in use, not enabled, invalid args).
     try {
       await new Promise((resolve, reject) => {
-        safariDriver.on("error", err => {
+        let settled = false;
+        const finish = fn => (...args) => {
+          if (settled) return;
+          settled = true;
+          fn(...args);
+        };
+
+        const onError = finish(err => {
+          safariDriver.off("exit", onExit);
           log.error(
-            "safaridriver failed to start — is it installed and enabled? Run: sudo safaridriver --enable",
-            err.message
+            `safaridriver failed to start — is it installed and enabled? Run: sudo safaridriver --enable (${err.message})`
           );
           reject(err);
         });
-        safariDriver.once("exit", (code, signal) => {
+        const onExit = finish((code, signal) => {
+          safariDriver.off("error", onError);
           reject(
             new Error(
-              `safaridriver exited before ready (code=${code} signal=${signal}) — port may be in use or safaridriver not enabled`
+              `safaridriver exited (code=${code} signal=${signal}) — port may be in use or safaridriver not enabled`
             )
           );
         });
-        setTimeout(resolve, 500);
+
+        safariDriver.once("error", onError);
+        safariDriver.once("exit", onExit);
+
+        waitForReady(15000).then(
+          finish(() => {
+            safariDriver.off("error", onError);
+            safariDriver.off("exit", onExit);
+            resolve();
+          }),
+          finish(err => {
+            safariDriver.off("error", onError);
+            safariDriver.off("exit", onExit);
+            reject(err);
+          })
+        );
       });
     } catch {
       await cleanup();
@@ -123,10 +199,14 @@ function SafariLauncher(logger, baseBrowserDecorator) {
     }
 
     try {
-      // Create a W3C WebDriver session (opens a new Safari window)
-      const res = await webdriver("POST", "/session", {
-        capabilities: { alwaysMatch: { browserName: "safari" } },
-      });
+      // Create a W3C WebDriver session (opens a new Safari window).
+      // Use a generous timeout: Safari can be slow to start on cold CI runners.
+      const res = await webdriver(
+        "POST",
+        "/session",
+        { capabilities: { alwaysMatch: { browserName: "safari" } } },
+        30000
+      );
       sessionId = res?.value?.sessionId;
       if (!sessionId) throw new Error("No sessionId from safaridriver");
 
