@@ -141,6 +141,8 @@ function inlineXrefMatches(matched, text) {
   // slices "{{" at the beginning and "}}" at the end
   const ref = norm(matched.slice(2, -2));
   if (ref.startsWith("\\")) {
+    // Remove the escape backslash at position 2 (right after "{{") precisely,
+    // instead of using replace() which could remove an unintended backslash.
     return matched.slice(0, 2) + matched.slice(3);
   }
 
