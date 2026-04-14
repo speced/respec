@@ -24,7 +24,17 @@ export function pub(topic, detail) {
   }
   // If this is an iframe, postMessage parent (used in testing).
   const args = String(JSON.stringify(detail?.stack || detail));
-  window.parent.postMessage({ topic, args }, window.parent.location.origin);
+  // Safari can throw SecurityError accessing parent.location.origin from
+  // srcdoc iframes (treated as opaque origin). Fall back to "*" which is
+  // acceptable here since these messages contain no sensitive data and are
+  // only used in the test harness.
+  let targetOrigin;
+  try {
+    targetOrigin = window.parent.location.origin;
+  } catch {
+    targetOrigin = "*";
+  }
+  window.parent.postMessage({ topic, args }, targetOrigin);
 }
 
 /**

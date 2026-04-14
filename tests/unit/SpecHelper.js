@@ -80,26 +80,33 @@ function getDoc(html) {
  * @return {Promise<Document>}
  */
 async function waitReady(iframe) {
-  const timeoutId = setTimeout(() => {
-    throw new Error(`Timed out waiting for document.respec.ready.`);
-  }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
-
   const doc = iframe.contentDocument;
   if (doc.respec) {
     await doc.respec.ready;
-    clearTimeout(timeoutId);
     return doc;
   }
 
-  return await new Promise(res => {
-    window.addEventListener("message", function msgHandler(ev) {
-      if (!doc || !ev.source || doc !== ev.source.document) return;
+  return await new Promise((res, reject) => {
+    // Use reject() rather than throw so Safari doesn't see an unhandled
+    // exception from inside setTimeout (which it wraps as a rejected Promise
+    // with undefined, crashing jasmine-core's formatProperties).
+    const timeoutId = setTimeout(() => {
+      window.removeEventListener("message", msgHandler);
+      reject(new Error("Timed out waiting for document.respec.ready."));
+    }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
+
+    function msgHandler(ev) {
+      // Compare Window references directly instead of ev.source.document:
+      // in Safari, srcdoc iframes may have an opaque origin, making
+      // ev.source.document throw a SecurityError.
+      if (!ev.source || ev.source !== iframe.contentWindow) return;
       if (ev.data.topic === "end-all") {
         window.removeEventListener("message", msgHandler);
         clearTimeout(timeoutId);
         res(doc);
       }
-    });
+    }
+    window.addEventListener("message", msgHandler);
   });
 }
 
