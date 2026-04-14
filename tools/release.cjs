@@ -37,7 +37,11 @@ const loadOps = {
 
 /** @param {string} input */
 function splitArgs(input) {
-  return input.match(/(?:[^\s"]+|"[^"]*")+/g)?.map(part => part.replace(/^"|"$/g, "")) ?? [];
+  return (
+    input
+      .match(/(?:[^\s"]+|"[^"]*")+/g)
+      ?.map(part => part.replace(/^"|"$/g, "")) ?? []
+  );
 }
 
 /** @param {string} program */
