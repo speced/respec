@@ -35,6 +35,7 @@ const loadOps = {
   delay: 100,
 };
 
+/** @param {string} input */
 function splitArgs(input) {
   return input.match(/(?:[^\s"]+|"[^"]*")+/g)?.map(part => part.replace(/^"|"$/g, "")) ?? [];
 }
