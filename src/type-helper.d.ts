@@ -387,6 +387,18 @@ interface Conf {
   l10n?: Record<string, string>;
 }
 
+/**
+ * Configuration after all defaults have been applied (i.e., after a
+ * profile's `run()` has called `Object.assign(conf, defaults)`).
+ * Fields that are guaranteed to be set by defaults — `license`, `logos`,
+ * `specStatus`, and `licenseInfo` — are narrowed to their non-optional types.
+ *
+ * Use this type only for helpers called *after* defaults have been merged
+ * into `conf`; pass plain `Conf` to `run()` entry points.
+ */
+type NormalizedConf = Conf &
+  Required<Pick<Conf, "license" | "logos" | "specStatus" | "licenseInfo">>;
+
 type GroupDetails = {
   wgId: number;
   wg: string;

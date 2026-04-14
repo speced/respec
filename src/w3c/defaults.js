@@ -80,11 +80,11 @@ export function run(conf) {
   }
 
   validateStatusForGroup(conf);
-  processLogos(conf);
+  processLogos(/** @type {NormalizedConf} */ (conf));
 }
 
 /**
- * @param {Conf} conf
+ * @param {NormalizedConf} conf
  */
 function processLogos(conf) {
   // Primarily include the W3C logo and license for W3C Recommendation track
@@ -96,18 +96,14 @@ function processLogos(conf) {
     ...W3CNotes,
     ...tagStatus,
     "ED",
-    // @ts-expect-error -- specStatus may be undefined but Array.includes handles it
   ].includes(specStatus);
   const inWorkingGroup = wg && wg.length && isWgStatus;
   // Member submissions don't need to be in a Working Group.
-  // @ts-expect-error -- specStatus may be undefined but Array.includes handles it
   const doesNotNeedWG = ["Member-SUBM"].includes(specStatus);
   const canShowW3CLogo = inWorkingGroup || doesNotNeedWG;
   if (canShowW3CLogo) {
-    // @ts-expect-error -- conf.logos is always set by defaults before this runs
     conf.logos.unshift(w3cLogo);
     if (specStatus === "Member-SUBM") {
-      // @ts-expect-error -- conf.logos is always set by defaults before this runs
       conf.logos.push(memSubmissionLogo);
     }
   }
@@ -185,8 +181,7 @@ function validateStatusForGroup(conf) {
     default:
       if (
         !conf.wgId &&
-        // @ts-expect-error -- specStatus may be undefined but Array.includes handles it
-        !["unofficial", "base", "UD", "Member-SUBM"].includes(conf.specStatus)
+        !["unofficial", "base", "UD", "Member-SUBM"].includes(specStatus)
       ) {
         const msg =
           "Document is not associated with a [W3C group](https://respec.org/w3c/groups/). Defaulting to 'base' status.";
