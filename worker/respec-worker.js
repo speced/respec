@@ -1,3 +1,4 @@
+// @ts-check
 // ReSpec Worker v1.0.0
 "use strict";
 // hljs is either inlined by core/worker.js (preferred) or loaded below via
