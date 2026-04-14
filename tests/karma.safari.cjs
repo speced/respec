@@ -105,7 +105,9 @@ function waitForReady(maxMs = 15000) {
         if (Date.now() < deadline) {
           setTimeout(attempt, 250);
         } else {
-          reject(new Error(`safaridriver not ready after ${maxMs}ms: ${err.message}`));
+          reject(
+            new Error(`safaridriver not ready after ${maxMs}ms: ${err.message}`)
+          );
         }
       });
       req.on("timeout", () => req.destroy());
@@ -154,11 +156,13 @@ function SafariLauncher(logger, baseBrowserDecorator) {
     try {
       await new Promise((resolve, reject) => {
         let settled = false;
-        const finish = fn => (...args) => {
-          if (settled) return;
-          settled = true;
-          fn(...args);
-        };
+        const finish =
+          fn =>
+          (...args) => {
+            if (settled) return;
+            settled = true;
+            fn(...args);
+          };
 
         const onError = finish(err => {
           safariDriver.off("exit", onExit);
