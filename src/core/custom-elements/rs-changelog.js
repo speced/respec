@@ -76,7 +76,7 @@ async function fetchCommits(from, to, filter, repo, path) {
     }
     const fullName = repo || gh.fullName;
     const url = new URL("commits", `${gh.apiBase}/${fullName}/`);
-    url.searchParams.set("from", from ?? "");
+    if (from) url.searchParams.set("from", from);
     url.searchParams.set("to", to);
     if (path) {
       url.searchParams.set("path", path);
