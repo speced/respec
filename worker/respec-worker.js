@@ -24,14 +24,21 @@ self.addEventListener("message", ({ data: originalData }) => {
         const isJavaScriptFile = parsedURL.pathname.endsWith(".js");
         const isValidPropName = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(propName);
 
-        if (!isAllowedProtocol || !isSameOrigin || !isJavaScriptFile || !isValidPropName) {
+        if (
+          !isAllowedProtocol ||
+          !isSameOrigin ||
+          !isJavaScriptFile ||
+          !isValidPropName
+        ) {
           throw new Error("Invalid language module request");
         }
 
         importScripts(parsedURL.href);
 
         if (typeof self[propName] !== "function") {
-          throw new Error("Loaded language module did not expose a valid language definition");
+          throw new Error(
+            "Loaded language module did not expose a valid language definition"
+          );
         }
 
         self.hljs.registerLanguage(lang, self[propName]);
