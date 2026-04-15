@@ -1,6 +1,12 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  getExportedDoc,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+import { prepare } from "../../../src/core/implementation-status.js";
 
 describe("Core — Implementation Status", () => {
   afterAll(flushIframes);
@@ -232,26 +238,41 @@ describe("Core — Implementation Status", () => {
     expect(dd.querySelector(".baseline-browsers")).toBeTruthy();
   });
 
-  it("accepts string shorthand config for explicit feature ID", async () => {
-    const ops = makeStandardOps({
-      implementationStatus: "test-feature",
-    });
-    const doc = await makeRSDoc(ops);
-    const { implementationStatus } = doc.defaultView.respecConfig;
-
+  it("accepts string shorthand config for explicit feature ID", () => {
+    const conf = { implementationStatus: "test-feature" };
+    prepare(conf);
+    const { implementationStatus } = conf;
     expect(implementationStatus.feature).toBe("test-feature");
     expect(implementationStatus.removeOnSave).toBeFalse();
+    document.getElementById("baseline-stylesheet")?.remove();
   });
 
-  it("accepts boolean true config for auto-detect", async () => {
-    const ops = makeStandardOps({
-      edDraftURI: "https://w3c.github.io/test-spec/",
-      implementationStatus: true,
-    });
-    const doc = await makeRSDoc(ops);
-    const { implementationStatus } = doc.defaultView.respecConfig;
-
+  it("accepts boolean true config for auto-detect", () => {
+    const conf = { implementationStatus: true };
+    prepare(conf);
+    const { implementationStatus } = conf;
     expect(implementationStatus.feature).toBeNull();
     expect(implementationStatus.removeOnSave).toBeFalse();
+    document.getElementById("baseline-stylesheet")?.remove();
+  });
+
+  it("exports static feature link when removeOnSave is enabled", async () => {
+    const ops = makeStandardOps({
+      implementationStatus: {
+        feature: "test-feature",
+        removeOnSave: true,
+        apiURL,
+      },
+    });
+    const doc = await makeRSDoc(ops);
+    const exportedDoc = await getExportedDoc(doc);
+    const exportedStatus = exportedDoc.querySelector(".baseline-status");
+    const exportedLink = exportedStatus.querySelector("a");
+
+    expect(exportedStatus.querySelector(".baseline-browsers")).toBeNull();
+    expect(exportedLink.getAttribute("href")).toContain(
+      "webstatus.dev/features/test-feature"
+    );
+    expect(exportedLink.textContent).toContain("Web Platform Status");
   });
 });
