@@ -115,9 +115,7 @@ const SUPPORT_ICONS = {
 
 const BROWSER_GROUPS = [...BROWSERS.entries()].reduce(
   (groups, [browserId, { engine }]) => {
-    const browserIds = groups.get(engine) || [];
-    browserIds.push(browserId);
-    groups.set(engine, browserIds);
+    groups.set(engine, [...(groups.get(engine) || []), browserId]);
     return groups;
   },
   new Map()
