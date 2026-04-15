@@ -159,7 +159,8 @@ function normalizeConfig(xref) {
     }
     default: {
       const msg = `Invalid value for \`xref\` configuration option. Received: "${xref}".`;
-      showError(msg, name);
+      const hint = docLink`Expected: \`true\`, a profile name (e.g. \`"web-platform"\`), an array of spec shortnames (e.g. \`["FETCH", "DOM"]\`), or an object with \`url\`, \`specs\`, or \`profile\` properties. See ${"[xref]"}.`;
+      showError(msg, name, { hint });
     }
   }
   return config;
