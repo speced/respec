@@ -1802,6 +1802,10 @@ describe("W3C — Headers", () => {
         specStatus: "WD",
         wg: "Test Working Group",
         wgURI: "https://example.com/wg",
+        // wgId must be truthy so defaults.js keeps specStatus as "WD"
+        // (without it, defaults.js changes specStatus to "base" which
+        // uses renderIsNoTrack instead of renderDeliverer)
+        wgId: 123456,
       });
       const doc = await makeRSDoc(opts);
       const sotd = doc.querySelector("#sotd");
