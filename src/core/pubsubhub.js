@@ -34,7 +34,14 @@ export function pub(topic, detail) {
   } catch {
     targetOrigin = "*";
   }
-  window.parent.postMessage({ topic, args }, targetOrigin);
+  try {
+    window.parent.postMessage({ topic, args }, targetOrigin);
+  } catch {
+    // Ignore: postMessage can throw in Safari when the srcdoc iframe's
+    // window.parent is not accessible (e.g., opaque-origin restrictions).
+    // The local CustomEvent dispatch above already resolved doc.respec.ready,
+    // so tests that poll doc.respec.ready will still complete correctly.
+  }
 }
 
 /**

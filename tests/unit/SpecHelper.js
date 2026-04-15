@@ -1,5 +1,6 @@
 "use strict";
 const iframes = [];
+const POLL_INTERVAL_MS = 100;
 
 /**
  * Create a doc for unit tests.
@@ -41,9 +42,13 @@ export function makePluginDoc(
               if (document.respec) {
                 document.respec.errors.push(err);
               } else {
-                Object.defineProperty(document, "respec", {
-                  value: { ready: Promise.reject(err) },
-                });
+                // Add a void .catch() so Safari doesn't propagate this
+                // rejected Promise as an unhandled rejection to the parent
+                // frame (where it arrives with reason=undefined, crashing
+                // jasmine-core's formatProperties).
+                const ready = Promise.reject(err);
+                ready.catch(() => {});
+                Object.defineProperty(document, "respec", { value: { ready } });
               }
             }
           }
@@ -81,29 +86,54 @@ function getDoc(html) {
  */
 async function waitReady(iframe) {
   const doc = iframe.contentDocument;
-  if (doc.respec) {
+  if (doc && doc.respec) {
     await doc.respec.ready;
     return doc;
   }
 
-  return await new Promise((res, reject) => {
-    // Use reject() rather than throw so Safari doesn't see an unhandled
-    // exception from inside setTimeout (which it wraps as a rejected Promise
-    // with undefined, crashing jasmine-core's formatProperties).
-    const timeoutId = setTimeout(() => {
+  return await new Promise((resolve, reject) => {
+    let settled = false;
+
+    // Settle exactly once: cancel all pending timers/listeners, then call fn.
+    function settle(fn) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      clearInterval(pollId);
       window.removeEventListener("message", msgHandler);
-      reject(new Error("Timed out waiting for document.respec.ready."));
-    }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
+      fn();
+    }
+
+    const timeoutId = setTimeout(
+      () =>
+        settle(() =>
+          reject(new Error("Timed out waiting for document.respec.ready."))
+        ),
+      jasmine.DEFAULT_TIMEOUT_INTERVAL
+    );
+
+    // Polling fallback: in Safari, postMessage from srcdoc iframes may not be
+    // received because ev.source !== iframe.contentWindow (different proxy
+    // objects for opaque-origin frames). Poll doc.respec.ready directly so
+    // tests complete without relying solely on postMessage.
+    const pollId = setInterval(() => {
+      try {
+        if (!doc || !doc.respec) return;
+        settle(() => {
+          doc.respec.ready.then(() => resolve(doc), reject);
+        });
+      } catch {
+        // Cross-origin access denied; rely on postMessage path.
+      }
+    }, POLL_INTERVAL_MS);
 
     function msgHandler(ev) {
-      // Compare Window references directly instead of ev.source.document:
-      // in Safari, srcdoc iframes may have an opaque origin, making
-      // ev.source.document throw a SecurityError.
-      if (!ev.source || ev.source !== iframe.contentWindow) return;
+      // In Safari, ev.source for opaque-origin srcdoc iframes may be null or
+      // may not === iframe.contentWindow (different WindowProxy wrappers).
+      // Accept null sources; reject messages that are clearly from another window.
+      if (ev.source != null && ev.source !== iframe.contentWindow) return;
       if (ev.data.topic === "end-all") {
-        window.removeEventListener("message", msgHandler);
-        clearTimeout(timeoutId);
-        res(doc);
+        settle(() => resolve(doc));
       }
     }
     window.addEventListener("message", msgHandler);
