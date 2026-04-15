@@ -166,7 +166,9 @@ function browserCellRenderer(feature) {
     const browserName = `${name}${versionLong}`;
     const supportLevel = statToText.get(caniuse);
     const textVersion = version ?? "—";
-    const versionSuffix = version ? ` version ${version}` : " (version unknown)";
+    const versionSuffix = version
+      ? ` version ${version}`
+      : " (version unknown)";
     const ariaLabel = `${feature} is ${supportLevel} since ${name}${versionSuffix} on ${type}.`;
     const cssClass = `caniuse-cell ${caniuse}`;
     const title = capitalize(`${supportLevel} since ${browserName}.`);
