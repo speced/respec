@@ -11,6 +11,10 @@ import { prepare } from "../../../src/core/implementation-status.js";
 describe("Core — Implementation Status", () => {
   afterAll(flushIframes);
   const apiURL = `${window.location.origin}/tests/data/baseline/data.json`;
+  function cleanupBaselineStylesheet() {
+    document.getElementById("baseline-stylesheet")?.remove();
+    expect(document.getElementById("baseline-stylesheet")).toBeNull();
+  }
 
   it("does nothing if implementationStatus is not enabled", async () => {
     const ops = makeStandardOps();
@@ -244,8 +248,7 @@ describe("Core — Implementation Status", () => {
     const { implementationStatus } = conf;
     expect(implementationStatus.feature).toBe("test-feature");
     expect(implementationStatus.removeOnSave).toBeFalse();
-    document.getElementById("baseline-stylesheet")?.remove();
-    expect(document.getElementById("baseline-stylesheet")).toBeNull();
+    cleanupBaselineStylesheet();
   });
 
   it("accepts boolean true config for auto-detect", () => {
@@ -254,8 +257,7 @@ describe("Core — Implementation Status", () => {
     const { implementationStatus } = conf;
     expect(implementationStatus.feature).toBeNull();
     expect(implementationStatus.removeOnSave).toBeFalse();
-    document.getElementById("baseline-stylesheet")?.remove();
-    expect(document.getElementById("baseline-stylesheet")).toBeNull();
+    cleanupBaselineStylesheet();
   });
 
   it("exports static feature link when removeOnSave is enabled", async () => {
