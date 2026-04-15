@@ -397,7 +397,9 @@ export async function run(conf) {
   if (conf.latestVersion !== null) {
     conf.latestVersion = conf.latestVersion
       ? w3Url(conf.latestVersion)
-      : w3Url(`${pubSpace}/${conf.shortName}/`);
+      : pubSpace
+        ? w3Url(`${pubSpace}/${conf.shortName}/`)
+        : "";
   }
 
   if (conf.latestVersion) validateIfAllowedOnTR(conf);

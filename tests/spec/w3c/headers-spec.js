@@ -1602,19 +1602,18 @@ describe("W3C — Headers", () => {
         });
         const doc = await makeRSDoc(ops);
         const { latestVersion } = doc.defaultView.respecConfig;
-        // Must have a latestVersion URL, but it must NOT be in the /TR/ space
-        expect(latestVersion).toBeTruthy();
+        // No-track specs without a publication space must not get any URL
         expect(latestVersion).not.toContain("/TR/");
-        // Also confirm the rendered link in the header matches
+        // Also confirm the rendered header shows "none" (no clickable link)
         const terms = [...doc.querySelectorAll(".head dt")];
         const latestVersionDt = terms.find(
           el => el.textContent.trim() === "Latest published version:"
         );
         expect(latestVersionDt).toBeTruthy();
-        const latestVersionLink =
-          latestVersionDt.nextElementSibling.querySelector("a");
-        expect(latestVersionLink).toBeTruthy();
-        expect(latestVersionLink.href).not.toContain("/TR/");
+        const latestVersionDd = latestVersionDt.nextElementSibling;
+        const latestVersionLink = latestVersionDd.querySelector("a");
+        expect(latestVersionLink).toBeNull();
+        expect(latestVersionDd.textContent.trim()).toBe("none");
       });
     }
   });
