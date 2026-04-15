@@ -245,6 +245,7 @@ describe("Core — Implementation Status", () => {
     expect(implementationStatus.feature).toBe("test-feature");
     expect(implementationStatus.removeOnSave).toBeFalse();
     document.getElementById("baseline-stylesheet")?.remove();
+    expect(document.getElementById("baseline-stylesheet")).toBeNull();
   });
 
   it("accepts boolean true config for auto-detect", () => {
@@ -254,6 +255,7 @@ describe("Core — Implementation Status", () => {
     expect(implementationStatus.feature).toBeNull();
     expect(implementationStatus.removeOnSave).toBeFalse();
     document.getElementById("baseline-stylesheet")?.remove();
+    expect(document.getElementById("baseline-stylesheet")).toBeNull();
   });
 
   it("exports static feature link when removeOnSave is enabled", async () => {
