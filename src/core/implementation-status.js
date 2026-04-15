@@ -14,11 +14,11 @@ export const name = "core/implementation-status";
 const DATA_URL = "https://unpkg.com/web-features/data.json";
 const LOGO_BASE = "https://www.w3.org/assets/logos/browser-logos";
 
-const ENGINES = new Map([
-  ["chrome", "Chrome"],
-  ["edge", "Edge"],
-  ["firefox", "Firefox"],
-  ["safari", "Safari"],
+const BROWSERS = new Map([
+  ["chrome", { name: "Chrome", engine: "chromium" }],
+  ["edge", { name: "Edge", engine: "chromium" }],
+  ["firefox", { name: "Firefox", engine: "gecko" }],
+  ["safari", { name: "Safari", engine: "webkit" }],
 ]);
 
 /** @type {Map<string|false, string>} */
@@ -113,11 +113,15 @@ const SUPPORT_ICONS = {
     </svg>`,
 };
 
-const ENGINE_GROUPS = [
-  { engines: ["chrome", "edge"] },
-  { engines: ["firefox"] },
-  { engines: ["safari"] },
-];
+const BROWSER_GROUPS = [...BROWSERS.entries()].reduce(
+  (groups, [browserId, { engine }]) => {
+    const browserIds = groups.get(engine) || [];
+    browserIds.push(browserId);
+    groups.set(engine, browserIds);
+    return groups;
+  },
+  new Map()
+);
 
 function fallbackResult() {
   return {
@@ -238,18 +242,15 @@ function findFeatures(data, conf, options) {
   const specUrls = getSpecUrls(conf);
   if (!specUrls.length) return [];
 
-  const matched = [];
-  for (const [id, feature] of Object.entries(features)) {
-    const specs = [].concat(feature.spec || []);
-    for (const specUrl of specs) {
-      const normalizedFeatureUrl = normalizeUrl(specUrl);
-      if (specUrls.some(url => normalizedFeatureUrl.startsWith(url))) {
-        matched.push({ id, ...feature });
-        break;
-      }
-    }
-  }
-  return matched;
+  return Object.entries(features)
+    .filter(([, feature]) => {
+      const specs = [].concat(feature.spec || []);
+      return specs.some(specUrl => {
+        const normalizedFeatureUrl = normalizeUrl(specUrl);
+        return specUrls.some(url => normalizedFeatureUrl.startsWith(url));
+      });
+    })
+    .map(([id, feature]) => ({ id, ...feature }));
 }
 
 function getSpecUrls(conf) {
@@ -286,7 +287,7 @@ function computeAggregate(features) {
 
 function aggregateSupport(features) {
   const browsers = new Map();
-  for (const browserId of ENGINES.keys()) {
+  for (const browserId of BROWSERS.keys()) {
     const supported = features.every(
       f => f.status?.support?.[browserId] != null
     );
@@ -302,9 +303,9 @@ function getLogoSrc(browserId) {
 function renderBadge(baseline, statusText, support, features) {
   const icon = BASELINE_ICONS.get(baseline)();
 
-  const pills = ENGINE_GROUPS.map(({ engines }) => {
-    const items = engines.map(browserId => {
-      const browserName = ENGINES.get(browserId);
+  const pills = [...BROWSER_GROUPS.values()].map(browserIds => {
+    const items = browserIds.map(browserId => {
+      const browserName = BROWSERS.get(browserId).name;
       const isSupported = support.get(browserId);
       const title = isSupported
         ? `${browserName}: Supported`
@@ -329,7 +330,7 @@ function renderBadge(baseline, statusText, support, features) {
       </span>`;
     });
 
-    const allSupported = engines.every(id => support.get(id));
+    const allSupported = browserIds.every(id => support.get(id));
     const pillCls = allSupported
       ? "baseline-pill supported"
       : "baseline-pill unsupported";
