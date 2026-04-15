@@ -212,8 +212,10 @@ export async function run() {
     const citeDetails = citeDetailsMap.get(elem);
     const linkProps = await getLinkProps(citeDetails);
     if (linkProps) {
-      // Use alias text (data-lt) if present
-      if (elem.dataset.lt) {
+      // Use alias text (data-lt) if present and element is empty
+      // (only applies to [[[...]]] triple-bracket expansions, not IDL references
+      // which also use data-lt for lookup terms but have child content)
+      if (elem.dataset.lt && elem.textContent === "") {
         elem.textContent = elem.dataset.lt;
         delete elem.dataset.lt;
       }
