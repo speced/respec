@@ -6,9 +6,7 @@
     <script class='remove' src='/builds/respec-w3c.js'></script>
     <script class='remove'>
       async function loadSolidity() {
-        const worker = await new Promise(resolve => {
-          require(["core/worker"], ({ worker }) => resolve(worker));
-        });
+        const worker = await window.respecWorker;
         const action = "highlight-load-lang";
         const langURL = new URL("../../support-files/hljs-testlang.js", window.location).href;
         const propName = "testLang";

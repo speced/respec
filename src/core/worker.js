@@ -76,3 +76,7 @@ async function createWorker() {
 }
 
 export const workerPromise = createWorker();
+
+// Expose the worker globally so test fixtures and external scripts can access
+// the ReSpec worker without going through the AMD require shim.
+window.respecWorker = workerPromise;
