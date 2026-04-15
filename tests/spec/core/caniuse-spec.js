@@ -116,6 +116,12 @@ describe("Core — Can I Use", () => {
     expect(firefoxVersion.textContent).toBe("66");
     expect(safariVersion.textContent).toBe("—");
 
+    // aria-label for no-version cell uses "(version unknown)" to match visible "—"
+    const safariCell = safariVersion.closest(".caniuse-cell");
+    expect(safariCell.getAttribute("aria-label")).toBe(
+      "FEATURE is unknown support since iOS Safari (version unknown) on mobile."
+    );
+
     // More info link
     const moreInfoLink = cells.item(3);
     expect(moreInfoLink.href).toBe("https://caniuse.com/FEATURE");

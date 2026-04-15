@@ -165,10 +165,11 @@ function browserCellRenderer(feature) {
     const versionLong = version ? ` version ${version}` : "";
     const browserName = `${name}${versionLong}`;
     const supportLevel = statToText.get(caniuse);
-    const ariaLabel = `${feature} is ${supportLevel} since ${browserName} on ${type}.`;
+    const textVersion = version ?? "—";
+    const versionSuffix = version ? ` version ${version}` : " (version unknown)";
+    const ariaLabel = `${feature} is ${supportLevel} since ${name}${versionSuffix} on ${type}.`;
     const cssClass = `caniuse-cell ${caniuse}`;
     const title = capitalize(`${supportLevel} since ${browserName}.`);
-    const textVersion = version ? version : "—";
     const src = getLogoSrc(browserId);
     const result = html`
       <div
