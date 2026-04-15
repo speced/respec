@@ -140,13 +140,15 @@ function SafariLauncher(logger, baseBrowserDecorator) {
     safariDriver.stderr.on("data", d =>
       log.debug("safaridriver:", d.toString().trim())
     );
-    safariDriver.on("exit", (code, signal) => {
+    safariDriver.on("exit", async (code, signal) => {
       if (sessionId) {
         log.error(
           `safaridriver exited unexpectedly (code=${code} signal=${signal})`
         );
-        sessionId = null;
+        // Null the process first so cleanup() doesn't try to kill an
+        // already-dead process, then run full cleanup to tear down the session.
         safariDriver = null;
+        await cleanup();
         this._done("failure");
       }
     });
