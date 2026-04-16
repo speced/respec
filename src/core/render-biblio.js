@@ -2,11 +2,16 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import { addId, getIntlData, showError } from "./utils.js";
+import { addId, getIntlData, showError, toId } from "./utils.js";
 import { biblio } from "./biblio.js";
 import { html } from "./import-maps.js";
 
 export const name = "core/render-biblio";
+
+/** @param {string} ref */
+function bibRefId(ref) {
+  return `bib-${toId(ref)}`;
+}
 
 const localizationStrings = {
   en: {
@@ -191,7 +196,7 @@ function getUniqueRefs(refs) {
  */
 export function renderInlineCitation(ref, linkText) {
   const key = ref.replace(/^(!|\?)/, "");
-  const href = `#bib-${key.toLowerCase()}`;
+  const href = `#${bibRefId(key)}`;
   const text = linkText || key;
   const elem = html`<cite
     ><a class="bibref" href="${href}" data-link-type="biblio">${text}</a></cite
@@ -205,7 +210,7 @@ export function renderInlineCitation(ref, linkText) {
  */
 function showRef(reference) {
   const { ref, refcontent } = reference;
-  const refId = `bib-${ref.toLowerCase()}`;
+  const refId = bibRefId(ref);
   const result = html`
     <dt id="${refId}">[${ref}]</dt>
     <dd>
@@ -270,10 +275,10 @@ function getAliases(refs) {
 function decorateInlineReference(refs, aliases) {
   refs
     .map(({ ref, refcontent }) => {
-      const refUrl = `#bib-${ref.toLowerCase()}`;
+      const refUrl = `#${bibRefId(ref)}`;
       const selectors = aliases
         .get(refcontent.id)
-        .map(alias => `a.bibref[href="#bib-${alias.toLowerCase()}"]`)
+        .map(alias => `a.bibref[href="#${bibRefId(alias)}"]`)
         .join(",");
       const elems = document.querySelectorAll(selectors);
       return { refUrl, elems, refcontent };
@@ -294,7 +299,7 @@ function warnBadRefs(refs) {
   for (const { ref } of refs) {
     /** @type {NodeListOf<HTMLElement>} */
     const links = document.querySelectorAll(
-      `a.bibref[href="#bib-${ref.toLowerCase()}"]`
+      `a.bibref[href="#${bibRefId(ref)}"]`
     );
     const elements = [...links].filter(
       ({ textContent: t }) => t.toLowerCase() === ref.toLowerCase()
