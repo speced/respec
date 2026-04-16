@@ -397,7 +397,9 @@ export async function run(conf) {
   if (conf.latestVersion !== null) {
     conf.latestVersion = conf.latestVersion
       ? w3Url(conf.latestVersion)
-      : w3Url(`${pubSpace}/${conf.shortName}/`);
+      : pubSpace
+        ? w3Url(`${pubSpace}/${conf.shortName}/`)
+        : "";
   }
 
   if (conf.latestVersion) validateIfAllowedOnTR(conf);
@@ -650,6 +652,9 @@ function validateIfAllowedOnTR(conf) {
 
 function derivePubSpace(conf) {
   const { specStatus, group } = conf;
+  if (conf.isNoTrack && !conf.isCGBG && !conf.isTagFinding) {
+    return "";
+  }
   if (trStatus.includes(specStatus) || conf.groupType === "wg") {
     return `/TR`;
   }
