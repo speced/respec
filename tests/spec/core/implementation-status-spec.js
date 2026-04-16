@@ -130,8 +130,13 @@ describe("Core — Implementation Status", () => {
     });
     const doc = await makeRSDoc(ops);
     const dt = doc.querySelector(".baseline-title");
+    const warnings = doc.respec.warnings.filter(
+      warning => warning.plugin === "core/implementation-status"
+    );
 
     expect(dt).toBeTruthy();
+    expect(warnings).toHaveSize(1);
+    expect(warnings[0].hint).toContain("web-features/blob/main/data.json");
   });
 
   it("defaults removeOnSave to false", async () => {
@@ -171,14 +176,12 @@ describe("Core — Implementation Status", () => {
     });
     const doc = await makeRSDoc(ops);
     const pills = doc.querySelectorAll(".baseline-pill");
+    const browsersPerPill = [...pills].map(
+      pill => pill.querySelectorAll(".baseline-browser").length
+    );
 
-    // 3 pills: Chromium (Chrome+Edge), Gecko (Firefox), WebKit (Safari)
     expect(pills.length).toBe(3);
-    // First pill has 2 browsers (Chrome + Edge)
-    expect(pills[0].querySelectorAll(".baseline-browser").length).toBe(2);
-    // Other pills have 1 each
-    expect(pills[1].querySelectorAll(".baseline-browser").length).toBe(1);
-    expect(pills[2].querySelectorAll(".baseline-browser").length).toBe(1);
+    expect(browsersPerPill).toEqual([2, 1, 1]);
   });
 
   it("renders baseline icon with accessible title", async () => {
@@ -193,6 +196,7 @@ describe("Core — Implementation Status", () => {
 
     expect(icon).toBeTruthy();
     expect(icon.getAttribute("role")).toBe("img");
+    expect(icon.getAttribute("aria-hidden")).toBe("true");
     const title = icon.querySelector("title");
     expect(title).toBeTruthy();
     expect(title.textContent).toBe("Limited availability");

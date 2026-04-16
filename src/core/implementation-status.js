@@ -206,7 +206,10 @@ async function fetchAndRender(conf, options) {
     const msg = options.feature
       ? `No Baseline data found for feature "${options.feature}".`
       : "No Baseline data found for this specification.";
-    showWarning(msg, name);
+    const hint = options.feature
+      ? `Find feature IDs in [web-features data](https://github.com/web-platform-dx/web-features/blob/main/data.json).`
+      : undefined;
+    showWarning(msg, name, { hint });
     return fallbackResult();
   }
 
@@ -300,6 +303,7 @@ function getLogoSrc(browserId) {
 
 function renderBadge(baseline, statusText, support, features) {
   const icon = BASELINE_ICONS.get(baseline)();
+  icon.setAttribute("aria-hidden", "true");
 
   const pills = [...BROWSER_GROUPS.values()].map(browserIds => {
     const items = browserIds.map(browserId => {
