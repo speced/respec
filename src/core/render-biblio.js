@@ -282,8 +282,7 @@ function decorateInlineReference(refs, aliases) {
   refs
     .map(({ ref, refcontent }) => {
       const refUrl = `#${bibRefId(ref)}`;
-      const selectors = aliases
-        .get(refcontent.id)
+      const selectors = (aliases.get(refcontent.id ?? "") ?? [])
         .map(alias => `a.bibref[href="#${bibRefId(alias)}"]`)
         .join(",");
       const elems = document.querySelectorAll(selectors);
