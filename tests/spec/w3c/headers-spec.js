@@ -1592,6 +1592,30 @@ describe("W3C — Headers", () => {
         );
       });
     }
+
+    for (const specStatus of ["unofficial", "MO", "base"]) {
+      it(`does not auto-generate /TR/ URL for no-track "${specStatus}" even with WG group`, async () => {
+        const ops = makeStandardOps({
+          shortName: "some-report",
+          specStatus,
+          group: "wg/json-ld",
+        });
+        const doc = await makeRSDoc(ops);
+        const { latestVersion } = doc.defaultView.respecConfig;
+        // No-track specs without a publication space must not get any URL
+        expect(latestVersion).not.toContain("/TR/");
+        // Also confirm the rendered header shows "none" (no clickable link)
+        const terms = [...doc.querySelectorAll(".head dt")];
+        const latestVersionDt = terms.find(
+          el => el.textContent.trim() === "Latest published version:"
+        );
+        expect(latestVersionDt).toBeTruthy();
+        const latestVersionDd = latestVersionDt.nextElementSibling;
+        const latestVersionLink = latestVersionDd.querySelector("a");
+        expect(latestVersionLink).toBeNull();
+        expect(latestVersionDd.textContent.trim()).toBe("none");
+      });
+    }
   });
 
   describe("prevED", () => {
