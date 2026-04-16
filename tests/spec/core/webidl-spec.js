@@ -1790,4 +1790,24 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(errors).toHaveSize(1);
     expect(errors[0].details).toContain("Promise&lt;void&gt;");
   });
+
+  it("does not set data-dfn-for on top-level IDL entities inside a data-dfn-for section (prose dfns)", () => {
+    const section = doc.querySelector("#top-level-no-dfn-for");
+    const dictDfn = section.querySelector("dfn[data-dfn-type='dictionary']");
+    const enumDfn = section.querySelector("dfn[data-dfn-type='enum']");
+    expect(dictDfn).toBeTruthy();
+    expect(enumDfn).toBeTruthy();
+    expect(dictDfn.dataset.dfnFor).toBe("");
+    expect(enumDfn.dataset.dfnFor).toBe("");
+  });
+
+  it("does not set data-dfn-for on top-level IDL entities inside a data-dfn-for section (IDL-generated dfns)", () => {
+    const section = doc.querySelector("#top-level-idl-dfn-no-dfn-for");
+    const dictDfn = section.querySelector("dfn[data-dfn-type='dictionary']");
+    const enumDfn = section.querySelector("dfn[data-dfn-type='enum']");
+    expect(dictDfn).toBeTruthy();
+    expect(enumDfn).toBeTruthy();
+    expect(dictDfn.dataset.dfnFor).toBe("");
+    expect(enumDfn.dataset.dfnFor).toBe("");
+  });
 });

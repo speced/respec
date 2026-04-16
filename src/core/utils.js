@@ -405,6 +405,25 @@ export function addHashId(elem, prefix = "") {
 }
 
 /**
+ * Converts a string to a slug suitable for use in an HTML id attribute:
+ * lowercases (unless noLC is true), decomposes Unicode, strips diacritics,
+ * replaces runs of non-word characters with "-", and trims leading/trailing
+ * hyphens.
+ * @param {string} txt
+ * @param {boolean} [noLC] - when true, skip lowercasing
+ * @returns {string}
+ */
+export function toId(txt, noLC = false) {
+  return (noLC ? txt : txt.toLowerCase())
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\W+/gim, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+}
+
+/**
  * Creates and sets an ID to an element (elem) using a specific prefix if
  * provided, and a specific text if given.
  * @param {HTMLElement} elem element
@@ -420,14 +439,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
   if (!txt) {
     txt = (elem.title ? elem.title : elem.textContent).trim();
   }
-  let id = noLC ? txt : txt.toLowerCase();
-  id = id
-    .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\W+/gim, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "");
+  let id = toId(txt, noLC);
 
   if (!id) {
     id = "generatedID";
