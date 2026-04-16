@@ -328,7 +328,7 @@ describe("Core - Inlines", () => {
 
     const noAliasAnchor = doc.querySelector("#no-alias a[href]");
     expect(noAliasAnchor).toBeTruthy();
-    // Without headings API, falls back to spec title
+    // spec title is used as link text when no alias is provided
     expect(noAliasAnchor.textContent).toBe("Fetch Standard");
   });
 

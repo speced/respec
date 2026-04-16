@@ -186,59 +186,24 @@ export async function run() {
 
   // Pre-compute cite details for each element (avoids double toCiteDetails calls)
   const citeDetailsMap = new Map();
-  const headingQueries = [];
   for (const elem of elems) {
-    const citeDetails = toCiteDetails(elem);
-    citeDetailsMap.set(elem, citeDetails);
-    // Collect elements that need heading text (triple-bracket cross-spec links)
-    if (
-      elem.localName === "a" &&
-      elem.textContent === "" &&
-      !elem.dataset.lt &&
-      citeDetails.frag &&
-      citeDetails.key !== THIS_SPEC
-    ) {
-      const spec = citeDetails.key.replace(/^[!?]/, "").toLowerCase();
-      const id = citeDetails.frag.replace("#", "");
-      headingQueries.push({ spec, id });
-    }
+    citeDetailsMap.set(elem, toCiteDetails(elem));
   }
-
-  // Batch-fetch heading text from the headings API
-  const headings = await fetchHeadings(headingQueries);
 
   for (const elem of elems) {
     const originalKey = elem.dataset.cite;
     const citeDetails = citeDetailsMap.get(elem);
     const linkProps = await getLinkProps(citeDetails);
     if (linkProps) {
-      // Use alias text (data-lt) if present and element is empty
-      // (only applies to [[[...]]] triple-bracket expansions, not IDL references
-      // which also use data-lt for lookup terms but have child content)
+      // Use alias text (data-lt) if present and element is empty.
+      // Only applies to [[[...]]] triple-bracket expansions (which set data-lt for
+      // alias text). IDL references also use data-lt as a lookup term but already
+      // have child content, so the textContent check prevents corrupting them.
       if (elem.dataset.lt && elem.textContent === "") {
         elem.textContent = elem.dataset.lt;
         delete elem.dataset.lt;
       }
-      // Use heading text for cross-spec section links
-      let headingSpecTitle = null;
-      if (citeDetails.frag && elem.textContent === "") {
-        const spec = citeDetails.key.replace(/^[!?]/, "").toLowerCase();
-        const id = citeDetails.frag.replace("#", "");
-        const heading = headings.get(`${spec}#${id}`);
-        if (heading) {
-          const secNum = heading.number ? `§\u00A0${heading.number} ` : "§ ";
-          elem.textContent = `${secNum}${heading.title}`;
-          headingSpecTitle = heading.specTitle;
-        }
-      }
       linkElem(elem, linkProps, citeDetails);
-      // Add spec title cite element for heading links
-      if (headingSpecTitle) {
-        const cite = document.createElement("cite");
-        cite.textContent = headingSpecTitle;
-        elem.before(cite);
-        cite.after(" ");
-      }
     } else {
       const msg = `Couldn't find a match for "${originalKey}"`;
       if (elem.dataset.matchedText) {
@@ -249,40 +214,6 @@ export async function run() {
   }
 
   sub("beforesave", cleanup);
-}
-
-const HEADINGS_API_URL = "https://respec.org/xref/headings/";
-
-/**
- * Fetches heading text from the headings API for cross-spec section links.
- * @param {{ spec: string; id: string }[]} queries
- * @returns {Promise<Map<string, { title: string; number?: string; specTitle: string }>>}
- */
-async function fetchHeadings(queries) {
-  const results = new Map();
-  if (!queries.length) return results;
-
-  try {
-    const response = await fetch(HEADINGS_API_URL, {
-      method: "POST",
-      body: JSON.stringify({ queries }),
-      headers: { "Content-Type": "application/json" },
-    });
-    if (!response.ok) return results;
-    const { result } = await response.json();
-    for (const entry of result) {
-      if (!entry.error) {
-        results.set(`${entry.spec}#${entry.id}`, {
-          title: entry.title,
-          number: entry.number,
-          specTitle: entry.specTitle,
-        });
-      }
-    }
-  } catch {
-    // Headings API unavailable; fall back to spec title
-  }
-  return results;
 }
 
 /**
