@@ -35,21 +35,8 @@ describe("Core — Data Include", () => {
     const div = doc.querySelector("#includes > div");
     expect(div.dataset.include).toBe(undefined);
     expect(div.dataset.includeFormat).toBe(undefined);
+    expect(div.dataset.oninclude).toBe(undefined);
     expect(div.dataset.dontRemove).toBe("pass");
-  });
-
-  it("removes data-oninclude attribute after processing", async () => {
-    const body = html`<section
-      id="oninclude-test"
-      data-include="${generateDataUrl("<p>included text</p>")}"
-      data-oninclude="someTransformFunction"
-    ></section>`;
-    const ops = makeStandardOps({}, body);
-    const doc = await makeRSDoc(ops);
-    const section = doc.querySelector("#oninclude-test");
-    expect(section).toBeTruthy();
-    expect(section.textContent).toContain("included text");
-    expect(section.dataset.oninclude).toBe(undefined);
   });
 
   it("replaces sections when data-include-replace is present", async () => {
