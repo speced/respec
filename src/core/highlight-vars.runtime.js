@@ -21,9 +21,7 @@ function highlightListener(ev) {
   const hightligtedElems = highlightVars(varElem);
   const resetListener = () => {
     const hlColor = getHighlightColor(varElem);
-    hightligtedElems.forEach((/** @type {any} */ el) =>
-      removeHighlight(el, hlColor)
-    );
+    hightligtedElems.forEach(el => removeHighlight(el, hlColor));
     [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
   };
   if (hightligtedElems.length) {
@@ -82,14 +80,10 @@ function highlightVars(varElem) {
 
   // highlight vars
   if (colorStatus) {
-    varsToHighlight.forEach((/** @type {HTMLElement} */ el) =>
-      removeHighlight(el, highlightColor)
-    );
+    varsToHighlight.forEach(el => removeHighlight(el, highlightColor));
     return [];
   } else {
-    varsToHighlight.forEach((/** @type {HTMLElement} */ el) =>
-      addHighlight(el, highlightColor)
-    );
+    varsToHighlight.forEach(el => addHighlight(el, highlightColor));
   }
   return varsToHighlight;
 }

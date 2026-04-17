@@ -236,7 +236,7 @@ export function run(conf) {
   }
   // We transplant the UI to do the markdown processing
   const rsUI = document.getElementById("respec-ui");
-  if (rsUI) rsUI.remove();
+  rsUI?.remove();
   // The new body will replace the old body
   const newBody = document.body.cloneNode(true);
   // Marked expects markdown be flush against the left margin

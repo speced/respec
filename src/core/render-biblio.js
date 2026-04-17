@@ -263,14 +263,16 @@ function stringifyReference(ref) {
  * @param {Ref[]} refs
  */
 function getAliases(refs) {
-  return refs.reduce((/** @type {Map<string, string[]>} */ aliases, ref) => {
+  /** @type {Map<string, string[]>} */
+  const aliases = new Map();
+  for (const ref of refs) {
     const key = ref.refcontent?.id ?? "";
     const keys = !aliases.has(key)
       ? aliases.set(key, []).get(key)
       : aliases.get(key);
     keys?.push(ref.ref);
-    return aliases;
-  }, new Map());
+  }
+  return aliases;
 }
 
 /**

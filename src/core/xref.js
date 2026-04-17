@@ -346,13 +346,9 @@ async function fetchFromNetwork(queries, url) {
     },
   };
   const response = await fetch(url, options);
+  /** @type {{ results: { id: string; result: SearchResultEntry[] }[] } }} */
   const json = await response.json();
-  return new Map(
-    json.results.map((/** @type {{id: any, result: any}} */ { id, result }) => [
-      id,
-      result,
-    ])
-  );
+  return new Map(json.results.map(({ id, result }) => [id, result]));
 }
 
 /**
@@ -545,13 +541,12 @@ function bufferToHexString(buffer) {
 
 /** @param {Document} doc */
 function cleanup(doc) {
+  /** @type {NodeListOf<HTMLAnchorElement>} */
   const elems = doc.querySelectorAll(
     "a[data-xref-for], a[data-xref-type], a[data-link-for]"
   );
   const attrToRemove = ["data-xref-for", "data-xref-type", "data-link-for"];
-  elems.forEach(
-    /** @param {Element} el */ el => {
-      attrToRemove.forEach(attr => el.removeAttribute(attr));
-    }
-  );
+  elems.forEach(el => {
+    attrToRemove.forEach(attr => el.removeAttribute(attr));
+  });
 }
