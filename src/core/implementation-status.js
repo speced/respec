@@ -36,8 +36,7 @@ const BASELINE_ICONS = new Map(
     [
       false,
       () =>
-        html`<svg class="baseline-icon" viewBox="0 0 36 20" role="img">
-          <title>Limited availability</title>
+        html`<svg class="baseline-icon" viewBox="0 0 36 20">
           <path fill="#f09409" d="M10 0L16 6L14 8L8 2L10 0Z" />
           <path fill="#f09409" d="M22 12L20 14L26 20L28 18L22 12Z" />
           <path fill="#f09409" d="M26 0L28 2L10 20L8 18L26 0Z" />
@@ -48,8 +47,7 @@ const BASELINE_ICONS = new Map(
     [
       "high",
       () =>
-        html`<svg class="baseline-icon" viewBox="0 0 36 20" role="img">
-          <title>Widely available</title>
+        html`<svg class="baseline-icon" viewBox="0 0 36 20">
           <path fill="#1ea446" d="M18 8L20 10L18 12L16 10L18 8Z" />
           <path fill="#1ea446" d="M26 0L28 2L10 20L0 10L2 8L10 16L26 0Z" />
           <path
@@ -62,8 +60,7 @@ const BASELINE_ICONS = new Map(
     [
       "low",
       () =>
-        html`<svg class="baseline-icon" viewBox="0 0 36 20" role="img">
-          <title>Newly available</title>
+        html`<svg class="baseline-icon" viewBox="0 0 36 20">
           <path
             fill="#a8c7fa"
             d="m10 0 2 2-2 2-2-2 2-2Zm4 4 2 2-2 2-2-2 2-2Zm16 0 2 2-2 2-2-2 2-2Zm4 4 2 2-2 2-2-2 2-2Zm-4 4 2 2-2 2-2-2 2-2Zm-4 4 2 2-2 2-2-2 2-2Zm-4-4 2 2-2 2-2-2 2-2ZM6 4l2 2-2 2-2-2 2-2Z"

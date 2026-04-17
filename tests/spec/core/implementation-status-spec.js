@@ -195,11 +195,9 @@ describe("Core — Implementation Status", () => {
     const icon = doc.querySelector(".baseline-icon");
 
     expect(icon).toBeTruthy();
-    expect(icon.getAttribute("role")).toBe("img");
+    expect(icon.hasAttribute("role")).toBeFalse();
     expect(icon.getAttribute("aria-hidden")).toBe("true");
-    const title = icon.querySelector("title");
-    expect(title).toBeTruthy();
-    expect(title.textContent).toBe("Limited availability");
+    expect(icon.querySelector("title")).toBeNull();
   });
 
   it("links to webstatus.dev for more info", async () => {
