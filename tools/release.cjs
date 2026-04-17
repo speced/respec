@@ -41,12 +41,11 @@ const loadOps = {
  */
 function commandRunner(file, baseArgs = []) {
   /**
-   * @param {string | string[]} cmd
+   * @param {string[]} cmd
    * @param {{showOutput: boolean}} [options]
    */
   const runner = (cmd, options = { showOutput: false }) => {
-    const cmdArgs = Array.isArray(cmd) ? cmd : cmd.split(/\s+/).filter(Boolean);
-    const args = [...baseArgs, ...cmdArgs];
+    const args = [...baseArgs, ...cmd];
     console.log(colors.cyan(`Run: ${file} ${colors.grey(args.join(" "))}`));
     if (DEBUG) {
       return Promise.resolve("");
