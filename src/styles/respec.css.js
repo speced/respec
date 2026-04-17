@@ -138,6 +138,7 @@ aside.example .marker > a.self-link {
 .header-wrapper {
   display: flex;
   align-items: baseline;
+  width: 100%;
 }
 
 :is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2):has(+ a.self-link) {
