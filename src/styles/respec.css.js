@@ -62,10 +62,18 @@ a[href].respec-offending-element {
   #references :target {
     background: color-mix(
       in srgb,
-      var(--borderedblock-bg) 70%,
+      var(--borderedblock-bg, #303030) 70%,
       transparent
     );
   }
+}
+
+body:has(input[name='color-scheme'][value='dark']:checked) #references :target {
+  background: color-mix(
+    in srgb,
+    var(--borderedblock-bg, #303030) 70%,
+    transparent
+  );
 }
 
 cite .bibref {
