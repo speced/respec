@@ -28,6 +28,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Document} doc
+ */
 function hasPriSecConsiderations(doc) {
   return Array.from(doc.querySelectorAll("h2, h3, h4, h5, h6")).some(
     ({ textContent: text }) => {
@@ -38,7 +41,11 @@ function hasPriSecConsiderations(doc) {
   );
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }

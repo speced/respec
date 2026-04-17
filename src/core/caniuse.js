@@ -3,6 +3,9 @@
  * Module: "core/caniuse"
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/speced/respec/wiki/caniuse
+ *
+ * @typedef {{ browser: string; version: string; caniuse: string }} CaniuseResult
+ * @typedef {(groups: Map<string, HTMLElement[]>, result: CaniuseResult) => Map<string, HTMLElement[]>} BrowserCellReducer
  */
 import { codedJoinAnd, docLink, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
@@ -40,13 +43,18 @@ const statToText = new Map([
   ["y", "supported by default"],
 ]);
 
+/** @param {Conf} conf */
 export function prepare(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
   }
   normalizeCaniuseConf(conf);
+  // @ts-expect-error -- conf is normalized above but Conf type doesn't reflect it
   validateBrowsers(conf);
-  const options = conf.caniuse;
+  const options =
+    /** @type {{ feature?: string; removeOnSave?: boolean; browsers?: string[] }} */ (
+      conf.caniuse
+    );
   if (!options.feature) {
     return; // no feature to show
   }
@@ -65,18 +73,24 @@ export function prepare(conf) {
  * @returns
  */
 function getLogoSrc(browser) {
-  const path = BROWSERS.get(browser).path ?? browser;
+  const path = BROWSERS.get(browser)?.path ?? browser;
   return `https://www.w3.org/assets/logos/browser-logos/${path}/${path}.svg`;
 }
 
+/** @param {Conf} conf */
 export async function run(conf) {
   const options = conf.caniuse;
+  // @ts-expect-error -- after normalizeCaniuseConf, options.feature is always a string if set
   if (!options?.feature) return;
 
+  // @ts-expect-error -- options is the normalized object form
   const featureURL = new URL(options.feature, "https://caniuse.com/").href;
   const headDlElem = document.querySelector(".head dl");
+  // @ts-expect-error -- options and conf.caniuse are the normalized object form
   const contentPromise = fetchStats(conf.caniuse)
+    // @ts-expect-error -- options is object form
     .then(json => processJson(json, options))
+    // @ts-expect-error -- options is object form
     .catch(err => handleError(err, options, featureURL));
   const definitionPair = html`<dt class="caniuse-title">Browser support:</dt>
     <dd class="caniuse-stats">
@@ -85,21 +99,31 @@ export async function run(conf) {
         placeholder: "Fetching data from caniuse.com...",
       }}
     </dd>`;
-  headDlElem.append(...definitionPair.childNodes);
+  headDlElem?.append(...definitionPair.childNodes);
   await contentPromise;
+  // @ts-expect-error -- options is the normalized object form
   pub("amend-user-config", { caniuse: options.feature });
+  // @ts-expect-error -- options is the normalized object form
   if (options.removeOnSave) {
     // Will remove the browser support cells.
     headDlElem
-      .querySelectorAll(".caniuse-browser")
+      ?.querySelectorAll(".caniuse-browser")
       .forEach(elem => elem.classList.add("removeOnSave"));
-    sub("beforesave", outputDoc => {
-      html.bind(outputDoc.querySelector(".caniuse-stats"))`
+    sub(
+      "beforesave",
+      /** @param {Document} outputDoc */ outputDoc => {
+        html.bind(outputDoc.querySelector(".caniuse-stats"))`
         <a href="${featureURL}">caniuse.com</a>`;
-    });
+      }
+    );
   }
 }
 
+/**
+ * @param {Error} err
+ * @param {{ feature: string }} options
+ * @param {string} featureURL
+ */
 function handleError(err, options, featureURL) {
   const msg = `Failed to retrieve feature "${options.feature}".`;
   const hint = docLink`Please check the feature key on [caniuse.com](https://caniuse.com) and update ${"[caniuse]"}.`;
@@ -109,7 +133,7 @@ function handleError(err, options, featureURL) {
 
 /**
  * returns normalized `conf.caniuse` configuration
- * @param {Object} conf   configuration settings
+ * @param {Conf} conf   configuration settings
  */
 function normalizeCaniuseConf(conf) {
   const defaultBrowsers = new Set(BROWSERS.keys());
@@ -123,6 +147,7 @@ function normalizeCaniuseConf(conf) {
   conf.caniuse = { ...DEFAULTS, ...conf.caniuse };
 }
 
+/** @param {{ caniuse: { browsers: any[] } }} conf */
 function validateBrowsers({ caniuse }) {
   const { browsers } = caniuse;
   const invalidBrowsers = browsers.filter(browser => !BROWSERS.has(browser));
@@ -133,8 +158,11 @@ function validateBrowsers({ caniuse }) {
   }
 }
 
+/**
+ * @param {{ result: CaniuseResult[] }} json
+ * @param {{ feature: string }} arg1
+ */
 async function processJson(json, { feature }) {
-  /** @type {Array} */
   const results = json.result;
   const groups = new Map([
     ["desktop", []],
@@ -159,9 +187,14 @@ async function processJson(json, { feature }) {
   return out;
 }
 
+/**
+ * @param {string} feature
+ * @returns {BrowserCellReducer}
+ */
 function browserCellRenderer(feature) {
   return (groups, { browser: browserId, version, caniuse }) => {
-    const { name, type } = BROWSERS.get(browserId);
+    const entry = BROWSERS.get(browserId);
+    const { name, type } = entry ?? { name: browserId, type: "desktop" };
     const versionLong = version ? ` version ${version}` : "";
     const browserName = `${name}${versionLong}`;
     const supportLevel = statToText.get(caniuse);
@@ -189,7 +222,7 @@ function browserCellRenderer(feature) {
         /><span class="browser-version">${textVersion}</span>
       </div>
     `;
-    groups.get(type).push(result);
+    groups.get(type)?.push(result);
     return groups;
   };
 }
@@ -198,6 +231,7 @@ function browserCellRenderer(feature) {
  * @typedef {Record<string, [string, string[]][]>} ApiResponse
  * @throws {Error} on failure
  */
+/** @param {{ feature: string, browsers: string[], apiURL?: string }} options */
 async function fetchStats(options) {
   const { feature, browsers, apiURL } = options;
   const url = new URL(apiURL || `./${feature}`, API_URL);
@@ -210,6 +244,7 @@ async function fetchStats(options) {
   return response.json();
 }
 
+/** @param {string} str */
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }

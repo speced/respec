@@ -87,7 +87,7 @@ function attachMDNDetail(mdnSpec) {
  */
 function buildBrowserSupportTable(support) {
   /**
-   * @param {string | keyof MDN_BROWSERS} browserId
+   * @param {keyof MDN_BROWSERS} browserId
    * @param {"Yes" | "No" | "Unknown"} yesNoUnknown
    * @param {string} version
    * @returns {HTMLTableRowElement}
@@ -102,7 +102,7 @@ function buildBrowserSupportTable(support) {
   }
 
   /**
-   * @param {string | keyof MDN_BROWSERS} browserId
+   * @param {keyof MDN_BROWSERS} browserId
    * @param {VersionDetails} versionData
    */
   function createRowFromBrowserData(browserId, versionData) {
@@ -119,8 +119,11 @@ function buildBrowserSupportTable(support) {
     }
   }
 
+  const browsers = /** @type {(keyof typeof MDN_BROWSERS)[]} */ (
+    Object.keys(MDN_BROWSERS)
+  );
   return html`<table>
-    ${Object.keys(MDN_BROWSERS).map(browserId => {
+    ${browsers.map(browserId => {
       return support[browserId]
         ? createRowFromBrowserData(browserId, support[browserId])
         : createRow(browserId, "Unknown", "");
@@ -128,10 +131,14 @@ function buildBrowserSupportTable(support) {
   </table>`;
 }
 
+/**
+ * @param {Conf} conf
+ */
 export async function run(conf) {
   const mdnKey = getMdnKey(conf);
   if (!mdnKey) return;
 
+  // @ts-expect-error -- conf.mdn is truthy here; getMdnData handles string/object/boolean
   const mdnSpecJson = await getMdnData(mdnKey, conf.mdn);
   if (!mdnSpecJson) return;
 
@@ -149,11 +156,15 @@ export async function run(conf) {
   }
 }
 
-/** @returns {string} */
+/** @returns {string | undefined} */
+/**
+ * @param {Conf} conf
+ */
 function getMdnKey(conf) {
   const { shortName, mdn } = conf;
   if (!mdn) return;
   if (typeof mdn === "string") return mdn;
+  // @ts-expect-error -- mdn is true | object here; .key only exists on object form
   return mdn.key || shortName;
 }
 

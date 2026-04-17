@@ -30,9 +30,13 @@ function processDfnElement(dfn) {
   const abbr = generateAbbreviation(dfn);
   // get normalized <dfn> textContent to remove spaces, tabs, new lines.
   const fullForm = dfn.textContent.replace(/\s\s+/g, " ").trim();
-  dfn.insertAdjacentHTML(
-    "afterend",
-    ` (<abbr title="${fullForm}">${abbr}</abbr>)`
+  const abbrEl = document.createElement("abbr");
+  abbrEl.title = fullForm;
+  abbrEl.textContent = abbr;
+  dfn.after(
+    document.createTextNode(" ("),
+    abbrEl,
+    document.createTextNode(")")
   );
   const lt = dfn.dataset.lt || "";
   dfn.dataset.lt = lt
@@ -42,12 +46,17 @@ function processDfnElement(dfn) {
     .join("|");
 }
 
+/**
+ * @param {HTMLElement} elem
+ */
 function generateAbbreviation(elem) {
   if (elem.dataset.abbr) return elem.dataset.abbr;
   // Generates abbreviation from textContent
   // e.g., "Permanent Account Number" -> "PAN"
-  return elem.textContent
-    .match(/\b([a-z])/gi)
-    .join("")
-    .toUpperCase();
+  return (
+    elem.textContent
+      ?.match(/\b([a-z])/gi)
+      ?.join("")
+      .toUpperCase() ?? ""
+  );
 }

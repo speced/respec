@@ -8,7 +8,9 @@
 import { docLink, getIntlData, showError, showWarning } from "../core/utils.js";
 export const name = "core/github";
 
+/** @type {(value: { apiBase: string, fullName: string, branch: string, repoURL: string } | null) => void} */
 let resolveGithubPromise;
+/** @type {(message: string) => void} */
 let rejectGithubPromise;
 /** @type {Promise<{ apiBase: string, fullName: string, branch: string, repoURL: string } | null>} */
 export const github = new Promise((resolve, reject) => {
@@ -55,6 +57,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
     // nothing to do, bail out.
@@ -69,7 +74,9 @@ export async function run(conf) {
     rejectGithubPromise(msg);
     return;
   }
-  let tempURL = conf.github.repoURL || conf.github;
+  /** @type {{ repoURL?: string; branch?: string; pullsURL?: string; commitHistoryURL?: string }} */
+  const ghConf = typeof conf.github === "string" ? {} : conf.github;
+  let tempURL = ghConf.repoURL || String(conf.github);
   if (!tempURL.endsWith("/")) tempURL += "/";
   /** @type URL */
   let ghURL;
@@ -91,7 +98,7 @@ export async function run(conf) {
     rejectGithubPromise(msg);
     return;
   }
-  const branch = conf.github.branch || "gh-pages";
+  const branch = ghConf.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
 
   // Allow custom pullsURL and commitHistoryURL for monorepo scenarios
@@ -133,10 +140,8 @@ export async function run(conf) {
   ) {
     commitHistoryURL = conf.github.commitHistoryURL;
   } else {
-    commitHistoryURL = new URL(
-      `./commits/${conf.github.branch ?? ""}`,
-      ghURL.href
-    ).href;
+    commitHistoryURL = new URL(`./commits/${ghConf.branch ?? ""}`, ghURL.href)
+      .href;
   }
 
   // Validate commitHistoryURL if it's provided

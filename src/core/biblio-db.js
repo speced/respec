@@ -54,7 +54,7 @@ async function openIdb() {
     const range = IDBKeyRange.lowerBound(now);
     let result = await store.openCursor(range);
     while (result?.value) {
-      /** @type {BiblioData} */
+      /** @type {StoredBiblioEntry} */
       const entry = result.value;
       if (entry.expires === undefined || entry.expires < now) {
         await store.delete(entry.id);
@@ -79,7 +79,7 @@ export const biblioDB = {
    */
   async find(id) {
     if (await this.isAlias(id)) {
-      id = await this.resolveAlias(id);
+      id = (await this.resolveAlias(id)) ?? id;
     }
     return await this.get("reference", id);
   },
@@ -116,7 +116,7 @@ export const biblioDB = {
    * Resolves an alias to its corresponding reference id.
    *
    * @param {String} id The id of the alias to look up.
-   * @return {Promise<String>} The id of the resolved reference.
+   * @return {Promise<String | null>} The id of the resolved reference.
    */
   async resolveAlias(id) {
     if (!id) {
@@ -160,9 +160,10 @@ export const biblioDB = {
     if (!data) {
       return;
     }
+    /** @type {{ alias: StoredBiblioEntry[], reference: StoredBiblioEntry[] }} */
     const aliasesAndRefs = { alias: [], reference: [] };
     for (const id of Object.keys(data)) {
-      /** @type {BiblioData} */
+      /** @type {StoredBiblioEntry} */
       const obj = { id, ...data[id], expires };
       if (obj.aliasOf) {
         aliasesAndRefs.alias.push(obj);
@@ -179,7 +180,7 @@ export const biblioDB = {
    * Adds a reference or alias to the database.
    *
    * @param {AllowedType} type The type as per ALLOWED_TYPES.
-   * @param {BiblioData} details The object to store.
+   * @param {StoredBiblioEntry} details The object to store.
    */
   async add(type, details) {
     if (!ALLOWED_TYPES.has(type)) {
@@ -197,7 +198,7 @@ export const biblioDB = {
     // or if it's expired
     if (isInDB) {
       const entry = await this.get(type, details.id);
-      if (entry?.expires < Date.now()) {
+      if (entry && entry.expires !== undefined && entry.expires < Date.now()) {
         const { store } = db.transaction(type, "readwrite");
         await store.delete(details.id);
         isInDB = false;
