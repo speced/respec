@@ -207,66 +207,56 @@ export const noTrackStatus = [
   "unofficial",
 ];
 /** @type {Map<string, LicenseInfo>} */
-export const licenses = /** @type {any} */ (
-  new Map([
-    [
-      "cc0",
-      {
-        name: "Creative Commons 0 Public Domain Dedication",
-        short: "CC0",
-        url: "https://creativecommons.org/publicdomain/zero/1.0/",
-      },
-    ],
-    [
-      "w3c-software",
-      {
-        name: "W3C Software Notice and License",
-        short: "W3C Software",
-        url: "https://www.w3.org/copyright/software-license-2002/",
-      },
-    ],
-    [
-      "w3c-software-doc",
-      {
-        name: "W3C Software and Document Notice and License",
-        short: "permissive document license",
-        url: "https://www.w3.org/copyright/software-license-2023/",
-      },
-    ],
-    [
-      "cc-by",
-      {
-        name: "Creative Commons Attribution 4.0 International Public License",
-        short: "CC-BY",
-        url: "https://creativecommons.org/licenses/by/4.0/legalcode",
-      },
-    ],
-    [
-      "document",
-      {
-        name: "W3C Document License",
-        short: "document use",
-        url: "https://www.w3.org/copyright/document-license/",
-      },
-    ],
-    [
-      "dual",
-      {
-        name: "W3C Dual License",
-        short: "dual license",
-        url: "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html",
-      },
-    ],
-    [
-      undefined,
-      {
-        name: "unlicensed",
-        url: null,
-        short: "UNLICENSED",
-      },
-    ],
-  ])
-);
+export const licenses = new Map([
+  [
+    "cc0",
+    {
+      name: "Creative Commons 0 Public Domain Dedication",
+      short: "CC0",
+      url: "https://creativecommons.org/publicdomain/zero/1.0/",
+    },
+  ],
+  [
+    "w3c-software",
+    {
+      name: "W3C Software Notice and License",
+      short: "W3C Software",
+      url: "https://www.w3.org/copyright/software-license-2002/",
+    },
+  ],
+  [
+    "w3c-software-doc",
+    {
+      name: "W3C Software and Document Notice and License",
+      short: "permissive document license",
+      url: "https://www.w3.org/copyright/software-license-2023/",
+    },
+  ],
+  [
+    "cc-by",
+    {
+      name: "Creative Commons Attribution 4.0 International Public License",
+      short: "CC-BY",
+      url: "https://creativecommons.org/licenses/by/4.0/legalcode",
+    },
+  ],
+  [
+    "document",
+    {
+      name: "W3C Document License",
+      short: "document use",
+      url: "https://www.w3.org/copyright/document-license/",
+    },
+  ],
+  [
+    "dual",
+    {
+      name: "W3C Dual License",
+      short: "dual license",
+      url: "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html",
+    },
+  ],
+]);
 
 const patentPolicies = ["PP2017", "PP2020"];
 
@@ -320,7 +310,14 @@ function deriveLicenseInfo(conf) {
     const hint = docLink`Please set ${"[license]"} to \`"w3c-software-doc"\` instead.`;
     showError(msg, name, { hint });
   }
-  // @ts-expect-error -- licenses.get accepts string | undefined key
+
+  if (typeof license === "undefined") {
+    return {
+      name: "unlicensed",
+      url: null,
+      short: "UNLICENSED",
+    };
+  }
   const licenseInfo = licenses.get(license);
   return licenseInfo;
 }
