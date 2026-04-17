@@ -29,8 +29,9 @@ export async function run() {
     el.tabIndex = 0;
     el.setAttribute("aria-haspopup", "dialog");
   }
-  if (document.body.querySelector("script")) {
-    document.body.querySelector("script").before(panels);
+  const firstScript = document.body.querySelector("script");
+  if (firstScript) {
+    firstScript.before(panels);
   } else {
     document.body.append(panels);
   }
@@ -127,8 +128,9 @@ function referencesToHTML(id, links) {
   links.forEach((link, i) => {
     const linkID = link.id || `ref-for-${id}-${i + 1}`;
     if (!link.id) link.id = linkID;
-    const title = getReferenceTitle(link);
-    const ids = titleToIDs.get(title) || titleToIDs.set(title, []).get(title);
+    const title = getReferenceTitle(link) ?? "";
+    const ids =
+      titleToIDs.get(title) ?? titleToIDs.set(title, []).get(title) ?? [];
     ids.push(linkID);
   });
 

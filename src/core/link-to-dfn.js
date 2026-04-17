@@ -8,6 +8,7 @@ import {
   docLink,
   getIntlData,
   getLinkTargets,
+  regExpEscape,
   showError,
   showWarning,
   wrapInner,
@@ -70,6 +71,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export async function run(conf) {
   const titleToDfns = mapTitleToDfns();
   /** @type {HTMLAnchorElement[]} */
@@ -133,22 +137,22 @@ function collectDfns(title) {
   /** @type {Map<string, Map<string, HTMLElement>>} */
   const result = new Map();
   const duplicates = [];
-  for (const dfn of definitionMap.get(title)) {
+  for (const dfn of definitionMap.get(title) ?? []) {
     const { dfnType = "dfn" } = dfn.dataset;
     const dfnFors = dfn.dataset.dfnFor?.split(",").map(s => s.trim()) ?? [""];
     for (const dfnFor of dfnFors) {
       // check for potential duplicate definition
-      if (result.has(dfnFor) && result.get(dfnFor).has(dfnType)) {
-        const oldDfn = result.get(dfnFor).get(dfnType);
+      if (result.has(dfnFor) && result.get(dfnFor)?.has(dfnType)) {
+        const oldDfn = result.get(dfnFor)?.get(dfnType);
         // We want <dfn> definitions to take precedence over
         // definitions from WebIDL. WebIDL definitions wind
         // up as <span>s instead of <dfn>.
-        const oldIsDfn = oldDfn.localName === "dfn";
+        const oldIsDfn = oldDfn?.localName === "dfn";
         const newIsDfn = dfn.localName === "dfn";
-        const isSameDfnType = dfnType === (oldDfn.dataset.dfnType || "dfn");
+        const isSameDfnType = dfnType === (oldDfn?.dataset.dfnType || "dfn");
         const isSameDfnFor =
-          (!dfnFor && !oldDfn.dataset.dfnFor) ||
-          oldDfn.dataset.dfnFor
+          (!dfnFor && !oldDfn?.dataset.dfnFor) ||
+          oldDfn?.dataset.dfnFor
             ?.split(",")
             .map(s => s.trim())
             .includes(dfnFor);
@@ -160,11 +164,11 @@ function collectDfns(title) {
       if (!result.has(dfnFor)) {
         result.set(dfnFor, new Map());
       }
-      result.get(dfnFor).set(dfnType, dfn);
+      result.get(dfnFor)?.set(dfnType, dfn);
       // We register non-dfn terms under the generic "idl" type as well
       // for backwards-compatibility
       if ("idl" in dfn.dataset || dfnType !== "dfn") {
-        result.get(dfnFor).set("idl", dfn);
+        result.get(dfnFor)?.set("idl", dfn);
       }
       addId(dfn, "dfn", title);
     }
@@ -183,23 +187,23 @@ function findMatchingDfn(anchor, titleToDfns) {
   const target = linkTargets.find(
     target =>
       titleToDfns.has(target.title) &&
-      titleToDfns.get(target.title).has(target.for)
+      titleToDfns.get(target.title)?.has(target.for)
   );
   if (!target) return;
 
-  const dfnsByType = titleToDfns.get(target.title).get(target.for);
+  const dfnsByType = titleToDfns.get(target.title)?.get(target.for);
   const { linkType } = anchor.dataset;
   if (linkType) {
     for (const type of linkType.split("|")) {
-      if (dfnsByType.get(type)) {
+      if (dfnsByType?.get(type)) {
         return dfnsByType.get(type);
       }
     }
-    return dfnsByType.get("dfn");
+    return dfnsByType?.get("dfn");
   } else {
     // Assumption: if it's for something, it's more likely IDL.
     const type = target.for ? "idl" : "dfn";
-    return dfnsByType.get(type) || dfnsByType.get("idl");
+    return dfnsByType?.get(type) || dfnsByType?.get("idl");
   }
 }
 
@@ -309,13 +313,18 @@ function shouldWrapByCode(elem, term = "") {
   return false;
 }
 
+/**
+ * @param {HTMLElement[]} elems
+ */
 function showLinkingError(elems) {
   elems.forEach(elem => {
     const msg = `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``;
     const title = "Linking error: no matching `<dfn>`";
     // Check if the link is inside a data-link-for section — a common footgun
     // where [=global-term=] gets scoped to the interface and fails.
-    const scopedSection = elem.closest("[data-link-for]");
+    const scopedSection = /** @type {HTMLElement | null} */ (
+      elem.closest("[data-link-for]")
+    );
     const scopingNote = scopedSection
       ? ` This link is inside a \`data-link-for="${scopedSection.dataset.linkFor}"\` section — \`[=term=]\` links are scoped to that context. To link to a global concept instead, either add \`data-link-for=""\` on this \`<a>\` or move it outside the scoped section.`
       : "";
@@ -335,14 +344,20 @@ function updateReferences(conf) {
   const { shortName = "" } = conf;
   // Match shortName in a data-cite (with optional leading ?!), while skipping shortName as prefix.
   // https://regex101.com/r/rsZyIJ/5
-  const regex = new RegExp(String.raw`^([?!])?${shortName}\b([^-])`, "i");
+  const regex = new RegExp(
+    String.raw`^([?!])?${regExpEscape(shortName)}\b([^-])`,
+    "i"
+  );
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );
   for (const elem of elems) {
-    elem.dataset.cite = elem.dataset.cite.replace(regex, `$1${THIS_SPEC}$2`);
+    elem.dataset.cite = (elem.dataset.cite ?? "").replace(
+      regex,
+      `$1${THIS_SPEC}$2`
+    );
     const { key, isNormative } = toCiteDetails(elem);
     if (key === THIS_SPEC) continue;
 
