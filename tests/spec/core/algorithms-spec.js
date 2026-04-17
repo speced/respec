@@ -36,7 +36,10 @@ describe("Core — Algorithm Lists", () => {
         <li>Assert: two <a href="#test">a link to be preserved</a>.</li>
       </ol>
     </section>`;
-    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const localBiblio = {
+      INFRA: { id: "INFRA", href: "https://infra.spec.whatwg.org/" },
+    };
+    const doc = await makeRSDoc(makeStandardOps({ localBiblio }, body));
 
     expect(doc.querySelectorAll("li.assert")).toHaveSize(2);
     const [first, second] = [...doc.querySelectorAll("li.assert")];

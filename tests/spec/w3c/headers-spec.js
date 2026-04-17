@@ -515,6 +515,7 @@ describe("W3C — Headers", () => {
           group: "webapps",
           github: "speced/respec",
           crEnd: "2019-01-01",
+          prEnd: "2019-01-01",
         });
         const doc = await makeRSDoc(ops, simpleSpecURL);
         const errors = headerErrors(doc);
@@ -1592,6 +1593,30 @@ describe("W3C — Headers", () => {
         );
       });
     }
+
+    for (const specStatus of ["unofficial", "MO", "base"]) {
+      it(`does not auto-generate /TR/ URL for no-track "${specStatus}" even with WG group`, async () => {
+        const ops = makeStandardOps({
+          shortName: "some-report",
+          specStatus,
+          group: "wg/json-ld",
+        });
+        const doc = await makeRSDoc(ops);
+        const { latestVersion } = doc.defaultView.respecConfig;
+        // No-track specs without a publication space must not get any URL
+        expect(latestVersion).not.toContain("/TR/");
+        // Also confirm the rendered header shows "none" (no clickable link)
+        const terms = [...doc.querySelectorAll(".head dt")];
+        const latestVersionDt = terms.find(
+          el => el.textContent.trim() === "Latest published version:"
+        );
+        expect(latestVersionDt).toBeTruthy();
+        const latestVersionDd = latestVersionDt.nextElementSibling;
+        const latestVersionLink = latestVersionDd.querySelector("a");
+        expect(latestVersionLink).toBeNull();
+        expect(latestVersionDd.textContent.trim()).toBe("none");
+      });
+    }
   });
 
   describe("prevED", () => {
@@ -1783,6 +1808,37 @@ describe("W3C — Headers", () => {
           "The W3C Patent Policy does not carry any licensing requirements or commitments on this document."
         );
       }
+    });
+    it("renders patent disclosure as a link when wgPatentURI is present", async () => {
+      const opts = makeStandardOps({
+        specStatus: "WD",
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(opts);
+      const sotd = doc.querySelector("#sotd");
+      const { wgPatentURI } = doc.defaultView.respecConfig;
+      expect(wgPatentURI).toBeTruthy();
+      const [link] = contains(sotd, "a[rel='disclosure']", "public list");
+      expect(link).toBeTruthy();
+      expect(link.href).toBe(wgPatentURI);
+    });
+    it("renders patent disclosure as plain text when wgPatentURI is absent", async () => {
+      const opts = makeStandardOps({
+        specStatus: "WD",
+        wg: "Test Working Group",
+        wgURI: "https://example.com/wg",
+        // wgId must be truthy so defaults.js keeps specStatus as "WD"
+        // (without it, defaults.js changes specStatus to "base" which
+        // uses renderIsNoTrack instead of renderDeliverer)
+        wgId: 123456,
+      });
+      const doc = await makeRSDoc(opts);
+      const sotd = doc.querySelector("#sotd");
+      const link = sotd.querySelector("a[rel='disclosure']");
+      expect(link).toBeNull();
+      expect(sotd.textContent).toContain(
+        "public list of any patent disclosures"
+      );
     });
   });
 

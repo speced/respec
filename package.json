@@ -24,11 +24,11 @@
     "Robin Berjon"
   ],
   "devDependencies": {
+    "@eslint/js": "^9.8.0",
     "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.0",
     "@types/pluralize": "0.0.33",
-    "@eslint/js": "^9.8.0",
     "boxen": "^8.0.1",
     "chokidar": "^5.0.0",
     "clean-css": "^5.3.3",
@@ -38,7 +38,7 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jasmine": "^4.2.2",
     "eslint-plugin-prettier": "^5.5.5",
-    "globals": "^17.4.0",
+    "globals": "^17.5.0",
     "highlight.js": "^11.11.1",
     "hyperhtml": "^2.34.2",
     "idb": "^8.0.3",
@@ -51,6 +51,7 @@
     "karma-jasmine-html-reporter": "^2.2.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
+    "lint-staged": "^16.4.0",
     "loading-indicator": "^2.0.0",
     "pluralize": "^8.0.0",
     "prettier": "^3.8.2",
@@ -59,8 +60,9 @@
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "serve": "^14.2.6",
     "serve-handler": "^6.1.7",
+    "simple-git-hooks": "^2.13.1",
     "sniffy-mimetype": "^1.1.1",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "vnu-jar": "^26.4.11",
     "webidl2": "^24.5.0"
   },
@@ -75,7 +77,7 @@
     "build:dini": "pnpm builder dini",
     "builddeps": "rollup -c js/deps/rollup.config.js --bundleConfigAsCjs && rollup -c worker/rollup.config.js --bundleConfigAsCjs",
     "lint": "tsc -p src/jsconfig.json && eslint .",
-    "prepare": "pnpm builddeps",
+    "prepare": "pnpm builddeps && simple-git-hooks",
     "builder": "node ./tools/builder.cjs",
     "release": "node ./tools/release.cjs",
     "server": "serve",
@@ -99,13 +101,21 @@
     "tools/respec2html.js",
     "tools/respecDocWriter.js"
   ],
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.js": "eslint --fix",
+    "*.{js,json,md,html,css}": "prettier --write"
+  },
   "prettier": {
     "trailingComma": "es5",
     "arrowParens": "avoid"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "puppeteer"
+      "puppeteer",
+      "simple-git-hooks"
     ],
     "ignoredBuiltDependencies": [
       "vnu-jar"

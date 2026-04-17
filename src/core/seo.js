@@ -7,6 +7,9 @@ import { html } from "../core/import-maps.js";
 
 export const name = "core/seo";
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   if (conf.gitRevision) {
     // This allows to set a git revision of the source used to produce the

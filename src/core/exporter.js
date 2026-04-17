@@ -36,6 +36,10 @@ export function rsDocToDataURL(mimeType, doc = document) {
   return `data:${mimeType};charset=utf-8,${encodedString}`;
 }
 
+/**
+ * @param {string} format
+ * @param {Document} doc
+ */
 export function serialize(format, doc) {
   const cloneDoc = doc.cloneNode(true);
   cleanup(cloneDoc);
@@ -55,13 +59,16 @@ export function serialize(format, doc) {
   return result;
 }
 
+/**
+ * @param {Document} cloneDoc
+ */
 function cleanup(cloneDoc) {
   const { head, body, documentElement } = cloneDoc;
   removeCommentNodes(cloneDoc);
 
   cloneDoc
     .querySelectorAll(".removeOnSave, #toc-nav")
-    .forEach(elem => elem.remove());
+    .forEach((/** @type {Element} */ elem) => elem.remove());
   body.classList.remove("toc-sidebar");
   removeReSpec(documentElement);
 
@@ -74,12 +81,10 @@ function cleanup(cloneDoc) {
   }
 
   // Move charset to near top, as it needs to be in the first 512 bytes.
-  let metaCharset = cloneDoc.querySelector(
-    "meta[charset], meta[content*='charset=']"
-  );
-  if (!metaCharset) {
-    metaCharset = html`<meta charset="utf-8" />`;
-  }
+  /** @type {HTMLMetaElement} */
+  const metaCharset =
+    cloneDoc.querySelector("meta[charset], meta[content*='charset=']") ||
+    html`<meta charset="utf-8" />`;
   insertions.appendChild(metaCharset);
 
   // Add meta generator

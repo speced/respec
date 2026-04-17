@@ -1790,4 +1790,48 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(errors).toHaveSize(1);
     expect(errors[0].details).toContain("Promise&lt;void&gt;");
   });
+
+  it("gives unique IDs to partial namespaces", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          namespace Foo { undefined bar(); };
+          partial namespace Foo { undefined baz(); };
+          partial namespace Foo { undefined qux(); };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const idls = [
+      ...doc.querySelectorAll("pre.idl code [data-idl][id]"),
+    ].filter(el => /^idl-def-foo(?:-partial-[12])?$/.test(el.id));
+    expect(idls).toHaveSize(3);
+    const ids = idls.map(el => el.id);
+    const uniqueIds = new Set(ids);
+    expect(uniqueIds.size).toBe(ids.length);
+    expect(ids).toContain("idl-def-foo");
+    expect(ids).toContain("idl-def-foo-partial-1");
+    expect(ids).toContain("idl-def-foo-partial-2");
+  });
+
+  it("does not set data-dfn-for on top-level IDL entities inside a data-dfn-for section (prose dfns)", () => {
+    const section = doc.querySelector("#top-level-no-dfn-for");
+    const dictDfn = section.querySelector("dfn[data-dfn-type='dictionary']");
+    const enumDfn = section.querySelector("dfn[data-dfn-type='enum']");
+    expect(dictDfn).toBeTruthy();
+    expect(enumDfn).toBeTruthy();
+    expect(dictDfn.dataset.dfnFor).toBe("");
+    expect(enumDfn.dataset.dfnFor).toBe("");
+  });
+
+  it("does not set data-dfn-for on top-level IDL entities inside a data-dfn-for section (IDL-generated dfns)", () => {
+    const section = doc.querySelector("#top-level-idl-dfn-no-dfn-for");
+    const dictDfn = section.querySelector("dfn[data-dfn-type='dictionary']");
+    const enumDfn = section.querySelector("dfn[data-dfn-type='enum']");
+    expect(dictDfn).toBeTruthy();
+    expect(enumDfn).toBeTruthy();
+    expect(dictDfn.dataset.dfnFor).toBe("");
+    expect(enumDfn.dataset.dfnFor).toBe("");
+  });
 });

@@ -256,14 +256,6 @@ export const licenses = new Map([
       url: "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html",
     },
   ],
-  [
-    undefined,
-    {
-      name: "unlicensed",
-      url: null,
-      short: "UNLICENSED",
-    },
-  ],
 ]);
 
 const patentPolicies = ["PP2017", "PP2020"];
@@ -285,6 +277,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
+/** @param {Conf} conf */
 function deriveLicenseInfo(conf) {
   let license = undefined;
   if (typeof conf.license === "string") {
@@ -310,39 +303,52 @@ function deriveLicenseInfo(conf) {
   }
 
   // W3C docs can't be CC-BY or CC0
+  // @ts-expect-error -- license may be undefined; includes() safely returns false
   if (!conf.isUnofficial && ["cc-by", "cc0"].includes(license)) {
+    // @ts-expect-error -- license is defined at this point (guarded above)
     const msg = docLink`License "\`${conf.license}\`" is not allowed for W3C Specifications.`;
     const hint = docLink`Please set ${"[license]"} to \`"w3c-software-doc"\` instead.`;
     showError(msg, name, { hint });
+  }
+
+  if (typeof license === "undefined") {
+    return {
+      name: "unlicensed",
+      url: null,
+      short: "UNLICENSED",
+    };
   }
   const licenseInfo = licenses.get(license);
   return licenseInfo;
 }
 
+/** @param {Conf} conf */
 export async function run(conf) {
-  conf.isBasic = conf.specStatus === "base";
-  conf.isCGBG = cgbgStatus.includes(conf.specStatus);
-  conf.isCGFinal = conf.isCGBG && conf.specStatus.endsWith("G-FINAL");
-  conf.isCR = conf.specStatus === "CR" || conf.specStatus === "CRD";
-  conf.isCRDraft = conf.specStatus === "CRD";
-  conf.isCRY = conf.specStatus === "CRY" || conf.specStatus === "CRYD";
-  conf.isEd = conf.specStatus === "ED";
-  conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
-  conf.isMO = conf.specStatus === "MO";
-  conf.isNote = W3CNotes.includes(conf.specStatus);
-  conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
-  conf.isPR = conf.specStatus === "PR";
-  conf.isRecTrack = recTrackStatus.includes(conf.specStatus);
-  conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
-  conf.isRegistry = registryTrackStatus.includes(conf.specStatus);
+  // specStatus is always set by defaults before this module runs
+  const specStatus = conf.specStatus ?? "";
+  conf.isBasic = specStatus === "base";
+  conf.isCGBG = cgbgStatus.includes(specStatus);
+  conf.isCGFinal = conf.isCGBG && specStatus.endsWith("G-FINAL");
+  conf.isCR = specStatus === "CR" || specStatus === "CRD";
+  conf.isCRDraft = specStatus === "CRD";
+  conf.isCRY = specStatus === "CRY" || specStatus === "CRYD";
+  conf.isEd = specStatus === "ED";
+  conf.isMemberSubmission = specStatus === "Member-SUBM";
+  conf.isMO = specStatus === "MO";
+  conf.isNote = W3CNotes.includes(specStatus);
+  conf.isNoTrack = noTrackStatus.includes(specStatus);
+  conf.isPR = specStatus === "PR";
+  conf.isRecTrack = recTrackStatus.includes(specStatus);
+  conf.isRec = conf.isRecTrack && specStatus === "REC";
+  conf.isRegistry = registryTrackStatus.includes(specStatus);
   conf.isRegular = !conf.isCGBG && !conf.isBasic;
-  conf.isTagEditorFinding = conf.specStatus === "editor-draft-finding";
-  conf.isTagFinding = tagStatus.includes(conf.specStatus);
-  conf.isUnofficial = conf.specStatus === "unofficial";
+  conf.isTagEditorFinding = specStatus === "editor-draft-finding";
+  conf.isTagFinding = tagStatus.includes(specStatus);
+  conf.isUnofficial = specStatus === "unofficial";
   conf.licenseInfo = deriveLicenseInfo(conf);
   conf.prependW3C = !conf.isBasic && !conf.isUnofficial;
-  conf.longStatus = status2long[conf.specStatus];
-  conf.textStatus = status2text[conf.specStatus];
+  conf.longStatus = /** @type {any} */ (status2long)[specStatus];
+  conf.textStatus = /** @type {any} */ (status2text)[specStatus];
   conf.showPreviousVersion = false;
 
   if (conf.isRegular && !conf.shortName) {
@@ -382,11 +388,12 @@ export async function run(conf) {
 
   const pubSpace = derivePubSpace(conf);
   if (pubSpace && !conf.thisVersion) {
-    const maturity = status2maturity[conf.specStatus] || conf.specStatus;
+    const maturity =
+      /** @type {any} */ (status2maturity)[specStatus] || specStatus;
     const { shortName, publishDate } = conf;
     const date = concatDate(publishDate);
     const docVersion = `${maturity}-${shortName}-${date}`;
-    const year = [...trStatus, "Member-SUBM"].includes(conf.specStatus)
+    const year = [...trStatus, "Member-SUBM"].includes(specStatus)
       ? `${publishDate.getUTCFullYear()}/`
       : "";
     conf.thisVersion = w3Url(`${pubSpace}/${year}${docVersion}/`);
@@ -397,7 +404,9 @@ export async function run(conf) {
   if (conf.latestVersion !== null) {
     conf.latestVersion = conf.latestVersion
       ? w3Url(conf.latestVersion)
-      : w3Url(`${pubSpace}/${conf.shortName}/`);
+      : pubSpace
+        ? w3Url(`${pubSpace}/${conf.shortName}/`)
+        : "";
   }
 
   if (conf.latestVersion) validateIfAllowedOnTR(conf);
@@ -415,7 +424,9 @@ export async function run(conf) {
     );
 
     const prevMaturity =
-      status2maturity[conf.previousMaturity] ?? conf.previousMaturity;
+      // @ts-expect-error -- previousMaturity may be undefined; indexing returns undefined which is handled by ??
+      /** @type {any} */ (status2maturity)[conf.previousMaturity] ??
+      conf.previousMaturity;
     if (conf.isTagFinding && conf.latestVersion) {
       const pubDate = ISODate.format(conf.publishDate);
       conf.thisVersion = w3Url(`${latestPath}-${pubDate}`);
@@ -436,21 +447,26 @@ export async function run(conf) {
     conf.prevRecURI = w3Url(`${pubSpace}/${conf.prevRecShortname}`);
 
   // Move any editors with retiredDate to formerEditors.
-  for (let i = 0; i < conf.editors.length; i++) {
-    const editor = conf.editors[i];
+  // editors and formerEditors are always set by defaults
+  const editors = conf.editors ?? [];
+  const formerEditors = conf.formerEditors ?? [];
+  for (let i = 0; i < editors.length; i++) {
+    const editor = editors[i];
     if ("retiredDate" in editor) {
-      conf.formerEditors.push(editor);
-      conf.editors.splice(i--, 1);
+      formerEditors.push(editor);
+      editors.splice(i--, 1);
     }
   }
+  conf.editors = editors;
+  conf.formerEditors = formerEditors;
 
-  if (conf.editors.length === 0) {
+  if (editors.length === 0) {
     const msg = "At least one editor is required.";
     const hint = docLink`Add one or more editors using the ${"[editors]"} configuration option.`;
     showError(msg, name, { hint });
-  } else if (conf.editors.length && conf.isRecTrack) {
+  } else if (editors.length && conf.isRecTrack) {
     // check that every editor has w3cid
-    conf.editors.forEach((editor, i) => {
+    editors.forEach((editor, i) => {
       if (editor.w3cid) return;
       const msg = docLink`Editor ${
         editor.name ? `"${editor.name}"` : `number ${i + 1}`
@@ -481,7 +497,7 @@ export async function run(conf) {
 
   const options = {
     get multipleAlternates() {
-      return conf.alternateFormats && conf.alternateFormats.length > 1;
+      return !!(conf.alternateFormats && conf.alternateFormats.length > 1);
     },
     get alternatesHTML() {
       return (
@@ -490,6 +506,7 @@ export async function run(conf) {
           // We need to pass a string here...
           conf.alternateFormats.map(({ label }) => label),
           (_, i) => {
+            // @ts-expect-error -- alternateFormats existence checked by the outer && guard
             const alt = conf.alternateFormats[i];
             return html`<a
               rel="alternate"
@@ -542,7 +559,7 @@ export async function run(conf) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgPatentHTML = htmlJoinAnd(conf.wg, (wg, i) => {
       return html`a
-        <a href="${conf.wgPatentURI[i]}" rel="disclosure"
+        <a href="${/** @type {any} */ (conf.wgPatentURI)[i]}" rel="disclosure"
           >public list of any patent disclosures (${wg})</a
         >`;
     });
@@ -560,7 +577,7 @@ export async function run(conf) {
   }
   conf.crEnd = validateDateAndRecover(conf, "crEnd");
 
-  if (conf.isPr && !conf.prEnd) {
+  if (conf.isPR && !conf.prEnd) {
     const msg = docLink`${"[specStatus]"} is "PR" but no ${"[prEnd]"} is specified in the ${"[respecConfig]"}.`;
     showError(msg, name);
   }
@@ -601,8 +618,8 @@ export async function run(conf) {
   }
   conf.revisedRecEnd = validateDateAndRecover(conf, "revisedRecEnd");
 
-  if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
-    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${conf.specStatus}") puts it on the W3C Rec Track.`;
+  if (conf.noRecTrack && recTrackStatus.includes(specStatus)) {
+    const msg = docLink`Document configured as ${"[noRecTrack]"}, but its status ("${specStatus}") puts it on the W3C Rec Track.`;
     const notAllowed = codedJoinOr(recTrackStatus, { quotes: true });
     const hint = `Status **can't** be any of: ${notAllowed}.`;
     showError(msg, name, { hint });
@@ -631,7 +648,9 @@ export async function run(conf) {
   });
 }
 
+/** @param {Conf} conf */
 function validateIfAllowedOnTR(conf) {
+  // @ts-expect-error -- latestVersion is always a string at this point
   const latestVersionURL = new URL(conf.latestVersion);
   const isW3C =
     latestVersionURL.origin === "https://www.w3.org" ||
@@ -639,8 +658,10 @@ function validateIfAllowedOnTR(conf) {
   if (
     isW3C &&
     latestVersionURL.pathname.startsWith("/TR/") &&
+    // @ts-expect-error -- specStatus is always set by defaults
     ["ED", ...trStatus].includes(conf.specStatus) === false
   ) {
+    // @ts-expect-error -- specStatus is always set by defaults
     const msg = docLink`Documents with a status of \`"${conf.specStatus}"\` can't be published on the W3C's /TR/ (Technical Report) space.`;
     const hint = docLink`Ask a W3C Team Member for a W3C URL where the report can be published and change ${"[latestVersion]"} to something else.`;
     showError(msg, name, { hint });
@@ -648,9 +669,13 @@ function validateIfAllowedOnTR(conf) {
   }
 }
 
+/** @param {Conf} conf */
 function derivePubSpace(conf) {
   const { specStatus, group } = conf;
-  if (trStatus.includes(specStatus) || conf.groupType === "wg") {
+  if (conf.isNoTrack && !conf.isCGBG && !conf.isTagFinding) {
+    return "";
+  }
+  if (trStatus.includes(specStatus ?? "") || conf.groupType === "wg") {
     return `/TR`;
   }
 
@@ -675,7 +700,9 @@ function derivePubSpace(conf) {
   return "";
 }
 
+/** @param {Conf} conf */
 function validateCGBG(conf) {
+  // @ts-expect-error -- specStatus is always set by defaults
   const reportType = status2text[conf.specStatus];
   const latestVersionURL = conf.latestVersion
     ? new URL(w3Url(conf.latestVersion))
@@ -702,11 +729,13 @@ function validateCGBG(conf) {
   }
 }
 
+/** @param {Conf} conf */
 async function deriveHistoryURI(conf) {
   if (!conf.shortName || conf.historyURI === null || !conf.latestVersion) {
     return; // Nothing to do
   }
 
+  // @ts-expect-error -- specStatus is always set by defaults
   const canShowHistory = conf.isEd || trStatus.includes(conf.specStatus);
 
   if (conf.historyURI && !canShowHistory) {
@@ -726,6 +755,7 @@ async function deriveHistoryURI(conf) {
   // Also make a an exception for FPWD, DNOTE, NOTE and DRY.
   if (
     (conf.historyURI && canShowHistory) ||
+    // @ts-expect-error -- specStatus is always set by defaults
     ["FPWD", "DNOTE", "NOTE", "DRY"].includes(conf.specStatus)
   ) {
     conf.historyURI = historyURL.href;
@@ -746,9 +776,14 @@ async function deriveHistoryURI(conf) {
   }
 }
 
+/** @param {Conf} conf */
 function validatePatentPolicies(conf) {
   if (!conf.wgPatentPolicy) return;
-  const policies = new Set([].concat(conf.wgPatentPolicy));
+  /** @type {Set<string>} */
+  const policies = new Set(
+    // @ts-expect-error -- wgPatentPolicy is string | string[] here (checked above)
+    [].concat(conf.wgPatentPolicy)
+  );
   if (
     policies.size &&
     ![...policies].every(policy => patentPolicies.includes(policy))
@@ -775,7 +810,7 @@ function validatePatentPolicies(conf) {
 }
 
 /**
- * @param {*} conf
+ * @param {Conf} conf
  * @param {HTMLElement} sotd
  */
 function populateSoTD(conf, sotd) {
@@ -785,6 +820,7 @@ function populateSoTD(conf, sotd) {
     get mailToWGPublicList() {
       return `mailto:${conf.wgPublicList}@w3.org`;
     },
+    /** @returns {string} */
     get mailToWGPublicListWithSubject() {
       const fragment = conf.subjectPrefix
         ? `?subject=${encodeURIComponent(conf.subjectPrefix)}`
@@ -810,12 +846,14 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
   while (sotdClone.hasChildNodes()) {
     if (
       sotdClone.nodeType === Node.ELEMENT_NODE &&
-      // @ts-ignore
+      // @ts-expect-error
       sotdClone.firstChild.localName === "section"
     ) {
       break;
     }
-    additionalContent.appendChild(sotdClone.firstChild);
+    additionalContent.appendChild(
+      /** @type {ChildNode} */ (sotdClone.firstChild)
+    );
   }
   if (isTagFinding && !additionalContent.hasChildNodes()) {
     const msg = docLink`ReSpec does not support automated SotD generation for TAG findings.`;

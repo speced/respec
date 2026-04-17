@@ -65,6 +65,7 @@ const downloadLinks = [
 
 /**
  * @param {typeof downloadLinks[0]} details
+ * @param {Conf} conf
  */
 function toDownloadLink(details, conf) {
   const { id, href, ext, title, type } = details;
@@ -81,8 +82,14 @@ function toDownloadLink(details, conf) {
   >`;
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   const saveDialog = {
+    /**
+     * @param {HTMLElement} button
+     */
     async show(button) {
       await document.respec.ready;
       const div = html`<div class="respec-save-buttons">
@@ -93,6 +100,7 @@ export function run(conf) {
   };
 
   const supportsDownload = "download" in HTMLAnchorElement.prototype;
+  /** @type {any} */
   let button;
   if (supportsDownload) {
     button = ui.addCommand(l10n.save_snapshot, show, "Ctrl+Shift+Alt+S", "💾");

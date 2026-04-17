@@ -51,7 +51,7 @@ if (
 }
 
 /**
- * @param {Object} conf respecConfig
+ * @param {Conf} conf respecConfig
  */
 export async function run(conf) {
   if (!conf.xref) {
@@ -98,7 +98,7 @@ function findExplicitExternalLinks() {
     .filter(el => {
       // ignore empties
       if (el.textContent.trim() === "") return false;
-      /** @type {HTMLElement} */
+      /** @type {HTMLElement | null} */
       const closest = el.closest("[data-cite]");
       return !closest || closest.dataset.cite !== "";
     })
@@ -106,6 +106,7 @@ function findExplicitExternalLinks() {
 }
 
 /**
+ * @param {boolean | string | string[] | { profile?: string; url?: string; specs?: string[] }} xref
  * converts conf.xref to object with url and spec properties
  */
 function normalizeConfig(xref) {
@@ -121,35 +122,50 @@ function normalizeConfig(xref) {
     case "boolean":
       // using defaults already, as above
       break;
-    case "string":
-      if (xref.toLowerCase() in profiles) {
-        Object.assign(config, { specs: profiles[xref.toLowerCase()] });
+    case "string": {
+      const xrefStr = /** @type {string} */ (xref);
+      if (xrefStr.toLowerCase() in profiles) {
+        Object.assign(config, {
+          specs: /** @type {Record<string, string[]>} */ (profiles)[
+            xrefStr.toLowerCase()
+          ],
+        });
       } else {
-        invalidProfileError(xref);
+        invalidProfileError(xrefStr);
       }
       break;
+    }
     case "array":
       Object.assign(config, { specs: xref });
       break;
-    case "object":
-      Object.assign(config, xref);
-      if (xref.profile) {
-        const profile = xref.profile.toLowerCase();
+    case "object": {
+      const xrefObj =
+        /** @type {{ profile?: string; url?: string; specs?: string[] }} */ (
+          xref
+        );
+      Object.assign(config, xrefObj);
+      if (xrefObj.profile) {
+        const profile = xrefObj.profile.toLowerCase();
         if (profile in profiles) {
-          const specs = (xref.specs ?? []).concat(profiles[profile]);
+          const specs = (xrefObj.specs ?? []).concat(
+            /** @type {Record<string, string[]>} */ (profiles)[profile]
+          );
           Object.assign(config, { specs });
         } else {
-          invalidProfileError(xref.profile);
+          invalidProfileError(xrefObj.profile);
         }
       }
       break;
+    }
     default: {
       const msg = `Invalid value for \`xref\` configuration option. Received: "${xref}".`;
-      showError(msg, name);
+      const hint = docLink`Expected: \`true\`, a profile name (e.g. \`"web-platform"\`), an array of spec shortnames (e.g. \`["FETCH", "DOM"]\`), or an object with \`url\`, \`specs\`, or \`profile\` properties. See ${"[xref]"}.`;
+      showError(msg, name, { hint });
     }
   }
   return config;
 
+  /** @param {string} profile */
   function invalidProfileError(profile) {
     const supportedProfiles = joinOr(Object.keys(profiles), s => `"${s}"`);
     const msg =
@@ -202,18 +218,20 @@ function getSpecContext(elem) {
   /** @type {string[][]} */
   const specs = [];
 
-  /** @type {HTMLElement} */
+  /** @type {HTMLElement | null} */
   let dataciteElem = elem.closest("[data-cite]");
 
   // Traverse up towards the root element, adding levels of lower priority specs
   while (dataciteElem) {
-    const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
+    const cite = (dataciteElem.dataset.cite ?? "")
+      .toLowerCase()
+      .replace(/[!?]/g, "");
     const cites = cite.split(/\s+/).filter(s => s);
     if (cites.length) {
       specs.push(cites);
     }
     if (dataciteElem === elem) break;
-    dataciteElem = dataciteElem.parentElement.closest("[data-cite]");
+    dataciteElem = dataciteElem.parentElement?.closest("[data-cite]") ?? null;
   }
 
   // If element itself contains data-cite, we don't take inline context into
@@ -262,10 +280,10 @@ function getForContext(elem, isIDL) {
   }
 
   if (isIDL) {
-    /** @type {HTMLElement} */
+    /** @type {HTMLElement | null} */
     const dataXrefForElem = elem.closest("[data-xref-for]");
     if (dataXrefForElem) {
-      return normalize(dataXrefForElem.dataset.xrefFor);
+      return normalize(dataXrefForElem.dataset.xrefFor ?? "");
     }
   }
 
@@ -328,6 +346,7 @@ async function fetchFromNetwork(queries, url) {
     },
   };
   const response = await fetch(url, options);
+  /** @type {{ results: { id: string; result: SearchResultEntry[] }[] } }} */
   const json = await response.json();
   return new Map(json.results.map(({ id, result }) => [id, result]));
 }
@@ -357,7 +376,7 @@ function isNormative(elem) {
  * @param {HTMLElement[]} elems
  * @param {RequestEntry[]} queryKeys
  * @param {Map<string, SearchResultEntry[]>} data
- * @param {any} conf
+ * @param {Conf} conf
  */
 function addDataCiteToTerms(elems, queryKeys, data, conf) {
   /** @type {Errors} */
@@ -370,7 +389,7 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
     const query = queryKeys[i];
 
     const { id } = query;
-    const results = data.get(id);
+    const results = data.get(id) ?? [];
     if (results.length === 1) {
       addDataCite(elem, query, results[0], conf);
     } else {
@@ -378,7 +397,7 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
       if (!collector.has(id)) {
         collector.set(id, { elems: [], results, query });
       }
-      collector.get(id).elems.push(elem);
+      collector.get(id)?.elems.push(elem);
     }
   }
 
@@ -389,7 +408,7 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
  * @param {HTMLElement} elem
  * @param {RequestEntry} query
  * @param {SearchResultEntry} result
- * @param {any} conf
+ * @param {Conf} conf
  */
 function addDataCite(elem, query, result, conf) {
   const { term, specs = [] } = query;
@@ -405,7 +424,12 @@ function addDataCite(elem, query, result, conf) {
   // a filename. That filename must be preserved if there's no specific path.
   if (citePath === "/") citePath = "";
   const citeFrag = url.hash.slice(1);
-  const dataset = { cite, citePath, citeFrag, linkType: type };
+  const dataset = /** @type {Record<string, string>} */ ({
+    cite,
+    citePath,
+    citeFrag,
+    linkType: type,
+  });
   if (forContext) dataset.linkFor = forContext[0];
   if (url.origin && url.origin !== "https://partial") {
     dataset.citeHref = url.href;
@@ -421,7 +445,7 @@ function addDataCite(elem, query, result, conf) {
  * @param {string} cite
  * @param {boolean} normative
  * @param {string} term
- * @param {any} conf
+ * @param {Conf} conf
  */
 function addToReferences(elem, cite, normative, term, conf) {
   const isNormRef = isNormative(elem);
@@ -436,7 +460,7 @@ function addToReferences(elem, cite, normative, term, conf) {
     // If it was originally informative, we move the existing
     // key to be normative.
     const existingKey = conf.informativeReferences.has(cite)
-      ? conf.informativeReferences.getCanonicalKey(cite)
+      ? (conf.informativeReferences.getCanonicalKey(cite) ?? cite)
       : cite;
     conf.normativeReferences.add(existingKey);
     conf.informativeReferences.delete(existingKey);
@@ -449,6 +473,11 @@ function addToReferences(elem, cite, normative, term, conf) {
 
 /** @param {Errors} errors */
 function showErrors({ ambiguous, notFound }) {
+  /**
+   * @param {string} term
+   * @param {RequestEntry} query
+   * @param {string[]} specs
+   */
   const getPrefilledFormURL = (term, query, specs = []) => {
     const url = new URL(API_URL);
     url.searchParams.set("term", term);
@@ -458,6 +487,10 @@ function showErrors({ ambiguous, notFound }) {
     return url.href;
   };
 
+  /**
+   * @param {string} howToCiteURL
+   * @param {string} originalTerm
+   */
   const howToFix = (howToCiteURL, originalTerm) => {
     return docLink`[See search matches for "${originalTerm}"](${howToCiteURL}) or ${"[Learn about this error|#error-term-not-found]"}.`;
   };
@@ -490,6 +523,7 @@ function showErrors({ ambiguous, notFound }) {
   }
 }
 
+/** @param {RequestEntry} obj */
 function objectHash(obj) {
   const str = JSON.stringify(obj, Object.keys(obj).sort());
   const buffer = new TextEncoder().encode(str);
@@ -499,10 +533,15 @@ function objectHash(obj) {
 /** @param {ArrayBuffer} buffer */
 function bufferToHexString(buffer) {
   const byteArray = new Uint8Array(buffer);
-  return [...byteArray].map(v => v.toString(16).padStart(2, "0")).join("");
+  return (
+    byteArray.toHex?.() ??
+    [...byteArray].map(v => v.toString(16).padStart(2, "0")).join("")
+  );
 }
 
+/** @param {Document} doc */
 function cleanup(doc) {
+  /** @type {NodeListOf<HTMLAnchorElement>} */
   const elems = doc.querySelectorAll(
     "a[data-xref-for], a[data-xref-type], a[data-link-for]"
   );
