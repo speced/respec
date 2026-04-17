@@ -184,14 +184,17 @@ export async function run() {
 
   await updateBiblio([...elems]);
 
-  // Pre-compute cite details for each element (avoids double toCiteDetails calls)
+  // Pre-compute cite details for each element (avoids double toCiteDetails calls).
+  // Capture original keys first since toCiteDetails may mutate dataset.cite.
+  const originalKeys = new Map();
   const citeDetailsMap = new Map();
   for (const elem of elems) {
+    originalKeys.set(elem, elem.dataset.cite);
     citeDetailsMap.set(elem, toCiteDetails(elem));
   }
 
   for (const elem of elems) {
-    const originalKey = elem.dataset.cite;
+    const originalKey = originalKeys.get(elem);
     const citeDetails = citeDetailsMap.get(elem);
     const linkProps = await getLinkProps(citeDetails);
     if (linkProps) {
