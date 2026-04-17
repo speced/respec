@@ -144,7 +144,8 @@ function toRefContent(ref) {
   const circular = new Set([key]);
   while (refcontent && refcontent.aliasOf) {
     if (circular.has(refcontent.aliasOf)) {
-      refcontent = /** @type {any} */ (null);
+      // @ts-expect-error circular
+      refcontent = null;
       const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
       showError(msg, name);
     } else {
@@ -285,24 +286,17 @@ function decorateInlineReference(refs, aliases) {
       const selectors = (aliases.get(refcontent.id ?? "") ?? [])
         .map(alias => `a.bibref[href="#${bibRefId(alias)}"]`)
         .join(",");
+      /** @type {NodeListOf<HTMLAnchorElement>} */
       const elems = document.querySelectorAll(selectors);
       return { refUrl, elems, refcontent };
     })
-    .forEach(
-      (
-        /** @type {{ refUrl: string, elems: NodeListOf<Element>, refcontent: any }} */ {
-          refUrl,
-          elems,
-          refcontent,
-        }
-      ) => {
-        elems.forEach((/** @type {Element} */ a) => {
-          a.setAttribute("href", refUrl);
-          a.setAttribute("title", refcontent.title);
-          /** @type {any} */ (a).dataset.linkType = "biblio";
-        });
-      }
-    );
+    .forEach(({ refUrl, elems, refcontent }) => {
+      elems.forEach(a => {
+        a.setAttribute("href", refUrl);
+        a.setAttribute("title", refcontent.title);
+        a.dataset.linkType = "biblio";
+      });
+    });
 }
 
 /**

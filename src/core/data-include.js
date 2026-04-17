@@ -101,11 +101,12 @@ async function runIncludes(root, currentDepth) {
         // For performance reasons, only allow limited nesting.
         await runIncludes(el, currentDepth + 1);
       }
-    } catch (err) {
-      const msg = `\`data-include\` failed: \`${url}\` (${/** @type {Error} */ (err).message}).`;
+    } catch (e) {
+      const err = /** @type {Error} */ (e);
+      const msg = `\`data-include\` failed: \`${url}\` (${err.message}).`;
       showError(msg, name, {
         elements: [el],
-        cause: /** @type {Error} */ (err),
+        cause: err,
       });
     }
   });

@@ -36,7 +36,7 @@ export function run() {
   Array.from(document.querySelectorAll("section.informative"))
     .map(informative => informative.querySelector("h2, h3, h4, h5, h6"))
     .filter(
-      /** @type {(h: Element | null) => h is Element} */ (
+      /** @type {(h: Element | null) => h is HTMLHeadingElement} */ (
         heading => heading !== null
       )
     )

@@ -163,9 +163,7 @@ function parseInlineIDL(str) {
       const [, identifier, allArgs] = /** @type {RegExpMatchArray} */ (
         value.match(slotRegex)
       );
-      const slotType = /** @type {"method"|"attribute"} */ (
-        allArgs ? "method" : "attribute"
-      );
+      const slotType = allArgs ? "method" : "attribute";
       const args =
         allArgs
           ?.slice(1, -1)

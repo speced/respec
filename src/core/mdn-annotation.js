@@ -87,7 +87,7 @@ function attachMDNDetail(mdnSpec) {
  */
 function buildBrowserSupportTable(support) {
   /**
-   * @param {string | keyof MDN_BROWSERS} browserId
+   * @param {keyof MDN_BROWSERS} browserId
    * @param {"Yes" | "No" | "Unknown"} yesNoUnknown
    * @param {string} version
    * @returns {HTMLTableRowElement}
@@ -96,15 +96,13 @@ function buildBrowserSupportTable(support) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
     return html`<tr class="${classList}">
-      <td>
-        ${/** @type {Record<string, string>} */ (MDN_BROWSERS)[browserId]}
-      </td>
+      <td>${MDN_BROWSERS[browserId]}</td>
       <td>${version ? version : displayStatus}</td>
     </tr>`;
   }
 
   /**
-   * @param {string | keyof MDN_BROWSERS} browserId
+   * @param {keyof MDN_BROWSERS} browserId
    * @param {VersionDetails} versionData
    */
   function createRowFromBrowserData(browserId, versionData) {
@@ -121,8 +119,11 @@ function buildBrowserSupportTable(support) {
     }
   }
 
+  const browsers = /** @type {(keyof typeof MDN_BROWSERS)[]} */ (
+    Object.keys(MDN_BROWSERS)
+  );
   return html`<table>
-    ${Object.keys(MDN_BROWSERS).map(browserId => {
+    ${browsers.map(browserId => {
       return support[browserId]
         ? createRowFromBrowserData(browserId, support[browserId])
         : createRow(browserId, "Unknown", "");

@@ -113,9 +113,7 @@ export function run(conf) {
       .split(/,/gm)
       .map(url => url.trim());
     const testURLs = toTestURLs(tests, conf.testSuiteURI, elem).filter(
-      /** @type {(u: string | undefined) => u is string} */ (
-        u => u !== undefined
-      )
+      u => u !== undefined
     );
     handleDuplicates(testURLs, elem);
     const details = toHTML(testURLs);

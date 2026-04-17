@@ -109,13 +109,12 @@ function toggleMenu() {
  * @param {Element} element
  */
 function trapFocus(element) {
+  /** @type {NodeListOf<HTMLElement>} */
   const focusableEls = element.querySelectorAll(
     "a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])"
   );
-  const firstFocusableEl = /** @type {HTMLElement} */ (focusableEls[0]);
-  const lastFocusableEl = /** @type {HTMLElement} */ (
-    focusableEls[focusableEls.length - 1]
-  );
+  const firstFocusableEl = focusableEls[0];
+  const lastFocusableEl = focusableEls[focusableEls.length - 1];
   if (firstFocusableEl) {
     firstFocusableEl.focus();
   }

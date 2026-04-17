@@ -43,9 +43,10 @@ export function sub(topic, cb, options = { once: false }) {
   const listener = async ev => {
     try {
       await cb(ev.detail);
-    } catch (error) {
-      const msg = `Error in handler for topic "${topic}": ${/** @type {Error} */ (error).message}`;
-      showError(msg, `sub:${topic}`, { cause: /** @type {Error} */ (error) });
+    } catch (err) {
+      const error = /** @type {Error} */ (err);
+      const msg = `Error in handler for topic "${topic}": ${error.message}`;
+      showError(msg, `sub:${topic}`, { cause: error });
     }
   };
   subscriptions.addEventListener(topic, /** @type {any} */ (listener), options);

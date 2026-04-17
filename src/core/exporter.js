@@ -41,9 +41,7 @@ export function rsDocToDataURL(mimeType, doc = document) {
  * @param {Document} doc
  */
 export function serialize(format, doc) {
-  const cloneDoc = /** @type {Document} */ (
-    /** @type {unknown} */ (doc.cloneNode(true))
-  );
+  const cloneDoc = doc.cloneNode(true);
   cleanup(cloneDoc);
   let result = "";
   switch (format) {
@@ -83,13 +81,11 @@ function cleanup(cloneDoc) {
   }
 
   // Move charset to near top, as it needs to be in the first 512 bytes.
-  let metaCharset = cloneDoc.querySelector(
-    "meta[charset], meta[content*='charset=']"
-  );
-  if (!metaCharset) {
-    metaCharset = html`<meta charset="utf-8" />`;
-  }
-  insertions.appendChild(/** @type {Element} */ (metaCharset));
+  /** @type {HTMLMetaElement} */
+  const metaCharset =
+    cloneDoc.querySelector("meta[charset], meta[content*='charset=']") ||
+    html`<meta charset="utf-8" />`;
+  insertions.appendChild(metaCharset);
 
   // Add meta generator
   const respecVersion = `ReSpec ${window.respecVersion || "Developer Channel"}`;

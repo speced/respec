@@ -132,9 +132,10 @@ async function addJSONLDInfo(conf, doc) {
   }
 
   // description from meta description
+  /** @type {HTMLMetaElement | null} */
   const description = doc.head.querySelector("meta[name=description]");
   if (description) {
-    jsonld.description = /** @type {HTMLMetaElement} */ (description).content;
+    jsonld.description = description.content;
   }
 
   // Editors

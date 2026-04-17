@@ -235,8 +235,9 @@ export default (conf, options) => {
   sub(
     "beforesave",
     /** @param {Document} doc */ doc => {
+      /** @type {HTMLDetailsElement|null} */
       const details = doc.querySelector(".head details");
-      if (details) /** @type {HTMLDetailsElement} */ (details).open = true;
+      if (details) details.open = true;
     }
   );
   return html`<div class="head">

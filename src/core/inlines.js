@@ -20,6 +20,7 @@ import { idlStringToHtml } from "./inline-idl-parser.js";
 import { renderInlineCitation } from "./render-biblio.js";
 
 export const name = "core/inlines";
+/** @type {Record<string, boolean>} */
 export const rfc2119Usage = {};
 
 /** @param {RegExp[]} regexes */
@@ -117,7 +118,7 @@ function inlineRFC2119Matches(matched) {
   const value = norm(matched);
   const nodeElement = html`<em class="rfc2119">${value}</em>`;
   // remember which ones were used
-  /** @type {any} */ (rfc2119Usage)[value] = true;
+  rfc2119Usage[value] = true;
   return nodeElement;
 }
 
@@ -272,8 +273,7 @@ export function run(conf) {
   conf.normativeReferences = new InsensitiveStringSet();
   conf.informativeReferences = new InsensitiveStringSet();
 
-  if (!conf.respecRFC2119)
-    conf.respecRFC2119 = /** @type {Record<string, boolean>} */ (rfc2119Usage);
+  if (!conf.respecRFC2119) conf.respecRFC2119 = rfc2119Usage;
 
   // PRE-PROCESSING
   /** @type {NodeListOf<HTMLElement>} */

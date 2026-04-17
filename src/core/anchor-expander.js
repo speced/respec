@@ -152,6 +152,7 @@ function processTable(matchingTable, id, a) {
  * @param {HTMLAnchorElement} a
  */
 function processSection(matchingElement, id, a) {
+  /** @type {HTMLHeadingElement|null} */
   const heading = matchingElement.querySelector("h6, h5, h4, h3, h2");
   if (!heading) {
     a.textContent = a.getAttribute("href");
@@ -161,8 +162,8 @@ function processSection(matchingElement, id, a) {
     showError(msg, name, { title, elements: [a] });
     return;
   }
-  processHeading(/** @type {HTMLElement} */ (heading), a);
-  localize(/** @type {HTMLElement} */ (heading), a);
+  processHeading(heading, a);
+  localize(heading, a);
 }
 
 /**

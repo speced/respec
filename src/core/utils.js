@@ -259,8 +259,7 @@ export function toKeyValuePairs(obj, delimiter = ", ", separator = "=") {
  * @param {string | string[]} urls
  */
 export function linkCSS(doc, urls) {
-  /** @type {string[]} */
-  const stylesArray = /** @type {any} */ ([]).concat(urls);
+  const stylesArray = /** @type {string[]} */ ([]).concat(urls);
   const frag = stylesArray
     .map(url => {
       const link = doc.createElement("link");

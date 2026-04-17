@@ -22,10 +22,10 @@ function getLanguageHint(classList) {
 }
 
 /**
- * @param {Element} elem
+ * @param {HTMLElement} elem
  */
 async function highlightElement(elem) {
-  const htmlElem = /** @type {HTMLElement} */ (elem);
+  const htmlElem = elem;
   htmlElem.setAttribute("aria-busy", "true");
   const languages = getLanguageHint(htmlElem.classList);
   let response;
@@ -89,11 +89,13 @@ export async function run(conf) {
   // Nothing to highlight
   if (conf.noHighlightCSS) return;
   const highlightables = [
-    ...document.querySelectorAll(`
+    .../** @type {NodeListOf<HTMLElement>} */ (
+      document.querySelectorAll(`
     pre:not(.idl):not(.nohighlight) > code:not(.nohighlight),
     pre:not(.idl):not(.nohighlight),
     code.highlight
-  `),
+  `)
+    ),
   ].filter(
     // Filter pre's that contain code
     elem => elem.localName !== "pre" || !elem.querySelector("code")
