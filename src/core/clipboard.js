@@ -13,21 +13,21 @@ const COPY_SVG =
  * The button excludes the header element (matched by headerSelector) from copy.
  *
  * @param {string} headerSelector - Selector for the header to exclude from copy
- * @param {string} [label="Copy to clipboard"] - Accessible label and tooltip for the copy button
+ * @param {string} [title="Copy to clipboard"] - Accessible label and tooltip for the copy button
  * @returns {HTMLButtonElement}
  */
-export function createCopyButton(headerSelector, label = "Copy to clipboard") {
+export function createCopyButton(headerSelector, title = "Copy to clipboard") {
   const button = document.createElement("button");
   button.innerHTML = COPY_SVG;
-  button.title = label;
-  button.setAttribute("aria-label", label);
+  button.title = title;
+  button.setAttribute("aria-label", title);
   button.classList.add("respec-button-copy-paste", "removeOnSave");
   button.addEventListener("click", () => {
     const pre = button.closest("pre");
     if (!pre) return;
-    const clone = pre.cloneNode(true);
+    const clone = /** @type {HTMLElement} */ (pre.cloneNode(true));
     clone.querySelector(headerSelector)?.remove();
-    navigator.clipboard.writeText(clone.textContent);
+    navigator.clipboard.writeText(clone.textContent ?? "");
   });
   return button;
 }

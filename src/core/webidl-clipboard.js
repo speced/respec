@@ -15,5 +15,5 @@ export const name = "core/webidl-clipboard";
  * @param {HTMLSpanElement} idlHeader
  */
 export function addCopyIDLButton(idlHeader) {
-  idlHeader.append(createCopyButton(".idlHeader"));
+  idlHeader.append(createCopyButton(".idlHeader", "Copy IDL to clipboard"));
 }
