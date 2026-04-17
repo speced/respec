@@ -11,7 +11,7 @@ import { informativeRefsInNormative } from "../xref.js";
 const ruleName = "informative-dfn";
 export const name = "core/linter-rules/informative-dfn";
 
-/** @type {Record<string, { msg(term: string, cite: string): string; readonly hint: string }>} */
+/** @satisfies {Record<string, { msg(term: string, cite: string): string; readonly hint: string }>} */
 const localizationStrings = {
   en: {
     msg(term, cite) {

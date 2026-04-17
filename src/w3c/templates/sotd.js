@@ -60,7 +60,7 @@ const localizationStrings = {
   },
 };
 
-export const l10n = /** @type {any} */ (getIntlData(localizationStrings));
+export const l10n = getIntlData(localizationStrings);
 
 const processLink = "https://www.w3.org/policies/process/20250818/";
 

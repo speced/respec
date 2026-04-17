@@ -76,7 +76,7 @@ const localizationStrings = {
     security_considerations: "Zásady bezpečnosti",
   },
 };
-const l10n = /** @type {any} */ (getIntlData(localizationStrings));
+const l10n = getIntlData(localizationStrings);
 
 export const requiresSomeSectionStatus = new Set([...recTrackStatus]);
 requiresSomeSectionStatus.delete("DISC"); // "Discontinued Draft"

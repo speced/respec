@@ -84,7 +84,7 @@ const localizationStrings = {
   },
 };
 
-const l10n = /** @type {any} */ (getIntlData(localizationStrings));
+const l10n = getIntlData(localizationStrings);
 
 /**
  * @typedef {object} Report

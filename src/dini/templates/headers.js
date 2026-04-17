@@ -85,7 +85,7 @@ const localizationStrings = {
   },
 };
 
-export const l10n = /** @type {any} */ (getIntlData(localizationStrings));
+export const l10n = getIntlData(localizationStrings);
 
 /**
  * @param {Conf} conf

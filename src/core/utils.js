@@ -184,9 +184,9 @@ export function norm(str) {
 }
 
 /**
- * @template {Record<string, Record<string, string|Function>>} T
+ * @template {{ en: Record<string, string|Function>, [lang: string]: Record<string, string|Function|undefined> }} T
  * @param {T} localizationStrings
- * @returns {T[keyof T]}
+ * @returns {T['en']}
  */
 export function getIntlData(localizationStrings, lang = docLang) {
   lang = lang.toLowerCase();
@@ -206,7 +206,7 @@ export function getIntlData(localizationStrings, lang = docLang) {
 }
 
 /**
- * @template {Record<string, Record<string, string|Function>>} T
+ * @template {Record<string, Record<string, string|Function|undefined>>} T
  * @param {T} localizationStrings
  * @param {string} key
  */

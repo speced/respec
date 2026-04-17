@@ -11,7 +11,7 @@ import {
 } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 
-/** @type {Record<string, { until(date: HTMLElement): HTMLElement }>} */
+/** @satisfies {Record<string, { until(date: HTMLElement): HTMLElement }>} */
 const localizationStrings = {
   en: {
     until(date) {

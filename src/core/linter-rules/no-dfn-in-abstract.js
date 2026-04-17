@@ -20,7 +20,7 @@ import { docLink, getIntlData, norm, showWarning } from "../utils.js";
 const ruleName = "no-dfn-in-abstract";
 export const name = `core/linter-rules/${ruleName}`;
 
-/** @type {Record<string, { msg(text: string): string; readonly hint: string }>} */
+/** @satisfies {Record<string, { msg(text: string): string; readonly hint: string }>} */
 const localizationStrings = {
   en: {
     msg(text) {

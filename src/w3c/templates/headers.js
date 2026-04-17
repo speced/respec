@@ -204,7 +204,7 @@ const localizationStrings = {
     your_topic_here: "VÁŠ PŘEDMĚT ZDE",
   },
 };
-export const l10n = /** @type {any} */ (getIntlData(localizationStrings));
+export const l10n = getIntlData(localizationStrings);
 
 /** @param {Conf} conf */
 export function getSpecSubTitleElem(conf) {

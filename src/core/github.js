@@ -55,7 +55,7 @@ const localizationStrings = {
     participate: "Mitmachen:",
   },
 };
-const l10n = /** @type {any} */ (getIntlData(localizationStrings));
+const l10n = getIntlData(localizationStrings);
 
 /**
  * @param {Conf} conf
