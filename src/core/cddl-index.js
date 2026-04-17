@@ -21,8 +21,10 @@ export function run() {
     return;
   }
 
-  // Query for descendant headings, e.g., "h2:first-child, etc."
-  const query = [2, 3, 4, 5, 6].map(level => `h${level}:first-child`).join(",");
+  // Query only immediate-child headings, e.g., ":scope > h2:first-child"
+  const query = [2, 3, 4, 5, 6]
+    .map(level => `:scope > h${level}:first-child`)
+    .join(",");
   if (!cddlIndexSec.querySelector(query)) {
     const header = document.createElement("h2");
     if (cddlIndexSec.title) {
@@ -79,19 +81,22 @@ export function run() {
     });
   } else {
     // Single consolidated pre
-    cddlIndexSec.append(createConsolidatedPre(cddlBlocks));
+    cddlIndexSec.append(createConsolidatedPre(cddlBlocks, "actual-cddl-index"));
   }
 }
 
 /**
  * Create a consolidated <pre class="cddl"> from multiple code blocks.
  * @param {HTMLElement[]} cddlCodes - array of <code> elements inside <pre class="cddl">
+ * @param {string} [id] - optional id for the consolidated <pre>
  * @returns {HTMLPreElement}
  */
-function createConsolidatedPre(cddlCodes) {
+function createConsolidatedPre(cddlCodes, id) {
   const pre = document.createElement("pre");
   pre.classList.add("cddl", "def", "highlight");
-  pre.id = "actual-cddl-index";
+  if (id) {
+    pre.id = id;
+  }
 
   const code = document.createElement("code");
   cddlCodes

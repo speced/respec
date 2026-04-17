@@ -716,6 +716,39 @@ describe("Core - CDDL", () => {
         "doesn't normatively declare any CDDL"
       );
     });
+
+    it("adds a heading when only nested headings are present", async () => {
+      const body = `
+        <pre class="cddl">
+          attire = "bow tie"
+        </pre>
+        <section id="cddl-index">
+          <section><h2>Nested heading</h2></section>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const indexSec = doc.getElementById("cddl-index");
+      expect(indexSec.firstElementChild?.localName).toBe("h2");
+      expect(indexSec.firstElementChild?.textContent).toBe("CDDL Index");
+    });
+
+    it("does not duplicate actual-cddl-index id for module sections", async () => {
+      const body = `
+        <pre class="cddl" data-cddl-module="local end">
+          Command = { method: tstr }
+        </pre>
+        <pre class="cddl" data-cddl-module="remote end">
+          Event = { type: tstr }
+        </pre>
+        <section id="cddl-index"></section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      expect(
+        doc.querySelectorAll("section#cddl-index pre#actual-cddl-index")
+      ).toHaveSize(0);
+    });
   });
 
   describe("highlight.js exclusion", () => {

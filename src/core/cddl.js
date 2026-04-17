@@ -301,8 +301,8 @@ function createReSpecCDDLMarker(MarkerBase, state) {
     serializeValue(prefix, value, suffix, node) {
       const fullValue = prefix + value + suffix;
 
-      // String value in a type choice at rule level → value definition
-      if (node.type === "text" && this.#isTypeChoiceValue(node)) {
+      // String value directly under CddlType at rule level → value definition
+      if (node.type === "text" && this.#isTypeValue(node)) {
         const forType = this.#currentRuleName;
         if (forType) {
           const id = `cddl-value-${sanitizeId(forType)}-${sanitizeId(value)}`;
@@ -337,13 +337,12 @@ function createReSpecCDDLMarker(MarkerBase, state) {
     }
 
     /**
-     * Check if a Value node is in a type choice position (not a map key).
-     * Matches: Value -> Type (at any nesting depth within a Rule).
-     * Excludes: Value -> Memberkey (string used as a map key literal).
+     * Check if a Value node is directly under CddlType.
+     * This excludes map key literals, which are represented under Memberkey.
      * @param {object} node
      * @returns {boolean}
      */
-    #isTypeChoiceValue(node) {
+    #isTypeValue(node) {
       const parent = node.parentNode;
       if (!parent) return false;
       return parent instanceof CddlType;
