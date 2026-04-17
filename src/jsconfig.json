@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es2022",
-    "moduleResolution": "node",
+    "target": "es2025",
+    "lib": ["es2025", "esnext.typedarrays", "dom"],
+    "moduleResolution": "bundler",
     "noImplicitThis": true,
-    "module": "es2022"
+    "module": "es2022",
+    "checkJs": false,
+    "stableTypeOrdering": true
   }
 }

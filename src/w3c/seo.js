@@ -31,9 +31,11 @@ export const requiresCanonicalLink = new Set([
   "finding",
 ]);
 
+/** @param {Conf} conf */
 export async function run(conf) {
   // Don't include a canonical URL for documents that haven't been published.
   if (
+    // @ts-expect-error -- specStatus may be undefined but Set.has handles it
     (!conf.canonicalURI && !requiresCanonicalLink.has(conf.specStatus)) ||
     !conf.shortName
   ) {
@@ -76,12 +78,18 @@ export async function run(conf) {
   }
 }
 
+/**
+ * @param {Conf} conf
+ * @param {Document} doc
+ */
 async function addJSONLDInfo(conf, doc) {
-  const rdfStatus = status2rdf[conf.specStatus];
+  // @ts-expect-error -- specStatus may be undefined but that's fine for indexing
+  const rdfStatus = /** @type {any} */ (status2rdf)[conf.specStatus];
   // Content for JSON
   const type = ["TechArticle"];
   if (rdfStatus) type.push(rdfStatus);
 
+  /** @type {any} */
   const jsonld = {
     "@context": [
       "http://schema.org",
@@ -114,6 +122,7 @@ async function addJSONLDInfo(conf, doc) {
 
   // add any additional copyright holders
   if (conf.additionalCopyrightHolders) {
+    /** @type {string[]} */
     const addl = Array.isArray(conf.additionalCopyrightHolders)
       ? conf.additionalCopyrightHolders
       : [conf.additionalCopyrightHolders];
@@ -124,6 +133,7 @@ async function addJSONLDInfo(conf, doc) {
   }
 
   // description from meta description
+  /** @type {HTMLMetaElement | null} */
   const description = doc.head.querySelector("meta[name=description]");
   if (description) {
     jsonld.description = description.content;
@@ -146,7 +156,7 @@ async function addJSONLDInfo(conf, doc) {
     citationIds.map(ref => resolveRef(ref))
   );
   jsonld.citation = citationContents
-    .filter(ref => typeof ref === "object")
+    .filter(ref => ref !== null && typeof ref === "object")
     .map(addRef);
 
   const script = doc.createElement("script");
@@ -157,8 +167,10 @@ async function addJSONLDInfo(conf, doc) {
 
 /**
  * Turn editors and authors into a list of JSON-LD relationships
+ * @param {Person} arg0
  */
 function addPerson({ name, url, mailto, company, companyURL }) {
+  /** @type {any} */
   const ed = {
     type: "Person",
     name,
@@ -176,9 +188,11 @@ function addPerson({ name, url, mailto, company, companyURL }) {
 
 /**
  * Create a reference URL from the ref
+ * @param {BiblioData} ref
  */
 function addRef(ref) {
   const { href: id, title: name, href: url } = ref;
+  /** @type {any} */
   const jsonld = {
     id,
     type: "TechArticle",

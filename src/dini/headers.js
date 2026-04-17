@@ -79,6 +79,9 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   conf.isUnofficial = conf.specStatus === "unofficial";
   conf.isBasic = conf.specStatus === "base";
@@ -95,6 +98,9 @@ export function run(conf) {
   );
   conf.publishYear = conf.publishDate.getUTCFullYear();
   conf.publishHumanDate = DINIDate.format(conf.publishDate);
+  /**
+   * @param {Person} it
+   */
   const peopCheck = function (it) {
     if (!it.name) {
       const msg = "All authors and editors must have a name.";
@@ -104,7 +110,7 @@ export function run(conf) {
       try {
         it.orcid = normalizeOrcid(it.orcid);
       } catch (e) {
-        const msg = `"${it.orcid}" is not an ORCID. ${e.message}`;
+        const msg = `"${it.orcid}" is not an ORCID. ${/** @type {Error} */ (e).message}`;
         showError(msg, name);
         // A failed orcid link could link to something outside of orcid,
         // which would be misleading.
@@ -145,7 +151,10 @@ export function run(conf) {
   });
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  conf.textStatus = status2text[conf.specStatus];
+  conf.textStatus = /** @type {Record<string, string>} */ (status2text)[
+    // @ts-expect-error -- specStatus is always set by this point
+    conf.specStatus
+  ];
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   // configuration done - yay!
