@@ -41,11 +41,12 @@ const loadOps = {
  */
 function commandRunner(file, baseArgs = []) {
   /**
-   * @param {string} cmd
+   * @param {string | string[]} cmd
    * @param {{showOutput: boolean}} [options]
    */
   const runner = (cmd, options = { showOutput: false }) => {
-    const args = [...baseArgs, ...cmd.split(/\s+/).filter(Boolean)];
+    const cmdArgs = Array.isArray(cmd) ? cmd : cmd.split(/\s+/).filter(Boolean);
+    const args = [...baseArgs, ...cmdArgs];
     console.log(colors.cyan(`Run: ${file} ${colors.grey(args.join(" "))}`));
     if (DEBUG) {
       return Promise.resolve("");
@@ -361,7 +362,13 @@ const run = async () => {
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
-    await npm(`version ${version} -m "v${version}" --no-git-tag-version`);
+    await npm([
+      "version",
+      version,
+      "-m",
+      `v${version}`,
+      "--no-git-tag-version",
+    ]);
 
     // 3. Run the build script (node tools/builder.js).
     await npm("run builddeps");
@@ -371,19 +378,22 @@ const run = async () => {
     console.log(colors.green(" Making sure the generated version is ok... 🕵🏻"));
     const source = `file:///${__dirname}/../examples/basic.built.html`;
     const tempFile = path.join(os.tmpdir(), "index.html");
-    await node(`./tools/respec2html.js -e --timeout 30 ${source} ${tempFile}`, {
-      showOutput: true,
-    });
+    await node(
+      ["./tools/respec2html.js", "-e", "--timeout", "30", source, tempFile],
+      {
+        showOutput: true,
+      }
+    );
 
     // Do HTML validation
     console.log(colors.green(" Making sure HTML validator is happy... 🕵🏻"));
-    await validator(`--stdout ${tempFile}`);
+    await validator(["--stdout", tempFile]);
     console.log(colors.green(" Build Seems good... ✅"));
 
     // 4. Commit your changes
     await git("add builds package.json pnpm-lock.yaml");
-    await git(`commit -m "v${version}"`);
-    await git(`tag "v${version}"`);
+    await git(["commit", "-m", `v${version}`]);
+    await git(["tag", `v${version}`]);
 
     // 5. Merge to gh-pages (git checkout gh-pages; git merge main)
     await git("checkout gh-pages");
