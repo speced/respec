@@ -1,4 +1,4 @@
-// ReSpec Worker v1.1.0
+// ReSpec Worker
 "use strict";
 // hljs is either inlined by core/worker.js (preferred) or loaded below via
 // importScripts as a fallback when the inline fetch was not possible.
