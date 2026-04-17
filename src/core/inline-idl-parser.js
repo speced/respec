@@ -106,17 +106,21 @@ function parseInlineIDL(str) {
   /** @type {InlineIdl[]} */
   const results = [];
   while (tokens.length) {
-    const value = tokens.pop();
+    const value = tokens.pop() ?? "";
     // Method
     if (methodRegex.test(value)) {
       const [, identifier, allArgs, altText, altArgs] =
-        value.match(methodRegex);
-      const args = allArgs.split(/,\s*/).filter(arg => arg);
+        /** @type {RegExpMatchArray} */ (value.match(methodRegex));
+      const args = (allArgs ?? "")
+        .split(/,\s*/)
+        .filter(/** @param {string} arg */ arg => arg);
       const renderText = altText?.trim();
-      const renderArgs = altArgs?.split(/,\s*/).filter(arg => arg);
+      const renderArgs = altArgs
+        ?.split(/,\s*/)
+        .filter(/** @param {string} arg */ arg => arg);
       results.push({
         type: "method",
-        identifier,
+        identifier: identifier ?? "",
         args,
         renderParent,
         renderText,
@@ -126,33 +130,49 @@ function parseInlineIDL(str) {
     }
     // Enum["enum value"]
     if (enumRegex.test(value)) {
-      const [, identifier, enumValue] = value.match(enumRegex);
-      results.push({ type: "enum", identifier, enumValue, renderParent });
+      const [, identifier, enumValue] = /** @type {RegExpMatchArray} */ (
+        value.match(enumRegex)
+      );
+      results.push({
+        type: "enum",
+        identifier: identifier ?? "",
+        enumValue: enumValue ?? "",
+        renderParent,
+      });
       continue;
     }
     // Exception - "NotAllowedError"
     // Or alternate enum syntax: {{ EnumContainer / "some enum value" }}
     if (exceptionRegex.test(value)) {
-      const [, identifier] = value.match(exceptionRegex);
+      const [, identifier] = /** @type {RegExpMatchArray} */ (
+        value.match(exceptionRegex)
+      );
       if (renderParent) {
-        results.push({ type: "exception", identifier });
+        results.push({ type: "exception", identifier: identifier ?? "" });
       } else {
-        results.push({ type: "enum", enumValue: identifier, renderParent });
+        results.push({
+          type: "enum",
+          enumValue: identifier ?? "",
+          renderParent,
+        });
       }
       continue;
     }
     // internal slot
     if (slotRegex.test(value)) {
-      const [, identifier, allArgs] = value.match(slotRegex);
+      const [, identifier, allArgs] = /** @type {RegExpMatchArray} */ (
+        value.match(slotRegex)
+      );
       const slotType = allArgs ? "method" : "attribute";
-      const args = allArgs
-        ?.slice(1, -1)
-        .split(/,\s*/)
-        .filter(arg => arg);
+      const args =
+        allArgs
+          ?.slice(1, -1)
+          .split(/,\s*/)
+          .filter(/** @param {string} arg */ arg => arg) ?? [];
       results.push({
         type: "internal-slot",
         slotType,
-        identifier,
+        identifier: identifier ?? "",
         args,
         renderParent,
       });
@@ -160,8 +180,14 @@ function parseInlineIDL(str) {
     }
     // attribute
     if (attributeRegex.test(value) && tokens.length) {
-      const [, identifier] = value.match(attributeRegex);
-      results.push({ type: "attribute", identifier, renderParent });
+      const [, identifier] = /** @type {RegExpMatchArray} */ (
+        value.match(attributeRegex)
+      );
+      results.push({
+        type: "attribute",
+        identifier: identifier ?? "",
+        renderParent,
+      });
       continue;
     }
     if (idlPrimitiveRegex.test(value)) {
@@ -216,10 +242,11 @@ function renderInternalSlot(details) {
   const { identifier, parent, slotType, renderParent, args } = details;
   const { identifier: linkFor } = parent || {};
   const isMethod = slotType === "method";
+  const safeArgs = args ?? [];
   const argsHtml = isMethod
-    ? html`(${htmlJoinComma(args, htmlArgMapper)})`
+    ? html`(${htmlJoinComma(safeArgs, htmlArgMapper)})`
     : null;
-  const textArgs = isMethod ? `(${args.join(", ")})` : "";
+  const textArgs = isMethod ? `(${safeArgs.join(", ")})` : "";
   const lt = `[[${identifier}]]${textArgs}`;
   const element = html`${parent && renderParent ? "." : ""}<a
       data-xref-type="${slotType}"
@@ -232,6 +259,11 @@ function renderInternalSlot(details) {
   return element;
 }
 
+/**
+ * @param {string} str
+ * @param {number} i
+ * @param {string[]} array
+ */
 function htmlArgMapper(str, i, array) {
   if (i < array.length - 1) return html`<var>${str}</var>`;
   // only the last argument can be variadic
@@ -343,7 +375,10 @@ export function idlStringToHtml(str) {
   } catch (error) {
     const el = html`<span>{{ ${str} }}</span>`;
     const title = "Error: Invalid inline IDL string.";
-    showError(error.message, "core/inlines", { title, elements: [el] });
+    showError(/** @type {Error} */ (error).message, "core/inlines", {
+      title,
+      elements: [el],
+    });
     return el;
   }
   const render = html(document.createDocumentFragment());

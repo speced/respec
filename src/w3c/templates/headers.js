@@ -25,6 +25,9 @@ const localizationStrings = {
     latest_recommendation: "Latest Recommendation:",
     message_topic: "… message topic …",
     more_details_about_this_doc: "More details about this document",
+    /**
+     * @param {boolean} plural
+     */
     multiple_alternates(plural) {
       return `This document is also available in ${
         plural ? "these non-normative formats" : "this non-normative format"
@@ -150,6 +153,9 @@ const localizationStrings = {
     latest_published_version: "Letzte publizierte Fassung:",
     latest_recommendation: "Aktuellste Empfehlung:",
     more_details_about_this_doc: "Mehr Informationen über dieses Dokument",
+    /**
+     * @param {boolean} plural
+     */
     multiple_alternates(plural) {
       return `Dieses Dokument ist ebenfalls in ${
         plural
@@ -182,6 +188,9 @@ const localizationStrings = {
     latest_recommendation: "Nejnovější doporučení:",
     message_topic: "… předmět zprávy …",
     more_details_about_this_doc: "Více informací o tomto dokumentu",
+    /**
+     * @param {boolean} plural
+     */
     multiple_alternates(plural) {
       return `Tento dokument je také dostupný v ${plural ? "těchto ne-normativních formátech" : "tomto ne-normativním formátu"}:`;
     },
@@ -197,6 +206,7 @@ const localizationStrings = {
 };
 export const l10n = getIntlData(localizationStrings);
 
+/** @param {Conf} conf */
 export function getSpecSubTitleElem(conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
 
@@ -214,17 +224,25 @@ export function getSpecSubTitleElem(conf) {
   return specSubTitleElem;
 }
 
+/**
+ * @param {Conf} conf
+ * @param {{ multipleAlternates: boolean; alternatesHTML: unknown }} options
+ */
 export default (conf, options) => {
   /**
    * After export, we let fixup.js handle the <details>.
    */
-  sub("beforesave", doc => {
-    const details = doc.querySelector(".head details");
-    if (details) details.open = true;
-  });
+  sub(
+    "beforesave",
+    /** @param {Document} doc */ doc => {
+      /** @type {HTMLDetailsElement|null} */
+      const details = doc.querySelector(".head details");
+      if (details) details.open = true;
+    }
+  );
   return html`<div class="head">
-    ${conf.logos.length
-      ? html`<p class="logos">${conf.logos.map(showLogo)}</p>`
+    ${(conf.logos ?? []).length
+      ? html`<p class="logos">${(conf.logos ?? []).map(showLogo)}</p>`
       : ""}
     ${document.querySelector("h1#title")} ${getSpecSubTitleElem(conf)}
     <p id="w3c-state">${renderSpecTitle(conf)}</p>
@@ -264,7 +282,10 @@ export default (conf, options) => {
                 : ""}
               ${conf.github
                 ? html`<dd>
-                    <a href="${conf.github.commitHistoryURL}"
+                    <a
+                      href="${
+                        /** @type {any} */ (conf.github).commitHistoryURL
+                      }"
                       >${l10n.commit_history}</a
                     >
                   </dd>`
@@ -309,25 +330,29 @@ export default (conf, options) => {
                 <dt>${l10n.latest_recommendation}</dt>
                 <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
               `}
-        ${conf.editors.length
+        ${(conf.editors ?? []).length
           ? html`
-              <dt>${conf.editors.length > 1 ? l10n.editors : l10n.editor}</dt>
+              <dt>
+                ${(conf.editors ?? []).length > 1 ? l10n.editors : l10n.editor}
+              </dt>
               ${showPeople(conf, "editors")}
             `
           : ""}
-        ${conf.formerEditors.length
+        ${(conf.formerEditors ?? []).length
           ? html`
               <dt>
-                ${conf.formerEditors.length > 1
+                ${(conf.formerEditors ?? []).length > 1
                   ? l10n.former_editors
                   : l10n.former_editor}
               </dt>
               ${showPeople(conf, "formerEditors")}
             `
           : ""}
-        ${conf.authors.length
+        ${(conf.authors ?? []).length
           ? html`
-              <dt>${conf.authors.length > 1 ? l10n.authors : l10n.author}</dt>
+              <dt>
+                ${(conf.authors ?? []).length > 1 ? l10n.authors : l10n.author}
+              </dt>
               ${showPeople(conf, "authors")}
             `
           : ""}
@@ -363,10 +388,12 @@ export default (conf, options) => {
   </div>`;
 };
 
+/** @param {Conf} conf */
 export function renderFeedback(conf) {
   const definitions = [];
   // Github feedback...
   if (conf.github) {
+    // @ts-expect-error -- conf.github is normalized to object form before templates run
     const { repoURL, issuesURL, newIssuesURL, pullsURL, fullName } =
       conf.github;
     definitions.push(
@@ -412,6 +439,7 @@ export function renderFeedback(conf) {
   return definitions;
 }
 
+/** @param {Conf} conf */
 function renderSpecTitle(conf) {
   const specType = conf.isCR || conf.isCRY ? conf.longStatus : conf.textStatus;
   const preamble = conf.prependW3C
@@ -444,6 +472,7 @@ function linkLicense(licenseInfo) {
     <a rel="license" href="${url}" title="${name}">${short}</a> rules apply.`;
 }
 
+/** @param {Conf} conf */
 function renderCopyright(conf) {
   // If there is already a copyright, let's relocate it.
   const existingCopyright = document.querySelector(".copyright");
@@ -467,6 +496,7 @@ function renderCopyright(conf) {
   return renderOfficialCopyright(conf);
 }
 
+/** @param {Conf} conf */
 function renderOfficialCopyright(conf) {
   return html`<p class="copyright">
     <a href="https://www.w3.org/policies/#copyright">Copyright</a>
@@ -479,6 +509,6 @@ function renderOfficialCopyright(conf) {
     <abbr title="World Wide Web Consortium">W3C</abbr><sup>&reg;</sup>
     <a href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>,
     <a href="https://www.w3.org/policies/#W3C_Trademarks">trademark</a
-    >${linkLicense(conf.licenseInfo)}
+    >${linkLicense(/** @type {LicenseInfo} */ (conf.licenseInfo))}
   </p>`;
 }

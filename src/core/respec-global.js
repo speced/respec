@@ -18,14 +18,16 @@ class ReSpec {
       sub("end-all", () => resolve(), { once: true });
     });
 
+    /** @type {any[]} */
     this.errors = [];
+    /** @type {any[]} */
     this.warnings = [];
 
-    sub("error", rsError => {
+    sub("error", (/** @type {any} */ rsError) => {
       console.error(rsError, rsError.toJSON());
       this.errors.push(rsError);
     });
-    sub("warn", rsError => {
+    sub("warn", (/** @type {any} */ rsError) => {
       console.warn(rsError, rsError.toJSON());
       this.warnings.push(rsError);
     });

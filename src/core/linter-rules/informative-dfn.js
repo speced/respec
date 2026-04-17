@@ -11,6 +11,7 @@ import { informativeRefsInNormative } from "../xref.js";
 const ruleName = "informative-dfn";
 export const name = "core/linter-rules/informative-dfn";
 
+/** @satisfies {Record<string, { msg(term: string, cite: string): string; readonly hint: string }>} */
 const localizationStrings = {
   en: {
     msg(term, cite) {
@@ -45,8 +46,13 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) return;
+  // @ts-expect-error -- at this point lint is truthy (object form), safe to index
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
 
   informativeRefsInNormative.forEach(({ term, spec, element }) => {

@@ -12,6 +12,7 @@ import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";
 export const name = "w3c/conformance";
 
+/** @satisfies {Record<string, { conformance: string; normativity: string; keywordInterpretation(keywords: Element[], plural: boolean): HTMLElement }>} */
 const localizationStrings = {
   en: {
     conformance: "Conformance",
@@ -79,6 +80,9 @@ function processConformance(conformance, conf) {
   conformance.prepend(...content.childNodes);
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   /** @type {HTMLElement | null} */
   const conformance = document.querySelector("section#conformance");
