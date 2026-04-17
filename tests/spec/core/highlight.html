@@ -14,7 +14,18 @@
         ).href;
         const propName = "testLang";
         const lang = "testlang";
-        worker.postMessage({ action, langURL, propName, lang });
+        // Fetch the language script in the main thread so it can be sent as
+        // content to the worker. importScripts() from blob workers is blocked
+        // by browsers for cross-origin URLs (blob worker origin is "null").
+        let langScript;
+        try {
+          const response = await fetch(langURL);
+          if (response.ok) langScript = await response.text();
+        } catch {
+          // If the fetch fails, the language will not be registered and
+          // highlighting will be skipped (see respec-worker.js).
+        }
+        worker.postMessage({ action, langScript, propName, lang });
         return new Promise(resolve => {
           worker.addEventListener("message", function listener({ data }) {
             const { action: responseAction, lang: responseLang } = data;
