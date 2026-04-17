@@ -310,6 +310,34 @@ describe("W3C — Bibliographic References", () => {
     expect(refs).toHaveSize(1);
     expect(refs[0].textContent).toBe("[dom]");
   });
+
+  it("handles authors as a string instead of array", async () => {
+    const body = `
+      <section id="conformance">
+        <p>[[StringAuthorRef]]</p>
+      </section>
+    `;
+    const localBiblio = {
+      StringAuthorRef: {
+        title: "String Author Test",
+        href: "https://example.com",
+        authors: "Jane Doe",
+      },
+    };
+    const ops = makeStandardOps({ localBiblio }, body);
+    const doc = await makeRSDoc(ops);
+
+    const ref = doc.querySelector("#bib-stringauthorref + dd");
+    expect(ref).toBeTruthy();
+    expect(ref.textContent).toContain("Jane Doe");
+
+    const errors = doc.respec.errors.filter(
+      e => e.plugin === "core/render-biblio" && e.message.includes('"authors"')
+    );
+    expect(errors).toHaveSize(1);
+    expect(errors[0].message).toContain("must be an array");
+    expect(errors[0].hint).toContain('authors: ["Jane Doe"]');
+  });
 });
 
 it("makes sure references section has expected localization text", async () => {
@@ -355,32 +383,4 @@ it("allows custom content in the references section", async () => {
   expect(pText).toContain("Some descriptive text");
   expect(normRef.textContent).toContain("Normatieve referenties");
   expect(infoRef.textContent).toContain("Informatieve referenties");
-});
-
-it("handles authors as a string instead of array", async () => {
-  const body = `
-    <section id="conformance">
-      <p>[[StringAuthorRef]]</p>
-    </section>
-  `;
-  const localBiblio = {
-    StringAuthorRef: {
-      title: "String Author Test",
-      href: "https://example.com",
-      authors: "Jane Doe",
-    },
-  };
-  const ops = makeStandardOps({ localBiblio }, body);
-  const doc = await makeRSDoc(ops);
-
-  const ref = doc.querySelector("#bib-stringauthorref + dd");
-  expect(ref).toBeTruthy();
-  expect(ref.textContent).toContain("Jane Doe");
-
-  const errors = doc.respec.errors.filter(
-    e => e.plugin === "core/render-biblio" && e.message.includes('"authors"')
-  );
-  expect(errors).toHaveSize(1);
-  expect(errors[0].message).toContain("must be an array");
-  expect(errors[0].hint).toContain('authors: ["Jane Doe"]');
 });
