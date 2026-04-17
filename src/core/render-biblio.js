@@ -245,10 +245,18 @@ function stringifyReference(ref) {
 
   output = ref.href ? `<a href="${ref.href}">${output}</a>. ` : `${output}. `;
 
-  if (ref.authors && ref.authors.length) {
-    output += ref.authors.join("; ");
-    if (ref.etAl) output += " et al";
-    if (!output.endsWith(".")) output += ". ";
+  if (ref.authors) {
+    if (!Array.isArray(ref.authors)) {
+      const msg = `The "authors" field in reference "${ref.id || ref.title}" must be an array.`;
+      const hint = `Use \`authors: [${JSON.stringify(ref.authors)}]\` instead of \`authors: ${JSON.stringify(ref.authors)}\`.`;
+      showError(msg, name, { hint });
+      ref.authors = [ref.authors];
+    }
+    if (ref.authors.length) {
+      output += ref.authors.join("; ");
+      if (ref.etAl) output += " et al";
+      if (!output.endsWith(".")) output += ". ";
+    }
   }
   if (ref.publisher) {
     output = `${output} ${endWithDot(ref.publisher)} `;
