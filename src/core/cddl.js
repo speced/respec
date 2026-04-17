@@ -15,6 +15,7 @@ import { addHashId, showError, showWarning, xmlEscape } from "./utils.js";
 import { createCopyButton, injectCopyScript } from "./clipboard.js";
 import css from "../styles/cddl.css.js";
 import { registerDefinition } from "./dfn-map.js";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/cddl";
 
@@ -491,7 +492,7 @@ function resolvePendingRefs(container, definitions) {
       a.href = `#${def.id}`;
       a.className = "cddl-name";
       a.dataset.linkType = "cddl-type";
-      a.innerHTML = span.innerHTML;
+      a.textContent = span.textContent;
       span.replaceWith(a);
     }
   });
@@ -627,4 +628,11 @@ export async function run() {
 
   // Step 6: Inject runtime copy-button script (survives export)
   injectCopyScript();
+
+  // Step 7: Clean up CDDL-specific attributes on export
+  sub("beforesave", (/** @type {Document} */ outputDoc) => {
+    outputDoc
+      .querySelectorAll("[data-cddl-pending]")
+      .forEach(el => el.removeAttribute("data-cddl-pending"));
+  });
 }

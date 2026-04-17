@@ -98,6 +98,18 @@ pre.cddl dfn {
   font-weight: bold;
 }
 
+pre.cddl dfn:focus-visible,
+pre.cddl a:focus-visible,
+.cddlHeader a.self-link:focus-visible {
+  outline: 2px solid #51a7e8;
+  outline-offset: 2px;
+}
+
+.respec-button-copy-paste:focus-visible {
+  outline: 2px solid #51a7e8;
+  outline-offset: 2px;
+}
+
 pre.cddl dfn[data-dfn-type="cddl-type"] {
   color: #c43a31;
 }
