@@ -12,6 +12,7 @@ import {
   getTextNodes,
   norm,
   refTypeFromContext,
+  regExpEscape,
   showWarning,
 } from "./utils.js";
 import { html } from "./import-maps.js";
@@ -19,6 +20,7 @@ import { idlStringToHtml } from "./inline-idl-parser.js";
 import { renderInlineCitation } from "./render-biblio.js";
 
 export const name = "core/inlines";
+/** @type {Record<string, boolean>} */
 export const rfc2119Usage = {};
 
 /** @param {RegExp[]} regexes */
@@ -147,14 +149,14 @@ function inlineXrefMatches(matched, text) {
   const node = idlStringToHtml(ref);
   // If it's inside a dfn or a `a`, it should just be coded, not linked.
   // This is because dfn elements are treated as links by ReSpec via role=link.
-  const renderAsCode = !!text.parentElement.closest("dfn,a");
+  const renderAsCode = !!text.parentElement?.closest("dfn,a");
   return renderAsCode ? inlineCodeMatches(`\`${node.textContent}\``) : node;
 }
 
 /**
  * @param {string} matched
  * @param {Text} txt
- * @param {Object} conf
+ * @param {Conf} conf
  * @return {Iterable<string | Node>}
  */
 function inlineBibrefMatches(matched, txt, conf) {
@@ -165,7 +167,10 @@ function inlineBibrefMatches(matched, txt, conf) {
   }
 
   const [spec, linkText] = ref.split("|").map(norm);
-  const { type, illegal } = refTypeFromContext(spec, txt.parentElement);
+  const { type, illegal } = refTypeFromContext(
+    spec,
+    /** @type {HTMLElement} */ (txt.parentElement)
+  );
   const cite = renderInlineCitation(spec, linkText);
   const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
@@ -189,7 +194,7 @@ function inlineBibrefMatches(matched, txt, conf) {
  * @param {Map<string, string>} abbrMap
  */
 function inlineAbbrMatches(matched, txt, abbrMap) {
-  return txt.parentElement.tagName === "ABBR"
+  return txt.parentElement?.tagName === "ABBR"
     ? matched
     : html`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
 }
@@ -231,15 +236,22 @@ function inlineAnchorMatches(matched) {
   >`;
 }
 
+/**
+ * @param {string} matched
+ */
 function inlineCodeMatches(matched) {
   const clean = matched.slice(1, -1); // Chop ` and `
   return html`<code>${clean}</code>`;
 }
 
+/**
+ * @param {string} text
+ * @returns {Node | (Node | string | DocumentFragment | HTMLElement)[]}
+ */
 function processInlineContent(text) {
   if (inlineCodeRegExp.test(text)) {
     // We use a capture group to split, so we can process all the parts.
-    return text.split(/(`[^`]+`)(?!`)/).map(part => {
+    return text.split(/(`[^`]+`)(?!`)/).map((/** @type {string} */ part) => {
       return part.startsWith("`")
         ? inlineCodeMatches(part)
         : processInlineContent(part);
@@ -248,6 +260,9 @@ function processInlineContent(text) {
   return document.createTextNode(text);
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   const abbrMap = new Map();
   document.normalize();
@@ -269,7 +284,9 @@ export function run(conf) {
     abbrMap.set(key, value);
   }
   const abbrRx = abbrMap.size
-    ? new RegExp(`(?:\\b${[...abbrMap.keys()].join("\\b)|(?:\\b")}\\b)`)
+    ? new RegExp(
+        `(?:\\b${[...abbrMap.keys()].map(k => regExpEscape(k)).join("\\b)|(?:\\b")}\\b)`
+      )
     : null;
 
   // PROCESSING

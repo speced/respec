@@ -37,7 +37,11 @@ const button = ui.addCommand(
 );
 
 function show() {
-  const onLoad = e => e.target.classList.add("ready");
+  /**
+   * @param {Event} e
+   */
+  const onLoad = e =>
+    /** @type {HTMLElement} */ (e.target).classList.add("ready");
   /** @type {HTMLElement} */
   const specrefSearchUI = html`
     <iframe class="respec-iframe" src="${URL}" onload=${onLoad}></iframe>

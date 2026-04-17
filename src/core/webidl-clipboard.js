@@ -28,8 +28,9 @@ export function addCopyIDLButton(idlHeader) {
   // There may be multiple <span>s of IDL, so we take everything
   // apart from the idl header.
   const pre = idlHeader.closest("pre.idl");
+  if (!pre) return;
   const idl = pre.cloneNode(true);
-  idl.querySelector(".idlHeader").remove();
+  idl.querySelector(".idlHeader")?.remove();
   const { textContent: idlText } = idl;
   const button = copyButton.cloneNode(true);
   button.addEventListener("click", () => {

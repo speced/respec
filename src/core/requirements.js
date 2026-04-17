@@ -24,11 +24,11 @@ export function run() {
 
   document.querySelectorAll("a.reqRef[href]").forEach(ref => {
     const href = ref.getAttribute("href");
-    const id = href.substring(1); // href looks like `#id`
+    const id = (href ?? "").substring(1); // href looks like `#id`
     const req = document.getElementById(id);
     let txt;
     if (req) {
-      txt = req.querySelector("a:first-child").textContent;
+      txt = req.querySelector("a:first-child")?.textContent ?? "";
     } else {
       txt = `Req. not found '${id}'`;
       const msg = `Requirement not found in element \`a.reqRef\`: ${id}`;

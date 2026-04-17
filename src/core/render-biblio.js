@@ -144,6 +144,7 @@ function toRefContent(ref) {
   const circular = new Set([key]);
   while (refcontent && refcontent.aliasOf) {
     if (circular.has(refcontent.aliasOf)) {
+      // @ts-expect-error circular
       refcontent = null;
       const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
       showError(msg, name);
@@ -178,10 +179,10 @@ function getUniqueRefs(refs) {
   /** @type {Map<string, Ref>} */
   const uniqueRefs = new Map();
   for (const ref of refs) {
-    if (!uniqueRefs.has(ref.refcontent.id)) {
+    if (!uniqueRefs.has(ref.refcontent?.id ?? "")) {
       // the condition ensures that only the first used [[TERM]]
       // shows up in #references section
-      uniqueRefs.set(ref.refcontent.id, ref);
+      uniqueRefs.set(ref.refcontent?.id ?? "", ref);
     }
   }
   return [...uniqueRefs.values()];
@@ -224,6 +225,10 @@ function showRef(reference) {
   return result;
 }
 
+/**
+ * @param {string} endStr
+ * @returns {(str: string) => string}
+ */
 function endNormalizer(endStr) {
   return str => {
     const trimmed = str.trim();
@@ -240,10 +245,18 @@ function stringifyReference(ref) {
 
   output = ref.href ? `<a href="${ref.href}">${output}</a>. ` : `${output}. `;
 
-  if (ref.authors && ref.authors.length) {
-    output += ref.authors.join("; ");
-    if (ref.etAl) output += " et al";
-    if (!output.endsWith(".")) output += ". ";
+  if (ref.authors) {
+    if (!Array.isArray(ref.authors)) {
+      const msg = `The "authors" field in reference "${ref.id || ref.title}" must be an array.`;
+      const hint = `Use \`authors: [${JSON.stringify(ref.authors)}]\` instead of \`authors: ${JSON.stringify(ref.authors)}\`.`;
+      showError(msg, name, { hint });
+      ref.authors = [ref.authors];
+    }
+    if (ref.authors.length) {
+      output += ref.authors.join("; ");
+      if (ref.etAl) output += " et al";
+      if (!output.endsWith(".")) output += ". ";
+    }
   }
   if (ref.publisher) {
     output = `${output} ${endWithDot(ref.publisher)} `;
@@ -256,30 +269,35 @@ function stringifyReference(ref) {
 
 /**
  * get aliases for a reference "key"
+ * @param {Ref[]} refs
  */
 function getAliases(refs) {
-  return refs.reduce((aliases, ref) => {
-    const key = ref.refcontent.id;
+  /** @type {Map<string, string[]>} */
+  const aliases = new Map();
+  for (const ref of refs) {
+    const key = ref.refcontent?.id ?? "";
     const keys = !aliases.has(key)
       ? aliases.set(key, []).get(key)
       : aliases.get(key);
-    keys.push(ref.ref);
-    return aliases;
-  }, new Map());
+    keys?.push(ref.ref);
+  }
+  return aliases;
 }
 
 /**
  * fix biblio reference URLs
  * Add title attribute to references
+ * @param {Ref[]} refs
+ * @param {Map<string, string[]>} aliases
  */
 function decorateInlineReference(refs, aliases) {
   refs
     .map(({ ref, refcontent }) => {
       const refUrl = `#${bibRefId(ref)}`;
-      const selectors = aliases
-        .get(refcontent.id)
+      const selectors = (aliases.get(refcontent.id ?? "") ?? [])
         .map(alias => `a.bibref[href="#${bibRefId(alias)}"]`)
         .join(",");
+      /** @type {NodeListOf<HTMLAnchorElement>} */
       const elems = document.querySelectorAll(selectors);
       return { refUrl, elems, refcontent };
     })
@@ -294,6 +312,7 @@ function decorateInlineReference(refs, aliases) {
 
 /**
  * warn about bad references
+ * @param {Ref[]} refs
  */
 function warnBadRefs(refs) {
   for (const { ref } of refs) {

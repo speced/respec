@@ -79,11 +79,14 @@ function getAlternativeNames(idlAst, parent, name) {
  * @param {*} argsAst
  */
 function generateMethodNamesWithArgs(operationName, argsAst) {
+  /** @type {string[]} */
   const operationNames = [];
   if (argsAst.length === 0) {
     return operationNames;
   }
+  /** @type {string[]} */
   const required = []; // required arguments
+  /** @type {string[]} */
   const optional = []; // optional arguments, including variadic ones
   for (const { name, optional: isOptional, variadic } of argsAst) {
     if (isOptional || variadic) {
@@ -214,9 +217,11 @@ export function decorateDfn(dfnElem, idlAst, parent, name) {
   switch (idlAst.type) {
     case "attribute":
     case "constructor":
-    case "operation":
-      addAlternativeNames(dfnElem, getAlternativeNames(idlAst, parent, name));
+    case "operation": {
+      const names = getAlternativeNames(idlAst, parent, name);
+      if (names) addAlternativeNames(dfnElem, names);
       break;
+    }
   }
 
   return dfnElem;
@@ -240,7 +245,7 @@ function getDfns(name, parent, originalName, type) {
     // This is explicitly marked as a concept, so we can't use it
     if (dfn.dataset.dfnType === "dfn") return false;
 
-    /** @type {HTMLElement} */
+    /** @type {HTMLElement | null} */
     const closestDfnFor = dfn.closest(`[data-dfn-for]`);
     return closestDfnFor && closestDfnFor.dataset.dfnFor === parent;
   });
@@ -259,6 +264,7 @@ function getDfns(name, parent, originalName, type) {
 
 /**
  * @return {string}
+ * @param {{ idlType?: string | any[]; generic?: string; union?: boolean }} [idlStruct]
  */
 function getDataType(idlStruct = {}) {
   const { idlType, generic, union } = idlStruct;
@@ -267,5 +273,6 @@ function getDataType(idlStruct = {}) {
   if (generic) return generic;
   // join on "|" handles for "unsigned short" etc.
   if (union) return idlType.map(getDataType).join("|");
+  // @ts-expect-error -- idlType is an array of idlStruct objects at this point
   return getDataType(idlType);
 }
