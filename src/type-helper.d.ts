@@ -414,9 +414,9 @@ type LicenseInfo = {
    */
   name: string;
   /**
-   * The URL of the license.
+   * The URL of the license. Null when the document is unlicensed.
    */
-  url: string;
+  url: string | null;
   /**
    * The short linking text of license.
    */
