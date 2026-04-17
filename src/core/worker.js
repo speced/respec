@@ -76,5 +76,3 @@ async function createWorker() {
 }
 
 export const workerPromise = createWorker();
-
-window.respecWorker = workerPromise;
