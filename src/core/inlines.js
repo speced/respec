@@ -72,6 +72,7 @@ const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citat
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
+const inlineCddlReference = /(?:\{\^[^}^]+\^\})/; // {^cddl-type^}, {^type/key^}
 
 /**
  * @example [^iframe^] // [^element^]
@@ -108,6 +109,75 @@ function inlineElementMatches(matched) {
       >${textContent}</a
     ></code
   >`;
+}
+
+/**
+ * Handles CDDL inline references: {^type^}, {^type/key^}, {^type/"value"^}
+ * @example {^attire^} // link to cddl-type
+ * @example {^delivery/address^} // link to cddl-key
+ * @example {^attire/"bow tie"^} // link to cddl-value
+ * @param {string} matched
+ * @return {HTMLElement}
+ */
+function inlineCddlMatches(matched) {
+  const value = matched.slice(2, -2).trim();
+
+  // Split on "/" but respect quoted strings
+  const parts = [];
+  let current = "";
+  let inQuotes = false;
+  for (const char of value) {
+    if (char === '"') {
+      inQuotes = !inQuotes;
+      current += char;
+    } else if (char === "/" && !inQuotes) {
+      parts.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  parts.push(current.trim());
+
+  if (parts.length === 1) {
+    // {^typename^} → link to cddl-type
+    const typeName = parts[0];
+    return html`<code
+      ><a data-link-type="cddl-type" data-xref-type="cddl-type"
+        >${typeName}</a
+      ></code
+    >`;
+  }
+
+  if (parts.length >= 2) {
+    const typeName = parts[0];
+    const member = parts[1];
+    if (member.startsWith('"') && member.endsWith('"')) {
+      // {^typename/"value"^} → link to cddl-value
+      return html`<code
+        ><a
+          data-link-type="cddl-value"
+          data-xref-type="cddl-value"
+          data-xref-for="${typeName}"
+          data-link-for="${typeName}"
+          >${member}</a
+        ></code
+      >`;
+    }
+    // {^typename/key^} → link to cddl-key
+    return html`<code
+      ><a
+        data-link-type="cddl-key"
+        data-xref-type="cddl-key"
+        data-xref-for="${typeName}"
+        data-link-for="${typeName}"
+        >${member}</a
+      ></code
+    >`;
+  }
+
+  // Fallback: treat as plain code
+  return html`<code>${value}</code>`;
 }
 
 /**
@@ -304,6 +374,7 @@ export function run(conf) {
       joinRegex([
         keywords,
         inlineIdlReference,
+        inlineCddlReference,
         inlineVariable,
         inlineCitation,
         inlineExpansion,
@@ -328,6 +399,9 @@ export function run(conf) {
       switch (true) {
         case t.startsWith("{{"):
           df.append(inlineXrefMatches(t, txt));
+          break;
+        case t.startsWith("{^"):
+          df.append(inlineCddlMatches(t));
           break;
         case t.startsWith("[[["):
           df.append(inlineRefMatches(t));

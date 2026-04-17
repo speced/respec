@@ -89,6 +89,7 @@
     "test:integration": "karma start ./tests/spec/karma.conf.cjs --single-run"
   },
   "dependencies": {
+    "cddlparser": "^0.6.0",
     "colors": "1.4.0",
     "finalhandler": "^2.1.1",
     "marked": "^18.0.0",

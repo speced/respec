@@ -26,6 +26,9 @@ importers:
 
   .:
     dependencies:
+      cddlparser:
+        specifier: ^0.6.0
+        version: 0.6.0
       colors:
         specifier: 1.4.0
         version: 1.4.0
@@ -777,6 +780,9 @@ packages:
   camelcase@8.0.0:
     resolution: {integrity: sha512-8WB3Jcas3swSvjIeA2yvCJ+Miyz5l1ZmB6HFb9R1317dt9LCQoswg/BGrmAmkWVEszSrrg4RwmO46qIm2OEnSA==}
     engines: {node: '>=16'}
+
+  cddlparser@0.6.0:
+    resolution: {integrity: sha512-gg9rCRCxX6HiJfj4Eu3W5Pk5J4vkRG0aV4zvUIKce+8CMkMWSjF4i820jMQ9Mzp8796wzEC3/rBoT5r6rPJ1/Q==}
 
   chalk-template@0.4.0:
     resolution: {integrity: sha512-/ghrgmhfY8RaSdeo43hNXxpoHAtxdbskUHjPpfqUWGttFgycUhYPGx3YZBCnUCvOa7Doivn1IZec3DEGFoMgLg==}
@@ -3342,6 +3348,8 @@ snapshots:
   camelcase@7.0.1: {}
 
   camelcase@8.0.0: {}
+
+  cddlparser@0.6.0: {}
 
   chalk-template@0.4.0:
     dependencies:
