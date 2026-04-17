@@ -620,6 +620,15 @@ export async function run() {
   // Step 3: Resolve pending references (forward references across blocks)
   resolvePendingRefs(document.body, state.definitions);
 
+  // Warn about any still-unresolved pending refs (likely typos)
+  document.querySelectorAll("[data-cddl-pending]").forEach(span => {
+    const typeName = span.getAttribute("data-cddl-pending");
+    showWarning(`No CDDL definition found for \`${typeName}\`.`, name, {
+      elements: [/** @type {HTMLElement} */ (span)],
+      hint: "Check for typos in the type name.",
+    });
+  });
+
   // Step 4: Resolve inline {^ ^} references to CDDL dfns
   resolveInlineCddlRefs(document, state.definitions);
 

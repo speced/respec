@@ -149,32 +149,31 @@ function inlineCddlMatches(matched) {
     >`;
   }
 
-  if (parts.length >= 2) {
-    const typeName = parts[0];
-    const member = parts[1];
-    if (member.startsWith('"') && member.endsWith('"')) {
-      // {^typename/"value"^} → link to cddl-value
-      return html`<code
-        ><a
-          data-link-type="cddl-value"
-          data-xref-type="cddl-value"
-          data-xref-for="${typeName}"
-          data-link-for="${typeName}"
-          >${member}</a
-        ></code
-      >`;
-    }
-    // {^typename/key^} → link to cddl-key
+  // parts.length >= 2
+  const typeName = parts[0];
+  const member = parts[1];
+  if (member.startsWith('"') && member.endsWith('"')) {
+    // {^typename/"value"^} → link to cddl-value
     return html`<code
       ><a
-        data-link-type="cddl-key"
-        data-xref-type="cddl-key"
+        data-link-type="cddl-value"
+        data-xref-type="cddl-value"
         data-xref-for="${typeName}"
         data-link-for="${typeName}"
         >${member}</a
       ></code
     >`;
   }
+  // {^typename/key^} → link to cddl-key
+  return html`<code
+    ><a
+      data-link-type="cddl-key"
+      data-xref-type="cddl-key"
+      data-xref-for="${typeName}"
+      data-link-for="${typeName}"
+      >${member}</a
+    ></code
+  >`;
 }
 
 /**
