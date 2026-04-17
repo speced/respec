@@ -87,7 +87,7 @@ const Prompts = {
       default: "y",
     };
     await this.askQuestion(promptOps);
-    await git(`checkout ${to}`);
+    await git(["checkout", to]);
   },
 
   /** @param {string} branch */
@@ -99,7 +99,7 @@ const Prompts = {
       default: "y",
     };
     await this.askQuestion(promptOps);
-    await git(`pull origin ${branch}`);
+    await git(["pull", "origin", branch]);
   },
 
   async askUpToDateAndDev() {
@@ -207,10 +207,14 @@ const Prompts = {
   },
 
   async askBumpVersion() {
-    const rawVersion = await npm("view respec version");
+    const rawVersion = await npm(["view", "respec", "version"]);
     const version = rawVersion.trim();
-    const latestTag = await git("describe --tags --abbrev=0");
-    const commits = await git(`log ${latestTag.trim()}..HEAD --oneline`);
+    const latestTag = await git(["describe", "--tags", "--abbrev=0"]);
+    const commits = await git([
+      "log",
+      `${latestTag.trim()}..HEAD`,
+      "--oneline",
+    ]);
     if (!commits) {
       throw new Error("😢  No commits. Nothing to release.");
     }
@@ -290,9 +294,9 @@ function toExecFilePromise(file, args, { timeout, showOutput }) {
 }
 
 async function getBranchState() {
-  const local = await git("rev-parse @");
-  const remote = await git("rev-parse @{u}");
-  const base = await git("merge-base @ @{u}");
+  const local = await git(["rev-parse", "@"]);
+  const remote = await git(["rev-parse", "@{u}"]);
+  const base = await git(["merge-base", "@", "@{u}"]);
   let result = "";
   switch (local) {
     case remote:
@@ -308,7 +312,7 @@ async function getBranchState() {
 }
 
 async function getCurrentBranch() {
-  const branch = await git("rev-parse --abbrev-ref HEAD");
+  const branch = await git(["rev-parse", "--abbrev-ref", "HEAD"]);
   return branch.trim();
 }
 
@@ -340,7 +344,7 @@ const run = async () => {
   try {
     // 1. Confirm maintainer is on up-to-date and on the main branch ()
     indicators.get("remote-update").show();
-    await git("remote update");
+    await git(["remote", "update"]);
     indicators.get("remote-update").hide();
     if (initialBranch !== "main") {
       await Prompts.askSwitchToBranch(initialBranch, "main");
@@ -371,7 +375,7 @@ const run = async () => {
     ]);
 
     // 3. Run the build script (node tools/builder.js).
-    await npm("run builddeps");
+    await npm(["run", "builddeps"]);
     for (const name of ["w3c", "geonovum", "dini", "aom"]) {
       await Builder.build({ name });
     }
@@ -391,23 +395,23 @@ const run = async () => {
     console.log(colors.green(" Build Seems good... ✅"));
 
     // 4. Commit your changes
-    await git("add builds package.json pnpm-lock.yaml");
+    await git(["add", "builds", "package.json", "pnpm-lock.yaml"]);
     await git(["commit", "-m", `v${version}`]);
     await git(["tag", `v${version}`]);
 
     // 5. Merge to gh-pages (git checkout gh-pages; git merge main)
-    await git("checkout gh-pages");
-    await git("pull origin gh-pages");
-    await git("merge main");
-    await git("checkout main");
+    await git(["checkout", "gh-pages"]);
+    await git(["pull", "origin", "gh-pages"]);
+    await git(["merge", "main"]);
+    await git(["checkout", "main"]);
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
-    await git("push origin main");
-    await git("push origin gh-pages");
-    await git("push --tags");
+    await git(["push", "origin", "main"]);
+    await git(["push", "origin", "gh-pages"]);
+    await git(["push", "--tags"]);
     indicators.get("push-to-server").hide();
     console.log(colors.green(" Publishing to npm... 📡"));
-    await npm("publish", { showOutput: true });
+    await npm(["publish"], { showOutput: true });
     if (initialBranch !== "main") {
       await Prompts.askSwitchToBranch("main", initialBranch);
     }
@@ -415,7 +419,7 @@ const run = async () => {
     console.error(colors.red(`\n☠  ${err.stack}`));
     const currentBranch = await getCurrentBranch();
     if (initialBranch !== currentBranch) {
-      await git(`checkout ${initialBranch}`);
+      await git(["checkout", initialBranch]);
     }
     process.exit(1);
     return;
