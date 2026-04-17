@@ -291,8 +291,10 @@ function createReSpecCDDLMarker(MarkerBase, state) {
       const key = `cddl-type:${name}`;
       if (state.definitions.has(key)) {
         const def = state.definitions.get(key);
-        const id = def?.id || `cddl-type-${sanitizeId(name)}`;
-        return `<a href="#${id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
+        if (!def) {
+          return `<span class="cddl-name">${xmlEscape(name)}</span>`;
+        }
+        return `<a href="#${def.id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
       }
 
       // Unknown type — just style it. It might be defined in a later block.
@@ -319,7 +321,10 @@ function createReSpecCDDLMarker(MarkerBase, state) {
 
           if (state.definitions.has(key)) {
             const def = state.definitions.get(key);
-            return `<a href="#${def?.id || id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
+            if (!def) {
+              return `<span class="cddl-str">${xmlEscape(fullValue)}</span>`;
+            }
+            return `<a href="#${def.id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
           }
 
           if (state.proseDfns.has(id)) {
