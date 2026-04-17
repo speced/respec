@@ -1,4 +1,5 @@
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import respecCss from "../../../src/styles/respec.css.js";
 
 describe("Core — Style", () => {
   afterAll(flushIframes);
@@ -8,10 +9,9 @@ describe("Core — Style", () => {
     expect(style).toBeTruthy();
   });
 
-  it("makes header wrapper full width", async () => {
-    const doc = await makeRSDoc(makeStandardOps());
-    const style = doc.getElementById("respec-mainstyle");
-    expect(style.textContent).toContain(".header-wrapper");
-    expect(style.textContent).toMatch(/width:\s*100%/);
+  it("makes header wrapper full width", () => {
+    expect(respecCss).toMatch(
+      /\.header-wrapper\s*\{[^}]*\bwidth:\s*100%\s*;[^}]*\}/
+    );
   });
 });
