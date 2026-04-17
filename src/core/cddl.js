@@ -70,7 +70,14 @@ const RFC_8610_URL =
   "https://www.rfc-editor.org/rfc/rfc8610#section-appendix.d";
 
 /**
+ * @typedef {{ parentNode?: CddlAstNode | null, type?: string, name?: string | { name?: string } }} CddlAstNode
+ * @typedef {{ type: string, serialize: () => string }} CddlToken
+ */
+
+/**
  * Sanitize a string for use in an HTML element ID.
+ * Unlike `toId()`, this follows Bikeshed-compatible CDDL IDs and strips
+ * quoted CDDL literal values before slugging.
  * @param {string} str
  * @returns {string}
  */
@@ -84,7 +91,7 @@ function sanitizeId(str) {
 
 /**
  * Find the enclosing Rule's name from a node's parent chain.
- * @param {object} node - AST node with parentNode chain
+ * @param {CddlAstNode} node - AST node with parentNode chain
  * @returns {string|null}
  */
 function findRuleName(node) {
@@ -100,7 +107,7 @@ function findRuleName(node) {
 
 /**
  * Check if a node is in a GenericParameters position (formal type parameter).
- * @param {object} node
+ * @param {CddlAstNode} node
  * @returns {boolean}
  */
 function isGenericParam(node) {
@@ -115,7 +122,7 @@ function isGenericParam(node) {
 
 /**
  * Check if a node is in a GenericArguments position (type argument).
- * @param {object} node
+ * @param {CddlAstNode} node
  * @returns {boolean}
  */
 function isGenericArg(node) {
@@ -130,7 +137,7 @@ function isGenericArg(node) {
 
 /**
  * Check if a Typename node is the LHS name of a Rule (definition position).
- * @param {object} node
+ * @param {CddlAstNode} node
  * @returns {boolean}
  */
 function isRuleName(node) {
@@ -139,7 +146,7 @@ function isRuleName(node) {
 
 /**
  * Check if a Typename node is a map member key (bareword: type).
- * @param {object} node
+ * @param {CddlAstNode} node
  * @returns {boolean}
  */
 function isMemberKey(node) {
@@ -166,7 +173,7 @@ function createReSpecCDDLMarker(MarkerBase, state) {
     /**
      * Called for every type/group name in the CDDL.
      * @param {string} name
-     * @param {object} node - Typename AST node
+     * @param {CddlAstNode} node - Typename AST node
      * @returns {string} HTML string
      */
     serializeName(name, node) {
@@ -177,7 +184,7 @@ function createReSpecCDDLMarker(MarkerBase, state) {
           if (!state.genericParams.has(ruleName)) {
             state.genericParams.set(ruleName, new Set());
           }
-          state.genericParams.get(ruleName).add(name);
+          state.genericParams.get(ruleName)?.add(name);
         }
         return `<span class="cddl-param">${xmlEscape(name)}</span>`;
       }
@@ -204,7 +211,7 @@ function createReSpecCDDLMarker(MarkerBase, state) {
       if (
         currentRule &&
         state.genericParams.has(currentRule) &&
-        state.genericParams.get(currentRule).has(name)
+        state.genericParams.get(currentRule)?.has(name)
       ) {
         return `<span class="cddl-param">${xmlEscape(name)}</span>`;
       }
@@ -284,7 +291,8 @@ function createReSpecCDDLMarker(MarkerBase, state) {
       const key = `cddl-type:${name}`;
       if (state.definitions.has(key)) {
         const def = state.definitions.get(key);
-        return `<a href="#${def.id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
+        const id = def?.id || `cddl-type-${sanitizeId(name)}`;
+        return `<a href="#${id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
       }
 
       // Unknown type — just style it. It might be defined in a later block.
@@ -296,7 +304,7 @@ function createReSpecCDDLMarker(MarkerBase, state) {
      * @param {string} prefix - e.g. '"', "h'", "b64'"
      * @param {string} value - the literal content
      * @param {string} suffix - e.g. '"', "'"
-     * @param {object} node - Value AST node
+     * @param {CddlAstNode} node - Value AST node
      * @returns {string}
      */
     serializeValue(prefix, value, suffix, node) {
@@ -311,7 +319,7 @@ function createReSpecCDDLMarker(MarkerBase, state) {
 
           if (state.definitions.has(key)) {
             const def = state.definitions.get(key);
-            return `<a href="#${def.id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
+            return `<a href="#${def?.id || id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
           }
 
           if (state.proseDfns.has(id)) {
@@ -353,7 +361,7 @@ function createReSpecCDDLMarker(MarkerBase, state) {
     /**
      * Check if a Value node is directly under CddlType.
      * This excludes map key literals, which are represented under Memberkey.
-     * @param {object} node
+     * @param {CddlAstNode} node
      * @returns {boolean}
      */
     #isTypeValue(node) {
@@ -364,8 +372,8 @@ function createReSpecCDDLMarker(MarkerBase, state) {
 
     /**
      * Called for every token (operators, delimiters, comments, etc.).
-     * @param {object} token - Token object
-     * @param {object} node - the AST node containing this token
+     * @param {CddlToken} token - Token object
+     * @param {CddlAstNode} node - the AST node containing this token
      * @returns {string}
      */
     serializeToken(token, node) {
@@ -501,6 +509,7 @@ function resolvePendingRefs(container, definitions) {
     const key = `cddl-type:${name}`;
     if (definitions.has(key)) {
       const def = definitions.get(key);
+      if (!def) return;
       const a = container.ownerDocument.createElement("a");
       a.href = `#${def.id}`;
       a.className = "cddl-name";
@@ -528,16 +537,24 @@ function resolveInlineCddlRefs(doc, definitions) {
       "";
     const text = link.textContent.trim();
 
+    /** @type {Record<"cddl-type"|"cddl-key"|"cddl-value", string>} */
     const keyMap = {
       "cddl-type": `cddl-type:${text}`,
       "cddl-key": `cddl-key:${linkFor}/${text}`,
       "cddl-value": `cddl-value:${linkFor}/${text}`,
     };
+    if (
+      linkType !== "cddl-type" &&
+      linkType !== "cddl-key" &&
+      linkType !== "cddl-value"
+    ) {
+      return;
+    }
     const key = keyMap[linkType];
-    if (!key) return;
 
     if (definitions.has(key)) {
       const def = definitions.get(key);
+      if (!def) return;
       link.setAttribute("href", `#${def.id}`);
       link.classList.add("internalDFN");
     } else {
@@ -569,13 +586,19 @@ function registerCddlDfns(doc, definitions) {
 }
 
 export async function run() {
+  /** @type {NodeListOf<HTMLElement>} */
   const cddls = document.querySelectorAll("pre.cddl:not([data-no-cddl])");
   if (!cddls.length) return;
 
   // Inject CSS
   const style = document.createElement("style");
   style.textContent = css;
-  document.querySelector("head link, head > *:last-child").before(style);
+  const styleAnchor = document.querySelector("head link, head > *:last-child");
+  if (styleAnchor) {
+    styleAnchor.before(style);
+  } else {
+    document.head.append(style);
+  }
 
   // Import cddlparser via import-maps (avoids fs/path imports in main entry)
   const parse = (/** @type {string} */ text) => {
@@ -623,7 +646,8 @@ export async function run() {
       header.append(copyButton);
       pre.prepend(header);
     } catch (err) {
-      showError(`CDDL parse error: ${err.message}`, name, {
+      const message = err instanceof Error ? err.message : String(err);
+      showError(`CDDL processing error: ${message}`, name, {
         elements: [pre],
         hint: 'Check the CDDL syntax in the `<pre class="cddl">` block.',
       });
