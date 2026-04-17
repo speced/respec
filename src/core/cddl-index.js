@@ -88,7 +88,7 @@ export function run() {
 /**
  * Create a consolidated <pre class="cddl"> from multiple code blocks.
  * @param {HTMLElement[]} cddlCodes - array of <code> elements inside <pre class="cddl">
- * @param {string} [id] - optional id for the consolidated <pre>
+ * @param {string} [id] - optional id (used for the single consolidated index pre)
  * @returns {HTMLPreElement}
  */
 function createConsolidatedPre(cddlCodes, id) {
