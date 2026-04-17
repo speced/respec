@@ -110,6 +110,7 @@ const SUPPORT_ICONS = {
     </svg>`,
 };
 
+/** @type {Map<string, string[]>} */
 const BROWSER_GROUPS = [...BROWSERS.entries()].reduce(
   (groups, [browserId, { engine }]) => {
     groups.set(engine, [...(groups.get(engine) || []), browserId]);
@@ -117,6 +118,38 @@ const BROWSER_GROUPS = [...BROWSERS.entries()].reduce(
   },
   new Map()
 );
+
+/**
+ * @typedef {{
+ *   feature?: string | null;
+ *   removeOnSave?: boolean;
+ *   apiURL?: string;
+ * }} ImplementationStatusOptions
+ */
+
+/**
+ * @typedef {{
+ *   implementationStatus?: boolean | string | ImplementationStatusOptions;
+ *   edDraftURI?: string;
+ *   shortName?: string;
+ *   thisVersion?: string;
+ * }} RespecConfig
+ */
+
+/**
+ * @typedef {{
+ *   name?: string;
+ *   spec?: string | string[];
+ *   status?: {
+ *     baseline?: "high" | "low" | false;
+ *     support?: Record<string, unknown>;
+ *   };
+ * }} WebFeature
+ */
+
+/** @typedef {WebFeature & { id: string }} WebFeatureEntry */
+
+/** @typedef {{ features?: Record<string, WebFeature> } | Record<string, WebFeature>} WebFeaturesData */
 
 function fallbackResult() {
   return {
@@ -126,10 +159,13 @@ function fallbackResult() {
   };
 }
 
+/** @param {RespecConfig} conf */
 export function prepare(conf) {
   if (!conf.implementationStatus) return;
   normalizeConf(conf);
-  const options = conf.implementationStatus;
+  const options = /** @type {ImplementationStatusOptions} */ (
+    conf.implementationStatus
+  );
   document.head.appendChild(
     html`<style
       id="baseline-stylesheet"
@@ -140,10 +176,13 @@ export function prepare(conf) {
   );
 }
 
+/** @param {RespecConfig} conf */
 export async function run(conf) {
   if (!conf.implementationStatus) return;
 
-  const options = conf.implementationStatus;
+  const options = /** @type {ImplementationStatusOptions} */ (
+    conf.implementationStatus
+  );
   const headDlElem = document.querySelector(".head dl");
   if (!headDlElem) return;
 
@@ -164,21 +203,29 @@ export async function run(conf) {
 
   if (options.removeOnSave) {
     const savedUrl = rendered.moreInfoUrl || "https://webstatus.dev/";
-    sub("beforesave", outputDoc => {
-      const dd = outputDoc.querySelector(".baseline-status");
-      if (!dd) return;
-      html.bind(dd)`<a href="${savedUrl}">Web Platform Status</a>`;
-    });
+    sub(
+      "beforesave",
+      /** @param {Document} outputDoc */ outputDoc => {
+        const dd = outputDoc.querySelector(".baseline-status");
+        if (!dd) return;
+        html.bind(dd)`<a href="${savedUrl}">Web Platform Status</a>`;
+      }
+    );
   }
 }
 
+/** @param {unknown} err */
 function handleError(err) {
   const msg = "Failed to retrieve implementation status data.";
   const hint = docLink`Check the ${"[implementationStatus]"} configuration.`;
-  showWarning(msg, name, { hint, cause: err });
+  showWarning(msg, name, {
+    hint,
+    cause: err instanceof Error ? err : undefined,
+  });
   return fallbackResult();
 }
 
+/** @param {RespecConfig} conf */
 function normalizeConf(conf) {
   const DEFAULTS = { removeOnSave: false };
   if (typeof conf.implementationStatus === "boolean") {
@@ -195,6 +242,10 @@ function normalizeConf(conf) {
   conf.implementationStatus = { ...DEFAULTS, ...conf.implementationStatus };
 }
 
+/**
+ * @param {RespecConfig} conf
+ * @param {ImplementationStatusOptions} options
+ */
 async function fetchAndRender(conf, options) {
   const data = await fetchData(options);
   const features = findFeatures(data, conf, options);
@@ -219,6 +270,7 @@ async function fetchAndRender(conf, options) {
   return renderBadge(baseline, statusText, support, features);
 }
 
+/** @param {ImplementationStatusOptions} options */
 async function fetchData(options) {
   const url = options.apiURL || DATA_URL;
   const response = await fetchAndCache(url);
@@ -228,8 +280,16 @@ async function fetchData(options) {
   return response.json();
 }
 
+/**
+ * @param {WebFeaturesData} data
+ * @param {RespecConfig} conf
+ * @param {ImplementationStatusOptions} options
+ * @returns {WebFeatureEntry[]}
+ */
 function findFeatures(data, conf, options) {
-  const features = data.features || data;
+  const features = /** @type {Record<string, WebFeature>} */ (
+    data.features || data
+  );
 
   if (options.feature) {
     const feature = features[options.feature];
@@ -242,7 +302,12 @@ function findFeatures(data, conf, options) {
 
   return Object.entries(features)
     .filter(([, feature]) => {
-      const specs = [].concat(feature.spec || []);
+      /** @type {string[]} */
+      const specs = Array.isArray(feature.spec)
+        ? feature.spec
+        : feature.spec
+          ? [feature.spec]
+          : [];
       return specs.some(specUrl => {
         const normalizedFeatureUrl = normalizeUrl(specUrl);
         return specUrls.some(url => normalizedFeatureUrl.startsWith(url));
@@ -251,6 +316,7 @@ function findFeatures(data, conf, options) {
     .map(([id, feature]) => ({ id, ...feature }));
 }
 
+/** @param {RespecConfig} conf */
 function getSpecUrls(conf) {
   const urls = new Set();
   if (conf.edDraftURI) urls.add(normalizeUrl(conf.edDraftURI));
@@ -262,6 +328,7 @@ function getSpecUrls(conf) {
   return [...urls];
 }
 
+/** @param {string} url */
 function normalizeUrl(url) {
   try {
     const u = new URL(url);
@@ -275,7 +342,10 @@ function normalizeUrl(url) {
   }
 }
 
-/** @returns {string|false} */
+/**
+ * @param {WebFeatureEntry[]} features
+ * @returns {"high" | "low" | false}
+ */
 function computeAggregate(features) {
   const statuses = features.map(f => f.status?.baseline);
   if (statuses.every(s => s === "high")) return "high";
@@ -283,6 +353,10 @@ function computeAggregate(features) {
   return false;
 }
 
+/**
+ * @param {WebFeatureEntry[]} features
+ * @returns {Map<string, boolean>}
+ */
 function aggregateSupport(features) {
   const browsers = new Map();
   for (const browserId of BROWSERS.keys()) {
@@ -294,17 +368,28 @@ function aggregateSupport(features) {
   return browsers;
 }
 
+/** @param {string} browserId */
 function getLogoSrc(browserId) {
   return `${LOGO_BASE}/${browserId}/${browserId}.svg`;
 }
 
+/**
+ * @param {"high" | "low" | false} baseline
+ * @param {string | undefined} statusText
+ * @param {Map<string, boolean>} support
+ * @param {WebFeatureEntry[]} features
+ */
 function renderBadge(baseline, statusText, support, features) {
-  const icon = BASELINE_ICONS.get(baseline)();
+  const makeIcon = BASELINE_ICONS.get(baseline) || BASELINE_ICONS.get(false);
+  if (!makeIcon) {
+    return fallbackResult();
+  }
+  const icon = makeIcon();
   icon.setAttribute("aria-hidden", "true");
 
   const pills = [...BROWSER_GROUPS.values()].map(browserIds => {
     const items = browserIds.map(browserId => {
-      const browserName = BROWSERS.get(browserId).name;
+      const browserName = BROWSERS.get(browserId)?.name || browserId;
       const isSupported = support.get(browserId);
       const title = isSupported
         ? `${browserName}: Supported`
