@@ -4,7 +4,6 @@
 import {
   getIntlData,
   htmlJoinAnd,
-  showError,
   showWarning,
 } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
@@ -88,10 +87,12 @@ export function run(conf) {
   const conformance = document.querySelector("section#conformance");
   if (conformance) {
     if (conformance.classList.contains("informative")) {
-      const msg = "The conformance section cannot be marked as informative.";
+      conformance.classList.remove("informative");
+      const msg =
+        "Conformance sections are normative by definition. The `informative` class has been removed.";
       const hint =
-        'Remove `class="informative"` from `<section id="conformance">`. Conformance sections are normative by definition.';
-      showError(msg, name, { hint, elements: [conformance] });
+        'Remove `class="informative"` from `<section id="conformance">` to avoid this warning.';
+      showWarning(msg, name, { hint, elements: [conformance] });
     }
     if (!conformance.classList.contains("override")) {
       processConformance(conformance, conf);
