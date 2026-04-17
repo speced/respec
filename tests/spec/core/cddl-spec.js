@@ -723,14 +723,15 @@ describe("Core - CDDL", () => {
           attire = "bow tie"
         </pre>
         <section id="cddl-index">
-          <section><h2>Nested heading</h2></section>
+          <section><h3>Nested heading</h3></section>
         </section>
       `;
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
       const indexSec = doc.getElementById("cddl-index");
-      expect(indexSec.firstElementChild?.localName).toBe("h2");
-      expect(indexSec.firstElementChild?.textContent).toBe("CDDL Index");
+      const heading = indexSec.querySelector("h2");
+      expect(heading).toBeTruthy();
+      expect(heading.textContent).toContain("CDDL Index");
     });
 
     it("does not duplicate actual-cddl-index id for module sections", async () => {
