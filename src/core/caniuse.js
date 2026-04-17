@@ -198,7 +198,7 @@ function browserCellRenderer(feature) {
     const versionLong = version ? ` version ${version}` : "";
     const browserName = `${name}${versionLong}`;
     const supportLevel = statToText.get(caniuse);
-    const textVersion = version ?? "—";
+    const textVersion = version ? version : "—";
     const versionSuffix = version
       ? ` version ${version}`
       : " (version unknown)";
