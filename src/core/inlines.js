@@ -123,21 +123,7 @@ function inlineCddlMatches(matched) {
   const value = matched.slice(2, -2).trim();
 
   // Split on "/" but respect quoted strings
-  const parts = [];
-  let current = "";
-  let inQuotes = false;
-  for (const char of value) {
-    if (char === '"') {
-      inQuotes = !inQuotes;
-      current += char;
-    } else if (char === "/" && !inQuotes) {
-      parts.push(current.trim());
-      current = "";
-    } else {
-      current += char;
-    }
-  }
-  parts.push(current.trim());
+  const parts = (value.match(/"([^"]*)"|([^/]+)/g) || []).map(s => s.trim());
 
   if (parts.length === 1) {
     // {^typename^} → link to cddl-type
@@ -149,26 +135,15 @@ function inlineCddlMatches(matched) {
     >`;
   }
 
-  // parts.length >= 2
+  // parts.length >= 2: {^typename/key^} or {^typename/"value"^}
   const typeName = parts[0];
   const member = parts[1];
-  if (member.startsWith('"') && member.endsWith('"')) {
-    // {^typename/"value"^} → link to cddl-value
-    return html`<code
-      ><a
-        data-link-type="cddl-value"
-        data-xref-type="cddl-value"
-        data-xref-for="${typeName}"
-        data-link-for="${typeName}"
-        >${member}</a
-      ></code
-    >`;
-  }
-  // {^typename/key^} → link to cddl-key
+  const type =
+    member.startsWith('"') && member.endsWith('"') ? "cddl-value" : "cddl-key";
   return html`<code
     ><a
-      data-link-type="cddl-key"
-      data-xref-type="cddl-key"
+      data-link-type="${type}"
+      data-xref-type="${type}"
       data-xref-for="${typeName}"
       data-link-for="${typeName}"
       >${member}</a

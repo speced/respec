@@ -3,6 +3,42 @@ const css = String.raw;
 
 // prettier-ignore
 export default css`
+:root {
+  --cddl-comment: #6a737d;
+  --cddl-kw: #005a9c;
+  --cddl-str: #032f62;
+  --cddl-num: #005cc5;
+  --cddl-op: #6f42c1;
+  --cddl-ctrl: #d73a49;
+  --cddl-occ: #e36209;
+  --cddl-bytes: #22863a;
+  --cddl-param: #e36209;
+  --cddl-type-dfn: #c43a31;
+  --cddl-key-dfn: #005a9c;
+  --cddl-header-bg: var(--def-border, #8ccbf2);
+  --cddl-header-color: #005a9c;
+  --cddl-focus: #51a7e8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cddl-comment: #8b949e;
+    --cddl-kw: #79c0ff;
+    --cddl-str: #a5d6ff;
+    --cddl-num: #79c0ff;
+    --cddl-op: #d2a8ff;
+    --cddl-ctrl: #ff7b72;
+    --cddl-occ: #ffa657;
+    --cddl-bytes: #7ee787;
+    --cddl-param: #ffa657;
+    --cddl-type-dfn: #ffa198;
+    --cddl-key-dfn: #79c0ff;
+    --cddl-header-bg: #3a6da0;
+    --cddl-header-color: #005a9c;
+    --cddl-focus: #51a7e8;
+  }
+}
+
 pre.cddl {
   padding: 1em;
   position: relative;
@@ -21,8 +57,8 @@ pre.cddl > code {
 .cddlHeader {
   display: block;
   width: 150px;
-  background: var(--def-border, #8ccbf2);
-  color: #005a9c;
+  background: var(--cddl-header-bg);
+  color: var(--cddl-header-color);
   font-family: sans-serif;
   font-weight: bold;
   margin: -1em 0 1em -1em;
@@ -38,33 +74,33 @@ pre.cddl > code {
 }
 
 pre.cddl .cddl-comment {
-  color: #6a737d;
+  color: var(--cddl-comment);
   font-style: italic;
 }
 
 pre.cddl .cddl-kw {
-  color: #005a9c;
+  color: var(--cddl-kw);
 }
 
 pre.cddl .cddl-str,
 pre.cddl dfn[data-dfn-type="cddl-value"] {
-  color: #032f62;
+  color: var(--cddl-str);
 }
 
 pre.cddl .cddl-num {
-  color: #005cc5;
+  color: var(--cddl-num);
 }
 
 pre.cddl .cddl-op {
-  color: #6f42c1;
+  color: var(--cddl-op);
 }
 
 pre.cddl .cddl-ctrl {
-  color: #d73a49;
+  color: var(--cddl-ctrl);
 }
 
 pre.cddl .cddl-occ {
-  color: #e36209;
+  color: var(--cddl-occ);
 }
 
 pre.cddl .cddl-name {
@@ -78,12 +114,12 @@ pre.cddl .cddl-name a {
 }
 
 pre.cddl .cddl-bytes {
-  color: #22863a;
+  color: var(--cddl-bytes);
 }
 
 pre.cddl .cddl-param {
   font-style: italic;
-  color: #e36209;
+  color: var(--cddl-param);
 }
 
 pre.cddl a[data-link-type] {
@@ -99,71 +135,20 @@ pre.cddl dfn {
 pre.cddl dfn:focus-visible,
 pre.cddl a:focus-visible,
 .cddlHeader a.self-link:focus-visible {
-  outline: 2px solid #51a7e8;
+  outline: 2px solid var(--cddl-focus);
   outline-offset: 2px;
 }
 
 .respec-button-copy-paste:focus-visible {
-  outline: 2px solid #51a7e8;
+  outline: 2px solid var(--cddl-focus);
   outline-offset: 2px;
 }
 
 pre.cddl dfn[data-dfn-type="cddl-type"] {
-  color: #c43a31;
+  color: var(--cddl-type-dfn);
 }
 
 pre.cddl dfn[data-dfn-type="cddl-key"] {
-  color: #005a9c;
-}
-
-@media (prefers-color-scheme: dark) {
-  .cddlHeader {
-    background: #3a6da0;
-  }
-
-  pre.cddl .cddl-comment {
-    color: #8b949e;
-  }
-
-  pre.cddl .cddl-kw {
-    color: #79c0ff;
-  }
-
-  pre.cddl .cddl-str,
-  pre.cddl dfn[data-dfn-type="cddl-value"] {
-    color: #a5d6ff;
-  }
-
-  pre.cddl .cddl-num {
-    color: #79c0ff;
-  }
-
-  pre.cddl .cddl-op {
-    color: #d2a8ff;
-  }
-
-  pre.cddl .cddl-ctrl {
-    color: #ff7b72;
-  }
-
-  pre.cddl .cddl-occ {
-    color: #ffa657;
-  }
-
-  pre.cddl .cddl-bytes {
-    color: #7ee787;
-  }
-
-  pre.cddl .cddl-param {
-    color: #ffa657;
-  }
-
-  pre.cddl dfn[data-dfn-type="cddl-type"] {
-    color: #ffa198;
-  }
-
-  pre.cddl dfn[data-dfn-type="cddl-key"] {
-    color: #79c0ff;
-  }
+  color: var(--cddl-key-dfn);
 }
 `;

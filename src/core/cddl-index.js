@@ -21,11 +21,9 @@ export function run() {
     return;
   }
 
-  // Query only immediate-child headings, e.g., ":scope > h2:first-child"
-  const query = [2, 3, 4, 5, 6]
-    .map(level => `:scope > h${level}:first-child`)
-    .join(",");
-  if (!cddlIndexSec.querySelector(query)) {
+  if (
+    !cddlIndexSec.querySelector(":scope > :is(h2, h3, h4, h5, h6):first-child")
+  ) {
     const header = document.createElement("h2");
     if (cddlIndexSec.title) {
       header.textContent = cddlIndexSec.title;
@@ -51,16 +49,16 @@ export function run() {
 
   // Group by module if data-cddl-module is used
   /** @type {Map<string, HTMLElement[]>} */
-  const modules = cddlBlocks.reduce((acc, cddlCode) => {
+  const modules = new Map();
+  for (const cddlCode of cddlBlocks) {
     const pre = cddlCode.closest("pre");
     const moduleName =
       /** @type {HTMLElement} */ (pre)?.dataset.cddlModule || "";
-    if (!acc.has(moduleName)) {
-      acc.set(moduleName, []);
+    if (!modules.has(moduleName)) {
+      modules.set(moduleName, []);
     }
-    acc.get(moduleName).push(/** @type {HTMLElement} */ (cddlCode));
-    return acc;
-  }, new Map());
+    modules.get(moduleName).push(/** @type {HTMLElement} */ (cddlCode));
+  }
 
   // Check if we have multiple modules
   const hasModules =

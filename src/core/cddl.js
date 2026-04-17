@@ -91,7 +91,7 @@ function sanitizeId(str) {
 
 /**
  * Find the enclosing Rule's name from a node's parent chain.
- * @param {CddlAstNode} node - AST node with parentNode chain
+ * @param {CddlAstNode} node
  * @returns {string|null}
  */
 function findRuleName(node) {
@@ -154,317 +154,329 @@ function isMemberKey(node) {
 }
 
 /**
- * Create the ReSpec CDDL Marker that produces highlighted, linked HTML.
+ * @typedef {object} CddlState
+ * @property {Map<string, {type: string, for: string|null, id: string}>} definitions
+ * @property {Set<string>} proseDfns - IDs of prose-level dfns already created
+ * @property {Map<string, Set<string>>} genericParams - rule to param names
+ */
+
+/**
+ * ReSpec CDDL Marker that produces highlighted, linked HTML.
  *
  * This is a subclass of cddlparser's Marker class. The Marker hooks are
  * called during AST serialization to inject HTML markup.
- *
- * @param {typeof CddlMarker} MarkerBase
- * @param {object} state - shared state across all CDDL blocks
- * @param {Map<string, {type: string, for: string|null, id: string}>} state.definitions
- * @param {Set<string>} state.proseDfns - IDs of prose-level dfns already created
- * @param {Map<string, Set<string>>} state.genericParams - rule → param names
  */
-function createReSpecCDDLMarker(MarkerBase, state) {
-  return class ReSpecCDDLMarker extends MarkerBase {
-    /** @type {string|null} */
-    #currentRuleName = null;
+class ReSpecCDDLMarker extends CddlMarker {
+  /** @type {string|null} */
+  #currentRuleName = null;
 
-    /**
-     * Called for every type/group name in the CDDL.
-     * @param {string} name
-     * @param {CddlAstNode} node - Typename AST node
-     * @returns {string} HTML string
-     */
-    serializeName(name, node) {
-      // Generic parameter definition (formal param in <T>)
-      if (isGenericParam(node)) {
-        const ruleName = findRuleName(node);
-        if (ruleName) {
-          if (!state.genericParams.has(ruleName)) {
-            state.genericParams.set(ruleName, new Set());
-          }
-          state.genericParams.get(ruleName)?.add(name);
+  /** @type {CddlState} */
+  #state;
+
+  /** @param {CddlState} state - shared state across all CDDL blocks */
+  constructor(state) {
+    super();
+    this.#state = state;
+  }
+
+  /**
+   * Called for every type/group name in the CDDL.
+   * @param {string} name
+   * @param {CddlAstNode} node - Typename AST node
+   * @returns {string} HTML string
+   */
+  serializeName(name, node) {
+    const state = this.#state;
+
+    // Generic parameter definition (formal param in <T>)
+    if (isGenericParam(node)) {
+      const ruleName = findRuleName(node);
+      if (ruleName) {
+        if (!state.genericParams.has(ruleName)) {
+          state.genericParams.set(ruleName, new Set());
         }
-        return `<span class="cddl-param">${xmlEscape(name)}</span>`;
+        state.genericParams.get(ruleName)?.add(name);
       }
+      return `<span class="cddl-param">${xmlEscape(name)}</span>`;
+    }
 
-      // Generic argument (actual arg in <tstr>)
-      if (isGenericArg(node)) {
-        // Treat like a normal type reference
-        return this.#serializeTypeRef(name);
-      }
-
-      // Rule name (LHS of = / /= / //=) → definition
-      if (isRuleName(node)) {
-        this.#currentRuleName = name;
-        return this.#serializeRuleDef(name);
-      }
-
-      // Member key (bareword:) → key definition
-      if (isMemberKey(node)) {
-        return this.#serializeKeyDef(name);
-      }
-
-      // Check if name matches a generic param of the current rule
-      const currentRule = findRuleName(node) || this.#currentRuleName;
-      if (
-        currentRule &&
-        state.genericParams.has(currentRule) &&
-        state.genericParams.get(currentRule)?.has(name)
-      ) {
-        return `<span class="cddl-param">${xmlEscape(name)}</span>`;
-      }
-
-      // Type reference (RHS)
+    // Generic argument (actual arg in <tstr>)
+    if (isGenericArg(node)) {
+      // Treat like a normal type reference
       return this.#serializeTypeRef(name);
     }
 
-    /**
-     * Serialize a rule definition (LHS of =).
-     * @param {string} name
-     * @returns {string}
-     */
-    #serializeRuleDef(name) {
-      const id = `cddl-type-${sanitizeId(name)}`;
-      const key = `cddl-type:${name}`;
-
-      // Check for duplicate
-      if (state.definitions.has(key)) {
-        return `<a href="#${id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
-      }
-
-      // Check if prose dfn already exists
-      if (state.proseDfns.has(id)) {
-        state.definitions.set(key, {
-          type: "cddl-type",
-          for: null,
-          id,
-        });
-        return `<a href="#${id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
-      }
-
-      // Create new dfn
-      state.definitions.set(key, { type: "cddl-type", for: null, id });
-      return `<dfn data-dfn-type="cddl-type" id="${id}" data-export>${xmlEscape(name)}</dfn>`;
+    // Rule name (LHS of = / /= / //=) → definition
+    if (isRuleName(node)) {
+      this.#currentRuleName = name;
+      return this.#serializeRuleDef(name);
     }
 
-    /**
-     * Serialize a member key definition (bareword:).
-     * @param {string} name
-     * @returns {string}
-     */
-    #serializeKeyDef(name) {
-      const forType = this.#currentRuleName;
-      if (!forType) {
+    // Member key (bareword:) → key definition
+    if (isMemberKey(node)) {
+      return this.#serializeKeyDef(name);
+    }
+
+    // Check if name matches a generic param of the current rule
+    const currentRule = findRuleName(node) || this.#currentRuleName;
+    if (
+      currentRule &&
+      state.genericParams.has(currentRule) &&
+      state.genericParams.get(currentRule)?.has(name)
+    ) {
+      return `<span class="cddl-param">${xmlEscape(name)}</span>`;
+    }
+
+    // Type reference (RHS)
+    return this.#serializeTypeRef(name);
+  }
+
+  /**
+   * Serialize a rule definition (LHS of =).
+   * @param {string} name
+   * @returns {string}
+   */
+  #serializeRuleDef(name) {
+    const state = this.#state;
+    const id = `cddl-type-${sanitizeId(name)}`;
+    const key = `cddl-type:${name}`;
+
+    // Check for duplicate
+    if (state.definitions.has(key)) {
+      return `<a href="#${id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
+    }
+
+    // Check if prose dfn already exists
+    if (state.proseDfns.has(id)) {
+      state.definitions.set(key, {
+        type: "cddl-type",
+        for: null,
+        id,
+      });
+      return `<a href="#${id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
+    }
+
+    // Create new dfn
+    state.definitions.set(key, { type: "cddl-type", for: null, id });
+    return `<dfn data-dfn-type="cddl-type" id="${id}" data-export>${xmlEscape(name)}</dfn>`;
+  }
+
+  /**
+   * Serialize a member key definition (bareword:).
+   * @param {string} name
+   * @returns {string}
+   */
+  #serializeKeyDef(name) {
+    const state = this.#state;
+    const forType = this.#currentRuleName;
+    if (!forType) {
+      return `<span class="cddl-name">${xmlEscape(name)}</span>`;
+    }
+
+    const id = `cddl-key-${sanitizeId(forType)}-${sanitizeId(name)}`;
+    const key = `cddl-key:${forType}/${name}`;
+
+    if (state.definitions.has(key)) {
+      return `<a href="#${id}" class="cddl-name" data-link-type="cddl-key" data-xref-for="${xmlEscape(forType)}">${xmlEscape(name)}</a>`;
+    }
+
+    if (state.proseDfns.has(id)) {
+      state.definitions.set(key, { type: "cddl-key", for: forType, id });
+      return `<a href="#${id}" class="cddl-name" data-link-type="cddl-key" data-xref-for="${xmlEscape(forType)}">${xmlEscape(name)}</a>`;
+    }
+
+    state.definitions.set(key, { type: "cddl-key", for: forType, id });
+    return `<dfn data-dfn-type="cddl-key" data-dfn-for="${xmlEscape(forType)}" id="${id}" data-export>${xmlEscape(name)}</dfn>`;
+  }
+
+  /**
+   * Serialize a type reference (RHS usage).
+   * @param {string} name
+   * @returns {string}
+   */
+  #serializeTypeRef(name) {
+    const state = this.#state;
+
+    // Prelude type → link to RFC 8610
+    if (PRELUDE_TYPES.has(name)) {
+      return `<a class="cddl-kw" data-link-type="cddl-type" data-link-spec="rfc8610" href="${RFC_8610_URL}">${xmlEscape(name)}</a>`;
+    }
+
+    // Known local definition → link
+    const key = `cddl-type:${name}`;
+    if (state.definitions.has(key)) {
+      const def = state.definitions.get(key);
+      if (!def) {
         return `<span class="cddl-name">${xmlEscape(name)}</span>`;
       }
-
-      const id = `cddl-key-${sanitizeId(forType)}-${sanitizeId(name)}`;
-      const key = `cddl-key:${forType}/${name}`;
-
-      if (state.definitions.has(key)) {
-        return `<a href="#${id}" class="cddl-name" data-link-type="cddl-key" data-xref-for="${xmlEscape(forType)}">${xmlEscape(name)}</a>`;
-      }
-
-      if (state.proseDfns.has(id)) {
-        state.definitions.set(key, { type: "cddl-key", for: forType, id });
-        return `<a href="#${id}" class="cddl-name" data-link-type="cddl-key" data-xref-for="${xmlEscape(forType)}">${xmlEscape(name)}</a>`;
-      }
-
-      state.definitions.set(key, { type: "cddl-key", for: forType, id });
-      return `<dfn data-dfn-type="cddl-key" data-dfn-for="${xmlEscape(forType)}" id="${id}" data-export>${xmlEscape(name)}</dfn>`;
+      return `<a href="#${def.id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
     }
 
-    /**
-     * Serialize a type reference (RHS usage).
-     * @param {string} name
-     * @returns {string}
-     */
-    #serializeTypeRef(name) {
-      // Prelude type → link to RFC 8610
-      if (PRELUDE_TYPES.has(name)) {
-        return `<a class="cddl-kw" data-link-type="cddl-type" data-link-spec="rfc8610" href="${RFC_8610_URL}">${xmlEscape(name)}</a>`;
-      }
+    // Unknown type — just style it. It might be defined in a later block.
+    return `<span class="cddl-name" data-cddl-pending="${xmlEscape(name)}">${xmlEscape(name)}</span>`;
+  }
 
-      // Known local definition → link
-      const key = `cddl-type:${name}`;
-      if (state.definitions.has(key)) {
-        const def = state.definitions.get(key);
-        if (!def) {
-          return `<span class="cddl-name">${xmlEscape(name)}</span>`;
+  /**
+   * Called for literal values (strings, numbers, bytes).
+   * @param {string} prefix - e.g. '"', "h'", "b64'"
+   * @param {string} value - the literal content
+   * @param {string} suffix - e.g. '"', "'"
+   * @param {CddlAstNode} node - Value AST node
+   * @returns {string}
+   */
+  serializeValue(prefix, value, suffix, node) {
+    const state = this.#state;
+    const fullValue = prefix + value + suffix;
+
+    // String value directly under CddlType at rule level → value definition
+    if (node.type === "text" && this.#isTypeValue(node)) {
+      const forType = this.#currentRuleName;
+      if (forType) {
+        const id = `cddl-value-${sanitizeId(forType)}-${sanitizeId(value)}`;
+        const key = `cddl-value:${forType}/"${value}"`;
+
+        if (state.definitions.has(key)) {
+          const def = state.definitions.get(key);
+          if (!def) {
+            return `<span class="cddl-str">${xmlEscape(fullValue)}</span>`;
+          }
+          return `<a href="#${def.id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
         }
-        return `<a href="#${def.id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
-      }
 
-      // Unknown type — just style it. It might be defined in a later block.
-      return `<span class="cddl-name" data-cddl-pending="${xmlEscape(name)}">${xmlEscape(name)}</span>`;
-    }
+        if (state.proseDfns.has(id)) {
+          state.definitions.set(key, {
+            type: "cddl-value",
+            for: forType,
+            id,
+          });
+          return `<a href="#${id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
+        }
 
-    /**
-     * Called for literal values (strings, numbers, bytes).
-     * @param {string} prefix - e.g. '"', "h'", "b64'"
-     * @param {string} value - the literal content
-     * @param {string} suffix - e.g. '"', "'"
-     * @param {CddlAstNode} node - Value AST node
-     * @returns {string}
-     */
-    serializeValue(prefix, value, suffix, node) {
-      const fullValue = prefix + value + suffix;
-
-      // String value directly under CddlType at rule level → value definition
-      if (node.type === "text" && this.#isTypeValue(node)) {
-        const forType = this.#currentRuleName;
-        if (forType) {
-          const id = `cddl-value-${sanitizeId(forType)}-${sanitizeId(value)}`;
-          const key = `cddl-value:${forType}/"${value}"`;
-
-          if (state.definitions.has(key)) {
-            const def = state.definitions.get(key);
-            if (!def) {
-              return `<span class="cddl-str">${xmlEscape(fullValue)}</span>`;
-            }
-            return `<a href="#${def.id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
-          }
-
-          if (state.proseDfns.has(id)) {
-            state.definitions.set(key, {
-              type: "cddl-value",
-              for: forType,
-              id,
-            });
-            return `<a href="#${id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
-          }
-
-          if (!state.definitions.has(key)) {
-            state.definitions.set(key, {
-              type: "cddl-value",
-              for: forType,
-              id,
-            });
-            return `<dfn data-dfn-type="cddl-value" data-dfn-for="${xmlEscape(forType)}" id="${id}" data-export>${xmlEscape(fullValue)}</dfn>`;
-          }
+        if (!state.definitions.has(key)) {
+          state.definitions.set(key, {
+            type: "cddl-value",
+            for: forType,
+            id,
+          });
+          return `<dfn data-dfn-type="cddl-value" data-dfn-for="${xmlEscape(forType)}" id="${id}" data-export>${xmlEscape(fullValue)}</dfn>`;
         }
       }
-
-      // Classify by type
-      switch (node.type) {
-        case "text":
-          return `<span class="cddl-str">${xmlEscape(fullValue)}</span>`;
-        case "number":
-        case "float":
-          return `<span class="cddl-num">${xmlEscape(fullValue)}</span>`;
-        case "bytes":
-        case "hex":
-        case "base64":
-          return `<span class="cddl-bytes">${xmlEscape(fullValue)}</span>`;
-        default:
-          return xmlEscape(fullValue);
-      }
     }
 
-    /**
-     * Check if a Value node is directly under CddlType.
-     * This excludes map key literals, which are represented under Memberkey.
-     * @param {CddlAstNode} node
-     * @returns {boolean}
-     */
-    #isTypeValue(node) {
-      const parent = node.parentNode;
-      if (!parent) return false;
-      return parent instanceof CddlType;
+    // Classify by type
+    switch (node.type) {
+      case "text":
+        return `<span class="cddl-str">${xmlEscape(fullValue)}</span>`;
+      case "number":
+      case "float":
+        return `<span class="cddl-num">${xmlEscape(fullValue)}</span>`;
+      case "bytes":
+      case "hex":
+      case "base64":
+        return `<span class="cddl-bytes">${xmlEscape(fullValue)}</span>`;
+      default:
+        return xmlEscape(fullValue);
     }
+  }
 
-    /**
-     * Called for every token (operators, delimiters, comments, etc.).
-     * @param {CddlToken} token - Token object
-     * @param {CddlAstNode} node - the AST node containing this token
-     * @returns {string}
-     */
-    serializeToken(token, node) {
-      const type = token.type;
-      const serialized = token.serialize();
+  /**
+   * Check if a Value node is directly under CddlType.
+   * This excludes map key literals, which are represented under Memberkey.
+   * @param {CddlAstNode} node
+   * @returns {boolean}
+   */
+  #isTypeValue(node) {
+    const parent = node.parentNode;
+    if (!parent) return false;
+    return parent instanceof CddlType;
+  }
 
-      switch (type) {
-        case "COMMENT":
-          return this.#wrapComment(serialized);
-        case "CTLOP":
-          return this.#wrapCtlop(serialized);
-        case "=":
-        case "/=":
-        case "//=":
-        case "/":
-        case "//":
-        case "=>":
-        case "..":
-        case "...":
-          return this.#wrapOp(serialized);
-        case "?":
-        case "*":
-        case "+":
-          // Occurrence indicators
-          if (node instanceof CddlOccurrence) {
-            return this.#wrapOccurrence(serialized);
-          }
-          return serialized;
-        default:
-          return serialized;
-      }
+  /**
+   * Called for every token (operators, delimiters, comments, etc.).
+   * @param {CddlToken} token - Token object
+   * @param {CddlAstNode} node - the AST node containing this token
+   * @returns {string}
+   */
+  serializeToken(token, node) {
+    const type = token.type;
+    const serialized = token.serialize();
+
+    switch (type) {
+      case "COMMENT":
+        return this.#wrapComment(serialized);
+      case "CTLOP":
+        return this.#wrapCtlop(serialized);
+      case "=":
+      case "/=":
+      case "//=":
+      case "/":
+      case "//":
+      case "=>":
+      case "..":
+      case "...":
+        return this.#wrapOp(serialized);
+      case "?":
+      case "*":
+      case "+":
+        // Occurrence indicators
+        if (node instanceof CddlOccurrence) {
+          return this.#wrapOccurrence(serialized);
+        }
+        return serialized;
+      default:
+        return serialized;
     }
+  }
 
-    /**
-     * Wrap a comment token in a span.
-     * @param {string} serialized
-     * @returns {string}
-     */
-    #wrapComment(serialized) {
-      // Comments are serialized with leading whitespace — only wrap the comment
-      // part. The serialized form includes whitespace + ";" + content.
-      return serialized.replace(
-        /(;[^\n]*)/g,
-        '<span class="cddl-comment">$1</span>'
-      );
-    }
+  /**
+   * Wrap a comment token in a span.
+   * @param {string} serialized
+   * @returns {string}
+   */
+  #wrapComment(serialized) {
+    // Comments are serialized with leading whitespace — only wrap the comment
+    // part. The serialized form includes whitespace + ";" + content.
+    return serialized.replace(
+      /(;[^\n]*)/g,
+      '<span class="cddl-comment">$1</span>'
+    );
+  }
 
-    /**
-     * Wrap a control operator (.size, .regexp, etc.) in a span.
-     * @param {string} serialized
-     * @returns {string}
-     */
-    #wrapCtlop(serialized) {
-      return serialized.replace(
-        /(\.\w+)/g,
-        '<span class="cddl-ctrl">$1</span>'
-      );
-    }
+  /**
+   * Wrap a control operator (.size, .regexp, etc.) in a span.
+   * @param {string} serialized
+   * @returns {string}
+   */
+  #wrapCtlop(serialized) {
+    return serialized.replace(/(\.\w+)/g, '<span class="cddl-ctrl">$1</span>');
+  }
 
-    /**
-     * Wrap an operator in a span.
-     * @param {string} serialized
-     * @returns {string}
-     */
-    #wrapOp(serialized) {
-      // Preserve whitespace around the operator
-      const match = serialized.match(/^(\s*)(.*?)(\s*)$/s);
-      if (match) {
-        return `${match[1]}<span class="cddl-op">${match[2]}</span>${match[3]}`;
-      }
-      return `<span class="cddl-op">${serialized}</span>`;
+  /**
+   * Wrap an operator in a span.
+   * @param {string} serialized
+   * @returns {string}
+   */
+  #wrapOp(serialized) {
+    // Preserve whitespace around the operator
+    const match = serialized.match(/^(\s*)(.*?)(\s*)$/s);
+    if (match) {
+      return `${match[1]}<span class="cddl-op">${match[2]}</span>${match[3]}`;
     }
+    return `<span class="cddl-op">${serialized}</span>`;
+  }
 
-    /**
-     * Wrap an occurrence indicator in a span.
-     * @param {string} serialized
-     * @returns {string}
-     */
-    #wrapOccurrence(serialized) {
-      const match = serialized.match(/^(\s*)(.*?)(\s*)$/s);
-      if (match) {
-        return `${match[1]}<span class="cddl-occ">${match[2]}</span>${match[3]}`;
-      }
-      return `<span class="cddl-occ">${serialized}</span>`;
+  /**
+   * Wrap an occurrence indicator in a span.
+   * @param {string} serialized
+   * @returns {string}
+   */
+  #wrapOccurrence(serialized) {
+    const match = serialized.match(/^(\s*)(.*?)(\s*)$/s);
+    if (match) {
+      return `${match[1]}<span class="cddl-occ">${match[2]}</span>${match[3]}`;
     }
-  };
+    return `<span class="cddl-occ">${serialized}</span>`;
+  }
 }
 
 /**
@@ -590,6 +602,45 @@ function registerCddlDfns(doc, definitions) {
   });
 }
 
+/**
+ * Parse and process a single CDDL block.
+ * @param {HTMLElement} pre - the <pre class="cddl"> element
+ * @param {(text: string) => object} parse - CDDL parser function
+ * @param {CddlState} state - shared state across all CDDL blocks
+ */
+function processCddlBlock(pre, parse, state) {
+  const cddlText = pre.textContent;
+  if (!cddlText.trim()) return;
+
+  try {
+    const ast = parse(cddlText);
+    const marker = new ReSpecCDDLMarker(state);
+    const html = ast.serialize(marker);
+
+    // Wrap in <code> (matching WebIDL pattern)
+    const code = document.createElement("code");
+    code.innerHTML = html;
+    pre.textContent = "";
+    pre.append(code);
+    pre.classList.add("def", "highlight");
+    addHashId(pre, "cddl-block");
+
+    // Add CDDL header with copy button
+    const header = document.createElement("span");
+    header.className = "cddlHeader";
+    header.innerHTML = `<a class="self-link" href="#${pre.id}">CDDL</a>`;
+    const copyButton = createCopyButton(".cddlHeader");
+    header.append(copyButton);
+    pre.prepend(header);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    showError(`CDDL processing error: ${message}`, name, {
+      elements: [pre],
+      hint: 'Check the CDDL syntax in the `<pre class="cddl">` block.',
+    });
+  }
+}
+
 export async function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const cddls = document.querySelectorAll("pre.cddl:not([data-no-cddl])");
@@ -612,12 +663,10 @@ export async function run() {
   };
 
   // Shared state across all CDDL blocks
+  /** @type {CddlState} */
   const state = {
-    /** @type {Map<string, {type: string, for: string|null, id: string}>} */
     definitions: new Map(),
-    /** @type {Set<string>} */
     proseDfns: new Set(),
-    /** @type {Map<string, Set<string>>} */
     genericParams: new Map(),
   };
 
@@ -625,39 +674,7 @@ export async function run() {
   normalizeProseDfns(document, state.proseDfns);
 
   // Step 2: Process each CDDL block
-  const ReSpecMarker = createReSpecCDDLMarker(CddlMarker, state);
-  /** @type {NodeListOf<HTMLElement>} */ (cddls).forEach(pre => {
-    const cddlText = pre.textContent;
-    if (!cddlText.trim()) return;
-
-    try {
-      const ast = parse(cddlText);
-      const marker = new ReSpecMarker();
-      const html = ast.serialize(marker);
-
-      // Wrap in <code> (matching WebIDL pattern)
-      const code = document.createElement("code");
-      code.innerHTML = html;
-      pre.textContent = "";
-      pre.append(code);
-      pre.classList.add("def", "highlight");
-      addHashId(pre, "cddl-block");
-
-      // Add CDDL header with copy button
-      const header = document.createElement("span");
-      header.className = "cddlHeader";
-      header.innerHTML = `<a class="self-link" href="#${pre.id}">CDDL</a>`;
-      const copyButton = createCopyButton(".cddlHeader");
-      header.append(copyButton);
-      pre.prepend(header);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      showError(`CDDL processing error: ${message}`, name, {
-        elements: [pre],
-        hint: 'Check the CDDL syntax in the `<pre class="cddl">` block.',
-      });
-    }
-  });
+  cddls.forEach(pre => processCddlBlock(pre, parse, state));
 
   // Step 3: Resolve pending references (forward references across blocks)
   resolvePendingRefs(document.body, state.definitions);
