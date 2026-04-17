@@ -309,7 +309,21 @@ function createReSpecCDDLMarker(MarkerBase, state) {
           const id = `cddl-value-${sanitizeId(forType)}-${sanitizeId(value)}`;
           const key = `cddl-value:${forType}/"${value}"`;
 
-          if (!state.definitions.has(key) && !state.proseDfns.has(id)) {
+          if (state.definitions.has(key)) {
+            const def = state.definitions.get(key);
+            return `<a href="#${def.id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
+          }
+
+          if (state.proseDfns.has(id)) {
+            state.definitions.set(key, {
+              type: "cddl-value",
+              for: forType,
+              id,
+            });
+            return `<a href="#${id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
+          }
+
+          if (!state.definitions.has(key)) {
             state.definitions.set(key, {
               type: "cddl-value",
               for: forType,
@@ -317,7 +331,6 @@ function createReSpecCDDLMarker(MarkerBase, state) {
             });
             return `<dfn data-dfn-type="cddl-value" data-dfn-for="${xmlEscape(forType)}" id="${id}" data-export>${xmlEscape(fullValue)}</dfn>`;
           }
-          return `<a href="#${id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
         }
       }
 

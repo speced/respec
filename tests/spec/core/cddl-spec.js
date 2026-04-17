@@ -683,6 +683,22 @@ describe("Core - CDDL", () => {
       );
       expect(dfn).toBeTruthy();
     });
+
+    it("resolves inline refs to prose-defined cddl values", async () => {
+      const body = `
+        <p><dfn cddl-value for="attire">"bow tie"</dfn> means formal attire.</p>
+        <pre class="cddl">
+          attire = "bow tie" / "necktie"
+        </pre>
+        <p>See {^attire/"bow tie"^} for details.</p>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const link = doc.querySelector("p a[data-link-type='cddl-value'][href]");
+      expect(link).toBeTruthy();
+      expect(link.getAttribute("href")).toBe("#cddl-value-attire-bow-tie");
+      expect(warningsFilter(doc)).toHaveSize(0);
+    });
   });
 
   describe("modules", () => {
