@@ -51,6 +51,9 @@ const geonovumDefaults = {
   ],
 };
 
+/**
+ * @param {NormalizedConf} conf
+ */
 function computeProps(conf) {
   return {
     isCCBY: conf.license === "cc-by",
@@ -60,6 +63,9 @@ function computeProps(conf) {
   };
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   // assign the defaults
   const lint =
@@ -77,5 +83,5 @@ export function run(conf) {
     lint,
   });
   // computed properties
-  Object.assign(conf, computeProps(conf));
+  Object.assign(conf, computeProps(/** @type {NormalizedConf} */ (conf)));
 }

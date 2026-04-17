@@ -39,6 +39,7 @@ const button = ui.addCommand(
 );
 
 function show() {
+  /** @type {any[]} */
   const entries = [];
   if ("getEntriesByType" in performance) {
     performance
@@ -84,6 +85,7 @@ function show() {
   ui.freshModal(`${l10n.about_respec} - ${window.respecVersion}`, div, button);
 }
 
+/** @param {{ name: string, duration: string }} entry */
 function perfEntryToTR({ name, duration }) {
   const moduleURL = `https://github.com/speced/respec/blob/develop/src/${name}.js`;
   return html`
