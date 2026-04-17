@@ -35,30 +35,21 @@ const loadOps = {
   delay: 100,
 };
 
-/** @param {string} input */
-function splitArgs(input) {
-  return (
-    input
-      .match(/(?:[^\s"]+|"[^"]*")+/g)
-      ?.map(part => part.replace(/^"|"$/g, "")) ?? []
-  );
-}
-
-/** @param {string} program */
-function commandRunner(program) {
-  const programParts = splitArgs(program);
-  const file = programParts[0];
-  const baseArgs = programParts.slice(1);
+/**
+ * @param {string} file
+ * @param {string[]} [baseArgs]
+ */
+function commandRunner(file, baseArgs = []) {
   /**
    * @param {string} cmd
-   * @param {{showOutput: boolean}} [options ]
+   * @param {{showOutput: boolean}} [options]
    */
   const runner = (cmd, options = { showOutput: false }) => {
-    console.log(colors.cyan(`Run: ${program} ${colors.grey(cmd)}`));
+    const args = [...baseArgs, ...cmd.split(/\s+/).filter(Boolean)];
+    console.log(colors.cyan(`Run: ${file} ${colors.grey(args.join(" "))}`));
     if (DEBUG) {
       return Promise.resolve("");
     }
-    const args = [...baseArgs, ...splitArgs(cmd)];
     return toExecFilePromise(file, args, { ...options, timeout: 200000 });
   };
   return runner;
@@ -67,7 +58,7 @@ function commandRunner(program) {
 const git = commandRunner("git");
 const npm = commandRunner("npm");
 const node = commandRunner("node");
-const validator = commandRunner(`java -jar ${vnu}`);
+const validator = commandRunner("java", ["-jar", vnu]);
 
 cmdPrompt.start();
 
