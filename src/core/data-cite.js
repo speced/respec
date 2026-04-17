@@ -202,7 +202,11 @@ export async function run() {
       // Only applies to [[[...]]] triple-bracket expansions (which set data-lt for
       // alias text). IDL references also use data-lt as a lookup term but already
       // have child content, so the textContent check prevents corrupting them.
-      if (elem.dataset.lt && elem.textContent === "") {
+      if (
+        elem.dataset.lt &&
+        elem.dataset.lt !== "the-empty-string" &&
+        elem.textContent === ""
+      ) {
         elem.textContent = elem.dataset.lt;
         delete elem.dataset.lt;
       }
