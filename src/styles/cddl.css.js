@@ -9,7 +9,6 @@ pre.cddl {
 }
 
 pre.cddl > code {
-  color: black;
   color: var(--text, black);
 }
 
@@ -22,18 +21,17 @@ pre.cddl > code {
 .cddlHeader {
   display: block;
   width: 150px;
-  background: #8ccbf2;
   background: var(--def-border, #8ccbf2);
   color: #005a9c;
   font-family: sans-serif;
   font-weight: bold;
   margin: -1em 0 1em -1em;
-  height: 28px;
-  line-height: 28px;
+  height: 1.75em;
+  line-height: 1.75em;
 }
 
 .cddlHeader a.self-link {
-  margin-left: 0.3cm;
+  margin-left: 0.5em;
   text-decoration: none;
   border-bottom: none;
   color: inherit;
