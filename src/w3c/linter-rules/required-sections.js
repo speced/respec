@@ -19,6 +19,14 @@ import { W3CNotes, recTrackStatus } from "../headers.js";
 const ruleName = "required-sections";
 export const name = "w3c/linter-rules/required-sections";
 
+/**
+ * @satisfies {Record<string, {
+ *  privacy_considerations: string,
+ *  security_considerations: string,
+ *  msg: (sectionTitle: string) => string,
+ *  hint: (sectionTitle: string) => string}
+ * >}
+ */
 const localizationStrings = {
   en: {
     msg(sectionTitle) {
@@ -65,7 +73,11 @@ requiresSomeSectionStatus.delete("DISC"); // "Discontinued Draft"
 // W3C notes do not require privacy or security considerations sections.
 W3CNotes.forEach(note => requiresSomeSectionStatus.delete(note));
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }
@@ -79,10 +91,12 @@ export function run(conf) {
     return;
   }
 
+  // @ts-expect-error -- specStatus is always set by defaults before linter rules run
   if (conf.noRecTrack || !requiresSomeSectionStatus.has(conf.specStatus)) {
     return;
   }
 
+  // @ts-expect-error -- at this point lint is truthy (object form), safe to index
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
 
   const missingRequiredSections = new InsensitiveStringSet([

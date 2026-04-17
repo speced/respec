@@ -19,19 +19,22 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }
 
   /** @type {NodeListOf<HTMLAnchorElement>} */
   const elems = document.querySelectorAll("var+a");
-  const offendingElements = [...elems].filter(
-    ({ previousSibling: { nodeName } }) => {
-      const isPrevVar = nodeName && nodeName === "VAR";
-      return isPrevVar;
-    }
-  );
+  const offendingElements = [...elems].filter(elem => {
+    const nodeName = elem.previousSibling?.nodeName;
+    const isPrevVar = nodeName === "VAR";
+    return isPrevVar;
+  });
 
   if (!offendingElements.length) {
     return;

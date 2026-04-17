@@ -19,10 +19,14 @@ if (!html?.hasAttribute("lang")) {
   }
 }
 
+/** @type {Record<string, any>} */
 export const l10n = {};
 
 export const lang = html?.lang ?? "en";
 
+/**
+ * @param {Conf} config
+ */
 export function run(config) {
   config.l10n = l10n[lang] || l10n.en;
 }

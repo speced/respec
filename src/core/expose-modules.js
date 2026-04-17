@@ -7,11 +7,12 @@ if (!inAmd) {
    * @param {(...modules: any[]) => void} callback
    */
   const require = function (deps, callback) {
+    const wr = /** @type {any} */ (window.require);
     const modules = deps.map(dep => {
-      if (!(dep in window.require.modules)) {
+      if (!(dep in wr.modules)) {
         throw new Error(`Unsupported dependency name: ${dep}`);
       }
-      return window.require.modules[dep];
+      return wr.modules[dep];
     });
     Promise.all(modules).then(results => callback(...results));
   };
@@ -25,6 +26,6 @@ if (!inAmd) {
  */
 export function expose(name, object) {
   if (!inAmd) {
-    window.require.modules[name] = object;
+    /** @type {any} */ (window.require).modules[name] = object;
   }
 }

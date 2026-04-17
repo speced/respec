@@ -33,20 +33,23 @@ export function pub(topic, detail) {
  * @param  {Function} cb         Callback function
  * @param  {Object} [options]
  * @param  {Boolean} [options.once] Add prop "once" for single notification.
- * @return {Object}              An object that should be considered opaque,
- *                               used for unsubscribing from messages.
+ * @return {void}
  */
 export function sub(topic, cb, options = { once: false }) {
   /** @param {CustomEvent} ev */
+  /**
+   * @param {CustomEvent} ev
+   */
   const listener = async ev => {
     try {
       await cb(ev.detail);
-    } catch (error) {
+    } catch (err) {
+      const error = /** @type {Error} */ (err);
       const msg = `Error in handler for topic "${topic}": ${error.message}`;
       showError(msg, `sub:${topic}`, { cause: error });
     }
   };
-  subscriptions.addEventListener(topic, listener, options);
+  subscriptions.addEventListener(topic, /** @type {any} */ (listener), options);
 }
 
 expose(name, { sub });

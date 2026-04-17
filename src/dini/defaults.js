@@ -49,12 +49,18 @@ const diniDefaults = {
   showPreviousVersion: false,
 };
 
+/**
+ * @param {NormalizedConf} conf
+ */
 function computeProps(conf) {
   return {
     licenseInfo: licenses.get(conf.license),
   };
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   // assign the defaults
   const lint =
@@ -73,5 +79,5 @@ export function run(conf) {
   });
 
   // computed properties
-  Object.assign(conf, computeProps(conf));
+  Object.assign(conf, computeProps(/** @type {NormalizedConf} */ (conf)));
 }
