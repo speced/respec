@@ -20,7 +20,10 @@
         try {
           const response = await fetch(langURL);
           if (response.ok) langScript = await response.text();
-        } catch {}
+        } catch {
+          // If the fetch fails, fall back to importScripts in the worker.
+          // This may also fail in blob worker environments (see respec-worker.js).
+        }
         worker.postMessage({ action, langURL, langScript, propName, lang });
         return new Promise(resolve => {
           worker.addEventListener("message", function listener({ data }) {

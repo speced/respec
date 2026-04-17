@@ -17,10 +17,16 @@ self.addEventListener("message", ({ data: originalData }) => {
       const { langURL, langScript, propName, lang } = data;
       try {
         if (langScript) {
-          // Execute pre-fetched script content directly (avoids importScripts
-          // from blob workers, which browsers block for cross-origin URLs).
-          // eslint-disable-next-line no-eval
-          (0, eval)(langScript);
+          // importScripts() from blob workers is blocked for cross-origin URLs
+          // (blob worker origin is "null"). Create a same-origin blob URL from
+          // the pre-fetched script content to load the language safely.
+          const blob = new Blob([langScript], { type: "application/javascript" });
+          const objectURL = URL.createObjectURL(blob);
+          try {
+            importScripts(objectURL);
+          } finally {
+            URL.revokeObjectURL(objectURL);
+          }
         } else {
           importScripts(langURL);
         }
