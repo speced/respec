@@ -7,6 +7,7 @@ import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";
 export const name = "dini/conformance";
 
+/** @satisfies {Record<string, { conformance: string; normativity: string; keywordInterpretation(keywords: Element[], plural: boolean): HTMLElement }>} */
 const localizationStrings = {
   en: {
     conformance: "Conformance",
@@ -14,10 +15,6 @@ const localizationStrings = {
       "As well as sections marked as non-normative, all authoring guidelines, " +
       "diagrams, examples, and notes in this specification are non-normative. " +
       "Everything else in this specification is normative.",
-    /**
-     * @param {Element[]} keywords
-     * @param {boolean} plural
-     */
     keywordInterpretation(keywords, plural) {
       return html`<p>
         The key word${plural ? "s" : ""} ${keywords} in this document
@@ -35,10 +32,6 @@ const localizationStrings = {
       "Neben den explizit als nicht-normativ gekennzeichneten Abschnitten " +
       "sind auch alle Diagramme, Beispiele und Hinweise in diesem Dokument " +
       "nicht normativ. Alle anderen Angaben sind normativ.",
-    /**
-     * @param {Element[]} keywords
-     * @param {boolean} plural
-     */
     keywordInterpretation(keywords, plural) {
       return html`<p>
         ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in

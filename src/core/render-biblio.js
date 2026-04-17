@@ -227,9 +227,10 @@ function showRef(reference) {
 
 /**
  * @param {string} endStr
+ * @returns {(str: string) => string}
  */
 function endNormalizer(endStr) {
-  return /** @param {string} str */ str => {
+  return str => {
     const trimmed = str.trim();
     const result =
       !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;

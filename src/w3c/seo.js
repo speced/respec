@@ -122,12 +122,13 @@ async function addJSONLDInfo(conf, doc) {
 
   // add any additional copyright holders
   if (conf.additionalCopyrightHolders) {
+    /** @type {string[]} */
     const addl = Array.isArray(conf.additionalCopyrightHolders)
       ? conf.additionalCopyrightHolders
       : [conf.additionalCopyrightHolders];
     jsonld.copyrightHolder = [
       jsonld.copyrightHolder,
-      ...addl.map((/** @type {any} */ h) => ({ name: h })),
+      ...addl.map(h => ({ name: h })),
     ];
   }
 
@@ -155,10 +156,7 @@ async function addJSONLDInfo(conf, doc) {
     citationIds.map(ref => resolveRef(ref))
   );
   jsonld.citation = citationContents
-    .filter(
-      /** @param {BiblioData | null} ref */ ref =>
-        ref !== null && typeof ref === "object"
-    )
+    .filter(ref => ref !== null && typeof ref === "object")
     .map(addRef);
 
   const script = doc.createElement("script");
@@ -202,7 +200,7 @@ function addRef(ref) {
     url,
   };
   if (ref.authors) {
-    jsonld.creator = ref.authors.map((/** @type {any} */ a) => ({ name: a }));
+    jsonld.creator = ref.authors.map(a => ({ name: a }));
   }
   if (ref.rawDate) {
     jsonld.publishedDate = ref.rawDate;

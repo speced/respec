@@ -19,17 +19,19 @@ import { W3CNotes, recTrackStatus } from "../headers.js";
 const ruleName = "required-sections";
 export const name = "w3c/linter-rules/required-sections";
 
+/**
+ * @satisfies {Record<string, {
+ *  privacy_considerations: string,
+ *  security_considerations: string,
+ *  msg: (sectionTitle: string) => string,
+ *  hint: (sectionTitle: string) => string}
+ * >}
+ */
 const localizationStrings = {
   en: {
-    /**
-     * @param {string} sectionTitle
-     */
     msg(sectionTitle) {
       return `W3C Recommendation track documents require a separate "${sectionTitle}" section.`;
     },
-    /**
-     * @param {string} sectionTitle
-     */
     hint(sectionTitle) {
       return docLink`Add a \`<section>\` with a "${sectionTitle}" header. See the [Horizontal review guidelines](https://www.w3.org/Guide/documentreview/#how_to_get_horizontal_review).
         If the document is not intended for the W3C Recommendation track, set ${"[noRecTrack]"} to \`true\`
@@ -39,15 +41,9 @@ const localizationStrings = {
     security_considerations: "Security Considerations",
   },
   es: {
-    /**
-     * @param {string} sectionTitle
-     */
     msg(sectionTitle) {
       return `Documentos que van a ser "W3C Recommendation" requieren una sección "${sectionTitle}" separada.`;
     },
-    /**
-     * @param {string} sectionTitle
-     */
     hint(sectionTitle) {
       return docLink`Agrega una \`<section>\` con título "${sectionTitle}". Ver los [Horizontal review guidelines](https://www.w3.org/Guide/documentreview/#how_to_get_horizontal_review).
         Si el documento no está destinado a ser un W3C Recommendation, puedes poner ${"[noRecTrack]"} a \`true\`
@@ -57,15 +53,9 @@ const localizationStrings = {
     security_considerations: "Consideraciones de Seguridad",
   },
   cs: {
-    /**
-     * @param {string} sectionTitle
-     */
     msg(sectionTitle) {
       return `Dokumenty na "W3C Recommendation track" vyžadují samostatnou sekci "${sectionTitle}".`;
     },
-    /**
-     * @param {string} sectionTitle
-     */
     hint(sectionTitle) {
       return docLink`Přidejte \`<section>\` s nadpisem "${sectionTitle}". Viz [Horizontal review guidelines](https://www.w3.org/Guide/documentreview/#how_to_get_horizontal_review).
         Pokud dokument není určen pro "W3C Recommendation track", nastavte ${"[noRecTrack]"} na \`true\`
