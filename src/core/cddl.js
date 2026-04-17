@@ -534,7 +534,7 @@ function resolveInlineCddlRefs(doc, definitions) {
         name,
         { elements: [/** @type {HTMLElement} */ (link)] }
       );
-      link.setAttribute("data-cite", "");
+      link.setAttribute("data-no-link-to-dfn", "");
     }
   });
 }

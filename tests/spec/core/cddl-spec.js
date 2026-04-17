@@ -7,9 +7,12 @@ import {
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
+  warningFilters,
 } from "../SpecHelper.js";
 
 const errorsFilter = errorFilters.filter("core/cddl");
+const warningsFilter = warningFilters.filter("core/cddl");
+const linkToDfnWarningsFilter = warningFilters.filter("core/link-to-dfn");
 
 describe("Core - CDDL", () => {
   afterAll(flushIframes);
@@ -620,6 +623,24 @@ describe("Core - CDDL", () => {
       const doc = await makeRSDoc(ops);
       const code = doc.querySelector("p code a[data-link-type='cddl-type']");
       expect(code).toBeTruthy();
+    });
+
+    it("warns once for unresolved inline CDDL refs", async () => {
+      const body = `
+        <pre class="cddl">
+          attire = "bow tie"
+        </pre>
+        <p>See {^missing-type^} for details.</p>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const unresolved = doc.querySelector("p a[data-no-link-to-dfn]");
+      expect(unresolved).toBeTruthy();
+      expect(warningsFilter(doc)).toHaveSize(1);
+      expect(warningsFilter(doc)[0].message).toContain(
+        "no definition found for `missing-type`"
+      );
+      expect(linkToDfnWarningsFilter(doc)).toHaveSize(0);
     });
   });
 
