@@ -448,8 +448,8 @@ export async function run(conf) {
 
   // Move any editors with retiredDate to formerEditors.
   // editors and formerEditors are always set by defaults
-  const editors = /** @type {Person[]} */ (conf.editors ?? []);
-  const formerEditors = /** @type {Person[]} */ (conf.formerEditors ?? []);
+  const editors = conf.editors ?? [];
+  const formerEditors = conf.formerEditors ?? [];
   for (let i = 0; i < editors.length; i++) {
     const editor = editors[i];
     if ("retiredDate" in editor) {
@@ -466,7 +466,7 @@ export async function run(conf) {
     showError(msg, name, { hint });
   } else if (editors.length && conf.isRecTrack) {
     // check that every editor has w3cid
-    editors.forEach((/** @type {any} */ editor, /** @type {number} */ i) => {
+    editors.forEach((editor, i) => {
       if (editor.w3cid) return;
       const msg = docLink`Editor ${
         editor.name ? `"${editor.name}"` : `number ${i + 1}`
@@ -476,11 +476,7 @@ export async function run(conf) {
     });
   }
 
-  if (
-    conf.alternateFormats?.some(
-      (/** @type {{uri: any, label: any}} */ { uri, label }) => !uri || !label
-    )
-  ) {
+  if (conf.alternateFormats?.some(({ uri, label }) => !uri || !label)) {
     const msg = docLink`Every ${"[`alternateFormats`]"} entry must have a \`uri\` and a \`label\`.`;
     showError(msg, name);
   }
@@ -508,11 +504,7 @@ export async function run(conf) {
         conf.alternateFormats &&
         htmlJoinAnd(
           // We need to pass a string here...
-          conf.alternateFormats.map((/** @type {any} */ { label }) => label),
-          /**
-           * @param {string} _
-           * @param {number} i
-           */
+          conf.alternateFormats.map(({ label }) => label),
           (_, i) => {
             // @ts-expect-error -- alternateFormats existence checked by the outer && guard
             const alt = conf.alternateFormats[i];
@@ -565,15 +557,12 @@ export async function run(conf) {
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
-    conf.wgPatentHTML = htmlJoinAnd(
-      conf.wg,
-      (/** @type {any} */ wg, /** @type {number} */ i) => {
-        return html`a
-          <a href="${/** @type {any} */ (conf.wgPatentURI)[i]}" rel="disclosure"
-            >public list of any patent disclosures (${wg})</a
-          >`;
-      }
-    );
+    conf.wgPatentHTML = htmlJoinAnd(conf.wg, (wg, i) => {
+      return html`a
+        <a href="${/** @type {any} */ (conf.wgPatentURI)[i]}" rel="disclosure"
+          >public list of any patent disclosures (${wg})</a
+        >`;
+    });
   } else {
     conf.multipleWGs = false;
   }
@@ -714,7 +703,7 @@ function derivePubSpace(conf) {
 /** @param {Conf} conf */
 function validateCGBG(conf) {
   // @ts-expect-error -- specStatus is always set by defaults
-  const reportType = /** @type {any} */ (status2text)[conf.specStatus];
+  const reportType = status2text[conf.specStatus];
   const latestVersionURL = conf.latestVersion
     ? new URL(w3Url(conf.latestVersion))
     : null;
@@ -790,6 +779,7 @@ async function deriveHistoryURI(conf) {
 /** @param {Conf} conf */
 function validatePatentPolicies(conf) {
   if (!conf.wgPatentPolicy) return;
+  /** @type {Set<string>} */
   const policies = new Set(
     // @ts-expect-error -- wgPatentPolicy is string | string[] here (checked above)
     [].concat(conf.wgPatentPolicy)
@@ -798,8 +788,7 @@ function validatePatentPolicies(conf) {
     policies.size &&
     ![...policies].every(policy => patentPolicies.includes(policy))
   ) {
-    /** @type {string[]} */
-    const invalidPolicies = /** @type {any[]} */ ([...policies]).filter(
+    const invalidPolicies = [...policies].filter(
       policy => !patentPolicies.includes(policy)
     );
     const msg = docLink`Invalid ${"[wgPatentPolicy]"} value(s): ${codedJoinAnd(
