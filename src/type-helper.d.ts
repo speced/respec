@@ -35,7 +35,7 @@ interface AxeViolation {
 declare var respecConfig: Conf;
 interface Window {
   respecVersion: string;
-  respecWorker: Promise<Worker>;
+  respecWorker?: Promise<Worker>;
   respecUI: {
     show(): void;
     hide(): void;
