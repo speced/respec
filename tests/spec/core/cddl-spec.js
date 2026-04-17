@@ -226,7 +226,9 @@ describe("Core - CDDL", () => {
         "text",
         "undefined",
       ]) {
-        expect(linkedNames).toContain(name);
+        expect(linkedNames)
+          .withContext(`prelude type "${name}" should be linked`)
+          .toContain(name);
       }
     });
   });

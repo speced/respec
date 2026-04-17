@@ -609,12 +609,10 @@ export async function run() {
       header.append(copyButton);
       pre.prepend(header);
     } catch (err) {
-      const snippet = cddlText.slice(0, 100);
-      showError(
-        `CDDL parse error: ${err.message}\n\`\`\`\n${snippet}…\n\`\`\``,
-        name,
-        { elements: [pre] }
-      );
+      showError(`CDDL parse error: ${err.message}`, name, {
+        elements: [pre],
+        hint: 'Check the CDDL syntax in the `<pre class="cddl">` block.',
+      });
     }
   });
 

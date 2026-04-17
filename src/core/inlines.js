@@ -175,9 +175,6 @@ function inlineCddlMatches(matched) {
       ></code
     >`;
   }
-
-  // Fallback: treat as plain code
-  return html`<code>${value}</code>`;
 }
 
 /**

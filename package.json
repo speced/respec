@@ -30,6 +30,7 @@
     "@rollup/plugin-terser": "^1.0.0",
     "@types/pluralize": "0.0.33",
     "boxen": "^8.0.1",
+    "cddlparser": "^0.6.0",
     "chokidar": "^5.0.0",
     "clean-css": "^5.3.3",
     "epipebomb": "^1.0.0",
@@ -89,7 +90,6 @@
     "test:integration": "karma start ./tests/spec/karma.conf.cjs --single-run"
   },
   "dependencies": {
-    "cddlparser": "^0.6.0",
     "colors": "1.4.0",
     "finalhandler": "^2.1.1",
     "marked": "^18.0.0",
