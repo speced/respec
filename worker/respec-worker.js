@@ -14,9 +14,20 @@ self.addEventListener("message", ({ data: originalData }) => {
   const data = Object.assign({}, originalData);
   switch (data.action) {
     case "highlight-load-lang": {
-      const { langURL, propName, lang } = data;
-      importScripts(langURL);
-      self.hljs.registerLanguage(lang, self[propName]);
+      const { langURL, langScript, propName, lang } = data;
+      try {
+        if (langScript) {
+          // Execute pre-fetched script content directly (avoids importScripts
+          // from blob workers, which browsers block for cross-origin URLs).
+          // eslint-disable-next-line no-eval
+          (0, eval)(langScript);
+        } else {
+          importScripts(langURL);
+        }
+        self.hljs.registerLanguage(lang, self[propName]);
+      } catch (err) {
+        console.error("Failed to load or register language", lang, err);
+      }
       break;
     }
     case "highlight": {

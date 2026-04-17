@@ -13,7 +13,15 @@
         const langURL = new URL("../../support-files/hljs-testlang.js", window.location).href;
         const propName = "testLang";
         const lang = "testlang";
-        worker.postMessage({ action, langURL, propName, lang });
+        // Fetch the language script in the main thread so it can be sent as
+        // content to the worker. importScripts() from blob workers is blocked
+        // by browsers for cross-origin URLs (blob worker origin is "null").
+        let langScript;
+        try {
+          const response = await fetch(langURL);
+          if (response.ok) langScript = await response.text();
+        } catch {}
+        worker.postMessage({ action, langURL, langScript, propName, lang });
         return new Promise(resolve => {
           worker.addEventListener("message", function listener({ data }) {
             const { action: responseAction, lang: responseLang } = data;
