@@ -211,6 +211,9 @@ describe("Core - anchor-expander", () => {
     expect(links[0].classList).toContain("dfn-ref");
     expect(links[1].textContent.trim()).toBe("<ltterm>");
     expect(links[1].classList).toContain("dfn-ref");
+    const code = links[1].querySelector("code");
+    expect(code).toBeTruthy();
+    expect(code.textContent.trim()).toBe("<ltterm>");
     // No dfn elements inside (safe copy)
     expect(doc.querySelector("#links dfn")).toBeNull();
   });
