@@ -1,11 +1,7 @@
 // @ts-check
 // Module w3c/conformance
 // Handle the conformance section properly.
-import {
-  getIntlData,
-  htmlJoinAnd,
-  showWarning,
-} from "../core/utils.js";
+import { getIntlData, htmlJoinAnd, showWarning } from "../core/utils.js";
 import { html } from "../core/import-maps.js";
 import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";

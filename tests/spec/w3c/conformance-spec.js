@@ -85,7 +85,9 @@ describe("W3C — Conformance", () => {
     expect(warnings).toHaveSize(1);
     expect(warnings[0].message).toContain("normative");
     expect(warnings[0].hint).toContain("informative");
-    expect(doc.respec.errors.filter(e => e.plugin === "w3c/conformance")).toHaveSize(0);
+    expect(
+      doc.respec.errors.filter(e => e.plugin === "w3c/conformance")
+    ).toHaveSize(0);
   });
 
   it("allows conformance section to be completely overridden via .override css class", async () => {
