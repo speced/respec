@@ -335,7 +335,7 @@ function createLabel(label, repoURL) {
   const { color: bgColor, name } = label;
   const safeBgColor = /^[0-9a-f]{6}$/i.test(bgColor) ? bgColor : "f6f8fa";
   const issuesURL = new URL("./issues/", repoURL);
-  issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
+  issuesURL.searchParams.set("q", `is:issue is:open label:"${name}"`);
   const color = textColorFromBgColor(safeBgColor);
   const style = `background-color: #${safeBgColor}; color: ${color}`;
   const ariaLabel = `GitHub label: ${name}`;
