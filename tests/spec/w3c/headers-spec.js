@@ -2579,6 +2579,26 @@ describe("W3C — Headers", () => {
       );
     });
 
+    it("shows history link for WD even before first publication (new shortname)", async () => {
+      // When a spec changes its shortname, the history URL won't return 200
+      // until after the first publication under the new name. Previously the
+      // HEAD check suppressed the link entirely in that case. Now we always
+      // show it — pubrules ignores the HTTP status of history links.
+      const ops = makeStandardOps({
+        shortName: "brand-new-shortname-that-has-never-been-published",
+        specStatus: "WD",
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(ops);
+      const [history] = contains(doc, ".head dt", "History:");
+      expect(history).toBeTruthy();
+      const historyLink = history.nextElementSibling.querySelector("a");
+      expect(historyLink).toBeTruthy();
+      expect(historyLink.href).toBe(
+        "https://www.w3.org/standards/history/brand-new-shortname-that-has-never-been-published/"
+      );
+    });
+
     it("allowing removing the history entirely by nulling it out", async () => {
       const ops = makeStandardOps({
         shortName: "test",

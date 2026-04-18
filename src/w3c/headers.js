@@ -751,28 +751,12 @@ async function deriveHistoryURI(conf) {
     "https://www.w3.org/standards/history/"
   );
 
-  // If it's on the Rec Track or it's TR worthy, then allow history override.
-  // Also make a an exception for FPWD, DNOTE, NOTE and DRY.
-  if (
-    (conf.historyURI && canShowHistory) ||
-    // @ts-expect-error -- specStatus is always set by defaults
-    ["FPWD", "DNOTE", "NOTE", "DRY"].includes(conf.specStatus)
-  ) {
+  // For any TR-published document, always include the history link even if the
+  // URL returns 404 at authoring time. Pubrules ignores the HTTP status of
+  // history links, and a new shortname won't have a history page until after
+  // first publication. Checking for 200 was hiding the link for new shortnames.
+  if (canShowHistory) {
     conf.historyURI = historyURL.href;
-    return;
-  }
-
-  // Let's get the history from the W3C.
-  // Do a fetch HEAD request to see if the history exists...
-  // We don't discriminate... if it's on the W3C website with a history,
-  // we show it.
-  try {
-    const response = await fetch(historyURL, { method: "HEAD" });
-    if (response.ok) {
-      conf.historyURI = response.url;
-    }
-  } catch {
-    // Ignore fetch errors
   }
 }
 
