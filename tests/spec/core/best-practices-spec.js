@@ -101,5 +101,9 @@ describe("Core — Best Practices", () => {
     const headings = bpSummary.querySelectorAll("h1, h2, h3, h4, h5, h6");
     expect(headings).toHaveSize(1);
     expect(headings[0].textContent).toBe("Custom Heading");
+
+    const listItems = bpSummary.querySelectorAll("ul li");
+    expect(listItems).toHaveSize(1);
+    expect(listItems[0].textContent.trim()).toBe("Best Practice 1: BP1");
   });
 });
