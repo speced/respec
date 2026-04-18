@@ -14,9 +14,25 @@ self.addEventListener("message", ({ data: originalData }) => {
   const data = Object.assign({}, originalData);
   switch (data.action) {
     case "highlight-load-lang": {
-      const { langURL, propName, lang } = data;
-      importScripts(langURL);
-      self.hljs.registerLanguage(lang, self[propName]);
+      const { langScript, propName, lang } = data;
+      try {
+        if (!langScript) {
+          throw new Error(`No script content provided for language "${lang}"`);
+        }
+        // importScripts() from blob workers is blocked for cross-origin URLs
+        // (blob worker origin is "null"). Create a same-origin blob URL from
+        // the pre-fetched script content to load the language safely.
+        const blob = new Blob([langScript], { type: "application/javascript" });
+        const objectURL = URL.createObjectURL(blob);
+        try {
+          importScripts(objectURL);
+        } finally {
+          URL.revokeObjectURL(objectURL);
+        }
+        self.hljs.registerLanguage(lang, self[propName]);
+      } catch (err) {
+        console.error("Failed to load or register language", lang, err);
+      }
       break;
     }
     case "highlight": {

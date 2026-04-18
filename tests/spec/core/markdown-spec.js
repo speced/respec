@@ -312,7 +312,10 @@ describe("Core - Markdown", () => {
     expect(webidlBlock.classList).toContain("idl");
     expect(webidlBlock.querySelector("code.hljs")).toBeNull();
     expect(webidlBlock.querySelector(".idlConstructor")).not.toBeNull();
-    expect(webidlBlock.querySelector(".respec-button-copy-paste")).toBeTruthy();
+    const copyButton = webidlBlock.querySelector(".respec-button-copy-paste");
+    expect(copyButton).toBeTruthy();
+    expect(copyButton.title).toBe("Copy IDL to clipboard");
+    expect(copyButton.getAttribute("aria-label")).toBe("Copy IDL to clipboard");
 
     expect(jsBlock.firstElementChild.localName).toBe("code");
     expect(jsBlock.querySelector("code.hljs").classList).toContain("js");

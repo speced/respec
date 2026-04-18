@@ -143,7 +143,9 @@ function inlineXrefMatches(matched, text) {
   // slices "{{" at the beginning and "}}" at the end
   const ref = norm(matched.slice(2, -2));
   if (ref.startsWith("\\")) {
-    return matched.replace("\\", "");
+    // Remove the escape backslash that immediately follows "{{" (with optional
+    // whitespace), using an anchored regex to avoid removing unintended backslashes.
+    return matched.replace(/^(\{\{\s*)\\/, "$1");
   }
 
   const node = idlStringToHtml(ref);
