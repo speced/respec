@@ -216,7 +216,7 @@ function getEngineSupportIcons(engines) {
   if (engines.length < 2) {
     return html`<span role="img" aria-label="${l10n.inSomeEngines}">🚫</span>`;
   }
-  return html`<span>&emsp;</span>`;
+  return html`<span aria-hidden="true" role="presentation">&emsp;</span>`;
 }
 
 /**
