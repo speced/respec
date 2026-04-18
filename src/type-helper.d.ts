@@ -111,6 +111,9 @@ interface Conf {
   biblio: Record<string, BiblioData>;
   editors?: Person[];
   formerEditors?: Person[];
+  unicode?: {
+    apiUrl?: string;
+  };
   /** Set of informative references */
   informativeReferences: InsensitiveStringSet;
   localBiblio?: Record<string, BiblioData>;
