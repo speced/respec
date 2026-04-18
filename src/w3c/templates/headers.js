@@ -262,7 +262,7 @@ export default (conf, options) => {
               <dd>
                 ${conf.latestVersion
                   ? html`<a href="${conf.latestVersion}"
-                      >${decodeURIComponent(conf.latestVersion)}</a
+                      >${decodeURI(conf.latestVersion)}</a
                     >`
                   : "none"}
               </dd>`

@@ -104,18 +104,19 @@ describe("Core — Definitions", () => {
     const body = `
     <section id='dfns'>
       <dfn id="kept">active term</dfn>
-      <del><dfn id="deleted">removed term</dfn></del>
+      <del><dfn>removed term</dfn></del>
     </section>`;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const kept = doc.getElementById("kept");
-    const deleted = doc.getElementById("deleted");
+    const deleted = doc.querySelector("del dfn");
     // The active dfn should be registered normally
     expect(kept).toBeTruthy();
     expect(kept.dataset.dfnType).toBe("dfn");
-    // The dfn inside <del> should not have been processed (no data-dfn-type)
+    // The dfn inside <del> should not have been processed: no data-dfn-type and no auto-generated id
     expect(deleted).toBeTruthy();
     expect(deleted.dataset.dfnType).toBeUndefined();
+    expect(deleted.id).toBeFalsy();
   });
 
   it("makes dfn tab enabled whose aria-role is a link", async () => {
