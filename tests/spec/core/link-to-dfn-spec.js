@@ -387,4 +387,30 @@ describe("Core — Link to definitions", () => {
     expect(codeElem.textContent).toEqual("MediaDevices");
     expect(codeElem.querySelector("code")).toBeNull();
   });
+
+  it("resolves scoped link using data-lt with slash notation", async () => {
+    // Regression test for https://github.com/speced/respec/issues/4133.
+    // Authors sometimes write <dfn data-lt="element/attr"> as shorthand for
+    // defining "attr" in the context of "element". The link [^ element/attr ^]
+    // generates a scoped link (data-link-for="element", text="attr") and must
+    // resolve to the dfn even though data-dfn-for is absent on the dfn.
+    const body = `
+      <section>
+        <p>
+          <dfn id="dfn-src" data-lt="script/src" data-dfn-type="element-attr">
+            The src IDL attribute
+          </dfn>
+        </p>
+        <p id="link-test">[^ script/src ^]</p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const a = doc.querySelector("#link-test a");
+    expect(a).toBeTruthy();
+    expect(a.hash).toBe("#dfn-src");
+    expect(a.classList).toContain("internalDFN");
+    expect(a.classList).not.toContain("respec-offending-element");
+  });
 });

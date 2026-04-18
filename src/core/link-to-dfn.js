@@ -126,6 +126,28 @@ function mapTitleToDfns() {
         elements: duplicates,
       });
     }
+    // When a dfn uses `data-lt="For/term"` style (e.g. "script/src"), also
+    // register the short title ("src") under the for-context ("script") so that
+    // scoped links like [^ script/src ^] can resolve to it.
+    if (key.includes("/")) {
+      const lastSlash = key.lastIndexOf("/");
+      const forContext = key.slice(0, lastSlash);
+      const shortTitle = key.slice(lastSlash + 1);
+      if (shortTitle) {
+        for (const [dfnFor, typeMap] of result) {
+          // Only promote dfns that are registered with an empty for-context —
+          // dfns with an explicit for-context are already scoped correctly.
+          if (dfnFor !== "") continue;
+          if (!titleToDfns.has(shortTitle)) {
+            titleToDfns.set(shortTitle, new Map());
+          }
+          const shortTitleMap = titleToDfns.get(shortTitle);
+          if (!shortTitleMap.has(forContext)) {
+            shortTitleMap.set(forContext, new Map(typeMap));
+          }
+        }
+      }
+    }
   }
   return titleToDfns;
 }
