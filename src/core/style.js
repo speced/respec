@@ -25,10 +25,15 @@ function insertStyle() {
   const styleElement = document.createElement("style");
   styleElement.id = "respec-mainstyle";
   styleElement.textContent = css;
-  // Insert before any existing <link> elements so author-provided stylesheets
-  // retain their position after all ReSpec-injected styles, letting custom CSS
-  // override ReSpec defaults. insertBefore(el, null) === appendChild.
-  document.head.insertBefore(styleElement, document.head.querySelector("link"));
+  // Insert before the first stylesheet or style element so author-provided
+  // stylesheets retain their position after all ReSpec-injected styles, letting
+  // custom CSS override ReSpec defaults. Using "link[rel~='stylesheet'], style"
+  // avoids displacing preconnect, icon, or other non-stylesheet link elements.
+  // insertBefore(el, null) === appendChild when no match is found.
+  document.head.insertBefore(
+    styleElement,
+    document.head.querySelector("link[rel~='stylesheet'], style")
+  );
   return styleElement;
 }
 
