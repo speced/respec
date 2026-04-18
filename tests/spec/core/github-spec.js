@@ -108,6 +108,13 @@ describe("Core - Github", () => {
       );
       expect(conf.github.repoURL).toBe("https://github.com/w3c/core-aam/");
     });
+    it("sets newIssuesURL to /new/choose on the normalized github object", async () => {
+      const doc = await makeRSDoc(stringOpt);
+      const { respecConfig: conf } = doc.defaultView;
+      expect(conf.github.newIssuesURL).toBe(
+        "https://github.com/speced/respec/issues/new/choose"
+      );
+    });
   });
   describe("the definition list items (localized)", () => {
     const l10n = {
@@ -214,15 +221,15 @@ describe("Core - Github", () => {
         elem => elem.textContent.trim() === "Dien een melding in"
       );
       expect(fileABug).toBeTruthy();
+      expect(fileABug.querySelector("a").href).toBe(
+        "https://github.com/w3c/core-aam/issues/new/choose"
+      );
       const allIssues = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "All issues"
       );
       expect(allIssues).toBeTruthy();
       expect(allIssues.querySelector("a").href).toBe(
         "https://github.com/w3c/core-aam/issues/"
-      );
-      expect(fileABug.querySelector("a").href).toBe(
-        "https://github.com/w3c/core-aam/issues/new/choose"
       );
     });
   });

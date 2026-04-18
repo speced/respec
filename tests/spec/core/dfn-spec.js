@@ -100,6 +100,24 @@ describe("Core — Definitions", () => {
     expect(dfn6.dataset.export).toBeUndefined();
   });
 
+  it("skips <dfn> elements inside <del> (deleted content)", async () => {
+    const body = `
+    <section id='dfns'>
+      <dfn id="kept">active term</dfn>
+      <del><dfn id="deleted">removed term</dfn></del>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const kept = doc.getElementById("kept");
+    const deleted = doc.getElementById("deleted");
+    // The active dfn should be registered normally
+    expect(kept).toBeTruthy();
+    expect(kept.dataset.dfnType).toBe("dfn");
+    // The dfn inside <del> should not have been processed (no data-dfn-type)
+    expect(deleted).toBeTruthy();
+    expect(deleted.dataset.dfnType).toBeUndefined();
+  });
+
   it("makes dfn tab enabled whose aria-role is a link", async () => {
     const body = `
     <section id='dfns'>
