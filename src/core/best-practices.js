@@ -57,7 +57,7 @@ export function run() {
   });
   if (bps.length) {
     if (bpSummary) {
-      const existingHeading = bpSummary.querySelector("h2, h3, h4, h5, h6");
+      const existingHeading = bpSummary.querySelector("h1, h2, h3, h4, h5, h6");
       if (!existingHeading) {
         bpSummary.prepend(html`<h1>Best Practices Summary</h1>`);
       }
