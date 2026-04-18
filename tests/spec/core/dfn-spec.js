@@ -418,9 +418,7 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
     });
 
-    // TODO: failing for Chrome, but not Firefox. Needs investigation.
-    // eslint-disable-next-line jasmine/no-disabled-tests
-    xit("handles bad attributes", async () => {
+    it("handles bad attributes", async () => {
       const body = html`
         <section>
           <h2>Attributes</h2>

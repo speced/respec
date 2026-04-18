@@ -27,10 +27,10 @@ describe("Core - Validators", () => {
       }
     });
 
-    // TODO: failing for Chrome, but not Firefox. Needs investigation.
-    // eslint-disable-next-line jasmine/no-disabled-tests
-    xit("generates an error if the element name is not valid", () => {
-      const elements = ["my element", "crypto$", "🪳", "-something", ""];
+    it("generates an error if the element name is not valid", () => {
+      // Note: emoji like 🪳 (U+1FAB3) are valid NameStartChar per XML
+      // [#x10000-#xEFFFF], so Chrome correctly does NOT throw for them.
+      const elements = ["my element", "crypto$", "-something", ""];
       for (const element of elements) {
         const dfn = document.createElement("dfn");
         const context = `element name: ${element}`;
@@ -57,10 +57,10 @@ describe("Core - Validators", () => {
       }
     });
 
-    // TODO: failing for Chrome, but not Firefox. Needs investigation.
-    // eslint-disable-next-line jasmine/no-disabled-tests
-    xit("generates an error if the attribute name is invalid", () => {
-      const attributes = ["-crossorigin", "-whatever-", "aria-😇"];
+    it("generates an error if the attribute name is invalid", () => {
+      // Note: emoji like 😇 (U+1F607) are valid NameChar per XML
+      // [#x10000-#xEFFFF], so "aria-😇" is valid and Chrome does not throw.
+      const attributes = ["-crossorigin", "-whatever-"];
       for (const attribute of attributes) {
         const context = `attribute name: ${attribute}`;
         const dfn = document.createElement("dfn");
