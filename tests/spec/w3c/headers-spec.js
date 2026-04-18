@@ -1626,7 +1626,7 @@ describe("W3C — Headers", () => {
         latestVersion: encodedLatestVersion,
       });
       const doc = await makeRSDoc(ops);
-      const terms = [...doc.querySelectorAll("dt")];
+      const terms = [...doc.querySelectorAll(".head dt")];
       const latestVersionDt = terms.find(
         el => el.textContent.trim() === "Latest published version:"
       );
@@ -1634,6 +1634,25 @@ describe("W3C — Headers", () => {
       const link = latestVersionDt.nextElementSibling.querySelector("a");
       expect(link.href).toBe(encodedLatestVersion);
       expect(link.textContent.trim()).toBe("https://www.w3.org/TR/föö-spec/");
+    });
+
+    it("falls back to the original latestVersion when URI decoding fails", async () => {
+      const malformedLatestVersion =
+        "https://www.w3.org/TR/f%C3%B6%C3%B6-spec/%";
+      const ops = makeStandardOps({
+        specStatus: "WD",
+        group: "webapps",
+        latestVersion: malformedLatestVersion,
+      });
+      const doc = await makeRSDoc(ops);
+      const terms = [...doc.querySelectorAll(".head dt")];
+      const latestVersionDt = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      expect(latestVersionDt).toBeTruthy();
+      const link = latestVersionDt.nextElementSibling.querySelector("a");
+      expect(link.href).toBe(malformedLatestVersion);
+      expect(link.textContent.trim()).toBe(malformedLatestVersion);
     });
   });
 
