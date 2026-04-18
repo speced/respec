@@ -417,12 +417,14 @@ describe("Core — Issues and Notes", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
-    // The heading must be a real DOM H1 element inserted via DOM APIs, not innerHTML
-    const h1 = doc.querySelector("#issue-summary h1");
-    expect(h1).not.toBeNull();
-    expect(h1.tagName).toBe("H1");
+    // After core/structure.js renames headings by depth, the injected h1 becomes h2.
+    // After core/id-headers.js wraps it, it lands inside div.header-wrapper.
+    const heading = doc.querySelector(
+      "#issue-summary > div.header-wrapper > h2"
+    );
+    expect(heading).not.toBeNull();
     // The element must be a real HTMLElement instance (proves DOM construction, not string injection)
-    expect(h1 instanceof doc.defaultView.HTMLHeadingElement).toBe(true);
+    expect(heading instanceof doc.defaultView.HTMLHeadingElement).toBe(true);
   });
 
   it("shows issue-summary section with heading provided", async () => {
