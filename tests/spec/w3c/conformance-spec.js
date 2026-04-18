@@ -88,4 +88,16 @@ describe("W3C — Conformance", () => {
       "Overridden paragraph."
     );
   });
+
+  it("does not render JSDoc annotations as literal text in output", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}<section id='conformance'></section>
+        <section><h2>Terms</h2><p>Terms MUST and SHOULD be used.</p></section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const conformance = doc.getElementById("conformance");
+    expect(conformance.textContent).not.toContain("@param");
+    expect(conformance.textContent).not.toContain("*/");
+  });
 });
