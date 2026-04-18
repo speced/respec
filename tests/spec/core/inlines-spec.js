@@ -657,4 +657,20 @@ describe("Core - Inlines", () => {
     expect(event.textContent).toBe("event");
     expect(noRef.textContent).toBe(`"no-referrer"`);
   });
+
+  it("renders escaped {{ \\IDL }} references as plain text without a link", async () => {
+    const body = `
+      <section>
+        <p id="no-space">{{\\Window}}</p>
+        <p id="with-space">{{ \\Window }}</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const noSpace = doc.getElementById("no-space");
+    expect(noSpace.querySelector("a")).toBeNull();
+    expect(noSpace.textContent.trim()).toBe("{{Window}}");
+    const withSpace = doc.getElementById("with-space");
+    expect(withSpace.querySelector("a")).toBeNull();
+    expect(withSpace.textContent.trim()).toBe("{{ Window }}");
+  });
 });

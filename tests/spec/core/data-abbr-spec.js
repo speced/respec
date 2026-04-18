@@ -92,4 +92,17 @@ describe("Core — data-abbr", () => {
     const abbr = doc.querySelector("section abbr");
     expect(abbr.title).toBe("Permanent Account Number");
   });
+  it("safely handles HTML-special characters in dfn text", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `<section id="section">
+        <dfn data-abbr="T&amp;C">Terms &amp; "Conditions"</dfn>
+      </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const abbr = doc.querySelector("#section dfn + abbr");
+    expect(abbr).toBeTruthy();
+    expect(abbr.title).toBe('Terms & "Conditions"');
+    expect(abbr.textContent).toBe("T&C");
+  });
 });
