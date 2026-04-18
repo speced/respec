@@ -246,33 +246,7 @@ async function evaluateHTML(version, timer) {
     timer.remaining
   );
 
-  const [major, minor] = version;
-  if (major < 20 || (major === 20 && minor < 10)) {
-    console.warn(
-      "👴🏽  Ye Olde ReSpec version detected! Please update to 20.10.0 or above. " +
-        `Your version: ${window.respecVersion}.`
-    );
-    // Document references an older version of ReSpec that does not yet
-    // have the "core/exporter" module. Try with the old "ui/save-html"
-    // module.
-    const { exportDocument } = await new Promise((resolve, reject) => {
-      require(["ui/save-html"], resolve, err => {
-        reject(new Error(err.message));
-      });
-    });
-    return exportDocument("html", "text/html");
-  } else if (!document.respec || !document.respec.toHTML) {
-    const { rsDocToDataURL } = await new Promise((resolve, reject) => {
-      require(["core/exporter"], resolve, err => {
-        reject(new Error(err.message));
-      });
-    });
-    const dataURL = rsDocToDataURL("text/html");
-    const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
-    return decodeURIComponent(encodedString);
-  } else {
-    return await document.respec.toHTML();
-  }
+  return await document.respec.toHTML();
 
   function timeout(promise, ms) {
     return new Promise((resolve, reject) => {
