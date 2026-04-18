@@ -32,6 +32,19 @@ describe("Core - UI", () => {
     expect(window.getComputedStyle(menu).display).toBe("none");
   });
 
+  it("close button has accessible label", async () => {
+    const doc = await makeRSDoc(makeStandardOps({ group: "webapps" }));
+    const ui = doc.defaultView.respecUI;
+    ui.freshModal(
+      "Test",
+      doc.createTextNode("content"),
+      doc.createElement("button")
+    );
+    const closeButton = doc.querySelector(".close-button");
+    expect(closeButton).toBeTruthy();
+    expect(closeButton.getAttribute("aria-label")).toBe("Close");
+  });
+
   it("shows errors", async () => {
     const doc = await makeRSDoc(makeStandardOps({ group: "webapps" }));
     const ui = doc.defaultView.respecUI;
