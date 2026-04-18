@@ -10,18 +10,16 @@ if (typeof self.hljs === "undefined" && self.RESPEC_HIGHLIGHT_URL) {
   }
 }
 
-self.addEventListener("message", ({ data: originalData }) => {
-  const data = Object.assign({}, originalData);
-  if (data.action === "highlight") {
-    const { code } = data;
-    const langs = data.languages.length ? data.languages : undefined;
-    try {
-      const { value, language } = self.hljs.highlightAuto(code, langs);
-      Object.assign(data, { value, language });
-    } catch (err) {
-      console.error("Could not transform some code?", err);
-      Object.assign(data, { value: code, language: "" });
-    }
+self.addEventListener("message", ({ data }) => {
+  if (data.action !== "highlight") return;
+  const { code } = data;
+  const langs = data.languages?.length ? data.languages : undefined;
+  try {
+    const { value, language } = self.hljs.highlightAuto(code, langs);
+    Object.assign(data, { value, language });
+  } catch (err) {
+    console.error("Could not transform some code?", err);
+    Object.assign(data, { value: code, language: "" });
   }
   self.postMessage(data);
 });
