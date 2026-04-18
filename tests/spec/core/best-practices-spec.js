@@ -98,7 +98,7 @@ describe("Core — Best Practices", () => {
     };
     const doc = await makeRSDoc(ops);
     const bpSummary = doc.getElementById("bp-summary");
-    const headings = bpSummary.querySelectorAll("h2, h3, h4, h5, h6");
+    const headings = bpSummary.querySelectorAll("h1, h2, h3, h4, h5, h6");
     expect(headings).toHaveSize(1);
     expect(headings[0].textContent).toBe("Custom Heading");
   });
