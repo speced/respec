@@ -33,11 +33,7 @@ function processDfnElement(dfn) {
   const abbrEl = document.createElement("abbr");
   abbrEl.title = fullForm;
   abbrEl.textContent = abbr;
-  dfn.after(
-    document.createTextNode(" ("),
-    abbrEl,
-    document.createTextNode(")")
-  );
+  dfn.after(" (", abbrEl, ")");
   const lt = dfn.dataset.lt || "";
   dfn.dataset.lt = lt
     .split("|")
