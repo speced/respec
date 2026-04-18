@@ -14,6 +14,7 @@ describe("Core - Validators", () => {
         "feGaussianBlur",
         "body",
         "html",
+        "🪳",
       ];
       for (const element of elements) {
         const dfn = document.createElement("dfn");
@@ -28,8 +29,6 @@ describe("Core - Validators", () => {
     });
 
     it("generates an error if the element name is not valid", () => {
-      // Note: emoji like 🪳 (U+1FAB3) are valid NameStartChar per XML
-      // [#x10000-#xEFFFF], so Chrome correctly does NOT throw for them.
       const elements = ["my element", "crypto$", "-something", ""];
       for (const element of elements) {
         const dfn = document.createElement("dfn");
@@ -44,7 +43,12 @@ describe("Core - Validators", () => {
     });
 
     it("doesn't generates an error if the attribute name is valid", () => {
-      const attributes = ["crossorigin", "aria-hidden", "aria-roledescription"];
+      const attributes = [
+        "crossorigin",
+        "aria-hidden",
+        "aria-roledescription",
+        "aria-😇",
+      ];
       for (const attribute of attributes) {
         const context = `attribute name: ${attribute}`;
         const dfn = document.createElement("dfn");
@@ -58,8 +62,6 @@ describe("Core - Validators", () => {
     });
 
     it("generates an error if the attribute name is invalid", () => {
-      // Note: emoji like 😇 (U+1F607) are valid NameChar per XML
-      // [#x10000-#xEFFFF], so "aria-😇" is valid and Chrome does not throw.
       const attributes = ["-crossorigin", "-whatever-"];
       for (const attribute of attributes) {
         const context = `attribute name: ${attribute}`;
