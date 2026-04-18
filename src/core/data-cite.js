@@ -184,8 +184,7 @@ export async function run() {
 
   await updateBiblio([...elems]);
 
-  // Pre-compute cite details for each element (avoids double toCiteDetails calls).
-  // Capture original keys first since toCiteDetails may mutate dataset.cite.
+  // Capture original keys before toCiteDetails mutates dataset.cite.
   const originalKeys = new Map();
   const citeDetailsMap = new Map();
   for (const elem of elems) {

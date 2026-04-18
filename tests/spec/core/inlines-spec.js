@@ -284,6 +284,68 @@ describe("Core - Inlines", () => {
     expect(notFound.textContent).toBe("[[[not-found]]]");
   });
 
+  it("DEBUG: inspect actual behavior of ! ? and pipe expansions", async () => {
+    const config = {
+      localBiblio: {
+        "the-spec": {
+          id: "the-spec",
+          title: "The Spec",
+          href: "https://example.com/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <section class="informative">
+          <p id="norm-frag">[[[!the-spec#some-id]]]</p>
+        </section>
+        <section id="conformance">
+          <p id="inform-frag">[[[?the-spec#some-id]]]</p>
+          <p id="no-frag">[[[the-spec]]]</p>
+        </section>
+        <p id="not-found-alias">[[[not-found|Custom Text]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+
+    const normFrag = doc.querySelector("#norm-frag");
+    console.log("NORM-FRAG innerHTML:", normFrag?.innerHTML);
+    console.log("NORM-FRAG textContent:", normFrag?.textContent);
+    const normAnchor = doc.querySelector("#norm-frag a");
+    console.log("NORM-FRAG anchor href:", normAnchor?.href);
+    console.log("NORM-FRAG anchor text:", normAnchor?.textContent);
+    console.log("NORM-FRAG anchor data-cite:", normAnchor?.dataset?.cite);
+
+    const informFrag = doc.querySelector("#inform-frag");
+    console.log("INFORM-FRAG innerHTML:", informFrag?.innerHTML);
+    const informAnchor = doc.querySelector("#inform-frag a");
+    console.log("INFORM-FRAG anchor href:", informAnchor?.href);
+    console.log("INFORM-FRAG anchor text:", informAnchor?.textContent);
+
+    const noFrag = doc.querySelector("#no-frag");
+    console.log("NO-FRAG innerHTML:", noFrag?.innerHTML);
+    const noFragAnchor = doc.querySelector("#no-frag a");
+    console.log("NO-FRAG anchor href:", noFragAnchor?.href);
+    console.log("NO-FRAG anchor text:", noFragAnchor?.textContent);
+
+    const notFoundAlias = doc.querySelector("#not-found-alias");
+    console.log("NOT-FOUND-ALIAS innerHTML:", notFoundAlias?.innerHTML);
+    console.log("NOT-FOUND-ALIAS textContent:", notFoundAlias?.textContent);
+
+    const normRefs = [...doc.querySelectorAll("#normative-references dt")];
+    console.log(
+      "NORMATIVE REFS:",
+      normRefs.map(el => el.textContent)
+    );
+    const informRefs = [...doc.querySelectorAll("#informative-references dt")];
+    console.log(
+      "INFORMATIVE REFS:",
+      informRefs.map(el => el.textContent)
+    );
+
+    expect(true).toBeTrue();
+  });
+
   it("links to specific section of another spec using [[[SPEC#id]]] syntax", async () => {
     const config = {
       localBiblio: {
