@@ -284,13 +284,18 @@ describe("Core - Inlines", () => {
     expect(notFound.textContent).toBe("[[[not-found]]]");
   });
 
-  it("DEBUG: inspect actual behavior of ! ? and pipe expansions", async () => {
+  it("classifies [[[!SPEC#id]]] as normative and [[[?SPEC#id]]] as informative", async () => {
     const config = {
       localBiblio: {
         "the-spec": {
           id: "the-spec",
           title: "The Spec",
           href: "https://example.com/",
+        },
+        "other-spec": {
+          id: "other-spec",
+          title: "Other Spec",
+          href: "https://example.com/other",
         },
       },
     };
@@ -300,50 +305,80 @@ describe("Core - Inlines", () => {
           <p id="norm-frag">[[[!the-spec#some-id]]]</p>
         </section>
         <section id="conformance">
-          <p id="inform-frag">[[[?the-spec#some-id]]]</p>
-          <p id="no-frag">[[[the-spec]]]</p>
+          <p id="inform-frag">[[[?other-spec#some-id]]]</p>
         </section>
-        <p id="not-found-alias">[[[not-found|Custom Text]]]</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(config, body));
 
-    const normFrag = doc.querySelector("#norm-frag");
-    console.log("NORM-FRAG innerHTML:", normFrag?.innerHTML);
-    console.log("NORM-FRAG textContent:", normFrag?.textContent);
+    // [[[!the-spec#some-id]]] forces normative even in informative section
     const normAnchor = doc.querySelector("#norm-frag a");
-    console.log("NORM-FRAG anchor href:", normAnchor?.href);
-    console.log("NORM-FRAG anchor text:", normAnchor?.textContent);
-    console.log("NORM-FRAG anchor data-cite:", normAnchor?.dataset?.cite);
+    expect(normAnchor).toBeTruthy();
+    expect(normAnchor.textContent).toBe("The Spec");
 
-    const informFrag = doc.querySelector("#inform-frag");
-    console.log("INFORM-FRAG innerHTML:", informFrag?.innerHTML);
+    const norm = [...doc.querySelectorAll("#normative-references dt")];
+    expect(norm.map(el => el.textContent)).toContain("[the-spec]");
+
+    // [[[?other-spec#some-id]]] forces informative even in normative section
     const informAnchor = doc.querySelector("#inform-frag a");
-    console.log("INFORM-FRAG anchor href:", informAnchor?.href);
-    console.log("INFORM-FRAG anchor text:", informAnchor?.textContent);
+    expect(informAnchor).toBeTruthy();
+    expect(informAnchor.textContent).toBe("Other Spec");
 
-    const noFrag = doc.querySelector("#no-frag");
-    console.log("NO-FRAG innerHTML:", noFrag?.innerHTML);
-    const noFragAnchor = doc.querySelector("#no-frag a");
-    console.log("NO-FRAG anchor href:", noFragAnchor?.href);
-    console.log("NO-FRAG anchor text:", noFragAnchor?.textContent);
+    const inform = [...doc.querySelectorAll("#informative-references dt")];
+    expect(inform.map(el => el.textContent)).toContain("[other-spec]");
+  });
 
-    const notFoundAlias = doc.querySelector("#not-found-alias");
-    console.log("NOT-FOUND-ALIAS innerHTML:", notFoundAlias?.innerHTML);
-    console.log("NOT-FOUND-ALIAS textContent:", notFoundAlias?.textContent);
+  it("supports [[[?SPEC#id|alias]]] and [[[?SPEC|alias]]] with informative classification", async () => {
+    const config = {
+      localBiblio: {
+        "the-spec": {
+          id: "the-spec",
+          title: "The Spec",
+          href: "https://example.com/",
+        },
+        "other-spec": {
+          id: "other-spec",
+          title: "Other Spec",
+          href: "https://example.com/other",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <section id="conformance">
+          <p id="inform-alias">[[[?the-spec#some-id|custom link text]]]</p>
+          <p id="inform-no-frag">[[[?other-spec|just the spec]]]</p>
+        </section>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
 
-    const normRefs = [...doc.querySelectorAll("#normative-references dt")];
-    console.log(
-      "NORMATIVE REFS:",
-      normRefs.map(el => el.textContent)
-    );
-    const informRefs = [...doc.querySelectorAll("#informative-references dt")];
-    console.log(
-      "INFORMATIVE REFS:",
-      informRefs.map(el => el.textContent)
-    );
+    // Alias text should be used instead of spec title
+    const aliasAnchor = doc.querySelector("#inform-alias a");
+    expect(aliasAnchor).toBeTruthy();
+    expect(aliasAnchor.textContent).toBe("custom link text");
 
-    expect(true).toBeTrue();
+    const noFragAnchor = doc.querySelector("#inform-no-frag a");
+    expect(noFragAnchor).toBeTruthy();
+    expect(noFragAnchor.textContent).toBe("just the spec");
+
+    // Both should be classified as informative
+    const inform = [...doc.querySelectorAll("#informative-references dt")];
+    expect(inform.map(el => el.textContent)).toContain("[the-spec]");
+    expect(inform.map(el => el.textContent)).toContain("[other-spec]");
+  });
+
+  it("shows matched text as fallback for [[[not-found|Custom Text]]]", async () => {
+    const body = `
+      <section id="test" class="informative">
+        <p id="output">[[[not-found|Custom Text]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps({}, body));
+    const output = doc.querySelector("#output");
+    expect(output).toBeTruthy();
+    // When the spec is not found, the original matched text is shown
+    expect(output.textContent.trim()).toBe("[[[not-found|Custom Text]]]");
   });
 
   it("links to specific section of another spec using [[[SPEC#id]]] syntax", async () => {
