@@ -57,7 +57,9 @@ describe("W3C — Group", () => {
       });
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd").textContent.replace(/\s+/g, " ");
-      expect(sotd).toContain("that the Working Group intends to include in");
+      expect(sotd)
+        .withContext(specStatus)
+        .toContain("that the Working Group intends to include in");
     });
 
     it(`${specStatus}: writes "Working Group intends" for a single group in an array`, async () => {
@@ -67,7 +69,9 @@ describe("W3C — Group", () => {
       });
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd").textContent.replace(/\s+/g, " ");
-      expect(sotd).toContain("that the Working Group intends to include in");
+      expect(sotd)
+        .withContext(specStatus)
+        .toContain("that the Working Group intends to include in");
     });
 
     it(`${specStatus}: writes "Working Groups intend" for multiple groups`, async () => {
@@ -77,7 +81,9 @@ describe("W3C — Group", () => {
       });
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd").textContent.replace(/\s+/g, " ");
-      expect(sotd).toContain("that the Working Groups intend to include in");
+      expect(sotd)
+        .withContext(specStatus)
+        .toContain("that the Working Groups intend to include in");
     });
   }
 
