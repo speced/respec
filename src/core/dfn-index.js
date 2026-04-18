@@ -130,8 +130,9 @@ export function run() {
   // core/dfn-index runs before core/structure (per profile order) so that
   // #index appears in the ToC. But section numbers are only assigned by
   // core/structure. We resolve this ordering dependency via the "toc" event:
-  // core/structure emits it after building the ToC, at which point we can
-  // annotate each index entry with its section number.
+  // core/structure emits it after completing section processing and numbering
+  // (and any ToC generation), at which point we annotate local index entries
+  // with their section numbers.
   sub("toc", appendSectionNumbers, { once: true });
 
   sub("beforesave", cleanup);
