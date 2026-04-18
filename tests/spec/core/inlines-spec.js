@@ -545,12 +545,14 @@ describe("Core - Inlines", () => {
         <p id="links">
           [= current settings object's =]
           [= current settings object\u2019s =]
+          [= current settings object'S =]
+          [= current settings object\u2019S =]
         </p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps({}, body));
     const anchors = doc.querySelectorAll("#links a");
-    expect(anchors).toHaveSize(2);
+    expect(anchors).toHaveSize(4);
     const dfnId = doc.querySelector("#test dfn").id;
     for (const a of anchors) {
       expect(a.getAttribute("href"))
@@ -560,6 +562,8 @@ describe("Core - Inlines", () => {
     // Display text retains possessive form
     expect(anchors[0].textContent).toBe("current settings object's");
     expect(anchors[1].textContent).toBe("current settings object\u2019s");
+    expect(anchors[2].textContent).toBe("current settings object'S");
+    expect(anchors[3].textContent).toBe("current settings object\u2019S");
   });
 
   it("processes {{ forContext/term }} IDL", async () => {
