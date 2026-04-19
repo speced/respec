@@ -213,16 +213,18 @@ function renderNotRec(conf) {
       break;
     case "CRD":
       statusExplanation = html`A Candidate Recommendation Draft integrates
-      changes from the previous Candidate Recommendation that the Working Group
-      intends to include in a subsequent Candidate Recommendation Snapshot.`;
+      changes from the previous Candidate Recommendation that the Working
+      Group${conf.multipleWGs ? "s intend" : " intends"} to include in a
+      subsequent Candidate Recommendation Snapshot.`;
       if (conf.pubMode === "LS") {
         updatePolicy = lsUpdatePolicy;
       }
       break;
     case "CRYD":
       statusExplanation = html`A Candidate Registry Draft integrates changes
-      from the previous Candidate Registry Snapshot that the Working Group
-      intends to include in a subsequent Candidate Registry Snapshot.`;
+      from the previous Candidate Registry Snapshot that the Working
+      Group${conf.multipleWGs ? "s intend" : " intends"} to include in a
+      subsequent Candidate Registry Snapshot.`;
       if (conf.pubMode === "LS") {
         updatePolicy = lsUpdatePolicy;
       }
