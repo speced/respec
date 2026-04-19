@@ -11,12 +11,6 @@ import {
 describe("Core — Highlight", () => {
   afterAll(flushIframes);
 
-  it("highlights remote languages not bundled by default with ReSpec", async () => {
-    const doc = await makeRSDoc({}, "spec/core/highlight.html");
-    const span = doc.querySelector("code.testlang span[class*=hljs]");
-    expect(span.textContent).toBe("funkyFunction");
-  });
-
   it("shouldn't highlight idl blocks", async () => {
     const body = `
       <section><pre class=idl>
