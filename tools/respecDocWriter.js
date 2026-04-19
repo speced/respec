@@ -225,7 +225,7 @@ async function checkIfReSpec(page) {
  */
 async function generateHTML(page, timer, version, url) {
   try {
-    return await page.evaluate(evaluateHTML, version, timer);
+    return await page.evaluate(evaluateHTML, timer);
   } catch (err) {
     const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${`${
       `Specification: ${url}\n` +
@@ -237,10 +237,9 @@ async function generateHTML(page, timer, version, url) {
 }
 
 /**
- * @param {ReSpecVersion} version
  * @param {ReturnType<typeof createTimer>} timer
  */
-async function evaluateHTML(version, timer) {
+async function evaluateHTML(timer) {
   await timeout(
     document.respec ? document.respec.ready : document.respecIsReady,
     timer.remaining
