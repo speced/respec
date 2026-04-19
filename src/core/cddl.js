@@ -72,6 +72,7 @@ const RFC_8610_URL =
 /**
  * @typedef {{ parentNode?: CddlAstNode | null, type?: string, name?: string | { name?: string } }} CddlAstNode
  * @typedef {{ type: string, serialize: () => string }} CddlToken
+ * @typedef {{ serialize: (...args: any[]) => string }} CddlParsedAst
  */
 
 /**
@@ -605,7 +606,7 @@ function registerCddlDfns(doc, definitions) {
 /**
  * Parse and process a single CDDL block.
  * @param {HTMLElement} pre - the <pre class="cddl"> element
- * @param {(text: string) => object} parse - CDDL parser function
+ * @param {(text: string) => CddlParsedAst} parse - CDDL parser function
  * @param {CddlState} state - shared state across all CDDL blocks
  */
 function processCddlBlock(pre, parse, state) {

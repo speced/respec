@@ -57,7 +57,10 @@ export function run() {
     if (!modules.has(moduleName)) {
       modules.set(moduleName, []);
     }
-    modules.get(moduleName).push(/** @type {HTMLElement} */ (cddlCode));
+    const moduleBlocks = modules.get(moduleName);
+    if (moduleBlocks) {
+      moduleBlocks.push(/** @type {HTMLElement} */ (cddlCode));
+    }
   }
 
   // Check if we have multiple modules
