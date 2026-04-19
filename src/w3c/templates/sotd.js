@@ -501,8 +501,8 @@ function linkToWorkingGroup(conf) {
   let changes = null;
   const proposedAdditions = document.querySelector(".addition.proposed");
   const proposedCorrections = document.querySelector(".correction.proposed");
-  const additions = document.querySelector(".addition");
-  const corrections = document.querySelector(".correction");
+  const additions = document.querySelector(".addition:not(.proposed)");
+  const corrections = document.querySelector(".correction:not(.proposed)");
   const hasRevisions =
     proposedAdditions || proposedCorrections || additions || corrections;
   if (conf.isRec && hasRevisions) {
