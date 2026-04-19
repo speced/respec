@@ -197,6 +197,10 @@ export async function run(conf) {
           href: ghURL,
         },
         {
+          value: "All issues",
+          href: issueBase,
+        },
+        {
           value: l10n.file_a_bug,
           href: newIssuesURL,
         },
