@@ -79,7 +79,7 @@ describe("Core - CDDL", () => {
       const doc = await makeRSDoc(ops);
       const errors = errorsFilter(doc);
       expect(errors).toHaveSize(1);
-      expect(errors[0].message).toContain("CDDL parse error");
+      expect(errors[0].message).toContain("CDDL processing error");
     });
 
     it("handles empty CDDL blocks gracefully", async () => {
