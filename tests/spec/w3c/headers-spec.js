@@ -2740,5 +2740,107 @@ describe("W3C — Headers", () => {
       const sotd = doc.getElementById("sotd");
       expect(sotd.querySelector("p.correction.proposed")).toBeTruthy();
     });
+
+    it("shows a w3c/headers error for REC with additions when #sotd lacks updateable-rec", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition">An addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeTruthy();
+    });
+
+    it("shows a w3c/headers error for REC with corrections when #sotd lacks updateable-rec", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="correction">A correction.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeTruthy();
+    });
+
+    it("does not show a w3c/headers updateable-rec error when class is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition">An addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeUndefined();
+    });
+
+    it("shows a w3c/headers error for REC with proposed additions when #sotd lacks updateable-rec", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition proposed">A proposed addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeTruthy();
+    });
+
+    it("does not show updateable-rec error for non-REC specs with additions", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition">An addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps({ specStatus: "WD", group: "webapps" }, body);
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeUndefined();
+    });
   });
 });
