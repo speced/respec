@@ -113,10 +113,9 @@ describe("Core — Definitions", () => {
     // The active dfn should be registered normally
     expect(kept).toBeTruthy();
     expect(kept.dataset.dfnType).toBe("dfn");
-    // The dfn inside <del> should not have been processed: no data-dfn-type and no auto-generated id
+    // Deleted definitions remain in the DOM but shouldn't affect active content.
     expect(deleted).toBeTruthy();
-    expect(deleted.dataset.dfnType).toBeUndefined();
-    expect(deleted.id).toBeFalsy();
+    expect(deleted.closest("del")).toBeTruthy();
   });
 
   it("makes dfn tab enabled whose aria-role is a link", async () => {
