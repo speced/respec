@@ -100,13 +100,9 @@ interface StoredBiblioEntry extends BiblioData {
  * `true`, `false`, or `"warn"` / `"error"`.
  * Supports string indexing so linter-rule files can look up individual rules.
  */
-type LintConfig = false | { [ruleName: string]: boolean | string };
+type LintConfig = false | ({ [ruleName: string]: boolean | string });
 
-type ProcessFn = (
-  config: Conf,
-  doc: Document,
-  utils?: unknown
-) => Promise<void> | void;
+type ProcessFn = (config: Conf, doc: Document, utils?: unknown) => Promise<void> | void;
 
 /** Configuration object type */
 interface Conf {
@@ -138,26 +134,24 @@ interface Conf {
   /** The URL of the pull request, if applicable */
   prUrl?: string;
   /** The GitHub configuration object */
-  github?:
-    | string
-    | {
-        /** The URL of the GitHub repository */
-        repoURL: string;
-        /** The default branch name */
-        branch?: string;
-        /** Optional custom pulls URL (for monorepo scenarios) */
-        pullsURL?: string;
-        /** Optional custom commit history URL (for monorepo scenarios) */
-        commitHistoryURL?: string;
-        /** The API base URL */
-        apiBase?: string;
-        /** The full name of the repo (e.g. "w3c/my-spec") */
-        fullName?: string;
-        /** The issues URL */
-        issuesURL?: string;
-        /** The new issues URL */
-        newIssuesURL?: string;
-      };
+  github?: string | {
+    /** The URL of the GitHub repository */
+    repoURL: string;
+    /** The default branch name */
+    branch?: string;
+    /** Optional custom pulls URL (for monorepo scenarios) */
+    pullsURL?: string;
+    /** Optional custom commit history URL (for monorepo scenarios) */
+    commitHistoryURL?: string;
+    /** The API base URL */
+    apiBase?: string;
+    /** The full name of the repo (e.g. "w3c/my-spec") */
+    fullName?: string;
+    /** The issues URL */
+    issuesURL?: string;
+    /** The new issues URL */
+    newIssuesURL?: string;
+  };
   /** The title of the document */
   title?: string;
 
@@ -358,21 +352,15 @@ interface Conf {
   /** Linting configuration */
   lint?: LintConfig;
   /** caniuse.com feature configuration */
-  caniuse?:
-    | string
-    | {
-        feature?: string;
-        browsers?: string[] | Record<string, string[]>;
-        maxAge?: number;
-        removeOnSave?: boolean;
-        [key: string]: unknown;
-      };
+  caniuse?: string | {
+    feature?: string;
+    browsers?: string[] | Record<string, string[]>;
+    maxAge?: number;
+    removeOnSave?: boolean;
+    [key: string]: unknown;
+  };
   /** External cross-reference configuration */
-  xref?:
-    | boolean
-    | string
-    | string[]
-    | { url?: string; specs?: string[]; profile?: string };
+  xref?: boolean | string | string[] | { url?: string; specs?: string[]; profile?: string };
   /** Whether to include JSON-LD metadata */
   doJsonLd?: boolean;
   /** Whether to highlight variables */
@@ -388,15 +376,9 @@ interface Conf {
   /** Accessibility linting configuration */
   a11y?: boolean | Record<string, unknown>;
   /** MDN annotation configuration */
-  mdn?:
-    | boolean
-    | string
-    | { key?: string; baseJsonPath?: string; maxAge?: number };
+  mdn?: boolean | string | { key?: string; specMapUrl?: string; baseJsonPath?: string; maxAge?: number };
   /** Web Monetization configuration */
-  monetization?:
-    | boolean
-    | string
-    | { paymentPointer?: string; removeOnSave?: boolean };
+  monetization?: boolean | string | { paymentPointer?: string; removeOnSave?: boolean };
   /** RFC 2119 usage tracking object, keyed by term */
   respecRFC2119?: Record<string, boolean>;
   /** Whether to place the SotD additional content after the WG info */
