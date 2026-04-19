@@ -301,17 +301,15 @@ describe("Core - Inlines", () => {
     };
     const body = `
       <section id="test">
-        <section class="informative">
-          <p id="norm-frag">[[[!the-spec#some-id]]]</p>
-        </section>
         <section id="conformance">
+          <p id="norm-frag">[[[!the-spec#some-id]]]</p>
           <p id="inform-frag">[[[?other-spec#some-id]]]</p>
         </section>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(config, body));
 
-    // [[[!the-spec#some-id]]] forces normative even in informative section
+    // [[[!the-spec#some-id]]] → normative (! prefix in normative section = normative)
     const normAnchor = doc.querySelector("#norm-frag a");
     expect(normAnchor).toBeTruthy();
     expect(normAnchor.textContent).toBe("The Spec");
@@ -319,7 +317,7 @@ describe("Core - Inlines", () => {
     const norm = [...doc.querySelectorAll("#normative-references dt")];
     expect(norm.map(el => el.textContent)).toContain("[the-spec]");
 
-    // [[[?other-spec#some-id]]] forces informative even in normative section
+    // [[[?other-spec#some-id]]] → informative (? prefix overrides normative section)
     const informAnchor = doc.querySelector("#inform-frag a");
     expect(informAnchor).toBeTruthy();
     expect(informAnchor.textContent).toBe("Other Spec");
