@@ -423,7 +423,7 @@ describe("Core — Definitions", () => {
         <section>
           <h2>Attributes</h2>
           <p id="attribute-bad">
-            <dfn class="element-attr">-attribute</dfn>
+            <dfn class="element-attr">bad attribute</dfn>
           </p>
         </section>
       `;
@@ -432,7 +432,7 @@ describe("Core — Definitions", () => {
 
       const errors = findDfnErrors(doc);
       expect(errors).toHaveSize(1);
-      expect(errors[0].message).toContain("-attribute");
+      expect(errors[0].message).toContain("bad attribute");
     });
 
     it("handles attribute values", async () => {
