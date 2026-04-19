@@ -54,13 +54,12 @@ export function run() {
     const pre = cddlCode.closest("pre");
     const moduleName =
       /** @type {HTMLElement} */ (pre)?.dataset.cddlModule || "";
-    if (!modules.has(moduleName)) {
-      modules.set(moduleName, []);
+    let moduleBlocks = modules.get(moduleName);
+    if (!moduleBlocks) {
+      moduleBlocks = [];
+      modules.set(moduleName, moduleBlocks);
     }
-    const moduleBlocks = modules.get(moduleName);
-    if (moduleBlocks) {
-      moduleBlocks.push(/** @type {HTMLElement} */ (cddlCode));
-    }
+    moduleBlocks.push(/** @type {HTMLElement} */ (cddlCode));
   }
 
   // Check if we have multiple modules
