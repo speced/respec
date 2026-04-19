@@ -37,7 +37,13 @@ export function makePluginDoc(
                 allPlugins.map(plug => import(plug))
               );
               await baseRunner.runAll(plugs);
-            } catch (err) {
+            } catch (rawErr) {
+              // Normalise to a real Error so Safari never rejects with
+              // undefined (which crashes jasmine-core's formatProperties).
+              const err =
+                rawErr instanceof Error
+                  ? rawErr
+                  : new Error(String(rawErr ?? "ReSpec failed"));
               console.error(err);
               if (document.respec) {
                 document.respec.errors.push(err);
@@ -128,10 +134,11 @@ async function waitReady(iframe) {
     }, POLL_INTERVAL_MS);
 
     function msgHandler(ev) {
-      // In Safari, ev.source for opaque-origin srcdoc iframes may be null or
-      // may not === iframe.contentWindow (different WindowProxy wrappers).
-      // Accept null sources; reject messages that are clearly from another window.
-      if (ev.source != null && ev.source !== iframe.contentWindow) return;
+      // Don't check ev.source: in Safari, opaque-origin srcdoc iframes send
+      // postMessages with ev.source being a different WindowProxy than
+      // iframe.contentWindow, so identity checks always fail. Tests run
+      // sequentially (jasmine), so at most one waitReady is active at a time;
+      // matching on topic alone is safe.
       if (ev.data.topic === "end-all") {
         settle(() => resolve(doc));
       }
