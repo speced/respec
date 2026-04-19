@@ -227,10 +227,10 @@ describe("W3C - Style", () => {
     const ops = makeStandardOps(); // default: light-only color scheme
     const doc = await makeRSDoc(ops);
     const link = doc.querySelector(
-      `link[href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+      `link[rel="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
     );
     expect(link).toBeTruthy();
-    expect(link.media).toBe("not all");
+    expect(link.getAttribute("media")).toBe("not all");
   });
 
   it("adds dark mode stylesheet", async () => {
@@ -238,10 +238,10 @@ describe("W3C - Style", () => {
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
     /** @type HTMLLinkElement? */
     const link = doc.querySelector(
-      `link[href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+      `link[rel="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
     );
     expect(link).toBeTruthy();
-    expect(link.media).toBe("(prefers-color-scheme: dark)");
+    expect(link.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
   });
 
   it("adds darkmode stylesheet at the end", async () => {
