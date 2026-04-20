@@ -58,6 +58,33 @@ describe("Core - Inlines", () => {
     );
   });
 
+  it("does not add self-citation to bibliography when [[shortName]] used", async () => {
+    // Regression test for https://github.com/speced/respec/issues/2363.
+    // A spec citing itself via [[shortName]] should not appear in its own
+    // bibliography. Instead, the inline renders as <cite> with the spec title.
+    const body = `
+      <h1 id="title">My Spec</h1>
+      <section id="conformance">
+        <p id="test">[[self-spec]] is this spec. [[html]] is external.</p>
+      </section>
+    `;
+    const ops = makeStandardOps({ shortName: "self-spec" }, body);
+    const doc = await makeRSDoc(ops);
+
+    // Self-citation renders as <cite> with the spec title
+    const cite = doc.querySelector("#test cite");
+    expect(cite).toBeTruthy();
+    expect(cite.textContent).toBe("My Spec");
+    expect(cite.title).toBe("self-spec");
+
+    const normDts = [...doc.querySelectorAll("#normative-references dt")];
+    const normKeys = normDts.map(dt => dt.textContent.trim());
+    // External reference must appear
+    expect(normKeys).toContain("[html]");
+    // Self-citation must NOT appear in the bibliography
+    expect(normKeys).not.toContain("[self-spec]");
+  });
+
   it("processes inline cite content with aliasing", async () => {
     const body = `
       <section id="test" class="normative">

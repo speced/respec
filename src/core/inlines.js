@@ -182,6 +182,12 @@ function inlineBibrefMatches(matched, txt, conf) {
     showWarning(msg, name, { elements: [citeElem], hint });
   }
 
+  const isSelfCite =
+    conf.shortName && cleanRef.toLowerCase() === conf.shortName.toLowerCase();
+  if (isSelfCite) {
+    const title = conf.title || cleanRef;
+    return [html`<cite title="${cleanRef}">${title}</cite>`];
+  }
   if (type === "informative" && !illegal) {
     conf.informativeReferences.add(cleanRef);
   } else {
