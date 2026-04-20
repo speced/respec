@@ -34,7 +34,7 @@ export default css`
     --cddl-type-dfn: #ffa198;
     --cddl-key-dfn: #79c0ff;
     --cddl-header-bg: #3a6da0;
-    --cddl-header-color: #005a9c;
+    --cddl-header-color: #fff;
     --cddl-focus: #51a7e8;
   }
 }

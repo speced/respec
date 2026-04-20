@@ -233,6 +233,13 @@ describe("Core - CDDL", () => {
           .withContext(`prelude type "${name}" should be linked`)
           .toContain(name);
       }
+      // Verify links point to RFC 8610 Appendix D
+      const linkHrefs = [...links].map(a => a.getAttribute("href"));
+      for (const href of linkHrefs) {
+        expect(href)
+          .withContext("prelude type links should point to RFC 8610")
+          .toBe("https://www.rfc-editor.org/rfc/rfc8610#appendix-D");
+      }
     });
   });
 

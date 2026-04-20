@@ -66,8 +66,7 @@ const PRELUDE_TYPES = new Set([
   "undefined",
 ]);
 
-const RFC_8610_URL =
-  "https://www.rfc-editor.org/rfc/rfc8610#section-appendix.d";
+const RFC_8610_URL = "https://www.rfc-editor.org/rfc/rfc8610#appendix-D";
 
 /**
  * @typedef {{ parentNode?: CddlAstNode | null, type?: string, name?: string | { name?: string } }} CddlAstNode
@@ -167,6 +166,7 @@ function isMemberKey(node) {
  * This is a subclass of cddlparser's Marker class. The Marker hooks are
  * called during AST serialization to inject HTML markup.
  */
+const html = String.raw;
 class ReSpecCDDLMarker extends CddlMarker {
   /** @type {string|null} */
   #currentRuleName = null;
@@ -345,11 +345,7 @@ class ReSpecCDDLMarker extends CddlMarker {
         }
 
         if (state.proseDfns.has(id)) {
-          state.definitions.set(key, {
-            type: "cddl-value",
-            for: forType,
-            id,
-          });
+          state.definitions.set(key, { type: "cddl-value", for: forType, id });
           return `<a href="#${id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
         }
 
@@ -489,27 +485,31 @@ class ReSpecCDDLMarker extends CddlMarker {
  * @param {Set<string>} proseDfns - set of dfn IDs to populate
  */
 function normalizeProseDfns(doc, proseDfns) {
-  const cddlAttrs = ["cddl-type", "cddl-key", "cddl-value"];
-  cddlAttrs.forEach(attr => {
-    doc.querySelectorAll(`dfn[${attr}]`).forEach(dfn => {
-      /** @type {HTMLElement} */ (dfn).dataset.dfnType = attr;
-      dfn.removeAttribute(attr);
+  /** @type {NodeListOf<HTMLElement>} */
+  const dfns = doc.querySelectorAll(
+    "dfn[cddl-type], dfn[cddl-key], dfn[cddl-value]"
+  );
+  dfns.forEach(dfn => {
+    const attr = ["cddl-type", "cddl-key", "cddl-value"].find(a =>
+      dfn.hasAttribute(a)
+    );
+    dfn.dataset.dfnType = attr;
+    dfn.removeAttribute(attr);
 
-      const forValue = dfn.getAttribute("for");
-      if (forValue) {
-        /** @type {HTMLElement} */ (dfn).dataset.dfnFor = forValue;
-        dfn.removeAttribute("for");
-      }
+    const forValue = dfn.getAttribute("for");
+    if (forValue) {
+      dfn.dataset.dfnFor = forValue;
+      dfn.removeAttribute("for");
+    }
 
-      const name = dfn.textContent.trim();
-      const forPart = forValue ? `${sanitizeId(forValue)}-` : "";
-      const typePart = attr.replace("cddl-", "");
-      const id = dfn.id || `cddl-${typePart}-${forPart}${sanitizeId(name)}`;
-      dfn.id = id;
-      proseDfns.add(id);
+    const name = dfn.textContent.trim();
+    const forPart = forValue ? `${sanitizeId(forValue)}-` : "";
+    const typePart = attr.replace("cddl-", "");
+    const id = `cddl-${typePart}-${forPart}${sanitizeId(name)}`;
+    dfn.id ||= id;
+    proseDfns.add(dfn.id);
 
-      registerDefinition(/** @type {HTMLElement} */ (dfn), [name]);
-    });
+    registerDefinition(dfn, [name]);
   });
 }
 

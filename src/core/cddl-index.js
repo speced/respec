@@ -24,14 +24,14 @@ export function run() {
   if (
     !cddlIndexSec.querySelector(":scope > :is(h2, h3, h4, h5, h6):first-child")
   ) {
-    const header = document.createElement("h2");
+    const heading = document.createElement("h2");
     if (cddlIndexSec.title) {
-      header.textContent = cddlIndexSec.title;
+      heading.textContent = cddlIndexSec.title;
       cddlIndexSec.removeAttribute("title");
     } else {
-      header.textContent = "CDDL Index";
+      heading.textContent = "CDDL Index";
     }
-    cddlIndexSec.prepend(header);
+    cddlIndexSec.prepend(heading);
   }
 
   // Filter out CDDL marked with class="exclude" and in non-normative sections
@@ -116,6 +116,18 @@ function createConsolidatedPre(cddlCodes, id) {
 
   // Remove duplicate IDs
   code.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
+
+  // Replace dfns with spans so the index doesn't create duplicate definitions
+  code.querySelectorAll("dfn").forEach(dfn => {
+    const span = document.createElement("span");
+    span.append(...dfn.childNodes);
+    for (const attr of dfn.attributes) {
+      if (attr.name !== "data-export" && !attr.name.startsWith("data-dfn")) {
+        span.setAttribute(attr.name, attr.value);
+      }
+    }
+    dfn.replaceWith(span);
+  });
 
   pre.append(code);
   return pre;
