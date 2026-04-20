@@ -171,8 +171,9 @@ describe("Core — Issues and Notes", () => {
       "this is 404"
     );
 
-    const [refactorLabel, bugLabel, blankLabel, invalidLabel] =
-      doc.getElementsByClassName("respec-gh-label");
+    const labels = doc.getElementsByClassName("respec-gh-label");
+    expect(labels).toHaveSize(4);
+    const [refactorLabel, bugLabel, blankLabel, invalidLabel] = labels;
 
     expect(refactorLabel.textContent).toBe("refactor");
     expect(refactorLabel.classList).toContain(
