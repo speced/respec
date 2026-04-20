@@ -230,7 +230,7 @@ describe("W3C - Style", () => {
       `link[rel="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
     );
     expect(link).toBeTruthy();
-    expect(link.getAttribute("media")).toBe("not all");
+    expect(link.disabled).toBeTrue();
   });
 
   it("adds dark mode stylesheet", async () => {
