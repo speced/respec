@@ -21,55 +21,51 @@ const BROWSERS = new Map([
   ["safari", { name: "Safari", engine: "webkit" }],
 ]);
 
-/** @type {Map<string|false, string>} */
-const STATUS_TEXT = new Map(
-  /** @type {[string|false, string][]} */ ([
-    ["high", "Widely available"],
-    ["low", "Newly available"],
-    [false, "Limited availability"],
-  ])
-);
+/** @type {Map<string, string>} */
+const STATUS_TEXT = new Map([
+  ["high", "Widely available"],
+  ["low", "Newly available"],
+  ["", "Limited availability"],
+]);
 
-/** @type {Map<string|false, () => HTMLElement>} */
-const BASELINE_ICONS = new Map(
-  /** @type {[string|false, any][]} */ ([
-    [
-      false,
-      () =>
-        html`<svg class="baseline-icon" viewBox="0 0 36 20">
-          <path fill="#f09409" d="M10 0L16 6L14 8L8 2L10 0Z" />
-          <path fill="#f09409" d="M22 12L20 14L26 20L28 18L22 12Z" />
-          <path fill="#f09409" d="M26 0L28 2L10 20L8 18L26 0Z" />
-          <path fill="#c6c6c6" d="M8 2L10 4L4 10L10 16L8 18L0 10L8 2Z" />
-          <path fill="#c6c6c6" d="M28 2L36 10L28 18L26 16L32 10L26 4L28 2Z" />
-        </svg>`,
-    ],
-    [
-      "high",
-      () =>
-        html`<svg class="baseline-icon" viewBox="0 0 36 20">
-          <path fill="#1ea446" d="M18 8L20 10L18 12L16 10L18 8Z" />
-          <path fill="#1ea446" d="M26 0L28 2L10 20L0 10L2 8L10 16L26 0Z" />
-          <path
-            fill="#c4eed0"
-            d="M28 2L26 4L32 10L26 16L22 12L20 14L26 20L36 10L28 2Z"
-          />
-          <path fill="#c4eed0" d="M10 0L2 8L4 10L10 4L14 8L16 6L10 0Z" />
-        </svg>`,
-    ],
-    [
-      "low",
-      () =>
-        html`<svg class="baseline-icon" viewBox="0 0 36 20">
-          <path
-            fill="#a8c7fa"
-            d="m10 0 2 2-2 2-2-2 2-2Zm4 4 2 2-2 2-2-2 2-2Zm16 0 2 2-2 2-2-2 2-2Zm4 4 2 2-2 2-2-2 2-2Zm-4 4 2 2-2 2-2-2 2-2Zm-4 4 2 2-2 2-2-2 2-2Zm-4-4 2 2-2 2-2-2 2-2ZM6 4l2 2-2 2-2-2 2-2Z"
-          />
-          <path fill="#1b6ef3" d="m26 0 2 2-18 18L0 10l2-2 8 8L26 0Z" />
-        </svg>`,
-    ],
-  ])
-);
+/** @type {Map<string, () => HTMLElement>} */
+const BASELINE_ICONS = new Map([
+  [
+    "",
+    () =>
+      html`<svg class="baseline-icon" viewBox="0 0 36 20">
+        <path fill="#f09409" d="M10 0L16 6L14 8L8 2L10 0Z" />
+        <path fill="#f09409" d="M22 12L20 14L26 20L28 18L22 12Z" />
+        <path fill="#f09409" d="M26 0L28 2L10 20L8 18L26 0Z" />
+        <path fill="#c6c6c6" d="M8 2L10 4L4 10L10 16L8 18L0 10L8 2Z" />
+        <path fill="#c6c6c6" d="M28 2L36 10L28 18L26 16L32 10L26 4L28 2Z" />
+      </svg>`,
+  ],
+  [
+    "high",
+    () =>
+      html`<svg class="baseline-icon" viewBox="0 0 36 20">
+        <path fill="#1ea446" d="M18 8L20 10L18 12L16 10L18 8Z" />
+        <path fill="#1ea446" d="M26 0L28 2L10 20L0 10L2 8L10 16L26 0Z" />
+        <path
+          fill="#c4eed0"
+          d="M28 2L26 4L32 10L26 16L22 12L20 14L26 20L36 10L28 2Z"
+        />
+        <path fill="#c4eed0" d="M10 0L2 8L4 10L10 4L14 8L16 6L10 0Z" />
+      </svg>`,
+  ],
+  [
+    "low",
+    () =>
+      html`<svg class="baseline-icon" viewBox="0 0 36 20">
+        <path
+          fill="#a8c7fa"
+          d="m10 0 2 2-2 2-2-2 2-2Zm4 4 2 2-2 2-2-2 2-2Zm16 0 2 2-2 2-2-2 2-2Zm4 4 2 2-2 2-2-2 2-2Zm-4 4 2 2-2 2-2-2 2-2Zm-4 4 2 2-2 2-2-2 2-2Zm-4-4 2 2-2 2-2-2 2-2ZM6 4l2 2-2 2-2-2 2-2Z"
+        />
+        <path fill="#1b6ef3" d="m26 0 2 2-18 18L0 10l2-2 8 8L26 0Z" />
+      </svg>`,
+  ],
+]);
 
 const SUPPORT_ICONS = {
   available: () =>
@@ -141,7 +137,7 @@ const BROWSER_GROUPS = [...BROWSERS.entries()].reduce(
  *   name?: string;
  *   spec?: string | string[];
  *   status?: {
- *     baseline?: "high" | "low" | false;
+ *     baseline?: "high" | "low" | "";
  *     support?: Record<string, unknown>;
  *   };
  * }} WebFeature
@@ -344,13 +340,13 @@ function normalizeUrl(url) {
 
 /**
  * @param {WebFeatureEntry[]} features
- * @returns {"high" | "low" | false}
+ * @returns {"high" | "low" | ""}
  */
 function computeAggregate(features) {
   const statuses = features.map(f => f.status?.baseline);
   if (statuses.every(s => s === "high")) return "high";
   if (statuses.every(s => s === "low" || s === "high")) return "low";
-  return false;
+  return "";
 }
 
 /**
@@ -374,13 +370,13 @@ function getLogoSrc(browserId) {
 }
 
 /**
- * @param {"high" | "low" | false} baseline
+ * @param {"high" | "low" | ""} baseline
  * @param {string | undefined} statusText
  * @param {Map<string, boolean>} support
  * @param {WebFeatureEntry[]} features
  */
 function renderBadge(baseline, statusText, support, features) {
-  const makeIcon = BASELINE_ICONS.get(baseline) || BASELINE_ICONS.get(false);
+  const makeIcon = BASELINE_ICONS.get(baseline) || BASELINE_ICONS.get("");
   if (!makeIcon) {
     return fallbackResult();
   }
