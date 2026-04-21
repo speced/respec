@@ -545,8 +545,8 @@ function normalizeProseDfns(doc, proseDfns) {
     "dfn[cddl-type], dfn[cddl-key], dfn[cddl-value]"
   );
   dfns.forEach(dfn => {
-    const attr = ["cddl-type", "cddl-key", "cddl-value"].find(a =>
-      dfn.hasAttribute(a)
+    const attr = /** @type {string} */ (
+      ["cddl-type", "cddl-key", "cddl-value"].find(a => dfn.hasAttribute(a))
     );
     dfn.dataset.dfnType = attr;
     dfn.removeAttribute(attr);
