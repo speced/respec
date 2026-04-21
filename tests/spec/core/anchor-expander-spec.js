@@ -188,4 +188,33 @@ describe("Core - anchor-expander", () => {
       expect(span.attributes).toHaveSize(0);
     }
   });
+
+  it("expands references to dfn elements, including terms starting with '<'", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <p>
+          <dfn id="dfn-plain">plain term</dfn>
+          <dfn id="dfn-coded"><code>&lt;ltterm&gt;</code></dfn>
+        </p>
+        <p id="links">
+          [[[#dfn-plain]]]
+          [[[#dfn-coded]]]
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const links = doc.querySelectorAll("#links a");
+    expect(links).toHaveSize(2);
+    expect(links[0].textContent.trim()).toBe("plain term");
+    expect(links[0].classList).toContain("dfn-ref");
+    expect(links[1].textContent.trim()).toBe("<ltterm>");
+    expect(links[1].classList).toContain("dfn-ref");
+    const code = links[1].querySelector("code");
+    expect(code).toBeTruthy();
+    expect(code.textContent.trim()).toBe("<ltterm>");
+    // No dfn elements inside (safe copy)
+    expect(doc.querySelector("#links dfn")).toBeNull();
+  });
 });
