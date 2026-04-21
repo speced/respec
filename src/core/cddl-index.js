@@ -12,7 +12,7 @@
  * that is preferred.
  */
 export const name = "core/cddl-index";
-import { nonNormativeSelector } from "./utils.js";
+import { nonNormativeSelector, renameElement } from "./utils.js";
 
 export function run() {
   /** @type {HTMLElement | null} */
@@ -119,14 +119,11 @@ function createConsolidatedPre(cddlCodes, id) {
 
   // Replace dfns with spans so the index doesn't create duplicate definitions
   code.querySelectorAll("dfn").forEach(dfn => {
-    const span = document.createElement("span");
-    span.append(...dfn.childNodes);
-    for (const attr of dfn.attributes) {
-      if (attr.name !== "data-export" && !attr.name.startsWith("data-dfn")) {
-        span.setAttribute(attr.name, attr.value);
-      }
+    const span = renameElement(dfn, "span");
+    span.removeAttribute("data-export");
+    for (const attr of [...span.attributes]) {
+      if (attr.name.startsWith("data-dfn")) span.removeAttribute(attr.name);
     }
-    dfn.replaceWith(span);
   });
 
   pre.append(code);

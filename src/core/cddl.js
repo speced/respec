@@ -198,7 +198,7 @@ class ReSpecCDDLMarker extends CddlMarker {
         }
         state.genericParams.get(ruleName)?.add(name);
       }
-      return `<span class="cddl-param">${xmlEscape(name)}</span>`;
+      return html`<span class="cddl-param">${xmlEscape(name)}</span>`;
     }
 
     // Generic argument (actual arg in <tstr>)
@@ -225,7 +225,7 @@ class ReSpecCDDLMarker extends CddlMarker {
       state.genericParams.has(currentRule) &&
       state.genericParams.get(currentRule)?.has(name)
     ) {
-      return `<span class="cddl-param">${xmlEscape(name)}</span>`;
+      return html`<span class="cddl-param">${xmlEscape(name)}</span>`;
     }
 
     // Type reference (RHS)
@@ -244,7 +244,9 @@ class ReSpecCDDLMarker extends CddlMarker {
 
     // Check for duplicate
     if (state.definitions.has(key)) {
-      return `<a href="#${id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
+      return html`<a href="#${id}" class="cddl-name" data-link-type="cddl-type"
+        >${xmlEscape(name)}</a
+      >`;
     }
 
     // Check if prose dfn already exists
@@ -254,12 +256,16 @@ class ReSpecCDDLMarker extends CddlMarker {
         for: null,
         id,
       });
-      return `<a href="#${id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
+      return html`<a href="#${id}" class="cddl-name" data-link-type="cddl-type"
+        >${xmlEscape(name)}</a
+      >`;
     }
 
     // Create new dfn
     state.definitions.set(key, { type: "cddl-type", for: null, id });
-    return `<dfn data-dfn-type="cddl-type" id="${id}" data-export>${xmlEscape(name)}</dfn>`;
+    return html`<dfn data-dfn-type="cddl-type" id="${id}" data-export
+      >${xmlEscape(name)}</dfn
+    >`;
   }
 
   /**
@@ -271,23 +277,41 @@ class ReSpecCDDLMarker extends CddlMarker {
     const state = this.#state;
     const forType = this.#currentRuleName;
     if (!forType) {
-      return `<span class="cddl-name">${xmlEscape(name)}</span>`;
+      return html`<span class="cddl-name">${xmlEscape(name)}</span>`;
     }
 
     const id = `cddl-key-${sanitizeId(forType)}-${sanitizeId(name)}`;
     const key = `cddl-key:${forType}/${name}`;
 
     if (state.definitions.has(key)) {
-      return `<a href="#${id}" class="cddl-name" data-link-type="cddl-key" data-xref-for="${xmlEscape(forType)}">${xmlEscape(name)}</a>`;
+      return html`<a
+        href="#${id}"
+        class="cddl-name"
+        data-link-type="cddl-key"
+        data-xref-for="${xmlEscape(forType)}"
+        >${xmlEscape(name)}</a
+      >`;
     }
 
     if (state.proseDfns.has(id)) {
       state.definitions.set(key, { type: "cddl-key", for: forType, id });
-      return `<a href="#${id}" class="cddl-name" data-link-type="cddl-key" data-xref-for="${xmlEscape(forType)}">${xmlEscape(name)}</a>`;
+      return html`<a
+        href="#${id}"
+        class="cddl-name"
+        data-link-type="cddl-key"
+        data-xref-for="${xmlEscape(forType)}"
+        >${xmlEscape(name)}</a
+      >`;
     }
 
     state.definitions.set(key, { type: "cddl-key", for: forType, id });
-    return `<dfn data-dfn-type="cddl-key" data-dfn-for="${xmlEscape(forType)}" id="${id}" data-export>${xmlEscape(name)}</dfn>`;
+    return html`<dfn
+      data-dfn-type="cddl-key"
+      data-dfn-for="${xmlEscape(forType)}"
+      id="${id}"
+      data-export
+      >${xmlEscape(name)}</dfn
+    >`;
   }
 
   /**
@@ -300,7 +324,13 @@ class ReSpecCDDLMarker extends CddlMarker {
 
     // Prelude type → link to RFC 8610
     if (PRELUDE_TYPES.has(name)) {
-      return `<a class="cddl-kw" data-link-type="cddl-type" data-link-spec="rfc8610" href="${RFC_8610_URL}">${xmlEscape(name)}</a>`;
+      return html`<a
+        class="cddl-kw"
+        data-link-type="cddl-type"
+        data-link-spec="rfc8610"
+        href="${RFC_8610_URL}"
+        >${xmlEscape(name)}</a
+      >`;
     }
 
     // Known local definition → link
@@ -308,13 +338,20 @@ class ReSpecCDDLMarker extends CddlMarker {
     if (state.definitions.has(key)) {
       const def = state.definitions.get(key);
       if (!def) {
-        return `<span class="cddl-name">${xmlEscape(name)}</span>`;
+        return html`<span class="cddl-name">${xmlEscape(name)}</span>`;
       }
-      return `<a href="#${def.id}" class="cddl-name" data-link-type="cddl-type">${xmlEscape(name)}</a>`;
+      return html`<a
+        href="#${def.id}"
+        class="cddl-name"
+        data-link-type="cddl-type"
+        >${xmlEscape(name)}</a
+      >`;
     }
 
     // Unknown type — just style it. It might be defined in a later block.
-    return `<span class="cddl-name" data-cddl-pending="${xmlEscape(name)}">${xmlEscape(name)}</span>`;
+    return html`<span class="cddl-name" data-cddl-pending="${xmlEscape(name)}"
+      >${xmlEscape(name)}</span
+    >`;
   }
 
   /**
@@ -339,14 +376,26 @@ class ReSpecCDDLMarker extends CddlMarker {
         if (state.definitions.has(key)) {
           const def = state.definitions.get(key);
           if (!def) {
-            return `<span class="cddl-str">${xmlEscape(fullValue)}</span>`;
+            return html`<span class="cddl-str">${xmlEscape(fullValue)}</span>`;
           }
-          return `<a href="#${def.id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
+          return html`<a
+            href="#${def.id}"
+            class="cddl-str"
+            data-link-type="cddl-value"
+            data-xref-for="${xmlEscape(forType)}"
+            >${xmlEscape(fullValue)}</a
+          >`;
         }
 
         if (state.proseDfns.has(id)) {
           state.definitions.set(key, { type: "cddl-value", for: forType, id });
-          return `<a href="#${id}" class="cddl-str" data-link-type="cddl-value" data-xref-for="${xmlEscape(forType)}">${xmlEscape(fullValue)}</a>`;
+          return html`<a
+            href="#${id}"
+            class="cddl-str"
+            data-link-type="cddl-value"
+            data-xref-for="${xmlEscape(forType)}"
+            >${xmlEscape(fullValue)}</a
+          >`;
         }
 
         if (!state.definitions.has(key)) {
@@ -355,7 +404,13 @@ class ReSpecCDDLMarker extends CddlMarker {
             for: forType,
             id,
           });
-          return `<dfn data-dfn-type="cddl-value" data-dfn-for="${xmlEscape(forType)}" id="${id}" data-export>${xmlEscape(fullValue)}</dfn>`;
+          return html`<dfn
+            data-dfn-type="cddl-value"
+            data-dfn-for="${xmlEscape(forType)}"
+            id="${id}"
+            data-export
+            >${xmlEscape(fullValue)}</dfn
+          >`;
         }
       }
     }
@@ -363,14 +418,14 @@ class ReSpecCDDLMarker extends CddlMarker {
     // Classify by type
     switch (node.type) {
       case "text":
-        return `<span class="cddl-str">${xmlEscape(fullValue)}</span>`;
+        return html`<span class="cddl-str">${xmlEscape(fullValue)}</span>`;
       case "number":
       case "float":
-        return `<span class="cddl-num">${xmlEscape(fullValue)}</span>`;
+        return html`<span class="cddl-num">${xmlEscape(fullValue)}</span>`;
       case "bytes":
       case "hex":
       case "base64":
-        return `<span class="cddl-bytes">${xmlEscape(fullValue)}</span>`;
+        return html`<span class="cddl-bytes">${xmlEscape(fullValue)}</span>`;
       default:
         return xmlEscape(fullValue);
     }
@@ -459,7 +514,7 @@ class ReSpecCDDLMarker extends CddlMarker {
     if (match) {
       return `${match[1]}<span class="cddl-op">${match[2]}</span>${match[3]}`;
     }
-    return `<span class="cddl-op">${serialized}</span>`;
+    return html`<span class="cddl-op">${serialized}</span>`;
   }
 
   /**
@@ -472,7 +527,7 @@ class ReSpecCDDLMarker extends CddlMarker {
     if (match) {
       return `${match[1]}<span class="cddl-occ">${match[2]}</span>${match[3]}`;
     }
-    return `<span class="cddl-occ">${serialized}</span>`;
+    return html`<span class="cddl-occ">${serialized}</span>`;
   }
 }
 
