@@ -737,6 +737,7 @@ function validateCGBG(conf) {
     return;
   }
 
+  // @ts-expect-error -- specStatus is always set by defaults
   if (conf.specStatus.endsWith("-DRAFT") && !conf.latestVersion) {
     conf.latestVersion = null;
     return;
@@ -799,7 +800,7 @@ async function deriveHistoryURI(conf) {
 }
 
 /** @returns {Promise<string|null>} Final URL after redirects, or null if unreachable. */
-async function resourceExists(url) {
+async function resourceExists(/** @type {string|URL} */ url) {
   try {
     const response = await fetch(url, { method: "HEAD" });
     return response.ok ? response.url : null;
