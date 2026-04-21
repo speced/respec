@@ -174,6 +174,9 @@ function inlineRFC2119Matches(matched) {
  */
 const defined = /^(?:!|\\|\?)?(?:#[\w-.]+|[\w-.]+(?:#[\w-.]+)?)(?:\|[^\]]+)?$/;
 
+/**
+ * @param {string} matched
+ */
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   let ref = matched.slice(3, -3).trim();
