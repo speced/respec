@@ -186,7 +186,7 @@ function inlineBibrefMatches(matched, txt, conf) {
     conf.shortName && cleanRef.toLowerCase() === conf.shortName.toLowerCase();
   if (isSelfCite) {
     const title = conf.title || cleanRef;
-    return [html`<cite title="${cleanRef}">${title}</cite>`];
+    return [html`<cite title="${conf.shortName}">${title}</cite>`];
   }
   if (type === "informative" && !illegal) {
     conf.informativeReferences.add(cleanRef);
