@@ -64,6 +64,32 @@ describe("W3C — Conformance", () => {
     expect(doc.querySelectorAll("#conformance .rfc2119")).toHaveSize(0);
   });
 
+  it("removes `informative` class and warns when conformance section is marked informative", async () => {
+    const body = `
+      <section id="conformance" class="informative">
+        <p>CONFORMANCE</p>
+      </section>
+      <section>
+        <h2>my section</h2>
+        <p>MUST be tested.</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps({}, body));
+    const conformance = doc.getElementById("conformance");
+    // The informative class should have been removed
+    expect(conformance.classList.contains("informative")).toBeFalse();
+    // A warning should be emitted, not an error
+    const warnings = doc.respec.warnings.filter(
+      w => w.plugin === "w3c/conformance"
+    );
+    expect(warnings).toHaveSize(1);
+    expect(warnings[0].message).toContain("normative");
+    expect(warnings[0].hint).toContain("informative");
+    expect(
+      doc.respec.errors.filter(e => e.plugin === "w3c/conformance")
+    ).toHaveSize(0);
+  });
+
   it("allows conformance section to be completely overridden via .override css class", async () => {
     const body = `
       <section>
