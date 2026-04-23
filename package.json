@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "35.9.0",
+  "version": "36.0.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -30,6 +30,7 @@
     "@rollup/plugin-terser": "^1.0.0",
     "@types/pluralize": "0.0.33",
     "boxen": "^8.0.1",
+    "cddlparser": "^0.6.0",
     "chokidar": "^5.0.0",
     "clean-css": "^5.3.3",
     "epipebomb": "^1.0.0",
@@ -63,7 +64,7 @@
     "simple-git-hooks": "^2.13.1",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^6.0.3",
-    "vnu-jar": "^26.4.11",
+    "vnu-jar": "^26.4.16",
     "webidl2": "^24.5.0"
   },
   "scripts": {
@@ -92,7 +93,7 @@
     "colors": "1.4.0",
     "finalhandler": "^2.1.1",
     "marked": "^18.0.0",
-    "puppeteer": "^24.40.0",
+    "puppeteer": "^24.42.0",
     "sade": "^1.8.1",
     "serve-static": "^2.2.1"
   },
