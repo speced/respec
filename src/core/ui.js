@@ -27,6 +27,10 @@ function insertStyle() {
   return styleElement;
 }
 
+/**
+ * @param {Element | null | undefined} elem
+ * @param {Map<string, string>} ariaMap
+ */
 function ariaDecorate(elem, ariaMap) {
   if (!elem) {
     return;
@@ -51,10 +55,15 @@ const closeButton = html`<button
   ❌
 </button>`;
 window.addEventListener("load", () => trapFocus(menu));
+/** @type {HTMLElement | null} */
 let modal;
+/** @type {HTMLElement | null} */
 let overlay;
+/** @type {any[]} */
 const errors = [];
+/** @type {any[]} */
 const warnings = [];
+/** @type {Record<string, HTMLButtonElement>} */
 const buttons = {};
 
 sub("start-all", () => document.body.prepend(respecUI), { once: true });
@@ -62,12 +71,15 @@ sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
 const respecPill = html`<button id="respec-pill" disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
-respecPill.addEventListener("click", e => {
-  e.stopPropagation();
-  respecPill.setAttribute("aria-expanded", String(menu.hidden));
-  toggleMenu();
-  menu.querySelector("li:first-child button").focus();
-});
+respecPill.addEventListener(
+  "click",
+  /** @param {MouseEvent} e */ e => {
+    e.stopPropagation();
+    respecPill.setAttribute("aria-expanded", String(menu.hidden));
+    toggleMenu();
+    menu.querySelector("li:first-child button").focus();
+  }
+);
 
 document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
@@ -76,13 +88,16 @@ document.documentElement.addEventListener("click", () => {
 });
 respecUI.appendChild(menu);
 
-menu.addEventListener("keydown", e => {
-  if (e.key === "Escape" && !menu.hidden) {
-    respecPill.setAttribute("aria-expanded", String(menu.hidden));
-    toggleMenu();
-    respecPill.focus();
+menu.addEventListener(
+  "keydown",
+  /** @param {KeyboardEvent} e */ e => {
+    if (e.key === "Escape" && !menu.hidden) {
+      respecPill.setAttribute("aria-expanded", String(menu.hidden));
+      toggleMenu();
+      respecPill.focus();
+    }
   }
-});
+);
 
 function toggleMenu() {
   menu.classList.toggle("respec-hidden");
@@ -90,8 +105,11 @@ function toggleMenu() {
   menu.hidden = !menu.hidden;
 }
 
-// Code adapted from https://hiddedevries.nl/en/blog/2017-01-29-using-javascript-to-trap-focus-in-an-element
+/**
+ * @param {Element} element
+ */
 function trapFocus(element) {
+  /** @type {NodeListOf<HTMLElement>} */
   const focusableEls = element.querySelectorAll(
     "a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])"
   );
@@ -101,20 +119,21 @@ function trapFocus(element) {
     firstFocusableEl.focus();
   }
   element.addEventListener("keydown", e => {
-    if (e.key !== "Tab") {
+    const keyEvent = /** @type {KeyboardEvent} */ (e);
+    if (keyEvent.key !== "Tab") {
       return;
     }
     // shift + tab
-    if (e.shiftKey) {
+    if (keyEvent.shiftKey) {
       if (document.activeElement === firstFocusableEl) {
         lastFocusableEl.focus();
-        e.preventDefault();
+        keyEvent.preventDefault();
       }
     }
     // tab
     else if (document.activeElement === lastFocusableEl) {
       firstFocusableEl.focus();
-      e.preventDefault();
+      keyEvent.preventDefault();
     }
   });
 }
@@ -127,6 +146,12 @@ const ariaMap = new Map([
 ]);
 ariaDecorate(respecPill, ariaMap);
 
+/**
+ * @param {RespecError | string} err
+ * @param {(RespecError | string)[]} arr
+ * @param {string} butName
+ * @param {string} title
+ */
 function errWarn(err, arr, butName, title) {
   arr.push(err);
   if (!buttons.hasOwnProperty(butName)) {
@@ -134,12 +159,17 @@ function errWarn(err, arr, butName, title) {
     respecUI.appendChild(buttons[butName]);
   }
   const button = buttons[butName];
-  button.textContent = arr.length;
+  button.textContent = String(arr.length);
   const label = arr.length === 1 ? pluralize.singular(title) : title;
   const ariaMap = new Map([["label", `${arr.length} ${label}`]]);
   ariaDecorate(button, ariaMap);
 }
 
+/**
+ * @param {string} butName
+ * @param {any[]} arr
+ * @param {string} title
+ */
 function createWarnButton(butName, arr, title) {
   const buttonId = `respec-pill-${butName}`;
   const button = html`<button
@@ -156,7 +186,9 @@ function createWarnButton(butName, arr, title) {
       const li = document.createElement("li");
       // if it's only a single element, just copy the contents into li
       if (fragment.firstElementChild === fragment.lastElementChild) {
-        li.append(...fragment.firstElementChild.childNodes);
+        li.append(
+          .../** @type {Element} */ (fragment.firstElementChild).childNodes
+        );
         // Otherwise, take everything.
       } else {
         li.appendChild(fragment);
@@ -190,6 +222,9 @@ export const ui = {
   },
   /**
    * @param {string} _keyShort shortcut key. unused - kept for backward compatibility.
+   * @param {string} label
+   * @param {Function} handler
+   * @param {string} icon
    */
   addCommand(label, handler, _keyShort, icon) {
     icon = icon || "";
@@ -202,18 +237,22 @@ export const ui = {
     menu.appendChild(menuItem);
     return button;
   },
+  /** @param {RespecError | string} rsError */
   error(rsError) {
     errWarn(rsError, errors, "error", "ReSpec Errors");
   },
+  /** @param {RespecError | string} rsError */
   warning(rsError) {
     errWarn(rsError, warnings, "warning", "ReSpec Warnings");
   },
+  /** @param {Element} [owner] */
   closeModal(owner) {
     if (overlay) {
-      overlay.classList.remove("respec-show-overlay");
-      overlay.classList.add("respec-hide-overlay");
-      overlay.addEventListener("transitionend", () => {
-        overlay.remove();
+      const overlayElem = overlay;
+      overlayElem.classList.remove("respec-show-overlay");
+      overlayElem.classList.add("respec-hide-overlay");
+      overlayElem.addEventListener("transitionend", () => {
+        overlayElem.remove();
         overlay = null;
       });
     }
@@ -225,6 +264,11 @@ export const ui = {
     modal = null;
     respecPill.focus();
   },
+  /**
+   * @param {string} title
+   * @param {Node} content
+   * @param {HTMLElement} currentOwner
+   */
   freshModal(title, content, currentOwner) {
     if (modal) modal.remove();
     if (overlay) overlay.remove();
@@ -243,11 +287,18 @@ export const ui = {
     </div>`;
     const ariaMap = new Map([["labelledby", headingId]]);
     ariaDecorate(modal, ariaMap);
-    document.body.append(overlay, modal);
-    overlay.addEventListener("click", () => this.closeModal(currentOwner));
-    overlay.classList.toggle("respec-show-overlay");
-    modal.hidden = false;
-    trapFocus(modal);
+    document.body.append(
+      /** @type {HTMLElement} */ (overlay),
+      /** @type {HTMLElement} */ (modal)
+    );
+    /** @type {HTMLElement} */ (overlay).addEventListener("click", () =>
+      this.closeModal(currentOwner)
+    );
+    /** @type {HTMLElement} */ (overlay).classList.toggle(
+      "respec-show-overlay"
+    );
+    /** @type {HTMLElement} */ (modal).hidden = false;
+    trapFocus(/** @type {HTMLElement} */ (modal));
   },
 };
 document.addEventListener("keydown", ev => {
@@ -256,9 +307,18 @@ document.addEventListener("keydown", ev => {
   }
 });
 window.respecUI = ui;
-sub("error", details => ui.error(details));
-sub("warn", details => ui.warning(details));
+sub(
+  "error",
+  /** @param {RespecError | string} details */ details => ui.error(details)
+);
+sub(
+  "warn",
+  /** @param {RespecError | string} details */ details => ui.warning(details)
+);
 
+/**
+ * @param {RespecError | string} err
+ */
 function rsErrorToHTML(err) {
   if (typeof err === "string") {
     return err;

@@ -1,5 +1,5 @@
 // @ts-check
-import { fetchAndCache, getIntlData, showError } from "./utils.js";
+import { docLink, fetchAndCache, getIntlData, showError } from "./utils.js";
 import css from "../styles/mdn-annotation.css.js";
 import { html } from "./import-maps.js";
 
@@ -87,7 +87,7 @@ function attachMDNDetail(mdnSpec) {
  */
 function buildBrowserSupportTable(support) {
   /**
-   * @param {string | keyof MDN_BROWSERS} browserId
+   * @param {keyof MDN_BROWSERS} browserId
    * @param {"Yes" | "No" | "Unknown"} yesNoUnknown
    * @param {string} version
    * @returns {HTMLTableRowElement}
@@ -102,7 +102,7 @@ function buildBrowserSupportTable(support) {
   }
 
   /**
-   * @param {string | keyof MDN_BROWSERS} browserId
+   * @param {keyof MDN_BROWSERS} browserId
    * @param {VersionDetails} versionData
    */
   function createRowFromBrowserData(browserId, versionData) {
@@ -119,8 +119,11 @@ function buildBrowserSupportTable(support) {
     }
   }
 
+  const browsers = /** @type {(keyof typeof MDN_BROWSERS)[]} */ (
+    Object.keys(MDN_BROWSERS)
+  );
   return html`<table>
-    ${Object.keys(MDN_BROWSERS).map(browserId => {
+    ${browsers.map(browserId => {
       return support[browserId]
         ? createRowFromBrowserData(browserId, support[browserId])
         : createRow(browserId, "Unknown", "");
@@ -128,12 +131,24 @@ function buildBrowserSupportTable(support) {
   </table>`;
 }
 
+/**
+ * @param {Conf} conf
+ */
 export async function run(conf) {
   const mdnKey = getMdnKey(conf);
   if (!mdnKey) return;
 
-  const mdnSpecJson = await getMdnData(mdnKey, conf.mdn);
-  if (!mdnSpecJson) return;
+  const mdnConf = typeof conf.mdn === "object" ? conf.mdn : {};
+  const mdnSpecJson = await getMdnData(mdnKey, mdnConf);
+  if (!mdnSpecJson) {
+    const msg = `Could not find MDN data associated with key "${mdnKey}".`;
+    const hint =
+      conf.mdn === true
+        ? docLink`When using \`mdn: true\`, the key defaults to ${"[shortName]"} ("${mdnKey}"). Check that your shortName matches an entry in the [MDN spec links map](https://github.com/w3c/mdn-spec-links/blob/main/SPECMAP.json), or set ${"[mdn]"} to the correct key.`
+        : docLink`Search for your spec's URL in the [MDN spec links map](https://github.com/w3c/mdn-spec-links/blob/main/SPECMAP.json) to find the correct key, then set ${"[mdn]"} to it.`;
+    showError(msg, name, { hint });
+    return;
+  }
 
   const style = document.createElement("style");
   style.textContent = css;
@@ -149,10 +164,14 @@ export async function run(conf) {
   }
 }
 
-/** @returns {string} */
+/**
+ * @param {Conf} conf
+ * @returns {string | undefined}
+ */
 function getMdnKey(conf) {
   const { shortName, mdn } = conf;
   if (!mdn) return;
+  if (mdn === true) return shortName;
   if (typeof mdn === "string") return mdn;
   return mdn.key || shortName;
 }
@@ -160,7 +179,6 @@ function getMdnKey(conf) {
 /**
  * @param {string} key MDN key
  * @param {object} mdnConf
- * @param {string} [mdnConf.specMapUrl]
  * @param {string} [mdnConf.baseJsonPath]
  * @param {number} [mdnConf.maxAge]
  *
@@ -168,19 +186,14 @@ function getMdnKey(conf) {
  * @typedef {Record<string | keyof MDN_BROWSERS, VersionDetails>} MdnSupportEntry
  * @typedef {{ name: string, title: string, slug: string, summary: string, support: MdnSupportEntry, engines: string[] }} MdnEntry
  * @typedef {Record<string, MdnEntry[]>} MdnData
- * @returns {Promise<MdnData|undefined>}
+ * @returns {Promise<MdnData|null>}
  */
 async function getMdnData(key, mdnConf) {
   const { baseJsonPath = BASE_JSON_PATH, maxAge = 60 * 60 * 24 * 1000 } =
     mdnConf;
   const url = new URL(`${key}.json`, baseJsonPath).href;
   const res = await fetchAndCache(url, maxAge);
-  if (res.status === 404) {
-    const msg = `Could not find MDN data associated with key "${key}".`;
-    const hint = "Please add a valid key to `respecConfig.mdn`";
-    showError(msg, name, { hint });
-    return;
-  }
+  if (res.status === 404) return null;
   return await res.json();
 }
 

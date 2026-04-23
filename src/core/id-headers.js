@@ -12,6 +12,7 @@ const localizationStrings = {
     /**
      *
      * @param {"Appendix" | "Section"} sectionType
+     * @param {HTMLElement | null} sectionNumber
      */
     permalinkLabel(sectionType, sectionNumber) {
       let label = `Permalink for${
@@ -26,6 +27,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   /** @type {NodeListOf<HTMLElement>} */
   const headings = document.querySelectorAll(
@@ -36,7 +40,7 @@ export function run(conf) {
     let id = h.id;
     if (!id) {
       addId(h);
-      id = h.parentElement.id || h.id;
+      id = h.parentElement?.id || h.id;
     }
     if (!conf.addSectionLinks) continue;
     const label = l10n.permalinkLabel(

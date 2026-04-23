@@ -50,6 +50,7 @@ function collectTables() {
     .filter(table => !!table.querySelector("caption"))
     .forEach((table, i) => {
       const caption = table.querySelector("caption");
+      if (!caption) return;
       decorateTable(table, caption, i);
       listOfTables.push(getListOfTablesListItem(table.id, caption));
     });

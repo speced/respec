@@ -515,6 +515,7 @@ describe("W3C — Headers", () => {
           group: "webapps",
           github: "speced/respec",
           crEnd: "2019-01-01",
+          prEnd: "2019-01-01",
         });
         const doc = await makeRSDoc(ops, simpleSpecURL);
         const errors = headerErrors(doc);
@@ -1592,6 +1593,30 @@ describe("W3C — Headers", () => {
         );
       });
     }
+
+    for (const specStatus of ["unofficial", "MO", "base"]) {
+      it(`does not auto-generate /TR/ URL for no-track "${specStatus}" even with WG group`, async () => {
+        const ops = makeStandardOps({
+          shortName: "some-report",
+          specStatus,
+          group: "wg/json-ld",
+        });
+        const doc = await makeRSDoc(ops);
+        const { latestVersion } = doc.defaultView.respecConfig;
+        // No-track specs without a publication space must not get any URL
+        expect(latestVersion).not.toContain("/TR/");
+        // Also confirm the rendered header shows "none" (no clickable link)
+        const terms = [...doc.querySelectorAll(".head dt")];
+        const latestVersionDt = terms.find(
+          el => el.textContent.trim() === "Latest published version:"
+        );
+        expect(latestVersionDt).toBeTruthy();
+        const latestVersionDd = latestVersionDt.nextElementSibling;
+        const latestVersionLink = latestVersionDd.querySelector("a");
+        expect(latestVersionLink).toBeNull();
+        expect(latestVersionDd.textContent.trim()).toBe("none");
+      });
+    }
   });
 
   describe("prevED", () => {
@@ -1783,6 +1808,37 @@ describe("W3C — Headers", () => {
           "The W3C Patent Policy does not carry any licensing requirements or commitments on this document."
         );
       }
+    });
+    it("renders patent disclosure as a link when wgPatentURI is present", async () => {
+      const opts = makeStandardOps({
+        specStatus: "WD",
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(opts);
+      const sotd = doc.querySelector("#sotd");
+      const { wgPatentURI } = doc.defaultView.respecConfig;
+      expect(wgPatentURI).toBeTruthy();
+      const [link] = contains(sotd, "a[rel='disclosure']", "public list");
+      expect(link).toBeTruthy();
+      expect(link.href).toBe(wgPatentURI);
+    });
+    it("renders patent disclosure as plain text when wgPatentURI is absent", async () => {
+      const opts = makeStandardOps({
+        specStatus: "WD",
+        wg: "Test Working Group",
+        wgURI: "https://example.com/wg",
+        // wgId must be truthy so defaults.js keeps specStatus as "WD"
+        // (without it, defaults.js changes specStatus to "base" which
+        // uses renderIsNoTrack instead of renderDeliverer)
+        wgId: 123456,
+      });
+      const doc = await makeRSDoc(opts);
+      const sotd = doc.querySelector("#sotd");
+      const link = sotd.querySelector("a[rel='disclosure']");
+      expect(link).toBeNull();
+      expect(sotd.textContent).toContain(
+        "public list of any patent disclosures"
+      );
     });
   });
 
@@ -2643,6 +2699,148 @@ describe("W3C — Headers", () => {
       expect(h1.textContent).toContain("Preview of PR #123:");
       expect(h1.textContent).toContain("Simple Spec");
       expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
+    });
+  });
+  describe("updateable-rec proposed markers", () => {
+    // Note: "updateable" is intentionally misspelled to match
+    // the class name used in sotd.js — do not "fix" this.
+
+    it("renders proposed additions paragraph when .addition.proposed element is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition proposed">A proposed addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      expect(sotd.querySelector("p.addition.proposed")).toBeTruthy();
+    });
+
+    it("renders proposed corrections paragraph when .correction.proposed element is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="correction proposed">A proposed correction.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      expect(sotd.querySelector("p.correction.proposed")).toBeTruthy();
+    });
+
+    it("shows a w3c/headers error for REC with additions when #sotd lacks updateable-rec", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition">An addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeTruthy();
+    });
+
+    it("shows a w3c/headers error for REC with corrections when #sotd lacks updateable-rec", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="correction">A correction.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeTruthy();
+    });
+
+    it("does not show a w3c/headers updateable-rec error when class is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition">An addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeUndefined();
+    });
+
+    it("shows a w3c/headers error for REC with proposed additions when #sotd lacks updateable-rec", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition proposed">A proposed addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeTruthy();
+    });
+
+    it("does not show updateable-rec error for non-REC specs with additions", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition">An addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps({ specStatus: "WD", group: "webapps" }, body);
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeUndefined();
     });
   });
 });

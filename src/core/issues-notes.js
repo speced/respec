@@ -11,13 +11,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import {
-  addId,
-  getIntlData,
-  parents,
-  showError,
-  showWarning,
-} from "./utils.js";
+import { addId, getIntlData, showError, showWarning } from "./utils.js";
 import css from "../styles/issues-notes.css.js";
 import { html } from "./import-maps.js";
 export const name = "core/issues-notes";
@@ -90,7 +84,7 @@ const l10n = getIntlData(localizationStrings);
  * @typedef {object} Report
  * @property {string} type
  * @property {boolean} inline
- * @property {number} number
+ * @property {number | undefined} number
  * @property {string} title
 
  * @typedef {object} GitHubLabel
@@ -129,7 +123,7 @@ function handleIssues(ins, ghIssues, conf) {
       const title = document.createElement("span");
       const className = `${type}-title marker`;
       // prettier-ignore
-      const titleParent = html`<div role="heading" class="${className}">${title}</div>`;
+      const titleParent = html`<div class="${className}">${title}</div>`;
       addId(titleParent, "h", type);
       let text = displayType;
       if (inno.id) {
@@ -142,20 +136,22 @@ function handleIssues(ins, ghIssues, conf) {
           report.number ? `number-${report.number}` : ""
         );
       }
-      /** @type {GitHubIssue} */
+      /** @type {GitHubIssue | undefined} */
       let ghIssue;
       if (isIssue) {
         if (report.number !== undefined) {
           text += ` ${report.number}`;
         }
         if (inno.dataset.hasOwnProperty("number")) {
-          const link = linkToIssueTracker(dataNum, conf, { isFeatureAtRisk });
+          const link = linkToIssueTracker(dataNum ?? "", conf, {
+            isFeatureAtRisk,
+          });
           if (link) {
             title.before(link);
             link.append(title);
           }
           title.classList.add("issue-number");
-          ghIssue = ghIssues.get(dataNum);
+          ghIssue = ghIssues.get(dataNum ?? "");
           if (!ghIssue) {
             const msg = `Failed to fetch issue number ${dataNum}.`;
             showWarning(msg, name);
@@ -187,8 +183,6 @@ function handleIssues(ins, ghIssues, conf) {
           .createContextualFragment(ghIssue.bodyHTML);
       }
       div.append(titleParent, body);
-      const level = parents(titleParent, "section").length + 2;
-      titleParent.setAttribute("aria-level", level);
     }
   });
   makeIssueSectionSummary(issueList);
@@ -196,6 +190,9 @@ function handleIssues(ins, ghIssues, conf) {
 
 function createIssueNumberGetter() {
   if (document.querySelector(".issue[data-number]")) {
+    /**
+     * @param {HTMLElement} element
+     */
     return element => {
       if (element.dataset.number) {
         return Number(element.dataset.number);
@@ -204,6 +201,9 @@ function createIssueNumberGetter() {
   }
 
   let issueNumber = 0;
+  /**
+   * @param {HTMLElement} element
+   */
   return element => {
     if (element.classList.contains("issue") && element.localName !== "span") {
       return ++issueNumber;
@@ -260,6 +260,7 @@ function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
 /**
  * @param {string} l10nIssue
  * @param {Report} report
+ * @param {string} id
  */
 function createIssueSummaryEntry(l10nIssue, report, id) {
   const issueNumberText = `${l10nIssue}${
@@ -343,6 +344,7 @@ function createLabel(label, repoURL) {
 
 /**
  * @returns {Promise<Map<string, GitHubIssue>>}
+ * @param {{ apiBase: string, fullName: string } | null} github
  */
 async function fetchAndStoreGithubIssues(github) {
   if (!github || !github.apiBase) {
@@ -352,7 +354,7 @@ async function fetchAndStoreGithubIssues(github) {
   /** @type {NodeListOf<HTMLElement>} */
   const specIssues = document.querySelectorAll(".issue[data-number]");
   const issueNumbers = [...specIssues]
-    .map(elem => Number.parseInt(elem.dataset.number, 10))
+    .map(elem => Number.parseInt(elem.dataset.number ?? "", 10))
     .filter(issueNumber => issueNumber);
 
   if (!issueNumbers.length) {
@@ -374,6 +376,9 @@ async function fetchAndStoreGithubIssues(github) {
   return new Map(Object.entries(issues));
 }
 
+/**
+ * @param {Conf} conf
+ */
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
@@ -387,7 +392,11 @@ export async function run(conf) {
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
-  const ghIssues = await fetchAndStoreGithubIssues(conf.github);
+  const ghIssues = await fetchAndStoreGithubIssues(
+    /** @type {{ apiBase: string, fullName: string } | null} */ (
+      conf.github ?? null
+    )
+  );
   const { head: headElem } = document;
   headElem.insertBefore(
     html`<style>

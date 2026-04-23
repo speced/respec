@@ -7,6 +7,7 @@ import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";
 export const name = "w3c/conformance";
 
+/** @satisfies {Record<string, { conformance: string; normativity: string; keywordInterpretation(keywords: Element[], plural: boolean): HTMLElement }>} */
 const localizationStrings = {
   en: {
     conformance: "Conformance",
@@ -74,10 +75,24 @@ function processConformance(conformance, conf) {
   conformance.prepend(...content.childNodes);
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  /** @type {HTMLElement | null} */
   const conformance = document.querySelector("section#conformance");
-  if (conformance && !conformance.classList.contains("override")) {
-    processConformance(conformance, conf);
+  if (conformance) {
+    if (conformance.classList.contains("informative")) {
+      conformance.classList.remove("informative");
+      const msg =
+        "Conformance sections are normative by definition. The `informative` class has been removed.";
+      const hint =
+        'Remove `class="informative"` from `<section id="conformance">` to avoid this warning.';
+      showWarning(msg, name, { hint, elements: [conformance] });
+    }
+    if (!conformance.classList.contains("override")) {
+      processConformance(conformance, conf);
+    }
   }
   // Warn when there are RFC2119/RFC8174 keywords, but not conformance section
   if (!conformance && Object.keys(rfc2119Usage).length) {

@@ -20,6 +20,11 @@ const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
 
 class Renderer extends marked.Renderer {
+  /**
+   * @param {import('marked').Tokens.Code} token
+   * @returns {string}
+   */
+  // @ts-expect-error - our token signature is compatible at runtime; marked's d.ts is minified
   code(token) {
     const { text: code, lang: infoString = "" } = token;
     const { language, ...metaData } = Renderer.parseInfoString(infoString);
@@ -30,7 +35,7 @@ class Renderer extends marked.Renderer {
     }
 
     const html = super
-      .code({ ...token, lang: language })
+      .code(/** @type {any} */ ({ ...token, lang: language }))
       .replace(`class="language-`, `class="`);
 
     const { example, illegalExample } = metaData;
@@ -41,6 +46,9 @@ class Renderer extends marked.Renderer {
     return html.replace("<pre>", `<pre title="${title}" class="${className}">`);
   }
 
+  /**
+   * @param {import('marked').Tokens.Image} token
+   */
   image(token) {
     const { href, title, text } = token;
     if (!title) {
@@ -78,6 +86,9 @@ class Renderer extends marked.Renderer {
     return { language, ...metaData };
   }
 
+  /**
+   * @param {import('marked').Tokens.Heading} token
+   */
   heading(token) {
     const text = this.parser.parseInline(token.tokens);
     const level = token.depth;
@@ -207,6 +218,9 @@ const processMDSections = convertElements("[data-format='markdown']:not(body)");
 const blockLevelElements =
   "[data-format=markdown], section, div, address, article, aside, figure, header, main";
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   const hasMDSections = !!document.querySelector(
     "[data-format=markdown]:not(body)"
@@ -222,7 +236,7 @@ export function run(conf) {
   }
   // We transplant the UI to do the markdown processing
   const rsUI = document.getElementById("respec-ui");
-  rsUI.remove();
+  rsUI?.remove();
   // The new body will replace the old body
   const newBody = document.body.cloneNode(true);
   // Marked expects markdown be flush against the left margin
@@ -233,6 +247,6 @@ export function run(conf) {
   // Remove links where class .nolinks
   substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
   // Frankenstein the whole thing back together
-  newBody.append(rsUI);
+  if (rsUI) newBody.append(rsUI);
   document.body.replaceWith(newBody);
 }

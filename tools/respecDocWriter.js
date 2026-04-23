@@ -1,12 +1,9 @@
 /**
  * Exports toHTML() method, allowing programmatic control of the spec generator.
  */
-import { fileURLToPath } from "url";
 import path from "path";
 import puppeteer from "puppeteer";
 import { readFile } from "fs/promises";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const noop = () => {};
 
@@ -142,7 +139,12 @@ async function useLocalReSpec(page, log) {
     const url = new URL(request.url());
     const respecProfileRegex = /\/(respec-[\w-]+)(?:\.js)?$/;
     const profile = url.pathname.match(respecProfileRegex)[1];
-    const localPath = path.join(__dirname, "..", "builds", `${profile}.js`);
+    const localPath = path.join(
+      import.meta.dirname,
+      "..",
+      "builds",
+      `${profile}.js`
+    );
     const relPath = path.relative(process.cwd(), localPath);
     log(`Intercepted ${url} to respond with ${relPath}`);
     await request.respond({
@@ -276,7 +278,7 @@ async function evaluateHTML(version, timer) {
     return new Promise((resolve, reject) => {
       promise.then(resolve, reject);
       const msg = `Timeout: document.respec.ready didn't resolve in ${ms}ms.`;
-      setTimeout(() => reject(msg), ms);
+      setTimeout(() => reject(new Error(msg)), ms);
     });
   }
 }

@@ -49,8 +49,9 @@ function fillWithText(el, data, { replace }) {
  * @param {string} url
  */
 function processResponse(rawData, id, url) {
-  /** @type {HTMLElement} */
+  /** @type {HTMLElement | null} */
   const el = document.querySelector(`[data-include-id=${id}]`);
+  if (!el) return;
   const data = runTransforms(rawData, el.dataset.oninclude, url);
   const replace = typeof el.dataset.includeReplace === "string";
   fillWithText(el, data, { replace });
@@ -70,7 +71,7 @@ function removeIncludeAttributes(el) {
     "data-include-format",
     "data-include-replace",
     "data-include-id",
-    "oninclude",
+    "data-oninclude",
   ].forEach(attr => el.removeAttribute(attr));
 }
 
@@ -100,7 +101,8 @@ async function runIncludes(root, currentDepth) {
         // For performance reasons, only allow limited nesting.
         await runIncludes(el, currentDepth + 1);
       }
-    } catch (err) {
+    } catch (e) {
+      const err = /** @type {Error} */ (e);
       const msg = `\`data-include\` failed: \`${url}\` (${err.message}).`;
       showError(msg, name, { elements: [el], cause: err });
     }

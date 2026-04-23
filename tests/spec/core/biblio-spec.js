@@ -226,6 +226,46 @@ describe("W3C — Bibliographic References", () => {
     expect(badRef.textContent.trim()).toBe("Reference not found.");
   });
 
+  it("generates valid HTML IDs for reference keys that contain spaces", async () => {
+    const body = `
+      <section id="conformance">
+        <p id="ref-ruby">[[Ruby TTS Req]]</p>
+        <p id="ref-tokyo">[[Tokyo Ghoul: re]]</p>
+      </section>
+    `;
+    const localBiblio = {
+      "Ruby TTS Req": {
+        title: "Ruby Text and Speech Requirements",
+        href: "https://example.com/ruby-tts",
+      },
+      "Tokyo Ghoul: re": {
+        title: "Tokyo Ghoul: re, Vol. 8",
+        href: "https://example.com/tokyo-ghoul",
+      },
+    };
+    const ops = makeStandardOps({ localBiblio }, body);
+    const doc = await makeRSDoc(ops);
+
+    // dt IDs must not contain spaces or characters that break CSS selectors
+    const rubyDt = doc.getElementById("bib-ruby-tts-req");
+    expect(rubyDt).withContext("dt#bib-ruby-tts-req should exist").toBeTruthy();
+    expect(rubyDt.textContent.trim()).toBe("[Ruby TTS Req]");
+
+    // colon+space in "Tokyo Ghoul: re" should both be collapsed to a single hyphen
+    const tokyoDt = doc.getElementById("bib-tokyo-ghoul-re");
+    expect(tokyoDt)
+      .withContext("dt#bib-tokyo-ghoul-re should exist")
+      .toBeTruthy();
+    expect(tokyoDt.textContent.trim()).toBe("[Tokyo Ghoul: re]");
+
+    // inline citation hrefs must point to the sanitized fragment
+    const rubyLink = doc.querySelector("#ref-ruby a.bibref");
+    expect(rubyLink.getAttribute("href")).toBe("#bib-ruby-tts-req");
+
+    const tokyoLink = doc.querySelector("#ref-tokyo a.bibref");
+    expect(tokyoLink.getAttribute("href")).toBe("#bib-tokyo-ghoul-re");
+  });
+
   it("shows a localized error if reference doesn't exist", async () => {
     const body = `<p id="bad-ref">[[bad-ref]]</p>`;
     const ops = makeStandardOps({ localBiblio }, body);
@@ -269,6 +309,34 @@ describe("W3C — Bibliographic References", () => {
     const refs = doc.querySelectorAll("#references dt");
     expect(refs).toHaveSize(1);
     expect(refs[0].textContent).toBe("[dom]");
+  });
+
+  it("handles authors as a string instead of array", async () => {
+    const body = `
+      <section id="conformance">
+        <p>[[StringAuthorRef]]</p>
+      </section>
+    `;
+    const localBiblio = {
+      StringAuthorRef: {
+        title: "String Author Test",
+        href: "https://example.com",
+        authors: "Jane Doe",
+      },
+    };
+    const ops = makeStandardOps({ localBiblio }, body);
+    const doc = await makeRSDoc(ops);
+
+    const ref = doc.querySelector("#bib-stringauthorref + dd");
+    expect(ref).toBeTruthy();
+    expect(ref.textContent).toContain("Jane Doe");
+
+    const errors = doc.respec.errors.filter(
+      e => e.plugin === "core/render-biblio" && e.message.includes('"authors"')
+    );
+    expect(errors).toHaveSize(1);
+    expect(errors[0].message).toContain("must be an array");
+    expect(errors[0].hint).toContain('authors: ["Jane Doe"]');
   });
 });
 

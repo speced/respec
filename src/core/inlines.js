@@ -12,6 +12,7 @@ import {
   getTextNodes,
   norm,
   refTypeFromContext,
+  regExpEscape,
   showWarning,
 } from "./utils.js";
 import { html } from "./import-maps.js";
@@ -19,6 +20,7 @@ import { idlStringToHtml } from "./inline-idl-parser.js";
 import { renderInlineCitation } from "./render-biblio.js";
 
 export const name = "core/inlines";
+/** @type {Record<string, boolean>} */
 export const rfc2119Usage = {};
 
 /** @param {RegExp[]} regexes */
@@ -70,6 +72,7 @@ const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citat
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
+const inlineCddlReference = /(?:\{\^[^}^]+\^\})/; // {^cddl-type^}, {^type/key^}
 
 /**
  * @example [^iframe^] // [^element^]
@@ -109,6 +112,46 @@ function inlineElementMatches(matched) {
 }
 
 /**
+ * Handles CDDL inline references: {^type^}, {^type/key^}, {^type/"value"^}
+ * @example {^attire^} // link to cddl-type
+ * @example {^delivery/address^} // link to cddl-key
+ * @example {^attire/"bow tie"^} // link to cddl-value
+ * @param {string} matched
+ * @return {HTMLElement}
+ */
+function inlineCddlMatches(matched) {
+  const value = matched.slice(2, -2).trim();
+
+  // Split on "/" but respect quoted strings
+  const parts = (value.match(/"([^"]*)"|([^/]+)/g) || []).map(s => s.trim());
+
+  if (parts.length === 1) {
+    // {^typename^} → link to cddl-type
+    const typeName = parts[0];
+    return html`<code
+      ><a data-link-type="cddl-type" data-xref-type="cddl-type"
+        >${typeName}</a
+      ></code
+    >`;
+  }
+
+  // parts.length >= 2: {^typename/key^} or {^typename/"value"^}
+  const typeName = parts[0];
+  const member = parts[1];
+  const type =
+    member.startsWith('"') && member.endsWith('"') ? "cddl-value" : "cddl-key";
+  return html`<code
+    ><a
+      data-link-type="${type}"
+      data-xref-type="${type}"
+      data-xref-for="${typeName}"
+      data-link-for="${typeName}"
+      >${member}</a
+    ></code
+  >`;
+}
+
+/**
  * @param {string} matched
  * @return {HTMLElement}
  */
@@ -141,20 +184,22 @@ function inlineXrefMatches(matched, text) {
   // slices "{{" at the beginning and "}}" at the end
   const ref = norm(matched.slice(2, -2));
   if (ref.startsWith("\\")) {
-    return matched.replace("\\", "");
+    // Remove the escape backslash that immediately follows "{{" (with optional
+    // whitespace), using an anchored regex to avoid removing unintended backslashes.
+    return matched.replace(/^(\{\{\s*)\\/, "$1");
   }
 
   const node = idlStringToHtml(ref);
   // If it's inside a dfn or a `a`, it should just be coded, not linked.
   // This is because dfn elements are treated as links by ReSpec via role=link.
-  const renderAsCode = !!text.parentElement.closest("dfn,a");
+  const renderAsCode = !!text.parentElement?.closest("dfn,a");
   return renderAsCode ? inlineCodeMatches(`\`${node.textContent}\``) : node;
 }
 
 /**
  * @param {string} matched
  * @param {Text} txt
- * @param {Object} conf
+ * @param {Conf} conf
  * @return {Iterable<string | Node>}
  */
 function inlineBibrefMatches(matched, txt, conf) {
@@ -165,7 +210,10 @@ function inlineBibrefMatches(matched, txt, conf) {
   }
 
   const [spec, linkText] = ref.split("|").map(norm);
-  const { type, illegal } = refTypeFromContext(spec, txt.parentElement);
+  const { type, illegal } = refTypeFromContext(
+    spec,
+    /** @type {HTMLElement} */ (txt.parentElement)
+  );
   const cite = renderInlineCitation(spec, linkText);
   const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
@@ -189,7 +237,7 @@ function inlineBibrefMatches(matched, txt, conf) {
  * @param {Map<string, string>} abbrMap
  */
 function inlineAbbrMatches(matched, txt, abbrMap) {
-  return txt.parentElement.tagName === "ABBR"
+  return txt.parentElement?.tagName === "ABBR"
     ? matched
     : html`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
 }
@@ -231,15 +279,22 @@ function inlineAnchorMatches(matched) {
   >`;
 }
 
+/**
+ * @param {string} matched
+ */
 function inlineCodeMatches(matched) {
   const clean = matched.slice(1, -1); // Chop ` and `
   return html`<code>${clean}</code>`;
 }
 
+/**
+ * @param {string} text
+ * @returns {Node | (Node | string | DocumentFragment | HTMLElement)[]}
+ */
 function processInlineContent(text) {
   if (inlineCodeRegExp.test(text)) {
     // We use a capture group to split, so we can process all the parts.
-    return text.split(/(`[^`]+`)(?!`)/).map(part => {
+    return text.split(/(`[^`]+`)(?!`)/).map((/** @type {string} */ part) => {
       return part.startsWith("`")
         ? inlineCodeMatches(part)
         : processInlineContent(part);
@@ -248,6 +303,9 @@ function processInlineContent(text) {
   return document.createTextNode(text);
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   const abbrMap = new Map();
   document.normalize();
@@ -269,7 +327,9 @@ export function run(conf) {
     abbrMap.set(key, value);
   }
   const abbrRx = abbrMap.size
-    ? new RegExp(`(?:\\b${[...abbrMap.keys()].join("\\b)|(?:\\b")}\\b)`)
+    ? new RegExp(
+        `(?:\\b${[...abbrMap.keys()].map(k => regExpEscape(k)).join("\\b)|(?:\\b")}\\b)`
+      )
     : null;
 
   // PROCESSING
@@ -285,6 +345,7 @@ export function run(conf) {
       joinRegex([
         keywords,
         inlineIdlReference,
+        inlineCddlReference,
         inlineVariable,
         inlineCitation,
         inlineExpansion,
@@ -309,6 +370,9 @@ export function run(conf) {
       switch (true) {
         case t.startsWith("{{"):
           df.append(inlineXrefMatches(t, txt));
+          break;
+        case t.startsWith("{^"):
+          df.append(inlineCddlMatches(t));
           break;
         case t.startsWith("[[["):
           df.append(inlineRefMatches(t));

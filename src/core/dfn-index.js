@@ -94,7 +94,7 @@ const CODE_TYPES = new Set([
 ]);
 
 /**
- * @typedef {{ term: string, type: string, linkFor: string, elem: HTMLAnchorElement }} Entry
+ * @typedef {{ term: string, type?: string, linkFor?: string, elem: HTMLAnchorElement }} Entry
  */
 
 export function run() {
@@ -157,7 +157,7 @@ function collectLocalTerms() {
     if (!elem.id) continue;
     const text = norm(elem.textContent);
     const elemsByTerm = data.get(text) || data.set(text, []).get(text);
-    elemsByTerm.push(elem);
+    elemsByTerm?.push(elem);
   }
 
   const dataSortedByTerm = [...data].sort(([a], [b]) =>
@@ -173,7 +173,12 @@ function collectLocalTerms() {
  * @returns {HTMLLIElement}
  */
 function renderLocalTerm(term, dfns) {
-  const renderItem = (dfn, text, suffix) => {
+  /**
+   * @param {HTMLElement} dfn
+   * @param {string} text
+   * @param {string} suffix
+   */
+  const renderItem = (dfn, text, suffix = "") => {
     const href = `#${dfn.id}`;
     return html`<li data-id=${dfn.id}>
       <a class="index-term" href="${href}">${{ html: text }}</a> ${suffix
@@ -216,9 +221,9 @@ function getLocalTermType(dfn) {
 
 /** @param {HTMLElement} dfn */
 function getLocalTermParentContext(dfn) {
-  /** @type {HTMLElement} */
+  /** @type {HTMLElement | null} */
   const dfnFor = dfn.closest("[data-dfn-for]:not([data-dfn-for=''])");
-  return dfnFor ? dfnFor.dataset.dfnFor : "";
+  return dfnFor?.dataset.dfnFor || "";
 }
 
 /**
@@ -273,18 +278,28 @@ function getLocalTermSuffix(dfn, type, term = "") {
 }
 
 function appendSectionNumbers() {
+  /**
+   * @param {string} id
+   */
   const getSectionNumber = id => {
     const dfn = document.getElementById(id);
     const sectionNumberEl = dfn
-      .closest("section:not(.notoc)")
-      .querySelector(".secno");
+      ?.closest("section:not(.notoc)")
+      ?.querySelector(".secno");
+    if (!sectionNumberEl) {
+      // dfn is in an unnumbered section (e.g. abstract, introductory) — skip
+      return null;
+    }
     const secNum = `§${sectionNumberEl.textContent.trim()}`;
     return html`<span class="print-only">${secNum}</span>`;
   };
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll("#index-defined-here li[data-id]");
-  elems.forEach(el => el.append(getSectionNumber(el.dataset.id)));
+  elems.forEach(el => {
+    const span = getSectionNumber(el.dataset.id ?? "");
+    if (span) el.append(span);
+  });
 }
 
 function createExternalTermIndex() {
@@ -347,7 +362,7 @@ function collectExternalTerms() {
     const spec = toCiteDetails(elem).key.toUpperCase();
 
     const entriesBySpec = data.get(spec) || data.set(spec, []).get(spec);
-    entriesBySpec.push({ term, type, linkFor, elem });
+    entriesBySpec?.push({ term, type, linkFor, elem });
     uniqueReferences.add(uniqueID);
   }
 
@@ -406,14 +421,16 @@ function getTermText(entry) {
   const { term, type, linkFor } = entry;
   let text = xmlEscape(term);
 
-  if (CODE_TYPES.has(type)) {
+  if (CODE_TYPES.has(type ?? "")) {
     if (type === "extended-attribute") {
       text = `[${text}]`;
     }
     text = `<code>${text}</code>`;
   }
 
-  const typeSuffix = TYPE_TERMS.has(term) ? "type" : TYPED_TYPES.get(type);
+  const typeSuffix = TYPE_TERMS.has(term)
+    ? "type"
+    : TYPED_TYPES.get(type ?? "");
   if (typeSuffix) {
     text += ` ${typeSuffix}`;
   }

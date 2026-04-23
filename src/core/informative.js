@@ -11,7 +11,7 @@ const localizationStrings = {
     informative: "This section is non-normative.",
   },
   nl: {
-    informative: "Dit onderdeel is niet normatief.",
+    informative: "Dit onderdeel is niet-normatief.",
   },
   ko: {
     informative: "이 부분은 비규범적입니다.",
@@ -35,7 +35,11 @@ const l10n = getIntlData(localizationStrings);
 export function run() {
   Array.from(document.querySelectorAll("section.informative"))
     .map(informative => informative.querySelector("h2, h3, h4, h5, h6"))
-    .filter(heading => heading)
+    .filter(
+      /** @type {(h: Element | null) => h is HTMLHeadingElement} */ (
+        heading => heading !== null
+      )
+    )
     .forEach(heading => {
       heading.after(html`<p><em>${l10n.informative}</em></p>`);
     });

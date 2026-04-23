@@ -29,8 +29,9 @@ export async function run() {
     el.tabIndex = 0;
     el.setAttribute("aria-haspopup", "dialog");
   }
-  if (document.body.querySelector("script")) {
-    document.body.querySelector("script").before(panels);
+  const firstScript = document.body.querySelector("script");
+  if (firstScript) {
+    firstScript.before(panels);
   } else {
     document.body.append(panels);
   }
@@ -69,6 +70,7 @@ function createPanel(dfn) {
           >Permalink</a
         >
         ${dfnExportedMarker(dfn)} ${idlMarker(dfn, links)}
+        ${cddlMarker(dfn, links)}
       </div>
       <p><b>Referenced in:</b></p>
       ${referencesToHTML(id, links)}
@@ -111,6 +113,28 @@ function idlMarker(dfn, links) {
 }
 
 /**
+ * @param {HTMLElement} dfn
+ * @param {NodeListOf<HTMLAnchorElement>} links
+ */
+function cddlMarker(dfn, links) {
+  const { dfnType } = dfn.dataset;
+  if (!dfnType?.startsWith("cddl-")) return null;
+
+  const cddlBlock = [...links]
+    .map(a => a.closest("pre.cddl"))
+    .find(pre => pre?.id);
+
+  if (!cddlBlock) return null;
+
+  return html`<a
+    href="#${cddlBlock.id}"
+    class="marker cddl-block"
+    title="Jump to CDDL declaration"
+    >CDDL</a
+  >`;
+}
+
+/**
  * @param {string} id dfn id
  * @param {NodeListOf<HTMLAnchorElement>} links
  * @returns {HTMLUListElement}
@@ -127,8 +151,9 @@ function referencesToHTML(id, links) {
   links.forEach((link, i) => {
     const linkID = link.id || `ref-for-${id}-${i + 1}`;
     if (!link.id) link.id = linkID;
-    const title = getReferenceTitle(link);
-    const ids = titleToIDs.get(title) || titleToIDs.set(title, []).get(title);
+    const title = getReferenceTitle(link) ?? "";
+    const ids =
+      titleToIDs.get(title) ?? titleToIDs.set(title, []).get(title) ?? [];
     ids.push(linkID);
   });
 
