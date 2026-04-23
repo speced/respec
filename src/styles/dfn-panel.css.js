@@ -95,6 +95,10 @@ dfn {
   background: #8ccbf2;
   box-shadow: 0 0 0 0.125em #0670b161;
 }
+.dfn-panel .marker.cddl-block {
+  background: #8ccbf2;
+  box-shadow: 0 0 0 0.125em #0670b161;
+}
 
 .dfn-panel a:not(:hover) {
   text-decoration: none !important;
