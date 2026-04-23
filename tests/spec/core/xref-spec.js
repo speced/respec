@@ -1,6 +1,7 @@
 "use strict";
 
 import {
+  errorFilters,
   flushIframes,
   makeDefaultBody,
   makeRSDoc,
@@ -259,6 +260,55 @@ describe("Core — xref", () => {
       "#test .respec-offending-element"
     );
     expect(offendingElements).toHaveSize(0);
+  });
+
+  it("strips version suffix from data-cite in spec context", async () => {
+    const body = `
+      <section data-cite="service-workers-1" id="test">
+        <p><a id="link">service worker</a></p>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link = doc.getElementById("link");
+    expect(link.classList).not.toContain("respec-offending-element");
+    expect(link.href).toContain("service-workers");
+  });
+
+  it("resolves terms with unversioned data-cite on container", async () => {
+    const body = `
+      <section data-cite="service-workers" id="test">
+        <p><a id="link">service worker</a></p>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link = doc.getElementById("link");
+    expect(link.classList).not.toContain("respec-offending-element");
+    expect(link.href).toContain("service-workers");
+  });
+
+  it("shows data-cite hint in error when spec shortname is wrong", async () => {
+    const errors = errorFilters.filter("core/xref");
+    const body = `
+      <section data-cite="service-workerz" id="test">
+        <p><a id="link">service worker</a></p>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link = doc.getElementById("link");
+    expect(link.classList).toContain("respec-offending-element");
+    const xrefErrors = errors(doc);
+    const error = xrefErrors.find(e => e.message.includes("service worker"));
+    expect(error).toBeTruthy();
+    expect(error.hint).toContain('data-cite="service-workerz"');
   });
 
   it("ignores terms if local dfn exists", async () => {

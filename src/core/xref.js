@@ -210,6 +210,29 @@ export function getTermFromElement(elem) {
 }
 
 /**
+ * @param {string} spec
+ */
+function stripVersionSuffix(spec) {
+  return spec.replace(/-\d+$/, "");
+}
+
+/**
+ * Expands versioned spec names to include the unversioned form.
+ * E.g., ["service-workers-1"] becomes ["service-workers-1", "service-workers"].
+ * @param {string[]} specs
+ */
+function expandVersionedSpecs(specs) {
+  return [
+    ...new Set(
+      specs.flatMap(s => {
+        const stripped = stripVersionSuffix(s);
+        return stripped !== s ? [s, stripped] : [s];
+      })
+    ),
+  ];
+}
+
+/**
  * Get spec context as a fallback chain, where each level (sub-array) represents
  * decreasing priority.
  * @param {HTMLElement} elem
@@ -226,7 +249,7 @@ function getSpecContext(elem) {
     const cite = (dataciteElem.dataset.cite ?? "")
       .toLowerCase()
       .replace(/[!?]/g, "");
-    const cites = cite.split(/\s+/).filter(s => s);
+    const cites = expandVersionedSpecs(cite.split(/\s+/).filter(s => s));
     if (cites.length) {
       specs.push(cites);
     }
@@ -242,7 +265,9 @@ function getSpecContext(elem) {
     const bibrefs = closestSection
       ? closestSection.querySelectorAll("a.bibref")
       : [];
-    const inlineRefs = [...bibrefs].map(el => el.textContent.toLowerCase());
+    const inlineRefs = expandVersionedSpecs(
+      [...bibrefs].map(el => el.textContent.toLowerCase())
+    );
     if (inlineRefs.length) {
       specs.push(inlineRefs);
     }
@@ -500,7 +525,13 @@ function showErrors({ ambiguous, notFound }) {
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = joinAnd(specs, s => `**[${s}]**`);
-    const hint = howToFix(formUrl, originalTerm);
+    let hint = howToFix(formUrl, originalTerm);
+    /** @type {HTMLElement | null} */
+    const closestCite = elems[0].closest("[data-cite]");
+    if (closestCite && closestCite !== document.body) {
+      const citeAttr = (closestCite.dataset.cite ?? "").replace(/`/g, "");
+      hint += ` A parent element has \`data-cite="${citeAttr}"\` — check that the spec shortname is correct.`;
+    }
     const forParent = query.for ? `, for **"${query.for}"**, ` : "";
     const msg = `Couldn't find "**${originalTerm}**"${forParent} in this document or other cited documents: ${specsString}.`;
     const title = "No matching definition found.";
