@@ -65,6 +65,7 @@ a[href].respec-offending-element {
       var(--borderedblock-bg, #303030) 70%,
       transparent
     );
+    animation: pop 0.4s ease-in-out 0s 1;
   }
 }
 
@@ -74,6 +75,7 @@ body:has(input[name='color-scheme'][value='dark']:checked) #references :target {
     var(--borderedblock-bg, #303030) 70%,
     transparent
   );
+  animation: pop 0.4s ease-in-out 0s 1;
 }
 
 cite .bibref {
