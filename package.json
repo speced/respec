@@ -57,14 +57,14 @@
     "pluralize": "^8.0.0",
     "prettier": "^3.8.3",
     "prompt": "^1.3.0",
-    "rollup": "^4.60.1",
+    "rollup": "^4.60.2",
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "serve": "^14.2.6",
     "serve-handler": "^6.1.7",
     "simple-git-hooks": "^2.13.1",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^6.0.3",
-    "vnu-jar": "^26.4.11",
+    "vnu-jar": "^26.4.16",
     "webidl2": "^24.5.0"
   },
   "scripts": {
@@ -92,7 +92,7 @@
   "dependencies": {
     "colors": "1.4.0",
     "finalhandler": "^2.1.1",
-    "marked": "^18.0.0",
+    "marked": "^18.0.2",
     "puppeteer": "^24.42.0",
     "sade": "^1.8.1",
     "serve-static": "^2.2.1"
