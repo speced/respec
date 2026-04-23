@@ -120,12 +120,19 @@ describe("Core - Github", () => {
         node => node.textContent === "Doe mee:"
       );
       expect(participate).toBeTruthy();
+      const allIssues = Array.from(doc.querySelectorAll("dd")).find(
+        elem => elem.textContent.trim() === "All issues"
+      );
+      expect(allIssues).toBeTruthy();
+      expect(allIssues.querySelector("a").href).toBe(
+        "https://github.com/speced/respec/issues/"
+      );
       const fileABug = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "Dien een melding in"
       );
       expect(fileABug).toBeTruthy();
       expect(fileABug.querySelector("a").href).toBe(
-        "https://github.com/speced/respec/issues/"
+        "https://github.com/speced/respec/issues/new/choose"
       );
       const commitHistory = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "Revisiehistorie"
@@ -207,8 +214,15 @@ describe("Core - Github", () => {
         elem => elem.textContent.trim() === "Dien een melding in"
       );
       expect(fileABug).toBeTruthy();
-      expect(fileABug.querySelector("a").href).toBe(
+      const allIssues = Array.from(doc.querySelectorAll("dd")).find(
+        elem => elem.textContent.trim() === "All issues"
+      );
+      expect(allIssues).toBeTruthy();
+      expect(allIssues.querySelector("a").href).toBe(
         "https://github.com/w3c/core-aam/issues/"
+      );
+      expect(fileABug.querySelector("a").href).toBe(
+        "https://github.com/w3c/core-aam/issues/new/choose"
       );
     });
   });
