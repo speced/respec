@@ -3,7 +3,7 @@
 const { Builder } = require("./builder.cjs");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
-const { exec } = require("child_process");
+const { execFile } = require("child_process");
 const loading = require("loading-indicator");
 const DEBUG = false;
 const vnu = require("vnu-jar");
@@ -35,18 +35,22 @@ const loadOps = {
   delay: 100,
 };
 
-/** @param {string} program */
-function commandRunner(program) {
+/**
+ * @param {string} file
+ * @param {string[]} [baseArgs]
+ */
+function commandRunner(file, baseArgs = []) {
   /**
-   * @param {string} cmd
-   * @param {{showOutput: boolean}} [options ]
+   * @param {string[]} cmd
+   * @param {{showOutput: boolean}} [options]
    */
   const runner = (cmd, options = { showOutput: false }) => {
-    console.log(colors.cyan(`Run: ${program} ${colors.grey(cmd)}`));
+    const args = [...baseArgs, ...cmd];
+    console.log(colors.cyan(`Run: ${file} ${colors.grey(args.join(" "))}`));
     if (DEBUG) {
       return Promise.resolve("");
     }
-    return toExecPromise(`${program} ${cmd}`, { ...options, timeout: 200000 });
+    return toExecFilePromise(file, args, { ...options, timeout: 200000 });
   };
   return runner;
 }
@@ -54,7 +58,7 @@ function commandRunner(program) {
 const git = commandRunner("git");
 const npm = commandRunner("npm");
 const node = commandRunner("node");
-const validator = commandRunner(`java -jar ${vnu}`);
+const validator = commandRunner("java", ["-jar", vnu]);
 
 cmdPrompt.start();
 
@@ -82,7 +86,7 @@ const Prompts = {
       default: "y",
     };
     await this.askQuestion(promptOps);
-    await git(`checkout ${to}`);
+    await git(["checkout", to]);
   },
 
   /** @param {string} branch */
@@ -94,7 +98,7 @@ const Prompts = {
       default: "y",
     };
     await this.askQuestion(promptOps);
-    await git(`pull origin ${branch}`);
+    await git(["pull", "origin", branch]);
   },
 
   async askUpToDateAndDev() {
@@ -202,10 +206,14 @@ const Prompts = {
   },
 
   async askBumpVersion() {
-    const rawVersion = await npm("view respec version");
+    const rawVersion = await npm(["view", "respec", "version"]);
     const version = rawVersion.trim();
-    const latestTag = await git("describe --tags --abbrev=0");
-    const commits = await git(`log ${latestTag.trim()}..HEAD --oneline`);
+    const latestTag = await git(["describe", "--tags", "--abbrev=0"]);
+    const commits = await git([
+      "log",
+      `${latestTag.trim()}..HEAD`,
+      "--oneline",
+    ]);
     if (!commits) {
       throw new Error("😢  No commits. Nothing to release.");
     }
@@ -253,17 +261,18 @@ const Prompts = {
 
 /**
  *
- * @param {string} cmd
+ * @param {string} file
+ * @param {string[]} args
  * @param {{ timeout: number, showOutput: boolean }} options
  * @returns {Promise<string>}
  */
-function toExecPromise(cmd, { timeout, showOutput }) {
+function toExecFilePromise(file, args, { timeout, showOutput }) {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
-      reject(new Error(`Command took too long: ${cmd}`));
+      reject(new Error(`Command took too long: ${file} ${args.join(" ")}`));
       proc.kill("SIGTERM");
     }, timeout);
-    const proc = exec(cmd, (err, stdout) => {
+    const proc = execFile(file, args, (err, stdout) => {
       clearTimeout(id);
       if (err) {
         return reject(err);
@@ -284,9 +293,9 @@ function toExecPromise(cmd, { timeout, showOutput }) {
 }
 
 async function getBranchState() {
-  const local = await git("rev-parse @");
-  const remote = await git("rev-parse @{u}");
-  const base = await git("merge-base @ @{u}");
+  const local = await git(["rev-parse", "@"]);
+  const remote = await git(["rev-parse", "@{u}"]);
+  const base = await git(["merge-base", "@", "@{u}"]);
   let result = "";
   switch (local) {
     case remote:
@@ -302,7 +311,7 @@ async function getBranchState() {
 }
 
 async function getCurrentBranch() {
-  const branch = await git("rev-parse --abbrev-ref HEAD");
+  const branch = await git(["rev-parse", "--abbrev-ref", "HEAD"]);
   return branch.trim();
 }
 
@@ -334,7 +343,7 @@ const run = async () => {
   try {
     // 1. Confirm maintainer is on up-to-date and on the main branch ()
     indicators.get("remote-update").show();
-    await git("remote update");
+    await git(["remote", "update"]);
     indicators.get("remote-update").hide();
     if (initialBranch !== "main") {
       await Prompts.askSwitchToBranch(initialBranch, "main");
@@ -356,43 +365,52 @@ const run = async () => {
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
-    await npm(`version ${version} -m "v${version}" --no-git-tag-version`);
+    await npm([
+      "version",
+      version,
+      "-m",
+      `v${version}`,
+      "--no-git-tag-version",
+    ]);
 
     // 3. Run the build script (node tools/builder.js).
-    await npm("run builddeps");
+    await npm(["run", "builddeps"]);
     for (const name of ["w3c", "geonovum", "dini", "aom"]) {
       await Builder.build({ name });
     }
     console.log(colors.green(" Making sure the generated version is ok... 🕵🏻"));
     const source = `file:///${__dirname}/../examples/basic.built.html`;
     const tempFile = path.join(os.tmpdir(), "index.html");
-    await node(`./tools/respec2html.js -e --timeout 30 ${source} ${tempFile}`, {
-      showOutput: true,
-    });
+    await node(
+      ["./tools/respec2html.js", "-e", "--timeout", "30", source, tempFile],
+      {
+        showOutput: true,
+      }
+    );
 
     // Do HTML validation
     console.log(colors.green(" Making sure HTML validator is happy... 🕵🏻"));
-    await validator(`--stdout ${tempFile}`);
+    await validator(["--stdout", tempFile]);
     console.log(colors.green(" Build Seems good... ✅"));
 
     // 4. Commit your changes
-    await git("add builds package.json pnpm-lock.yaml");
-    await git(`commit -m "v${version}"`);
-    await git(`tag "v${version}"`);
+    await git(["add", "builds", "package.json", "pnpm-lock.yaml"]);
+    await git(["commit", "-m", `v${version}`]);
+    await git(["tag", `v${version}`]);
 
     // 5. Merge to gh-pages (git checkout gh-pages; git merge main)
-    await git("checkout gh-pages");
-    await git("pull origin gh-pages");
-    await git("merge main");
-    await git("checkout main");
+    await git(["checkout", "gh-pages"]);
+    await git(["pull", "origin", "gh-pages"]);
+    await git(["merge", "main"]);
+    await git(["checkout", "main"]);
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
-    await git("push origin main");
-    await git("push origin gh-pages");
-    await git("push --tags");
+    await git(["push", "origin", "main"]);
+    await git(["push", "origin", "gh-pages"]);
+    await git(["push", "--tags"]);
     indicators.get("push-to-server").hide();
     console.log(colors.green(" Publishing to npm... 📡"));
-    await npm("publish", { showOutput: true });
+    await npm(["publish"], { showOutput: true });
     if (initialBranch !== "main") {
       await Prompts.askSwitchToBranch("main", initialBranch);
     }
@@ -400,7 +418,7 @@ const run = async () => {
     console.error(colors.red(`\n☠  ${err.stack}`));
     const currentBranch = await getCurrentBranch();
     if (initialBranch !== currentBranch) {
-      await git(`checkout ${initialBranch}`);
+      await git(["checkout", initialBranch]);
     }
     process.exit(1);
     return;
