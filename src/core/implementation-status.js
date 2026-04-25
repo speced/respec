@@ -288,7 +288,6 @@ async function fetchFeatures(conf, options) {
     const response = await fetchAndCache(url);
     if (!response.ok) return [];
     const feature = await response.json();
-    if (feature.error) return [];
     return [{ id: options.feature, ...feature }];
   }
 
@@ -305,8 +304,11 @@ async function fetchFeatures(conf, options) {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { result } = await response.json();
     return result || [];
-  } catch {
-    // Fallback: download full dataset if search endpoint is unavailable
+  } catch (err) {
+    console.warn(
+      `[${name}] Search endpoint failed, falling back to full dataset`,
+      err
+    );
     const data = await fetchData(options);
     return findFeatures(data, conf, options);
   }
@@ -443,6 +445,7 @@ function renderBadge(baseline, statusText, support, features) {
 
       return html`<span
         class="baseline-browser ${cls}"
+        role="img"
         title="${title}"
         aria-label="${title}"
       >
@@ -451,7 +454,7 @@ function renderBadge(baseline, statusText, support, features) {
           width="24"
           height="24"
           src="${getLogoSrc(browserId)}"
-          alt="${browserName}"
+          alt=""
         />${supportIcon}
       </span>`;
     });
@@ -475,7 +478,7 @@ function renderBadge(baseline, statusText, support, features) {
     ? `More info about ${featureName} support`
     : "More info about browser support";
 
-  const dt = html`${statusText} ${icon}:`;
+  const dt = html`${statusText}${icon}:`;
   const dd = html`${browserGroup}
     <a
       class="baseline-more-info"
