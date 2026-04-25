@@ -108,12 +108,9 @@ const SUPPORT_ICONS = {
 };
 
 /** @type {Map<string, string[]>} */
-const BROWSER_GROUPS = [...BROWSERS.entries()].reduce(
-  (groups, [browserId, { engine }]) => {
-    groups.set(engine, [...(groups.get(engine) || []), browserId]);
-    return groups;
-  },
-  new Map()
+const BROWSER_GROUPS = Map.groupBy(
+  BROWSERS.keys(),
+  id => BROWSERS.get(id).engine
 );
 
 /**
@@ -183,7 +180,7 @@ export async function run(conf) {
   const headDlElem = document.querySelector(".head dl");
   if (!headDlElem) return;
 
-  const result = fetchAndRender(conf, options).catch(err => handleError(err));
+  const result = fetchAndRender(conf, options).catch(handleError);
 
   const dtPromise = result.then(r => r.dt);
   const ddPromise = result.then(r => r.dd);
@@ -346,12 +343,7 @@ function findFeatures(data, conf, options) {
 
   return Object.entries(features)
     .filter(([, feature]) => {
-      /** @type {string[]} */
-      const specs = Array.isArray(feature.spec)
-        ? feature.spec
-        : feature.spec
-          ? [feature.spec]
-          : [];
+      const specs = [feature.spec].flat().filter(Boolean);
       return specs.some(specUrl => {
         const normalizedFeatureUrl = normalizeUrl(specUrl);
         return specUrls.some(url => normalizedFeatureUrl.startsWith(url));
@@ -424,10 +416,7 @@ function getLogoSrc(browserId) {
  * @param {WebFeatureEntry[]} features
  */
 function renderBadge(baseline, statusText, support, features) {
-  const makeIcon = BASELINE_ICONS.get(baseline) || BASELINE_ICONS.get("");
-  if (!makeIcon) {
-    return fallbackResult();
-  }
+  const makeIcon = BASELINE_ICONS.get(baseline) ?? BASELINE_ICONS.get("");
   const icon = makeIcon();
   icon.setAttribute("aria-hidden", "true");
 
@@ -469,13 +458,12 @@ function renderBadge(baseline, statusText, support, features) {
 
   const browserGroup = html`<span class="baseline-browsers">${pills}</span>`;
 
-  const featureId = features.length === 1 ? features[0].id : null;
-  const featureName = features.length === 1 ? features[0].name : null;
-  const moreInfoUrl = featureId
-    ? `https://webstatus.dev/features/${encodeURIComponent(featureId)}`
+  const singleFeature = features.length === 1 ? features[0] : null;
+  const moreInfoUrl = singleFeature
+    ? `https://webstatus.dev/features/${encodeURIComponent(singleFeature.id)}`
     : "https://webstatus.dev/";
-  const moreInfoLabel = featureName
-    ? `More info about ${featureName} support`
+  const moreInfoLabel = singleFeature?.name
+    ? `More info about ${singleFeature.name} support`
     : "More info about browser support";
 
   const dt = html`${statusText}${icon}:`;
