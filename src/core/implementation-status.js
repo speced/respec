@@ -11,7 +11,8 @@ import { html } from "./import-maps.js";
 
 export const name = "core/implementation-status";
 
-const DATA_URL = "https://unpkg.com/web-features/data.json";
+const DATA_URL = "https://respec.org/api/baseline";
+const SEARCH_URL = "https://respec.org/api/baseline/search";
 const LOGO_BASE = "https://www.w3.org/assets/logos/browser-logos";
 
 const BROWSERS = new Map([
@@ -243,8 +244,7 @@ function normalizeConf(conf) {
  * @param {ImplementationStatusOptions} options
  */
 async function fetchAndRender(conf, options) {
-  const data = await fetchData(options);
-  const features = findFeatures(data, conf, options);
+  const features = await fetchFeatures(conf, options);
 
   if (!features.length) {
     const msg = options.feature
@@ -264,6 +264,52 @@ async function fetchAndRender(conf, options) {
   pub("amend-user-config", { implementationStatus: options.feature || true });
 
   return renderBadge(baseline, statusText, support, features);
+}
+
+/**
+ * Fetch features using the most efficient endpoint available.
+ * - Explicit feature ID: GET /api/baseline/:feature
+ * - Auto-detect by spec URLs: POST /api/baseline/search
+ * - Custom apiURL: fetch full dataset and search client-side (legacy)
+ * @param {RespecConfig} conf
+ * @param {ImplementationStatusOptions} options
+ * @returns {Promise<WebFeatureEntry[]>}
+ */
+async function fetchFeatures(conf, options) {
+  // Custom apiURL: legacy full-dataset mode
+  if (options.apiURL) {
+    const data = await fetchData(options);
+    return findFeatures(data, conf, options);
+  }
+
+  // Explicit feature ID: single lookup
+  if (options.feature) {
+    const url = `${DATA_URL}/${encodeURIComponent(options.feature)}`;
+    const response = await fetchAndCache(url);
+    if (!response.ok) return [];
+    const feature = await response.json();
+    if (feature.error) return [];
+    return [{ id: options.feature, ...feature }];
+  }
+
+  // Auto-detect: send spec URLs to server for matching
+  const specUrls = getSpecUrls(conf);
+  if (!specUrls.length) return [];
+
+  try {
+    const response = await fetch(SEARCH_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ specs: specUrls }),
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const { result } = await response.json();
+    return result || [];
+  } catch {
+    // Fallback: download full dataset if search endpoint is unavailable
+    const data = await fetchData(options);
+    return findFeatures(data, conf, options);
+  }
 }
 
 /** @param {ImplementationStatusOptions} options */
