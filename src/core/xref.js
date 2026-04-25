@@ -527,9 +527,9 @@ function showErrors({ ambiguous, notFound }) {
     const specsString = joinAnd(specs, s => `**[${s}]**`);
     let hint = howToFix(formUrl, originalTerm);
     /** @type {HTMLElement | null} */
-    const closestCite = elems[0].closest("[data-cite]");
-    if (closestCite && closestCite !== document.body) {
-      const citeAttr = (closestCite.dataset.cite ?? "").replace(/`/g, "");
+    const closestCite = elems[0].parentElement?.closest("[data-cite]") ?? null;
+    const citeAttr = closestCite?.dataset.cite?.replace(/`/g, "") ?? "";
+    if (closestCite && closestCite !== document.body && citeAttr) {
       hint += ` A parent element has \`data-cite="${citeAttr}"\` — check that the spec shortname is correct.`;
     }
     const forParent = query.for ? `, for **"${query.for}"**, ` : "";
