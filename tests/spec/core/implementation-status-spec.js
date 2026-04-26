@@ -281,4 +281,33 @@ describe("Core — Implementation Status", () => {
     );
     expect(exportedLink.textContent).toContain("Web Platform Status");
   });
+
+  it("ignores moved and split features in auto-detect", async () => {
+    const ops = makeStandardOps({
+      edDraftURI: "https://w3c.github.io/test-spec/",
+      implementationStatus: {
+        apiURL,
+      },
+    });
+    const doc = await makeRSDoc(ops);
+    const dt = doc.querySelector(".baseline-title");
+
+    expect(dt).toBeTruthy();
+    expect(dt.textContent).toContain("Widely available");
+  });
+
+  it("ignores moved features when looking up explicit feature ID", async () => {
+    const ops = makeStandardOps({
+      implementationStatus: {
+        feature: "moved-feature",
+        apiURL,
+      },
+    });
+    const doc = await makeRSDoc(ops);
+    const warnings = doc.respec.warnings.filter(
+      warning => warning.plugin === "core/implementation-status"
+    );
+
+    expect(warnings).toHaveSize(1);
+  });
 });

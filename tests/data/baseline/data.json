@@ -62,6 +62,16 @@
         }
       },
       "compat_features": ["api.MultiB"]
+    },
+    "moved-feature": {
+      "kind": "moved",
+      "redirect_target": "test-feature",
+      "spec": ["https://w3c.github.io/test-spec/"]
+    },
+    "split-feature": {
+      "kind": "split",
+      "redirect_targets": ["multi-feature-a", "multi-feature-b"],
+      "spec": ["https://w3c.github.io/multi-spec/"]
     }
   }
 }

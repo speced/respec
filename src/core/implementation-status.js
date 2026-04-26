@@ -133,9 +133,10 @@ const BROWSER_GROUPS = Map.groupBy(
 /**
  * @typedef {{
  *   name?: string;
+ *   kind?: "feature" | "moved" | "split" | "group";
  *   spec?: string | string[];
  *   status?: {
- *     baseline?: "high" | "low" | "";
+ *     baseline?: "high" | "low" | false;
  *     support?: Record<string, unknown>;
  *   };
  * }} WebFeature
@@ -285,6 +286,7 @@ async function fetchFeatures(conf, options) {
     const response = await fetchAndCache(url);
     if (!response.ok) return [];
     const feature = await response.json();
+    if (feature.split_into?.length) return feature.split_into;
     return [{ id: options.feature, ...feature }];
   }
 
@@ -321,6 +323,11 @@ async function fetchData(options) {
   return response.json();
 }
 
+/** @param {WebFeature} f */
+function isUsableFeature(f) {
+  return !f.kind || f.kind === "feature";
+}
+
 /**
  * @param {WebFeaturesData} data
  * @param {RespecConfig} conf
@@ -334,7 +341,7 @@ function findFeatures(data, conf, options) {
 
   if (options.feature) {
     const feature = features[options.feature];
-    if (!feature) return [];
+    if (!feature || !isUsableFeature(feature)) return [];
     return [{ id: options.feature, ...feature }];
   }
 
@@ -343,6 +350,7 @@ function findFeatures(data, conf, options) {
 
   return Object.entries(features)
     .filter(([, feature]) => {
+      if (!isUsableFeature(feature)) return false;
       const specs = [feature.spec].flat().filter(Boolean);
       return specs.some(specUrl => {
         const normalizedFeatureUrl = normalizeUrl(specUrl);
