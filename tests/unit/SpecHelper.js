@@ -139,7 +139,7 @@ async function waitReady(iframe) {
       // iframe.contentWindow, so identity checks always fail. Tests run
       // sequentially (jasmine), so at most one waitReady is active at a time;
       // matching on topic alone is safe.
-      if (ev.data.topic === "end-all") {
+      if (ev.data?.topic === "end-all") {
         settle(() => resolve(doc));
       }
     }

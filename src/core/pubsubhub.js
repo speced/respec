@@ -25,14 +25,13 @@ export function pub(topic, detail) {
   // If this is an iframe, postMessage parent (used in testing).
   const args = String(JSON.stringify(detail?.stack || detail));
   // Safari can throw SecurityError accessing parent.location.origin from
-  // srcdoc iframes (treated as opaque origin). Fall back to "*" which is
-  // acceptable here since these messages contain no sensitive data and are
-  // only used in the test harness.
+  // srcdoc iframes (treated as opaque origin). Skip the postMessage in that
+  // case; the polling fallback in SpecHelper.js handles test completion.
   let targetOrigin;
   try {
     targetOrigin = window.parent.location.origin;
   } catch {
-    targetOrigin = "*";
+    return;
   }
   try {
     window.parent.postMessage({ topic, args }, targetOrigin);
