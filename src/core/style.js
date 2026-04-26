@@ -26,9 +26,9 @@ function insertStyle() {
   styleElement.id = "respec-mainstyle";
   styleElement.textContent = css;
   // Insert before the first stylesheet or style element so author-provided
-  // stylesheets retain their position after all ReSpec-injected styles, letting
-  // custom CSS override ReSpec defaults. Using "link[rel~='stylesheet'], style"
-  // avoids displacing preconnect, icon, or other non-stylesheet link elements.
+  // stylesheets that are already in <head> keep their later position, letting
+  // custom CSS override ReSpec's main stylesheet. Using "link[rel~='stylesheet'],
+  // style" avoids displacing preconnect, icon, or other non-stylesheet links.
   // insertBefore(el, null) === appendChild when no match is found.
   document.head.insertBefore(
     styleElement,
