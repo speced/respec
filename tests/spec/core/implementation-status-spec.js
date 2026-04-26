@@ -282,7 +282,7 @@ describe("Core — Implementation Status", () => {
     expect(exportedLink.textContent).toContain("Web Platform Status");
   });
 
-  it("ignores moved and split features in auto-detect", async () => {
+  it("ignores moved features in auto-detect", async () => {
     const ops = makeStandardOps({
       edDraftURI: "https://w3c.github.io/test-spec/",
       implementationStatus: {
@@ -294,6 +294,20 @@ describe("Core — Implementation Status", () => {
 
     expect(dt).toBeTruthy();
     expect(dt.textContent).toContain("Widely available");
+  });
+
+  it("ignores split features in auto-detect", async () => {
+    const ops = makeStandardOps({
+      edDraftURI: "https://w3c.github.io/multi-spec/",
+      implementationStatus: {
+        apiURL,
+      },
+    });
+    const doc = await makeRSDoc(ops);
+    const dt = doc.querySelector(".baseline-title");
+
+    expect(dt).toBeTruthy();
+    expect(dt.textContent).toContain("Newly available");
   });
 
   it("ignores moved features when looking up explicit feature ID", async () => {
@@ -309,5 +323,6 @@ describe("Core — Implementation Status", () => {
     );
 
     expect(warnings).toHaveSize(1);
+    expect(warnings[0].message).toContain("No Baseline data found");
   });
 });

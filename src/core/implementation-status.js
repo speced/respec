@@ -286,7 +286,9 @@ async function fetchFeatures(conf, options) {
     const response = await fetchAndCache(url);
     if (!response.ok) return [];
     const feature = await response.json();
-    if (feature.split_into?.length) return feature.split_into;
+    if (feature.split_into?.length) {
+      return feature.split_into.filter(isUsableFeature);
+    }
     return [{ id: options.feature, ...feature }];
   }
 
@@ -323,7 +325,10 @@ async function fetchData(options) {
   return response.json();
 }
 
-/** @param {WebFeature} f */
+/**
+ * Moved, split, and group entries redirect to other features and lack status.
+ * @param {WebFeature} f
+ */
 function isUsableFeature(f) {
   return !f.kind || f.kind === "feature";
 }
@@ -388,7 +393,7 @@ function normalizeUrl(url) {
 
 /**
  * @param {WebFeatureEntry[]} features
- * @returns {"high" | "low" | ""}
+ * @returns {"high" | "low" | ""} Upstream `false` maps to `""` via fall-through.
  */
 function computeAggregate(features) {
   const statuses = features.map(f => f.status?.baseline);
