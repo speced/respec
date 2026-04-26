@@ -1651,7 +1651,7 @@ describe("W3C — Headers", () => {
       );
       expect(latestVersionDt).toBeTruthy();
       const link = latestVersionDt.nextElementSibling.querySelector("a");
-      expect(link.href).toBe(malformedLatestVersion);
+      expect(link.getAttribute("href")).toBe(malformedLatestVersion);
       expect(link.textContent.trim()).toBe(malformedLatestVersion);
     });
   });
