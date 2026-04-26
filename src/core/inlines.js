@@ -69,7 +69,7 @@ const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
 const inlineIdlReference = /(?:{{[^}]+\?*}})/; // {{ WebIDLThing }}, {{ WebIDLThing? }}
 const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;"?<>]+\??)?\|\B/; // |var : Type?|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citation]]
-const inlineExpansion = /(?:\[\[\[[^\]]+\]\]\])/; // [[[expand]]]
+const inlineExpansion = /(?:\[\[\[[^\]]+\]\]\])/; // [[[#id]]], [[[SPEC]]], [[[SPEC#id]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
 const inlineCddlReference = /(?:\{\^[^}^]+\^\})/; // {^cddl-type^}, {^type/key^}
@@ -164,23 +164,21 @@ function inlineRFC2119Matches(matched) {
 }
 
 /**
- * @param {string} matched
- * @return {HTMLElement}
- */
-/**
  * Validates inline expansion/reference syntax.
  * Valid forms: [[[#id]]], [[[SPEC]]], [[[SPEC#id]]], [[[SPEC|text]]],
  * [[[SPEC#id|text]]], [[[#id|text]]]
  */
-const defined = /^(?:!|\\|\?)?(?:#[\w-.]+|[\w-.]+(?:#[\w-.]+)?)(?:\|[^\]]+)?$/;
+const inlineExpansionPattern =
+  /^(?:!|\\|\?)?(?:#[\w-.]+|[\w-.]+(?:#[\w-.]+)?)(?:\|[^\]]+)?$/;
 
 /**
  * @param {string} matched
+ * @return {HTMLElement}
  */
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
   let ref = matched.slice(3, -3).trim();
-  if (!defined.test(ref)) {
+  if (!inlineExpansionPattern.test(ref)) {
     const msg = `Bad syntax: \`${matched}\` is not a valid inline expansion.`;
     const hint =
       "Expected `[[[#id]]]`, `[[[SPEC]]]`, `[[[SPEC#id]]]`, or with alias: `[[[SPEC#id|text]]]`.";
