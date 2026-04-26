@@ -1,5 +1,7 @@
 /* ReSpec specific CSS */
 const css = String.raw;
+const defined = String.raw;
+const darkRefTargetBg = defined`color-mix(in srgb, #eaf3ff 15%, transparent)`;
 
 // Prettier ignore only to keep code indented from level 0.
 // prettier-ignore
@@ -60,22 +62,12 @@ a[href].respec-offending-element {
 
 @media (prefers-color-scheme: dark) {
   #references :target {
-    background: color-mix(
-      in srgb,
-      var(--borderedblock-bg, #303030) 70%,
-      transparent
-    );
-    animation: pop 0.4s ease-in-out 0s 1;
+    background: ${darkRefTargetBg};
   }
 }
 
 body:has(input[name='color-scheme'][value='dark']:checked) #references :target {
-  background: color-mix(
-    in srgb,
-    var(--borderedblock-bg, #303030) 70%,
-    transparent
-  );
-  animation: pop 0.4s ease-in-out 0s 1;
+  background: ${darkRefTargetBg};
 }
 
 cite .bibref {
