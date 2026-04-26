@@ -72,6 +72,7 @@ const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citat
 const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
+const inlineCddlReference = /(?:\{\^[^}^]+\^\})/; // {^cddl-type^}, {^type/key^}
 
 /**
  * @example [^iframe^] // [^element^]
@@ -106,6 +107,46 @@ function inlineElementMatches(matched) {
       data-link-type="${xrefType}"
       data-link-for="${xrefFor}"
       >${textContent}</a
+    ></code
+  >`;
+}
+
+/**
+ * Handles CDDL inline references: {^type^}, {^type/key^}, {^type/"value"^}
+ * @example {^attire^} // link to cddl-type
+ * @example {^delivery/address^} // link to cddl-key
+ * @example {^attire/"bow tie"^} // link to cddl-value
+ * @param {string} matched
+ * @return {HTMLElement}
+ */
+function inlineCddlMatches(matched) {
+  const value = matched.slice(2, -2).trim();
+
+  // Split on "/" but respect quoted strings
+  const parts = (value.match(/"([^"]*)"|([^/]+)/g) || []).map(s => s.trim());
+
+  if (parts.length === 1) {
+    // {^typename^} → link to cddl-type
+    const typeName = parts[0];
+    return html`<code
+      ><a data-link-type="cddl-type" data-xref-type="cddl-type"
+        >${typeName}</a
+      ></code
+    >`;
+  }
+
+  // parts.length >= 2: {^typename/key^} or {^typename/"value"^}
+  const typeName = parts[0];
+  const member = parts[1];
+  const type =
+    member.startsWith('"') && member.endsWith('"') ? "cddl-value" : "cddl-key";
+  return html`<code
+    ><a
+      data-link-type="${type}"
+      data-xref-type="${type}"
+      data-xref-for="${typeName}"
+      data-link-for="${typeName}"
+      >${member}</a
     ></code
   >`;
 }
@@ -310,6 +351,7 @@ export function run(conf) {
       joinRegex([
         keywords,
         inlineIdlReference,
+        inlineCddlReference,
         inlineVariable,
         inlineCitation,
         inlineExpansion,
@@ -334,6 +376,9 @@ export function run(conf) {
       switch (true) {
         case t.startsWith("{{"):
           df.append(inlineXrefMatches(t, txt));
+          break;
+        case t.startsWith("{^"):
+          df.append(inlineCddlMatches(t));
           break;
         case t.startsWith("[[["):
           df.append(inlineRefMatches(t));
