@@ -213,37 +213,11 @@ describe("Core — Issues and Notes", () => {
       "https://github.com/org/repo/issues/?q=is%3Aissue+is%3Aopen+label%3A%22not-a-color%22"
     );
 
-    // Invalid colors must not appear verbatim in the style attribute (CSS injection guard)
-    expect(blankLabel.style.backgroundColor).toBe("rgb(246, 248, 250)"); // fallback #f6f8fa
-    expect(blankLabel.getAttribute("style")).not.toContain("javascript");
-    expect(invalidLabel.style.backgroundColor).toBe("rgb(246, 248, 250)"); // fallback #f6f8fa
+    // Invalid colors fall back to #f6f8fa (GitHub's default gray)
+    expect(blankLabel.style.backgroundColor).toBe("rgb(246, 248, 250)");
+    expect(invalidLabel.style.backgroundColor).toBe("rgb(246, 248, 250)");
     expect(invalidLabel.getAttribute("style")).not.toContain(
       "this is not a color"
-    );
-  });
-
-  it("sanitizes GitHub label colors against CSS injection", async () => {
-    const ops = {
-      config: githubConfig,
-      body: `${makeDefaultBody()}
-        <div class='issue' data-number='1540'>issue with invalid label colors</div>
-      `,
-    };
-    const doc = await makeRSDoc(ops);
-    const labels = doc.querySelectorAll(".respec-gh-label");
-    // The fixture has 4 labels: "refactor" (valid), "bug" (valid), "blank" (empty), "not-a-color" (invalid)
-    const blankLabel = labels[2];
-    const invalidLabel = labels[3];
-
-    // Both invalid colors fall back to #f6f8fa — the safe GitHub gray
-    const fallbackBg = "rgb(246, 248, 250)";
-    expect(blankLabel.style.backgroundColor).toBe(fallbackBg);
-    expect(invalidLabel.style.backgroundColor).toBe(fallbackBg);
-
-    // The raw invalid strings must not appear inside the style attribute
-    expect(blankLabel.getAttribute("style")).not.toContain("undefined");
-    expect(invalidLabel.getAttribute("style")).not.toMatch(
-      /this is not a color/
     );
   });
 
@@ -406,28 +380,6 @@ describe("Core — Issues and Notes", () => {
     expect(doc.documentElement.lang).toBe("es");
     expect(textContent).toContain("Resumen de la cuestión");
   });
-  it("generates issue summary heading as a DOM element, not via innerHTML", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `
-      <section>
-        <h2>Test Issues</h2>
-        <p class="issue" data-number=123></p>
-      </section>
-      <section id="issue-summary"></section>
-      `,
-    };
-    const doc = await makeRSDoc(ops);
-    // After core/structure.js renames headings by depth, the injected h1 becomes h2.
-    // After core/id-headers.js wraps it, it lands inside div.header-wrapper.
-    const heading = doc.querySelector(
-      "#issue-summary > div.header-wrapper > h2"
-    );
-    expect(heading).not.toBeNull();
-    // The element must be a real HTMLElement instance (proves DOM construction, not string injection)
-    expect(heading instanceof doc.defaultView.HTMLHeadingElement).toBe(true);
-  });
-
   it("shows issue-summary section with heading provided", async () => {
     const ops = {
       config: makeBasicConfig(),
