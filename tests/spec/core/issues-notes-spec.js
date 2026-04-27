@@ -115,6 +115,27 @@ describe("Core — Issues and Notes", () => {
     expect(pnot.textContent).toBe("EDNOTE");
   });
 
+  it("should not treat titles of issues, notes, or ednotes as headings", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body:
+        `${makeDefaultBody()}<section id="test">` +
+        `<p class='issue' title='ISS-TIT'>ISSUE</p>` +
+        `<p class='note' title='NOT-TIT'>NOTE</p>` +
+        `<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>` +
+        `</section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const issueTitle = doc.querySelector("div.issue div.issue-title");
+    const noteTitle = doc.querySelector("div.note div.note-title");
+    const ednoteTitle = doc.querySelector("div.note div.ednote-title");
+
+    for (const title of [issueTitle, noteTitle, ednoteTitle]) {
+      expect(title.getAttribute("role")).toBeNull();
+      expect(title.getAttribute("aria-level")).toBeNull();
+    }
+  });
+
   it("should process warnings", async () => {
     const ops = {
       config: makeBasicConfig(),

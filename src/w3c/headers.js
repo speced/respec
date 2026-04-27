@@ -584,12 +584,14 @@ export async function run(conf) {
   conf.prEnd = validateDateAndRecover(conf, "prEnd");
 
   const isUpdatableRec = sotd.classList.contains("updateable-rec");
-  const hasCorrections = document.querySelector(".correction") !== null;
+  const hasCorrections =
+    document.querySelector(".correction:not(.proposed)") !== null;
   const hasProposedCorrections =
-    document.querySelector(".proposed-correction") !== null;
-  const hasAdditions = document.querySelector(".addition") !== null;
+    document.querySelector(".correction.proposed") !== null;
+  const hasAdditions =
+    document.querySelector(".addition:not(.proposed)") !== null;
   const hasProposedAdditions =
-    document.querySelector(".proposed-addition") !== null;
+    document.querySelector(".addition.proposed") !== null;
   const hasRevisions =
     hasCorrections ||
     hasAdditions ||
@@ -602,8 +604,15 @@ export async function run(conf) {
     showError(msg, name, { hint });
   }
 
-  if (!isUpdatableRec && (hasAdditions || hasCorrections)) {
-    const msg = docLink`${"[specStatus]"} is "REC" with proposed additions but the Recommendation is not marked as allowing new features.`;
+  if (
+    conf.isRec &&
+    !isUpdatableRec &&
+    (hasAdditions ||
+      hasCorrections ||
+      hasProposedAdditions ||
+      hasProposedCorrections)
+  ) {
+    const msg = docLink`${"[specStatus]"} is "REC" with amendments, but the Recommendation is not marked as allowing revisions.`;
     showError(msg, name);
   }
 

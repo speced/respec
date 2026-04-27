@@ -11,13 +11,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import {
-  addId,
-  getIntlData,
-  parents,
-  showError,
-  showWarning,
-} from "./utils.js";
+import { addId, getIntlData, showError, showWarning } from "./utils.js";
 import css from "../styles/issues-notes.css.js";
 import { html } from "./import-maps.js";
 export const name = "core/issues-notes";
@@ -129,7 +123,7 @@ function handleIssues(ins, ghIssues, conf) {
       const title = document.createElement("span");
       const className = `${type}-title marker`;
       // prettier-ignore
-      const titleParent = html`<div role="heading" class="${className}">${title}</div>`;
+      const titleParent = html`<div class="${className}">${title}</div>`;
       addId(titleParent, "h", type);
       let text = displayType;
       if (inno.id) {
@@ -189,8 +183,6 @@ function handleIssues(ins, ghIssues, conf) {
           .createContextualFragment(ghIssue.bodyHTML);
       }
       div.append(titleParent, body);
-      const level = parents(titleParent, "section").length + 2;
-      titleParent.setAttribute("aria-level", level);
     }
   });
   makeIssueSectionSummary(issueList);
