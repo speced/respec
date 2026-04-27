@@ -514,9 +514,12 @@ function showErrors({ ambiguous, notFound }) {
     const formUrl = getPrefilledFormURL(originalTerm, query, specs);
     const forParent = query.for ? `, for **"${query.for}"**, ` : "";
     const moreInfo = howToFix(formUrl, originalTerm);
-    const hint =
-      docLink`To fix, use the ${"[data-cite]"} attribute to pick the one you mean from the appropriate specification.` +
-      String.raw` ${moreInfo}`;
+    const isSameSpecOverload =
+      specs.length === 1 && originalTerm.endsWith("()");
+    const hint = isSameSpecOverload
+      ? `This method has multiple overloads in ${specsString}. To fix, include parameter names: \`{{ ${query.for ? `${query.for}/` : ""}${originalTerm.slice(0, -2)}(param1, param2) }}\`. ${moreInfo}`
+      : docLink`To fix, use the ${"[data-cite]"} attribute to pick the one you mean from the appropriate specification.` +
+        String.raw` ${moreInfo}`;
     const msg = `The term "**${originalTerm}**"${forParent} is ambiguous because it's defined in ${specsString}.`;
     const title = "Definition is ambiguous.";
     showError(msg, name, { title, elements: elems, hint });
