@@ -16,6 +16,11 @@ const SAFARIDRIVER_PORT = Number.parseInt(
   process.env.SAFARIDRIVER_PORT || "4445",
   10
 );
+if (!Number.isFinite(SAFARIDRIVER_PORT)) {
+  throw new Error(
+    `Invalid SAFARIDRIVER_PORT: "${process.env.SAFARIDRIVER_PORT}"`
+  );
+}
 
 /**
  * Simple W3C WebDriver client using Node's built-in http module.
