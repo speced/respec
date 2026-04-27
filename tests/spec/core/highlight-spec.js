@@ -181,8 +181,9 @@ describe("Core — Highlight", () => {
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
+    const details = doc.getElementById("closed-details");
+    expect(details.open).toBeFalse();
     const pre = doc.getElementById("details-pre");
-    // Highlighting should work even when <details> is closed (textContent vs innerText)
     expect(pre.querySelector("span[class*=hljs-]")).toBeTruthy();
   });
 });

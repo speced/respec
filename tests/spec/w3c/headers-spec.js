@@ -1632,7 +1632,7 @@ describe("W3C — Headers", () => {
       );
       expect(latestVersionDt).toBeTruthy();
       const link = latestVersionDt.nextElementSibling.querySelector("a");
-      expect(link.href).toBe(encodedLatestVersion);
+      expect(link.getAttribute("href")).toBe(encodedLatestVersion);
       expect(link.textContent.trim()).toBe("https://www.w3.org/TR/föö-spec/");
     });
 
