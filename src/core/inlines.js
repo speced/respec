@@ -210,18 +210,7 @@ function inlineBibrefMatches(matched, txt, conf) {
   }
 
   const [spec, linkText] = ref.split("|").map(norm);
-  const { type, illegal } = refTypeFromContext(
-    spec,
-    /** @type {HTMLElement} */ (txt.parentElement)
-  );
-  const cite = renderInlineCitation(spec, linkText);
   const cleanRef = spec.replace(/^(!|\?)/, "");
-  if (illegal && !conf.normativeReferences.has(cleanRef)) {
-    const citeElem = cite.childNodes[1] || cite;
-    const msg = `Normative references in informative sections are not allowed. `;
-    const hint = `Remove '!' from the start of the reference \`[[${ref}]]\``;
-    showWarning(msg, name, { elements: [citeElem], hint });
-  }
 
   const isSelfCite =
     conf.shortName && cleanRef.toLowerCase() === conf.shortName.toLowerCase();
@@ -229,6 +218,19 @@ function inlineBibrefMatches(matched, txt, conf) {
     const title = conf.title || cleanRef;
     return [html`<cite title="${conf.shortName}">${title}</cite>`];
   }
+
+  const { type, illegal } = refTypeFromContext(
+    spec,
+    /** @type {HTMLElement} */ (txt.parentElement)
+  );
+  const cite = renderInlineCitation(spec, linkText);
+  if (illegal && !conf.normativeReferences.has(cleanRef)) {
+    const citeElem = cite.childNodes[1] || cite;
+    const msg = `Normative references in informative sections are not allowed. `;
+    const hint = `Remove '!' from the start of the reference \`[[${ref}]]\``;
+    showWarning(msg, name, { elements: [citeElem], hint });
+  }
+
   if (type === "informative" && !illegal) {
     conf.informativeReferences.add(cleanRef);
   } else {
