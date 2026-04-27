@@ -284,7 +284,12 @@ async function fetchFeatures(conf, options) {
   if (options.feature) {
     const url = `${DATA_URL}/${encodeURIComponent(options.feature)}`;
     const response = await fetchAndCache(url);
-    if (!response.ok) return [];
+    if (!response.ok) {
+      if (response.status === 404) return [];
+      throw new Error(
+        `Failed to fetch Baseline data for feature "${options.feature}": HTTP ${response.status}`
+      );
+    }
     const feature = await response.json();
     if (feature.split_into?.length) {
       return feature.split_into.filter(isUsableFeature);
@@ -429,7 +434,10 @@ function getLogoSrc(browserId) {
  * @param {WebFeatureEntry[]} features
  */
 function renderBadge(baseline, statusText, support, features) {
-  const makeIcon = BASELINE_ICONS.get(baseline) ?? BASELINE_ICONS.get("");
+  const makeIcon =
+    BASELINE_ICONS.get(baseline) ??
+    BASELINE_ICONS.get("") ??
+    (() => html`<span></span>`);
   const icon = makeIcon();
   icon.setAttribute("aria-hidden", "true");
 
@@ -479,7 +487,7 @@ function renderBadge(baseline, statusText, support, features) {
     ? `More info about ${singleFeature.name} support`
     : "More info about browser support";
 
-  const dt = html`${statusText}${icon}:`;
+  const dt = html`${statusText}:${icon}`;
   const dd = html`${browserGroup}
     <a
       class="baseline-more-info"
