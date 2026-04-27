@@ -189,16 +189,21 @@ function inlineRefMatches(matched) {
   const linkText = pipeIdx !== -1 ? ref.slice(pipeIdx + 1).trim() : null;
   if (pipeIdx !== -1) ref = ref.slice(0, pipeIdx).trim();
 
-  if (!ref.startsWith("#")) {
-    return html`<a
-      data-cite="${ref}"
-      data-matched-text="${matched}"
-      data-lt="${linkText || null}"
-    ></a>`;
+  // Strip !/?/\ prefix (normative/informative/escaped markers)
+  const refWithoutPrefix = ref.replace(/^[!?\\]/, "");
+
+  if (refWithoutPrefix.startsWith("#")) {
+    return linkText
+      ? html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"
+          >${linkText}</a
+        >`
+      : html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"></a>`;
   }
-  return linkText
-    ? html`<a href="${ref}" data-matched-text="${matched}">${linkText}</a>`
-    : html`<a href="${ref}" data-matched-text="${matched}"></a>`;
+  return html`<a
+    data-cite="${ref}"
+    data-matched-text="${matched}"
+    data-lt="${linkText || null}"
+  ></a>`;
 }
 
 /**
