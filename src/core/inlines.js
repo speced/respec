@@ -173,7 +173,7 @@ const inlineExpansionPattern =
 
 /**
  * @param {string} matched
- * @return {HTMLElement}
+ * @return {HTMLElement | string}
  */
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
@@ -181,7 +181,7 @@ function inlineRefMatches(matched) {
   if (!inlineExpansionPattern.test(ref)) {
     const msg = `Bad syntax: \`${matched}\` is not a valid inline expansion.`;
     const hint =
-      "Expected `[[[#id]]]`, `[[[SPEC]]]`, `[[[SPEC#id]]]`, or with alias: `[[[SPEC#id|text]]]`.";
+      "Expected `[[[#id]]]`, `[[[SPEC]]]`, `[[[SPEC#id]]]`, `[[[SPEC|text]]]`, `[[[SPEC#id|text]]]`, or `[[[#id|text]]]`; `!`/`?` prefixes are also supported.";
     showWarning(msg, name, { hint });
     return matched;
   }

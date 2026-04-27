@@ -184,7 +184,8 @@ export async function run() {
 
   await updateBiblio([...elems]);
 
-  // Capture original keys before toCiteDetails mutates dataset.cite.
+  // Capture keys after updateBiblio (which may have mutated dataset.cite via
+  // toCiteDetails), so we can match elements to their biblio entries later.
   const originalKeys = new Map();
   const citeDetailsMap = new Map();
   for (const elem of elems) {
