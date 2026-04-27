@@ -1,7 +1,6 @@
 /* ReSpec specific CSS */
 const css = String.raw;
-const defined = String.raw;
-const darkRefTargetBg = defined`color-mix(in srgb, #eaf3ff 15%, transparent)`;
+const darkRefTargetBg = String.raw`color-mix(in srgb, #eaf3ff 15%, transparent)`;
 
 // Prettier ignore only to keep code indented from level 0.
 // prettier-ignore
