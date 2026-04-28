@@ -256,7 +256,12 @@ async function updateBiblio(elems) {
  * @param {Document} doc - The document to cleanup.
  */
 function cleanup(doc) {
-  const attrToRemove = ["data-cite", "data-cite-frag", "data-cite-path", "data-cite-section"];
+  const attrToRemove = [
+    "data-cite",
+    "data-cite-frag",
+    "data-cite-path",
+    "data-cite-section",
+  ];
   const elems = doc.querySelectorAll("a[data-cite], dfn[data-cite]");
   elems.forEach(elem =>
     attrToRemove.forEach(attr => elem.removeAttribute(attr))
