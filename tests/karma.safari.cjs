@@ -12,15 +12,17 @@
 const { spawn } = require("child_process");
 const http = require("http");
 
-const SAFARIDRIVER_PORT = Number.parseInt(
-  process.env.SAFARIDRIVER_PORT || "4445",
-  10
-);
-if (!Number.isFinite(SAFARIDRIVER_PORT)) {
-  throw new Error(
-    `Invalid SAFARIDRIVER_PORT: "${process.env.SAFARIDRIVER_PORT}"`
-  );
-}
+const SAFARIDRIVER_PORT = (() => {
+  const raw = process.env.SAFARIDRIVER_PORT;
+  if (!raw) return 4445;
+  const port = Number.parseInt(raw, 10);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error(
+      `Invalid SAFARIDRIVER_PORT: "${raw}" (must be an integer 1–65535)`
+    );
+  }
+  return port;
+})();
 
 /**
  * Simple W3C WebDriver client using Node's built-in http module.

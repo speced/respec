@@ -25,21 +25,21 @@ export function pub(topic, detail) {
   // If this is an iframe, postMessage parent (used in testing).
   const args = String(JSON.stringify(detail?.stack || detail));
   // Safari can throw SecurityError accessing parent.location.origin from
-  // srcdoc iframes (treated as opaque origin). Skip the postMessage in that
-  // case; the polling fallback in SpecHelper.js handles test completion.
+  // srcdoc iframes (treated as opaque origin). For the "end-all" signal
+  // (detail = undefined, no sensitive data) fall back to "*" so the test
+  // harness receives it. For all other topics skip the postMessage entirely
+  // to avoid broadcasting potentially sensitive data to unknown origins.
   let targetOrigin;
   try {
     targetOrigin = window.parent.location.origin;
   } catch {
-    return;
+    if (topic !== "end-all") return;
+    targetOrigin = "*";
   }
   try {
     window.parent.postMessage({ topic, args }, targetOrigin);
   } catch {
-    // Ignore: postMessage can throw in Safari when the srcdoc iframe's
-    // window.parent is not accessible (e.g., opaque-origin restrictions).
-    // The local CustomEvent dispatch above already resolved doc.respec.ready,
-    // so tests that poll doc.respec.ready will still complete correctly.
+    // Ignore: postMessage may throw in restricted browsing contexts.
   }
 }
 
