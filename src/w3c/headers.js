@@ -400,13 +400,26 @@ export async function run(conf) {
   }
 
   if (conf.isEd) conf.thisVersion = conf.edDraftURI;
-  if (conf.isCGBG) validateCGBG(conf);
+  if (conf.isCGBG) {
+    validateCGBG(conf);
+  }
+  if (conf.isTagEditorFinding && !conf.latestVersion) {
+    conf.latestVersion = null;
+  }
   if (conf.latestVersion !== null) {
     conf.latestVersion = conf.latestVersion
       ? w3Url(conf.latestVersion)
       : pubSpace
         ? w3Url(`${pubSpace}/${conf.shortName}/`)
         : "";
+    if (conf.latestVersion && !conf.isNoTrack && conf.specStatus !== "FPWD") {
+      const exists = await resourceExists(conf.latestVersion);
+      if (exists === null) {
+        const msg = `The "Latest published version:" header link points to a URL that does not exist.`;
+        const hint = docLink`Check that the ${"[shortName]"} is correct and you are using the right ${"[specStatus]"} for this kind of document.`;
+        showWarning(msg, name, { hint });
+      }
+    }
   }
 
   if (conf.latestVersion) validateIfAllowedOnTR(conf);
@@ -485,7 +498,12 @@ export async function run(conf) {
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
   validatePatentPolicies(conf);
-  await deriveHistoryURI(conf);
+
+  // Only derive historyURI if not explicitly suppressed by the user (null).
+  if (conf.historyURI !== null) {
+    conf.historyURI = await deriveHistoryURI(conf);
+  }
+
   if (conf.isTagEditorFinding) {
     delete conf.thisVersion;
     delete conf.latestVersion;
@@ -674,7 +692,6 @@ function validateIfAllowedOnTR(conf) {
     const msg = docLink`Documents with a status of \`"${conf.specStatus}"\` can't be published on the W3C's /TR/ (Technical Report) space.`;
     const hint = docLink`Ask a W3C Team Member for a W3C URL where the report can be published and change ${"[latestVersion]"} to something else.`;
     showError(msg, name, { hint });
-    return;
   }
 }
 
@@ -713,9 +730,6 @@ function derivePubSpace(conf) {
 function validateCGBG(conf) {
   // @ts-expect-error -- specStatus is always set by defaults
   const reportType = status2text[conf.specStatus];
-  const latestVersionURL = conf.latestVersion
-    ? new URL(w3Url(conf.latestVersion))
-    : null;
 
   if (!conf.wg) {
     const msg = docLink`The ${"[group]"} configuration option is required for this kind of document (${reportType}).`;
@@ -723,8 +737,17 @@ function validateCGBG(conf) {
     return;
   }
 
+  // @ts-expect-error -- specStatus is always set by defaults
+  if (conf.specStatus.endsWith("-DRAFT") && !conf.latestVersion) {
+    conf.latestVersion = null;
+    return;
+  }
+
   // Deal with final reports
   if (conf.isCGFinal) {
+    const latestVersionURL = conf.latestVersion
+      ? new URL(w3Url(conf.latestVersion))
+      : null;
     // Final report require a w3.org URL.
     const isW3C =
       latestVersionURL?.origin === "https://www.w3.org" ||
@@ -740,19 +763,18 @@ function validateCGBG(conf) {
 
 /** @param {Conf} conf */
 async function deriveHistoryURI(conf) {
-  if (!conf.shortName || conf.historyURI === null || !conf.latestVersion) {
-    return; // Nothing to do
+  if (!conf.shortName || !conf.latestVersion) {
+    return null;
   }
 
   // @ts-expect-error -- specStatus is always set by defaults
   const canShowHistory = conf.isEd || trStatus.includes(conf.specStatus);
 
-  if (conf.historyURI && !canShowHistory) {
-    const msg = docLink`The ${"[historyURI]"} can't be used with non /TR/ documents.`;
+  if (!canShowHistory && conf.historyURI) {
+    const msg = docLink`The ${"[historyURI]"} can't be used with non-standards track documents.`;
     const hint = docLink`Please remove ${"[historyURI]"}.`;
     showError(msg, name, { hint });
-    conf.historyURI = null;
-    return;
+    return null;
   }
 
   const historyURL = new URL(
@@ -767,21 +789,23 @@ async function deriveHistoryURI(conf) {
     // @ts-expect-error -- specStatus is always set by defaults
     ["FPWD", "DNOTE", "NOTE", "DRY"].includes(conf.specStatus)
   ) {
-    conf.historyURI = historyURL.href;
-    return;
+    return historyURL.href;
   }
 
   // Let's get the history from the W3C.
   // Do a fetch HEAD request to see if the history exists...
   // We don't discriminate... if it's on the W3C website with a history,
   // we show it.
+  return await resourceExists(historyURL);
+}
+
+/** @returns {Promise<string|null>} Final URL after redirects, or null if unreachable. */
+async function resourceExists(/** @type {string|URL} */ url) {
   try {
-    const response = await fetch(historyURL, { method: "HEAD" });
-    if (response.ok) {
-      conf.historyURI = response.url;
-    }
+    const response = await fetch(url, { method: "HEAD" });
+    return response.ok ? response.url : null;
   } catch {
-    // Ignore fetch errors
+    return null;
   }
 }
 

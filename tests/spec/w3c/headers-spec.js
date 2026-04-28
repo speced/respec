@@ -16,9 +16,11 @@ import {
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
+  warningFilters,
 } from "../SpecHelper.js";
 
 const headerErrors = errorFilters.filter("w3c/headers");
+const headerWarnings = warningFilters.filter("w3c/headers");
 const defaultErrors = errorFilters.filter("w3c/defaults");
 
 const findContent = string => {
@@ -62,26 +64,27 @@ describe("W3C — Headers", () => {
     expect(exportedDoc.querySelector(".head details[open]")).toBeTruthy();
   });
 
-  it("links to the 'kinds of documents' only for W3C documents", async () => {
-    const statuses = ["FPWD", "WD", "CR", "CRD", "PR", "REC", "NOTE"];
-    for (const specStatus of statuses) {
+  for (const specStatus of recTrackStatus) {
+    it(`links to the 'kinds of documents' only for W3C documents with status ${specStatus}`, async () => {
       const doc = await makeRSDoc(
         makeStandardOps({ specStatus, group: "webapps" })
       );
       const w3cLink = doc.querySelector(
         `.head a[href='https://www.w3.org/standards/types#${specStatus}']`
       );
-      expect(w3cLink).withContext(`specStatus: ${specStatus}`).toBeTruthy();
-    }
+      expect(w3cLink).toBeTruthy();
+    });
+  }
 
-    for (const specStatus of ["unofficial", "base"]) {
+  for (const specStatus of noTrackStatus) {
+    it(`doesn't link to the 'kinds of documents' for non-rec track ${specStatus}`, async () => {
       const doc = await makeRSDoc(makeStandardOps({ specStatus }));
       const w3cLink = doc.querySelector(
         ".head a[href='https://www.w3.org/standards/types#UD']"
       );
-      expect(w3cLink).withContext(`specStatus: ${specStatus}`).toBeNull();
-    }
-  });
+      expect(w3cLink).toBeNull();
+    });
+  }
 
   describe("prevRecShortname & prevRecURI", () => {
     it("takes prevRecShortname and prevRecURI into account", async () => {
@@ -1449,6 +1452,21 @@ describe("W3C — Headers", () => {
       expect(latestVersionLink.textContent).toBe("https://www.w3.org/TR/foo/");
     });
 
+    it("warns if latestVersion URL doesn't exist", async () => {
+      const ops = makeStandardOps({
+        shortName: "foo",
+        specStatus: "WD",
+        group: "webapps",
+        github: "w3c/respec",
+      });
+      const doc = await makeRSDoc(ops);
+      const warnings = headerWarnings(doc);
+      expect(warnings).toHaveSize(1);
+      expect(warnings[0].message).toContain(
+        `The "Latest published version:" header link points to a URL that does not exist`
+      );
+    });
+
     it("allows skipping latest published version link in initial ED", async () => {
       const ops = makeStandardOps({
         specStatus: "ED",
@@ -1563,11 +1581,7 @@ describe("W3C — Headers", () => {
           group: "wicg",
         });
         const doc = await makeRSDoc(ops);
-        const terms = [...doc.querySelectorAll(".head dt")];
-        const latestVersion = terms.find(
-          el => el.textContent.trim() === "Latest published version:"
-        );
-        expect(latestVersion).toHaveSize(0);
+        expect(contains(doc, "dt", "Latest published version:")).toHaveSize(0);
       });
     }
     for (const specStatus of noTrackStatus) {
@@ -2056,7 +2070,7 @@ describe("W3C — Headers", () => {
       { specStatus: "BG-FINAL", group: "publishingbg" },
     ];
     for (const { specStatus, group } of finalReportStatus) {
-      it("requires that the ${specStatus} latestVersion be a w3c URL", async () => {
+      it(`requires that the ${specStatus} latestVersion be a w3c URL`, async () => {
         const ops = makeStandardOps({
           specStatus,
           group,
@@ -2633,8 +2647,8 @@ describe("W3C — Headers", () => {
       );
     });
 
-    for (const specStatus of trStatus) {
-      it(`includes the history for "${specStatus}" rec-track status`, async () => {
+    for (const specStatus of recTrackStatus) {
+      it(`includes the history for rec-track "${specStatus}" docs`, async () => {
         const shortName = `push-api`;
         const ops = makeStandardOps({
           shortName,
@@ -2647,7 +2661,7 @@ describe("W3C — Headers", () => {
         expect(history).withContext(specStatus).toBeTruthy();
         expect(history.nextElementSibling).withContext(specStatus).toBeTruthy();
         const historyLink = history.nextElementSibling.querySelector("a");
-        expect(historyLink).toBeTruthy();
+        expect(historyLink).withContext(specStatus).toBeTruthy();
         expect(historyLink.href).toBe(
           `https://www.w3.org/standards/history/${shortName}/`
         );
