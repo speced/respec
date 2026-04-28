@@ -8,7 +8,7 @@ import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
 /** Matches ASCII apostrophe or U+2019 RIGHT SINGLE QUOTATION MARK possessive suffix. */
-export const POSSESSIVE_SUFFIX = /['\u2019]s$/i;
+export const POSSESSIVE_SUFFIX = /['\u2019]s$/;
 
 const dashes = /-/g;
 
