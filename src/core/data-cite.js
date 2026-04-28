@@ -51,7 +51,7 @@ async function fetchHeadingTexts(queries) {
       body: JSON.stringify({ queries }),
     });
     if (!res.ok) return new Map();
-    const { result } = await res.json();
+    const { result = [] } = await res.json();
     /** @type {Map<string, HeadingInfo>} */
     const map = new Map();
     for (const entry of result) {
@@ -244,22 +244,19 @@ export async function run() {
   // toCiteDetails), so we can match elements to their biblio entries later.
   const originalKeys = new Map();
   const citeDetailsMap = new Map();
+  const headingQueries = new Map();
+  const elemHeadingKeys = new Map();
   for (const elem of elems) {
     originalKeys.set(elem, elem.dataset.cite);
-    citeDetailsMap.set(elem, toCiteDetails(elem));
-  }
+    const citeDetails = toCiteDetails(elem);
+    citeDetailsMap.set(elem, citeDetails);
 
-  // Batch-fetch heading titles for [[[SPEC#id]]] elements that lack alias text.
-  const headingQueries = new Map();
-  const headingElemKeys = new Map();
-  for (const elem of elems) {
     const { citeSection, lt } = elem.dataset;
     if (citeSection && !lt && elem.textContent === "") {
-      const { key } = citeDetailsMap.get(elem);
-      const mapKey = `${key}#${citeSection}`;
-      headingElemKeys.set(elem, mapKey);
+      const mapKey = `${citeDetails.key}#${citeSection}`;
+      elemHeadingKeys.set(elem, mapKey);
       if (!headingQueries.has(mapKey)) {
-        headingQueries.set(mapKey, { spec: key, id: citeSection });
+        headingQueries.set(mapKey, { spec: citeDetails.key, id: citeSection });
       }
     }
   }
@@ -284,10 +281,10 @@ export async function run() {
       }
 
       // Use heading title from headings API when available and no alias was set.
-      const headingKey = headingElemKeys.get(elem);
+      const headingKey = elemHeadingKeys.get(elem);
       if (headingKey && elem.textContent === "") {
         const heading = headingTexts.get(headingKey);
-        if (heading) {
+        if (heading?.title) {
           linkProps.title = formatHeadingText(heading);
         }
       }

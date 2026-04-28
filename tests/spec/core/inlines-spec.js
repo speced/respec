@@ -418,9 +418,9 @@ describe("Core - Inlines", () => {
     const anchor = doc.querySelector("#output a[href]");
     expect(anchor).toBeTruthy();
     expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#fetching");
-    // When the headings API responds, shows "§4 Fetching";
+    // When the headings API responds, shows "§N Fetching" (N may change);
     // when unavailable, falls back to "Fetch Standard".
-    expect(["§4 Fetching", "Fetch Standard"]).toContain(anchor.textContent);
+    expect(anchor.textContent).toMatch(/^(§[\d.]+ Fetching|Fetch Standard)$/);
   });
 
   it("prefers alias text over heading text for [[[SPEC#id|text]]]", async () => {
