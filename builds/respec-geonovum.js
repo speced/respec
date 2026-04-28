@@ -7265,6 +7265,7 @@ body:has(input[name=color-scheme][value=dark]:checked){color-scheme:dark}`;
       name: Do,
       run: function () {
         for (const e of document.querySelectorAll("dfn")) {
+          if (e.closest("del")) continue;
           const t = jt(e);
           if ((zo(e, t), e.dataset.cite && /\b#\b/.test(e.dataset.cite)))
             continue;
@@ -9306,13 +9307,11 @@ var.respec-hl{background:0 0;color:#000;box-shadow:unset}
         });
         const r = ([e, t]) =>
             [{ title: e, id: t[0], text: e }].concat(
-              t
-                .slice(1)
-                .map((e, t) => ({
-                  title: `Reference ${t + 2}`,
-                  text: `(${t + 2})`,
-                  id: e,
-                }))
+              t.slice(1).map((e, t) => ({
+                title: `Reference ${t + 2}`,
+                text: `(${t + 2})`,
+                id: e,
+              }))
             ),
           o = e => ft`<li>
       ${r(e).map(

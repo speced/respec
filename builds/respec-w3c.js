@@ -13497,6 +13497,7 @@ body:has(input[name=color-scheme][value=dark]:checked){color-scheme:dark}`;
       name: tc,
       run: function () {
         for (const e of document.querySelectorAll("dfn")) {
+          if (e.closest("del")) continue;
           const t = Hr(e);
           if ((ec(e, t), e.dataset.cite && /\b#\b/.test(e.dataset.cite)))
             continue;
@@ -17772,13 +17773,11 @@ var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}`;
         });
         const r = ([e, t]) =>
             [{ title: e, id: t[0], text: e }].concat(
-              t
-                .slice(1)
-                .map((e, t) => ({
-                  title: `Reference ${t + 2}`,
-                  text: `(${t + 2})`,
-                  id: e,
-                }))
+              t.slice(1).map((e, t) => ({
+                title: `Reference ${t + 2}`,
+                text: `(${t + 2})`,
+                id: e,
+              }))
             ),
           s = e => or`<li>
       ${r(e).map(

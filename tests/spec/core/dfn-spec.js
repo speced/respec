@@ -103,19 +103,25 @@ describe("Core — Definitions", () => {
   it("skips <dfn> elements inside <del> (deleted content)", async () => {
     const body = `
     <section id='dfns'>
-      <dfn id="kept">active term</dfn>
-      <del><dfn>removed term</dfn></del>
+      <del><dfn>shared term</dfn></del>
+      <dfn id="kept">shared term</dfn>
+      <a>shared term</a>
     </section>`;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const kept = doc.getElementById("kept");
+    const active = doc.querySelector("section#dfns > dfn");
     const deleted = doc.querySelector("del dfn");
-    // The active dfn should be registered normally
-    expect(kept).toBeTruthy();
-    expect(kept.dataset.dfnType).toBe("dfn");
-    // Deleted definitions remain in the DOM but shouldn't affect active content.
+    const link = doc.querySelector("#dfns a");
+    // Active definitions are processed and linked normally.
+    expect(active).toBeTruthy();
+    expect(active.id).toBe("kept");
+    expect(active.dataset.dfnType).toBe("dfn");
+    // Deleted definitions remain in the DOM.
     expect(deleted).toBeTruthy();
     expect(deleted.closest("del")).toBeTruthy();
+    // Deleted definitions should not participate in duplicate checks or linking.
+    expect(findDfnErrors(doc)).toEqual([]);
+    expect(link.getAttribute("href")).toBe("#kept");
   });
 
   it("makes dfn tab enabled whose aria-role is a link", async () => {
