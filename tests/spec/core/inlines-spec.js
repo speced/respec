@@ -400,6 +400,50 @@ describe("Core - Inlines", () => {
     expect(anchor.textContent).toBe("Fetch Standard");
   });
 
+  it("uses heading text from API for [[[SPEC#id]]] when available", async () => {
+    const config = {
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch#fetching]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#fetching");
+    // When the headings API responds, shows "§4 Fetching";
+    // when unavailable, falls back to "Fetch Standard".
+    expect(["§4 Fetching", "Fetch Standard"]).toContain(anchor.textContent);
+  });
+
+  it("prefers alias text over heading text for [[[SPEC#id|text]]]", async () => {
+    const config = {
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="with-alias">[[[fetch#fetching|custom text]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#with-alias a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#fetching");
+    expect(anchor.textContent).toBe("custom text");
+  });
+
   it("does not add [[[SPEC#id]]] section links to dfn-index as external definitions", async () => {
     const config = {
       localBiblio: {

@@ -19,6 +19,7 @@ import {
   showWarning,
   wrapInner,
 } from "./utils.js";
+import { API_URL } from "./xref.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/data-cite";
 
@@ -28,6 +29,54 @@ export const name = "core/data-cite";
  * @type {string}
  */
 export const THIS_SPEC = "__SPEC__";
+
+/**
+ * @typedef {{ title: string, number: string | null }} HeadingInfo
+ */
+
+/**
+ * Fetches heading titles from the respec.org headings API for cross-spec
+ * section links ([[[SPEC#id]]] syntax). Returns a Map keyed by "spec#id".
+ * Gracefully returns an empty Map on any failure.
+ * @param {{ spec: string, id: string }[]} queries
+ * @returns {Promise<Map<string, HeadingInfo>>}
+ */
+async function fetchHeadingTexts(queries) {
+  if (!queries.length) return new Map();
+  const url = new URL("search/headings", API_URL).href;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ queries }),
+    });
+    if (!res.ok) return new Map();
+    const { result } = await res.json();
+    /** @type {Map<string, HeadingInfo>} */
+    const map = new Map();
+    for (const entry of result) {
+      if (!entry.error) {
+        map.set(`${entry.spec}#${entry.id}`, {
+          title: entry.title,
+          number: entry.number || null,
+        });
+      }
+    }
+    return map;
+  } catch {
+    return new Map();
+  }
+}
+
+/**
+ * Formats a heading title for use as link text.
+ * When a section number is available, produces "§N Title".
+ * @param {HeadingInfo} heading
+ * @returns {string}
+ */
+function formatHeadingText({ title, number }) {
+  return number ? `§${number} ${title}` : title;
+}
 
 /**
  * Gets the link properties for the given citation details.
@@ -200,6 +249,22 @@ export async function run() {
     citeDetailsMap.set(elem, toCiteDetails(elem));
   }
 
+  // Batch-fetch heading titles for [[[SPEC#id]]] elements that lack alias text.
+  const headingQueries = new Map();
+  const headingElemKeys = new Map();
+  for (const elem of elems) {
+    const { citeSection, lt } = elem.dataset;
+    if (citeSection && !lt && elem.textContent === "") {
+      const { key } = citeDetailsMap.get(elem);
+      const mapKey = `${key}#${citeSection}`;
+      headingElemKeys.set(elem, mapKey);
+      if (!headingQueries.has(mapKey)) {
+        headingQueries.set(mapKey, { spec: key, id: citeSection });
+      }
+    }
+  }
+  const headingTexts = await fetchHeadingTexts([...headingQueries.values()]);
+
   for (const elem of elems) {
     const originalKey = originalKeys.get(elem);
     const citeDetails = citeDetailsMap.get(elem);
@@ -217,6 +282,16 @@ export async function run() {
         elem.textContent = elem.dataset.lt;
         delete elem.dataset.lt;
       }
+
+      // Use heading title from headings API when available and no alias was set.
+      const headingKey = headingElemKeys.get(elem);
+      if (headingKey && elem.textContent === "") {
+        const heading = headingTexts.get(headingKey);
+        if (heading) {
+          linkProps.title = formatHeadingText(heading);
+        }
+      }
+
       linkElem(elem, linkProps, citeDetails);
     } else {
       const msg = `Couldn't find a match for "${originalKey}"`;
