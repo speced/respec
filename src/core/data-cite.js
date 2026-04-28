@@ -144,7 +144,7 @@ const findPath = makeComponentFinder("/");
  */
 export function toCiteDetails(elem) {
   const { dataset } = elem;
-  const { cite: rawKey, citeFrag, citePath, citeHref } = dataset;
+  const { cite: rawKey, citeFrag, citePath, citeHref, citeSection } = dataset;
 
   // The key is a fragment, resolve using the shortName as key
   if ((rawKey ?? "").startsWith("#") && !citeFrag) {
@@ -160,7 +160,14 @@ export function toCiteDetails(elem) {
     return toCiteDetails(elem);
   }
 
-  const frag = citeFrag ? `#${citeFrag}` : findFrag(rawKey ?? "");
+  // data-cite-section stores the section fragment for [[[SPEC#id]]] links.
+  // Unlike data-cite-frag, it does not cause dfn-index to treat the link as a
+  // definition reference.
+  const frag = citeFrag
+    ? `#${citeFrag}`
+    : citeSection
+      ? `#${citeSection}`
+      : findFrag(rawKey ?? "");
   const path = citePath || findPath(rawKey ?? "").split("#")[0]; // path is always before "#"
   const { type } = refTypeFromContext(rawKey ?? "", elem);
   const isNormative = type === "normative";
@@ -249,7 +256,7 @@ async function updateBiblio(elems) {
  * @param {Document} doc - The document to cleanup.
  */
 function cleanup(doc) {
-  const attrToRemove = ["data-cite", "data-cite-frag", "data-cite-path"];
+  const attrToRemove = ["data-cite", "data-cite-frag", "data-cite-path", "data-cite-section"];
   const elems = doc.querySelectorAll("a[data-cite], dfn[data-cite]");
   elems.forEach(elem =>
     attrToRemove.forEach(attr => elem.removeAttribute(attr))

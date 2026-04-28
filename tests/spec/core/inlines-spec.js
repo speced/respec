@@ -400,6 +400,31 @@ describe("Core - Inlines", () => {
     expect(anchor.textContent).toBe("Fetch Standard");
   });
 
+  it("does not add [[[SPEC#id]]] section links to dfn-index as external definitions", async () => {
+    const config = {
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="index"></section>
+      <section id="test">
+        <p id="output">[[[fetch#data-fetch]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    // Section link should be resolved correctly
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    // But it must NOT appear in the dfn-index "Terms defined by reference" table
+    const externalIndex = doc.querySelector("#index-defined-elsewhere");
+    expect(externalIndex?.textContent ?? "").not.toContain("Fetch Standard");
+  });
+
   it("supports alias text with [[[SPEC#id|text]]] syntax", async () => {
     const config = {
       localBiblio: {
