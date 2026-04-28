@@ -115,6 +115,27 @@ describe("Core — Issues and Notes", () => {
     expect(pnot.textContent).toBe("EDNOTE");
   });
 
+  it("should not treat titles of issues, notes, or ednotes as headings", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body:
+        `${makeDefaultBody()}<section id="test">` +
+        `<p class='issue' title='ISS-TIT'>ISSUE</p>` +
+        `<p class='note' title='NOT-TIT'>NOTE</p>` +
+        `<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>` +
+        `</section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const issueTitle = doc.querySelector("div.issue div.issue-title");
+    const noteTitle = doc.querySelector("div.note div.note-title");
+    const ednoteTitle = doc.querySelector("div.note div.ednote-title");
+
+    for (const title of [issueTitle, noteTitle, ednoteTitle]) {
+      expect(title.getAttribute("role")).toBeNull();
+      expect(title.getAttribute("aria-level")).toBeNull();
+    }
+  });
+
   it("should process warnings", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -171,8 +192,9 @@ describe("Core — Issues and Notes", () => {
       "this is 404"
     );
 
-    const [refactorLabel, bugLabel, blankLabel, invalidLabel] =
-      doc.getElementsByClassName("respec-gh-label");
+    const labels = doc.getElementsByClassName("respec-gh-label");
+    expect(labels).toHaveSize(4);
+    const [refactorLabel, bugLabel, blankLabel, invalidLabel] = labels;
 
     expect(refactorLabel.textContent).toBe("refactor");
     expect(refactorLabel.classList).toContain(
@@ -210,6 +232,13 @@ describe("Core — Issues and Notes", () => {
     );
     expect(invalidLabel.href).toBe(
       "https://github.com/org/repo/issues/?q=is%3Aissue+is%3Aopen+label%3A%22not-a-color%22"
+    );
+
+    // Invalid colors fall back to #f6f8fa (GitHub's default gray)
+    expect(blankLabel.style.backgroundColor).toBe("rgb(246, 248, 250)");
+    expect(invalidLabel.style.backgroundColor).toBe("rgb(246, 248, 250)");
+    expect(invalidLabel.getAttribute("style")).not.toContain(
+      "this is not a color"
     );
   });
 
