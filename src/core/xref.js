@@ -217,24 +217,16 @@ function stripVersionSuffix(spec) {
 }
 
 /**
- * Expands versioned spec names to include the unversioned form.
- * E.g., ["service-workers-1"] becomes ["service-workers-1", "service-workers"].
- * @param {string[]} specs
- */
-function expandVersionedSpecs(specs) {
-  return [
-    ...new Set(
-      specs.flatMap(s => {
-        const stripped = stripVersionSuffix(s);
-        return stripped !== s ? [s, stripped] : [s];
-      })
-    ),
-  ];
-}
-
-/**
  * Get spec context as a fallback chain, where each level (sub-array) represents
  * decreasing priority.
+ *
+ * For versioned spec names (e.g. "service-workers-1"), the unversioned form
+ * ("service-workers") is added as a **separate lower-priority level** rather
+ * than at the same level.  Keeping them at different levels avoids returning
+ * two results for the same term when the xref data indexes the definition under
+ * both the versioned and unversioned shortname, which would otherwise trigger a
+ * spurious "ambiguous dfn" error.
+ *
  * @param {HTMLElement} elem
  */
 function getSpecContext(elem) {
@@ -249,9 +241,23 @@ function getSpecContext(elem) {
     const cite = (dataciteElem.dataset.cite ?? "")
       .toLowerCase()
       .replace(/[!?]/g, "");
-    const cites = expandVersionedSpecs(cite.split(/\s+/).filter(s => s));
+    const cites = cite.split(/\s+/).filter(s => s);
     if (cites.length) {
       specs.push(cites);
+      // Add the unversioned forms (e.g. "service-workers" for "service-workers-1")
+      // at a lower priority so the server only falls back to them when the
+      // versioned name yields no result.  This prevents ambiguous-dfn errors if
+      // a term is indexed under both shortname variants.
+      const unversioned = [
+        ...new Set(
+          cites
+            .map(stripVersionSuffix)
+            .filter((stripped, i) => stripped !== cites[i])
+        ),
+      ];
+      if (unversioned.length) {
+        specs.push(unversioned);
+      }
     }
     if (dataciteElem === elem) break;
     dataciteElem = dataciteElem.parentElement?.closest("[data-cite]") ?? null;
@@ -265,11 +271,22 @@ function getSpecContext(elem) {
     const bibrefs = closestSection
       ? closestSection.querySelectorAll("a.bibref")
       : [];
-    const inlineRefs = expandVersionedSpecs(
-      [...bibrefs].map(el => el.textContent.toLowerCase())
-    );
-    if (inlineRefs.length) {
-      specs.push(inlineRefs);
+    const inlineRefList = [
+      ...new Set([...bibrefs].map(el => el.textContent.toLowerCase())),
+    ];
+    if (inlineRefList.length) {
+      specs.push(inlineRefList);
+      // Same versioned → unversioned fallback for inline bibrefs.
+      const unversioned = [
+        ...new Set(
+          inlineRefList
+            .map(stripVersionSuffix)
+            .filter((stripped, i) => stripped !== inlineRefList[i])
+        ),
+      ];
+      if (unversioned.length) {
+        specs.push(unversioned);
+      }
     }
   }
 
@@ -285,11 +302,11 @@ function getSpecContext(elem) {
 function dedupeSpecContext(specs) {
   /** @type {string[][]} */
   const unique = [];
+  /** @type {Set<string>} tracks all specs seen in higher-priority levels */
+  const seen = new Set();
   for (const level of specs) {
-    const higherPriority = unique[unique.length - 1] || [];
-    const uniqueSpecs = [...new Set(level)].filter(
-      spec => !higherPriority.includes(spec)
-    );
+    const uniqueSpecs = [...new Set(level)].filter(spec => !seen.has(spec));
+    uniqueSpecs.forEach(s => seen.add(s));
     unique.push(uniqueSpecs.sort());
   }
   return unique;
