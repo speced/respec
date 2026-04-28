@@ -11,13 +11,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import {
-  addId,
-  getIntlData,
-  parents,
-  showError,
-  showWarning,
-} from "./utils.js";
+import { addId, getIntlData, showError, showWarning } from "./utils.js";
 import css from "../styles/issues-notes.css.js";
 import { html } from "./import-maps.js";
 export const name = "core/issues-notes";
@@ -129,7 +123,7 @@ function handleIssues(ins, ghIssues, conf) {
       const title = document.createElement("span");
       const className = `${type}-title marker`;
       // prettier-ignore
-      const titleParent = html`<div role="heading" class="${className}">${title}</div>`;
+      const titleParent = html`<div class="${className}">${title}</div>`;
       addId(titleParent, "h", type);
       let text = displayType;
       if (inno.id) {
@@ -189,8 +183,6 @@ function handleIssues(ins, ghIssues, conf) {
           .createContextualFragment(ghIssue.bodyHTML);
       }
       div.append(titleParent, body);
-      const level = parents(titleParent, "section").length + 2;
-      titleParent.setAttribute("aria-level", level);
     }
   });
   makeIssueSectionSummary(issueList);
@@ -296,10 +288,7 @@ function makeIssueSectionSummary(issueList) {
     !heading ||
     (heading && heading !== issueSummaryElement.firstElementChild)
   ) {
-    issueSummaryElement.insertAdjacentHTML(
-      "afterbegin",
-      `<h1>${l10n.issue_summary}</h1>`
-    );
+    issueSummaryElement.prepend(html`<h1>${l10n.issue_summary}</h1>`);
   }
 }
 
@@ -336,10 +325,11 @@ function textColorFromBgColor(bg) {
  */
 function createLabel(label, repoURL) {
   const { color: bgColor, name } = label;
+  const safeBgColor = /^[0-9a-f]{6}$/i.test(bgColor) ? bgColor : "f6f8fa";
   const issuesURL = new URL("./issues/", repoURL);
-  issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
-  const color = textColorFromBgColor(bgColor);
-  const style = `background-color: #${bgColor}; color: ${color}`;
+  issuesURL.searchParams.set("q", `is:issue is:open label:"${name}"`);
+  const color = textColorFromBgColor(safeBgColor);
+  const style = `background-color: #${safeBgColor}; color: ${color}`;
   const ariaLabel = `GitHub label: ${name}`;
   return html` <a
     class="respec-gh-label"
