@@ -29,6 +29,55 @@ export const name = "core/data-cite";
  */
 export const THIS_SPEC = "__SPEC__";
 
+const HEADINGS_API_URL = "https://respec.org/xref/search/headings";
+
+/**
+ * @typedef {{ title: string, number: string | null }} HeadingInfo
+ */
+
+/**
+ * Fetches heading titles from the respec.org headings API for cross-spec
+ * section links ([[[SPEC#id]]] syntax). Returns a Map keyed by "spec#id".
+ * Gracefully returns an empty Map on any failure.
+ * @param {{ spec: string, id: string }[]} queries
+ * @returns {Promise<Map<string, HeadingInfo>>}
+ */
+async function fetchHeadingTexts(queries) {
+  if (!queries.length) return new Map();
+  try {
+    const res = await fetch(HEADINGS_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ queries }),
+    });
+    if (!res.ok) return new Map();
+    const { result = [] } = await res.json();
+    /** @type {Map<string, HeadingInfo>} */
+    const map = new Map();
+    for (const entry of result) {
+      if (!entry.error) {
+        map.set(`${entry.spec}#${entry.id}`, {
+          title: entry.title,
+          number: entry.number || null,
+        });
+      }
+    }
+    return map;
+  } catch {
+    return new Map();
+  }
+}
+
+/**
+ * Formats a heading title for use as link text.
+ * When a section number is available, produces "§N Title".
+ * @param {HeadingInfo} heading
+ * @returns {string}
+ */
+function formatHeadingText({ title, number }) {
+  return number ? `§${number} ${title}` : title;
+}
+
 /**
  * Gets the link properties for the given citation details.
  * @param {CiteDetails} citeDetails - The citation details.
@@ -144,7 +193,7 @@ const findPath = makeComponentFinder("/");
  */
 export function toCiteDetails(elem) {
   const { dataset } = elem;
-  const { cite: rawKey, citeFrag, citePath, citeHref } = dataset;
+  const { cite: rawKey, citeFrag, citePath, citeHref, citeSection } = dataset;
 
   // The key is a fragment, resolve using the shortName as key
   if ((rawKey ?? "").startsWith("#") && !citeFrag) {
@@ -160,7 +209,14 @@ export function toCiteDetails(elem) {
     return toCiteDetails(elem);
   }
 
-  const frag = citeFrag ? `#${citeFrag}` : findFrag(rawKey ?? "");
+  // data-cite-section stores the section fragment for [[[SPEC#id]]] links.
+  // Unlike data-cite-frag, it does not cause dfn-index to treat the link as a
+  // definition reference.
+  const frag = citeFrag
+    ? `#${citeFrag}`
+    : citeSection
+      ? `#${citeSection}`
+      : findFrag(rawKey ?? "");
   const path = citePath || findPath(rawKey ?? "").split("#")[0]; // path is always before "#"
   const { type } = refTypeFromContext(rawKey ?? "", elem);
   const isNormative = type === "normative";
@@ -184,11 +240,55 @@ export async function run() {
 
   await updateBiblio([...elems]);
 
+  // Capture keys after updateBiblio (which may have mutated dataset.cite via
+  // toCiteDetails), so we can match elements to their biblio entries later.
+  const originalKeys = new Map();
+  const citeDetailsMap = new Map();
+  const headingQueries = new Map();
+  const elemHeadingKeys = new Map();
   for (const elem of elems) {
-    const originalKey = elem.dataset.cite;
+    originalKeys.set(elem, elem.dataset.cite);
     const citeDetails = toCiteDetails(elem);
+    citeDetailsMap.set(elem, citeDetails);
+
+    const { citeSection, lt } = elem.dataset;
+    if (citeSection && !lt && elem.textContent === "") {
+      const mapKey = `${citeDetails.key}#${citeSection}`;
+      elemHeadingKeys.set(elem, mapKey);
+      if (!headingQueries.has(mapKey)) {
+        headingQueries.set(mapKey, { spec: citeDetails.key, id: citeSection });
+      }
+    }
+  }
+  const headingTexts = await fetchHeadingTexts([...headingQueries.values()]);
+
+  for (const elem of elems) {
+    const originalKey = originalKeys.get(elem);
+    const citeDetails = citeDetailsMap.get(elem);
     const linkProps = await getLinkProps(citeDetails);
     if (linkProps) {
+      // Use alias text (data-lt) if present and element is empty.
+      // Only applies to [[[...]]] triple-bracket expansions (which set data-lt for
+      // alias text). IDL references also use data-lt as a lookup term but already
+      // have child content, so the textContent check prevents corrupting them.
+      if (
+        elem.dataset.lt &&
+        elem.dataset.lt !== "the-empty-string" &&
+        elem.textContent === ""
+      ) {
+        elem.textContent = elem.dataset.lt;
+        delete elem.dataset.lt;
+      }
+
+      // Use heading title from headings API when available and no alias was set.
+      const headingKey = elemHeadingKeys.get(elem);
+      if (headingKey && elem.textContent === "") {
+        const heading = headingTexts.get(headingKey);
+        if (heading?.title) {
+          linkProps.title = formatHeadingText(heading);
+        }
+      }
+
       linkElem(elem, linkProps, citeDetails);
     } else {
       const msg = `Couldn't find a match for "${originalKey}"`;
@@ -228,7 +328,12 @@ async function updateBiblio(elems) {
  * @param {Document} doc - The document to cleanup.
  */
 function cleanup(doc) {
-  const attrToRemove = ["data-cite", "data-cite-frag", "data-cite-path"];
+  const attrToRemove = [
+    "data-cite",
+    "data-cite-frag",
+    "data-cite-path",
+    "data-cite-section",
+  ];
   const elems = doc.querySelectorAll("a[data-cite], dfn[data-cite]");
   elems.forEach(elem =>
     attrToRemove.forEach(attr => elem.removeAttribute(attr))

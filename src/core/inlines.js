@@ -69,7 +69,7 @@ const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
 const inlineIdlReference = /(?:{{[^}]+\?*}})/; // {{ WebIDLThing }}, {{ WebIDLThing? }}
 const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;"?<>]+\??)?\|\B/; // |var : Type?|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citation]]
-const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
+const inlineExpansion = /(?:\[\[\[[^\]]+\]\]\])/; // [[[SPEC]]], [[[SPEC#id]]], [[[#id]]], [[[...|text]]], !/?-prefixed
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
 const inlineCddlReference = /(?:\{\^[^}^]+\^\})/; // {^cddl-type^}, {^type/key^}
@@ -164,16 +164,67 @@ function inlineRFC2119Matches(matched) {
 }
 
 /**
+ * Validates inline expansion/reference syntax.
+ * Valid forms: [[[#id]]], [[[SPEC]]], [[[SPEC#id]]], [[[SPEC|text]]],
+ * [[[SPEC#id|text]]], [[[#id|text]]]
+ */
+const inlineExpansionPattern =
+  /^(?:!|\\|\?)?(?:#[\w-.]+|[\w-.]+(?:#[\w-.]+)?)(?:\|[^\]]+)?$/;
+
+/**
  * @param {string} matched
- * @return {HTMLElement}
+ * @return {HTMLElement | string}
  */
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
-  const ref = matched.slice(3, -3).trim();
-  if (!ref.startsWith("#")) {
-    return html`<a data-cite="${ref}" data-matched-text="${matched}"></a>`;
+  let ref = matched.slice(3, -3).trim();
+  if (!inlineExpansionPattern.test(ref)) {
+    const msg = `Bad syntax: \`${matched}\` is not a valid inline expansion.`;
+    const hint =
+      "Expected `[[[#id]]]`, `[[[SPEC]]]`, `[[[SPEC#id]]]`, `[[[SPEC|text]]]`, `[[[SPEC#id|text]]]`, or `[[[#id|text]]]`; `!`/`?` prefixes are also supported.";
+    showWarning(msg, name, { hint });
+    return matched;
   }
-  return html`<a href="${ref}" data-matched-text="${matched}"></a>`;
+  const pipeIdx = ref.indexOf("|");
+  const linkText = pipeIdx !== -1 ? ref.slice(pipeIdx + 1).trim() : null;
+  if (pipeIdx !== -1) ref = ref.slice(0, pipeIdx).trim();
+
+  // Strip !/?/\ prefix (normative/informative/escaped markers)
+  const refWithoutPrefix = ref.replace(/^[!?\\]/, "");
+
+  if (ref.startsWith("\\")) {
+    return `[[[${refWithoutPrefix}]]]`;
+  }
+
+  if (refWithoutPrefix.startsWith("#")) {
+    return linkText
+      ? html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"
+          >${linkText}</a
+        >`
+      : html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"></a>`;
+  }
+
+  const hashIdx = refWithoutPrefix.indexOf("#");
+  if (hashIdx !== -1) {
+    // SPEC#fragment form: use data-cite-section for the fragment so dfn-index
+    // doesn't misclassify this section link as an external definition reference.
+    const prefixLength = ref.length - refWithoutPrefix.length;
+    const specPart =
+      ref.slice(0, prefixLength) + refWithoutPrefix.slice(0, hashIdx);
+    const sectionFrag = refWithoutPrefix.slice(hashIdx + 1);
+    return html`<a
+      data-cite="${specPart}"
+      data-cite-section="${sectionFrag}"
+      data-matched-text="${matched}"
+      data-lt="${linkText || null}"
+    ></a>`;
+  }
+
+  return html`<a
+    data-cite="${ref}"
+    data-matched-text="${matched}"
+    data-lt="${linkText || null}"
+  ></a>`;
 }
 
 /**
