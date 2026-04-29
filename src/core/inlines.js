@@ -210,12 +210,20 @@ function inlineBibrefMatches(matched, txt, conf) {
   }
 
   const [spec, linkText] = ref.split("|").map(norm);
+  const cleanRef = spec.replace(/^(!|\?)/, "");
+
+  const isSelfCite =
+    conf.shortName && cleanRef.toLowerCase() === conf.shortName.toLowerCase();
+  if (isSelfCite) {
+    const title = conf.title || cleanRef;
+    return [html`<cite title="${conf.shortName}">${title}</cite>`];
+  }
+
   const { type, illegal } = refTypeFromContext(
     spec,
     /** @type {HTMLElement} */ (txt.parentElement)
   );
   const cite = renderInlineCitation(spec, linkText);
-  const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
     const citeElem = cite.childNodes[1] || cite;
     const msg = `Normative references in informative sections are not allowed. `;
