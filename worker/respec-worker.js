@@ -62,6 +62,8 @@ self.addEventListener("message", ({ data }) => {
       } catch (err) {
         console.error("Failed to load or register language", lang, err);
       }
+      delete data.langScript;
+      delete data.langURL;
       break;
     }
     case "highlight": {

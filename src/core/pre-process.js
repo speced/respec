@@ -35,7 +35,8 @@ export async function run(config) {
           const timerId = setTimeout(() => {
             reject(new Error(`preProcess function "${fnName}" timed out.`));
           }, TIMEOUT);
-          Promise.resolve(f(config, document, utils))
+          Promise.resolve()
+            .then(() => f(config, document, utils))
             .then(resolve, reject)
             .finally(() => {
               clearTimeout(timerId);
