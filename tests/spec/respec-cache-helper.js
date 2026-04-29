@@ -21,7 +21,7 @@ export async function seedCache(entries) {
   for (const [origin, urls] of byOrigin) {
     const cache = await caches.open(origin);
     for (const [url, { status = 200, body }] of urls) {
-      const isJSON = typeof body === "object";
+      const isJSON = body !== null && typeof body === "object";
       const headers = {
         "Content-Type": isJSON ? "application/json" : "text/plain",
         Expires: expires,
