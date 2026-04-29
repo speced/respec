@@ -192,8 +192,9 @@ describe("Core — Issues and Notes", () => {
       "this is 404"
     );
 
-    const [refactorLabel, bugLabel, blankLabel, invalidLabel] =
-      doc.getElementsByClassName("respec-gh-label");
+    const labels = doc.getElementsByClassName("respec-gh-label");
+    expect(labels).toHaveSize(4);
+    const [refactorLabel, bugLabel, blankLabel, invalidLabel] = labels;
 
     expect(refactorLabel.textContent).toBe("refactor");
     expect(refactorLabel.classList).toContain(
@@ -231,6 +232,13 @@ describe("Core — Issues and Notes", () => {
     );
     expect(invalidLabel.href).toBe(
       "https://github.com/org/repo/issues/?q=is%3Aissue+is%3Aopen+label%3A%22not-a-color%22"
+    );
+
+    // Invalid colors fall back to #f6f8fa (GitHub's default gray)
+    expect(blankLabel.style.backgroundColor).toBe("rgb(246, 248, 250)");
+    expect(invalidLabel.style.backgroundColor).toBe("rgb(246, 248, 250)");
+    expect(invalidLabel.getAttribute("style")).not.toContain(
+      "this is not a color"
     );
   });
 
