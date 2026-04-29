@@ -34,6 +34,18 @@ self.addEventListener("message", ({ data }) => {
             URL.revokeObjectURL(objectURL);
           }
         } else if (langURL) {
+          const { protocol, hostname } = new URL(langURL);
+          const isSecure =
+            protocol === "https:" ||
+            (protocol === "http:" &&
+              (hostname === "localhost" ||
+                hostname === "127.0.0.1" ||
+                hostname === "[::1]"));
+          if (!isSecure) {
+            throw new Error(
+              `langURL must be https: or http: on localhost, got "${langURL}"`
+            );
+          }
           importScripts(langURL);
         } else {
           throw new Error(
