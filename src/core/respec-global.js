@@ -4,12 +4,10 @@
  * readonly properties:
  *  - version: returns version of ReSpec Script.
  *  - ready: returns a promise that settles when ReSpec finishes processing.
- *  - worker: returns a promise that resolves to the ReSpec Web Worker.
  *
  */
 import { serialize } from "../core/exporter.js";
 import { sub } from "./pubsubhub.js";
-import { workerPromise } from "./worker.js";
 
 export const name = "core/respec-global";
 
@@ -41,10 +39,6 @@ class ReSpec {
 
   get ready() {
     return this._respecDonePromise;
-  }
-
-  get worker() {
-    return workerPromise;
   }
 
   async toHTML() {

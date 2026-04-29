@@ -245,6 +245,14 @@ async function evaluateHTML(timer) {
     timer.remaining
   );
 
+  if (!document.respec?.toHTML) {
+    throw new Error(
+      "document.respec.toHTML is not available. " +
+        "Please upgrade to a newer version of ReSpec, " +
+        "or use an older version of the ReSpec CLI."
+    );
+  }
+
   return await document.respec.toHTML();
 
   function timeout(promise, ms) {
