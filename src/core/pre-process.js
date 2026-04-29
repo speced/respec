@@ -12,6 +12,8 @@ import { makePluginUtils, showError } from "./utils.js";
 
 export const name = "core/pre-process";
 
+const TIMEOUT = 15000;
+
 /**
  * @param {Conf} config
  */
@@ -29,7 +31,17 @@ export async function run(config) {
       const fnName = `${name}/${f.name || `[${i}]`}`;
       const utils = makePluginUtils(fnName);
       try {
-        await f(config, document, utils);
+        await new Promise((resolve, reject) => {
+          const timerId = setTimeout(() => {
+            reject(new Error(`preProcess function "${fnName}" timed out.`));
+          }, TIMEOUT);
+          Promise.resolve()
+            .then(() => f(config, document, utils))
+            .then(resolve, reject)
+            .finally(() => {
+              clearTimeout(timerId);
+            });
+        });
       } catch (err) {
         const msg = `Function ${fnName} threw an error during \`preProcess\`.`;
         const hint = "See developer console.";
