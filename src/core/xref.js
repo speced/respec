@@ -248,9 +248,7 @@ function getSpecContext(elem) {
       // at a lower priority so the server only falls back to them when the
       // versioned name yields no result.  This prevents ambiguous-dfn errors if
       // a term is indexed under both shortname variants.
-      const unversioned = [
-        ...new Set(cites.map(stripVersionSuffix)).difference(new Set(cites)),
-      ];
+      const unversioned = getUnversionedFallbacks(cites);
       if (unversioned.length) {
         specs.push(unversioned);
       }
@@ -272,12 +270,7 @@ function getSpecContext(elem) {
     ];
     if (inlineRefList.length) {
       specs.push(inlineRefList);
-      // Same versioned → unversioned fallback for inline bibrefs.
-      const unversioned = [
-        ...new Set(inlineRefList.map(stripVersionSuffix)).difference(
-          new Set(inlineRefList)
-        ),
-      ];
+      const unversioned = getUnversionedFallbacks(inlineRefList);
       if (unversioned.length) {
         specs.push(unversioned);
       }
@@ -286,6 +279,15 @@ function getSpecContext(elem) {
 
   const uniqueSpecContext = dedupeSpecContext(specs);
   return uniqueSpecContext;
+}
+
+/**
+ * Returns specs whose unversioned form differs from the original,
+ * e.g., ["css-grid-2"] → ["css-grid"] (excluding "css-grid-2" itself).
+ * @param {string[]} specs
+ */
+function getUnversionedFallbacks(specs) {
+  return [...new Set(specs.map(stripVersionSuffix)).difference(new Set(specs))];
 }
 
 /**
@@ -299,7 +301,7 @@ function dedupeSpecContext(specs) {
   /** @type {Set<string>} tracks all specs seen in higher-priority levels */
   const seen = new Set();
   for (const level of specs) {
-    const uniqueSpecs = [...new Set(level)].filter(spec => !seen.has(spec));
+    const uniqueSpecs = [...new Set(level).values().filter(s => !seen.has(s))];
     uniqueSpecs.forEach(s => seen.add(s));
     unique.push(uniqueSpecs.sort());
   }
