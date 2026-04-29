@@ -5,9 +5,8 @@
     <title>Highlight custom language test</title>
     <script class="remove">
       async function loadTestLang() {
-        const worker = await new Promise(resolve => {
-          require(["core/worker"], ({ worker }) => resolve(worker));
-        });
+        const { workerPromise } = await import("/src/core/worker.js");
+        const worker = await workerPromise;
         const action = "highlight-load-lang";
         const langURL = new URL(
           "../../support-files/hljs-testlang.js",
