@@ -176,4 +176,21 @@ describe("Core — Highlight", () => {
     expect(lastCode.textContent).toContain("Header: Test5");
     expect(lastCode.classList).toContain("http");
   });
+
+  it("highlights <pre> inside a closed <details> element", async () => {
+    const body = `
+      <section>
+        <details id="closed-details">
+          <summary>Toggle</summary>
+          <pre class="js" id="details-pre">function bar() { return 1; }</pre>
+        </details>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const details = doc.getElementById("closed-details");
+    expect(details.open).toBeFalse();
+    const pre = doc.getElementById("details-pre");
+    expect(pre.querySelector("span[class*=hljs-]")).toBeTruthy();
+  });
 });

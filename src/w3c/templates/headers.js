@@ -262,7 +262,7 @@ export default (conf, options) => {
               <dd>
                 ${conf.latestVersion
                   ? html`<a href="${conf.latestVersion}"
-                      >${conf.latestVersion}</a
+                      >${safeDecodeURI(conf.latestVersion)}</a
                     >`
                   : "none"}
               </dd>`
@@ -458,6 +458,17 @@ function renderSpecTitle(conf) {
             >${W3CDate.format(conf.modificationDate)}</time
           >`
       : ""}`;
+}
+
+/**
+ * @param {string} iri
+ */
+function safeDecodeURI(iri) {
+  try {
+    return decodeURI(iri);
+  } catch {
+    return iri;
+  }
 }
 
 /**
