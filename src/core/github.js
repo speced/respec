@@ -188,7 +188,6 @@ export async function run(conf) {
       showWarning(msg, name);
     }
   }
-  const newIssuesURL = new URL("./new/choose", issueBase).href;
   if (!conf.excludeGithubLinks) {
     const otherLink = {
       key: l10n.participate,
