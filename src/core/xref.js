@@ -249,11 +249,7 @@ function getSpecContext(elem) {
       // versioned name yields no result.  This prevents ambiguous-dfn errors if
       // a term is indexed under both shortname variants.
       const unversioned = [
-        ...new Set(
-          cites
-            .map(stripVersionSuffix)
-            .filter((stripped, i) => stripped !== cites[i])
-        ),
+        ...new Set(cites.map(stripVersionSuffix)).difference(new Set(cites)),
       ];
       if (unversioned.length) {
         specs.push(unversioned);
@@ -278,10 +274,8 @@ function getSpecContext(elem) {
       specs.push(inlineRefList);
       // Same versioned → unversioned fallback for inline bibrefs.
       const unversioned = [
-        ...new Set(
-          inlineRefList
-            .map(stripVersionSuffix)
-            .filter((stripped, i) => stripped !== inlineRefList[i])
+        ...new Set(inlineRefList.map(stripVersionSuffix)).difference(
+          new Set(inlineRefList)
         ),
       ];
       if (unversioned.length) {
