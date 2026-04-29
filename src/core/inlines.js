@@ -192,6 +192,10 @@ function inlineRefMatches(matched) {
   // Strip !/?/\ prefix (normative/informative/escaped markers)
   const refWithoutPrefix = ref.replace(/^[!?\\]/, "");
 
+  if (ref.startsWith("\\")) {
+    return `[[[${refWithoutPrefix}]]]`;
+  }
+
   if (refWithoutPrefix.startsWith("#")) {
     return linkText
       ? html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"
