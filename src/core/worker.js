@@ -9,7 +9,6 @@ export const name = "core/worker";
 
 // Opportunistically preload syntax highlighter, which is used by the worker
 import { createResourceHint } from "./utils.js";
-import { expose } from "./expose-modules.js";
 import { fetchBase } from "./text-loader.js";
 
 // Derive the highlight URL from the ReSpec bundle location. In the IIFE bundle,
@@ -77,8 +76,3 @@ async function createWorker() {
 }
 
 export const workerPromise = createWorker();
-
-expose(
-  name,
-  workerPromise.then(worker => ({ worker }))
-);
