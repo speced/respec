@@ -13,6 +13,25 @@ import { makePluginUtils, showError } from "./utils.js";
 
 export const name = "core/post-process";
 
+const TIMEOUT = 15000;
+
+/**
+ * @param {Promise<void> | void} task
+ * @param {string} label
+ */
+function withTimeout(task, label) {
+  return new Promise((resolve, reject) => {
+    const timerId = setTimeout(() => {
+      reject(new Error(`${label} timed out.`));
+    }, TIMEOUT);
+    Promise.resolve(task)
+      .then(resolve, reject)
+      .finally(() => {
+        clearTimeout(timerId);
+      });
+  });
+}
+
 /**
  * @param {Conf} config
  */
@@ -30,7 +49,10 @@ export async function run(config) {
       const fnName = `${name}/${f.name || `[${i}]`}`;
       const utils = makePluginUtils(fnName);
       try {
-        await f(config, document, utils);
+        await withTimeout(
+          f(config, document, utils),
+          `postProcess function "${fnName}"`
+        );
       } catch (err) {
         const msg = `Function ${fnName} threw an error during \`postProcess\`.`;
         const hint = "See developer console.";
@@ -39,6 +61,12 @@ export async function run(config) {
     }
   }
   if (typeof config.afterEnd === "function") {
-    await config.afterEnd(config, document);
+    try {
+      await withTimeout(config.afterEnd(config, document), "config.afterEnd");
+    } catch (err) {
+      const msg = "Function afterEnd threw an error.";
+      const hint = "See developer console.";
+      showError(msg, name, { hint, cause: /** @type {Error} */ (err) });
+    }
   }
 }
