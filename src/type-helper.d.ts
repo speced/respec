@@ -50,10 +50,6 @@ interface Window {
     closeModal(owner?: Element): void;
     freshModal(title: string, content: Node, currentOwner: Element): void;
   };
-  require?: {
-    (deps: string[], callback: (...modules: any[]) => void): void;
-    modules: { [dep: string]: any };
-  };
   axe?: {
     run(context: Node, options: any): Promise<{ violations: AxeViolation[] }>;
   };
@@ -63,6 +59,7 @@ interface Document {
   respec: {
     readonly version: string;
     readonly ready: Promise<void>;
+    readonly worker: Promise<Worker>;
   };
 }
 

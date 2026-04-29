@@ -11,6 +11,13 @@ import {
 describe("Core — Highlight", () => {
   afterAll(flushIframes);
 
+  it("highlights custom languages registered via preProcess", async () => {
+    const doc = await makeRSDoc({}, "spec/core/highlight.html");
+    const span = doc.querySelector("code.testlang span[class*=hljs]");
+    expect(span).toBeTruthy();
+    expect(span.textContent).toBe("funkyFunction");
+  });
+
   it("shouldn't highlight idl blocks", async () => {
     const body = `
       <section><pre class=idl>

@@ -45,6 +45,7 @@ const modules = [
   import("../src/core/informative.js"),
   import("../src/core/id-headers.js"),
   import("../src/core/caniuse.js"),
+  import("../src/core/implementation-status.js"),
   import("../src/core/mdn-annotation.js"),
   import("../src/ui/save-html.js"),
   import("../src/ui/search-specref.js"),
