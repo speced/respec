@@ -110,7 +110,7 @@ const SUPPORT_ICONS = {
 /** @type {Map<string, string[]>} */
 const BROWSER_GROUPS = Map.groupBy(
   BROWSERS.keys(),
-  id => BROWSERS.get(id).engine
+  id => /** @type {{ engine: string }} */ (BROWSERS.get(id)).engine
 );
 
 /**
@@ -361,7 +361,9 @@ function findFeatures(data, conf, options) {
   return Object.entries(features)
     .filter(([, feature]) => {
       if (!isUsableFeature(feature)) return false;
-      const specs = [feature.spec].flat().filter(Boolean);
+      const specs = /** @type {string[]} */ (
+        [feature.spec].flat().filter(Boolean)
+      );
       return specs.some(specUrl => {
         const normalizedFeatureUrl = normalizeUrl(specUrl);
         return specUrls.some(url => normalizedFeatureUrl.startsWith(url));
