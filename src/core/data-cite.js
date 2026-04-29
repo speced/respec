@@ -19,7 +19,6 @@ import {
   showWarning,
   wrapInner,
 } from "./utils.js";
-import { API_URL } from "./xref.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/data-cite";
 
@@ -29,6 +28,8 @@ export const name = "core/data-cite";
  * @type {string}
  */
 export const THIS_SPEC = "__SPEC__";
+
+const HEADINGS_API_URL = "https://respec.org/xref/search/headings";
 
 /**
  * @typedef {{ title: string, number: string | null }} HeadingInfo
@@ -43,9 +44,8 @@ export const THIS_SPEC = "__SPEC__";
  */
 async function fetchHeadingTexts(queries) {
   if (!queries.length) return new Map();
-  const url = new URL("search/headings", API_URL).href;
   try {
-    const res = await fetch(url, {
+    const res = await fetch(HEADINGS_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ queries }),

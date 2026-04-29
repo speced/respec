@@ -418,9 +418,12 @@ describe("Core - Inlines", () => {
     const anchor = doc.querySelector("#output a[href]");
     expect(anchor).toBeTruthy();
     expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#fetching");
-    // When the headings API responds, shows "§N Fetching" (N may change);
-    // when unavailable, falls back to "Fetch Standard".
-    expect(anchor.textContent).toMatch(/^(§[\d.]+ Fetching|Fetch Standard)$/);
+    // When the headings API responds, shows "§N Fetching" (N may change)
+    // or "Fetching" when the heading has no section number; when unavailable,
+    // falls back to "Fetch Standard".
+    expect(anchor.textContent).toMatch(
+      /^(§[\d.]+ Fetching|Fetching|Fetch Standard)$/
+    );
   });
 
   it("prefers alias text over heading text for [[[SPEC#id|text]]]", async () => {
