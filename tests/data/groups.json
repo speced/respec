@@ -1,0 +1,126 @@
+{
+  "https://respec.org/w3c/groups/css/": {
+    "body": {
+      "shortname": "css",
+      "type": "wg",
+      "id": 32061,
+      "name": "Cascading Style Sheets (CSS) Working Group",
+      "URI": "https://www.w3.org/groups/wg/css/",
+      "patentURI": "https://www.w3.org/groups/wg/css/ipr",
+      "patentPolicy": "PP2020",
+      "wgURI": "https://www.w3.org/groups/wg/css"
+    }
+  },
+  "https://respec.org/w3c/groups/maps4html/": {
+    "body": {
+      "shortname": "maps4html",
+      "type": "cg",
+      "id": 70543,
+      "name": "Maps For HTML Community Group",
+      "URI": "https://www.w3.org/community/maps4html/",
+      "wgURI": "https://www.w3.org/groups/cg/maps4html"
+    }
+  },
+  "https://respec.org/w3c/groups/payments/": {
+    "body": {
+      "shortname": "payments",
+      "type": "wg",
+      "id": 83744,
+      "name": "Web Payments Working Group",
+      "URI": "https://www.w3.org/groups/wg/payments/",
+      "patentURI": "https://www.w3.org/groups/wg/payments/ipr",
+      "patentPolicy": "PP2020",
+      "wgURI": "https://www.w3.org/groups/wg/payments"
+    }
+  },
+  "https://respec.org/w3c/groups/publishingbg/": {
+    "body": {
+      "shortname": "publishingbg",
+      "type": "bg",
+      "id": 97159,
+      "name": "Publishing Business Group",
+      "URI": "https://www.w3.org/community/publishingbg/",
+      "wgURI": "https://www.w3.org/groups/bg/publishingbg"
+    }
+  },
+  "https://respec.org/w3c/groups/tag/": {
+    "body": {
+      "shortname": "tag",
+      "type": "other",
+      "id": 34270,
+      "name": "Technical Architecture Group",
+      "URI": "https://www.w3.org/2001/tag/",
+      "wgURI": "https://www.w3.org/groups/other/tag"
+    }
+  },
+  "https://respec.org/w3c/groups/webapps/": {
+    "body": {
+      "shortname": "webapps",
+      "type": "wg",
+      "id": 114929,
+      "name": "Web Applications Working Group",
+      "URI": "https://www.w3.org/groups/wg/webapps/",
+      "patentURI": "https://www.w3.org/groups/wg/webapps/ipr",
+      "patentPolicy": "PP2020",
+      "wgURI": "https://www.w3.org/groups/wg/webapps"
+    }
+  },
+  "https://respec.org/w3c/groups/webperf/": {
+    "body": {
+      "shortname": "webperf",
+      "type": "wg",
+      "id": 45211,
+      "name": "Web Performance Working Group",
+      "URI": "https://www.w3.org/groups/wg/webperf/",
+      "patentURI": "https://www.w3.org/groups/wg/webperf/ipr",
+      "patentPolicy": "PP2020",
+      "wgURI": "https://www.w3.org/groups/wg/webperf"
+    }
+  },
+  "https://respec.org/w3c/groups/wicg/": {
+    "body": {
+      "shortname": "wicg",
+      "type": "cg",
+      "id": 80485,
+      "name": "Web Platform Incubator Community Group",
+      "URI": "https://www.w3.org/community/wicg/",
+      "wgURI": "https://www.w3.org/groups/cg/wicg"
+    }
+  },
+  "https://respec.org/w3c/groups/wot/wg": {
+    "body": {
+      "shortname": "wot",
+      "type": "wg",
+      "id": 95969,
+      "name": "Web of Things Working Group",
+      "URI": "https://www.w3.org/WoT/wg/",
+      "patentURI": "https://www.w3.org/groups/wg/wot/ipr",
+      "patentPolicy": "PP2020",
+      "wgURI": "https://www.w3.org/groups/wg/wot"
+    }
+  },
+  "https://respec.org/w3c/groups/json-ld/wg": {
+    "body": {
+      "shortname": "json-ld",
+      "type": "wg",
+      "id": 107714,
+      "name": "JSON-LD Working Group",
+      "URI": "https://www.w3.org/groups/wg/json-ld/",
+      "patentURI": "https://www.w3.org/groups/wg/json-ld/ipr",
+      "patentPolicy": "PP2020",
+      "wgURI": "https://www.w3.org/groups/wg/json-ld"
+    }
+  },
+  "https://respec.org/w3c/groups/wot/": {
+    "status": 409,
+    "body": "Multiple groups with shortname: \"wot\".\nPlease use either: \"cg/wot\", \"ig/wot\", \"wg/wot\"."
+  },
+  "https://respec.org/w3c/groups/404/": {
+    "status": 404,
+    "body": "No group with shortname: \"404\"."
+  },
+  "https://respec.org/w3c/groups/not%20a%20real%20group/": {
+    "status": 404,
+    "body": "No group with shortname: \"not a real group\"."
+  }
+}
