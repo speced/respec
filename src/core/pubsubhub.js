@@ -7,7 +7,6 @@
  */
 export const name = "core/pubsubhub";
 
-import { expose } from "./expose-modules.js";
 import { showError } from "./utils.js";
 
 const subscriptions = new EventTarget();
@@ -51,5 +50,3 @@ export function sub(topic, cb, options = { once: false }) {
   };
   subscriptions.addEventListener(topic, /** @type {any} */ (listener), options);
 }
-
-expose(name, { sub });

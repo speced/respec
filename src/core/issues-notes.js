@@ -288,10 +288,7 @@ function makeIssueSectionSummary(issueList) {
     !heading ||
     (heading && heading !== issueSummaryElement.firstElementChild)
   ) {
-    issueSummaryElement.insertAdjacentHTML(
-      "afterbegin",
-      `<h1>${l10n.issue_summary}</h1>`
-    );
+    issueSummaryElement.prepend(html`<h1>${l10n.issue_summary}</h1>`);
   }
 }
 
@@ -328,10 +325,11 @@ function textColorFromBgColor(bg) {
  */
 function createLabel(label, repoURL) {
   const { color: bgColor, name } = label;
+  const safeBgColor = /^[0-9a-f]{6}$/i.test(bgColor) ? bgColor : "f6f8fa";
   const issuesURL = new URL("./issues/", repoURL);
-  issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
-  const color = textColorFromBgColor(bgColor);
-  const style = `background-color: #${bgColor}; color: ${color}`;
+  issuesURL.searchParams.set("q", `is:issue is:open label:"${name}"`);
+  const color = textColorFromBgColor(safeBgColor);
+  const style = `background-color: #${safeBgColor}; color: ${color}`;
   const ariaLabel = `GitHub label: ${name}`;
   return html` <a
     class="respec-gh-label"
