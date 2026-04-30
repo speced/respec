@@ -8,8 +8,8 @@ import {
   makeStandardOps,
   warningFilters,
 } from "../../SpecHelper.js";
-import { seedGroupCache } from "../../respec-cache-helper.js";
 import { requiresSomeSectionStatus } from "../../../../src/w3c/linter-rules/required-sections.js";
+import { seedGroupCache } from "../../respec-cache-helper.js";
 
 describe("w3c — required-sections", () => {
   afterAll(() => {
