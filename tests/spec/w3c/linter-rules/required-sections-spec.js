@@ -8,12 +8,14 @@ import {
   makeStandardOps,
   warningFilters,
 } from "../../SpecHelper.js";
+import { seedGroupCache } from "../../respec-cache-helper.js";
 import { requiresSomeSectionStatus } from "../../../../src/w3c/linter-rules/required-sections.js";
 
 describe("w3c — required-sections", () => {
   afterAll(() => {
     flushIframes();
   });
+  beforeAll(seedGroupCache);
 
   const errorsFilter = errorFilters.filter(
     "w3c/linter-rules/required-sections"

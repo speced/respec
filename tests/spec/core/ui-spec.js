@@ -1,9 +1,11 @@
 "use strict";
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { seedGroupCache } from "../respec-cache-helper.js";
 
 describe("Core - UI", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
 
   it("shows and hides the UI", async () => {
     const doc = await makeRSDoc(makeStandardOps());

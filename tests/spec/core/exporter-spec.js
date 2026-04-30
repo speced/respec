@@ -6,9 +6,11 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
+import { seedGroupCache } from "../respec-cache-helper.js";
 
 describe("Core - exporter", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
 
   it("removes .removeOnSave elements", async () => {
     const ops = makeStandardOps();
