@@ -364,14 +364,20 @@ async function preflight() {
     );
   }
 
-  // gh-pages branch must resolve unambiguously to origin
+  // origin/gh-pages must exist and be unambiguous
   try {
     const branches = await git("branch -r --list */gh-pages");
     const remotes = branches
       .trim()
       .split("\n")
       .filter(line => line.trim());
-    if (remotes.length > 1) {
+    const hasOrigin = remotes.some(r => r.trim() === "origin/gh-pages");
+    if (!hasOrigin) {
+      errors.push(
+        "origin/gh-pages not found. The release requires it.\n" +
+          "    Fix: git fetch origin gh-pages"
+      );
+    } else if (remotes.length > 1) {
       const defaultRemote = await git("config checkout.defaultRemote").catch(
         () => ""
       );
@@ -480,12 +486,14 @@ const run = async () => {
   let ghPagesHead = "";
   let pushed = false;
   try {
-    await preflight();
-
-    // 1. Confirm maintainer is on up-to-date and on the main branch
+    // Refresh remote refs before preflight (gh-pages check needs current data)
     indicators.get("remote-update").show();
     await git("remote update");
     indicators.get("remote-update").hide();
+
+    await preflight();
+
+    // 1. Confirm maintainer is on up-to-date and on the main branch
     if (initialBranch !== "main") {
       await Prompts.askSwitchToBranch(initialBranch, "main");
     }
@@ -547,14 +555,14 @@ const run = async () => {
     await git("merge main");
     await git("checkout main");
 
-    // 6. Push — point of no return
+    // 6. Push — point of no return after first successful push
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
     await git("push origin main");
+    pushed = true;
     await git("push origin gh-pages");
     await git("push --tags");
     indicators.get("push-to-server").hide();
-    pushed = true;
 
     // 7. Publish to npm (interactive for OTP auth)
     console.log(colors.green(" Publishing to npm... 📡"));
