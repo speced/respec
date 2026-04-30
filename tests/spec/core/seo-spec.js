@@ -7,9 +7,11 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
+import { seedGroupCache } from "../respec-cache-helper.js";
 
 describe("Core — Seo", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
   it("doesn't insert a meta description element if there is no abstract", async () => {
     const ops = {
       config: makeBasicConfig(),
