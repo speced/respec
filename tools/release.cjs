@@ -364,6 +364,18 @@ async function preflight() {
     );
   }
 
+  // GitHub CLI (needed for creating GitHub Releases that trigger W3C CDN sync)
+  try {
+    await toExecPromise("gh auth status", { timeout: 10000, showOutput: false });
+    console.log(colors.green("  ✓ GitHub CLI (gh)"));
+  } catch {
+    errors.push(
+      "GitHub CLI not found or not authenticated (required for creating releases).\n" +
+        "    Install: brew install gh\n" +
+        "    Then:    gh auth login"
+    );
+  }
+
   // origin/gh-pages must exist and be unambiguous
   try {
     const branches = await git("branch -r --list */gh-pages");
@@ -568,6 +580,13 @@ const run = async () => {
     console.log(colors.green(" Publishing to npm... 📡"));
     await toSpawnPromise("npm publish");
 
+    // 8. Create GitHub Release (triggers W3C CDN sync)
+    console.log(colors.green(" Creating GitHub Release... 📡"));
+    await toExecPromise(
+      `gh release create v${version} --generate-notes`,
+      { timeout: 30000, showOutput: true }
+    );
+
     if (initialBranch !== "main") {
       await Prompts.askSwitchToBranch("main", initialBranch);
     }
@@ -576,8 +595,10 @@ const run = async () => {
     if (pushed) {
       console.log(
         colors.yellow(
-          "\n  Git push succeeded. Only npm publish failed.\n" +
-            "  Run `npm publish` manually to complete the release.\n"
+          "\n  Git push succeeded but a later step failed.\n" +
+            "  You may need to run manually:\n" +
+            "    npm publish\n" +
+            "    gh release create v" + version + " --generate-notes\n"
         )
       );
     } else {
