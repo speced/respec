@@ -16,8 +16,8 @@
  * @typedef {Map<string, { elems: HTMLElement[], results: SearchResultEntry[], query: RequestEntry }>} ErrorCollection
  * @typedef {{ ambiguous: ErrorCollection, notFound: ErrorCollection }} Errors
  */
-import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import {
+  POSSESSIVE_SUFFIX,
   createResourceHint,
   docLink,
   joinAnd,
@@ -26,6 +26,7 @@ import {
   norm as normalize,
   showError,
 } from "./utils.js";
+import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import { possibleExternalLinks } from "./link-to-dfn.js";
 import { sub } from "./pubsubhub.js";
 
@@ -184,6 +185,10 @@ function getRequestEntry(elem) {
 
   let term = getTermFromElement(elem);
   if (!isIDL) term = term.toLowerCase();
+  // Strip possessive suffix for API lookup — the xref API has no fallback chain,
+  // so we normalize eagerly. Assumes no spec defines the possessive form as a
+  // distinct term. Only applied when no explicit data-lt (author can override).
+  if (!isIDL && !elem.dataset.lt) term = term.replace(POSSESSIVE_SUFFIX, "");
 
   const specs = getSpecContext(elem);
   const types = getTypeContext(elem, isIDL);
