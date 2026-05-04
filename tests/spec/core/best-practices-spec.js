@@ -87,7 +87,9 @@ describe("Core — Best Practices", () => {
       <section id="principles">
         <h2>Section</h2>
         <span class='practicelab' data-label="Principle ">P1</span>
-        <span class='practicelab' data-label="Principle ">P2</span>
+        <div>
+          <p class='practicelab' data-label="Principle ">P2</p>
+        </div>
         <section id='bp-summary' data-label="Principles Summary">
         </section>
       </section>
@@ -104,5 +106,31 @@ describe("Core — Best Practices", () => {
     expect(listItems[1].textContent.trim()).toBe("Principle 2: P2");
     const heading = summary.querySelector("h3");
     expect(heading.textContent).toContain("Principles Summary");
+
+    // Boxed practice: verify custom label appears in the visible marker
+    const selfLink = doc.querySelector(".advisement .self-link");
+    expect(selfLink.textContent).toBe("Principle 2");
+
+    // Custom labels must not carry the built-in locale's lang attribute
+    const bdi = selfLink.querySelector("bdi");
+    expect(bdi.hasAttribute("lang")).toBeFalse();
+  });
+
+  it("sets lang attribute on bdi only for built-in localized labels", async () => {
+    const body = `
+      <section id="bps">
+        <h2>Section</h2>
+        <div>
+          <p class='practicelab'>BP1</p>
+        </div>
+      </section>
+    `;
+    const ops = {
+      config: makeBasicConfig(),
+      body,
+    };
+    const doc = await makeRSDoc(ops);
+    const bdi = doc.querySelector(".advisement .self-link bdi");
+    expect(bdi.hasAttribute("lang")).toBeTrue();
   });
 });

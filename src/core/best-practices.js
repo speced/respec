@@ -40,8 +40,11 @@ export function run() {
     const id = addId(bp, "bp");
     const rawLabel = bp.dataset.label || l10n.best_practice;
     const label = `${rawLabel.trimEnd()} `;
+    const bdi = html`<bdi>${label}${num + 1}</bdi>`;
+    // Only set lang when using the built-in localized label, not a custom one
+    if (!bp.dataset.label) bdi.lang = lang;
     const localizedBpName = html`<a class="marker self-link" href="${`#${id}`}"
-      ><bdi lang="${lang}">${label}${num + 1}</bdi></a
+      >${bdi}</a
     >`;
 
     // Make the summary items, if we have a summary
