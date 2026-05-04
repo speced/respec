@@ -366,7 +366,10 @@ async function preflight() {
 
   // GitHub CLI (needed for creating GitHub Releases that trigger W3C CDN sync)
   try {
-    await toExecPromise("gh auth status", { timeout: 10000, showOutput: false });
+    await toExecPromise("gh auth status", {
+      timeout: 10000,
+      showOutput: false,
+    });
     console.log(colors.green("  ✓ GitHub CLI (gh)"));
   } catch {
     errors.push(
@@ -571,9 +574,9 @@ const run = async () => {
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
     await git("push origin main");
-    pushed = true;
     await git("push origin gh-pages");
     await git("push --tags");
+    pushed = true;
     indicators.get("push-to-server").hide();
 
     // 7. Publish to npm (interactive for OTP auth)
@@ -582,10 +585,10 @@ const run = async () => {
 
     // 8. Create GitHub Release (triggers W3C CDN sync)
     console.log(colors.green(" Creating GitHub Release... 📡"));
-    await toExecPromise(
-      `gh release create v${version} --generate-notes`,
-      { timeout: 30000, showOutput: true }
-    );
+    await toExecPromise(`gh release create v${version} --generate-notes`, {
+      timeout: 30000,
+      showOutput: true,
+    });
 
     if (initialBranch !== "main") {
       await Prompts.askSwitchToBranch("main", initialBranch);
@@ -595,10 +598,10 @@ const run = async () => {
     if (pushed) {
       console.log(
         colors.yellow(
-          "\n  Git push succeeded but a later step failed.\n" +
-            "  You may need to run manually:\n" +
-            "    npm publish\n" +
-            "    gh release create v" + version + " --generate-notes\n"
+          `\n  Git push succeeded but a later step failed.\n` +
+            `  You may need to run manually:\n` +
+            `    npm publish\n` +
+            `    gh release create v${version} --generate-notes\n`
         )
       );
     } else {
