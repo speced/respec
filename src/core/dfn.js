@@ -147,9 +147,12 @@ function computeExport(dfn) {
       dfn.dataset.export = "";
       break;
 
-    // Auto-suppress export for dfns in explicitly informative sections
+    // Auto-suppress export for dfns in explicitly informative sections,
+    // but respect a normative section nested inside an informative one.
     case !dfn.matches(".export, [data-export]") &&
-      !!dfn.closest("section.informative"):
+      dfn
+        .closest("section.informative, section.normative")
+        ?.matches("section.informative"):
       dfn.dataset.noexport = "";
       break;
   }
