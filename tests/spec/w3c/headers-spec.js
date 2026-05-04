@@ -1469,6 +1469,27 @@ describe("W3C — Headers", () => {
       expect(latestVersionEl.textContent.trim()).toBe("none");
     });
 
+    it("derives /TR latestVersion for multi-group ED specs", async () => {
+      const ops = makeStandardOps({
+        shortName: "multi-group-test",
+        specStatus: "ED",
+        group: ["das", "webapps"],
+        edDraftURI: "https://example.com/ed/",
+      });
+      const doc = await makeRSDoc(ops);
+
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      expect(latestVersion).toBeTruthy();
+      const latestVersionLink =
+        latestVersion.nextElementSibling.querySelector("a");
+      expect(latestVersionLink.href).toBe(
+        "https://www.w3.org/TR/multi-group-test/"
+      );
+    });
+
     it("allows overriding latest published version to a different location", async () => {
       const ops = makeStandardOps({
         shortName: "spec",
