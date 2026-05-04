@@ -146,6 +146,12 @@ function computeExport(dfn) {
     case dfn.matches(":is(.export):not([data-noexport], .no-export)"):
       dfn.dataset.export = "";
       break;
+
+    // Auto-suppress export for dfns in explicitly informative sections
+    case !dfn.matches(".export, [data-export]") &&
+      !!dfn.closest("section.informative"):
+      dfn.dataset.noexport = "";
+      break;
   }
 }
 
