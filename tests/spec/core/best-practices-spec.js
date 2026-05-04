@@ -81,4 +81,28 @@ describe("Core — Best Practices", () => {
     );
     expect(bps.querySelectorAll("ul li")).toHaveSize(3);
   });
+
+  it("uses custom labels from data-label attribute", async () => {
+    const body = `
+      <section id="principles">
+        <h2>Section</h2>
+        <span class='practicelab' data-label="Principle ">P1</span>
+        <span class='practicelab' data-label="Principle ">P2</span>
+        <section id='bp-summary' data-label="Principles Summary">
+        </section>
+      </section>
+    `;
+    const ops = {
+      config: makeBasicConfig(),
+      body,
+    };
+    const doc = await makeRSDoc(ops);
+    const summary = doc.getElementById("bp-summary");
+    expect(summary).toBeTruthy();
+    const listItems = summary.querySelectorAll("li");
+    expect(listItems[0].textContent.trim()).toBe("Principle 1: P1");
+    expect(listItems[1].textContent.trim()).toBe("Principle 2: P2");
+    const heading = summary.querySelector("h3");
+    expect(heading.textContent).toContain("Principles Summary");
+  });
 });
