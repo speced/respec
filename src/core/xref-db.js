@@ -38,13 +38,19 @@ export async function resolveXrefCache(queries) {
   const requiredKeySet = new Set(queries.map(query => query.id));
   try {
     const cache = await getIdbCache();
-    let cursor = await cache.transaction(STORE_NAME).store.openCursor();
+    const tx = cache.transaction(STORE_NAME, "readwrite");
+    let cursor = await tx.store.openCursor();
     while (cursor) {
       if (requiredKeySet.has(cursor.key)) {
-        cachedData.set(cursor.key, cursor.value.result);
+        if (cursor.value.result?.length) {
+          cachedData.set(cursor.key, cursor.value.result);
+        } else {
+          cursor.delete();
+        }
       }
       cursor = await cursor.continue();
     }
+    await tx.done;
   } catch (err) {
     console.error(err);
   }
