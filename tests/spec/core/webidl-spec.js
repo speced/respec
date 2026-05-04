@@ -1561,6 +1561,26 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const banana = p.querySelector("dfn");
     expect(banana.dataset.export).not.toBeDefined();
   });
+
+  it("warns when a partial interface has a dfn without data-cite", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          partial interface PartialWarn {
+            undefined doStuff();
+          };
+        </pre>
+        <p><dfn>PartialWarn</dfn></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const warnings = doc.respec.warnings.filter(
+      w => w.plugin === "core/webidl" && w.message.includes("partial")
+    );
+    expect(warnings).toHaveSize(1);
+    expect(warnings[0].message).toContain("PartialWarn");
+  });
   it("autolinks partial definitions", async () => {
     const body = `
       <section data-dfn-for="EventInit">
