@@ -60,6 +60,8 @@ window.addEventListener("load", () => trapFocus(menu));
 let modal;
 /** @type {HTMLElement | null} */
 let overlay;
+/** @type {HTMLElement | null} */
+let currentModalOwner;
 /** @type {any[]} */
 const errors = [];
 /** @type {any[]} */
@@ -86,6 +88,7 @@ document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
     toggleMenu();
   }
+  respecPill.setAttribute("aria-expanded", "false");
 });
 respecUI.appendChild(menu);
 
@@ -277,6 +280,7 @@ export const ui = {
   },
   /** @param {Element} [owner] */
   closeModal(owner) {
+    const effectiveOwner = owner || currentModalOwner;
     if (overlay) {
       const overlayElem = overlay;
       overlayElem.classList.remove("respec-show-overlay");
@@ -286,12 +290,13 @@ export const ui = {
         overlay = null;
       });
     }
-    if (owner) {
-      owner.setAttribute("aria-expanded", "false");
+    if (effectiveOwner) {
+      effectiveOwner.setAttribute("aria-expanded", "false");
     }
     if (!modal) return;
     modal.remove();
     modal = null;
+    currentModalOwner = null;
     respecPill.focus();
   },
   /**
@@ -302,6 +307,7 @@ export const ui = {
   freshModal(title, content, currentOwner) {
     if (modal) modal.remove();
     if (overlay) overlay.remove();
+    currentModalOwner = currentOwner;
     overlay = html`<div id="respec-overlay" class="removeOnSave"></div>`;
     const id = `${currentOwner.id}-modal`;
     const headingId = `${id}-heading`;
