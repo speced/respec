@@ -75,8 +75,6 @@ const REF_STATUSES = new Map([
   ["WD", "W3C Working Draft"],
 ]);
 
-const endWithDot = endNormalizer(".");
-
 /** @param {Conf} conf */
 export function run(conf) {
   const informs = Array.from(conf.informativeReferences);
@@ -231,19 +229,6 @@ function showRef(reference) {
   return result;
 }
 
-/**
- * @param {string} endStr
- * @returns {(str: string) => string}
- */
-function endNormalizer(endStr) {
-  return str => {
-    const trimmed = str.trim();
-    const result =
-      !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
-    return result;
-  };
-}
-
 /** @param {BiblioData|string} ref */
 function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
@@ -265,7 +250,13 @@ function stringifyReference(ref) {
     }
   }
   if (ref.publisher) {
-    output = `${output} ${endWithDot(ref.publisher)} `;
+    // When pages follow, use a comma after publisher instead of a period.
+    const publisherEnd = ref.pages ? "," : ".";
+    const publisherText = ref.publisher.trim();
+    const normalizedPublisher = publisherText.endsWith(".")
+      ? publisherText.slice(0, -1)
+      : publisherText;
+    output = `${output} ${normalizedPublisher}${publisherEnd} `;
   }
   if (ref.pages) output += `pp. ${xmlEscape(ref.pages)}. `;
   if (ref.date) output += `${ref.date}. `;
