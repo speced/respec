@@ -183,12 +183,8 @@ function normalizeConfig(xref) {
 function getRequestEntry(elem) {
   const isIDL = "xrefType" in elem.dataset;
 
-  let term = getTermFromElement(elem);
+  let term = getTermFromElement(elem, { isIDL });
   if (!isIDL) term = term.toLowerCase();
-  // Strip possessive suffix for API lookup — the xref API has no fallback chain,
-  // so we normalize eagerly. Assumes no spec defines the possessive form as a
-  // distinct term. Only applied when no explicit data-lt (author can override).
-  if (!isIDL && !elem.dataset.lt) term = term.replace(POSSESSIVE_SUFFIX, "");
 
   const specs = getSpecContext(elem);
   const types = getTypeContext(elem, isIDL);
@@ -207,11 +203,17 @@ function getRequestEntry(elem) {
 }
 
 /** @param {HTMLElement} elem */
-export function getTermFromElement(elem) {
+/**
+ * @param {HTMLElement} elem
+ * @param {{ isIDL?: boolean }} [options]
+ */
+export function getTermFromElement(elem, { isIDL = false } = {}) {
   const { lt: linkingText } = elem.dataset;
   let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
   term = normalize(term);
-  return term === "the-empty-string" ? "" : term;
+  if (term === "the-empty-string") return "";
+  if (!isIDL && !linkingText) term = term.replace(POSSESSIVE_SUFFIX, "");
+  return term;
 }
 
 /**
