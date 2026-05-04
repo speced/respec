@@ -1,13 +1,17 @@
 "use strict";
 
 import {
+  cacheXrefData,
+  clearXrefData,
+  resolveXrefCache,
+} from "../../../src/core/xref-db.js";
+import {
   errorFilters,
   flushIframes,
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
-import { clearXrefData } from "../../../src/core/xref-db.js";
 
 describe("Core — xref", () => {
   afterAll(flushIframes);
@@ -1116,5 +1120,70 @@ describe("Core — xref", () => {
     expect(specLink.href).toBe(
       "https://w3c.github.io/reporting/network-reporting.html#endpoint-group"
     );
+  });
+});
+
+describe("Core — xref-db caching", () => {
+  beforeEach(async () => {
+    await clearXrefData();
+    localStorage.setItem("XREF:LAST_VERSION_CHECK", Date.now().toString());
+  });
+
+  afterEach(async () => {
+    await clearXrefData();
+  });
+
+  it("does not cache queries with empty results", async () => {
+    const queries = [
+      { id: "found-term", term: "found", types: ["dfn"] },
+      { id: "missing-term", term: "missing", types: ["dfn"] },
+    ];
+    const results = new Map();
+    results.set("found-term", [{ uri: "#found", shortname: "spec" }]);
+
+    await cacheXrefData(queries, results);
+    const cached = await resolveXrefCache(queries);
+
+    expect(cached.has("found-term")).toBeTrue();
+    expect(cached.has("missing-term")).toBeFalse();
+  });
+
+  it("cleans up pre-existing empty cache entries on read", async () => {
+    const queries = [{ id: "stale-term", term: "stale", types: ["dfn"] }];
+
+    const { promise: dbReady, resolve, reject } = Promise.withResolvers();
+    const req = indexedDB.open("xref", 2);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+    const db = await dbReady;
+
+    const tx = db.transaction("xrefs", "readwrite");
+    tx.objectStore("xrefs").add({ query: queries[0], result: [] });
+    const { promise: txDone, resolve: txResolve } = Promise.withResolvers();
+    tx.oncomplete = txResolve;
+    await txDone;
+    db.close();
+
+    const cached = await resolveXrefCache(queries);
+    expect(cached.has("stale-term")).toBeFalse();
+
+    const {
+      promise: verifyDbReady,
+      resolve: resolveVerifyDb,
+      reject: rejectVerifyDb,
+    } = Promise.withResolvers();
+    const req2 = indexedDB.open("xref", 2);
+    req2.onsuccess = () => resolveVerifyDb(req2.result);
+    req2.onerror = () => rejectVerifyDb(req2.error);
+    const verifyDb = await verifyDbReady;
+
+    const verifyTx = verifyDb.transaction("xrefs", "readonly");
+    const getReq = verifyTx.objectStore("xrefs").get("stale-term");
+    const { promise: getReady, resolve: resolveGet } = Promise.withResolvers();
+    getReq.onsuccess = () => resolveGet(getReq.result);
+    const remaining = await getReady;
+    verifyDb.close();
+
+    expect(remaining).toBeUndefined();
   });
 });
