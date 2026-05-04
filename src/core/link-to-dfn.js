@@ -262,7 +262,9 @@ function isCode(dfn) {
   if (children.length !== 1) {
     return false;
   }
-  return /** @type {HTMLElement} */ (children[0]).localName === "code";
+  const child = children[0];
+  if (child.nodeType !== Node.ELEMENT_NODE) return false;
+  return /** @type {Element} */ (child).localName === "code";
 }
 
 /**
