@@ -89,9 +89,9 @@ describe("Core - exporter", () => {
     const rsDoc = await makeRSDoc(ops);
     rsDoc.body.classList.add("toc-inline", "toc-sidebar");
     const html = await rsDoc.respec.toHTML();
-    const bodyMatch = html.match(/<body[^>]*class="([^"]*)"/);
-    const bodyClasses = bodyMatch ? bodyMatch[1] : "";
-    expect(bodyClasses).not.toContain("toc-inline");
-    expect(bodyClasses).not.toContain("toc-sidebar");
+    const [bodyTag] = html.match(/<body[^>]*>/) ?? [];
+    expect(bodyTag).toBeTruthy();
+    expect(bodyTag).not.toContain("toc-inline");
+    expect(bodyTag).not.toContain("toc-sidebar");
   });
 });
