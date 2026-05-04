@@ -181,7 +181,9 @@ function validateStatusForGroup(conf) {
     default:
       if (
         !conf.wgId &&
-        !["unofficial", "base", "UD", "Member-SUBM"].includes(specStatus)
+        !["unofficial", "base", "UD", "Member-SUBM", "charter"].includes(
+          specStatus
+        )
       ) {
         const msg =
           "Document is not associated with a [W3C group](https://respec.org/w3c/groups/). Defaulting to 'base' status.";

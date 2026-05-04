@@ -1163,7 +1163,7 @@ describe("W3C — Headers", () => {
       const [errata] = contains(
         doc,
         ".head dd>a[href='https://foo.com']",
-        "Errata exists"
+        "Check for errata"
       );
       expect(errata).toBeTruthy();
     });
