@@ -187,6 +187,48 @@ describe("W3C - SEO", () => {
     });
   });
 
+  it("uses HTTPS for schema.org context and vocab", async () => {
+    const ops = { config, body };
+    const doc = await makeRSDoc(ops);
+    const script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse(script.textContent);
+    const vocabEntry = jsonld["@context"].find(entry => entry["@vocab"]);
+    expect(vocabEntry["@vocab"]).toBe("https://schema.org/");
+    expect(JSON.stringify(jsonld["@context"])).not.toContain(
+      "http://schema.org"
+    );
+  });
+
+  it("includes datePublished on citations with rawDate", async () => {
+    const datedConfig = {
+      ...config,
+      localBiblio: {
+        ...config.localBiblio,
+        DatedRef: {
+          title: "Dated reference",
+          href: "http://test.com/dated",
+          rawDate: "2024-01-15",
+        },
+      },
+    };
+    const datedBody = `
+      <html>
+      <title>Basic Title</title>
+      <section id="sotd"><p>foo</p></section>
+      <section id="toc"></section>
+      <p>foo [[!DatedRef]]</p>
+    `;
+    const ops = { config: datedConfig, body: datedBody };
+    const doc = await makeRSDoc(ops);
+    const script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse(script.textContent);
+    const datedCitation = jsonld.citation.find(
+      c => c.name === "Dated reference"
+    );
+    expect(datedCitation).toBeTruthy();
+    expect(datedCitation.datePublished).toBe("2024-01-15");
+  });
+
   it("describes editors and contributors", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
