@@ -52,8 +52,8 @@ describe("AOM - Style", () => {
     expect(elem.content).toBe(expectedStr);
   });
 
-  it("doesn't include fixup.js when noToc is set", async () => {
-    const ops = makeStandardAomOps({ noToc: true });
+  it("doesn't include fixup.js when noTOC is set", async () => {
+    const ops = makeStandardAomOps({ noTOC: true });
     const doc = await makeRSDoc(ops);
     const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
     const elem = doc.querySelector(query);

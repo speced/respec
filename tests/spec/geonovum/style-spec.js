@@ -87,10 +87,10 @@ describe("Geonovum - Style", () => {
     );
   });
 
-  it("shouldn't include fixup.js when noToc is set", async () => {
+  it("shouldn't include fixup.js when noTOC is set", async () => {
     const ops = makeStandardGeoOps();
     const newProps = {
-      noToc: true,
+      noTOC: true,
     };
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);

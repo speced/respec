@@ -58,7 +58,7 @@ describe("Core - ID headers", () => {
       ariaLabel = deepAppendix.getAttribute("aria-label");
       expect(ariaLabel).toBe("Permalink for Appendix A.1");
 
-      // marked as noToc
+      // marked as noTOC
       const deepH4 = doc.querySelector("h4 + a.self-link");
       ariaLabel = deepH4.getAttribute("aria-label");
       expect(ariaLabel).toBe("Permalink for this Section");
