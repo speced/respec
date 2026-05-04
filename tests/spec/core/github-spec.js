@@ -112,6 +112,7 @@ describe("Core - Github", () => {
             repoURL: "https://github.com/speced/respec/",
             newIssuesURL: "https://github.com/speced/respec/issues/new",
           },
+          excludeGithubLinks: false,
         }),
         body: makeDefaultBody(),
       };
@@ -119,6 +120,14 @@ describe("Core - Github", () => {
       const doc = await makeRSDoc(opts);
       const { respecConfig: conf } = doc.defaultView;
       expect(conf.github.newIssuesURL).toBe(
+        "https://github.com/speced/respec/issues/new"
+      );
+      // Also verify the rendered feedback link in the DOM uses the custom URL
+      const fileABug = Array.from(doc.querySelectorAll("dd")).find(
+        elem => elem.textContent.trim() === "File an issue"
+      );
+      expect(fileABug).toBeTruthy();
+      expect(fileABug.querySelector("a").href).toBe(
         "https://github.com/speced/respec/issues/new"
       );
     });
