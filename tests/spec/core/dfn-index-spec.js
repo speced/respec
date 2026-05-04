@@ -502,5 +502,21 @@ describe("Core — dfn-index", () => {
       expect(parsing1.id).toBe("index-term-parsing");
       expect(parsing2.id).toBe("index-term-parsing-0");
     });
+
+    it("excludes terms with data-noindex from the external index", async () => {
+      const body = `<section data-cite="DOM">
+          <h2>TEST</h2>
+          <p>{{ Event }} {{ Event/type }}</p>
+          <p><a data-cite="DOM#interface-event" data-noindex>Event (noindex)</a></p>
+        </section>
+        <section id="index"></section>`;
+      const ops = makeStandardOps({ xref: "web-platform" }, body);
+      const doc = await makeRSDoc(ops);
+      const externalIndex = doc.getElementById("index-defined-elsewhere");
+      const terms = [...externalIndex.querySelectorAll(".index-term")].map(el =>
+        el.textContent.trim()
+      );
+      expect(terms).not.toContain("Event (noindex)");
+    });
   });
 });
