@@ -734,4 +734,49 @@ describe("Core — Definitions", () => {
       expect(desc2.dataset.defines).toBe("#dfn-different-convention");
     });
   });
+
+  describe("informative section export suppression", () => {
+    it("auto-suppresses export for dfns in informative sections", async () => {
+      const body = `
+        <section class="informative">
+          <h2>Informative</h2>
+          <p><dfn id="info-dfn">informative term</dfn></p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("info-dfn");
+      expect(dfn.dataset.noexport).toBe("");
+    });
+
+    it("does not suppress export for dfns in normative sections nested inside informative", async () => {
+      const body = `
+        <section class="informative">
+          <h2>Informative Appendix</h2>
+          <section class="normative">
+            <h3>Normative Subsection</h3>
+            <p><dfn id="normative-dfn">normative term</dfn></p>
+          </section>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("normative-dfn");
+      expect(dfn.dataset.noexport).toBeUndefined();
+    });
+
+    it("does not suppress export for explicitly exported dfns in informative sections", async () => {
+      const body = `
+        <section class="informative">
+          <h2>Informative</h2>
+          <p><dfn id="explicit-export" data-export>explicit export</dfn></p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("explicit-export");
+      expect(dfn.dataset.export).toBe("");
+      expect(dfn.dataset.noexport).toBeUndefined();
+    });
+  });
 });

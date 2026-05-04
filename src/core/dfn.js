@@ -148,14 +148,21 @@ function computeExport(dfn) {
       break;
 
     // Auto-suppress export for dfns in explicitly informative sections,
-    // but respect a normative section nested inside an informative one.
-    case !dfn.matches(".export, [data-export]") &&
-      dfn
-        .closest("section.informative, section.normative")
-        ?.matches("section.informative"):
+    // but not if a closer normative section overrides the context.
+    case isInformativeContext(dfn):
       dfn.dataset.noexport = "";
       break;
   }
+}
+
+/**
+ * @param {HTMLElement} dfn
+ */
+function isInformativeContext(dfn) {
+  if (dfn.matches(".export, [data-export]")) return false;
+  return dfn
+    .closest("section.informative, section.normative")
+    ?.classList.contains("informative");
 }
 
 /**
