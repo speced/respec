@@ -317,6 +317,27 @@ describe("Core - Structure", () => {
     expect(textContent).toContain("Tabla de Contenidos");
   });
 
+  it("localizes table of contents to French", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      htmlAttrs: {
+        lang: "fr",
+      },
+      body: `
+      <section id='sotd'>
+        <p>This is required.</p>
+      </section>
+      <section class="informative" id="intro">
+        <h2>Introduction</h2>
+      </section>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    const { textContent } = doc.querySelector("#toc h2");
+    expect(doc.documentElement.lang).toBe("fr");
+    expect(textContent).toContain("Table des matières");
+  });
+
   it("finds and updates empty anchors correctly", async () => {
     const ops = {
       config: makeBasicConfig(),

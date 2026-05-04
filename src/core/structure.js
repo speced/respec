@@ -46,6 +46,10 @@ const localizationStrings = {
     toc: "Tabla de Contenidos",
     back_to_top: "Volver arriba",
   },
+  fr: {
+    toc: "Table des matières",
+    back_to_top: "Retour en haut",
+  },
   de: {
     toc: "Inhaltsverzeichnis",
     back_to_top: "Zurück nach oben",
