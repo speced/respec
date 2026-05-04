@@ -1,11 +1,13 @@
 "use strict";
 
 import {
+  W3CNotes,
   cgStatus,
   cgbgStatus,
   licenses,
   noTrackStatus,
   recTrackStatus,
+  registryTrackStatus,
   trStatus,
 } from "../../../src/w3c/headers.js";
 
@@ -516,6 +518,38 @@ describe("W3C — Headers", () => {
           github: "speced/respec",
           crEnd: "2019-01-01",
           prEnd: "2019-01-01",
+        });
+        const doc = await makeRSDoc(ops, simpleSpecURL);
+        const errors = headerErrors(doc);
+        expect(errors).toHaveSize(1);
+        const [error] = errors;
+        expect(error.message).toContain("w3cid");
+        expect(error.message).toContain("person 2");
+      });
+    }
+    for (const specStatus of W3CNotes) {
+      it(`shows an error if w3cid is missing for Note status ${specStatus}`, async () => {
+        const ops = makeStandardOps({
+          specStatus,
+          editors: [{ name: "ok", w3cid: "12345" }, { name: "person 2" }],
+          group: "webapps",
+          github: "speced/respec",
+        });
+        const doc = await makeRSDoc(ops, simpleSpecURL);
+        const errors = headerErrors(doc);
+        expect(errors).toHaveSize(1);
+        const [error] = errors;
+        expect(error.message).toContain("w3cid");
+        expect(error.message).toContain("person 2");
+      });
+    }
+    for (const specStatus of registryTrackStatus) {
+      it(`shows an error if w3cid is missing for Registry status ${specStatus}`, async () => {
+        const ops = makeStandardOps({
+          specStatus,
+          editors: [{ name: "ok", w3cid: "12345" }, { name: "person 2" }],
+          group: "webapps",
+          github: "speced/respec",
         });
         const doc = await makeRSDoc(ops, simpleSpecURL);
         const errors = headerErrors(doc);
