@@ -49,6 +49,7 @@ const menu = html`<ul
 ></ul>`;
 const closeButton = html`<button
   class="close-button"
+  aria-label="Close"
   onclick=${() => ui.closeModal()}
   title="Close"
 >
@@ -77,7 +78,7 @@ respecPill.addEventListener(
     e.stopPropagation();
     respecPill.setAttribute("aria-expanded", String(menu.hidden));
     toggleMenu();
-    menu.querySelector("li:first-child button").focus();
+    menu.querySelector("li:first-child button")?.focus();
   }
 );
 
@@ -95,6 +96,35 @@ menu.addEventListener(
       respecPill.setAttribute("aria-expanded", String(menu.hidden));
       toggleMenu();
       respecPill.focus();
+      return;
+    }
+    const items = /** @type {HTMLElement[]} */ ([
+      ...menu.querySelectorAll("button:not([disabled])"),
+    ]);
+    const currentIndex = items.indexOf(
+      /** @type {HTMLElement} */ (document.activeElement)
+    );
+    switch (e.key) {
+      case "ArrowDown": {
+        e.preventDefault();
+        const next = items[(currentIndex + 1) % items.length];
+        next?.focus();
+        break;
+      }
+      case "ArrowUp": {
+        e.preventDefault();
+        const prev = items[(currentIndex - 1 + items.length) % items.length];
+        prev?.focus();
+        break;
+      }
+      case "Home":
+        e.preventDefault();
+        items[0]?.focus();
+        break;
+      case "End":
+        e.preventDefault();
+        items[items.length - 1]?.focus();
+        break;
     }
   }
 );
