@@ -132,7 +132,7 @@ function defineIdlName(escaped, data, parent) {
   if (dfn) {
     if (data.partial && !dfn.dataset.cite) {
       const nonPartialPattern = new RegExp(
-        `^\\s*(?:interface|dictionary|namespace|interface\\s+mixin)\\s+${regExpEscape(name)}\\b`,
+        `(?:^|\\])\\s*(?:interface|dictionary|namespace|interface\\s+mixin)\\s+${regExpEscape(name)}\\b`,
         "m"
       );
       const hasNonPartialDef = [

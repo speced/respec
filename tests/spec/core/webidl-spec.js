@@ -1581,6 +1581,72 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(warnings).toHaveSize(1);
     expect(warnings[0].message).toContain("PartialWarn");
   });
+
+  it("does not warn when partial has a non-partial base definition", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          interface HasBase {};
+          partial interface HasBase {
+            undefined doStuff();
+          };
+        </pre>
+        <p><dfn>HasBase</dfn></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const warnings = doc.respec.warnings.filter(
+      w => w.plugin === "core/webidl" && w.message.includes("partial")
+    );
+    expect(warnings).toHaveSize(0);
+  });
+
+  it("does not warn when partial dfn has data-cite", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          partial interface CitedPartial {
+            undefined doStuff();
+          };
+        </pre>
+        <p><dfn data-cite="SomeSpec#cited-partial">CitedPartial</dfn></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const warnings = doc.respec.warnings.filter(
+      w => w.plugin === "core/webidl" && w.message.includes("partial")
+    );
+    expect(warnings).toHaveSize(0);
+  });
+
+  it("warns for partial with extended-attribute-prefixed base", async () => {
+    const body = `
+      <section>
+        <pre class="idl">
+          partial interface AttrPrefixed {
+            undefined doStuff();
+          };
+        </pre>
+        <p><dfn>AttrPrefixed</dfn></p>
+      </section>
+      <section>
+        <pre class="idl">
+          [Exposed=Window] interface AttrPrefixed {
+            attribute DOMString name;
+          };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const warnings = doc.respec.warnings.filter(
+      w => w.plugin === "core/webidl" && w.message.includes("partial")
+    );
+    expect(warnings).toHaveSize(0);
+  });
+
   it("autolinks partial definitions", async () => {
     const body = `
       <section data-dfn-for="EventInit">
