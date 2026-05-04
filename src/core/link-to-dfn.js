@@ -256,14 +256,13 @@ function isCode(dfn) {
   if (dfn.closest("code,pre")) {
     return true;
   }
-  // Note that childNodes.length === 1 excludes
-  // definitions that have either other text, or other
-  // whitespace, inside the <dfn>.
-  if (dfn.childNodes.length !== 1) {
+  const children = [...dfn.childNodes].filter(
+    n => !(n.nodeType === Node.TEXT_NODE && (n.textContent ?? "").trim() === "")
+  );
+  if (children.length !== 1) {
     return false;
   }
-  const [first] = /** @type {NodeListOf<HTMLElement>} */ (dfn.childNodes);
-  return first.localName === "code";
+  return /** @type {HTMLElement} */ (children[0]).localName === "code";
 }
 
 /**
