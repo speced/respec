@@ -513,9 +513,12 @@ describe("Core — dfn-index", () => {
       const ops = makeStandardOps({ xref: "web-platform" }, body);
       const doc = await makeRSDoc(ops);
       const externalIndex = doc.getElementById("index-defined-elsewhere");
+      expect(externalIndex).toBeTruthy();
       const terms = [...externalIndex.querySelectorAll(".index-term")].map(el =>
         el.textContent.trim()
       );
+      expect(terms.length).toBeGreaterThan(0);
+      expect(terms).toContain("Event interface");
       expect(terms).not.toContain("Event (noindex)");
     });
   });
