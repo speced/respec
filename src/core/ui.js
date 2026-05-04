@@ -307,6 +307,9 @@ export const ui = {
   freshModal(title, content, currentOwner) {
     if (modal) modal.remove();
     if (overlay) overlay.remove();
+    if (currentModalOwner && currentModalOwner !== currentOwner) {
+      currentModalOwner.setAttribute("aria-expanded", "false");
+    }
     currentModalOwner = currentOwner;
     overlay = html`<div id="respec-overlay" class="removeOnSave"></div>`;
     const id = `${currentOwner.id}-modal`;
