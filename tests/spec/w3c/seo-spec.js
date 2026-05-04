@@ -167,7 +167,7 @@ describe("W3C - SEO", () => {
     const doc = await makeRSDoc(ops);
     const script = doc.querySelector("script[type='application/ld+json']");
     const jsonld = JSON.parse(script.textContent);
-    expect(jsonld["@context"]).toContain("http://schema.org");
+    expect(jsonld["@context"]).toContain("https://schema.org");
     expect(jsonld.id).toBe("https://www.w3.org/TR/some-spec/");
     expect(jsonld.type).toContain("TechArticle");
     expect(jsonld.type).toContain("w3p:CR");
