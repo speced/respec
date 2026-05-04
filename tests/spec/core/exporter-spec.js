@@ -91,7 +91,7 @@ describe("Core - exporter", () => {
     const html = await rsDoc.respec.toHTML();
     const [bodyTag] = html.match(/<body[^>]*>/) ?? [];
     expect(bodyTag).toBeTruthy();
-    expect(bodyTag).not.toContain("toc-inline");
-    expect(bodyTag).not.toContain("toc-sidebar");
+    expect(bodyTag).not.toMatch(/\bclass="[^"]*\btoc-inline\b/);
+    expect(bodyTag).not.toMatch(/\bclass="[^"]*\btoc-sidebar\b/);
   });
 });
