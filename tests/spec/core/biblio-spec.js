@@ -32,6 +32,12 @@ describe("W3C — Bibliographic References", () => {
       href: "http://test.com",
       publisher: "Publisher Here",
     },
+    TestRef4: {
+      title: "Fourth test",
+      href: "http://test.com",
+      publisher: "Publisher Pages",
+      pages: "369-384",
+    },
     FOOBARGLOP: {
       aliasOf: "BARBAR",
     },
@@ -48,7 +54,7 @@ describe("W3C — Bibliographic References", () => {
   const body = `
     <section id='sotd'>
       <p>[[DOM]] [[dom]] [[fetch]] [[?FeTcH]] [[FETCh]] [[fetCH]]
-      <p>foo [[TestRef1]] [[TestRef2]] [[TestRef3]]</p>
+      <p>foo [[TestRef1]] [[TestRef2]] [[TestRef3]] [[TestRef4]]</p>
       <p>[[EVERCOOKIE]]</p>
     </section>
     <section id='sample'>
@@ -142,6 +148,12 @@ describe("W3C — Bibliographic References", () => {
     ref = doc.querySelector("#bib-testref3 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Publisher Here\.\s/);
+  });
+
+  it("displays the pages field when present", () => {
+    const ref = doc.querySelector("#bib-testref4 + dd");
+    expect(ref).toBeTruthy();
+    expect(ref.textContent).toContain("pp. 369-384");
   });
 
   it("resolves a localy-aliased spec", () => {

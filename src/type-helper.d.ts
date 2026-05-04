@@ -78,6 +78,7 @@ interface BiblioData {
   href?: string;
   authors?: string[];
   publisher?: string;
+  pages?: string;
   date?: string;
   rawDate?: string;
   isbn?: string;

@@ -2,7 +2,7 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import { addId, getIntlData, showError, toId } from "./utils.js";
+import { addId, getIntlData, showError, toId, xmlEscape } from "./utils.js";
 import { biblio } from "./biblio.js";
 import { html } from "./import-maps.js";
 
@@ -33,6 +33,12 @@ const localizationStrings = {
     norm_references: "Referencias normativas",
     references: "Referencias",
     reference_not_found: "Referencia no encontrada.",
+  },
+  fr: {
+    info_references: "Références informatives",
+    norm_references: "Références normatives",
+    references: "Références",
+    reference_not_found: "Référence non trouvée.",
   },
   ja: {
     info_references: "参照用参考文献",
@@ -261,6 +267,7 @@ function stringifyReference(ref) {
   if (ref.publisher) {
     output = `${output} ${endWithDot(ref.publisher)} `;
   }
+  if (ref.pages) output += `pp. ${xmlEscape(ref.pages)}. `;
   if (ref.date) output += `${ref.date}. `;
   if (ref.status) output += `${REF_STATUSES.get(ref.status) || ref.status}. `;
   if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
