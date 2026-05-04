@@ -673,4 +673,20 @@ describe("Core - Inlines", () => {
     expect(withSpace.querySelector("a")).toBeNull();
     expect(withSpace.textContent.trim()).toBe("{{ Window }}");
   });
+
+  it("resolves {{[[slot]]}} from ancestor data-link-for", async () => {
+    const body = `
+      <section>
+        <dfn data-dfn-for="MyInterface">[[\\mySlot]]</dfn>
+        <dfn>MyInterface</dfn>
+        <section data-link-for="MyInterface">
+          <p id="test">{{ [[mySlot]] }}</p>
+        </section>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const anchor = doc.querySelector("#test a");
+    expect(anchor).toBeTruthy();
+    expect(anchor.textContent).toBe("[[mySlot]]");
+  });
 });
