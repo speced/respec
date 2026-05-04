@@ -538,6 +538,20 @@ describe("Core - Inlines", () => {
     );
   });
 
+  it("links [= =] to event-type definitions", async () => {
+    const body = `
+      <section>
+        <dfn data-dfn-type="event">orientationchange</dfn>
+        <p id="test">[= orientationchange =]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const anchor = doc.querySelector("#test a");
+    expect(anchor).toBeTruthy();
+    expect(anchor.getAttribute("href")).toBe("#dfn-orientationchange");
+    expect(anchor.textContent).toBe("orientationchange");
+  });
+
   it("processes {{ forContext/term }} IDL", async () => {
     const body = `
       <section>
