@@ -98,4 +98,13 @@ describe("Geonovum - Style", () => {
     const elem = doc.querySelector(query);
     expect(elem).toBeNull();
   });
+
+  it("shouldn't include fixup.js when legacy noToc is set", async () => {
+    const ops = makeStandardGeoOps();
+    Object.assign(ops.config, { noToc: true });
+    const doc = await makeRSDoc(ops);
+    const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
+    const elem = doc.querySelector(query);
+    expect(elem).toBeNull();
+  });
 });

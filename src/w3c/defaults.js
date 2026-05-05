@@ -75,7 +75,7 @@ export function run(conf) {
     lint,
   });
 
-  if ("noToc" in conf) conf.noTOC = conf.noToc;
+  if ("noToc" in conf && !("noTOC" in conf)) conf.noTOC = conf.noToc;
   if (conf.specStatus !== "unofficial" && !conf.hasOwnProperty("license")) {
     conf.license = "w3c-software-doc";
   }

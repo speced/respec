@@ -84,6 +84,6 @@ export function run(conf) {
   });
   // computed properties
 
-  if ("noToc" in conf) conf.noTOC = conf.noToc;
+  if ("noToc" in conf && !("noTOC" in conf)) conf.noTOC = conf.noToc;
   Object.assign(conf, computeProps(/** @type {NormalizedConf} */ (conf)));
 }
