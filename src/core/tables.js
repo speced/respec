@@ -20,8 +20,8 @@ const localizationStrings = {
     table: "Table ",
   },
   fr: {
-    list_of_tables: "Liste des tableaux",
-    table: "Tableau ",
+    list_of_tables: "Liste des tables",
+    table: "Table ",
   },
 };
 

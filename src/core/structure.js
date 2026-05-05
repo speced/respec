@@ -48,7 +48,7 @@ const localizationStrings = {
   },
   fr: {
     toc: "Table des matières",
-    back_to_top: "Retour en haut",
+    back_to_top: "Retourner en haut",
   },
   de: {
     toc: "Inhaltsverzeichnis",
