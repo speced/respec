@@ -133,4 +133,27 @@ describe("Core — Best Practices", () => {
     const bdi = doc.querySelector(".advisement .self-link bdi");
     expect(bdi.hasAttribute("lang")).toBeTrue();
   });
+
+  it("uses custom labels in boxed best practice containers", async () => {
+    const body = `
+      <section>
+        <h2>Section</h2>
+        <div>
+          <span class='practicelab' data-label="Principle">Boxed P1</span>
+          <p>Details here.</p>
+        </div>
+      </section>
+    `;
+    const ops = {
+      config: makeBasicConfig(),
+      body,
+    };
+    const doc = await makeRSDoc(ops);
+    const container = doc.querySelector(".advisement");
+    expect(container).toBeTruthy();
+    const marker = container.querySelector(".marker");
+    expect(marker.textContent).toContain("Principle 1");
+    const bdi = marker.querySelector("bdi");
+    expect(bdi.hasAttribute("lang")).toBeFalse();
+  });
 });

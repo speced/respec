@@ -38,11 +38,11 @@ export function run() {
   const summaryItems = bpSummary ? document.createElement("ul") : null;
   [...bps].forEach((bp, num) => {
     const id = addId(bp, "bp");
-    const rawLabel = bp.dataset.label || l10n.best_practice;
+    const customLabel = bp.dataset.label;
+    const rawLabel = customLabel || l10n.best_practice;
     const label = `${rawLabel.trimEnd()} `;
     const bdi = html`<bdi>${label}${num + 1}</bdi>`;
-    // Only set lang when using the built-in localized label, not a custom one
-    if (!bp.dataset.label) bdi.lang = lang;
+    if (!customLabel) bdi.lang = lang;
     const localizedBpName = html`<a class="marker self-link" href="${`#${id}`}"
       >${bdi}</a
     >`;
