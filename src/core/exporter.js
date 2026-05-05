@@ -7,7 +7,6 @@
  */
 
 import { removeCommentNodes, removeReSpec } from "./utils.js";
-import { expose } from "./expose-modules.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -107,5 +106,3 @@ function prettify(cloneDoc) {
     el.outerHTML = `\n${el.outerHTML}`;
   });
 }
-
-expose("core/exporter", { rsDocToDataURL });
