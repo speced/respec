@@ -651,7 +651,8 @@ describe("Core — xref", () => {
       expect(eventTargetLink.firstElementChild.localName).toBe("code");
 
       const link2 = doc.querySelector("#link2 a");
-      expect(link2).toBeNull();
+      expect(link2).toBeTruthy();
+      expect(link2.classList).toContain("respec-offending-element");
 
       const link3 = doc.querySelector("#link3 a");
       expect(link3.href).toBe("https://dom.spec.whatwg.org/#eventtarget");
