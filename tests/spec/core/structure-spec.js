@@ -354,7 +354,7 @@ describe("Core - Structure", () => {
     expect(doc.documentElement.lang).toBe("fr");
     const abbr = doc.querySelector("#back-to-top abbr");
     expect(abbr).toBeTruthy();
-    expect(abbr.title).toBe("Retour en haut");
+    expect(abbr.title).toBe("Retourner en haut");
   });
 
   it("finds and updates empty anchors correctly", async () => {

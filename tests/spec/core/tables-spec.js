@@ -83,8 +83,8 @@ describe("Core - Tables", () => {
     const listOfTables = doc.getElementById("list-of-tables");
     const listOfTablesHeader = listOfTables.querySelector("h2");
     expect(doc.documentElement.lang).toBe("fr");
-    expect(listOfTablesHeader.textContent).toContain("Liste des tableaux");
+    expect(listOfTablesHeader.textContent).toContain("Liste des tables");
     const tableLinks = listOfTables.querySelectorAll("ul li a");
-    expect(tableLinks[0].textContent).toContain("Tableau");
+    expect(tableLinks[0].textContent).toContain("Table");
   });
 });
