@@ -69,4 +69,22 @@ describe("Core - Tables", () => {
     expect(tableLinks[0].textContent).toBe("Table 1 test 1");
     expect(tableLinks[1].textContent).toBe("Table 2 test 2");
   });
+
+  it("localizes list of tables to French", async () => {
+    const body = `
+      <table class='numbered'>
+        <caption>test 1</caption>
+      </table>
+      <section id='list-of-tables'></section>
+    `;
+    const ops = makeStandardOps(null, body);
+    ops.htmlAttrs = { lang: "fr" };
+    const doc = await makeRSDoc(ops);
+    const listOfTables = doc.getElementById("list-of-tables");
+    const listOfTablesHeader = listOfTables.querySelector("h2");
+    expect(doc.documentElement.lang).toBe("fr");
+    expect(listOfTablesHeader.textContent).toContain("Liste des tableaux");
+    const tableLinks = listOfTables.querySelectorAll("ul li a");
+    expect(tableLinks[0].textContent).toContain("Tableau");
+  });
 });

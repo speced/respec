@@ -338,6 +338,25 @@ describe("Core - Structure", () => {
     expect(textContent).toContain("Table des matières");
   });
 
+  it("localizes back to top to French", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      htmlAttrs: {
+        lang: "fr",
+      },
+      body: `
+      <section id='sotd'>
+        <p>This is required.</p>
+      </section>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    expect(doc.documentElement.lang).toBe("fr");
+    const abbr = doc.querySelector("#back-to-top abbr");
+    expect(abbr).toBeTruthy();
+    expect(abbr.title).toBe("Retour en haut");
+  });
+
   it("finds and updates empty anchors correctly", async () => {
     const ops = {
       config: makeBasicConfig(),
