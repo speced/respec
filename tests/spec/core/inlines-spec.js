@@ -538,18 +538,21 @@ describe("Core - Inlines", () => {
     );
   });
 
-  it("links [= =] to event-type definitions", async () => {
+  it("links {{ Interface/event!!event }} to event-type definitions", async () => {
     const body = `
-      <section>
-        <dfn data-dfn-type="event">orientationchange</dfn>
-        <p id="test">[= orientationchange =]</p>
+      <section data-dfn-for="ScreenOrientation">
+        <h2><dfn>ScreenOrientation</dfn></h2>
+        <dfn data-dfn-type="event" data-dfn-for="ScreenOrientation">change</dfn>
+        <p id="test">{{ ScreenOrientation/change!!event }}</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
-    const anchor = doc.querySelector("#test a");
-    expect(anchor).toBeTruthy();
-    expect(anchor.getAttribute("href")).toBe("#dfn-orientationchange");
-    expect(anchor.textContent).toBe("orientationchange");
+    const para = doc.getElementById("test");
+    const anchor = para.querySelector("a");
+    expect(anchor).withContext(para.innerHTML).toBeTruthy();
+    expect(anchor.dataset.xrefType).toBe("event");
+    expect(anchor.dataset.linkFor).toBe("ScreenOrientation");
+    expect(anchor.textContent).toBe("change");
   });
 
   it("processes {{ forContext/term }} IDL", async () => {

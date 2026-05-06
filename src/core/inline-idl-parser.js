@@ -88,6 +88,14 @@ const isProbablySlotRegex = /\[\[.+\]\]/;
  * @returns {InlineIdl[]}
  */
 function parseInlineIDL(str) {
+  // Extract !!type suffix for type disambiguation (Bikeshed compat)
+  let typeHint = "";
+  if (str.includes("!!")) {
+    [str, typeHint] = str.split("!!", 2);
+    str = str.trim();
+    typeHint = typeHint.trim();
+  }
+
   // If it's got [[ string ]], then split as an internal slot
   const isSlot = isProbablySlotRegex.test(str);
   const splitter = isSlot ? slotSplitRegex : methodSplitRegex;
@@ -215,7 +223,7 @@ function parseInlineIDL(str) {
     item.parent = list[i + 1] || null;
   });
   // return them in the order we found them...
-  return results.reverse();
+  return { tokens: results.reverse(), typeHint };
 }
 
 /**
@@ -275,13 +283,16 @@ function htmlArgMapper(str, i, array) {
 /**
  * Attribute: .identifier
  * @param {IdlAttribute} details
+ * @param {string} [typeHint]
  */
-function renderAttribute(details) {
+function renderAttribute(details, typeHint) {
   const { parent, identifier, renderParent } = details;
   const { identifier: linkFor } = parent || {};
+  const xrefType = typeHint || "attribute|dict-member|const";
+  const linkType = typeHint || "idl";
   const element = html`${renderParent ? "." : ""}<a
-      data-link-type="idl"
-      data-xref-type="attribute|dict-member|const"
+      data-link-type="${linkType}"
+      data-xref-type="${xrefType}"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
       ><code>${identifier}</code></a
@@ -292,16 +303,18 @@ function renderAttribute(details) {
 /**
  * Method: .identifier(arg1, arg2, ...), identifier(arg1, arg2, ...)
  * @param {IdlMethod} details
+ * @param {string} [typeHint]
  */
-function renderMethod(details) {
+function renderMethod(details, typeHint) {
   const { args, identifier, type, parent, renderParent } = details;
   const { renderText: text, renderArgs: textArgs } = details;
   const { identifier: linkFor } = parent || {};
   const argsText = htmlJoinComma(textArgs || args, htmlArgMapper);
   const searchText = `${identifier}(${args.join(", ")})`;
+  const xrefType = typeHint || type;
   const element = html`${parent && renderParent ? "." : ""}<a
       data-link-type="idl"
-      data-xref-type="${type}"
+      data-xref-type="${xrefType}"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
       data-lt="${searchText}"
@@ -369,9 +382,9 @@ function renderIdlPrimitiveType(details) {
  * @return {Node} html output
  */
 export function idlStringToHtml(str) {
-  let results;
+  let parsed;
   try {
-    results = parseInlineIDL(str);
+    parsed = parseInlineIDL(str);
   } catch (error) {
     const el = html`<span>{{ ${str} }}</span>`;
     const title = "Error: Invalid inline IDL string.";
@@ -381,6 +394,7 @@ export function idlStringToHtml(str) {
     });
     return el;
   }
+  const { tokens: results, typeHint } = parsed;
   const render = html(document.createDocumentFragment());
   const output = [];
   for (const details of results) {
@@ -391,13 +405,13 @@ export function idlStringToHtml(str) {
         break;
       }
       case "attribute":
-        output.push(renderAttribute(details));
+        output.push(renderAttribute(details, typeHint));
         break;
       case "internal-slot":
         output.push(renderInternalSlot(details));
         break;
       case "method":
-        output.push(renderMethod(details));
+        output.push(renderMethod(details, typeHint));
         break;
       case "enum":
         output.push(renderEnum(details));
