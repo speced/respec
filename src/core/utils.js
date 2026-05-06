@@ -789,7 +789,7 @@ export class InsensitiveStringSet extends Set {
   getCanonicalKey(key) {
     return super.has(key)
       ? key
-      : this.keys().find(
+      : [...this.keys()].find(
           existingKey => existingKey.toLowerCase() === key.toLowerCase()
         );
   }
