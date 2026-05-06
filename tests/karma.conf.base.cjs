@@ -66,6 +66,7 @@ module.exports = config => {
       "/js/deps/": "/base/js/deps/",
       "/base/deps/": "/base/js/deps/",
       "/worker/respec-worker.js": "/base/worker/respec-worker.js",
+      "/base/src/core/respec-mermaid.js": "/base/builds/respec-mermaid.js",
       "/support-files/": "/base/tests/support-files/",
     },
 
