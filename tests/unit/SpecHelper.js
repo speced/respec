@@ -25,13 +25,20 @@ export function makePluginDoc(
     <!DOCTYPE html>
     <html lang="en">
       <head>
+        <base href="${window.location.origin}/" />
         ${head}
         <script>
+          // Prevent unhandled rejections with undefined reason from propagating
+          // to the parent frame (Safari strips the reason across opaque origins,
+          // causing jasmine-core to crash on formatProperties(undefined).split).
+          window.addEventListener("unhandledrejection", function(e) {
+            if (e.reason === undefined || e.reason === null) e.preventDefault();
+          });
           var respecConfig = ${JSON.stringify(config || {}, null, 2)};
         </script>
         <script type="module">
-          async function run(plugins) {
-            const allPlugins = plugins.map(p => "/base" + p);
+          async function run(plugins, origin) {
+            const allPlugins = plugins.map(p => origin + "/base" + p);
             try {
               const [baseRunner, ...plugs] = await Promise.all(
                 allPlugins.map(plug => import(plug))
@@ -58,7 +65,7 @@ export function makePluginDoc(
               }
             }
           }
-          run(${JSON.stringify(plugins)});
+          run(${JSON.stringify(plugins)}, ${JSON.stringify(window.location.origin)});
         </script>
       </head>
       <body>${body}</body>
@@ -122,11 +129,14 @@ async function waitReady(iframe) {
     // received because ev.source !== iframe.contentWindow (different proxy
     // objects for opaque-origin frames). Poll doc.respec.ready directly so
     // tests complete without relying solely on postMessage.
+    // Re-read iframe.contentDocument on each tick because Safari can replace
+    // the document object for opaque-origin srcdoc iframes after initial load.
     const pollId = setInterval(() => {
       try {
-        if (!doc || !doc.respec) return;
+        const currentDoc = iframe.contentDocument;
+        if (!currentDoc || !currentDoc.respec) return;
         settle(() => {
-          doc.respec.ready.then(() => resolve(doc), reject);
+          currentDoc.respec.ready.then(() => resolve(currentDoc), reject);
         });
       } catch {
         // Cross-origin access denied; rely on postMessage path.
@@ -140,7 +150,7 @@ async function waitReady(iframe) {
       // sequentially (jasmine), so at most one waitReady is active at a time;
       // matching on topic alone is safe.
       if (ev.data?.topic === "end-all") {
-        settle(() => resolve(doc));
+        settle(() => resolve(iframe.contentDocument));
       }
     }
     window.addEventListener("message", msgHandler);
