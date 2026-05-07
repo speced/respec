@@ -7,6 +7,9 @@ import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
+/** Matches ASCII apostrophe or U+2019 RIGHT SINGLE QUOTATION MARK possessive suffix. */
+export const POSSESSIVE_SUFFIX = /['\u2019]s$/;
+
 const dashes = /-/g;
 
 /**
@@ -582,6 +585,14 @@ export function getLinkTargets(elem) {
 
     // Finally, we can try to match without link for
     if (linkFor !== "") result.push({ for: "", title });
+
+    // Possessive suffix fallback: "term's" / "term\u2019s" → "term"
+    const stripped = title.replace(POSSESSIVE_SUFFIX, "");
+    if (stripped !== title && stripped !== "") {
+      result.push({ for: linkFor, title: stripped });
+      if (!linkForElem) result.push({ for: stripped, title: stripped });
+      if (linkFor !== "") result.push({ for: "", title: stripped });
+    }
     return result;
   }, /** @type {LinkTarget[]} */ ([]));
   return results;
