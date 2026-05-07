@@ -89,20 +89,19 @@ async function loadMermaidLib() {
  * @returns {Promise<void>}
  */
 function loadScript(url) {
-  const { promise, resolve, reject } =
-    /** @type {PromiseWithResolvers<void>} */ (Promise.withResolvers());
-  const script = document.createElement("script");
-  script.src = url;
-  script.onload = () => {
-    script.remove();
-    resolve();
-  };
-  script.onerror = event => {
-    script.remove();
-    reject(new Error(`Failed to load: ${url}`, { cause: event }));
-  };
-  document.head.append(script);
-  return promise;
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = url;
+    script.onload = () => {
+      script.remove();
+      resolve();
+    };
+    script.onerror = event => {
+      script.remove();
+      reject(new Error(`Failed to load: ${url}`, { cause: event }));
+    };
+    document.head.append(script);
+  });
 }
 
 /**
@@ -269,6 +268,21 @@ export async function run(conf) {
   const mermaidBlocks = document.querySelectorAll("pre.mermaid");
 
   if (!mermaidBlocks.length) return;
+
+  const uncaptioned = [...mermaidBlocks].filter(pre => {
+    const figure = pre.closest("figure");
+    return !figure || !figure.querySelector("figcaption");
+  });
+  if (uncaptioned.length) {
+    showWarning(
+      "Diagram blocks must be wrapped in a `<figure>` with a `<figcaption>`.",
+      name,
+      {
+        hint: "Wrap the `<pre>` in a `<figure>` element and add a `<figcaption>`.",
+        elements: uncaptioned,
+      }
+    );
+  }
 
   let counter = 0;
 

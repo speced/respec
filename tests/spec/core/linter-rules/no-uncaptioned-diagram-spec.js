@@ -7,33 +7,30 @@ import {
   warningFilters,
 } from "../../SpecHelper.js";
 
-const warningsFilter = warningFilters.filter(
-  "core/linter-rules/no-uncaptioned-diagram"
-);
+const warningsFilter = warningFilters.filter("core/diagrams");
 
-describe("Core Linter Rule - 'no-uncaptioned-diagram'", () => {
+describe("Core - Diagrams - uncaptioned diagram warning", () => {
   afterAll(flushIframes);
 
   it("warns when diagram is outside a figure", async () => {
     const body = `<pre class="mermaid">flowchart LR</pre>`;
-    const ops = makeStandardOps(
-      { lint: { "no-uncaptioned-diagram": true } },
-      body
-    );
-    const doc = await makeRSDoc(ops);
+    const doc = await makeRSDoc(makeStandardOps(null, body));
     const warnings = warningsFilter(doc);
-    expect(warnings).toHaveSize(1);
+    expect(warnings.length).toBeGreaterThanOrEqual(1);
+    const match = warnings.find(w =>
+      w.message.includes("must be wrapped in a `<figure>`")
+    );
+    expect(match).toBeTruthy();
   });
 
   it("warns when figure is missing a figcaption", async () => {
     const body = `<figure><pre class="mermaid">flowchart LR</pre></figure>`;
-    const ops = makeStandardOps(
-      { lint: { "no-uncaptioned-diagram": true } },
-      body
-    );
-    const doc = await makeRSDoc(ops);
+    const doc = await makeRSDoc(makeStandardOps(null, body));
     const warnings = warningsFilter(doc);
-    expect(warnings).toHaveSize(1);
+    const match = warnings.find(w =>
+      w.message.includes("must be wrapped in a `<figure>`")
+    );
+    expect(match).toBeTruthy();
   });
 
   it("does not warn when diagram is in a figure with figcaption", async () => {
@@ -43,23 +40,11 @@ describe("Core Linter Rule - 'no-uncaptioned-diagram'", () => {
         <figcaption>Test</figcaption>
       </figure>
     `;
-    const ops = makeStandardOps(
-      { lint: { "no-uncaptioned-diagram": true } },
-      body
-    );
-    const doc = await makeRSDoc(ops);
+    const doc = await makeRSDoc(makeStandardOps(null, body));
     const warnings = warningsFilter(doc);
-    expect(warnings).toHaveSize(0);
-  });
-
-  it("does not warn when disabled", async () => {
-    const body = `<pre class="mermaid">flowchart LR</pre>`;
-    const ops = makeStandardOps(
-      { lint: { "no-uncaptioned-diagram": false } },
-      body
+    const match = warnings.find(w =>
+      w.message.includes("must be wrapped in a `<figure>`")
     );
-    const doc = await makeRSDoc(ops);
-    const warnings = warningsFilter(doc);
-    expect(warnings).toHaveSize(0);
+    expect(match).toBeFalsy();
   });
 });
