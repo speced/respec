@@ -13,12 +13,14 @@
  */
 
 import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
+import { cacheHeadingsData, resolveHeadingsCache } from "./headings-db.js";
 import {
   refTypeFromContext,
   showError,
   showWarning,
   wrapInner,
 } from "./utils.js";
+import { html } from "./import-maps.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/data-cite";
 
@@ -38,44 +40,63 @@ const HEADINGS_API_URL = "https://respec.org/xref/search/headings";
 /**
  * Fetches heading titles from the respec.org headings API for cross-spec
  * section links ([[[SPEC#id]]] syntax). Returns a Map keyed by "spec#id".
- * Gracefully returns an empty Map on any failure.
+ * Uses IndexedDB cache; falls back to network on cache miss.
  * @param {{ spec: string, id: string }[]} queries
  * @returns {Promise<Map<string, HeadingInfo>>}
  */
 async function fetchHeadingTexts(queries) {
   if (!queries.length) return new Map();
+
+  const cached = await resolveHeadingsCache(queries);
+  const uncachedQueries = queries.filter(q => !cached.has(`${q.spec}#${q.id}`));
+
+  if (!uncachedQueries.length) return cached;
+
   try {
     const res = await fetch(HEADINGS_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ queries }),
+      body: JSON.stringify({ queries: uncachedQueries }),
     });
-    if (!res.ok) return new Map();
+    if (!res.ok) {
+      const msg = `Failed to fetch heading texts (HTTP ${res.status}).`;
+      const hint = "Cross-spec section links will fall back to spec titles.";
+      showWarning(msg, name, { hint });
+      return cached;
+    }
     const { result = [] } = await res.json();
     /** @type {Map<string, HeadingInfo>} */
-    const map = new Map();
+    const fetched = new Map();
     for (const entry of result) {
       if (!entry.error) {
-        map.set(`${entry.spec}#${entry.id}`, {
+        fetched.set(`${entry.spec}#${entry.id}`, {
           title: entry.title,
           number: entry.number || null,
         });
       }
     }
-    return map;
+    await cacheHeadingsData(uncachedQueries, fetched);
+    return new Map([...cached, ...fetched]);
   } catch {
-    return new Map();
+    const msg = "Failed to fetch heading texts from respec.org.";
+    const hint = "Cross-spec section links will fall back to spec titles.";
+    showWarning(msg, name, { hint });
+    return cached;
   }
 }
 
 /**
- * Formats a heading title for use as link text.
- * When a section number is available, produces "§N Title".
+ * Sets heading content on an element using proper secno markup.
+ * When a section number is available, produces `<bdi class="secno">N </bdi>Title`.
+ * @param {HTMLElement} elem
  * @param {HeadingInfo} heading
- * @returns {string}
  */
-function formatHeadingText({ title, number }) {
-  return number ? `§${number} ${title}` : title;
+function setHeadingContent(elem, { title, number }) {
+  if (number) {
+    elem.append(html`<bdi class="secno">${number} </bdi>`, title);
+  } else {
+    elem.textContent = title;
+  }
 }
 
 /**
@@ -285,7 +306,7 @@ export async function run() {
       if (headingKey && elem.textContent === "") {
         const heading = headingTexts.get(headingKey);
         if (heading?.title) {
-          linkProps.title = formatHeadingText(heading);
+          setHeadingContent(elem, heading);
         }
       }
 
