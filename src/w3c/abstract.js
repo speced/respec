@@ -21,6 +21,7 @@ const localizationStrings = {
   ja: { abstract: "要約" },
   nl: { abstract: "Samenvatting" },
   es: { abstract: "Resumen" },
+  fr: { abstract: "Résumé" },
   de: { abstract: "Zusammenfassung" },
   cs: { abstract: "Abstrakt" },
 };

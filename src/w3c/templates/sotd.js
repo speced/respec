@@ -43,6 +43,9 @@ const localizationStrings = {
       <a href="https://www.w3.org/TR/">el índice de normas y borradores</a> del
       W3C.`,
   },
+  fr: {
+    sotd: "État du présent document",
+  },
   de: {
     sotd: "Status dieses Dokuments",
     status_at_publication: html`Dieser Abschnitt beschreibt den Status des
