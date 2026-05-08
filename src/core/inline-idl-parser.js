@@ -92,7 +92,7 @@ function parseInlineIDL(str) {
   const isSlot = isProbablySlotRegex.test(str);
   const splitter = isSlot ? slotSplitRegex : methodSplitRegex;
   let [forPart, childString] = str.split(splitter);
-  if (isSlot && forPart && !childString) {
+  if (isSlot && !childString && forPart.startsWith("[[")) {
     childString = forPart;
     forPart = "";
   }

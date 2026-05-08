@@ -689,4 +689,22 @@ describe("Core - Inlines", () => {
     expect(anchor).toBeTruthy();
     expect(anchor.textContent).toBe("[[mySlot]]");
   });
+
+  it("handles {{Foo.[[slot]]}} dot-notation without losing base context", async () => {
+    const body = `
+      <section>
+        <dfn data-dfn-for="MyInterface">[[\\mySlot]]</dfn>
+        <dfn>MyInterface</dfn>
+        <p id="test">{{ MyInterface.[[mySlot]] }}</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const p = doc.getElementById("test");
+    expect(p.textContent).toContain("MyInterface.[[mySlot]]");
+    const anchors = p.querySelectorAll("a");
+    expect(anchors.length).toBe(2);
+    expect(anchors[0].textContent).toBe("MyInterface");
+    expect(anchors[1].textContent).toBe("[[mySlot]]");
+    expect(anchors[1].dataset.linkFor).toBe("MyInterface");
+  });
 });
