@@ -1621,7 +1621,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(warnings).toHaveSize(0);
   });
 
-  it("warns for partial with extended-attribute-prefixed base", async () => {
+  it("does not warn when non-partial base has same-line extended attributes", async () => {
     const body = `
       <section>
         <pre class="idl">
