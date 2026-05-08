@@ -432,7 +432,7 @@ export function idlStringToHtml(str) {
       "core/inlines",
       {
         elements: [el],
-        hint: `Expected one of: ${[...validTypeHints].join(", ")}.`,
+        hint: `Common types: attribute, method, event, interface, dict-member, const, enum-value.`,
       }
     );
     typeHint = "";
