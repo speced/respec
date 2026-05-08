@@ -2,7 +2,7 @@
 // Parses an inline IDL string (`{{ idl string }}`)
 //  and renders its components as HTML
 
-import { htmlJoinComma, showError } from "./utils.js";
+import { htmlJoinComma, showError, showWarning } from "./utils.js";
 import { html } from "./import-maps.js";
 const idlPrimitiveRegex = /^[a-z]+(\s+[a-z]+)+\??$/; // {{unrestricted double?}} {{ double }}
 const exceptionRegex = /\B"([^"]*)"\B/; // {{ "SomeException" }}
@@ -30,6 +30,35 @@ const enumRegex = /^(\w+)\["([\w- ]*)"\]$/;
 const methodSplitRegex = /\.?(\w+\(.*\)$)/;
 const slotSplitRegex = /\/(.+)/;
 const isProbablySlotRegex = /\[\[.+\]\]/;
+
+/** Valid types for the `!!type` disambiguation suffix in `{{ }}` inline IDL syntax */
+const validTypeHints = new Set([
+  "abstract-op",
+  "attr-value",
+  "attribute",
+  "callback",
+  "const",
+  "dict-member",
+  "dfn",
+  "dictionary",
+  "element",
+  "element-attr",
+  "element-state",
+  "enum",
+  "enum-value",
+  "event",
+  "exception",
+  "extended-attribute",
+  "http-header",
+  "interface",
+  "interface-mixin",
+  "method",
+  "namespace",
+  "permission",
+  "scheme",
+  "typedef",
+]);
+
 /**
  * @typedef {object} IdlBase
  * @property {"base"} type
@@ -85,7 +114,7 @@ const isProbablySlotRegex = /\[\[.+\]\]/;
 
 /**
  * @param {string} str
- * @returns {InlineIdl[]}
+ * @returns {{ tokens: InlineIdl[], typeHint: string }}
  */
 function parseInlineIDL(str) {
   // Extract !!type suffix for type disambiguation (Bikeshed compat)
@@ -394,7 +423,20 @@ export function idlStringToHtml(str) {
     });
     return el;
   }
-  const { tokens: results, typeHint } = parsed;
+  const { tokens: results, typeHint: rawTypeHint } = parsed;
+  let typeHint = rawTypeHint;
+  if (typeHint && !validTypeHints.has(typeHint)) {
+    const el = html`<span>{{ ${str} }}</span>`;
+    showWarning(
+      `Unknown type hint "!!${typeHint}" in \`{{ ${str} }}\`. Falling back to default type resolution.`,
+      "core/inlines",
+      {
+        elements: [el],
+        hint: `Expected one of: ${[...validTypeHints].join(", ")}.`,
+      }
+    );
+    typeHint = "";
+  }
   const render = html(document.createDocumentFragment());
   const output = [];
   for (const details of results) {

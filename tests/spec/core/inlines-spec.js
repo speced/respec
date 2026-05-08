@@ -1,6 +1,13 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  makeRSDoc,
+  makeStandardOps,
+  warningFilters,
+} from "../SpecHelper.js";
+
+const inlinesWarningsFilter = warningFilters.filter("core/inlines");
 
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
@@ -553,6 +560,25 @@ describe("Core - Inlines", () => {
     expect(anchor.dataset.xrefType).toBe("event");
     expect(anchor.dataset.linkFor).toBe("ScreenOrientation");
     expect(anchor.textContent).toBe("change");
+  });
+
+  it("warns on unknown !!type hints and falls back to default", async () => {
+    const body = `
+      <section>
+        <p id="test">{{ Window/event!!nonsense }}</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const para = doc.getElementById("test");
+    const anchor = para.querySelector("a");
+    // Falls back to default (no type override), anchor still renders
+    expect(anchor).withContext(para.innerHTML).toBeTruthy();
+    // data-xref-type should be the default for an attribute (no typeHint applied)
+    expect(anchor.dataset.xrefType).not.toBe("nonsense");
+    // A warning was emitted for the invalid type hint
+    const warnings = inlinesWarningsFilter(doc);
+    expect(warnings.length).toBeGreaterThanOrEqual(1);
+    expect(warnings[0].message).toContain("!!nonsense");
   });
 
   it("processes {{ forContext/term }} IDL", async () => {
