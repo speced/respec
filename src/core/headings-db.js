@@ -2,7 +2,7 @@
 import { idb } from "./import-maps.js";
 
 /**
- * @typedef {{ title: string, number: string | null }} HeadingInfo
+ * @typedef {import("./headings.js").HeadingInfo} HeadingInfo
  * @typedef {{ query: { spec: string, id: string }, result: HeadingInfo }} HeadingEntry
  * @typedef {import("idb").DBSchema & { headings: { key: string, value: HeadingEntry } }} HeadingsDb
  */
@@ -74,7 +74,7 @@ function shouldBustCache() {
     localStorage.getItem("HEADINGS:LAST_CACHED") ?? "",
     10
   );
-  if (!lastCached) return true;
+  if (isNaN(lastCached)) return false;
   return Date.now() - lastCached > CACHE_MAX_AGE;
 }
 
