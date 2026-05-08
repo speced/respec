@@ -453,7 +453,7 @@ async function rollback(version, mainHead, ghPagesHead, initialBranch) {
   try {
     const currentBranch = await getCurrentBranch();
     if (currentBranch !== "main") {
-      await git("checkout main");
+      await git("switch main");
     }
   } catch {
     // best effort
@@ -474,20 +474,21 @@ async function rollback(version, mainHead, ghPagesHead, initialBranch) {
   }
   if (ghPagesHead) {
     try {
-      await git("checkout gh-pages");
+      await git("switch gh-pages");
       await git(`reset --hard ${ghPagesHead}`);
       console.log(
         colors.yellow(`  Reset gh-pages to ${ghPagesHead.slice(0, 8)}`)
       );
-      await git("checkout main");
     } catch {
       console.log(colors.red("  Failed to reset gh-pages — check manually."));
+    } finally {
+      await git("switch main");
     }
   }
   try {
     const currentBranch = await getCurrentBranch();
     if (initialBranch !== currentBranch) {
-      await git(`checkout ${initialBranch}`);
+      await git(`switch ${initialBranch}`);
     }
   } catch {
     // best effort
