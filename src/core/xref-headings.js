@@ -1,18 +1,18 @@
 // @ts-check
 /**
- * Module core/headings
+ * Module core/xref-headings
  *
  * Resolves cross-spec section heading titles via the respec.org headings API.
  * Used by core/data-cite to populate [[[SPEC#id]]] link text.
- * Caches results in IndexedDB via core/headings-db.
+ * Caches results in IndexedDB via core/xref-headings-db.
  *
- * @module core/headings
+ * @module core/xref-headings
  */
-import { cacheHeadingsData, resolveHeadingsCache } from "./headings-db.js";
+import { cacheHeadingsData, resolveHeadingsCache } from "./xref-headings-db.js";
 import { html } from "./import-maps.js";
 import { showWarning } from "./utils.js";
 
-export const name = "core/headings";
+export const name = "core/xref-headings";
 
 const HEADINGS_API_URL = "https://respec.org/xref/search/headings";
 

@@ -13,7 +13,7 @@
  */
 
 import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
-import { fetchHeadingTexts, setHeadingContent } from "./headings.js";
+import { fetchHeadingTexts, setHeadingContent } from "./xref-headings.js";
 import {
   refTypeFromContext,
   showError,
