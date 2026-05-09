@@ -101,7 +101,7 @@ describe("Core — dfnPanel", () => {
       doc.getElementById(dfnId).click();
       const panel = doc.getElementById(getPanelId(dfnId));
       expect(panel.classList).not.toContain("docked");
-      panel.querySelector("ul a").click();
+      panel.querySelector(".dfn-panel-refs a").click();
       expect(panel.classList).toContain("docked");
     });
 
@@ -109,7 +109,7 @@ describe("Core — dfnPanel", () => {
       const doc = await makeRSDoc(ops);
       doc.getElementById(dfnId).click();
       const panel = doc.getElementById(getPanelId(dfnId));
-      panel.querySelector("ul a").click();
+      panel.querySelector(".dfn-panel-refs a").click();
       expect(panel.classList).toContain("docked");
 
       panel.click();
@@ -147,7 +147,7 @@ describe("Core — dfnPanel", () => {
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-zero");
 
-    const referenceSection = panel.querySelector("ul");
+    const referenceSection = panel.querySelector(".dfn-panel-refs");
     expect(referenceSection).not.toBeNull();
     expect(referenceSection.textContent.trim()).toBe(
       "Not referenced in this document."
@@ -164,13 +164,15 @@ describe("Core — dfnPanel", () => {
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-one");
 
-    const referenceHeading = panel.querySelector("b");
+    const referenceHeading = [...panel.querySelectorAll("b")].find(b =>
+      b.textContent.includes("Referenced in:")
+    );
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
-    const referenceListItems = panel.querySelectorAll("ul li");
+    const referenceListItems = panel.querySelectorAll(".dfn-panel-refs li");
     expect(referenceListItems).toHaveSize(1);
 
-    const references = panel.querySelectorAll("ul li a");
+    const references = panel.querySelectorAll(".dfn-panel-refs li a");
     expect(references).toHaveSize(1);
     expect(references[0].textContent).toBe("§ 1. top level heading");
     expect(references[0].hash).toBe("#ref-for-dfn-one-1");
@@ -186,10 +188,12 @@ describe("Core — dfnPanel", () => {
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-many");
 
-    const referenceHeading = panel.querySelector("b");
+    const referenceHeading = [...panel.querySelectorAll("b")].find(b =>
+      b.textContent.includes("Referenced in:")
+    );
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
-    const referenceListItems = panel.querySelectorAll("ul li");
+    const referenceListItems = panel.querySelectorAll(".dfn-panel-refs li");
     expect(referenceListItems).toHaveSize(2);
     const [item1, item2] = referenceListItems;
 
@@ -273,15 +277,186 @@ describe("Core — dfnPanel", () => {
     const selfLink = panel.querySelector("a.self-link");
     expect(selfLink.hash).toBe("#dfn-one");
 
-    const referenceHeading = panel.querySelector("b");
+    const referenceHeading = [...panel.querySelectorAll("b")].find(b =>
+      b.textContent.includes("Referenced in:")
+    );
     expect(referenceHeading.textContent).toBe("Referenced in:");
 
-    const referenceListItems = panel.querySelectorAll("ul li");
+    const referenceListItems = panel.querySelectorAll(".dfn-panel-refs li");
     expect(referenceListItems).toHaveSize(1);
 
-    const references = panel.querySelectorAll("ul li a");
+    const references = panel.querySelectorAll(".dfn-panel-refs li a");
     expect(references).toHaveSize(1);
     expect(references[0].textContent).toBe("§ 1. top level heading");
     expect(references[0].hash).toBe("#ref-for-dfn-one-1");
+  });
+});
+
+describe("possible linking syntaxes", () => {
+  afterAll(flushIframes);
+
+  it("renders linking syntax section for a plain dfn", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-concept">my concept</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById(`dfn-panel-for-test-concept`);
+
+    const syntaxHeading = [...panel.querySelectorAll("b")].find(b =>
+      b.textContent.includes("Possible linking syntaxes:")
+    );
+    expect(syntaxHeading).toBeTruthy();
+
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    expect(syntaxList).toBeTruthy();
+
+    const items = syntaxList.querySelectorAll("li");
+    expect(items).toHaveSize(1);
+    expect(items[0].querySelector("code").textContent).toBe("[=my concept=]");
+  });
+
+  it("renders [= =] syntax for dfn type", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-dfn">widget</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-test-dfn");
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    expect(syntaxList.querySelector("code").textContent).toBe("[=widget=]");
+  });
+
+  it("renders [= For/term =] syntax when dfn has dfn-for", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-dfn" data-dfn-for="Request">mode</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-test-dfn");
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    expect(syntaxList.querySelector("code").textContent).toBe(
+      "[=Request/mode=]"
+    );
+  });
+
+  it("renders {{ }} syntax for IDL interface type", async () => {
+    const body = `
+      <section data-dfn-for="Foo">
+        <h2>Foo</h2>
+        <pre class="idl">
+          [Exposed=Window]
+          interface Foo {};
+        </pre>
+        <dfn id="test-dfn">Foo</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-test-dfn");
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    expect(syntaxList).toBeTruthy();
+    const code = syntaxList.querySelector("code");
+    expect(code.textContent).toBe("{{Foo}}");
+  });
+
+  it("renders [^ ^] syntax for element type", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-element" data-dfn-type="element">video</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-test-element");
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    expect(syntaxList.querySelector("code").textContent).toBe("[^video^]");
+  });
+
+  it("renders [^ element/attr ^] syntax for element-attr type", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn
+          id="test-attr"
+          data-dfn-type="element-attr"
+          data-dfn-for="video"
+          >src</dfn
+        >
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-test-attr");
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    expect(syntaxList.querySelector("code").textContent).toBe("[^video/src^]");
+  });
+
+  it("renders multiple syntaxes when dfn has data-lt aliases", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-lt" data-lt="widget|thing">widget</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-test-lt");
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    const items = syntaxList.querySelectorAll("li");
+    expect(items).toHaveSize(2);
+    expect(items[0].querySelector("code").textContent).toBe("[=widget=]");
+    expect(items[1].querySelector("code").textContent).toBe("[=thing=]");
+  });
+
+  it("renders copy buttons for each syntax item", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-copy" data-lt="foo|bar">foo</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-test-copy");
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    const copyBtns = syntaxList.querySelectorAll(".dfn-panel-copy-btn");
+    expect(copyBtns).toHaveSize(2);
+    expect(copyBtns[0].dataset.copyText).toBe("[=foo=]");
+    expect(copyBtns[1].dataset.copyText).toBe("[=bar=]");
+    expect(copyBtns[0].getAttribute("aria-label")).toBe(
+      "Copy [=foo=] to clipboard"
+    );
+  });
+
+  it("does not render linking syntaxes section for index-term dfns", async () => {
+    const body = `
+      <section data-cite="DOM">
+        <h2>TEST</h2>
+        <p>{{ Event }}</p>
+      </section>
+      <section id="index"></section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const index = doc.getElementById("index-defined-elsewhere");
+    const term = index && index.querySelector(".index-term");
+    if (!term) return; // Skip if no external terms resolved
+
+    const termPanel = doc.getElementById(`dfn-panel-for-${term.id}`);
+    if (!termPanel) return;
+
+    const syntaxList = termPanel.querySelector(".dfn-panel-lt");
+    expect(syntaxList).toBeNull();
   });
 });
