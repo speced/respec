@@ -7,41 +7,34 @@ export default css`
 
 .caniuse-stats {
   display: flex;
-  column-gap: 2em;
+  flex-direction: column;
+  gap: 0.5em;
 }
 
-.caniuse-group {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: flex-end;
-  flex-basis: auto;
+.caniuse-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20em, 100%), 1fr));
+  gap: 0.5em;
+  margin: 0;
+  padding: 0;
+}
+
+.caniuse-type {
+  text-transform: capitalize;
+  font-size: 0.8em;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.2em;
 }
 
 .caniuse-browsers {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: .2em;
-  column-gap: .4em;
-  border-bottom: 1px solid #ccc;
-  row-gap: .4em;
-  padding-bottom: .4cm;
-}
-
-.caniuse-type {
-  align-self: center;
-  border-top: none;
-  text-transform: capitalize;
-  font-size: .8em;
-  margin-top: -.8em;
-  font-weight: bold;
-}
-
-.caniuse-type span {
-  background-color: var(--bg, white);
-  padding: 0 0.4em;
+  column-gap: 0.4em;
+  row-gap: 0.4em;
+  margin: 0;
+  padding: 0.4em 0;
 }
 
 /* a browser version */
@@ -52,7 +45,7 @@ export default css`
   display: flex;
   font-size: 90%;
   min-width: 1.5cm;
-  padding: .3rem;
+  padding: 0.3rem;
   justify-content: space-evenly;
   --supported: #2a8436dd;
   --no-support: #c44230dd;
@@ -72,15 +65,15 @@ export default css`
 }
 
 img.caniuse-browser {
-  filter: drop-shadow(0px 0px .1cm #666666);
+  filter: drop-shadow(0px 0px 0.1cm #666666);
   background: transparent;
 }
 
 .caniuse-cell span.browser-version {
-  margin-left: 0.4em;
+  margin-inline-start: 0.4em;
   text-shadow: 0 0 0.1em #fff;
   font-weight: 100;
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .caniuse-stats a[href] {
@@ -94,7 +87,7 @@ img.caniuse-browser {
 }
 
 /* no support, disabled by default */
-.caniuse-cell:is(.n,.d) {
+.caniuse-cell:is(.n, .d) {
   --caniuse-angle: 45deg;
   --caniuse-bg: var(--no-support);
   --caniuse-bg-alt: var(--no-support-alt);
@@ -110,7 +103,7 @@ img.caniuse-browser {
 
 /* not supported by default / partial support etc
 see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
-.caniuse-cell:is(.a,.x,.p) {
+.caniuse-cell:is(.a, .x, .p) {
   --caniuse-angle: 90deg;
   --caniuse-bg: var(--partial);
   --caniuse-bg-alt: var(--partial-alt);
@@ -128,7 +121,7 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
     padding: 0.5em;
   }
 
-  .caniuse-cell:is(.a,.d,.p,.x,.u)::before {
+  .caniuse-cell:is(.a, .d, .p, .x, .u)::before {
     content: "⚠️";
     padding: 0.5em;
   }
