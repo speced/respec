@@ -29,6 +29,11 @@ span.warning {
   font-size: smaller;
 }
 
+#issue-summary li.closed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
 .warning {
   border-color: #f11;
   border-color: var(--warning-border, #f11);

@@ -169,7 +169,10 @@ function handleIssues(ins, ghIssues, conf) {
             report.title = ghIssue.title;
           }
         }
-        issueList.append(createIssueSummaryEntry(l10n.issue, report, div.id));
+        const isClosed = ghIssue?.state === "CLOSED";
+        issueList.append(
+          createIssueSummaryEntry(l10n.issue, report, div.id, isClosed)
+        );
       }
       title.textContent = text;
       if (report.title) {
@@ -270,15 +273,22 @@ function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
  * @param {string} l10nIssue
  * @param {Report} report
  * @param {string} id
+ * @param {boolean} [isClosed]
  */
-function createIssueSummaryEntry(l10nIssue, report, id) {
+function createIssueSummaryEntry(l10nIssue, report, id, isClosed = false) {
   const issueNumberText = `${l10nIssue}${
     report.number ? ` ${report.number}` : ""
   }`;
   const title = report.title
     ? html`<span style="text-transform: none">: ${report.title}</span>`
     : "";
-  return html`<li><a href="${`#${id}`}">${issueNumberText}</a>${title}</li>`;
+  const li = html`<li>
+    <a href="${`#${id}`}">${issueNumberText}</a>${title}
+  </li>`;
+  if (isClosed) {
+    li.classList.add("closed");
+  }
+  return li;
 }
 
 /**
