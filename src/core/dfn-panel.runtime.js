@@ -9,6 +9,19 @@ function setupPanel() {
   const listener = panelListener();
   document.body.addEventListener("keydown", listener);
   document.body.addEventListener("click", listener);
+  setupCopyButtons();
+}
+
+function setupCopyButtons() {
+  document.body.addEventListener("click", event => {
+    const target = event.target;
+    const btn =
+      target instanceof HTMLElement && target.closest(".dfn-panel-copy-btn");
+    if (!(btn instanceof HTMLElement)) return;
+    const text = btn.dataset.copyText;
+    if (!text) return;
+    navigator.clipboard.writeText(text).catch(() => {});
+  });
 }
 
 function panelListener() {
@@ -99,6 +112,10 @@ function deriveAction(event) {
     return hitALink ? "none" : "show";
   }
   if (target.closest(".dfn-panel")) {
+    // Copy buttons keep the panel open regardless of docked state.
+    if (target.closest(".dfn-panel-copy-btn")) {
+      return "none";
+    }
     if (hitALink) {
       return target.classList.contains("self-link") ? "hide" : "dock";
     }
