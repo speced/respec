@@ -282,13 +282,9 @@ function createIssueSummaryEntry(l10nIssue, report, id, isClosed = false) {
   const title = report.title
     ? html`<span style="text-transform: none">: ${report.title}</span>`
     : "";
-  const li = html`<li>
+  return html`<li class="${isClosed ? "closed" : ""}">
     <a href="${`#${id}`}">${issueNumberText}</a>${title}
   </li>`;
-  if (isClosed) {
-    li.classList.add("closed");
-  }
-  return li;
 }
 
 /**
