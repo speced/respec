@@ -19,6 +19,11 @@ export default css`
   padding: 0;
 }
 
+.caniuse-group {
+  display: flex;
+  flex-direction: column;
+}
+
 .caniuse-type {
   text-transform: capitalize;
   font-size: 0.8em;
