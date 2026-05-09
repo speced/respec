@@ -17,7 +17,7 @@ describe("Core — Link to definitions", () => {
     const doc = await makeRSDoc(ops);
     const a = doc.getElementById("testAnchor");
     expect(a).toBeTruthy();
-    expect(a.hash).toBe("#dfn-test");
+    expect(a.hash).toBe("#dfn-window-test");
     const decodedHash = decodeURIComponent(a.hash);
     expect(doc.getElementById(decodedHash.slice(1))).toBeTruthy();
   });
