@@ -33,8 +33,12 @@ export function run(conf) {
   const elems = document.querySelectorAll("a[href^='#']");
   const offendingElements = [...elems].filter(isBrokenHyperlink);
   if (offendingElements.length) {
+    const links = offendingElements
+      .map(el => el.getAttribute("href"))
+      .join(", ");
+    const hint = `${l10n.hint} Broken links: ${links}`;
     showWarning(l10n.msg, name, {
-      hint: l10n.hint,
+      hint,
       elements: offendingElements,
     });
   }
