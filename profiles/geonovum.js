@@ -41,6 +41,7 @@ const modules = [
   import("../src/core/list-sorter.js"),
   import("../src/core/highlight-vars.js"),
   import("../src/core/anchor-expander.js"),
+  import("../src/core/grammar-boxes.js"),
   import("../src/core/dfn-panel.js"),
   import("../src/core/dfn-contract.js"),
   /* Linter must be the last thing to run */

@@ -42,6 +42,7 @@ const modules = [
   import("../src/core/highlight-vars.js"),
   import("../src/core/data-type.js"),
   import("../src/core/anchor-expander.js"),
+  import("../src/core/grammar-boxes.js"),
   import("../src/core/dfn-panel.js"),
   import("../src/core/custom-elements/index.js"),
   import("../src/core/dfn-contract.js"),
