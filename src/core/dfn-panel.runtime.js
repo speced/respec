@@ -121,6 +121,9 @@ function deriveAction(event) {
     return "showBiblio";
   }
   if (target.closest(".dfn-panel")) {
+    if (target.closest(".biblio-ref")) {
+      return "none";
+    }
     if (hitALink) {
       return target.classList.contains("self-link") ? "hide" : "dock";
     }
