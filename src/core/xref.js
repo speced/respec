@@ -16,8 +16,8 @@
  * @typedef {Map<string, { elems: HTMLElement[], results: SearchResultEntry[], query: RequestEntry }>} ErrorCollection
  * @typedef {{ ambiguous: ErrorCollection, notFound: ErrorCollection }} Errors
  */
-import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import {
+  POSSESSIVE_SUFFIX,
   createResourceHint,
   docLink,
   joinAnd,
@@ -26,6 +26,7 @@ import {
   norm as normalize,
   showError,
 } from "./utils.js";
+import { cacheXrefData, resolveXrefCache } from "./xref-db.js";
 import { possibleExternalLinks } from "./link-to-dfn.js";
 import { sub } from "./pubsubhub.js";
 
@@ -182,7 +183,7 @@ function normalizeConfig(xref) {
 function getRequestEntry(elem) {
   const isIDL = "xrefType" in elem.dataset;
 
-  let term = getTermFromElement(elem);
+  let term = getTermFromElement(elem, { isIDL });
   if (!isIDL) term = term.toLowerCase();
 
   const specs = getSpecContext(elem);
@@ -202,16 +203,37 @@ function getRequestEntry(elem) {
 }
 
 /** @param {HTMLElement} elem */
-export function getTermFromElement(elem) {
+/**
+ * @param {HTMLElement} elem
+ * @param {{ isIDL?: boolean }} [options]
+ */
+export function getTermFromElement(elem, { isIDL = false } = {}) {
   const { lt: linkingText } = elem.dataset;
   let term = linkingText ? linkingText.split("|", 1)[0] : elem.textContent;
   term = normalize(term);
-  return term === "the-empty-string" ? "" : term;
+  if (term === "the-empty-string") return "";
+  if (!isIDL && !linkingText) term = term.replace(POSSESSIVE_SUFFIX, "");
+  return term;
+}
+
+/**
+ * @param {string} spec
+ */
+function stripVersionSuffix(spec) {
+  return spec.replace(/-\d+$/, "");
 }
 
 /**
  * Get spec context as a fallback chain, where each level (sub-array) represents
  * decreasing priority.
+ *
+ * For versioned spec names (e.g. "service-workers-1"), the unversioned form
+ * ("service-workers") is added as a **separate lower-priority level** rather
+ * than at the same level.  Keeping them at different levels avoids returning
+ * two results for the same term when the xref data indexes the definition under
+ * both the versioned and unversioned shortname, which would otherwise trigger a
+ * spurious "ambiguous dfn" error.
+ *
  * @param {HTMLElement} elem
  */
 function getSpecContext(elem) {
@@ -229,6 +251,14 @@ function getSpecContext(elem) {
     const cites = cite.split(/\s+/).filter(s => s);
     if (cites.length) {
       specs.push(cites);
+      // Add the unversioned forms (e.g. "service-workers" for "service-workers-1")
+      // at a lower priority so the server only falls back to them when the
+      // versioned name yields no result.  This prevents ambiguous-dfn errors if
+      // a term is indexed under both shortname variants.
+      const unversioned = getUnversionedFallbacks(cites);
+      if (unversioned.length) {
+        specs.push(unversioned);
+      }
     }
     if (dataciteElem === elem) break;
     dataciteElem = dataciteElem.parentElement?.closest("[data-cite]") ?? null;
@@ -242,14 +272,29 @@ function getSpecContext(elem) {
     const bibrefs = closestSection
       ? closestSection.querySelectorAll("a.bibref")
       : [];
-    const inlineRefs = [...bibrefs].map(el => el.textContent.toLowerCase());
-    if (inlineRefs.length) {
-      specs.push(inlineRefs);
+    const inlineRefList = [
+      ...new Set([...bibrefs].map(el => el.textContent.toLowerCase())),
+    ];
+    if (inlineRefList.length) {
+      specs.push(inlineRefList);
+      const unversioned = getUnversionedFallbacks(inlineRefList);
+      if (unversioned.length) {
+        specs.push(unversioned);
+      }
     }
   }
 
   const uniqueSpecContext = dedupeSpecContext(specs);
   return uniqueSpecContext;
+}
+
+/**
+ * Returns specs whose unversioned form differs from the original,
+ * e.g., ["css-grid-2"] → ["css-grid"] (excluding "css-grid-2" itself).
+ * @param {string[]} specs
+ */
+function getUnversionedFallbacks(specs) {
+  return [...new Set(specs.map(stripVersionSuffix)).difference(new Set(specs))];
 }
 
 /**
@@ -260,11 +305,11 @@ function getSpecContext(elem) {
 function dedupeSpecContext(specs) {
   /** @type {string[][]} */
   const unique = [];
+  /** @type {Set<string>} tracks all specs seen in higher-priority levels */
+  const seen = new Set();
   for (const level of specs) {
-    const higherPriority = unique[unique.length - 1] || [];
-    const uniqueSpecs = [...new Set(level)].filter(
-      spec => !higherPriority.includes(spec)
-    );
+    const uniqueSpecs = [...new Set(level).values().filter(s => !seen.has(s))];
+    uniqueSpecs.forEach(s => seen.add(s));
     unique.push(uniqueSpecs.sort());
   }
   return unique;
@@ -500,7 +545,13 @@ function showErrors({ ambiguous, notFound }) {
     const originalTerm = getTermFromElement(elems[0]);
     const formUrl = getPrefilledFormURL(originalTerm, query);
     const specsString = joinAnd(specs, s => `**[${s}]**`);
-    const hint = howToFix(formUrl, originalTerm);
+    let hint = howToFix(formUrl, originalTerm);
+    /** @type {HTMLElement | null} */
+    const closestCite = elems[0].parentElement?.closest("[data-cite]") ?? null;
+    const citeAttr = closestCite?.dataset.cite?.replace(/`/g, "") ?? "";
+    if (closestCite && closestCite !== document.body && citeAttr) {
+      hint += ` A parent element has \`data-cite="${citeAttr}"\` — check that the spec shortname is correct.`;
+    }
     const forParent = query.for ? `, for **"${query.for}"**, ` : "";
     const msg = `Couldn't find "**${originalTerm}**"${forParent} in this document or other cited documents: ${specsString}.`;
     const title = "No matching definition found.";
