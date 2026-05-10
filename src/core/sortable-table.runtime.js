@@ -123,8 +123,8 @@ function setupSortableTable() {
     if (next === null) {
       rows.sort(
         (a, b) =>
-          parseInt(/** @type {string} */ (a.dataset.sortIndex)) -
-          parseInt(/** @type {string} */ (b.dataset.sortIndex))
+          parseInt(/** @type {string} */ (a.dataset.sortIndex), 10) -
+          parseInt(/** @type {string} */ (b.dataset.sortIndex), 10)
       );
     } else {
       /** @type {HTMLTableRowElement | null} */
@@ -137,16 +137,14 @@ function setupSortableTable() {
 
       const isNumeric = rows.every(row => {
         const text = row.cells[colIndex]?.textContent?.trim() ?? "";
-        return text !== "" && !isNaN(parseFloat(text));
+        return text !== "" && !isNaN(Number(text));
       });
 
       const dir = next === ASC ? 1 : -1;
       rows.sort((a, b) => {
         const x = a.cells[colIndex]?.textContent?.trim() ?? "";
         const y = b.cells[colIndex]?.textContent?.trim() ?? "";
-        const cmp = isNumeric
-          ? parseFloat(x) - parseFloat(y)
-          : x.localeCompare(y);
+        const cmp = isNumeric ? Number(x) - Number(y) : x.localeCompare(y);
         return dir * cmp;
       });
     }
