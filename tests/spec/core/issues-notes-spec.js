@@ -296,22 +296,25 @@ describe("Core — Issues and Notes", () => {
     );
     expect(textContent).toBe("Issue 1540");
 
-    // Closed issue summary entry should have "closed" class for strikethrough styling
-    const closedSummaryItem = summarySection
-      .querySelector("[href='#this-should-exist']")
-      .closest("li");
+    const closedAnchor = summarySection.querySelector(
+      "[href='#this-should-exist']"
+    );
+    expect(closedAnchor).not.toBeNull();
+    const closedSummaryItem = closedAnchor.closest("li");
     expect(closedSummaryItem.classList).toContain("closed");
 
-    // Open issue summary entry should NOT have "closed" class
-    const openSummaryItem = summarySection
-      .querySelector("[href='#issue-container-number-1540']")
-      .closest("li");
+    const openAnchor = summarySection.querySelector(
+      "[href='#issue-container-number-1540']"
+    );
+    expect(openAnchor).not.toBeNull();
+    const openSummaryItem = openAnchor.closest("li");
     expect(openSummaryItem.classList).not.toContain("closed");
 
-    // Issue without data-number (no GitHub state) should NOT have "closed" class
-    const regularSummaryItem = summarySection
-      .querySelector("[href='#i-should-be-here-too']")
-      .closest("li");
+    const regularAnchor = summarySection.querySelector(
+      "[href='#i-should-be-here-too']"
+    );
+    expect(regularAnchor).not.toBeNull();
+    const regularSummaryItem = regularAnchor.closest("li");
     expect(regularSummaryItem.classList).not.toContain("closed");
 
     const issueDiv404 = doc.getElementById("this-is-404");

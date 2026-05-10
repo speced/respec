@@ -34,6 +34,11 @@ span.warning {
   opacity: 0.6;
 }
 
+#issue-summary li.closed a::after {
+  content: " (Closed)";
+  font-size: smaller;
+}
+
 .warning {
   border-color: #f11;
   border-color: var(--warning-border, #f11);
