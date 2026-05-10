@@ -439,6 +439,28 @@ describe("possible linking syntaxes", () => {
     );
   });
 
+  it("keeps the panel open when Enter is pressed on a copy button", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-copy-enter" data-lt="foo|bar">foo</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const dfn = doc.getElementById("test-copy-enter");
+    const panel = doc.getElementById("dfn-panel-for-test-copy-enter");
+    const copyBtn = panel.querySelector(".dfn-panel-copy-btn");
+
+    dfn.click();
+    copyBtn.focus();
+    copyBtn.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
+    );
+
+    expect(panel.hidden).toBeFalse();
+  });
+
   it("does not render linking syntaxes section for index-term dfns", async () => {
     const body = `
       <section data-cite="DOM">
