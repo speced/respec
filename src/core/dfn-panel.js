@@ -13,6 +13,7 @@ export const name = "core/dfn-panel";
 const IDL_TYPES = new Set([
   "attribute",
   "callback",
+  "callback interface",
   "constructor",
   "dict-member",
   "dictionary",
@@ -21,6 +22,7 @@ const IDL_TYPES = new Set([
   "exception",
   "extended-attribute",
   "interface",
+  "interface mixin",
   "method",
   "namespace",
   "typedef",
@@ -204,7 +206,7 @@ function getLinkingSyntaxes(dfn) {
  */
 function createSyntaxCopyButton(text) {
   const button = document.createElement("button");
-  button.className = "dfn-panel-copy-btn";
+  button.className = "dfn-panel-copy-btn removeOnSave";
   button.dataset.copyText = text;
   button.setAttribute("aria-label", `Copy ${text} to clipboard`);
   button.title = "Copy to clipboard";
