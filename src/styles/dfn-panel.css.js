@@ -12,6 +12,10 @@ dfn {
   cursor: pointer;
 }
 
+a.bibref {
+  cursor: pointer;
+}
+
 .dfn-panel {
   position: absolute;
   z-index: 35;
@@ -127,5 +131,9 @@ dfn {
   max-width: calc(100vw - 0.75em * 2 - 0.5em - 0.2em * 2);
   max-height: 30vh;
   overflow: auto;
+}
+
+.dfn-panel .biblio-ref {
+  margin-top: 0.5em;
 }
 `;
