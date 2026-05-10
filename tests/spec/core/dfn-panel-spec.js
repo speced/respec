@@ -412,14 +412,8 @@ describe("Core — biblioPanel", () => {
     const body = `<p id="bad">[[bad-ref-no-entry]]</p>`;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    // A bad ref gets a #bib-bad-ref-no-entry dt but with "Reference not found."
-    // dd — no panel should be created because the dd content is an error marker,
-    // but more importantly createBiblioPanel falls back gracefully.
-    // The panel element should not exist if no dt is present for the bibId.
-    // (bad refs do get a dt, but we verify the panel was created only if the
-    // dt exists and has a valid dd sibling.)
-    // Just verify no JS error was thrown (doc rendered successfully).
-    expect(doc).toBeTruthy();
+    const panel = doc.querySelector('[id^="biblio-panel-for-"]');
+    expect(panel).toBeNull();
   });
 
   it("works in an exported document", async () => {
