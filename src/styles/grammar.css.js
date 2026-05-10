@@ -1,11 +1,10 @@
-/* --- Grammar Boxes (ABNF, EBNF, BNF) --- */
 const css = String.raw;
 
 // prettier-ignore
 export default css`
 :root {
   --grammar-header-bg: var(--def-border, #8ccbf2);
-  --grammar-header-color: #fff;
+  --grammar-header-color: #005a9c;
   --grammar-focus: #51a7e8;
 }
 
@@ -13,27 +12,20 @@ export default css`
   :root {
     --grammar-header-bg: #3a6da0;
     --grammar-header-color: #fff;
-    --grammar-focus: #51a7e8;
   }
 }
 
-pre.abnf,
-pre.ebnf,
-pre.bnf {
+pre:is(.abnf, .ebnf, .bnf) {
   padding: 1em;
   position: relative;
 }
 
-pre.abnf > code,
-pre.ebnf > code,
-pre.bnf > code {
+pre:is(.abnf, .ebnf, .bnf) > code {
   color: var(--text, black);
 }
 
 @media print {
-  pre.abnf,
-  pre.ebnf,
-  pre.bnf {
+  pre:is(.abnf, .ebnf, .bnf) {
     white-space: pre-wrap;
   }
 }
@@ -57,10 +49,7 @@ pre.bnf > code {
   color: inherit;
 }
 
-.grammarHeader a.self-link:focus-visible,
-pre.abnf a:focus-visible,
-pre.ebnf a:focus-visible,
-pre.bnf a:focus-visible {
+.grammarHeader a:focus-visible {
   outline: 2px solid var(--grammar-focus);
   outline-offset: 2px;
 }

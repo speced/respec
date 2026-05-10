@@ -1,10 +1,4 @@
 // @ts-check
-// Module core/grammar-boxes
-//  Adds styled header badges to ABNF, EBNF, and BNF pre blocks,
-//  mirroring the WebIDL and CDDL block pattern.
-//  Syntax highlighting is handled by core/highlight via highlight.js,
-//  which already has ABNF registered and will use auto-detection for EBNF/BNF.
-
 import { createCopyButton, injectCopyScript } from "./clipboard.js";
 import { addHashId } from "./utils.js";
 import css from "../styles/grammar.css.js";
@@ -28,21 +22,15 @@ const GRAMMARS = new Map([
  * @param {string} lang - grammar class name, e.g. "abnf"
  */
 function processGrammarBlock(pre, label, lang) {
-  // Wrap existing text content in <code> for consistent structure and so that
-  // highlight.js can pick it up via the `pre > code` selector.
-  // Note: pre.textContent is cleared before addHashId, but addHashId reads
-  // from the subtree — pre.textContent returns code.textContent (the original
-  // grammar text), so the hash is computed from the real content.
   const code = document.createElement("code");
   code.className = lang;
   code.textContent = pre.textContent;
   pre.textContent = "";
   pre.append(code);
+  pre.classList.add("def", "highlight");
 
-  // Add an id so the self-link and copy button work.
   addHashId(pre, `${lang}-block`);
 
-  // Build the header badge.
   const header = document.createElement("span");
   header.className = "grammarHeader";
   const selfLink = document.createElement("a");
