@@ -6,32 +6,21 @@ if (document.respec) {
 }
 
 function setupSortableTable() {
-  /**
-   * Maps each table to a map of th -> current sort direction.
-   * "ascending" | "descending" | null (not sorted)
-   * @type {WeakMap<HTMLTableElement, WeakMap<HTMLTableCellElement, "ascending" | "descending">>}
-   */
+  const ASC = "ascending";
+  const DESC = "descending";
+
+  /** @type {Record<string, "ascending" | "descending" | null>} */
+  const NEXT_DIR = { [ASC]: DESC, [DESC]: null };
+
+  /** @type {WeakMap<HTMLTableElement, WeakMap<HTMLTableCellElement, "ascending" | "descending">>} */
   const STATE = new WeakMap();
 
   /**
-   * Returns the visible label of the <th> cell, excluding any button text.
-   * @param {HTMLTableCellElement} th
-   * @returns {string}
-   */
-  const getThLabel = th => {
-    return th.dataset.label ?? th.textContent.trim();
-  };
-
-  /**
-   * Creates or updates the sort button inside a <th>.
-   * dir: null = unsorted, "ascending" = A→Z, "descending" = Z→A
-   *
    * @param {HTMLTableCellElement} th
    * @param {"ascending" | "descending" | null} dir
    */
   const updateButton = (th, dir) => {
-    // Cache the original label on first call so the button text is not
-    // included in subsequent label reads.
+    // Cache original label before button text is appended.
     if (!th.dataset.label) {
       th.dataset.label = th.textContent.trim();
     }
@@ -43,39 +32,31 @@ function setupSortableTable() {
       th.append(button);
     }
 
-    const icon = dir === "ascending" ? "▲" : dir === "descending" ? "▼" : "⇕";
-    const label = getThLabel(th);
+    const icon = dir === ASC ? "▲" : dir === DESC ? "▼" : "⇕";
+    const label = th.dataset.label;
 
     if (dir) {
+      const opposite = dir === ASC ? DESC : ASC;
       button.setAttribute(
         "aria-label",
-        `Sorted ${dir} by ${label}. Click to sort ${dir === "ascending" ? "descending" : "ascending"}.`
+        `Sorted ${dir} by ${label}. Click to sort ${opposite}.`
       );
-    } else {
-      button.setAttribute("aria-label", `Sort by ${label}`);
-    }
-    button.textContent = icon;
-
-    if (dir) {
       th.setAttribute("aria-sort", dir);
     } else {
+      button.setAttribute("aria-label", `Sort by ${label}`);
       th.removeAttribute("aria-sort");
     }
+    button.textContent = icon;
   };
 
   /** @type {NodeListOf<HTMLTableElement>} */
   const tables = document.querySelectorAll("table.sortable");
-  for (const table of tables) {
-    if (!table.tHead) continue;
-    for (const th of table.tHead.querySelectorAll("th")) {
-      updateButton(th, null);
-    }
-    STATE.set(table, new WeakMap());
-  }
+  tables.forEach(table => {
+    if (!table.tHead) return;
+    table.tHead.querySelectorAll("th").forEach(th => updateButton(th, null));
+  });
 
   /**
-   * Returns the <th> that triggered the sort, or null.
-   * Handles both direct clicks on <th> and clicks on the button inside.
    * @param {MouseEvent} ev
    * @returns {HTMLTableCellElement | null}
    */
@@ -86,6 +67,18 @@ function setupSortableTable() {
       return th;
     }
     return null;
+  };
+
+  /**
+   * Stamps original row indices so the table can be reset to its initial order.
+   * @param {HTMLTableRowElement[]} rows
+   */
+  const stampOriginalOrder = rows => {
+    rows.forEach((row, i) => {
+      if (!row.dataset.sortIndex) {
+        row.dataset.sortIndex = String(i);
+      }
+    });
   };
 
   document.addEventListener("click", ev => {
@@ -103,23 +96,16 @@ function setupSortableTable() {
     }
 
     const current = tableState.get(th) ?? null;
-    // Toggle: null→ascending, ascending→descending, descending→null (reset)
     /** @type {"ascending" | "descending" | null} */
-    const next =
-      current === null
-        ? "ascending"
-        : current === "ascending"
-          ? "descending"
-          : null;
+    const next = current === null ? ASC : NEXT_DIR[current];
 
-    // Reset all other headers in this table
     if (table.tHead) {
-      for (const otherTh of table.tHead.querySelectorAll("th")) {
+      table.tHead.querySelectorAll("th").forEach(otherTh => {
         if (otherTh !== th) {
           tableState.delete(otherTh);
           updateButton(otherTh, null);
         }
-      }
+      });
     }
 
     if (next === null) {
@@ -132,22 +118,13 @@ function setupSortableTable() {
     const tbody = table.tBodies[0];
     /** @type {HTMLTableRowElement[]} */
     const rows = Array.from(tbody.rows);
+    stampOriginalOrder(rows);
 
     if (next === null) {
-      // Restore original order — rows carry their original index
       rows.sort(
-        (a, b) =>
-          (a.dataset.sortIndex ? parseInt(a.dataset.sortIndex) : 0) -
-          (b.dataset.sortIndex ? parseInt(b.dataset.sortIndex) : 0)
+        (a, b) => parseInt(a.dataset.sortIndex) - parseInt(b.dataset.sortIndex)
       );
     } else {
-      // Record original order on first sort
-      rows.forEach((row, i) => {
-        if (!row.dataset.sortIndex) {
-          row.dataset.sortIndex = String(i);
-        }
-      });
-
       /** @type {HTMLTableRowElement | null} */
       const headerRow = /** @type {HTMLTableRowElement | null} */ (
         th.closest("tr")
@@ -156,24 +133,25 @@ function setupSortableTable() {
       const colIndex = Array.from(headerRow.cells).indexOf(th);
       if (colIndex === -1) return;
 
+      const isNumeric = rows.every(row => {
+        const text = row.cells[colIndex]?.textContent?.trim() ?? "";
+        return text !== "" && !isNaN(parseFloat(text));
+      });
+
+      const dir = next === ASC ? 1 : -1;
       rows.sort((a, b) => {
         const x = a.cells[colIndex]?.textContent?.trim() ?? "";
         const y = b.cells[colIndex]?.textContent?.trim() ?? "";
-
-        // Numeric sort when both cells look like numbers
-        const numX = parseFloat(x);
-        const numY = parseFloat(y);
-        if (!isNaN(numX) && !isNaN(numY)) {
-          return next === "ascending" ? numX - numY : numY - numX;
-        }
-
-        return next === "ascending" ? x.localeCompare(y) : y.localeCompare(x);
+        const cmp = isNumeric
+          ? parseFloat(x) - parseFloat(y)
+          : x.localeCompare(y);
+        return dir * cmp;
       });
     }
 
     /** @type {typeof tbody} */
     const newTbody = tbody.cloneNode(false);
-    newTbody.append(...rows);
+    for (const row of rows) newTbody.append(row);
     tbody.replaceWith(newTbody);
   });
 }

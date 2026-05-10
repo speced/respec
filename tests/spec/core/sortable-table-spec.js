@@ -6,7 +6,6 @@ describe("Core — sortable-table", () => {
   afterAll(flushIframes);
 
   /**
-   * Helper: dispatch a click event on an element inside the doc.
    * @param {HTMLElement} el
    */
   function click(el) {
@@ -15,7 +14,15 @@ describe("Core — sortable-table", () => {
     );
   }
 
-  // Table used in most tests
+  /**
+   * The runtime defers setup via document.respec.ready.then(), so we must
+   * flush the iframe's pending microtasks before interacting with buttons.
+   * @param {Document} doc
+   */
+  async function flushRuntime(doc) {
+    await new Promise(r => doc.defaultView.setTimeout(r, 0));
+  }
+
   const sortableBody = `
     <section>
       <h2>Test Section</h2>
@@ -54,7 +61,6 @@ describe("Core — sortable-table", () => {
     it("injects a <style> element for sortable-table CSS", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
-      // The style element is injected into <head>; check it contains our marker class.
       const headStyles = [...doc.querySelectorAll("head style")];
       const found = headStyles.some(s => s.textContent.includes(".sortable"));
       expect(found).toBeTrue();
@@ -65,6 +71,7 @@ describe("Core — sortable-table", () => {
     it("adds a sort button to each <th> in the sortable table", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const ths = doc.querySelectorAll("table.sortable thead th");
       for (const th of ths) {
         const btn = th.querySelector("button");
@@ -75,6 +82,7 @@ describe("Core — sortable-table", () => {
     it("buttons start with aria-label 'Sort by <column>'", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const ths = [...doc.querySelectorAll("table.sortable thead th")];
       const btn0 = ths[0].querySelector("button");
       expect(btn0.getAttribute("aria-label")).toBe("Sort by Name");
@@ -90,6 +98,7 @@ describe("Core — sortable-table", () => {
       `;
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const plainThBtn = doc.querySelector("table.plain thead th button");
       expect(plainThBtn).toBeNull();
     });
@@ -99,6 +108,7 @@ describe("Core — sortable-table", () => {
     it("has no aria-sort before any click", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const th = doc.querySelector("table.sortable thead th");
       expect(th.hasAttribute("aria-sort")).toBeFalse();
     });
@@ -106,6 +116,7 @@ describe("Core — sortable-table", () => {
     it("sets aria-sort='ascending' after first click", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const th = doc.querySelector("table.sortable thead th");
       click(th.querySelector("button"));
       expect(th.getAttribute("aria-sort")).toBe("ascending");
@@ -114,6 +125,7 @@ describe("Core — sortable-table", () => {
     it("sets aria-sort='descending' after second click", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const th = doc.querySelector("table.sortable thead th");
       const btn = th.querySelector("button");
       click(btn);
@@ -124,6 +136,7 @@ describe("Core — sortable-table", () => {
     it("removes aria-sort and restores order after third click", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const th = doc.querySelector("table.sortable thead th");
       const btn = th.querySelector("button");
       click(btn);
@@ -135,6 +148,7 @@ describe("Core — sortable-table", () => {
     it("resets aria-sort on other columns when a new column is clicked", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const [th0, th1] = doc.querySelectorAll("table.sortable thead th");
       click(th0.querySelector("button"));
       expect(th0.getAttribute("aria-sort")).toBe("ascending");
@@ -148,6 +162,7 @@ describe("Core — sortable-table", () => {
     it("sorts rows ascending (A→Z) on first click", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const th = doc.querySelector("table.sortable thead th");
       click(th.querySelector("button"));
       const rows = [...doc.querySelectorAll("table.sortable tbody tr")];
@@ -158,6 +173,7 @@ describe("Core — sortable-table", () => {
     it("sorts rows descending (Z→A) on second click", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const th = doc.querySelector("table.sortable thead th");
       const btn = th.querySelector("button");
       click(btn);
@@ -170,6 +186,7 @@ describe("Core — sortable-table", () => {
     it("restores original row order on third click (reset)", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const th = doc.querySelector("table.sortable thead th");
       const btn = th.querySelector("button");
       click(btn);
@@ -185,6 +202,7 @@ describe("Core — sortable-table", () => {
     it("sorts numeric columns by numeric value, not lexicographic order", async () => {
       const ops = makeStandardOps(null, sortableBody);
       const doc = await makeRSDoc(ops);
+      await flushRuntime(doc);
       const ths = [...doc.querySelectorAll("table.sortable thead th")];
       const scoreBtn = ths[1].querySelector("button");
       click(scoreBtn);

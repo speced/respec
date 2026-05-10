@@ -1,8 +1,4 @@
 // @ts-check
-// Module core/sortable-table
-// Adds click-to-sort behaviour to tables with class="sortable".
-// The sort runs in a small runtime script injected into the document so
-// that it is present in saved/exported specs as well as live ReSpec renders.
 import css from "../styles/sortable-table.css.js";
 import { fetchBase } from "./text-loader.js";
 
