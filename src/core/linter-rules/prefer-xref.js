@@ -15,6 +15,14 @@ const localizationStrings = {
       return docLink`Using ${"[xref]"} shorthand syntax is shorter, spec-version-agnostic, and lets ReSpec verify the term exists. To silence this warning for a specific element, add \`class="lint-ignore"\`. To disable this rule entirely, set \`lint: { "${ruleName}": false }\` in your \`respecConfig\`.`;
     },
   },
+  cs: {
+    msg(specKey) {
+      return `Specifikace \`${specKey}\` je dostupná v xref. Zvažte použití zkráceného zápisu (např. \`[= pojem =]\`) místo \`data-cite="${specKey}#…"\`.`;
+    },
+    get hint() {
+      return docLink`Zkrácený zápis ${"[xref]"} je kratší, nezávislý na verzi specifikace a umožňuje ReSpecu ověřit existenci pojmu. Pro potlačení tohoto varování u konkrétního prvku přidejte \`class="lint-ignore"\`. Pro úplné vypnutí pravidla nastavte \`lint: { "${ruleName}": false }\` ve vašem \`respecConfig\`.`;
+    },
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
