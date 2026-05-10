@@ -192,15 +192,22 @@ function termToSyntax(term, dfnType, dfnFor) {
  */
 function getLinkingSyntaxes(dfn) {
   const dfnType = dfn.dataset.dfnType || "dfn";
-  const dfnFor = dfn.dataset.dfnFor || null;
-  const primaryTerm = norm(dfn.textContent);
+  const forValues = dfn.dataset.dfnFor
+    ? dfn.dataset.dfnFor
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean)
+    : [null];
+  const primaryTerm = "ltNodefault" in dfn.dataset ? "" : norm(dfn.textContent);
   const ltTerms = dfn.dataset.lt
     ? dfn.dataset.lt.split("|").map(norm).filter(Boolean)
     : [];
   const allTerms = [primaryTerm, ...ltTerms].filter(
     (t, i, arr) => Boolean(t) && arr.indexOf(t) === i
   );
-  return allTerms.map(term => termToSyntax(term, dfnType, dfnFor));
+  return allTerms.flatMap(term =>
+    forValues.map(forValue => termToSyntax(term, dfnType, forValue))
+  );
 }
 
 /**
