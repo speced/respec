@@ -22,14 +22,14 @@ const GRAMMARS = new Map([
  * @param {string} lang - grammar class name, e.g. "abnf"
  */
 function processGrammarBlock(pre, label, lang) {
+  addHashId(pre, `${lang}-block`);
+
   const code = document.createElement("code");
   code.className = lang;
   code.textContent = pre.textContent;
   pre.textContent = "";
   pre.append(code);
   pre.classList.add("def", "highlight");
-
-  addHashId(pre, `${lang}-block`);
 
   const header = document.createElement("span");
   header.className = "grammarHeader";
