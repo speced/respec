@@ -122,7 +122,9 @@ function setupSortableTable() {
 
     if (next === null) {
       rows.sort(
-        (a, b) => parseInt(a.dataset.sortIndex) - parseInt(b.dataset.sortIndex)
+        (a, b) =>
+          parseInt(/** @type {string} */ (a.dataset.sortIndex)) -
+          parseInt(/** @type {string} */ (b.dataset.sortIndex))
       );
     } else {
       /** @type {HTMLTableRowElement | null} */
