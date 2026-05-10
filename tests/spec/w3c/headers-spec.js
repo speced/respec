@@ -189,9 +189,20 @@ describe("W3C — Headers", () => {
       const [result2] = contains(
         dNoteDoc,
         "p",
-        "This document was published by the Web Performance Working Group as a Group Draft Note using the Note track."
+        "This document was published by the Web Performance Working Group as a Group Note Draft using the Note track."
       );
       expect(result2).toBeTruthy();
+    });
+
+    it("does not require crEnd for CRD", async () => {
+      const ops = makeStandardOps({
+        specStatus: "CRD",
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const crEndError = errors.find(e => e.message.includes("crEnd"));
+      expect(crEndError).toBeUndefined();
     });
 
     describe("specStatus - base", () => {
@@ -502,8 +513,9 @@ describe("W3C — Headers", () => {
           specStatus,
           editors: [{ name: "ok", w3cid: "12345" }, { name: "person 2" }],
           group: "webapps",
-          github: "w3c/respec",
+          github: "speced/respec",
           crEnd: "2019-01-01",
+          prEnd: "2019-01-01",
         });
         const doc = await makeRSDoc(ops, simpleSpecURL);
         const errors = headerErrors(doc);
@@ -954,6 +966,14 @@ describe("W3C — Headers", () => {
       expect(h1).toBeTruthy();
       expect(h1.textContent).toBe("No Title");
     });
+
+    it("uses a localized default title in French when document excludes a title", async () => {
+      const ops = makeStandardOps({}, makeDefaultBody());
+      ops.htmlAttrs = { lang: "fr" };
+      const doc = await makeRSDoc(ops);
+      expect(doc.documentElement.lang).toBe("fr");
+      expect(doc.querySelector("h1#title").textContent).toBe("Sans titre");
+    });
   });
 
   describe("subtitle", () => {
@@ -1162,7 +1182,7 @@ describe("W3C — Headers", () => {
       const ops = makeStandardOps({
         specStatus: "WD",
         license: "unknown",
-        github: "w3c/respec",
+        github: "speced/respec",
         group: "webapps",
       });
       const doc = await makeRSDoc(ops, simpleSpecURL);
@@ -1457,6 +1477,27 @@ describe("W3C — Headers", () => {
       expect(latestVersionEl.textContent.trim()).toBe("none");
     });
 
+    it("derives /TR latestVersion for multi-group ED specs", async () => {
+      const ops = makeStandardOps({
+        shortName: "multi-group-test",
+        specStatus: "ED",
+        group: ["das", "webapps"],
+        edDraftURI: "https://example.com/ed/",
+      });
+      const doc = await makeRSDoc(ops);
+
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      expect(latestVersion).toBeTruthy();
+      const latestVersionLink =
+        latestVersion.nextElementSibling.querySelector("a");
+      expect(latestVersionLink.href).toBe(
+        "https://www.w3.org/TR/multi-group-test/"
+      );
+    });
+
     it("allows overriding latest published version to a different location", async () => {
       const ops = makeStandardOps({
         shortName: "spec",
@@ -1579,6 +1620,30 @@ describe("W3C — Headers", () => {
         expect(errors[0].message).toContain(
           `Documents with a status of \`"${specStatus}"\` can't be published on the W3C's /TR/ (Technical Report) space.`
         );
+      });
+    }
+
+    for (const specStatus of ["unofficial", "MO", "base"]) {
+      it(`does not auto-generate /TR/ URL for no-track "${specStatus}" even with WG group`, async () => {
+        const ops = makeStandardOps({
+          shortName: "some-report",
+          specStatus,
+          group: "wg/json-ld",
+        });
+        const doc = await makeRSDoc(ops);
+        const { latestVersion } = doc.defaultView.respecConfig;
+        // No-track specs without a publication space must not get any URL
+        expect(latestVersion).not.toContain("/TR/");
+        // Also confirm the rendered header shows "none" (no clickable link)
+        const terms = [...doc.querySelectorAll(".head dt")];
+        const latestVersionDt = terms.find(
+          el => el.textContent.trim() === "Latest published version:"
+        );
+        expect(latestVersionDt).toBeTruthy();
+        const latestVersionDd = latestVersionDt.nextElementSibling;
+        const latestVersionLink = latestVersionDd.querySelector("a");
+        expect(latestVersionLink).toBeNull();
+        expect(latestVersionDd.textContent.trim()).toBe("none");
       });
     }
   });
@@ -1773,6 +1838,37 @@ describe("W3C — Headers", () => {
         );
       }
     });
+    it("renders patent disclosure as a link when wgPatentURI is present", async () => {
+      const opts = makeStandardOps({
+        specStatus: "WD",
+        group: "webapps",
+      });
+      const doc = await makeRSDoc(opts);
+      const sotd = doc.querySelector("#sotd");
+      const { wgPatentURI } = doc.defaultView.respecConfig;
+      expect(wgPatentURI).toBeTruthy();
+      const [link] = contains(sotd, "a[rel='disclosure']", "public list");
+      expect(link).toBeTruthy();
+      expect(link.href).toBe(wgPatentURI);
+    });
+    it("renders patent disclosure as plain text when wgPatentURI is absent", async () => {
+      const opts = makeStandardOps({
+        specStatus: "WD",
+        wg: "Test Working Group",
+        wgURI: "https://example.com/wg",
+        // wgId must be truthy so defaults.js keeps specStatus as "WD"
+        // (without it, defaults.js changes specStatus to "base" which
+        // uses renderIsNoTrack instead of renderDeliverer)
+        wgId: 123456,
+      });
+      const doc = await makeRSDoc(opts);
+      const sotd = doc.querySelector("#sotd");
+      const link = sotd.querySelector("a[rel='disclosure']");
+      expect(link).toBeNull();
+      expect(sotd.textContent).toContain(
+        "public list of any patent disclosures"
+      );
+    });
   });
 
   describe("sotdAfterWGinfo", () => {
@@ -1808,6 +1904,24 @@ describe("W3C — Headers", () => {
       const { textContent } = doc.querySelector("#sotd h2");
       expect(doc.documentElement.lang).toBe("es");
       expect(textContent).toContain("Estado de este Document");
+    });
+
+    it("localizes sotd to French", async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        htmlAttrs: {
+          lang: "fr",
+        },
+        body: `
+        <section id="sotd">
+          State of the document
+        </section>
+      `,
+      };
+      const doc = await makeRSDoc(ops);
+      const { textContent } = doc.querySelector("#sotd h2");
+      expect(doc.documentElement.lang).toBe("fr");
+      expect(textContent).toContain("État du présent document");
     });
   });
 
@@ -2359,7 +2473,7 @@ describe("W3C — Headers", () => {
       it(`includes feedback links for CG's ${specStatus} status`, async () => {
         const ops = makeStandardOps({
           specStatus,
-          github: "w3c/respec",
+          github: "speced/respec",
           group: "wicg",
         });
         const doc = await makeRSDoc(ops);
@@ -2371,7 +2485,7 @@ describe("W3C — Headers", () => {
 
     it("includes a Feedback: with a <dd> to github issues", async () => {
       const doc = await makeRSDoc(
-        makeStandardOps({ github: "w3c/respec", specStatus: "WD" })
+        makeStandardOps({ github: "speced/respec", specStatus: "WD" })
       );
       const [dt] = contains(doc, ".head dt", "Feedback:");
       const dd = dt.nextElementSibling;
@@ -2379,22 +2493,22 @@ describe("W3C — Headers", () => {
     });
 
     it("includes links for to new issue, pull requests, open issues", async () => {
-      const doc = await makeRSDoc(makeStandardOps({ github: "w3c/respec" }));
+      const doc = await makeRSDoc(makeStandardOps({ github: "speced/respec" }));
       const [prLink] = contains(
         doc,
-        ".head a[href='https://github.com/w3c/respec/pulls/']",
+        ".head a[href='https://github.com/speced/respec/pulls/']",
         "pull requests"
       );
       expect(prLink).toBeTruthy();
       const [openIssue] = contains(
         doc,
-        ".head a[href='https://github.com/w3c/respec/issues/']",
+        ".head a[href='https://github.com/speced/respec/issues/']",
         "open issues"
       );
       expect(openIssue).toBeTruthy();
       const [newIssue] = contains(
         doc,
-        ".head a[href='https://github.com/w3c/respec/issues/new/choose']",
+        ".head a[href='https://github.com/speced/respec/issues/new/choose']",
         "new issue"
       );
       expect(newIssue).toBeTruthy();
@@ -2422,6 +2536,7 @@ describe("W3C — Headers", () => {
         shortName: "appmanifest",
         specStatus: "WD",
         group: "webapps",
+        historyURI: "https://www.w3.org/standards/history/appmanifest/",
       });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
@@ -2439,14 +2554,15 @@ describe("W3C — Headers", () => {
 
     it("includes a dd for the commit history of the document", async () => {
       const ops = makeStandardOps({
-        github: "w3c/respec",
+        github: "speced/respec",
         shortName: "appmanifest",
         specStatus: "WD",
         group: "webapps",
+        historyURI: "https://www.w3.org/standards/history/appmanifest/",
       });
       const doc = await makeRSDoc(ops);
       const commitHistory = doc.querySelector(
-        ".head dd>a[href='https://github.com/w3c/respec/commits/']"
+        ".head dd>a[href='https://github.com/speced/respec/commits/']"
       );
       expect(commitHistory).toBeTruthy();
       const [publicationHistory] = contains(
@@ -2537,7 +2653,7 @@ describe("W3C — Headers", () => {
         shortName: "test",
         specStatus: "WD",
         latestVersion: null,
-        github: "w3c/respec",
+        github: "speced/respec",
       });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
@@ -2546,10 +2662,12 @@ describe("W3C — Headers", () => {
       expect(commits).toBeTruthy();
     });
 
-    it("derives the historyURI automatically when it's missing, but the document is on TR", async () => {
+    it("shows the history link for ED docs on TR", async () => {
       const ops = makeStandardOps({
         shortName: "payment-request",
         specStatus: "ED",
+        group: "webapps",
+        historyURI: "https://www.w3.org/standards/history/payment-request/",
       });
       const doc = await makeRSDoc(ops);
       const [history] = contains(doc, ".head dt", "History:");
@@ -2569,6 +2687,7 @@ describe("W3C — Headers", () => {
           shortName,
           specStatus,
           group: "webapps",
+          historyURI: `https://www.w3.org/standards/history/${shortName}/`,
         });
         const doc = await makeRSDoc(ops);
         const [history] = contains(doc, ".head dt", "History:");
@@ -2627,6 +2746,148 @@ describe("W3C — Headers", () => {
       expect(h1.textContent).toContain("Preview of PR #123:");
       expect(h1.textContent).toContain("Simple Spec");
       expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
+    });
+  });
+  describe("updateable-rec proposed markers", () => {
+    // Note: "updateable" is intentionally misspelled to match
+    // the class name used in sotd.js — do not "fix" this.
+
+    it("renders proposed additions paragraph when .addition.proposed element is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition proposed">A proposed addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      expect(sotd.querySelector("p.addition.proposed")).toBeTruthy();
+    });
+
+    it("renders proposed corrections paragraph when .correction.proposed element is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="correction proposed">A proposed correction.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const sotd = doc.getElementById("sotd");
+      expect(sotd.querySelector("p.correction.proposed")).toBeTruthy();
+    });
+
+    it("shows a w3c/headers error for REC with additions when #sotd lacks updateable-rec", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition">An addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeTruthy();
+    });
+
+    it("shows a w3c/headers error for REC with corrections when #sotd lacks updateable-rec", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="correction">A correction.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeTruthy();
+    });
+
+    it("does not show a w3c/headers updateable-rec error when class is present", async () => {
+      const body = `
+      <section id="sotd" class="updateable-rec">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition">An addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeUndefined();
+    });
+
+    it("shows a w3c/headers error for REC with proposed additions when #sotd lacks updateable-rec", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition proposed">A proposed addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps(
+        { specStatus: "REC", group: "webapps" },
+        body
+      );
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeTruthy();
+    });
+
+    it("does not show updateable-rec error for non-REC specs with additions", async () => {
+      const body = `
+      <section id="sotd">
+        <p>Custom SOTD.</p>
+      </section>
+      <section>
+        <div class="addition">An addition.</div>
+      </section>
+    `;
+      const ops = makeStandardOps({ specStatus: "WD", group: "webapps" }, body);
+      const doc = await makeRSDoc(ops);
+      const errors = headerErrors(doc);
+      const updateableRecError = errors.find(error =>
+        error.message.includes("not marked as allowing revisions")
+      );
+      expect(updateableRecError).toBeUndefined();
     });
   });
 });

@@ -6,6 +6,7 @@
  */
 
 import { addId, getIntlData, norm, xmlEscape } from "./utils.js";
+import { biblio } from "./biblio.js";
 import css from "../styles/dfn-index.css.js";
 import { getTermFromElement } from "./xref.js";
 import { html } from "./import-maps.js";
@@ -19,8 +20,58 @@ const localizationStrings = {
   en: {
     heading: "Index",
     headingExternal: "Terms defined by reference",
-    headlingLocal: "Terms defined by this specification",
+    headingLocal: "Terms defined by this specification",
     dfnOf: "definition of",
+    definesFollowing: "defines the following:",
+  },
+  cs: {
+    heading: "Glosář",
+    headingExternal: "Termíny definované odkazem",
+    headingLocal: "Termíny definované touto specifikací",
+    dfnOf: "definice",
+    definesFollowing: "definuje následující:",
+  },
+  de: {
+    heading: "Index",
+    headingExternal: "Begriffe, die durch Verweis definiert sind",
+    headingLocal: "Begriffe, die in dieser Spezifikation definiert sind",
+    dfnOf: "Definition von",
+    definesFollowing: "definiert Folgendes:",
+  },
+  es: {
+    heading: "Índice",
+    headingExternal: "Términos definidos por referencia",
+    headingLocal: "Términos definidos por esta especificación",
+    dfnOf: "definición de",
+    definesFollowing: "define lo siguiente:",
+  },
+  ja: {
+    heading: "索引",
+    headingExternal: "参照によって定義された用語",
+    headingLocal: "この仕様で定義された用語",
+    dfnOf: "の定義",
+    definesFollowing: "以下を定義します:",
+  },
+  ko: {
+    heading: "색인",
+    headingExternal: "참조로 정의된 용어",
+    headingLocal: "이 명세서에서 정의된 용어",
+    dfnOf: "정의",
+    definesFollowing: "다음을 정의합니다:",
+  },
+  nl: {
+    heading: "Index",
+    headingExternal: "Termen gedefinieerd door verwijzing",
+    headingLocal: "Termen gedefinieerd door deze specificatie",
+    dfnOf: "definitie van",
+    definesFollowing: "definieert het volgende:",
+  },
+  zh: {
+    heading: "索引",
+    headingExternal: "通过引用定义的术语",
+    headingLocal: "由本规范定义的术语",
+    dfnOf: "的定义",
+    definesFollowing: "定义以下内容:",
   },
 };
 const l10n = getIntlData(localizationStrings);
@@ -43,7 +94,7 @@ const CODE_TYPES = new Set([
 ]);
 
 /**
- * @typedef {{ term: string, type: string, linkFor: string, elem: HTMLAnchorElement }} Entry
+ * @typedef {{ term: string, type?: string, linkFor?: string, elem: HTMLAnchorElement }} Entry
  */
 
 export function run() {
@@ -64,7 +115,7 @@ export function run() {
   }
 
   const localTermIndex = html`<section id="index-defined-here">
-    <h3>${l10n.headlingLocal}</h3>
+    <h3>${l10n.headingLocal}</h3>
     ${createLocalTermIndex()}
   </section>`;
   index.append(localTermIndex);
@@ -106,7 +157,7 @@ function collectLocalTerms() {
     if (!elem.id) continue;
     const text = norm(elem.textContent);
     const elemsByTerm = data.get(text) || data.set(text, []).get(text);
-    elemsByTerm.push(elem);
+    elemsByTerm?.push(elem);
   }
 
   const dataSortedByTerm = [...data].sort(([a], [b]) =>
@@ -122,7 +173,12 @@ function collectLocalTerms() {
  * @returns {HTMLLIElement}
  */
 function renderLocalTerm(term, dfns) {
-  const renderItem = (dfn, text, suffix) => {
+  /**
+   * @param {HTMLElement} dfn
+   * @param {string} text
+   * @param {string} suffix
+   */
+  const renderItem = (dfn, text, suffix = "") => {
     const href = `#${dfn.id}`;
     return html`<li data-id=${dfn.id}>
       <a class="index-term" href="${href}">${{ html: text }}</a> ${suffix
@@ -165,9 +221,9 @@ function getLocalTermType(dfn) {
 
 /** @param {HTMLElement} dfn */
 function getLocalTermParentContext(dfn) {
-  /** @type {HTMLElement} */
+  /** @type {HTMLElement | null} */
   const dfnFor = dfn.closest("[data-dfn-for]:not([data-dfn-for=''])");
-  return dfnFor ? dfnFor.dataset.dfnFor : "";
+  return dfnFor?.dataset.dfnFor || "";
 }
 
 /**
@@ -222,16 +278,28 @@ function getLocalTermSuffix(dfn, type, term = "") {
 }
 
 function appendSectionNumbers() {
+  /**
+   * @param {string} id
+   */
   const getSectionNumber = id => {
     const dfn = document.getElementById(id);
-    const sectionNumberEl = dfn.closest("section").querySelector(".secno");
+    const sectionNumberEl = dfn
+      ?.closest("section:not(.notoc)")
+      ?.querySelector(".secno");
+    if (!sectionNumberEl) {
+      // dfn is in an unnumbered section (e.g. abstract, introductory) — skip
+      return null;
+    }
     const secNum = `§${sectionNumberEl.textContent.trim()}`;
     return html`<span class="print-only">${secNum}</span>`;
   };
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll("#index-defined-here li[data-id]");
-  elems.forEach(el => el.append(getSectionNumber(el.dataset.id)));
+  elems.forEach(el => {
+    const span = getSectionNumber(el.dataset.id ?? "");
+    if (span) el.append(span);
+  });
 }
 
 function createExternalTermIndex() {
@@ -239,10 +307,21 @@ function createExternalTermIndex() {
   const dataSortedBySpec = [...data.entries()].sort(([specA], [specB]) =>
     specA.localeCompare(specB)
   );
+  const indexSection = document.querySelector("section#index");
+  const useFullTitle = !!indexSection?.classList.contains(
+    "prefer-full-spec-title"
+  );
   return html`<ul class="index">
     ${dataSortedBySpec.map(([spec, entries]) => {
+      let citationElement;
+      if (useFullTitle && biblio[spec]?.title) {
+        citationElement = renderInlineCitation(spec, biblio[spec].title);
+      } else {
+        citationElement = renderInlineCitation(spec);
+      }
+
       return html`<li data-spec="${spec}">
-        ${renderInlineCitation(spec)} defines the following:
+        ${citationElement} ${l10n.definesFollowing}
         <ul>
           ${entries
             .sort((a, b) => a.term.localeCompare(b.term))
@@ -275,7 +354,7 @@ function collectExternalTerms() {
       continue;
     }
 
-    const { type, linkFor } = elem.dataset;
+    const { linkType: type, linkFor } = elem.dataset;
     const term = getTermFromElement(elem);
     if (!term) {
       continue; // <a data-cite="SPEC"></a>
@@ -283,7 +362,7 @@ function collectExternalTerms() {
     const spec = toCiteDetails(elem).key.toUpperCase();
 
     const entriesBySpec = data.get(spec) || data.set(spec, []).get(spec);
-    entriesBySpec.push({ term, type, linkFor, elem });
+    entriesBySpec?.push({ term, type, linkFor, elem });
     uniqueReferences.add(uniqueID);
   }
 
@@ -342,14 +421,16 @@ function getTermText(entry) {
   const { term, type, linkFor } = entry;
   let text = xmlEscape(term);
 
-  if (CODE_TYPES.has(type)) {
+  if (CODE_TYPES.has(type ?? "")) {
     if (type === "extended-attribute") {
       text = `[${text}]`;
     }
     text = `<code>${text}</code>`;
   }
 
-  const typeSuffix = TYPE_TERMS.has(term) ? "type" : TYPED_TYPES.get(type);
+  const typeSuffix = TYPE_TERMS.has(term)
+    ? "type"
+    : TYPED_TYPES.get(type ?? "");
   if (typeSuffix) {
     text += ` ${typeSuffix}`;
   }

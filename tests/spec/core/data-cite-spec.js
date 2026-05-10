@@ -203,6 +203,14 @@ describe("Core — data-cite attribute", () => {
     );
   });
   describe("data-cite-frag", () => {
+    // Pre-seed the biblio so these tests don't depend on network-backed specref.
+    const localBiblio = {
+      "WHATWG-HTML": {
+        href: "https://html.spec.whatwg.org/multipage/",
+        title: "HTML Standard",
+      },
+    };
+
     it("adds the path and the fragment identifier to the link", async () => {
       const body = `
         <section class="informative">
@@ -212,7 +220,7 @@ describe("Core — data-cite attribute", () => {
             data-cite-frag="pass">inline link</a></p>
         </section>
       `;
-      const ops = makeStandardOps(null, body);
+      const ops = makeStandardOps({ localBiblio }, body);
       const doc = await makeRSDoc(ops);
       const a = doc.querySelector("#t1 > a");
       expect(a.textContent).toBe("inline link");
@@ -243,7 +251,7 @@ describe("Core — data-cite attribute", () => {
             data-cite-frag="pass">inline link</a></p>
         </section>
       `;
-      const ops = makeStandardOps(null, body);
+      const ops = makeStandardOps({ localBiblio }, body);
       const doc = await makeRSDoc(ops);
 
       const a = doc.querySelector("#t1 > a");

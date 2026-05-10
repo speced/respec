@@ -5,6 +5,13 @@
  * function is provided by the user, it is used to filter the commits that are
  * to be shown. Otherwise, all commits are shown.
  *
+ * Optionally, a `path` parameter can be provided to filter commits to only
+ * those that affected a specific file or folder (useful for monorepos).
+ *
+ * Optionally, a `repo` parameter can be provided (e.g., "owner/repo") to
+ * fetch commits from a specific repository, overriding the default repository
+ * from respecConfig.github.
+ *
  * @typedef {{message: string, hash: string}} Commit
  */
 import { github } from "../github.js";
@@ -16,25 +23,32 @@ export const name = "rs-changelog";
 export const element = class ChangelogElement extends HTMLElement {
   constructor() {
     super();
+    const filterAttr = this.getAttribute("filter");
+    /** @type {(commit: Commit) => boolean} */
+    const filterFn =
+      filterAttr &&
+      typeof (/** @type {any} */ (window)[filterAttr]) === "function"
+        ? /** @type {any} */ (window)[filterAttr]
+        : () => true;
     this.props = {
       from: this.getAttribute("from"),
       to: this.getAttribute("to") || "HEAD",
-      /** @type {(commit: Commit) => boolean} */
-      filter:
-        typeof window[this.getAttribute("filter")] === "function"
-          ? window[this.getAttribute("filter")]
-          : () => true,
+      repo: this.getAttribute("repo"),
+      path: this.getAttribute("path"),
+      filter: filterFn,
     };
   }
 
   connectedCallback() {
-    const { from, to, filter } = this.props;
+    const { from, to, filter, repo, path } = this.props;
     html.bind(this)`
       <ul>
       ${{
-        any: fetchCommits(from, to, filter)
-          .then(commits => toHTML(commits))
-          .catch(error => showError(error.message, name, { elements: [this] }))
+        any: fetchCommits(from, to, filter, repo, path)
+          .then(commits => toHTML(commits, repo))
+          .catch(error =>
+            showError(error.message, name, { elements: [this], cause: error })
+          )
           .finally(() => {
             this.dispatchEvent(new CustomEvent("done"));
           }),
@@ -45,7 +59,14 @@ export const element = class ChangelogElement extends HTMLElement {
   }
 };
 
-async function fetchCommits(from, to, filter) {
+/**
+ * @param {string | null} from
+ * @param {string} to
+ * @param {(commit: Commit) => boolean} filter
+ * @param {string | null} repo
+ * @param {string | null} path
+ */
+async function fetchCommits(from, to, filter, repo, path) {
   /** @type {Commit[]} */
   let commits;
   try {
@@ -53,9 +74,13 @@ async function fetchCommits(from, to, filter) {
     if (!gh) {
       throw new Error("`respecConfig.github` is not set");
     }
-    const url = new URL("commits", `${gh.apiBase}/${gh.fullName}/`);
-    url.searchParams.set("from", from);
+    const fullName = repo || gh.fullName;
+    const url = new URL("commits", `${gh.apiBase}/${fullName}/`);
+    if (from) url.searchParams.set("from", from);
     url.searchParams.set("to", to);
+    if (path) {
+      url.searchParams.set("path", path);
+    }
 
     const res = await fetch(url.href);
     if (!res.ok) {
@@ -69,15 +94,19 @@ async function fetchCommits(from, to, filter) {
     }
     commits = commits.filter(filter);
   } catch (error) {
-    const msg = `Error loading commits from GitHub. ${error.message}`;
-    console.error(error);
-    throw new Error(msg);
+    const msg = `Error loading commits from GitHub. ${/** @type {Error} */ (error).message}`;
+    throw new Error(msg, { cause: error });
   }
   return commits;
 }
 
-async function toHTML(commits) {
-  const { repoURL } = await github;
+/**
+ * @param {Commit[]} commits
+ * @param {string | null} repo
+ */
+async function toHTML(commits, repo) {
+  const gh = await github;
+  const repoURL = repo ? `https://github.com/${repo}/` : gh?.repoURL;
   return commits.map(commit => {
     const [message, prNumber = null] = commit.message.split(/\(#(\d+)\)/, 2);
     const commitURL = `${repoURL}commit/${commit.hash}`;

@@ -15,10 +15,18 @@ const localizationStrings = {
     msg: "Variable was defined, but never used.",
     hint: "Add a `data-ignore-unused` attribute to the `<var>`.",
   },
+  cs: {
+    msg: "Proměnná byla definována, ale nikdy nebyla použita.",
+    hint: "Přidejte atribut `data-ignore-unused` k elementu `<var>`.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }
@@ -59,7 +67,7 @@ export function run(conf) {
     for (const varElem of varElems) {
       const key = norm(varElem.textContent);
       const elems = varUsage.get(key) || varUsage.set(key, []).get(key);
-      elems.push(varElem);
+      elems?.push(varElem);
     }
 
     for (const vars of varUsage.values()) {

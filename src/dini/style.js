@@ -12,6 +12,10 @@ import {
 } from "../core/utils.js";
 import { sub } from "../core/pubsubhub.js";
 export const name = "dini/style";
+/**
+ * @param {Document} doc
+ * @param {string} version
+ */
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
   if (location.hash) {
@@ -90,13 +94,24 @@ if (!document.head.querySelector("meta[name=viewport]")) {
 
 document.head.prepend(elements);
 
+/**
+ * @param {string} linkURL
+ */
 function styleMover(linkURL) {
+  /**
+   * @param {Document} exportDoc
+   */
   return exportDoc => {
     const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
-    exportDoc.querySelector("head").append(w3cStyle);
+    if (w3cStyle) {
+      exportDoc.querySelector("head")?.append(w3cStyle);
+    }
   };
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   if (!conf.specStatus) {
     const msg = "`respecConfig.specStatus` missing. Defaulting to 'base'.";

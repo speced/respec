@@ -236,7 +236,8 @@ function resolveNameAndId(defn, parent) {
     case "callback interface":
     case "dictionary":
     case "interface":
-    case "interface mixin": {
+    case "interface mixin":
+    case "namespace": {
       idlId += resolvePartial(defn);
       break;
     }

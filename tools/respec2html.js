@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { readFile, writeFile } from "fs/promises";
 import colors from "colors";
-import { fileURLToPath } from "url";
 import finalhandler from "finalhandler";
 import http from "http";
 import { marked } from "marked";
@@ -10,28 +9,31 @@ import sade from "sade";
 import serveStatic from "serve-static";
 import { toHTML } from "./respecDocWriter.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = import.meta.dirname;
 
 class Renderer extends marked.Renderer {
-  strong(text) {
-    return colors.bold(text);
+  strong(token) {
+    return colors.bold(this.parser.parseInline(token.tokens));
   }
-  em(text) {
-    return colors.italic(text);
+  em(token) {
+    return colors.italic(this.parser.parseInline(token.tokens));
   }
-  codespan(text) {
-    return colors.underline(unescape(text));
+  codespan(token) {
+    return colors.underline(unescape(token.text));
   }
-  paragraph(text) {
-    return unescape(text);
+  paragraph(token) {
+    return unescape(this.parser.parseInline(token.tokens));
   }
-  link(href, _title, text) {
-    return `[${text}](${colors.blue.dim.underline(href)})`;
+  link(token) {
+    const text = this.parser.parseInline(token.tokens);
+    return `[${text}](${colors.blue.dim.underline(token.href)})`;
   }
-  list(body, _orderered) {
+  list(token) {
+    const body = token.items.map(item => this.listitem(item)).join("");
     return `\n${body}`;
   }
-  listitem(text) {
+  listitem(token) {
+    const text = this.parser.parseInline(token.tokens);
     return `* ${text}\n`;
   }
 }
@@ -85,20 +87,37 @@ class Logger {
 
   _formatMarkdown(str) {
     if (typeof str !== "string") return str;
-    return marked(str, { smartypants: true, renderer: new Renderer() });
+    return marked(str, { renderer: new Renderer() });
   }
 
   /** @param {import("./respecDocWriter").ReSpecError} rsError */
   _printDetails(rsError) {
+    const shouldPrintStacktrace = this._shouldPrintStacktrace(rsError);
     const print = (title, value) => {
       if (!value) return;
-      const padWidth = "Plugin".length + 1; // "Plugin" is the longest title
+      const longestTitle = shouldPrintStacktrace ? "Stacktrace" : "Plugin";
+      const padWidth = longestTitle.length + 1;
       const paddedTitle = `${title}:`.padStart(padWidth);
       console.error(" ", colors.bold(paddedTitle), this._formatMarkdown(value));
     };
     print("Count", rsError.elements && String(rsError.elements.length));
     print("Plugin", rsError.plugin);
     print("Hint", rsError.hint);
+    if (shouldPrintStacktrace) {
+      let stacktrace = `${rsError.stack}`;
+      if (rsError.cause) {
+        stacktrace += `\n    ${colors.bold("Caused by:")} ${rsError.cause.stack.split("\n").join("\n   ")}`;
+      }
+      print("Stacktrace", stacktrace);
+    }
+  }
+
+  _shouldPrintStacktrace(rsError) {
+    return (
+      this.verbose &&
+      !!rsError.stack &&
+      (!!rsError.cause?.stack || rsError.plugin === "unknown")
+    );
   }
 }
 
@@ -184,7 +203,12 @@ cli
     "Abort if ReSpec generates warnings (or errors).",
     false
   )
-  .option("--disable-sandbox", "Disable Chromium sandboxing if needed.", false)
+  .option(
+    "--sandbox",
+    "Disable Chromium sandboxing if needed, with --no-sandbox.",
+    true
+  )
+  .option("--disable-sandbox", "Alias of --no-sandbox.", false)
   .option("--devtools", "Enable debugging and show Chrome's DevTools.", false)
   .option("--verbose", "Log processing status to stdout.", false)
   .option("--localhost", "Spin up a local server to perform processing.", false)
@@ -199,6 +223,11 @@ cli.action(async (source, destination, opts) => {
     log.fatal("A source is required.");
     cli.help();
     process.exit(1);
+  }
+
+  if (opts["disable-sandbox"]) {
+    opts.sandbox = false;
+    delete opts["disable-sandbox"];
   }
 
   try {
@@ -247,7 +276,7 @@ async function run(source, destination, options, log) {
     onError: log.error.bind(log),
     onWarning: log.warn.bind(log),
     onProgress: log.info.bind(log),
-    disableSandbox: options["disable-sandbox"],
+    disableSandbox: !options.sandbox,
     devtools: options.devtools,
   });
 

@@ -10,6 +10,9 @@ import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/pluralize";
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   if (!conf.pluralize) return;
 
@@ -68,7 +71,10 @@ function getPluralizer() {
   });
 
   // returns pluralized/singularized term if `text` needs pluralization/singularization, "" otherwise
-  return function pluralizeDfn(/** @type {string} */ text) {
+  /**
+   * @param {string} text
+   */
+  return function pluralizeDfn(text) {
     const normText = normalize(text).toLowerCase();
     const plural = pluralize.isSingular(normText)
       ? pluralize.plural(normText)

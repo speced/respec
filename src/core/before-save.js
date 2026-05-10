@@ -35,11 +35,10 @@ function performTransformations(transforms, doc) {
     try {
       fn(doc);
     } catch (err) {
-      const nameOrPosition = `\`${fn.name}\`` || `at position ${pos}`;
+      const nameOrPosition = fn.name ? `\`${fn.name}\`` : `at position ${pos}`;
       const msg = docLink`Function ${nameOrPosition}\` threw an error during processing of ${"[beforeSave]"}.`;
       const hint = "See developer console.";
-      showError(msg, name, { hint });
-      console.error(err);
+      showError(msg, name, { hint, cause: err });
     } finally {
       pos++;
     }

@@ -1,5 +1,6 @@
 /* ReSpec specific CSS */
 const css = String.raw;
+const darkRefTargetBg = String.raw`color-mix(in srgb, #eaf3ff 15%, transparent)`;
 
 // Prettier ignore only to keep code indented from level 0.
 // prettier-ignore
@@ -58,8 +59,18 @@ a[href].respec-offending-element {
   animation: pop 0.4s ease-in-out 0s 1;
 }
 
+@media (prefers-color-scheme: dark) {
+  #references :target {
+    background: ${darkRefTargetBg};
+  }
+}
+
+body:has(input[name='color-scheme'][value='dark']:checked) #references :target {
+  background: ${darkRefTargetBg};
+}
+
 cite .bibref {
-  font-style: normal;
+  font-style: italic;
 }
 
 a[href].orcid {
@@ -87,7 +98,6 @@ ol.tof {
 
 #issue-summary li {
   list-style: none;
-  display: inline-block;
 }
 
 details.respec-tests-details {
@@ -140,7 +150,7 @@ aside.example .marker > a.self-link {
   align-items: baseline;
 }
 
-:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2) {
+:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2):has(+ a.self-link) {
   position: relative;
   left: -.5em;
 }
@@ -178,5 +188,18 @@ aside.example .marker > a.self-link {
   .removeOnSave {
     display: none;
   }
+}
+
+/**
+ * Control prefers-color-scheme behavior in linked SVGs:
+ * - use light when no dark scheme present, or light scheme is checked.
+ * - use dark when dark scheme is checked.
+ */
+head:not(:has(meta[name='color-scheme'][content~='dark'])) + body,
+body:has(input[name='color-scheme'][value='light']:checked) {
+  color-scheme: light;
+}
+body:has(input[name='color-scheme'][value='dark']:checked) {
+  color-scheme: dark;
 }
 `;

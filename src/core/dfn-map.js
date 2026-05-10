@@ -13,6 +13,6 @@ export function registerDefinition(dfn, names) {
     if (!definitionMap.has(name)) {
       definitionMap.set(name, new Set());
     }
-    definitionMap.get(name).add(dfn);
+    definitionMap.get(name)?.add(dfn);
   }
 }

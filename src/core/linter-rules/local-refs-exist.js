@@ -13,10 +13,18 @@ const localizationStrings = {
     msg: "Broken local reference found in document.",
     hint: "Please fix the links mentioned.",
   },
+  cs: {
+    msg: "V dokumentu byla nalezena nefunkční lokální reference.",
+    hint: "Opravte prosím uvedené odkazy.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }
@@ -32,8 +40,12 @@ export function run(conf) {
   }
 }
 
+/**
+ * @param {HTMLAnchorElement} elem
+ */
 function isBrokenHyperlink(elem) {
-  const id = elem.getAttribute("href").substring(1);
+  const id = elem.getAttribute("href")?.substring(1);
+  if (!id) return;
   const doc = elem.ownerDocument;
   return !doc.getElementById(id) && !doc.getElementsByName(id).length;
 }

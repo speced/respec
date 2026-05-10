@@ -1,12 +1,12 @@
 {
   "name": "respec",
-  "version": "35.0.2",
+  "version": "37.0.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
-    "node": ">=20.12.1"
+    "node": ">=24"
   },
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "pnpm@10.30.1",
   "bin": {
     "respec": "tools/respec2html.js",
     "respec2html": "tools/respec2html.js"
@@ -15,7 +15,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git://github.com/w3c/respec.git"
+    "url": "git://github.com/speced/respec.git"
   },
   "contributors": [
     "Marcos Cáceres <marcos@marcosc.com> (https://marcosc.com/)",
@@ -24,44 +24,48 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@rollup/plugin-alias": "^5.1.0",
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
+    "@eslint/js": "^9.8.0",
+    "@rollup/plugin-commonjs": "^29.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^1.0.0",
     "@types/pluralize": "0.0.33",
-    "boxen": "^7.1.1",
-    "chokidar": "^3.6.0",
+    "boxen": "^8.0.1",
+    "cddlparser": "^0.6.0",
+    "chokidar": "^5.0.0",
     "clean-css": "^5.3.3",
     "epipebomb": "^1.0.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jasmine": "^4.1.3",
-    "eslint-plugin-prettier": "^5.1.3",
-    "highlight.js": "^11.9.0",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jasmine": "^4.2.2",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.6.0",
+    "highlight.js": "^11.11.1",
     "hyperhtml": "^2.34.2",
-    "idb": "^8.0.0",
-    "jasmine": "^5.1.0",
-    "jasmine-core": "^5.1.2",
-    "karma": "^6.4.3",
+    "idb": "^8.0.3",
+    "jasmine": "^6.2.0",
+    "jasmine-core": "^6.2.0",
+    "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
     "karma-firefox-launcher": "^2.1.3",
     "karma-jasmine": "^5.1.0",
-    "karma-jasmine-html-reporter": "^2.1.0",
+    "karma-jasmine-html-reporter": "^2.2.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
+    "lint-staged": "^16.4.0",
     "loading-indicator": "^2.0.0",
     "pluralize": "^8.0.0",
-    "prettier": "^3.2.5",
+    "prettier": "^3.8.3",
     "prompt": "^1.3.0",
-    "rollup": "^4.17.1",
+    "rollup": "^4.60.2",
     "rollup-plugin-minify-html-literals": "^1.2.6",
-    "serve": "^14.2.3",
-    "serve-handler": "^6.1.5",
+    "serve": "^14.2.6",
+    "serve-handler": "^6.1.7",
+    "simple-git-hooks": "^2.13.1",
     "sniffy-mimetype": "^1.1.1",
-    "typescript": "^5.4.5",
-    "vnu-jar": "^23.4.11",
-    "webidl2": "^24.4.1"
+    "typescript": "^6.0.3",
+    "vnu-jar": "^26.5.2",
+    "webidl2": "^24.5.0"
   },
   "scripts": {
     "build:aom-debug": "pnpm build:aom -- --debug",
@@ -74,7 +78,7 @@
     "build:dini": "pnpm builder dini",
     "builddeps": "rollup -c js/deps/rollup.config.js --bundleConfigAsCjs && rollup -c worker/rollup.config.js --bundleConfigAsCjs",
     "lint": "tsc -p src/jsconfig.json && eslint .",
-    "prepare": "pnpm builddeps",
+    "prepare": "pnpm builddeps && simple-git-hooks",
     "builder": "node ./tools/builder.cjs",
     "release": "node ./tools/release.cjs",
     "server": "serve",
@@ -87,20 +91,54 @@
   },
   "dependencies": {
     "colors": "1.4.0",
-    "finalhandler": "^1.2.0",
-    "marked": "^12.0.2",
-    "puppeteer": "^22.7.1",
+    "finalhandler": "^2.1.1",
+    "marked": "^18.0.3",
+    "puppeteer": "^24.42.0",
     "sade": "^1.8.1",
-    "serve-static": "^1.15.0"
+    "serve-static": "^2.2.1"
   },
   "files": [
     "builds/",
     "tools/respec2html.js",
     "tools/respecDocWriter.js"
   ],
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.js": "eslint --fix",
+    "*.{js,json,md,html,css}": "prettier --write"
+  },
   "prettier": {
     "trailingComma": "es5",
     "arrowParens": "avoid"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "puppeteer",
+      "simple-git-hooks"
+    ],
+    "ignoredBuiltDependencies": [
+      "vnu-jar"
+    ],
+    "overrides": {
+      "flatted": ">=3.4.2",
+      "jasmine>glob": ">=10.5.0",
+      "lodash": ">=4.18.0",
+      "qs": ">=6.14.2",
+      "socket.io-parser": ">=4.2.6",
+      "tmp": ">=0.2.4",
+      "ws": ">=8.17.1",
+      "eslint-plugin-import>minimatch": "^3.1.4",
+      "eslint>minimatch": "^3.1.4",
+      "eslint>brace-expansion": "^1.1.13",
+      "minimatch>brace-expansion": "^1.1.13",
+      "karma>minimatch": "^3.1.4",
+      "jasmine>minimatch": "^9.0.7",
+      "@rollup/pluginutils>picomatch": "^2.3.2",
+      "@rollup/plugin-commonjs>picomatch": "^4.0.4",
+      "anymatch>picomatch": "^2.3.2"
+    }
   },
   "funding": {
     "type": "opencollective",

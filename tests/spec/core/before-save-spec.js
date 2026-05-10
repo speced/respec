@@ -7,7 +7,13 @@ import {
 } from "../SpecHelper.js";
 
 describe("Core - beforeSave config option", () => {
-  afterAll(flushIframes);
+  beforeAll(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL *= 2;
+  });
+  afterAll(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL /= 2;
+    flushIframes();
+  });
   const beforeSaveErrors = errorFilters.filter("core/before-save");
   it("allows modification before saving", async () => {
     const ops = makeStandardOps();

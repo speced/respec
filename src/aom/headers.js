@@ -73,12 +73,15 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
     return new Date(formattedDate);
   }
   const msg =
-    `[\`${prop}\`](https://github.com/w3c/respec/wiki/${prop}) ` +
+    `[\`${prop}\`](https://github.com/speced/respec/wiki/${prop}) ` +
     `is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
   showError(msg, name);
   return new Date(ISODate.format(new Date()));
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   if (!conf.specStatus) {
     const msg = "Missing required configuration: `specStatus`";
@@ -95,6 +98,9 @@ export function run(conf) {
   conf.issueTracker = `https://github.com/AOMediaCodec/${conf.shortName}/issues/`;
   conf.publishYear = conf.publishDate.getUTCFullYear();
   conf.publishHumanDate = AOMDate.format(conf.publishDate);
+  /**
+   * @param {Person} it
+   */
   const peopCheck = function (it) {
     if (!it.name) {
       const msg = "All authors and editors must have a name.";
@@ -134,7 +140,10 @@ export function run(conf) {
   // });
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  conf.textStatus = status2text[conf.specStatus];
+  conf.textStatus = /** @type {Record<string, string>} */ (status2text)[
+    // @ts-expect-error -- specStatus is always set by this point
+    conf.specStatus
+  ];
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   // configuration done - yay!
@@ -144,7 +153,7 @@ export function run(conf) {
   document.body.prepend(header);
   document.body.classList.add("h-entry");
 
-  // Requested by https://github.com/w3c/respec/issues/504
+  // Requested by https://github.com/speced/respec/issues/504
   // Makes a record of a few auto-generated things.
   pub("amend-user-config", {
     publishISODate: conf.publishISODate,

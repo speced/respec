@@ -7,6 +7,10 @@ import {
 } from "./sotd.js";
 import { html } from "../../core/import-maps.js";
 
+/**
+ * @param {Conf} conf
+ * @param {{ additionalContent: DocumentFragment; additionalSections: NodeList; mailToWGPublicListWithSubject?: string; mailToWGPublicListSubscription?: string }} opts
+ */
 export default (conf, opts) => {
   return html`
     <h2>${l10n.sotd}</h2>

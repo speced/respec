@@ -22,6 +22,9 @@ const localizationStrings = {
   es: {
     example: "Ejemplo",
   },
+  fr: {
+    example: "Exemple",
+  },
   ko: {
     example: "예시",
   },
@@ -33,6 +36,9 @@ const localizationStrings = {
   },
   zh: {
     example: "例",
+  },
+  cs: {
+    example: "Příklad",
   },
 };
 

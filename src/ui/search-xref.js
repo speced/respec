@@ -20,13 +20,20 @@ const localizationStrings = {
   zh: {
     title: "搜索定义",
   },
+  cs: {
+    title: "Hledat definice",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
 const button = ui.addCommand(l10n.title, show, "Ctrl+Shift+Alt+x", "📚");
 
 function show() {
-  const onLoad = e => e.target.classList.add("ready");
+  /**
+   * @param {Event} e
+   */
+  const onLoad = e =>
+    /** @type {HTMLElement} */ (e.target).classList.add("ready");
   const xrefSearchUI = html`
     <iframe class="respec-iframe" src="${URL}" onload="${onLoad}"></iframe>
     <a href="${URL}" target="_blank">Open Search UI in a new tab</a>

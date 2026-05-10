@@ -154,6 +154,61 @@ describe("Core — dfn-index", () => {
       expect(secNum.textContent).toBe("§1.");
       expect(item.textContent.endsWith("§1.")).toBeTrue();
     });
+
+    it("does not crash when a dfn is in an unnumbered section (e.g. abstract)", async () => {
+      // Regression test for https://github.com/speced/respec/issues/5133
+      // dfn-index.js:appendSectionNumbers() was crashing with
+      // "Cannot read properties of null (reading 'textContent')"
+      // when a <dfn> appeared in the abstract or other unnumbered section.
+      const bodyWithAbstractDfn = `
+        <section id="abstract">
+          <p>This spec defines the <dfn>my-concept</dfn>.</p>
+        </section>
+        <section id="content">
+          <h2>Content</h2>
+          <p>[=my-concept=] is used here.</p>
+        </section>
+        <section id="index"></section>`;
+      const ops = makeStandardOps(null, bodyWithAbstractDfn);
+      // Should not throw
+      const doc = await makeRSDoc(ops);
+      const index = doc.getElementById("index-defined-here");
+      expect(index).toBeTruthy();
+
+      // The term should appear in the index
+      const terms = [...index.querySelectorAll("ul.index > li")].map(
+        li => li.textContent.trim().split(/\s/)[0]
+      );
+      expect(terms).toContain("my-concept");
+
+      // But it should NOT have a §N section number (no .secno in abstract)
+      const myConceptItem = [...index.querySelectorAll("ul.index > li")].find(
+        li => li.textContent.includes("my-concept")
+      );
+      expect(myConceptItem.querySelector(".print-only")).toBeNull();
+    });
+
+    it("prefer-full-spec-title class doesn't affect local terms", async () => {
+      const body = `<section id="content">
+          <h2>Whatever</h2>
+          <p class="test"><dfn>hello</dfn> <dfn>bar</dfn></p>
+        </section>
+        <section id="index" class="prefer-full-spec-title"></section>`;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const localIndex = doc.getElementById("index-defined-here");
+
+      // Local terms should not be affected by prefer-full-spec-title class
+      // They should still show just the term names without any spec citations
+      const terms = [...localIndex.querySelectorAll("ul.index > li")].map(
+        term => term.textContent.trim().split(/\s/)[0]
+      );
+      expect(terms).toEqual(["bar", "hello"]);
+
+      // Verify no citation elements are present in local terms
+      expect(localIndex.querySelectorAll("cite")).toHaveSize(0);
+      expect(localIndex.querySelectorAll(".bibref")).toHaveSize(0);
+    });
   });
 
   describe("External Terms Index", () => {
@@ -279,6 +334,51 @@ describe("Core — dfn-index", () => {
 
       const termsInDom = [...bySpecs[0].querySelectorAll("li")];
       expect(termsInDom).toHaveSize(4);
+    });
+
+    it("uses localized text for 'defines the following'", async () => {
+      // Test with default language (English)
+      const bySpecs = index.querySelectorAll("ul.index > li");
+      expect(bySpecs[0].textContent.trim()).toMatch(
+        /\[DOM\] defines the following:/
+      );
+
+      // Test with a different language
+      const body = ` <section id="content">
+          <p>{{ Event }}</p>
+        </section>
+        <section id="index"></section>`;
+      const ops = makeStandardOps({ xref: "web-platform" }, body);
+      ops.htmlAttrs = { lang: "es" };
+      const doc = await makeRSDoc(ops);
+      const spanishIndex = doc.getElementById("index-defined-elsewhere");
+      const spanishBySpecs = spanishIndex.querySelectorAll("ul.index > li");
+      if (spanishBySpecs.length > 0) {
+        expect(spanishBySpecs[0].textContent.trim()).toMatch(
+          /\[DOM\] define lo siguiente:/
+        );
+      }
+    });
+
+    it("uses full spec title when prefer-full-spec-title class is present", async () => {
+      const body = ` <section id="content">
+          <p>{{ Event }}</p>
+        </section>
+        <section id="index" class="prefer-full-spec-title"></section>`;
+      const ops = makeStandardOps({ xref: "web-platform" }, body);
+      const doc = await makeRSDoc(ops);
+      const fullTitleIndex = doc.getElementById("index-defined-elsewhere");
+      const bySpecs = fullTitleIndex.querySelectorAll("ul.index > li");
+
+      if (bySpecs.length > 0) {
+        // Should use full title instead of just [DOM]
+        expect(bySpecs[0].textContent.trim()).toMatch(
+          /DOM Standard defines the following:/
+        );
+        expect(bySpecs[0].textContent.trim()).not.toMatch(
+          /^\[DOM\] defines the following:/
+        );
+      }
     });
 
     it("lists terms in a spec in sorted order", () => {

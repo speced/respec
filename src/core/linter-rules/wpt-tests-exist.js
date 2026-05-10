@@ -13,14 +13,23 @@ const localizationStrings = {
     msg: "The following test could not be found in Web Platform Tests:",
     hint: "Check [wpt.live](https://wpt.live) to see if it was deleted or renamed.",
   },
+  cs: {
+    msg: "Následující test nebyl nalezen ve Web Platform Tests:",
+    hint: "Zkontrolujte [wpt.live](https://wpt.live), zda nebyl smazán nebo přejmenován.",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export async function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }
 
+  // @ts-expect-error -- testSuiteURI may be undefined; getFilesInWPT handles it gracefully
   const filesInWPT = await getFilesInWPT(conf.testSuiteURI, conf.githubAPI);
   if (!filesInWPT) {
     return;
@@ -32,8 +41,8 @@ export async function run(conf) {
 
   for (const elem of testables) {
     elem.dataset.tests
-      .split(/,/gm)
-      .map(test => test.trim().split("#")[0])
+      ?.split(/,/gm)
+      .map(test => test.trim().split(/\?|#/)[0])
       .filter(test => test && !filesInWPT.has(test))
       .map(missingTest => {
         showWarning(`${l10n.msg} \`${missingTest}\`.`, name, {
@@ -56,7 +65,10 @@ async function getFilesInWPT(testSuiteURI, githubAPIBase) {
       testSuiteURL.pathname.startsWith("/web-platform-tests/wpt/tree/master/")
     ) {
       const re = /web-platform-tests\/wpt\/tree\/master\/(.+)/;
-      wptDirectory = testSuiteURL.pathname.match(re)[1].replace(/\//g, "");
+      wptDirectory = (testSuiteURL.pathname.match(re)?.[1] ?? "").replace(
+        /\//g,
+        ""
+      );
     } else {
       wptDirectory = testSuiteURL.pathname.replace(/\//g, "");
     }

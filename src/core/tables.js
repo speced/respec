@@ -19,6 +19,10 @@ const localizationStrings = {
     list_of_tables: "List of Tables",
     table: "Table ",
   },
+  fr: {
+    list_of_tables: "Liste des tables",
+    table: "Table ",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);
@@ -50,6 +54,7 @@ function collectTables() {
     .filter(table => !!table.querySelector("caption"))
     .forEach((table, i) => {
       const caption = table.querySelector("caption");
+      if (!caption) return;
       decorateTable(table, caption, i);
       listOfTables.push(getListOfTablesListItem(table.id, caption));
     });

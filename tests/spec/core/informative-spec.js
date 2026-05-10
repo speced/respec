@@ -33,6 +33,22 @@ describe("Core — Informative", () => {
     };
     const doc = await makeRSDoc(ops);
     const em = doc.querySelector("#info > p > em");
-    expect(em.textContent).toBe("Dit onderdeel is niet normatief.");
+    expect(em.textContent).toBe("Dit onderdeel is niet-normatief.");
+  });
+
+  it("localizes informative sections to French", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      htmlAttrs: {
+        lang: "fr",
+      },
+      body: `
+      <section class="informative" id="info">
+        <h2>title</h2>
+      </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const em = doc.querySelector("#info > p > em");
+    expect(em.textContent).toBe("Cette section est non normative.");
   });
 });

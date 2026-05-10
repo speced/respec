@@ -7,6 +7,7 @@ import { renderInlineCitation } from "../core/render-biblio.js";
 import { rfc2119Usage } from "../core/inlines.js";
 export const name = "w3c/conformance";
 
+/** @satisfies {Record<string, { conformance: string; normativity: string; keywordInterpretation(keywords: Element[], plural: boolean): HTMLElement }>} */
 const localizationStrings = {
   en: {
     conformance: "Conformance",
@@ -18,9 +19,10 @@ const localizationStrings = {
       return html`<p>
         The key word${plural ? "s" : ""} ${keywords} in this document
         ${plural ? "are" : "is"} to be interpreted as described in
-        <a href="https://datatracker.ietf.org/doc/html/bcp14">BCP 14</a>
+        <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>
         ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
-        when, and only when, they appear in all capitals, as shown here.
+        when, and only when, ${plural ? "they appear" : "it appears"} in all
+        capitals, as shown here.
       </p>`;
     },
   },
@@ -34,7 +36,7 @@ const localizationStrings = {
       return html`<p>
         ${plural ? "Die Schlüsselwörter" : "Das Schlüsselwort"} ${keywords} in
         diesem Dokument ${plural ? "sind" : "ist"} gemäß
-        <a href="https://datatracker.ietf.org/doc/html/bcp14">BCP 14</a>
+        <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>
         ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
         und unter Berücksichtigung von
         <a href="https://github.com/adfinis-sygroup/2119/blob/master/2119de.rst"
@@ -42,6 +44,25 @@ const localizationStrings = {
         >
         zu interpretieren, wenn und nur wenn ${plural ? "sie" : "es"} wie hier
         gezeigt durchgehend groß geschrieben wurde${plural ? "n" : ""}.
+      </p>`;
+    },
+  },
+  fr: {
+    conformance: "Conformité",
+    normativity:
+      "Tout comme les sections marquées comme non normatives, toutes les recommandations d'édition, " +
+      "diagrammes, exemples et notes dans cette spécification sont non normatifs. " +
+      "Tout le reste dans cette spécification est normatif.",
+    keywordInterpretation(keywords, plural) {
+      return html`<p>
+        ${plural ? "Les mots-clés" : "Le mot-clé"} ${keywords} dans ce document
+        ${plural ? "doivent" : "doit"} être interprété${plural ? "s" : ""} comme
+        décrit dans
+        <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>
+        ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
+        lorsque, et seulement lorsque,
+        ${plural ? "ils apparaissent" : "il apparaît"} en majuscules, comme
+        indiqué ici.
       </p>`;
     },
   },
@@ -73,10 +94,24 @@ function processConformance(conformance, conf) {
   conformance.prepend(...content.childNodes);
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  /** @type {HTMLElement | null} */
   const conformance = document.querySelector("section#conformance");
-  if (conformance && !conformance.classList.contains("override")) {
-    processConformance(conformance, conf);
+  if (conformance) {
+    if (conformance.classList.contains("informative")) {
+      conformance.classList.remove("informative");
+      const msg =
+        "Conformance sections are normative by definition. The `informative` class has been removed.";
+      const hint =
+        'Remove `class="informative"` from `<section id="conformance">` to avoid this warning.';
+      showWarning(msg, name, { hint, elements: [conformance] });
+    }
+    if (!conformance.classList.contains("override")) {
+      processConformance(conformance, conf);
+    }
   }
   // Warn when there are RFC2119/RFC8174 keywords, but not conformance section
   if (!conformance && Object.keys(rfc2119Usage).length) {

@@ -57,7 +57,7 @@ ReSpec now comes into flavors:
   - Significant speed improvements via IDB caching + cache api.
 
 ## "xref" - Automatic references linking
-We added a new way of linking to terms defined in other specs, which is a lot more cleaner and less cumbersome. The following snippet shows the difference between the old and new way of linking to external terms. [[Full Documentation](https://github.com/w3c/respec/wiki/xref)]
+We added a new way of linking to terms defined in other specs, which is a lot more cleaner and less cumbersome. The following snippet shows the difference between the old and new way of linking to external terms. [[Full Documentation](https://github.com/speced/respec/wiki/xref)]
 
 ```html
 <!-- before -->
@@ -95,7 +95,7 @@ Now we can write `<a>URL parser</a>` or `[\= URL parser =]` (`\` added to preven
 
 We have to tell ReSpec in which specs we want to search the definitions for. Set `respecConfig.xref = ["url"]` to let ReSpec know that we want to link to terms defined in [[URL]] spec. Now it will search for terms and link them. You can write spec shortnames as well as spec IDs, though shortnames are preferred.
 
-We can also link to IDL terms using **IDL Linking micro-syntax**. Instead of writing `<code><a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a></code>`, we can write `{{\ EventHandler }}` (but don't forget to change [`respecConfig.xref`](https://github.com/w3c/respec/wiki/xref) to `["url", "html"]`).
+We can also link to IDL terms using **IDL Linking micro-syntax**. Instead of writing `<code><a data-cite="HTML/webappapis.html#eventhandler">EventHandler</a></code>`, we can write `{{\ EventHandler }}` (but don't forget to change [`respecConfig.xref`](https://github.com/speced/respec/wiki/xref) to `["url", "html"]`).
 
 A whitespace-separated list of specs can be added on <code>&lt;body></code> as: <code>&lt;body data-cite="url html"></code>, instead of adding it in `respecConfig.xref`.
 
@@ -244,7 +244,7 @@ The UI can be accessed in following ways:
 ## Web IDL linking
 
 We added several features using Web IDL parser library named
-[webidl2.js](https://github.com/w3c/webidl2.js/) and the first of them is
+[webidl2.js](https://github.com/speced/webidl2.js/) and the first of them is
 automatic IDL linking.
 
 <pre class="idl" data-cite="webidl html dom">
@@ -359,7 +359,7 @@ arguments are now required to have an explicit default value.
    authors might want to add `[Exposed=(Window,Worker)]` instead of just
    `[Exposed=Window]` suggested from ReSpec.
 
-* There is [a bot](https://github.com/w3c/payment-handler/pull/343) to fix IDLs for us.
+* There is [a bot](https://github.com/speced/payment-handler/pull/343) to fix IDLs for us.
 
    Because copy-paste is hard! It also helps non-ReSpec specifications to get
    correct IDLs.
@@ -398,12 +398,12 @@ It also works in a backward way, where `apple` automatically links to `Apples`:
 ## mdn integration
 If your spec is documented on MDN, ReSpec can now display MDN support data directly in your specification. This is great for developers as they can see what browser implements a particular part of a spec, as well as giving direct access to developer documentation.
 
-  - Simply add [config option](https://github.com/w3c/respec/wiki/mdn) `mdn: true`
+  - Simply add [config option](https://github.com/speced/respec/wiki/mdn) `mdn: true`
 
 ## Caniuse integration
 ReSpec now supports caniuse.com integration, which shows up as a table at the top of your spec.
 
-  - [config option](https://github.com/w3c/respec/wiki/caniuse) `caniuse: "feature"` (where "feature" is the id used on caniuse to identify your spec).
+  - [config option](https://github.com/speced/respec/wiki/caniuse) `caniuse: "feature"` (where "feature" is the id used on caniuse to identify your spec).
 
 You can also customize exactly which browsers show up.
 

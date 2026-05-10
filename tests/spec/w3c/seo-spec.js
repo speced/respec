@@ -19,7 +19,7 @@ describe("W3C - SEO", () => {
   it("sets the canonical URI to TR URI when so configured", async () => {
     const href = "https://www.w3.org/TR/Foo/";
     const ops = makeStandardOps({
-      github: "w3c/respec",
+      github: "speced/respec",
       canonicalURI: "TR",
       group: "webapps",
       shortName: "Foo",

@@ -12,29 +12,41 @@ import { makePluginUtils, showError } from "./utils.js";
 
 export const name = "core/pre-process";
 
+const TIMEOUT = 15000;
+
+/**
+ * @param {Conf} config
+ */
 export async function run(config) {
   if (Array.isArray(config.preProcess)) {
-    const promises = config.preProcess
-      .filter(f => {
-        const isFunction = typeof f === "function";
-        if (!isFunction) {
-          const msg = "Every item in `preProcess` must be a JS function.";
-          showError(msg, name);
-        }
-        return isFunction;
-      })
-      .map(async (f, i) => {
-        const fnName = `${name}/${f.name || `[${i}]`}`;
-        const utils = makePluginUtils(fnName);
-        try {
-          return await f(config, document, utils);
-        } catch (err) {
-          const msg = `Function ${f.name} threw an error during \`preProcess\`.`;
-          const hint = "See developer console.";
-          showError(msg, name, { hint });
-          console.error(err);
-        }
-      });
-    await Promise.all(promises);
+    const functions = config.preProcess.filter((/** @type {any} */ f) => {
+      const isFunction = typeof f === "function";
+      if (!isFunction) {
+        const msg = "Every item in `preProcess` must be a JS function.";
+        showError(msg, name);
+      }
+      return isFunction;
+    });
+    for (const [i, f] of functions.entries()) {
+      const fnName = `${name}/${f.name || `[${i}]`}`;
+      const utils = makePluginUtils(fnName);
+      try {
+        await new Promise((resolve, reject) => {
+          const timerId = setTimeout(() => {
+            reject(new Error(`preProcess function "${fnName}" timed out.`));
+          }, TIMEOUT);
+          Promise.resolve()
+            .then(() => f(config, document, utils))
+            .then(resolve, reject)
+            .finally(() => {
+              clearTimeout(timerId);
+            });
+        });
+      } catch (err) {
+        const msg = `Function ${fnName} threw an error during \`preProcess\`.`;
+        const hint = "See developer console.";
+        showError(msg, name, { hint, cause: /** @type {Error} */ (err) });
+      }
+    }
   }
 }

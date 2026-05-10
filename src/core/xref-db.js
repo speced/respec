@@ -58,7 +58,7 @@ export async function resolveXrefCache(queries) {
  */
 async function shouldBustCache() {
   const key = "XREF:LAST_VERSION_CHECK";
-  const lastChecked = parseInt(localStorage.getItem(key), 10);
+  const lastChecked = parseInt(localStorage.getItem(key) ?? "", 10);
   const now = Date.now();
 
   if (!lastChecked) {
@@ -87,7 +87,7 @@ export async function cacheXrefData(queries, results) {
     const cache = await getIdbCache();
     const tx = cache.transaction(STORE_NAME, "readwrite");
     for (const query of queries) {
-      const result = results.get(query.id);
+      const result = results.get(query.id) ?? [];
       tx.objectStore(STORE_NAME).add({ query, result });
     }
     await tx.done;

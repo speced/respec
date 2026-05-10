@@ -17,10 +17,18 @@ const localizationStrings = {
     msg: docLink`${"[respecConfig]"} 中不允许使用不安全的URL.`,
     hint: "请将以下属性更改为 https://：",
   },
+  cs: {
+    msg: docLink`V ${"[respecConfig]"} nejsou povoleny nezabezpečené URL adresy.`,
+    hint: "Změňte prosím následující vlastnosti na 'https://': ",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }
@@ -33,9 +41,11 @@ export function run(conf) {
 
   const offendingMembers = Object.getOwnPropertyNames(conf)
     // this check is cheap, "prevED" is w3c exception.
+    // @ts-expect-error -- dynamic string indexing of Conf to inspect all URL properties
     .filter(key => (key.endsWith("URI") && conf[key]) || key === "prevED")
     // this check is expensive, so separate step
     .filter(key =>
+      // @ts-expect-error -- dynamic string indexing of Conf to inspect all URL properties
       new URL(conf[key], parent.location.href).href.startsWith("http://")
     );
 

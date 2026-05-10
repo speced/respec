@@ -15,10 +15,18 @@ const localizationStrings = {
     msg: "`p` elements should end with a punctuation mark.",
     hint: `Please make sure \`p\` elements end with one of: ${humanMarks}.`,
   },
+  cs: {
+    msg: "Elementy `p` by měly končit interpunkčním znaménkem.",
+    hint: `Ujistěte se, že elementy \`p\` končí jedním z těchto znaků: ${humanMarks}.`,
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }

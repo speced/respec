@@ -1,3 +1,3 @@
-Everyone is welcome to contribute. 
+Everyone is welcome to contribute.
 
-Please see our [developer guide](https://github.com/w3c/respec/wiki/Developers-Guide) to get started!  
+Please see our [developer guide](https://github.com/speced/respec/wiki/Developers-Guide) to get started!

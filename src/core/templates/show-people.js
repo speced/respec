@@ -11,6 +11,7 @@ import {
 } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 
+/** @satisfies {Record<string, { until(date: HTMLElement): HTMLElement }>} */
 const localizationStrings = {
   en: {
     until(date) {
@@ -125,7 +126,7 @@ function personToHTML(person) {
   const { retiredDate } = person;
   if (person.retiredDate) {
     const time = html`<time datetime="${retiredDate}"
-      >${W3CDate.format(new Date(retiredDate))}</time
+      >${W3CDate.format(new Date(retiredDate ?? ""))}</time
     >`;
     contents.push(html` - ${l10n.until(time)} `);
   }
@@ -138,6 +139,9 @@ function personToHTML(person) {
   return dd;
 }
 
+/**
+ * @param {PersonExtras} extra
+ */
 function renderExtra(extra) {
   const classVal = extra.class || null;
   const { name, href } = extra;
@@ -209,7 +213,7 @@ function personValidator(prop) {
 
     if (
       person.hasOwnProperty("extras") &&
-      !validateExtras(person.extras, seePersonHint, preamble)
+      !validateExtras(person.extras ?? [], seePersonHint, preamble)
     ) {
       return false;
     }

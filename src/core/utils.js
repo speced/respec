@@ -7,7 +7,17 @@ import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
+/** Matches ASCII apostrophe or U+2019 RIGHT SINGLE QUOTATION MARK possessive suffix. */
+export const POSSESSIVE_SUFFIX = /['\u2019]s$/;
+
 const dashes = /-/g;
+
+/**
+ * Polyfill for RegExp.escape() (ES2025). Escapes a string for use in a RegExp.
+ * @param {string} str
+ */
+export const regExpEscape =
+  RegExp.escape ?? (str => str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&"));
 
 /**
  * Hashes a string from char code. Can return a negative number.
@@ -66,7 +76,7 @@ export function createResourceHint(opts) {
       break;
     case "preload":
       if ("as" in opts) {
-        linkElem.setAttribute("as", opts.as);
+        linkElem.setAttribute("as", opts.as || "");
       }
       if (opts.corsMode) {
         linkElem.crossOrigin = opts.corsMode;
@@ -82,7 +92,7 @@ export function createResourceHint(opts) {
 
 // RESPEC STUFF
 /**
- * @param {Document} doc
+ * @param {Document | Element} doc
  */
 export function removeReSpec(doc) {
   doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
@@ -140,7 +150,7 @@ const disjunction = joinFactory("disjunction");
 /**
  *
  * @param {string[]} items
- * @param {(value: undefined, index: number, array: undefined[]) => string} [mapper]
+ * @param {(value: string, index: number, array: string[]) => string} [mapper]
  */
 export function joinAnd(items, mapper) {
   return conjunction(items, mapper).join("");
@@ -149,7 +159,7 @@ export function joinAnd(items, mapper) {
 /**
  *
  * @param {string[]} items
- * @param {(value: undefined, index: number, array: undefined[]) => string} [mapper]
+ * @param {(value: string, index: number, array: string[]) => string} [mapper]
  */
 export function joinOr(items, mapper) {
   return disjunction(items, mapper).join("");
@@ -177,9 +187,9 @@ export function norm(str) {
 }
 
 /**
- * @template {Record<string, Record<string, string|Function>>} T
+ * @template {{ en: Record<string, string|Function>, [lang: string]: Record<string, string|Function|undefined> }} T
  * @param {T} localizationStrings
- * @returns {T[keyof T]}
+ * @returns {T['en']}
  */
 export function getIntlData(localizationStrings, lang = docLang) {
   lang = lang.toLowerCase();
@@ -199,15 +209,15 @@ export function getIntlData(localizationStrings, lang = docLang) {
 }
 
 /**
- * @template {Record<string, Record<string, string|Function>>} T
+ * @template {Record<string, Record<string, string|Function|undefined>>} T
  * @param {T} localizationStrings
  * @param {string} key
  */
 export function getIntlDataForKey(localizationStrings, key, lang = docLang) {
   lang = lang.toLowerCase();
+  const shortLang = lang.match(/^(\w{2,3})-.+$/)?.[1] ?? "";
   return (
-    localizationStrings[lang]?.[key] ||
-    localizationStrings[lang.match(/^(\w{2,3})-.+$/)?.[1]]?.[key]
+    localizationStrings[lang]?.[key] || localizationStrings[shortLang]?.[key]
   );
 }
 
@@ -252,7 +262,7 @@ export function toKeyValuePairs(obj, delimiter = ", ", separator = "=") {
  * @param {string | string[]} urls
  */
 export function linkCSS(doc, urls) {
-  const stylesArray = [].concat(urls);
+  const stylesArray = /** @type {string[]} */ ([]).concat(urls);
   const frag = stylesArray
     .map(url => {
       const link = doc.createElement("link");
@@ -278,15 +288,14 @@ export function linkCSS(doc, urls) {
  * @this {any}
  * @param {string} content
  * @param {string} [flist] List of global function names.
- * @param {unknown[]} [funcArgs] Arguments to pass to each function.
+ * @param {...any} funcArgs Arguments to pass to each function.
  */
 export function runTransforms(content, flist, ...funcArgs) {
   const args = [this, content, ...funcArgs];
   if (flist) {
     const methods = flist.split(/\s+/);
     for (const meth of methods) {
-      /** @type {any} */
-      const method = window[meth];
+      const method = /** @type {any} */ (window)[meth];
       if (method) {
         // the initial call passed |this| directly, so we keep it that way
         try {
@@ -294,8 +303,10 @@ export function runTransforms(content, flist, ...funcArgs) {
         } catch (e) {
           const msg = `call to \`${meth}()\` failed with: ${e}.`;
           const hint = "See developer console for stack trace.";
-          showWarning(msg, "utils/runTransforms", { hint });
-          console.error(e);
+          showWarning(msg, "utils/runTransforms", {
+            hint,
+            cause: /** @type {Error} */ (e),
+          });
         }
       }
     }
@@ -325,7 +336,7 @@ export async function fetchAndCache(input, maxAge = 24 * 60 * 60 * 1000) {
       cachedResponse = await cache.match(request);
       if (
         cachedResponse &&
-        new Date(cachedResponse.headers.get("Expires")) > new Date()
+        new Date(cachedResponse.headers.get("Expires") ?? "") > new Date()
       ) {
         return cachedResponse;
       }
@@ -365,7 +376,7 @@ export async function fetchAndCache(input, maxAge = 24 * 60 * 60 * 1000) {
  * Separates each item with proper commas.
  * @template T
  * @param {T[]} array
- * @param {(item: T) => any} [mapper]
+ * @param {(item: T, index: number, array: T[]) => any} [mapper]
  */
 export function htmlJoinComma(array, mapper = item => item) {
   const items = array.map(mapper);
@@ -375,10 +386,11 @@ export function htmlJoinComma(array, mapper = item => item) {
 /**
  *
  * @param {string[]} array
- * @param {(item: any) => any[]} [mapper]
+ * @param {(item: any, index: number, array: string[]) => any[]} [mapper]
  */
 export function htmlJoinAnd(array, mapper) {
-  const result = [].concat(conjunction(array, mapper));
+  /** @type {any[]} */
+  const result = /** @type {any} */ ([]).concat(conjunction(array, mapper));
   return result.map(item => (typeof item === "string" ? html`${item}` : item));
 }
 
@@ -392,6 +404,25 @@ export function addHashId(elem, prefix = "") {
   const text = norm(elem.textContent);
   const hash = hashString(text);
   return addId(elem, prefix, hash);
+}
+
+/**
+ * Converts a string to a slug suitable for use in an HTML id attribute:
+ * lowercases (unless noLC is true), decomposes Unicode, strips diacritics,
+ * replaces runs of non-word characters with "-", and trims leading/trailing
+ * hyphens.
+ * @param {string} txt
+ * @param {boolean} [noLC] - when true, skip lowercasing
+ * @returns {string}
+ */
+export function toId(txt, noLC = false) {
+  return (noLC ? txt : txt.toLowerCase())
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\W+/gim, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
 }
 
 /**
@@ -410,14 +441,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
   if (!txt) {
     txt = (elem.title ? elem.title : elem.textContent).trim();
   }
-  let id = noLC ? txt : txt.toLowerCase();
-  id = id
-    .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\W+/gim, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "");
+  let id = toId(txt, noLC);
 
   if (!id) {
     id = "generatedID";
@@ -450,11 +474,14 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
  */
 export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
   const exclusionQuery = exclusions.join(", ");
-  const acceptNode = (/** @type {Text} */ node) => {
+  /**
+   * @param {Text} node
+   */
+  const acceptNodeFn = node => {
     if (!options.wsNodes && !node.data.trim()) {
       return NodeFilter.FILTER_REJECT;
     }
-    if (exclusionQuery && node.parentElement.closest(exclusionQuery)) {
+    if (exclusionQuery && node.parentElement?.closest(exclusionQuery)) {
       return NodeFilter.FILTER_REJECT;
     }
     return NodeFilter.FILTER_ACCEPT;
@@ -462,7 +489,7 @@ export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
   const nodeIterator = document.createNodeIterator(
     el,
     NodeFilter.SHOW_TEXT,
-    acceptNode
+    /** @type {NodeFilter} */ ({ acceptNode: acceptNodeFn })
   );
   /** @type {Text[]} */
   const textNodes = [];
@@ -500,6 +527,7 @@ export function getDfnTitles(elem) {
   } else if (
     elem.childNodes.length === 1 &&
     elem.getElementsByTagName("abbr").length === 1 &&
+    child &&
     child.title
   ) {
     titleSet.add(child.title);
@@ -539,10 +567,11 @@ export function getDfnTitles(elem) {
  * @returns {LinkTarget[]}
  */
 export function getLinkTargets(elem) {
-  /** @type {HTMLElement} */
+  /** @type {HTMLElement | null} */
   const linkForElem = elem.closest("[data-link-for]");
-  const linkFor = linkForElem ? linkForElem.dataset.linkFor : "";
+  const linkFor = linkForElem ? (linkForElem.dataset.linkFor ?? "") : "";
   const titles = getDfnTitles(elem);
+  /** @type {LinkTarget[]} */
   const results = titles.reduce((result, title) => {
     // supports legacy <dfn>Foo.Bar()</dfn> definitions
     const split = title.split(".");
@@ -556,8 +585,16 @@ export function getLinkTargets(elem) {
 
     // Finally, we can try to match without link for
     if (linkFor !== "") result.push({ for: "", title });
+
+    // Possessive suffix fallback: "term's" / "term\u2019s" → "term"
+    const stripped = title.replace(POSSESSIVE_SUFFIX, "");
+    if (stripped !== title && stripped !== "") {
+      result.push({ for: linkFor, title: stripped });
+      if (!linkForElem) result.push({ for: stripped, title: stripped });
+      if (linkFor !== "") result.push({ for: "", title: stripped });
+    }
     return result;
-  }, []);
+  }, /** @type {LinkTarget[]} */ ([]));
   return results;
 }
 
@@ -683,11 +720,11 @@ export function getElementIndentation(element) {
   if (!previousSibling || previousSibling.nodeType !== Node.TEXT_NODE) {
     return "";
   }
-  const index = previousSibling.textContent.lastIndexOf("\n");
+  const index = (previousSibling.textContent ?? "").lastIndexOf("\n");
   if (index === -1) {
     return "";
   }
-  const slice = previousSibling.textContent.slice(index + 1);
+  const slice = (previousSibling.textContent ?? "").slice(index + 1);
   if (/\S/.test(slice)) {
     return "";
   }
@@ -702,6 +739,10 @@ export function getElementIndentation(element) {
  */
 export function msgIdGenerator(namespace, counter = 0) {
   /** @returns {Generator<string, never, never>}  */
+  /**
+   * @param {string} namespace
+   * @param {number} counter
+   */
   function* idGenerator(namespace, counter) {
     while (true) {
       yield `${namespace}:${counter}`;
@@ -751,7 +792,7 @@ export class InsensitiveStringSet extends Set {
   delete(key) {
     return super.has(key)
       ? super.delete(key)
-      : super.delete(this.getCanonicalKey(key));
+      : super.delete(this.getCanonicalKey(key) ?? key);
   }
   /**
    * @param {string} key
@@ -785,18 +826,17 @@ export function makeSafeCopy(node) {
 export function removeCommentNodes(node) {
   const walker = document.createTreeWalker(node, NodeFilter.SHOW_COMMENT);
   for (const comment of [...walkTree(walker)]) {
-    comment.remove();
+    /** @type {ChildNode} */ (comment).remove();
   }
 }
 
 /**
- * @template {Node} T
- * @param {TreeWalker<T>} walker
- * @return {IterableIterator<T>}
+ * @param {TreeWalker} walker
+ * @return {IterableIterator<Node>}
  */
 function* walkTree(walker) {
   while (walker.nextNode()) {
-    yield /** @type {T} */ (walker.currentNode);
+    yield walker.currentNode;
   }
 }
 
@@ -850,7 +890,7 @@ export class RespecError extends Error {
    * @param {Parameters<typeof showError>[2] & { isWarning: boolean }} options
    */
   constructor(message, plugin, options) {
-    super(message);
+    super(message, { ...(options.cause && { cause: options.cause }) });
     const name = options.isWarning ? "ReSpecWarning" : "ReSpecError";
     Object.assign(this, { message, plugin, name, ...options });
     if (options.elements) {
@@ -864,7 +904,23 @@ export class RespecError extends Error {
     const { message, name, stack } = this;
     // @ts-expect-error https://github.com/microsoft/TypeScript/issues/26792
     const { plugin, hint, elements, title, details } = this;
-    return { message, name, plugin, hint, elements, title, details, stack };
+    return {
+      message,
+      name,
+      plugin,
+      hint,
+      elements,
+      title,
+      details,
+      stack,
+      ...(this.cause instanceof Error && {
+        cause: {
+          name: this.cause.name,
+          message: this.cause.message,
+          stack: this.cause.stack,
+        },
+      }),
+    };
   }
 }
 
@@ -876,6 +932,7 @@ export class RespecError extends Error {
  * @param {HTMLElement[]} [options.elements] Offending elements.
  * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
  * @param {string} [options.details] Any further details/context.
+ * @param {Error} [options.cause] The error that caused this one.
  */
 export function showError(message, pluginName, options = {}) {
   const opts = { ...options, isWarning: false };
@@ -890,6 +947,7 @@ export function showError(message, pluginName, options = {}) {
  * @param {HTMLElement[]} [options.elements] Offending elements.
  * @param {string} [options.title] Title attribute for offending elements. Can be a shorter form of the message.
  * @param {string} [options.details] Any further details/context.
+ * @param {Error} [options.cause] The error that caused this one.
  */
 export function showWarning(message, pluginName, options = {}) {
   const opts = { ...options, isWarning: true };
@@ -897,13 +955,16 @@ export function showWarning(message, pluginName, options = {}) {
 }
 
 /**
- * Creates showError, showWarning utilities for use in custom pre-process and
- * post-process plugins.
+ * Creates showError, showWarning and amendConfiguration utilities for
+ * use in custom pre-process and post-process plugins.
  * @param {string} pluginName
  */
 export function makePluginUtils(pluginName) {
   /** @typedef {Parameters<typeof showError>[2]} Options */
   return {
+    /** @type {(configUpdates: Record<string, unknown>) => void} */
+    amendConfiguration: configUpdates =>
+      pub("amend-user-config", configUpdates),
     /** @type {(message: string, options?: Options) => void} */
     showError: (msg, options) => showError(msg, pluginName, options),
     /** @type {(message: string, options?: Options) => void} */
@@ -943,6 +1004,7 @@ export function codedJoinAnd(array, { quotes } = { quotes: false }) {
   return joinAnd(array, quotes ? s => toMDCode(addQuotes(s)) : toMDCode);
 }
 
+/** @param {string} item */
 function addQuotes(item) {
   return String(item) ? `"${item}"` : "";
 }

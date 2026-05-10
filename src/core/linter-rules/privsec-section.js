@@ -19,9 +19,18 @@ const localizationStrings = {
       "Add a privacy and/or security considerations section. " +
       "See the [Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/).",
   },
+  cs: {
+    msg: "Dokument musí obsahovat sekci 'Zásady ochrany soukromí a/nebo bezpečnosti'.",
+    hint:
+      "Přidejte sekci o zásadách ochrany soukromí a/nebo bezpečnosti. " +
+      "Viz [Dotazník pro sebehodnocení](https://w3ctag.github.io/security-questionnaire/).",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Document} doc
+ */
 function hasPriSecConsiderations(doc) {
   return Array.from(doc.querySelectorAll("h2, h3, h4, h5, h6")).some(
     ({ textContent: text }) => {
@@ -32,7 +41,11 @@ function hasPriSecConsiderations(doc) {
   );
 }
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }

@@ -2,16 +2,27 @@
 import { showWarning } from "./utils.js";
 export const name = "core/list-sorter";
 
+/**
+ * @param {string} direction
+ */
 function makeSorter(direction) {
   const order = direction === "ascending" ? 1 : -1;
-  return ({ textContent: a }, { textContent: b }) => {
+  /**
+   * @param {Element} elemA
+   * @param {Element} elemB
+   */
+  return (elemA, elemB) => {
+    const a = elemA.textContent ?? "";
+    const b = elemB.textContent ?? "";
     return order * a.trim().localeCompare(b.trim());
   };
 }
+
 /**
  * Shallow sort list items in OL, and UL elements.
  *
  * @param {HTMLUListElement} elem
+ * @param {string} dir
  * @returns {DocumentFragment}
  */
 export function sortListItems(elem, dir) {
@@ -27,6 +38,7 @@ export function sortListItems(elem, dir) {
  * Shallow sort a definition list based on its definition terms (dt) elements.
  *
  * @param {HTMLDListElement} dl
+ * @param {string} dir
  * @returns {DocumentFragment}
  */
 export function sortDefinitionTerms(dl, dir) {

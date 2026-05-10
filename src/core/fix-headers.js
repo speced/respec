@@ -10,16 +10,20 @@ export const name = "core/fix-headers";
 export function run() {
   [...document.querySelectorAll("section:not(.introductory)")]
     .map(sec => sec.querySelector("h1, h2, h3, h4, h5, h6"))
-    .filter(h => h)
+    .filter(h => h !== null)
     .forEach(heading => {
       const depth = Math.min(getParents(heading, "section").length + 1, 6);
       renameElement(heading, `h${depth}`);
     });
 }
 
+/**
+ * @param {Element | null} el
+ * @param {string} selector
+ */
 function getParents(el, selector) {
   const parents = [];
-  while (el != el.ownerDocument.body) {
+  while (el && el != el.ownerDocument.body) {
     if (el.matches(selector)) parents.push(el);
     el = el.parentElement;
   }

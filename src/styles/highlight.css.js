@@ -6,10 +6,29 @@ Original One Light Syntax theme from https://github.com/atom/one-light-syntax
 
 const css = String.raw;
 
+// Repeatably used in media rule and selector-based override.
+const hljsDarkVars = `
+  --base: #282c34;
+  --mono-1: #abb2bf;
+  --mono-2: #818896;
+  --mono-3: #5c6370;
+  --hue-1: #56b6c2;
+  --hue-2: #61aeee;
+  --hue-3: #c678dd;
+  --hue-4: #98c379;
+  --hue-5: #e06c75;
+  --hue-5-2: #be5046;
+  --hue-6: #d19a66;
+  --hue-6-2: #e6c07b;
+`;
+
 // Prettier ignore only to keep code indented from level 0.
 // prettier-ignore
 export default css`
-.hljs {
+/* Use light by default, when no dark scheme present, or light scheme is checked. */
+.hljs,
+head:not(:has(meta[name='color-scheme'][content~='dark'])) + body .hljs,
+body:has(input[name='color-scheme'][value='light']:checked) .hljs {
   --base: #fafafa;
   --mono-1: #383a42;
   --mono-2: #686b77;
@@ -24,22 +43,14 @@ export default css`
   --hue-6-2: #9a6a01;
 }
 
-/* There's no way to adapt this to "manual" theme toggle yet. */
+/* Use dark by default when preferred, or when dark scheme is checked. */
 @media (prefers-color-scheme: dark) {
   .hljs {
-    --base: #282c34;
-    --mono-1: #abb2bf;
-    --mono-2: #818896;
-    --mono-3: #5c6370;
-    --hue-1: #56b6c2;
-    --hue-2: #61aeee;
-    --hue-3: #c678dd;
-    --hue-4: #98c379;
-    --hue-5: #e06c75;
-    --hue-5-2: #be5046;
-    --hue-6: #d19a66;
-    --hue-6-2: #e6c07b;
+    ${hljsDarkVars}
   }
+}
+body:has(input[name='color-scheme'][value='dark']:checked) .hljs {
+  ${hljsDarkVars}
 }
 
 .hljs {

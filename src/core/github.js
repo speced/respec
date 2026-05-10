@@ -2,13 +2,15 @@
 /**
  * core/github
  *
- * @see https://github.com/w3c/respec/wiki/github
+ * @see https://github.com/speced/respec/wiki/github
  */
 
 import { docLink, getIntlData, showError, showWarning } from "../core/utils.js";
 export const name = "core/github";
 
+/** @type {(value: { apiBase: string, fullName: string, branch: string, repoURL: string } | null) => void} */
 let resolveGithubPromise;
+/** @type {(message: string) => void} */
 let rejectGithubPromise;
 /** @type {Promise<{ apiBase: string, fullName: string, branch: string, repoURL: string } | null>} */
 export const github = new Promise((resolve, reject) => {
@@ -55,6 +57,9 @@ const localizationStrings = {
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
     // nothing to do, bail out.
@@ -69,7 +74,9 @@ export async function run(conf) {
     rejectGithubPromise(msg);
     return;
   }
-  let tempURL = conf.github.repoURL || conf.github;
+  /** @type {{ repoURL?: string; branch?: string; pullsURL?: string; commitHistoryURL?: string }} */
+  const ghConf = typeof conf.github === "string" ? {} : conf.github;
+  let tempURL = ghConf.repoURL || String(conf.github);
   if (!tempURL.endsWith("/")) tempURL += "/";
   /** @type URL */
   let ghURL;
@@ -91,12 +98,74 @@ export async function run(conf) {
     rejectGithubPromise(msg);
     return;
   }
-  const branch = conf.github.branch || "gh-pages";
+  const branch = ghConf.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
-  const commitHistoryURL = new URL(
-    `./commits/${conf.github.branch ?? ""}`,
-    ghURL.href
-  );
+  const newIssuesURL = new URL("./new/choose", issueBase).href;
+
+  // Allow custom pullsURL and commitHistoryURL for monorepo scenarios
+  let pullsURL;
+  if (
+    typeof conf.github === "object" &&
+    conf.github.hasOwnProperty("pullsURL")
+  ) {
+    pullsURL = conf.github.pullsURL;
+  } else {
+    pullsURL = new URL("./pulls/", ghURL).href;
+  }
+
+  // Validate pullsURL if it's provided
+  if (pullsURL) {
+    try {
+      const pullsURLObj = new URL(pullsURL);
+      if (pullsURLObj.origin !== "https://github.com") {
+        const msg = docLink`${"[github.pullsURL]"} must be HTTPS and pointing to GitHub. (${pullsURL}).`;
+        rejectGithubPromise(msg);
+        return;
+      }
+      if (!pullsURLObj.pathname.includes("/pulls")) {
+        const msg = docLink`${"[github.pullsURL]"} must point to pull requests. (${pullsURL}).`;
+        rejectGithubPromise(msg);
+        return;
+      }
+    } catch {
+      const msg = docLink`${"[github.pullsURL]"} is not a valid URL. (${pullsURL}).`;
+      rejectGithubPromise(msg);
+      return;
+    }
+  }
+
+  let commitHistoryURL;
+  if (
+    typeof conf.github === "object" &&
+    conf.github.hasOwnProperty("commitHistoryURL")
+  ) {
+    commitHistoryURL = conf.github.commitHistoryURL;
+  } else {
+    commitHistoryURL = new URL(`./commits/${ghConf.branch ?? ""}`, ghURL.href)
+      .href;
+  }
+
+  // Validate commitHistoryURL if it's provided
+  if (commitHistoryURL) {
+    try {
+      const commitURLObj = new URL(commitHistoryURL);
+      if (commitURLObj.origin !== "https://github.com") {
+        const msg = docLink`${"[github.commitHistoryURL]"} must be HTTPS and pointing to GitHub. (${commitHistoryURL}).`;
+        rejectGithubPromise(msg);
+        return;
+      }
+      if (!commitURLObj.pathname.includes("/commits")) {
+        const msg = docLink`${"[github.commitHistoryURL]"} must point to commits. (${commitHistoryURL}).`;
+        rejectGithubPromise(msg);
+        return;
+      }
+    } catch {
+      const msg = docLink`${"[github.commitHistoryURL]"} is not a valid URL. (${commitHistoryURL}).`;
+      rejectGithubPromise(msg);
+      return;
+    }
+  }
+
   const newProps = {
     edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubToken: undefined,
@@ -104,7 +173,7 @@ export async function run(conf) {
     issueBase,
     atRiskBase: issueBase,
     otherLinks: [],
-    pullBase: new URL("./pulls/", ghURL).href,
+    pullBase: pullsURL,
     shortName: repo,
   };
   // Assign new properties, but retain existing ones
@@ -128,16 +197,20 @@ export async function run(conf) {
           href: ghURL,
         },
         {
+          value: "All issues",
+          href: issueBase,
+        },
+        {
           value: l10n.file_a_bug,
-          href: newProps.issueBase,
+          href: newIssuesURL,
         },
         {
           value: l10n.commit_history,
-          href: commitHistoryURL.href,
+          href: commitHistoryURL,
         },
         {
           value: "Pull requests",
-          href: newProps.pullBase,
+          href: pullsURL,
         },
       ],
     };
@@ -152,9 +225,9 @@ export async function run(conf) {
     apiBase: githubAPI,
     fullName: `${org}/${repo}`,
     issuesURL: issueBase,
-    pullsURL: newProps.pullBase,
-    newIssuesURL: new URL("./new/choose", issueBase).href,
-    commitHistoryURL: commitHistoryURL.href,
+    pullsURL,
+    newIssuesURL,
+    commitHistoryURL,
   };
   resolveGithubPromise(normalizedGHObj);
 

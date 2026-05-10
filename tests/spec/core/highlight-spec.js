@@ -11,9 +11,10 @@ import {
 describe("Core — Highlight", () => {
   afterAll(flushIframes);
 
-  it("highlights remote languages not bundled by default with ReSpec", async () => {
+  it("highlights custom languages registered via preProcess", async () => {
     const doc = await makeRSDoc({}, "spec/core/highlight.html");
     const span = doc.querySelector("code.testlang span[class*=hljs]");
+    expect(span).toBeTruthy();
     expect(span.textContent).toBe("funkyFunction");
   });
 

@@ -17,6 +17,9 @@ export const name = "core/linter-rules/no-unused-dfns";
 
 const localizationStrings = {
   en: {
+    /**
+     * @param {string} text
+     */
     msg(text) {
       return `Found definition for "${text}", but nothing links to it. This is usually a spec bug!`;
     },
@@ -31,11 +34,34 @@ const localizationStrings = {
         To silence this warning entirely, set \`lint: { "no-unused-dfns": false }\` in your \`respecConfig\`.`;
     },
   },
+  cs: {
+    /**
+     * @param {string} text
+     */
+    msg(text) {
+      return `Nalezena definice pro "${text}", ale nic na ni neodkazuje. Toto je obvykle chyba ve specifikaci!`;
+    },
+    get hint() {
+      return docLink`
+        Můžete udělat jedno z následujícího...
+
+          * Přidejte k definici atribut \`class="lint-ignore"\`.
+          * Definici buď odstraňte, nebo změňte \`<dfn>\` na jiný typ HTML elementu.
+          * Pokud jste chtěli ${"[export|#data-export]"} tuto definici, přidejte k ní \`class="export"\`.
+
+        Pro úplné potlačení tohoto varování nastavte \`lint: { "no-unused-dfns": false }\` ve vaší \`respecConfig\`.`;
+    },
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) return;
+  // @ts-expect-error -- at this point lint is truthy (object form), safe to index
   const logger = conf.lint[ruleName] === "error" ? showError : showWarning;
   /** @type NodeListOf<HTMLElement> */
   const definitions = document.querySelectorAll(
@@ -52,6 +78,9 @@ export function run(conf) {
   });
 }
 
+/**
+ * @param {HTMLElement} dfn
+ */
 function isDfnUnused(dfn) {
   // Not in the index
   // and not the "self-link" box

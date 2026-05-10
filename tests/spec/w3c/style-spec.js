@@ -68,7 +68,7 @@ const statuses = [
   {
     specStatus: "BG-FINAL",
     expectedURL: "https://www.w3.org/StyleSheets/TR/2021/bg-final",
-    group: "autowebplatform",
+    group: "publishingbg",
   },
   {
     specStatus: "BG-DRAFT",
@@ -260,5 +260,14 @@ describe("W3C - Style", () => {
     const query = "script[src^='https://www.w3.org/scripts/TR/2021/fixup.js']";
     const elem = doc.querySelector(query);
     expect(elem).toBeNull();
+  });
+
+  it("does not append empty text nodes to head when moving stylesheets on export", async () => {
+    const ops = makeStandardOps({});
+    const doc = await getExportedDoc(await makeRSDoc(ops));
+    const emptyTextNodes = [...doc.head.childNodes].filter(
+      n => n.nodeType === Node.TEXT_NODE && n.textContent === ""
+    );
+    expect(emptyTextNodes).toHaveSize(0);
   });
 });

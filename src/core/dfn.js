@@ -71,11 +71,12 @@ export function run() {
     computeType(dfn, linkingText);
     computeExport(dfn);
 
-    // Only add `lt`s that are different from the text content
-    if (titles.length === 1 && linkingText === norm(dfn.textContent)) {
-      continue;
+    // Only add `lt`s that are different from the text content and local-lts
+    const localLt = (dfn.dataset.localLt || "").split("|").map(norm);
+    const lt = titles.filter(t => !localLt.includes(t));
+    if (lt.length > 1 || linkingText !== norm(dfn.textContent)) {
+      dfn.dataset.lt = lt.join("|");
     }
-    dfn.dataset.lt = titles.join("|");
   }
 }
 
@@ -90,7 +91,9 @@ function computeType(dfn, linkingText) {
     // class defined type (e.g., "<dfn class="element">)
     case knownTypes.some(name => dfn.classList.contains(name)):
       // First one wins
-      type = [...dfn.classList].find(className => knownTypesMap.has(className));
+      type =
+        [...dfn.classList].find(className => knownTypesMap.has(className)) ??
+        "";
       validateDefinition(linkingText, type, dfn);
       break;
 
@@ -102,9 +105,9 @@ function computeType(dfn, linkingText) {
 
   // Derive closest type
   if (!type && !dfn.matches("[data-dfn-type]")) {
-    /** @type {HTMLElement} */
+    /** @type {HTMLElement | null} */
     const closestType = dfn.closest("[data-dfn-type]");
-    type = closestType?.dataset.dfnType;
+    type = closestType?.dataset.dfnType ?? "";
   }
   // only if we have type and one wasn't explicitly given.
   if (type && !dfn.dataset.dfnType) {
@@ -115,6 +118,9 @@ function computeType(dfn, linkingText) {
 }
 
 // Deal with export/no export
+/**
+ * @param {HTMLElement} dfn
+ */
 function computeExport(dfn) {
   switch (true) {
     // Error if we have both exports and no exports.
@@ -140,7 +146,23 @@ function computeExport(dfn) {
     case dfn.matches(":is(.export):not([data-noexport], .no-export)"):
       dfn.dataset.export = "";
       break;
+
+    // Auto-suppress export for dfns in explicitly informative sections,
+    // but not if a closer normative section overrides the context.
+    case isInformativeContext(dfn):
+      dfn.dataset.noexport = "";
+      break;
   }
+}
+
+/**
+ * @param {HTMLElement} dfn
+ */
+function isInformativeContext(dfn) {
+  if (dfn.matches(".export, [data-export]")) return false;
+  return dfn
+    .closest("section.informative, section.normative")
+    ?.classList.contains("informative");
 }
 
 /**
@@ -150,14 +172,14 @@ function computeExport(dfn) {
  */
 function validateDefinition(text, type, dfn) {
   const entry = knownTypesMap.get(type);
-  if (entry.requiresFor && !dfn.dataset.dfnFor) {
+  if (entry?.requiresFor && !dfn.dataset.dfnFor) {
     const msg = docLink`Definition of type "\`${type}\`" requires a ${"[data-dfn-for]"} attribute.`;
     const { associateWith } = entry;
-    const hint = docLink`Use a ${"[data-dfn-for]"} attribute to associate this with ${associateWith}.`;
+    const hint = docLink`Use a ${"[data-dfn-for]"} attribute to associate this with ${associateWith ?? ""}.`;
     showError(msg, name, { hint, elements: [dfn] });
   }
 
-  if (entry.validator) {
+  if (entry?.validator) {
     entry.validator(text, type, dfn, name);
   }
 }
@@ -173,7 +195,7 @@ function processAsInternalSlot(title, dfn) {
   }
 
   // Automatically use the closest data-dfn-for as the parent.
-  /** @type HTMLElement */
+  /** @type {HTMLElement | null} */
   const parent = dfn.closest("[data-dfn-for]");
   if (dfn !== parent && parent?.dataset.dfnFor) {
     dfn.dataset.dfnFor = parent.dataset.dfnFor;

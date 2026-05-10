@@ -20,17 +20,15 @@ export function run() {
   for (const li of elements) {
     li.classList.add("assert");
 
-    // Link "Assert" to https://infra.spec.whatwg.org/#assert
+    // Link "Assert" to the infra spec using data-cite, so it works
+    // regardless of whether xref is enabled (e.g., for non-W3C profiles).
     const textNode = li.firstChild;
     if (
       textNode instanceof Text &&
       textNode.textContent.startsWith("Assert: ")
     ) {
       textNode.textContent = textNode.textContent.replace("Assert: ", "");
-      li.prepend(
-        html`<a href="https://infra.spec.whatwg.org/#assert">Assert</a>`,
-        ": "
-      );
+      li.prepend(html`<a data-cite="INFRA#assert">Assert</a>`, ": ");
     }
   }
 

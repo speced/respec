@@ -762,5 +762,31 @@
           <dfn data-dfn-for="EnumType">enumValueType</dfn>
         </p>
       </section>
+      <section id="top-level-no-dfn-for" data-dfn-for="SomeInterface" data-link-for="SomeInterface">
+        <h2>Top-level IDL inside a data-dfn-for section (with prose dfns)</h2>
+        <pre class="idl">
+          dictionary TopDict {
+            DOMString field;
+          };
+          enum TopEnum {
+            "value-a",
+            "value-b"
+          };
+        </pre>
+        <dfn>TopDict</dfn>
+        <dfn>TopEnum</dfn>
+      </section>
+      <section id="top-level-idl-dfn-no-dfn-for" data-dfn-for="SomeInterface" data-link-for="SomeInterface">
+        <h2>Top-level IDL inside a data-dfn-for section (IDL-generated dfns)</h2>
+        <pre class="idl">
+          dictionary TopDictNoProse {
+            DOMString field;
+          };
+          enum TopEnumNoProse {
+            "value-a",
+            "value-b"
+          };
+        </pre>
+      </section>
   </body>
 </html>

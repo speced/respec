@@ -2,6 +2,7 @@
 
 import {
   flushIframes,
+  html,
   makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
@@ -221,6 +222,7 @@ describe("Core — Definitions", () => {
 
     const dfnOnlyLocalLt = doc.querySelector("#only-local-lt dfn");
     expect(dfnOnlyLocalLt.id).toBe("dfn-install");
+    expect(dfnOnlyLocalLt.dataset.lt).toBe(undefined);
     for (const el of [...doc.querySelectorAll("#only-local-lt a")]) {
       expect(el.hash).toBe("#dfn-install");
     }
@@ -401,14 +403,11 @@ describe("Core — Definitions", () => {
     });
 
     it("handles attributes", async () => {
-      const body = `
+      const body = html`
         <section>
           <h2>Attributes</h2>
           <p id="attributes">
             <dfn class="element-attr">some-attribute</dfn>
-          </p>
-          <p id="attribute-bad">
-            <dfn class="element-attr">-attribute</dfn>
           </p>
         </section>
       `;
@@ -417,11 +416,23 @@ describe("Core — Definitions", () => {
       const dfn = doc.querySelector("#attributes dfn");
       expect(dfn.dataset.dfnType).toBe("element-attr");
       expect(dfn.dataset.export).toBe("");
+    });
 
-      // Check validation error
+    it("handles bad attributes", async () => {
+      const body = html`
+        <section>
+          <h2>Attributes</h2>
+          <p id="attribute-bad">
+            <dfn class="element-attr">bad attribute</dfn>
+          </p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+
       const errors = findDfnErrors(doc);
       expect(errors).toHaveSize(1);
-      expect(errors[0].message).toContain("-attribute");
+      expect(errors[0].message).toContain("bad attribute");
     });
 
     it("handles attribute values", async () => {
@@ -656,6 +667,50 @@ describe("Core — Definitions", () => {
       expect(errors[1].message).toContain("but also has a");
     });
 
+    it("auto-suppresses export for dfns in informative sections", async () => {
+      const body = `
+        <section class="informative">
+          <h2>Informative</h2>
+          <p><dfn>informative dfn</dfn></p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("dfn");
+      expect(dfn.dataset.noexport).toBe("");
+      expect(dfn.dataset.export).toBeUndefined();
+    });
+
+    it("preserves export for dfns in normative sections nested inside informative sections", async () => {
+      const body = `
+        <section class="informative">
+          <h2>Informative</h2>
+          <section class="normative">
+            <h3>Normative subsection</h3>
+            <p><dfn>normative dfn</dfn></p>
+          </section>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("dfn");
+      expect(dfn.dataset.noexport).toBeUndefined();
+    });
+
+    it("preserves explicit data-export on dfns inside informative sections", async () => {
+      const body = `
+        <section class="informative">
+          <h2>Informative</h2>
+          <p><dfn data-export>forced export</dfn></p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector("dfn");
+      expect(dfn.dataset.export).toBeDefined();
+      expect(dfn.dataset.noexport).toBeUndefined();
+    });
+
     it("assigns data-defines on well-known patterns", async () => {
       const body = `
         <section>
@@ -675,6 +730,51 @@ describe("Core — Definitions", () => {
       const desc2 = doc.getElementById("desc2");
       expect(desc1.dataset.defines).toBe("#dfn-definition");
       expect(desc2.dataset.defines).toBe("#dfn-different-convention");
+    });
+  });
+
+  describe("informative section export suppression", () => {
+    it("auto-suppresses export for dfns in informative sections", async () => {
+      const body = `
+        <section class="informative">
+          <h2>Informative</h2>
+          <p><dfn id="info-dfn">informative term</dfn></p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("info-dfn");
+      expect(dfn.dataset.noexport).toBe("");
+    });
+
+    it("does not suppress export for dfns in normative sections nested inside informative", async () => {
+      const body = `
+        <section class="informative">
+          <h2>Informative Appendix</h2>
+          <section class="normative">
+            <h3>Normative Subsection</h3>
+            <p><dfn id="normative-dfn">normative term</dfn></p>
+          </section>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("normative-dfn");
+      expect(dfn.dataset.noexport).toBeUndefined();
+    });
+
+    it("does not suppress export for explicitly exported dfns in informative sections", async () => {
+      const body = `
+        <section class="informative">
+          <h2>Informative</h2>
+          <p><dfn id="explicit-export" data-export>explicit export</dfn></p>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const dfn = doc.getElementById("explicit-export");
+      expect(dfn.dataset.export).toBe("");
+      expect(dfn.dataset.noexport).toBeUndefined();
     });
   });
 });

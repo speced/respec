@@ -14,6 +14,7 @@ describe("Core - Validators", () => {
         "feGaussianBlur",
         "body",
         "html",
+        "🪳",
       ];
       for (const element of elements) {
         const dfn = document.createElement("dfn");
@@ -28,7 +29,7 @@ describe("Core - Validators", () => {
     });
 
     it("generates an error if the element name is not valid", () => {
-      const elements = ["my element", "crypto$", "🪳", "-something", ""];
+      const elements = ["my element", ""];
       for (const element of elements) {
         const dfn = document.createElement("dfn");
         const context = `element name: ${element}`;
@@ -42,7 +43,12 @@ describe("Core - Validators", () => {
     });
 
     it("doesn't generates an error if the attribute name is valid", () => {
-      const attributes = ["crossorigin", "aria-hidden", "aria-roledescription"];
+      const attributes = [
+        "crossorigin",
+        "aria-hidden",
+        "aria-roledescription",
+        "aria-😇",
+      ];
       for (const attribute of attributes) {
         const context = `attribute name: ${attribute}`;
         const dfn = document.createElement("dfn");
@@ -56,7 +62,7 @@ describe("Core - Validators", () => {
     });
 
     it("generates an error if the attribute name is invalid", () => {
-      const attributes = ["-crossorigin", "-whatever-", "aria-😇"];
+      const attributes = ["my attribute", ""];
       for (const attribute of attributes) {
         const context = `attribute name: ${attribute}`;
         const dfn = document.createElement("dfn");

@@ -24,24 +24,39 @@ export const name = "core/structure";
 const localizationStrings = {
   en: {
     toc: "Table of Contents",
+    back_to_top: "Back to Top",
   },
   zh: {
     toc: "内容大纲",
+    back_to_top: "返回顶部",
   },
   ko: {
     toc: "목차",
+    back_to_top: "맨 위로",
   },
   ja: {
     toc: "目次",
+    back_to_top: "先頭に戻る",
   },
   nl: {
     toc: "Inhoudsopgave",
+    back_to_top: "Terug naar boven",
   },
   es: {
     toc: "Tabla de Contenidos",
+    back_to_top: "Volver arriba",
+  },
+  fr: {
+    toc: "Table des matières",
+    back_to_top: "Retourner en haut",
   },
   de: {
     toc: "Inhaltsverzeichnis",
+    back_to_top: "Zurück nach oben",
+  },
+  cs: {
+    toc: "Obsah",
+    back_to_top: "Zpět na začátek",
   },
 };
 
@@ -149,7 +164,7 @@ function getSectionTree(parent) {
       continue;
     }
     const title = header.textContent;
-    addId(section, null, title);
+    addId(section, undefined, title);
     sections.push({
       element: section,
       header,
@@ -189,6 +204,7 @@ function filterHeader(h) {
   });
 }
 
+/** @param {Conf} conf */
 export function run(conf) {
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = Infinity;
@@ -200,14 +216,18 @@ export function run(conf) {
   if (!conf.noTOC) {
     skipFromToC();
     const sectionTree = getSectionTree(document.body);
-    const result = scanSections(sectionTree, conf.maxTocLevel);
+    const result = scanSections(
+      sectionTree,
+      // @ts-expect-error -- maxTocLevel is always set above (either from conf or to Infinity)
+      conf.maxTocLevel
+    );
     if (result) {
       createTableOfContents(result);
     }
   }
 
   // See core/dfn-index
-  pub("toc");
+  pub("toc", undefined);
 }
 
 function renameSectionHeaders() {
@@ -239,7 +259,7 @@ function skipFromToC() {
   /** @type {NodeListOf<HTMLElement>} */
   const sections = document.querySelectorAll("section[data-max-toc]");
   for (const section of sections) {
-    const maxToc = parseInt(section.dataset.maxToc, 10);
+    const maxToc = parseInt(section.dataset.maxToc ?? "", 10);
     if (maxToc < 0 || maxToc > 6 || Number.isNaN(maxToc)) {
       const msg = "`data-max-toc` must have a value between 0-6 (inclusive).";
       showError(msg, name, { elements: [section] });
@@ -288,7 +308,7 @@ function createTableOfContents(ol) {
   }
 
   const link = html`<p role="navigation" id="back-to-top">
-    <a href="#title"><abbr title="Back to Top">&uarr;</abbr></a>
+    <a href="#title"><abbr title="${l10n.back_to_top}">&uarr;</abbr></a>
   </p>`;
   document.body.append(link);
 }

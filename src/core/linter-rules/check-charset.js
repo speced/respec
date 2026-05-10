@@ -16,10 +16,18 @@ const localizationStrings = {
     msg: `文档只能包含一个 charset 属性为 utf-8 的 \`<meta>\` 标签`,
     hint: `将此行添加到文档的 \`<head>\` 部分—— \`<meta charset="utf-8">\` 或将 charset 设置为 utf-8（如果尚未设置）。`,
   },
+  cs: {
+    msg: `Dokument smí obsahovat pouze jeden tag \`<meta>\` s charset nastaveným na 'utf-8'`,
+    hint: `Přidejte tento řádek do sekce \`<head>\` vašeho dokumentu - \`<meta charset="utf-8">\` nebo nastavte charset na "utf-8", pokud ještě není nastaven.`,
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
+  // @ts-expect-error -- LintConfig can be false; ?. only short-circuits null/undefined in TS
   if (!conf.lint?.[ruleName]) {
     return;
   }
@@ -28,7 +36,7 @@ export function run(conf) {
   const metas = document.querySelectorAll("meta[charset]");
   const val = [];
   for (const meta of metas) {
-    val.push(meta.getAttribute("charset").trim().toLowerCase());
+    val.push((meta.getAttribute("charset") ?? "").trim().toLowerCase());
   }
   const utfExists = val.includes("utf-8");
 

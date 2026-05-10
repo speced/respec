@@ -11,6 +11,9 @@ import { removeReSpec } from "./utils.js";
 
 export const name = "core/base-runner";
 
+/**
+ * @param {ReSpecPlugin[]} plugs
+ */
 export async function runAll(plugs) {
   initReSpecGlobal();
 
@@ -29,26 +32,37 @@ export async function runAll(plugs) {
   pub("plugins-done", respecConfig);
 
   await postProcess(respecConfig);
-  pub("end-all");
+  pub("end-all", undefined);
   removeReSpec(document);
   performance.mark(`${name}-end`);
   performance.measure(name, `${name}-start`, `${name}-end`);
 }
 
+/**
+ * @param {ReSpecPlugin} plug
+ */
 function isRunnableModule(plug) {
   return plug && (plug.run || plug.Plugin);
 }
 
+/**
+ * @param {ReSpecPlugin[]} runnables
+ * @param {Conf} config
+ */
 async function executePreparePass(runnables, config) {
   for (const plug of runnables.filter(p => p.prepare)) {
     try {
-      await plug.prepare(config);
+      await plug.prepare?.(config);
     } catch (err) {
       console.error(err);
     }
   }
 }
 
+/**
+ * @param {ReSpecPlugin[]} runnables
+ * @param {Conf} config
+ */
 async function executeRunPass(runnables, config) {
   for (const plug of runnables) {
     const name = plug.name || "";
@@ -66,10 +80,10 @@ async function executeRunPass(runnables, config) {
         try {
           if (plug.Plugin) {
             await new plug.Plugin(config).run();
-            resolve();
+            resolve(undefined);
           } else if (plug.run) {
             await plug.run(config);
-            resolve();
+            resolve(undefined);
           }
         } catch (err) {
           reject(err);

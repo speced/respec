@@ -12,6 +12,10 @@ import {
 } from "../core/utils.js";
 import { sub } from "../core/pubsubhub.js";
 export const name = "geonovum/style";
+/**
+ * @param {Document} doc
+ * @param {string} version
+ */
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
   script.addEventListener(
@@ -46,6 +50,9 @@ function createMetaViewport() {
   return meta;
 }
 
+/**
+ * @param {string} css_name
+ */
 function createStyle(css_name) {
   const link = document.createElement("link");
   link.rel = "stylesheet";
@@ -106,6 +113,9 @@ if (!document.head.querySelector("meta[name=viewport]")) {
 document.head.prepend(elements);
 
 // export function run(conf, doc, cb) {
+/**
+ * @param {Conf} conf
+ */
 export function run(conf) {
   if (!conf.specStatus) {
     const msg = "`respecConfig.specStatus` missing. Defaulting to 'GN-BASIS'.";
