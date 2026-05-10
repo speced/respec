@@ -37,6 +37,10 @@ const localizationStrings = {
     fig: "Figura ",
     list_of_figures: "Lista de Figuras",
   },
+  fr: {
+    list_of_figures: "Liste des figures",
+    fig: "Figure ",
+  },
   zh: {
     fig: "图 ",
     list_of_figures: "规范中包含的图",

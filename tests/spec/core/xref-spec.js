@@ -1,6 +1,7 @@
 "use strict";
 
 import {
+  errorFilters,
   flushIframes,
   makeDefaultBody,
   makeRSDoc,
@@ -259,6 +260,66 @@ describe("Core — xref", () => {
       "#test .respec-offending-element"
     );
     expect(offendingElements).toHaveSize(0);
+  });
+
+  it("strips version suffix from data-cite in spec context", async () => {
+    // Regression test for https://github.com/speced/respec/issues/5224.
+    // Using a versioned shortname (e.g. SERVICE-WORKERS-1) must:
+    //   1. still resolve the term (unversioned fallback is used if needed), and
+    //   2. NOT produce an "ambiguous dfn" error even if the xref data indexes
+    //      the definition under both the versioned and unversioned shortname.
+    const errors = errorFilters.filter("core/xref");
+    const body = `
+      <section data-cite="service-workers-1" id="test">
+        <p><a id="link">service worker</a></p>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link = doc.getElementById("link");
+    expect(link.classList).not.toContain("respec-offending-element");
+    expect(link.href).toContain("service-workers");
+    // Confirm neither an "ambiguous" nor a "not found" error was raised.
+    const xrefErrors = errors(doc);
+    expect(
+      xrefErrors.filter(e => e.message.includes("service worker"))
+    ).toEqual([]);
+  });
+
+  it("resolves terms with unversioned data-cite on container", async () => {
+    const body = `
+      <section data-cite="service-workers" id="test">
+        <p><a id="link">service worker</a></p>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link = doc.getElementById("link");
+    expect(link.classList).not.toContain("respec-offending-element");
+    expect(link.href).toContain("service-workers");
+  });
+
+  it("shows data-cite hint in error when spec shortname is wrong", async () => {
+    const errors = errorFilters.filter("core/xref");
+    const body = `
+      <section data-cite="service-workerz" id="test">
+        <p><a id="link">service worker</a></p>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link = doc.getElementById("link");
+    expect(link.classList).toContain("respec-offending-element");
+    const xrefErrors = errors(doc);
+    const error = xrefErrors.find(e => e.message.includes("service worker"));
+    expect(error).toBeTruthy();
+    expect(error.hint).toContain('data-cite="service-workerz"');
   });
 
   it("ignores terms if local dfn exists", async () => {
