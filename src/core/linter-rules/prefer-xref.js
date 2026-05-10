@@ -31,7 +31,9 @@ function getXrefSpecSet(xref) {
   if (typeof xref === "string") {
     const profile = xref.toLowerCase();
     if (profile in profiles) {
-      profiles[profile].forEach(s => specs.add(s.toUpperCase()));
+      /** @type {Record<string, string[]>} */ (profiles)[profile].forEach(
+        (/** @type {string} */ s) => specs.add(s.toUpperCase())
+      );
     }
     return specs.size ? specs : null;
   }
@@ -47,7 +49,9 @@ function getXrefSpecSet(xref) {
     if (profile) {
       const key = profile.toLowerCase();
       if (key in profiles) {
-        profiles[key].forEach(s => specs.add(s.toUpperCase()));
+        /** @type {Record<string, string[]>} */ (profiles)[key].forEach(
+          (/** @type {string} */ s) => specs.add(s.toUpperCase())
+        );
       }
     }
     if (specList) {
@@ -94,16 +98,17 @@ export function run(conf) {
   const offenders = new Map();
 
   elems.forEach(elem => {
-    const rawCite = elem.dataset.cite;
+    const rawCite = /** @type {string} */ (elem.dataset.cite);
     const specKey = extractSpecKey(rawCite);
     if (!specKey || !xrefSpecSet.has(specKey)) return;
 
     if (!offenders.has(specKey)) {
       offenders.set(specKey, []);
     }
-    offenders.get(specKey).push(elem);
+    /** @type {HTMLElement[]} */ (offenders.get(specKey)).push(elem);
   });
 
+  // @ts-expect-error -- ruleName is a string literal but LintConfig index signature doesn't cover it
   const logger = conf.lint?.[ruleName] === "error" ? showError : showWarning;
   offenders.forEach((elements, specKey) => {
     logger(l10n.msg(specKey), name, {
