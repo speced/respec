@@ -93,8 +93,10 @@ export default css`
   50% { opacity: 0.35; }
 }
 
-.baseline-status--loaded {
-  animation: baseline-appear 200ms cubic-bezier(0, 0, 0.2, 1) both;
+@media (prefers-reduced-motion: no-preference) {
+  .baseline-status--loaded {
+    animation: baseline-appear 200ms cubic-bezier(0, 0, 0.2, 1) both;
+  }
 }
 
 @keyframes baseline-appear {

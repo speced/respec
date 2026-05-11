@@ -191,7 +191,7 @@ export async function run(conf) {
     conf.implementationStatus
   );
   const headDlElem = document.querySelector(".head dl");
-  if (!headDlElem) return;
+  if (!headDlElem || !headDlElem.parentElement) return;
 
   const dt = html`<dt class="baseline-title">Browser support:</dt>`;
   const dd = html`<dd
@@ -207,26 +207,24 @@ export async function run(conf) {
   ></span>`;
 
   headDlElem.append(dt, dd);
-  /** @type {HTMLElement} */ (headDlElem.parentElement).append(summary);
+  headDlElem.parentElement.append(summary);
 
   let resolvedResult;
   try {
     resolvedResult = await fetchAndRender(conf, options);
+    dd.classList.remove("baseline-status--loading");
+    dd.classList.add("baseline-status--loaded");
+    dd.removeAttribute("aria-busy");
+    html.bind(dd)`${resolvedResult.content}`;
+    if (resolvedResult.summary) {
+      summary.textContent = resolvedResult.summary;
+    }
   } catch (err) {
     resolvedResult = handleError(err);
     dd.classList.remove("baseline-status--loading");
     dd.removeAttribute("aria-busy");
     html.bind(dd)`${resolvedResult.content}`;
     summary.textContent = "Browser support data unavailable.";
-    return;
-  }
-
-  dd.classList.remove("baseline-status--loading");
-  dd.classList.add("baseline-status--loaded");
-  dd.removeAttribute("aria-busy");
-  html.bind(dd)`${resolvedResult.content}`;
-  if (resolvedResult.summary) {
-    summary.textContent = resolvedResult.summary;
   }
 
   sub(
@@ -307,7 +305,7 @@ async function fetchAndRender(conf, options) {
   }
 
   const baseline = computeAggregate(features);
-  const statusText = STATUS_TEXT.get(baseline);
+  const statusText = /** @type {string} */ (STATUS_TEXT.get(baseline));
   const support = aggregateSupport(features);
 
   pub("amend-user-config", { implementationStatus: options.feature || true });
@@ -482,7 +480,7 @@ function getLogoSrc(browserId) {
 
 /**
  * @param {"high" | "low" | ""} baseline
- * @param {string | undefined} statusText
+ * @param {string} statusText
  * @param {Map<string, boolean>} support
  * @param {WebFeatureEntry[]} features
  */
