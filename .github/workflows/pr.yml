@@ -64,7 +64,7 @@ jobs:
       - uses: actions/setup-node@v6
         with: { node-version-file: '.nvmrc', cache: pnpm }
       - run: pnpm i --frozen-lockfile
-      - run: pnpm build:w3c & pnpm build:geonovum
+      - run: pnpm build:w3c & pnpm build:geonovum & pnpm build:aom & pnpm build:dini
       - run: pnpm test:unit
         env:
           BROWSERS: ${{ matrix.browser }}

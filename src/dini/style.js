@@ -132,7 +132,7 @@ export function run(conf) {
   }
 
   // Attach W3C fixup script after we are done.
-  if (!conf.noToc) {
+  if (!conf.noTOC) {
     sub(
       "end-all",
       () => {
