@@ -37,7 +37,8 @@ describe("Core — Implementation Status", () => {
 
     expect(dt).toBeTruthy();
     expect(dd).toBeTruthy();
-    expect(dt.textContent).toContain("Widely available");
+    expect(dt.textContent).toContain("Browser support");
+    expect(dd.textContent).toContain("Widely available");
   });
 
   it("shows correct status for limited availability", async () => {
@@ -48,10 +49,10 @@ describe("Core — Implementation Status", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    const dt = doc.querySelector(".baseline-title");
+    const dd = doc.querySelector(".baseline-status");
 
-    expect(dt).toBeTruthy();
-    expect(dt.textContent).toContain("Limited availability");
+    expect(dd).toBeTruthy();
+    expect(dd.textContent).toContain("Limited availability");
   });
 
   it("shows browser support icons", async () => {
@@ -87,7 +88,6 @@ describe("Core — Implementation Status", () => {
 
     expect(supported.length).toBe(1);
     expect(notSupported.length).toBe(3);
-    // Each unsupported browser must have its own SVG icon (not shared)
     for (const el of notSupported) {
       expect(el.querySelector(".baseline-support-icon")).toBeTruthy();
     }
@@ -101,10 +101,10 @@ describe("Core — Implementation Status", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    const dt = doc.querySelector(".baseline-title");
+    const dd = doc.querySelector(".baseline-status");
 
-    expect(dt).toBeTruthy();
-    expect(dt.textContent).toContain("Widely available");
+    expect(dd).toBeTruthy();
+    expect(dd.textContent).toContain("Widely available");
   });
 
   it("aggregates multiple features with worst-of semantics", async () => {
@@ -115,10 +115,10 @@ describe("Core — Implementation Status", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    const dt = doc.querySelector(".baseline-title");
+    const dd = doc.querySelector(".baseline-status");
 
-    expect(dt).toBeTruthy();
-    expect(dt.textContent).toContain("Newly available");
+    expect(dd).toBeTruthy();
+    expect(dd.textContent).toContain("Newly available");
   });
 
   it("handles missing feature gracefully", async () => {
@@ -161,10 +161,10 @@ describe("Core — Implementation Status", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    const dt = doc.querySelector(".baseline-title");
+    const dd = doc.querySelector(".baseline-status");
 
-    expect(dt).toBeTruthy();
-    expect(dt.textContent).toContain("Newly available");
+    expect(dd).toBeTruthy();
+    expect(dd.textContent).toContain("Newly available");
   });
 
   it("groups browsers by engine in pills", async () => {
@@ -240,7 +240,6 @@ describe("Core — Implementation Status", () => {
     const dd = doc.querySelector(".baseline-status");
 
     expect(dd).toBeTruthy();
-    // Badge should have browser pills, not just a plain link
     expect(dd.querySelector(".baseline-browsers")).toBeTruthy();
   });
 
@@ -290,10 +289,10 @@ describe("Core — Implementation Status", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    const dt = doc.querySelector(".baseline-title");
+    const dd = doc.querySelector(".baseline-status");
 
-    expect(dt).toBeTruthy();
-    expect(dt.textContent).toContain("Widely available");
+    expect(dd).toBeTruthy();
+    expect(dd.textContent).toContain("Widely available");
   });
 
   it("ignores split features in auto-detect", async () => {
@@ -304,10 +303,10 @@ describe("Core — Implementation Status", () => {
       },
     });
     const doc = await makeRSDoc(ops);
-    const dt = doc.querySelector(".baseline-title");
+    const dd = doc.querySelector(".baseline-status");
 
-    expect(dt).toBeTruthy();
-    expect(dt.textContent).toContain("Newly available");
+    expect(dd).toBeTruthy();
+    expect(dd.textContent).toContain("Newly available");
   });
 
   it("ignores moved features when looking up explicit feature ID", async () => {
@@ -324,5 +323,141 @@ describe("Core — Implementation Status", () => {
 
     expect(warnings).toHaveSize(1);
     expect(warnings[0].message).toContain("No Baseline data found");
+  });
+
+  describe("loading state and accessibility", () => {
+    it("removes loading class after render", async () => {
+      const ops = makeStandardOps({
+        implementationStatus: {
+          feature: "test-feature",
+          apiURL,
+        },
+      });
+      const doc = await makeRSDoc(ops);
+      const dd = doc.querySelector(".baseline-status");
+
+      expect(dd).toBeTruthy();
+      expect(dd.classList.contains("baseline-status--loading")).toBeFalse();
+      expect(dd.classList.contains("baseline-status--loaded")).toBeTrue();
+    });
+
+    it("removes aria-busy after render", async () => {
+      const ops = makeStandardOps({
+        implementationStatus: {
+          feature: "test-feature",
+          apiURL,
+        },
+      });
+      const doc = await makeRSDoc(ops);
+      const dd = doc.querySelector(".baseline-status");
+
+      expect(dd).toBeTruthy();
+      expect(dd.hasAttribute("aria-busy")).toBeFalse();
+    });
+
+    it("populates the accessibility summary after render", async () => {
+      const ops = makeStandardOps({
+        implementationStatus: {
+          feature: "test-feature",
+          apiURL,
+        },
+      });
+      const doc = await makeRSDoc(ops);
+      const summary = doc.querySelector(".baseline-a11y-summary");
+
+      expect(summary).toBeTruthy();
+      expect(summary.getAttribute("aria-live")).toBe("polite");
+      expect(summary.getAttribute("aria-atomic")).toBe("true");
+      expect(summary.textContent).toContain("Widely available");
+      expect(summary.textContent).toContain("Supported in");
+    });
+
+    it("uses static dt label 'Browser support:'", async () => {
+      const ops = makeStandardOps({
+        implementationStatus: {
+          feature: "test-feature",
+          apiURL,
+        },
+      });
+      const doc = await makeRSDoc(ops);
+      const dt = doc.querySelector(".baseline-title");
+
+      expect(dt.textContent.trim()).toBe("Browser support:");
+    });
+
+    it("includes status label in the dd element", async () => {
+      const ops = makeStandardOps({
+        implementationStatus: {
+          feature: "test-feature",
+          apiURL,
+        },
+      });
+      const doc = await makeRSDoc(ops);
+      const label = doc.querySelector(".baseline-status-label");
+
+      expect(label).toBeTruthy();
+      expect(label.textContent).toContain("Widely available");
+    });
+
+    it("adds preconnect link for browser logos", async () => {
+      const ops = makeStandardOps({
+        implementationStatus: {
+          feature: "test-feature",
+          apiURL,
+        },
+      });
+      const doc = await makeRSDoc(ops);
+      const preconnect = doc.querySelector(
+        'link[rel="preconnect"][href="https://www.w3.org"]'
+      );
+
+      expect(preconnect).toBeTruthy();
+    });
+
+    it("removes a11y summary span from exported document", async () => {
+      const ops = makeStandardOps({
+        implementationStatus: {
+          feature: "test-feature",
+          apiURL,
+        },
+      });
+      const doc = await makeRSDoc(ops);
+      const exportedDoc = await getExportedDoc(doc);
+
+      expect(exportedDoc.querySelector(".baseline-a11y-summary")).toBeNull();
+    });
+
+    it("removes loading classes from exported document", async () => {
+      const ops = makeStandardOps({
+        implementationStatus: {
+          feature: "test-feature",
+          apiURL,
+        },
+      });
+      const doc = await makeRSDoc(ops);
+      const exportedDoc = await getExportedDoc(doc);
+      const dd = exportedDoc.querySelector(".baseline-status");
+
+      expect(dd.classList.contains("baseline-status--loading")).toBeFalse();
+      expect(dd.classList.contains("baseline-status--loaded")).toBeFalse();
+      expect(dd.hasAttribute("aria-busy")).toBeFalse();
+    });
+
+    it("changes 'More info' to 'Current browser support' in exported doc", async () => {
+      const ops = makeStandardOps({
+        implementationStatus: {
+          feature: "test-feature",
+          apiURL,
+        },
+      });
+      const doc = await makeRSDoc(ops);
+      const exportedDoc = await getExportedDoc(doc);
+      const link = exportedDoc.querySelector(".baseline-more-info");
+
+      expect(link.textContent).toBe("Current browser support");
+      expect(link.getAttribute("aria-label")).toContain(
+        "Current browser support for"
+      );
+    });
   });
 });
