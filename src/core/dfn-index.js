@@ -344,12 +344,8 @@ function collectExternalTerms() {
     if (!elem.dataset.cite) {
       continue;
     }
-    const { cite, citeFrag, citeSection, xrefType, linkType } = elem.dataset;
-    if (
-      citeSection ||
-      !(xrefType || linkType || cite.includes("#") || citeFrag)
-    ) {
-      // Not a reference to a definition (citeSection = section link, not a dfn ref)
+    const { cite, citeFrag, xrefType, linkType } = elem.dataset;
+    if (!(xrefType || linkType || cite.includes("#") || citeFrag)) {
       continue;
     }
     const uniqueID = elem.href;
