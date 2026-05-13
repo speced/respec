@@ -501,8 +501,10 @@ describe("Core - Inlines", () => {
     expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
     expect(anchor.textContent).toBe("4.1 Fetching data");
     // But it must NOT appear in the dfn-index "Terms defined by reference" table
-    const externalIndex = doc.querySelector("#index-defined-elsewhere");
-    expect(externalIndex).toBeFalsy();
+    const externalTerms = doc.querySelectorAll(
+      "#index-defined-elsewhere li[data-spec]"
+    );
+    expect(externalTerms.length).toBe(0);
   });
 
   it("supports alias text with [[[SPEC#id|text]]] syntax", async () => {
