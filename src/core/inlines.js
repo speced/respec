@@ -208,9 +208,10 @@ function inlineRefMatches(matched) {
   if (hashIdx !== -1) {
     // SPEC#fragment form: use data-cite-section for the fragment so dfn-index
     // doesn't misclassify this section link as an external definition reference.
-    const prefixLength = ref.length - refWithoutPrefix.length;
-    const specPart =
-      ref.slice(0, prefixLength) + refWithoutPrefix.slice(0, hashIdx);
+    const specPart = ref.slice(
+      0,
+      ref.length - refWithoutPrefix.length + hashIdx
+    );
     const sectionFrag = refWithoutPrefix.slice(hashIdx + 1);
     return html`<a
       data-cite="${specPart}"

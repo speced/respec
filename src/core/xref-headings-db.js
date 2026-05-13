@@ -69,6 +69,10 @@ export async function cacheHeadingsData(queries, results) {
   }
 }
 
+/**
+ * Returns true when the cached headings data has exceeded CACHE_MAX_AGE and
+ * should be discarded. Returns false when no timestamp exists (cold start).
+ */
 function shouldBustCache() {
   const lastCached = parseInt(
     localStorage.getItem("HEADINGS:LAST_CACHED") ?? "",
@@ -78,6 +82,7 @@ function shouldBustCache() {
   return Date.now() - lastCached > CACHE_MAX_AGE;
 }
 
+/** Clears all cached headings data and removes the last-cached timestamp. */
 export async function clearHeadingsData() {
   try {
     const db = await getDb();

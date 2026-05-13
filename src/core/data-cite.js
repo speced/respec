@@ -192,12 +192,12 @@ export async function run() {
 
   await updateBiblio([...elems]);
 
-  // Capture keys after updateBiblio (which may have mutated dataset.cite via
-  // toCiteDetails), so we can match elements to their biblio entries later.
+  // Precompute toCiteDetails for each element so we can:
+  // - capture originalKey for error messages before toCiteDetails mutates dataset.cite
+  // - batch all heading queries for [[[SPEC#id]]] links in a single fetch
   const originalKeys = new Map();
   const citeDetailsMap = new Map();
   const headingQueries = new Map();
-  const elemHeadingKeys = new Map();
   for (const elem of elems) {
     originalKeys.set(elem, elem.dataset.cite);
     const citeDetails = toCiteDetails(elem);
@@ -205,10 +205,9 @@ export async function run() {
 
     const { citeSection, lt } = elem.dataset;
     if (citeSection && !lt && elem.textContent === "") {
-      const mapKey = `${citeDetails.key}#${citeSection}`;
-      elemHeadingKeys.set(elem, mapKey);
-      if (!headingQueries.has(mapKey)) {
-        headingQueries.set(mapKey, { spec: citeDetails.key, id: citeSection });
+      const key = `${citeDetails.key}#${citeSection}`;
+      if (!headingQueries.has(key)) {
+        headingQueries.set(key, { spec: citeDetails.key, id: citeSection });
       }
     }
   }
@@ -233,9 +232,9 @@ export async function run() {
       }
 
       // Use heading title from headings API when available and no alias was set.
-      const headingKey = elemHeadingKeys.get(elem);
-      if (headingKey && elem.textContent === "") {
-        const heading = headingTexts.get(headingKey);
+      const { citeSection } = elem.dataset;
+      if (citeSection && elem.textContent === "") {
+        const heading = headingTexts.get(`${citeDetails.key}#${citeSection}`);
         if (heading?.title) {
           setHeadingContent(elem, heading);
         }
