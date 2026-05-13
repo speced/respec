@@ -848,7 +848,7 @@ describe("Core — xref", () => {
 
       // as base == [[type]], it is treated as a local internal slot
       const link1 = doc.querySelector("#link1 a");
-      expect(link1.getAttribute("href")).toBe("#dfn-type");
+      expect(link1.getAttribute("href")).toBe("#dfn-window-type");
       expect(link1.firstElementChild.localName).toBe("code");
 
       // the base "Credential" is used as "forContext" for [[type]]

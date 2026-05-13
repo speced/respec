@@ -39,6 +39,14 @@ export function run() {
       const updatedElement = document.getElementById(id);
       if (updatedElement) {
         newHash = id;
+      } else if (id.startsWith("dfn-")) {
+        const legacySuffix = `-${id.slice("dfn-".length)}`;
+        const matchingElements = [...document.querySelectorAll("[id]")].filter(
+          ({ id }) => id.startsWith("dfn-") && id.endsWith(legacySuffix)
+        );
+        if (matchingElements.length === 1) {
+          newHash = matchingElements[0].id;
+        }
       }
     }
     window.location.hash = `#${newHash}`;

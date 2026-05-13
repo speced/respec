@@ -22,7 +22,7 @@ describe("Core — Location Hash", () => {
     it("recovers legacy encoded hashes for slots", async () => {
       const testURL = `${simpleURL}#dfn-%5B%5Bescapedslot%5D%5D`;
       const doc = await makeRSDoc(ops, testURL);
-      expect(doc.location.hash).toBe("#dfn-escapedslot");
+      expect(doc.location.hash).toBe("#dfn-test-escapedslot");
     }, 20000);
   });
 });
