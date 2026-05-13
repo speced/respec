@@ -40,10 +40,10 @@ export function run() {
       if (updatedElement) {
         newHash = id;
       } else if (id.startsWith("dfn-")) {
-        const legacySuffix = `-${id.slice("dfn-".length)}`;
-        const matchingElements = [...document.querySelectorAll("[id]")].filter(
-          ({ id }) => id.startsWith("dfn-") && id.endsWith(legacySuffix)
-        );
+        const legacyTermSuffix = `-${id.slice("dfn-".length)}`;
+        const matchingElements = [
+          ...document.querySelectorAll("[id^='dfn-']"),
+        ].filter(({ id }) => id.endsWith(legacyTermSuffix));
         if (matchingElements.length === 1) {
           newHash = matchingElements[0].id;
         }
