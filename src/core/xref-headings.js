@@ -106,10 +106,8 @@ export async function run(conf) {
   const elems = document.querySelectorAll("a[data-cite-section]");
   if (!elems.length) return;
 
-  const apiUrl =
-    typeof conf.xrefHeadingsUrl === "string"
-      ? conf.xrefHeadingsUrl
-      : HEADINGS_API_URL;
+  const useCustomUrl = typeof conf.xrefHeadingsUrl === "string";
+  const apiUrl = useCustomUrl ? conf.xrefHeadingsUrl : HEADINGS_API_URL;
 
   /** @type {Map<string, { spec: string, id: string }>} */
   const headingQueries = new Map();
@@ -135,11 +133,10 @@ export async function run(conf) {
 
   if (!headingElems.length) return;
 
-  const skipCache = typeof conf.xrefHeadingsUrl === "string";
   const headingTexts = await fetchHeadingTexts(
     [...headingQueries.values()],
     apiUrl,
-    { skipCache }
+    { skipCache: useCustomUrl }
   );
 
   for (const { elem, key } of headingElems) {
