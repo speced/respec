@@ -41,10 +41,10 @@ export function run() {
       if (updatedElement) {
         newHash = id;
       } else if (id.startsWith(DFN_ID_PREFIX)) {
-        const legacyTermSuffix = `-${id.slice(DFN_ID_PREFIX.length)}`;
+        const termWithLeadingHyphen = `-${id.slice(DFN_ID_PREFIX.length)}`;
         const matchingElements = [
           ...document.querySelectorAll(
-            `[id^='${DFN_ID_PREFIX}'][id$='${CSS.escape(legacyTermSuffix)}']`
+            `[id^='${DFN_ID_PREFIX}'][id$='${CSS.escape(termWithLeadingHyphen)}']`
           ),
         ];
         if (matchingElements.length === 1) {
