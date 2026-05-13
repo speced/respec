@@ -2,7 +2,7 @@
 import { idb } from "./import-maps.js";
 
 /**
- * @typedef {import("./headings.js").HeadingInfo} HeadingInfo
+ * @typedef {import("./xref-headings.js").HeadingInfo} HeadingInfo
  * @typedef {{ query: { spec: string, id: string }, result: HeadingInfo }} HeadingEntry
  * @typedef {import("idb").DBSchema & { headings: { key: string, value: HeadingEntry } }} HeadingsDb
  */
