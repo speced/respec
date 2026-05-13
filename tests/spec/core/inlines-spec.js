@@ -381,6 +381,7 @@ describe("Core - Inlines", () => {
 
   it("links to specific section of another spec using [[[SPEC#id]]] syntax", async () => {
     const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
       localBiblio: {
         fetch: {
           title: "Fetch Standard",
@@ -397,7 +398,8 @@ describe("Core - Inlines", () => {
     const anchor = doc.querySelector("#output a[href]");
     expect(anchor).toBeTruthy();
     expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
-    expect(anchor.textContent).toBe("Fetch Standard");
+    // Local fixture returns { number: "4.1", title: "Fetching data" }
+    expect(anchor.textContent).toBe("4.1 Fetching data");
   });
 
   it("uses heading text from API for [[[SPEC#id]]] when available", async () => {
@@ -430,9 +432,9 @@ describe("Core - Inlines", () => {
     }
   });
 
-  it("uses local xrefHeadingsUrl to fetch heading texts for [[[SPEC#id]]]", async () => {
+  it("uses xref.headingApiUrl to fetch heading texts for [[[SPEC#id]]]", async () => {
     const config = {
-      xrefHeadingsUrl: `${location.origin}/tests/data/headings.json`,
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
       localBiblio: {
         fetch: {
           title: "Fetch Standard",
@@ -456,6 +458,7 @@ describe("Core - Inlines", () => {
 
   it("prefers alias text over heading text for [[[SPEC#id|text]]]", async () => {
     const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
       localBiblio: {
         fetch: {
           title: "Fetch Standard",
@@ -477,6 +480,7 @@ describe("Core - Inlines", () => {
 
   it("does not add [[[SPEC#id]]] section links to dfn-index as external definitions", async () => {
     const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
       localBiblio: {
         fetch: {
           title: "Fetch Standard",
@@ -491,17 +495,19 @@ describe("Core - Inlines", () => {
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(config, body));
-    // Section link should be resolved correctly
+    // Section link should be resolved correctly (heading from local fixture)
     const anchor = doc.querySelector("#output a[href]");
     expect(anchor).toBeTruthy();
     expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    expect(anchor.textContent).toBe("4.1 Fetching data");
     // But it must NOT appear in the dfn-index "Terms defined by reference" table
     const externalIndex = doc.querySelector("#index-defined-elsewhere");
-    expect(externalIndex?.textContent ?? "").not.toContain("Fetch Standard");
+    expect(externalIndex).toBeFalsy();
   });
 
   it("supports alias text with [[[SPEC#id|text]]] syntax", async () => {
     const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
       localBiblio: {
         fetch: {
           title: "Fetch Standard",
@@ -523,8 +529,8 @@ describe("Core - Inlines", () => {
 
     const noAliasAnchor = doc.querySelector("#no-alias a[href]");
     expect(noAliasAnchor).toBeTruthy();
-    // spec title is used as link text when no alias is provided
-    expect(noAliasAnchor.textContent).toBe("Fetch Standard");
+    // heading from local fixture: { number: "4.1", title: "Fetching data" }
+    expect(noAliasAnchor.textContent).toBe("4.1 Fetching data");
   });
 
   it("supports alias text with [[[SPEC|text]]] syntax (no fragment)", async () => {

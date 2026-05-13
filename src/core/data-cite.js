@@ -144,7 +144,7 @@ const findPath = makeComponentFinder("/");
  */
 export function toCiteDetails(elem) {
   const { dataset } = elem;
-  const { cite: rawKey, citeFrag, citePath, citeHref, citeSection } = dataset;
+  const { cite: rawKey, citeFrag, citePath, citeHref } = dataset;
 
   // The key is a fragment, resolve using the shortName as key
   if ((rawKey ?? "").startsWith("#") && !citeFrag) {
@@ -160,14 +160,7 @@ export function toCiteDetails(elem) {
     return toCiteDetails(elem);
   }
 
-  // data-cite-section stores the section fragment for [[[SPEC#id]]] links.
-  // Unlike data-cite-frag, it does not cause dfn-index to treat the link as a
-  // definition reference.
-  const frag = citeFrag
-    ? `#${citeFrag}`
-    : citeSection
-      ? `#${citeSection}`
-      : findFrag(rawKey ?? "");
+  const frag = citeFrag ? `#${citeFrag}` : findFrag(rawKey ?? "");
   const path = citePath || findPath(rawKey ?? "").split("#")[0]; // path is always before "#"
   const { type } = refTypeFromContext(rawKey ?? "", elem);
   const isNormative = type === "normative";
@@ -207,12 +200,12 @@ export async function run() {
     const linkProps = await getLinkProps(citeDetails);
     if (linkProps) {
       // Apply alias text (data-lt) for non-section links only.
-      // [[[SPEC#id|alias]]] elements (citeSection) have their alias handled by
-      // core/xref-headings after this module runs. IDL references use data-lt as
-      // a lookup term but already have child content, so the textContent check
-      // prevents corrupting them.
+      // [[[SPEC#id|alias]]] elements have both citeFrag and matchedText set;
+      // their alias is handled by core/xref-headings after this module runs.
+      // IDL references use data-lt as a lookup term but already have child
+      // content, so the textContent check prevents corrupting them.
       if (
-        !elem.dataset.citeSection &&
+        !(elem.dataset.citeFrag && elem.dataset.matchedText) &&
         elem.dataset.lt &&
         elem.dataset.lt !== "the-empty-string" &&
         elem.textContent === ""
@@ -260,12 +253,7 @@ async function updateBiblio(elems) {
  * @param {Document} doc - The document to cleanup.
  */
 function cleanup(doc) {
-  const attrToRemove = [
-    "data-cite",
-    "data-cite-frag",
-    "data-cite-path",
-    "data-cite-section",
-  ];
+  const attrToRemove = ["data-cite", "data-cite-frag", "data-cite-path"];
   const elems = doc.querySelectorAll("a[data-cite], dfn[data-cite]");
   elems.forEach(elem =>
     attrToRemove.forEach(attr => elem.removeAttribute(attr))

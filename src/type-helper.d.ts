@@ -357,9 +357,7 @@ interface Conf {
     [key: string]: unknown;
   };
   /** External cross-reference configuration */
-  xref?: boolean | string | string[] | { url?: string; specs?: string[]; profile?: string };
-  /** Override the headings API URL for core/xref-headings (e.g. for testing) */
-  xrefHeadingsUrl?: string;
+  xref?: boolean | string | string[] | { url?: string; specs?: string[]; profile?: string; headingApiUrl?: string };
   /** Whether to include JSON-LD metadata */
   doJsonLd?: boolean;
   /** Whether to highlight variables */

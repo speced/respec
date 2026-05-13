@@ -8,7 +8,7 @@
  * Caches results in IndexedDB via core/xref-headings-db.
  *
  * Configuration:
- *   conf.xrefHeadingsUrl {string} — override the headings API URL (useful for testing)
+ *   conf.xref.headingApiUrl {string} — override the headings API URL (useful for testing)
  *
  * @module core/xref-headings
  */
@@ -102,12 +102,23 @@ export function setHeadingContent(elem, { title, number }) {
  * @param {Conf} conf
  */
 export async function run(conf) {
+  // Section links from [[[SPEC#id]]] have both data-cite-frag and data-matched-text set.
+  // (data-matched-text is set by inlines.js on all [[[...]]] expansions;
+  // data-cite-frag carries the section fragment for the SPEC#id form only.)
   /** @type {NodeListOf<HTMLAnchorElement>} */
-  const elems = document.querySelectorAll("a[data-cite-section]");
+  const elems = document.querySelectorAll(
+    "a[data-cite-frag][data-matched-text]"
+  );
   if (!elems.length) return;
 
-  const useCustomUrl = typeof conf.xrefHeadingsUrl === "string";
-  const apiUrl = useCustomUrl ? conf.xrefHeadingsUrl : HEADINGS_API_URL;
+  const xrefConf =
+    typeof conf.xref === "object" &&
+    conf.xref !== null &&
+    !Array.isArray(conf.xref)
+      ? conf.xref
+      : {};
+  const useCustomUrl = typeof xrefConf.headingApiUrl === "string";
+  const apiUrl = useCustomUrl ? xrefConf.headingApiUrl : HEADINGS_API_URL;
 
   /** @type {Map<string, { spec: string, id: string }>} */
   const headingQueries = new Map();
@@ -122,7 +133,7 @@ export async function run(conf) {
     } else {
       // No alias: look up the section heading from the API.
       const spec = (elem.dataset.cite ?? "").replace(/^[!?]/, "");
-      const id = elem.dataset.citeSection ?? "";
+      const id = elem.dataset.citeFrag ?? "";
       const key = `${spec}#${id}`;
       headingElems.push({ elem, key });
       if (!headingQueries.has(key)) {

@@ -5,6 +5,12 @@
       "id": "fetching",
       "title": "Fetching",
       "number": "4"
+    },
+    {
+      "spec": "fetch",
+      "id": "data-fetch",
+      "title": "Fetching data",
+      "number": "4.1"
     }
   ]
 }
