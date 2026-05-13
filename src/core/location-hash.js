@@ -6,6 +6,7 @@
 // the window to the correct point in the document when processing is done.
 
 export const name = "core/location-hash";
+const DFN_ID_PREFIX = "dfn-";
 
 export function run() {
   if (!window.location.hash) {
@@ -39,11 +40,13 @@ export function run() {
       const updatedElement = document.getElementById(id);
       if (updatedElement) {
         newHash = id;
-      } else if (id.startsWith("dfn-")) {
-        const legacyTermSuffix = `-${id.slice("dfn-".length)}`;
+      } else if (id.startsWith(DFN_ID_PREFIX)) {
+        const legacyTermSuffix = `-${id.slice(DFN_ID_PREFIX.length)}`;
         const matchingElements = [
-          ...document.querySelectorAll("[id^='dfn-']"),
-        ].filter(({ id }) => id.endsWith(legacyTermSuffix));
+          ...document.querySelectorAll(
+            `[id^='${DFN_ID_PREFIX}'][id$='${CSS.escape(legacyTermSuffix)}']`
+          ),
+        ];
         if (matchingElements.length === 1) {
           newHash = matchingElements[0].id;
         }
