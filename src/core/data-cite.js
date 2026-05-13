@@ -13,7 +13,6 @@
  */
 
 import { biblio, resolveRef, updateFromNetwork } from "./biblio.js";
-import { fetchHeadingTexts, setHeadingContent } from "./xref-headings.js";
 import {
   refTypeFromContext,
   showError,
@@ -192,52 +191,34 @@ export async function run() {
 
   await updateBiblio([...elems]);
 
-  // Precompute toCiteDetails for each element so we can:
-  // - capture originalKey for error messages before toCiteDetails mutates dataset.cite
-  // - batch all heading queries for [[[SPEC#id]]] links in a single fetch
+  // Precompute toCiteDetails for each element to capture originalKey for error
+  // messages before toCiteDetails mutates dataset.cite
   const originalKeys = new Map();
   const citeDetailsMap = new Map();
-  const headingQueries = new Map();
   for (const elem of elems) {
     originalKeys.set(elem, elem.dataset.cite);
     const citeDetails = toCiteDetails(elem);
     citeDetailsMap.set(elem, citeDetails);
-
-    const { citeSection, lt } = elem.dataset;
-    if (citeSection && !lt && elem.textContent === "") {
-      const key = `${citeDetails.key}#${citeSection}`;
-      if (!headingQueries.has(key)) {
-        headingQueries.set(key, { spec: citeDetails.key, id: citeSection });
-      }
-    }
   }
-  const headingTexts = await fetchHeadingTexts([...headingQueries.values()]);
 
   for (const elem of elems) {
     const originalKey = originalKeys.get(elem);
     const citeDetails = citeDetailsMap.get(elem);
     const linkProps = await getLinkProps(citeDetails);
     if (linkProps) {
-      // Use alias text (data-lt) if present and element is empty.
-      // Only applies to [[[...]]] triple-bracket expansions (which set data-lt for
-      // alias text). IDL references also use data-lt as a lookup term but already
-      // have child content, so the textContent check prevents corrupting them.
+      // Apply alias text (data-lt) for non-section links only.
+      // [[[SPEC#id|alias]]] elements (citeSection) have their alias handled by
+      // core/xref-headings after this module runs. IDL references use data-lt as
+      // a lookup term but already have child content, so the textContent check
+      // prevents corrupting them.
       if (
+        !elem.dataset.citeSection &&
         elem.dataset.lt &&
         elem.dataset.lt !== "the-empty-string" &&
         elem.textContent === ""
       ) {
         elem.textContent = elem.dataset.lt;
         delete elem.dataset.lt;
-      }
-
-      // Use heading title from headings API when available and no alias was set.
-      const { citeSection } = elem.dataset;
-      if (citeSection && elem.textContent === "") {
-        const heading = headingTexts.get(`${citeDetails.key}#${citeSection}`);
-        if (heading?.title) {
-          setHeadingContent(elem, heading);
-        }
       }
 
       linkElem(elem, linkProps, citeDetails);

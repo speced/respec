@@ -3,8 +3,12 @@
  * Module core/xref-headings
  *
  * Resolves cross-spec section heading titles via the respec.org headings API.
- * Used by core/data-cite to populate [[[SPEC#id]]] link text.
+ * Handles [[[SPEC#id]]] section links: applies alias text (data-lt) or fetches
+ * heading titles from the API, and updates element content with proper secno markup.
  * Caches results in IndexedDB via core/xref-headings-db.
+ *
+ * Configuration:
+ *   conf.xrefHeadingsUrl {string} — override the headings API URL (useful for testing)
  *
  * @module core/xref-headings
  */
@@ -14,7 +18,7 @@ import { showWarning } from "./utils.js";
 
 export const name = "core/xref-headings";
 
-const HEADINGS_API_URL = "https://respec.org/xref/search/headings";
+export const HEADINGS_API_URL = "https://respec.org/xref/search/headings";
 
 /**
  * @typedef {{ title: string, number: string | null }} HeadingInfo
@@ -23,20 +27,26 @@ const HEADINGS_API_URL = "https://respec.org/xref/search/headings";
 /**
  * Fetches heading titles from the respec.org headings API for cross-spec
  * section links ([[[SPEC#id]]] syntax). Returns a Map keyed by "spec#id".
- * Uses IndexedDB cache; falls back to network on cache miss.
+ * Uses IndexedDB cache unless skipCache is true; falls back to network on cache miss.
  * @param {{ spec: string, id: string }[]} queries
+ * @param {string} [apiUrl] - override the API URL (defaults to HEADINGS_API_URL)
+ * @param {{ skipCache?: boolean }} [options]
  * @returns {Promise<Map<string, HeadingInfo>>}
  */
-export async function fetchHeadingTexts(queries) {
+export async function fetchHeadingTexts(
+  queries,
+  apiUrl = HEADINGS_API_URL,
+  { skipCache = false } = {}
+) {
   if (!queries.length) return new Map();
 
-  const cached = await resolveHeadingsCache(queries);
+  const cached = skipCache ? new Map() : await resolveHeadingsCache(queries);
   const uncachedQueries = queries.filter(q => !cached.has(`${q.spec}#${q.id}`));
 
   if (!uncachedQueries.length) return cached;
 
   try {
-    const res = await fetch(HEADINGS_API_URL, {
+    const res = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ queries: uncachedQueries }),
@@ -58,7 +68,7 @@ export async function fetchHeadingTexts(queries) {
         });
       }
     }
-    await cacheHeadingsData(uncachedQueries, fetched);
+    if (!skipCache) await cacheHeadingsData(uncachedQueries, fetched);
     return new Map([...cached, ...fetched]);
   } catch {
     const msg = "Failed to fetch heading texts from respec.org.";
@@ -79,5 +89,66 @@ export function setHeadingContent(elem, { title, number }) {
     elem.append(html`<bdi class="secno">${number} </bdi>`, title);
   } else {
     elem.textContent = title;
+  }
+}
+
+/**
+ * Processes all [[[SPEC#id]]] section links in the document:
+ * - Applies alias text (data-lt) when provided by the author
+ * - Fetches section heading titles from the headings API for the rest
+ * - Falls back to the spec title already set by core/data-cite
+ *
+ * Must run after core/data-cite (so elements have href and spec-title fallback).
+ * @param {Conf} conf
+ */
+export async function run(conf) {
+  /** @type {NodeListOf<HTMLAnchorElement>} */
+  const elems = document.querySelectorAll("a[data-cite-section]");
+  if (!elems.length) return;
+
+  const apiUrl =
+    typeof conf.xrefHeadingsUrl === "string"
+      ? conf.xrefHeadingsUrl
+      : HEADINGS_API_URL;
+
+  /** @type {Map<string, { spec: string, id: string }>} */
+  const headingQueries = new Map();
+  /** @type {{ elem: HTMLAnchorElement, key: string }[]} */
+  const headingElems = [];
+
+  for (const elem of elems) {
+    if (elem.dataset.lt) {
+      // Author provided alias text (e.g. [[[SPEC#id|alias]]]); apply it now.
+      elem.textContent = elem.dataset.lt;
+      delete elem.dataset.lt;
+    } else {
+      // No alias: look up the section heading from the API.
+      const spec = (elem.dataset.cite ?? "").replace(/^[!?]/, "");
+      const id = elem.dataset.citeSection ?? "";
+      const key = `${spec}#${id}`;
+      headingElems.push({ elem, key });
+      if (!headingQueries.has(key)) {
+        headingQueries.set(key, { spec, id });
+      }
+    }
+  }
+
+  if (!headingElems.length) return;
+
+  const skipCache = typeof conf.xrefHeadingsUrl === "string";
+  const headingTexts = await fetchHeadingTexts(
+    [...headingQueries.values()],
+    apiUrl,
+    { skipCache }
+  );
+
+  for (const { elem, key } of headingElems) {
+    const heading = headingTexts.get(key);
+    if (heading?.title) {
+      // Clear the spec-title fallback set by data-cite and use the heading.
+      elem.textContent = "";
+      setHeadingContent(elem, heading);
+    }
+    // else: keep the spec title already set by core/data-cite as fallback
   }
 }

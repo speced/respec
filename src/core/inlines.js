@@ -204,15 +204,13 @@ function inlineRefMatches(matched) {
       : html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"></a>`;
   }
 
-  const hashIdx = refWithoutPrefix.indexOf("#");
-  if (hashIdx !== -1) {
+  if (refWithoutPrefix.includes("#")) {
     // SPEC#fragment form: use data-cite-section for the fragment so dfn-index
     // doesn't misclassify this section link as an external definition reference.
-    const specPart = ref.slice(
-      0,
-      ref.length - refWithoutPrefix.length + hashIdx
-    );
-    const sectionFrag = refWithoutPrefix.slice(hashIdx + 1);
+    const [specName, sectionFrag] = refWithoutPrefix.split("#");
+    // Preserve any !/?/\ prefix from ref (e.g. "!SPEC" → "!" + specName)
+    const specPart =
+      ref.slice(0, ref.length - refWithoutPrefix.length) + specName;
     return html`<a
       data-cite="${specPart}"
       data-cite-section="${sectionFrag}"
