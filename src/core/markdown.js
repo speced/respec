@@ -134,7 +134,7 @@ function normalizeIndent(text) {
 /**
  * @param {string} text
  * @param {object} options
- * @param {boolean} options.inline
+ * @param {boolean} [options.inline]
  * @param {boolean} [options.fromHTML]
  */
 export function markdownToHtml(
