@@ -54,15 +54,18 @@ export async function fetchHeadingTexts(queries, apiUrl = HEADINGS_API_URL) {
     }
     const { result = [] } = await res.json();
     /** @type {Map<string, HeadingInfo>} */
-    const fetched = new Map();
-    for (const entry of result) {
-      if (!entry.error) {
-        fetched.set(`${entry.spec}#${entry.id}`, {
-          title: entry.title,
-          number: entry.number || null,
-        });
-      }
-    }
+    const fetched = new Map(
+      /** @type {{ spec: string, id: string, title: string, number: string | null, error?: boolean }[]} */
+      (result)
+        .filter(entry => !entry.error)
+        .map(
+          entry =>
+            /** @type {[string, HeadingInfo]} */ ([
+              `${entry.spec}#${entry.id}`,
+              { title: entry.title, number: entry.number || null },
+            ])
+        )
+    );
     await cacheHeadingsData(uncachedQueries, fetched);
     return new Map([...cached, ...fetched]);
   } catch {
@@ -122,13 +125,11 @@ export async function run(conf) {
   /** @type {{ elem: HTMLAnchorElement, key: string }[]} */
   const headingElems = [];
 
-  for (const elem of elems) {
+  elems.forEach(elem => {
     if (elem.dataset.lt) {
-      // Author provided alias text (e.g. [[[SPEC#id|alias]]]); apply it now.
       elem.textContent = elem.dataset.lt;
       delete elem.dataset.lt;
     } else {
-      // No alias: look up the section heading from the API.
       const spec = (elem.dataset.cite ?? "").replace(/^[!?]/, "");
       const id = elem.dataset.citeFrag ?? "";
       const key = `${spec}#${id}`;
@@ -137,7 +138,7 @@ export async function run(conf) {
         headingQueries.set(key, { spec, id });
       }
     }
-  }
+  });
 
   if (!headingElems.length) return;
 
@@ -146,13 +147,11 @@ export async function run(conf) {
     apiUrl
   );
 
-  for (const { elem, key } of headingElems) {
+  headingElems.forEach(({ elem, key }) => {
     const heading = headingTexts.get(key);
     if (heading?.title) {
-      // Clear the spec-title fallback set by data-cite and use the heading.
       elem.textContent = "";
       setHeadingContent(elem, heading);
     }
-    // else: keep the spec title already set by core/data-cite as fallback
-  }
+  });
 }

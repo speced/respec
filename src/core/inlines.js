@@ -177,17 +177,17 @@ const inlineExpansionPattern =
  */
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
-  let ref = matched.slice(3, -3).trim();
-  if (!inlineExpansionPattern.test(ref)) {
+  const raw = matched.slice(3, -3).trim();
+  if (!inlineExpansionPattern.test(raw)) {
     const msg = `Bad syntax: \`${matched}\` is not a valid inline expansion.`;
     const hint =
       "Expected `[[[#id]]]`, `[[[SPEC]]]`, `[[[SPEC#id]]]`, `[[[SPEC|text]]]`, `[[[SPEC#id|text]]]`, or `[[[#id|text]]]`; `!`/`?` prefixes are also supported.";
     showWarning(msg, name, { hint });
     return matched;
   }
-  const pipeIdx = ref.indexOf("|");
-  const linkText = pipeIdx !== -1 ? ref.slice(pipeIdx + 1).trim() : null;
-  if (pipeIdx !== -1) ref = ref.slice(0, pipeIdx).trim();
+  const pipeIdx = raw.indexOf("|");
+  const linkText = pipeIdx !== -1 ? raw.slice(pipeIdx + 1).trim() : null;
+  const ref = pipeIdx !== -1 ? raw.slice(0, pipeIdx).trim() : raw;
 
   // Strip !/?/\ prefix (normative/informative/escaped markers)
   const refWithoutPrefix = ref.replace(/^[!?\\]/, "");
