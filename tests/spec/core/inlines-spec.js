@@ -406,6 +406,7 @@ describe("Core - Inlines", () => {
 
   it("uses heading text from API for [[[SPEC#id]]] when available", async () => {
     const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
       localBiblio: {
         fetch: {
           title: "Fetch Standard",
@@ -422,16 +423,10 @@ describe("Core - Inlines", () => {
     const anchor = doc.querySelector("#output a[href]");
     expect(anchor).toBeTruthy();
     expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#fetching");
-    // When the headings API responds, shows "<bdi class=secno>N </bdi>Fetching"
-    // (textContent is "N Fetching"); when unavailable, falls back to "Fetch Standard".
-    expect(anchor.textContent).toMatch(
-      /^([\d.]+ Fetching|Fetching|Fetch Standard)$/
-    );
-    // Verify secno markup when heading number is present
-    const secno = anchor.querySelector("bdi.secno");
-    if (secno) {
-      expect(secno.textContent).toMatch(/^[\d.]+ $/);
-    }
+    // Local fixture returns { number: "4", title: "Fetching" }
+    // showing "<bdi class=secno>4 </bdi>Fetching"
+    expect(anchor.querySelector("bdi.secno")?.textContent).toBe("4 ");
+    expect(anchor.textContent).toBe("4 Fetching");
   });
 
   it("uses xref.headingApiUrl to fetch heading texts for [[[SPEC#id]]]", async () => {
