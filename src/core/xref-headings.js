@@ -27,20 +27,15 @@ export const HEADINGS_API_URL = "https://respec.org/xref/search/headings";
 /**
  * Fetches heading titles from the respec.org headings API for cross-spec
  * section links ([[[SPEC#id]]] syntax). Returns a Map keyed by "spec#id".
- * Uses IndexedDB cache unless skipCache is true; falls back to network on cache miss.
+ * Uses IndexedDB cache; falls back to network on cache miss.
  * @param {{ spec: string, id: string }[]} queries
  * @param {string} [apiUrl] - override the API URL (defaults to HEADINGS_API_URL)
- * @param {{ skipCache?: boolean }} [options]
  * @returns {Promise<Map<string, HeadingInfo>>}
  */
-export async function fetchHeadingTexts(
-  queries,
-  apiUrl = HEADINGS_API_URL,
-  { skipCache = false } = {}
-) {
+export async function fetchHeadingTexts(queries, apiUrl = HEADINGS_API_URL) {
   if (!queries.length) return new Map();
 
-  const cached = skipCache ? new Map() : await resolveHeadingsCache(queries);
+  const cached = await resolveHeadingsCache(queries);
   const uncachedQueries = queries.filter(q => !cached.has(`${q.spec}#${q.id}`));
 
   if (!uncachedQueries.length) return cached;
@@ -68,7 +63,7 @@ export async function fetchHeadingTexts(
         });
       }
     }
-    if (!skipCache) await cacheHeadingsData(uncachedQueries, fetched);
+    await cacheHeadingsData(uncachedQueries, fetched);
     return new Map([...cached, ...fetched]);
   } catch {
     const msg = "Failed to fetch heading texts from respec.org.";
@@ -117,8 +112,10 @@ export async function run(conf) {
     !Array.isArray(conf.xref)
       ? conf.xref
       : {};
-  const useCustomUrl = typeof xrefConf.headingApiUrl === "string";
-  const apiUrl = useCustomUrl ? xrefConf.headingApiUrl : HEADINGS_API_URL;
+  const apiUrl =
+    typeof xrefConf.headingApiUrl === "string"
+      ? xrefConf.headingApiUrl
+      : HEADINGS_API_URL;
 
   /** @type {Map<string, { spec: string, id: string }>} */
   const headingQueries = new Map();
@@ -146,8 +143,7 @@ export async function run(conf) {
 
   const headingTexts = await fetchHeadingTexts(
     [...headingQueries.values()],
-    apiUrl,
-    { skipCache: useCustomUrl }
+    apiUrl
   );
 
   for (const { elem, key } of headingElems) {

@@ -1,9 +1,11 @@
 "use strict";
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { clearHeadingsData } from "../../../src/core/xref-headings-db.js";
 
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
+  beforeEach(clearHeadingsData);
   it("processes inline cite content", async () => {
     const body = `
       <section id="conformance">
