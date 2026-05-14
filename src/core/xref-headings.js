@@ -22,73 +22,8 @@ export const HEADINGS_API_URL = "https://respec.org/xref/search/headings";
 
 /**
  * @typedef {{ title: string, number: string | null }} HeadingInfo
+ * @typedef {{ spec: string, id: string, title: string, number: string | null, error?: boolean }} HeadingApiResultEntry
  */
-
-/**
- * Fetches heading titles from the respec.org headings API for cross-spec
- * section links ([[[SPEC#id]]] syntax). Returns a Map keyed by "spec#id".
- * Uses IndexedDB cache; falls back to network on cache miss.
- * @param {{ spec: string, id: string }[]} queries
- * @param {string} [apiUrl] - override the API URL (defaults to HEADINGS_API_URL)
- * @returns {Promise<Map<string, HeadingInfo>>}
- */
-export async function fetchHeadingTexts(queries, apiUrl = HEADINGS_API_URL) {
-  if (!queries.length) return new Map();
-
-  const cached = await resolveHeadingsCache(queries);
-  const uncachedQueries = queries.filter(q => !cached.has(`${q.spec}#${q.id}`));
-
-  if (!uncachedQueries.length) return cached;
-
-  try {
-    const res = await fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ queries: uncachedQueries }),
-    });
-    if (!res.ok) {
-      const msg = `Failed to fetch heading texts (HTTP ${res.status}).`;
-      const hint = "Cross-spec section links will fall back to spec titles.";
-      showWarning(msg, name, { hint });
-      return cached;
-    }
-    const { result = [] } = await res.json();
-    /** @type {Map<string, HeadingInfo>} */
-    const fetched = new Map(
-      /** @type {{ spec: string, id: string, title: string, number: string | null, error?: boolean }[]} */
-      (result)
-        .filter(entry => !entry.error)
-        .map(
-          entry =>
-            /** @type {[string, HeadingInfo]} */ ([
-              `${entry.spec}#${entry.id}`,
-              { title: entry.title, number: entry.number || null },
-            ])
-        )
-    );
-    await cacheHeadingsData(uncachedQueries, fetched);
-    return new Map([...cached, ...fetched]);
-  } catch {
-    const msg = "Failed to fetch heading texts from respec.org.";
-    const hint = "Cross-spec section links will fall back to spec titles.";
-    showWarning(msg, name, { hint });
-    return cached;
-  }
-}
-
-/**
- * Sets heading content on an element using proper secno markup.
- * When a section number is available, produces `<bdi class="secno">N </bdi>Title`.
- * @param {HTMLElement} elem
- * @param {HeadingInfo} heading
- */
-export function setHeadingContent(elem, { title, number }) {
-  if (number) {
-    elem.append(html`<bdi class="secno">${number} </bdi>`, title);
-  } else {
-    elem.textContent = title;
-  }
-}
 
 /**
  * Processes all [[[SPEC#id]]] section links in the document:
@@ -109,16 +44,7 @@ export async function run(conf) {
   );
   if (!elems.length) return;
 
-  const xrefConf =
-    typeof conf.xref === "object" &&
-    conf.xref !== null &&
-    !Array.isArray(conf.xref)
-      ? conf.xref
-      : {};
-  const apiUrl =
-    typeof xrefConf.headingApiUrl === "string"
-      ? xrefConf.headingApiUrl
-      : HEADINGS_API_URL;
+  const apiUrl = getApiUrl(conf);
 
   /** @type {Map<string, { spec: string, id: string }>} */
   const headingQueries = new Map();
@@ -154,4 +80,83 @@ export async function run(conf) {
       setHeadingContent(elem, heading);
     }
   });
+}
+
+/**
+ * Returns the headings API URL from conf, falling back to the default.
+ * @param {Conf} conf
+ * @returns {string}
+ */
+function getApiUrl(conf) {
+  const xrefConf =
+    typeof conf.xref === "object" &&
+    conf.xref !== null &&
+    !Array.isArray(conf.xref)
+      ? conf.xref
+      : {};
+  return typeof xrefConf.headingApiUrl === "string"
+    ? xrefConf.headingApiUrl
+    : HEADINGS_API_URL;
+}
+
+/**
+ * Fetches heading titles from the respec.org headings API for cross-spec
+ * section links ([[[SPEC#id]]] syntax). Returns a Map keyed by "spec#id".
+ * Uses IndexedDB cache; falls back to network on cache miss.
+ * @param {{ spec: string, id: string }[]} queries
+ * @param {string} [apiUrl] - override the API URL (defaults to HEADINGS_API_URL)
+ * @returns {Promise<Map<string, HeadingInfo>>}
+ */
+export async function fetchHeadingTexts(queries, apiUrl = HEADINGS_API_URL) {
+  if (!queries.length) return new Map();
+
+  const cached = await resolveHeadingsCache(queries);
+  const uncachedQueries = queries.filter(q => !cached.has(`${q.spec}#${q.id}`));
+
+  if (!uncachedQueries.length) return cached;
+
+  try {
+    const res = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ queries: uncachedQueries }),
+    });
+    if (!res.ok) {
+      const msg = `Failed to fetch heading texts (HTTP ${res.status}).`;
+      const hint = "Cross-spec section links will fall back to spec titles.";
+      showWarning(msg, name, { hint });
+      return cached;
+    }
+    const { result = [] } = await res.json();
+    /** @type {Map<string, HeadingInfo>} */
+    const fetched = new Map(
+      /** @type {HeadingApiResultEntry[]} */ (result)
+        .filter(entry => !entry.error)
+        .map(entry => /** @type {[string, HeadingInfo]} */ ([
+          `${entry.spec}#${entry.id}`,
+          { title: entry.title, number: entry.number || null },
+        ]))
+    );
+    await cacheHeadingsData(uncachedQueries, fetched);
+    return new Map([...cached, ...fetched]);
+  } catch {
+    const msg = "Failed to fetch heading texts from respec.org.";
+    const hint = "Cross-spec section links will fall back to spec titles.";
+    showWarning(msg, name, { hint });
+    return cached;
+  }
+}
+
+/**
+ * Sets heading content on an element using proper secno markup.
+ * When a section number is available, produces `<bdi class="secno">N </bdi>Title`.
+ * @param {HTMLElement} elem
+ * @param {HeadingInfo} heading
+ */
+export function setHeadingContent(elem, { title, number }) {
+  if (number) {
+    elem.append(html`<bdi class="secno">${number} </bdi>`, title);
+  } else {
+    elem.textContent = title;
+  }
 }
