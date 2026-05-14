@@ -132,10 +132,13 @@ export async function fetchHeadingTexts(queries, apiUrl = HEADINGS_API_URL) {
     const fetched = new Map(
       /** @type {HeadingApiResultEntry[]} */ (result)
         .filter(entry => !entry.error)
-        .map(entry => /** @type {[string, HeadingInfo]} */ ([
-          `${entry.spec}#${entry.id}`,
-          { title: entry.title, number: entry.number || null },
-        ]))
+        .map(
+          entry =>
+            /** @type {[string, HeadingInfo]} */ ([
+              `${entry.spec}#${entry.id}`,
+              { title: entry.title, number: entry.number || null },
+            ])
+        )
     );
     await cacheHeadingsData(uncachedQueries, fetched);
     return new Map([...cached, ...fetched]);
