@@ -69,7 +69,7 @@ const inlineCodeRegExp = /(?:`[^`]+`)(?!`)/; // `code`
 const inlineIdlReference = /(?:{{[^}]+\?*}})/; // {{ WebIDLThing }}, {{ WebIDLThing? }}
 const inlineVariable = /\B\|\w[\w\s]*(?:\s*:[\w\s&;"?<>]+\??)?\|\B/; // |var : Type?|
 const inlineCitation = /(?:\[\[(?:!|\\|\?)?[\w.-]+(?:|[^\]]+)?\]\])/; // [[citation]]
-const inlineExpansion = /(?:\[\[\[(?:!|\\|\?)?#?[\w-.]+\]\]\])/; // [[[expand]]]
+const inlineExpansion = /(?:\[\[\[[^\]]+\]\]\])/; // [[[SPEC]]], [[[SPEC#id]]], [[[#id]]], [[[...|text]]], !/?-prefixed
 const inlineAnchor = /(?:\[=[^=]+=\])/; // Inline [= For/link =]
 const inlineElement = /(?:\[\^[^^]+\^\])/; // Inline [^element^]
 const inlineCddlReference = /(?:\{\^[^}^]+\^\})/; // {^cddl-type^}, {^type/key^}
@@ -164,16 +164,64 @@ function inlineRFC2119Matches(matched) {
 }
 
 /**
+ * Validates inline expansion/reference syntax.
+ * Valid forms: [[[#id]]], [[[SPEC]]], [[[SPEC#id]]], [[[SPEC|text]]],
+ * [[[SPEC#id|text]]], [[[#id|text]]]
+ */
+const inlineExpansionPattern =
+  /^(?:!|\\|\?)?(?:#[\w-.]+|[\w-.]+(?:#[\w-.]+)?)(?:\|[^\]]+)?$/;
+
+/**
  * @param {string} matched
- * @return {HTMLElement}
+ * @return {HTMLElement | string}
  */
 function inlineRefMatches(matched) {
   // slices "[[[" at the beginning and "]]]" at the end
-  const ref = matched.slice(3, -3).trim();
-  if (!ref.startsWith("#")) {
-    return html`<a data-cite="${ref}" data-matched-text="${matched}"></a>`;
+  const raw = matched.slice(3, -3).trim();
+  if (!inlineExpansionPattern.test(raw)) {
+    const msg = `Bad syntax: \`${matched}\` is not a valid inline expansion.`;
+    const hint =
+      "See https://github.com/speced/respec/wiki/inlines for valid syntax.";
+    showWarning(msg, name, { hint });
+    return matched;
   }
-  return html`<a href="${ref}" data-matched-text="${matched}"></a>`;
+  const pipeIdx = raw.indexOf("|");
+  const linkText = pipeIdx !== -1 ? raw.slice(pipeIdx + 1).trim() : null;
+  const ref = pipeIdx !== -1 ? raw.slice(0, pipeIdx).trim() : raw;
+
+  // Strip !/?/\ prefix (normative/informative/escaped markers)
+  const refWithoutPrefix = ref.replace(/^[!?\\]/, "");
+
+  if (ref.startsWith("\\")) {
+    return `[[[${refWithoutPrefix}]]]`;
+  }
+
+  if (refWithoutPrefix.startsWith("#")) {
+    return linkText
+      ? html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"
+          >${linkText}</a
+        >`
+      : html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"></a>`;
+  }
+
+  if (refWithoutPrefix.includes("#")) {
+    const [specName, sectionFrag] = refWithoutPrefix.split("#");
+    // Preserve any !/?/\ prefix from ref (e.g. "!SPEC" → "!" + specName)
+    const specPart =
+      ref.slice(0, ref.length - refWithoutPrefix.length) + specName;
+    return html`<a
+      data-cite="${specPart}"
+      data-cite-frag="${sectionFrag}"
+      data-matched-text="${matched}"
+      data-lt="${linkText || null}"
+    ></a>`;
+  }
+
+  return html`<a
+    data-cite="${ref}"
+    data-matched-text="${matched}"
+    data-lt="${linkText || null}"
+  ></a>`;
 }
 
 /**
