@@ -425,7 +425,9 @@ describe("Core - Inlines", () => {
     expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#fetching");
     // Local fixture returns { number: "4", title: "Fetching" }
     // showing "<bdi class=secno>4 </bdi>Fetching"
-    expect(anchor.querySelector("bdi.secno")?.textContent).toBe("4 ");
+    const secno1 = anchor.querySelector("bdi.secno");
+    expect(secno1).toBeTruthy();
+    expect(secno1.textContent).toBe("4 ");
     expect(anchor.textContent).toBe("4 Fetching");
   });
 
@@ -449,7 +451,9 @@ describe("Core - Inlines", () => {
     expect(anchor).toBeTruthy();
     expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#fetching");
     // Local fixture returns { number: "4", title: "Fetching" }
-    expect(anchor.querySelector("bdi.secno")?.textContent).toBe("4 ");
+    const secno2 = anchor.querySelector("bdi.secno");
+    expect(secno2).toBeTruthy();
+    expect(secno2.textContent).toBe("4 ");
     expect(anchor.textContent).toBe("4 Fetching");
   });
 
