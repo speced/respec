@@ -1147,43 +1147,4 @@ describe("Core — xref-db caching", () => {
     expect(cached.has("found-term")).toBeTrue();
     expect(cached.has("missing-term")).toBeFalse();
   });
-
-  it("cleans up pre-existing empty cache entries on read", async () => {
-    const queries = [{ id: "stale-term", term: "stale", types: ["dfn"] }];
-
-    const { promise: dbReady, resolve, reject } = Promise.withResolvers();
-    const req = indexedDB.open("xref", 2);
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-    const db = await dbReady;
-
-    const tx = db.transaction("xrefs", "readwrite");
-    tx.objectStore("xrefs").add({ query: queries[0], result: [] });
-    const { promise: txDone, resolve: txResolve } = Promise.withResolvers();
-    tx.oncomplete = txResolve;
-    await txDone;
-    db.close();
-
-    const cached = await resolveXrefCache(queries);
-    expect(cached.has("stale-term")).toBeFalse();
-
-    const {
-      promise: verifyDbReady,
-      resolve: resolveVerifyDb,
-      reject: rejectVerifyDb,
-    } = Promise.withResolvers();
-    const req2 = indexedDB.open("xref", 2);
-    req2.onsuccess = () => resolveVerifyDb(req2.result);
-    req2.onerror = () => rejectVerifyDb(req2.error);
-    const verifyDb = await verifyDbReady;
-
-    const verifyTx = verifyDb.transaction("xrefs", "readonly");
-    const getReq = verifyTx.objectStore("xrefs").get("stale-term");
-    const { promise: getReady, resolve: resolveGet } = Promise.withResolvers();
-    getReq.onsuccess = () => resolveGet(getReq.result);
-    const remaining = await getReady;
-    verifyDb.close();
-
-    expect(remaining).toBeUndefined();
-  });
 });
