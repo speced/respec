@@ -83,7 +83,7 @@ describe("Core — Can I Use", () => {
     const doc = await makeRSDoc(ops);
     const stats = doc.querySelector(".caniuse-stats");
     const cells = stats.querySelectorAll(".caniuse-cell");
-    expect(cells).toHaveSize(4);
+    expect(cells).toHaveSize(3);
 
     // Check a cell
     const [cell] = cells;
