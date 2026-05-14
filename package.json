@@ -39,7 +39,7 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jasmine": "^4.2.2",
     "eslint-plugin-prettier": "^5.5.5",
-    "globals": "^17.5.0",
+    "globals": "^17.6.0",
     "highlight.js": "^11.11.1",
     "hyperhtml": "^2.34.2",
     "idb": "^8.0.3",
@@ -64,7 +64,7 @@
     "simple-git-hooks": "^2.13.1",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^6.0.3",
-    "vnu-jar": "^26.4.16",
+    "vnu-jar": "^26.5.2",
     "webidl2": "^24.5.0"
   },
   "scripts": {
@@ -92,7 +92,7 @@
   "dependencies": {
     "colors": "1.4.0",
     "finalhandler": "^2.1.1",
-    "marked": "^18.0.2",
+    "marked": "^18.0.3",
     "puppeteer": "^24.42.0",
     "sade": "^1.8.1",
     "serve-static": "^2.2.1"

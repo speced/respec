@@ -68,7 +68,7 @@ function cleanup(cloneDoc) {
   cloneDoc
     .querySelectorAll(".removeOnSave, #toc-nav")
     .forEach((/** @type {Element} */ elem) => elem.remove());
-  body.classList.remove("toc-sidebar");
+  body.classList.remove("toc-sidebar", "toc-inline");
   removeReSpec(documentElement);
 
   const insertions = cloneDoc.createDocumentFragment();

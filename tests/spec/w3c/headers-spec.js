@@ -966,6 +966,14 @@ describe("W3C — Headers", () => {
       expect(h1).toBeTruthy();
       expect(h1.textContent).toBe("No Title");
     });
+
+    it("uses a localized default title in French when document excludes a title", async () => {
+      const ops = makeStandardOps({}, makeDefaultBody());
+      ops.htmlAttrs = { lang: "fr" };
+      const doc = await makeRSDoc(ops);
+      expect(doc.documentElement.lang).toBe("fr");
+      expect(doc.querySelector("h1#title").textContent).toBe("Sans titre");
+    });
   });
 
   describe("subtitle", () => {
@@ -1896,6 +1904,24 @@ describe("W3C — Headers", () => {
       const { textContent } = doc.querySelector("#sotd h2");
       expect(doc.documentElement.lang).toBe("es");
       expect(textContent).toContain("Estado de este Document");
+    });
+
+    it("localizes sotd to French", async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        htmlAttrs: {
+          lang: "fr",
+        },
+        body: `
+        <section id="sotd">
+          State of the document
+        </section>
+      `,
+      };
+      const doc = await makeRSDoc(ops);
+      const { textContent } = doc.querySelector("#sotd h2");
+      expect(doc.documentElement.lang).toBe("fr");
+      expect(textContent).toContain("État du présent document");
     });
   });
 
