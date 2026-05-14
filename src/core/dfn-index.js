@@ -344,9 +344,12 @@ function collectExternalTerms() {
     if (!elem.dataset.cite) {
       continue;
     }
-    const { cite, citeFrag, xrefType, linkType } = elem.dataset;
+    const { cite, citeFrag, xrefType, linkType, matchedText } = elem.dataset;
+    // [[[SPEC#id]]] section links have both citeFrag and matchedText; skip them.
+    if (citeFrag && matchedText) {
+      continue;
+    }
     if (!(xrefType || linkType || cite.includes("#") || citeFrag)) {
-      // Not a reference to a definition
       continue;
     }
     const uniqueID = elem.href;

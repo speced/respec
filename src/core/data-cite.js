@@ -184,11 +184,36 @@ export async function run() {
 
   await updateBiblio([...elems]);
 
+  // Precompute toCiteDetails for each element to capture originalKey for error
+  // messages before toCiteDetails mutates dataset.cite
+  const originalKeys = new Map();
+  const citeDetailsMap = new Map();
   for (const elem of elems) {
-    const originalKey = elem.dataset.cite;
+    originalKeys.set(elem, elem.dataset.cite);
     const citeDetails = toCiteDetails(elem);
+    citeDetailsMap.set(elem, citeDetails);
+  }
+
+  for (const elem of elems) {
+    const originalKey = originalKeys.get(elem);
+    const citeDetails = citeDetailsMap.get(elem);
     const linkProps = await getLinkProps(citeDetails);
     if (linkProps) {
+      // Apply alias text (data-lt) for non-section links only.
+      // [[[SPEC#id|alias]]] elements have both citeFrag and matchedText set;
+      // their alias is handled by core/xref-headings after this module runs.
+      // IDL references use data-lt as a lookup term but already have child
+      // content, so the textContent check prevents corrupting them.
+      if (
+        !(elem.dataset.citeFrag && elem.dataset.matchedText) &&
+        elem.dataset.lt &&
+        elem.dataset.lt !== "the-empty-string" &&
+        elem.textContent === ""
+      ) {
+        elem.textContent = elem.dataset.lt;
+        delete elem.dataset.lt;
+      }
+
       linkElem(elem, linkProps, citeDetails);
     } else {
       const msg = `Couldn't find a match for "${originalKey}"`;
