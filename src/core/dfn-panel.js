@@ -34,6 +34,8 @@ export async function run() {
   const bibrefLinks = document.querySelectorAll("a.bibref[href^='#bib-']");
   /** @type {Set<string>} */
   const seenBibIds = new Set();
+  /** @type {Set<string>} bibIds that have an actual panel */
+  const panelBibIds = new Set();
   bibrefLinks.forEach(link => {
     const bibId = link.getAttribute("href")?.slice(1);
     if (!bibId) return;
@@ -41,10 +43,15 @@ export async function run() {
     if (!seenBibIds.has(bibId)) {
       seenBibIds.add(bibId);
       const panel = createBiblioPanel(link);
-      if (panel) panels.append(panel);
+      if (panel) {
+        panels.append(panel);
+        panelBibIds.add(bibId);
+      }
     }
-    // All links pointing to the same bibId share the single panel.
-    link.setAttribute("aria-haspopup", "dialog");
+    // Only mark links as dialog triggers when a panel was actually created.
+    if (panelBibIds.has(bibId)) {
+      link.setAttribute("aria-haspopup", "dialog");
+    }
   });
 
   const firstScript = document.body.querySelector("script");

@@ -414,6 +414,8 @@ describe("Core — biblioPanel", () => {
     const doc = await makeRSDoc(ops);
     const panel = doc.querySelector('[id^="biblio-panel-for-"]');
     expect(panel).toBeNull();
+    const link = doc.querySelector("#bad a.bibref");
+    expect(link.hasAttribute("aria-haspopup")).toBeFalse();
   });
 
   it("works in an exported document", async () => {
