@@ -111,6 +111,8 @@ function createBiblioPanel(link) {
   if (!dt) return null;
   const dd = dt.nextElementSibling;
   if (!dd || dd.tagName !== "DD") return null;
+  // Don't create a panel for references that couldn't be resolved.
+  if (dd.querySelector(".respec-offending-element")) return null;
 
   const panelId = `biblio-panel-for-${bibId}`;
   const refKey = dt.textContent?.trim() ?? "";
