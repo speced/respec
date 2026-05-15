@@ -6,6 +6,7 @@ describe("Core — Location Hash", () => {
   afterAll(flushIframes);
   const ops = makeStandardOps();
   const simpleURL = "/tests/spec/core/simple.html";
+  const legacyIndexedURL = "/tests/spec/core/location-hash-legacy-indexed.html";
 
   describe("legacy fragment format", () => {
     it("leaves editor defined id alone, even if they include illegal chars", async () => {
@@ -23,6 +24,11 @@ describe("Core — Location Hash", () => {
       const testURL = `${simpleURL}#dfn-%5B%5Bescapedslot%5D%5D`;
       const doc = await makeRSDoc(ops, testURL);
       expect(doc.location.hash).toBe("#dfn-test-escapedslot");
+    }, 20000);
+    it("recovers legacy numeric-suffixed hashes", async () => {
+      const testURL = `${legacyIndexedURL}#dfn-unsafe-current-time-0`;
+      const doc = await makeRSDoc(ops, testURL);
+      expect(doc.location.hash).toBe("#dfn-window-unsafe-current-time");
     }, 20000);
   });
 });
