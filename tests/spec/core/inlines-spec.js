@@ -1,9 +1,11 @@
 "use strict";
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { clearHeadingsData } from "../../../src/core/xref-headings-db.js";
 
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
+  beforeEach(clearHeadingsData);
   it("processes inline cite content", async () => {
     const body = `
       <section id="conformance">
@@ -284,6 +286,299 @@ describe("Core - Inlines", () => {
     expect(notFound.textContent).toBe("[[[not-found]]]");
   });
 
+  it("classifies [[[!SPEC#id]]] as normative and [[[?SPEC#id]]] as informative", async () => {
+    const config = {
+      localBiblio: {
+        "the-spec": {
+          id: "the-spec",
+          title: "The Spec",
+          href: "https://example.com/",
+        },
+        "other-spec": {
+          id: "other-spec",
+          title: "Other Spec",
+          href: "https://example.com/other",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <section id="conformance">
+          <p id="norm-frag">[[[!the-spec#some-id]]]</p>
+          <p id="inform-frag">[[[?other-spec#some-id]]]</p>
+        </section>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+
+    // [[[!the-spec#some-id]]] → normative (! prefix in normative section = normative)
+    const normAnchor = doc.querySelector("#norm-frag a");
+    expect(normAnchor).toBeTruthy();
+    expect(normAnchor.textContent).toBe("The Spec");
+
+    const norm = [...doc.querySelectorAll("#normative-references dt")];
+    expect(norm.map(el => el.textContent)).toContain("[the-spec]");
+
+    // [[[?other-spec#some-id]]] → informative (? prefix overrides normative section)
+    const informAnchor = doc.querySelector("#inform-frag a");
+    expect(informAnchor).toBeTruthy();
+    expect(informAnchor.textContent).toBe("Other Spec");
+
+    const inform = [...doc.querySelectorAll("#informative-references dt")];
+    expect(inform.map(el => el.textContent)).toContain("[other-spec]");
+  });
+
+  it("supports [[[?SPEC#id|alias]]] and [[[?SPEC|alias]]] with informative classification", async () => {
+    const config = {
+      localBiblio: {
+        "the-spec": {
+          id: "the-spec",
+          title: "The Spec",
+          href: "https://example.com/",
+        },
+        "other-spec": {
+          id: "other-spec",
+          title: "Other Spec",
+          href: "https://example.com/other",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <section id="conformance">
+          <p id="inform-alias">[[[?the-spec#some-id|custom link text]]]</p>
+          <p id="inform-no-frag">[[[?other-spec|just the spec]]]</p>
+        </section>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+
+    // Alias text should be used instead of spec title
+    const aliasAnchor = doc.querySelector("#inform-alias a");
+    expect(aliasAnchor).toBeTruthy();
+    expect(aliasAnchor.textContent).toBe("custom link text");
+
+    const noFragAnchor = doc.querySelector("#inform-no-frag a");
+    expect(noFragAnchor).toBeTruthy();
+    expect(noFragAnchor.textContent).toBe("just the spec");
+
+    // Both should be classified as informative
+    const inform = [...doc.querySelectorAll("#informative-references dt")];
+    expect(inform.map(el => el.textContent)).toContain("[the-spec]");
+    expect(inform.map(el => el.textContent)).toContain("[other-spec]");
+  });
+
+  it("shows matched text as fallback for [[[not-found|Custom Text]]]", async () => {
+    const body = `
+      <section id="test" class="informative">
+        <p id="output">[[[not-found|Custom Text]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps({}, body));
+    const output = doc.querySelector("#output");
+    expect(output).toBeTruthy();
+    // When the spec is not found, the original matched text is shown
+    expect(output.textContent.trim()).toBe("[[[not-found|Custom Text]]]");
+  });
+
+  it("links to specific section of another spec using [[[SPEC#id]]] syntax", async () => {
+    const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch#data-fetch]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    // Local fixture returns { number: "4.1", title: "Fetching data" }
+    expect(anchor.textContent).toBe("4.1 Fetching data");
+  });
+
+  it("uses heading text from API for [[[SPEC#id]]] when available", async () => {
+    const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch#fetching]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#fetching");
+    // Local fixture returns { number: "4", title: "Fetching" }
+    // showing "<bdi class=secno>4 </bdi>Fetching"
+    const secno1 = anchor.querySelector("bdi.secno");
+    expect(secno1).toBeTruthy();
+    expect(secno1.textContent).toBe("4 ");
+    expect(anchor.textContent).toBe("4 Fetching");
+  });
+
+  it("uses xref.headingApiUrl to fetch heading texts for [[[SPEC#id]]]", async () => {
+    const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch#fetching]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#fetching");
+    // Local fixture returns { number: "4", title: "Fetching" }
+    const secno2 = anchor.querySelector("bdi.secno");
+    expect(secno2).toBeTruthy();
+    expect(secno2.textContent).toBe("4 ");
+    expect(anchor.textContent).toBe("4 Fetching");
+  });
+
+  it("prefers alias text over heading text for [[[SPEC#id|text]]]", async () => {
+    const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="with-alias">[[[fetch#fetching|custom text]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#with-alias a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#fetching");
+    expect(anchor.textContent).toBe("custom text");
+  });
+
+  it("does not add [[[SPEC#id]]] section links to dfn-index as external definitions", async () => {
+    const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="index"></section>
+      <section id="test">
+        <p id="output">[[[fetch#data-fetch]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    // Section link should be resolved correctly (heading from local fixture)
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    expect(anchor.textContent).toBe("4.1 Fetching data");
+    // But it must NOT appear in the dfn-index "Terms defined by reference" table
+    const externalTerms = doc.querySelectorAll(
+      "#index-defined-elsewhere li[data-spec]"
+    );
+    expect(externalTerms.length).toBe(0);
+  });
+
+  it("supports alias text with [[[SPEC#id|text]]] syntax", async () => {
+    const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="alias">[[[fetch#data-fetch|fetching data]]]</p>
+        <p id="no-alias">[[[fetch#data-fetch]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const aliasAnchor = doc.querySelector("#alias a[href]");
+    expect(aliasAnchor).toBeTruthy();
+    expect(aliasAnchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    expect(aliasAnchor.textContent).toBe("fetching data");
+
+    const noAliasAnchor = doc.querySelector("#no-alias a[href]");
+    expect(noAliasAnchor).toBeTruthy();
+    // heading from local fixture: { number: "4.1", title: "Fetching data" }
+    expect(noAliasAnchor.textContent).toBe("4.1 Fetching data");
+  });
+
+  it("supports alias text with [[[SPEC|text]]] syntax (no fragment)", async () => {
+    const config = {
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="alias">[[[fetch|Custom Fetch Link]]]</p>
+        <p id="no-alias">[[[fetch]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const aliasAnchor = doc.querySelector("#alias a[href]");
+    expect(aliasAnchor).toBeTruthy();
+    expect(aliasAnchor.href).toBe("https://fetch.spec.whatwg.org/");
+    expect(aliasAnchor.textContent).toBe("Custom Fetch Link");
+
+    const noAliasAnchor = doc.querySelector("#no-alias a[href]");
+    expect(noAliasAnchor).toBeTruthy();
+    expect(noAliasAnchor.textContent).toBe("Fetch Standard");
+  });
+
+  it("supports alias text with [[[#id|text]]] for in-document links", async () => {
+    const body = `
+      <section id="my-section">
+        <h2>My Section Heading</h2>
+        <p>Some content.</p>
+      </section>
+      <section>
+        <h2>References</h2>
+        <p id="output">[[[#my-section|see this section]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const anchor = doc.querySelector("#output a[href='#my-section']");
+    expect(anchor).toBeTruthy();
+    expect(anchor.textContent).toBe("see this section");
+  });
+
   it("allows [[[#...]]] to be a general expander for ids in document", async () => {
     /** @param {string} text */
     function generateDataIncludeUrl(text) {
@@ -327,6 +622,17 @@ describe("Core - Inlines", () => {
 
     const badOne = doc.querySelector("#output a.respec-offending-element");
     expect(badOne.textContent).toBe("#does-not-exist");
+  });
+
+  it("does not process [[[#id#invalid]]] with multiple hash fragments", async () => {
+    const body = `
+      <section id="section"><h2>Section</h2></section>
+      <p id="output">[[[#section#invalid]]]</p>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const output = doc.getElementById("output");
+    expect(output.querySelector("a")).toBeNull();
+    expect(output.textContent.trim()).toBe("[[[#section#invalid]]]");
   });
 
   it("proceseses backticks inside [= =] inline links", async () => {
@@ -536,6 +842,30 @@ describe("Core - Inlines", () => {
     expect(decodeURIComponent(conceptLink.hash)).toBe(
       "#multipart/form-data-encoding-algorithm"
     );
+  });
+
+  it("strips possessive suffix from [= term's =] for link resolution", async () => {
+    const body = `
+      <section id="test">
+        <dfn>current settings object</dfn>
+        <p id="links">
+          [= current settings object's =]
+          [= current settings object\u2019s =]
+        </p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps({}, body));
+    const anchors = doc.querySelectorAll("#links a");
+    expect(anchors).toHaveSize(2);
+    const dfnId = doc.querySelector("#test dfn").id;
+    for (const a of anchors) {
+      expect(a.getAttribute("href"))
+        .withContext(a.textContent)
+        .toBe(`#${dfnId}`);
+    }
+    // Display text retains possessive form
+    expect(anchors[0].textContent).toBe("current settings object's");
+    expect(anchors[1].textContent).toBe("current settings object\u2019s");
   });
 
   it("processes {{ forContext/term }} IDL", async () => {
