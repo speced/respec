@@ -156,7 +156,7 @@ function isMemberKey(node) {
 /**
  * @typedef {object} CddlState
  * @property {Map<string, {type: string, for: string|null, id: string}>} definitions
- * @property {Set<string>} proseDfns - IDs of prose-level dfns already created
+ * @property {Map<string, string>} proseDfns - generated CDDL IDs mapped to prose-level dfn IDs
  * @property {Map<string, Set<string>>} genericParams - rule to param names
  */
 
@@ -250,13 +250,17 @@ class ReSpecCDDLMarker extends CddlMarker {
     }
 
     // Check if prose dfn already exists
-    if (state.proseDfns.has(id)) {
+    const proseId = state.proseDfns.get(id);
+    if (proseId) {
       state.definitions.set(key, {
         type: "cddl-type",
         for: null,
-        id,
+        id: proseId,
       });
-      return html`<a href="#${id}" class="cddl-name" data-link-type="cddl-type"
+      return html`<a
+        href="#${proseId}"
+        class="cddl-name"
+        data-link-type="cddl-type"
         >${xmlEscape(name)}</a
       >`;
     }
@@ -293,10 +297,15 @@ class ReSpecCDDLMarker extends CddlMarker {
       >`;
     }
 
-    if (state.proseDfns.has(id)) {
-      state.definitions.set(key, { type: "cddl-key", for: forType, id });
+    const proseId = state.proseDfns.get(id);
+    if (proseId) {
+      state.definitions.set(key, {
+        type: "cddl-key",
+        for: forType,
+        id: proseId,
+      });
       return html`<a
-        href="#${id}"
+        href="#${proseId}"
         class="cddl-name"
         data-link-type="cddl-key"
         data-xref-for="${xmlEscape(forType)}"
@@ -387,10 +396,15 @@ class ReSpecCDDLMarker extends CddlMarker {
           >`;
         }
 
-        if (state.proseDfns.has(id)) {
-          state.definitions.set(key, { type: "cddl-value", for: forType, id });
+        const proseId = state.proseDfns.get(id);
+        if (proseId) {
+          state.definitions.set(key, {
+            type: "cddl-value",
+            for: forType,
+            id: proseId,
+          });
           return html`<a
-            href="#${id}"
+            href="#${proseId}"
             class="cddl-str"
             data-link-type="cddl-value"
             data-xref-for="${xmlEscape(forType)}"
@@ -533,36 +547,29 @@ class ReSpecCDDLMarker extends CddlMarker {
 
 /**
  * Normalize prose-level CDDL dfn elements.
- * Converts shorthand attributes (cddl-type, cddl-key, cddl-value) to
- * data-dfn-type/data-dfn-for attributes.
+ * Registers prose dfns that already use conforming data-dfn-type attributes.
  *
  * @param {Document} doc
- * @param {Set<string>} proseDfns - set of dfn IDs to populate
+ * @param {Map<string, string>} proseDfns - generated CDDL IDs mapped to dfn IDs
  */
 function normalizeProseDfns(doc, proseDfns) {
   /** @type {NodeListOf<HTMLElement>} */
   const dfns = doc.querySelectorAll(
-    "dfn[cddl-type], dfn[cddl-key], dfn[cddl-value]"
+    [
+      "dfn[data-dfn-type='cddl-type']",
+      "dfn[data-dfn-type='cddl-key']",
+      "dfn[data-dfn-type='cddl-value']",
+    ].join(", ")
   );
   dfns.forEach(dfn => {
-    const attr = /** @type {string} */ (
-      ["cddl-type", "cddl-key", "cddl-value"].find(a => dfn.hasAttribute(a))
-    );
-    dfn.dataset.dfnType = attr;
-    dfn.removeAttribute(attr);
-
-    const forValue = dfn.getAttribute("for");
-    if (forValue) {
-      dfn.dataset.dfnFor = forValue;
-      dfn.removeAttribute("for");
-    }
-
+    const dfnType = /** @type {string} */ (dfn.dataset.dfnType);
+    const forValue = dfn.dataset.dfnFor;
     const name = dfn.textContent.trim();
     const forPart = forValue ? `${sanitizeId(forValue)}-` : "";
-    const typePart = attr.replace("cddl-", "");
+    const typePart = dfnType.replace("cddl-", "");
     const id = `cddl-${typePart}-${forPart}${sanitizeId(name)}`;
     dfn.id ||= id;
-    proseDfns.add(dfn.id);
+    proseDfns.set(id, dfn.id);
 
     registerDefinition(dfn, [name]);
   });
@@ -722,7 +729,7 @@ export async function run() {
   /** @type {CddlState} */
   const state = {
     definitions: new Map(),
-    proseDfns: new Set(),
+    proseDfns: new Map(),
     genericParams: new Map(),
   };
 

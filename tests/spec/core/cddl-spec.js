@@ -652,9 +652,9 @@ describe("Core - CDDL", () => {
   });
 
   describe("prose-level definitions", () => {
-    it("normalizes dfn[cddl-type] to data-dfn-type", async () => {
+    it("uses prose dfn[data-dfn-type='cddl-type'] definitions", async () => {
       const body = `
-        <p>The <dfn cddl-type>attire</dfn> type represents clothing.</p>
+        <p>The <dfn data-dfn-type="cddl-type">attire</dfn> type represents clothing.</p>
         <pre class="cddl">
           attire = "bow tie" / "necktie"
         </pre>
@@ -674,9 +674,9 @@ describe("Core - CDDL", () => {
       expect(attireBlockDfns).toHaveSize(0);
     });
 
-    it("normalizes dfn[cddl-key] with for attribute", async () => {
+    it("uses prose dfn[data-dfn-type='cddl-key'] with data-dfn-for attribute", async () => {
       const body = `
-        <p>The <dfn cddl-key for="delivery">address</dfn> key.</p>
+        <p>The <dfn data-dfn-type="cddl-key" data-dfn-for="delivery">address</dfn> key.</p>
         <pre class="cddl">
           delivery = {
             address: tstr,
@@ -693,7 +693,7 @@ describe("Core - CDDL", () => {
 
     it("resolves inline refs to prose-defined cddl values", async () => {
       const body = `
-        <p><dfn cddl-value for="attire">"bow tie"</dfn> means formal attire.</p>
+        <p><dfn data-dfn-type="cddl-value" data-dfn-for="attire">"bow tie"</dfn> means formal attire.</p>
         <pre class="cddl">
           attire = "bow tie" / "necktie"
         </pre>
@@ -701,6 +701,10 @@ describe("Core - CDDL", () => {
       `;
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
+      const dfn = doc.querySelector(
+        "dfn[data-dfn-type='cddl-value'][data-dfn-for='attire']"
+      );
+      expect(dfn).toBeTruthy();
       const link = doc.querySelector("p a[data-link-type='cddl-value'][href]");
       expect(link).toBeTruthy();
       expect(link.getAttribute("href")).toBe("#cddl-value-attire-bow-tie");
