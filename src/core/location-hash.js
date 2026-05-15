@@ -41,12 +41,18 @@ export function run() {
       if (updatedElement) {
         newHash = id;
       } else if (id.startsWith(DFN_ID_PREFIX)) {
-        const termWithLeadingHyphen = `-${id.slice(DFN_ID_PREFIX.length)}`;
+        const legacyTerm = id.slice(DFN_ID_PREFIX.length);
+        const termWithLeadingHyphen = `-${legacyTerm}`;
         const matchingElements = [
           ...document.querySelectorAll(
-            `[id^='${DFN_ID_PREFIX}'][id$='${CSS.escape(termWithLeadingHyphen)}']`
+            `[data-dfn-type][id^='${DFN_ID_PREFIX}']`
           ),
-        ];
+        ].filter(({ id }) => {
+          const scopedId = id.slice(DFN_ID_PREFIX.length).replace(/-\d+$/, "");
+          return (
+            scopedId === legacyTerm || scopedId.endsWith(termWithLeadingHyphen)
+          );
+        });
         if (matchingElements.length === 1) {
           newHash = matchingElements[0].id;
         }
