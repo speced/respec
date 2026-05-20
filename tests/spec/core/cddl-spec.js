@@ -12,6 +12,7 @@ import {
 
 const errorsFilter = errorFilters.filter("core/cddl");
 const warningsFilter = warningFilters.filter("core/cddl");
+const linkToDfnErrorsFilter = errorFilters.filter("core/link-to-dfn");
 const linkToDfnWarningsFilter = warningFilters.filter("core/link-to-dfn");
 
 describe("Core - CDDL", () => {
@@ -672,6 +673,7 @@ describe("Core - CDDL", () => {
         d => d.textContent === "attire"
       );
       expect(attireBlockDfns).toHaveSize(0);
+      expect(linkToDfnErrorsFilter(doc)).toHaveSize(0);
     });
 
     it("uses prose dfn[data-dfn-type='cddl-key'] with data-dfn-for attribute", async () => {

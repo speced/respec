@@ -244,7 +244,14 @@ class ReSpecCDDLMarker extends CddlMarker {
 
     // Check for duplicate
     if (state.definitions.has(key)) {
-      return html`<a href="#${id}" class="cddl-name" data-link-type="cddl-type"
+      const def = state.definitions.get(key);
+      if (!def) {
+        return html`<span class="cddl-name">${xmlEscape(name)}</span>`;
+      }
+      return html`<a
+        href="#${def.id}"
+        class="cddl-name"
+        data-link-type="cddl-type"
         >${xmlEscape(name)}</a
       >`;
     }
@@ -288,8 +295,12 @@ class ReSpecCDDLMarker extends CddlMarker {
     const key = `cddl-key:${forType}/${name}`;
 
     if (state.definitions.has(key)) {
+      const def = state.definitions.get(key);
+      if (!def) {
+        return html`<span class="cddl-name">${xmlEscape(name)}</span>`;
+      }
       return html`<a
-        href="#${id}"
+        href="#${def.id}"
         class="cddl-name"
         data-link-type="cddl-key"
         data-xref-for="${xmlEscape(forType)}"
@@ -562,17 +573,98 @@ function normalizeProseDfns(doc, proseDfns) {
     ].join(", ")
   );
   dfns.forEach(dfn => {
-    const dfnType = /** @type {string} */ (dfn.dataset.dfnType);
-    const forValue = dfn.dataset.dfnFor;
-    const name = dfn.textContent.trim();
-    const forPart = forValue ? `${sanitizeId(forValue)}-` : "";
-    const typePart = dfnType.replace("cddl-", "");
-    const id = `cddl-${typePart}-${forPart}${sanitizeId(name)}`;
+    const id = getCddlGeneratedId(dfn);
+    if (!id) return;
     dfn.id ||= id;
     proseDfns.set(id, dfn.id);
-
-    registerDefinition(dfn, [name]);
   });
+}
+
+/**
+ * Prefer prose-level CDDL dfns over generated block dfns when both exist.
+ * @param {Document} doc
+ * @param {Map<string, {type: string, for: string|null, id: string}>} definitions
+ */
+function linkGeneratedDfnsToProseDfns(doc, definitions) {
+  /** @type {Map<string, string>} */
+  const proseIds = new Map();
+  /** @type {NodeListOf<HTMLElement>} */
+  const proseDfns = doc.querySelectorAll(
+    [
+      "dfn[data-dfn-type='cddl-type']",
+      "dfn[data-dfn-type='cddl-key']",
+      "dfn[data-dfn-type='cddl-value']",
+    ].join(", ")
+  );
+
+  proseDfns.forEach(dfn => {
+    if (dfn.closest("pre.cddl")) return;
+    const id = getCddlGeneratedId(dfn);
+    if (id) dfn.id ||= id;
+    const key = getCddlDefinitionKey(dfn);
+    if (key) proseIds.set(key, dfn.id);
+  });
+
+  /** @type {NodeListOf<HTMLElement>} */
+  const blockDfns = doc.querySelectorAll(
+    "pre.cddl dfn[data-dfn-type^='cddl-']"
+  );
+  blockDfns.forEach(dfn => {
+    const key = getCddlDefinitionKey(dfn);
+    const proseId = key ? proseIds.get(key) : null;
+    if (!key || !proseId) return;
+
+    const link = doc.createElement("a");
+    link.href = `#${proseId}`;
+    link.className = dfn.className;
+    link.dataset.linkType = dfn.dataset.dfnType || "";
+    if (dfn.dataset.dfnFor) link.dataset.xrefFor = dfn.dataset.dfnFor;
+    link.textContent = dfn.textContent;
+    dfn.replaceWith(link);
+
+    const def = definitions.get(key);
+    if (def) def.id = proseId;
+  });
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @returns {string|null}
+ */
+function getCddlDefinitionKey(dfn) {
+  const type = dfn.dataset.dfnType;
+  const text = dfn.textContent.trim();
+  const forValue = dfn.dataset.dfnFor || "";
+  switch (type) {
+    case "cddl-type":
+      return `cddl-type:${text}`;
+    case "cddl-key":
+      return forValue ? `cddl-key:${forValue}/${text}` : null;
+    case "cddl-value":
+      return forValue ? `cddl-value:${forValue}/${text}` : null;
+    default:
+      return null;
+  }
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @returns {string|null}
+ */
+function getCddlGeneratedId(dfn) {
+  const dfnType = dfn.dataset.dfnType;
+  if (
+    dfnType !== "cddl-type" &&
+    dfnType !== "cddl-key" &&
+    dfnType !== "cddl-value"
+  ) {
+    return null;
+  }
+  const forValue = dfn.dataset.dfnFor;
+  const name = dfn.textContent.trim();
+  const forPart = forValue ? `${sanitizeId(forValue)}-` : "";
+  const typePart = dfnType.replace("cddl-", "");
+  return `cddl-${typePart}-${forPart}${sanitizeId(name)}`;
 }
 
 /**
@@ -657,7 +749,7 @@ function resolveInlineCddlRefs(doc, definitions) {
 function registerCddlDfns(doc, definitions) {
   definitions.forEach(def => {
     const dfn = doc.getElementById(def.id);
-    if (dfn?.localName === "dfn") {
+    if (dfn?.localName === "dfn" && dfn.closest("pre.cddl")) {
       registerDefinition(/** @type {HTMLElement} */ (dfn), [
         dfn.textContent.trim(),
       ]);
@@ -739,7 +831,10 @@ export async function run() {
   // Step 2: Process each CDDL block
   cddls.forEach(pre => processCddlBlock(pre, parse, state));
 
-  // Step 3: Resolve pending references (forward references across blocks)
+  // Step 3: Prefer prose dfns when CDDL blocks define the same term
+  linkGeneratedDfnsToProseDfns(document, state.definitions);
+
+  // Step 4: Resolve pending references (forward references across blocks)
   resolvePendingRefs(document.body, state.definitions);
 
   // Warn about any still-unresolved pending refs (likely typos)
@@ -751,16 +846,16 @@ export async function run() {
     });
   });
 
-  // Step 4: Resolve inline {^ ^} references to CDDL dfns
+  // Step 5: Resolve inline {^ ^} references to CDDL dfns
   resolveInlineCddlRefs(document, state.definitions);
 
-  // Step 5: Register definitions with ReSpec's dfn-map
+  // Step 6: Register definitions with ReSpec's dfn-map
   registerCddlDfns(document, state.definitions);
 
-  // Step 6: Inject runtime copy-button script (survives export)
+  // Step 7: Inject runtime copy-button script (survives export)
   injectCopyScript();
 
-  // Step 7: Clean up CDDL-specific attributes on export
+  // Step 8: Clean up CDDL-specific attributes on export
   sub("beforesave", (/** @type {Document} */ outputDoc) => {
     outputDoc
       .querySelectorAll("[data-cddl-pending]")
