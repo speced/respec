@@ -3,8 +3,9 @@
 const { Builder } = require("./builder.cjs");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
-const { exec } = require("child_process");
+const { execFile, spawn } = require("child_process");
 const loading = require("loading-indicator");
+const fs = require("fs");
 const DEBUG = false;
 const vnu = require("vnu-jar");
 const path = require("path");
@@ -35,18 +36,22 @@ const loadOps = {
   delay: 100,
 };
 
-/** @param {string} program */
-function commandRunner(program) {
+/**
+ * @param {string} file
+ * @param {string[]} [baseArgs]
+ */
+function commandRunner(file, baseArgs = []) {
   /**
-   * @param {string} cmd
-   * @param {{showOutput: boolean}} [options ]
+   * @param {string[]} cmd
+   * @param {{showOutput: boolean}} [options]
    */
   const runner = (cmd, options = { showOutput: false }) => {
-    console.log(colors.cyan(`Run: ${program} ${colors.grey(cmd)}`));
+    const args = [...baseArgs, ...cmd];
+    console.log(colors.cyan(`Run: ${file} ${colors.grey(args.join(" "))}`));
     if (DEBUG) {
       return Promise.resolve("");
     }
-    return toExecPromise(`${program} ${cmd}`, { ...options, timeout: 200000 });
+    return toExecFilePromise(file, args, { ...options, timeout: 200000 });
   };
   return runner;
 }
@@ -54,7 +59,7 @@ function commandRunner(program) {
 const git = commandRunner("git");
 const npm = commandRunner("npm");
 const node = commandRunner("node");
-const validator = commandRunner(`java -jar ${vnu}`);
+const validator = commandRunner("java", ["-jar", vnu]);
 
 cmdPrompt.start();
 
@@ -82,7 +87,7 @@ const Prompts = {
       default: "y",
     };
     await this.askQuestion(promptOps);
-    await git(`checkout ${to}`);
+    await git(["checkout", to]);
   },
 
   /** @param {string} branch */
@@ -94,7 +99,7 @@ const Prompts = {
       default: "y",
     };
     await this.askQuestion(promptOps);
-    await git(`pull origin ${branch}`);
+    await git(["pull", "origin", branch]);
   },
 
   async askUpToDateAndDev() {
@@ -202,10 +207,14 @@ const Prompts = {
   },
 
   async askBumpVersion() {
-    const rawVersion = await npm("view respec version");
+    const rawVersion = await npm(["view", "respec", "version"]);
     const version = rawVersion.trim();
-    const latestTag = await git("describe --tags --abbrev=0");
-    const commits = await git(`log ${latestTag.trim()}..HEAD --oneline`);
+    const latestTag = await git(["describe", "--tags", "--abbrev=0"]);
+    const commits = await git([
+      "log",
+      `${latestTag.trim()}..HEAD`,
+      "--oneline",
+    ]);
     if (!commits) {
       throw new Error("😢  No commits. Nothing to release.");
     }
@@ -253,17 +262,18 @@ const Prompts = {
 
 /**
  *
- * @param {string} cmd
+ * @param {string} file
+ * @param {string[]} args
  * @param {{ timeout: number, showOutput: boolean }} options
  * @returns {Promise<string>}
  */
-function toExecPromise(cmd, { timeout, showOutput }) {
+function toExecFilePromise(file, args, { timeout, showOutput }) {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
-      reject(new Error(`Command took too long: ${cmd}`));
+      reject(new Error(`Command took too long: ${file} ${args.join(" ")}`));
       proc.kill("SIGTERM");
     }, timeout);
-    const proc = exec(cmd, (err, stdout) => {
+    const proc = execFile(file, args, (err, stdout) => {
       clearTimeout(id);
       if (err) {
         return reject(err);
@@ -284,9 +294,9 @@ function toExecPromise(cmd, { timeout, showOutput }) {
 }
 
 async function getBranchState() {
-  const local = await git("rev-parse @");
-  const remote = await git("rev-parse @{u}");
-  const base = await git("merge-base @ @{u}");
+  const local = await git(["rev-parse", "@"]);
+  const remote = await git(["rev-parse", "@{u}"]);
+  const base = await git(["merge-base", "@", "@{u}"]);
   let result = "";
   switch (local) {
     case remote:
@@ -302,7 +312,7 @@ async function getBranchState() {
 }
 
 async function getCurrentBranch() {
-  const branch = await git("rev-parse --abbrev-ref HEAD");
+  const branch = await git(["rev-parse", "--abbrev-ref", "HEAD"]);
   return branch.trim();
 }
 
@@ -315,6 +325,183 @@ class Indicator {
   }
   hide() {
     loading.stop(this.id);
+  }
+}
+
+async function preflight() {
+  console.log(colors.cyan("\n  Preflight checks\n"));
+  const errors = [];
+
+  // Java (needed for vnu HTML validator)
+  try {
+    await toExecFilePromise("java", ["-version"], {
+      timeout: 10000,
+      showOutput: false,
+    });
+    console.log(colors.green("  ✓ Java runtime"));
+  } catch {
+    errors.push(
+      "Java runtime not found (required by vnu HTML validator).\n" +
+        "    Install: brew install java\n" +
+        "    Then:    sudo ln -sfn /opt/homebrew/opt/openjdk/libexec/openjdk.jdk" +
+        " /Library/Java/JavaVirtualMachines/openjdk.jdk"
+    );
+  }
+
+  // Puppeteer Chrome (needed for respec2html)
+  try {
+    const chromePath = await toExecFilePromise(
+      "node",
+      [
+        "-e",
+        'import("puppeteer").then(p => process.stdout.write(p.executablePath()))',
+      ],
+      { timeout: 15000, showOutput: false }
+    );
+    if (!fs.existsSync(chromePath.trim())) {
+      throw new Error("Chrome binary missing");
+    }
+    console.log(colors.green("  ✓ Puppeteer Chrome"));
+  } catch {
+    errors.push(
+      "Puppeteer Chrome not found (required by respec2html).\n" +
+        "    Install: npx puppeteer browsers install chrome"
+    );
+  }
+
+  // GitHub CLI (needed for creating GitHub Releases that trigger W3C CDN sync)
+  try {
+    await toExecFilePromise("gh", ["auth", "status"], {
+      timeout: 10000,
+      showOutput: false,
+    });
+    console.log(colors.green("  ✓ GitHub CLI (gh)"));
+  } catch {
+    errors.push(
+      "GitHub CLI not found or not authenticated (required for creating releases).\n" +
+        "    Install: brew install gh\n" +
+        "    Then:    gh auth login"
+    );
+  }
+
+  // origin/gh-pages must exist and be unambiguous
+  try {
+    const branches = await git(["branch", "-r", "--list", "*/gh-pages"]);
+    const remotes = branches
+      .trim()
+      .split("\n")
+      .filter(line => line.trim());
+    const hasOrigin = remotes.some(r => r.trim() === "origin/gh-pages");
+    if (!hasOrigin) {
+      errors.push(
+        "origin/gh-pages not found. The release requires it.\n" +
+          "    Fix: git fetch origin gh-pages"
+      );
+    } else if (remotes.length > 1) {
+      const defaultRemote = await git([
+        "config",
+        "checkout.defaultRemote",
+      ]).catch(() => "");
+      if (!defaultRemote.trim()) {
+        errors.push(
+          `"gh-pages" exists on ${remotes.length} remotes:\n${remotes.map(r => `      ${r.trim()}`).join("\n")}\n    Fix: git config checkout.defaultRemote origin`
+        );
+      } else {
+        console.log(colors.green("  ✓ gh-pages branch (via defaultRemote)"));
+      }
+    } else {
+      console.log(colors.green("  ✓ gh-pages branch"));
+    }
+  } catch {
+    errors.push("Could not verify gh-pages branch status.");
+  }
+
+  if (errors.length) {
+    console.log(colors.red("\n  ❌ Preflight failed:\n"));
+    errors.forEach((err, i) => {
+      console.log(colors.red(`  ${i + 1}. ${err}\n`));
+    });
+    throw new Error("Fix the issues above and try again.");
+  }
+  console.log(colors.green("\n  ✅ All preflight checks passed.\n"));
+}
+
+/**
+ * Runs a command interactively (stdio inherited), needed for npm publish OTP.
+ * @param {string} file
+ * @param {string[]} args
+ * @returns {Promise<void>}
+ */
+function toSpawnPromise(file, args) {
+  console.log(colors.cyan(`Run: ${file} ${colors.grey(args.join(" "))}`));
+  if (DEBUG) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const proc = spawn(file, args, { stdio: "inherit" });
+    proc.on("close", code => {
+      if (code !== 0) {
+        reject(
+          new Error(
+            `Command failed with exit code ${code}: ${file} ${args.join(" ")}`
+          )
+        );
+      } else {
+        resolve();
+      }
+    });
+    proc.on("error", reject);
+  });
+}
+
+/**
+ * @param {string} version
+ * @param {string} mainHead
+ * @param {string} ghPagesHead
+ * @param {string} initialBranch
+ */
+async function rollback(version, mainHead, ghPagesHead, initialBranch) {
+  console.log(colors.yellow("\n  ⏪ Rolling back local changes...\n"));
+  try {
+    const currentBranch = await getCurrentBranch();
+    if (currentBranch !== "main") {
+      await git(["switch", "main"]);
+    }
+  } catch {
+    // best effort
+  }
+  try {
+    await git(["tag", "-d", `v${version}`]);
+    console.log(colors.yellow(`  Deleted tag v${version}`));
+  } catch {
+    // tag may not exist yet
+  }
+  if (mainHead) {
+    try {
+      await git(["reset", "--hard", mainHead]);
+      console.log(colors.yellow(`  Reset main to ${mainHead.slice(0, 8)}`));
+    } catch {
+      console.log(colors.red("  Failed to reset main — check manually."));
+    }
+  }
+  if (ghPagesHead) {
+    try {
+      await git(["switch", "gh-pages"]);
+      await git(["reset", "--hard", ghPagesHead]);
+      console.log(
+        colors.yellow(`  Reset gh-pages to ${ghPagesHead.slice(0, 8)}`)
+      );
+    } catch {
+      console.log(colors.red("  Failed to reset gh-pages — check manually."));
+    } finally {
+      await git(["switch", "main"]);
+    }
+  }
+  try {
+    const currentBranch = await getCurrentBranch();
+    if (initialBranch !== currentBranch) {
+      await git(["switch", initialBranch]);
+    }
+  } catch {
+    // best effort
   }
 }
 
@@ -331,11 +518,19 @@ const indicators = new Map([
 
 const run = async () => {
   const initialBranch = await getCurrentBranch();
+  let version = "";
+  let mainHead = "";
+  let ghPagesHead = "";
+  let pushed = false;
   try {
-    // 1. Confirm maintainer is on up-to-date and on the main branch ()
+    // Refresh remote refs before preflight (gh-pages check needs current data)
     indicators.get("remote-update").show();
-    await git("remote update");
+    await git(["remote", "update"]);
     indicators.get("remote-update").hide();
+
+    await preflight();
+
+    // 1. Confirm maintainer is on up-to-date and on the main branch
     if (initialBranch !== "main") {
       await Prompts.askSwitchToBranch(initialBranch, "main");
     }
@@ -353,54 +548,96 @@ const run = async () => {
       default:
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
+
+    // Save state for rollback (before any mutations)
+    mainHead = (await git(["rev-parse", "HEAD"])).trim();
+
     // 2. Bump the version in `package.json`.
-    const version = await Prompts.askBumpVersion();
+    version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
-    await npm(`version ${version} -m "v${version}" --no-git-tag-version`);
+    await npm([
+      "version",
+      version,
+      "-m",
+      `v${version}`,
+      "--no-git-tag-version",
+    ]);
 
     // 3. Run the build script (node tools/builder.js).
-    await npm("run builddeps");
+    await npm(["run", "builddeps"]);
     for (const name of ["w3c", "geonovum", "dini", "aom"]) {
       await Builder.build({ name });
     }
     console.log(colors.green(" Making sure the generated version is ok... 🕵🏻"));
     const source = `file:///${__dirname}/../examples/basic.built.html`;
     const tempFile = path.join(os.tmpdir(), "index.html");
-    await node(`./tools/respec2html.js -e --timeout 30 ${source} ${tempFile}`, {
-      showOutput: true,
-    });
+    await node(
+      ["./tools/respec2html.js", "-e", "--timeout", "30", source, tempFile],
+      {
+        showOutput: true,
+      }
+    );
 
     // Do HTML validation
     console.log(colors.green(" Making sure HTML validator is happy... 🕵🏻"));
-    await validator(`--stdout ${tempFile}`);
+    await validator(["--stdout", tempFile]);
     console.log(colors.green(" Build Seems good... ✅"));
 
     // 4. Commit your changes
-    await git("add builds package.json pnpm-lock.yaml");
-    await git(`commit -m "v${version}"`);
-    await git(`tag "v${version}"`);
+    await git(["add", "builds", "package.json", "pnpm-lock.yaml"]);
+    await git(["commit", "-m", `v${version}`]);
+    await git(["tag", `v${version}`]);
 
-    // 5. Merge to gh-pages (git checkout gh-pages; git merge main)
-    await git("checkout gh-pages");
-    await git("pull origin gh-pages");
-    await git("merge main");
-    await git("checkout main");
+    // 5. Merge to gh-pages
+    try {
+      ghPagesHead = (await git(["rev-parse", "origin/gh-pages"])).trim();
+    } catch {
+      // gh-pages may not exist locally yet
+    }
+    await git(["checkout", "gh-pages"]).catch(() =>
+      git(["checkout", "--track", "origin/gh-pages"])
+    );
+    await git(["pull", "origin", "gh-pages"]);
+    await git(["merge", "main"]);
+    await git(["checkout", "main"]);
+
+    // 6. Push — point of no return after first successful push
     await Prompts.askPushAll();
     indicators.get("push-to-server").show();
-    await git("push origin main");
-    await git("push origin gh-pages");
-    await git("push --tags");
+    await git(["push", "origin", "main"]);
+    await git(["push", "origin", "gh-pages"]);
+    await git(["push", "--tags"]);
+    pushed = true;
     indicators.get("push-to-server").hide();
+
+    // 7. Publish to npm (interactive for OTP auth)
     console.log(colors.green(" Publishing to npm... 📡"));
-    await npm("publish", { showOutput: true });
+    await toSpawnPromise("npm", ["publish"]);
+
+    // 8. Create GitHub Release (triggers W3C CDN sync)
+    console.log(colors.green(" Creating GitHub Release... 📡"));
+    await toExecFilePromise(
+      "gh",
+      ["release", "create", `v${version}`, "--generate-notes"],
+      { timeout: 30000, showOutput: true }
+    );
+
     if (initialBranch !== "main") {
       await Prompts.askSwitchToBranch("main", initialBranch);
     }
   } catch (err) {
     console.error(colors.red(`\n☠  ${err.stack}`));
-    const currentBranch = await getCurrentBranch();
-    if (initialBranch !== currentBranch) {
-      await git(`checkout ${initialBranch}`);
+    if (pushed) {
+      console.log(
+        colors.yellow(
+          `\n  Git push succeeded but a later step failed.\n` +
+            `  You may need to run manually:\n` +
+            `    npm publish\n` +
+            `    gh release create v${version} --generate-notes\n`
+        )
+      );
+    } else {
+      await rollback(version, mainHead, ghPagesHead, initialBranch);
     }
     process.exit(1);
     return;
