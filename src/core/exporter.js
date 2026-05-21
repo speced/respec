@@ -7,7 +7,6 @@
  */
 
 import { removeCommentNodes, removeReSpec } from "./utils.js";
-import { expose } from "./expose-modules.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
 
@@ -69,7 +68,7 @@ function cleanup(cloneDoc) {
   cloneDoc
     .querySelectorAll(".removeOnSave, #toc-nav")
     .forEach((/** @type {Element} */ elem) => elem.remove());
-  body.classList.remove("toc-sidebar");
+  body.classList.remove("toc-sidebar", "toc-inline");
   removeReSpec(documentElement);
 
   const insertions = cloneDoc.createDocumentFragment();
@@ -107,5 +106,3 @@ function prettify(cloneDoc) {
     el.outerHTML = `\n${el.outerHTML}`;
   });
 }
-
-expose("core/exporter", { rsDocToDataURL });

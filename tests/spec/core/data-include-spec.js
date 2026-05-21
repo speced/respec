@@ -35,6 +35,7 @@ describe("Core — Data Include", () => {
     const div = doc.querySelector("#includes > div");
     expect(div.dataset.include).toBe(undefined);
     expect(div.dataset.includeFormat).toBe(undefined);
+    expect(div.dataset.oninclude).toBe(undefined);
     expect(div.dataset.dontRemove).toBe("pass");
   });
 

@@ -47,6 +47,25 @@ const localizationStrings = {
       </p>`;
     },
   },
+  fr: {
+    conformance: "Conformité",
+    normativity:
+      "Tout comme les sections marquées comme non normatives, toutes les recommandations d'édition, " +
+      "diagrammes, exemples et notes dans cette spécification sont non normatifs. " +
+      "Tout le reste dans cette spécification est normatif.",
+    keywordInterpretation(keywords, plural) {
+      return html`<p>
+        ${plural ? "Les mots-clés" : "Le mot-clé"} ${keywords} dans ce document
+        ${plural ? "doivent" : "doit"} être interprété${plural ? "s" : ""} comme
+        décrit dans
+        <a href="https://www.rfc-editor.org/info/bcp14">BCP 14</a>
+        ${renderInlineCitation("RFC2119")} ${renderInlineCitation("RFC8174")}
+        lorsque, et seulement lorsque,
+        ${plural ? "ils apparaissent" : "il apparaît"} en majuscules, comme
+        indiqué ici.
+      </p>`;
+    },
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
@@ -79,9 +98,20 @@ function processConformance(conformance, conf) {
  * @param {Conf} conf
  */
 export function run(conf) {
+  /** @type {HTMLElement | null} */
   const conformance = document.querySelector("section#conformance");
-  if (conformance && !conformance.classList.contains("override")) {
-    processConformance(conformance, conf);
+  if (conformance) {
+    if (conformance.classList.contains("informative")) {
+      conformance.classList.remove("informative");
+      const msg =
+        "Conformance sections are normative by definition. The `informative` class has been removed.";
+      const hint =
+        'Remove `class="informative"` from `<section id="conformance">` to avoid this warning.';
+      showWarning(msg, name, { hint, elements: [conformance] });
+    }
+    if (!conformance.classList.contains("override")) {
+      processConformance(conformance, conf);
+    }
   }
   // Warn when there are RFC2119/RFC8174 keywords, but not conformance section
   if (!conformance && Object.keys(rfc2119Usage).length) {
