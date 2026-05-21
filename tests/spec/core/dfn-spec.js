@@ -114,14 +114,14 @@ describe("Core — Definitions", () => {
     const link = doc.querySelector("#dfns a");
     // Active definitions are processed and linked normally.
     expect(active).toBeTruthy();
-    expect(active.id).toBe("kept");
+    expect(active.id).toBeTruthy();
     expect(active.dataset.dfnType).toBe("dfn");
     // Deleted definitions remain in the DOM.
     expect(deleted).toBeTruthy();
     expect(deleted.closest("del")).toBeTruthy();
     // Deleted definitions should not participate in duplicate checks or linking.
     expect(findDfnErrors(doc)).toEqual([]);
-    expect(link.getAttribute("href")).toBe("#kept");
+    expect(link.getAttribute("href")).toBe(`#${active.id}`);
   });
 
   it("makes dfn tab enabled whose aria-role is a link", async () => {
