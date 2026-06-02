@@ -168,8 +168,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       vnu-jar:
-        specifier: ^26.5.22
-        version: 26.5.22
+        specifier: ^26.5.29
+        version: 26.5.29
       webidl2:
         specifier: ^24.5.0
         version: 24.5.0
@@ -2548,8 +2548,8 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
-  vnu-jar@26.5.22:
-    resolution: {integrity: sha512-3ael3XzO11gN7G/6Pp60zUIGwczzuLbuzgsXaAx75hnXDO2ix1FtzqamVp6EAooRhGDT249mWryv6CWJHMyyqA==}
+  vnu-jar@26.5.29:
+    resolution: {integrity: sha512-KtzZ29PEsVkSENDs6elpTZfD3nhiOVWccKdX2LfFthofVrffUGf7uc+x1qpMrOACzqfpOImOtVFjVzo6unUzNQ==}
     engines: {node: '>=0.10'}
     hasBin: true
 
@@ -5238,7 +5238,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vnu-jar@26.5.22: {}
+  vnu-jar@26.5.29: {}
 
   void-elements@2.0.1: {}
 
