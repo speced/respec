@@ -101,12 +101,32 @@ const localizationStrings = {
     with_subject_line: "次の件名で",
   },
   nl: {
+    archives: "archieven",
     author: "Auteur:",
     authors: "Auteurs:",
+    commit_history: "Commit geschiedenis",
     editor: "Redacteur:",
     editors: "Redacteurs:",
+    feedback: "Feedback:",
+    former_editor: "Voormalige auteur:",
+    former_editors: "Voormalige auteurs:",
+    history: "Geschiedenis:",
+    implementation_report: "Implementatie rapport:",
     latest_editors_draft: "Laatste werkversie:",
     latest_published_version: "Laatst gepubliceerde versie:",
+    latest_recommendation: "Laatste aanbeveling:",
+    more_details_about_this_doc: "Meer informatie over dit document",
+    /**
+     * @param {boolean} plural
+     */
+    multiple_alternates(plural) {
+      return `Dit document is ook beschikbaar in ${
+        plural
+          ? "dit niet-normatieve formaat"
+          : "deze niet-normatieve formaten"
+      }:`;
+    },
+    publication_history: "Publicatiegeschiedenis",
     this_version: "Deze versie:",
   },
   es: {
