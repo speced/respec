@@ -76,7 +76,6 @@ export async function run(conf) {
   headingElems.forEach(({ elem, key }) => {
     const heading = headingTexts.get(key);
     if (heading?.title) {
-      elem.textContent = "";
       setHeadingContent(elem, heading);
     }
   });
@@ -152,14 +151,20 @@ export async function fetchHeadingTexts(queries, apiUrl = HEADINGS_API_URL) {
 
 /**
  * Sets heading content on an element using proper secno markup.
- * When a section number is available, produces `<bdi class="secno">N </bdi>Title`.
+ * Prefixes the reference with the "§" section sign (followed by a
+ * non-breaking space), matching in-document section links produced by
+ * core/anchor-expander. When a section number is available, produces
+ * `§\u00A0<bdi class="secno">N </bdi>Title`.
  * @param {HTMLElement} elem
  * @param {HeadingInfo} heading
  */
 export function setHeadingContent(elem, { title, number }) {
+  elem.classList.add("sec-ref");
+  elem.textContent = "";
+  elem.append("§\u00A0");
   if (number) {
     elem.append(html`<bdi class="secno">${number} </bdi>`, title);
   } else {
-    elem.textContent = title;
+    elem.append(title);
   }
 }
