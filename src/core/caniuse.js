@@ -170,21 +170,17 @@ async function processJson(json, { feature }) {
   ]);
   const toBrowserCell = browserCellRenderer(feature);
   results.reduce(toBrowserCell, groups);
-  const out = [...groups]
+  const entries = [...groups]
     .filter(([, arr]) => arr.length)
     .map(
       ([key, arr]) =>
         html`<div class="caniuse-group">
-          <div class="caniuse-browsers">${arr}</div>
-          <div class="caniuse-type"><span>${key}</div>
+          <dt class="caniuse-type">${key}</dt>
+          <dd class="caniuse-browsers">${arr}</dd>
         </div>`
     );
-  out.push(
-    html`<a class="caniuse-cell" href="https://caniuse.com/${feature}"
-      >More info</a
-    >`
-  );
-  return out;
+  return html`<dl class="caniuse-groups">${entries}</dl>
+    <a href="https://caniuse.com/${feature}">More info</a>`;
 }
 
 /**
