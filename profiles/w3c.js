@@ -81,6 +81,7 @@ const modules = [
   import("../src/core/linter-rules/no-http-props.js"),
   import("../src/core/linter-rules/a11y.js"),
   import("../src/core/linter-rules/informative-dfn.js"),
+  import("../src/core/linter-rules/prefer-xref.js"),
 ];
 
 Promise.all(modules)

@@ -55,6 +55,7 @@ const modules = [
   import("../src/core/linter-rules/no-unused-vars.js"),
   import("../src/core/linter-rules/privsec-section.js"),
   import("../src/core/linter-rules/no-http-props.js"),
+  import("../src/core/linter-rules/prefer-xref.js"),
 ];
 
 Promise.all(modules)

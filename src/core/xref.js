@@ -32,7 +32,7 @@ import { sub } from "./pubsubhub.js";
 
 export const name = "core/xref";
 
-const profiles = {
+export const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
 };
 
