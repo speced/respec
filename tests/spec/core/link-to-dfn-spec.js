@@ -17,9 +17,34 @@ describe("Core — Link to definitions", () => {
     const doc = await makeRSDoc(ops);
     const a = doc.getElementById("testAnchor");
     expect(a).toBeTruthy();
-    expect(a.hash).toBe("#dfn-test");
+    expect(a.hash).toBe("#dfn-window-test");
     const decodedHash = decodeURIComponent(a.hash);
     expect(doc.getElementById(decodedHash.slice(1))).toBeTruthy();
+  });
+
+  it("uses data-dfn-for in generated IDs for duplicate terms", async () => {
+    const body = `
+      <section>
+        <h2>Test section</h2>
+        <p>
+          <dfn data-dfn-for="Request">state</dfn>
+          <dfn data-dfn-for="Response">state</dfn>
+          <a data-link-for="Request" data-link-type="dfn" id="requestState">state</a>
+          <a data-link-for="Response" data-link-type="dfn" id="responseState">state</a>
+        </p>
+      </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const [requestState, responseState] = doc.querySelectorAll("dfn");
+    expect(requestState.id).toBe("dfn-request-state");
+    expect(responseState.id).toBe("dfn-response-state");
+    expect(requestState.id).not.toMatch(/-\d+$/);
+    expect(responseState.id).not.toMatch(/-\d+$/);
+
+    const requestStateLink = doc.getElementById("requestState");
+    const responseStateLink = doc.getElementById("responseState");
+    expect(requestStateLink.hash).toBe("#dfn-request-state");
+    expect(responseStateLink.hash).toBe("#dfn-response-state");
   });
 
   it("links to IDL definitions and wraps in code if needed", async () => {
