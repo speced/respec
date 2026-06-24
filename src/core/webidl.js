@@ -7,6 +7,7 @@
 import {
   addHashId,
   docLink,
+  regExpEscape,
   showError,
   showWarning,
   wrapInner,
@@ -129,6 +130,20 @@ function defineIdlName(escaped, data, parent) {
   });
   const linkType = getDfnType(data.type);
   if (dfn) {
+    if (data.partial && !dfn.dataset.cite) {
+      const nonPartialPattern = new RegExp(
+        `(?:^|\\])\\s*(?:interface|dictionary|namespace|interface\\s+mixin)\\s+${regExpEscape(name)}\\b`,
+        "m"
+      );
+      const hasNonPartialDef = [
+        ...document.querySelectorAll("pre.idl, pre.webidl"),
+      ].some(pre => nonPartialPattern.test(pre.textContent ?? ""));
+      if (!hasNonPartialDef && !dfn.dataset.hasOwnProperty("idl")) {
+        const msg = `Found a \`<dfn>\` for "${name}", but the IDL declares it as a \`partial\` ${data.type}.`;
+        const hint = docLink`Remove the \`<dfn>\` (partials don't define the ${data.type}) or use ${"[data-cite]"} to reference the defining spec.`;
+        showWarning(msg, pluginName, { elements: [dfn], hint });
+      }
+    }
     if (!data.partial) {
       if (!dfn.matches("[data-noexport]")) dfn.dataset.export = "";
       dfn.dataset.dfnType = linkType;
