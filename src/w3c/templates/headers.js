@@ -136,6 +136,19 @@ const localizationStrings = {
     with_subject_line: "con línea de asunto",
     your_topic_here: "TU SUJETO AQUÍ",
   },
+  fr: {
+    archives: "archives",
+    author: "Auteur :",
+    authors: "Auteurs :",
+    editor: "Éditeur :",
+    editors: "Éditeurs :",
+    former_editor: "Ancien éditeur :",
+    former_editors: "Anciens éditeurs :",
+    latest_editors_draft: "Dernier brouillon de l'éditeur :",
+    latest_published_version: "Dernière version publiée :",
+    this_version: "Cette version :",
+    history: "Historique :",
+  },
   de: {
     archives: "Archiv",
     author: "Autor/in:",
@@ -362,7 +375,7 @@ export default (conf, options) => {
           : ""}
         ${conf.errata
           ? html`<dt>Errata:</dt>
-              <dd><a href="${conf.errata}">Errata exists</a>.</dd>`
+              <dd><a href="${conf.errata}">Check for errata</a>.</dd>`
           : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
       </dl>
