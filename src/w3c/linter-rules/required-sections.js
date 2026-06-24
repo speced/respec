@@ -65,6 +65,18 @@ const localizationStrings = {
     privacy_considerations: "Zásady ochrany soukromí",
     security_considerations: "Zásady bezpečnosti",
   },
+  nl: {
+    msg(sectionTitle) {
+      return `Documenten op de "W3C Recommendation track" vereisen een aparte "${sectionTitle}" sectie.`;
+    },
+    hint(sectionTitle) {
+      return docLink`Voeg een \`<section>\` toe met als titel "${sectionTitle}". Zie de [Horizontal review guidelines](https://www.w3.org/Guide/documentreview/#how_to_get_horizontal_review).
+        Als het document niet bedoeld is voor W3C Recommendation, zet ${"[noRecTrack]"} dan op \`true\`
+        of schakel de linterregel ${`[${ruleName}]`} uit.`;
+    },
+    privacy_considerations: "Privacyoverwegingen",
+    security_considerations: "Beveiligingsoverwegingen",
+  },
 };
 const l10n = getIntlData(localizationStrings);
 
