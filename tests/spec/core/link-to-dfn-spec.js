@@ -388,6 +388,23 @@ describe("Core — Link to definitions", () => {
     expect(codeElem.querySelector("code")).toBeNull();
   });
 
+  it("wraps links in code when dfn>code has surrounding whitespace text nodes", async () => {
+    const bodyText = `
+      <section>
+        <h2>Test Section</h2>
+        <p><dfn>
+          <code>myTerm</code>
+        </dfn></p>
+        <p id="link-target"><a>myTerm</a></p>
+      </section>`;
+    const ops = makeStandardOps(null, bodyText);
+    const doc = await makeRSDoc(ops);
+    const anchor = doc.querySelector("#link-target a");
+    expect(anchor).toBeTruthy();
+    expect(anchor.querySelector("code")).toBeTruthy();
+    expect(anchor.textContent).toBe("myTerm");
+  });
+
   it("does not corrupt data-cite values when shortName is missing", async () => {
     const body = `
       <section>
