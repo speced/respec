@@ -221,14 +221,27 @@ describe("W3C - Style", () => {
     expect(elem.content).toBe("light");
   });
 
+  it("always adds dark stylesheet link so fixup.js theme toggle works", async () => {
+    // Light-only specs must have dark.css link present so fixup.js updateTheme()
+    // doesn't throw a TypeError when accessing darkCss.disabled (issue #5200).
+    const ops = makeStandardOps(); // default: light-only color scheme
+    const doc = await makeRSDoc(ops);
+    const link = doc.querySelector(
+      `link[rel="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+    );
+    expect(link).toBeTruthy();
+    expect(link.disabled).toBeTrue();
+  });
+
   it("adds dark mode stylesheet", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
     /** @type HTMLLinkElement? */
     const link = doc.querySelector(
-      `link[href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+      `link[rel="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
     );
     expect(link).toBeTruthy();
+    expect(link.getAttribute("media")).toBe("(prefers-color-scheme: dark)");
   });
 
   it("adds darkmode stylesheet at the end", async () => {

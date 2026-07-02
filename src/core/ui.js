@@ -50,7 +50,7 @@ const menu = html`<ul
 const closeButton = html`<button
   class="close-button"
   onclick=${() => ui.closeModal()}
-  title="Close"
+  aria-label="Close"
 >
   ❌
 </button>`;
