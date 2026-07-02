@@ -59,6 +59,7 @@ const knownTypes = [...knownTypesMap.keys()];
 
 export function run() {
   for (const dfn of document.querySelectorAll("dfn")) {
+    if (dfn.closest("del")) continue;
     const titles = getDfnTitles(dfn);
     registerDefinition(dfn, titles);
 
