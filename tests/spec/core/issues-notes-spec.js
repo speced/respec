@@ -444,7 +444,7 @@ describe("Core — Issues and Notes", () => {
     const p = doc.querySelector("#issue-summary p");
     expect(p.innerText).toContain("Here you will find all issues summary");
     const div = doc.querySelector("#issue-summary div:last-child");
-    expect(div.innerText).toContain("This is a note");
+    expect(div.textContent).toContain("This is a note");
     // Headings other than top level heading should not be detected as issue summary heading
     const h3 = doc.querySelector("#issue-summary section h3");
     expect(h3.innerText).toContain("This is not the heading of issue-summary");
