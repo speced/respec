@@ -2,7 +2,7 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import { addId, getIntlData, showError, toId } from "./utils.js";
+import { addId, getIntlData, showError, toId, xmlEscape } from "./utils.js";
 import { biblio } from "./biblio.js";
 import { html } from "./import-maps.js";
 
@@ -33,6 +33,12 @@ const localizationStrings = {
     norm_references: "Referencias normativas",
     references: "Referencias",
     reference_not_found: "Referencia no encontrada.",
+  },
+  fr: {
+    info_references: "Références informatives",
+    norm_references: "Références normatives",
+    references: "Références",
+    reference_not_found: "Référence non trouvée.",
   },
   ja: {
     info_references: "参照用参考文献",
@@ -68,8 +74,6 @@ const REF_STATUSES = new Map([
   ["REC", "W3C Recommendation"],
   ["WD", "W3C Working Draft"],
 ]);
-
-const endWithDot = endNormalizer(".");
 
 /** @param {Conf} conf */
 export function run(conf) {
@@ -225,19 +229,6 @@ function showRef(reference) {
   return result;
 }
 
-/**
- * @param {string} endStr
- * @returns {(str: string) => string}
- */
-function endNormalizer(endStr) {
-  return str => {
-    const trimmed = str.trim();
-    const result =
-      !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
-    return result;
-  };
-}
-
 /** @param {BiblioData|string} ref */
 function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
@@ -259,8 +250,15 @@ function stringifyReference(ref) {
     }
   }
   if (ref.publisher) {
-    output = `${output} ${endWithDot(ref.publisher)} `;
+    // When pages follow, use a comma after publisher instead of a period.
+    const publisherEnd = ref.pages ? "," : ".";
+    const publisherText = ref.publisher.trim();
+    const normalizedPublisher = publisherText.endsWith(".")
+      ? publisherText.slice(0, -1)
+      : publisherText;
+    output = `${output} ${normalizedPublisher}${publisherEnd} `;
   }
+  if (ref.pages) output += `pp. ${xmlEscape(ref.pages)}. `;
   if (ref.date) output += `${ref.date}. `;
   if (ref.status) output += `${REF_STATUSES.get(ref.status) || ref.status}. `;
   if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
