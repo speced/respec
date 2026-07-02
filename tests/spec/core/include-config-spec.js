@@ -7,9 +7,11 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
+import { seedGroupCache } from "../respec-cache-helper.js";
 
 describe("Core — Include config as JSON", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
   let ops;
   beforeAll(() => {
     ops = {

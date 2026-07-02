@@ -9,10 +9,12 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
+import { seedGroupCache } from "../respec-cache-helper.js";
 const errorsFilter = errorFilters.filter("w3c/defaults");
 
 describe("W3C — Defaults", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
   it("sets sensible defaults for w3c specs", async () => {
     const ops = {
       config: { editors: [{ name: "foo" }], specStatus: "base" },
