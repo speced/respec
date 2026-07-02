@@ -1,7 +1,14 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  makeRSDoc,
+  makeStandardOps,
+  warningFilters,
+} from "../SpecHelper.js";
 import { clearHeadingsData } from "../../../src/core/xref-headings-db.js";
+
+const inlinesWarningsFilter = warningFilters.filter("core/inlines");
 
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
@@ -894,6 +901,42 @@ describe("Core - Inlines", () => {
     expect(decodeURIComponent(conceptLink.hash)).toBe(
       "#multipart/form-data-encoding-algorithm"
     );
+  });
+
+  it("links {{ Interface/event!!event }} to event-type definitions", async () => {
+    const body = `
+      <section data-dfn-for="ScreenOrientation">
+        <h2><dfn>ScreenOrientation</dfn></h2>
+        <dfn data-dfn-type="event" data-dfn-for="ScreenOrientation">change</dfn>
+        <p id="test">{{ ScreenOrientation/change!!event }}</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const para = doc.getElementById("test");
+    const anchor = para.querySelector("a");
+    expect(anchor).withContext(para.innerHTML).toBeTruthy();
+    expect(anchor.dataset.xrefType).toBe("event");
+    expect(anchor.dataset.linkFor).toBe("ScreenOrientation");
+    expect(anchor.textContent).toBe("change");
+  });
+
+  it("warns on unknown !!type hints and falls back to default", async () => {
+    const body = `
+      <section>
+        <p id="test">{{ Window/event!!nonsense }}</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const para = doc.getElementById("test");
+    const anchor = para.querySelector("a");
+    // Falls back to default (no type override), anchor still renders
+    expect(anchor).withContext(para.innerHTML).toBeTruthy();
+    // data-xref-type should be the default for an attribute (no typeHint applied)
+    expect(anchor.dataset.xrefType).not.toBe("nonsense");
+    // A warning was emitted for the invalid type hint
+    const warnings = inlinesWarningsFilter(doc);
+    expect(warnings.length).toBeGreaterThanOrEqual(1);
+    expect(warnings[0].message).toContain("!!nonsense");
   });
 
   it("strips possessive suffix from [= term's =] for link resolution", async () => {
