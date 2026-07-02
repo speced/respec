@@ -323,9 +323,9 @@ function showLinkingError(elems) {
     // Check if the link is inside a data-link-for section — a common footgun
     // where [=global-term=] gets scoped to the interface and fails.
     const scopedSection = /** @type {HTMLElement | null} */ (
-      elem.closest("[data-link-for]")
+      elem.parentElement?.closest("[data-link-for]") ?? null
     );
-    const scopingNote = scopedSection
+    const scopingNote = scopedSection?.dataset.linkFor
       ? ` This link is inside a \`data-link-for="${scopedSection.dataset.linkFor}"\` section — \`[=term=]\` links are scoped to that context. To link to a global concept instead, either add \`data-link-for=""\` on this \`<a>\` or move it outside the scoped section.`
       : "";
     const hint = `Add a matching \`<dfn>\` element, ${docLink`use ${"[data-cite]"} to link to an external definition, or enable ${"[xref]"} for automatic cross-spec linking.`}${scopingNote}`;
