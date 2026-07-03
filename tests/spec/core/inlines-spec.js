@@ -631,6 +631,90 @@ describe("Core - Inlines", () => {
     expect(anchor.textContent).toBe("see this section");
   });
 
+  it("processes backticks in [[[#id|`code`]]] alias text", async () => {
+    const body = `
+      <section id="my-section">
+        <h2>My Section Heading</h2>
+      </section>
+      <section>
+        <h2>References</h2>
+        <p id="output">[[[#my-section|the \`display\` property]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const anchor = doc.querySelector("#output a[href='#my-section']");
+    expect(anchor).toBeTruthy();
+    expect(anchor.querySelector("code").textContent).toBe("display");
+    expect(anchor.textContent).toBe("the display property");
+  });
+
+  it("processes backticks amid surrounding, multi-line text in [[[#id|…]]]", async () => {
+    const body = `
+      <section id="my-section">
+        <h2>My Section Heading</h2>
+      </section>
+      <section>
+        <h2>References</h2>
+        <p id="output">[[[#my-section|foo
+          \`code\` bar
+        ]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const anchor = doc.querySelector("#output a[href='#my-section']");
+    expect(anchor).toBeTruthy();
+    const codes = anchor.querySelectorAll("code");
+    expect(codes).toHaveSize(1);
+    expect(codes[0].textContent).toBe("code");
+    expect(anchor.textContent).toContain("foo");
+    expect(anchor.textContent).toContain("bar");
+  });
+
+  it("processes backticks in [[[SPEC#id|`code`]]] alias text", async () => {
+    const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch#data-fetch|the \`fetch\` method]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    expect(anchor.querySelector("code").textContent).toBe("fetch");
+    expect(anchor.textContent).toBe("the fetch method");
+  });
+
+  it("processes backticks in [[[SPEC|`code`]]] alias text", async () => {
+    const config = {
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch|the \`fetch\` spec]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/");
+    expect(anchor.querySelector("code").textContent).toBe("fetch");
+    expect(anchor.textContent).toBe("the fetch spec");
+  });
+
   it("allows [[[#...]]] to be a general expander for ids in document", async () => {
     /** @param {string} text */
     function generateDataIncludeUrl(text) {

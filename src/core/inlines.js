@@ -199,7 +199,7 @@ function inlineRefMatches(matched) {
   if (refWithoutPrefix.startsWith("#")) {
     return linkText
       ? html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"
-          >${linkText}</a
+          >${processInlineContent(linkText)}</a
         >`
       : html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"></a>`;
   }
@@ -349,6 +349,19 @@ function processInlineContent(text) {
     });
   }
   return document.createTextNode(text);
+}
+
+/**
+ * Replaces an element's content with `text`, rendering inline `code` spans
+ * the same way `[= =]` and other inline syntaxes do. Used to apply the alias
+ * of a `[[[…|alias]]]` autolink as its display text.
+ * @param {HTMLElement} elem
+ * @param {string} text
+ */
+export function setInlineContent(elem, text) {
+  elem.textContent = "";
+  const content = processInlineContent(text);
+  elem.append(...(Array.isArray(content) ? content : [content]));
 }
 
 /**

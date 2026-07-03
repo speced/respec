@@ -14,6 +14,7 @@
  */
 import { cacheHeadingsData, resolveHeadingsCache } from "./xref-headings-db.js";
 import { html } from "./import-maps.js";
+import { setInlineContent } from "./inlines.js";
 import { showWarning } from "./utils.js";
 
 export const name = "core/xref-headings";
@@ -53,7 +54,7 @@ export async function run(conf) {
 
   elems.forEach(elem => {
     if (elem.dataset.lt) {
-      elem.textContent = elem.dataset.lt;
+      setInlineContent(elem, elem.dataset.lt);
       delete elem.dataset.lt;
     } else {
       const spec = (elem.dataset.cite ?? "").replace(/^[!?]/, "");
