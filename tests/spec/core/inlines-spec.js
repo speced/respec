@@ -401,7 +401,7 @@ describe("Core - Inlines", () => {
     expect(anchor).toBeTruthy();
     expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
     // Local fixture returns { number: "4.1", title: "Fetching data" }
-    expect(anchor.textContent).toBe("4.1 Fetching data");
+    expect(anchor.textContent).toBe("§ 4.1 Fetching data");
   });
 
   it("uses heading text from API for [[[SPEC#id]]] when available", async () => {
@@ -428,7 +428,7 @@ describe("Core - Inlines", () => {
     const secno1 = anchor.querySelector("bdi.secno");
     expect(secno1).toBeTruthy();
     expect(secno1.textContent).toBe("4 ");
-    expect(anchor.textContent).toBe("4 Fetching");
+    expect(anchor.textContent).toBe("§ 4 Fetching");
   });
 
   it("uses xref.headingApiUrl to fetch heading texts for [[[SPEC#id]]]", async () => {
@@ -454,7 +454,59 @@ describe("Core - Inlines", () => {
     const secno2 = anchor.querySelector("bdi.secno");
     expect(secno2).toBeTruthy();
     expect(secno2.textContent).toBe("4 ");
-    expect(anchor.textContent).toBe("4 Fetching");
+    expect(anchor.textContent).toBe("§ 4 Fetching");
+  });
+
+  it("prefixes [[[SPEC#id]]] with § even when the section has no number", async () => {
+    const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch#acknowledgments]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#acknowledgments");
+    // Local fixture returns { number: null, title: "Acknowledgments" }
+    expect(anchor.classList).toContain("sec-ref");
+    expect(anchor.querySelector("bdi.secno")).toBeNull();
+    expect(anchor.textContent).toBe("§ Acknowledgments");
+  });
+
+  it("does not prefix [[[SPEC#id]]] with § when the headings API fails", async () => {
+    const config = {
+      xref: {
+        headingApiUrl: `${location.origin}/tests/data/does-not-exist-404.json`,
+      },
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch#data-fetch]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    // API failed → falls back to the spec title set by core/data-cite, with no "§".
+    expect(anchor.textContent).toBe("Fetch Standard");
+    // Fallback is the spec link, not a section reference — no sec-ref class.
+    expect(anchor.classList).not.toContain("sec-ref");
   });
 
   it("prefers alias text over heading text for [[[SPEC#id|text]]]", async () => {
@@ -500,7 +552,7 @@ describe("Core - Inlines", () => {
     const anchor = doc.querySelector("#output a[href]");
     expect(anchor).toBeTruthy();
     expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
-    expect(anchor.textContent).toBe("4.1 Fetching data");
+    expect(anchor.textContent).toBe("§ 4.1 Fetching data");
     // But it must NOT appear in the dfn-index "Terms defined by reference" table
     const externalTerms = doc.querySelectorAll(
       "#index-defined-elsewhere li[data-spec]"
@@ -533,7 +585,7 @@ describe("Core - Inlines", () => {
     const noAliasAnchor = doc.querySelector("#no-alias a[href]");
     expect(noAliasAnchor).toBeTruthy();
     // heading from local fixture: { number: "4.1", title: "Fetching data" }
-    expect(noAliasAnchor.textContent).toBe("4.1 Fetching data");
+    expect(noAliasAnchor.textContent).toBe("§ 4.1 Fetching data");
   });
 
   it("supports alias text with [[[SPEC|text]]] syntax (no fragment)", async () => {
@@ -577,6 +629,90 @@ describe("Core - Inlines", () => {
     const anchor = doc.querySelector("#output a[href='#my-section']");
     expect(anchor).toBeTruthy();
     expect(anchor.textContent).toBe("see this section");
+  });
+
+  it("processes backticks in [[[#id|`code`]]] alias text", async () => {
+    const body = `
+      <section id="my-section">
+        <h2>My Section Heading</h2>
+      </section>
+      <section>
+        <h2>References</h2>
+        <p id="output">[[[#my-section|the \`display\` property]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const anchor = doc.querySelector("#output a[href='#my-section']");
+    expect(anchor).toBeTruthy();
+    expect(anchor.querySelector("code").textContent).toBe("display");
+    expect(anchor.textContent).toBe("the display property");
+  });
+
+  it("processes backticks amid surrounding, multi-line text in [[[#id|…]]]", async () => {
+    const body = `
+      <section id="my-section">
+        <h2>My Section Heading</h2>
+      </section>
+      <section>
+        <h2>References</h2>
+        <p id="output">[[[#my-section|foo
+          \`code\` bar
+        ]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const anchor = doc.querySelector("#output a[href='#my-section']");
+    expect(anchor).toBeTruthy();
+    const codes = anchor.querySelectorAll("code");
+    expect(codes).toHaveSize(1);
+    expect(codes[0].textContent).toBe("code");
+    expect(anchor.textContent).toContain("foo");
+    expect(anchor.textContent).toContain("bar");
+  });
+
+  it("processes backticks in [[[SPEC#id|`code`]]] alias text", async () => {
+    const config = {
+      xref: { headingApiUrl: `${location.origin}/tests/data/headings.json` },
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch#data-fetch|the \`fetch\` method]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/#data-fetch");
+    expect(anchor.querySelector("code").textContent).toBe("fetch");
+    expect(anchor.textContent).toBe("the fetch method");
+  });
+
+  it("processes backticks in [[[SPEC|`code`]]] alias text", async () => {
+    const config = {
+      localBiblio: {
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+        <p id="output">[[[fetch|the \`fetch\` spec]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const anchor = doc.querySelector("#output a[href]");
+    expect(anchor).toBeTruthy();
+    expect(anchor.href).toBe("https://fetch.spec.whatwg.org/");
+    expect(anchor.querySelector("code").textContent).toBe("fetch");
+    expect(anchor.textContent).toBe("the fetch spec");
   });
 
   it("allows [[[#...]]] to be a general expander for ids in document", async () => {
