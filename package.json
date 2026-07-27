@@ -139,7 +139,12 @@
       "jasmine>minimatch": "^9.0.7",
       "@rollup/pluginutils>picomatch": "^2.3.2",
       "@rollup/plugin-commonjs>picomatch": "^4.0.4",
-      "anymatch>picomatch": "^2.3.2"
+      "anymatch>picomatch": "^2.3.2",
+      "ws@>=8.0.0 <8.21.0": ">=8.21.0",
+      "tmp@<0.2.6": ">=0.2.6",
+      "qs@>=6.11.1 <=6.15.1": ">=6.15.2",
+      "js-yaml@>=4.0.0 <=4.1.1": ">=4.2.0",
+      "cookie@<0.7.0": ">=0.7.0"
     }
   },
   "funding": {
