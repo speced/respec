@@ -1,5 +1,6 @@
 "use strict";
 const iframes = [];
+const POLL_INTERVAL_MS = 100;
 
 /**
  * @return {Promise<Document>}
@@ -8,32 +9,67 @@ export function makeRSDoc(opts, src, style = "") {
   opts = { profile: "w3c", ...opts };
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
-    // reject when DEFAULT_TIMEOUT_INTERVAL passes
-    const timeoutId = setTimeout(() => {
-      reject(new Error(`Timed out waiting on ${src}`));
-    }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
+    let settled = false;
+
+    // Settle exactly once: cancel all pending timers/listeners, then call fn.
+    function settle(fn) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      clearInterval(pollId);
+      window.removeEventListener("message", msgHandler);
+      fn();
+    }
+
+    // Reject when DEFAULT_TIMEOUT_INTERVAL passes.
+    const timeoutId = setTimeout(
+      () => settle(() => reject(new Error(`Timed out waiting on ${src}`))),
+      jasmine.DEFAULT_TIMEOUT_INTERVAL
+    );
+
+    // Polling fallback for Safari: srcdoc iframes are opaque-origin so
+    // postMessage may not deliver a usable ev.source. Poll doc.respec.ready
+    // directly so tests complete without relying solely on postMessage.
+    const pollId = setInterval(() => {
+      try {
+        const currentDoc = ifr.contentDocument;
+        if (!currentDoc || !currentDoc.respec) return;
+        settle(() => {
+          currentDoc.respec.ready.then(() => resolve(currentDoc), reject);
+        });
+      } catch {
+        // Cross-origin access denied; rely on postMessage path.
+      }
+    }, POLL_INTERVAL_MS);
+
+    function msgHandler(ev) {
+      const data = ev.data;
+      if (!data || typeof data !== "object" || data.topic !== "end-all") {
+        return;
+      }
+      // For same-origin iframes, verify the source matches our iframe.
+      // For opaque-origin srcdoc iframes (Safari), ev.source.document throws
+      // SecurityError, so we fall through and trust the sequential test runner.
+      try {
+        if (ev.source && ev.source.document !== ifr.contentDocument) return;
+      } catch {
+        // SecurityError in Safari for opaque-origin srcdoc iframes: proceed.
+      }
+      settle(() => resolve(ifr.contentDocument));
+    }
+
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
       if (src) {
         decorateDocument(doc, opts);
       }
       if (doc.respec) {
-        await doc.respec.ready;
-        resolve(doc);
+        settle(() => {
+          doc.respec.ready.then(() => resolve(doc), reject);
+        });
+        return;
       }
-      window.addEventListener("message", function msgHandler(ev) {
-        if (
-          !doc ||
-          !ev.source ||
-          doc !== ev.source.document ||
-          ev.data.topic !== "end-all"
-        ) {
-          return;
-        }
-        window.removeEventListener("message", msgHandler);
-        resolve(doc);
-        clearTimeout(timeoutId);
-      });
+      window.addEventListener("message", msgHandler);
     });
     ifr.style.display = "none";
     if (style) {

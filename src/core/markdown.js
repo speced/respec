@@ -64,16 +64,17 @@ class Renderer extends marked.Renderer {
   }
 
   /**
-   * @param {string} infoString
+   * @param {string | undefined} infoString
    */
   static parseInfoString(infoString) {
-    const firstSpace = infoString.search(/\s/);
+    const str = infoString || "";
+    const firstSpace = str.search(/\s/);
     if (firstSpace === -1) {
-      return { language: infoString };
+      return { language: str };
     }
 
-    const language = infoString.slice(0, firstSpace);
-    const metaDataStr = infoString.slice(firstSpace + 1);
+    const language = str.slice(0, firstSpace);
+    const metaDataStr = str.slice(firstSpace + 1);
     let metaData;
     if (metaDataStr) {
       try {

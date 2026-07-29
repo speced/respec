@@ -90,13 +90,13 @@ describe("Core — data-tests attribute", () => {
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(1)");
       const [fileElement, secureIconElement] = li.children;
 
-      const fileName = fileElement.innerText.trim();
+      const fileName = fileElement.textContent.trim();
       expect(fileName).toBe("this-is-secure");
 
       const link = fileElement.href;
       expect(link).toBe("https://wpt.fyi/respec/this-is-secure.https.html");
 
-      const emoji = secureIconElement.innerText;
+      const emoji = secureIconElement.textContent;
       expect(emoji).toBe("🔒");
 
       const spanAriaLabel = secureIconElement.getAttribute("aria-label");
@@ -109,13 +109,13 @@ describe("Core — data-tests attribute", () => {
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(2)");
       const [fileElement, manualIconElement] = li.children;
 
-      const fileName = fileElement.innerText.trim();
+      const fileName = fileElement.textContent.trim();
       expect(fileName).toBe("this-is");
 
       const link = fileElement.href;
       expect(link).toBe("https://wpt.fyi/respec/this-is-manual.html");
 
-      const emoji = manualIconElement.innerText;
+      const emoji = manualIconElement.textContent;
       expect(emoji).toBe("💪");
 
       const spanAriaLabel = manualIconElement.getAttribute("aria-label");
@@ -128,7 +128,7 @@ describe("Core — data-tests attribute", () => {
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(3)");
       const [fileElement, secureIconElement, manualIconElement] = li.children;
 
-      const fileName = fileElement.innerText.trim();
+      const fileName = fileElement.textContent.trim();
       expect(fileName).toBe("this-is-secure-and");
 
       const link = fileElement.href;
@@ -136,7 +136,7 @@ describe("Core — data-tests attribute", () => {
         "https://wpt.fyi/respec/this-is-secure-and-manual.https.html"
       );
 
-      const emojiSecure = secureIconElement.innerText;
+      const emojiSecure = secureIconElement.textContent;
       expect(emojiSecure).toBe("🔒");
 
       const spanAriaLabel1 = secureIconElement.getAttribute("aria-label");
@@ -145,7 +145,7 @@ describe("Core — data-tests attribute", () => {
       const spanTitle1 = secureIconElement.getAttribute("title");
       expect(spanTitle1).toBe("Test requires HTTPS");
 
-      const spanEmoji2 = manualIconElement.innerText;
+      const spanEmoji2 = manualIconElement.textContent;
       expect(spanEmoji2).toBe("💪");
 
       const spanAriaLabel2 = manualIconElement.getAttribute("aria-label");
