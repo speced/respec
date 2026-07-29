@@ -122,7 +122,7 @@
       "vnu-jar"
     ],
     "overrides": {
-      "fast-uri": ">=3.1.2",
+      "fast-uri": "^3.1.4",
       "flatted": ">=3.4.2",
       "follow-redirects": ">=1.16.0",
       "jasmine>glob": ">=10.5.0",
@@ -131,20 +131,19 @@
       "socket.io-parser": ">=4.2.6",
       "tmp": ">=0.2.4",
       "ws": ">=8.17.1",
-      "eslint-plugin-import>minimatch": "^3.1.4",
-      "eslint>minimatch": "^3.1.4",
-      "eslint>brace-expansion": "^1.1.13",
-      "minimatch>brace-expansion": "^1.1.13",
-      "karma>minimatch": "^3.1.4",
-      "jasmine>minimatch": "^9.0.7",
       "@rollup/pluginutils>picomatch": "^2.3.2",
       "@rollup/plugin-commonjs>picomatch": "^4.0.4",
       "anymatch>picomatch": "^2.3.2",
       "ws@>=8.0.0 <8.21.0": ">=8.21.0",
       "tmp@<0.2.6": ">=0.2.6",
       "qs@>=6.11.1 <=6.15.1": ">=6.15.2",
-      "js-yaml@>=4.0.0 <=4.1.1": ">=4.2.0",
-      "cookie@<0.7.0": ">=0.7.0"
+      "cookie@<0.7.0": ">=0.7.0",
+      "js-yaml": "^4.2.0",
+      "engine.io": "^6.6.7",
+      "body-parser": "^1.20.6",
+      "brace-expansion@<1.1.16": "^1.1.16",
+      "brace-expansion@>=2.0.0 <2.1.2": "^2.1.2",
+      "brace-expansion@>=5.0.0 <5.0.8": "^5.0.8"
     }
   },
   "funding": {
