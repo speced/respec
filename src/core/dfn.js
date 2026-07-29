@@ -32,12 +32,18 @@ const knownTypesMap = new Map([
       validator: validateCommonName,
     },
   ],
-  ["element", { requiresFor: false, validator: validateDOMName }],
+  [
+    "element",
+    {
+      requiresFor: false,
+      validator: /** @type {DefinitionValidator} */ (validateDOMName),
+    },
+  ],
   [
     "element-attr",
     {
       requiresFor: false,
-      validator: validateDOMName,
+      validator: /** @type {DefinitionValidator} */ (validateDOMName),
     },
   ],
   [
