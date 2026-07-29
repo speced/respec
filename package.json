@@ -32,7 +32,6 @@
     "boxen": "^8.0.1",
     "cddlparser": "^0.6.0",
     "chokidar": "^5.0.0",
-    "clean-css": "^5.3.3",
     "epipebomb": "^1.0.0",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.1.8",

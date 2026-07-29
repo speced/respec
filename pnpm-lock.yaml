@@ -75,9 +75,6 @@ importers:
       chokidar:
         specifier: ^5.0.0
         version: 5.0.0
-      clean-css:
-        specifier: ^5.3.3
-        version: 5.3.3
       epipebomb:
         specifier: ^1.0.0
         version: 1.0.0
@@ -773,10 +770,6 @@ packages:
   clean-css@4.2.4:
     resolution: {integrity: sha512-EJUDT7nDVFDvaQgAo2G/PJvxmp1o/c6iXLbswsBbUFXi1Nr+AjA2cKmfbKDMjMvzEe75g3P6JkaDDAKk96A85A==}
     engines: {node: '>= 4.0'}
-
-  clean-css@5.3.3:
-    resolution: {integrity: sha512-D5J+kHaVb/wKSFcyyV75uCn8fiY4sV38XJoe4CUyGQ+mOU/fMVYUdH1hJC+CJQ5uY3EnW27SbJYS4X8BiLrAFg==}
-    engines: {node: '>= 10.0'}
 
   cli-boxes@3.0.0:
     resolution: {integrity: sha512-/lzGpEWL/8PfI0BmBOPRwp0c/wFNX1RdUML3jK/RcSBA9T8mZDdQpqYBKtCFTOfQbwPqWEOpjqW+Fnayc0969g==}
@@ -3072,10 +3065,6 @@ snapshots:
       zod: 3.25.76
 
   clean-css@4.2.4:
-    dependencies:
-      source-map: 0.6.1
-
-  clean-css@5.3.3:
     dependencies:
       source-map: 0.6.1
 
