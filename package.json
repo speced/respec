@@ -24,7 +24,7 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.8.0",
+    "@eslint/js": "^9.39.5",
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.0",
