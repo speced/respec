@@ -121,9 +121,7 @@ const localizationStrings = {
      */
     multiple_alternates(plural) {
       return `Dit document is ook beschikbaar in ${
-        plural
-          ? "dit niet-normatieve formaat"
-          : "deze niet-normatieve formaten"
+        plural ? "dit niet-normatieve formaat" : "deze niet-normatieve formaten"
       }:`;
     },
     publication_history: "Publicatiegeschiedenis",
