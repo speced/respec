@@ -227,12 +227,12 @@ async function generateHTML(page, timer, version, url) {
   try {
     return await page.evaluate(evaluateHTML, timer);
   } catch (err) {
-    const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${`${
+    const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${
       `Specification: ${url}\n` +
       `ReSpec version: ${version.join(".")}\n` +
       "File a bug: https://github.com/speced/respec/\n"
-    }${err ? `Error: ${err.stack}\n` : ""}`}`;
-    throw new Error(msg);
+    }`;
+    throw new Error(msg, { cause: err });
   }
 }
 

@@ -297,7 +297,7 @@ async function getBranchState() {
   const local = await git(["rev-parse", "@"]);
   const remote = await git(["rev-parse", "@{u}"]);
   const base = await git(["merge-base", "@", "@{u}"]);
-  let result = "";
+  let result;
   switch (local) {
     case remote:
       result = "up-to-date";

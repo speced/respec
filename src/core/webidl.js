@@ -51,7 +51,6 @@ const templates = {
     }
     let type = "_IDL_";
     let cite = null;
-    let lt;
     switch (unescaped) {
       case "object":
         type = "interface";
@@ -62,7 +61,6 @@ const templates = {
       data-link-type="${type === "_IDL_" ? "idl" : type}"
       data-xref-type="${type}"
       data-cite="${cite}"
-      data-lt="${lt}"
       >${wrapped}</a
     >`;
   },
