@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  fast-uri: '>=3.1.2'
+  fast-uri: ^3.1.4
   flatted: '>=3.4.2'
   follow-redirects: '>=1.16.0'
   jasmine>glob: '>=10.5.0'
@@ -22,6 +22,8 @@ overrides:
   qs@>=6.11.1 <=6.15.1: '>=6.15.2'
   js-yaml@>=4.0.0 <=4.1.1: '>=4.2.0'
   cookie@<0.7.0: '>=0.7.0'
+  engine.io: ^6.6.7
+  body-parser: ^1.20.6
   brace-expansion@<1.1.16: ^1.1.16
   brace-expansion@>=2.0.0 <2.1.2: ^2.1.2
   brace-expansion@>=5.0.0 <5.0.8: ^5.0.8
