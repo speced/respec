@@ -30,6 +30,7 @@ const modules = [
   import("../src/core/tables.js"),
   import("../src/core/webidl.js"),
   import("../src/core/cddl.js"),
+  import("../src/core/grammar-boxes.js"),
   import("../src/core/biblio.js"),
   import("../src/core/link-to-dfn.js"),
   import("../src/core/xref.js"),
