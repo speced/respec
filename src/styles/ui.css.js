@@ -9,7 +9,7 @@ export default css`
   padding: 0.2em;
   font-weight: bold;
   cursor: pointer;
-  margin-left: 5px;
+  margin-inline-start: 5px;
   border: none;
   background: transparent;
 }
@@ -19,9 +19,9 @@ export default css`
   display: flex;
   flex-direction: row-reverse;
   top: 20px;
-  right: 20px;
+  inset-inline-end: 20px;
   width: 202px;
-  text-align: right;
+  text-align: end;
   z-index: 9000;
 }
 
@@ -43,7 +43,7 @@ export default css`
   border: none;
   opacity: 0.75;
   border-radius: 2em;
-  margin-right: 1em;
+  margin-inline-end: 1em;
   min-width: 3.5em;
   will-change: opacity;
 }
@@ -149,7 +149,7 @@ export default css`
   box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
   width: 200px;
   display: none;
-  text-align: left;
+  text-align: start;
   margin-top: 32px;
   font-size: 0.8em;
 }
@@ -231,8 +231,8 @@ export default css`
   list-style-type: none;
   margin: 0;
   padding: .5em 0;
-  padding-left: 2em;
-  padding-right: .5em;
+  padding-inline-start: 2em;
+  padding-inline-end: .5em;
 }
 
 :is(.respec-warning-list,.respec-error-list) > li + li {
@@ -241,7 +241,7 @@ export default css`
 
 :is(.respec-warning-list,.respec-error-list) > li:before {
   position: absolute;
-  left: .4em;
+  inset-inline-start: .4em;
 }
 
 :is(.respec-warning-list,.respec-error-list) p {
@@ -311,7 +311,7 @@ export default css`
   max-height: 80%;
   overflow-y: auto;
   margin: 0 -0.5cm;
-  left: 20%;
+  inset-inline-start: 20%;
   max-width: 75%;
   min-width: 60%;
 }
@@ -320,7 +320,7 @@ export default css`
 .respec-modal h3 {
   margin: 0;
   padding: 0.2em;
-  left: 0 !important;
+  inset-inline-start: 0 !important;
   text-align: center;
   background: var(--tocsidebar-shadow, #ddd);
   color: var(--text, black);
@@ -332,7 +332,7 @@ export default css`
   color: var(--text, black);
   border: none;
   width: 100%;
-  text-align: left;
+  text-align: start;
   font-size: inherit;
   padding: 1.2em 1.2em;
 }
@@ -343,7 +343,7 @@ export default css`
 }
 
 .respec-cmd-icon {
-  padding-right: 0.5em;
+  padding-inline-end: 0.5em;
 }
 
 #respec-ui button.respec-option:first-child {
@@ -368,7 +368,7 @@ export default css`
   user-select: none;
   -webkit-appearance: none;
   top: 0;
-  left: 127px;
+  inset-inline-start: 127px;
 }
 
 @media print {
@@ -404,7 +404,7 @@ p:is(.respec-hint,.respec-occurrences) {
 }
 
 .respec-plugin {
-  text-align: right;
+  text-align: end;
   color: rgb(120, 120, 120, .5);
   font-size: 0.6em;
 }
