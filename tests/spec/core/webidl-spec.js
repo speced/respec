@@ -1048,6 +1048,63 @@ enum EnumBasic {
       );
       expect(doc.getElementById("idl-def-enumbasic")).toBeTruthy();
     });
+
+    it("links quoted enum value definitions to IDL", async () => {
+      // Authors sometimes write <dfn>"value"</dfn> with surrounding quotes to
+      // mirror WebIDL syntax. ReSpec must still match these dfns to the IDL
+      // enum member (which webidl2 reports without quotes).
+      const body = `
+        <pre class="idl">
+          enum QuotedEnum {
+            "alpha",
+            "beta with spaces"
+          };
+        </pre>
+        <p>
+          <dfn data-dfn-for="QuotedEnum" data-dfn-type="enum-value">"alpha"</dfn>
+          <dfn data-dfn-for="QuotedEnum" data-dfn-type="enum-value">"beta with spaces"</dfn>
+        </p>
+        <p id="link-test" data-link-for="QuotedEnum">
+          <a>alpha</a> — <a>beta with spaces</a>
+        </p>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+
+      // The IDL should link to the user-provided dfns (no extra auto-generated dfns).
+      const alphaDfn = doc.getElementById("dom-quotedenum-alpha");
+      expect(alphaDfn).withContext("dfn for alpha must exist").toBeTruthy();
+      expect(alphaDfn.dataset.dfnType)
+        .withContext("dfn type must be enum-value")
+        .toBe("enum-value");
+
+      const betaDfn = doc.getElementById("dom-quotedenum-beta-with-spaces");
+      expect(betaDfn)
+        .withContext("dfn for beta with spaces must exist")
+        .toBeTruthy();
+
+      // The IDL block must link to the user-provided dfns.
+      const idlBlock = doc.querySelector("pre.idl code");
+      expect(idlBlock.querySelector("a[href='#dom-quotedenum-alpha']"))
+        .withContext("IDL block links alpha to user dfn")
+        .toBeTruthy();
+      expect(
+        idlBlock.querySelector("a[href='#dom-quotedenum-beta-with-spaces']")
+      )
+        .withContext("IDL block links beta-with-spaces to user dfn")
+        .toBeTruthy();
+
+      // Inline links should resolve too.
+      const linkTest = doc.getElementById("link-test");
+      expect(linkTest.querySelector("a[href='#dom-quotedenum-alpha']"))
+        .withContext("inline link to alpha resolves")
+        .toBeTruthy();
+      expect(
+        linkTest.querySelector("a[href='#dom-quotedenum-beta-with-spaces']")
+      )
+        .withContext("inline link to beta with spaces resolves")
+        .toBeTruthy();
+    });
   });
 
   it("should handle enumeration value definitions", () => {
