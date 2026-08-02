@@ -29,6 +29,31 @@ export async function run() {
     el.tabIndex = 0;
     el.setAttribute("aria-haspopup", "dialog");
   }
+
+  /** @type {NodeListOf<HTMLAnchorElement>} */
+  const bibrefLinks = document.querySelectorAll("a.bibref[href^='#bib-']");
+  /** @type {Set<string>} */
+  const seenBibIds = new Set();
+  /** @type {Set<string>} bibIds that have an actual panel */
+  const panelBibIds = new Set();
+  bibrefLinks.forEach(link => {
+    const bibId = link.getAttribute("href")?.slice(1);
+    if (!bibId) return;
+    // Multiple links can share the same bibId (aliases); create the panel once.
+    if (!seenBibIds.has(bibId)) {
+      seenBibIds.add(bibId);
+      const panel = createBiblioPanel(link);
+      if (panel) {
+        panels.append(panel);
+        panelBibIds.add(bibId);
+      }
+    }
+    // Only mark links as dialog triggers when a panel was actually created.
+    if (panelBibIds.has(bibId)) {
+      link.setAttribute("aria-haspopup", "dialog");
+    }
+  });
+
   const firstScript = document.body.querySelector("script");
   if (firstScript) {
     firstScript.before(panels);
@@ -74,6 +99,51 @@ function createPanel(dfn) {
       </div>
       <p><b>Referenced in:</b></p>
       ${referencesToHTML(id, links)}
+    </div>
+  `;
+  return panel;
+}
+
+/**
+ * Creates a popup panel for a bibliography reference link.
+ * The panel clones the rendered `<dd>` from the references section.
+ *
+ * @param {HTMLAnchorElement} link
+ * @returns {HTMLElement | null}
+ */
+function createBiblioPanel(link) {
+  const bibId = link.getAttribute("href")?.slice(1); // e.g. "bib-html"
+  if (!bibId) return null;
+  const dt = document.getElementById(bibId);
+  if (!dt) return null;
+  const dd = dt.nextElementSibling;
+  if (!dd || dd.tagName !== "DD") return null;
+  // Don't create a panel for references that couldn't be resolved.
+  if (dd.querySelector(".respec-offending-element")) return null;
+
+  const panelId = `biblio-panel-for-${bibId}`;
+  const refKey = dt.textContent?.trim() ?? "";
+
+  /** @type {HTMLElement} */
+  const panel = html`
+    <div
+      class="dfn-panel"
+      id="${panelId}"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-label="Citation details for ${refKey}"
+    >
+      <span class="caret"></span>
+      <div>
+        <a
+          class="self-link"
+          href="#${bibId}"
+          aria-label="Go to reference ${refKey}. Activate to close this dialog."
+          >Reference</a
+        >
+      </div>
+      <p class="biblio-ref">${{ html: dd.innerHTML }}</p>
     </div>
   `;
   return panel;

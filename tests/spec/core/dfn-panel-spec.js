@@ -285,3 +285,155 @@ describe("Core — dfnPanel", () => {
     expect(references[0].hash).toBe("#ref-for-dfn-one-1");
   });
 });
+
+describe("Core — biblioPanel", () => {
+  afterAll(flushIframes);
+
+  const localBiblio = {
+    TestRef: {
+      title: "Test Reference Title",
+      href: "https://example.com/test",
+      authors: ["Author One", "Author Two"],
+      publisher: "Test Publisher",
+      date: "2024",
+    },
+    AliasRef: {
+      aliasOf: "TestRef",
+    },
+  };
+  const body = `
+    <section id="conformance">
+      <p id="p-testref">[[TestRef]]</p>
+      <p id="p-aliasref">[[AliasRef]]</p>
+    </section>
+  `;
+  const ops = makeStandardOps({ localBiblio }, body);
+
+  describe("panel creation", () => {
+    it("creates a biblio panel for each unique bibref href", async () => {
+      const doc = await makeRSDoc(ops);
+      // [[TestRef]] and [[AliasRef]] both resolve to #bib-testref after
+      // alias normalisation, so there should be exactly one panel.
+      const panels = doc.querySelectorAll(
+        '[id^="biblio-panel-for-bib-testref"]'
+      );
+      expect(panels).toHaveSize(1);
+    });
+
+    it("has correct ARIA attributes", async () => {
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById("biblio-panel-for-bib-testref");
+      expect(panel).toBeTruthy();
+      expect(panel.getAttribute("role")).toBe("dialog");
+      expect(panel.getAttribute("aria-modal")).toBe("true");
+      expect(panel.getAttribute("aria-label")).toBe(
+        "Citation details for [TestRef]"
+      );
+    });
+
+    it("marks bibref links with aria-haspopup", async () => {
+      const doc = await makeRSDoc(ops);
+      const bibrefLinks = doc.querySelectorAll(
+        "#p-testref a.bibref, #p-aliasref a.bibref"
+      );
+      bibrefLinks.forEach(link => {
+        expect(link.getAttribute("aria-haspopup"))
+          .withContext(`${link.textContent} should have aria-haspopup`)
+          .toBe("dialog");
+      });
+    });
+
+    it("panel is hidden by default", async () => {
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById("biblio-panel-for-bib-testref");
+      expect(panel.hidden).toBeTrue();
+    });
+
+    it("has a self-link pointing to the references entry", async () => {
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById("biblio-panel-for-bib-testref");
+      const selfLink = panel.querySelector("a.self-link");
+      expect(selfLink).toBeTruthy();
+      expect(selfLink.hash).toBe("#bib-testref");
+      expect(selfLink.textContent.trim()).toBe("Reference");
+    });
+
+    it("contains citation content from the references section", async () => {
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById("biblio-panel-for-bib-testref");
+      const biblioRef = panel.querySelector(".biblio-ref");
+      expect(biblioRef).toBeTruthy();
+      expect(biblioRef.textContent).toContain("Test Reference Title");
+      expect(biblioRef.textContent).toContain("Author One");
+      expect(biblioRef.textContent).toContain("Test Publisher");
+      expect(biblioRef.textContent).toContain("2024");
+    });
+  });
+
+  describe("panel interaction", () => {
+    it("opens on bibref click", async () => {
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById("biblio-panel-for-bib-testref");
+      expect(panel.hidden).toBeTrue();
+      const bibLink = doc.querySelector("#p-testref a.bibref");
+      bibLink.click();
+      expect(panel.hidden).toBeFalse();
+    });
+
+    it("closes on external click", async () => {
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById("biblio-panel-for-bib-testref");
+      doc.querySelector("#p-testref a.bibref").click();
+      expect(panel.hidden).toBeFalse();
+      doc.body.click();
+      expect(panel.hidden).toBeTrue();
+    });
+
+    it("closes on self-link click", async () => {
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById("biblio-panel-for-bib-testref");
+      doc.querySelector("#p-testref a.bibref").click();
+      expect(panel.hidden).toBeFalse();
+      panel.querySelector("a.self-link").click();
+      expect(panel.hidden).toBeTrue();
+    });
+
+    it("does not close when clicking inside the panel", async () => {
+      const doc = await makeRSDoc(ops);
+      const panel = doc.getElementById("biblio-panel-for-bib-testref");
+      doc.querySelector("#p-testref a.bibref").click();
+      expect(panel.hidden).toBeFalse();
+      panel.click();
+      expect(panel.hidden).toBeFalse();
+    });
+  });
+
+  it("does not create a panel for a bibref with no rendered entry", async () => {
+    const body = `<p id="bad">[[bad-ref-no-entry]]</p>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.querySelector('[id^="biblio-panel-for-"]');
+    expect(panel).toBeNull();
+    const link = doc.querySelector("#bad a.bibref");
+    expect(link.hasAttribute("aria-haspopup")).toBeFalse();
+  });
+
+  it("works in an exported document", async () => {
+    const rdoc = await makeRSDoc(ops);
+    const doc = await getExportedDoc(rdoc);
+
+    const panel = doc.getElementById("biblio-panel-for-bib-testref");
+    expect(panel).toBeTruthy();
+    expect(panel.hidden).toBeTrue();
+
+    const bibLink = doc.querySelector("#p-testref a.bibref");
+    bibLink.click();
+    expect(panel.hidden).toBeFalse();
+
+    const selfLink = panel.querySelector("a.self-link");
+    expect(selfLink.hash).toBe("#bib-testref");
+
+    const biblioRef = panel.querySelector(".biblio-ref");
+    expect(biblioRef.textContent).toContain("Test Reference Title");
+  });
+});
