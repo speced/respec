@@ -14,16 +14,41 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      # Matches the CI workflows, where it was added for PR #3306.
+      LC_ALL: en_US.UTF-8
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v5
       - uses: actions/setup-node@v6
         with: { node-version-file: ".nvmrc", cache: pnpm }
+
+      # Deliberately NOT setting PUPPETEER_SKIP_DOWNLOAD here, though the CI
+      # workflows do. CI can skip it because it sets PUPPETEER_EXECUTABLE_PATH to
+      # the runner's Chrome for the same job. An agent runs its commands after
+      # this job ends, so a job-scoped variable would not reach it: skipping the
+      # download would leave it with neither a bundled browser nor a path to one,
+      # and tools/respecDocWriter.js launches puppeteer directly. Paying for the
+      # download once here makes the environment self-sufficient.
       - run: pnpm i --frozen-lockfile
+
       # karma loads the bundles from builds/, not src/, and each profile has its
-      # own. Building all four here means the agent can run the suite without
-      # first working out why a src/ change had no effect on the tests.
+      # own. Building all four means the agent can run any suite without first
+      # working out why a src/ change had no effect on the tests.
       - run: pnpm build:w3c
       - run: pnpm build:geonovum
       - run: pnpm build:aom
       - run: pnpm build:dini
+
+      # Fails the setup loudly if puppeteer has no usable browser, rather than
+      # leaving the agent to discover it mid-task. tools/respecDocWriter.js calls
+      # puppeteer.launch(), so this path has to resolve AND exist. Note the
+      # browser lands in ~/.cache/puppeteer, not node_modules.
+      - name: Check puppeteer has a browser
+        run: |
+          node -e "
+          const fs = require('fs');
+          Promise.resolve(require('puppeteer').executablePath())
+            .then(p => { fs.accessSync(p); console.log('browser ok:', p); })
+            .catch(e => { console.error('no usable browser:', e.message); process.exit(1); })
+          "

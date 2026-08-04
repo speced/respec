@@ -10,18 +10,18 @@ Contributions written with AI are welcome and have a policy: see
 
 ## Build and test
 
+This is the whole sequence. The build is part of it, not an optional extra:
+
 ```bash
 pnpm i --frozen-lockfile
 pnpm lint                 # tsc -p src/jsconfig.json && eslint .
+pnpm build:w3c && pnpm build:geonovum && pnpm build:aom && pnpm build:dini
 pnpm test                 # unit then integration, both via karma
 ```
 
 Karma reads the bundles in `builds/`, not `src/`. A source change has no effect on
-the tests until the bundle is rebuilt, so build before running the suite:
-
-```bash
-pnpm build:w3c && pnpm build:geonovum && pnpm build:aom && pnpm build:dini
-```
+the tests until the bundle is rebuilt, which is why the build sits above the test
+line rather than being mentioned afterwards.
 
 There is one bundle per profile. Building only `w3c` leaves the Geonovum, DiNI and
 AOM suites testing the previous code, which looks like a passing or failing test
@@ -31,9 +31,10 @@ alters a test result, suspect a stale bundle before suspecting the test.
 Never commit anything under `builds/`. CI rebuilds it, and a PR touching it fails
 a dedicated check.
 
-To run one suite, pass the describe block:
+To run one suite, rebuild first, then pass the describe block:
 
 ```bash
+pnpm build:w3c
 npx karma start tests/spec/karma.conf.cjs --single-run --browsers ChromeHeadless --grep="Core - Inlines"
 ```
 
