@@ -10,14 +10,21 @@ Contributions written with AI are welcome and have a policy: see
 
 ## Build and test
 
-This is the whole sequence. The build is part of it, not an optional extra:
+This is the whole sequence. The build is part of it, and so is `BROWSERS`:
 
 ```bash
 pnpm i --frozen-lockfile
 pnpm lint                 # tsc -p src/jsconfig.json && eslint .
 pnpm build:w3c && pnpm build:geonovum && pnpm build:aom && pnpm build:dini
-pnpm test                 # unit then integration, both via karma
+BROWSERS=ChromeHeadless pnpm test        # unit then integration, via karma
+pnpm test:build                          # the builder tool
+pnpm test:headless                       # renders examples through puppeteer
 ```
+
+**Always set `BROWSERS`, or pass `--browsers`.** No karma config sets a default, so
+`pnpm test` on its own launches nothing, waits for a browser to connect by hand, and
+hangs until something kills it. Nothing in the output says so; it simply stops after
+printing `START:`.
 
 Karma reads the bundles in `builds/`, not `src/`. A source change has no effect on
 the tests until the bundle is rebuilt, which is why the build sits above the test
@@ -31,11 +38,13 @@ alters a test result, suspect a stale bundle before suspecting the test.
 Never commit anything under `builds/`. CI rebuilds it, and a PR touching it fails
 a dedicated check.
 
-To run one suite, rebuild first, then pass the describe block:
+To run a single suite, rebuild first, then pass the describe block. Integration and
+unit suites use different configs:
 
 ```bash
 pnpm build:w3c
 npx karma start tests/spec/karma.conf.cjs --single-run --browsers ChromeHeadless --grep="Core - Inlines"
+npx karma start tests/unit/karma.conf.cjs --single-run --browsers ChromeHeadless
 ```
 
 `--grep` is a literal string match. Alternation does not work, and only the last
@@ -49,8 +58,10 @@ Prefer functional style over imperative loops: `forEach`, `map`, `filter`, `find
 `nodeList.forEach()` over `[...nodeList].forEach()` and avoid the extra array.
 
 Every `querySelector`, `closest`, `getElementById` and `getAttribute` result is
-possibly null; check before use. Do not paper over it with `?? ""` on a DOM query,
-which creates an empty text node instead of failing.
+possibly null; check before use. Do not paper over it with `?? ""`, because the
+empty string then flows on into an `html` template and renders as an empty text
+node, so the bug shows up later as missing output rather than as a null failing
+where it happened.
 
 Write en-US English everywhere, including comments and identifiers: behavior,
 color, license, center, analyze, initialize, serialize. Leave existing en-GB
@@ -88,7 +99,9 @@ its own PR even when it is one line and obviously correct.
 
 ## Adding a module
 
-A new module under `src/core/` exports `name` and an async `run(conf)`, and must be
+A new module under `src/core/` exports `name` and a `run(conf)`. `run` may be
+synchronous or async, whichever the work needs: most core modules are synchronous,
+and only the ones that fetch or await something are not. The module must be
 registered in every profile that needs it: `profiles/w3c.js`, `profiles/geonovum.js`,
 `profiles/aom.js`, `profiles/dini.js`. Tests go in `tests/spec/core/`. If the module
 uses `getIntlData`, add a Czech (`cs`) entry.
