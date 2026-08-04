@@ -29,13 +29,29 @@ invented APIs are the two failure modes we see most.
 
 ### Disclose it
 
-If AI generated logic in your contribution, label the PR `AI` and say so in the
+If AI generated logic in your contribution, say so in the pull request
 description. Generated logic means an agent, a function, an algorithm, a test, a
 feature: something you would otherwise have had to work out.
 
+You do not need to apply a label. Labeling requires triage access on this
+repository, which most contributors do not have, so a maintainer adds the `AI`
+label based on what your description says. One line is enough.
+
 Editor autocomplete, a rename refactor, or a model helping you word a comment do
-not need the label. The label exists to tell a reviewer where to spend attention,
-not to tally tool use, and a label on everything tells them nothing.
+not need disclosing. The point is to tell a reviewer where to spend attention, not
+to tally tool use, and a disclosure on everything tells them nothing.
+
+### Do not paste private material into a model
+
+Whatever you send to a hosted model leaves this project, and may be retained or
+used for training. Do not paste into one: credentials or tokens, an embargoed or
+unpublished security report, a member-confidential or otherwise private W3C
+document, or third-party code or text you do not have the right to redistribute.
+
+This matters more here than in most projects, because the people writing specs
+with ReSpec routinely handle material that is under embargo or restricted to
+group members. If a bug can only be explained with such material, describe the
+shape of the problem instead, or ask a maintainer to reproduce it.
 
 ### One concern per pull request
 
@@ -52,8 +68,9 @@ shows up:
 **The pull request description** is plain prose. No `## Summary`, no `## Changes`,
 no `## Test plan`, no emoji, no bold section labels. If it closes an issue, that
 line goes first. Then say how the bug was fixed, then anything else a reviewer
-needs. Two or three sentences is usually enough for that part. Do not describe
-your test plan; CI runs the tests and the reviewer can read them.
+needs. Two or three sentences is usually enough for that part. A sentence saying
+what you ran locally is welcome; a formal test-plan section is not, since CI runs
+the tests and the reviewer can read them.
 
 **The commit message** is one imperative subject line, lowercase after any
 prefix, no trailing period. A body only when the diff genuinely cannot be
@@ -84,10 +101,12 @@ pull request, and that it is open.
 
 ### What does not count as a test
 
-This applies to every contribution, from anyone. A test that cannot fail proves
-nothing and costs review time. We reject:
+This applies to every contribution, from anyone, wherever a test is offered as
+evidence that a fix works. Not every change needs a regression test: a refactor, a
+docs change, or a dependency bump may need none. But a test that claims to pin a
+bug and cannot fail proves nothing and costs review time. We reject:
 
-- a test that passes on `main` without the fix
+- a test that passes on `main` without the fix, when it is offered as proof of one
 - a test asserting a literal the implementation just set, or restating the
   implementation's own shape
 - a test exercising a path the issue never mentioned, while the reported path
