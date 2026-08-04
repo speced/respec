@@ -52,8 +52,8 @@ shows up:
 **The pull request description** is plain prose. No `## Summary`, no `## Changes`,
 no `## Test plan`, no emoji, no bold section labels. If it closes an issue, that
 line goes first. Then say how the bug was fixed, then anything else a reviewer
-needs. Two or three sentences is usually the whole thing. Do not describe your
-test plan; CI runs the tests and the reviewer can read them.
+needs. Two or three sentences is usually enough for that part. Do not describe
+your test plan; CI runs the tests and the reviewer can read them.
 
 **The commit message** is one imperative subject line, lowercase after any
 prefix, no trailing period. A body only when the diff genuinely cannot be
@@ -62,17 +62,22 @@ understood without one, and then a sentence or two. No bullet lists, no
 trailers such as `Co-Authored-By` for a model.
 
 **Code comments** say why, not what. A comment restating the line below it is
-noise a reader has to skim past, and generated code produces a lot of it. Delete
-anything that would be obvious to someone reading the code. What earns a comment
-is a reason that is not visible: a workaround for a browser bug, an ordering
-constraint, why the obvious approach fails. The same test applies to an issue
-link: keep it when the issue records that reason, drop it when it does not. A bare
-`fixes #1234` in the source is the common failing case, since it tells a future
-reader nothing the history does not already hold.
+noise a reader has to skim past, and generated code produces a lot of it. The test
+is not whether a comment is obvious to us, which you have no way to judge: it is
+whether the comment would still be needed if the reader could see the code, and
+they can. What earns a comment is a reason that is not visible: a workaround for a
+browser bug, an ordering constraint, why the obvious approach fails. The same test
+applies to an issue link: keep it when the issue records that reason, drop it when
+it does not. A bare `fixes #1234` in the source is the common failing case, since
+it tells a future reader nothing the history does not already hold.
 
 ### Say exactly what the issue asked for
 
-Quote the issue's asks in the description and mark each one addressed or not.
+Say which of the issue's asks you addressed and which you did not. A short list is
+fine and does not count against keeping the prose brief; the point is that a
+reviewer can tell at a glance whether the issue is finished, not that you produce
+a formal document.
+
 Only write `Closes #N` when every ask is delivered. Otherwise write `Refs #N` and
 say what is left. Before citing a number, confirm it is an issue rather than a
 pull request, and that it is open.
