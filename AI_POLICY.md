@@ -27,7 +27,7 @@ invented APIs are the two failure modes we see most.
 
 ### Disclose it
 
-If AI generated logic in your contribution, say so in the pull request
+If AI generated any of the logic in your contribution, say so in the pull request
 description. Generated logic means an agent, a function, an algorithm, a test, a
 feature: something you would otherwise have had to work out.
 

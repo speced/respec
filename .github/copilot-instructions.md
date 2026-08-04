@@ -10,9 +10,11 @@ Contributions written with AI are welcome and have a policy: see
 
 ## Build and test
 
-This is the whole sequence. The build is part of it, and so is `BROWSERS`:
+This is the whole sequence. The build is part of it, and so are `BROWSERS` and
+`PUPPETEER_CACHE_DIR`:
 
 ```bash
+export PUPPETEER_CACHE_DIR="$PWD/.cache/puppeteer"
 pnpm i --frozen-lockfile
 pnpm lint                 # tsc -p src/jsconfig.json && eslint .
 pnpm build:w3c && pnpm build:geonovum && pnpm build:aom && pnpm build:dini
@@ -25,6 +27,11 @@ pnpm test:headless                       # renders examples through puppeteer
 `pnpm test` on its own launches nothing, waits for a browser to connect by hand, and
 hangs until something kills it. Nothing in the output says so; it simply stops after
 printing `START:`.
+
+**Set `PUPPETEER_CACHE_DIR` to `$PWD/.cache/puppeteer` for anything that launches a
+browser**, which includes `pnpm test:headless` via `tools/respecDocWriter.js`. The
+agent environment provisions the browser there rather than in the default home
+cache, so puppeteer will not find it unless pointed at the same place.
 
 Karma reads the bundles in `builds/`, not `src/`. A source change has no effect on
 the tests until the bundle is rebuilt, which is why the build sits above the test
