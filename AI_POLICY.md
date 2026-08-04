@@ -3,13 +3,13 @@
 ReSpec accepts contributions written with AI. This document says what we ask for
 in return.
 
-It has two audiences, because two very different things get called AI
-contribution. Everything under "Everyone" applies to any contributor, maintainers
-included. Everything under "Generated pipelines" applies where a maintainer runs
-models to produce contributions at volume, or an autonomous account opens PRs
-directly. Those requirements are stricter because in that setting we control the
-pipeline and can actually enforce the ordering, which nobody can verify from
-outside a PR.
+![A cheerful pixel-art robot smiling straight at the camera while a forest burns
+orange behind it. The caption reads "AI is welcome
+here."](assets/ai-is-welcome-here.png)
+
+Everything under "Everyone" applies to any contributor, maintainers included, and
+it is short. The section after it describes the stricter process we run on our own
+AI generated work, and asks nothing of you.
 
 ## Everyone
 
@@ -75,17 +75,21 @@ List every review finding you chose not to act on, with your reason, in the PR
 before asking for another round. A finding you drop silently is a decision you
 made on the reviewer's behalf.
 
-## Generated pipelines
+## What the maintainers hold themselves to
 
-These apply to maintainers running models at volume and to autonomous accounts.
-They are not asked of outside contributors, who cannot be held to an ordering
-nobody can verify.
+Nothing in this section is asked of you. It describes how we run our own AI
+generated work, and it is here so you can see the standard we are applying to
+ourselves rather than only to contributions.
+
+If you are contributing, you need one model and your own judgment. You are never
+expected to own a second AI subscription, or to orchestrate models against each
+other, to send us a patch.
 
 ### The test is written by a different model than the fix
 
 A model that writes a fix cannot be trusted to write the test for it, because a
 test authored alongside an implementation tends to assert what the code happens
-to do rather than what the report said was broken. So:
+to do rather than what the report said was broken. So, in our own pipeline:
 
 1. The test is written by a **different** model from the one writing the fix, and
    is written **from the issue alone, before the fix exists**. It has to fail on
@@ -93,20 +97,19 @@ to do rather than what the report said was broken. So:
    later mean something.
 2. The fix is then written to make that test pass.
 3. A third model audits both, judging whether the test pins the reported behavior
-   or something incidental. Answer every finding: fix it, or say why it is wrong.
-   Do not resolve a thread silently.
+   or something incidental. Every finding gets answered: fixed, or a reason why it
+   is wrong. No thread is resolved silently.
 
-In practice today that means one of Claude or Gemini writes the test and the
-other writes the fix, and Copilot audits both. Copilot is what we use because it
-is already wired into review here; nothing about the requirement depends on that
-particular tool, and no outside contributor is expected to buy it.
+In practice that means one of Claude or Gemini writes the test and the other
+writes the fix, and Copilot audits both. This is enforceable for us only because
+we control the whole pipeline. From outside a pull request, nobody could check
+that the ordering happened, which is exactly why we do not ask it of anyone else.
 
 ### Higher scrutiny, on purpose
 
-Work from these pipelines is held to a stricter standard than a human's. A model
-can produce a confident, fluent, well formatted pull request that is wrong, and
-can do it faster than anyone can read it. The asymmetry is the reason for the
-extra requirements, and it is not personal.
+We hold this work to a stricter standard than a human's. A model can produce a
+confident, fluent, well formatted pull request that is wrong, and can do it
+faster than anyone can read it. That asymmetry is the reason for the extra steps.
 
 We would rather a model attempt a real fix under these checks than a timid one,
-so please do try the hard bugs.
+so the hard bugs are fair game.
