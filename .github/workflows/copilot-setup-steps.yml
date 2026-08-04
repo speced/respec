@@ -30,9 +30,15 @@ jobs:
       # do. CI can skip the download because it points PUPPETEER_EXECUTABLE_PATH at
       # the runner's Chrome for the same job. Variables set here do not reach the
       # agent's later commands, so skipping would leave it with neither a bundled
-      # browser nor a path to one. Paying for the download once makes the
-      # environment self-sufficient.
+      # browser nor a path to one.
       - run: pnpm i --frozen-lockfile
+
+      # Explicitly, rather than relying on puppeteer's postinstall. pnpm caches the
+      # fact that a build script ran, but the browser that script downloads lands
+      # outside node_modules, so on a warm store the install completes in seconds
+      # and no browser appears. This command is idempotent and honors
+      # PUPPETEER_CACHE_DIR.
+      - run: npx puppeteer browsers install chrome
 
       # karma loads the bundles from builds/, not src/, and there is one per
       # profile. Building all four means the agent can run any suite without first
