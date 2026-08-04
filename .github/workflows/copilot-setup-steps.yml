@@ -1,0 +1,29 @@
+name: "Copilot Setup Steps"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v5
+      - uses: actions/setup-node@v6
+        with: { node-version-file: ".nvmrc", cache: pnpm }
+      - run: pnpm i --frozen-lockfile
+      # karma loads the bundles from builds/, not src/, and each profile has its
+      # own. Building all four here means the agent can run the suite without
+      # first working out why a src/ change had no effect on the tests.
+      - run: pnpm build:w3c
+      - run: pnpm build:geonovum
+      - run: pnpm build:aom
+      - run: pnpm build:dini
