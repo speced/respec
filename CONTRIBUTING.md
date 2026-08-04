@@ -1,4 +1,4 @@
-<img src="assets/ai-is-welcome-here.png" alt="A cheerful pixel-art robot smiling straight at the camera while a forest burns orange behind it. The caption reads &quot;AI is welcome here.&quot;" width="220" align="right">
+<img src="assets/ai-is-welcome-here.png" alt="Pixel-art robot grinning in front of a burning forest, captioned &quot;AI is welcome here.&quot;" width="220" align="right">
 
 Everyone is welcome to contribute, including AI.
 

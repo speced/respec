@@ -54,14 +54,17 @@ jobs:
 
       # Fails the setup loudly if puppeteer has no usable browser, rather than
       # leaving the agent to discover it mid-task. Same cache dir as the install,
-      # or this would check a location nothing populated.
+      # or this would check a location nothing populated. Dynamic import rather
+      # than require, so it does not depend on require(esm) support if the pinned
+      # Node version ever moves.
       - name: Check puppeteer has a browser
         env:
           PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.cache/puppeteer
         run: |
           node -e "
           const fs = require('fs');
-          Promise.resolve(require('puppeteer').executablePath())
+          import('puppeteer')
+            .then(p => p.default.executablePath())
             .then(p => { fs.accessSync(p); console.log('browser ok:', p); })
             .catch(e => { console.error('no usable browser:', e.message); process.exit(1); })
           "
