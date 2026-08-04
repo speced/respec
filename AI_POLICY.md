@@ -159,5 +159,9 @@ We hold this work to a stricter standard than a human's. A model can produce a
 confident, fluent, well formatted pull request that is wrong, and can do it
 faster than anyone can read it. That asymmetry is the reason for the extra steps.
 
-We would rather a model attempt a real fix under these checks than a timid one,
-so the hard bugs are fair game.
+We would rather a model attempt a real fix under these checks than a timid one, so
+most of the hard bugs are fair game. Some are not, and this matches GitHub's own
+guidance on what to keep away from a coding agent: security, authentication and
+anything touching personal data, a production-critical breakage, and changes
+resting on substantial business logic or on design consistency across the
+codebase. Those we do ourselves.
