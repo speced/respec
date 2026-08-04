@@ -1,3 +1,5 @@
+<img src="assets/ai-is-welcome-here.png" alt="A cheerful pixel-art robot smiling straight at the camera while a forest burns orange behind it. The caption reads &quot;AI is welcome here.&quot;" width="220" align="right">
+
 Everyone is welcome to contribute, including AI.
 
 Please see our [developer guide](https://github.com/speced/respec/wiki/Developers-Guide) to get started, and if you are using AI, our short [AI policy](AI_POLICY.md).

@@ -3,9 +3,7 @@
 ReSpec accepts contributions written with AI. This document says what we ask for
 in return.
 
-![A cheerful pixel-art robot smiling straight at the camera while a forest burns
-orange behind it. The caption reads "AI is welcome
-here."](assets/ai-is-welcome-here.png)
+<img src="assets/ai-is-welcome-here.png" alt="A cheerful pixel-art robot smiling straight at the camera while a forest burns orange behind it. The caption reads &quot;AI is welcome here.&quot;" width="320">
 
 Everything under "Everyone" applies to any contributor, maintainers included, and
 it is short. The section after it describes the stricter process we run on our own
