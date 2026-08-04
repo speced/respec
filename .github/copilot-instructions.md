@@ -33,6 +33,10 @@ browser**, which includes `pnpm test:headless` via `tools/respecDocWriter.js`. T
 agent environment provisions the browser there rather than in the default home
 cache, so puppeteer will not find it unless pointed at the same place.
 
+If you are a human with a browser already in puppeteer's default cache, you do not
+need that line, and you should skip it: the workspace copy is around 340 MB and does
+not get shared between checkouts.
+
 Karma reads the bundles in `builds/`, not `src/`. A source change has no effect on
 the tests until the bundle is rebuilt, which is why the build sits above the test
 line rather than being mentioned afterwards.
