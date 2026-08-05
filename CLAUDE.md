@@ -123,17 +123,6 @@ Before pushing any PR, check for these patterns that Copilot consistently flags:
 
 **Unused properties:** Don't declare properties in constants (e.g., `label` in a Map entry) that are never read. Copilot flags these consistently.
 
-## Known pre-existing Firefox CI failures
-
-These fail in Firefox CI but NOT Chrome. Do not treat as regressions:
-
-- 4 xref tests that hit `https://respec.org/xref/` live (timeout) — need pre-computed fixtures
-- Any test that fetches from external APIs without local test data
-
-## Known flaky CI (all browsers)
-
-- "Core - Highlight: highlights remote languages not bundled by default" — fetches from CDN, fails on network issues. Re-run with `gh run rerun RUN_ID --repo speced/respec --failed`.
-
 ## Cross-spec headings API
 
 `POST /xref/headings` on respec.org looks up section heading text by
