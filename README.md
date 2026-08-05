@@ -42,6 +42,8 @@ Use [specref.org](https://www.specref.org/) to look up and cite other specificat
 
 See our [developer guide](https://github.com/speced/respec/wiki/Developers-Guide) and [Code of Conduct](CODE_OF_CONDUCT.md).
 
+Using AI to contribute? Please read our [AI policy](AI_POLICY.md) first.
+
 ## Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
