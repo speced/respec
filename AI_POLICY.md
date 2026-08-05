@@ -61,6 +61,10 @@ This applies to every contribution, from anyone, wherever a test is offered as e
 
 If the change alters rendered output, include before and after screenshots. If it does not, skip them. Most AI PRs here are not visual and screenshots would prove nothing about them.
 
+### Prove the bug is fixed
+
+A bug-fix PR has to show the bug happening before the change and not happening after it, using the same repro both times. A green test proves nothing on its own if nobody saw it fail first. For a rendering bug, add before and after images; for everything else the repro output is the proof, and images are optional. The machine-readable form the automated check looks for is specified in [ai-pr-proof-requirement.md](ai-pr-proof-requirement.md); keep the description itself plain prose.
+
 ### Say what you did not fix
 
 List every review finding you chose not to act on, with your reason, in the PR before asking for another round. A finding you drop silently is a decision you made on the reviewer's behalf.

@@ -64,6 +64,8 @@ The house style is in [AI_POLICY.md](../AI_POLICY.md) under "Write it the way th
 
 A test that cannot fail is worse than no test, because it costs review time and implies coverage that does not exist. A regression test must fail on `main` for the reason the issue describes, and pass with the fix. Do not assert a literal the implementation just set, and do not exercise a path the issue never mentioned while the reported path stays uncovered.
 
+Do not claim a bug is fixed without showing it broken first. Run the same repro against the pre-fix state and against your fix, and put that in the PR description. Prefer running it on the base commit; when the base will not build with your new test, revert only the fix and say so. The exact format the check validates is in [ai-pr-proof-requirement.md](../ai-pr-proof-requirement.md).
+
 One concern per pull request. A locale addition or a drive-by refactor belongs in its own PR even when it is one line and obviously correct.
 
 ## Adding a module
