@@ -73,8 +73,9 @@ the tests and the reviewer can read them.
 **The commit message** is one imperative subject line, lowercase after any
 prefix, no trailing period. A body only when the diff genuinely cannot be
 understood without one, and then a sentence or two. No bullet lists, no
-"Summary", no recap of what the diff already shows. Do not add AI attribution
-trailers such as `Co-Authored-By` for a model.
+"Summary", no recap of what the diff already shows. A `Co-Authored-By` trailer
+naming the model that wrote it is welcome, and consistent with what already
+appears in this project's history.
 
 **Code comments** say why, not what. A comment restating the line below it is
 noise a reader has to skim past, and generated code produces a lot of it. The test
