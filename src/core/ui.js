@@ -49,6 +49,7 @@ const menu = html`<ul
 ></ul>`;
 const closeButton = html`<button
   class="close-button"
+  aria-label="Close"
   onclick=${() => ui.closeModal()}
   title="Close"
 >
@@ -59,6 +60,8 @@ window.addEventListener("load", () => trapFocus(menu));
 let modal;
 /** @type {HTMLElement | null} */
 let overlay;
+/** @type {HTMLElement | null} */
+let currentModalOwner;
 /** @type {any[]} */
 const errors = [];
 /** @type {any[]} */
@@ -77,7 +80,7 @@ respecPill.addEventListener(
     e.stopPropagation();
     respecPill.setAttribute("aria-expanded", String(menu.hidden));
     toggleMenu();
-    menu.querySelector("li:first-child button").focus();
+    menu.querySelector("li:first-child button")?.focus();
   }
 );
 
@@ -85,6 +88,7 @@ document.documentElement.addEventListener("click", () => {
   if (!menu.hidden) {
     toggleMenu();
   }
+  respecPill.setAttribute("aria-expanded", "false");
 });
 respecUI.appendChild(menu);
 
@@ -95,6 +99,35 @@ menu.addEventListener(
       respecPill.setAttribute("aria-expanded", String(menu.hidden));
       toggleMenu();
       respecPill.focus();
+      return;
+    }
+    const items = /** @type {HTMLElement[]} */ ([
+      ...menu.querySelectorAll("button:not([disabled])"),
+    ]);
+    const currentIndex = items.indexOf(
+      /** @type {HTMLElement} */ (document.activeElement)
+    );
+    switch (e.key) {
+      case "ArrowDown": {
+        e.preventDefault();
+        const next = items[(currentIndex + 1) % items.length];
+        next?.focus();
+        break;
+      }
+      case "ArrowUp": {
+        e.preventDefault();
+        const prev = items[(currentIndex - 1 + items.length) % items.length];
+        prev?.focus();
+        break;
+      }
+      case "Home":
+        e.preventDefault();
+        items[0]?.focus();
+        break;
+      case "End":
+        e.preventDefault();
+        items[items.length - 1]?.focus();
+        break;
     }
   }
 );
@@ -247,6 +280,7 @@ export const ui = {
   },
   /** @param {Element} [owner] */
   closeModal(owner) {
+    const effectiveOwner = owner || currentModalOwner;
     if (overlay) {
       const overlayElem = overlay;
       overlayElem.classList.remove("respec-show-overlay");
@@ -256,12 +290,13 @@ export const ui = {
         overlay = null;
       });
     }
-    if (owner) {
-      owner.setAttribute("aria-expanded", "false");
+    if (effectiveOwner) {
+      effectiveOwner.setAttribute("aria-expanded", "false");
     }
     if (!modal) return;
     modal.remove();
     modal = null;
+    currentModalOwner = null;
     respecPill.focus();
   },
   /**
@@ -272,6 +307,10 @@ export const ui = {
   freshModal(title, content, currentOwner) {
     if (modal) modal.remove();
     if (overlay) overlay.remove();
+    if (currentModalOwner && currentModalOwner !== currentOwner) {
+      currentModalOwner.setAttribute("aria-expanded", "false");
+    }
+    currentModalOwner = currentOwner;
     overlay = html`<div id="respec-overlay" class="removeOnSave"></div>`;
     const id = `${currentOwner.id}-modal`;
     const headingId = `${id}-heading`;
