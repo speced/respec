@@ -487,8 +487,8 @@ describe("Core — dfn-index", () => {
       expect(panel.querySelector("a.self-link").href).toBe(
         "https://dom.spec.whatwg.org/#event"
       );
-      expect(panel.querySelectorAll("ul li")).toHaveSize(1);
-      const reference = panel.querySelector("ul li a");
+      expect(panel.querySelectorAll(".dfn-panel-refs li")).toHaveSize(1);
+      const reference = panel.querySelector(".dfn-panel-refs li a");
       expect(reference.textContent).toBe("§ 1. TEST");
       expect(reference.hash).toBe("#ref-for-index-term-event-interface-1");
     });
