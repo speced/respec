@@ -1,9 +1,15 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  makeRSDoc,
+  makeStandardOps,
+  warningFilters,
+} from "../SpecHelper.js";
 
 describe("Core — Link to definitions", () => {
   afterAll(flushIframes);
+  const warnings = warningFilters.filter("core/link-to-dfn");
 
   it("removes non-alphanum chars from fragment components", async () => {
     const bodyText = `
@@ -403,5 +409,43 @@ describe("Core — Link to definitions", () => {
     // Check there is no element with __SPEC__ in its data-cite
     const corrupt = doc.querySelector("[data-cite*='__SPEC__']");
     expect(corrupt).toBeNull();
+  });
+
+  it("scoping hint only fires for ancestor data-link-for, not self", async () => {
+    const body = `
+      <section>
+        <h2>Scoping</h2>
+        <section data-link-for="Iface">
+          <h3>Inside scope</h3>
+          <p><a data-cite="">globalTerm</a></p>
+        </section>
+        <section data-link-for="">
+          <h3>Empty scope</h3>
+          <p><a data-cite="">anotherTerm</a></p>
+        </section>
+        <section>
+          <h3>No scope</h3>
+          <p><a data-cite="">noScopeTerm</a></p>
+        </section>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const scopedWarnings = warnings(doc);
+    const insideScopeWarning = scopedWarnings.find(w =>
+      w.message?.includes("globalTerm")
+    );
+    const emptyScopeWarning = scopedWarnings.find(w =>
+      w.message?.includes("anotherTerm")
+    );
+    const noScopeWarning = scopedWarnings.find(w =>
+      w.message?.includes("noScopeTerm")
+    );
+    expect(insideScopeWarning).toBeTruthy();
+    expect(insideScopeWarning.hint).toContain('data-link-for="Iface"');
+    expect(emptyScopeWarning).toBeTruthy();
+    expect(emptyScopeWarning.hint).not.toContain("data-link-for=");
+    expect(noScopeWarning).toBeTruthy();
+    expect(noScopeWarning.hint).not.toContain("data-link-for=");
   });
 });
