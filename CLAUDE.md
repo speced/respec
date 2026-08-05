@@ -1,12 +1,8 @@
 # ReSpec
 
-Browser-based tool that generates W3C specifications. Authors write HTML plus a
-`<script>` tag; ReSpec handles boilerplate, cross-references, bibliography, and
-validation. Around half of W3C standards are produced with it, so a regression
-here reaches a lot of documents.
+Browser-based tool that generates W3C specifications. Authors write HTML plus a `<script>` tag; ReSpec handles boilerplate, cross-references, bibliography, and validation. Around half of W3C standards are produced with it, so a regression here reaches a lot of documents.
 
-Build, test, code style, and the house style for pull requests, commits and
-comments live in the file below, shared with other agents rather than duplicated:
+Build, test, code style, and the house style for pull requests, commits and comments live in the file below, shared with other agents rather than duplicated:
 
 @.github/copilot-instructions.md
 
@@ -24,20 +20,20 @@ The build output is an IIFE (`builds/respec-w3c.js`). Rollup captures `document.
 
 ## Key modules
 
-| Module                              | What it does                                                              |
-| ----------------------------------- | ------------------------------------------------------------------------- |
-| `src/core/dfn.js` + `dfn-map.js`    | Definition registration and export                                        |
-| `src/core/link-to-dfn.js`           | Resolves `<a>` tags to local `<dfn>` elements                             |
-| `src/core/xref.js` + `xref-db.js`   | External term resolution via respec.org/xref API + IndexedDB cache        |
-| `src/core/biblio.js`                | Bibliography from api.specref.org + IndexedDB cache                       |
-| `src/core/inlines.js`               | All inline shorthand syntax: `[= =]`, `{{ }}`, `[[SPEC]]`, `[[[...]]]`, ` | var | `   |
-| `src/core/webidl.js`                | WebIDL parsing (via webidl2 npm), semantic markup, auto-dfn               |
-| `src/core/issues-notes.js`          | GitHub issue integration, issue/note/warning blocks                       |
-| `src/core/markdown.js`              | Optional markdown processing via `marked`                                 |
-| `src/core/dfn-panel.js`             | Interactive definition panels (hover/click)                               |
-| `src/core/highlight.js` + `worker/` | Syntax highlighting via highlight.js in a Web Worker                      |
-| `src/w3c/headers.js`                | Full W3C header/SoTD generation                                           |
-| `src/w3c/seo.js`                    | Schema.org JSON-LD, canonical link (`doJsonLd: true` to enable)           |
+| Module                              | What it does                                                                      |
+| ----------------------------------- | --------------------------------------------------------------------------------- |
+| `src/core/dfn.js` + `dfn-map.js`    | Definition registration and export                                                |
+| `src/core/link-to-dfn.js`           | Resolves `<a>` tags to local `<dfn>` elements                                     |
+| `src/core/xref.js` + `xref-db.js`   | External term resolution via respec.org/xref API + IndexedDB cache                |
+| `src/core/biblio.js`                | Bibliography from api.specref.org + IndexedDB cache                               |
+| `src/core/inlines.js`               | All inline shorthand syntax: `[= =]`, `{{ }}`, `[[SPEC]]`, `[[[...]]]`, variables |
+| `src/core/webidl.js`                | WebIDL parsing (via webidl2 npm), semantic markup, auto-dfn                       |
+| `src/core/issues-notes.js`          | GitHub issue integration, issue/note/warning blocks                               |
+| `src/core/markdown.js`              | Optional markdown processing via `marked`                                         |
+| `src/core/dfn-panel.js`             | Interactive definition panels (hover/click)                                       |
+| `src/core/highlight.js` + `worker/` | Syntax highlighting via highlight.js in a Web Worker                              |
+| `src/w3c/headers.js`                | Full W3C header/SoTD generation                                                   |
+| `src/w3c/seo.js`                    | Schema.org JSON-LD, canonical link (`doJsonLd: true` to enable)                   |
 
 ## Inline shorthand syntax reference
 
@@ -125,6 +121,4 @@ Before pushing any PR, check for these patterns that Copilot consistently flags:
 
 ## Cross-spec headings API
 
-`POST /xref/headings` on respec.org looks up section heading text by
-`{spec, id}`, sourced from w3c/webref `ed/headings/`. This is what lets
-`[[[SPEC#id]]]` render the actual heading rather than just the spec title.
+`POST /xref/headings` on respec.org looks up section heading text by `{spec, id}`, sourced from w3c/webref `ed/headings/`. This is what lets `[[[SPEC#id]]]` render the actual heading rather than just the spec title.
