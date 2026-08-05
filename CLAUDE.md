@@ -123,8 +123,6 @@ Before pushing any PR, check for these patterns that Copilot consistently flags:
 
 **Unused properties:** Don't declare properties in constants (e.g., `label` in a Map entry) that are never read. Copilot flags these consistently.
 
-See `copilot-patterns.md` for the full analysis and checklist.
-
 ## Known pre-existing Firefox CI failures
 
 These fail in Firefox CI but NOT Chrome. Do not treat as regressions:
@@ -136,8 +134,8 @@ These fail in Firefox CI but NOT Chrome. Do not treat as regressions:
 
 - "Core - Highlight: highlights remote languages not bundled by default" — fetches from CDN, fails on network issues. Re-run with `gh run rerun RUN_ID --repo speced/respec --failed`.
 
-## Cross-spec headings API (in progress)
+## Cross-spec headings API
 
-speced/respec-web-services#469 adds `POST /xref/headings` to look up section
-heading text by `{spec, id}`. Data from w3c/webref `ed/headings/`. Needed for
-`[[[SPEC#id]]]` to display actual heading text instead of just spec title.
+`POST /xref/headings` on respec.org looks up section heading text by
+`{spec, id}`, sourced from w3c/webref `ed/headings/`. This is what lets
+`[[[SPEC#id]]]` render the actual heading rather than just the spec title.
