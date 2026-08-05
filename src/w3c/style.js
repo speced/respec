@@ -126,8 +126,11 @@ export function run(conf) {
     );
     document.head.appendChild(colorScheme);
   }
-  if (colorScheme?.content.includes("dark")) {
-    const darkModeStyleUrl = getStyleUrl("dark.css");
+  // Always add the dark stylesheet so fixup.js's updateTheme() can find it.
+  // For light-only specs, use disabled so it's present but never applied (#5200).
+  const darkModeStyleUrl = getStyleUrl("dark.css");
+  const isDark = colorScheme.content?.includes("dark") ?? false;
+  if (isDark) {
     document.head.appendChild(
       html`<link
         rel="stylesheet"
@@ -135,8 +138,15 @@ export function run(conf) {
         media="(prefers-color-scheme: dark)"
       />`
     );
-    // As required by W3C Pub Rules.
+    // As required by W3C Pub Rules, dark stylesheet must be last.
     sub("beforesave", styleMover(darkModeStyleUrl));
+  } else {
+    const darkLink = html`<link
+      rel="stylesheet"
+      href="${darkModeStyleUrl.href}"
+    />`;
+    darkLink.disabled = true;
+    document.head.appendChild(darkLink);
   }
 }
 
