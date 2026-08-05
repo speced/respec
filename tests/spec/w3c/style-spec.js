@@ -7,6 +7,8 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
+import { seedGroupCache } from "../respec-cache-helper.js";
+
 const statuses = [
   {
     specStatus: undefined,
@@ -163,6 +165,7 @@ const statuses = [
 
 describe("W3C - Style", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
 
   it("should include 'fixup.js'", async () => {
     const ops = makeStandardOps();
