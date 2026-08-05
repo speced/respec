@@ -83,7 +83,7 @@ describe("Core — Can I Use", () => {
     const doc = await makeRSDoc(ops);
     const stats = doc.querySelector(".caniuse-stats");
     const cells = stats.querySelectorAll(".caniuse-cell");
-    expect(cells).toHaveSize(4);
+    expect(cells).toHaveSize(3);
 
     // Check a cell
     const [cell] = cells;
@@ -123,7 +123,7 @@ describe("Core — Can I Use", () => {
     );
 
     // More info link
-    const moreInfoLink = cells.item(3);
+    const moreInfoLink = stats.querySelector("a[href*='caniuse.com']");
     expect(moreInfoLink.href).toBe("https://caniuse.com/FEATURE");
     expect(moreInfoLink.textContent.trim()).toBe("More info");
   });
@@ -224,11 +224,7 @@ describe("Core — Can I Use", () => {
     expect(desktopBrowsers).toHaveSize(1);
     const [firefox] = desktopBrowsers;
     expect(firefox.src).toContain("firefox.svg");
-    expect(desktop.querySelector(".caniuse-type > span").textContent).toBe(
-      "desktop"
-    );
-    expect(mobile.querySelector(".caniuse-type > span").textContent).toBe(
-      "mobile"
-    );
+    expect(desktop.querySelector(".caniuse-type").textContent).toBe("desktop");
+    expect(mobile.querySelector(".caniuse-type").textContent).toBe("mobile");
   });
 });
