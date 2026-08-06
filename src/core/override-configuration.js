@@ -14,6 +14,7 @@ export const name = "core/override-configuration";
  */
 export function run(config) {
   const params = new URLSearchParams(document.location.search);
+  const dangerousKeys = new Set(["__proto__", "prototype", "constructor"]);
   const overrideEntries = Array.from(params)
     .filter(([key, value]) => !!key && !!value)
     .map(([codedKey, codedValue]) => {
@@ -26,7 +27,8 @@ export function run(config) {
         value = decodedValue;
       }
       return [key, value];
-    });
+    })
+    .filter(([key]) => !dangerousKeys.has(key));
   const overrideProps = Object.fromEntries(overrideEntries);
   Object.assign(config, overrideProps);
   pub("amend-user-config", overrideProps);
