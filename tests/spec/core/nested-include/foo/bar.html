@@ -1,0 +1,15 @@
+<p>bar content</p>
+<!--
+  This nested include uses a URL relative to "includes/data.json". The
+  question this fixture answers: is that URL resolved relative to *this*
+  file's location (tests/spec/core/nested-include/foo/bar.html), which
+  would yield tests/spec/core/nested-include/foo/includes/data.json, or
+  relative to the top-level document that started the include chain
+  (tests/spec/core/nested-include/outer.html), which would yield
+  tests/spec/core/nested-include/includes/data.json?
+-->
+<div
+  id="inner-target"
+  data-include="includes/data.json"
+  data-include-format="text"
+></div>

@@ -10,7 +10,7 @@ const additionalFiles = [
     included: false,
   },
   {
-    pattern: "tests/spec/**/*-spec.js",
+    pattern: process.env.SPEC_FILE_PATTERN || "tests/spec/**/*-spec.js",
     type: "module",
     included: false,
   },
