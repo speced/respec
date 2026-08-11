@@ -3,6 +3,10 @@
  * Module: "core/implementation-status"
  * Adds an implementation status badge to the spec front matter,
  * showing Baseline browser availability from web-features data.
+ *
+ * Baseline name and logos are trademarks of Google LLC, used under
+ * the CC BY-ND 4.0 license. See usage guidelines:
+ * https://web-platform-dx.github.io/web-features/name-and-logo-usage-guidelines/
  */
 import { docLink, fetchAndCache, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";

@@ -684,7 +684,11 @@ function derivePubSpace(conf) {
   if (conf.isNoTrack && !conf.isCGBG && !conf.isTagFinding) {
     return "";
   }
-  if (trStatus.includes(specStatus ?? "") || conf.groupType === "wg") {
+  const groupType = conf.groupType;
+  const isWG =
+    groupType === "wg" ||
+    (Array.isArray(groupType) && groupType.includes("wg"));
+  if (trStatus.includes(specStatus ?? "") || isWG) {
     return `/TR`;
   }
 

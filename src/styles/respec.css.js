@@ -98,7 +98,6 @@ ol.tof {
 
 #issue-summary li {
   list-style: none;
-  display: inline-block;
 }
 
 details.respec-tests-details {

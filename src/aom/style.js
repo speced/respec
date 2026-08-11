@@ -119,7 +119,7 @@ export function run(conf) {
     showWarning(msg, name);
   }
 
-  let styleFile = "";
+  let styleFile;
 
   // Figure out which style file to use.
   switch (conf.specStatus.toUpperCase()) {
