@@ -431,7 +431,7 @@ export async function run(conf) {
       const pubDate = ISODate.format(conf.publishDate);
       conf.thisVersion = w3Url(`${latestPath}-${pubDate}`);
       const prevPubDate = ISODate.format(conf.previousPublishDate);
-      conf.prevVersion = w3Url(`${latestPath}-${prevPubDate}}`);
+      conf.prevVersion = w3Url(`${latestPath}-${prevPubDate}`);
     } else if (conf.isCGBG || conf.isBasic) {
       conf.prevVersion = conf.prevVersion || "";
     } else {
