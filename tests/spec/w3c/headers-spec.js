@@ -969,6 +969,14 @@ describe("W3C — Headers", () => {
       expect(h1).toBeTruthy();
       expect(h1.textContent).toBe("No Title");
     });
+
+    it("uses a localized default title in French when document excludes a title", async () => {
+      const ops = makeStandardOps({}, makeDefaultBody());
+      ops.htmlAttrs = { lang: "fr" };
+      const doc = await makeRSDoc(ops);
+      expect(doc.documentElement.lang).toBe("fr");
+      expect(doc.querySelector("h1#title").textContent).toBe("Sans titre");
+    });
   });
 
   describe("subtitle", () => {
@@ -1148,9 +1156,11 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const [dt] = contains(doc, "dt", "Previous version:");
       expect(dt.nextElementSibling.localName).toBe("dd");
-      expect(dt.nextElementSibling.textContent).toContain(
-        "https://www.w3.org/2001/tag/doc"
-      );
+      const anchor = dt.nextElementSibling.querySelector("a");
+      const expected = "https://www.w3.org/2001/tag/doc/Foo-1977-03-15";
+      expect(anchor.href).toBe(expected);
+      // The URL is the link text too, so a stray character is visible to readers.
+      expect(anchor.textContent.trim()).toBe(expected);
     });
   });
 
@@ -1470,6 +1480,27 @@ describe("W3C — Headers", () => {
       const latestVersionLink = latestVersionEl.querySelector("a");
       expect(latestVersionLink).toBeNull();
       expect(latestVersionEl.textContent.trim()).toBe("none");
+    });
+
+    it("derives /TR latestVersion for multi-group ED specs", async () => {
+      const ops = makeStandardOps({
+        shortName: "multi-group-test",
+        specStatus: "ED",
+        group: ["das", "webapps"],
+        edDraftURI: "https://example.com/ed/",
+      });
+      const doc = await makeRSDoc(ops);
+
+      const terms = [...doc.querySelectorAll("dt")];
+      const latestVersion = terms.find(
+        el => el.textContent.trim() === "Latest published version:"
+      );
+      expect(latestVersion).toBeTruthy();
+      const latestVersionLink =
+        latestVersion.nextElementSibling.querySelector("a");
+      expect(latestVersionLink.href).toBe(
+        "https://www.w3.org/TR/multi-group-test/"
+      );
     });
 
     it("allows overriding latest published version to a different location", async () => {
@@ -1878,6 +1909,24 @@ describe("W3C — Headers", () => {
       const { textContent } = doc.querySelector("#sotd h2");
       expect(doc.documentElement.lang).toBe("es");
       expect(textContent).toContain("Estado de este Document");
+    });
+
+    it("localizes sotd to French", async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        htmlAttrs: {
+          lang: "fr",
+        },
+        body: `
+        <section id="sotd">
+          State of the document
+        </section>
+      `,
+      };
+      const doc = await makeRSDoc(ops);
+      const { textContent } = doc.querySelector("#sotd h2");
+      expect(doc.documentElement.lang).toBe("fr");
+      expect(textContent).toContain("État du présent document");
     });
   });
 
