@@ -1153,9 +1153,11 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const [dt] = contains(doc, "dt", "Previous version:");
       expect(dt.nextElementSibling.localName).toBe("dd");
-      expect(dt.nextElementSibling.textContent).toContain(
-        "https://www.w3.org/2001/tag/doc"
-      );
+      const anchor = dt.nextElementSibling.querySelector("a");
+      const expected = "https://www.w3.org/2001/tag/doc/Foo-1977-03-15";
+      expect(anchor.href).toBe(expected);
+      // The URL is the link text too, so a stray character is visible to readers.
+      expect(anchor.textContent.trim()).toBe(expected);
     });
   });
 
