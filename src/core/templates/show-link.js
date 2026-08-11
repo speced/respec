@@ -33,8 +33,10 @@ export default function showLink(link) {
  */
 function showLinkData(data) {
   return html`<dd class="${data.class ? data.class : null}">
-    ${data.href
-      ? html`<a href="${data.href}">${data.value || data.href}</a>`
-      : data.value}
+    ${
+      data.href
+        ? html`<a href="${data.href}">${data.value || data.href}</a>`
+        : data.value
+    }
   </dd>`;
 }

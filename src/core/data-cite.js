@@ -37,7 +37,7 @@ export const THIS_SPEC = "__SPEC__";
  */
 async function getLinkProps(citeDetails) {
   const { key, frag, path, href: canonicalHref } = citeDetails;
-  let href = "";
+  let href;
   let title = "";
 
   // This is just referring to this document
