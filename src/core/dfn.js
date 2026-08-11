@@ -32,12 +32,18 @@ const knownTypesMap = new Map([
       validator: validateCommonName,
     },
   ],
-  ["element", { requiresFor: false, validator: validateDOMName }],
+  [
+    "element",
+    {
+      requiresFor: false,
+      validator: /** @type {DefinitionValidator} */ (validateDOMName),
+    },
+  ],
   [
     "element-attr",
     {
       requiresFor: false,
-      validator: validateDOMName,
+      validator: /** @type {DefinitionValidator} */ (validateDOMName),
     },
   ],
   [
@@ -146,7 +152,23 @@ function computeExport(dfn) {
     case dfn.matches(":is(.export):not([data-noexport], .no-export)"):
       dfn.dataset.export = "";
       break;
+
+    // Auto-suppress export for dfns in explicitly informative sections,
+    // but not if a closer normative section overrides the context.
+    case isInformativeContext(dfn):
+      dfn.dataset.noexport = "";
+      break;
   }
+}
+
+/**
+ * @param {HTMLElement} dfn
+ */
+function isInformativeContext(dfn) {
+  if (dfn.matches(".export, [data-export]")) return false;
+  return dfn
+    .closest("section.informative, section.normative")
+    ?.classList.contains("informative");
 }
 
 /**
