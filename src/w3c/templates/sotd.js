@@ -84,32 +84,38 @@ export default (conf, opts) => {
   return html`
     <h2>${l10n.sotd}</h2>
     ${conf.isPreview ? renderPreview(conf) : ""}
-    ${conf.isUnofficial
-      ? renderIsUnofficial(opts)
-      : conf.isTagFinding
-        ? opts.additionalContent
-        : conf.isNoTrack
-          ? renderIsNoTrack(conf, opts)
-          : html`
-              <p><em>${l10n.status_at_publication}</em></p>
-              ${conf.isMemberSubmission
-                ? noteForSubmission(conf, opts)
-                : html`
-                    ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-                    ${!conf.overrideStatus
-                      ? html` ${linkToWorkingGroup(conf)} `
-                      : ""}
-                    ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-                    ${conf.isRec ? renderIsRec(conf) : renderNotRec(conf)}
-                    ${renderDeliverer(conf)}
-                    <p>
-                      This document is governed by the
-                      <a id="w3c_process_revision" href="${processLink}"
-                        >18 August 2025 W3C Process Document</a
-                      >.
-                    </p>
-                  `}
-            `}
+    ${
+      conf.isUnofficial
+        ? renderIsUnofficial(opts)
+        : conf.isTagFinding
+          ? opts.additionalContent
+          : conf.isNoTrack
+            ? renderIsNoTrack(conf, opts)
+            : html`
+                <p><em>${l10n.status_at_publication}</em></p>
+                ${
+                  conf.isMemberSubmission
+                    ? noteForSubmission(conf, opts)
+                    : html`
+                        ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
+                        ${
+                          !conf.overrideStatus
+                            ? html` ${linkToWorkingGroup(conf)} `
+                            : ""
+                        }
+                        ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
+                        ${conf.isRec ? renderIsRec(conf) : renderNotRec(conf)}
+                        ${renderDeliverer(conf)}
+                        <p>
+                          This document is governed by the
+                          <a id="w3c_process_revision" href="${processLink}"
+                            >18 August 2025 W3C Process Document</a
+                          >.
+                        </p>
+                      `
+                }
+              `
+    }
     ${opts.additionalSections}
   `;
 };
@@ -120,22 +126,26 @@ export function renderPreview(conf) {
   return html`<details class="annoying-warning" open="">
     <summary>
       This is a
-      preview${prUrl && prNumber
-        ? html`
-            of pull request
-            <a href="${prUrl}">#${prNumber}</a>
-          `
-        : ""}
+      preview${
+        prUrl && prNumber
+          ? html`
+              of pull request
+              <a href="${prUrl}">#${prNumber}</a>
+            `
+          : ""
+      }
     </summary>
     <p>
       Do not attempt to implement this version of the specification. Do not
       reference this version as authoritative in any way.
-      ${edDraftURI
-        ? html`
-            Instead, see
-            <a href="${edDraftURI}">${edDraftURI}</a> for the Editor's draft.
-          `
-        : ""}
+      ${
+        edDraftURI
+          ? html`
+              Instead, see
+              <a href="${edDraftURI}">${edDraftURI}</a> for the Editor's draft.
+            `
+          : ""
+      }
     </p>
   </details>`;
 }
@@ -182,10 +192,12 @@ function renderNotRec(conf) {
     This is a draft document and may be updated, replaced, or obsoleted by other
     documents at any time. It is inappropriate to cite this document as other
     than a work in progress.
-    ${updatableRec
-      ? html`Future updates to this upcoming Recommendation may incorporate
-          <a href="${processLink}#allow-new-features">new features</a>.`
-      : ""}
+    ${
+      updatableRec
+        ? html`Future updates to this upcoming Recommendation may incorporate
+            <a href="${processLink}#allow-new-features">new features</a>.`
+        : ""
+    }
   </p>`;
   if (conf.specStatus === "DISC") {
     updatePolicy = html`<p>
@@ -255,10 +267,12 @@ function renderNotRec(conf) {
           >royalty-free licensing</a
         >
         for implementations.`;
-      updatePolicy = html`${updatableRec
-        ? html`Future updates to this upcoming Recommendation may incorporate
-            <a href="${processLink}#allow-new-features">new features</a>.`
-        : ""}`;
+      updatePolicy = html`${
+        updatableRec
+          ? html`Future updates to this upcoming Recommendation may incorporate
+              <a href="${processLink}#allow-new-features">new features</a>.`
+          : ""
+      }`;
       if (conf.pubMode === "LS") {
         reviewPolicy = html`<p>
           Comments are welcome at any time but most especially before
@@ -326,42 +340,54 @@ function renderIsRec(conf) {
         >royalty-free licensing</a
       >
       for implementations.
-      ${updatableRec
-        ? html`Future updates to this Recommendation may incorporate
-            <a href="${processLink}#allow-new-features">new features</a>.`
-        : ""}
+      ${
+        updatableRec
+          ? html`Future updates to this Recommendation may incorporate
+              <a href="${processLink}#allow-new-features">new features</a>.`
+          : ""
+      }
     </p>
-    ${document.querySelector(".addition:not(.proposed)")
-      ? html`<p class="addition">
-          Candidate additions are marked in the document.
-        </p>`
-      : ""}
-    ${document.querySelector(".correction:not(.proposed)")
-      ? html`<p class="correction">
-          Candidate corrections are marked in the document.
-        </p>`
-      : ""}
-    ${document.querySelector(".addition.proposed")
-      ? html`<p class="addition proposed">
-          Proposed additions are marked in the document.
-        </p>`
-      : ""}
-    ${document.querySelector(".correction.proposed")
-      ? html`<p class="correction proposed">
-          Proposed corrections are marked in the document.
-        </p>`
-      : ""}
-    ${reviewTarget
-      ? html`<p>
-          The W3C Membership and other interested parties are invited to review
-          the proposed ${reviewTarget} and send comments through
-          ${W3CDate.format(/** @type {Date} */ (revisedRecEnd))}. Advisory
-          Committee Representatives should consult their
-          <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
-            >WBS questionnaires</a
-          >.
-        </p>`
-      : ""}
+    ${
+      document.querySelector(".addition:not(.proposed)")
+        ? html`<p class="addition">
+            Candidate additions are marked in the document.
+          </p>`
+        : ""
+    }
+    ${
+      document.querySelector(".correction:not(.proposed)")
+        ? html`<p class="correction">
+            Candidate corrections are marked in the document.
+          </p>`
+        : ""
+    }
+    ${
+      document.querySelector(".addition.proposed")
+        ? html`<p class="addition proposed">
+            Proposed additions are marked in the document.
+          </p>`
+        : ""
+    }
+    ${
+      document.querySelector(".correction.proposed")
+        ? html`<p class="correction proposed">
+            Proposed corrections are marked in the document.
+          </p>`
+        : ""
+    }
+    ${
+      reviewTarget
+        ? html`<p>
+            The W3C Membership and other interested parties are invited to
+            review the proposed ${reviewTarget} and send comments through
+            ${W3CDate.format(/** @type {Date} */ (revisedRecEnd))}. Advisory
+            Committee Representatives should consult their
+            <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
+              >WBS questionnaires</a
+            >.
+          </p>`
+        : ""
+    }
   `;
 }
 
@@ -402,31 +428,39 @@ function renderDeliverer(conf) {
       `;
   return html`<p data-deliverer="${isNote || isRegistry ? wgId : null}">
     ${producers}
-    ${!(isNote || isRegistry)
-      ? html`
-          ${multipleWGs
-            ? html` W3C maintains ${wgPatentHTML} `
-            : html`
-                W3C maintains a
-                ${wgPatentURI
-                  ? html`<a href="${wgPatentURI}" rel="disclosure"
-                      >public list of any patent disclosures</a
-                    >`
-                  : "public list of any patent disclosures"}
-              `}
-          made in connection with the deliverables of
-          ${multipleWGs
-            ? "each group; these pages also include"
-            : "the group; that page also includes"}
-          instructions for disclosing a patent. An individual who has actual
-          knowledge of a patent that the individual believes contains
-          <a href="${patentPolicyURL}#def-essential">Essential Claim(s)</a>
-          must disclose the information in accordance with
-          <a href="${patentPolicyURL}#sec-Disclosure"
-            >section 6 of the W3C Patent Policy</a
-          >.
-        `
-      : ""}
+    ${
+      !(isNote || isRegistry)
+        ? html`
+            ${
+              multipleWGs
+                ? html` W3C maintains ${wgPatentHTML} `
+                : html`
+                    W3C maintains a
+                    ${
+                      wgPatentURI
+                        ? html`<a href="${wgPatentURI}" rel="disclosure"
+                            >public list of any patent disclosures</a
+                          >`
+                        : "public list of any patent disclosures"
+                    }
+                  `
+            }
+            made in connection with the deliverables of
+            ${
+              multipleWGs
+                ? "each group; these pages also include"
+                : "the group; that page also includes"
+            }
+            instructions for disclosing a patent. An individual who has actual
+            knowledge of a patent that the individual believes contains
+            <a href="${patentPolicyURL}#def-essential">Essential Claim(s)</a>
+            must disclose the information in accordance with
+            <a href="${patentPolicyURL}#sec-Disclosure"
+              >section 6 of the W3C Patent Policy</a
+            >.
+          `
+        : ""
+    }
   </p>`;
 }
 
@@ -489,10 +523,12 @@ export function renderPublicList(conf, opts) {
     If you wish to make comments regarding this document, please send them to
     <a href="${mailToWGPublicListWithSubject}">${wgPublicList}@w3.org</a>
     (<a href="${mailToWGPublicListSubscription}">subscribe</a>,
-    <a href="${archivesURL}">archives</a>)${subjectPrefix
-      ? html` with <code>${subjectPrefix}</code> at the start of your email's
-          subject`
-      : ""}.
+    <a href="${archivesURL}">archives</a>)${
+      subjectPrefix
+        ? html` with <code>${subjectPrefix}</code> at the start of your email's
+            subject`
+        : ""
+    }.
   </p>`;
 }
 
@@ -514,34 +550,40 @@ function linkToWorkingGroup(conf) {
       (additions && corrections)
     ) {
       changes = html`It includes
-      ${proposedAdditions
-        ? html`<a href="${processLink}#proposed-amendments">
-            proposed amendments</a
-          >`
-        : html`<a href="${processLink}#candidate-amendments">
-            candidate amendments</a
-          >`},
+      ${
+        proposedAdditions
+          ? html`<a href="${processLink}#proposed-amendments">
+              proposed amendments</a
+            >`
+          : html`<a href="${processLink}#candidate-amendments">
+              candidate amendments</a
+            >`
+      },
       introducing substantive changes and new features since the previous
       Recommendation.`;
     } else if (proposedAdditions || additions) {
       changes = html`It includes
-      ${proposedAdditions
-        ? html`<a href="${processLink}#proposed-addition">
-            proposed additions</a
-          >`
-        : html`<a href="${processLink}#candidate-addition">
-            candidate additions</a
-          >`},
+      ${
+        proposedAdditions
+          ? html`<a href="${processLink}#proposed-addition">
+              proposed additions</a
+            >`
+          : html`<a href="${processLink}#candidate-addition">
+              candidate additions</a
+            >`
+      },
       introducing new features since the previous Recommendation.`;
     } else if (proposedCorrections || corrections) {
       changes = html`It includes
-      ${proposedCorrections
-        ? html`<a href="${processLink}#proposed-corrections">
-            proposed corrections</a
-          >`
-        : html`<a href="${processLink}#candidate-correction">
-            candidate corrections</a
-          >`}.`;
+      ${
+        proposedCorrections
+          ? html`<a href="${processLink}#proposed-corrections">
+              proposed corrections</a
+            >`
+          : html`<a href="${processLink}#candidate-correction">
+              candidate corrections</a
+            >`
+      }.`;
     }
   }
   // @ts-expect-error -- specStatus is always set by this point
@@ -583,30 +625,38 @@ export function linkToCommunity(conf, opts) {
     return;
   }
   return html`<p>
-    ${conf.github
-      ? html`
-          <a href="${conf.issueBase}">GitHub Issues</a> are preferred for
-          discussion of this specification.
-        `
-      : ""}
-    ${conf.wgPublicList
-      ? html`
-          ${conf.github && conf.wgPublicList
-            ? "Alternatively, you can send comments to our mailing list."
-            : "Comments regarding this document are welcome."}
-          Please send them to
-          <a href="${opts.mailToWGPublicListWithSubject}"
-            >${conf.wgPublicList}@w3.org</a
-          >
-          (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
-          <a
-            href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
-            >archives</a
-          >)${conf.subjectPrefix
-            ? html` with <code>${conf.subjectPrefix}</code> at the start of your
-                email's subject`
-            : ""}.
-        `
-      : ""}
+    ${
+      conf.github
+        ? html`
+            <a href="${conf.issueBase}">GitHub Issues</a> are preferred for
+            discussion of this specification.
+          `
+        : ""
+    }
+    ${
+      conf.wgPublicList
+        ? html`
+            ${
+              conf.github && conf.wgPublicList
+                ? "Alternatively, you can send comments to our mailing list."
+                : "Comments regarding this document are welcome."
+            }
+            Please send them to
+            <a href="${opts.mailToWGPublicListWithSubject}"
+              >${conf.wgPublicList}@w3.org</a
+            >
+            (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
+            <a
+              href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
+              >archives</a
+            >)${
+              conf.subjectPrefix
+                ? html` with <code>${conf.subjectPrefix}</code> at the start of
+                    your email's subject`
+                : ""
+            }.
+          `
+        : ""
+    }
   </p>`;
 }

@@ -11,6 +11,12 @@
       "id": "data-fetch",
       "title": "Fetching data",
       "number": "4.1"
+    },
+    {
+      "spec": "fetch",
+      "id": "acknowledgments",
+      "title": "Acknowledgments",
+      "number": null
     }
   ]
 }

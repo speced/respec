@@ -83,6 +83,13 @@ class Logger {
     const header = colors.bgRed.white.bold("[FATAL]");
     const message = colors.red(error.stack || error);
     console.error(header, message);
+    // Errors thrown by respecDocWriter keep the original in `cause`, so the
+    // underlying stack is only reachable by walking the chain.
+    let cause = error instanceof Error ? error.cause : undefined;
+    for (let depth = 0; cause instanceof Error && depth < 5; depth++) {
+      console.error(colors.red(`Caused by: ${cause.stack}`));
+      cause = cause.cause;
+    }
   }
 
   _formatMarkdown(str) {
