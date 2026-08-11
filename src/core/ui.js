@@ -185,11 +185,12 @@ function createWarnButton(butName, arr, title) {
         .createContextualFragment(rsErrorToHTML(err));
       const li = document.createElement("li");
       // if it's only a single element, just copy the contents into li
-      if (fragment.firstElementChild === fragment.lastElementChild) {
-        li.append(
-          .../** @type {Element} */ (fragment.firstElementChild).childNodes
-        );
-        // Otherwise, take everything.
+      if (
+        fragment.firstElementChild &&
+        fragment.firstElementChild === fragment.lastElementChild
+      ) {
+        li.append(...fragment.firstElementChild.childNodes);
+        // Otherwise, take everything (including plain text nodes).
       } else {
         li.appendChild(fragment);
       }
