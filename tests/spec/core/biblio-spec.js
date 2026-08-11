@@ -132,12 +132,10 @@ describe("W3C — Bibliographic References", () => {
       );
     }
     expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
-    ref = null;
     // Make sure the ". " is automatically added to publisher.
     ref = doc.querySelector("#bib-testref2 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Testing 123\.\s/);
-    ref = null;
     // Make sure publisher is shown even when there is no author
     ref = doc.querySelector("#bib-testref3 + dd");
     expect(ref).toBeTruthy();

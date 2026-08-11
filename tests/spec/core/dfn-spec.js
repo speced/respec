@@ -418,14 +418,12 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
     });
 
-    // TODO: failing for Chrome, but not Firefox. Needs investigation.
-    // eslint-disable-next-line jasmine/no-disabled-tests
-    xit("handles bad attributes", async () => {
+    it("handles bad attributes", async () => {
       const body = html`
         <section>
           <h2>Attributes</h2>
           <p id="attribute-bad">
-            <dfn class="element-attr">-attribute</dfn>
+            <dfn class="element-attr">bad attribute</dfn>
           </p>
         </section>
       `;
@@ -434,7 +432,7 @@ describe("Core — Definitions", () => {
 
       const errors = findDfnErrors(doc);
       expect(errors).toHaveSize(1);
-      expect(errors[0].message).toContain("-attribute");
+      expect(errors[0].message).toContain("bad attribute");
     });
 
     it("handles attribute values", async () => {
