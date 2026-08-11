@@ -143,7 +143,7 @@ export function run(conf) {
 /** @param {Conf} conf */
 function getStyleFile(conf) {
   const canonicalStatus = conf.specStatus?.toUpperCase() ?? "";
-  let styleFile = "";
+  let styleFile;
   const canUseW3CStyle =
     [
       ...recTrackStatus,
