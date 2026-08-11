@@ -1648,6 +1648,75 @@ describe("W3C — Headers", () => {
         expect(latestVersionDd.textContent.trim()).toBe("none");
       });
     }
+
+    it("shows the IRI as link text, but keeps the encoded URL in href", async () => {
+      const ops = makeStandardOps({
+        specStatus: "WD",
+        group: "webapps",
+        latestVersion: "https://www.w3.org/TR/föö-spec/",
+      });
+      const doc = await makeRSDoc(ops);
+      const [dt] = contains(doc, ".head dt", "Latest published version:");
+      const anchor = dt.nextElementSibling.querySelector("a");
+      expect(anchor.getAttribute("href")).toBe(
+        "https://www.w3.org/TR/f%C3%B6%C3%B6-spec/"
+      );
+      expect(anchor.textContent.trim()).toBe("https://www.w3.org/TR/föö-spec/");
+    });
+
+    it("keeps the link text as-is when the URL can't be decoded", async () => {
+      const latestVersion = "https://www.w3.org/TR/foo%zz/";
+      const ops = makeStandardOps({
+        specStatus: "WD",
+        group: "webapps",
+        latestVersion,
+      });
+      const doc = await makeRSDoc(ops);
+      const [dt] = contains(doc, ".head dt", "Latest published version:");
+      const anchor = dt.nextElementSibling.querySelector("a");
+      expect(anchor.getAttribute("href")).toBe(latestVersion);
+      expect(anchor.textContent.trim()).toBe(latestVersion);
+    });
+
+    it("shows the IRI for the other URLs in the same list", async () => {
+      // These four are used verbatim, unlike latestVersion which w3Url()
+      // normalizes, so the href stays exactly as the author wrote it.
+      const edDraftURI = "https://example.com/f%C3%B6%C3%B6/ed/";
+      const historyURI = "https://www.w3.org/standards/history/f%C3%B6%C3%B6/";
+      const ops = makeStandardOps({
+        specStatus: "WD",
+        group: "webapps",
+        edDraftURI,
+        historyURI,
+      });
+      const doc = await makeRSDoc(ops);
+      [
+        ["Latest editor's draft:", edDraftURI, "https://example.com/föö/ed/"],
+        ["History:", historyURI, "https://www.w3.org/standards/history/föö/"],
+      ].forEach(([label, href, iri]) => {
+        const [dt] = contains(doc, ".head dt", label);
+        const anchor = dt.nextElementSibling.querySelector("a");
+        expect(anchor.textContent.trim()).toBe(iri);
+        expect(anchor.getAttribute("href")).toBe(href);
+      });
+    });
+
+    it("shows the IRI for an author-supplied thisVersion", async () => {
+      // thisVersion is only author-supplied for CG/BG documents; elsewhere
+      // w3Url() derives it. prevVersion is always w3Url()-derived, so it can
+      // never carry percent-encoding from config.
+      const thisVersion = "https://example.com/f%C3%B6%C3%B6/2026/";
+      const ops = makeStandardOps({
+        specStatus: "CG-DRAFT",
+        wgPublicList: "public-webapps",
+        thisVersion,
+      });
+      const doc = await makeRSDoc(ops);
+      const [dt] = contains(doc, ".head dt", "This version:");
+      const anchor = dt.nextElementSibling.querySelector("a");
+      expect(anchor.textContent.trim()).toBe("https://example.com/föö/2026/");
+      expect(anchor.getAttribute("href")).toBe(thisVersion);
+    });
   });
 
   describe("prevED", () => {

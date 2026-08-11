@@ -240,6 +240,14 @@ export default (conf, options) => {
       if (details) details.open = true;
     }
   );
+  // Link text shows the readable IRI; the href keeps the encoded URL.
+  const iri = {
+    thisVersion: safeDecodeURI(conf.thisVersion),
+    latestVersion: safeDecodeURI(conf.latestVersion),
+    edDraftURI: safeDecodeURI(conf.edDraftURI),
+    historyURI: safeDecodeURI(conf.historyURI),
+    prevVersion: safeDecodeURI(conf.prevVersion),
+  };
   return html`<div class="head">
     ${
       (conf.logos ?? []).length
@@ -256,7 +264,7 @@ export default (conf, options) => {
             ? html`<dt>${l10n.this_version}</dt>
                 <dd>
                   <a class="u-url" href="${conf.thisVersion}"
-                    >${conf.thisVersion}</a
+                    >${iri.thisVersion}</a
                   >
                 </dd>`
             : ""
@@ -268,7 +276,7 @@ export default (conf, options) => {
                   ${
                     conf.latestVersion
                       ? html`<a href="${conf.latestVersion}"
-                          >${conf.latestVersion}</a
+                          >${iri.latestVersion}</a
                         >`
                       : "none"
                   }
@@ -279,7 +287,7 @@ export default (conf, options) => {
           conf.edDraftURI
             ? html`
                 <dt>${l10n.latest_editors_draft}</dt>
-                <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
+                <dd><a href="${conf.edDraftURI}">${iri.edDraftURI}</a></dd>
               `
             : ""
         }
@@ -289,7 +297,7 @@ export default (conf, options) => {
                 ${
                   conf.historyURI
                     ? html`<dd>
-                        <a href="${conf.historyURI}">${conf.historyURI}</a>
+                        <a href="${conf.historyURI}">${iri.historyURI}</a>
                       </dd>`
                     : ""
                 }
@@ -339,7 +347,7 @@ export default (conf, options) => {
           conf.showPreviousVersion
             ? html`
                 <dt>${l10n.prev_version}</dt>
-                <dd><a href="${conf.prevVersion}">${conf.prevVersion}</a></dd>
+                <dd><a href="${conf.prevVersion}">${iri.prevVersion}</a></dd>
               `
             : ""
         }
@@ -502,6 +510,20 @@ function renderSpecTitle(conf) {
             >`
         : ""
     }`;
+}
+
+/**
+ * Shows a percent-encoded URL as the IRI a human can read, or as-is when it
+ * has malformed escape sequences.
+ * @param {string | null} [url]
+ */
+function safeDecodeURI(url) {
+  if (!url) return url;
+  try {
+    return decodeURI(url);
+  } catch {
+    return url;
+  }
 }
 
 /**
