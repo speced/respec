@@ -100,6 +100,7 @@ export async function run(conf) {
   }
   const branch = ghConf.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
+  const newIssuesURL = new URL("./new/choose", issueBase).href;
 
   // Allow custom pullsURL and commitHistoryURL for monorepo scenarios
   let pullsURL;
@@ -196,8 +197,12 @@ export async function run(conf) {
           href: ghURL,
         },
         {
+          value: "All issues",
+          href: issueBase,
+        },
+        {
           value: l10n.file_a_bug,
-          href: newProps.issueBase,
+          href: newIssuesURL,
         },
         {
           value: l10n.commit_history,
@@ -221,7 +226,7 @@ export async function run(conf) {
     fullName: `${org}/${repo}`,
     issuesURL: issueBase,
     pullsURL,
-    newIssuesURL: new URL("./new/choose", issueBase).href,
+    newIssuesURL,
     commitHistoryURL,
   };
   resolveGithubPromise(normalizedGHObj);

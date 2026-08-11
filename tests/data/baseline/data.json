@@ -1,0 +1,77 @@
+{
+  "browsers": {},
+  "features": {
+    "test-feature": {
+      "name": "Test Feature",
+      "description": "A test feature",
+      "spec": ["https://w3c.github.io/test-spec/"],
+      "status": {
+        "baseline": "high",
+        "baseline_high_date": "2020-01-01",
+        "baseline_low_date": "2018-01-01",
+        "support": {
+          "chrome": "70",
+          "chrome_android": "70",
+          "edge": "79",
+          "firefox": "65",
+          "firefox_android": "65",
+          "safari": "12",
+          "safari_ios": "12"
+        }
+      },
+      "compat_features": ["api.TestFeature"]
+    },
+    "limited-feature": {
+      "name": "Limited Feature",
+      "description": "A feature with limited support",
+      "spec": ["https://w3c.github.io/limited-spec/"],
+      "status": {
+        "baseline": false,
+        "support": {
+          "chrome": "90"
+        }
+      },
+      "compat_features": ["api.LimitedFeature"]
+    },
+    "multi-feature-a": {
+      "name": "Multi Feature A",
+      "description": "First feature in a multi-feature spec",
+      "spec": ["https://w3c.github.io/multi-spec/"],
+      "status": {
+        "baseline": "high",
+        "support": {
+          "chrome": "70",
+          "edge": "79",
+          "firefox": "65",
+          "safari": "12"
+        }
+      },
+      "compat_features": ["api.MultiA"]
+    },
+    "multi-feature-b": {
+      "name": "Multi Feature B",
+      "description": "Second feature with lower baseline",
+      "spec": ["https://w3c.github.io/multi-spec/#section-b"],
+      "status": {
+        "baseline": "low",
+        "support": {
+          "chrome": "110",
+          "edge": "110",
+          "firefox": "110",
+          "safari": "17"
+        }
+      },
+      "compat_features": ["api.MultiB"]
+    },
+    "moved-feature": {
+      "kind": "moved",
+      "redirect_target": "test-feature",
+      "spec": ["https://w3c.github.io/test-spec/"]
+    },
+    "split-feature": {
+      "kind": "split",
+      "redirect_targets": ["multi-feature-a", "multi-feature-b"],
+      "spec": ["https://w3c.github.io/multi-spec/"]
+    }
+  }
+}

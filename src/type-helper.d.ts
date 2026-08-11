@@ -50,10 +50,6 @@ interface Window {
     closeModal(owner?: Element): void;
     freshModal(title: string, content: Node, currentOwner: Element): void;
   };
-  require?: {
-    (deps: string[], callback: (...modules: any[]) => void): void;
-    modules: { [dep: string]: any };
-  };
   axe?: {
     run(context: Node, options: any): Promise<{ violations: AxeViolation[] }>;
   };
@@ -63,6 +59,7 @@ interface Document {
   respec: {
     readonly version: string;
     readonly ready: Promise<void>;
+    readonly worker: Promise<Worker>;
   };
 }
 
@@ -81,6 +78,7 @@ interface BiblioData {
   href?: string;
   authors?: string[];
   publisher?: string;
+  pages?: string;
   date?: string;
   rawDate?: string;
   isbn?: string;
@@ -360,7 +358,7 @@ interface Conf {
     [key: string]: unknown;
   };
   /** External cross-reference configuration */
-  xref?: boolean | string | string[] | { url?: string; specs?: string[]; profile?: string };
+  xref?: boolean | string | string[] | { url?: string; specs?: string[]; profile?: string; headingApiUrl?: string };
   /** Whether to include JSON-LD metadata */
   doJsonLd?: boolean;
   /** Whether to highlight variables */

@@ -81,7 +81,7 @@ export async function run(conf) {
 
   /** @type {NodeListOf<HTMLAnchorElement>} */
   const localAnchors = document.querySelectorAll(
-    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
+    "a[data-cite='']:not([data-no-link-to-dfn]), a:not([href]):not([data-cite]):not([data-no-link-to-dfn]):not(.logo):not(.externalDFN)"
   );
   for (const anchor of localAnchors) {
     if (!anchor.dataset?.linkType && anchor.dataset?.xrefType) {
@@ -342,22 +342,25 @@ function showLinkingError(elems) {
  */
 function updateReferences(conf) {
   const { shortName = "" } = conf;
-  // Match shortName in a data-cite (with optional leading ?!), while skipping shortName as prefix.
+  // Build the regex only when shortName is non-empty. An empty shortName would
+  // produce a degenerate regex that corrupts all data-cite values — e.g.
+  // turning "HTML" into "__SPEC__HTML".
   // https://regex101.com/r/rsZyIJ/5
-  const regex = new RegExp(
-    String.raw`^([?!])?${regExpEscape(shortName)}\b([^-])`,
-    "i"
-  );
+  const regex = shortName
+    ? new RegExp(String.raw`^([?!])?${regExpEscape(shortName)}\b([^-])`, "i")
+    : null;
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
     "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
   );
   for (const elem of elems) {
-    elem.dataset.cite = (elem.dataset.cite ?? "").replace(
-      regex,
-      `$1${THIS_SPEC}$2`
-    );
+    if (regex) {
+      elem.dataset.cite = (elem.dataset.cite ?? "").replace(
+        regex,
+        `$1${THIS_SPEC}$2`
+      );
+    }
     const { key, isNormative } = toCiteDetails(elem);
     if (key === THIS_SPEC) continue;
 

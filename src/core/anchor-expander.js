@@ -47,6 +47,12 @@ export function run() {
         processBox(matchingElement, id, a);
         break;
       }
+      case "dfn": {
+        const copy = makeSafeCopy(matchingElement);
+        a.append(...copy.childNodes);
+        a.classList.add("dfn-ref");
+        break;
+      }
       default: {
         a.textContent = a.getAttribute("href");
         const msg = "ReSpec doesn't support expanding this kind of reference.";

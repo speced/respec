@@ -3,6 +3,7 @@
  * Module core/clipboard
  *
  * Shared clipboard copy button for code blocks (WebIDL, CDDL, etc.).
+ * Buttons survive export: a runtime script re-attaches click handlers.
  */
 
 const COPY_SVG =
@@ -10,10 +11,11 @@ const COPY_SVG =
 
 /**
  * Create a copy-to-clipboard button for a code block.
- * The button excludes the header element (matched by headerSelector) from copy.
+ * The button stores the header selector in a data attribute so the
+ * runtime script can re-attach the handler in exported documents.
  *
  * @param {string} headerSelector - Selector for the header to exclude from copy
- * @param {string} [title="Copy to clipboard"] - Accessible label and tooltip for the copy button
+ * @param {string} [title="Copy to clipboard"] - Accessible label and tooltip
  * @returns {HTMLButtonElement}
  */
 export function createCopyButton(headerSelector, title = "Copy to clipboard") {
@@ -22,6 +24,7 @@ export function createCopyButton(headerSelector, title = "Copy to clipboard") {
   button.title = title;
   button.setAttribute("aria-label", title);
   button.classList.add("respec-button-copy-paste", "removeOnSave");
+  button.dataset.copyHeader = headerSelector;
   button.addEventListener("click", () => {
     const pre = button.closest("pre");
     if (!pre) return;
@@ -30,4 +33,27 @@ export function createCopyButton(headerSelector, title = "Copy to clipboard") {
     navigator.clipboard.writeText(clone.textContent ?? "");
   });
   return button;
+}
+
+/**
+ * Inject a runtime script that re-attaches copy handlers in exported docs.
+ * Call this once after all copy buttons are created.
+ */
+export function injectCopyScript() {
+  if (document.getElementById("respec-copy-paste")) return;
+  const script = document.createElement("script");
+  script.id = "respec-copy-paste";
+  script.textContent = `
+    document.querySelectorAll(".respec-button-copy-paste").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var pre = this.closest("pre");
+        if (!pre) return;
+        var sel = this.dataset.copyHeader;
+        var clone = pre.cloneNode(true);
+        if (sel) { var h = clone.querySelector(sel); if (h) h.remove(); }
+        navigator.clipboard.writeText(clone.textContent);
+      });
+    });
+  `;
+  document.body.append(script);
 }

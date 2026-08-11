@@ -116,4 +116,36 @@ describe("Core - MDN Annotation", () => {
     expect(tagName).toBe("ASIDE");
     expect(classList).toContain("mdn");
   });
+
+  it("shows a helpful hint when the mdn key is not found (404)", async () => {
+    const ops = makeStandardOps({
+      mdn: { baseJsonPath },
+      shortName: "nonexistent-spec-xyz",
+    });
+    const doc = await makeRSDoc(ops, "spec/core/mdn-annotation.html");
+    const error = doc.respec.errors.find(
+      e => e.plugin === "core/mdn-annotation"
+    );
+    expect(error).toBeTruthy();
+    expect(error.hint).toContain("SPECMAP.json");
+    expect(error.hint).toContain("mdn");
+  });
+
+  // Can't directly test `mdn: true` because it uses the default
+  // BASE_JSON_PATH (w3c.github.io), which isn't available in tests.
+  // Instead, test the explicit-key hint via `mdn.key`.
+  it("shows a helpful hint when an explicit mdn key is not found (404)", async () => {
+    const ops = makeStandardOps({
+      mdn: { key: "nonexistent-key", baseJsonPath },
+      shortName: "whatever",
+    });
+    const doc = await makeRSDoc(ops, "spec/core/mdn-annotation.html");
+    const error = doc.respec.errors.find(
+      e => e.plugin === "core/mdn-annotation"
+    );
+    expect(error).toBeTruthy();
+    expect(error.message).toContain("nonexistent-key");
+    expect(error.hint).toContain("SPECMAP.json");
+    expect(error.hint).toContain("mdn");
+  });
 });

@@ -387,4 +387,21 @@ describe("Core — Link to definitions", () => {
     expect(codeElem.textContent).toEqual("MediaDevices");
     expect(codeElem.querySelector("code")).toBeNull();
   });
+
+  it("does not corrupt data-cite values when shortName is missing", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <p><dfn data-cite="HTML#concept-document">Document</dfn></p>
+      </section>
+    `;
+    // Explicitly omit shortName to reproduce the __SPEC__HTML corruption.
+    // An empty shortName caused the regex to become degenerate and corrupt
+    // all data-cite values (e.g., "HTML" → "__SPEC__HTML").
+    const ops = makeStandardOps({ shortName: undefined }, body);
+    const doc = await makeRSDoc(ops);
+    // Check there is no element with __SPEC__ in its data-cite
+    const corrupt = doc.querySelector("[data-cite*='__SPEC__']");
+    expect(corrupt).toBeNull();
+  });
 });

@@ -103,7 +103,11 @@ describe("Core — Can I Use", () => {
 
     expect(firefox.width).toBe(20);
     expect(firefox.height).toBe(20);
-    expect(chrome.alt).toBe("Android Chrome logo");
+    expect(chrome.alt).toBe("");
+
+    // The parent cell has role=img with aria-label for accessibility
+    const firstCell = cells[0];
+    expect(firstCell.getAttribute("role")).toBe("img");
 
     // The version numbers
     const [firefoxVersion, chromeVersion, safariVersion] =
@@ -111,6 +115,12 @@ describe("Core — Can I Use", () => {
     expect(chromeVersion.textContent).toBe("78");
     expect(firefoxVersion.textContent).toBe("66");
     expect(safariVersion.textContent).toBe("—");
+
+    // aria-label for no-version cell uses "(version unknown)" to match visible "—"
+    const safariCell = safariVersion.closest(".caniuse-cell");
+    expect(safariCell.getAttribute("aria-label")).toBe(
+      "FEATURE is unknown support since iOS Safari (version unknown) on mobile."
+    );
 
     // More info link
     const moreInfoLink = cells.item(3);

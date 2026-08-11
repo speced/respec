@@ -70,6 +70,7 @@ function createPanel(dfn) {
           >Permalink</a
         >
         ${dfnExportedMarker(dfn)} ${idlMarker(dfn, links)}
+        ${cddlMarker(dfn, links)}
       </div>
       <p><b>Referenced in:</b></p>
       ${referencesToHTML(id, links)}
@@ -109,6 +110,28 @@ function idlMarker(dfn, links) {
     }
   }
   return null;
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {NodeListOf<HTMLAnchorElement>} links
+ */
+function cddlMarker(dfn, links) {
+  const { dfnType } = dfn.dataset;
+  if (!dfnType?.startsWith("cddl-")) return null;
+
+  const cddlBlock = [...links]
+    .map(a => a.closest("pre.cddl"))
+    .find(pre => pre?.id);
+
+  if (!cddlBlock) return null;
+
+  return html`<a
+    href="#${cddlBlock.id}"
+    class="marker cddl-block"
+    title="Jump to CDDL declaration"
+    >CDDL</a
+  >`;
 }
 
 /**

@@ -30,7 +30,7 @@ async function highlightElement(elem) {
   const languages = getLanguageHint(htmlElem.classList);
   let response;
   try {
-    response = await sendHighlightRequest(htmlElem.innerText, languages);
+    response = await sendHighlightRequest(htmlElem.textContent, languages);
   } catch (err) {
     console.error(err);
     return;
@@ -91,8 +91,8 @@ export async function run(conf) {
   const highlightables = [
     .../** @type {NodeListOf<HTMLElement>} */ (
       document.querySelectorAll(`
-    pre:not(.idl):not(.nohighlight) > code:not(.nohighlight),
-    pre:not(.idl):not(.nohighlight),
+    pre:not(.idl):not(.cddl):not(.nohighlight) > code:not(.nohighlight),
+    pre:not(.idl):not(.cddl):not(.nohighlight),
     code.highlight
   `)
     ),

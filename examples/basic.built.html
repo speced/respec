@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -70,6 +70,53 @@
         <li>A |variable:DOMString| can be declared like this.</li>
       </ol>
     </section>
+    <section>
+      <h2>WebDriver BiDi Extension for Foo</h2>
+      <p>
+        This section defines the WebDriver BiDi [[WEBDRIVER-BIDI]] protocol
+        commands for the {{Foo}} interface.
+      </p>
+      <section>
+        <h3>The <code>foo.doTheFoo</code> Command</h3>
+        <p>
+          The <dfn cddl-type>FooDoTheFooCommand</dfn> invokes {{Foo/doTheFoo()}}
+          on the remote end. The {^FooDoTheFooParameters/bar^} parameter maps to
+          the {{Foo}}'s {{Foo/bar}} attribute.
+        </p>
+        <pre class="cddl">
+          FooDoTheFooCommand = {
+            method: "foo.doTheFoo",
+            params: FooDoTheFooParameters,
+          }
+
+          FooDoTheFooParameters = {
+            bar: tstr,
+            ? timeout: uint,
+            ? level: FooLevel,
+          }
+
+          FooLevel = "low" / "medium" / "high"
+        </pre>
+        <p>
+          The {^FooDoTheFooParameters/bar^} parameter is required. The
+          {^FooDoTheFooParameters/timeout^} parameter is optional and defaults
+          to 30 seconds. The {^FooLevel^} can be {^FooLevel/"low"^},
+          {^FooLevel/"medium"^}, or {^FooLevel/"high"^}.
+        </p>
+      </section>
+      <section>
+        <h3>The <code>foo.doTheFoo</code> Result</h3>
+        <p>On success, the remote end returns a {^FooDoTheFooResult^}.</p>
+        <pre class="cddl">
+          FooDoTheFooResult = {
+            success: bool,
+            ? message: tstr,
+            ? data: bstr,
+          }
+        </pre>
+      </section>
+    </section>
+    <section id="cddl-index"></section>
     <section id="conformance">
       <p>
         This is required for specifications that contain normative material.
