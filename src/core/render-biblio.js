@@ -215,11 +215,13 @@ function showRef(reference) {
   const result = html`
     <dt id="${refId}">[${ref}]</dt>
     <dd>
-      ${refcontent
-        ? { html: stringifyReference(refcontent) }
-        : html`<em class="respec-offending-element"
-            >${l10n.reference_not_found}</em
-          >`}
+      ${
+        refcontent
+          ? { html: stringifyReference(refcontent) }
+          : html`<em class="respec-offending-element"
+              >${l10n.reference_not_found}</em
+            >`
+      }
     </dd>
   `;
   return result;

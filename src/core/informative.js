@@ -28,6 +28,9 @@ const localizationStrings = {
   cs: {
     informative: "Tato sekce není normativní.",
   },
+  fr: {
+    informative: "Cette section est non normative.",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);
