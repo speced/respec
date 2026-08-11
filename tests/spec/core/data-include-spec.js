@@ -67,6 +67,23 @@ describe("Core — Data Include", () => {
     expect(container.textContent).toBe("");
   });
 
+  it("shows an error and doesn't inject content when the include fails", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody(),
+    };
+    const doc = await makeRSDoc(ops, url);
+    const container = doc.getElementById("not-found-include");
+    expect(container).toBeTruthy();
+    expect(container.textContent).toBe("");
+    expect(container.hasAttribute("data-include")).toBe(true);
+    const errors = doc.respec.errors.filter(
+      err => err.plugin === "core/data-include"
+    );
+    expect(errors.length).toBe(1);
+    expect(errors[0].message).toContain("404");
+  });
+
   it("handles nested data-includes", async () => {
     const body = html`<section
       id="include-level-1"
