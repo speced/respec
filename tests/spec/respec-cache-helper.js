@@ -43,16 +43,17 @@ let groupsPromise;
  */
 export async function seedGroupCache() {
   if (!groupsPromise) {
-    groupsPromise = fetch("/tests/data/groups.json")
-      .then(r => {
+    groupsPromise = (async () => {
+      try {
+        const r = await fetch("/tests/data/groups.json");
         if (!r.ok)
           throw new Error(`Failed to load groups fixture: ${r.status}`);
-        return r.json();
-      })
-      .catch(err => {
+        return await r.json();
+      } catch (err) {
         groupsPromise = undefined;
         throw err;
-      });
+      }
+    })();
   }
   await seedCache(await groupsPromise);
 }
