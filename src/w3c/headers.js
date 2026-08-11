@@ -431,7 +431,7 @@ export async function run(conf) {
       const pubDate = ISODate.format(conf.publishDate);
       conf.thisVersion = w3Url(`${latestPath}-${pubDate}`);
       const prevPubDate = ISODate.format(conf.previousPublishDate);
-      conf.prevVersion = w3Url(`${latestPath}-${prevPubDate}}`);
+      conf.prevVersion = w3Url(`${latestPath}-${prevPubDate}`);
     } else if (conf.isCGBG || conf.isBasic) {
       conf.prevVersion = conf.prevVersion || "";
     } else {
@@ -684,7 +684,11 @@ function derivePubSpace(conf) {
   if (conf.isNoTrack && !conf.isCGBG && !conf.isTagFinding) {
     return "";
   }
-  if (trStatus.includes(specStatus ?? "") || conf.groupType === "wg") {
+  const groupType = conf.groupType;
+  const isWG =
+    groupType === "wg" ||
+    (Array.isArray(groupType) && groupType.includes("wg"));
+  if (trStatus.includes(specStatus ?? "") || isWG) {
     return `/TR`;
   }
 

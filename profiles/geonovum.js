@@ -24,6 +24,7 @@ const modules = [
   import("../src/core/biblio.js"),
   import("../src/core/link-to-dfn.js"),
   import("../src/core/data-cite.js"),
+  import("../src/core/xref-headings.js"),
   import("../src/core/render-biblio.js"),
   import("../src/core/contrib.js"),
   import("../src/core/sections.js"),
