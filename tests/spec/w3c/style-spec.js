@@ -68,7 +68,7 @@ const statuses = [
   {
     specStatus: "BG-FINAL",
     expectedURL: "https://www.w3.org/StyleSheets/TR/2021/bg-final",
-    group: "autowebplatform",
+    group: "publishingbg",
   },
   {
     specStatus: "BG-DRAFT",

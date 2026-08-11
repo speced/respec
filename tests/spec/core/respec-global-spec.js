@@ -47,6 +47,16 @@ describe("Core — Respec Global - document.respec", () => {
     expect(doc.respec.errors).toHaveSize(0);
   });
 
+  it("exposes a worker promise that resolves to a Worker", async () => {
+    const doc = await makeRSDoc(makeStandardOps());
+    const { worker } = doc.respec;
+    expect(worker).toBeDefined();
+    expect(typeof worker.then).toBe("function");
+    const resolved = await worker;
+    expect(resolved).toBeTruthy();
+    expect(typeof resolved.postMessage).toBe("function");
+  });
+
   it("returns exported html with toHTML()", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
