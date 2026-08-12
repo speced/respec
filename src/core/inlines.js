@@ -199,7 +199,7 @@ function inlineRefMatches(matched) {
   if (refWithoutPrefix.startsWith("#")) {
     return linkText
       ? html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"
-          >${linkText}</a
+          >${processInlineContent(linkText)}</a
         >`
       : html`<a href="${refWithoutPrefix}" data-matched-text="${matched}"></a>`;
   }
@@ -258,12 +258,20 @@ function inlineBibrefMatches(matched, txt, conf) {
   }
 
   const [spec, linkText] = ref.split("|").map(norm);
+  const cleanRef = spec.replace(/^(!|\?)/, "");
+
+  const isSelfCite =
+    conf.shortName && cleanRef.toLowerCase() === conf.shortName.toLowerCase();
+  if (isSelfCite) {
+    const title = conf.title || cleanRef;
+    return [html`<cite title="${conf.shortName}">${title}</cite>`];
+  }
+
   const { type, illegal } = refTypeFromContext(
     spec,
     /** @type {HTMLElement} */ (txt.parentElement)
   );
   const cite = renderInlineCitation(spec, linkText);
-  const cleanRef = spec.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
     const citeElem = cite.childNodes[1] || cite;
     const msg = `Normative references in informative sections are not allowed. `;
@@ -349,6 +357,19 @@ function processInlineContent(text) {
     });
   }
   return document.createTextNode(text);
+}
+
+/**
+ * Replaces an element's content with `text`, rendering inline `code` spans
+ * the same way `[= =]` and other inline syntaxes do. Used to apply the alias
+ * of a `[[[…|alias]]]` autolink as its display text.
+ * @param {HTMLElement} elem
+ * @param {string} text
+ */
+export function setInlineContent(elem, text) {
+  elem.textContent = "";
+  const content = processInlineContent(text);
+  elem.append(...(Array.isArray(content) ? content : [content]));
 }
 
 /**

@@ -297,7 +297,7 @@ async function getBranchState() {
   const local = await git(["rev-parse", "@"]);
   const remote = await git(["rev-parse", "@{u}"]);
   const base = await git(["merge-base", "@", "@{u}"]);
-  let result = "";
+  let result;
   switch (local) {
     case remote:
       result = "up-to-date";
@@ -354,7 +354,7 @@ async function preflight() {
       "node",
       [
         "-e",
-        'import("puppeteer").then(p => process.stdout.write(p.executablePath()))',
+        'import("puppeteer").then(async p => process.stdout.write(await p.executablePath()))',
       ],
       { timeout: 15000, showOutput: false }
     );
