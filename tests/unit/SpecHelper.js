@@ -29,25 +29,13 @@ export function makePluginDoc(
           var respecConfig = ${JSON.stringify(config || {}, null, 2)};
         </script>
         <script type="module">
-          async function run(plugins) {
-            const allPlugins = plugins.map(p => "/base" + p);
-            try {
-              const [baseRunner, ...plugs] = await Promise.all(
-                allPlugins.map(plug => import(plug))
-              );
-              await baseRunner.runAll(plugs);
-            } catch (err) {
-              console.error(err);
-              if (document.respec) {
-                document.respec.errors.push(err);
-              } else {
-                Object.defineProperty(document, "respec", {
-                  value: { ready: Promise.reject(err) },
-                });
-              }
-            }
-          }
-          run(${JSON.stringify(plugins)});
+          const plugins = ${JSON.stringify(plugins)};
+          window.respecReady = (async () => {
+            const [baseRunner, ...plugs] = await Promise.all(
+              plugins.map(plug => import("/base" + plug))
+            );
+            await baseRunner.runAll(plugs);
+          })();
         </script>
       </head>
       <body>${body}</body>
@@ -80,27 +68,11 @@ function getDoc(html) {
  * @return {Promise<Document>}
  */
 async function waitReady(iframe) {
-  const timeoutId = setTimeout(() => {
-    throw new Error(`Timed out waiting for document.respec.ready.`);
-  }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
-
-  const doc = iframe.contentDocument;
-  if (doc.respec) {
-    await doc.respec.ready;
-    clearTimeout(timeoutId);
-    return doc;
-  }
-
-  return await new Promise(res => {
-    window.addEventListener("message", function msgHandler(ev) {
-      if (!doc || !ev.source || doc !== ev.source.document) return;
-      if (ev.data.topic === "end-all") {
-        window.removeEventListener("message", msgHandler);
-        clearTimeout(timeoutId);
-        res(doc);
-      }
-    });
-  });
+  // makePluginDoc exposes the promise for its own ReSpec run, so await that
+  // rather than the "end-all" postMessage: document.respec only exists once
+  // the dynamically imported plugins have loaded, which is after iframe load.
+  await iframe.contentWindow.respecReady;
+  return iframe.contentDocument;
 }
 
 export function flushIframes() {
