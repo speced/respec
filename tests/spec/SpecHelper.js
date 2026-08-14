@@ -146,6 +146,12 @@ function decorateDocument(doc, opts) {
     });
   }
 
+  function decorateHead({ head = "" }) {
+    if (head) {
+      doc.head.insertAdjacentHTML("beforeend", head);
+    }
+  }
+
   if (opts.htmlAttrs) {
     Object.keys(opts.htmlAttrs).reduce(
       intoAttributes.bind(opts.htmlAttrs),
@@ -156,6 +162,7 @@ function decorateDocument(doc, opts) {
     doc.title = opts.title;
   }
   decorateBody(opts);
+  decorateHead(opts);
   addRespecConfig(opts);
   if (!doc.querySelector("script[src]")) {
     addReSpecLoader(opts);
