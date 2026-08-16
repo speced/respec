@@ -81,4 +81,29 @@ describe("Core — Best Practices", () => {
     );
     expect(bps.querySelectorAll("ul li")).toHaveSize(3);
   });
+
+  it("does not duplicate heading when bp-summary already has one", async () => {
+    const body = `
+      <section id="bps">
+        <h2>Section</h2>
+        <span class='practicelab'>BP1</span>
+        <section id='bp-summary'>
+          <h2>Custom Heading</h2>
+        </section>
+      </section>
+    `;
+    const ops = {
+      config: makeBasicConfig(),
+      body,
+    };
+    const doc = await makeRSDoc(ops);
+    const bpSummary = doc.getElementById("bp-summary");
+    const headings = bpSummary.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    expect(headings).toHaveSize(1);
+    expect(headings[0].textContent).toContain("Custom Heading");
+
+    const listItems = bpSummary.querySelectorAll("ul li");
+    expect(listItems).toHaveSize(1);
+    expect(listItems[0].textContent.trim()).toBe("Best Practice 1: BP1");
+  });
 });
