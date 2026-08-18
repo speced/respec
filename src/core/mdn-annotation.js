@@ -89,7 +89,7 @@ function attachMDNDetail(mdnSpec) {
  */
 function buildBrowserSupportTable(support) {
   /**
-   * @param {keyof MDN_BROWSERS} browserId
+   * @param {keyof typeof MDN_BROWSERS} browserId
    * @param {"Yes" | "No" | "Unknown"} yesNoUnknown
    * @param {string} version
    * @returns {HTMLTableRowElement}
@@ -104,7 +104,7 @@ function buildBrowserSupportTable(support) {
   }
 
   /**
-   * @param {keyof MDN_BROWSERS} browserId
+   * @param {keyof typeof MDN_BROWSERS} browserId
    * @param {VersionDetails} versionData
    */
   function createRowFromBrowserData(browserId, versionData) {
@@ -185,7 +185,7 @@ function getMdnKey(conf) {
  * @param {number} [mdnConf.maxAge]
  *
  * @typedef {{ version_added: string|boolean|null, version_removed?: string }} VersionDetails
- * @typedef {Record<string | keyof MDN_BROWSERS, VersionDetails>} MdnSupportEntry
+ * @typedef {Record<string | keyof typeof MDN_BROWSERS, VersionDetails>} MdnSupportEntry
  * @typedef {{ name: string, title: string, slug: string, summary: string, support: MdnSupportEntry, engines: string[] }} MdnEntry
  * @typedef {Record<string, MdnEntry[]>} MdnData
  * @returns {Promise<MdnData|null>}
@@ -215,12 +215,12 @@ function findElements(data) {
  */
 function getEngineSupportIcons(engines) {
   if (engines.length === 3) {
-    return html`<span title="${l10n.inAllEngines}">✅</span>`;
+    return html`<span role="img" aria-label="${l10n.inAllEngines}">✅</span>`;
   }
   if (engines.length < 2) {
-    return html`<span title="${l10n.inSomeEngines}">🚫</span>`;
+    return html`<span role="img" aria-label="${l10n.inSomeEngines}">🚫</span>`;
   }
-  return html`<span>&emsp;</span>`;
+  return html`<span aria-hidden="true">&emsp;</span>`;
 }
 
 /**
