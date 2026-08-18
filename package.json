@@ -89,7 +89,6 @@
     "test:integration": "karma start ./tests/spec/karma.conf.cjs --single-run"
   },
   "dependencies": {
-    "colors": "1.4.0",
     "finalhandler": "^2.1.1",
     "marked": "^18.0.9",
     "puppeteer": "^25.8.0",
