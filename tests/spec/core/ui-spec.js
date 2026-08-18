@@ -32,6 +32,17 @@ describe("Core - UI", () => {
     expect(window.getComputedStyle(menu).display).toBe("none");
   });
 
+  it("labels the modal close button for assistive technology", async () => {
+    const doc = await makeRSDoc(makeStandardOps());
+    doc.defaultView.respecUI.freshModal(
+      "Test",
+      doc.createTextNode("content"),
+      doc.createElement("button")
+    );
+    const closeButton = doc.querySelector(".respec-modal .close-button");
+    expect(closeButton.getAttribute("aria-label")).toBe("Close");
+  });
+
   it("shows errors", async () => {
     const doc = await makeRSDoc(makeStandardOps({ group: "webapps" }));
     const ui = doc.defaultView.respecUI;
