@@ -101,12 +101,30 @@ const localizationStrings = {
     with_subject_line: "次の件名で",
   },
   nl: {
+    archives: "archieven",
     author: "Auteur:",
     authors: "Auteurs:",
+    commit_history: "Commit geschiedenis",
     editor: "Redacteur:",
     editors: "Redacteurs:",
+    feedback: "Feedback:",
+    former_editor: "Voormalige redacteur:",
+    former_editors: "Voormalige redacteurs:",
+    history: "Geschiedenis:",
+    implementation_report: "Implementatie rapport:",
     latest_editors_draft: "Laatste werkversie:",
     latest_published_version: "Laatst gepubliceerde versie:",
+    latest_recommendation: "Laatste aanbeveling:",
+    more_details_about_this_doc: "Meer informatie over dit document",
+    /**
+     * @param {boolean} plural
+     */
+    multiple_alternates(plural) {
+      return `Dit document is ook beschikbaar in ${
+        plural ? "dit niet-normatieve formaat" : "deze niet-normatieve formaten"
+      }:`;
+    },
+    publication_history: "Publicatiegeschiedenis",
     this_version: "Deze versie:",
   },
   es: {
@@ -240,149 +258,199 @@ export default (conf, options) => {
       if (details) details.open = true;
     }
   );
+  // Link text shows the readable IRI; the href keeps the encoded URL.
+  const iri = {
+    thisVersion: safeDecodeURI(conf.thisVersion),
+    latestVersion: safeDecodeURI(conf.latestVersion),
+    edDraftURI: safeDecodeURI(conf.edDraftURI),
+    historyURI: safeDecodeURI(conf.historyURI),
+    prevVersion: safeDecodeURI(conf.prevVersion),
+  };
   return html`<div class="head">
-    ${(conf.logos ?? []).length
-      ? html`<p class="logos">${(conf.logos ?? []).map(showLogo)}</p>`
-      : ""}
+    ${
+      (conf.logos ?? []).length
+        ? html`<p class="logos">${(conf.logos ?? []).map(showLogo)}</p>`
+        : ""
+    }
     ${document.querySelector("h1#title")} ${getSpecSubTitleElem(conf)}
     <p id="w3c-state">${renderSpecTitle(conf)}</p>
     <details open="${localStorage.getItem("tr-metadata") || "true"}">
       <summary>${l10n.more_details_about_this_doc}</summary>
       <dl>
-        ${conf.thisVersion
-          ? html`<dt>${l10n.this_version}</dt>
-              <dd>
-                <a class="u-url" href="${conf.thisVersion}"
-                  >${conf.thisVersion}</a
-                >
-              </dd>`
-          : ""}
-        ${"latestVersion" in conf // latestVersion can be falsy
-          ? html`<dt>${l10n.latest_published_version}</dt>
-              <dd>
-                ${conf.latestVersion
-                  ? html`<a href="${conf.latestVersion}"
-                      >${conf.latestVersion}</a
-                    >`
-                  : "none"}
-              </dd>`
-          : ""}
-        ${conf.edDraftURI
-          ? html`
-              <dt>${l10n.latest_editors_draft}</dt>
-              <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
-            `
-          : ""}
-        ${conf.historyURI || conf.github
-          ? html`<dt>${l10n.history}</dt>
-              ${conf.historyURI
-                ? html`<dd>
-                    <a href="${conf.historyURI}">${conf.historyURI}</a>
-                  </dd>`
-                : ""}
-              ${conf.github
-                ? html`<dd>
-                    <a
-                      href="${
-                        /** @type {any} */ (conf.github).commitHistoryURL
-                      }"
-                      >${l10n.commit_history}</a
-                    >
-                  </dd>`
-                : ""}`
-          : ""}
-        ${conf.testSuiteURI
-          ? html`
-              <dt>${l10n.test_suite}</dt>
-              <dd><a href="${conf.testSuiteURI}">${conf.testSuiteURI}</a></dd>
-            `
-          : ""}
-        ${conf.implementationReportURI
-          ? html`
-              <dt>${l10n.implementation_report}</dt>
-              <dd>
-                <a href="${conf.implementationReportURI}"
-                  >${conf.implementationReportURI}</a
-                >
-              </dd>
-            `
-          : ""}
-        ${conf.prevED
-          ? html`
-              <dt>${l10n.prev_editor_draft}</dt>
-              <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
-            `
-          : ""}
-        ${conf.showPreviousVersion
-          ? html`
-              <dt>${l10n.prev_version}</dt>
-              <dd><a href="${conf.prevVersion}">${conf.prevVersion}</a></dd>
-            `
-          : ""}
-        ${!conf.prevRecURI
-          ? ""
-          : conf.isRec
+        ${
+          conf.thisVersion
+            ? html`<dt>${l10n.this_version}</dt>
+                <dd>
+                  <a class="u-url" href="${conf.thisVersion}"
+                    >${iri.thisVersion}</a
+                  >
+                </dd>`
+            : ""
+        }
+        ${
+          "latestVersion" in conf // latestVersion can be falsy
+            ? html`<dt>${l10n.latest_published_version}</dt>
+                <dd>
+                  ${
+                    conf.latestVersion
+                      ? html`<a href="${conf.latestVersion}"
+                          >${iri.latestVersion}</a
+                        >`
+                      : "none"
+                  }
+                </dd>`
+            : ""
+        }
+        ${
+          conf.edDraftURI
             ? html`
-                <dt>${l10n.prev_recommendation}</dt>
-                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+                <dt>${l10n.latest_editors_draft}</dt>
+                <dd><a href="${conf.edDraftURI}">${iri.edDraftURI}</a></dd>
               `
-            : html`
-                <dt>${l10n.latest_recommendation}</dt>
-                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-              `}
-        ${(conf.editors ?? []).length
-          ? html`
-              <dt>
-                ${(conf.editors ?? []).length > 1 ? l10n.editors : l10n.editor}
-              </dt>
-              ${showPeople(conf, "editors")}
-            `
-          : ""}
-        ${(conf.formerEditors ?? []).length
-          ? html`
-              <dt>
-                ${(conf.formerEditors ?? []).length > 1
-                  ? l10n.former_editors
-                  : l10n.former_editor}
-              </dt>
-              ${showPeople(conf, "formerEditors")}
-            `
-          : ""}
-        ${(conf.authors ?? []).length
-          ? html`
-              <dt>
-                ${(conf.authors ?? []).length > 1 ? l10n.authors : l10n.author}
-              </dt>
-              ${showPeople(conf, "authors")}
-            `
-          : ""}
-        ${conf.github || conf.wgPublicList
-          ? html`<dt>${l10n.feedback}</dt>
-              ${renderFeedback(conf)}`
-          : ""}
-        ${conf.errata
-          ? html`<dt>Errata:</dt>
-              <dd><a href="${conf.errata}">Errata exists</a>.</dd>`
-          : ""}
+            : ""
+        }
+        ${
+          conf.historyURI || conf.github
+            ? html`<dt>${l10n.history}</dt>
+                ${
+                  conf.historyURI
+                    ? html`<dd>
+                        <a href="${conf.historyURI}">${iri.historyURI}</a>
+                      </dd>`
+                    : ""
+                }
+                ${
+                  conf.github
+                    ? html`<dd>
+                        <a
+                          href="${
+                            /** @type {any} */ (conf.github).commitHistoryURL
+                          }"
+                          >${l10n.commit_history}</a
+                        >
+                      </dd>`
+                    : ""
+                }`
+            : ""
+        }
+        ${
+          conf.testSuiteURI
+            ? html`
+                <dt>${l10n.test_suite}</dt>
+                <dd><a href="${conf.testSuiteURI}">${conf.testSuiteURI}</a></dd>
+              `
+            : ""
+        }
+        ${
+          conf.implementationReportURI
+            ? html`
+                <dt>${l10n.implementation_report}</dt>
+                <dd>
+                  <a href="${conf.implementationReportURI}"
+                    >${conf.implementationReportURI}</a
+                  >
+                </dd>
+              `
+            : ""
+        }
+        ${
+          conf.prevED
+            ? html`
+                <dt>${l10n.prev_editor_draft}</dt>
+                <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
+              `
+            : ""
+        }
+        ${
+          conf.showPreviousVersion
+            ? html`
+                <dt>${l10n.prev_version}</dt>
+                <dd><a href="${conf.prevVersion}">${iri.prevVersion}</a></dd>
+              `
+            : ""
+        }
+        ${
+          !conf.prevRecURI
+            ? ""
+            : conf.isRec
+              ? html`
+                  <dt>${l10n.prev_recommendation}</dt>
+                  <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+                `
+              : html`
+                  <dt>${l10n.latest_recommendation}</dt>
+                  <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+                `
+        }
+        ${
+          (conf.editors ?? []).length
+            ? html`
+                <dt>
+                  ${(conf.editors ?? []).length > 1 ? l10n.editors : l10n.editor}
+                </dt>
+                ${showPeople(conf, "editors")}
+              `
+            : ""
+        }
+        ${
+          (conf.formerEditors ?? []).length
+            ? html`
+                <dt>
+                  ${
+                    (conf.formerEditors ?? []).length > 1
+                      ? l10n.former_editors
+                      : l10n.former_editor
+                  }
+                </dt>
+                ${showPeople(conf, "formerEditors")}
+              `
+            : ""
+        }
+        ${
+          (conf.authors ?? []).length
+            ? html`
+                <dt>
+                  ${(conf.authors ?? []).length > 1 ? l10n.authors : l10n.author}
+                </dt>
+                ${showPeople(conf, "authors")}
+              `
+            : ""
+        }
+        ${
+          conf.github || conf.wgPublicList
+            ? html`<dt>${l10n.feedback}</dt>
+                ${renderFeedback(conf)}`
+            : ""
+        }
+        ${
+          conf.errata
+            ? html`<dt>Errata:</dt>
+                <dd><a href="${conf.errata}">Errata exists</a>.</dd>`
+            : ""
+        }
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
       </dl>
     </details>
-    ${conf.isRec
-      ? html`<p>
-          See also
-          <a
-            href="${`https://www.w3.org/Translations/?technology=${conf.shortName}`}"
-          >
-            <strong>translations</strong></a
-          >.
-        </p>`
-      : ""}
-    ${conf.alternateFormats
-      ? html`<p>
-          ${l10n.multiple_alternates(options.multipleAlternates)}
-          ${options.alternatesHTML}
-        </p>`
-      : ""}
+    ${
+      conf.isRec
+        ? html`<p>
+            See also
+            <a
+              href="${`https://www.w3.org/Translations/?technology=${conf.shortName}`}"
+            >
+              <strong>translations</strong></a
+            >.
+          </p>`
+        : ""
+    }
+    ${
+      conf.alternateFormats
+        ? html`<p>
+            ${l10n.multiple_alternates(options.multipleAlternates)}
+            ${options.alternatesHTML}
+          </p>`
+        : ""
+    }
     ${renderCopyright(conf)}
     <hr title="Separator for header" />
   </div>`;
@@ -450,14 +518,30 @@ function renderSpecTitle(conf) {
   return html`${preamble}${" "}
     <time class="dt-published" datetime="${conf.dashDate}"
       >${W3CDate.format(conf.publishDate)}</time
-    >${conf.modificationDate
-      ? html`, ${l10n.edited_in_place}${" "}
-          <time
-            class="dt-modified"
-            datetime="${ISODate.format(conf.modificationDate)}"
-            >${W3CDate.format(conf.modificationDate)}</time
-          >`
-      : ""}`;
+    >${
+      conf.modificationDate
+        ? html`, ${l10n.edited_in_place}${" "}
+            <time
+              class="dt-modified"
+              datetime="${ISODate.format(conf.modificationDate)}"
+              >${W3CDate.format(conf.modificationDate)}</time
+            >`
+        : ""
+    }`;
+}
+
+/**
+ * Shows a percent-encoded URL as the IRI a human can read, or as-is when it
+ * has malformed escape sequences.
+ * @param {string | null} [url]
+ */
+function safeDecodeURI(url) {
+  if (!url) return url;
+  try {
+    return decodeURI(url);
+  } catch {
+    return url;
+  }
 }
 
 /**
@@ -485,12 +569,14 @@ function renderCopyright(conf) {
       Copyright &copy;
       ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
       the document editors/authors.
-      ${conf.licenseInfo.name !== "unlicensed"
-        ? html`Text is available under the
-            <a rel="license" href="${conf.licenseInfo.url}"
-              >${conf.licenseInfo.name}</a
-            >; additional terms may apply.`
-        : ""}
+      ${
+        conf.licenseInfo.name !== "unlicensed"
+          ? html`Text is available under the
+              <a rel="license" href="${conf.licenseInfo.url}"
+                >${conf.licenseInfo.name}</a
+              >; additional terms may apply.`
+          : ""
+      }
     </p>`;
   }
   return renderOfficialCopyright(conf);
@@ -502,9 +588,11 @@ function renderOfficialCopyright(conf) {
     <a href="https://www.w3.org/policies/#copyright">Copyright</a>
     &copy;
     ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
-    ${conf.additionalCopyrightHolders
-      ? html` ${[conf.additionalCopyrightHolders]} &amp; `
-      : ""}
+    ${
+      conf.additionalCopyrightHolders
+        ? html` ${[conf.additionalCopyrightHolders]} &amp; `
+        : ""
+    }
     <a href="https://www.w3.org/">World Wide Web Consortium</a>.
     <abbr title="World Wide Web Consortium">W3C</abbr><sup>&reg;</sup>
     <a href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>,

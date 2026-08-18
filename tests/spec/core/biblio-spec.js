@@ -32,6 +32,12 @@ describe("W3C — Bibliographic References", () => {
       href: "http://test.com",
       publisher: "Publisher Here",
     },
+    TestRef4: {
+      title: "Fourth test",
+      href: "http://test.com",
+      publisher: "Publisher Pages",
+      pages: "369-384",
+    },
     FOOBARGLOP: {
       aliasOf: "BARBAR",
     },
@@ -48,7 +54,7 @@ describe("W3C — Bibliographic References", () => {
   const body = `
     <section id='sotd'>
       <p>[[DOM]] [[dom]] [[fetch]] [[?FeTcH]] [[FETCh]] [[fetCH]]
-      <p>foo [[TestRef1]] [[TestRef2]] [[TestRef3]]</p>
+      <p>foo [[TestRef1]] [[TestRef2]] [[TestRef3]] [[TestRef4]]</p>
       <p>[[EVERCOOKIE]]</p>
     </section>
     <section id='sample'>
@@ -132,16 +138,21 @@ describe("W3C — Bibliographic References", () => {
       );
     }
     expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
-    ref = null;
     // Make sure the ". " is automatically added to publisher.
     ref = doc.querySelector("#bib-testref2 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Testing 123\.\s/);
-    ref = null;
     // Make sure publisher is shown even when there is no author
     ref = doc.querySelector("#bib-testref3 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Publisher Here\.\s/);
+  });
+
+  it("displays the pages field when present", () => {
+    const ref = doc.querySelector("#bib-testref4 + dd");
+    expect(ref).toBeTruthy();
+    // Publisher followed by pages should use comma, not period
+    expect(ref.textContent).toContain("Publisher Pages, pp. 369-384");
   });
 
   it("resolves a localy-aliased spec", () => {
@@ -274,6 +285,16 @@ describe("W3C — Bibliographic References", () => {
     const badRef = doc.querySelector("#referencias-informativas dd");
     expect(badRef).toBeTruthy();
     expect(badRef.textContent.trim()).toBe("Referencia no encontrada.");
+  });
+
+  it("shows localized French references section and error", async () => {
+    const body = `<p id="bad-ref">[[bad-ref]]</p>`;
+    const ops = makeStandardOps({ localBiblio }, body);
+    ops.htmlAttrs = { lang: "fr" };
+    const doc = await makeRSDoc(ops);
+    const badRef = doc.querySelector("#references-informatives dd");
+    expect(badRef).toBeTruthy();
+    expect(badRef.textContent.trim()).toBe("Référence non trouvée.");
   });
 
   it("uses cached results from IDB", async () => {

@@ -19,6 +19,7 @@ import {
   showWarning,
   wrapInner,
 } from "./utils.js";
+import { setInlineContent } from "./inlines.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/data-cite";
 
@@ -36,7 +37,7 @@ export const THIS_SPEC = "__SPEC__";
  */
 async function getLinkProps(citeDetails) {
   const { key, frag, path, href: canonicalHref } = citeDetails;
-  let href = "";
+  let href;
   let title = "";
 
   // This is just referring to this document
@@ -210,7 +211,7 @@ export async function run() {
         elem.dataset.lt !== "the-empty-string" &&
         elem.textContent === ""
       ) {
-        elem.textContent = elem.dataset.lt;
+        setInlineContent(elem, elem.dataset.lt);
         delete elem.dataset.lt;
       }
 

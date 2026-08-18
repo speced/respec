@@ -43,7 +43,6 @@ module.exports = config => {
     plugins: [
       require("karma-jasmine"),
       require("karma-mocha-reporter"),
-      require("karma-jasmine-html-reporter"),
       require("karma-chrome-launcher"),
       require("karma-firefox-launcher"),
       require("karma-safari-launcher"),
@@ -70,7 +69,7 @@ module.exports = config => {
     },
 
     preprocessors: {},
-    reporters: ["mocha", "kjhtml"],
+    reporters: ["mocha"],
     port: 9876,
     colors: true,
 

@@ -1,32 +1,32 @@
 #!/usr/bin/env node
 import { readFile, writeFile } from "fs/promises";
-import colors from "colors";
 import finalhandler from "finalhandler";
 import http from "http";
 import { marked } from "marked";
 import path from "path";
 import sade from "sade";
 import serveStatic from "serve-static";
+import { styleText } from "node:util";
 import { toHTML } from "./respecDocWriter.js";
 
 const __dirname = import.meta.dirname;
 
 class Renderer extends marked.Renderer {
   strong(token) {
-    return colors.bold(this.parser.parseInline(token.tokens));
+    return styleText("bold", this.parser.parseInline(token.tokens));
   }
   em(token) {
-    return colors.italic(this.parser.parseInline(token.tokens));
+    return styleText("italic", this.parser.parseInline(token.tokens));
   }
   codespan(token) {
-    return colors.underline(unescape(token.text));
+    return styleText("underline", unescape(token.text));
   }
   paragraph(token) {
     return unescape(this.parser.parseInline(token.tokens));
   }
   link(token) {
     const text = this.parser.parseInline(token.tokens);
-    return `[${text}](${colors.blue.dim.underline(token.href)})`;
+    return `[${text}](${styleText(["blue", "dim", "underline"], token.href)})`;
   }
   list(token) {
     const body = token.items.map(item => this.listitem(item)).join("");
@@ -50,8 +50,8 @@ class Logger {
    */
   info(message, timeRemaining) {
     if (!this.verbose) return;
-    const header = colors.dim.bgWhite.black.bold("[INFO]");
-    const time = colors.dim(`[Timeout: ${timeRemaining}ms]`);
+    const header = styleText(["dim", "bgWhite", "black", "bold"], "[INFO]");
+    const time = styleText("dim", `[Timeout: ${timeRemaining}ms]`);
     console.error(header, time, message);
   }
 
@@ -60,8 +60,8 @@ class Logger {
    * @param {RsError} rsError
    */
   error(rsError) {
-    const header = colors.bgRed.white.bold("[ERROR]");
-    const message = colors.red(this._formatMarkdown(rsError.message));
+    const header = styleText(["bgRed", "white", "bold"], "[ERROR]");
+    const message = styleText("red", this._formatMarkdown(rsError.message));
     console.error(header, message);
     if (rsError.plugin) {
       this._printDetails(rsError);
@@ -70,8 +70,8 @@ class Logger {
 
   /** @param {RsError} rsError */
   warn(rsError) {
-    const header = colors.bgYellow.black.bold("[WARNING]");
-    const message = colors.yellow(this._formatMarkdown(rsError.message));
+    const header = styleText(["bgYellow", "black", "bold"], "[WARNING]");
+    const message = styleText("yellow", this._formatMarkdown(rsError.message));
     console.error(header, message);
     if (rsError.plugin) {
       this._printDetails(rsError);
@@ -80,9 +80,16 @@ class Logger {
 
   /** @param {Error | string} error */
   fatal(error) {
-    const header = colors.bgRed.white.bold("[FATAL]");
-    const message = colors.red(error.stack || error);
+    const header = styleText(["bgRed", "white", "bold"], "[FATAL]");
+    const message = styleText("red", error.stack || error);
     console.error(header, message);
+    // Errors thrown by respecDocWriter keep the original in `cause`, so the
+    // underlying stack is only reachable by walking the chain.
+    let cause = error instanceof Error ? error.cause : undefined;
+    for (let depth = 0; cause instanceof Error && depth < 5; depth++) {
+      console.error(styleText("red", `Caused by: ${cause.stack}`));
+      cause = cause.cause;
+    }
   }
 
   _formatMarkdown(str) {
@@ -98,7 +105,11 @@ class Logger {
       const longestTitle = shouldPrintStacktrace ? "Stacktrace" : "Plugin";
       const padWidth = longestTitle.length + 1;
       const paddedTitle = `${title}:`.padStart(padWidth);
-      console.error(" ", colors.bold(paddedTitle), this._formatMarkdown(value));
+      console.error(
+        " ",
+        styleText("bold", paddedTitle),
+        this._formatMarkdown(value)
+      );
     };
     print("Count", rsError.elements && String(rsError.elements.length));
     print("Plugin", rsError.plugin);
@@ -106,7 +117,7 @@ class Logger {
     if (shouldPrintStacktrace) {
       let stacktrace = `${rsError.stack}`;
       if (rsError.cause) {
-        stacktrace += `\n    ${colors.bold("Caused by:")} ${rsError.cause.stack.split("\n").join("\n   ")}`;
+        stacktrace += `\n    ${styleText("bold", "Caused by:")} ${rsError.cause.stack.split("\n").join("\n   ")}`;
       }
       print("Stacktrace", stacktrace);
     }
@@ -166,18 +177,20 @@ class StaticServer {
 
 const cli = sade("respec [source] [destination]", true)
   .describe("Converts a ReSpec source file to HTML and writes to destination.")
-  .example(`input.html output.html ${colors.dim("# Output to a file.")}`)
+  .example(`input.html output.html ${styleText("dim", "# Output to a file.")}`)
   .example(
-    `http://example.com/spec.html stdout ${colors.dim("# Output to stdout.")}`
+    `http://example.com/spec.html stdout ${styleText("dim", "# Output to stdout.")}`
   )
   .example(
-    `http://example.com/spec.html output.html -e -w ${colors.dim(
+    `http://example.com/spec.html output.html -e -w ${styleText(
+      "dim",
       "# Halt on errors or warning."
     )}`
   )
   .example("--src http://example.com/spec.html --out spec.html")
   .example(
-    `--localhost index.html out.html ${colors.dim(
+    `--localhost index.html out.html ${styleText(
+      "dim",
       "# Generate file using a local web server."
     )}`
   );
