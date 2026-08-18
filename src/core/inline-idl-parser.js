@@ -120,9 +120,7 @@ function parseInlineIDL(str) {
   // Extract !!type suffix for type disambiguation (Bikeshed compat)
   let typeHint = "";
   if (str.includes("!!")) {
-    [str, typeHint] = str.split("!!", 2);
-    str = str.trim();
-    typeHint = typeHint.trim();
+    [str, typeHint] = str.split("!!", 2).map(s => s.trim());
   }
 
   // If it's got [[ string ]], then split as an internal slot
