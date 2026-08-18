@@ -63,7 +63,7 @@
     "simple-git-hooks": "^2.13.1",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^7.0.2",
-    "vnu-jar": "^26.8.6",
+    "vnu-jar": "^26.8.15",
     "webidl2": "^24.5.0"
   },
   "scripts": {
@@ -92,7 +92,7 @@
     "colors": "1.4.0",
     "finalhandler": "^2.1.1",
     "marked": "^18.0.9",
-    "puppeteer": "^25.7.0",
+    "puppeteer": "^25.8.0",
     "sade": "^1.8.1",
     "serve-static": "^2.2.1"
   },
