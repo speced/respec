@@ -50,17 +50,18 @@ async function openIdb() {
   // Clean the database of expired biblio entries.
   const now = Date.now();
   for (const storeName of [...ALLOWED_TYPES]) {
-    const store = db.transaction(storeName, "readwrite").store;
+    const tx = db.transaction(storeName, "readwrite");
     const range = IDBKeyRange.lowerBound(now);
-    let result = await store.openCursor(range);
+    let result = await tx.store.openCursor(range);
     while (result?.value) {
       /** @type {StoredBiblioEntry} */
       const entry = result.value;
       if (entry.expires === undefined || entry.expires < now) {
-        await store.delete(entry.id);
+        await tx.store.delete(entry.id);
       }
       result = await result.continue();
     }
+    await tx.done;
   }
 
   return db;
@@ -199,13 +200,20 @@ export const biblioDB = {
     if (isInDB) {
       const entry = await this.get(type, details.id);
       if (entry && entry.expires !== undefined && entry.expires < Date.now()) {
-        const { store } = db.transaction(type, "readwrite");
-        await store.delete(details.id);
+        const tx = db.transaction(type, "readwrite");
+        await tx.store.delete(details.id);
+        await tx.done;
         isInDB = false;
       }
     }
-    const { store } = db.transaction(type, "readwrite");
-    return isInDB ? await store.put(details) : await store.add(details);
+    const tx = db.transaction(type, "readwrite");
+    const result = isInDB
+      ? await tx.store.put(details)
+      : await tx.store.add(details);
+    // Await commit, not just the request: a later read in its own transaction
+    // may otherwise not see this write.
+    await tx.done;
+    return result;
   },
   /**
    * Closes the underlying database.
@@ -228,5 +236,6 @@ export const biblioDB = {
       return stores.objectStore(name).clear();
     });
     await Promise.all(clearStorePromises);
+    await stores.done;
   },
 };
