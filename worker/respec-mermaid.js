@@ -29,18 +29,16 @@ async function render(source, { id }) {
   container.style.left = "-9999px";
   container.style.top = "-9999px";
   document.body.append(container);
-  // The render id is deterministic, so a spec could legitimately already use it.
-  // Note what was there first, so cleanup only ever removes mermaid's own node.
-  const preExisting = document.getElementById(id);
   try {
+    // Given a container, mermaid renders entirely inside it, so removing the
+    // container is the whole cleanup. Never search the document for the render
+    // id: it is deterministic, and a spec may legitimately use it already.
     const { svg } = await mermaid.render(id, source, container);
     return { svg };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return { error: message };
   } finally {
-    const leftover = document.getElementById(id);
-    if (leftover && leftover !== preExisting) leftover.remove();
     container.remove();
   }
 }
