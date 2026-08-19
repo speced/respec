@@ -48,7 +48,7 @@ Every `querySelector`, `closest`, `getElementById` and `getAttribute` result is 
 
 Write en-US English everywhere, including comments and identifiers: behavior, color, license, center, analyze, initialize, serialize. Leave existing en-GB spelling alone when it is load-bearing, such as an established identifier or a verbatim quotation.
 
-Run `npx prettier --write` on changed files. CI fails on unformatted code.
+Run `pnpm format --write` on changed files. CI fails on unformatted code.
 
 ## Pull requests, commits, and comments
 
