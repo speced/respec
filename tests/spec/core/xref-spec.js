@@ -12,6 +12,7 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
+import { API_URL } from "../../../src/core/xref.js";
 
 describe("Core — xref", () => {
   afterAll(flushIframes);
@@ -1090,6 +1091,21 @@ describe("Core — xref", () => {
       expect(doc.body.dataset.cite.split(" ")).toEqual(
         jasmine.arrayWithExactContents(["XHR", "SVG"])
       );
+    });
+  });
+
+  describe("API_URL construction", () => {
+    it("uses the canonical respec.org xref endpoint as API_URL", () => {
+      expect(API_URL).toBe("https://respec.org/xref/");
+    });
+
+    it("resolves the version-check URL against the fixed API_URL origin", () => {
+      // The version-check request is derived from the hardcoded API_URL and is
+      // not author-configurable, so it always targets respec.org.
+      const versionURL = new URL("meta/version", API_URL);
+      expect(versionURL.href).toBe("https://respec.org/xref/meta/version");
+      expect(versionURL.protocol).toBe("https:");
+      expect(versionURL.hostname).toBe("respec.org");
     });
   });
 
