@@ -161,7 +161,7 @@ aside.example .marker > a.self-link {
   position: relative;
   left: -1.1em;
   font-size: 1rem;
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 :is(h2, h3, h4, h5, h6) + a.self-link::before {
