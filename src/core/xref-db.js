@@ -71,6 +71,10 @@ async function shouldBustCache() {
   }
 
   const url = new URL("meta/version", API_URL).href;
+  const parsedUrl = new URL(url);
+  if (parsedUrl.protocol !== "https:" || parsedUrl.hostname !== "respec.org") {
+    return false;
+  }
   const res = await fetch(url);
   if (!res.ok) return false;
   const lastUpdated = await res.text();
