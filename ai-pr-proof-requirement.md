@@ -25,8 +25,8 @@ For every AI-authored bug-fix PR:
 5. `base-sha` is preferred. If another mode is used, the proof must say why `base-sha` was not valid.
 6. The before-proof must fail for the reason the bug describes.
 7. The after-proof must pass, or otherwise show that the incorrect behavior is gone.
-8. If the bug is visual, UI-based, rendering-based, or output-based, include before and after screenshots or equivalent rendered artifacts.
-9. If no deterministic repro can be produced in any mode, the PR must be labeled speculative and the PR description must say exactly what blocked proof generation.
+8. If no deterministic repro can be produced in any mode, the PR must be labeled speculative and the PR description must say exactly what blocked proof generation.
+9. If the bug is visual, UI-based, rendering-based, or output-based, a human MUST include a before and after screenshots or equivalent rendered artifacts.
 
 ## Required proof block
 
