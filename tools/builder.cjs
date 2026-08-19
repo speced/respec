@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 const sade = require("sade");
-const colors = require("colors");
+const { styleText } = require("node:util");
 const { readFileSync } = require("fs");
 const path = require("path");
 const rollup = require("rollup");
@@ -155,9 +155,9 @@ if (require.main === module) {
     .describe(
       "Builder builds a ReSpec profile. Profile must be in the profiles/ folder (e.g., w3c.js)"
     )
-    .example(`w3c ${colors.dim("# Build W3C profile.")}`)
+    .example(`w3c ${styleText("dim", "# Build W3C profile.")}`)
     .example(
-      `w3c --debug ${colors.dim("# Build W3C profile without optimizations.")}`
+      `w3c --debug ${styleText("dim", "# Build W3C profile without optimizations.")}`
     )
     .option("-d, --debug", "Disable optimization to ease debugging", false)
     .option("-w, --watch", "Automatically re-build on file changes", false)
@@ -169,7 +169,7 @@ if (require.main === module) {
       try {
         await Builder.build({ name: profile, debug: opts.debug });
       } catch (err) {
-        console.error(colors.red(err.stack));
+        console.error(styleText("red", err.stack));
         return process.exit(1);
       }
     })
