@@ -126,24 +126,34 @@ export function run(conf) {
     );
     document.head.appendChild(colorScheme);
   }
-  if (colorScheme?.content.includes("dark")) {
-    const darkModeStyleUrl = getStyleUrl("dark.css");
-    document.head.appendChild(
-      html`<link
-        rel="stylesheet"
-        href="${darkModeStyleUrl.href}"
-        media="(prefers-color-scheme: dark)"
-      />`
-    );
+  // W3C's fixup.js only injects the light/dark/auto toggle when it can find the
+  // dark stylesheet link, and it drives that link with `.disabled`. Light-only
+  // specs never had the link, so the toggle silently never appeared (#5200). Add
+  // it either way, switched off when the spec has not opted into dark mode.
+  const darkModeStyleURL = getStyleUrl("dark.css");
+  const isDark = colorScheme.content.includes("dark");
+  const darkLink = html`<link
+    rel="stylesheet"
+    href="${darkModeStyleURL.href}"
+  />`;
+  if (isDark) darkLink.media = "(prefers-color-scheme: dark)";
+  document.head.appendChild(darkLink);
+  if (isDark) {
     // As required by W3C Pub Rules.
-    sub("beforesave", styleMover(darkModeStyleUrl));
+    sub("beforesave", styleMover(darkModeStyleURL));
+  } else {
+    // `disabled` rather than `media="not all"` because fixup.js sets
+    // `darkCss.media = ""`, which would wipe a media query. Must be set after
+    // insertion: per HTML the setter is a no-op while the link's associated CSS
+    // style sheet is still null.
+    darkLink.disabled = true;
   }
 }
 
 /** @param {Conf} conf */
 function getStyleFile(conf) {
   const canonicalStatus = conf.specStatus?.toUpperCase() ?? "";
-  let styleFile = "";
+  let styleFile;
   const canUseW3CStyle =
     [
       ...recTrackStatus,
