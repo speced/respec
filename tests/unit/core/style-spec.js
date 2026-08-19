@@ -8,6 +8,6 @@ describe("Core - style", () => {
   it("uses accessible contrast for section self-link icon", async () => {
     const doc = await makePluginDoc(["/src/core/style.js"]);
     const style = doc.getElementById("respec-mainstyle");
-    expect(style.textContent).toContain("opacity: 0.8;");
+    expect(style.textContent).toMatch(/opacity:\s*0.8;/);
   });
 });
