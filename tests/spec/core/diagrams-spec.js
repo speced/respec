@@ -383,4 +383,27 @@ describe("Core - Diagrams", () => {
       expect(doc.defaultView.__xss).toBeUndefined();
     });
   });
+
+  it("does not remove author content that reuses a renderer id", async () => {
+    // The render id is deterministic (respec-mermaid-diagram-0), and cleanup used
+    // to search the whole document for it, so a spec using that id lost the
+    // element. See the review note on worker/respec-mermaid.js.
+    const body = `
+      <section>
+        <p id="respec-mermaid-diagram-0">Author content, must survive.</p>
+        <figure>
+          <pre class="mermaid">
+graph TD;
+  A-->B;
+          </pre>
+          <figcaption>Diagram</figcaption>
+        </figure>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const victim = doc.getElementById("respec-mermaid-diagram-0");
+    expect(victim).toBeTruthy();
+    expect(victim.textContent).toContain("must survive");
+  });
 });
