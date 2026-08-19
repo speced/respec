@@ -221,6 +221,23 @@ describe("W3C - Style", () => {
     expect(elem.content).toBe("light");
   });
 
+  it("adds a dark mode stylesheet link for light-only specs", async () => {
+    // W3C's fixup.js only injects the light/dark/auto toggle when it finds a
+    // dark stylesheet link, so light-only specs need one present (#5200). Note
+    // the rel filter: a preload hint for the same href exists too.
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops);
+    const meta = doc.querySelector("meta[name='color-scheme']");
+    expect(meta).toBeTruthy();
+    expect(meta.content).toBe("light");
+    const link = doc.querySelector(
+      `link[rel="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+    );
+    expect(link).toBeTruthy();
+    // Deliberately not asserting `disabled`: per HTML that setter is a no-op
+    // until the sheet loads, so it would make this test depend on the network.
+  });
+
   it("adds dark mode stylesheet", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
