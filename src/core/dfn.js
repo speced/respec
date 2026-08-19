@@ -65,6 +65,9 @@ const knownTypes = [...knownTypesMap.keys()];
 
 export function run() {
   for (const dfn of document.querySelectorAll("dfn")) {
+    // Deleted content (e.g., in an updatable REC) defines nothing.
+    if (dfn.closest("del")) continue;
+
     const titles = getDfnTitles(dfn);
     registerDefinition(dfn, titles);
 
