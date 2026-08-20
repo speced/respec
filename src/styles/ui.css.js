@@ -371,6 +371,61 @@ export default css`
   left: 127px;
 }
 
+/* Copy acknowledgement: the check swaps in, a popover appears beside it. */
+.respec-copy-check {
+  display: none;
+}
+
+.respec-copied .respec-copy-check {
+  display: inline;
+}
+
+.respec-copied > svg:not(.respec-copy-check) {
+  display: none;
+}
+
+/* Colored on the path, not inherited: a :hover rule on the button would
+   otherwise repaint the check to match the toolbar and hide it. The plain
+   value first, for browsers without light-dark(). */
+.respec-copy-check path {
+  fill: #1a7f37;
+  fill: light-dark(#1a7f37, #3fb950);
+}
+
+.respec-copy-toast {
+  /* In the top layer, so no ancestor's overflow, border radius or 3D transform
+     can clip it. The UA sheet centres popovers with inset: 0 and margin: auto;
+     anchor positioning replaces that with "beside the button just clicked". */
+  position-anchor: --respec-copy-anchor;
+  position-area: inline-end center;
+  position-try-fallbacks: flip-inline;
+  inset: auto;
+  margin: 0;
+  margin-inline-start: 0.5em;
+  padding: 0.4em 0.6em;
+  border: 0;
+  border-radius: 6px;
+  /* light-dark() follows both the system preference and ReSpec's own theme
+     toggle, which sets the color-scheme property on the body. */
+  background: #24292f;
+  background: light-dark(#24292f, #e6e6e6);
+  color: #fff;
+  color: light-dark(#fff, #1c1c1c);
+  font: normal 12px/1 system-ui, sans-serif;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Announces the copy for screen readers; the popover is decorative. */
+.respec-copy-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 @media print {
   #respec-ui {
     display: none;

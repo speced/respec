@@ -1,9 +1,11 @@
 /* --- Diagrams --- */
 const css = String.raw;
 
-// prettier-ignore
-export default css`
-:root {
+// The reader's explicit choice beats the system preference, so both sets of
+// values are applied by selector as well as by media query, the same way
+// core/styles/highlight and respec do it.
+// Untagged: a css`` fragment with no selector is dropped by the minifier.
+const lightVars = `
   --diagram-error-border: #d73a49;
   --diagram-error-bg: #ffeef0;
   --diagram-error-color: #86181d;
@@ -18,24 +20,45 @@ export default css`
   --diagram-gutter-color: #57606a;
   --diagram-pulse-from: #f0f0f0;
   --diagram-pulse-to: #f0b8bb;
+`;
+
+const darkVars = `
+  --diagram-error-border: #f85149;
+  --diagram-error-bg: #3d1f28;
+  --diagram-error-color: #ff7b72;
+  --diagram-header-bg: #3a6da0;
+  --diagram-header-color: #fff;
+  --diagram-back-bg: #1e1e1e;
+  --diagram-btn-bg: #2d2d2d;
+  --diagram-btn-border: #555;
+  --diagram-btn-color: #aaa;
+  --diagram-btn-hover-bg: #3d3d3d;
+  --diagram-btn-hover-color: #ddd;
+  --diagram-gutter-color: #999;
+  --diagram-pulse-from: #2d2d2d;
+  --diagram-pulse-to: #5a2d31;
+`;
+
+// prettier-ignore
+export default css`
+:root {
+  ${lightVars}
 }
 
+/* Dark when the system prefers it, or when the reader picks dark. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --diagram-error-border: #f85149;
-    --diagram-error-bg: #3d1f28;
-    --diagram-error-color: #ff7b72;
-    --diagram-header-bg: #3a6da0;
-    --diagram-back-bg: #1e1e1e;
-    --diagram-btn-bg: #2d2d2d;
-    --diagram-btn-border: #555;
-    --diagram-btn-color: #aaa;
-    --diagram-btn-hover-bg: #3d3d3d;
-    --diagram-btn-hover-color: #ddd;
-    --diagram-gutter-color: #999;
-    --diagram-pulse-from: #2d2d2d;
-    --diagram-pulse-to: #5a2d31;
+    ${darkVars}
   }
+}
+body:has(input[name='color-scheme'][value='dark']:checked) {
+  ${darkVars}
+}
+
+/* Light when the document has no dark scheme, or the reader picks light. */
+head:not(:has(meta[name='color-scheme'][content~='dark'])) + body,
+body:has(input[name='color-scheme'][value='light']:checked) {
+  ${lightVars}
 }
 
 .diagram-container {

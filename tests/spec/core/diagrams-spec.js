@@ -3,11 +3,31 @@
 import {
   errorFilters,
   flushIframes,
+  getExportedDoc,
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
 
 const errorsFilter = errorFilters.filter("core/diagrams");
+
+/**
+ * Replace the clipboard with a stub whose promises the test can await, instead
+ * of sleeping: the copy handler resolves off the very same promise.
+ * @param {Document} doc
+ * @param {Error} [rejectWith] Reject the write, as a refusing platform does.
+ * @returns {Promise<void>[]} Collected writes, filled on each click.
+ */
+function stubClipboard(doc, rejectWith) {
+  const writes = [];
+  doc.defaultView.navigator.clipboard.writeText = () => {
+    const write = rejectWith
+      ? Promise.reject(rejectWith)
+      : Promise.resolve(undefined);
+    writes.push(write);
+    return write;
+  };
+  return writes;
+}
 
 describe("Core - Diagrams", () => {
   afterAll(flushIframes);
@@ -50,6 +70,140 @@ describe("Core - Diagrams", () => {
         "#fig-toolbar .respec-button-copy-paste"
       );
       expect(copyBtn).toBeTruthy();
+    });
+
+    it("acknowledges a copy with a check, an anchored popover, and a live region", async () => {
+      const body = `
+        <figure id="fig-ack">
+          <pre class="mermaid">
+            flowchart LR
+              A --> B
+          </pre>
+          <figcaption>Copy acknowledgement</figcaption>
+        </figure>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      // Headless browsers refuse clipboard writes, so stand in for a write the
+      // platform accepted, and let the test await that same promise.
+      const writes = stubClipboard(doc);
+      const copyBtn = doc.querySelector("#fig-ack .respec-button-copy-paste");
+      expect(copyBtn.querySelector(".respec-copy-check")).toBeTruthy();
+      expect(copyBtn.classList).not.toContain("respec-copied");
+
+      copyBtn.click();
+      await Promise.all(writes);
+
+      expect(copyBtn.classList).toContain("respec-copied");
+      const toast = doc.getElementById("respec-copy-toast");
+      expect(toast.textContent).toBe("Copied!");
+      expect(toast.matches(":popover-open")).toBeTrue();
+      // The popover positions itself against the button that was clicked.
+      expect(copyBtn.style.getPropertyValue("anchor-name")).toBe(
+        "--respec-copy-anchor"
+      );
+      const announcer = doc.getElementById("respec-copy-status");
+      expect(announcer.getAttribute("aria-live")).toBe("polite");
+      expect(announcer.textContent).toContain("Copied!");
+    });
+
+    it("keeps the popover on the most recently copied button", async () => {
+      const body = `
+        <figure id="fig-one">
+          <pre class="mermaid">
+            flowchart LR
+              A --> B
+          </pre>
+          <figcaption>First</figcaption>
+        </figure>
+        <figure id="fig-two">
+          <pre class="mermaid">
+            flowchart LR
+              C --> D
+          </pre>
+          <figcaption>Second</figcaption>
+        </figure>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const writes = stubClipboard(doc);
+      const [first, second] = doc.querySelectorAll(
+        ".diagramHeader .respec-button-copy-paste"
+      );
+
+      // Copy the second one late enough that the first button's 2s expiry lands
+      // between the two clicks and the assertions below. Real waits, because
+      // that expiry is the only moment the bug can show itself.
+      first.click();
+      await Promise.all(writes);
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      second.click();
+      await Promise.all(writes);
+      await new Promise(resolve => setTimeout(resolve, 700));
+
+      // The first button's expiry must not close the second button's popover.
+      const toast = doc.getElementById("respec-copy-toast");
+      expect(toast.matches(":popover-open")).toBeTrue();
+      expect(second.style.getPropertyValue("anchor-name")).toBe(
+        "--respec-copy-anchor"
+      );
+      expect(first.style.getPropertyValue("anchor-name")).toBe("");
+    });
+
+    it("still copies from a saved export of the document", async () => {
+      const body = `
+        <figure id="fig-export">
+          <pre class="mermaid">
+            flowchart LR
+              A --> B
+          </pre>
+          <figcaption>Exported copy</figcaption>
+        </figure>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const exportedDoc = await getExportedDoc(doc);
+      // An export carries no ReSpec, so the inlined runtime is the only copy
+      // logic there. This is the one test that exercises that serialized code.
+      expect(exportedDoc.getElementById("respec-copy-paste")).toBeTruthy();
+      const writes = stubClipboard(exportedDoc);
+      const copyBtn = exportedDoc.querySelector(".respec-button-copy-paste");
+      expect(copyBtn).toBeTruthy();
+
+      copyBtn.click();
+      await Promise.all(writes);
+
+      expect(copyBtn.classList).toContain("respec-copied");
+      expect(
+        exportedDoc.getElementById("respec-copy-status").textContent
+      ).toContain("Copied!");
+    });
+
+    it("stays silent when the clipboard refuses the write", async () => {
+      const body = `
+        <figure id="fig-refused">
+          <pre class="mermaid">
+            flowchart LR
+              A --> B
+          </pre>
+          <figcaption>Refused copy</figcaption>
+        </figure>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      // A cross-origin frame or a denied permission rejects the write. Claiming
+      // "Copied!" there would be a lie.
+      const writes = stubClipboard(doc, new Error("refused"));
+      const copyBtn = doc.querySelector(
+        "#fig-refused .respec-button-copy-paste"
+      );
+
+      copyBtn.click();
+      await Promise.allSettled(writes);
+
+      expect(copyBtn.classList).not.toContain("respec-copied");
+      expect(doc.getElementById("respec-copy-toast")).toBeNull();
+      expect(doc.getElementById("respec-copy-status")).toBeNull();
     });
 
     it("preserves the original source in the back face", async () => {
