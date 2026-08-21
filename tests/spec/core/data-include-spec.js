@@ -150,6 +150,43 @@ describe("Core — Data Include", () => {
     ).toBeTrue();
   });
 
+  it("resolves a nested data-include's relative URL against the top-level document, not the including file's own URL", async () => {
+    // Fixtures live under tests/spec/core/nested-include/:
+    //   outer.html                     <- the document under test
+    //   foo/bar.html                   <- fetched via outer.html's data-include="foo/bar.html"
+    //   includes/data.json             <- resolving "includes/data.json" against outer.html
+    //   foo/includes/data.json         <- resolving "includes/data.json" against foo/bar.html
+    //
+    // foo/bar.html itself has data-include="includes/data.json". This test
+    // asserts which of the two data.json files actually gets fetched, i.e.
+    // whether nested includes resolve relative URLs against the document
+    // that started the include chain, or against the file that declared
+    // the nested data-include.
+    const nestedIncludeUrl = "/tests/spec/core/nested-include/outer.html";
+    const ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody(),
+    };
+    const doc = await makeRSDoc(ops, nestedIncludeUrl);
+
+    const outerTarget = doc.querySelector("#nested-target");
+    expect(outerTarget).toBeTruthy();
+    expect(outerTarget.querySelector("p").textContent).toBe("bar content");
+
+    const innerTarget = doc.querySelector("#inner-target");
+    expect(innerTarget).toBeTruthy();
+    // Current behavior: the nested data-include is resolved relative to
+    // outer.html (the top-level document), *not* relative to foo/bar.html
+    // (the file that declared it) — even though foo/bar.html was itself
+    // fetched from a "foo/" subdirectory.
+    expect(innerTarget.textContent).toContain(
+      "top-level document (outer.html)"
+    );
+    expect(innerTarget.textContent).not.toContain(
+      "included file's own directory"
+    );
+  });
+
   it("includes text when data-include-format is 'text'", async () => {
     const ops = {
       config: makeBasicConfig(),

@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Nested Include Outer Spec</title>
+    <script class="remove">
+      var respecConfig = {
+        specStatus: "ED",
+        shortName: "nested-include-outer",
+      };
+    </script>
+  </head>
+  <body>
+    <section id="abstract">
+      <p>Basic doc</p>
+    </section>
+    <section id="sotd">
+      <p>CUSTOM PARAGRAPH</p>
+    </section>
+    <section id="nested-includes">
+      <!--
+        This outer include is relative to this document's own URL
+        (tests/spec/core/nested-include/outer.html), so it resolves to
+        tests/spec/core/nested-include/foo/bar.html
+      -->
+      <div id="nested-target" data-include="foo/bar.html"></div>
+    </section>
+  </body>
+</html>
