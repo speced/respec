@@ -117,7 +117,16 @@ export async function run(conf) {
     sub(
       "beforesave",
       /** @param {Document} outputDoc */ outputDoc => {
-        html.bind(outputDoc.querySelector(".caniuse-stats"))`
+        const statsElem = outputDoc.querySelector(".caniuse-stats");
+        if (!statsElem) {
+          const msg =
+            "Couldn't add the caniuse.com link to the saved document.";
+          const hint =
+            "The support table is appended to the document header's definition list (`.head dl`), so it was never inserted if that list is absent. The browser support cells are removed on save, so the exported document will have no caniuse.com attribution.";
+          showWarning(msg, name, { hint });
+          return;
+        }
+        html.bind(statsElem)`
         <a href="${featureURL}">caniuse.com</a>`;
       }
     );

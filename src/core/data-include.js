@@ -95,6 +95,11 @@ async function runIncludes(root, currentDepth) {
     el.dataset.includeId = id;
     try {
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(
+          `Fetching \`${url}\` failed with status code ${response.status} (${response.statusText}).`
+        );
+      }
       const text = await response.text();
       processResponse(text, id, url);
       if (currentDepth < 3) {
@@ -103,7 +108,7 @@ async function runIncludes(root, currentDepth) {
       }
     } catch (e) {
       const err = /** @type {Error} */ (e);
-      const msg = `\`data-include\` failed: \`${url}\` (${err.message}).`;
+      const msg = `\`data-include\` failed: \`${url}\` (${err.message}). Please check that the URL is correct and reachable.`;
       showError(msg, name, { elements: [el], cause: err });
     }
   });
