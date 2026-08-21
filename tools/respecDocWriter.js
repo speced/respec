@@ -7,7 +7,11 @@ import { readFile } from "fs/promises";
 
 const noop = () => {};
 
-/** Time allowed for the browser process to start, separate from processing. */
+/**
+ * Time allowed for the browser process to start, separate from processing.
+ * Cold CI runners regularly need longer than puppeteer's 30s default,
+ * which surfaced as "Timed out ... waiting for the WS endpoint URL".
+ */
 const LAUNCH_TIMEOUT = 120000;
 
 /**
@@ -47,7 +51,6 @@ export async function toHTML(src, options = {}) {
   /**
    * Starts once the browser is up, so a slow launch does not eat the caller's
    * processing budget. `timeout` documents time before *processing* times out.
-   * @type {{ remaining: number }}
    */
   let timer = createTimer(timeout);
 
@@ -73,8 +76,6 @@ export async function toHTML(src, options = {}) {
     args,
     devtools,
     headless: true,
-    // Cold CI runners regularly need longer than puppeteer's 30s default,
-    // which surfaced as "Timed out ... waiting for the WS endpoint URL".
     timeout: LAUNCH_TIMEOUT,
   });
   // Charge only document processing against the caller's timeout.
