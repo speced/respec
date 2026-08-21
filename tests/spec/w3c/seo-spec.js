@@ -2,9 +2,11 @@
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
 import { requiresCanonicalLink } from "../../../src/w3c/seo.js";
+import { seedGroupCache } from "../respec-cache-helper.js";
 
 describe("W3C - SEO", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
 
   it("defaults to TR as canonical URI", async () => {
     const doc = await makeRSDoc(
