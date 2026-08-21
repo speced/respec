@@ -7,6 +7,8 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
+import { seedGroupCache } from "../respec-cache-helper.js";
+
 const statuses = [
   {
     specStatus: undefined,
@@ -163,6 +165,7 @@ const statuses = [
 
 describe("W3C - Style", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
 
   it("should include 'fixup.js'", async () => {
     const ops = makeStandardOps();
@@ -267,13 +270,9 @@ describe("W3C - Style", () => {
     expect(linkBase.nextElementSibling).toBe(linkDarkMode);
   });
 
-  it("shouldn't include fixup.js when noToc is set", async () => {
-    const ops = makeStandardOps();
-    const newProps = {
-      noToc: true,
-    };
-    Object.assign(ops.config, newProps);
-    const doc = await makeRSDoc(ops, "spec/core/simple.html");
+  it("shouldn't include fixup.js when noTOC is set", async () => {
+    const ops = makeStandardOps({ noTOC: true });
+    const doc = await makeRSDoc(ops);
     const query = "script[src^='https://www.w3.org/scripts/TR/2021/fixup.js']";
     const elem = doc.querySelector(query);
     expect(elem).toBeNull();

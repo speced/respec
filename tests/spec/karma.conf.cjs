@@ -10,6 +10,11 @@ const additionalFiles = [
     included: false,
   },
   {
+    pattern: "tests/spec/respec-cache-helper.js",
+    type: "module",
+    included: false,
+  },
+  {
     pattern: "tests/spec/**/*-spec.js",
     type: "module",
     included: false,

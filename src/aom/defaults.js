@@ -3,7 +3,7 @@
  * Sets the defaults for AOM specs
  */
 export const name = "aom/defaults";
-import { coreDefaults } from "../core/defaults.js";
+import { coreDefaults, normalizeNoTOC } from "../core/defaults.js";
 
 const licenses = new Map([
   [
@@ -64,6 +64,7 @@ export function run(conf) {
     lint,
   });
 
+  normalizeNoTOC(conf);
   // computed properties
   Object.assign(conf, computeProps(/** @type {NormalizedConf} */ (conf)));
 }
