@@ -87,12 +87,16 @@ describe("Geonovum - Style", () => {
     );
   });
 
-  it("shouldn't include fixup.js when noToc is set", async () => {
-    const ops = makeStandardGeoOps();
-    const newProps = {
-      noToc: true,
-    };
-    Object.assign(ops.config, newProps);
+  it("shouldn't include fixup.js when noTOC is set", async () => {
+    const ops = { ...makeStandardGeoOps({ noTOC: true }), profile: "geonovum" };
+    const doc = await makeRSDoc(ops);
+    const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
+    const elem = doc.querySelector(query);
+    expect(elem).toBeNull();
+  });
+
+  it("shouldn't include fixup.js when the deprecated noToc is set", async () => {
+    const ops = { ...makeStandardGeoOps({ noToc: true }), profile: "geonovum" };
     const doc = await makeRSDoc(ops);
     const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
     const elem = doc.querySelector(query);

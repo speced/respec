@@ -2,7 +2,7 @@
 // @ts-check
 const { Builder } = require("./builder.cjs");
 const cmdPrompt = require("prompt");
-const colors = require("colors");
+const { styleText } = require("node:util");
 const { execFile, spawn } = require("child_process");
 const loading = require("loading-indicator");
 const fs = require("fs");
@@ -47,7 +47,9 @@ function commandRunner(file, baseArgs = []) {
    */
   const runner = (cmd, options = { showOutput: false }) => {
     const args = [...baseArgs, ...cmd];
-    console.log(colors.cyan(`Run: ${file} ${colors.grey(args.join(" "))}`));
+    console.log(
+      styleText("cyan", `Run: ${file} ${styleText("grey", args.join(" "))}`)
+    );
     if (DEBUG) {
       return Promise.resolve("");
     }
@@ -79,9 +81,10 @@ const Prompts = {
    */
   async askSwitchToBranch(from, to) {
     const promptOps = {
-      description: `You're on branch ${colors.green(
+      description: `You're on branch ${styleText(
+        "green",
         from
-      )}. Switch to ${colors.green(to)}?`,
+      )}. Switch to ${styleText("green", to)}?`,
       pattern: /^[yn]$/i,
       message: "Values can be 'y' or 'n'.",
       default: "y",
@@ -112,7 +115,8 @@ const Prompts = {
     try {
       await this.askQuestion(promptOps);
     } catch (err) {
-      const warning = colors.yellow(
+      const warning = styleText(
+        "yellow",
         "🚨 Make sure to run `git checkout main` and reset any changes."
       );
       console.warn(warning);
@@ -155,7 +159,10 @@ const Prompts = {
               : "❓";
           // colorize
           if (match) {
-            result = result.replace(match.toLowerCase(), colors.green(match));
+            result = result.replace(
+              match.toLowerCase(),
+              styleText("green", match)
+            );
           }
           return `  ${icon} ${result}`;
         })
@@ -249,7 +256,8 @@ const Prompts = {
 
   async askPushAll() {
     const promptOps = {
-      description: `${colors.red(
+      description: `${styleText(
+        "red",
         "🔥  Ready to make this live? 🔥"
       )}  (last chance!)`,
       pattern: /^[yn]$/i,
@@ -329,7 +337,7 @@ class Indicator {
 }
 
 async function preflight() {
-  console.log(colors.cyan("\n  Preflight checks\n"));
+  console.log(styleText("cyan", "\n  Preflight checks\n"));
   const errors = [];
 
   // Java (needed for vnu HTML validator)
@@ -338,7 +346,7 @@ async function preflight() {
       timeout: 10000,
       showOutput: false,
     });
-    console.log(colors.green("  ✓ Java runtime"));
+    console.log(styleText("green", "  ✓ Java runtime"));
   } catch {
     errors.push(
       "Java runtime not found (required by vnu HTML validator).\n" +
@@ -354,14 +362,14 @@ async function preflight() {
       "node",
       [
         "-e",
-        'import("puppeteer").then(p => process.stdout.write(p.executablePath()))',
+        'import("puppeteer").then(async p => process.stdout.write(await p.executablePath()))',
       ],
       { timeout: 15000, showOutput: false }
     );
     if (!fs.existsSync(chromePath.trim())) {
       throw new Error("Chrome binary missing");
     }
-    console.log(colors.green("  ✓ Puppeteer Chrome"));
+    console.log(styleText("green", "  ✓ Puppeteer Chrome"));
   } catch {
     errors.push(
       "Puppeteer Chrome not found (required by respec2html).\n" +
@@ -375,7 +383,7 @@ async function preflight() {
       timeout: 10000,
       showOutput: false,
     });
-    console.log(colors.green("  ✓ GitHub CLI (gh)"));
+    console.log(styleText("green", "  ✓ GitHub CLI (gh)"));
   } catch {
     errors.push(
       "GitHub CLI not found or not authenticated (required for creating releases).\n" +
@@ -407,23 +415,25 @@ async function preflight() {
           `"gh-pages" exists on ${remotes.length} remotes:\n${remotes.map(r => `      ${r.trim()}`).join("\n")}\n    Fix: git config checkout.defaultRemote origin`
         );
       } else {
-        console.log(colors.green("  ✓ gh-pages branch (via defaultRemote)"));
+        console.log(
+          styleText("green", "  ✓ gh-pages branch (via defaultRemote)")
+        );
       }
     } else {
-      console.log(colors.green("  ✓ gh-pages branch"));
+      console.log(styleText("green", "  ✓ gh-pages branch"));
     }
   } catch {
     errors.push("Could not verify gh-pages branch status.");
   }
 
   if (errors.length) {
-    console.log(colors.red("\n  ❌ Preflight failed:\n"));
+    console.log(styleText("red", "\n  ❌ Preflight failed:\n"));
     errors.forEach((err, i) => {
-      console.log(colors.red(`  ${i + 1}. ${err}\n`));
+      console.log(styleText("red", `  ${i + 1}. ${err}\n`));
     });
     throw new Error("Fix the issues above and try again.");
   }
-  console.log(colors.green("\n  ✅ All preflight checks passed.\n"));
+  console.log(styleText("green", "\n  ✅ All preflight checks passed.\n"));
 }
 
 /**
@@ -433,7 +443,9 @@ async function preflight() {
  * @returns {Promise<void>}
  */
 function toSpawnPromise(file, args) {
-  console.log(colors.cyan(`Run: ${file} ${colors.grey(args.join(" "))}`));
+  console.log(
+    styleText("cyan", `Run: ${file} ${styleText("grey", args.join(" "))}`)
+  );
   if (DEBUG) return Promise.resolve();
   return new Promise((resolve, reject) => {
     const proc = spawn(file, args, { stdio: "inherit" });
@@ -459,7 +471,7 @@ function toSpawnPromise(file, args) {
  * @param {string} initialBranch
  */
 async function rollback(version, mainHead, ghPagesHead, initialBranch) {
-  console.log(colors.yellow("\n  ⏪ Rolling back local changes...\n"));
+  console.log(styleText("yellow", "\n  ⏪ Rolling back local changes...\n"));
   try {
     const currentBranch = await getCurrentBranch();
     if (currentBranch !== "main") {
@@ -470,16 +482,18 @@ async function rollback(version, mainHead, ghPagesHead, initialBranch) {
   }
   try {
     await git(["tag", "-d", `v${version}`]);
-    console.log(colors.yellow(`  Deleted tag v${version}`));
+    console.log(styleText("yellow", `  Deleted tag v${version}`));
   } catch {
     // tag may not exist yet
   }
   if (mainHead) {
     try {
       await git(["reset", "--hard", mainHead]);
-      console.log(colors.yellow(`  Reset main to ${mainHead.slice(0, 8)}`));
+      console.log(
+        styleText("yellow", `  Reset main to ${mainHead.slice(0, 8)}`)
+      );
     } catch {
-      console.log(colors.red("  Failed to reset main — check manually."));
+      console.log(styleText("red", "  Failed to reset main — check manually."));
     }
   }
   if (ghPagesHead) {
@@ -487,10 +501,12 @@ async function rollback(version, mainHead, ghPagesHead, initialBranch) {
       await git(["switch", "gh-pages"]);
       await git(["reset", "--hard", ghPagesHead]);
       console.log(
-        colors.yellow(`  Reset gh-pages to ${ghPagesHead.slice(0, 8)}`)
+        styleText("yellow", `  Reset gh-pages to ${ghPagesHead.slice(0, 8)}`)
       );
     } catch {
-      console.log(colors.red("  Failed to reset gh-pages — check manually."));
+      console.log(
+        styleText("red", "  Failed to reset gh-pages — check manually.")
+      );
     } finally {
       await git(["switch", "main"]);
     }
@@ -508,11 +524,13 @@ async function rollback(version, mainHead, ghPagesHead, initialBranch) {
 const indicators = new Map([
   [
     "remote-update",
-    new Indicator(colors.green(" Performing Git remote update... 📡 ")),
+    new Indicator(styleText("green", " Performing Git remote update... 📡 ")),
   ],
   [
     "push-to-server",
-    new Indicator(colors.green(" Pushing everything back to server... 📡")),
+    new Indicator(
+      styleText("green", " Pushing everything back to server... 📡")
+    ),
   ],
 ]);
 
@@ -568,7 +586,9 @@ const run = async () => {
     for (const name of ["w3c", "geonovum", "dini", "aom"]) {
       await Builder.build({ name });
     }
-    console.log(colors.green(" Making sure the generated version is ok... 🕵🏻"));
+    console.log(
+      styleText("green", " Making sure the generated version is ok... 🕵🏻")
+    );
     const source = `file:///${__dirname}/../examples/basic.built.html`;
     const tempFile = path.join(os.tmpdir(), "index.html");
     await node(
@@ -579,9 +599,11 @@ const run = async () => {
     );
 
     // Do HTML validation
-    console.log(colors.green(" Making sure HTML validator is happy... 🕵🏻"));
+    console.log(
+      styleText("green", " Making sure HTML validator is happy... 🕵🏻")
+    );
     await validator(["--stdout", tempFile]);
-    console.log(colors.green(" Build Seems good... ✅"));
+    console.log(styleText("green", " Build Seems good... ✅"));
 
     // 4. Commit your changes
     await git(["add", "builds", "package.json", "pnpm-lock.yaml"]);
@@ -611,11 +633,11 @@ const run = async () => {
     indicators.get("push-to-server").hide();
 
     // 7. Publish to npm (interactive for OTP auth)
-    console.log(colors.green(" Publishing to npm... 📡"));
+    console.log(styleText("green", " Publishing to npm... 📡"));
     await toSpawnPromise("npm", ["publish"]);
 
     // 8. Create GitHub Release (triggers W3C CDN sync)
-    console.log(colors.green(" Creating GitHub Release... 📡"));
+    console.log(styleText("green", " Creating GitHub Release... 📡"));
     await toExecFilePromise(
       "gh",
       ["release", "create", `v${version}`, "--generate-notes"],
@@ -626,10 +648,11 @@ const run = async () => {
       await Prompts.askSwitchToBranch("main", initialBranch);
     }
   } catch (err) {
-    console.error(colors.red(`\n☠  ${err.stack}`));
+    console.error(styleText("red", `\n☠  ${err.stack}`));
     if (pushed) {
       console.log(
-        colors.yellow(
+        styleText(
+          "yellow",
           `\n  Git push succeeded but a later step failed.\n` +
             `  You may need to run manually:\n` +
             `    npm publish\n` +
