@@ -27,6 +27,7 @@ const modules = [
   import("../src/core/issues-notes.js"),
   import("../src/core/best-practices.js"),
   import("../src/core/figures.js"),
+  import("../src/core/diagrams.js"),
   import("../src/core/tables.js"),
   import("../src/core/webidl.js"),
   import("../src/core/cddl.js"),
