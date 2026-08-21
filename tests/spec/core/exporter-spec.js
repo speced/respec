@@ -6,9 +6,11 @@ import {
   makeRSDoc,
   makeStandardOps,
 } from "../SpecHelper.js";
+import { seedGroupCache } from "../respec-cache-helper.js";
 
 describe("Core - exporter", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
 
   it("removes .removeOnSave elements", async () => {
     const ops = makeStandardOps();
@@ -82,5 +84,16 @@ describe("Core - exporter", () => {
     expect(lastElementChild.href).toBe(
       "https://www.w3.org/StyleSheets/TR/2021/W3C-ED"
     );
+  });
+
+  it("removes toc-inline and toc-sidebar classes from body", async () => {
+    const ops = makeStandardOps();
+    const rsDoc = await makeRSDoc(ops);
+    rsDoc.body.classList.add("toc-inline", "toc-sidebar");
+    const html = await rsDoc.respec.toHTML();
+    const [bodyTag] = html.match(/<body[^>]*>/) ?? [];
+    expect(bodyTag).toBeTruthy();
+    expect(bodyTag).not.toMatch(/\bclass="[^"]*\btoc-inline\b/);
+    expect(bodyTag).not.toMatch(/\bclass="[^"]*\btoc-sidebar\b/);
   });
 });

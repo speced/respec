@@ -1,9 +1,11 @@
 "use strict";
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { seedGroupCache } from "../respec-cache-helper.js";
 
 describe("Core - UI", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
 
   it("shows and hides the UI", async () => {
     const doc = await makeRSDoc(makeStandardOps());
@@ -30,6 +32,17 @@ describe("Core - UI", () => {
     // spin the event loop
     await new Promise(resolve => setTimeout(resolve));
     expect(window.getComputedStyle(menu).display).toBe("none");
+  });
+
+  it("labels the modal close button for assistive technology", async () => {
+    const doc = await makeRSDoc(makeStandardOps());
+    doc.defaultView.respecUI.freshModal(
+      "Test",
+      doc.createTextNode("content"),
+      doc.createElement("button")
+    );
+    const closeButton = doc.querySelector(".respec-modal .close-button");
+    expect(closeButton.getAttribute("aria-label")).toBe("Close");
   });
 
   it("shows errors", async () => {

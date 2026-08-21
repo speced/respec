@@ -1,6 +1,6 @@
 # ReSpec
 
-[![Build Status](https://github.com/speced/respec/workflows/Node%20CI/badge.svg?branch=develop)](https://github.com/speced/respec/actions?query=workflow%3A%22Node+CI%22+branch%3Adevelop)
+[![Build Status](https://github.com/speced/respec/workflows/Node%20CI/badge.svg?branch=main)](https://github.com/speced/respec/actions?query=workflow%3A%22Node+CI%22+branch%3Amain)
 
 ReSpec is a tool for writing [W3C](https://www.w3.org/) specifications and other technical documents. Write your content in HTML, add a `<script>` tag, and ReSpec handles the boilerplate, formatting, cross-references, bibliography, and validation automatically.
 

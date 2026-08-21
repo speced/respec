@@ -100,6 +100,20 @@ describe("Core — Definitions", () => {
     expect(dfn6.dataset.export).toBeUndefined();
   });
 
+  it("ignores definitions inside <del>", async () => {
+    const body = `
+    <section id='dfns'>
+      <del><dfn>shared term</dfn></del>
+      <dfn id="kept">shared term</dfn>
+      <a>shared term</a>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const sec = doc.getElementById("dfns");
+    expect(sec.querySelector("del dfn").id).toBe("");
+    expect(sec.querySelector("a").getAttribute("href")).toBe("#kept");
+  });
+
   it("makes dfn tab enabled whose aria-role is a link", async () => {
     const body = `
     <section id='dfns'>
@@ -418,14 +432,12 @@ describe("Core — Definitions", () => {
       expect(dfn.dataset.export).toBe("");
     });
 
-    // TODO: failing for Chrome, but not Firefox. Needs investigation.
-    // eslint-disable-next-line jasmine/no-disabled-tests
-    xit("handles bad attributes", async () => {
+    it("handles bad attributes", async () => {
       const body = html`
         <section>
           <h2>Attributes</h2>
           <p id="attribute-bad">
-            <dfn class="element-attr">-attribute</dfn>
+            <dfn class="element-attr">bad attribute</dfn>
           </p>
         </section>
       `;
@@ -434,7 +446,7 @@ describe("Core — Definitions", () => {
 
       const errors = findDfnErrors(doc);
       expect(errors).toHaveSize(1);
-      expect(errors[0].message).toContain("-attribute");
+      expect(errors[0].message).toContain("bad attribute");
     });
 
     it("handles attribute values", async () => {
