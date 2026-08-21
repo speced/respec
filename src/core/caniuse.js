@@ -112,7 +112,7 @@ export async function run(conf) {
   if (options.removeOnSave) {
     // Will remove the browser support cells.
     headDlElem
-    .querySelectorAll(".caniuse-browser")
+      .querySelectorAll(".caniuse-browser")
       .forEach(elem => elem.classList.add("removeOnSave"));
     sub(
       "beforesave",
