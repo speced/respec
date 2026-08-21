@@ -7,6 +7,8 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
+import { seedGroupCache } from "../respec-cache-helper.js";
+
 const statuses = [
   {
     specStatus: undefined,
@@ -163,6 +165,7 @@ const statuses = [
 
 describe("W3C - Style", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
 
   it("should include 'fixup.js'", async () => {
     const ops = makeStandardOps();
@@ -221,6 +224,23 @@ describe("W3C - Style", () => {
     expect(elem.content).toBe("light");
   });
 
+  it("adds a dark mode stylesheet link for light-only specs", async () => {
+    // W3C's fixup.js only injects the light/dark/auto toggle when it finds a
+    // dark stylesheet link, so light-only specs need one present (#5200). Note
+    // the rel filter: a preload hint for the same href exists too.
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops);
+    const meta = doc.querySelector("meta[name='color-scheme']");
+    expect(meta).toBeTruthy();
+    expect(meta.content).toBe("light");
+    const link = doc.querySelector(
+      `link[rel="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+    );
+    expect(link).toBeTruthy();
+    // Deliberately not asserting `disabled`: per HTML that setter is a no-op
+    // until the sheet loads, so it would make this test depend on the network.
+  });
+
   it("adds dark mode stylesheet", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
@@ -250,13 +270,9 @@ describe("W3C - Style", () => {
     expect(linkBase.nextElementSibling).toBe(linkDarkMode);
   });
 
-  it("shouldn't include fixup.js when noToc is set", async () => {
-    const ops = makeStandardOps();
-    const newProps = {
-      noToc: true,
-    };
-    Object.assign(ops.config, newProps);
-    const doc = await makeRSDoc(ops, "spec/core/simple.html");
+  it("shouldn't include fixup.js when noTOC is set", async () => {
+    const ops = makeStandardOps({ noTOC: true });
+    const doc = await makeRSDoc(ops);
     const query = "script[src^='https://www.w3.org/scripts/TR/2021/fixup.js']";
     const elem = doc.querySelector(query);
     expect(elem).toBeNull();
