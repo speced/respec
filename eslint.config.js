@@ -7,7 +7,7 @@ import prettierRecommended from "eslint-plugin-prettier/recommended";
 
 export default [
   {
-    ignores: ["builds/**", "js/**"],
+    ignores: [".cache/**", "builds/**", "js/**"],
   },
   js.configs.recommended,
   prettierRecommended,
