@@ -86,6 +86,11 @@ export async function run(conf) {
   // @ts-expect-error -- options is the normalized object form
   const featureURL = new URL(options.feature, "https://caniuse.com/").href;
   const headDlElem = document.querySelector(".head dl");
+  if (!headDlElem) {
+    const msg = `Can't render caniuse browser support table: no ".head dl" element was found.`;
+    showWarning(msg, name);
+    return;
+  }
   // @ts-expect-error -- options and conf.caniuse are the normalized object form
   const contentPromise = fetchStats(conf.caniuse)
     // @ts-expect-error -- options is object form
@@ -99,7 +104,7 @@ export async function run(conf) {
         placeholder: "Fetching data from caniuse.com...",
       }}
     </dd>`;
-  headDlElem?.append(...definitionPair.childNodes);
+  headDlElem.append(...definitionPair.childNodes);
   await contentPromise;
   // @ts-expect-error -- options is the normalized object form
   pub("amend-user-config", { caniuse: options.feature });
@@ -107,7 +112,7 @@ export async function run(conf) {
   if (options.removeOnSave) {
     // Will remove the browser support cells.
     headDlElem
-      ?.querySelectorAll(".caniuse-browser")
+      .querySelectorAll(".caniuse-browser")
       .forEach(elem => elem.classList.add("removeOnSave"));
     sub(
       "beforesave",
