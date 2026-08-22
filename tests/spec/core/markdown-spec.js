@@ -128,16 +128,16 @@ describe("Core - Markdown", () => {
 
     const [customID, foo, bar, automaticId] = headings;
 
-    expect(customID.id).toBe("custom-id");
+    expect(customID.closest("section").id).toBe("custom-id");
     expect(customID.textContent).toBe("1. Heading");
 
-    expect(foo.id).toBe("foo");
+    expect(foo.closest("section").id).toBe("foo");
     expect(foo.textContent).toBe("2. Foo title");
 
-    expect(bar.id).toBe("bar");
+    expect(bar.closest("section").id).toBe("bar");
     expect(bar.textContent).toBe("2.1 Bar title");
 
-    expect(automaticId.id).toBe("x2-2-another-title");
+    expect(automaticId.closest("section").id).toBe("x2-2-another-title");
     expect(automaticId.textContent).toBe("2.2 Another title");
   });
 
@@ -568,7 +568,7 @@ function getAnswer() {
       const ops = makeStandardOps({ format: "markdown" }, body);
       ops.abstract = null;
       const doc = await makeRSDoc(ops);
-      const h2 = doc.getElementById("h2");
+      const h2 = doc.querySelector("#h2 > h2");
       const p = doc.getElementById("p");
 
       expect(h2.localName).toBe("h2");
