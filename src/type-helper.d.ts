@@ -120,6 +120,7 @@ interface Conf {
   afterEnd?: ProcessFn;
   specStatus?: string;
   wgId?: string;
+  /** @deprecated Use `noTOC` instead */
   noToc?: boolean;
   noTOC?: boolean;
   /** Disables injecting ReSpec styles */

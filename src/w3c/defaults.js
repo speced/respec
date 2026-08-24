@@ -14,7 +14,7 @@ import {
   trStatus,
 } from "./headers.js";
 import { codedJoinOr, docLink, showError } from "../core/utils.js";
-import { coreDefaults } from "../core/defaults.js";
+import { coreDefaults, normalizeNoTOC } from "../core/defaults.js";
 
 const w3cLogo = {
   src: "https://www.w3.org/StyleSheets/TR/2021/logos/W3C",
@@ -75,6 +75,7 @@ export function run(conf) {
     lint,
   });
 
+  normalizeNoTOC(conf);
   if (conf.specStatus !== "unofficial" && !conf.hasOwnProperty("license")) {
     conf.license = "w3c-software-doc";
   }
