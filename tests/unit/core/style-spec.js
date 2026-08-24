@@ -11,27 +11,35 @@ describe("Core - style", () => {
     expect(style.textContent).toMatch(/opacity:\s*0.8;/);
   });
 
-  it("keeps the h4-h6 self-link icon the same color as its heading", async () => {
-    // --heading-text is the h2/h3 heading color; h4-h6 headings don't use it,
-    // so the icon must follow its own heading instead.
+  it("colors the h4-h6 self-link icon like its heading, not --heading-text", async () => {
+    // --heading-text is the h2/h3 heading color. W3C's stylesheets leave h4-h6
+    // to inherit the surrounding text color, so the icon has to as well.
     const doc = await makePluginDoc(["/src/core/style.js"], {
       body: `
         <input type="radio" name="color-scheme" value="dark" checked />
         <div style="color: rgb(1, 2, 3); --heading-text: rgb(9, 9, 9)">
           <h4 id="four">Four</h4><a class="self-link" href="#four"></a>
+          <h5 id="five">Five</h5><a class="self-link" href="#five"></a>
+          <h6 id="six">Six</h6><a class="self-link" href="#six"></a>
         </div>`,
     });
-    const icon = doc.querySelector('a[href="#four"]');
+    const win = doc.defaultView;
     // Firefox returns an empty declaration for a pseudo-element with no
     // generated box, and makePluginDoc hides its iframe. Render it first.
-    doc.defaultView.frameElement.style.display = "block";
-    const iconColor = () =>
-      doc.defaultView.getComputedStyle(icon, "::before").color;
-    const darkToggle = doc.querySelector("input[name='color-scheme']");
+    win.frameElement.style.display = "block";
 
-    expect(iconColor()).toBe("rgb(1, 2, 3)");
+    const expectIconsMatchHeadings = () => {
+      for (const id of ["four", "five", "six"]) {
+        const icon = doc.querySelector(`a[href="#${id}"]`);
+        const iconColor = win.getComputedStyle(icon, "::before").color;
+        const headingColor = win.getComputedStyle(doc.getElementById(id)).color;
+        expect(iconColor).toBe(headingColor);
+      }
+    };
 
-    darkToggle.checked = false;
-    expect(iconColor()).toBe("rgb(1, 2, 3)");
+    expectIconsMatchHeadings();
+
+    doc.querySelector("input[name='color-scheme']").checked = false;
+    expectIconsMatchHeadings();
   });
 });
