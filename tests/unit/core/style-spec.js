@@ -57,4 +57,18 @@ describe("Core - style", () => {
     darkToggle.checked = false;
     expectRightSources();
   });
+
+  it("does not underline the section self-link", async () => {
+    // A decoration declared on the anchor is painted across its ::before no
+    // matter what the pseudo-element declares, so it has to be off here.
+    const doc = await makePluginDoc(["/src/core/style.js"], {
+      body: `<div><h2 id="two">Two</h2><a class="self-link" href="#two"></a></div>`,
+      style: "display: block", // see makePluginDoc's `style` param
+    });
+    const link = doc.querySelector("a.self-link");
+    expect(link).toBeTruthy();
+    expect(doc.defaultView.getComputedStyle(link).textDecorationLine).toBe(
+      "none"
+    );
+  });
 });
