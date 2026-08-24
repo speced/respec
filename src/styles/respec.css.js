@@ -175,18 +175,7 @@ aside.example .marker > a.self-link {
 }
 
 :is(h4, h5, h6) + a.self-link::before {
-  color: black;
-}
-
-@media (prefers-color-scheme: dark) {
-  :is(h4, h5, h6) + a.self-link::before {
-    color: var(--heading-text);
-  }
-}
-
-body:has(input[name='color-scheme'][value='dark']:checked)
-  :is(h4, h5, h6) + a.self-link::before {
-  color: var(--heading-text);
+  color: currentColor;
 }
 
 @media (max-width: 767px) {
