@@ -106,8 +106,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       jasmine-core:
-        specifier: ^7.0.1
-        version: 7.0.1
+        specifier: ^7.0.2
+        version: 7.0.2
       karma:
         specifier: ^6.4.4
         version: 6.4.4
@@ -1616,8 +1616,8 @@ packages:
   jasmine-core@4.6.1:
     resolution: {integrity: sha512-VYz/BjjmC3klLJlLwA4Kw8ytk0zDSmbbDLNs794VnWmkcCB7I9aAL/D48VNQtmITyPvea2C3jdUMfc3kAoy0PQ==}
 
-  jasmine-core@7.0.1:
-    resolution: {integrity: sha512-AVUnCekV7RBFS6k4+bc9OrLTbEcDYM9gVHtUuPMWrpFUZBovr5p47WbVTKbr6gBYeAtBBe+nX32ivrvc0Ne2XA==}
+  jasmine-core@7.0.2:
+    resolution: {integrity: sha512-YMVijt84KPQQFm1db1AQAxTXfq0k3wU06OkepLViljURFqiRQ7EYYX2eUAshhUv9fA9t1E2N65GrdqvupA9VPQ==}
 
   jasmine@7.0.0:
     resolution: {integrity: sha512-rnjiyg1LAhFZMoyU8ei/Wqyvti5oCzFhW7ZtkD6o+CSx3LpU9aYurPrh5BKyX3coGvmdEVYPC2HYh1rrBvZoWg==}
@@ -3681,13 +3681,13 @@ snapshots:
 
   jasmine-core@4.6.1: {}
 
-  jasmine-core@7.0.1: {}
+  jasmine-core@7.0.2: {}
 
   jasmine@7.0.0:
     dependencies:
       '@jasminejs/reporters': 1.1.0
       glob: 13.0.6
-      jasmine-core: 7.0.1
+      jasmine-core: 7.0.2
 
   json-buffer@3.0.1: {}
 
