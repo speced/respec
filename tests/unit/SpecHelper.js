@@ -74,14 +74,9 @@ function getDoc(html, style = "") {
       waitReady(ifr).then(resolve).catch(reject)
     );
     ifr.style.display = "none";
-    if (style) {
-      try {
-        ifr.style = style;
-      } catch ({ message }) {
-        // eslint-disable-next-line no-console
-        console.warn(`Could not override iframe style: ${style} (${message})`);
-      }
-    }
+    // Assigning a string goes through `style`'s [PutForwards=cssText], so an
+    // invalid declaration is ignored rather than thrown.
+    if (style) ifr.style = style;
     const doc = new DOMParser().parseFromString(html, "text/html");
     ifr.srcdoc = doc.documentElement.outerHTML;
 

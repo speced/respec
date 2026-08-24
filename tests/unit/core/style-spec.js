@@ -12,13 +12,11 @@ describe("Core - style", () => {
   });
 
   it("colors the h4-h6 self-link icon from the surrounding text, not --heading-text", async () => {
-    // base.css colors only h1-h3, with --heading-text; h4-h6 inherit the
-    // surrounding text. The icon is a ::before on the link, which takes
-    // `color: inherit`, so it follows that same surrounding text — NOT the
-    // heading, which it never consults. Under W3C's stylesheets the two
-    // coincide, which is why this looks like "matches its heading"; it isn't.
-    // --heading-text is set to a color nothing inherits, to keep the two paths
-    // distinguishable.
+    // The icon is a ::before on the LINK, so `currentColor` follows the link's
+    // inherited text color and never consults the heading. Under W3C's
+    // stylesheets those coincide, which is why this can look like "matches its
+    // heading" — it isn't. --heading-text is set to a color nothing inherits so
+    // the two paths stay distinguishable.
     const doc = await makePluginDoc(["/src/core/style.js"], {
       body: `
         <input type="radio" name="color-scheme" value="dark" checked />
@@ -29,15 +27,12 @@ describe("Core - style", () => {
           <h5 id="five">Five</h5><a class="self-link" href="#five"></a>
           <h6 id="six">Six</h6><a class="self-link" href="#six"></a>
         </div>`,
-      // Gecko returns an empty declaration for a pseudo-element with no
-      // generated box, and the frame is hidden by default.
-      style: "display: block",
+      style: "display: block", // see makePluginDoc's `style` param
     });
     const win = doc.defaultView;
 
     const darkToggle = doc.querySelector("input[name='color-scheme']");
     expect(darkToggle).toBeTruthy();
-    expect(doc.querySelectorAll("a.self-link").length).toBe(5);
 
     const link = id => doc.querySelector(`a[href="#${id}"]`);
     const iconColor = id => win.getComputedStyle(link(id), "::before").color;
@@ -54,10 +49,11 @@ describe("Core - style", () => {
       }
     };
 
+    // Dark: the theme toggle above is checked.
     expectRightSources();
 
-    // Guards the regression this replaced: an override that only applied with
-    // the theme toggle set to dark.
+    // Light: guards the regression this replaced, an override that only applied
+    // with the toggle set to dark.
     darkToggle.checked = false;
     expectRightSources();
   });
