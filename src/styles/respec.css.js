@@ -162,11 +162,13 @@ aside.example .marker > a.self-link {
   left: -1.1em;
   font-size: 1rem;
   opacity: 0.8;
+  /* Has to be here, not on the ::before: a decoration is painted across the
+     pseudo-element regardless of what the pseudo-element itself declares. */
+  text-decoration: none;
 }
 
 :is(h2, h3, h4, h5, h6) + a.self-link::before {
   content: "§";
-  text-decoration: none;
 }
 
 :is(h2, h3) + a.self-link {
