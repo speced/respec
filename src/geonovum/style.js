@@ -152,7 +152,7 @@ export function run(conf) {
       styleFile = "base.css";
   }
 
-  if (!conf.noToc) {
+  if (!conf.noTOC) {
     sub(
       "end-all",
       () => {

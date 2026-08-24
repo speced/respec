@@ -161,21 +161,22 @@ aside.example .marker > a.self-link {
   position: relative;
   left: -1.1em;
   font-size: 1rem;
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 :is(h2, h3, h4, h5, h6) + a.self-link::before {
   content: "§";
   text-decoration: none;
-  color: var(--heading-text);
 }
 
 :is(h2, h3) + a.self-link {
   top: -0.2em;
 }
 
-:is(h4, h5, h6) + a.self-link::before {
-  color: black;
+/* base.css colors only h1-h3, with --heading-text. h4-h6 inherit the surrounding
+   text, so their icon does too — by not declaring a color here at all. */
+:is(h2, h3) + a.self-link::before {
+  color: var(--heading-text);
 }
 
 @media (max-width: 767px) {
