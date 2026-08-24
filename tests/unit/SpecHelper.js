@@ -8,11 +8,15 @@ const iframes = [];
  * @param {object} [options.config] JSON-serializable respecConfig object.
  * @param {string} [options.head]
  * @param {string} [options.body]
+ * @param {string} [options.style] Overrides the iframe's own style. The frame is
+ * hidden by default, which makes a pseudo-element's computed style unreadable in
+ * Gecko; pass `"display: block"` to render it. Mirrors `makeRSDoc`'s third
+ * argument.
  * @return {Promise<Document>}
  */
 export function makePluginDoc(
   plugins,
-  { config = {}, head = `<meta charset="UTF-8" />`, body = "" } = {}
+  { config = {}, head = `<meta charset="UTF-8" />`, body = "", style = "" } = {}
 ) {
   plugins = [
     "/src/core/base-runner.js",
@@ -20,7 +24,8 @@ export function makePluginDoc(
     "/src/core/dfn.js", // Needed for "plugins-done" event,
     ...plugins,
   ];
-  return getDoc(`
+  return getDoc(
+    `
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -52,20 +57,26 @@ export function makePluginDoc(
       </head>
       <body>${body}</body>
     </html>
-  `);
+  `,
+    style
+  );
 }
 
 /**
  * @param {string} html
+ * @param {string} [style] Overrides the iframe's style, which is hidden by default.
  * @return {Promise<Document>}
  */
-function getDoc(html) {
+function getDoc(html, style = "") {
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
     ifr.addEventListener("load", () =>
       waitReady(ifr).then(resolve).catch(reject)
     );
     ifr.style.display = "none";
+    // Assigning a string goes through `style`'s [PutForwards=cssText], so an
+    // invalid declaration is ignored rather than thrown.
+    if (style) ifr.style = style;
     const doc = new DOMParser().parseFromString(html, "text/html");
     ifr.srcdoc = doc.documentElement.outerHTML;
 
