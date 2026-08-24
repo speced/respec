@@ -22,6 +22,9 @@ describe("Core - style", () => {
         </div>`,
     });
     const icon = doc.querySelector('a[href="#four"]');
+    // Firefox returns an empty declaration for a pseudo-element with no
+    // generated box, and makePluginDoc hides its iframe. Render it first.
+    doc.defaultView.frameElement.style.display = "block";
     const iconColor = () =>
       doc.defaultView.getComputedStyle(icon, "::before").color;
     const darkToggle = doc.querySelector("input[name='color-scheme']");
