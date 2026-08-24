@@ -146,5 +146,8 @@
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/respec"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }

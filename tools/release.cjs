@@ -395,22 +395,30 @@ async function preflight() {
   // npm auth. This is the credential that actually expires, and `npm publish` is the LAST step of
   // the release, so without this check the token is discovered to be stale only after main, gh-pages
   // and the tag have all been pushed, leaving the release half-done and needing manual recovery.
-  // The registry is explicit because publish targets public npm while this machine's default
-  // registry may be an internal mirror, so a bare `npm whoami` would check the wrong one.
-  const NPM_REGISTRY = "https://registry.npmjs.org";
-  try {
-    const who = await toExecFilePromise(
-      "npm",
-      ["whoami", "--registry", NPM_REGISTRY],
-      { timeout: 20000, showOutput: false }
-    );
-    console.log(styleText("green", `  ✓ npm auth (${who.trim()})`));
-  } catch {
+  // The registry comes from publishConfig so this probe and the publish below cannot target
+  // different registries: a bare `npm whoami` (or a bare publish) would use the machine default,
+  // which may be an internal mirror.
+  const NPM_REGISTRY = require("../package.json").publishConfig?.registry;
+  if (!NPM_REGISTRY) {
     errors.push(
-      "npm is not authenticated for publishing (the token expires periodically).\n" +
-        `    Check: npm whoami --registry ${NPM_REGISTRY}\n` +
-        `    Fix:   npm login --registry ${NPM_REGISTRY}`
+      "package.json has no publishConfig.registry, so `npm publish` would target whatever\n" +
+        "    registry this machine defaults to. Set it before releasing."
     );
+  } else {
+    try {
+      const who = await toExecFilePromise(
+        "npm",
+        ["whoami", "--registry", NPM_REGISTRY],
+        { timeout: 20000, showOutput: false }
+      );
+      console.log(styleText("green", `  ✓ npm auth (${who.trim()})`));
+    } catch {
+      errors.push(
+        "npm is not authenticated for publishing (the token expires periodically).\n" +
+          `    Check: npm whoami --registry ${NPM_REGISTRY}\n` +
+          `    Fix:   npm login --registry ${NPM_REGISTRY}`
+      );
+    }
   }
 
   // origin/gh-pages must exist and be unambiguous
