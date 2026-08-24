@@ -392,6 +392,27 @@ async function preflight() {
     );
   }
 
+  // npm auth. This is the credential that actually expires, and `npm publish` is the LAST step of
+  // the release, so without this check the token is discovered to be stale only after main, gh-pages
+  // and the tag have all been pushed, leaving the release half-done and needing manual recovery.
+  // The registry is explicit because publish targets public npm while this machine's default
+  // registry may be an internal mirror, so a bare `npm whoami` would check the wrong one.
+  const NPM_REGISTRY = "https://registry.npmjs.org";
+  try {
+    const who = await toExecFilePromise(
+      "npm",
+      ["whoami", "--registry", NPM_REGISTRY],
+      { timeout: 20000, showOutput: false }
+    );
+    console.log(styleText("green", `  ✓ npm auth (${who.trim()})`));
+  } catch {
+    errors.push(
+      "npm is not authenticated for publishing (the token expires periodically).\n" +
+        `    Check: npm whoami --registry ${NPM_REGISTRY}\n` +
+        `    Fix:   npm login --registry ${NPM_REGISTRY}`
+    );
+  }
+
   // origin/gh-pages must exist and be unambiguous
   try {
     const branches = await git(["branch", "-r", "--list", "*/gh-pages"]);
