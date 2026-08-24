@@ -62,7 +62,7 @@
     "simple-git-hooks": "^2.13.1",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^7.0.2",
-    "vnu-jar": "^26.8.15",
+    "vnu-jar": "^26.8.21",
     "webidl2": "^24.5.0"
   },
   "scripts": {
