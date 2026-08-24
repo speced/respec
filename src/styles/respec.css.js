@@ -155,7 +155,10 @@ aside.example .marker > a.self-link {
   left: -.5em;
 }
 
-:is(h2, h3, h4, h5, h6):not(#toc h2) + a.self-link {
+/* The #toc exclusion is wrapped in :where() so it contributes no specificity.
+   As a bare :not(#toc h2) its ID outweighed .self-link:hover and killed that
+   rule's opacity: 1. */
+:is(h2, h3, h4, h5, h6):not(:where(#toc h2)) + a.self-link {
   color: inherit;
   order: -1;
   position: relative;

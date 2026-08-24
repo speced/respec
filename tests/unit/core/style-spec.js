@@ -71,4 +71,23 @@ describe("Core - style", () => {
       "none"
     );
   });
+
+  it("lets .self-link:hover win over the resting opacity", async () => {
+    // :hover cannot be synthesised, so this asserts the thing that was actually
+    // broken: the resting-opacity rule must not OUTWEIGH a selector of the same
+    // specificity as .self-link:hover, which is (0, 2, 0). A bare
+    // :not(#toc h2) contributed an ID, making it (1, 1, 3) and leaving the hover
+    // rule's opacity: 1 dead.
+    const doc = await makePluginDoc(["/src/core/style.js"], {
+      head: `<meta charset="UTF-8" /><style>
+        /* Same specificity as .self-link:hover */
+        .self-link.hover-stand-in { opacity: 1; }
+      </style>`,
+      body: `<div><h2 id="two">Two</h2><a class="self-link hover-stand-in" href="#two"></a></div>`,
+      style: "display: block", // see makePluginDoc's `style` param
+    });
+    const link = doc.querySelector("a.self-link");
+    expect(link).toBeTruthy();
+    expect(doc.defaultView.getComputedStyle(link).opacity).toBe("1");
+  });
 });
