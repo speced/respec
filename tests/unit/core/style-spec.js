@@ -90,4 +90,21 @@ describe("Core - style", () => {
     expect(link).toBeTruthy();
     expect(doc.defaultView.getComputedStyle(link).opacity).toBe("1");
   });
+
+  it("keeps the heading offset rule beatable by ordinary author rules", async () => {
+    // Same trap as above, in the rule that nudges a self-linked heading left:
+    // four IDs inside :not() made it (1, 1, 3), so nothing an author could
+    // reasonably write would override it. The stand-in below is (0, 2, 0), which
+    // should win.
+    const doc = await makePluginDoc(["/src/core/style.js"], {
+      head: `<meta charset="UTF-8" /><style>
+        .probe-a.probe-b { left: 0px; }
+      </style>`,
+      body: `<div><h2 id="two" class="probe-a probe-b">Two</h2><a class="self-link" href="#two"></a></div>`,
+      style: "display: block", // see makePluginDoc's `style` param
+    });
+    const heading = doc.getElementById("two");
+    expect(heading).toBeTruthy();
+    expect(doc.defaultView.getComputedStyle(heading).left).toBe("0px");
+  });
 });
