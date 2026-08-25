@@ -60,6 +60,7 @@ function commandRunner(file, baseArgs = []) {
 
 const git = commandRunner("git");
 const npm = commandRunner("npm");
+const pnpm = commandRunner("pnpm");
 const node = commandRunner("node");
 const validator = commandRunner("java", ["-jar", vnu]);
 
@@ -610,7 +611,16 @@ const run = async () => {
       "--no-git-tag-version",
     ]);
 
-    // 3. Run the build script (node tools/builder.js).
+    // 3. Install exactly what the lockfile says, then build.
+    // builds/*.js bundle code straight out of node_modules (src/core/import-maps.js imports
+    // node_modules/marked/lib/marked.esm.js, for example), and step 1 has just checked out main.
+    // Without this, a release run on a stale node_modules publishes bundles built from the OLD
+    // dependency versions while committing the NEW pnpm-lock.yaml, so the artifact and the
+    // lockfile disagree. --frozen-lockfile makes that a hard failure rather than a silent drift.
+    console.log(styleText("green", " Installing dependencies... 📦"));
+    await pnpm(["install", "--frozen-lockfile"]);
+
+    // 3b. Run the build script (node tools/builder.js).
     await npm(["run", "builddeps"]);
     for (const name of ["w3c", "geonovum", "dini", "aom"]) {
       await Builder.build({ name });
