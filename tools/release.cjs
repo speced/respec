@@ -467,24 +467,17 @@ async function preflight() {
 }
 
 /**
- * Runs npm interactively (stdio inherited), needed for OTP auth during publish.
- * @param {string[]} args
+ * Publishes to npm interactively (stdio inherited), needed for OTP auth.
  * @returns {Promise<void>}
  */
-function spawnNpm(args) {
-  console.log(
-    styleText("cyan", `Run: npm ${styleText("grey", args.join(" "))}`)
-  );
+function publishToNpm() {
+  console.log(styleText("cyan", "Run: npm publish"));
   if (DEBUG) return Promise.resolve();
   return new Promise((resolve, reject) => {
-    const proc = spawn("npm", args, { stdio: "inherit", shell: false });
+    const proc = spawn("npm", ["publish"], { stdio: "inherit", shell: false });
     proc.on("close", code => {
       if (code !== 0) {
-        reject(
-          new Error(
-            `Command failed with exit code ${code}: npm ${args.join(" ")}`
-          )
-        );
+        reject(new Error(`Command failed with exit code ${code}: npm publish`));
       } else {
         resolve();
       }
@@ -672,7 +665,7 @@ const run = async () => {
 
     // 7. Publish to npm (interactive for OTP auth)
     console.log(styleText("green", " Publishing to npm... 📡"));
-    await spawnNpm(["publish"]);
+    await publishToNpm();
 
     // 8. Create GitHub Release (triggers W3C CDN sync)
     console.log(styleText("green", " Creating GitHub Release... 📡"));
