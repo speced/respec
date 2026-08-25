@@ -1,0 +1,29 @@
+allowBuilds:
+  puppeteer: true
+  simple-git-hooks: true
+  unrs-resolver: false
+  vnu-jar: false
+
+overrides:
+  '@rollup/plugin-commonjs>picomatch': '^4.0.4'
+  '@rollup/pluginutils>picomatch': '^2.3.2'
+  'anymatch>picomatch': '^2.3.2'
+  'body-parser': '^1.20.6'
+  'brace-expansion@<1.1.16': '^1.1.16'
+  'brace-expansion@>=2.0.0 <2.1.2': '^2.1.2'
+  'brace-expansion@>=5.0.0 <5.0.8': '^5.0.8'
+  'cookie@<0.7.0': '>=0.7.0'
+  'engine.io': '^6.6.7'
+  'fast-uri': '^3.1.5'
+  'flatted': '>=3.4.2'
+  'follow-redirects': '>=1.16.0'
+  'jasmine>glob': '>=10.5.0'
+  'js-yaml@>=4.0.0 <=4.1.1': '>=4.2.0'
+  'lodash': '>=4.18.0'
+  'qs': '>=6.14.2'
+  'qs@>=6.11.1 <=6.15.1': '>=6.15.2'
+  'socket.io-parser': '>=4.2.7'
+  'tmp': '>=0.2.4'
+  'tmp@<0.2.6': '>=0.2.6'
+  'ws': '>=8.17.1'
+  'ws@>=8.0.0 <8.21.0': '>=8.21.0'
