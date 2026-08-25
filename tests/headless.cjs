@@ -4,14 +4,43 @@ const { exec } = require("child_process");
 const http = require("http");
 const serveHandler = require("serve-handler");
 
-const port = 8000;
-const timeout = 30; // seconds
+// Budget respec2html gets for processing the document, passed through as --timeout.
+const processingTimeout = 30; // seconds
+
+// Each spec spawns respec2html, which launches a browser before processing starts.
+// tools/respecDocWriter.js gives that launch its own budget (LAUNCH_TIMEOUT, 120s) precisely
+// because a cold runner can be slow, so the spec timeout has to cover launch AND processing.
+// Setting it to the processing budget alone let jasmine kill the child mid-launch, which read
+// as flakiness rather than a timeout.
+const specTimeout = (120 + processingTimeout + 30) * 1000; // launch + processing + slack
 
 describe("Headless (examples)", () => {
-  beforeAll(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = timeout * 1000;
-    const server = http.createServer(serveHandler);
-    server.listen(port);
+  /** @type {import("http").Server} */
+  let server;
+  /** @type {number} */
+  let port;
+
+  beforeAll(async () => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = specTimeout;
+    server = http.createServer(serveHandler);
+    // Port 0 asks the OS for a free port. A hardcoded port fails whenever something else is
+    // already listening, and worse, a foreign server on it would let these specs pass while
+    // serving someone else's files. Reporting a bind failure here also beats an uncaught
+    // exception attributed to whichever spec happened to be running at the time.
+    await new Promise((resolve, reject) => {
+      server.once("error", reject);
+      server.listen(0, () => resolve(undefined));
+    });
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      throw new Error(`Could not determine the test server's port: ${address}`);
+    }
+    port = address.port;
+  });
+
+  afterAll(async () => {
+    if (!server) return;
+    await new Promise(resolve => server.close(() => resolve(undefined)));
   });
 
   it("builds basic.html without errors", async () => {
@@ -41,7 +70,7 @@ describe("Headless (examples)", () => {
 
 function toCommand(src, { useLocal = false } = {}) {
   const command = `node ./tools/respec2html.js ${src}`;
-  const options = ["-e", `--timeout ${timeout}`, "--verbose"];
+  const options = ["-e", `--timeout ${processingTimeout}`, "--verbose"];
   if (useLocal) options.push("--use-local");
   return `${command} ${options.join(" ")}`;
 }
