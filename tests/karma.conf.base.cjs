@@ -83,6 +83,13 @@ module.exports = config => {
     client: {
       // @ts-expect-error
       args: ["--grep", config.grep || ""],
+      jasmine: {
+        // Integration specs render whole ReSpec documents, some of which fetch
+        // over the network, so they do not reliably finish inside jasmine's 5s
+        // default when CI runners are loaded. A hung spec still fails, just
+        // later; browserNoActivityTimeout above remains the outer bound.
+        timeoutInterval: 15000,
+      },
     },
   };
 
