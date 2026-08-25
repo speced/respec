@@ -472,13 +472,18 @@ async function preflight() {
  * @param {string[]} args
  * @returns {Promise<void>}
  */
+const ALLOWED_SPAWN_COMMANDS = ["npm"];
+
 function toSpawnPromise(file, args) {
+  if (!ALLOWED_SPAWN_COMMANDS.includes(file)) {
+    return Promise.reject(new Error(`Command not allowed: ${file}`));
+  }
   console.log(
     styleText("cyan", `Run: ${file} ${styleText("grey", args.join(" "))}`)
   );
   if (DEBUG) return Promise.resolve();
   return new Promise((resolve, reject) => {
-    const proc = spawn(file, args, { stdio: "inherit" });
+    const proc = spawn(file, args, { stdio: "inherit", shell: false });
     proc.on("close", code => {
       if (code !== 0) {
         reject(
