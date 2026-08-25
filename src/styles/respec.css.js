@@ -150,32 +150,40 @@ aside.example .marker > a.self-link {
   align-items: baseline;
 }
 
-:is(h2, h3, h4, h5, h6):not(#toc > h2, #abstract > h2, #sotd > h2, .head > h2):has(+ a.self-link) {
+/* :where() again, for the same reason as the rule below: these four IDs would
+   otherwise make this (1, 1, 3) and put it out of reach of ordinary author CSS. */
+:is(h2, h3, h4, h5, h6):not(:where(#toc > h2, #abstract > h2, #sotd > h2, .head > h2)):has(+ a.self-link) {
   position: relative;
   left: -.5em;
 }
 
-:is(h2, h3, h4, h5, h6):not(#toc h2) + a.self-link {
+/* The #toc exclusion is wrapped in :where() so it contributes no specificity.
+   As a bare :not(#toc h2) its ID outweighed .self-link:hover and killed that
+   rule's opacity: 1. */
+:is(h2, h3, h4, h5, h6):not(:where(#toc h2)) + a.self-link {
   color: inherit;
   order: -1;
   position: relative;
   left: -1.1em;
   font-size: 1rem;
   opacity: 0.8;
+  /* Has to be here, not on the ::before: a decoration is painted across the
+     pseudo-element regardless of what the pseudo-element itself declares. */
+  text-decoration: none;
 }
 
 :is(h2, h3, h4, h5, h6) + a.self-link::before {
   content: "§";
-  text-decoration: none;
-  color: var(--heading-text);
 }
 
 :is(h2, h3) + a.self-link {
   top: -0.2em;
 }
 
-:is(h4, h5, h6) + a.self-link::before {
-  color: black;
+/* base.css colors only h1-h3, with --heading-text. h4-h6 inherit the surrounding
+   text, so their icon does too — by not declaring a color here at all. */
+:is(h2, h3) + a.self-link::before {
+  color: var(--heading-text);
 }
 
 @media (max-width: 767px) {

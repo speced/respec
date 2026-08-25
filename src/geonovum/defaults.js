@@ -3,7 +3,7 @@
  * Sets the defaults for Geonovum documents
  */
 export const name = "geonovum/defaults";
-import { coreDefaults } from "../core/defaults.js";
+import { coreDefaults, normalizeNoTOC } from "../core/defaults.js";
 
 const licenses = new Map([
   [
@@ -82,6 +82,7 @@ export function run(conf) {
     ...conf,
     lint,
   });
+  normalizeNoTOC(conf);
   // computed properties
   Object.assign(conf, computeProps(/** @type {NormalizedConf} */ (conf)));
 }
