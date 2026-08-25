@@ -28,8 +28,12 @@ describe("Headless (examples)", () => {
     // serving someone else's files. Reporting a bind failure here also beats an uncaught
     // exception attributed to whichever spec happened to be running at the time.
     await new Promise((resolve, reject) => {
-      server.once("error", reject);
-      server.listen(0, () => resolve(undefined));
+      const onError = error => reject(error);
+      server.once("error", onError);
+      server.listen(0, () => {
+        server.off("error", onError);
+        resolve(undefined);
+      });
     });
     const address = server.address();
     if (!address || typeof address === "string") {
