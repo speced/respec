@@ -2,11 +2,9 @@
 
 Browser-based tool that generates W3C specifications. Authors write HTML plus a `<script>` tag; ReSpec handles boilerplate, cross-references, bibliography, and validation. Around half of W3C standards are produced with it, so a regression here reaches a lot of documents.
 
-Build, test, code style, and the house style for pull requests, commits and comments live in the file below, shared with other agents rather than duplicated:
+Build, test, code style, and the house style for pull requests, commits and comments live in `.github/copilot-instructions.md`, shared with other agents rather than duplicated here. Read it when a task touches any of those; it is a path rather than an import so it does not sit in context for tasks that do not.
 
-@.github/copilot-instructions.md
-
-Contributions written with AI are welcome and have a policy: @AI_POLICY.md
+Contributions written with AI are welcome and have a policy: read `AI_POLICY.md` before opening a pull request.
 
 ## Architecture
 
@@ -35,22 +33,6 @@ The build output is an IIFE (`builds/respec-w3c.js`). Rollup captures `document.
 | `src/w3c/headers.js`                | Full W3C header/SoTD generation                                                   |
 | `src/w3c/seo.js`                    | Schema.org JSON-LD, canonical link (`doJsonLd: true` to enable)                   |
 
-## Inline shorthand syntax reference
-
-```
-[= term =]              → link to a local/external definition
-[= For/term =]          → scoped definition link
-{{ IDLInterface }}      → WebIDL type reference
-{{ IDLInterface/member() }} → WebIDL member reference
-[[SPEC]]                → normative reference
-?[[SPEC]]               → informative reference
-[[[expand]]]            → expand section title at that ID
-[[[SPEC#id]]]           → cross-spec section link
-[[[#id]]]               → in-document section expander
-|varName|               → variable (for algorithms)
-|varName: Type|         → typed variable
-```
-
 ## Testing patterns
 
 ```js
@@ -61,12 +43,14 @@ import {
   errorFilters,
   warningFilters,
 } from "../SpecHelper.js";
-const errors = errorFilters.filter("module/name");
-const warnings = warningFilters.filter("module/name");
+const pluginErrors = errorFilters.filter("module/name");
+const pluginWarnings = warningFilters.filter("module/name");
 
 const doc = await makeRSDoc(
   makeStandardOps({ specStatus: "WD", group: "webapps" }, body)
 );
+const errors = pluginErrors(doc);
+const warnings = pluginWarnings(doc);
 ```
 
 ### Common Copilot findings (from respec-web-services experience)
@@ -89,17 +73,17 @@ After any rebase with conflicts, verify the working tree matches expectations:
 
 ### CI lint failures on PRs
 
-Almost always caused by the branch being behind main. Fix:
+Almost always the branch being behind main. When the conflict is under `builds/`, do not resolve it: take main's bundles and rebuild if you need them, which is faster and cheaper than reading a diff of generated code.
 
-1. `git rebase main` (resolve conflicts — for `builds/` files, always take `--ours`)
-2. `git diff main --name-only | xargs npx prettier --write`
-3. `git push --force-with-lease`
+1. `git rebase main`
+2. For any conflict under `builds/`: `git checkout origin/main -- builds/ && git add builds/`, then `pnpm build:w3c` only if you need to run the integration suite locally
+3. `git diff main...HEAD --name-only | xargs pnpm format --write` — three dots, so it lists only what this branch changed. With one dot it also lists everything main changed, and on a stale branch that reformats files you never touched.
 
-Do NOT commit `builds/` files — CI rebuilds them. On rebase conflicts in build artifacts, take main's version.
+Never commit `builds/`: CI rebuilds it, and a dedicated check fails a pull request that touches it.
 
-## Pre-PR checklist (learned from Copilot reviews)
+## Pre-PR checklist
 
-Before pushing any PR, check for these patterns that Copilot consistently flags:
+Patterns a reviewer will otherwise catch:
 
 **Null safety:** Every `querySelector()`, `closest()`, `getElementById()`, `getAttribute()` result must be checked before use. Never use `?? ""` on DOM queries (creates empty text nodes). Guard `append()` calls against null.
 
@@ -118,7 +102,3 @@ Before pushing any PR, check for these patterns that Copilot consistently flags:
 **Save/export data flow:** When `removeOnSave` or `beforesave` rewrites content, ensure the rewritten HTML preserves feature-specific URLs and context, not just a generic fallback link.
 
 **Unused properties:** Don't declare properties in constants (e.g., `label` in a Map entry) that are never read. Copilot flags these consistently.
-
-## Cross-spec headings API
-
-`POST /xref/headings` on respec.org looks up section heading text by `{spec, id}`, sourced from w3c/webref `ed/headings/`. This is what lets `[[[SPEC#id]]]` render the actual heading rather than just the spec title.
