@@ -622,7 +622,7 @@ const run = async () => {
 
     // 3b. Run the build script (node tools/builder.js).
     await npm(["run", "builddeps"]);
-    for (const name of ["w3c", "geonovum", "dini", "aom"]) {
+    for (const name of ["w3c", "dini", "aom"]) {
       await Builder.build({ name });
     }
     console.log(

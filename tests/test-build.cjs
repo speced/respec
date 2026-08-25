@@ -18,7 +18,7 @@ async function fileExists(filePath) {
 describe("builder (tool)", () => {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
 
-  const profiles = ["w3c", "geonovum"];
+  const profiles = ["w3c"];
   const rootDir = path.join(__dirname, "..");
 
   beforeAll(async () => {

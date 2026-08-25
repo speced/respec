@@ -68,8 +68,6 @@
   "scripts": {
     "build:aom-debug": "pnpm build:aom -- --debug",
     "build:aom": "pnpm builder aom",
-    "build:geonovum-debug": "pnpm build:geonovum -- --debug",
-    "build:geonovum": "pnpm builder geonovum",
     "build:w3c-debug": "pnpm build:w3c -- --debug",
     "build:w3c": "pnpm builder w3c",
     "build:dini-debug": "pnpm build:dini -- --debug",

@@ -10,7 +10,7 @@ const { Builder } = require("./builder.cjs");
 const { DEPLOY_PRIME_URL, COMMIT_REF, REVIEW_ID, REPOSITORY_URL } = process.env;
 
 const BUILD_DIR = path.resolve(__dirname, "../builds/");
-const PROFILES = ["w3c", "geonovum", "dini"];
+const PROFILES = ["w3c", "dini"];
 
 const SPECS = {
   W3C: [
