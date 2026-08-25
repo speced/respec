@@ -467,28 +467,22 @@ async function preflight() {
 }
 
 /**
- * Runs a command interactively (stdio inherited), needed for npm publish OTP.
- * @param {string} file
+ * Runs npm interactively (stdio inherited), needed for OTP auth during publish.
  * @param {string[]} args
  * @returns {Promise<void>}
  */
-const ALLOWED_SPAWN_COMMANDS = ["npm"];
-
-function toSpawnPromise(file, args) {
-  if (!ALLOWED_SPAWN_COMMANDS.includes(file)) {
-    return Promise.reject(new Error(`Command not allowed: ${file}`));
-  }
+function spawnNpm(args) {
   console.log(
-    styleText("cyan", `Run: ${file} ${styleText("grey", args.join(" "))}`)
+    styleText("cyan", `Run: npm ${styleText("grey", args.join(" "))}`)
   );
   if (DEBUG) return Promise.resolve();
   return new Promise((resolve, reject) => {
-    const proc = spawn(file, args, { stdio: "inherit", shell: false });
+    const proc = spawn("npm", args, { stdio: "inherit", shell: false });
     proc.on("close", code => {
       if (code !== 0) {
         reject(
           new Error(
-            `Command failed with exit code ${code}: ${file} ${args.join(" ")}`
+            `Command failed with exit code ${code}: npm ${args.join(" ")}`
           )
         );
       } else {
@@ -678,7 +672,7 @@ const run = async () => {
 
     // 7. Publish to npm (interactive for OTP auth)
     console.log(styleText("green", " Publishing to npm... 📡"));
-    await toSpawnPromise("npm", ["publish"]);
+    await spawnNpm(["publish"]);
 
     // 8. Create GitHub Release (triggers W3C CDN sync)
     console.log(styleText("green", " Creating GitHub Release... 📡"));
