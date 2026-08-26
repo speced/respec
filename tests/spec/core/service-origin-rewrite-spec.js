@@ -42,4 +42,12 @@ describe("SpecHelper - rewriteServiceUrl", () => {
       rewriteServiceUrl("/base/builds/respec-w3c.js", map)
     ).not.toThrow();
   });
+
+  it("is handed a serviceOrigins object by the karma client config", () => {
+    // Proves the wiring exists. Which origins it holds depends on the
+    // environment, so the values are asserted end to end below instead.
+    expect(globalThis.__karma__.config.serviceOrigins).toEqual(
+      jasmine.any(Object)
+    );
+  });
 });
