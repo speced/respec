@@ -1,6 +1,10 @@
 // @ts-check
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
-import { rewriteServiceUrl } from "../service-origin-rewrite.js";
+import {
+  installFetchRewrite,
+  rewriteServiceUrl,
+  validateServiceOrigins,
+} from "../service-origin-rewrite.js";
 
 describe("SpecHelper - rewriteServiceUrl", () => {
   const map = {
@@ -8,21 +12,15 @@ describe("SpecHelper - rewriteServiceUrl", () => {
     "https://api.specref.org": "http://localhost:8001",
   };
 
-  it("rewrites a mapped origin and keeps the path and query", () => {
-    expect(rewriteServiceUrl("https://respec.org/xref/search/?q=1", map)).toBe(
-      "http://localhost:8000/xref/search/?q=1"
-    );
+  it("rewrites a mapped origin and keeps the path, query and hash", () => {
+    expect(
+      rewriteServiceUrl("https://respec.org/xref/search/?q=1#f", map)
+    ).toBe("http://localhost:8000/xref/search/?q=1#f");
   });
 
   it("leaves an unmapped origin alone", () => {
     const url = "https://w3c.github.io/mdn-spec-links/x.json";
     expect(rewriteServiceUrl(url, map)).toBe(url);
-  });
-
-  it("rewrites the xref cache version probe, which config cannot reach", () => {
-    expect(rewriteServiceUrl("https://respec.org/xref/meta/version", map)).toBe(
-      "http://localhost:8000/xref/meta/version"
-    );
   });
 
   it("accepts a replacement with a trailing slash without doubling it", () => {
@@ -33,38 +31,145 @@ describe("SpecHelper - rewriteServiceUrl", () => {
     ).toBe("http://localhost:8000/caniuse/x");
   });
 
-  it("returns the input unchanged when the map is empty", () => {
-    const url = "https://respec.org/xref/search/";
-    expect(rewriteServiceUrl(url, {})).toBe(url);
+  it("returns a relative url unchanged", () => {
+    // Asserts the return value, not merely that it did not throw: with the
+    // guard returning undefined instead, core/data-include.js would fetch the
+    // string "undefined".
+    const url = "/base/builds/respec-w3c.js";
+    expect(rewriteServiceUrl(url, map)).toBe(url);
   });
+});
 
-  it("does not throw on a relative url", () => {
+describe("SpecHelper - validateServiceOrigins", () => {
+  it("accepts a bare origin", () => {
     expect(() =>
-      rewriteServiceUrl("/base/builds/respec-w3c.js", map)
+      validateServiceOrigins({ "https://respec.org": "http://localhost:8000" })
     ).not.toThrow();
   });
 
-  it("is handed a serviceOrigins object by the karma client config", () => {
-    // Proves the wiring exists. Which origins it holds depends on the
-    // environment, so the values are asserted end to end below instead.
-    expect(globalThis.__karma__.config.serviceOrigins).toEqual(
-      jasmine.any(Object)
-    );
+  it("rejects a scheme-less value, which would redirect nothing", () => {
+    // "localhost:8000" parses as scheme "localhost:", so the protocol and host
+    // setters are ignored and the whole suite runs against production.
+    expect(() =>
+      validateServiceOrigins({ "https://respec.org": "localhost:8000" })
+    ).toThrowError(/needs an http or https scheme/);
+  });
+
+  it("rejects a value carrying a path, which would be dropped", () => {
+    expect(() =>
+      validateServiceOrigins({
+        "https://respec.org": "http://localhost:8000/api",
+      })
+    ).toThrowError(/must be an origin with no path/);
+  });
+
+  it("rejects an unparseable value at install rather than inside fetch", () => {
+    expect(() =>
+      validateServiceOrigins({ "https://respec.org": "8000" })
+    ).toThrowError(/is not a URL/);
+  });
+});
+
+describe("SpecHelper - installFetchRewrite", () => {
+  const map = { "https://respec.org": "http://localhost:8000" };
+
+  /** A stand-in window that records what reached the underlying fetch. */
+  function fakeWin() {
+    const calls = [];
+    return {
+      calls,
+      Request: window.Request,
+      caches: "untouched",
+      fetch(input, init) {
+        calls.push({ input, init });
+        return Promise.resolve("ok");
+      },
+    };
+  }
+
+  it("does nothing at all when the map is empty", () => {
+    const win = fakeWin();
+    const before = win.fetch;
+    installFetchRewrite(win, {});
+    expect(win.fetch).toBe(before);
+    expect(win.caches).toBe("untouched");
+  });
+  it("clones a Request onto the rewritten url, keeping method and headers", async () => {
+    // This is the shape core/utils.js fetchAndCache passes: a bodyless GET.
+    const win = fakeWin();
+    installFetchRewrite(win, map);
+    const request = new Request("https://respec.org/w3c/groups/webapps", {
+      headers: { "X-Probe": "1" },
+    });
+    await win.fetch(request);
+    const sent = win.calls[0].input;
+    expect(sent.url).toBe("http://localhost:8000/w3c/groups/webapps");
+    expect(sent.method).toBe("GET");
+    expect(sent.headers.get("X-Probe")).toBe("1");
+  });
+
+  it("forwards an unmapped Request as the very same object", async () => {
+    const win = fakeWin();
+    installFetchRewrite(win, map);
+    const request = new Request("https://w3c.github.io/x.json");
+    await win.fetch(request);
+    expect(win.calls[0].input).toBe(request);
+    expect(win.__respecRewrittenUrls).toEqual([]);
+  });
+
+  it("passes init through untouched, so a POST keeps its body", async () => {
+    const win = fakeWin();
+    installFetchRewrite(win, map);
+    const init = {
+      method: "POST",
+      body: JSON.stringify({ queries: [] }),
+      headers: { "Content-Type": "application/json" },
+    };
+    await win.fetch("https://respec.org/xref/search/", init);
+    expect(win.calls[0].input).toBe("http://localhost:8000/xref/search/");
+    expect(win.calls[0].init).toBe(init);
+  });
+
+  it("hides caches, so a seeded entry cannot answer before fetch runs", async () => {
+    // core/utils.js fetchAndCache reads and writes under the pre-rewrite origin,
+    // which both shadows the redirect and pollutes the production cache with
+    // local responses. Asserts the always-miss behavior rather than the shape,
+    // because `"caches" in window` stays true for an own property either way.
+    const win = fakeWin();
+    installFetchRewrite(win, map);
+    expect("caches" in win).toBe(true);
+    const cache = await win.caches.open("https://respec.org");
+    await expectAsync(
+      cache.match(new Request("https://respec.org/x"))
+    ).toBeResolvedTo(undefined);
+    await expectAsync(cache.put("https://respec.org/x", "body")).toBeResolved();
+  });
+
+  it("refuses to install with a bad origin rather than failing per request", () => {
+    const win = fakeWin();
+    const before = win.fetch;
+    expect(() =>
+      installFetchRewrite(win, { "https://respec.org": "localhost:8000" })
+    ).toThrowError(/needs an http or https scheme/);
+    expect(win.fetch).toBe(before);
   });
 });
 
 describe("SpecHelper - service origin rewrite, end to end", () => {
   const karmaConfig = globalThis.__karma__.config;
-  /** @type {Record<string, string> | undefined} */
-  let original;
+  const original = karmaConfig.serviceOrigins;
 
-  beforeEach(() => {
-    original = karmaConfig.serviceOrigins;
-  });
   afterEach(() => {
     karmaConfig.serviceOrigins = original;
   });
   afterAll(flushIframes);
+
+  it("is handed a serviceOrigins map the wrapper accepts", () => {
+    // Pins the karma wiring, and fails the suite early on a typo'd variable
+    // rather than after every request has quietly gone to production.
+    expect(original).toEqual(jasmine.any(Object));
+    expect(() => validateServiceOrigins(original)).not.toThrow();
+  });
 
   it("redirects a request ReSpec itself makes", async () => {
     // Unreachable on purpose: this asserts where the request went, not that it
@@ -87,12 +192,11 @@ describe("SpecHelper - service origin rewrite, end to end", () => {
     expect(doc.defaultView.__respecRewrittenUrls).toBeUndefined();
   });
 
-  it("is installed but only partially effective for a fixture loaded via src", async () => {
-    // makeRSDoc decorates an src-loaded document from the iframe's load
-    // handler, so the wrapper exists but misses any request ReSpec already
-    // issued. It does catch later ones, because the pipeline continues past
-    // load. How many is timing dependent and deliberately not asserted: the
-    // point is that src-loaded fixtures cannot be relied on for coverage.
+  it("still installs for a fixture loaded via src", async () => {
+    // Named for what is asserted. makeRSDoc decorates an src-loaded document
+    // from the iframe's load handler, so the wrapper exists but misses whatever
+    // ReSpec already issued; how much it catches is timing dependent, so src
+    // fixtures cannot be relied on for coverage.
     karmaConfig.serviceOrigins = {
       "https://respec.org": "http://service-rewrite-probe.invalid",
     };

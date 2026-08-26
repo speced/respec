@@ -2,6 +2,7 @@
 import {
   installFetchRewrite,
   rewriteServiceUrl,
+  validateServiceOrigins,
 } from "./service-origin-rewrite.js";
 
 const iframes = [];
@@ -158,16 +159,19 @@ function decorateDocument(doc, opts) {
     script.classList.add("remove");
     // Inlined rather than imported: this document is detached and then handed
     // to ifr.srcdoc, so a module would not have run by the time ReSpec loads.
-    // Position within <head> does not matter, because profiles/w3c.js defers
-    // ReSpec.run() behind a Promise.all of dynamic imports, so nothing fetches
-    // during script evaluation. What does matter is that this runs during parse
-    // rather than after load, which is why src-loaded fixtures are not covered.
-    // Emitted as bare declarations; wrapping them in parens would make them
-    // function expressions, which bind nothing, and the call would throw.
+    // What matters is that this runs during parse rather than after load, which
+    // is why src-loaded fixtures get only partial coverage. Position within
+    // <head> does not, since ReSpec defers its pipeline behind a Promise.all.
+    //
+    // Every function the installer calls has to be listed here; a missing one
+    // is a ReferenceError that kills the script and silently installs nothing.
+    // Emitted as bare declarations, because parenthesised function expressions
+    // would bind no names and the call below would throw.
     script.textContent = `
       ${rewriteServiceUrl.toString()}
+      ${validateServiceOrigins.toString()}
       ${installFetchRewrite.toString()}
-      installFetchRewrite(window, ${JSON.stringify(map)});
+      installFetchRewrite(window, ${JSON.stringify(map).replace(/</g, "\\u003c")});
     `;
     doc.head.appendChild(script);
   }
