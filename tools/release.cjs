@@ -60,6 +60,7 @@ function commandRunner(file, baseArgs = []) {
 
 const git = commandRunner("git");
 const npm = commandRunner("npm");
+const pnpm = commandRunner("pnpm");
 const node = commandRunner("node");
 const validator = commandRunner("java", ["-jar", vnu]);
 
@@ -392,6 +393,35 @@ async function preflight() {
     );
   }
 
+  // npm auth. This is the credential that actually expires, and `npm publish` is the LAST step of
+  // the release, so without this check the token is discovered to be stale only after main, gh-pages
+  // and the tag have all been pushed, leaving the release half-done and needing manual recovery.
+  // The registry comes from publishConfig so this probe and the publish below cannot target
+  // different registries: a bare `npm whoami` (or a bare publish) would use the machine default,
+  // which may be an internal mirror.
+  const NPM_REGISTRY = require("../package.json").publishConfig?.registry;
+  if (!NPM_REGISTRY) {
+    errors.push(
+      "package.json has no publishConfig.registry, so `npm publish` would target whatever\n" +
+        "    registry this machine defaults to. Set it before releasing."
+    );
+  } else {
+    try {
+      const who = await toExecFilePromise(
+        "npm",
+        ["whoami", "--registry", NPM_REGISTRY],
+        { timeout: 20000, showOutput: false }
+      );
+      console.log(styleText("green", `  ✓ npm auth (${who.trim()})`));
+    } catch {
+      errors.push(
+        "npm is not authenticated for publishing (the token expires periodically).\n" +
+          `    Check: npm whoami --registry ${NPM_REGISTRY}\n` +
+          `    Fix:   npm login --registry ${NPM_REGISTRY}`
+      );
+    }
+  }
+
   // origin/gh-pages must exist and be unambiguous
   try {
     const branches = await git(["branch", "-r", "--list", "*/gh-pages"]);
@@ -437,25 +467,17 @@ async function preflight() {
 }
 
 /**
- * Runs a command interactively (stdio inherited), needed for npm publish OTP.
- * @param {string} file
- * @param {string[]} args
+ * Publishes to npm interactively (stdio inherited), needed for OTP auth.
  * @returns {Promise<void>}
  */
-function toSpawnPromise(file, args) {
-  console.log(
-    styleText("cyan", `Run: ${file} ${styleText("grey", args.join(" "))}`)
-  );
+function publishToNpm() {
+  console.log(styleText("cyan", "Run: npm publish"));
   if (DEBUG) return Promise.resolve();
   return new Promise((resolve, reject) => {
-    const proc = spawn(file, args, { stdio: "inherit" });
+    const proc = spawn("npm", ["publish"], { stdio: "inherit", shell: false });
     proc.on("close", code => {
       if (code !== 0) {
-        reject(
-          new Error(
-            `Command failed with exit code ${code}: ${file} ${args.join(" ")}`
-          )
-        );
+        reject(new Error(`Command failed with exit code ${code}: npm publish`));
       } else {
         resolve();
       }
@@ -581,7 +603,16 @@ const run = async () => {
       "--no-git-tag-version",
     ]);
 
-    // 3. Run the build script (node tools/builder.js).
+    // 3. Install exactly what the lockfile says, then build.
+    // builds/*.js bundle code straight out of node_modules (src/core/import-maps.js imports
+    // node_modules/marked/lib/marked.esm.js, for example), and step 1 has just checked out main.
+    // Without this, a release run on a stale node_modules publishes bundles built from the OLD
+    // dependency versions while committing the NEW pnpm-lock.yaml, so the artifact and the
+    // lockfile disagree. --frozen-lockfile makes that a hard failure rather than a silent drift.
+    console.log(styleText("green", " Installing dependencies... 📦"));
+    await pnpm(["install", "--frozen-lockfile"]);
+
+    // 3b. Run the build script (node tools/builder.js).
     await npm(["run", "builddeps"]);
     for (const name of ["w3c", "geonovum", "dini", "aom"]) {
       await Builder.build({ name });
@@ -634,7 +665,7 @@ const run = async () => {
 
     // 7. Publish to npm (interactive for OTP auth)
     console.log(styleText("green", " Publishing to npm... 📡"));
-    await toSpawnPromise("npm", ["publish"]);
+    await publishToNpm();
 
     // 8. Create GitHub Release (triggers W3C CDN sync)
     console.log(styleText("green", " Creating GitHub Release... 📡"));

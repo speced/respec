@@ -20,10 +20,10 @@ async function loadWithStatus(status, expectedURL) {
     profile: "geonovum",
   };
   const doc = await makeRSDoc(ops);
-  const query = `link[href^='${testedURL}']`;
-  const elem = doc.querySelector(query);
-  expect(elem).toBeTruthy();
-  expect(elem.href).toBe(testedURL);
+  // rel=stylesheet: for specStatus "base" the preload resource hint has the
+  // same href, and querySelector would return that hint instead.
+  const query = `link[rel=stylesheet][href='${testedURL}']`;
+  expect(doc.querySelector(query)).toBeTruthy();
   return doc;
 }
 
@@ -66,9 +66,10 @@ describe("Geonovum - Style", () => {
     const ops = makeStandardGeoOps();
     // TODO: create test specs for Geonovum?
     const doc = await makeRSDoc(ops);
-    const query = "script[src^='https://www.w3.org/scripts/TR/2021/fixup.js']";
-    const elem = doc.querySelector(query);
-    expect(elem.src).toBe("https://www.w3.org/scripts/TR/2021/fixup.js");
+    // 2016, not the 2021 the W3C profile emits: this is what proves the
+    // Geonovum bundle ran. See #5409.
+    const query = "script[src='https://www.w3.org/scripts/TR/2016/fixup.js']";
+    expect(doc.querySelector(query)).toBeTruthy();
   });
 
   it("should have a meta viewport added", async () => {
@@ -87,12 +88,16 @@ describe("Geonovum - Style", () => {
     );
   });
 
-  it("shouldn't include fixup.js when noToc is set", async () => {
-    const ops = makeStandardGeoOps();
-    const newProps = {
-      noToc: true,
-    };
-    Object.assign(ops.config, newProps);
+  it("shouldn't include fixup.js when noTOC is set", async () => {
+    const ops = makeStandardGeoOps({ noTOC: true });
+    const doc = await makeRSDoc(ops);
+    const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
+    const elem = doc.querySelector(query);
+    expect(elem).toBeNull();
+  });
+
+  it("shouldn't include fixup.js when the deprecated noToc is set", async () => {
+    const ops = makeStandardGeoOps({ noToc: true });
     const doc = await makeRSDoc(ops);
     const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
     const elem = doc.querySelector(query);
