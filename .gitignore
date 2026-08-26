@@ -15,4 +15,8 @@ package-lock.json
 yarn.lock
 *.log
 .worktrees/
-CLAUDE.md
+CLAUDE.local.md
+
+# Browser downloaded by puppeteer when PUPPETEER_CACHE_DIR points into the repo
+# (see .github/workflows/copilot-setup-steps.yml)
+.cache/

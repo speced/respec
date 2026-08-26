@@ -73,6 +73,7 @@
     "build:dini-debug": "pnpm build:dini -- --debug",
     "build:dini": "pnpm builder dini",
     "builddeps": "rollup -c js/deps/rollup.config.js --bundleConfigAsCjs && rollup -c worker/rollup.config.js --bundleConfigAsCjs",
+    "format": "prettier",
     "lint": "tsc -p src/jsconfig.json && eslint .",
     "prepare": "pnpm builddeps && simple-git-hooks",
     "builder": "node ./tools/builder.cjs",
