@@ -236,6 +236,15 @@ export function makeBasicConfig(profile = "w3c") {
         ],
         specStatus: "PD",
       };
+    case "dini":
+      return {
+        editors: [
+          {
+            name: "Person Name",
+          },
+        ],
+        specStatus: "base",
+      };
     default:
       throw new Error(`Unknown profile: ${profile}`);
   }
@@ -263,6 +272,7 @@ export function makeStandardGeoOps(config = {}, body = makeDefaultBody()) {
   return {
     body,
     config: { ...makeBasicConfig("geonovum"), ...config },
+    profile: "geonovum",
   };
 }
 
@@ -271,5 +281,13 @@ export function makeStandardAomOps(config = {}, body = makeDefaultBody()) {
     body,
     config: { ...makeBasicConfig("aom"), ...config },
     profile: "aom",
+  };
+}
+
+export function makeStandardDiniOps(config = {}, body = makeDefaultBody()) {
+  return {
+    body,
+    config: { ...makeBasicConfig("dini"), ...config },
+    profile: "dini",
   };
 }

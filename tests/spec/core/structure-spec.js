@@ -5,7 +5,10 @@ import {
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
+  warningFilters,
 } from "../SpecHelper.js";
+
+const warnings = warningFilters.filter("core/defaults");
 
 describe("Core - Structure", () => {
   const body = `
@@ -121,7 +124,7 @@ describe("Core - Structure", () => {
     expect(normativeRef1.textContent).toBe("[normative]");
   });
 
-  it("should not build a ToC with noTOC", async () => {
+  it("should not build a ToC with noTOC and not warn", async () => {
     // test with noTOC
     const ops = {
       config: makeBasicConfig(),
@@ -130,6 +133,26 @@ describe("Core - Structure", () => {
     ops.config.noTOC = true;
     const doc = await makeRSDoc(ops);
     expect(doc.getElementById("toc")).toBeNull();
+    expect(warnings(doc)).toHaveSize(0);
+  });
+
+  it("should not build a ToC with the deprecated noToc, but warns", async () => {
+    const ops = {
+      config: { ...makeBasicConfig(), noToc: true },
+      body: "<section><h2>Section</h2></section>",
+    };
+    const doc = await makeRSDoc(ops);
+    expect(doc.getElementById("toc")).toBeNull();
+    expect(warnings(doc)).toHaveSize(1);
+  });
+
+  it("should prefer noTOC over the deprecated noToc", async () => {
+    const ops = {
+      config: { ...makeBasicConfig(), noToc: true, noTOC: false },
+      body: "<section><h2>Section</h2></section>",
+    };
+    const doc = await makeRSDoc(ops);
+    expect(doc.getElementById("toc")).toBeTruthy();
   });
 
   it("should include introductory sections in ToC", async () => {
