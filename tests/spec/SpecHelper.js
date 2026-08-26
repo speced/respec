@@ -1,4 +1,9 @@
 "use strict";
+import {
+  installFetchRewrite,
+  rewriteServiceUrl,
+} from "./service-origin-rewrite.js";
+
 const iframes = [];
 
 /**
@@ -146,6 +151,27 @@ function decorateDocument(doc, opts) {
     });
   }
 
+  function addFetchRewrite() {
+    const map = globalThis.__karma__?.config?.serviceOrigins;
+    if (!map || !Object.keys(map).length) return;
+    const script = doc.createElement("script");
+    script.classList.add("remove");
+    // Inlined rather than imported: this document is detached and then handed
+    // to ifr.srcdoc, so a module would not have run by the time ReSpec loads.
+    // Position within <head> does not matter, because profiles/w3c.js defers
+    // ReSpec.run() behind a Promise.all of dynamic imports, so nothing fetches
+    // during script evaluation. What does matter is that this runs during parse
+    // rather than after load, which is why src-loaded fixtures are not covered.
+    // Emitted as bare declarations; wrapping them in parens would make them
+    // function expressions, which bind nothing, and the call would throw.
+    script.textContent = `
+      ${rewriteServiceUrl.toString()}
+      ${installFetchRewrite.toString()}
+      installFetchRewrite(window, ${JSON.stringify(map)});
+    `;
+    doc.head.appendChild(script);
+  }
+
   if (opts.htmlAttrs) {
     Object.keys(opts.htmlAttrs).reduce(
       intoAttributes.bind(opts.htmlAttrs),
@@ -156,6 +182,7 @@ function decorateDocument(doc, opts) {
     doc.title = opts.title;
   }
   decorateBody(opts);
+  addFetchRewrite();
   addRespecConfig(opts);
   if (!doc.querySelector("script[src]")) {
     addReSpecLoader(opts);
