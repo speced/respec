@@ -15,6 +15,11 @@ const additionalFiles = [
     included: false,
   },
   {
+    pattern: "tests/spec/service-origin-rewrite.js",
+    type: "module",
+    included: false,
+  },
+  {
     pattern: "tests/spec/**/*-spec.js",
     type: "module",
     included: false,
