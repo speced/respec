@@ -272,6 +272,7 @@ export function makeStandardGeoOps(config = {}, body = makeDefaultBody()) {
   return {
     body,
     config: { ...makeBasicConfig("geonovum"), ...config },
+    profile: "geonovum",
   };
 }
 
