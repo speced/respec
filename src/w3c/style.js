@@ -101,6 +101,32 @@ function styleMover(linkURL) {
 }
 
 /**
+ * Put the dark stylesheet link back into the state ReSpec chose, because by save
+ * time fixup.js has been driving it live: it sets `media = ""` and toggles
+ * `disabled` to follow the reader's theme, and both are reflected content
+ * attributes. Saving a document while the reader had dark selected would
+ * otherwise export an enabled, unconditional dark sheet, which now sits last in
+ * `head` and so wins the cascade, rendering dark for everyone including readers
+ * without scripting.
+ *
+ * @param {Document} exportDoc
+ * @param {boolean} isDark whether the spec itself opted into dark mode
+ */
+function restoreDarkLinkState(exportDoc, isDark) {
+  const darkLink = exportDoc.querySelector(
+    `head link[rel~="stylesheet"][href="${getStyleUrl("dark.css")}"]`
+  );
+  if (!darkLink) return;
+  if (isDark) {
+    darkLink.setAttribute("media", "(prefers-color-scheme: dark)");
+    darkLink.removeAttribute("disabled");
+  } else {
+    darkLink.removeAttribute("media");
+    darkLink.setAttribute("disabled", "");
+  }
+}
+
+/**
  * @param {Conf} conf
  */
 export function run(conf) {
@@ -142,11 +168,17 @@ export function run(conf) {
   if (!isDark) darkLink.setAttribute("disabled", "");
   document.head.appendChild(darkLink);
   // The dark sheet has to end up last. It and base.css set the same `:root`
-  // custom properties at equal specificity, and the mover above puts base.css
-  // at the end of `head` on export, so without this the toggle enables a sheet
-  // that then loses the cascade and the reader sees nothing change. Also what
-  // W3C Pub Rules require for dark-mode specs.
-  sub("beforesave", styleMover(darkModeStyleURL));
+  // custom properties at equal specificity, and the mover above puts the
+  // maturity-level sheet, which `@import`s base.css, at the end of `head` on
+  // export. Without this the toggle enables a sheet that then loses the cascade
+  // and the reader sees nothing change. Also what W3C Pub Rules require.
+  sub(
+    "beforesave",
+    /** @param {Document} exportDoc */ exportDoc => {
+      styleMover(darkModeStyleURL)(exportDoc);
+      restoreDarkLinkState(exportDoc, isDark);
+    }
+  );
 }
 
 /** @param {Conf} conf */

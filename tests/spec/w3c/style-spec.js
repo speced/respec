@@ -218,6 +218,70 @@ describe("W3C - Style", () => {
     expect(dark.nextElementSibling).toBe(null);
   });
 
+  it("disables the dark stylesheet in the live document for a light-only spec", async () => {
+    // Uses noTOC deliberately: with the TOC on, fixup.js is attached and sets
+    // `disabled` itself, so the assertion would pass whether or not ReSpec did
+    // it. With noTOC there is no fixup.js, so ReSpec's own `disabled` is the
+    // only thing keeping the sheet off, and a light-only spec would otherwise
+    // render dark permanently.
+    const doc = await makeRSDoc(makeStandardOps({ noTOC: true }));
+    const link = doc.querySelector(
+      `link[rel~="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+    );
+    expect(link).toBeTruthy();
+    expect(link.hasAttribute("disabled")).toBeTrue();
+  });
+
+  it("exports the dark stylesheet disabled even if the reader was in dark mode", async () => {
+    // fixup.js drives this link live to follow the reader's theme, and both
+    // `disabled` and `media` are reflected content attributes. Since the dark
+    // sheet now sits last in `head`, a document saved while dark was selected
+    // would otherwise export an enabled, unconditional dark sheet and render
+    // dark for everyone.
+    //
+    // Asserted against the serialized HTML rather than getExportedDoc(), because
+    // the export carries the fixup.js script tag: re-parsing it into an iframe
+    // lets fixup.js run again and re-mutate the link, so a re-hydrated document
+    // does not tell you what was published.
+    const rsDoc = await makeRSDoc(makeStandardOps({}));
+    const live = rsDoc.querySelector(
+      `link[rel~="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+    );
+    expect(live).toBeTruthy();
+    // The state fixup.js leaves behind once the reader picks dark. Set as
+    // attributes rather than through `link.disabled`, because that setter is a
+    // no-op while the sheet is still null and these tests never load it.
+    live.removeAttribute("disabled");
+    live.setAttribute("media", "");
+
+    const html = await rsDoc.respec.toHTML();
+    const [tag] = html.match(/<link[^>]*dark\.css[^>]*>/g) ?? [];
+    expect(tag).toBeTruthy();
+    expect(tag).toContain("disabled");
+    expect(tag).not.toContain("media=");
+  });
+
+  it("exports the dark stylesheet media-gated for a spec that opted in", async () => {
+    // Same leak in the other direction: fixup.js sets `media = ""` on load, so
+    // without restoring it an opted-in spec exports a sheet that applies at all
+    // times instead of only when the reader prefers dark.
+    const rsDoc = await makeRSDoc(
+      makeStandardOps(),
+      "spec/core/color-scheme.html"
+    );
+    const live = rsDoc.querySelector(
+      `link[rel~="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
+    );
+    expect(live).toBeTruthy();
+    live.setAttribute("media", "");
+
+    const html = await rsDoc.respec.toHTML();
+    const [tag] = html.match(/<link[^>]*dark\.css[^>]*>/g) ?? [];
+    expect(tag).toBeTruthy();
+    expect(tag).toContain('media="(prefers-color-scheme: dark)"');
+    expect(tag).not.toContain("disabled");
+  });
+
   it("respects existing color scheme", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops, "spec/core/color-scheme.html");
