@@ -45,10 +45,9 @@ jobs:
           PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.cache/puppeteer
 
       # karma loads the bundles from builds/, not src/, and there is one per
-      # profile. Building all four means the agent can run any suite without first
+      # profile. Building all three means the agent can run any suite without first
       # working out why a src/ change had no effect on the tests.
       - run: pnpm build:w3c
-      - run: pnpm build:geonovum
       - run: pnpm build:aom
       - run: pnpm build:dini
 
