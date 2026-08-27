@@ -177,7 +177,12 @@ describe("SpecHelper - service origin rewrite, end to end", () => {
     karmaConfig.serviceOrigins = {
       "https://respec.org": "http://service-rewrite-probe.invalid",
     };
-    const body = `<section><p>A <a>dictionary</a> here.</p></section>`;
+    // A term nothing else could have cached. core/xref-db.js answers from
+    // IndexedDB keyed on the query alone, shared across the whole origin, and
+    // jasmine's spec order is random, so a well-known term like "dictionary"
+    // could already be warm from core/xref-spec.js and no request would go out.
+    const term = `probe-${Math.random().toString(36).slice(2)}`;
+    const body = `<section><p>A <a>${term}</a> here.</p></section>`;
     const doc = await makeRSDoc(makeStandardOps({ xref: ["webidl"] }, body));
     const seen = doc.defaultView.__respecRewrittenUrls;
     expect(seen).toBeDefined();
@@ -190,6 +195,19 @@ describe("SpecHelper - service origin rewrite, end to end", () => {
     karmaConfig.serviceOrigins = {};
     const doc = await makeRSDoc(makeStandardOps({ specStatus: "WD" }));
     expect(doc.defaultView.__respecRewrittenUrls).toBeUndefined();
+  });
+
+  it("survives an origin key carrying a script end tag", async () => {
+    // Values are validated, but keys are not: they come from our own karma
+    // config rather than from a user. They still land in the injected payload,
+    // so the escaping there is the only thing stopping this from closing the
+    // script element, spilling raw JS into the body and installing nothing.
+    karmaConfig.serviceOrigins = {
+      "https://x.invalid</script><b>spilled</b>": "http://localhost:8000",
+    };
+    const doc = await makeRSDoc(makeStandardOps({ specStatus: "WD" }));
+    expect(doc.defaultView.__respecRewrittenUrls).toBeDefined();
+    expect(doc.body.textContent).not.toContain("spilled");
   });
 
   it("still installs for a fixture loaded via src", async () => {

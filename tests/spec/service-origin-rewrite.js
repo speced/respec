@@ -73,6 +73,10 @@ export function validateServiceOrigins(map) {
  * production run is served local bodies. That outlives the test run in a
  * browser with a persistent profile.
  *
+ * Reaches only this window. The highlight worker has its own global scope, so
+ * anything it fetches is not redirected; nothing under worker/ requests a mapped
+ * origin today, but an origin added to the map later would silently escape.
+ *
  * @param {Window} win
  * @param {Record<string, string>} map
  */

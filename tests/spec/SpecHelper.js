@@ -155,6 +155,11 @@ function decorateDocument(doc, opts) {
   function addFetchRewrite() {
     const map = globalThis.__karma__?.config?.serviceOrigins;
     if (!map || !Object.keys(map).length) return;
+    // Validated here as well as inside the installer. A throw from the injected
+    // script only fires the iframe's error event, which nothing listens for, so
+    // a bad variable would mean no wrapper and every document quietly against
+    // production. Called from the karma context it fails a spec instead.
+    validateServiceOrigins(map);
     const script = doc.createElement("script");
     script.classList.add("remove");
     // Inlined rather than imported: this document is detached and then handed
@@ -167,12 +172,19 @@ function decorateDocument(doc, opts) {
     // is a ReferenceError that kills the script and silently installs nothing.
     // Emitted as bare declarations, because parenthesised function expressions
     // would bind no names and the call below would throw.
-    script.textContent = `
+    const payload = `
       ${rewriteServiceUrl.toString()}
       ${validateServiceOrigins.toString()}
       ${installFetchRewrite.toString()}
-      installFetchRewrite(window, ${JSON.stringify(map).replace(/</g, "\\u003c")});
+      installFetchRewrite(window, ${JSON.stringify(map)});
     `;
+    // A "</script" in the payload would close this element when the document is
+    // serialized into srcdoc, leaving raw JS as body text and no wrapper at all.
+    // It can only occur inside a string, since it is a syntax error in code, so
+    // escaping the slash is always safe. Escaping every "<" would not be:
+    // "<" is not a valid operator, so it would break any comparison.
+    const escaped = payload.replace(/<\/(script)/gi, "<\\/$1");
+    script.textContent = escaped;
     doc.head.appendChild(script);
   }
 
