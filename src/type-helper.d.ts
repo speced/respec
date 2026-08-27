@@ -125,6 +125,17 @@ interface Conf {
   noTOC?: boolean;
   /** Disables injecting ReSpec styles */
   noReSpecCSS?: boolean;
+  /**
+   * Whether this spec offers readers dark mode. Defaults to true. Set it to
+   * exactly `false` and ReSpec emits no dark stylesheet, so W3C's fixup.js finds
+   * nothing to toggle and readers get no theme picker; ReSpec also deletes its own
+   * dark styles, so a reader whose operating system prefers dark does not get a
+   * light page with dark ReSpec components in it.
+   *
+   * Use this only while your custom CSS is not dark-aware yet. Fix the CSS and
+   * remove the option; it is transitional and will go away.
+   */
+  darkMode?: boolean;
 
   /** Indicates whether the document is a preview */
   isPreview?: boolean;
