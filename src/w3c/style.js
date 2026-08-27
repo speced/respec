@@ -141,10 +141,12 @@ export function run(conf) {
   // drops the sheet (#5436), so set the state before the element enters the document.
   if (!isDark) darkLink.setAttribute("disabled", "");
   document.head.appendChild(darkLink);
-  if (isDark) {
-    // As required by W3C Pub Rules.
-    sub("beforesave", styleMover(darkModeStyleURL));
-  }
+  // The dark sheet has to end up last. It and base.css set the same `:root`
+  // custom properties at equal specificity, and the mover above puts base.css
+  // at the end of `head` on export, so without this the toggle enables a sheet
+  // that then loses the cascade and the reader sees nothing change. Also what
+  // W3C Pub Rules require for dark-mode specs.
+  sub("beforesave", styleMover(darkModeStyleURL));
 }
 
 /** @param {Conf} conf */

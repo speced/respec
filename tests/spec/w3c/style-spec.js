@@ -199,13 +199,23 @@ describe("W3C - Style", () => {
     });
   }
 
-  it("should add W3C stylesheet at the end", async () => {
+  it("puts the dark stylesheet last, after the W3C stylesheet", async () => {
+    // The dark sheet has to win the cascade, because it and base.css set the
+    // same `:root` custom properties at equal specificity. If base.css lands
+    // after it, fixup.js's toggle enables a sheet that then loses, and the
+    // reader sees nothing happen.
     const ops = makeStandardOps({});
     const doc = await getExportedDoc(await makeRSDoc(ops));
-    const url = "https://www.w3.org/StyleSheets/TR/2021/base";
-    const elem = doc.querySelector(`link[href^='${url}'][rel="stylesheet"]`);
-    expect(elem).toBeTruthy();
-    expect(elem.nextElementSibling).toBe(null);
+    const base = doc.querySelector(
+      `link[rel="stylesheet"][href^='https://www.w3.org/StyleSheets/TR/2021/base']`
+    );
+    const dark = doc.querySelector(
+      `link[rel="stylesheet"][href='https://www.w3.org/StyleSheets/TR/2021/dark.css']`
+    );
+    expect(base).toBeTruthy();
+    expect(dark).toBeTruthy();
+    expect(base.nextElementSibling).toBe(dark);
+    expect(dark.nextElementSibling).toBe(null);
   });
 
   it("respects existing color scheme", async () => {

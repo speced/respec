@@ -68,7 +68,7 @@ describe("Core - exporter", () => {
     expect(dfn.hasAttribute("data-keep-me")).toBeTrue();
   });
 
-  it("moves the W3C style sheet to be last thing in documents head", async () => {
+  it("moves the W3C style sheets to be the last things in documents head", async () => {
     const ops = makeStandardOps({ specStatus: "ED", group: "webapps" });
     ops.body = `
       <!-- add WebIDL style -->
@@ -81,7 +81,13 @@ describe("Core - exporter", () => {
       </pre>`;
     const doc = await getExportedDoc(await makeRSDoc(ops));
     const { lastElementChild } = doc.head;
+    // The dark sheet sits after the maturity-level sheet: both set the same
+    // `:root` custom properties at equal specificity, so the dark one has to
+    // come last to win once the theme toggle enables it.
     expect(lastElementChild.href).toBe(
+      "https://www.w3.org/StyleSheets/TR/2021/dark.css"
+    );
+    expect(lastElementChild.previousElementSibling.href).toBe(
       "https://www.w3.org/StyleSheets/TR/2021/W3C-ED"
     );
   });
