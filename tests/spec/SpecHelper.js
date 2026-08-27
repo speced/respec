@@ -14,9 +14,12 @@ export function makeRSDoc(opts, src, style = "") {
   opts = { profile: "w3c", ...opts };
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
+    // Names the document, because `src` is undefined for every srcdoc-built
+    // document and "Timed out waiting on undefined" is all a developer got.
+    const what = src ?? `srcdoc document (${opts.profile} profile)`;
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
     const timeoutId = setTimeout(() => {
-      reject(new Error(`Timed out waiting on ${src}`));
+      reject(new Error(`Timed out waiting on ${what}`));
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
@@ -25,6 +28,11 @@ export function makeRSDoc(opts, src, style = "") {
       }
       if (doc.respec) {
         await doc.respec.ready;
+        // Cleared here as well as in the message handler below. Leaving it armed
+        // on this path means a spec that jasmine has already abandoned rejects a
+        // promise nobody holds, which surfaces as an error thrown in afterAll and
+        // can abort the run with tests still unexecuted and uncounted.
+        clearTimeout(timeoutId);
         resolve(doc);
       }
       window.addEventListener("message", function msgHandler(ev) {
