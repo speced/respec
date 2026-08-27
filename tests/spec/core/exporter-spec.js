@@ -68,7 +68,7 @@ describe("Core - exporter", () => {
     expect(dfn.hasAttribute("data-keep-me")).toBeTrue();
   });
 
-  it("moves the W3C style sheets to be the last things in documents head", async () => {
+  it("moves the W3C style sheets to be the last things in the document's head", async () => {
     const ops = makeStandardOps({ specStatus: "ED", group: "webapps" });
     ops.body = `
       <!-- add WebIDL style -->
