@@ -74,7 +74,7 @@ describe("SpecHelper - installFetchRewrite", () => {
   const map = { "https://respec.org": "http://localhost:8000" };
 
   /** A stand-in window that records what reached the underlying fetch. */
-  function fakeWin() {
+  function fakeWindow() {
     const calls = [];
     return {
       calls,
@@ -88,46 +88,48 @@ describe("SpecHelper - installFetchRewrite", () => {
   }
 
   it("does nothing at all when the map is empty", () => {
-    const win = fakeWin();
-    const before = win.fetch;
-    installFetchRewrite(win, {});
-    expect(win.fetch).toBe(before);
-    expect(win.caches).toBe("untouched");
+    const targetWindow = fakeWindow();
+    const before = targetWindow.fetch;
+    installFetchRewrite(targetWindow, {});
+    expect(targetWindow.fetch).toBe(before);
+    expect(targetWindow.caches).toBe("untouched");
   });
   it("clones a Request onto the rewritten url, keeping method and headers", async () => {
     // This is the shape core/utils.js fetchAndCache passes: a bodyless GET.
-    const win = fakeWin();
-    installFetchRewrite(win, map);
+    const targetWindow = fakeWindow();
+    installFetchRewrite(targetWindow, map);
     const request = new Request("https://respec.org/w3c/groups/webapps", {
       headers: { "X-Probe": "1" },
     });
-    await win.fetch(request);
-    const sent = win.calls[0].input;
+    await targetWindow.fetch(request);
+    const sent = targetWindow.calls[0].input;
     expect(sent.url).toBe("http://localhost:8000/w3c/groups/webapps");
     expect(sent.method).toBe("GET");
     expect(sent.headers.get("X-Probe")).toBe("1");
   });
 
   it("forwards an unmapped Request as the very same object", async () => {
-    const win = fakeWin();
-    installFetchRewrite(win, map);
+    const targetWindow = fakeWindow();
+    installFetchRewrite(targetWindow, map);
     const request = new Request("https://w3c.github.io/x.json");
-    await win.fetch(request);
-    expect(win.calls[0].input).toBe(request);
-    expect(win.__respecRewrittenUrls).toEqual([]);
+    await targetWindow.fetch(request);
+    expect(targetWindow.calls[0].input).toBe(request);
+    expect(targetWindow.__respecRewrittenUrls).toEqual([]);
   });
 
   it("passes init through untouched, so a POST keeps its body", async () => {
-    const win = fakeWin();
-    installFetchRewrite(win, map);
+    const targetWindow = fakeWindow();
+    installFetchRewrite(targetWindow, map);
     const init = {
       method: "POST",
       body: JSON.stringify({ queries: [] }),
       headers: { "Content-Type": "application/json" },
     };
-    await win.fetch("https://respec.org/xref/search/", init);
-    expect(win.calls[0].input).toBe("http://localhost:8000/xref/search/");
-    expect(win.calls[0].init).toBe(init);
+    await targetWindow.fetch("https://respec.org/xref/search/", init);
+    expect(targetWindow.calls[0].input).toBe(
+      "http://localhost:8000/xref/search/"
+    );
+    expect(targetWindow.calls[0].init).toBe(init);
   });
 
   it("hides caches, so a seeded entry cannot answer before fetch runs", async () => {
@@ -135,10 +137,10 @@ describe("SpecHelper - installFetchRewrite", () => {
     // which both shadows the redirect and pollutes the production cache with
     // local responses. Asserts the always-miss behavior rather than the shape,
     // because `"caches" in window` stays true for an own property either way.
-    const win = fakeWin();
-    installFetchRewrite(win, map);
-    expect("caches" in win).toBe(true);
-    const cache = await win.caches.open("https://respec.org");
+    const targetWindow = fakeWindow();
+    installFetchRewrite(targetWindow, map);
+    expect("caches" in targetWindow).toBe(true);
+    const cache = await targetWindow.caches.open("https://respec.org");
     await expectAsync(
       cache.match(new Request("https://respec.org/x"))
     ).toBeResolvedTo(undefined);
@@ -146,12 +148,14 @@ describe("SpecHelper - installFetchRewrite", () => {
   });
 
   it("refuses to install with a bad origin rather than failing per request", () => {
-    const win = fakeWin();
-    const before = win.fetch;
+    const targetWindow = fakeWindow();
+    const before = targetWindow.fetch;
     expect(() =>
-      installFetchRewrite(win, { "https://respec.org": "localhost:8000" })
+      installFetchRewrite(targetWindow, {
+        "https://respec.org": "localhost:8000",
+      })
     ).toThrowError(/needs an http or https scheme/);
-    expect(win.fetch).toBe(before);
+    expect(targetWindow.fetch).toBe(before);
   });
 });
 

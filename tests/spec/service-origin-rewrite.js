@@ -61,9 +61,10 @@ export function validateServiceOrigins(map) {
 }
 
 /**
- * Installs a `fetch` on `win` that redirects mapped origins, and records what
- * it redirected on `win.__respecRewrittenUrls` so a test can assert the wrapper
- * was active during ReSpec's own run rather than merely present.
+ * Installs a `fetch` on `targetWindow` that redirects mapped origins, and
+ * records what it redirected on `targetWindow.__respecRewrittenUrls` so a test
+ * can assert the wrapper was active during ReSpec's own run rather than merely
+ * present.
  *
  * Also takes the HTTP cache out of the picture, which is not optional. Two
  * things in core/utils.js fetchAndCache read and write it under the ORIGINAL
@@ -77,41 +78,45 @@ export function validateServiceOrigins(map) {
  * anything it fetches is not redirected; nothing under worker/ requests a mapped
  * origin today, but an origin added to the map later would silently escape.
  *
- * @param {Window} win
+ * @param {Window} targetWindow
  * @param {Record<string, string>} map
  */
-export function installFetchRewrite(win, map) {
+export function installFetchRewrite(targetWindow, map) {
   if (!map || !Object.keys(map).length) return;
   validateServiceOrigins(map);
-  const original = win.fetch.bind(win);
-  win.__respecRewrittenUrls = [];
-  // An always-miss, never-store cache. Setting it to undefined instead would
-  // also work, but only via fetchAndCache's catch: `"caches" in window` stays
-  // true for an own property, so it enters the branch, throws on `.open`, and
-  // logs a console error on every request. This keeps that path quiet and makes
-  // "read nothing, write nothing" the stated behavior rather than a side effect.
-  Object.defineProperty(win, "caches", {
-    configurable: true,
-    value: {
-      open: () =>
-        Promise.resolve({
-          match: () => Promise.resolve(undefined),
-          put: () => Promise.resolve(undefined),
-        }),
+  const original = targetWindow.fetch.bind(targetWindow);
+  targetWindow.__respecRewrittenUrls = [];
+  // Stands in for the Cache API with a cache that never hits and never stores.
+  // fetchAndCache in core/utils.js is the only consumer and touches exactly
+  // three methods; it reads and writes under the pre-rewrite origin, so leaving
+  // the real one in place would let a seeded entry answer before fetch is
+  // reached, and would store a local response under the production key.
+  const alwaysMiss = {
+    async open() {
+      return {
+        async match() {},
+        async put() {},
+      };
     },
+  };
+  Object.defineProperty(targetWindow, "caches", {
+    configurable: true,
+    value: alwaysMiss,
   });
-  win.fetch = (input, init) => {
-    const isRequest = input instanceof win.Request;
+  targetWindow.fetch = (input, init) => {
+    const isRequest = input instanceof targetWindow.Request;
     const url = isRequest ? input.url : String(input);
     const rewritten = rewriteServiceUrl(url, map);
     if (rewritten === url) return original(input, init);
     // ponytail: a Request carrying a body would need `duplex` here. core/utils.js
     // is the only site that passes a Request and always builds a bodyless GET,
     // so this is unreachable today; handle it when a caller sends one.
-    const next = isRequest ? new win.Request(rewritten, input) : rewritten;
+    const next = isRequest
+      ? new targetWindow.Request(rewritten, input)
+      : rewritten;
     // Recorded after the clone, so a clone that throws is not reported as a
     // redirect that happened.
-    win.__respecRewrittenUrls.push(rewritten);
+    targetWindow.__respecRewrittenUrls.push(rewritten);
     return original(next, init);
   };
 }
