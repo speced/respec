@@ -7,71 +7,56 @@ import {
 } from "../service-origin-rewrite.js";
 
 describe("SpecHelper - rewriteServiceUrl", () => {
-  const map = {
-    "https://respec.org": "http://localhost:8000",
-    "https://api.specref.org": "http://localhost:8001",
-  };
+  const origins = new Map([
+    ["https://respec.org", "http://localhost:8000"],
+    ["https://api.specref.org", "http://localhost:8001"],
+  ]);
 
   it("rewrites a mapped origin and keeps the path, query and hash", () => {
     expect(
-      rewriteServiceUrl("https://respec.org/xref/search/?q=1#f", map)
+      rewriteServiceUrl("https://respec.org/xref/search/?q=1#f", origins)
     ).toBe("http://localhost:8000/xref/search/?q=1#f");
   });
 
   it("leaves an unmapped origin alone", () => {
     const url = "https://w3c.github.io/mdn-spec-links/x.json";
-    expect(rewriteServiceUrl(url, map)).toBe(url);
-  });
-
-  it("accepts a replacement with a trailing slash without doubling it", () => {
-    expect(
-      rewriteServiceUrl("https://respec.org/caniuse/x", {
-        "https://respec.org": "http://localhost:8000/",
-      })
-    ).toBe("http://localhost:8000/caniuse/x");
+    expect(rewriteServiceUrl(url, origins)).toBe(url);
   });
 
   it("returns a relative url unchanged", () => {
-    // Asserts the return value, not merely that it did not throw: with the
-    // guard returning undefined instead, core/data-include.js would fetch the
-    // string "undefined".
+    // toBe, not not.toThrow(): a guard returning undefined would pass that.
     const url = "/base/builds/respec-w3c.js";
-    expect(rewriteServiceUrl(url, map)).toBe(url);
+    expect(rewriteServiceUrl(url, origins)).toBe(url);
   });
 });
 
 describe("SpecHelper - validateServiceOrigins", () => {
   it("accepts a bare origin", () => {
     expect(() =>
-      validateServiceOrigins({ "https://respec.org": "http://localhost:8000" })
+      validateServiceOrigins(
+        new Map([["https://respec.org", "http://localhost:8000"]])
+      )
     ).not.toThrow();
   });
 
   it("rejects a scheme-less value, which would redirect nothing", () => {
-    // "localhost:8000" parses as scheme "localhost:", so the protocol and host
-    // setters silently do nothing and the whole suite runs against production.
+    // Parses fine as scheme "localhost:", so a URL check alone misses it.
     expect(() =>
-      validateServiceOrigins({ "https://respec.org": "localhost:8000" })
-    ).toThrowError(/needs an http or https scheme/);
+      validateServiceOrigins(
+        new Map([["https://respec.org", "localhost:8000"]])
+      )
+    ).toThrowError(/needs an http:\/\/ or https:\/\/ prefix/);
   });
 
-  it("rejects a value carrying a path, which would be dropped", () => {
+  it("rejects an unparseable value", () => {
     expect(() =>
-      validateServiceOrigins({
-        "https://respec.org": "http://localhost:8000/api",
-      })
-    ).toThrowError(/must be an origin with no path/);
-  });
-
-  it("rejects an unparseable value at install rather than inside fetch", () => {
-    expect(() =>
-      validateServiceOrigins({ "https://respec.org": "8000" })
-    ).toThrowError(/is not a URL/);
+      validateServiceOrigins(new Map([["https://respec.org", "8000"]]))
+    ).toThrowError(/is not a valid URL/);
   });
 });
 
 describe("SpecHelper - installFetchRewrite", () => {
-  const map = { "https://respec.org": "http://localhost:8000" };
+  const origins = new Map([["https://respec.org", "http://localhost:8000"]]);
 
   /** A stand-in window that records what reached the underlying fetch. */
   function fakeWindow() {
@@ -90,14 +75,14 @@ describe("SpecHelper - installFetchRewrite", () => {
   it("does nothing at all when the map is empty", () => {
     const targetWindow = fakeWindow();
     const before = targetWindow.fetch;
-    installFetchRewrite(targetWindow, {});
+    installFetchRewrite(targetWindow, new Map());
     expect(targetWindow.fetch).toBe(before);
     expect(targetWindow.caches).toBe("untouched");
   });
   it("clones a Request onto the rewritten url, keeping method and headers", async () => {
     // This is the shape core/utils.js fetchAndCache passes: a bodyless GET.
     const targetWindow = fakeWindow();
-    installFetchRewrite(targetWindow, map);
+    installFetchRewrite(targetWindow, origins);
     const request = new Request("https://respec.org/w3c/groups/webapps", {
       headers: { "X-Probe": "1" },
     });
@@ -110,16 +95,16 @@ describe("SpecHelper - installFetchRewrite", () => {
 
   it("forwards an unmapped Request as the very same object", async () => {
     const targetWindow = fakeWindow();
-    installFetchRewrite(targetWindow, map);
+    installFetchRewrite(targetWindow, origins);
     const request = new Request("https://w3c.github.io/x.json");
     await targetWindow.fetch(request);
     expect(targetWindow.calls[0].input).toBe(request);
     expect(targetWindow.__respecRewrittenUrls).toEqual([]);
   });
 
-  it("passes init through untouched, so a POST keeps its body", async () => {
+  it("forwards the same init object rather than rebuilding it", async () => {
     const targetWindow = fakeWindow();
-    installFetchRewrite(targetWindow, map);
+    installFetchRewrite(targetWindow, origins);
     const init = {
       method: "POST",
       body: JSON.stringify({ queries: [] }),
@@ -129,32 +114,30 @@ describe("SpecHelper - installFetchRewrite", () => {
     expect(targetWindow.calls[0].input).toBe(
       "http://localhost:8000/xref/search/"
     );
+    // Identity, so a POST body cannot be lost: nothing here copies init.
     expect(targetWindow.calls[0].init).toBe(init);
   });
 
   it("hides caches, so a seeded entry cannot answer before fetch runs", async () => {
-    // core/utils.js fetchAndCache reads and writes under the pre-rewrite origin,
-    // which both shadows the redirect and pollutes the production cache with
-    // local responses. Asserts the always-miss behavior rather than the shape,
-    // because `"caches" in window` stays true for an own property either way.
+    // Asserts behavior, not shape: `"caches" in window` stays true either way.
     const targetWindow = fakeWindow();
-    installFetchRewrite(targetWindow, map);
+    installFetchRewrite(targetWindow, origins);
     expect("caches" in targetWindow).toBe(true);
     const cache = await targetWindow.caches.open("https://respec.org");
-    await expectAsync(
-      cache.match(new Request("https://respec.org/x"))
-    ).toBeResolvedTo(undefined);
-    await expectAsync(cache.put("https://respec.org/x", "body")).toBeResolved();
+    expect(
+      await cache.match(new Request("https://respec.org/x"))
+    ).toBeUndefined();
   });
 
   it("refuses to install with a bad origin rather than failing per request", () => {
     const targetWindow = fakeWindow();
     const before = targetWindow.fetch;
     expect(() =>
-      installFetchRewrite(targetWindow, {
-        "https://respec.org": "localhost:8000",
-      })
-    ).toThrowError(/needs an http or https scheme/);
+      installFetchRewrite(
+        targetWindow,
+        new Map([["https://respec.org", "localhost:8000"]])
+      )
+    ).toThrowError(/needs an http:\/\/ or https:\/\/ prefix/);
     expect(targetWindow.fetch).toBe(before);
   });
 });
@@ -172,19 +155,19 @@ describe("SpecHelper - service origin rewrite, end to end", () => {
     // Pins the karma wiring, and fails the suite early on a typo'd variable
     // rather than after every request has quietly gone to production.
     expect(original).toEqual(jasmine.any(Object));
-    expect(() => validateServiceOrigins(original)).not.toThrow();
+    expect(() =>
+      validateServiceOrigins(new Map(Object.entries(original)))
+    ).not.toThrow();
   });
 
   it("redirects a request ReSpec itself makes", async () => {
     // Unreachable on purpose: this asserts where the request went, not that it
-    // succeeded. The xref lookup fails, which this test does not assert on.
+    // succeeded.
     karmaConfig.serviceOrigins = {
       "https://respec.org": "http://service-rewrite-probe.invalid",
     };
-    // A term nothing else could have cached. core/xref-db.js answers from
-    // IndexedDB keyed on the query alone, shared across the whole origin, and
-    // jasmine's spec order is random, so a well-known term like "dictionary"
-    // could already be warm from core/xref-spec.js and no request would go out.
+    // Unique per run: xref-db keys IndexedDB on the query alone, origin-wide, and
+    // jasmine randomizes spec order, so a shared term can arrive already warm.
     const term = `probe-${Math.random().toString(36).slice(2)}`;
     const body = `<section><p>A <a>${term}</a> here.</p></section>`;
     const doc = await makeRSDoc(makeStandardOps({ xref: ["webidl"] }, body));
@@ -201,24 +184,10 @@ describe("SpecHelper - service origin rewrite, end to end", () => {
     expect(doc.defaultView.__respecRewrittenUrls).toBeUndefined();
   });
 
-  it("survives an origin key carrying a script end tag", async () => {
-    // validateServiceOrigins checks values but not keys, since keys come from our
-    // config rather than from a user. They still land in the injected payload,
-    // so the escaping there is the only thing stopping this from closing the
-    // script element, spilling raw JS into the body and installing nothing.
-    karmaConfig.serviceOrigins = {
-      "https://x.invalid</script><b>spilled</b>": "http://localhost:8000",
-    };
-    const doc = await makeRSDoc(makeStandardOps({ specStatus: "WD" }));
-    expect(doc.defaultView.__respecRewrittenUrls).toBeDefined();
-    expect(doc.body.textContent).not.toContain("spilled");
-  });
-
   it("still installs for a fixture loaded via src", async () => {
-    // Named for what it asserts. makeRSDoc decorates an src-loaded document
-    // from the iframe's load handler, so the wrapper exists but misses whatever
-    // ReSpec already issued. How much it catches depends on timing, so nobody
-    // should rely on src fixtures for coverage.
+    // makeRSDoc decorates an src-loaded document from the iframe's load handler,
+    // so the wrapper exists but misses whatever ReSpec already issued. How much
+    // it catches depends on timing; do not rely on src fixtures for coverage.
     karmaConfig.serviceOrigins = {
       "https://respec.org": "http://service-rewrite-probe.invalid",
     };

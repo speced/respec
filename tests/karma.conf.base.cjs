@@ -83,13 +83,8 @@ module.exports = config => {
     client: {
       // @ts-expect-error
       args: ["--grep", config.grep || ""],
-      // Point the suite at locally running services instead of production, e.g.
-      //   RESPEC_SERVICES_BASE=http://localhost:8000 \
-      //   SPECREF_BASE=http://localhost:8001 \
-      //   BROWSERS=ChromeHeadless pnpm test:integration
-      // 8000 is respec-web-services' own default; use whatever port you started
-      // specref on. Each value must be a bare origin with a scheme and no path.
-      // Empty means every request goes to production, exactly as before.
+      // Redirects xref, group, caniuse, baseline and bibliography requests to
+      // local servers; see .github/copilot-instructions.md. Empty means production.
       serviceOrigins: {
         ...(process.env.RESPEC_SERVICES_BASE && {
           "https://respec.org": process.env.RESPEC_SERVICES_BASE,

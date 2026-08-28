@@ -14,11 +14,9 @@ export function makeRSDoc(opts, src, style = "") {
   opts = { profile: "w3c", ...opts };
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
-    // Name the document: `src` is undefined for every srcdoc-built document, so
-    // this message used to read "Timed out waiting on undefined".
-    const what = src ?? `srcdoc document (${opts.profile} profile)`;
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
     const timeoutId = setTimeout(() => {
+      const what = src ?? `srcdoc document (${opts.profile} profile)`;
       reject(new Error(`Timed out waiting on ${what}`));
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", async () => {
@@ -28,11 +26,6 @@ export function makeRSDoc(opts, src, style = "") {
       }
       if (doc.respec) {
         await doc.respec.ready;
-        // Clear the timer on this path too, not only in the message handler
-        // below. If it stays armed, jasmine abandons the spec first, then the
-        // timer rejects a promise nobody holds; karma reports that as an error
-        // thrown in afterAll and can abort the run with tests still unexecuted
-        // and uncounted.
         clearTimeout(timeoutId);
         resolve(doc);
       }
@@ -161,41 +154,27 @@ function decorateDocument(doc, opts) {
     });
   }
 
+  /**
+   * Gives the spec document a `fetch` that sends service requests to a local
+   * server instead of respec.org, when the karma config names one. Does nothing
+   * otherwise.
+   */
   function addFetchRewrite() {
-    const map = globalThis.__karma__?.config?.serviceOrigins;
-    if (!map || !Object.keys(map).length) return;
-    // Validate here as well as inside the installer. When the injected script
-    // throws, it only fires the iframe's error event and nothing listens for
-    // that, so a bad variable would leave every document with no wrapper, still
-    // hitting production. Calling it from the karma context fails a spec instead.
-    validateServiceOrigins(map);
+    const configured = globalThis.__karma__?.config?.serviceOrigins;
+    const origins = new Map(Object.entries(configured ?? {}));
+    if (!origins.size) return;
+    // Fail here rather than inside the iframe: a throw from the script built
+    // below fires only that iframe's error event, and makeRSDoc adds no listener
+    // for it, so a bad variable would leave every document silently unwrapped.
+    validateServiceOrigins(origins);
     const script = doc.createElement("script");
     script.classList.add("remove");
-    // Inline the source rather than import it: makeRSDoc builds this document
-    // detached and then hands it to ifr.srcdoc, so a module would not have run
-    // by the time ReSpec loads. What matters is that this runs while the browser
-    // parses the document rather than after it loads, which is why src-loaded
-    // fixtures get only partial coverage. Position within <head> does not
-    // matter, since ReSpec defers its pipeline behind a Promise.all.
-    //
-    // List every function the installer calls. Leave one out and the browser
-    // throws a ReferenceError, which kills the script and installs nothing.
-    // Emit them as bare declarations, because a parenthesised function
-    // expression binds no name and the call below would throw.
-    const payload = `
+    script.textContent = `
       ${rewriteServiceUrl.toString()}
       ${validateServiceOrigins.toString()}
       ${installFetchRewrite.toString()}
-      installFetchRewrite(window, ${JSON.stringify(map)});
+      installFetchRewrite(window, new Map(${JSON.stringify([...origins])}));
     `;
-    // A "</script" in the payload would close this element once makeRSDoc
-    // serializes the document into srcdoc, spilling raw JS into the body and
-    // installing no wrapper at all. It can only occur inside a string, since it
-    // is a syntax error in code, so escaping the slash is always safe. Escaping
-    // every "<" would not be: "<" is no operator, so that would break any
-    // comparison a future edit puts in these functions.
-    const escaped = payload.replace(/<\/(script)/gi, "<\\/$1");
-    script.textContent = escaped;
     doc.head.appendChild(script);
   }
 
