@@ -237,8 +237,8 @@ describe("W3C - Style", () => {
       `link[rel="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
     );
     expect(link).toBeTruthy();
-    // Deliberately not asserting `disabled`: per HTML that setter is a no-op
-    // until the sheet loads, so it would make this test depend on the network.
+    // Safe to assert now the attribute is set before insertion.
+    expect(link.hasAttribute("disabled")).toBe(true);
   });
 
   it("adds dark mode stylesheet", async () => {
