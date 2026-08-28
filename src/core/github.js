@@ -99,7 +99,7 @@ export async function run(conf) {
     return;
   }
   const branch = ghConf.branch || "gh-pages";
-  const issueBase = new URL("./issues/", ghURL).href;
+  const issueBase = conf.issueBase || new URL("./issues/", ghURL).href;
   const newIssuesURL = new URL("./new/choose", issueBase).href;
 
   // Allow custom pullsURL and commitHistoryURL for monorepo scenarios
