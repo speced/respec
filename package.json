@@ -81,7 +81,7 @@
     "server": "serve",
     "start": "node ./tools/dev-server.cjs",
     "test:build": "jasmine --random=false ./tests/test-build.cjs",
-    "test:headless": "jasmine --random=false ./tests/headless.cjs",
+    "test:headless": "jasmine --random=false ./tests/headless.cjs ./tests/darkmode-race.cjs",
     "test": "pnpm test:unit && pnpm test:integration",
     "test:unit": "karma start ./tests/unit/karma.conf.cjs --single-run",
     "test:integration": "karma start ./tests/spec/karma.conf.cjs --single-run"
