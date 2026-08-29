@@ -190,6 +190,15 @@ function handleIssues(ins, ghIssues, conf) {
         body = document
           .createRange()
           .createContextualFragment(ghIssue.bodyHTML);
+        const externalImages = /** @type {NodeListOf<HTMLImageElement>} */ (
+          body.querySelectorAll("img[src*='githubusercontent.com']")
+        );
+        if (externalImages.length) {
+          const msg = `Issue #${dataNum} contains images hosted on githubusercontent.com which may be rejected by W3C publication tools.`;
+          const hint =
+            "Download the images and host them alongside the spec source.";
+          showWarning(msg, name, { hint });
+        }
       }
       div.append(titleParent, body);
     }
