@@ -23,7 +23,10 @@ export function pub(topic, detail) {
   }
   // If this is an iframe, postMessage parent (used in testing).
   const args = String(JSON.stringify(detail?.stack || detail));
-  window.parent.postMessage({ topic, args }, window.parent.location.origin);
+  // "/" means "only deliver to a parent on our own origin", which is what
+  // reading parent.location.origin achieved — except that read throws a
+  // SecurityError when the parent is not same origin.
+  window.parent.postMessage({ topic, args }, "/");
 }
 
 /**
