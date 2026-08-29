@@ -1,17 +1,81 @@
 "use strict";
-import {
-  installFetchRewrite,
-  rewriteServiceUrl,
-  validateServiceOrigins,
-} from "./service-origin-rewrite.js";
+import { cachesCleared } from "./respec-cache-helper.js";
+import { validateServiceOrigins } from "./service-origin-rewrite.js";
 
 const iframes = [];
 
 /**
+ * Registers the service worker that redirects respec.org and specref requests to
+ * whatever origins the karma config names, and resolves once it controls this
+ * page. Every spec document is a child of this page, so they inherit it.
+ */
+const serviceWorkerReady = (async () => {
+  await navigator.serviceWorker.register("/respec-test-sw.js", {
+    type: "module",
+  });
+  if (navigator.serviceWorker.controller) return;
+  // Keep this wait: register() resolves before the worker activates and claims
+  // the page, and the first makeRSDoc would then find no controller to send its
+  // origins to.
+  await new Promise(resolve => {
+    navigator.serviceWorker.addEventListener("controllerchange", resolve, {
+      once: true,
+    });
+  });
+})();
+
+/**
+ * Sends `message` to the service worker and resolves with its reply.
+ *
+ * @param {object} message
+ */
+async function askServiceWorker(message) {
+  await serviceWorkerReady;
+  const worker = navigator.serviceWorker.controller;
+  if (!worker) {
+    throw new Error(
+      "No service worker controls this page, so every service request would go to production."
+    );
+  }
+  return new Promise(resolve => {
+    const channel = new MessageChannel();
+    channel.port1.addEventListener("message", ev => resolve(ev.data), {
+      once: true,
+    });
+    channel.port1.start();
+    worker.postMessage(message, [channel.port2]);
+  });
+}
+
+/**
+ * Hands the service worker the origins named in the karma config, and waits for
+ * it to confirm. `makeRSDoc` does this per document, so one spec's redirects
+ * cannot leak into the next.
+ */
+async function configureServiceWorker() {
+  const origins = new Map(
+    Object.entries(globalThis.__karma__?.config?.serviceOrigins ?? {})
+  );
+  validateServiceOrigins(origins);
+  await askServiceWorker({ type: "configure", origins: [...origins] });
+}
+
+/**
+ * Every URL the service worker has redirected since the last `makeRSDoc` call.
+ *
+ * @returns {Promise<string[]>}
+ */
+export async function serviceWorkerRedirects() {
+  const { redirects } = await askServiceWorker({ type: "report" });
+  return redirects;
+}
+
+/**
  * @return {Promise<Document>}
  */
-export function makeRSDoc(opts, src, style = "") {
+export async function makeRSDoc(opts, src, style = "") {
   opts = { profile: "w3c", ...opts };
+  await Promise.all([configureServiceWorker(), cachesCleared]);
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
@@ -155,25 +219,29 @@ function decorateDocument(doc, opts) {
   }
 
   /**
-   * Gives the spec document a `fetch` that sends service requests to a local
-   * server instead of respec.org, when the karma config names one. Does nothing
-   * otherwise.
+   * Makes this document's Cache API miss every lookup and discard every write,
+   * while the karma config redirects service requests to a local service.
+   *
+   * Leave this in: fetchAndCache in core/utils.js reads and writes the cache
+   * from inside the document, where the service worker cannot see it, and it
+   * stamps whatever it stores with a fresh 24 hour expiry under the production
+   * URL. So one document's local response would answer the next document's
+   * lookup instead of the service being asked again.
    */
-  function addFetchRewrite() {
+  function blockCacheWhileRedirected() {
     const configured = globalThis.__karma__?.config?.serviceOrigins;
-    const origins = new Map(Object.entries(configured ?? {}));
-    if (!origins.size) return;
-    // Fail here rather than inside the iframe: a throw from the script built
-    // below fires only that iframe's error event, and makeRSDoc adds no listener
-    // for it, so a bad variable would leave every document silently unwrapped.
-    validateServiceOrigins(origins);
+    if (!Object.keys(configured ?? {}).length) return;
     const script = doc.createElement("script");
     script.classList.add("remove");
     script.textContent = `
-      ${rewriteServiceUrl.toString()}
-      ${validateServiceOrigins.toString()}
-      ${installFetchRewrite.toString()}
-      installFetchRewrite(window, new Map(${JSON.stringify([...origins])}));
+      Object.defineProperty(window, "caches", {
+        configurable: true,
+        value: {
+          async open() {
+            return { async match() {}, async put() {} };
+          },
+        },
+      });
     `;
     doc.head.appendChild(script);
   }
@@ -188,7 +256,7 @@ function decorateDocument(doc, opts) {
     doc.title = opts.title;
   }
   decorateBody(opts);
-  addFetchRewrite();
+  blockCacheWhileRedirected();
   addRespecConfig(opts);
   if (!doc.querySelector("script[src]")) {
     addReSpecLoader(opts);

@@ -53,6 +53,9 @@ module.exports = config => {
 
     proxies: {
       "/about-blank.html": "/base/tests/about-blank.html",
+      // Root path, or the worker's scope would not cover karma's own page and
+      // the spec iframes that inherit control from it.
+      "/respec-test-sw.js": "/base/tests/spec/respec-test-sw.js",
       "/assets/": "/base/assets/",
       "/js/": "/base/js/",
       "/src/": "/base/src/",
