@@ -46,7 +46,7 @@ export default (conf, options) => {
           : ""
       }
       ${
-        "latestVersion" in conf // latestVersion can be falsy
+        conf.latestVersion !== null && conf.latestVersion !== undefined
           ? html`<dt>${l10n.latest_published_version}</dt>
               <dd>
                 ${
