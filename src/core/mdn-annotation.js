@@ -2,6 +2,7 @@
 import { docLink, fetchAndCache, getIntlData, showError } from "./utils.js";
 import css from "../styles/mdn-annotation.css.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 
 export const name = "core/mdn-annotation";
 
@@ -152,9 +153,7 @@ export async function run(conf) {
     return;
   }
 
-  const style = document.createElement("style");
-  style.textContent = css;
-  document.head.append(style);
+  insertStyle(css);
 
   for (const elem of findElements(mdnSpecJson)) {
     const mdnSpecArray = mdnSpecJson[elem.id];

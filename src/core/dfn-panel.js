@@ -5,17 +5,13 @@
 import css from "../styles/dfn-panel.css.js";
 import { fetchBase } from "./text-loader.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 import { norm } from "./utils.js";
 
 export const name = "core/dfn-panel";
 
 export async function run() {
-  document.head.insertBefore(
-    html`<style>
-      ${css}
-    </style>`,
-    document.querySelector("link")
-  );
+  insertStyle(css, { before: document.querySelector("link") });
 
   /** @type {NodeListOf<HTMLElement>} */
   const elems = document.querySelectorAll(
