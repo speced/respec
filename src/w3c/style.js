@@ -109,15 +109,19 @@ function styleMover(linkURL) {
  * `head` and so wins the cascade, rendering dark for everyone including readers
  * without scripting.
  *
+ * The spec's own intent is read back from the `color-scheme` meta tag rather
+ * than captured when the link was inserted: fixup.js never touches that tag, so
+ * it still says what the spec opted into.
+ *
  * @param {Document} exportDoc
- * @param {boolean} isDark whether the spec itself opted into dark mode
  */
-function restoreDarkLinkState(exportDoc, isDark) {
+function restoreDarkLinkState(exportDoc) {
   const darkLink = exportDoc.querySelector(
     `head link[rel~="stylesheet"][href="${getStyleUrl("dark.css")}"]`
   );
   if (!darkLink) return;
-  if (isDark) {
+  const colorScheme = exportDoc.querySelector("head meta[name=color-scheme]");
+  if (colorScheme?.getAttribute("content")?.includes("dark")) {
     darkLink.setAttribute("media", "(prefers-color-scheme: dark)");
     darkLink.removeAttribute("disabled");
   } else {
@@ -176,7 +180,7 @@ export function run(conf) {
     "beforesave",
     /** @param {Document} exportDoc */ exportDoc => {
       styleMover(darkModeStyleURL)(exportDoc);
-      restoreDarkLinkState(exportDoc, isDark);
+      restoreDarkLinkState(exportDoc);
     }
   );
 }
