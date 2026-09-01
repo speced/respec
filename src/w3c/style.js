@@ -6,6 +6,7 @@
 
 import { W3CNotes, recTrackStatus, registryTrackStatus } from "./headers.js";
 import { createResourceHint } from "../core/utils.js";
+import { disableDarkStyles } from "../core/insert-style.js";
 import { html } from "../core/import-maps.js";
 import { sub } from "../core/pubsubhub.js";
 
@@ -87,19 +88,6 @@ if (!document.head.querySelector("meta[name=viewport]")) {
 
 document.head.prepend(elements);
 
-// The author's own `<style>` elements, captured before ReSpec injects more, so the
-// dark-mode strip below leaves them alone the way Bikeshed leaves author CSS alone.
-// This excludes ReSpec's two stylesheets that carry an id by id rather than by
-// timing, because `profiles/w3c.js` imports modules concurrently and nothing
-// guarantees `core/style.js` has injected `#respec-mainstyle` before this module is
-// evaluated. Excluding by id is correct whichever order they happen to run in.
-const RESPEC_STYLE_IDS = ["respec-mainstyle", "baseline-stylesheet"];
-const authorStyles = new Set(
-  [...document.querySelectorAll("head style")].filter(
-    el => !RESPEC_STYLE_IDS.includes(el.id)
-  )
-);
-
 /**
  * @param {URL|string} linkURL
  * @returns {(exportDoc: Document) => void}
@@ -111,63 +99,6 @@ function styleMover(linkURL) {
       exportDoc.querySelector("head")?.append(w3cStyle);
     }
   };
-}
-
-/**
- * Remove every `@media (prefers-color-scheme: dark)` block from a stylesheet.
- *
- * Brace counting rather than Bikeshed's left-margin regex (`manager.py:250-270`),
- * because ReSpec's stylesheets reach the page from a minified bundle: there is no
- * newline to anchor to, the whole sheet is one line. Counts braces from the block's
- * opening one, so it works on minified and readable CSS alike.
- *
- * Known limit: a `{` or `}` inside a string or comment would miscount. None of
- * ReSpec's stylesheets contain one, and this only ever runs over ReSpec's own.
- *
- * @param {string} css
- * @returns {string}
- */
-export function stripDarkMediaBlocks(css) {
-  const opener = /@media[^{]*prefers-color-scheme\s*:\s*dark[^{]*\{/gi;
-  let out = "";
-  let copiedTo = 0;
-  let match;
-  while ((match = opener.exec(css)) !== null) {
-    let depth = 1;
-    let i = opener.lastIndex;
-    while (i < css.length && depth > 0) {
-      if (css[i] === "{") depth++;
-      else if (css[i] === "}") depth--;
-      i++;
-    }
-    out += css.slice(copiedTo, match.index);
-    copiedTo = i;
-    opener.lastIndex = i;
-  }
-  return copiedTo === 0 ? css : out + css.slice(copiedTo);
-}
-
-/**
- * Strips ReSpec's own dark styles, the way Bikeshed's `removeInlineDarkStyles()`
- * strips its own, once the editor has turned dark mode off.
- *
- * Skip this and the browser paints a light page with dark ReSpec components for
- * anyone whose operating system prefers dark: dark CDDL tokens, a dark `.assert`
- * block, dark baseline pills. Nothing else can prevent that. Those blocks are
- * media queries, and neither CSS nor a meta tag can stop a media query matching,
- * which I measured in Safari 27, Chrome 151 and Firefox 153. Deleting the text is
- * the only lever ReSpec has.
- *
- * This runs once on `end-all`. That is late enough because every module injects
- * its stylesheet from `run()` or `prepare()`, and no module injects one at or
- * after `end-all`.
- */
-function stripReSpecDarkStyles() {
-  for (const style of document.querySelectorAll("head style")) {
-    if (authorStyles.has(style)) continue;
-    const stripped = stripDarkMediaBlocks(style.textContent);
-    if (stripped !== style.textContent) style.textContent = stripped;
-  }
 }
 
 /**
@@ -215,28 +146,14 @@ export function run(conf) {
   // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
   sub("beforesave", styleMover(finalStyleURL));
 
-  // The editor has turned dark mode off, so do what Bikeshed's `Dark Mode: off`
-  // does: emit no `color-scheme` meta and no dark stylesheet link
-  // (`boilerplate.py:1293` returns before it writes either), and strip dark blocks
-  // out of our own styles. Omitting the link is the whole mechanism, because
-  // fixup.js only builds the theme toggle when it finds that link.
-  //
-  // Strictly `=== false`. Absent is the default and `undefined` is falsy, so a
-  // general falsy test would have disabled dark mode on every spec that never set
-  // the option. Returning here also matters: the code below reads
-  // `colorScheme.content`, which would throw once the meta is no longer injected.
   if (conf.darkMode === false) {
-    // `createResourceHints()` above adds the preload hint at import time, before
-    // any config exists, so this is the only place that can remove it. Worth doing:
-    // a spec whose editor turned dark mode off should not fetch a stylesheet it
-    // will never apply, and anyone searching for `link[href$="dark.css"]` would
-    // still find the leftover hint.
+    disableDarkStyles();
+    // Without this the page still downloads dark.css, which it will never apply.
     document
       .querySelector(
         `head link[rel~="preload"][href="${getStyleUrl("dark.css")}"]`
       )
       ?.remove();
-    sub("end-all", stripReSpecDarkStyles, { once: true });
     return;
   }
 

@@ -1,6 +1,6 @@
 "use strict";
 
-import { insertStyle } from "/src/core/insert-style.js";
+import { insertStyle, stripDarkMediaBlocks } from "/src/core/insert-style.js";
 
 describe("Core - insertStyle", () => {
   /** @type {Element[]} */
@@ -73,5 +73,99 @@ describe("Core - insertStyle", () => {
     });
     expect(style.id).toBe("probe-id");
     expect(style.className).toBe("probe");
+  });
+});
+
+describe("Core - stripDarkMediaBlocks", () => {
+  it("returns CSS with no dark block unchanged", () => {
+    expect(stripDarkMediaBlocks("")).toBe("");
+    expect(stripDarkMediaBlocks("body { color: black; }")).toBe(
+      "body { color: black; }"
+    );
+  });
+
+  it("removes a dark block", () => {
+    expect(
+      stripDarkMediaBlocks(
+        "@media (prefers-color-scheme: dark) { body { color: white; } }"
+      )
+    ).toBe("");
+  });
+
+  it("leaves other media queries alone", () => {
+    const print = "@media print { body { color: black; } }";
+    expect(stripDarkMediaBlocks(print)).toBe(print);
+    const light = "@media (prefers-color-scheme: light) { a{} }";
+    expect(stripDarkMediaBlocks(light)).toBe(light);
+  });
+
+  it("handles minified CSS, where the whole sheet is one line", () => {
+    expect(
+      stripDarkMediaBlocks(
+        "a{}@media(prefers-color-scheme:dark){b{color:#fff;}}c{}"
+      )
+    ).toBe("a{}c{}");
+  });
+
+  it("counts nested braces rather than stopping at the first closer", () => {
+    expect(
+      stripDarkMediaBlocks(
+        "@media (prefers-color-scheme: dark) { @supports (display: grid) { a{} } }"
+      )
+    ).toBe("");
+  });
+
+  it("removes every dark block, not just the first", () => {
+    expect(
+      stripDarkMediaBlocks(
+        "@media (prefers-color-scheme: dark){a{}} @media (prefers-color-scheme: dark){b{}}"
+      )
+    ).toBe(" ");
+  });
+
+  it("matches a dark condition combined with others", () => {
+    expect(
+      stripDarkMediaBlocks(
+        "@media screen and (prefers-color-scheme: dark) { a{} }"
+      )
+    ).toBe("");
+    expect(
+      stripDarkMediaBlocks("@media print, (prefers-color-scheme: dark) { a{} }")
+    ).toBe("");
+  });
+
+  it("matches across newlines inside the condition", () => {
+    expect(
+      stripDarkMediaBlocks("@media\n(prefers-color-scheme:\ndark\n) { a{} }")
+    ).toBe("");
+  });
+
+  it("leaves everything outside the block byte-identical", () => {
+    expect(
+      stripDarkMediaBlocks(
+        "a{} \n@media (prefers-color-scheme: dark) { b{} }\n c{}"
+      )
+    ).toBe("a{} \n\n c{}");
+  });
+
+  // The two cases below pin a KNOWN limitation, not desired behaviour. Braces and at-rules
+  // inside a CSS string confuse the scan. Acceptable because only ReSpec's own stylesheets
+  // reach this function, and none of them contain one; `insertStyle` is what guarantees an
+  // author's CSS never gets here. If a fix ever lands, these two should fail and be
+  // rewritten to the correct expectation.
+  it("known limitation: an at-rule inside a string is treated as real", () => {
+    expect(
+      stripDarkMediaBlocks(
+        "body { content: '@media (prefers-color-scheme: dark) {}'; }"
+      )
+    ).toBe("body { content: ''; }");
+  });
+
+  it("known limitation: a closing brace inside a string ends the block early", () => {
+    expect(
+      stripDarkMediaBlocks(
+        "@media (prefers-color-scheme: dark) { a::after { content: '}'; } }"
+      )
+    ).toBe(" }");
   });
 });
