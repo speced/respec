@@ -12,13 +12,24 @@ export const biblio = {};
 
 export const name = "core/biblio";
 
-const bibrefsURL = new URL("https://api.specref.org/bibrefs?refs=");
+/**
+ * Specref first, then respec.org's mirror of the same data. Keeping Specref
+ * primary means a citation resolves identically here and in other spec tools,
+ * and that ReSpec goes back to it on its own once it answers again.
+ */
+const bibrefsURLs = [
+  new URL("https://api.specref.org/bibrefs?refs="),
+  new URL("https://respec.org/bibrefs?refs="),
+];
+
+/** Bounds the wait when the first service accepts a connection and never replies. */
+const FETCH_TIMEOUT_MS = 5000;
 
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.
 const link = createResourceHint({
   hint: "dns-prefetch",
-  href: bibrefsURL.origin,
+  href: bibrefsURLs[0].origin,
 });
 document.head.appendChild(link);
 /** @type {(value: Conf['biblio']) => void} */
@@ -28,6 +39,31 @@ let doneResolver;
 const done = new Promise(resolve => {
   doneResolver = resolve;
 });
+
+/**
+ * @param {string} refs comma separated reference ids
+ * @param {{ forceUpdate: boolean }} options
+ * @returns {Promise<Response | null>} the first service that answered, if any
+ */
+async function fetchBibrefs(refs, options) {
+  for (const url of bibrefsURLs) {
+    let response;
+    try {
+      response = await fetch(url.href + refs, {
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      });
+    } catch (err) {
+      console.warn(`Could not reach ${url.origin} for references.`, err);
+      continue;
+    }
+    if ((!options.forceUpdate && !response.ok) || response.status !== 200) {
+      console.warn(`${url.origin} answered ${response.status} for references.`);
+      continue;
+    }
+    return response;
+  }
+  return null;
+}
 
 /** @param {string[]} refs */
 export async function updateFromNetwork(
@@ -39,14 +75,8 @@ export async function updateFromNetwork(
   if (!refsToFetch.length || navigator.onLine === false) {
     return null;
   }
-  let response;
-  try {
-    response = await fetch(bibrefsURL.href + refsToFetch.join(","));
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-  if ((!options.forceUpdate && !response.ok) || response.status !== 200) {
+  const response = await fetchBibrefs(refsToFetch.join(","), options);
+  if (!response) {
     return null;
   }
   /** @type {Conf['biblio']} */

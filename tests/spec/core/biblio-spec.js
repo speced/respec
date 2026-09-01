@@ -71,13 +71,14 @@ describe("W3C — Bibliographic References", () => {
   const ops = makeStandardOps({ localBiblio }, body);
 
   afterAll(flushIframes);
-  const bibRefsURL = new URL("https://api.specref.org/bibrefs");
-
   let doc;
-  let specRefOk;
+  let bibrefsOk;
   beforeAll(async () => {
     doc = await makeRSDoc(ops);
-    specRefOk = (await fetch(bibRefsURL, { method: "HEAD" })).ok;
+    // Whether a reference only the bibliography service can resolve came back.
+    // A fetch from here would not do: the suite redirects service requests with
+    // a service worker scoped to the spec document, not to this context.
+    bibrefsOk = Boolean(doc.querySelector("#bib-dom + dd cite"));
   });
 
   it("displays references correctly", async () => {
@@ -93,7 +94,7 @@ describe("W3C — Bibliographic References", () => {
   });
 
   it("pings biblio service to see if it's running", () => {
-    expect(specRefOk).toBeTruthy();
+    expect(bibrefsOk).toBeTruthy();
   });
 
   it("includes the title of a spec for an inline citation, including aliases", async () => {
@@ -121,7 +122,7 @@ describe("W3C — Bibliographic References", () => {
   });
 
   it("includes a dns-prefetch to bibref server", () => {
-    const host = bibRefsURL.host;
+    const host = "api.specref.org";
     const link = doc.querySelector(`link[rel='dns-prefetch'][href*='${host}']`);
     expect(link).toBeTruthy();
     expect(link.classList).toContain("removeOnSave");
@@ -131,10 +132,11 @@ describe("W3C — Bibliographic References", () => {
     // Make sure the reference is added.
     let ref = doc.querySelector("#bib-testref1 + dd");
     expect(ref).toBeTruthy();
-    // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
-    if (!specRefOk) {
+    // This prevents Jasmine from taking down the whole test suite if the
+    // bibliography service is down.
+    if (!bibrefsOk) {
       throw new Error(
-        "SpecRef seems to be down. Can't proceed with this spec."
+        "The bibliography service seems to be down. Can't proceed with this spec."
       );
     }
     expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
