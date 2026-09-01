@@ -12,7 +12,7 @@ This is the whole sequence. The build is part of it, and so are `BROWSERS` and `
 export PUPPETEER_CACHE_DIR="$PWD/.cache/puppeteer"
 pnpm i --frozen-lockfile
 pnpm lint                 # tsc -p src/jsconfig.json && eslint .
-pnpm build:w3c && pnpm build:geonovum && pnpm build:aom && pnpm build:dini
+pnpm build:w3c && pnpm build:aom && pnpm build:dini
 BROWSERS=ChromeHeadless pnpm test        # unit then integration, via karma
 pnpm test:build                          # the builder tool
 pnpm test:headless                       # renders examples through puppeteer
@@ -26,7 +26,7 @@ If you are a human with a browser already in puppeteer's default cache, you do n
 
 The integration suite (`tests/spec/`) reads the bundles in `builds/`, not `src/`, so a source change has no effect on it until the bundle is rebuilt. That is why the build sits above the test line rather than being mentioned afterwards. The unit suite (`tests/unit/`) loads `src/` directly, so it needs no rebuild and is the faster loop while iterating.
 
-There is one bundle per profile. Building only `w3c` leaves the Geonovum, DiNI and AOM suites testing the previous code, which looks like a passing or failing test that has nothing to do with the change. If a change that provably does nothing alters a test result, suspect a stale bundle before suspecting the test.
+There is one bundle per profile. Building only `w3c` leaves the DiNI and AOM suites testing the previous code, which looks like a passing or failing test that has nothing to do with the change. If a change that provably does nothing alters a test result, suspect a stale bundle before suspecting the test.
 
 Never commit anything under `builds/`. CI rebuilds it, and a PR touching it fails a dedicated check.
 
@@ -84,4 +84,4 @@ One concern per pull request. A locale addition or a drive-by refactor belongs i
 
 ## Adding a module
 
-A module goes in `src/core/` only if every profile wants it. If it is specific to one, put it in that profile's folder instead, as `src/w3c/` already does for eight modules. Either way it exports `name` and a `run(conf)`. `run` may be synchronous or async, whichever the work needs: most core modules are synchronous, and only the ones that fetch or await something are not. The module must be registered in every profile that needs it: `profiles/w3c.js`, `profiles/geonovum.js`, `profiles/aom.js`, `profiles/dini.js`. Tests go in `tests/spec/core/`. If the module uses `getIntlData`, add a Czech (`cs`) entry.
+A module goes in `src/core/` only if every profile wants it. If it is specific to one, put it in that profile's folder instead, as `src/w3c/` already does for eight modules. Either way it exports `name` and a `run(conf)`. `run` may be synchronous or async, whichever the work needs: most core modules are synchronous, and only the ones that fetch or await something are not. The module must be registered in every profile that needs it: `profiles/w3c.js`, `profiles/aom.js`, `profiles/dini.js`. Tests go in `tests/spec/core/`. If the module uses `getIntlData`, add a Czech (`cs`) entry.
