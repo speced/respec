@@ -60,7 +60,8 @@ async function forward(request, url) {
     // A 502 keeps a service that is not running on ReSpec's own "response was
     // not ok" path. Rejecting instead surfaces as an unhandled rejection in a
     // child iframe, which no spec can see.
-    return new Response(`${url} did not respond: ${error.message}`, {
+    const reason = error instanceof Error ? error.message : String(error);
+    return new Response(`${url} did not respond: ${reason}`, {
       status: 502,
     });
   }
