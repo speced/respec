@@ -40,6 +40,20 @@ npx karma start tests/unit/karma.conf.cjs --single-run --browsers ChromeHeadless
 
 `--grep` is a literal string match. Alternation does not work, and only the last `--grep` counts, so run separate invocations instead.
 
+### Testing against a local respec-web-services or specref
+
+The suite resolves cross-references, W3C group data, caniuse, baseline and bibliography against `respec.org` and `api.specref.org`. Two environment variables send those requests somewhere else instead, so you can check a service change against this suite before it deploys:
+
+```bash
+RESPEC_SERVICES_BASE=http://localhost:8000 \
+SPECREF_BASE=http://localhost:8001 \
+BROWSERS=ChromeHeadless npx karma start tests/spec/karma.conf.cjs --single-run
+```
+
+Set neither and everything goes to production exactly as before. A service worker (`tests/spec/respec-test-sw.js`) does the redirecting, so it also covers requests no per-document `fetch` wrapper reaches, such as the highlighter's `importScripts`.
+
+Two consequences to expect. While either variable is set the suite stops seeding the Cache API and gives each spec document a cache that misses every lookup, so every request really reaches your service rather than being answered from a fixture. And a service that is not running answers 502 through the worker, which surfaces as ReSpec's ordinary "response was not ok" handling rather than as an unhandled rejection.
+
 ## Code style
 
 Prefer functional style over imperative loops: `forEach`, `map`, `filter`, `find`, `reduce`, `some`, `every`. Use an early `return` inside `forEach` rather than `continue`. `NodeList`, `Map` and `Set` have `forEach` natively, so prefer `nodeList.forEach()` over `[...nodeList].forEach()` and avoid the extra array.
