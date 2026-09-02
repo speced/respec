@@ -158,7 +158,7 @@ export function run(conf) {
   }
   // W3C's fixup.js only injects the light/dark/auto toggle when it can find the
   // dark stylesheet link, and it drives that link with `.disabled`. Light-only
-  // specs never had the link, so the toggle silently never appeared (#5200). Add
+  // specs never had the link, so the toggle silently never appeared. Add
   // it either way, switched off when the spec has not opted into dark mode.
   const darkModeStyleURL = getStyleUrl("dark.css");
   const isDark = colorScheme.content.includes("dark");
@@ -167,8 +167,8 @@ export function run(conf) {
     href="${darkModeStyleURL.href}"
   />`;
   if (isDark) darkLink.media = "(prefers-color-scheme: dark)";
-  // Setting `.disabled` on a still-loading link does not stick in Chrome, and the next write
-  // drops the sheet (#5436), so set the state before the element enters the document.
+  // Set `disabled` before appending: Chrome does not keep it on a link that is still
+  // loading, and the next write to that link drops the sheet.
   if (!isDark) darkLink.setAttribute("disabled", "");
   document.head.appendChild(darkLink);
   // The dark sheet has to end up last. It and base.css set the same `:root`
