@@ -99,13 +99,19 @@ module.exports = config => {
     },
   };
 
-  // Set both or bibliography goes untested: core/biblio.js falls back to
-  // respec.org/bibrefs, and an origin rewrite cannot separate that from xref.
-  if (process.env.SPECREF_BASE && !process.env.RESPEC_SERVICES_BASE) {
+  // Set both or bibliography goes untested whichever one you set: core/biblio.js tries
+  // api.specref.org then respec.org/bibrefs, and an origin rewrite cannot separate that
+  // second one from xref.
+  const [specref, services] = [
+    process.env.SPECREF_BASE,
+    process.env.RESPEC_SERVICES_BASE,
+  ];
+  if (Boolean(specref) !== Boolean(services)) {
+    const unset = specref ? "RESPEC_SERVICES_BASE" : "SPECREF_BASE";
+    const reached = specref ? "respec.org/bibrefs" : "api.specref.org";
     process.emitWarning(
-      "SPECREF_BASE is set but RESPEC_SERVICES_BASE is not. Bibliography falls back " +
-        "to respec.org/bibrefs, so those requests still go to production. Set both to " +
-        "test bibliography against a local service.",
+      `${unset} is not set, so bibliography can still reach ${reached} on production. ` +
+        "Set both to test bibliography against a local service.",
       "ReSpecServiceOrigins"
     );
   }
