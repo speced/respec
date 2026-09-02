@@ -53,6 +53,9 @@ module.exports = config => {
 
     proxies: {
       "/about-blank.html": "/base/tests/about-blank.html",
+      // Root path, or the worker's scope would not cover karma's own page and
+      // the spec iframes that inherit control from it.
+      "/respec-test-sw.js": "/base/tests/spec/respec-test-sw.js",
       "/assets/": "/base/assets/",
       "/js/": "/base/js/",
       "/src/": "/base/src/",
@@ -83,6 +86,16 @@ module.exports = config => {
     client: {
       // @ts-expect-error
       args: ["--grep", config.grep || ""],
+      // Redirects xref, group, caniuse, baseline and bibliography requests to
+      // local servers; see .github/copilot-instructions.md. Empty means production.
+      serviceOrigins: {
+        ...(process.env.RESPEC_SERVICES_BASE && {
+          "https://respec.org": process.env.RESPEC_SERVICES_BASE,
+        }),
+        ...(process.env.SPECREF_BASE && {
+          "https://api.specref.org": process.env.SPECREF_BASE,
+        }),
+      },
     },
   };
 
