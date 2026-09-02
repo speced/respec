@@ -74,10 +74,16 @@ describe("W3C — Bibliographic References", () => {
   let doc;
   let bibrefsOk;
   beforeAll(async () => {
+    // Clear first, or the check below passes on a DOM entry another spec left
+    // in IndexedDB and proves nothing about either service.
+    const { biblioDB } = await import("../../../src/core/biblio-db.js");
+    await biblioDB.ready;
+    await biblioDB.clear();
+
     doc = await makeRSDoc(ops);
-    // Whether a reference only the bibliography service can resolve came back.
-    // A fetch from here would not do: the suite redirects service requests with
-    // a service worker scoped to the spec document, not to this context.
+    // DOM is the one reference here that only a service can resolve. Reading it
+    // off the page rather than fetching it is deliberate: the suite's redirect
+    // to a local service is a service worker scoped to the spec document.
     bibrefsOk = Boolean(doc.querySelector("#bib-dom + dd cite"));
   });
 

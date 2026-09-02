@@ -42,7 +42,7 @@ describe("Core - biblio bibliography services", () => {
 
   it("asks Specref first and does not ask the mirror when it answers", async () => {
     stubFetch(() => jsonResponse(ENTRY));
-    const data = await updateFromNetwork(["TESTREF"], { forceUpdate: true });
+    const data = await updateFromNetwork(["TESTREF"]);
     expect(data).toEqual(ENTRY);
     expect(attempted).toEqual([SPECREF]);
   });
@@ -51,7 +51,7 @@ describe("Core - biblio bibliography services", () => {
     stubFetch(url =>
       url.startsWith(SPECREF) ? new Error("network") : jsonResponse(ENTRY)
     );
-    const data = await updateFromNetwork(["TESTREF"], { forceUpdate: true });
+    const data = await updateFromNetwork(["TESTREF"]);
     expect(data).toEqual(ENTRY);
     expect(attempted).toEqual([SPECREF, MIRROR]);
   });
@@ -62,14 +62,28 @@ describe("Core - biblio bibliography services", () => {
         ? new Response("nope", { status: 503 })
         : jsonResponse(ENTRY)
     );
-    const data = await updateFromNetwork(["TESTREF"], { forceUpdate: true });
+    const data = await updateFromNetwork(["TESTREF"]);
+    expect(data).toEqual(ENTRY);
+    expect(attempted).toEqual([SPECREF, MIRROR]);
+  });
+
+  it("falls back to the mirror when Specref answers 200 with something other than JSON", async () => {
+    stubFetch(url =>
+      url.startsWith(SPECREF)
+        ? new Response("<html>Gateway</html>", {
+            status: 200,
+            headers: { "Content-Type": "text/html" },
+          })
+        : jsonResponse(ENTRY)
+    );
+    const data = await updateFromNetwork(["TESTREF"]);
     expect(data).toEqual(ENTRY);
     expect(attempted).toEqual([SPECREF, MIRROR]);
   });
 
   it("gives up when neither service answers", async () => {
     stubFetch(() => new Error("network"));
-    const data = await updateFromNetwork(["TESTREF"], { forceUpdate: true });
+    const data = await updateFromNetwork(["TESTREF"]);
     expect(data).toBeNull();
     expect(attempted).toEqual([SPECREF, MIRROR]);
   });

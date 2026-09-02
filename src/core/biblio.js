@@ -12,17 +12,13 @@ export const biblio = {};
 
 export const name = "core/biblio";
 
-/**
- * Specref first, then respec.org's mirror of the same data. Keeping Specref
- * primary means a citation resolves identically here and in other spec tools,
- * and that ReSpec goes back to it on its own once it answers again.
- */
+/** Keep Specref first: a citation then resolves the same here as in every other spec tool. */
 const bibrefsURLs = [
   new URL("https://api.specref.org/bibrefs?refs="),
   new URL("https://respec.org/bibrefs?refs="),
 ];
 
-/** Bounds the wait when the first service accepts a connection and never replies. */
+/** Without this, a service that connects and never replies blocks the fallback. */
 const FETCH_TIMEOUT_MS = 5000;
 
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
@@ -41,11 +37,14 @@ const done = new Promise(resolve => {
 });
 
 /**
+ * Asks each bibliography service in turn and returns the first usable answer.
+ * A service only counts as answering once its body parses, so an error page
+ * that comes back as 200 and HTML still falls through to the next one.
+ *
  * @param {string} refs comma separated reference ids
- * @param {{ forceUpdate: boolean }} options
- * @returns {Promise<Response | null>} the first service that answered, if any
+ * @returns {Promise<{ data: Conf['biblio'], expires: string | null } | null>}
  */
-async function fetchBibrefs(refs, options) {
+async function fetchBibrefs(refs) {
   for (const url of bibrefsURLs) {
     let response;
     try {
@@ -56,36 +55,37 @@ async function fetchBibrefs(refs, options) {
       console.warn(`Could not reach ${url.origin} for references.`, err);
       continue;
     }
-    if ((!options.forceUpdate && !response.ok) || response.status !== 200) {
+    if (response.status !== 200) {
       console.warn(`${url.origin} answered ${response.status} for references.`);
       continue;
     }
-    return response;
+    try {
+      const data = await response.json();
+      return { data, expires: response.headers.get("Expires") };
+    } catch (err) {
+      console.warn(`${url.origin} sent references that are not JSON.`, err);
+    }
   }
   return null;
 }
 
 /** @param {string[]} refs */
-export async function updateFromNetwork(
-  refs,
-  options = { forceUpdate: false }
-) {
+export async function updateFromNetwork(refs) {
   const refsToFetch = [...new Set(refs)].filter(ref => ref.trim());
   // Update database if needed, if we are online
   if (!refsToFetch.length || navigator.onLine === false) {
     return null;
   }
-  const response = await fetchBibrefs(refsToFetch.join(","), options);
-  if (!response) {
+  const found = await fetchBibrefs(refsToFetch.join(","));
+  if (!found) {
     return null;
   }
-  /** @type {Conf['biblio']} */
-  const data = await response.json();
+  const { data, expires: expiresHeader } = found;
   // SpecRef updates every hour, so we should follow suit
   // https://github.com/tobie/specref#hourly-auto-updating
   const oneHourFromNow = Date.now() + 1000 * 60 * 60 * 1;
   try {
-    const expiresValue = Date.parse(response.headers.get("Expires") || "");
+    const expiresValue = Date.parse(expiresHeader || "");
     const expires = Number.isNaN(expiresValue)
       ? oneHourFromNow
       : Math.min(expiresValue, oneHourFromNow);
@@ -203,7 +203,7 @@ export class Plugin {
     const externalRefs = split.noData.map(item => item.id);
     if (externalRefs.length) {
       // Going to the network for refs we don't have
-      const data = await updateFromNetwork(externalRefs, { forceUpdate: true });
+      const data = await updateFromNetwork(externalRefs);
       Object.assign(biblio, data);
     }
     Object.assign(biblio, this.conf.localBiblio);
