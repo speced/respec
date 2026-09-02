@@ -81,9 +81,8 @@ describe("Core - exporter", () => {
       </pre>`;
     const doc = await getExportedDoc(await makeRSDoc(ops));
     const { lastElementChild } = doc.head;
-    // The dark sheet sits after the maturity-level sheet: both set the same
-    // `:root` custom properties at equal specificity, so the dark one has to
-    // come last to win once the theme toggle enables it.
+    // dark.css last, maturity sheet second-last: reversing them makes the theme toggle a
+    // no-op, so assert both positions rather than membership.
     expect(lastElementChild.href).toBe(
       "https://www.w3.org/StyleSheets/TR/2021/dark.css"
     );

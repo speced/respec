@@ -200,10 +200,8 @@ describe("W3C - Style", () => {
   }
 
   it("puts the dark stylesheet last, after the W3C stylesheet", async () => {
-    // The dark sheet has to win the cascade, because it and base.css set the
-    // same `:root` custom properties at equal specificity. If base.css lands
-    // after it, fixup.js's toggle enables a sheet that then loses, and the
-    // reader sees nothing happen.
+    // The order is the assertion: dark.css and base.css set the same `:root` custom
+    // properties at equal specificity, so base.css landing last makes the toggle a no-op.
     const ops = makeStandardOps({});
     const doc = await getExportedDoc(await makeRSDoc(ops));
     const base = doc.querySelector(
@@ -219,11 +217,8 @@ describe("W3C - Style", () => {
   });
 
   it("disables the dark stylesheet in the live document for a light-only spec", async () => {
-    // Uses noTOC deliberately: with the TOC on, fixup.js is attached and sets
-    // `disabled` itself, so the assertion would pass whether or not ReSpec did
-    // it. With noTOC there is no fixup.js, so ReSpec's own `disabled` is the
-    // only thing keeping the sheet off, and a light-only spec would otherwise
-    // render dark permanently.
+    // Keep `noTOC`: it is the one configuration with no fixup.js, which would otherwise set
+    // `disabled` itself and make this pass whether or not ReSpec did.
     const doc = await makeRSDoc(makeStandardOps({ noTOC: true }));
     const link = doc.querySelector(
       `link[rel~="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
@@ -239,18 +234,15 @@ describe("W3C - Style", () => {
     // would otherwise export an enabled, unconditional dark sheet and render
     // dark for everyone.
     //
-    // Asserted against the serialized HTML rather than getExportedDoc(), because
-    // the export carries the fixup.js script tag: re-parsing it into an iframe
-    // lets fixup.js run again and re-mutate the link, so a re-hydrated document
-    // does not tell you what was published.
+    // Match the serialized string, not getExportedDoc(): the export carries the fixup.js
+    // script tag, so re-parsing it into an iframe lets fixup.js re-mutate the link.
     const rsDoc = await makeRSDoc(makeStandardOps({}));
     const live = rsDoc.querySelector(
       `link[rel~="stylesheet"][href="https://www.w3.org/StyleSheets/TR/2021/dark.css"]`
     );
     expect(live).toBeTruthy();
-    // The state fixup.js leaves behind once the reader picks dark. Set as
-    // attributes rather than through `link.disabled`, because that setter is a
-    // no-op while the sheet is still null and these tests never load it.
+    // Drive these with setAttribute, not `link.disabled`: the property setter is a no-op
+    // while `link.sheet` is null, which it always is here since the sheet never loads.
     live.removeAttribute("disabled");
     live.setAttribute("media", "");
 
@@ -262,9 +254,8 @@ describe("W3C - Style", () => {
   });
 
   it("exports the dark stylesheet media-gated for a spec that opted in", async () => {
-    // Same leak in the other direction: fixup.js sets `media = ""` on load, so
-    // without restoring it an opted-in spec exports a sheet that applies at all
-    // times instead of only when the reader prefers dark.
+    // fixup.js sets `media = ""` on load, so without restoring it an opted-in spec exports
+    // a sheet that applies at all times.
     const rsDoc = await makeRSDoc(
       makeStandardOps(),
       "spec/core/color-scheme.html"
