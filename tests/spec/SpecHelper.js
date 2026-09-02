@@ -216,17 +216,6 @@ export function makeBasicConfig(profile = "w3c") {
         lint: false,
         definitionMap: {},
       };
-    case "geonovum":
-      return {
-        editors: [
-          {
-            name: "Person Name",
-          },
-        ],
-        specStatus: "GN-BASIS",
-        edDraftURI: "https://foo.com",
-        shortName: "Foo",
-      };
     case "aom":
       return {
         editors: [
@@ -265,13 +254,6 @@ export function makeStandardOps(config = {}, body = makeDefaultBody()) {
   return {
     body,
     config: { ...makeBasicConfig(), ...config },
-  };
-}
-
-export function makeStandardGeoOps(config = {}, body = makeDefaultBody()) {
-  return {
-    body,
-    config: { ...makeBasicConfig("geonovum"), ...config },
   };
 }
 

@@ -8,7 +8,6 @@ bevy.json
 .idea
 js/deps/builds
 !js/profile-w3c-common.js
-!js/profile-geonovum.js
 !js/profile-w3c.js
 .vscode/*
 !.vscode/tasks.json
@@ -16,4 +15,8 @@ package-lock.json
 yarn.lock
 *.log
 .worktrees/
-CLAUDE.md
+CLAUDE.local.md
+
+# Browser downloaded by puppeteer when PUPPETEER_CACHE_DIR points into the repo
+# (see .github/workflows/copilot-setup-steps.yml)
+.cache/
