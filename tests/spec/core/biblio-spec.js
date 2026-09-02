@@ -77,7 +77,14 @@ describe("W3C — Bibliographic References", () => {
   let specRefOk;
   beforeAll(async () => {
     doc = await makeRSDoc(ops);
-    specRefOk = (await fetch(bibRefsURL, { method: "HEAD" })).ok;
+    // Keep the try/catch: an unreachable host rejects rather than returning a not-ok
+    // response, and an unhandled rejection here fails every spec in the file as
+    // "beforeAll function failed" instead of letting the checks below report the outage.
+    try {
+      specRefOk = (await fetch(bibRefsURL, { method: "HEAD" })).ok;
+    } catch {
+      specRefOk = false;
+    }
   });
 
   it("displays references correctly", async () => {
