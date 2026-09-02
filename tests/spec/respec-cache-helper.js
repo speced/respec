@@ -3,6 +3,19 @@
 const WEEK = 7 * 24 * 60 * 60 * 1000;
 
 /**
+ * Awaited by anything that reads or writes the cache, so nothing can seed an
+ * entry this wipe is about to delete.
+ *
+ * A run pointed at a local service stores that service's responses under the
+ * production URL for 24 hours, so a later run against production would read
+ * them back and report a pass on bytes production never sent.
+ */
+export const cachesCleared = (async () => {
+  const names = await caches.keys();
+  await Promise.all(names.map(name => caches.delete(name)));
+})();
+
+/**
  * Pre-seeds the browser Cache API so fetchAndCache() returns cached
  * data without hitting the network. Works for any respec.org endpoint.
  *
@@ -11,6 +24,13 @@ const WEEK = 7 * 24 * 60 * 60 * 1000;
  *   and a body (object for JSON, string for text).
  */
 export async function seedCache(entries) {
+  // A seeded response answers fetchAndCache before it ever calls fetch, so
+  // seeding during a redirected run would leave the local service unasked and
+  // the suite green whatever that service does.
+  if (Object.keys(globalThis.__karma__?.config?.serviceOrigins ?? {}).length) {
+    return;
+  }
+  await cachesCleared;
   const byOrigin = new Map();
   for (const [url, entry] of Object.entries(entries)) {
     const origin = new URL(url).origin;
