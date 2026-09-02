@@ -137,16 +137,13 @@ export function run(conf) {
     href="${darkModeStyleURL.href}"
   />`;
   if (isDark) darkLink.media = "(prefers-color-scheme: dark)";
+  // Setting `.disabled` on a still-loading link does not stick in Chrome, and the next write
+  // drops the sheet (#5436), so set the state before the element enters the document.
+  if (!isDark) darkLink.setAttribute("disabled", "");
   document.head.appendChild(darkLink);
   if (isDark) {
     // As required by W3C Pub Rules.
     sub("beforesave", styleMover(darkModeStyleURL));
-  } else {
-    // `disabled` rather than `media="not all"` because fixup.js sets
-    // `darkCss.media = ""`, which would wipe a media query. Must be set after
-    // insertion: per HTML the setter is a no-op while the link's associated CSS
-    // style sheet is still null.
-    darkLink.disabled = true;
   }
 }
 
