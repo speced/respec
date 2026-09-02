@@ -1,5 +1,5 @@
-// Regression test for speced/respec#5436. Only Chrome reproduces the race, so this passes on
-// other engines whether or not the fix is present.
+// Only Chrome reproduces the race, so this passes on other engines whether or not the fix
+// is present.
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
@@ -12,7 +12,7 @@ const LIGHT = "rgb(255, 255, 255)";
 // tools/respecDocWriter.js and tests/headless.cjs both budget 120s for.
 const LAUNCH_TIMEOUT = 120000;
 
-describe("W3C - Style - dark stylesheet arriving late (#5436)", () => {
+describe("W3C - Style - dark stylesheet arriving late", () => {
   let server;
   let browser;
   let port;

@@ -101,6 +101,35 @@ function styleMover(linkURL) {
 }
 
 /**
+ * Restores the dark stylesheet link to the state ReSpec chose, in the document being
+ * exported.
+ *
+ * Keep this on the `beforesave` path: fixup.js drives that link live to follow the reader's
+ * theme, and `media` and `disabled` are reflected content attributes, so a spec saved while
+ * dark was showing would otherwise publish an unconditional dark sheet that every reader
+ * gets, scripting or not.
+ *
+ * Intent comes from the `color-scheme` meta tag rather than a flag captured at insert time,
+ * because fixup.js never touches that tag.
+ *
+ * @param {Document} exportDoc
+ */
+function restoreDarkLinkState(exportDoc) {
+  const darkLink = exportDoc.querySelector(
+    `head link[rel~="stylesheet"][href="${getStyleUrl("dark.css")}"]`
+  );
+  if (!darkLink) return;
+  const colorScheme = exportDoc.querySelector("head meta[name=color-scheme]");
+  if (colorScheme?.getAttribute("content")?.includes("dark")) {
+    darkLink.setAttribute("media", "(prefers-color-scheme: dark)");
+    darkLink.removeAttribute("disabled");
+  } else {
+    darkLink.removeAttribute("media");
+    darkLink.setAttribute("disabled", "");
+  }
+}
+
+/**
  * @param {Conf} conf
  */
 export function run(conf) {
@@ -126,10 +155,8 @@ export function run(conf) {
     );
     document.head.appendChild(colorScheme);
   }
-  // W3C's fixup.js only injects the light/dark/auto toggle when it can find the
-  // dark stylesheet link, and it drives that link with `.disabled`. Light-only
-  // specs never had the link, so the toggle silently never appeared (#5200). Add
-  // it either way, switched off when the spec has not opted into dark mode.
+  // Add the link even for a light-only spec, switched off: fixup.js injects the
+  // light/dark/auto toggle only when it can find this link, and drives it with `.disabled`.
   const darkModeStyleURL = getStyleUrl("dark.css");
   const isDark = colorScheme.content.includes("dark");
   const darkLink = html`<link
@@ -137,14 +164,21 @@ export function run(conf) {
     href="${darkModeStyleURL.href}"
   />`;
   if (isDark) darkLink.media = "(prefers-color-scheme: dark)";
-  // Setting `.disabled` on a still-loading link does not stick in Chrome, and the next write
-  // drops the sheet (#5436), so set the state before the element enters the document.
+  // Set `disabled` before appending: Chrome does not keep it on a link that is still
+  // loading, and the next write to that link drops the sheet.
   if (!isDark) darkLink.setAttribute("disabled", "");
   document.head.appendChild(darkLink);
-  if (isDark) {
-    // As required by W3C Pub Rules.
-    sub("beforesave", styleMover(darkModeStyleURL));
-  }
+  // Move the dark sheet too, or the toggle enables a sheet that then loses the cascade and
+  // the reader sees nothing change: it and base.css set the same `:root` custom properties
+  // at equal specificity, and the mover above puts the maturity-level sheet, which
+  // `@import`s base.css, at the end of `head`.
+  sub(
+    "beforesave",
+    /** @param {Document} exportDoc */ exportDoc => {
+      styleMover(darkModeStyleURL)(exportDoc);
+      restoreDarkLinkState(exportDoc);
+    }
+  );
 }
 
 /** @param {Conf} conf */
