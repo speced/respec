@@ -63,6 +63,21 @@ describe("Core - UI", () => {
     expect(button.getAttribute("aria-label")).toBe("2 ReSpec Errors");
   });
 
+  it("shows a list with string errors when the pill is clicked", async () => {
+    const doc = await makeRSDoc(makeStandardOps({ group: "webapps" }));
+    const ui = doc.defaultView.respecUI;
+
+    ui.error("test 1");
+    const button = doc.getElementById("respec-pill-error");
+
+    expect(() => button.click()).not.toThrow();
+
+    const modal = doc.querySelector(".respec-error-list");
+    expect(modal).toBeTruthy();
+    expect(modal.children.length).toBe(1);
+    expect(modal.children[0].textContent).toBe("test 1");
+  });
+
   it("shows warnings", async () => {
     const doc = await makeRSDoc(makeStandardOps());
     const ui = doc.defaultView.respecUI;
