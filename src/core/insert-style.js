@@ -2,12 +2,13 @@
 // Module core/insert-style
 // One place where ReSpec adds its own `<style>` elements to the head.
 //
-// Going through here is also what lets `disableDarkStyles()` rewrite ReSpec's CSS without
-// ever reading the spec author's: this module only sees strings ReSpec handed it.
+// Add ReSpec's stylesheets through here and nowhere else: `disableDarkStyles()` rewrites what
+// this module inserted, so anything added directly is beyond its reach, and a spec author's
+// own `<style>` stays out of its reach for the same reason.
 
 export const name = "core/insert-style";
 
-/** The elements this module created, so `disableDarkStyles` can revisit them. */
+/** The stylesheets `disableDarkStyles()` rewrites. */
 const inserted = new Set();
 
 let darkStylesDisabled = false;
@@ -15,38 +16,30 @@ let darkStylesDisabled = false;
 /**
  * Removes every `@media` block that requests a dark color scheme.
  *
- * Pass only ReSpec's own CSS. This counts braces rather than parsing, so a `{` or `}` inside
- * a string or a comment miscounts the depth. An unterminated block is left alone rather than
- * truncating the sheet, but a comment holding a dark `@media` opener still swallows the rules
- * after it.
+ * CSS with nothing to remove comes back untouched. Anything else comes back through the
+ * browser's CSS parser, so formatting is normalized, comments are gone, and whatever the
+ * parser rejects is dropped rather than passed along.
+ *
+ * `not (prefers-color-scheme: dark)` is kept: it forces a page light, so removing it would do
+ * the opposite of what the caller asked for.
  *
  * @param {string} css
  * @returns {string}
  */
 export function stripDarkMediaBlocks(css) {
-  // `(?!\s*not\b)` because `not (prefers-color-scheme: dark)` is what keeps a page light:
-  // deleting it would do the opposite of what the caller asked for.
-  const opener =
-    /@media(?!\s*not\b)[^{]*prefers-color-scheme\s*:\s*dark[^{]*\{/gi;
-  let out = "";
-  let copiedTo = 0;
-  let match;
-  while ((match = opener.exec(css)) !== null) {
-    let depth = 1;
-    let i = opener.lastIndex;
-    while (i < css.length && depth > 0) {
-      if (css[i] === "{") depth++;
-      else if (css[i] === "}") depth--;
-      i++;
-    }
-    // Depth still open means the braces never balanced, so the end of the block is unknown.
-    // Copying up to `i` here would delete every rule after it, silently.
-    if (depth > 0) break;
-    out += css.slice(copiedTo, match.index);
-    copiedTo = i;
-    opener.lastIndex = i;
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(css);
+  const kept = [];
+  let removed = false;
+  for (const rule of sheet.cssRules) {
+    const isDarkMedia =
+      rule instanceof CSSMediaRule &&
+      /prefers-color-scheme\s*:\s*dark/i.test(rule.conditionText) &&
+      !/\bnot\b/i.test(rule.conditionText);
+    if (isDarkMedia) removed = true;
+    else kept.push(rule.cssText);
   }
-  return copiedTo === 0 ? css : out + css.slice(copiedTo);
+  return removed ? kept.join("\n") : css;
 }
 
 /**
@@ -74,15 +67,14 @@ export function insertStyle(css, { id, className, before } = {}) {
 }
 
 /**
- * Drop ReSpec's dark rules from the stylesheets it has already added, and from any it adds
+ * Removes ReSpec's dark rules from the stylesheets it has already added, and from any added
  * afterwards.
  *
- * Revisiting the existing ones is what frees callers from caring about order: profile
- * modules are imported with `Promise.all`, so a module that inserted at import time, before
- * any config was read, still gets corrected here.
+ * Existing ones have to be revisited because profile modules are imported with `Promise.all`,
+ * so several insert their stylesheets before any config is read.
  *
- * The flag lives for the life of the realm, and every path today builds one document per
- * realm, so that is not observable. A host building two specs in one realm would carry it over.
+ * The flag lives for the life of the realm. Every path today builds one document per realm, so
+ * a second spec in the same realm would inherit it.
  */
 export function disableDarkStyles() {
   darkStylesDisabled = true;
