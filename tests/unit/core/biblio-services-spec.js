@@ -87,4 +87,33 @@ describe("Core - biblio bibliography services", () => {
     expect(data).toBeNull();
     expect(attempted).toEqual([SPECREF, MIRROR]);
   });
+
+  // A Specref that connects and never replies is the case the mirror exists for, and the
+  // whole exchange has to finish inside one spec's budget or the rescue is worthless. This
+  // spec sets its own budget rather than reading jasmine's, so raising the module's timeout
+  // back to the default fails here instead of failing whichever spec happened to be slow.
+  it("reaches the mirror well inside a spec budget when Specref hangs", async () => {
+    const BUDGET_MS = 3000;
+    window.fetch = (url, { signal } = {}) => {
+      attempted.push(String(url).split("?")[0]);
+      if (!String(url).startsWith(SPECREF)) {
+        return Promise.resolve(jsonResponse(ENTRY));
+      }
+      // Connects and never replies, but honors the abort the module arms it with. Ignoring
+      // the signal here would hang past any budget and say nothing about the timeout.
+      return new Promise((_resolve, reject) => {
+        signal?.addEventListener("abort", () => reject(signal.reason));
+      });
+    };
+    const started = performance.now();
+    const data = await Promise.race([
+      updateFromNetwork(["TESTREF"]),
+      new Promise(resolve =>
+        setTimeout(() => resolve("over budget"), BUDGET_MS)
+      ),
+    ]);
+    expect(performance.now() - started).toBeLessThan(BUDGET_MS);
+    expect(data).toEqual(ENTRY);
+    expect(attempted).toEqual([SPECREF, MIRROR]);
+  });
 });
