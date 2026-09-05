@@ -11,6 +11,7 @@ import { codedJoinAnd, docLink, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
 import css from "../styles/caniuse.css.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 
 export const name = "core/caniuse";
 
@@ -59,14 +60,10 @@ export function prepare(conf) {
     return; // no feature to show
   }
 
-  document.head.appendChild(
-    html`<style
-      id="caniuse-stylesheet"
-      class="${options.removeOnSave ? "removeOnSave" : ""}"
-    >
-      ${css}
-    </style>`
-  );
+  insertStyle(css, {
+    id: "caniuse-stylesheet",
+    className: options.removeOnSave ? "removeOnSave" : "",
+  });
 }
 /**
  * @param {string} browser
