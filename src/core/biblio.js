@@ -18,8 +18,14 @@ const bibrefsURLs = [
   new URL("https://respec.org/bibrefs?refs="),
 ];
 
-/** Without this, a service that connects and never replies blocks the fallback. */
-const FETCH_TIMEOUT_MS = 5000;
+/**
+ * Without this, a service that connects and never replies blocks the fallback.
+ *
+ * Keep it well under the suite's per-spec budget, which jasmine defaults to 5000ms: at 5000
+ * the fallback started at the same instant a spec gave up, so a slow Specref failed the spec
+ * that the second service existed to rescue.
+ */
+const FETCH_TIMEOUT_MS = 2000;
 
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.
