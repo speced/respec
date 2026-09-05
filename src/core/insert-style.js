@@ -2,9 +2,9 @@
 // Module core/insert-style
 // One place where ReSpec adds its own `<style>` elements to the head.
 //
-// Add ReSpec's stylesheets through here and nowhere else: `disableDarkStyles()` rewrites what
-// this module inserted, so anything added directly is beyond its reach, and a spec author's
-// own `<style>` stays out of its reach for the same reason.
+// `disableDarkStyles()` only rewrites what this module inserted, so a stylesheet created
+// directly with `createElement` will not be reached, and a spec author's own `<style>` is out
+// of reach for the same reason.
 
 export const name = "core/insert-style";
 
@@ -26,7 +26,7 @@ let darkStylesDisabled = false;
  * @param {string} css
  * @returns {string}
  */
-export function stripDarkMediaBlocks(css) {
+function stripDarkMediaBlocks(css) {
   const sheet = new CSSStyleSheet();
   sheet.replaceSync(css);
   const kept = [];
@@ -68,7 +68,11 @@ export function insertStyle(css, { id, className, before } = {}) {
 
 /**
  * Removes ReSpec's dark rules from the stylesheets it has already added, and from any added
- * afterwards.
+ * afterwards. Call it when an editor has set `darkMode: false`.
+ *
+ * It only reaches stylesheets that went through `insertStyle`, so a spec author's own
+ * `<style>` is never rewritten, and neither is anything ReSpec created directly with
+ * `createElement`.
  *
  * Existing ones have to be revisited because profile modules are imported with `Promise.all`,
  * so several insert their stylesheets before any config is read.

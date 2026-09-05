@@ -1,10 +1,6 @@
 "use strict";
 
-import {
-  disableDarkStyles,
-  insertStyle,
-  stripDarkMediaBlocks,
-} from "/src/core/insert-style.js";
+import { disableDarkStyles, insertStyle } from "/src/core/insert-style.js";
 
 describe("Core - insertStyle", () => {
   /** @type {Element[]} */
@@ -80,14 +76,38 @@ describe("Core - insertStyle", () => {
   });
 });
 
-describe("Core - stripDarkMediaBlocks", () => {
-  // Assert on the rules, not the text: the parser normalizes what it re-serializes, so a
-  // string comparison here would be testing the serializer.
+// `disableDarkStyles()` flips a realm-wide flag that nothing resets, so `beforeAll` does it
+// once for this whole block rather than a spec doing it and leaking into the others. Keep dark
+// CSS out of every spec outside this block.
+describe("Core - dark styles removed", () => {
+  /** @type {HTMLStyleElement} */
+  let insertedBefore;
+  /** @type {HTMLStyleElement[]} */
+  const added = [];
+
+  beforeAll(() => {
+    insertedBefore = insertStyle(
+      ".pre{color:red}@media (prefers-color-scheme: dark){.pre{color:#fff}}"
+    );
+    added.push(insertedBefore);
+    disableDarkStyles();
+  });
+
+  afterAll(() => {
+    for (const el of added) el.remove();
+  });
+
+  /** @param {string} css @returns {string} what landed in the document */
+  function inserted(css) {
+    const style = insertStyle(css);
+    added.push(style);
+    return style.textContent;
+  }
 
   /** @param {string} css @returns {string[]} the condition of each surviving `@media` */
   function conditions(css) {
     const sheet = new CSSStyleSheet();
-    sheet.replaceSync(stripDarkMediaBlocks(css));
+    sheet.replaceSync(inserted(css));
     return [...sheet.cssRules]
       .filter(r => r instanceof CSSMediaRule)
       .map(r => r.conditionText);
@@ -96,15 +116,20 @@ describe("Core - stripDarkMediaBlocks", () => {
   /** @param {string} css @returns {string[]} the selector of each surviving top-level rule */
   function selectors(css) {
     const sheet = new CSSStyleSheet();
-    sheet.replaceSync(stripDarkMediaBlocks(css));
+    sheet.replaceSync(inserted(css));
     return [...sheet.cssRules]
       .filter(r => r instanceof CSSStyleRule)
       .map(r => r.selectorText);
   }
 
-  it("returns CSS with no dark block unchanged", () => {
-    expect(stripDarkMediaBlocks("")).toBe("");
-    expect(selectors("body { color: black; }")).toEqual(["body"]);
+  it("rewrites stylesheets inserted before the option was read", () => {
+    expect(insertedBefore.textContent).not.toContain("prefers-color-scheme");
+    expect(insertedBefore.textContent).toContain(".pre");
+  });
+
+  it("leaves CSS with nothing to remove byte-identical", () => {
+    const css = 'a[data-x="1"] > b::after{content:"&"}';
+    expect(inserted(css)).toBe(css);
   });
 
   it("removes a dark block and keeps everything else", () => {
@@ -115,40 +140,42 @@ describe("Core - stripDarkMediaBlocks", () => {
   });
 
   it("leaves other media queries alone", () => {
-    expect(conditions("@media print { body { color: black; } }")).toEqual([
-      "print",
-    ]);
+    expect(conditions("@media print{body{color:black}}")).toEqual(["print"]);
     expect(
-      conditions("@media (prefers-color-scheme: light) { a{color:red} }")
+      conditions("@media (prefers-color-scheme: light){a{color:red}}")
     ).toEqual(["(prefers-color-scheme: light)"]);
   });
 
   it("handles minified CSS, where the whole sheet is one line", () => {
-    const css =
-      "a{color:red}@media(prefers-color-scheme:dark){b{color:#fff}}c{color:blue}";
-    expect(selectors(css)).toEqual(["a", "c"]);
+    expect(
+      selectors(
+        "a{color:red}@media(prefers-color-scheme:dark){b{color:#fff}}c{color:blue}"
+      )
+    ).toEqual(["a", "c"]);
   });
 
   it("removes a nested dark block whole, braces and all", () => {
-    const css =
-      "@media (prefers-color-scheme: dark) { @supports (display: grid) { a{color:red} } }";
-    expect(stripDarkMediaBlocks(css)).toBe("");
+    expect(
+      inserted(
+        "@media (prefers-color-scheme: dark){@supports (display:grid){a{color:red}}}"
+      )
+    ).toBe("");
   });
 
   it("removes every dark block, not just the first", () => {
-    const css =
-      "@media (prefers-color-scheme: dark){a{color:red}} @media (prefers-color-scheme: dark){b{color:blue}}";
-    expect(conditions(css)).toEqual([]);
+    expect(
+      conditions(
+        "@media (prefers-color-scheme: dark){a{color:red}} @media (prefers-color-scheme: dark){b{color:blue}}"
+      )
+    ).toEqual([]);
   });
 
   it("removes a dark condition combined with others", () => {
     expect(
-      conditions(
-        "@media screen and (prefers-color-scheme: dark) { a{color:red} }"
-      )
+      conditions("@media screen and (prefers-color-scheme: dark){a{color:red}}")
     ).toEqual([]);
     expect(
-      conditions("@media print, (prefers-color-scheme: dark) { a{color:red} }")
+      conditions("@media print,(prefers-color-scheme: dark){a{color:red}}")
     ).toEqual([]);
   });
 
@@ -161,40 +188,22 @@ describe("Core - stripDarkMediaBlocks", () => {
   });
 
   it("keeps a rule holding a brace in a string", () => {
-    const css =
-      "@media (prefers-color-scheme: dark){a::after{content:'}'}}c{color:blue}";
-    expect(selectors(css)).toEqual(["c"]);
+    expect(
+      selectors(
+        "@media (prefers-color-scheme: dark){a::after{content:'}'}}c{color:blue}"
+      )
+    ).toEqual(["c"]);
   });
 
   it("keeps a rule whose declaration merely mentions a dark at-rule", () => {
-    const css = "body { content: '@media (prefers-color-scheme: dark) {}'; }";
-    expect(selectors(css)).toEqual(["body"]);
+    expect(
+      selectors("body{content:'@media (prefers-color-scheme: dark) {}'}")
+    ).toEqual(["body"]);
   });
 
   it("keeps a rule after a comment holding a dark opener", () => {
-    const css = "/* @media (prefers-color-scheme: dark) { */ body{color:red}";
-    expect(selectors(css)).toEqual(["body"]);
-  });
-});
-
-// Keep dark CSS out of every other spec in this file, and keep this lifecycle in one spec:
-// `disableDarkStyles()` sets a realm-wide flag that nothing resets, and jasmine randomizes
-// order, so a second spec would find it already set.
-describe("Core - disableDarkStyles", () => {
-  it("strips dark rules from stylesheets already inserted, and from later ones", () => {
-    const DARK = "@media (prefers-color-scheme: dark){.x{color:#fff}}";
-    const existing = insertStyle(`.x{color:red}${DARK}`);
-    expect(existing.textContent).toContain("prefers-color-scheme");
-
-    disableDarkStyles();
-    expect(existing.textContent).not.toContain("prefers-color-scheme");
-    expect(existing.textContent).toContain(".x");
-
-    const later = insertStyle(`.y{color:green}${DARK}`);
-    expect(later.textContent).not.toContain("prefers-color-scheme");
-    expect(later.textContent).toContain(".y");
-
-    existing.remove();
-    later.remove();
+    expect(
+      selectors("/* @media (prefers-color-scheme: dark) { */ body{color:red}")
+    ).toEqual(["body"]);
   });
 });
