@@ -136,4 +136,39 @@ a.idlEnumItem {
     visibility: hidden;
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  .idlHeader {
+    background: #1a5276;
+    color: #e8e8e8;
+  }
+
+  .idlID,
+  .idlType,
+  .idlSuperclass {
+    color: #6cb4ee;
+  }
+
+  .idlName {
+    color: #ff7b4f;
+  }
+
+  .idlName a {
+    color: #ff7b4f;
+    border-bottom-color: #ff7b4f;
+  }
+
+  a.idlEnumItem {
+    color: #e8e8e8;
+    border-bottom-color: #555;
+  }
+
+  .extAttr {
+    color: #aaa;
+  }
+
+  .idlSectionComment {
+    color: #999;
+  }
+}
 `;
