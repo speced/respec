@@ -16,6 +16,7 @@ import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
 import { addCopyIDLButton } from "./webidl-clipboard.js";
 import css from "../styles/webidl.css.js";
+import { insertStyle } from "./insert-style.js";
 import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/webidl";
@@ -384,9 +385,9 @@ export async function run() {
   if (!idls.length) {
     return;
   }
-  const style = document.createElement("style");
-  style.textContent = css;
-  document.querySelector("head link, head > *:last-child").before(style);
+  insertStyle(css, {
+    before: document.querySelector("head link, head > *:last-child"),
+  });
 
   const astArray = [...idls].map(renderWebIDL);
 
