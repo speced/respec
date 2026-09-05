@@ -146,6 +146,9 @@ export function run(conf) {
   // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
   sub("beforesave", styleMover(finalStyleURL));
 
+  // Keep this `=== false` and keep the early return. A falsy test would turn dark mode off on
+  // every spec that never set the option, and the code below reads `colorScheme.content`,
+  // which throws once the meta is no longer injected.
   if (conf.darkMode === false) {
     disableDarkStyles();
     // Without this the page still downloads dark.css, which it will never apply.

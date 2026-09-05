@@ -13,16 +13,21 @@ const inserted = new Set();
 let darkStylesDisabled = false;
 
 /**
- * Removes every `@media` block asking for a dark color scheme.
+ * Removes every `@media` block that requests a dark color scheme.
  *
- * Pass only ReSpec's own CSS: a `{` or `}` inside a string or comment miscounts the depth
- * and swallows the rest of the sheet.
+ * Pass only ReSpec's own CSS. This counts braces rather than parsing, so a `{` or `}` inside
+ * a string or a comment miscounts the depth. An unterminated block is left alone rather than
+ * truncating the sheet, but a comment holding a dark `@media` opener still swallows the rules
+ * after it.
  *
  * @param {string} css
  * @returns {string}
  */
 export function stripDarkMediaBlocks(css) {
-  const opener = /@media[^{]*prefers-color-scheme\s*:\s*dark[^{]*\{/gi;
+  // `(?!\s*not\b)` because `not (prefers-color-scheme: dark)` is what keeps a page light:
+  // deleting it would do the opposite of what the caller asked for.
+  const opener =
+    /@media(?!\s*not\b)[^{]*prefers-color-scheme\s*:\s*dark[^{]*\{/gi;
   let out = "";
   let copiedTo = 0;
   let match;
@@ -34,6 +39,9 @@ export function stripDarkMediaBlocks(css) {
       else if (css[i] === "}") depth--;
       i++;
     }
+    // Depth still open means the braces never balanced, so the end of the block is unknown.
+    // Copying up to `i` here would delete every rule after it, silently.
+    if (depth > 0) break;
     out += css.slice(copiedTo, match.index);
     copiedTo = i;
     opener.lastIndex = i;
@@ -73,9 +81,8 @@ export function insertStyle(css, { id, className, before } = {}) {
  * modules are imported with `Promise.all`, so a module that inserted at import time, before
  * any config was read, still gets corrected here.
  *
- * The flag lives for the life of the realm. Every path today builds one document per realm
- * (a puppeteer page per document, an iframe per karma spec), so that is not observable; a
- * host that built two specs in one realm would carry it over.
+ * The flag lives for the life of the realm, and every path today builds one document per
+ * realm, so that is not observable. A host building two specs in one realm would carry it over.
  */
 export function disableDarkStyles() {
   darkStylesDisabled = true;
