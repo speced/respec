@@ -125,6 +125,12 @@ interface Conf {
   noTOC?: boolean;
   /** Disables injecting ReSpec styles */
   noReSpecCSS?: boolean;
+  /**
+   * Set to `false` to turn dark mode off for this spec: no theme picker, and
+   * ReSpec's own dark styles are removed. Transitional, for custom CSS that is
+   * not dark-aware yet.
+   */
+  darkMode?: boolean;
 
   /** Indicates whether the document is a preview */
   isPreview?: boolean;

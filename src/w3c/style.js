@@ -6,6 +6,7 @@
 
 import { W3CNotes, recTrackStatus, registryTrackStatus } from "./headers.js";
 import { createResourceHint } from "../core/utils.js";
+import { disableDarkStyles } from "../core/insert-style.js";
 import { html } from "../core/import-maps.js";
 import { sub } from "../core/pubsubhub.js";
 
@@ -144,6 +145,20 @@ export function run(conf) {
   );
   // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
   sub("beforesave", styleMover(finalStyleURL));
+
+  // Keep this `=== false` and keep the early return. A falsy test would turn dark mode off on
+  // every spec that never set the option, and the code below reads `colorScheme.content`,
+  // which throws once the meta is no longer injected.
+  if (conf.darkMode === false) {
+    disableDarkStyles();
+    // Without this the page still downloads dark.css, which it will never apply.
+    document
+      .querySelector(
+        `head link[rel~="preload"][href="${getStyleUrl("dark.css")}"]`
+      )
+      ?.remove();
+    return;
+  }
 
   // Add color scheme meta tag and style
   /** @type {HTMLMetaElement | null} */
