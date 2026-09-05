@@ -307,8 +307,10 @@ function createTableOfContents(ol) {
     }
   }
 
-  const link = html`<p role="navigation" id="back-to-top">
-    <a href="#title"><abbr title="${l10n.back_to_top}">&uarr;</abbr></a>
+  const link = html`<p id="back-to-top">
+    <a href="#title"
+      ><span aria-hidden="true">&uarr;</span> ${l10n.back_to_top}</a
+    >
   </p>`;
   document.body.append(link);
 }
