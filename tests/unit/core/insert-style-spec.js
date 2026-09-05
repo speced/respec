@@ -1,6 +1,10 @@
 "use strict";
 
-import { insertStyle, stripDarkMediaBlocks } from "/src/core/insert-style.js";
+import {
+  disableDarkStyles,
+  insertStyle,
+  stripDarkMediaBlocks,
+} from "/src/core/insert-style.js";
 
 describe("Core - insertStyle", () => {
   /** @type {Element[]} */
@@ -39,6 +43,7 @@ describe("Core - insertStyle", () => {
   it("appends to the head when the anchor is null", () => {
     const style = insert("a{color:red}", { before: null });
     expect(style.parentNode).toBe(document.head);
+    expect(document.head.lastElementChild).toBe(style);
   });
 
   // Callers pass an unscoped `document.querySelector("link")`, which can return a node
@@ -167,5 +172,47 @@ describe("Core - stripDarkMediaBlocks", () => {
         "@media (prefers-color-scheme: dark) { a::after { content: '}'; } }"
       )
     ).toBe(" }");
+  });
+});
+
+describe("Core - stripDarkMediaBlocks, destructive input", () => {
+  // Each of these once deleted valid CSS. They now leave the sheet alone, because the end of
+  // an unbalanced block is unknown and guessing at it loses rules silently.
+  it("leaves the sheet alone when a dark block never closes", () => {
+    const css =
+      "a { color: red; } @media (prefers-color-scheme: dark) { b { color: white; } c { color: blue; }";
+    expect(stripDarkMediaBlocks(css)).toBe(css);
+  });
+
+  it("leaves the sheet alone when a comment holds the opener", () => {
+    const css = "/* @media (prefers-color-scheme: dark) { */ body{color:red}";
+    expect(stripDarkMediaBlocks(css)).toBe(css);
+  });
+
+  it("keeps `not (prefers-color-scheme: dark)`, which forces a page light", () => {
+    const css =
+      "@media not (prefers-color-scheme: dark){body{background:#fff}}";
+    expect(stripDarkMediaBlocks(css)).toBe(css);
+  });
+});
+
+// `disableDarkStyles` sets a module flag that lives for the whole realm and nothing resets it,
+// and jasmine runs specs in random order, so the before and after states cannot be split into
+// two specs: whichever ran second would find the flag already set. One spec walks the whole
+// lifecycle instead. Keep dark CSS out of every other spec in this file for the same reason.
+describe("Core - disableDarkStyles", () => {
+  it("strips dark rules from stylesheets already inserted, and from later ones", () => {
+    const DARK = "@media (prefers-color-scheme: dark){.x{color:#fff}}";
+    const existing = insertStyle(`.x{color:red}${DARK}`);
+    expect(existing.textContent).toContain("prefers-color-scheme");
+
+    disableDarkStyles();
+    expect(existing.textContent).toBe(".x{color:red}");
+
+    const later = insertStyle(`.y{color:green}${DARK}`);
+    expect(later.textContent).toBe(".y{color:green}");
+
+    existing.remove();
+    later.remove();
   });
 });
