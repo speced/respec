@@ -83,7 +83,7 @@ describe("Core — Can I Use", () => {
     const doc = await makeRSDoc(ops);
     const stats = doc.querySelector(".caniuse-stats");
     const cells = stats.querySelectorAll(".caniuse-cell");
-    expect(cells).toHaveSize(4);
+    expect(cells).toHaveSize(3);
 
     // Check a cell
     const [cell] = cells;
@@ -123,9 +123,13 @@ describe("Core — Can I Use", () => {
     );
 
     // More info link
-    const moreInfoLink = cells.item(3);
+    const moreInfoLink = stats.querySelector("a[href*='caniuse.com']");
     expect(moreInfoLink.href).toBe("https://caniuse.com/FEATURE");
     expect(moreInfoLink.textContent.trim()).toBe("More info");
+    // It must not carry .caniuse-cell: that sets color:#fff and a gradient from
+    // --caniuse-bg, which is only defined on the support-level classes, so the
+    // link rendered white on white.
+    expect(moreInfoLink.classList.contains("caniuse-cell")).toBeFalse();
   });
 
   it("removes irrelevant config for caniuse feature", async () => {
@@ -230,5 +234,27 @@ describe("Core — Can I Use", () => {
     expect(mobile.querySelector(".caniuse-type > span").textContent).toBe(
       "mobile"
     );
+  });
+
+  it("marks up the groups as a dl, with the More info link outside it", async () => {
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "FEATURE",
+        apiURL,
+      },
+    });
+    const doc = await makeRSDoc(ops);
+    const stats = doc.querySelector(".caniuse-stats");
+    const list = stats.querySelector("dl.caniuse-groups");
+    // A dl only allows dt/dd, optionally wrapped in a div.
+    expect(list.querySelectorAll(":scope > div.caniuse-group")).toHaveSize(2);
+    expect(
+      list.querySelectorAll(":scope > div > dt.caniuse-type:first-child")
+    ).toHaveSize(2);
+    expect(
+      list.querySelectorAll(":scope > div > dd.caniuse-browsers:last-child")
+    ).toHaveSize(2);
+    // So the link is a sibling of the list, not inside it.
+    expect(stats.querySelector("a[href]").parentElement).toBe(stats);
   });
 });

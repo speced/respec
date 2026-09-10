@@ -10,12 +10,56 @@ export default css`
   column-gap: 2em;
 }
 
+/* The dl is a new wrapper around the groups, so it has to be transparent to
+   the flex row that used to hold them directly. */
+.caniuse-groups {
+  display: flex;
+  flex: 1;
+  column-gap: 2em;
+  margin: 0;
+}
+
+/* Narrow screens: stack the groups full width so the pills wrap instead of
+   forming tall single-file columns, and give "More info" its own row.
+   767px matches the only other breakpoint in ReSpec (respec.css.js). */
+@media (max-width: 767px) {
+  .caniuse-stats {
+    display: block;
+  }
+
+  .caniuse-groups {
+    flex-direction: column;
+  }
+
+  /* Space every group equally, including the first. Using padding rather than
+     row-gap avoids the second group getting gap plus padding while the first
+     gets padding alone. Generous, because each group's label hangs below its
+     own rule, and a tight gap reads as the label belonging to the group
+     beneath it. */
+  .caniuse-group {
+    padding-top: 1.5em;
+  }
+
+  .caniuse-more-info {
+    display: block;
+    text-align: right;
+    margin-top: 0.5em;
+  }
+}
+
+/* column-reverse, not column: a dl requires the dt before its dd, but the
+   label belongs visually below, straddling the rule under the browsers. */
 .caniuse-group {
   display: flex;
   flex: 1;
-  flex-direction: column;
+  flex-direction: column-reverse;
   justify-content: flex-end;
   flex-basis: auto;
+  /* Establish a stacking context so the label can be lifted above the dd's
+     bottom border. Reversing the visual order does not reverse paint order:
+     the dd is a later sibling, so its border would paint over the label and
+     strike the text through. */
+  position: relative;
 }
 
 .caniuse-browsers {
@@ -23,7 +67,7 @@ export default css`
   align-items: baseline;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: .2em;
+  margin: .2em 0 0;
   column-gap: .4em;
   border-bottom: 1px solid #ccc;
   row-gap: .4em;
@@ -37,10 +81,20 @@ export default css`
   font-size: .8em;
   margin-top: -.8em;
   font-weight: bold;
+  /* Above the dd's border, so the label's background breaks the rule instead
+     of the rule striking through the text. */
+  position: relative;
+  z-index: 1;
 }
 
+/* The label punches a hole in the rule above it, so its background has to match
+   the page. This was var(--bg, white), but --bg is defined nowhere in ReSpec,
+   so it always resolved to literal white: a white patch on a dark page.
+   Canvas/CanvasText are system colours that follow the used color-scheme, so
+   this tracks both the OS preference and ReSpec's own dark toggle. */
 .caniuse-type span {
-  background-color: var(--bg, white);
+  background-color: Canvas;
+  color: CanvasText;
   padding: 0 0.4em;
 }
 
@@ -83,7 +137,7 @@ img.caniuse-browser {
   font-size: .9em;
 }
 
-.caniuse-stats a[href] {
+.caniuse-more-info {
   white-space: nowrap;
   align-self: flex-end;
 }
@@ -118,6 +172,17 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 
 /* handle case when printing */
 @media print {
+  /* Browsers drop backgrounds when printing, so the label can no longer punch
+     a hole in the rule and the line would strike through the text. Drop the
+     rule instead and let the label sit under its group. */
+  .caniuse-browsers {
+    border-bottom: none;
+  }
+
+  .caniuse-type {
+    margin-top: 0;
+  }
+
   .caniuse-cell.y::before {
     content: "✔️";
     padding: 0.5em;
