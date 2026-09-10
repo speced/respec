@@ -68,7 +68,7 @@ describe("Core - exporter", () => {
     expect(dfn.hasAttribute("data-keep-me")).toBeTrue();
   });
 
-  it("moves the W3C style sheet to be last thing in documents head", async () => {
+  it("moves the W3C style sheets to be the last things in the document's head", async () => {
     const ops = makeStandardOps({ specStatus: "ED", group: "webapps" });
     ops.body = `
       <!-- add WebIDL style -->
@@ -81,7 +81,12 @@ describe("Core - exporter", () => {
       </pre>`;
     const doc = await getExportedDoc(await makeRSDoc(ops));
     const { lastElementChild } = doc.head;
+    // dark.css last, maturity sheet second-last: reversing them makes the theme toggle a
+    // no-op, so assert both positions rather than membership.
     expect(lastElementChild.href).toBe(
+      "https://www.w3.org/StyleSheets/TR/2021/dark.css"
+    );
+    expect(lastElementChild.previousElementSibling.href).toBe(
       "https://www.w3.org/StyleSheets/TR/2021/W3C-ED"
     );
   });

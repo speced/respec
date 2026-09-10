@@ -18,8 +18,13 @@ const bibrefsURLs = [
   new URL("https://respec.org/bibrefs?refs="),
 ];
 
-/** Without this, a service that connects and never replies blocks the fallback. */
-const FETCH_TIMEOUT_MS = 5000;
+/**
+ * Without this, a service that connects and never replies blocks the fallback.
+ *
+ * Both services share whatever time the caller allows, so keep this short enough that the
+ * second one still gets a turn.
+ */
+const FETCH_TIMEOUT_MS = 2000;
 
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.

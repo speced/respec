@@ -6,6 +6,7 @@
  * Set `conf.highlightVars = true` to enable.
  */
 import css from "../styles/datatype.css.js";
+import { insertStyle } from "./insert-style.js";
 
 export const name = "core/data-type";
 
@@ -17,9 +18,7 @@ export function run(conf) {
     return;
   }
 
-  const style = document.createElement("style");
-  style.textContent = css;
-  document.head.appendChild(style);
+  insertStyle(css);
 
   let section = null;
   const varMap = new Map();

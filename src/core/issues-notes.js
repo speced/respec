@@ -14,6 +14,7 @@
 import { addId, getIntlData, showError, showWarning } from "./utils.js";
 import css from "../styles/issues-notes.css.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 export const name = "core/issues-notes";
 
 const localizationStrings = {
@@ -404,13 +405,7 @@ export async function run(conf) {
       conf.github ?? null
     )
   );
-  const { head: headElem } = document;
-  headElem.insertBefore(
-    html`<style>
-      ${css}
-    </style>`,
-    headElem.querySelector("link")
-  );
+  insertStyle(css, { before: document.head.querySelector("link") });
   handleIssues(issuesAndNotes, ghIssues, conf);
   const ednotes = document.querySelectorAll(".ednote");
   ednotes.forEach(ednote => {

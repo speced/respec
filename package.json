@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "37.3.6",
+  "version": "37.4.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -38,7 +38,7 @@
     "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-jasmine": "^4.2.2",
     "eslint-plugin-prettier": "^5.5.6",
-    "globals": "^17.11.0",
+    "globals": "^17.12.0",
     "highlight.js": "^11.12.0",
     "hyperhtml": "^2.34.2",
     "idb": "^8.0.3",
@@ -59,10 +59,10 @@
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "serve": "^14.2.6",
     "serve-handler": "^6.1.7",
-    "simple-git-hooks": "^2.13.1",
+    "simple-git-hooks": "^2.14.0",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^7.0.2",
-    "vnu-jar": "^26.8.21",
+    "vnu-jar": "^26.8.30",
     "webidl2": "^24.5.0"
   },
   "scripts": {
@@ -81,7 +81,7 @@
     "server": "serve",
     "start": "node ./tools/dev-server.cjs",
     "test:build": "jasmine --random=false ./tests/test-build.cjs",
-    "test:headless": "jasmine --random=false ./tests/headless.cjs",
+    "test:headless": "jasmine --random=false ./tests/headless.cjs ./tests/darkmode-race.cjs",
     "test": "pnpm test:unit && pnpm test:integration",
     "test:unit": "karma start ./tests/unit/karma.conf.cjs --single-run",
     "test:integration": "karma start ./tests/spec/karma.conf.cjs --single-run"
@@ -89,7 +89,7 @@
   "dependencies": {
     "finalhandler": "^2.1.1",
     "marked": "^18.0.11",
-    "puppeteer": "^25.9.0",
+    "puppeteer": "^25.10.0",
     "sade": "^1.8.1",
     "serve-static": "^2.2.1"
   },
