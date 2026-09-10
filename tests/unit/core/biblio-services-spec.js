@@ -94,6 +94,8 @@ describe("Core - biblio bibliography services", () => {
   // back to the default fails here instead of failing whichever spec happened to be slow.
   it("reaches the mirror well inside a spec budget when Specref hangs", async () => {
     const BUDGET_MS = 3000;
+    /** Rejects the hanging request, standing in for its abort. */
+    let giveUpOnSpecref;
     window.fetch = (url, { signal } = {}) => {
       attempted.push(String(url).split("?")[0]);
       if (!String(url).startsWith(SPECREF)) {
@@ -102,17 +104,29 @@ describe("Core - biblio bibliography services", () => {
       // Connects and never replies, but honors the abort the module arms it with. Ignoring
       // the signal here would hang past any budget and say nothing about the timeout.
       return new Promise((_resolve, reject) => {
+        giveUpOnSpecref = () => reject(new Error("hanging request abandoned"));
         signal?.addEventListener("abort", () => reject(signal.reason));
       });
     };
+
+    const update = updateFromNetwork(["TESTREF"]);
     const started = performance.now();
-    const data = await Promise.race([
-      updateFromNetwork(["TESTREF"]),
+    await Promise.race([
+      update,
       new Promise(resolve =>
-        setTimeout(() => resolve("over budget"), BUDGET_MS)
+        setTimeout(() => {
+          // Over budget means the module is still waiting on Specref. Cut it loose so the
+          // fallback runs against this stub: leaving it pending would let the real `fetch`,
+          // restored in `afterEach`, serve the mirror from the network mid-suite.
+          giveUpOnSpecref?.();
+          resolve();
+        }, BUDGET_MS)
       ),
     ]);
-    expect(performance.now() - started).toBeLessThan(BUDGET_MS);
+    const elapsed = performance.now() - started;
+    const data = await update;
+
+    expect(elapsed).toBeLessThan(BUDGET_MS);
     expect(data).toEqual(ENTRY);
     expect(attempted).toEqual([SPECREF, MIRROR]);
   });
