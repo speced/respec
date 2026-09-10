@@ -128,4 +128,33 @@ dfn {
   max-height: 30vh;
   overflow: auto;
 }
+
+.dfn-panel .dfn-panel-lt {
+  list-style: none;
+  padding: 0;
+}
+
+.dfn-panel .dfn-panel-lt li {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  margin-left: 0;
+}
+
+.dfn-panel .dfn-panel-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.2em;
+  border: 1px solid #ccc;
+  border-radius: 0.2em;
+  background: transparent;
+  font-size: 0.85em;
+  cursor: pointer;
+  line-height: 1;
+  color: inherit;
+}
+
+.dfn-panel .dfn-panel-copy-btn:hover {
+  background: #eee;
+}
 `;
