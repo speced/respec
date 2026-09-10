@@ -46,6 +46,25 @@ function panelListener() {
         displayPanel(dfn, panel, coords);
         break;
       }
+      case "showBiblio": {
+        hidePanel(panel);
+        /** @type {HTMLAnchorElement | null} */
+        const bibLink = /** @type {HTMLAnchorElement | null} */ (
+          target.closest("a.bibref[href^='#bib-']")
+        );
+        if (!bibLink) break;
+        const bibId = bibLink.getAttribute("href")?.slice(1);
+        if (!bibId) break;
+        panel = document.getElementById(`biblio-panel-for-${bibId}`);
+        if (!panel) break;
+        // Prevent the default scroll-to-references navigation.
+        event.preventDefault();
+        const bibCoords = deriveCoordinates(
+          /** @type {MouseEvent|KeyboardEvent} */ (event)
+        );
+        displayPanel(bibLink, panel, bibCoords);
+        break;
+      }
       case "dock": {
         if (panel) {
           panel.style.left = "";
@@ -98,7 +117,13 @@ function deriveAction(event) {
   if (target.closest("dfn:not([data-cite]), .index-term")) {
     return hitALink ? "none" : "show";
   }
+  if (target.closest("a.bibref[href^='#bib-']")) {
+    return "showBiblio";
+  }
   if (target.closest(".dfn-panel")) {
+    if (target.closest(".biblio-ref")) {
+      return "none";
+    }
     if (hitALink) {
       return target.classList.contains("self-link") ? "hide" : "dock";
     }
