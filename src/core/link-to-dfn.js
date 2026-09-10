@@ -170,7 +170,8 @@ function collectDfns(title) {
       if ("idl" in dfn.dataset || dfnType !== "dfn") {
         result.get(dfnFor)?.set("idl", dfn);
       }
-      addId(dfn, "dfn", title);
+      const idText = dfnFor ? `${dfnFor}-${title}` : title;
+      addId(dfn, "dfn", idText);
     }
   }
 
