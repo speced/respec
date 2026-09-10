@@ -320,13 +320,13 @@ function showLinkingError(elems) {
   elems.forEach(elem => {
     const msg = `Found linkless \`<a>\` element with text "${elem.textContent}" but no matching \`<dfn>\``;
     const title = "Linking error: no matching `<dfn>`";
-    // Check if the link is inside a data-link-for section — a common footgun
-    // where [=global-term=] gets scoped to the interface and fails.
-    const scopedSection = /** @type {HTMLElement | null} */ (
-      elem.closest("[data-link-for]")
-    );
-    const scopingNote = scopedSection
-      ? ` This link is inside a \`data-link-for="${scopedSection.dataset.linkFor}"\` section — \`[=term=]\` links are scoped to that context. To link to a global concept instead, either add \`data-link-for=""\` on this \`<a>\` or move it outside the scoped section.`
+    // The nearest [data-link-for] sets the scope (as in getLinkTargets), so an
+    // empty one, or one on the <a> itself (from `[=Iface/term=]`), is the
+    // author's own doing and needs no hint.
+    const scope = elem.closest("[data-link-for]");
+    const linkFor = scope === elem ? "" : scope?.getAttribute("data-link-for");
+    const scopingNote = linkFor
+      ? ` This link is inside a \`data-link-for="${linkFor}"\` section — \`[=term=]\` links are scoped to that context. To link to a global concept instead, either add \`data-link-for=""\` on this \`<a>\` or move it outside the scoped section.`
       : "";
     const hint = `Add a matching \`<dfn>\` element, ${docLink`use ${"[data-cite]"} to link to an external definition, or enable ${"[xref]"} for automatic cross-spec linking.`}${scopingNote}`;
     showWarning(msg, name, { title, hint, elements: [elem] });
