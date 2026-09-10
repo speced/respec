@@ -46,15 +46,21 @@ describe("Core - ID headers", () => {
       let ariaLabel = anchor.getAttribute("aria-label");
       expect(ariaLabel).toBe("Permalink for this Section");
 
-      const custom = doc.querySelector("#custom-id + a.self-link");
+      const custom = doc.querySelector(
+        "#custom-id > div.header-wrapper > h2 + a.self-link"
+      );
       ariaLabel = custom.getAttribute("aria-label");
       expect(ariaLabel).toBe("Permalink for Section 3.");
 
-      const appendix = doc.querySelector("#a1 + a.self-link");
+      const appendix = doc.querySelector(
+        "#a1 > div.header-wrapper > h2 + a.self-link"
+      );
       ariaLabel = appendix.getAttribute("aria-label");
       expect(ariaLabel).toBe("Permalink for Appendix A.");
 
-      const deepAppendix = doc.querySelector("#a2 + a.self-link");
+      const deepAppendix = doc.querySelector(
+        "#a2 > div.header-wrapper > h3 + a.self-link"
+      );
       ariaLabel = deepAppendix.getAttribute("aria-label");
       expect(ariaLabel).toBe("Permalink for Appendix A.1");
 
