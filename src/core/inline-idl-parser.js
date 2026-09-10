@@ -91,11 +91,10 @@ function parseInlineIDL(str) {
   // If it's got [[ string ]], then split as an internal slot
   const isSlot = isProbablySlotRegex.test(str);
   const splitter = isSlot ? slotSplitRegex : methodSplitRegex;
-  const [forPart, childString] = str.split(splitter);
-  if (isSlot && forPart && !childString) {
-    throw new SyntaxError(
-      `Internal slot missing "for" part. Expected \`{{ InterfaceName/${forPart}}}\` }.`
-    );
+  let [forPart, childString] = str.split(splitter);
+  if (isSlot && !childString && forPart.startsWith("[[")) {
+    childString = forPart;
+    forPart = "";
   }
   const tokens = forPart
     .split(/[./]/)
