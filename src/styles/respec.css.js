@@ -148,6 +148,7 @@ aside.example .marker > a.self-link {
 .header-wrapper {
   display: flex;
   align-items: baseline;
+  width: 100%;
 }
 
 /* :where() again, for the same reason as the rule below: these four IDs would
