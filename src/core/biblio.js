@@ -21,9 +21,8 @@ const bibrefsURLs = [
 /**
  * Without this, a service that connects and never replies blocks the fallback.
  *
- * Keep it well under the suite's per-spec budget, which jasmine defaults to 5000ms: at 5000
- * the fallback started at the same instant a spec gave up, so a slow Specref failed the spec
- * that the second service existed to rescue.
+ * Both services share whatever time the caller allows, so keep this short enough that the
+ * second one still gets a turn.
  */
 const FETCH_TIMEOUT_MS = 2000;
 

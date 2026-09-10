@@ -88,10 +88,6 @@ describe("Core - biblio bibliography services", () => {
     expect(attempted).toEqual([SPECREF, MIRROR]);
   });
 
-  // A Specref that connects and never replies is the case the mirror exists for, and the
-  // whole exchange has to finish inside one spec's budget or the rescue is worthless. This
-  // spec sets its own budget rather than reading jasmine's, so raising the module's timeout
-  // back to the default fails here instead of failing whichever spec happened to be slow.
   it("reaches the mirror well inside a spec budget when Specref hangs", async () => {
     const BUDGET_MS = 3000;
     /** Rejects the hanging request, standing in for its abort. */
@@ -101,8 +97,6 @@ describe("Core - biblio bibliography services", () => {
       if (!String(url).startsWith(SPECREF)) {
         return Promise.resolve(jsonResponse(ENTRY));
       }
-      // Connects and never replies, but honors the abort the module arms it with. Ignoring
-      // the signal here would hang past any budget and say nothing about the timeout.
       return new Promise((_resolve, reject) => {
         giveUpOnSpecref = () => reject(new Error("hanging request abandoned"));
         signal?.addEventListener("abort", () => reject(signal.reason));
@@ -115,9 +109,8 @@ describe("Core - biblio bibliography services", () => {
       update,
       new Promise(resolve =>
         setTimeout(() => {
-          // Over budget means the module is still waiting on Specref. Cut it loose so the
-          // fallback runs against this stub: leaving it pending would let the real `fetch`,
-          // restored in `afterEach`, serve the mirror from the network mid-suite.
+          // Cut the hanging request loose so the fallback runs against this stub. Left
+          // pending, it outlives `afterEach` and serves the mirror from the real network.
           giveUpOnSpecref?.();
           resolve();
         }, BUDGET_MS)
