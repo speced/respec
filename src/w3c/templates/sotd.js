@@ -262,7 +262,7 @@ function renderNotRec(conf) {
         <a href="${processLink}#dfn-wide-review">wide review</a>, is intended to
         gather
         <a href="${conf.implementationReportURI}">implementation experience</a>,
-        and has commitments from Working Group members to
+        and has commitments from working group members to
         <a href="https://www.w3.org/policies/patent-policy/#sec-Requirements"
           >royalty-free licensing</a
         >
@@ -335,7 +335,7 @@ function renderIsRec(conf) {
       A W3C Recommendation is a specification that, after extensive
       consensus-building, is endorsed by
       <abbr title="World Wide Web Consortium">W3C</abbr> and its Members, and
-      has commitments from Working Group members to
+      has commitments from working group members to
       <a href="https://www.w3.org/policies/patent-policy/#sec-Requirements"
         >royalty-free licensing</a
       >
