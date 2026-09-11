@@ -496,7 +496,7 @@ function noteForMemberSubmission(conf) {
     potential input to the
     <a href="https://www.w3.org/policies/process/">W3C Process</a>. A
     <a href="${teamComment}">W3C Team Comment</a> has been published in
-    conjunction with this Member Submission. Publication of acknowledged member
+    conjunction with this W3C Member Submission. Publication of acknowledged member
     submissions at the W3C site is one of the benefits of
     <a href="https://www.w3.org/Consortium/Prospectus/Joining">
       W3C Membership</a
