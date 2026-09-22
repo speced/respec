@@ -1,5 +1,7 @@
 // @ts-check
 
+const fs = require("fs");
+const path = require("path");
 const { exec } = require("child_process");
 const http = require("http");
 const serveHandler = require("serve-handler");
@@ -69,6 +71,25 @@ describe("Headless (examples)", () => {
     );
     const logs = await exe.run();
     expect(logs).toContain("Intercepted");
+  });
+
+  it("reports a source line with --experimental-sourcemap", async () => {
+    const fixturePath = "tests/fixtures/sourcemap-error.html";
+    const badRef = "[[NOT-A-REAL-SPEC-XYZ]]";
+    const fixtureHtml = fs.readFileSync(
+      path.join(__dirname, "fixtures/sourcemap-error.html"),
+      "utf8"
+    );
+    const badRefLine = fixtureHtml
+      .slice(0, fixtureHtml.indexOf(badRef))
+      .split("\n").length;
+
+    const exe = toExecutable(
+      `node ./tools/respec2html.js http://localhost:${port}/${fixturePath} ` +
+        `--timeout ${processingTimeout} --verbose --experimental-sourcemap`
+    );
+    const logs = await exe.run();
+    expect(logs).toContain(`${fixturePath}:${badRefLine}`);
   });
 });
 

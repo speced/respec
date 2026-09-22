@@ -15,9 +15,15 @@ import {
   regExpEscape,
   showWarning,
 } from "./utils.js";
+import {
+  inSourcemapMode,
+  removeMarkers,
+  tagOriginalSource,
+} from "./sourcemap.js";
 import { html } from "./import-maps.js";
 import { idlStringToHtml } from "./inline-idl-parser.js";
 import { renderInlineCitation } from "./render-biblio.js";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/inlines";
 /** @type {Record<string, boolean>} */
@@ -376,6 +382,8 @@ export function setInlineContent(elem, text) {
  * @param {Conf} conf
  */
 export function run(conf) {
+  sub("beforesave", removeMarkers);
+
   const abbrMap = new Map();
   document.normalize();
   if (!document.querySelector("section#conformance")) {
@@ -436,6 +444,7 @@ export function run(conf) {
         df.append(t);
         continue;
       }
+      const matchStart = df.childNodes.length;
       switch (true) {
         case t.startsWith("{{"):
           df.append(inlineXrefMatches(t, txt));
@@ -468,6 +477,7 @@ export function run(conf) {
           df.append(inlineRFC2119Matches(t));
           break;
       }
+      if (inSourcemapMode()) tagOriginalSource(df, matchStart, t);
     }
     txt.replaceWith(df);
   }

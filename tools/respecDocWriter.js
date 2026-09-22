@@ -1,6 +1,11 @@
 /**
  * Exports toHTML() method, allowing programmatic control of the spec generator.
  */
+import {
+  getAnnotationFormat,
+  respondAnnotated,
+  tightenErrorLocations,
+} from "./sourcemap.js";
 import path from "path";
 import puppeteer from "puppeteer";
 import { readFile } from "fs/promises";
@@ -20,6 +25,7 @@ const LAUNCH_TIMEOUT = 120000;
  * @param {object} [options]
  * @param {number} [options.timeout] Milliseconds before processing should timeout.
  * @param {boolean} [options.useLocal] Use locally installed ReSpec instead of the one in document.
+ * @param {boolean} [options.experimentalSourcemap] Experimental: annotate the document with markers so errors/warnings can report a source line. Markers are stripped from the returned `html`.
  * @param {(error: RsError) => void} [options.onError] What to do if a ReSpec processing has an error. Does nothing by default.
  * @param {(warning: RsError) => void} [options.onWarning] What to do if a ReSpec processing has a warning. Does nothing by default.
  * @param {(msg: string, timeRemaining: number) => void} [options.onProgress]
@@ -36,6 +42,7 @@ export async function toHTML(src, options = {}) {
     disableGPU = false,
     devtools = false,
     useLocal = false,
+    experimentalSourcemap = false,
   } = options;
   if (typeof options.onError !== "function") {
     options.onError = noop;
@@ -58,11 +65,15 @@ export async function toHTML(src, options = {}) {
   const errors = [];
   /** @type {RsError[]} */
   const warnings = [];
+  /** @type {Map<string, string>} */
+  const rawSources = new Map();
   const onError = error => {
+    tightenErrorLocations(error, rawSources);
     errors.push(error);
     options.onError(error);
   };
   const onWarning = warning => {
+    tightenErrorLocations(warning, rawSources);
     warnings.push(warning);
     options.onWarning(warning);
   };
@@ -85,11 +96,13 @@ export async function toHTML(src, options = {}) {
     const page = await browser.newPage();
 
     handleConsoleMessages(page, onError, onWarning);
-    if (useLocal) {
-      await useLocalReSpec(page, log);
-    }
-
     const url = new URL(src);
+    await setupInterception(page, {
+      useLocal,
+      sourcemap: experimentalSourcemap ? { mainUrl: url, rawSources } : false,
+      log,
+    });
+
     log(`Navigating to ${url}`);
     const response = await page.goto(url.href, { timeout: timer.remaining });
     if (
@@ -123,48 +136,64 @@ export async function toHTML(src, options = {}) {
 }
 
 /**
- * Replace the ReSpec script in document with the locally installed one. This is
- * useful in CI env or when you want to pin the ReSpec version.
- *
- * @assumption The ReSpec script being used in the document is hosted on either
- * w3.org or w3c.github.io or speced.github.io. If this assumption doesn't hold
- * true (interception fails), this function will timeout.
- *
- * The following ReSpec URLs are supported:
- * https://www.w3.org/Tools/respec/${profile}
- * https://w3c.github.io/respec/builds/${profile}.js
- * https://speced.github.io/respec/builds/${profile}.js
- * file:///home/path-to-respec/builds/${profile}.js
- * http://localhost:PORT/builds/${profile}.js
- * https://example.com/builds/${profile}.js
- *
+ * Sets up request interception for `useLocal` and `sourcemap` together:
+ * Puppeteer only tolerates one "request" handler deciding each request's
+ * outcome.
  * @param {import("puppeteer").Page} page
- * @param {(msg: any) => void} log
+ * @param {object} options
+ * @param {boolean} options.useLocal
+ * @param {false | { mainUrl: URL, rawSources: Map<string, string> }} options.sourcemap
+ * @param {(msg: any) => void} options.log
  */
-async function useLocalReSpec(page, log) {
+async function setupInterception(page, { useLocal, sourcemap, log }) {
+  if (!useLocal && !sourcemap) return;
   await page.setRequestInterception(true);
 
   page.on("request", async request => {
-    if (!isRespecScript(request)) {
+    try {
+      if (useLocal && isRespecScript(request)) {
+        await respondWithLocalReSpec(request, log);
+        return;
+      }
+      if (sourcemap) {
+        const format = await getAnnotationFormat(
+          request.url(),
+          sourcemap.mainUrl.href,
+          page
+        );
+        if (format) {
+          await respondAnnotated(request, format, sourcemap.rawSources, log);
+          return;
+        }
+      }
       await request.continue();
-      return;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      log(`Interception error for ${request.url()}: ${message}`);
+      await request.continue().catch(() => {});
     }
+  });
+}
 
-    const url = new URL(request.url());
-    const respecProfileRegex = /\/(respec-[\w-]+)(?:\.js)?$/;
-    const profile = url.pathname.match(respecProfileRegex)[1];
-    const localPath = path.join(
-      import.meta.dirname,
-      "..",
-      "builds",
-      `${profile}.js`
-    );
-    const relPath = path.relative(process.cwd(), localPath);
-    log(`Intercepted ${url} to respond with ${relPath}`);
-    await request.respond({
-      contentType: "text/javascript; charset=utf-8",
-      body: await readFile(localPath),
-    });
+/**
+ * @param {import("puppeteer").HTTPRequest} request
+ * @param {(msg: any) => void} log
+ */
+async function respondWithLocalReSpec(request, log) {
+  const url = new URL(request.url());
+  const respecProfileRegex = /\/(respec-[\w-]+)(?:\.js)?$/;
+  const profile = url.pathname.match(respecProfileRegex)[1];
+  const localPath = path.join(
+    import.meta.dirname,
+    "..",
+    "builds",
+    `${profile}.js`
+  );
+  const relPath = path.relative(process.cwd(), localPath);
+  log(`Intercepted ${url} to respond with ${relPath}`);
+  await request.respond({
+    contentType: "text/javascript; charset=utf-8",
+    body: await readFile(localPath),
   });
 }
 
@@ -289,6 +318,8 @@ async function evaluateHTML(timer) {
  * @property {HTMLElement[]} [ReSpecError.elements]
  * @property {string} [ReSpecError.title]
  * @property {string} [ReSpecError.details]
+ * @property {(string | null)[]} [ReSpecError.location] source `path:line` (or `path:start-end`) per offending element
+ * @property {(string | null)[]} [ReSpecError.originalText] raw matched inline-syntax text per offending element, used to narrow `location`
  *
  * @typedef {RsErrorBasic | ReSpecError} RsError
  */

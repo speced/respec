@@ -2,9 +2,15 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
+import {
+  getSourcemapLocation,
+  getSourcemapOriginalText,
+  inSourcemapMode,
+} from "./sourcemap.js";
 import { lang as docLang } from "./l10n.js";
 import { html } from "./import-maps.js";
 import { pub } from "./pubsubhub.js";
+
 export const name = "core/utils";
 
 /** Matches ASCII apostrophe or U+2019 RIGHT SINGLE QUOTATION MARK possessive suffix. */
@@ -892,7 +898,16 @@ export class RespecError extends Error {
   constructor(message, plugin, options) {
     super(message, { ...(options.cause && { cause: options.cause }) });
     const name = options.isWarning ? "ReSpecWarning" : "ReSpecError";
-    Object.assign(this, { message, plugin, name, ...options });
+    Object.assign(this, {
+      message,
+      plugin,
+      name,
+      ...options,
+      ...(inSourcemapMode() && {
+        location: options.elements?.map(getSourcemapLocation),
+        originalText: options.elements?.map(getSourcemapOriginalText),
+      }),
+    });
     if (options.elements) {
       options.elements.forEach(elem =>
         markAsOffending(elem, message, options.title)
@@ -903,7 +918,8 @@ export class RespecError extends Error {
   toJSON() {
     const { message, name, stack } = this;
     // @ts-expect-error https://github.com/microsoft/TypeScript/issues/26792
-    const { plugin, hint, elements, title, details } = this;
+    const { plugin, hint, elements, title, details, location, originalText } =
+      this;
     return {
       message,
       name,
@@ -912,6 +928,8 @@ export class RespecError extends Error {
       elements,
       title,
       details,
+      location,
+      originalText,
       stack,
       ...(this.cause instanceof Error && {
         cause: {

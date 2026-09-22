@@ -19,7 +19,7 @@ class Renderer extends marked.Renderer {
     return styleText("italic", this.parser.parseInline(token.tokens));
   }
   codespan(token) {
-    return styleText("underline", unescape(token.text));
+    return styleText("cyan", `\`${unescape(token.text)}\``);
   }
   paragraph(token) {
     return unescape(this.parser.parseInline(token.tokens));
@@ -108,9 +108,13 @@ class Logger {
       console.error(
         " ",
         styleText("bold", paddedTitle),
-        this._formatMarkdown(value)
+        this._reindent(this._formatMarkdown(value), paddedTitle.length + 3)
       );
     };
+    print(
+      "Line",
+      rsError.location && rsError.location.filter(Boolean).join(", ")
+    );
     print("Count", rsError.elements && String(rsError.elements.length));
     print("Plugin", rsError.plugin);
     print("Hint", rsError.hint);
@@ -129,6 +133,13 @@ class Logger {
       !!rsError.stack &&
       (!!rsError.cause?.stack || rsError.plugin === "unknown")
     );
+  }
+
+  /**
+   * @param {string} text
+   */
+  _reindent(text, width = 0) {
+    return text.replaceAll("\n", `\n${" ".repeat(width)}`);
   }
 }
 
@@ -210,6 +221,11 @@ cli
     "Use locally installed ReSpec instead of the one in document.",
     false
   )
+  .option(
+    "--experimental-sourcemap",
+    "Experimental: report a source line for errors/warnings, by rewriting the document (and its data-includes) on the fly.",
+    false
+  )
   .option("-e, --haltonerror", "Abort if the spec has any errors.", false)
   .option(
     "-w, --haltonwarn",
@@ -286,6 +302,7 @@ async function run(source, destination, options, log) {
   const { html, errors, warnings } = await toHTML(src, {
     timeout: options.timeout * 1000,
     useLocal: options["use-local"],
+    experimentalSourcemap: options["experimental-sourcemap"],
     onError: log.error.bind(log),
     onWarning: log.warn.bind(log),
     onProgress: log.info.bind(log),
