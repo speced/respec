@@ -12,6 +12,7 @@ export const name = "core/best-practices";
 const localizationStrings = {
   en: {
     best_practice: "Best Practice ",
+    best_practice_summary: "Best Practices Summary",
   },
   ja: {
     best_practice: "最良実施例 ",
@@ -21,6 +22,10 @@ const localizationStrings = {
   },
   zh: {
     best_practice: "最佳实践 ",
+  },
+  fr: {
+    best_practice: "Bonne pratique ",
+    best_practice_summary: "Résumé des bonnes pratiques",
   },
 };
 const l10n = getIntlData(localizationStrings);
@@ -33,8 +38,13 @@ export function run() {
   const summaryItems = bpSummary ? document.createElement("ul") : null;
   [...bps].forEach((bp, num) => {
     const id = addId(bp, "bp");
+    const customLabel = bp.dataset.label;
+    const rawLabel = customLabel || l10n.best_practice;
+    const label = `${rawLabel.trimEnd()} `;
+    const bdi = html`<bdi>${label}${num + 1}</bdi>`;
+    if (!customLabel) bdi.lang = lang;
     const localizedBpName = html`<a class="marker self-link" href="${`#${id}`}"
-      ><bdi lang="${lang}">${l10n.best_practice}${num + 1}</bdi></a
+      >${bdi}</a
     >`;
 
     // Make the summary items, if we have a summary
@@ -57,7 +67,9 @@ export function run() {
   });
   if (bps.length) {
     if (bpSummary) {
-      bpSummary.appendChild(html`<h1>Best Practices Summary</h1>`);
+      const summaryLabel =
+        bpSummary.dataset.label || l10n.best_practice_summary;
+      bpSummary.appendChild(html`<h1>${summaryLabel}</h1>`);
       if (summaryItems) bpSummary.appendChild(summaryItems);
     }
   } else if (bpSummary) {
