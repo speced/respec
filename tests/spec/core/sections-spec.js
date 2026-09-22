@@ -22,10 +22,11 @@ describe("Core — sections", () => {
     const doc = await makeRSDoc(ops);
     for (let i = 2; i <= 6; i++) {
       const context = `h${i}`;
-      const h = doc.getElementById(context);
-      const section = h.parentElement.parentElement;
+      const section = doc.getElementById(context);
+      const h = section.querySelector(`h${i}`);
       expect(section.localName).withContext(context).toBe("section");
-      expect(section.id).withContext(context).toBe(`section-${i}`);
+      expect(section.id).withContext(context).toBe(context);
+      expect(h.id).withContext(context).toBe(`section-${i}`);
     }
   });
 
@@ -46,10 +47,12 @@ describe("Core — sections", () => {
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     for (let i = 2; i <= 6; i++) {
-      const h = doc.getElementById(`h${i}`);
-      const section = h.parentElement.parentElement;
+      const id = `h${i}`;
+      const section = doc.getElementById(id);
+      const h = section.querySelector(`h${i}`);
       expect(section.localName).toBe("section");
-      expect(section.id).toBe(`section-${i}`);
+      expect(section.id).toBe(id);
+      expect(h.id).toBe(`section-${i}`);
     }
   });
 
@@ -147,7 +150,7 @@ describe("Core — sections", () => {
     const section = doc.getElementById("h2").closest("section");
     expect(section.classList).toContain("appendix");
 
-    const heading = section.querySelector("#h2");
+    const heading = section.querySelector("h2");
     expect(heading.localName).toBe("h2");
     expect(heading.textContent).toBe("A. Appendix A");
 

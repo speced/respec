@@ -164,7 +164,12 @@ function getSectionTree(parent) {
       continue;
     }
     const title = header.textContent;
-    addId(section, undefined, title);
+    if (header.id && !section.id) {
+      section.id = header.id;
+      header.removeAttribute("id");
+    } else {
+      addId(section, undefined, title);
+    }
     sections.push({
       element: section,
       header,
