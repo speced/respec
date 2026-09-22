@@ -49,6 +49,11 @@ const localizationStrings = {
     file_a_bug: "Nota un bug",
     participate: "Participe:",
   },
+  fr: {
+    file_a_bug: "Signaler un problème",
+    participate: "Participer :",
+    commit_history: "Historique des modifications",
+  },
   de: {
     commit_history: "Revisionen",
     file_a_bug: "Fehler melden",
@@ -100,7 +105,27 @@ export async function run(conf) {
   }
   const branch = ghConf.branch || "gh-pages";
   const issueBase = new URL("./issues/", ghURL).href;
-  const newIssuesURL = new URL("./new/choose", issueBase).href;
+  let newIssuesURL;
+  if (
+    typeof conf.github === "object" &&
+    conf.github.hasOwnProperty("newIssuesURL")
+  ) {
+    try {
+      const url = new URL(String(conf.github.newIssuesURL));
+      if (url.protocol !== "https:") {
+        const msg = docLink`${"[github.newIssuesURL]"} must use HTTPS. (${String(conf.github.newIssuesURL)}).`;
+        rejectGithubPromise(msg);
+        return;
+      }
+      newIssuesURL = url.href;
+    } catch {
+      const msg = docLink`${"[github.newIssuesURL]"} is not a valid URL. (${String(conf.github.newIssuesURL)}).`;
+      rejectGithubPromise(msg);
+      return;
+    }
+  } else {
+    newIssuesURL = new URL("./new/choose", issueBase).href;
+  }
 
   // Allow custom pullsURL and commitHistoryURL for monorepo scenarios
   let pullsURL;
@@ -166,8 +191,8 @@ export async function run(conf) {
     }
   }
 
+  /** @type {Record<string, any>} */
   const newProps = {
-    edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubToken: undefined,
     githubUser: undefined,
     issueBase,
@@ -176,6 +201,9 @@ export async function run(conf) {
     pullBase: pullsURL,
     shortName: repo,
   };
+  if (!conf.hasOwnProperty("edDraftURI")) {
+    newProps.edDraftURI = `https://${org.toLowerCase()}.github.io/${repo}/`;
+  }
   // Assign new properties, but retain existing ones
   let githubAPI = "https://respec.org/github";
   if (conf.githubAPI) {
