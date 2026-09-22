@@ -192,8 +192,22 @@ aside.example .marker > a.self-link {
   }
 }
 
+#back-to-top {
+  text-align: end;
+}
+
+#back-to-top a {
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-decoration: none;
+}
+
 @media print {
   .removeOnSave {
+    display: none;
+  }
+
+  #back-to-top {
     display: none;
   }
 }
