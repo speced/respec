@@ -14,6 +14,7 @@ const modules = [
   import("../src/core/reindent.js"),
   import("../src/core/title.js"),
   import("../src/w3c/level.js"),
+  import("../src/w3c/cg-spec.js"),
   import("../src/w3c/headers.js"),
   import("../src/w3c/abstract.js"),
   import("../src/core/data-transform.js"),
