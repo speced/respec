@@ -6,6 +6,7 @@ export const name = "w3c/defaults";
 import {
   W3CNotes,
   bgStatus,
+  cgRedesignStatus,
   cgStatus,
   recTrackStatus,
   registryTrackStatus,
@@ -81,6 +82,7 @@ export function run(conf) {
   }
 
   validateStatusForGroup(conf);
+  validateCGMaturity(conf);
   processLogos(/** @type {NormalizedConf} */ (conf));
 }
 
@@ -107,6 +109,34 @@ function processLogos(conf) {
     if (specStatus === "Member-SUBM") {
       conf.logos.push(memSubmissionLogo);
     }
+  }
+}
+
+const CG_MATURITIES = ["draft", "transferred", "unmaintained"];
+
+/**
+ * The maturity stage of a CG specification, which is a separate axis from its
+ * status: either of the two redesign statuses can be at any of the three
+ * stages, and the stage changes the markup rather than a value.
+ *
+ * @param {Conf} conf
+ */
+function validateCGMaturity(conf) {
+  // Silently irrelevant elsewhere: nothing about a document that is not one of
+  // these two statuses should change because this option exists.
+  if (!cgRedesignStatus.includes(conf.specStatus ?? "")) return;
+
+  if (conf.cgMaturity === undefined) {
+    conf.cgMaturity = "draft";
+    return;
+  }
+
+  if (!CG_MATURITIES.includes(conf.cgMaturity)) {
+    const choices = codedJoinOr(CG_MATURITIES, { quotes: true });
+    const msg = docLink`\`"${conf.cgMaturity}"\` is not a supported value for the ${"[cgMaturity]"} configuration option.`;
+    const hint = `Please use one of: ${choices}. Automatically falling back to \`"draft"\`.`;
+    showError(msg, name, { hint });
+    conf.cgMaturity = "draft";
   }
 }
 
@@ -138,7 +168,11 @@ function validateStatusForGroup(conf) {
 
   switch (groupType) {
     case "cg": {
-      if (![...cgStatus, "unofficial", "UD"].includes(specStatus)) {
+      if (
+        ![...cgStatus, ...cgRedesignStatus, "unofficial", "UD"].includes(
+          specStatus
+        )
+      ) {
         const msg = docLink`W3C Community Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
         const supportedStatus = codedJoinOr(cgStatus, { quotes: true });
         const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"CG-DRAFT"\`.`;

@@ -146,6 +146,8 @@ export const status2text = {
   "editor-draft-finding": "Draft TAG Finding",
   "CG-DRAFT": "Draft Community Group Report",
   "CG-FINAL": "Final Community Group Report",
+  "CG-LIVING": "Community Group Living Specification",
+  "CG-SNAPSHOT": "Community Group Snapshot",
   "BG-DRAFT": "Draft Business Group Report",
   "BG-FINAL": "Final Business Group Report",
 };
@@ -189,8 +191,14 @@ export const recTrackStatus = [
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const tagStatus = ["draft-finding", "finding", "editor-draft-finding"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
+// The two statuses of the CG specification redesign, which uses the cg-assets
+// style sheets and scripts rather than the /StyleSheets/TR/2021/cg-* ones.
+// Deliberately kept out of `cgStatus`, so that nothing an existing Community
+// Group report does changes: these join only the lists they have to be in to be
+// treated as Community Group reports at all.
+export const cgRedesignStatus = ["CG-LIVING", "CG-SNAPSHOT"];
 export const bgStatus = ["BG-DRAFT", "BG-FINAL"];
-export const cgbgStatus = [...cgStatus, ...bgStatus];
+export const cgbgStatus = [...cgStatus, ...cgRedesignStatus, ...bgStatus];
 export const trStatus = [
   ...W3CNotes,
   ...recTrackStatus,
@@ -199,6 +207,7 @@ export const trStatus = [
 export const noTrackStatus = [
   "base",
   ...cgStatus,
+  ...cgRedesignStatus,
   ...bgStatus,
   "editor-draft-finding",
   "draft-finding",
