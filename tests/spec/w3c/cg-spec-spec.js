@@ -228,10 +228,12 @@ describe("W3C — CG specification redesign", () => {
     for (const specStatus of cgRedesignStatus) {
       it(`treats ${specStatus} as a Community Group report`, async () => {
         const doc = await makeRSDoc(cgOps({ specStatus }));
-        // The CG header and SotD templates, not the Working Group ones.
-        expect(doc.querySelector(".head .copyright").textContent).toContain(
-          "Community Contributor License Agreement"
-        );
+        // Community Group treatment, not Working Group treatment. Which of the
+        // two community agreements applies is per status, and is asserted in
+        // cg-header-spec.js.
+        expect(
+          doc.querySelector(".box--head .copyright").textContent
+        ).toContain("W3C Community");
         expect(doc.getElementById("sotd").textContent).toContain(
           "not a W3C Standard"
         );
