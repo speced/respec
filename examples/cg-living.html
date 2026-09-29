@@ -10,12 +10,14 @@
         // A living specification in the Community Group redesign. Use
         // "CG-SNAPSHOT" for an archival copy of one.
         specStatus: "CG-LIVING",
-        // "draft" (the default), "transferred" or "unmaintained".
+        // "draft" (default), "transferred" or "unmaintained".
         cgMaturity: "draft",
         // Required: the collected status metadata is looked up by short name.
         shortName: "scheduling-apis",
         group: "wicg",
         github: "WICG/scheduling-apis",
+        // Required if cgMaturity: "transferred"
+        // transferredTo: { name: "ACME", url: "https://acme.org/" },
         editors: [
           {
             name: "Your Name",

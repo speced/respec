@@ -93,10 +93,12 @@ import {
   showError,
   showWarning,
 } from "../core/utils.js";
+import cgHeadersTmpl from "./templates/cg-headers.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
 import { html } from "../core/import-maps.js";
+import { isCGSpec } from "./cg-assets.js";
 import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
 
@@ -531,7 +533,12 @@ export async function run(conf) {
   };
 
   // insert into document
-  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf, options);
+  const headerTmpl = isCGSpec(conf)
+    ? cgHeadersTmpl
+    : conf.isCGBG
+      ? cgbgHeadersTmpl
+      : headersTmpl;
+  const header = headerTmpl(conf, options);
   document.body.prepend(header);
   document.body.classList.add("h-entry");
 
