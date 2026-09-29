@@ -128,16 +128,43 @@ function validateCGMaturity(conf) {
 
   if (conf.cgMaturity === undefined) {
     conf.cgMaturity = "draft";
-    return;
-  }
-
-  if (!CG_MATURITIES.includes(conf.cgMaturity)) {
+  } else if (!CG_MATURITIES.includes(conf.cgMaturity)) {
     const choices = codedJoinOr(CG_MATURITIES, { quotes: true });
     const msg = docLink`\`"${conf.cgMaturity}"\` is not a supported value for the ${"[cgMaturity]"} configuration option.`;
     const hint = `Please use one of: ${choices}. Automatically falling back to \`"draft"\`.`;
     showError(msg, name, { hint });
     conf.cgMaturity = "draft";
   }
+
+  validateTransferredTo(conf);
+}
+
+/**
+ * @param {Conf["transferredTo"]} to
+ */
+function organizationName(to) {
+  if (typeof to === "string") return to.trim();
+  if (to && typeof to === "object" && typeof to.name === "string") {
+    return to.name.trim();
+  }
+  return "";
+}
+
+/**
+ * A transferred specification must say who took the work up.
+ *
+ * @param {Conf} conf
+ */
+function validateTransferredTo(conf) {
+  if (conf.cgMaturity !== "transferred") return;
+  if (organizationName(conf.transferredTo)) return;
+
+  const msg = conf.transferredTo
+    ? docLink`The ${"[transferredTo]"} configuration option needs the name of an organization.`
+    : docLink`The ${"[transferredTo]"} configuration option is required when ${"[cgMaturity]"} is \`"transferred"\`.`;
+  const hint = docLink`Set ${"[transferredTo]"} to the organization that has taken the work up: a name, or \`{ name, url }\`. Until it is set, the notice reads "Another organization".`;
+  showError(msg, name, { hint });
+  delete conf.transferredTo;
 }
 
 /**
