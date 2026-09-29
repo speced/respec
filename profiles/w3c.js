@@ -43,6 +43,7 @@ const modules = [
   import("../src/core/fix-headers.js"),
   import("../src/core/webidl-index.js"),
   import("../src/core/cddl-index.js"),
+  import("../src/w3c/cg-sections.js"),
   import("../src/core/structure.js"),
   import("../src/core/informative.js"),
   import("../src/core/id-headers.js"),
