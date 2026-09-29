@@ -7,8 +7,8 @@
  * load time. A container left empty renders as nothing.
  */
 
+import { W3CDate, concatDate } from "../../core/utils.js";
 import { getSpecSubTitleElem, l10n } from "./headers.js";
-import { W3CDate } from "../../core/utils.js";
 import { html } from "../../core/import-maps.js";
 import showPeople from "../../core/templates/show-people.js";
 
@@ -17,7 +17,7 @@ const LIFECYCLE =
 const LIVING_V_SNAPSHOT =
   "https://github.com/w3c/cg-program/blob/main/beta-2026/w3c-programs.md#living-specification-v-snapshot";
 const COMMUNITY = "https://www.w3.org/community/";
-const INCUBATION = "https://incubation.w3.org/groups/";
+const INCUBATION = "https://incubation.w3.org/";
 
 const chevron = () =>
   html`<svg
@@ -72,8 +72,20 @@ export function snapshotsIndex(conf) {
   // - `conf.group` is an id
   const group = typeof conf.group === "string" ? conf.group.split("/")[0] : "";
   if (!group || !conf.shortName) return "";
-  const base = `${INCUBATION}${encodeURIComponent(group)}/specs`;
+  const base = `${INCUBATION}groups/${encodeURIComponent(group)}/specs/`;
   return `${base}#${encodeURIComponent(conf.shortName)}`;
+}
+
+/**
+ * The snapshot address.
+ *
+ * @param {Conf} conf
+ */
+export function snapshotAddress(conf) {
+  if (conf.specStatus !== "CG-SNAPSHOT") return "";
+  if (!conf.shortName || !conf.publishDate) return "";
+  const dated = `${conf.shortName}-${concatDate(conf.publishDate)}`;
+  return `${INCUBATION}specs/${encodeURIComponent(dated)}/`;
 }
 
 /** @param {Conf} conf */

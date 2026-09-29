@@ -93,7 +93,7 @@ import {
   showError,
   showWarning,
 } from "../core/utils.js";
-import cgHeadersTmpl from "./templates/cg-headers.js";
+import cgHeadersTmpl, { snapshotAddress } from "./templates/cg-headers.js";
 import cgSotdTmpl from "./templates/cg-sotd.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
@@ -409,6 +409,12 @@ export async function run(conf) {
       ? `${publishDate.getUTCFullYear()}/`
       : "";
     conf.thisVersion = w3Url(`${pubSpace}/${year}${docVersion}/`);
+  }
+
+  // check if a CG snapshot address can be derived
+  if (!conf.thisVersion) {
+    const address = snapshotAddress(conf);
+    if (address) conf.thisVersion = address;
   }
 
   if (conf.isEd) conf.thisVersion = conf.edDraftURI;
