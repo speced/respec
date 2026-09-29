@@ -94,6 +94,7 @@ import {
   showWarning,
 } from "../core/utils.js";
 import cgHeadersTmpl from "./templates/cg-headers.js";
+import cgSotdTmpl from "./templates/cg-sotd.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
@@ -844,7 +845,11 @@ function populateSoTD(conf, sotd) {
       return `mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`;
     },
   };
-  const template = conf.isCGBG ? cgbgSotdTmpl : sotdTmpl;
+  const template = isCGSpec(conf)
+    ? cgSotdTmpl
+    : conf.isCGBG
+      ? cgbgSotdTmpl
+      : sotdTmpl;
   return template(conf, options);
 }
 
