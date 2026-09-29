@@ -429,7 +429,7 @@ describe("W3C — CG specification redesign", () => {
       const doc = await makeRSDoc(cgOps());
       const [link] = snapshotsLink(doc);
       expect(link.getAttribute("href")).toBe(
-        "https://incubation.w3.org/groups/wicg/specs#scheduling-apis"
+        "https://incubation.w3.org/groups/wicg/specs/#scheduling-apis"
       );
     });
 
@@ -444,29 +444,48 @@ describe("W3C — CG specification redesign", () => {
   });
 
   describe("a snapshot's own identity", () => {
+    const snapOps = (config = {}) =>
+      cgOps({
+        specStatus: "CG-SNAPSHOT",
+        publishDate: "2025-05-30",
+        ...config,
+      });
+
     it("states when it was published, and where it lives", async () => {
-      const doc = await makeRSDoc(
-        cgOps({
-          specStatus: "CG-SNAPSHOT",
-          publishDate: "2025-05-30",
-          thisVersion: "https://example.com/snapshots/2025-05-30/",
-        })
-      );
+      const doc = await makeRSDoc(snapOps());
       const notice = doc.querySelector(".box--head .box--information");
       const time = notice.querySelector("time.dt-updated");
       // Its own date and address are facts the generator knows; only the
       // living specification's are fetched.
       expect(time.getAttribute("datetime")).toBe("2025-05-30");
       expect(notice.textContent).toContain("30 May 2025");
-      expect(
-        notice.querySelector(
-          'a[href="https://example.com/snapshots/2025-05-30/"]'
-        )
-      ).toBeTruthy();
     });
 
-    it("omits the address line when there is no address to give", async () => {
-      const doc = await makeRSDoc(cgOps({ specStatus: "CG-SNAPSHOT" }));
+    it("derives the address from the short name and the publication date", async () => {
+      const doc = await makeRSDoc(snapOps());
+      const url = "https://incubation.w3.org/specs/scheduling-apis-20250530/";
+      expect(doc.defaultView.respecConfig.thisVersion).toBe(url);
+      const notice = doc.querySelector(".box--head .box--information");
+      expect(notice.querySelector(`a[href="${url}"]`).textContent).toBe(url);
+    });
+
+    it("follows the publication date", async () => {
+      const doc = await makeRSDoc(snapOps({ publishDate: "2026-01-02" }));
+      expect(doc.defaultView.respecConfig.thisVersion).toBe(
+        "https://incubation.w3.org/specs/scheduling-apis-20260102/"
+      );
+    });
+
+    it("lets an editor override it", async () => {
+      const url = "https://example.com/snapshots/2025-05-30/";
+      const doc = await makeRSDoc(snapOps({ thisVersion: url }));
+      expect(doc.defaultView.respecConfig.thisVersion).toBe(url);
+      const notice = doc.querySelector(".box--head .box--information");
+      expect(notice.querySelector(`a[href="${url}"]`)).toBeTruthy();
+    });
+
+    it("omits the address line when there is no short name to derive it from", async () => {
+      const doc = await makeRSDoc(snapOps({ shortName: undefined }));
       const notice = doc.querySelector(".box--head .box--information");
       expect(notice.textContent).not.toContain("The address of this snapshot");
     });
