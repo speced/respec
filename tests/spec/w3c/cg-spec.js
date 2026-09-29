@@ -38,10 +38,7 @@ const cgOps = (config = {}) =>
 const regionsOf = doc =>
   [...doc.querySelectorAll("[data-cg-region]")].map(el => el.dataset.cgRegion);
 
-// The four shapes of the header box, as the cg-assets demos define them. Each
-// row is one kind of document; what changes between them is markup, not
-// values, which is why the generator decides it and cg-metadata.js never sees
-// it.
+// The four variants of the header box
 const VARIANTS = [
   {
     label: "a draft living specification",
@@ -60,7 +57,11 @@ const VARIANTS = [
   },
   {
     label: "a transferred living specification",
-    config: { specStatus: "CG-LIVING", cgMaturity: "transferred" },
+    config: {
+      specStatus: "CG-LIVING",
+      cgMaturity: "transferred",
+      transferredTo: "WHATWG",
+    },
     tag: "Transferred",
     notice: "box--information",
     regions: ["living-spec"],
@@ -173,7 +174,10 @@ describe("W3C — CG specification redesign", () => {
   describe("cgMaturity", () => {
     for (const cgMaturity of ["draft", "transferred", "unmaintained"]) {
       it(`accepts "${cgMaturity}"`, async () => {
-        const doc = await makeRSDoc(cgOps({ cgMaturity }));
+        // "transferred" additionally requires an organization; see below.
+        const doc = await makeRSDoc(
+          cgOps({ cgMaturity, transferredTo: "WHATWG" })
+        );
         expect(doc.querySelector("meta[name='cg-spec-maturity']").content).toBe(
           cgMaturity
         );
@@ -488,6 +492,41 @@ describe("W3C — CG specification redesign", () => {
       );
       const notice = doc.querySelector(".box--head .box--information");
       expect(notice.textContent).toContain("WHATWG has taken up the work");
+      expect(defaultErrors(doc)).toHaveSize(0);
+    });
+
+    // Tests on transferred CG specs and its requirements
+    const UNUSABLE = [
+      ["it is missing", undefined],
+      ["it is empty", ""],
+      ["it is only whitespace", "   "],
+      ["the object has no name", { url: "https://whatwg.org/" }],
+      ["the object's name is empty", { name: "", url: "https://whatwg.org/" }],
+    ];
+    for (const [label, transferredTo] of UNUSABLE) {
+      it(`errors when ${label}`, async () => {
+        const doc = await makeRSDoc(
+          cgOps({ cgMaturity: "transferred", transferredTo })
+        );
+        const errors = defaultErrors(doc);
+        expect(errors).toHaveSize(1);
+        expect(errors[0].message).toContain("transferredTo");
+
+        const notice = doc.querySelector(".box--head .box--information");
+        expect(notice.textContent).toContain(
+          "Another organization has taken up the work"
+        );
+        expect(
+          notice.querySelector('a[href="https://whatwg.org/"]')
+        ).toBeNull();
+      });
+    }
+
+    it("says nothing about it on a document that has not been transferred", async () => {
+      const doc = await makeRSDoc(
+        cgOps({ cgMaturity: "draft", transferredTo: undefined })
+      );
+      expect(defaultErrors(doc)).toHaveSize(0);
     });
   });
 
