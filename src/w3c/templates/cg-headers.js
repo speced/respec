@@ -284,6 +284,7 @@ export default (conf, _options) => {
   if (specTitleElem && variant !== "snapshot") {
     const label = variant[0].toUpperCase() + variant.slice(1);
     specTitleElem.append(
+      " ",
       html`<a class="link--button link--button--tag" href="${LIFECYCLE}"
         >${label}${chevron()}</a
       >`
