@@ -6,7 +6,7 @@ import { insertStyle } from "./insert-style.js";
 
 export const name = "core/mdn-annotation";
 
-const BASE_JSON_PATH = "https://w3c.github.io/mdn-spec-links/";
+const BASE_JSON_PATH = "https://speced.github.io/mdn-spec-links/";
 const MDN_URL_BASE = "https://developer.mozilla.org/en-US/docs/Web/";
 const MDN_BROWSERS = {
   // The browser IDs here must match the ones in the imported JSON data.
@@ -147,8 +147,8 @@ export async function run(conf) {
     const msg = `Could not find MDN data associated with key "${mdnKey}".`;
     const hint =
       conf.mdn === true
-        ? docLink`When using \`mdn: true\`, the key defaults to ${"[shortName]"} ("${mdnKey}"). Check that your shortName matches an entry in the [MDN spec links map](https://github.com/w3c/mdn-spec-links/blob/main/SPECMAP.json), or set ${"[mdn]"} to the correct key.`
-        : docLink`Search for your spec's URL in the [MDN spec links map](https://github.com/w3c/mdn-spec-links/blob/main/SPECMAP.json) to find the correct key, then set ${"[mdn]"} to it.`;
+        ? docLink`When using \`mdn: true\`, the key defaults to ${"[shortName]"} ("${mdnKey}"). Check that your shortName matches an entry in the [MDN spec links map](https://github.com/speced/mdn-spec-links/blob/main/SPECMAP.json), or set ${"[mdn]"} to the correct key.`
+        : docLink`Search for your spec's URL in the [MDN spec links map](https://github.com/speced/mdn-spec-links/blob/main/SPECMAP.json) to find the correct key, then set ${"[mdn]"} to it.`;
     showError(msg, name, { hint });
     return;
   }
