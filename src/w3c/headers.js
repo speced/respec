@@ -93,10 +93,13 @@ import {
   showError,
   showWarning,
 } from "../core/utils.js";
+import cgHeadersTmpl, { snapshotAddress } from "./templates/cg-headers.js";
+import cgSotdTmpl from "./templates/cg-sotd.js";
 import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
 import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
 import headersTmpl from "./templates/headers.js";
 import { html } from "../core/import-maps.js";
+import { isCGSpec } from "./cg-assets.js";
 import { pub } from "../core/pubsubhub.js";
 import sotdTmpl from "./templates/sotd.js";
 
@@ -146,6 +149,8 @@ export const status2text = {
   "editor-draft-finding": "Draft TAG Finding",
   "CG-DRAFT": "Draft Community Group Report",
   "CG-FINAL": "Final Community Group Report",
+  "CG-LIVING": "Community Group Living Specification",
+  "CG-SNAPSHOT": "Community Group Snapshot",
   "BG-DRAFT": "Draft Business Group Report",
   "BG-FINAL": "Final Business Group Report",
 };
@@ -189,8 +194,14 @@ export const recTrackStatus = [
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const tagStatus = ["draft-finding", "finding", "editor-draft-finding"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
+// The two statuses of the CG specification redesign, which uses the cg-assets
+// style sheets and scripts rather than the /StyleSheets/TR/2021/cg-* ones.
+// Deliberately kept out of `cgStatus`, so that nothing an existing Community
+// Group report does changes: these join only the lists they have to be in to be
+// treated as Community Group reports at all.
+export const cgRedesignStatus = ["CG-LIVING", "CG-SNAPSHOT"];
 export const bgStatus = ["BG-DRAFT", "BG-FINAL"];
-export const cgbgStatus = [...cgStatus, ...bgStatus];
+export const cgbgStatus = [...cgStatus, ...cgRedesignStatus, ...bgStatus];
 export const trStatus = [
   ...W3CNotes,
   ...recTrackStatus,
@@ -199,6 +210,7 @@ export const trStatus = [
 export const noTrackStatus = [
   "base",
   ...cgStatus,
+  ...cgRedesignStatus,
   ...bgStatus,
   "editor-draft-finding",
   "draft-finding",
@@ -399,6 +411,12 @@ export async function run(conf) {
     conf.thisVersion = w3Url(`${pubSpace}/${year}${docVersion}/`);
   }
 
+  // check if a CG snapshot address can be derived
+  if (!conf.thisVersion) {
+    const address = snapshotAddress(conf);
+    if (address) conf.thisVersion = address;
+  }
+
   if (conf.isEd) conf.thisVersion = conf.edDraftURI;
   if (conf.isCGBG) validateCGBG(conf);
   if (conf.latestVersion !== null) {
@@ -522,7 +540,12 @@ export async function run(conf) {
   };
 
   // insert into document
-  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf, options);
+  const headerTmpl = isCGSpec(conf)
+    ? cgHeadersTmpl
+    : conf.isCGBG
+      ? cgbgHeadersTmpl
+      : headersTmpl;
+  const header = headerTmpl(conf, options);
   document.body.prepend(header);
   document.body.classList.add("h-entry");
 
@@ -828,7 +851,11 @@ function populateSoTD(conf, sotd) {
       return `mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`;
     },
   };
-  const template = conf.isCGBG ? cgbgSotdTmpl : sotdTmpl;
+  const template = isCGSpec(conf)
+    ? cgSotdTmpl
+    : conf.isCGBG
+      ? cgbgSotdTmpl
+      : sotdTmpl;
   return template(conf, options);
 }
 
