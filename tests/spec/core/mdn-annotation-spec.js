@@ -144,7 +144,7 @@ describe("Core - MDN Annotation", () => {
   });
 
   // Can't directly test `mdn: true` because it uses the default
-  // BASE_JSON_PATH (w3c.github.io), which isn't available in tests.
+  // BASE_JSON_PATH (speced.github.io), which isn't available in tests.
   // Instead, test the explicit-key hint via `mdn.key`.
   it("shows a helpful hint when an explicit mdn key is not found (404)", async () => {
     const ops = makeStandardOps({
