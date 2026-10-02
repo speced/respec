@@ -26,6 +26,12 @@ const bibrefsURLs = [
  */
 const FETCH_TIMEOUT_MS = 2000;
 
+/**
+ * Caps how many refs are joined into a single request URL, so a caller-supplied
+ * list can't be used to build an unbounded URL (CWE-770).
+ */
+const MAX_REFS_PER_FETCH = 100;
+
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.
 const link = createResourceHint({
@@ -81,11 +87,22 @@ export async function updateFromNetwork(refs) {
   if (!refsToFetch.length || navigator.onLine === false) {
     return null;
   }
-  const found = await fetchBibrefs(refsToFetch.join(","));
-  if (!found) {
+  // Split into bounded batches so an oversized ref list can't produce an
+  // excessively long request URL (CWE-770).
+  const batches = [];
+  for (let i = 0; i < refsToFetch.length; i += MAX_REFS_PER_FETCH) {
+    batches.push(refsToFetch.slice(i, i + MAX_REFS_PER_FETCH));
+  }
+  const results = (
+    await Promise.all(batches.map(batch => fetchBibrefs(batch.join(","))))
+  ).filter(found => found);
+  if (!results.length) {
     return null;
   }
-  const { data, expires: expiresHeader } = found;
+  const data = Object.assign({}, ...results.map(found => found.data));
+  const expiresHeader = results
+    .map(found => found.expires)
+    .find(expires => expires);
   // SpecRef updates every hour, so we should follow suit
   // https://github.com/tobie/specref#hourly-auto-updating
   const oneHourFromNow = Date.now() + 1000 * 60 * 60 * 1;
