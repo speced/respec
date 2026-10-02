@@ -194,7 +194,7 @@ function renderNotRec(conf) {
     than a work in progress.
     ${
       updatableRec
-        ? html`Future updates to this upcoming Recommendation may incorporate
+        ? html`Future updates to this upcoming recommendation may incorporate
             <a href="${processLink}#allow-new-features">new features</a>.`
         : ""
     }
@@ -269,7 +269,7 @@ function renderNotRec(conf) {
         for implementations.`;
       updatePolicy = html`${
         updatableRec
-          ? html`Future updates to this upcoming Recommendation may incorporate
+          ? html`Future updates to this upcoming recommendation may incorporate
               <a href="${processLink}#allow-new-features">new features</a>.`
           : ""
       }`;
@@ -281,7 +281,7 @@ function renderNotRec(conf) {
       } else {
         reviewPolicy = html`<p>
           This Candidate Recommendation is not expected to advance to
-          Recommendation any earlier than
+          recommendation any earlier than
           ${W3CDate.format(/** @type {Date} */ (conf.crEnd))}.
         </p>`;
       }
@@ -342,7 +342,7 @@ function renderIsRec(conf) {
       for implementations.
       ${
         updatableRec
-          ? html`Future updates to this Recommendation may incorporate
+          ? html`Future updates to this recommendation may incorporate
               <a href="${processLink}#allow-new-features">new features</a>.`
           : ""
       }
@@ -560,7 +560,7 @@ function linkToWorkingGroup(conf) {
             >`
       },
       introducing substantive changes and new features since the previous
-      Recommendation.`;
+      recommendation.`;
     } else if (proposedAdditions || additions) {
       changes = html`It includes
       ${
@@ -572,7 +572,7 @@ function linkToWorkingGroup(conf) {
               candidate additions</a
             >`
       },
-      introducing new features since the previous Recommendation.`;
+      introducing new features since the previous recommendation.`;
     } else if (proposedCorrections || corrections) {
       changes = html`It includes
       ${
