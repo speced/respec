@@ -100,9 +100,12 @@ function createStyleLink(path) {
  */
 function createScript(path) {
   const src = cgAssetUrl(path);
-  return path.endsWith("cg-metadata.js")
+  const script = path.endsWith("cg-metadata.js")
     ? html`<script src="${src}" defer></script>`
     : html`<script src="${src}"></script>`;
+  // Make script async false to preserve execution order and avoid race conditions.
+  script.async = false;
+  return script;
 }
 
 /**
