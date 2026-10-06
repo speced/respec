@@ -6,7 +6,7 @@
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@11.24.0",
+  "packageManager": "pnpm@12.10.0",
   "bin": {
     "respec": "tools/respec2html.js",
     "respec2html": "tools/respec2html.js"
