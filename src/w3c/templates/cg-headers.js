@@ -39,12 +39,16 @@ const chevron = () =>
  * @param {"div" | "li"} as
  */
 export function region(name, noScriptText, as = "div") {
-  const fallback = html`<noscript
-    ><p class="cg-metadata-unavailable">${noScriptText}</p></noscript
-  >`;
-  return as === "li"
-    ? html`<li data-cg-region="${name}">${fallback}</li>`
-    : html`<div data-cg-region="${name}">${fallback}</div>`;
+  const message = document.createElement("p");
+  message.className = "cg-metadata-unavailable";
+  message.textContent = noScriptText;
+  const fallback = document.createElement("noscript");
+  fallback.append(message);
+
+  const container = document.createElement(as);
+  container.dataset.cgRegion = name;
+  container.append(fallback);
+  return container;
 }
 
 /**
