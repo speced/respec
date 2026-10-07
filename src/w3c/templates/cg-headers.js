@@ -36,16 +36,16 @@ const chevron = () =>
  *
  * @param {string} name
  * @param {string} noScriptText
- * @param {"div" | "li"} as
+ * @param {"div" | "li"} elementName
  */
-export function region(name, noScriptText, as = "div") {
+export function region(name, noScriptText, elementName = "div") {
   const message = document.createElement("p");
   message.className = "cg-metadata-unavailable";
   message.textContent = noScriptText;
   const fallback = document.createElement("noscript");
   fallback.append(message);
 
-  const container = document.createElement(as);
+  const container = document.createElement(elementName);
   container.dataset.cgRegion = name;
   container.append(fallback);
   return container;
