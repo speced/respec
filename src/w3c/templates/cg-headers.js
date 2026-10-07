@@ -57,12 +57,9 @@ export function cgVariant(conf) {
  * @param {Conf} conf
  */
 export function snapshotsIndex(conf) {
-  // `group` may be type-qualified, as in "wot/wg", and may be an array when a
-  // document is published jointly.
-  // TODO:
-  // - `conf.group` is an array for joint publications
-  // - `conf.group` is an id
-  const group = typeof conf.group === "string" ? conf.group.split("/")[0] : "";
+  // `group` may be type-qualified, as in "cg/wicg"
+  const group =
+    typeof conf.group === "string" ? conf.group.split("/", 2).at(-1) : "";
   if (!group || !conf.shortName) return "";
   const base = `${INCUBATION}groups/${encodeURIComponent(group)}/specs/`;
   return `${base}#${encodeURIComponent(conf.shortName)}`;
