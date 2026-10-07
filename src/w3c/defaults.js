@@ -201,7 +201,10 @@ function validateStatusForGroup(conf) {
         )
       ) {
         const msg = docLink`W3C Community Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
-        const supportedStatus = codedJoinOr(cgStatus, { quotes: true });
+        const supportedStatus = codedJoinOr(
+          [...cgStatus, ...cgRedesignStatus],
+          { quotes: true }
+        );
         const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"CG-DRAFT"\`.`;
         showError(msg, name, { hint });
         conf.specStatus = "CG-DRAFT";
