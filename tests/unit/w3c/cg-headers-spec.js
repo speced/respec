@@ -10,7 +10,7 @@ describe("W3C - CG headers - snapshotsIndex", () => {
   });
 
   it("uses the group's own short name from a type-qualified group", () => {
-    expect(snapshotsIndex({ group: "wicg/cg", shortName: "foo" })).toBe(
+    expect(snapshotsIndex({ group: "cg/wicg", shortName: "foo" })).toBe(
       "https://incubation.w3.org/groups/wicg/specs/#foo"
     );
   });
