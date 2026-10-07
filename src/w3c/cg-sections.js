@@ -31,7 +31,9 @@ function getInvolved(conf) {
   // Only when a single group is named: the join page is per group, and there
   // is no one page to send a reader to for a joint publication.
   const joinURL =
-    typeof conf.group === "string" ? `${COMMUNITY}${conf.group}/join` : null;
+    typeof conf.group === "string"
+      ? `${COMMUNITY}${conf.group.split("/", 2).at(-1)}/join`
+      : null;
 
   // `introductory` is how ReSpec says "list this in the table of contents but
   // do not number it": boilerplate, not part of the specification's own
