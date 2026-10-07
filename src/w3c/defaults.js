@@ -6,6 +6,7 @@ export const name = "w3c/defaults";
 import {
   W3CNotes,
   bgStatus,
+  cgRedesignStatus,
   cgStatus,
   recTrackStatus,
   registryTrackStatus,
@@ -81,6 +82,7 @@ export function run(conf) {
   }
 
   validateStatusForGroup(conf);
+  validateCGMaturity(conf);
   processLogos(/** @type {NormalizedConf} */ (conf));
 }
 
@@ -108,6 +110,61 @@ function processLogos(conf) {
       conf.logos.push(memSubmissionLogo);
     }
   }
+}
+
+const CG_MATURITIES = ["draft", "transferred", "unmaintained"];
+
+/**
+ * The maturity stage of a CG specification, which is a separate axis from its
+ * status: either of the two redesign statuses can be at any of the three
+ * stages, and the stage changes the markup rather than a value.
+ *
+ * @param {Conf} conf
+ */
+function validateCGMaturity(conf) {
+  // Silently irrelevant elsewhere: nothing about a document that is not one of
+  // these two statuses should change because this option exists.
+  if (!cgRedesignStatus.includes(conf.specStatus ?? "")) return;
+
+  if (conf.cgMaturity === undefined) {
+    conf.cgMaturity = "draft";
+  } else if (!CG_MATURITIES.includes(conf.cgMaturity)) {
+    const choices = codedJoinOr(CG_MATURITIES, { quotes: true });
+    const msg = docLink`\`"${conf.cgMaturity}"\` is not a supported value for the ${"[cgMaturity]"} configuration option.`;
+    const hint = `Please use one of: ${choices}. Automatically falling back to \`"draft"\`.`;
+    showError(msg, name, { hint });
+    conf.cgMaturity = "draft";
+  }
+
+  validateTransferredTo(conf);
+}
+
+/**
+ * @param {Conf["transferredTo"]} to
+ */
+function organizationName(to) {
+  if (typeof to === "string") return to.trim();
+  if (to && typeof to === "object" && typeof to.name === "string") {
+    return to.name.trim();
+  }
+  return "";
+}
+
+/**
+ * A transferred specification must say who took the work up.
+ *
+ * @param {Conf} conf
+ */
+function validateTransferredTo(conf) {
+  if (conf.cgMaturity !== "transferred") return;
+  if (organizationName(conf.transferredTo)) return;
+
+  const msg = conf.transferredTo
+    ? docLink`The ${"[transferredTo]"} configuration option needs the name of an organization.`
+    : docLink`The ${"[transferredTo]"} configuration option is required when ${"[cgMaturity]"} is \`"transferred"\`.`;
+  const hint = docLink`Set ${"[transferredTo]"} to the organization that has taken the work up: a name, or \`{ name, url }\`. Until it is set, the notice reads "Another organization".`;
+  showError(msg, name, { hint });
+  delete conf.transferredTo;
 }
 
 /**
@@ -138,9 +195,16 @@ function validateStatusForGroup(conf) {
 
   switch (groupType) {
     case "cg": {
-      if (![...cgStatus, "unofficial", "UD"].includes(specStatus)) {
+      if (
+        ![...cgStatus, ...cgRedesignStatus, "unofficial", "UD"].includes(
+          specStatus
+        )
+      ) {
         const msg = docLink`W3C Community Group documents can't use \`"${specStatus}"\` for the ${"[specStatus]"} configuration option.`;
-        const supportedStatus = codedJoinOr(cgStatus, { quotes: true });
+        const supportedStatus = codedJoinOr(
+          [...cgStatus, ...cgRedesignStatus],
+          { quotes: true }
+        );
         const hint = `Please use one of: ${supportedStatus}. Automatically falling back to \`"CG-DRAFT"\`.`;
         showError(msg, name, { hint });
         conf.specStatus = "CG-DRAFT";
