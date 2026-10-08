@@ -347,7 +347,7 @@ function updateReferences(conf) {
   // turning "HTML" into "__SPEC__HTML".
   // https://regex101.com/r/rsZyIJ/5
   const regex = shortName
-    ? new RegExp(String.raw`^([?!])?${regExpEscape(shortName)}\b([^-])`, "i")
+    ? new RegExp(String.raw`^([?!])?${regExpEscape(shortName)}\b([^-]|$)`, "i")
     : null;
 
   /** @type {NodeListOf<HTMLElement>} */
