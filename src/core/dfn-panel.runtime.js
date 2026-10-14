@@ -9,6 +9,19 @@ function setupPanel() {
   const listener = panelListener();
   document.body.addEventListener("keydown", listener);
   document.body.addEventListener("click", listener);
+  setupCopyButtons();
+}
+
+function setupCopyButtons() {
+  document.body.addEventListener("click", event => {
+    const target = event.target;
+    const btn =
+      target instanceof HTMLElement && target.closest(".dfn-panel-copy-btn");
+    if (!(btn instanceof HTMLElement)) return;
+    const text = btn.dataset.copyText;
+    if (!text) return;
+    navigator.clipboard.writeText(text).catch(() => {});
+  });
 }
 
 function panelListener() {
@@ -99,6 +112,10 @@ function deriveAction(event) {
     return hitALink ? "none" : "show";
   }
   if (target.closest(".dfn-panel")) {
+    // Copy buttons keep the panel open regardless of docked state.
+    if (target.closest(".dfn-panel-copy-btn")) {
+      return "none";
+    }
     if (hitALink) {
       return target.classList.contains("self-link") ? "hide" : "dock";
     }
@@ -164,16 +181,18 @@ function displayPanel(dfn, panel, { x, y }) {
  * @returns
  */
 function trapFocus(panel, dfn) {
-  /** @type NodeListOf<HTMLAnchorElement> elements */
-  const anchors = panel.querySelectorAll("a[href]");
+  /** @type NodeListOf<HTMLElement> elements */
+  const focusableElements = panel.querySelectorAll(
+    "a[href], button:not([disabled])"
+  );
   // No need to trap focus
-  if (!anchors.length) return;
+  if (!focusableElements.length) return;
 
   // Move focus to first anchor element
-  const first = anchors.item(0);
+  const first = focusableElements.item(0);
   first.focus();
 
-  const trapListener = createTrapListener(anchors, panel, dfn);
+  const trapListener = createTrapListener(focusableElements, panel, dfn);
   panel.addEventListener("keydown", trapListener);
 
   // Hiding the panel releases the trap
@@ -190,13 +209,13 @@ function trapFocus(panel, dfn) {
 
 /**
  *
- * @param {NodeListOf<HTMLAnchorElement>} anchors
+ * @param {NodeListOf<HTMLElement>} focusableElements
  * @param {HTMLElement} panel
  * @param {HTMLElement} dfn
  * @returns
  */
-function createTrapListener(anchors, panel, dfn) {
-  const lastIndex = anchors.length - 1;
+function createTrapListener(focusableElements, panel, dfn) {
+  const lastIndex = focusableElements.length - 1;
   let currentIndex = 0;
   /**
    * @param {KeyboardEvent} event
@@ -212,13 +231,18 @@ function createTrapListener(anchors, panel, dfn) {
         } else if (currentIndex > lastIndex) {
           currentIndex = 0;
         }
-        anchors.item(currentIndex).focus();
+        focusableElements.item(currentIndex).focus();
         break;
       }
 
       // Hitting "Enter" on an anchor releases the trap.
       case "Enter":
-        hidePanel(panel);
+        if (
+          event.target instanceof HTMLElement &&
+          event.target.closest("a[href]")
+        ) {
+          hidePanel(panel);
+        }
         break;
 
       // Hitting "Escape" returns focus to dfn.
