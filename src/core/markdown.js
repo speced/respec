@@ -134,15 +134,21 @@ function normalizeIndent(text) {
 /**
  * @param {string} text
  * @param {object} options
- * @param {boolean} options.inline
+ * @param {boolean} [options.inline]
+ * @param {boolean} [options.fromHTML]
  */
-export function markdownToHtml(text, options = { inline: false }) {
+export function markdownToHtml(
+  text,
+  options = { inline: false, fromHTML: true }
+) {
   const normalizedLeftPad = normalizeIndent(text);
   // As markdown is pulled from HTML, > and & are already escaped and
   // so blockquotes aren't picked up by the parser. This fixes it.
-  const potentialMarkdown = normalizedLeftPad
-    .replace(gtEntity, ">")
-    .replace(ampEntity, "&");
+  // When text comes from a raw fetch (data-include), skip this step.
+  const potentialMarkdown =
+    options.fromHTML !== false
+      ? normalizedLeftPad.replace(gtEntity, ">").replace(ampEntity, "&")
+      : normalizedLeftPad;
 
   const result = options.inline
     ? marked.parseInline(potentialMarkdown, config)
