@@ -538,6 +538,18 @@ export function getDfnTitles(elem) {
   titleSet.add(normText);
   titleSet.delete("");
 
+  // For enum-value dfns, authors often write <dfn>"value"</dfn> with surrounding
+  // quotes (mirroring WebIDL syntax). Register the unquoted form as well so that
+  // WebIDL lookups and {{ EnumType/"value" }} inline refs can find the dfn.
+  if (
+    elem.dataset.dfnType === "enum-value" &&
+    normText.startsWith('"') &&
+    normText.endsWith('"') &&
+    normText.length > 2
+  ) {
+    titleSet.add(normText.slice(1, -1));
+  }
+
   // We could have done this with @data-lt (as the logic is same), but if
   // @data-lt was not present, we would end up using @data-local-lt as element's
   // id (in other words, we prefer textContent over @data-local-lt for dfn id)
