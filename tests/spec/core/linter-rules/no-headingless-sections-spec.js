@@ -81,4 +81,19 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
     expect(warnings[0].elements).toHaveSize(1);
     expect(warnings[0].elements[0].id).toBe("badone");
   });
+
+  it("doesn't warn for introductory sections without headings", async () => {
+    const body = `
+      <section class="introductory">
+        <p>Some introductory content without a heading.</p>
+      </section>
+      <section>
+        <h2>Normal section</h2>
+      </section>
+    `;
+    const opts = makeStandardOps(config, body);
+    const doc = await makeRSDoc(opts);
+    const warnings = warningsFilter(doc);
+    expect(warnings).toHaveSize(0);
+  });
 });

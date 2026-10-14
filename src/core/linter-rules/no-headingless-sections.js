@@ -40,7 +40,7 @@ export function run(conf) {
   }
   /** @type {NodeListOf<HTMLElement>} */
   const sections = document.querySelectorAll(
-    "section:not(.head,#abstract,#sotd)"
+    "section:not(.head,.introductory,#abstract,#sotd)"
   );
   const offendingElements = [...sections].filter(
     ({ firstElementChild: e }) =>
