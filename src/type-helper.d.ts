@@ -131,6 +131,17 @@ interface Conf {
    * not dark-aware yet.
    */
   darkMode?: boolean;
+  /**
+   * Maturity stage of a Community Group specification using the redesign, i.e.
+   * one with a `specStatus` of `"CG-LIVING"` or `"CG-SNAPSHOT"`. Defaults to
+   * `"draft"`, and has no effect on any other kind of document.
+   */
+  cgMaturity?: "draft" | "transferred" | "unmaintained";
+  /**
+   * The organization that has taken up the work, named in the notice of a CG
+   * redesign specification whose `cgMaturity` is `"transferred"`.
+   */
+  transferredTo?: string | { name: string; url?: string };
 
   /** Indicates whether the document is a preview */
   isPreview?: boolean;
