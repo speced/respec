@@ -17,7 +17,7 @@ const LIFECYCLE =
 const LIVING_V_SNAPSHOT =
   "https://github.com/w3c/cg-program/blob/main/beta-2026/w3c-programs.md#living-specification-v-snapshot";
 const COMMUNITY = "https://www.w3.org/community/";
-const INCUBATION = "https://incubation.w3.org/";
+const INCUBATION = "https://host-tbd.org/";
 
 /**
  * An empty container for cg-metadata.js + no JavaScript fallback.
