@@ -40,7 +40,7 @@ function getInvolved(conf) {
   // sequence of sections. See core/structure's `isIntro`.
   return html`<section class="introductory">
     <h2 id="cg-get-involved">Get involved</h2>
-    <p>There are many ways to support this Community Group incubation.</p>
+    <p>There are many ways to support this W3C Community Group incubation.</p>
     <dl>
       ${
         issuesURL || hasIssueSummary
@@ -58,7 +58,9 @@ function getInvolved(conf) {
       ${
         conf.wg
           ? html`<dt id="cg-join-group">Join the group</dt>
-              <dd><a href="${conf.wgURI}">Learn about the ${conf.wg}</a></dd>
+              <dd>
+                <a href="${conf.wgURI}">Learn about the W3C ${conf.wg}</a>
+              </dd>
               ${
                 joinURL
                   ? html`<dd><a href="${joinURL}">Join the group</a></dd>`

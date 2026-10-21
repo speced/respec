@@ -135,7 +135,7 @@ function noticeBox(conf) {
           </li>
           <li>
             ${transferredTo(conf)} has taken up the work for standardization and
-            so the Community Group is no longer the “owner”.
+            so the W3C Community Group is no longer the “owner”.
           </li>
         </ul>
       </div>`;
@@ -171,7 +171,7 @@ function noticeBox(conf) {
             "li"
           )}
           <li>
-            This is a Community Group incubation and is not (yet) ready for
+            This is a W3C Community Group incubation and is not (yet) ready for
             standardization.
           </li>
         </ul>
@@ -255,7 +255,7 @@ function copyright(conf, titleNodes) {
         : ""
     }
     the Contributors to the ${titleNodes} Specification, published by the
-    <a href="${conf.wgURI}">${conf.wg}</a> under the ${agreement}
+    <a href="${conf.wgURI}">W3C ${conf.wg}</a> under the ${agreement}
   </p>`;
 }
 
