@@ -7,6 +7,7 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
+import { INCUBATION } from "../../../src/w3c/templates/cg-headers.js";
 import { cgRedesignStatus } from "../../../src/w3c/headers.js";
 import { seedGroupCache } from "../respec-cache-helper.js";
 
@@ -429,7 +430,7 @@ describe("W3C — CG specification redesign", () => {
       const doc = await makeRSDoc(cgOps());
       const [link] = snapshotsLink(doc);
       expect(link.getAttribute("href")).toBe(
-        "https://incubation.w3.org/groups/wicg/specs/#scheduling-apis"
+        `${INCUBATION}groups/wicg/specs/#scheduling-apis`
       );
     });
 
@@ -463,7 +464,7 @@ describe("W3C — CG specification redesign", () => {
 
     it("derives the address from the short name and the publication date", async () => {
       const doc = await makeRSDoc(snapOps());
-      const url = "https://incubation.w3.org/specs/scheduling-apis-20250530/";
+      const url = `${INCUBATION}specs/scheduling-apis-20250530/`;
       expect(doc.defaultView.respecConfig.thisVersion).toBe(url);
       const notice = doc.querySelector(".box--head .box--information");
       expect(notice.querySelector(`a[href="${url}"]`).textContent).toBe(url);
@@ -472,7 +473,7 @@ describe("W3C — CG specification redesign", () => {
     it("follows the publication date", async () => {
       const doc = await makeRSDoc(snapOps({ publishDate: "2026-01-02" }));
       expect(doc.defaultView.respecConfig.thisVersion).toBe(
-        "https://incubation.w3.org/specs/scheduling-apis-20260102/"
+        `${INCUBATION}specs/scheduling-apis-20260102/`
       );
     });
 

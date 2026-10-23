@@ -17,7 +17,7 @@ const LIFECYCLE =
 const LIVING_V_SNAPSHOT =
   "https://github.com/w3c/cg-program/blob/main/beta-2026/w3c-programs.md#living-specification-v-snapshot";
 const COMMUNITY = "https://www.w3.org/community/";
-const INCUBATION = "https://host-tbd.org/";
+export const INCUBATION = "https://host-tbd.org/";
 
 /**
  * An empty container for cg-metadata.js + no JavaScript fallback.
@@ -87,6 +87,7 @@ function transferredTo(conf) {
 
 /**
  * The notice depending on the type of CG spec
+ *
  * @param {Conf} conf
  */
 function noticeBox(conf) {
