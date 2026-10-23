@@ -92,7 +92,7 @@ function transferredTo(conf) {
 function noticeBox(conf) {
   switch (cgVariant(conf)) {
     case "snapshot":
-      return html`<div class="box box--information">
+      return html`<div class="box box--information" id="top-status-block">
         <h2>
           This is a <a href="${LIVING_V_SNAPSHOT}">snapshot</a> of an incubation
         </h2>
@@ -120,7 +120,7 @@ function noticeBox(conf) {
         </ul>
       </div>`;
     case "transferred":
-      return html`<div class="box box--information">
+      return html`<div class="box box--information" id="top-status-block">
         <h2>
           This specification has been
           <a href="${LIFECYCLE}">transferred</a>
@@ -154,7 +154,7 @@ function noticeBox(conf) {
         </ul>
       </div>`;
     default:
-      return html`<div class="box box--information">
+      return html`<div class="box box--information" id="top-status-block">
         <h2>
           This is a
           <a href="${LIVING_V_SNAPSHOT}">living specification</a>
