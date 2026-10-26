@@ -57,8 +57,9 @@ export function snapshotsIndex(conf) {
   const group =
     typeof conf.group === "string" ? conf.group.split("/", 2).at(-1) : "";
   if (!group || !conf.shortName) return "";
-  const base = `${INCUBATION}groups/${encodeURIComponent(group)}/specs/`;
-  return `${base}#${encodeURIComponent(conf.shortName)}`;
+  const url = new URL(`groups/${encodeURIComponent(group)}/specs/`, INCUBATION);
+  url.hash = encodeURIComponent(conf.shortName);
+  return url.href;
 }
 
 /**
@@ -70,7 +71,7 @@ export function snapshotAddress(conf) {
   if (conf.specStatus !== "CG-SNAPSHOT") return "";
   if (!conf.shortName || !conf.publishDate) return "";
   const dated = `${conf.shortName}-${concatDate(conf.publishDate)}`;
-  return `${INCUBATION}specs/${encodeURIComponent(dated)}/`;
+  return new URL(`specs/${encodeURIComponent(dated)}/`, INCUBATION).href;
 }
 
 /** @param {Conf} conf */

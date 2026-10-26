@@ -30,10 +30,12 @@ function getInvolved(conf) {
   const hasIssueSummary = !!document.getElementById("issue-summary");
   // Only when a single group is named: the join page is per group, and there
   // is no one page to send a reader to for a joint publication.
-  const joinURL =
-    typeof conf.group === "string"
-      ? `${COMMUNITY}${conf.group.split("/", 2).at(-1)}/join`
-      : null;
+  // `group` may be type-qualified, as in "cg/wicg".
+  const groupShortName =
+    typeof conf.group === "string" ? conf.group.split("/", 2).at(-1) : "";
+  const joinURL = groupShortName
+    ? new URL(`${encodeURIComponent(groupShortName)}/join`, COMMUNITY).href
+    : null;
 
   // `introductory` is how ReSpec says "list this in the table of contents but
   // do not number it": boilerplate, not part of the specification's own
