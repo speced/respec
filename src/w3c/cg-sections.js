@@ -10,7 +10,7 @@
  * numbered.
  */
 
-import { cgVariant, region } from "./templates/cg-headers.js";
+import { cgVariant, createRegion } from "./templates/cg-headers.js";
 import { html } from "../core/import-maps.js";
 import { isCGSpec } from "./cg-assets.js";
 
@@ -96,7 +96,7 @@ function usageGuidance(conf) {
     <h2 id="usage-guidance">Usage guidance</h2>
     ${
       isDraft
-        ? html`${region(
+        ? html`${createRegion(
             "usage-guidance",
             "The usage guidance for this specification is loaded from the status metadata, which needs JavaScript."
           )}

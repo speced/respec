@@ -26,17 +26,13 @@ export const INCUBATION = "https://host-tbd.org/";
  * @param {string} noScriptText
  * @param {"div" | "li"} elementName
  */
-export function region(name, noScriptText, elementName = "div") {
-  const message = document.createElement("p");
-  message.className = "cg-metadata-unavailable";
-  message.textContent = noScriptText;
-  const fallback = document.createElement("noscript");
-  fallback.append(message);
-
-  const container = document.createElement(elementName);
-  container.dataset.cgRegion = name;
-  container.append(fallback);
-  return container;
+export function createRegion(name, noScriptText, elementName = "div") {
+  const fallback = html`<noscript>
+    <p class="cg-metadata-unavailable">${noScriptText}</p>
+  </noscript>`;
+  return elementName === "li"
+    ? html`<li data-cg-region="${name}">${fallback}</li>`
+    : html`<div data-cg-region="${name}">${fallback}</div>`;
 }
 
 /**
@@ -166,7 +162,7 @@ function noticeBox(conf) {
             for this specification are expected to change in place at this
             address.
           </li>
-          ${region(
+          ${createRegion(
             "last-edited",
             "The last-edited date is loaded from the status metadata, which needs JavaScript.",
             "li"
@@ -188,7 +184,7 @@ function noticeBox(conf) {
  */
 function whereToLook(conf) {
   const isSnapshot = cgVariant(conf) === "snapshot";
-  const livingSpec = region(
+  const livingSpec = createRegion(
     "living-spec",
     isSnapshot
       ? "The address of the living specification and its last-edited date are loaded from the status metadata, which needs JavaScript."
@@ -303,11 +299,11 @@ export default (conf, _options) => {
     ${noticeBox(conf)}
     ${
       variant === "draft"
-        ? html`${region(
+        ? html`${createRegion(
             "progress",
             "The progress towards standardization is loaded from the status metadata, which needs JavaScript."
           )}
-          ${region(
+          ${createRegion(
             "browser-support",
             "Browser support is loaded from the status metadata, which needs JavaScript."
           )}`
