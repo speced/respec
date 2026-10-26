@@ -42,7 +42,12 @@ export function isCGSpec(conf) {
  */
 const STYLES = ["css/base.css", "css/cg-spec.css", "css/dark.css"];
 
-const SCRIPTS = ["js/cg-fixup.js", "js/dark.js", "js/cg-metadata.js"];
+/** @type {{ path: string; defer?: boolean }[]} */
+const SCRIPTS = [
+  { path: "js/cg-fixup.js" },
+  { path: "js/dark.js" },
+  { path: "js/cg-metadata.js", defer: true },
+];
 
 /**
  * Drops the w3.org styles and hints that this module's sibling w3c/style adds
@@ -93,17 +98,13 @@ function createStyleLink(path) {
 }
 
 /**
- * cg-metadata.js builds the status blocks, several of which sit at the foot of
- * the document, so it must not run before the document is complete.
- *
  * @param {string} path
+ * @param {object} [options]
+ * @param {boolean} [options.defer]
  */
-function createScript(path) {
-  const src = cgAssetUrl(path);
-  const script = path.endsWith("cg-metadata.js")
-    ? html`<script src="${src}" defer></script>`
-    : html`<script src="${src}"></script>`;
-  // Make script async false to preserve execution order and avoid race conditions.
+function createScript(path, { defer = false } = {}) {
+  const script = html`<script src="${cgAssetUrl(path)}"></script>`;
+  if (defer) script.defer = true;
   script.async = false;
   return script;
 }
@@ -159,8 +160,8 @@ export function insertCGAssets() {
   sub(
     "end-all",
     () => {
-      for (const path of SCRIPTS) {
-        document.body.appendChild(createScript(path));
+      for (const { path, defer } of SCRIPTS) {
+        document.body.appendChild(createScript(path, { defer }));
       }
     },
     { once: true }
