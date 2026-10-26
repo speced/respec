@@ -82,6 +82,102 @@ function transferredTo(conf) {
   return to.url ? html`<a href="${to.url}">${to.name}</a>` : to.name;
 }
 
+/** @param {Conf} conf */
+function noticeBoxSnapshot(conf) {
+  return html`<div class="box box--information" id="top-status-block">
+    <h2>
+      This is a <a href="${LIVING_V_SNAPSHOT}">snapshot</a> of an incubation
+    </h2>
+    <ul>
+      <li>
+        <strong
+          >This document instance is archival and is not intended to
+          change.</strong
+        >
+      </li>
+      <li>
+        It was published on
+        <time class="dt-updated" datetime="${conf.dashDate}"
+          >${W3CDate.format(conf.publishDate)}</time
+        >.
+      </li>
+      ${
+        conf.thisVersion
+          ? html`<li>
+              The address of this snapshot is
+              <a href="${conf.thisVersion}">${conf.thisVersion}</a>.
+            </li>`
+          : ""
+      }
+    </ul>
+  </div>`;
+}
+
+/** @param {Conf} conf */
+function noticeBoxTransferred(conf) {
+  return html`<div class="box box--information" id="top-status-block">
+    <h2>
+      This specification has been
+      <a href="${LIFECYCLE}">transferred</a>
+    </h2>
+    <ul>
+      <li>
+        <strong
+          >Rather than use or reference this specification, please consult the
+          guidance of the organization to which the specification has been
+          transferred.</strong
+        >
+      </li>
+      <li>
+        ${transferredTo(conf)} has taken up the work for standardization and so
+        the W3C Community Group is no longer the “owner”.
+      </li>
+    </ul>
+  </div>`;
+}
+
+/** The notice for a specification nobody is maintaining any more. */
+function noticeBoxUnmaintained() {
+  return html`<div class="box box--warning">
+    <h2>
+      This specification is no longer in development and is
+      <a href="${LIFECYCLE}">unmaintained</a>
+    </h2>
+    <ul>
+      <li><strong>Do not use or reference.</strong></li>
+      <li>
+        If these circumstances change in the future, we will review our
+        guidance.
+      </li>
+    </ul>
+  </div>`;
+}
+
+/** The notice for a living specification still under development. */
+function noticeBoxDraft() {
+  return html`<div class="box box--information" id="top-status-block">
+    <h2>
+      This is a
+      <a href="${LIVING_V_SNAPSHOT}">living specification</a>
+    </h2>
+    <ul>
+      <li>
+        The text of this specification and the status information support for
+        this specification are expected to change in place at this address.
+      </li>
+      ${createRegion(
+        "last-edited",
+        "The last-edited date is loaded from the status metadata, which needs JavaScript.",
+        "li"
+      )}
+      <li>
+        This is a W3C Community Group incubation and is not (yet) ready for
+        standardization.
+      </li>
+    </ul>
+  </div>`;
+}
+
 /**
  * The notice depending on the type of CG spec
  *
@@ -90,90 +186,13 @@ function transferredTo(conf) {
 function noticeBox(conf) {
   switch (cgVariant(conf)) {
     case "snapshot":
-      return html`<div class="box box--information" id="top-status-block">
-        <h2>
-          This is a <a href="${LIVING_V_SNAPSHOT}">snapshot</a> of an incubation
-        </h2>
-        <ul>
-          <li>
-            <strong
-              >This document instance is archival and is not intended to
-              change.</strong
-            >
-          </li>
-          <li>
-            It was published on
-            <time class="dt-updated" datetime="${conf.dashDate}"
-              >${W3CDate.format(conf.publishDate)}</time
-            >.
-          </li>
-          ${
-            conf.thisVersion
-              ? html`<li>
-                  The address of this snapshot is
-                  <a href="${conf.thisVersion}">${conf.thisVersion}</a>.
-                </li>`
-              : ""
-          }
-        </ul>
-      </div>`;
+      return noticeBoxSnapshot(conf);
     case "transferred":
-      return html`<div class="box box--information" id="top-status-block">
-        <h2>
-          This specification has been
-          <a href="${LIFECYCLE}">transferred</a>
-        </h2>
-        <ul>
-          <li>
-            <strong
-              >Rather than use or reference this specification, please consult
-              the guidance of the organization to which the specification has
-              been transferred.</strong
-            >
-          </li>
-          <li>
-            ${transferredTo(conf)} has taken up the work for standardization and
-            so the W3C Community Group is no longer the “owner”.
-          </li>
-        </ul>
-      </div>`;
+      return noticeBoxTransferred(conf);
     case "unmaintained":
-      return html`<div class="box box--warning">
-        <h2>
-          This specification is no longer in development and is
-          <a href="${LIFECYCLE}">unmaintained</a>
-        </h2>
-        <ul>
-          <li><strong>Do not use or reference.</strong></li>
-          <li>
-            If these circumstances change in the future, we will review our
-            guidance.
-          </li>
-        </ul>
-      </div>`;
+      return noticeBoxUnmaintained();
     default:
-      return html`<div class="box box--information" id="top-status-block">
-        <h2>
-          This is a
-          <a href="${LIVING_V_SNAPSHOT}">living specification</a>
-        </h2>
-        <ul>
-          <li>
-            The text of this specification and the status information support
-            for this specification are expected to change in place at this
-            address.
-          </li>
-          ${createRegion(
-            "last-edited",
-            "The last-edited date is loaded from the status metadata, which needs JavaScript.",
-            "li"
-          )}
-          <li>
-            This is a W3C Community Group incubation and is not (yet) ready for
-            standardization.
-          </li>
-        </ul>
-      </div>`;
+      return noticeBoxDraft();
   }
 }
 
