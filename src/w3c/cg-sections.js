@@ -75,15 +75,6 @@ function getInvolved(conf) {
   </section>`;
 }
 
-const DISCLAIMER = html`<p class="copyright">
-  <strong>Disclaimer:</strong> The data in these tables is managed outside the
-  document and is updated automatically. While W3C strives to ensure the
-  accuracy of status data, we do not guarantee that the information is
-  error-free. Any mention of specific products or services is solely for
-  informational purposes and does not imply endorsement by W3C, Inc. or its
-  Members.
-</p>`;
-
 /**
  * Guidance for someone deciding whether to build on this. For a draft it is
  * collected data, so the section is an empty container; for every other
@@ -99,10 +90,17 @@ function usageGuidance(conf) {
     ${
       isDraft
         ? html`${createRegion(
-            "usage-guidance",
-            "The usage guidance for this specification is loaded from the status metadata, which needs JavaScript."
-          )}
-          ${DISCLAIMER}`
+              "usage-guidance",
+              "The usage guidance for this specification is loaded from the status metadata, which needs JavaScript."
+            )}
+            <p class="copyright">
+              <strong>Disclaimer:</strong> The data in these tables is managed
+              outside the document and is updated automatically. While W3C
+              strives to ensure the accuracy of status data, we do not guarantee
+              that the information is error-free. Any mention of specific
+              products or services is solely for informational purposes and does
+              not imply endorsement by W3C, Inc. or its Members.
+            </p>`
         : html`<p>
             See the notice at the head of this document: it says what this
             document is and how much to rely on it.
