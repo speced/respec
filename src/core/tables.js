@@ -19,6 +19,10 @@ const localizationStrings = {
     list_of_tables: "List of Tables",
     table: "Table ",
   },
+  fr: {
+    list_of_tables: "Liste des tables",
+    table: "Table ",
+  },
 };
 
 const l10n = getIntlData(localizationStrings);

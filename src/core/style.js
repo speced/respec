@@ -12,22 +12,10 @@
 export const name = "core/style";
 
 import css from "../styles/respec.css.js";
+import { insertStyle } from "./insert-style.js";
 
 // Opportunistically inserts the style to reduce some FOUC.
-/** @type {HTMLStyleElement} */
-const styleElement = insertStyle();
-
-/**
- * Inserts the ReSpec CSS as a `style` element into the document's `head`.
- * @return {HTMLStyleElement} The `style` element that was inserted.
- */
-function insertStyle() {
-  const styleElement = document.createElement("style");
-  styleElement.id = "respec-mainstyle";
-  styleElement.textContent = css;
-  document.head.appendChild(styleElement);
-  return styleElement;
-}
+const styleElement = insertStyle(css, { id: "respec-mainstyle" });
 
 /**
  * Removes the ReSpec CSS if the `noReSpecCSS` configuration option is `true`.

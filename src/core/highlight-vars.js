@@ -9,6 +9,7 @@
  */
 import css from "../styles/var.css.js";
 import { fetchBase } from "./text-loader.js";
+import { insertStyle } from "./insert-style.js";
 import { sub } from "./pubsubhub.js";
 
 export const name = "core/highlight-vars";
@@ -21,9 +22,7 @@ export async function run(conf) {
     return;
   }
 
-  const styleElement = document.createElement("style");
-  styleElement.textContent = css;
-  document.head.appendChild(styleElement);
+  insertStyle(css);
 
   const script = document.createElement("script");
   script.id = "respec-highlight-vars";

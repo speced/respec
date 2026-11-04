@@ -119,7 +119,7 @@ export function run(conf) {
     showWarning(msg, name);
   }
 
-  let styleFile = "";
+  let styleFile;
 
   // Figure out which style file to use.
   switch (conf.specStatus.toUpperCase()) {
@@ -132,7 +132,7 @@ export function run(conf) {
   }
 
   // Attach W3C fixup script after we are done.
-  if (!conf.noToc) {
+  if (!conf.noTOC) {
     sub(
       "end-all",
       () => {

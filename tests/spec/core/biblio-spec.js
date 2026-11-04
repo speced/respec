@@ -32,6 +32,12 @@ describe("W3C — Bibliographic References", () => {
       href: "http://test.com",
       publisher: "Publisher Here",
     },
+    TestRef4: {
+      title: "Fourth test",
+      href: "http://test.com",
+      publisher: "Publisher Pages",
+      pages: "369-384",
+    },
     FOOBARGLOP: {
       aliasOf: "BARBAR",
     },
@@ -48,7 +54,7 @@ describe("W3C — Bibliographic References", () => {
   const body = `
     <section id='sotd'>
       <p>[[DOM]] [[dom]] [[fetch]] [[?FeTcH]] [[FETCh]] [[fetCH]]
-      <p>foo [[TestRef1]] [[TestRef2]] [[TestRef3]]</p>
+      <p>foo [[TestRef1]] [[TestRef2]] [[TestRef3]] [[TestRef4]]</p>
       <p>[[EVERCOOKIE]]</p>
     </section>
     <section id='sample'>
@@ -65,13 +71,20 @@ describe("W3C — Bibliographic References", () => {
   const ops = makeStandardOps({ localBiblio }, body);
 
   afterAll(flushIframes);
-  const bibRefsURL = new URL("https://api.specref.org/bibrefs");
-
   let doc;
-  let specRefOk;
+  let bibrefsOk;
   beforeAll(async () => {
+    // Clear first, or the check below passes on a DOM entry another spec left
+    // in IndexedDB and proves nothing about either service.
+    const { biblioDB } = await import("../../../src/core/biblio-db.js");
+    await biblioDB.ready;
+    await biblioDB.clear();
+
     doc = await makeRSDoc(ops);
-    specRefOk = (await fetch(bibRefsURL, { method: "HEAD" })).ok;
+    // DOM is the one reference here that only a service can resolve. Reading it
+    // off the page rather than fetching it is deliberate: the suite's redirect
+    // to a local service is a service worker scoped to the spec document.
+    bibrefsOk = Boolean(doc.querySelector("#bib-dom + dd cite"));
   });
 
   it("displays references correctly", async () => {
@@ -87,7 +100,7 @@ describe("W3C — Bibliographic References", () => {
   });
 
   it("pings biblio service to see if it's running", () => {
-    expect(specRefOk).toBeTruthy();
+    expect(bibrefsOk).toBeTruthy();
   });
 
   it("includes the title of a spec for an inline citation, including aliases", async () => {
@@ -115,7 +128,7 @@ describe("W3C — Bibliographic References", () => {
   });
 
   it("includes a dns-prefetch to bibref server", () => {
-    const host = bibRefsURL.host;
+    const host = "api.specref.org";
     const link = doc.querySelector(`link[rel='dns-prefetch'][href*='${host}']`);
     expect(link).toBeTruthy();
     expect(link.classList).toContain("removeOnSave");
@@ -125,23 +138,29 @@ describe("W3C — Bibliographic References", () => {
     // Make sure the reference is added.
     let ref = doc.querySelector("#bib-testref1 + dd");
     expect(ref).toBeTruthy();
-    // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
-    if (!specRefOk) {
+    // This prevents Jasmine from taking down the whole test suite if the
+    // bibliography service is down.
+    if (!bibrefsOk) {
       throw new Error(
-        "SpecRef seems to be down. Can't proceed with this spec."
+        "The bibliography service seems to be down. Can't proceed with this spec."
       );
     }
     expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
-    ref = null;
     // Make sure the ". " is automatically added to publisher.
     ref = doc.querySelector("#bib-testref2 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Testing 123\.\s/);
-    ref = null;
     // Make sure publisher is shown even when there is no author
     ref = doc.querySelector("#bib-testref3 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Publisher Here\.\s/);
+  });
+
+  it("displays the pages field when present", () => {
+    const ref = doc.querySelector("#bib-testref4 + dd");
+    expect(ref).toBeTruthy();
+    // Publisher followed by pages should use comma, not period
+    expect(ref.textContent).toContain("Publisher Pages, pp. 369-384");
   });
 
   it("resolves a localy-aliased spec", () => {
@@ -274,6 +293,16 @@ describe("W3C — Bibliographic References", () => {
     const badRef = doc.querySelector("#referencias-informativas dd");
     expect(badRef).toBeTruthy();
     expect(badRef.textContent.trim()).toBe("Referencia no encontrada.");
+  });
+
+  it("shows localized French references section and error", async () => {
+    const body = `<p id="bad-ref">[[bad-ref]]</p>`;
+    const ops = makeStandardOps({ localBiblio }, body);
+    ops.htmlAttrs = { lang: "fr" };
+    const doc = await makeRSDoc(ops);
+    const badRef = doc.querySelector("#references-informatives dd");
+    expect(badRef).toBeTruthy();
+    expect(badRef.textContent.trim()).toBe("Référence non trouvée.");
   });
 
   it("uses cached results from IDB", async () => {

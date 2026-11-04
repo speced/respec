@@ -14,6 +14,7 @@
 import { addId, getIntlData, showError, showWarning } from "./utils.js";
 import css from "../styles/issues-notes.css.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 export const name = "core/issues-notes";
 
 const localizationStrings = {
@@ -75,6 +76,15 @@ const localizationStrings = {
     no_issues_in_spec: "V této specifikaci nejsou uvedeny žádné problémy.",
     note: "Poznámka",
     warning: "Varování",
+  },
+  fr: {
+    editors_note: "Note de l'éditeur",
+    issue: "Problème",
+    issue_summary: "Résumé des problèmes",
+    no_issues_in_spec:
+      "Il n'y a aucun problème répertorié dans cette spécification.",
+    note: "Note",
+    warning: "Avertissement",
   },
 };
 
@@ -395,13 +405,7 @@ export async function run(conf) {
       conf.github ?? null
     )
   );
-  const { head: headElem } = document;
-  headElem.insertBefore(
-    html`<style>
-      ${css}
-    </style>`,
-    headElem.querySelector("link")
-  );
+  insertStyle(css, { before: document.head.querySelector("link") });
   handleIssues(issuesAndNotes, ghIssues, conf);
   const ednotes = document.querySelectorAll(".ednote");
   ednotes.forEach(ednote => {

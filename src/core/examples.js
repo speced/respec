@@ -9,6 +9,7 @@
 import { addId, getIntlData } from "./utils.js";
 import css from "../styles/examples.css.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 
 export const name = "core/examples";
 
@@ -21,6 +22,9 @@ const localizationStrings = {
   },
   es: {
     example: "Ejemplo",
+  },
+  fr: {
+    example: "Exemple",
   },
   ko: {
     example: "예시",
@@ -72,12 +76,7 @@ export function run() {
   );
   if (!examples.length) return;
 
-  document.head.insertBefore(
-    html`<style>
-      ${css}
-    </style>`,
-    document.querySelector("link")
-  );
+  insertStyle(css, { before: document.querySelector("link") });
 
   let number = 0;
   examples.forEach(example => {

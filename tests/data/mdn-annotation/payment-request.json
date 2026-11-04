@@ -204,6 +204,14 @@
       "title": "PaymentRequest.prototype.id"
     }
   ],
+  "dom-paymentrequest-show": [
+    {
+      "slug": "API/PaymentRequest/show",
+      "summary": "The show() method of the PaymentRequest interface instructs the user agent to begin the process of showing the payment interface to the user.",
+      "engines": ["blink", "webkit"],
+      "title": "PaymentRequest.prototype.show"
+    }
+  ],
   "custom-method": [
     {
       "slug": "API/PaymentRequest/custom",

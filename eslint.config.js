@@ -1,13 +1,13 @@
 // @ts-check
 import globals from "globals";
-import importPlugin from "eslint-plugin-import";
+import importPlugin from "eslint-plugin-import-x";
 import jasminePlugin from "eslint-plugin-jasmine";
 import js from "@eslint/js";
 import prettierRecommended from "eslint-plugin-prettier/recommended";
 
 export default [
   {
-    ignores: ["builds/**", "js/**"],
+    ignores: [".cache/**", "builds/**", "js/**"],
   },
   js.configs.recommended,
   prettierRecommended,
@@ -24,11 +24,11 @@ export default [
       },
     },
     plugins: {
-      import: importPlugin,
+      "import-x": importPlugin,
     },
     rules: {
       "prettier/prettier": ["error", { endOfLine: "auto" }],
-      "import/extensions": ["error", "always", { ignorePackages: true }],
+      "import-x/extensions": ["error", "always", { ignorePackages: true }],
       "dot-notation": "error",
       "eol-last": ["error", "always"],
       indent: 0,
