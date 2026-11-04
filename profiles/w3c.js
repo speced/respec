@@ -34,6 +34,7 @@ const modules = [
   import("../src/core/link-to-dfn.js"),
   import("../src/core/xref.js"),
   import("../src/core/data-cite.js"),
+  import("../src/core/xref-headings.js"),
   import("../src/core/render-biblio.js"),
   import("../src/core/dfn-index.js"),
   import("../src/core/contrib.js"),

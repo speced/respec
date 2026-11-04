@@ -11,6 +11,7 @@ import { codedJoinAnd, docLink, showError, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
 import css from "../styles/caniuse.css.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 
 export const name = "core/caniuse";
 
@@ -59,14 +60,10 @@ export function prepare(conf) {
     return; // no feature to show
   }
 
-  document.head.appendChild(
-    html`<style
-      id="caniuse-stylesheet"
-      class="${options.removeOnSave ? "removeOnSave" : ""}"
-    >
-      ${css}
-    </style>`
-  );
+  insertStyle(css, {
+    id: "caniuse-stylesheet",
+    className: options.removeOnSave ? "removeOnSave" : "",
+  });
 }
 /**
  * @param {string} browser
@@ -112,7 +109,16 @@ export async function run(conf) {
     sub(
       "beforesave",
       /** @param {Document} outputDoc */ outputDoc => {
-        html.bind(outputDoc.querySelector(".caniuse-stats"))`
+        const statsElem = outputDoc.querySelector(".caniuse-stats");
+        if (!statsElem) {
+          const msg =
+            "Couldn't add the caniuse.com link to the saved document.";
+          const hint =
+            "The support table is appended to the document header's definition list (`.head dl`), so it was never inserted if that list is absent. The browser support cells are removed on save, so the exported document will have no caniuse.com attribution.";
+          showWarning(msg, name, { hint });
+          return;
+        }
+        html.bind(statsElem)`
         <a href="${featureURL}">caniuse.com</a>`;
       }
     );

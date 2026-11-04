@@ -50,17 +50,23 @@ async function openIdb() {
   // Clean the database of expired biblio entries.
   const now = Date.now();
   for (const storeName of [...ALLOWED_TYPES]) {
-    const store = db.transaction(storeName, "readwrite").store;
+    const tx = db.transaction(storeName, "readwrite");
     const range = IDBKeyRange.lowerBound(now);
-    let result = await store.openCursor(range);
-    while (result?.value) {
-      /** @type {StoredBiblioEntry} */
-      const entry = result.value;
-      if (entry.expires === undefined || entry.expires < now) {
-        await store.delete(entry.id);
+    const sweep = async () => {
+      let result = await tx.store.openCursor(range);
+      while (result?.value) {
+        /** @type {StoredBiblioEntry} */
+        const entry = result.value;
+        if (entry.expires === undefined || entry.expires < now) {
+          await tx.store.delete(entry.id);
+        }
+        result = await result.continue();
       }
-      result = await result.continue();
-    }
+    };
+    // Await the work and the commit together. If a request rejects, IndexedDB aborts the
+    // transaction and idb rejects tx.done as well; awaiting them in sequence means this line
+    // is never reached and that second rejection has no handler.
+    await Promise.all([sweep(), tx.done]);
   }
 
   return db;
@@ -199,13 +205,20 @@ export const biblioDB = {
     if (isInDB) {
       const entry = await this.get(type, details.id);
       if (entry && entry.expires !== undefined && entry.expires < Date.now()) {
-        const { store } = db.transaction(type, "readwrite");
-        await store.delete(details.id);
+        const tx = db.transaction(type, "readwrite");
+        await Promise.all([tx.store.delete(details.id), tx.done]);
         isInDB = false;
       }
     }
-    const { store } = db.transaction(type, "readwrite");
-    return isInDB ? await store.put(details) : await store.add(details);
+    const tx = db.transaction(type, "readwrite");
+    // Await commit as well as the request: a later read in its own transaction may otherwise
+    // not see this write, and awaiting them together keeps an aborted transaction's rejection
+    // handled rather than unhandled.
+    const [result] = await Promise.all([
+      isInDB ? tx.store.put(details) : tx.store.add(details),
+      tx.done,
+    ]);
+    return result;
   },
   /**
    * Closes the underlying database.
@@ -227,6 +240,6 @@ export const biblioDB = {
     const clearStorePromises = storeNames.map(name => {
       return stores.objectStore(name).clear();
     });
-    await Promise.all(clearStorePromises);
+    await Promise.all([...clearStorePromises, stores.done]);
   },
 };

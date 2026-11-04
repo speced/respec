@@ -2,10 +2,11 @@
 import { docLink, fetchAndCache, getIntlData, showError } from "./utils.js";
 import css from "../styles/mdn-annotation.css.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 
 export const name = "core/mdn-annotation";
 
-const BASE_JSON_PATH = "https://w3c.github.io/mdn-spec-links/";
+const BASE_JSON_PATH = "https://speced.github.io/mdn-spec-links/";
 const MDN_URL_BASE = "https://developer.mozilla.org/en-US/docs/Web/";
 const MDN_BROWSERS = {
   // The browser IDs here must match the ones in the imported JSON data.
@@ -75,9 +76,11 @@ function attachMDNDetail(mdnSpec) {
     <summary aria-label="${label}"><span>MDN</span>${engineSupport}</summary>
     <a title="${summary}" href="${href}">${mdnSubPath}</a>
     ${getEngineSupport(engines)}
-    ${support
-      ? buildBrowserSupportTable(support)
-      : html`<p class="nosupportdata">No support data.</p>`}
+    ${
+      support
+        ? buildBrowserSupportTable(support)
+        : html`<p class="nosupportdata">No support data.</p>`
+    }
   </details>`;
 }
 
@@ -87,7 +90,7 @@ function attachMDNDetail(mdnSpec) {
  */
 function buildBrowserSupportTable(support) {
   /**
-   * @param {keyof MDN_BROWSERS} browserId
+   * @param {keyof typeof MDN_BROWSERS} browserId
    * @param {"Yes" | "No" | "Unknown"} yesNoUnknown
    * @param {string} version
    * @returns {HTMLTableRowElement}
@@ -102,7 +105,7 @@ function buildBrowserSupportTable(support) {
   }
 
   /**
-   * @param {keyof MDN_BROWSERS} browserId
+   * @param {keyof typeof MDN_BROWSERS} browserId
    * @param {VersionDetails} versionData
    */
   function createRowFromBrowserData(browserId, versionData) {
@@ -144,15 +147,13 @@ export async function run(conf) {
     const msg = `Could not find MDN data associated with key "${mdnKey}".`;
     const hint =
       conf.mdn === true
-        ? docLink`When using \`mdn: true\`, the key defaults to ${"[shortName]"} ("${mdnKey}"). Check that your shortName matches an entry in the [MDN spec links map](https://github.com/w3c/mdn-spec-links/blob/main/SPECMAP.json), or set ${"[mdn]"} to the correct key.`
-        : docLink`Search for your spec's URL in the [MDN spec links map](https://github.com/w3c/mdn-spec-links/blob/main/SPECMAP.json) to find the correct key, then set ${"[mdn]"} to it.`;
+        ? docLink`When using \`mdn: true\`, the key defaults to ${"[shortName]"} ("${mdnKey}"). Check that your shortName matches an entry in the [MDN spec links map](https://github.com/speced/mdn-spec-links/blob/main/SPECMAP.json), or set ${"[mdn]"} to the correct key.`
+        : docLink`Search for your spec's URL in the [MDN spec links map](https://github.com/speced/mdn-spec-links/blob/main/SPECMAP.json) to find the correct key, then set ${"[mdn]"} to it.`;
     showError(msg, name, { hint });
     return;
   }
 
-  const style = document.createElement("style");
-  style.textContent = css;
-  document.head.append(style);
+  insertStyle(css);
 
   for (const elem of findElements(mdnSpecJson)) {
     const mdnSpecArray = mdnSpecJson[elem.id];
@@ -183,7 +184,7 @@ function getMdnKey(conf) {
  * @param {number} [mdnConf.maxAge]
  *
  * @typedef {{ version_added: string|boolean|null, version_removed?: string }} VersionDetails
- * @typedef {Record<string | keyof MDN_BROWSERS, VersionDetails>} MdnSupportEntry
+ * @typedef {Record<string | keyof typeof MDN_BROWSERS, VersionDetails>} MdnSupportEntry
  * @typedef {{ name: string, title: string, slug: string, summary: string, support: MdnSupportEntry, engines: string[] }} MdnEntry
  * @typedef {Record<string, MdnEntry[]>} MdnData
  * @returns {Promise<MdnData|null>}
@@ -213,12 +214,12 @@ function findElements(data) {
  */
 function getEngineSupportIcons(engines) {
   if (engines.length === 3) {
-    return html`<span title="${l10n.inAllEngines}">✅</span>`;
+    return html`<span role="img" aria-label="${l10n.inAllEngines}">✅</span>`;
   }
   if (engines.length < 2) {
-    return html`<span title="${l10n.inSomeEngines}">🚫</span>`;
+    return html`<span role="img" aria-label="${l10n.inSomeEngines}">🚫</span>`;
   }
-  return html`<span>&emsp;</span>`;
+  return html`<span aria-hidden="true">&emsp;</span>`;
 }
 
 /**

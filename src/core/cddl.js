@@ -14,6 +14,7 @@ import {
 import { addHashId, showError, showWarning, xmlEscape } from "./utils.js";
 import { createCopyButton, injectCopyScript } from "./clipboard.js";
 import css from "../styles/cddl.css.js";
+import { insertStyle } from "./insert-style.js";
 import { registerDefinition } from "./dfn-map.js";
 import { sub } from "./pubsubhub.js";
 
@@ -703,14 +704,9 @@ export async function run() {
   if (!cddls.length) return;
 
   // Inject CSS
-  const style = document.createElement("style");
-  style.textContent = css;
-  const styleAnchor = document.querySelector("head link, head > *:last-child");
-  if (styleAnchor) {
-    styleAnchor.before(style);
-  } else {
-    document.head.append(style);
-  }
+  insertStyle(css, {
+    before: document.querySelector("head link, head > *:last-child"),
+  });
 
   // Import cddlparser via import-maps (avoids fs/path imports in main entry)
   const parse = (/** @type {string} */ text) => {

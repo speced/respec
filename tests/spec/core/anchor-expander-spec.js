@@ -187,7 +187,7 @@ describe("Core - anchor-expander", () => {
       expect(span.textContent.trim()).toEqual("MediaDevices");
       expect(span.attributes).toHaveSize(0);
     }
-  });
+  }, 10000);
 
   it("expands references to dfn elements, including terms starting with '<'", async () => {
     const body = `

@@ -176,4 +176,21 @@ describe("Core — Highlight", () => {
     expect(lastCode.textContent).toContain("Header: Test5");
     expect(lastCode.classList).toContain("http");
   });
+
+  it("highlights pre elements inside a closed details element", async () => {
+    const body = `
+      <section>
+        <details id="closed">
+          <summary>Toggle</summary>
+          <pre class="js">function foo() { alert("foo"); }</pre>
+        </details>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    // The iframe must render, as the bug is that unrendered text isn't highlighted.
+    const doc = await makeRSDoc(ops, null, "display: block");
+    const details = doc.getElementById("closed");
+    expect(details.open).toBeFalse();
+    expect(details.querySelector("pre span[class*=hljs-]")).toBeTruthy();
+  });
 });

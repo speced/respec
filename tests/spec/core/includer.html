@@ -1,39 +1,43 @@
-<!DOCTYPE html>
-<html xmlns='http://www.w3.org/1999/xhtml'>
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset='utf-8'/>
+    <meta charset="utf-8" />
     <title>Includer Spec</title>
-    <script class='remove'>
+    <script class="remove">
       var respecConfig = {
-              specStatus:   "ED"
-          ,   shortName:    "includer"
-          ,   editors:      [{ name: "Robin Berjon", url: "http://berjon.com/" }]
-          ,   wg:           "ReSpec Hackin' Gang"
-          ,   wgURI:        "http://darobin.github.com/respec"
-          ,   wgPublicList: "none"
-          ,   wgPatentURI:  "XXX"
-          ,   edDraftURI:   "http://darobin.github.com/respec"
-          ,   format: "markdown"
-        };
+        specStatus: "ED",
+        shortName: "includer",
+        editors: [{ name: "Robin Berjon", url: "http://berjon.com/" }],
+        wg: "ReSpec Hackin' Gang",
+        wgURI: "http://darobin.github.com/respec",
+        wgPublicList: "none",
+        wgPatentURI: "XXX",
+        edDraftURI: "http://darobin.github.com/respec",
+        format: "markdown",
+      };
     </script>
   </head>
   <body>
-    <section id='abstract'>
+    <section id="abstract">
       <p>Basic doc</p>
     </section>
-    <section id='sotd'>
-      <p>
-        CUSTOM PARAGRAPH
-      </p>
+    <section id="sotd">
+      <p>CUSTOM PARAGRAPH</p>
     </section>
     <section id="empty-include" data-include></section>
-    <section id='includes'>
-      <div data-include='/tests/spec/core/inc.html'
+    <section
+      id="not-found-include"
+      data-include="/tests/spec/core/this-file-does-not-exist.html"
+    ></section>
+    <section id="includes">
+      <div
+        data-include="/tests/spec/core/inc.html"
         data-include-format
         data-oninclude="someFunction"
-        data-dont-remove="pass"></div>
+        data-dont-remove="pass"
+      ></div>
     </section>
-    <section id='includes-replace'>
+    <section id="includes-replace">
       <!--
       The data URL is equivalent to:
       <section id="replacement-test"><h3>Replacement</h3></section>
@@ -41,19 +45,19 @@
       <div
         id="this-should-be-missing"
         data-include-replace
-        data-include='data:text/html;charset=utf-8,%3Csection%20id%3D%22replacement-test%22%3E%3Ch3%3EReplacement%3C%2Fh3%3E%3C%2Fsection%3E'>
-        </div>
+        data-include="data:text/html;charset=utf-8,%3Csection%20id%3D%22replacement-test%22%3E%3Ch3%3EReplacement%3C%2Fh3%3E%3C%2Fsection%3E"
+      ></div>
     </section>
-    <section id='includes-text'>
+    <section id="includes-text">
       <!--
       The data URL is equivalent to:
       <p>pass</p>
       -->
       <div
-        id='no-replace'
-        data-include-format='text'
-        data-include='data:text/plain;charset=utf-8,%3Cp%3Epass%3C%2Fp%3E'>
-        </div>
+        id="no-replace"
+        data-include-format="text"
+        data-include="data:text/plain;charset=utf-8,%3Cp%3Epass%3C%2Fp%3E"
+      ></div>
     </section>
   </body>
 </html>

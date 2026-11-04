@@ -3,7 +3,7 @@
  * Sets the defaults for DINI specs
  */
 export const name = "dini/defaults";
-import { coreDefaults } from "../core/defaults.js";
+import { coreDefaults, normalizeNoTOC } from "../core/defaults.js";
 
 const licenses = new Map([
   [
@@ -78,6 +78,7 @@ export function run(conf) {
     lint,
   });
 
+  normalizeNoTOC(conf);
   // computed properties
   Object.assign(conf, computeProps(/** @type {NormalizedConf} */ (conf)));
 }
