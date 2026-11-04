@@ -86,7 +86,8 @@ describe("Core - MDN Annotation", () => {
     const iconBad = poorSupportedMdnPanel.querySelector(
       "details summary span:nth-child(2)"
     );
-    expect(iconBad.title).toContain("has limited support");
+    expect(iconBad.getAttribute("role")).toBe("img");
+    expect(iconBad.getAttribute("aria-label")).toContain("has limited support");
     expect(iconBad.textContent).toBe("🚫");
     const textBad = poorSupportedMdnPanel.querySelector("details p");
     expect(textBad.classList).toContain("engines-some");
@@ -96,10 +97,21 @@ describe("Core - MDN Annotation", () => {
     const iconGood = goodSupportedMdnPanel.querySelector(
       "details summary span:nth-child(2)"
     );
-    expect(iconGood.title).toContain("all major engines");
+    expect(iconGood.getAttribute("role")).toBe("img");
+    expect(iconGood.getAttribute("aria-label")).toContain("all major engines");
     expect(iconGood.textContent).toBe("✅");
     const textGood = goodSupportedMdnPanel.querySelector("details p");
     expect(textGood.classList).toContain("engines-all");
+  });
+
+  it("hides the spacer icon of features in two engines from assistive technology", () => {
+    const { previousElementSibling: partialSupportMdnPanel } =
+      doc.getElementById("dom-paymentrequest-show");
+    const icon = partialSupportMdnPanel.querySelector(
+      "details summary span:nth-child(2)"
+    );
+    expect(icon.getAttribute("aria-hidden")).toBe("true");
+    expect(icon.textContent.trim()).toBe("");
   });
 
   it("doesn't attach MDNbox if ID is not in the spec", () => {
@@ -132,7 +144,7 @@ describe("Core - MDN Annotation", () => {
   });
 
   // Can't directly test `mdn: true` because it uses the default
-  // BASE_JSON_PATH (w3c.github.io), which isn't available in tests.
+  // BASE_JSON_PATH (speced.github.io), which isn't available in tests.
   // Instead, test the explicit-key hint via `mdn.key`.
   it("shows a helpful hint when an explicit mdn key is not found (404)", async () => {
     const ops = makeStandardOps({

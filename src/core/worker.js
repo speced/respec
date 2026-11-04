@@ -12,13 +12,16 @@ import { createResourceHint } from "./utils.js";
 import { fetchBase } from "./text-loader.js";
 
 // Derive the highlight URL from the ReSpec bundle location. In the IIFE bundle,
-// import.meta.url resolves to the script element's src (captured at load time).
-const highlightHref = new URL("respec-highlight.js", import.meta.url).href;
+// import.meta.url resolves to the script element's src (captured at load time),
+// so the highlighter sits next to it. In source-module mode (dev server, karma)
+// it resolves to src/core/worker.js instead, where no highlighter exists; the
+// built one lives at the repo root under builds/.
+export const highlightHref = import.meta.url.endsWith("/src/core/worker.js")
+  ? new URL("../../builds/respec-highlight.js", import.meta.url).href
+  : new URL("respec-highlight.js", import.meta.url).href;
 
-// Canonical production URL used as the importScripts() fallback. This differs
-// from highlightHref because in source-module mode (dev server, headless tests)
-// import.meta.url resolves to the module file rather than the bundle, making
-// the derived URL wrong. The production URL is always correct for importScripts.
+// Last-resort URL for importScripts() when the highlighter can't be fetched at
+// all (e.g. cross-origin without CORS headers).
 const PRODUCTION_HIGHLIGHT_URL =
   "https://www.w3.org/Tools/respec/respec-highlight";
 

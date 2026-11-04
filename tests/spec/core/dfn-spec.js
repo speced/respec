@@ -100,6 +100,20 @@ describe("Core — Definitions", () => {
     expect(dfn6.dataset.export).toBeUndefined();
   });
 
+  it("ignores definitions inside <del>", async () => {
+    const body = `
+    <section id='dfns'>
+      <del><dfn>shared term</dfn></del>
+      <dfn id="kept">shared term</dfn>
+      <a>shared term</a>
+    </section>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const sec = doc.getElementById("dfns");
+    expect(sec.querySelector("del dfn").id).toBe("");
+    expect(sec.querySelector("a").getAttribute("href")).toBe("#kept");
+  });
+
   it("makes dfn tab enabled whose aria-role is a link", async () => {
     const body = `
     <section id='dfns'>

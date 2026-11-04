@@ -19,6 +19,8 @@ import {
   warningFilters,
 } from "../SpecHelper.js";
 
+import { seedGroupCache } from "../respec-cache-helper.js";
+
 const headerErrors = errorFilters.filter("w3c/headers");
 const headerWarnings = warningFilters.filter("w3c/headers");
 const defaultErrors = errorFilters.filter("w3c/defaults");
@@ -28,6 +30,7 @@ const findContent = string => {
 };
 describe("W3C — Headers", () => {
   afterEach(flushIframes);
+  beforeAll(seedGroupCache);
   const simpleSpecURL = "spec/core/simple.html";
   /**
    * @param {Node} node
