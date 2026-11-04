@@ -3,6 +3,15 @@
 import { biblioDB } from "../../../src/core/biblio-db.js";
 
 describe("Core - biblioDB", () => {
+  // biblioDB is a singleton wrapping one persistent IndexedDB, and
+  // biblio-spec.js clears that same database. Without a clean slate per
+  // spec, results depend on which spec ran first and whether its writes
+  // had committed.
+  beforeEach(async () => {
+    await biblioDB.ready;
+    await biblioDB.clear();
+  });
+
   const data = {
     "whatwg-dom": {
       aliasOf: "WHATWG-DOM",

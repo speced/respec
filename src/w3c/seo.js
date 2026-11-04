@@ -92,9 +92,9 @@ async function addJSONLDInfo(conf, doc) {
   /** @type {any} */
   const jsonld = {
     "@context": [
-      "http://schema.org",
+      "https://schema.org",
       {
-        "@vocab": "http://schema.org/",
+        "@vocab": "https://schema.org/",
         "@language": doc.documentElement.lang || "en",
         w3p: "http://www.w3.org/2001/02pd/rec54#",
         foaf: "http://xmlns.com/foaf/0.1/",
@@ -203,7 +203,7 @@ function addRef(ref) {
     jsonld.creator = ref.authors.map(a => ({ name: a }));
   }
   if (ref.rawDate) {
-    jsonld.publishedDate = ref.rawDate;
+    jsonld.datePublished = ref.rawDate;
   }
   if (ref.isbn) {
     jsonld.identifier = ref.isbn;

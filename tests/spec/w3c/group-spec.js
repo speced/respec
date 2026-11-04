@@ -1,9 +1,11 @@
 "use strict";
 
 import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import { seedGroupCache } from "../respec-cache-helper.js";
 
 describe("W3C — Group", () => {
   afterAll(flushIframes);
+  beforeAll(seedGroupCache);
 
   async function getGroupConf(config) {
     const ops = makeStandardOps(config);

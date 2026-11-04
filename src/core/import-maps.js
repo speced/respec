@@ -18,7 +18,11 @@ import { marked as _marked } from "../../node_modules/marked/lib/marked.esm.js";
 import _pluralize from "../../js/deps/builds/pluralize.js";
 import hyperHTML from "../../node_modules/hyperhtml/esm.js";
 
-export const html = hyperHTML;
+// The runtime import above is by file path, which bypasses hyperhtml's
+// index.d.ts, so `html` would otherwise be typed from the minified esm.js.
+export const html = /** @type {typeof import("hyperhtml").default} */ (
+  /** @type {unknown} */ (hyperHTML)
+);
 export const idb = _idb;
 export const marked = _marked;
 export const MIMEType = _MIMEType;

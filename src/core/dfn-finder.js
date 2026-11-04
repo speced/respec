@@ -158,8 +158,6 @@ function findNormalDfn(defn, parent, ...names) {
         dfns = [...alternativeDfns];
         registerDefinition(dfns[0], [resolvedName]);
       }
-    } else {
-      resolvedName = name;
     }
     if (dfns.length > 1) {
       const msg = `WebIDL identifier \`${name}\` ${

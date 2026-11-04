@@ -32,12 +32,18 @@ const knownTypesMap = new Map([
       validator: validateCommonName,
     },
   ],
-  ["element", { requiresFor: false, validator: validateDOMName }],
+  [
+    "element",
+    {
+      requiresFor: false,
+      validator: /** @type {DefinitionValidator} */ (validateDOMName),
+    },
+  ],
   [
     "element-attr",
     {
       requiresFor: false,
-      validator: validateDOMName,
+      validator: /** @type {DefinitionValidator} */ (validateDOMName),
     },
   ],
   [
@@ -59,6 +65,9 @@ const knownTypes = [...knownTypesMap.keys()];
 
 export function run() {
   for (const dfn of document.querySelectorAll("dfn")) {
+    // Deleted content (e.g., in an updatable REC) defines nothing.
+    if (dfn.closest("del")) continue;
+
     const titles = getDfnTitles(dfn);
     registerDefinition(dfn, titles);
 
