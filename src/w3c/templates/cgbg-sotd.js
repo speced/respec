@@ -19,21 +19,23 @@ export default (conf, opts) => {
       This specification was published by the
       <a href="${conf.wgURI}">${conf.wg}</a>. It is not a W3C Standard nor is it
       on the W3C Standards Track.
-      ${conf.isCGFinal
-        ? html`
-            Please note that under the
-            <a href="https://www.w3.org/community/about/agreements/final/"
-              >W3C Community Final Specification Agreement (FSA)</a
-            >
-            other conditions apply.
-          `
-        : html`
-            Please note that under the
-            <a href="https://www.w3.org/community/about/agreements/cla/"
-              >W3C Community Contributor License Agreement (CLA)</a
-            >
-            there is a limited opt-out and other conditions apply.
-          `}
+      ${
+        conf.isCGFinal
+          ? html`
+              Please note that under the
+              <a href="https://www.w3.org/community/about/agreements/final/"
+                >W3C Community Final Specification Agreement (FSA)</a
+              >
+              other conditions apply.
+            `
+          : html`
+              Please note that under the
+              <a href="https://www.w3.org/community/about/agreements/cla/"
+                >W3C Community Contributor License Agreement (CLA)</a
+              >
+              there is a limited opt-out and other conditions apply.
+            `
+      }
       Learn more about
       <a href="https://www.w3.org/community/"
         >W3C Community and Business Groups</a

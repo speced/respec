@@ -78,6 +78,7 @@ interface BiblioData {
   href?: string;
   authors?: string[];
   publisher?: string;
+  pages?: string;
   date?: string;
   rawDate?: string;
   isbn?: string;
@@ -119,10 +120,17 @@ interface Conf {
   afterEnd?: ProcessFn;
   specStatus?: string;
   wgId?: string;
+  /** @deprecated Use `noTOC` instead */
   noToc?: boolean;
   noTOC?: boolean;
   /** Disables injecting ReSpec styles */
   noReSpecCSS?: boolean;
+  /**
+   * Set to `false` to turn dark mode off for this spec: no theme picker, and
+   * ReSpec's own dark styles are removed. Transitional, for custom CSS that is
+   * not dark-aware yet.
+   */
+  darkMode?: boolean;
 
   /** Indicates whether the document is a preview */
   isPreview?: boolean;
@@ -357,7 +365,7 @@ interface Conf {
     [key: string]: unknown;
   };
   /** External cross-reference configuration */
-  xref?: boolean | string | string[] | { url?: string; specs?: string[]; profile?: string };
+  xref?: boolean | string | string[] | { url?: string; specs?: string[]; profile?: string; headingApiUrl?: string };
   /** Whether to include JSON-LD metadata */
   doJsonLd?: boolean;
   /** Whether to highlight variables */

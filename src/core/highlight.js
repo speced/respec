@@ -5,7 +5,7 @@
  * Performs syntax highlighting to all pre and code elements.
  */
 import css from "../styles/highlight.css.js";
-import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 import { msgIdGenerator } from "./utils.js";
 import { workerPromise } from "./worker.js";
 export const name = "core/highlight";
@@ -30,7 +30,7 @@ async function highlightElement(elem) {
   const languages = getLanguageHint(htmlElem.classList);
   let response;
   try {
-    response = await sendHighlightRequest(htmlElem.innerText, languages);
+    response = await sendHighlightRequest(htmlElem.textContent, languages);
   } catch (err) {
     console.error(err);
     return;
@@ -107,10 +107,6 @@ export async function run(conf) {
   const promisesToHighlight = highlightables
     .filter(elem => elem.textContent.trim())
     .map(highlightElement);
-  document.head.appendChild(
-    html`<style>
-      ${css}
-    </style>`
-  );
+  insertStyle(css);
   await Promise.all(promisesToHighlight);
 }

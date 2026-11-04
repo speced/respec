@@ -4,6 +4,7 @@ Currently used only for adding 'assert' class to algorithm lists
 */
 import css from "../styles/algorithms.css.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 
 export const name = "core/algorithms";
 
@@ -32,7 +33,5 @@ export function run() {
     }
   }
 
-  const style = document.createElement("style");
-  style.textContent = css;
-  document.head.appendChild(style);
+  insertStyle(css);
 }

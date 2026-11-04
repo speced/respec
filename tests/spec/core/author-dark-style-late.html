@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <meta charset="utf-8" />
+  <title>Simple Spec</title>
+  <script class="remove">
+    function addAuthorDarkStyle(id) {
+      const style = document.createElement("style");
+      if (id) style.id = id;
+      else style.dataset.authorNoId = "";
+      style.textContent =
+        "@media (prefers-color-scheme: dark) { .author-thing { background: rebeccapurple; } }";
+      document.head.append(style);
+    }
+    var respecConfig = {
+      specStatus: "base",
+      shortName: "basics",
+      darkMode: false,
+      preProcess: [
+        () => addAuthorDarkStyle("author-preprocess-style"),
+        () => addAuthorDarkStyle(""),
+      ],
+      postProcess: [() => addAuthorDarkStyle("author-postprocess-style")],
+    };
+  </script>
+  <section id="abstract">
+    <p>Basic doc</p>
+  </section>
+  <section id="sotd">
+    <p>
+      Adds author stylesheets carrying a dark media query from preProcess and
+      from postProcess, one of them with no id at all.
+    </p>
+  </section>
+</html>

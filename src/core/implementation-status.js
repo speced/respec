@@ -3,11 +3,16 @@
  * Module: "core/implementation-status"
  * Adds an implementation status badge to the spec front matter,
  * showing Baseline browser availability from web-features data.
+ *
+ * Baseline name and logos are trademarks of Google LLC, used under
+ * the CC BY-ND 4.0 license. See usage guidelines:
+ * https://web-platform-dx.github.io/web-features/name-and-logo-usage-guidelines/
  */
 import { docLink, fetchAndCache, showWarning } from "./utils.js";
 import { pub, sub } from "./pubsubhub.js";
 import css from "../styles/implementation-status.css.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 
 export const name = "core/implementation-status";
 
@@ -161,14 +166,10 @@ export function prepare(conf) {
   const options = /** @type {ImplementationStatusOptions} */ (
     conf.implementationStatus
   );
-  document.head.appendChild(
-    html`<style
-      id="baseline-stylesheet"
-      class="${options.removeOnSave ? "removeOnSave" : ""}"
-    >
-      ${css}
-    </style>`
-  );
+  insertStyle(css, {
+    id: "baseline-stylesheet",
+    className: options.removeOnSave ? "removeOnSave" : "",
+  });
 }
 
 /** @param {RespecConfig} conf */

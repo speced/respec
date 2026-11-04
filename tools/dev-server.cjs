@@ -15,7 +15,7 @@ const { createServer } = require("http");
 const chokidar = require("chokidar");
 const karma = require("karma");
 const serve = require("serve-handler");
-const colors = require("colors");
+const { styleText } = require("node:util");
 const sade = require("sade");
 const serveConfig = require("../serve.json");
 const { Builder } = require("./builder.cjs");
@@ -155,14 +155,14 @@ async function run(args) {
       }
       await karmaServer.run();
     } catch (err) {
-      console.error(colors.red(err.stack));
+      console.error(styleText("red", err.stack));
     } finally {
       isActive = false;
     }
   }
 
   async function onError(err) {
-    console.error(colors.red(err.stack));
+    console.error(styleText("red", err.stack));
     await karmaServer.stop();
     process.exit(1);
   }
@@ -191,7 +191,10 @@ async function printWelcomeMessage(args) {
 
   const message = messages
     .map(([title, text]) => {
-      return colors.white.bold(`${title}:`.padEnd(30)) + colors.white(text);
+      return (
+        styleText(["white", "bold"], `${title}:`.padEnd(30)) +
+        styleText("white", text)
+      );
     })
     .join("\n");
 
