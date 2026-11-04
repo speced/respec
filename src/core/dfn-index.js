@@ -46,6 +46,13 @@ const localizationStrings = {
     dfnOf: "definición de",
     definesFollowing: "define lo siguiente:",
   },
+  fr: {
+    heading: "Index",
+    headingExternal: "Termes définis par référence",
+    headingLocal: "Termes définis par cette spécification",
+    dfnOf: "définition de",
+    definesFollowing: "définit les termes suivants :",
+  },
   ja: {
     heading: "索引",
     headingExternal: "参照によって定義された用語",
@@ -340,6 +347,9 @@ function collectExternalTerms() {
     if (!elem.dataset.cite) {
       continue;
     }
+    if ("noindex" in elem.dataset) {
+      continue;
+    }
     const { cite, citeFrag, xrefType, linkType, matchedText } = elem.dataset;
     // [[[SPEC#id]]] section links have both citeFrag and matchedText; skip them.
     if (citeFrag && matchedText) {
@@ -458,4 +468,8 @@ function cleanup(doc) {
   doc
     .querySelectorAll("#index-defined-here li[data-id]")
     .forEach(el => el.removeAttribute("data-id"));
+
+  doc
+    .querySelectorAll("a[data-noindex]")
+    .forEach(el => el.removeAttribute("data-noindex"));
 }
