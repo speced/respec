@@ -53,6 +53,9 @@ module.exports = config => {
 
     proxies: {
       "/about-blank.html": "/base/tests/about-blank.html",
+      // Root path, or the worker's scope would not cover karma's own page and
+      // the spec iframes that inherit control from it.
+      "/respec-test-sw.js": "/base/tests/spec/respec-test-sw.js",
       "/assets/": "/base/assets/",
       "/js/": "/base/js/",
       "/src/": "/base/src/",
@@ -83,8 +86,35 @@ module.exports = config => {
     client: {
       // @ts-expect-error
       args: ["--grep", config.grep || ""],
+      // Redirects xref, group, caniuse, baseline and bibliography requests to
+      // local servers; see .github/copilot-instructions.md. Empty means production.
+      serviceOrigins: {
+        ...(process.env.RESPEC_SERVICES_BASE && {
+          "https://respec.org": process.env.RESPEC_SERVICES_BASE,
+        }),
+        ...(process.env.SPECREF_BASE && {
+          "https://api.specref.org": process.env.SPECREF_BASE,
+        }),
+      },
     },
   };
+
+  // Set both or bibliography goes untested whichever one you set: core/biblio.js tries
+  // api.specref.org then respec.org/bibrefs, and an origin rewrite cannot separate that
+  // second one from xref.
+  const [specref, services] = [
+    process.env.SPECREF_BASE,
+    process.env.RESPEC_SERVICES_BASE,
+  ];
+  if (Boolean(specref) !== Boolean(services)) {
+    const unset = specref ? "RESPEC_SERVICES_BASE" : "SPECREF_BASE";
+    const reached = specref ? "respec.org/bibrefs" : "api.specref.org";
+    process.emitWarning(
+      `${unset} is not set, so bibliography can still reach ${reached} on production. ` +
+        "Set both to test bibliography against a local service.",
+      "ReSpecServiceOrigins"
+    );
+  }
 
   if (process.env.BROWSERS) {
     options.browsers = process.env.BROWSERS.split(" ");

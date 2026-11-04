@@ -19,7 +19,7 @@ class Renderer extends marked.Renderer {
     return styleText("italic", this.parser.parseInline(token.tokens));
   }
   codespan(token) {
-    return styleText("underline", unescape(token.text));
+    return styleText("cyan", `\`${unescape(token.text)}\``);
   }
   paragraph(token) {
     return unescape(this.parser.parseInline(token.tokens));
@@ -108,7 +108,7 @@ class Logger {
       console.error(
         " ",
         styleText("bold", paddedTitle),
-        this._formatMarkdown(value)
+        this._reindent(this._formatMarkdown(value), paddedTitle.length + 3)
       );
     };
     print("Count", rsError.elements && String(rsError.elements.length));
@@ -129,6 +129,13 @@ class Logger {
       !!rsError.stack &&
       (!!rsError.cause?.stack || rsError.plugin === "unknown")
     );
+  }
+
+  /**
+   * @param {string} text
+   */
+  _reindent(text, padding = 0) {
+    return text.replaceAll("\n", `\n${" ".repeat(padding)}`);
   }
 }
 

@@ -10,6 +10,7 @@ import { biblio } from "./biblio.js";
 import css from "../styles/dfn-index.css.js";
 import { getTermFromElement } from "./xref.js";
 import { html } from "./import-maps.js";
+import { insertStyle } from "./insert-style.js";
 import { renderInlineCitation } from "./render-biblio.js";
 import { sub } from "./pubsubhub.js";
 import { toCiteDetails } from "./data-cite.js";
@@ -44,6 +45,13 @@ const localizationStrings = {
     headingLocal: "Términos definidos por esta especificación",
     dfnOf: "definición de",
     definesFollowing: "define lo siguiente:",
+  },
+  fr: {
+    heading: "Index",
+    headingExternal: "Termes définis par référence",
+    headingLocal: "Termes définis par cette spécification",
+    dfnOf: "définition de",
+    definesFollowing: "définit les termes suivants :",
   },
   ja: {
     heading: "索引",
@@ -103,9 +111,7 @@ export function run() {
     return;
   }
 
-  const styleEl = document.createElement("style");
-  styleEl.textContent = css;
-  document.head.appendChild(styleEl);
+  insertStyle(css);
 
   index.classList.add("appendix");
   if (!index.querySelector("h2, h1")) {
@@ -341,6 +347,9 @@ function collectExternalTerms() {
     if (!elem.dataset.cite) {
       continue;
     }
+    if ("noindex" in elem.dataset) {
+      continue;
+    }
     const { cite, citeFrag, xrefType, linkType, matchedText } = elem.dataset;
     // [[[SPEC#id]]] section links have both citeFrag and matchedText; skip them.
     if (citeFrag && matchedText) {
@@ -459,4 +468,8 @@ function cleanup(doc) {
   doc
     .querySelectorAll("#index-defined-here li[data-id]")
     .forEach(el => el.removeAttribute("data-id"));
+
+  doc
+    .querySelectorAll("a[data-noindex]")
+    .forEach(el => el.removeAttribute("data-noindex"));
 }

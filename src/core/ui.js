@@ -11,21 +11,13 @@
 import { html, pluralize } from "./import-maps.js";
 import { reindent, xmlEscape } from "./utils.js";
 import css from "../styles/ui.css.js";
+import { insertStyle } from "./insert-style.js";
 import { markdownToHtml } from "./markdown.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
-insertStyle();
-
-function insertStyle() {
-  const styleElement = document.createElement("style");
-  styleElement.id = "respec-ui-styles";
-  styleElement.textContent = css;
-  styleElement.classList.add("removeOnSave");
-  document.head.appendChild(styleElement);
-  return styleElement;
-}
+insertStyle(css, { id: "respec-ui-styles", className: "removeOnSave" });
 
 /**
  * @param {Element | null | undefined} elem
