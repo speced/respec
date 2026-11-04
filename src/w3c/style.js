@@ -5,6 +5,7 @@
  * */
 
 import { W3CNotes, recTrackStatus, registryTrackStatus } from "./headers.js";
+import { insertCGAssets, isCGSpec } from "./cg-assets.js";
 import { createResourceHint } from "../core/utils.js";
 import { disableDarkStyles } from "../core/insert-style.js";
 import { html } from "../core/import-maps.js";
@@ -134,6 +135,15 @@ function restoreDarkLinkState(exportDoc) {
  * @param {Conf} conf
  */
 export function run(conf) {
+  // The CG specification redesign has its own style sheets and scripts, and
+  // none of the W3C TR ones below apply to it: not the maturity-level sheet,
+  // not fixup.js, and not the `color-scheme` handling, which cg-assets' own
+  // dark.js does not read.
+  if (isCGSpec(conf)) {
+    insertCGAssets();
+    return;
+  }
+
   // Attach W3C fixup script after we are done.
   if (!conf.noTOC) {
     sub("end-all", attachFixupScript, { once: true });
