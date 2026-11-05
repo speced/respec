@@ -319,6 +319,42 @@ describe("possible linking syntaxes", () => {
     expect(items[0].querySelector("code").textContent).toBe("[=my concept=]");
   });
 
+  it("adds the heading and list directly to the panel", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-direct">my concept</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-test-direct");
+
+    // `.dfn-panel > div` is a flex row, so a wrapper div would put the heading
+    // and the list side by side.
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    expect(syntaxList.parentElement).toBe(panel);
+    const heading = syntaxList.previousElementSibling.querySelector("b");
+    expect(heading.textContent).toBe("Possible linking syntaxes:");
+  });
+
+  it("lists what links to the term before the linking syntaxes", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-order">my concept</dfn>
+        <a>my concept</a>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-test-order");
+    const references = panel.querySelector(".dfn-panel-refs");
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    const position = references.compareDocumentPosition(syntaxList);
+    expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it("renders [= =] syntax for dfn type", async () => {
     const body = `
       <section>
@@ -419,7 +455,7 @@ describe("possible linking syntaxes", () => {
     expect(items[1].querySelector("code").textContent).toBe("[=thing=]");
   });
 
-  it("renders copy buttons for each syntax item", async () => {
+  it("renders a copy button per syntax item, hidden until hover or focus", async () => {
     const body = `
       <section>
         <h2>Test</h2>
@@ -437,28 +473,165 @@ describe("possible linking syntaxes", () => {
     expect(copyBtns[0].getAttribute("aria-label")).toBe(
       "Copy [=foo=] to clipboard"
     );
+
+    // The test frame is not focused, so :hover and :focus cannot be driven here.
+    doc.getElementById("test-copy").click();
+    expect(doc.defaultView.getComputedStyle(copyBtns[0]).opacity).toBe("0");
+    // Read only <style> sheets: cssRules on a cross-origin <link> throws.
+    const rules = [...doc.querySelectorAll("style")].flatMap(style => [
+      ...(style.sheet?.cssRules ?? []),
+    ]);
+    const reveal = rules.filter(
+      rule =>
+        rule.selectorText?.includes("li:hover .dfn-panel-copy-btn") &&
+        rule.selectorText.includes(".dfn-panel-copy-btn:focus")
+    );
+    expect(reveal).toHaveSize(1);
+    expect(reveal[0].style.opacity).toBe("1");
   });
 
-  it("keeps the panel open when Enter is pressed on a copy button", async () => {
+  it("keeps a docked panel open when a copy button is clicked", async () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-copy-enter" data-lt="foo|bar">foo</dfn>
+        <dfn id="test-docked" data-lt="foo|bar">foo</dfn>
+        <a>foo</a>
       </section>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const dfn = doc.getElementById("test-copy-enter");
-    const panel = doc.getElementById("dfn-panel-for-test-copy-enter");
-    const copyBtn = panel.querySelector(".dfn-panel-copy-btn");
+    const dfn = doc.getElementById("test-docked");
+    const panel = doc.getElementById("dfn-panel-for-test-docked");
 
     dfn.click();
-    copyBtn.focus();
-    copyBtn.dispatchEvent(
-      new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-    );
+    // Clicking a reference inside the panel docks it.
+    panel.querySelector(".dfn-panel-refs a").click();
+    expect(panel.classList.contains("docked")).toBeTrue();
 
+    panel.querySelector(".dfn-panel-copy-btn").click();
     expect(panel.hidden).toBeFalse();
+  });
+
+  it("lists a const in {{ }} form that links back to it", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <pre class="idl">
+          [Exposed=Window]
+          interface ConstHolder {
+            const unsigned short MAX = 1;
+          };
+        </pre>
+        <p id="ref">{{ConstHolder/MAX}}</p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-dom-constholder-max");
+    const listed = [...panel.querySelectorAll(".dfn-panel-lt code")].map(
+      c => c.textContent
+    );
+    expect(listed).toEqual(["{{ConstHolder/MAX}}"]);
+    const link = doc.querySelector("#ref a");
+    expect(link.getAttribute("href")).toBe("#dom-constholder-max");
+  });
+
+  it("lists enum values in quotes so every value links back", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <pre class="idl">
+          enum Mode2 { "first", "with-dash" };
+        </pre>
+        <p id="ref">{{Mode2/"with-dash"}}</p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-dom-mode2-with-dash");
+    const listed = [...panel.querySelectorAll(".dfn-panel-lt code")].map(
+      c => c.textContent
+    );
+    expect(listed).toEqual(['{{Mode2/"with-dash"}}']);
+    const link = doc.querySelector("#ref a");
+    expect(link.getAttribute("href")).toBe("#dom-mode2-with-dash");
+  });
+
+  it("lists no syntax for an overload that no inline syntax can link to", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <pre class="idl">
+          [Exposed=Window]
+          interface Over2 {
+            undefined over();
+            undefined over(long x);
+          };
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const first = doc.getElementById("dfn-panel-for-dom-over2-over");
+    const second = doc.getElementById(
+      "dfn-panel-for-dom-over2-over!overload-1"
+    );
+    expect(first.querySelector(".dfn-panel-lt")).toBeTruthy();
+    expect(second.querySelector(".dfn-panel-lt")).toBeNull();
+  });
+
+  it("lists no syntax for dfn types that no inline syntax links to", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-event" data-dfn-type="event">my-event</dfn>
+        <dfn id="test-header" data-dfn-type="http-header">My-Header</dfn>
+        <dfn id="test-plain">my concept</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    for (const id of ["test-event", "test-header"]) {
+      const panel = doc.getElementById(`dfn-panel-for-${id}`);
+      expect(panel.querySelector(".dfn-panel-lt")).toBeNull();
+    }
+    const plain = doc.getElementById("dfn-panel-for-test-plain");
+    expect(plain.querySelector(".dfn-panel-lt")).toBeTruthy();
+  });
+
+  it("shows markup in data-lt as text, ignores a blank data-dfn-for, and survives a missing clipboard", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-odd" data-lt="&lt;img src=x onerror=alert(1)&gt;">hostile</dfn>
+        <dfn id="test-blank-for" data-dfn-for=" ">blank for</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const win = doc.defaultView;
+
+    const hostile = doc.getElementById("dfn-panel-for-test-odd");
+    expect(hostile.querySelector("img")).toBeNull();
+    const codes = [...hostile.querySelectorAll(".dfn-panel-lt code")];
+    expect(codes.map(c => c.textContent)).toEqual([
+      "[=hostile=]",
+      "[=<img src=x onerror=alert(1)>=]",
+    ]);
+
+    const blank = doc.getElementById("dfn-panel-for-test-blank-for");
+    const blankCodes = [...blank.querySelectorAll(".dfn-panel-lt code")];
+    expect(blankCodes.map(c => c.textContent)).toEqual(["[=blank for=]"]);
+
+    // Outside secure contexts navigator.clipboard is undefined.
+    Object.defineProperty(win.navigator, "clipboard", {
+      value: undefined,
+      configurable: true,
+    });
+    const errors = [];
+    win.addEventListener("error", e => errors.push(e.message));
+    hostile.querySelector(".dfn-panel-copy-btn").click();
+    expect(errors).toEqual([]);
   });
 
   it("does not render linking syntaxes section for index-term dfns", async () => {

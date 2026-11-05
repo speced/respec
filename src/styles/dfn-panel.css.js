@@ -138,23 +138,26 @@ dfn {
   display: flex;
   align-items: center;
   gap: 0.25em;
-  margin-left: 0;
 }
 
 .dfn-panel .dfn-panel-copy-btn {
-  display: inline-flex;
-  align-items: center;
   padding: 0 0.2em;
-  border: 1px solid #ccc;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
   border-radius: 0.2em;
   background: transparent;
   font-size: 0.85em;
   cursor: pointer;
   line-height: 1;
   color: inherit;
+  opacity: 0;
+}
+
+.dfn-panel .dfn-panel-lt li:hover .dfn-panel-copy-btn,
+.dfn-panel .dfn-panel-copy-btn:focus {
+  opacity: 1;
 }
 
 .dfn-panel .dfn-panel-copy-btn:hover {
-  background: #eee;
+  background: color-mix(in srgb, currentColor 15%, transparent);
 }
 `;

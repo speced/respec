@@ -20,7 +20,7 @@ function setupCopyButtons() {
     if (!(btn instanceof HTMLElement)) return;
     const text = btn.dataset.copyText;
     if (!text) return;
-    navigator.clipboard.writeText(text).catch(() => {});
+    navigator.clipboard?.writeText(text).catch(() => {});
   });
 }
 
