@@ -13,7 +13,7 @@ export const name = "core/dfn-panel";
 const IDL_TYPES = new Set([
   "attribute",
   "callback",
-  "callback interface",
+  "const",
   "constructor",
   "dict-member",
   "dictionary",
@@ -22,7 +22,6 @@ const IDL_TYPES = new Set([
   "exception",
   "extended-attribute",
   "interface",
-  "interface mixin",
   "method",
   "namespace",
   "typedef",
@@ -31,6 +30,8 @@ const IDL_TYPES = new Set([
 const CDDL_TYPES = new Set(["cddl-type", "cddl-key", "cddl-value"]);
 
 const ELEMENT_TYPES = new Set(["element", "element-attr", "attr-value"]);
+
+const CONCEPT_TYPES = new Set(["dfn", "abstract-op"]);
 
 export async function run() {
   insertStyle(css, { before: document.querySelector("link") });
@@ -90,9 +91,8 @@ function createPanel(dfn) {
         ${dfnExportedMarker(dfn)} ${idlMarker(dfn, links)}
         ${cddlMarker(dfn, links)}
       </div>
-      ${linkingSyntaxesToHTML(dfn)}
       <p><b>Referenced in:</b></p>
-      ${referencesToHTML(id, links)}
+      ${referencesToHTML(id, links)} ${linkingSyntaxesToHTML(dfn)}
     </div>
   `;
   return panel;
@@ -154,7 +154,8 @@ function cddlMarker(dfn, links) {
 }
 
 /**
- * Returns the linking syntax string for a term given its dfn-type and dfn-for.
+ * Returns the linking syntax string for a term given its dfn-type and dfn-for,
+ * or an empty string when no inline syntax links to that type.
  * @param {string} term
  * @param {string} dfnType
  * @param {string | null} dfnFor
@@ -163,7 +164,9 @@ function cddlMarker(dfn, links) {
 function termToSyntax(term, dfnType, dfnFor) {
   const forPrefix = dfnFor ? `${dfnFor}/` : "";
   if (IDL_TYPES.has(dfnType)) {
-    return `{{${forPrefix}${term}}}`;
+    // Unquoted, a value like with-dash does not parse inside {{ }}.
+    const name = dfnType === "enum-value" ? `"${term}"` : term;
+    return `{{${forPrefix}${name}}}`;
   }
   if (CDDL_TYPES.has(dfnType)) {
     return `{^${forPrefix}${term}^}`;
@@ -174,10 +177,8 @@ function termToSyntax(term, dfnType, dfnFor) {
     }
     return `[^${term}^]`;
   }
-  if (dfnFor) {
-    return `[=${dfnFor}/${term}=]`;
-  }
-  return `[=${term}=]`;
+  // [= =] links only these. Types like event and http-header have no shorthand.
+  return CONCEPT_TYPES.has(dfnType) ? `[=${forPrefix}${term}=]` : "";
 }
 
 /**
@@ -187,45 +188,44 @@ function termToSyntax(term, dfnType, dfnFor) {
  * @returns {string[]}
  */
 function getLinkingSyntaxes(dfn) {
+  // No inline syntax links to an overload after the first (`!overload-N`).
+  if (/!overload-/.test(dfn.dataset.lt ?? "")) return [];
   const dfnType = dfn.dataset.dfnType || "dfn";
-  const forValues = dfn.dataset.dfnFor
-    ? dfn.dataset.dfnFor
-        .split(",")
-        .map(s => s.trim())
-        .filter(Boolean)
-    : [null];
+  const forNames =
+    dfn.dataset.dfnFor
+      ?.split(",")
+      .map(s => s.trim())
+      .filter(Boolean) ?? [];
+  const forValues = forNames.length ? forNames : [null];
   const primaryTerm = "ltNodefault" in dfn.dataset ? "" : norm(dfn.textContent);
-  const ltTerms = dfn.dataset.lt
-    ? dfn.dataset.lt.split("|").map(norm).filter(Boolean)
-    : [];
-  const allTerms = [primaryTerm, ...ltTerms].filter(
-    (t, i, arr) => Boolean(t) && arr.indexOf(t) === i
-  );
-  return allTerms.flatMap(term =>
-    forValues.map(forValue => termToSyntax(term, dfnType, forValue))
-  );
+  const ltTerms = dfn.dataset.lt?.split("|").map(norm) ?? [];
+  const allTerms = [...new Set([primaryTerm, ...ltTerms])].filter(Boolean);
+  return allTerms
+    .flatMap(term =>
+      forValues.map(forValue => termToSyntax(term, dfnType, forValue))
+    )
+    .filter(Boolean);
 }
 
 /**
  * Creates a copy-to-clipboard button for a linking syntax string.
  * @param {string} text
- * @returns {HTMLButtonElement}
  */
 function createSyntaxCopyButton(text) {
-  const button = document.createElement("button");
-  button.className = "dfn-panel-copy-btn removeOnSave";
-  button.dataset.copyText = text;
-  button.setAttribute("aria-label", `Copy ${text} to clipboard`);
-  button.title = "Copy to clipboard";
-  button.textContent = "⎘";
-  return button;
+  return html`<button
+    class="dfn-panel-copy-btn removeOnSave"
+    data-copy-text="${text}"
+    aria-label="Copy ${text} to clipboard"
+    title="Copy to clipboard"
+  >
+    ⎘
+  </button>`;
 }
 
 /**
  * Renders the "Possible linking syntaxes:" section for a dfn panel.
  * Returns null if the dfn is an index-term (external) or has no syntaxes.
  * @param {HTMLElement} dfn
- * @returns {HTMLElement | null}
  */
 function linkingSyntaxesToHTML(dfn) {
   // Only show for local <dfn> elements, not external .index-term spans
@@ -233,25 +233,17 @@ function linkingSyntaxesToHTML(dfn) {
   const syntaxes = getLinkingSyntaxes(dfn);
   if (!syntaxes.length) return null;
 
-  const ul = document.createElement("ul");
-  ul.className = "dfn-panel-lt";
-  for (const syntax of syntaxes) {
-    const li = document.createElement("li");
-    const code = document.createElement("code");
-    code.textContent = syntax;
-    const copyBtn = createSyntaxCopyButton(syntax);
-    li.append(code, " ", copyBtn);
-    ul.append(li);
-  }
-
-  const b = document.createElement("b");
-  b.textContent = "Possible linking syntaxes:";
-  const p = document.createElement("p");
-  p.append(b);
-
-  const container = document.createElement("div");
-  container.append(p, ul);
-  return container;
+  // No wrapper element: `.dfn-panel > div` is a flex row, so a wrapping div
+  // would lay the heading and the list out side by side.
+  return html`<p><b>Possible linking syntaxes:</b></p>
+    <ul class="dfn-panel-lt">
+      ${syntaxes.map(
+        syntax =>
+          html`<li>
+            <code>${syntax}</code> ${createSyntaxCopyButton(syntax)}
+          </li>`
+      )}
+    </ul>`;
 }
 
 /**
