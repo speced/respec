@@ -474,13 +474,17 @@ describe("possible linking syntaxes", () => {
       "Copy [=foo=] to clipboard"
     );
 
-    // The test frame is not focused, so :hover and :focus cannot be driven here.
-    doc.getElementById("test-copy").click();
-    expect(doc.defaultView.getComputedStyle(copyBtns[0]).opacity).toBe("0");
-    // Read only <style> sheets: cssRules on a cross-origin <link> throws.
+    // The test frame is not rendered or focused, so computed styles, :hover and
+    // :focus are unavailable (Firefox returns ""): read the rules instead.
+    // Only <style> sheets: cssRules on a cross-origin <link> throws.
     const rules = [...doc.querySelectorAll("style")].flatMap(style => [
       ...(style.sheet?.cssRules ?? []),
     ]);
+    const atRest = rules.filter(
+      rule => rule.selectorText === ".dfn-panel .dfn-panel-copy-btn"
+    );
+    expect(atRest).toHaveSize(1);
+    expect(atRest[0].style.opacity).toBe("0");
     const reveal = rules.filter(
       rule =>
         rule.selectorText?.includes("li:hover .dfn-panel-copy-btn") &&
