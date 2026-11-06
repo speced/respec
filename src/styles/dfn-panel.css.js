@@ -128,4 +128,41 @@ dfn {
   max-height: 30vh;
   overflow: auto;
 }
+
+.dfn-panel .dfn-panel-lt {
+  list-style: none;
+  padding: 0;
+}
+
+.dfn-panel .dfn-panel-lt li {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.dfn-panel .dfn-panel-copy-btn {
+  padding: 0 0.2em;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: 0.2em;
+  background: transparent;
+  font-size: 0.85em;
+  cursor: pointer;
+  line-height: 1;
+  color: inherit;
+  opacity: 0;
+}
+
+.dfn-panel .dfn-panel-lt li:hover .dfn-panel-copy-btn,
+.dfn-panel .dfn-panel-copy-btn:focus {
+  opacity: 1;
+}
+
+.dfn-panel .dfn-panel-copy-btn:hover {
+  background: color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.dfn-panel .dfn-panel-copy-btn:active {
+  background: color-mix(in srgb, currentColor 30%, transparent);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, currentColor 50%, transparent);
+}
 `;

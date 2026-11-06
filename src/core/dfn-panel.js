@@ -10,6 +10,29 @@ import { norm } from "./utils.js";
 
 export const name = "core/dfn-panel";
 
+const IDL_TYPES = new Set([
+  "attribute",
+  "callback",
+  "const",
+  "constructor",
+  "dict-member",
+  "dictionary",
+  "enum-value",
+  "enum",
+  "exception",
+  "extended-attribute",
+  "interface",
+  "method",
+  "namespace",
+  "typedef",
+]);
+
+const CDDL_TYPES = new Set(["cddl-type", "cddl-key", "cddl-value"]);
+
+const ELEMENT_TYPES = new Set(["element", "element-attr", "attr-value"]);
+
+const CONCEPT_TYPES = new Set(["dfn", "abstract-op"]);
+
 export async function run() {
   insertStyle(css, { before: document.querySelector("link") });
 
@@ -69,7 +92,7 @@ function createPanel(dfn) {
         ${cddlMarker(dfn, links)}
       </div>
       <p><b>Referenced in:</b></p>
-      ${referencesToHTML(id, links)}
+      ${referencesToHTML(id, links)} ${linkingSyntaxesToHTML(dfn)}
     </div>
   `;
   return panel;
@@ -131,13 +154,107 @@ function cddlMarker(dfn, links) {
 }
 
 /**
+ * Returns the linking syntax string for a term given its dfn-type and dfn-for,
+ * or an empty string when no inline syntax links to that type.
+ * @param {string} term
+ * @param {string} dfnType
+ * @param {string | null} dfnFor
+ * @returns {string}
+ */
+function termToSyntax(term, dfnType, dfnFor) {
+  const forPrefix = dfnFor ? `${dfnFor}/` : "";
+  if (IDL_TYPES.has(dfnType)) {
+    // Unquoted, a value like with-dash does not parse inside {{ }}.
+    const name = dfnType === "enum-value" ? `"${term}"` : term;
+    return `{{${forPrefix}${name}}}`;
+  }
+  if (CDDL_TYPES.has(dfnType)) {
+    return `{^${forPrefix}${term}^}`;
+  }
+  if (ELEMENT_TYPES.has(dfnType)) {
+    if ((dfnType === "element-attr" || dfnType === "attr-value") && dfnFor) {
+      return `[^${dfnFor}/${term}^]`;
+    }
+    return `[^${term}^]`;
+  }
+  // [= =] links only these. Types like event and http-header have no shorthand.
+  return CONCEPT_TYPES.has(dfnType) ? `[=${forPrefix}${term}=]` : "";
+}
+
+/**
+ * Returns the list of possible linking syntax strings for a dfn element.
+ * Includes the primary text and any data-lt aliases.
+ * @param {HTMLElement} dfn
+ * @returns {string[]}
+ */
+function getLinkingSyntaxes(dfn) {
+  // No inline syntax links to an overload after the first (`!overload-N`).
+  if (/!overload-/.test(dfn.dataset.lt ?? "")) return [];
+  const dfnType = dfn.dataset.dfnType || "dfn";
+  const forNames =
+    dfn.dataset.dfnFor
+      ?.split(",")
+      .map(s => s.trim())
+      .filter(Boolean) ?? [];
+  const forValues = forNames.length ? forNames : [null];
+  const primaryTerm = "ltNodefault" in dfn.dataset ? "" : norm(dfn.textContent);
+  const ltTerms = dfn.dataset.lt?.split("|").map(norm) ?? [];
+  const allTerms = [...new Set([primaryTerm, ...ltTerms])].filter(Boolean);
+  return allTerms
+    .flatMap(term =>
+      forValues.map(forValue => termToSyntax(term, dfnType, forValue))
+    )
+    .filter(Boolean);
+}
+
+/**
+ * Creates a copy-to-clipboard button for a linking syntax string.
+ * @param {string} text
+ */
+function createSyntaxCopyButton(text) {
+  return html`<button
+    type="button"
+    class="dfn-panel-copy-btn"
+    data-copy-text="${text}"
+    aria-label="Copy ${text} to clipboard"
+    title="Copy to clipboard"
+  >
+    ⎘
+  </button>`;
+}
+
+/**
+ * Renders the "Possible linking syntaxes:" section for a dfn panel.
+ * Returns null if the dfn is an index-term (external) or has no syntaxes.
+ * @param {HTMLElement} dfn
+ */
+function linkingSyntaxesToHTML(dfn) {
+  // Only show for local <dfn> elements, not external .index-term spans
+  if (!dfn.matches("dfn")) return null;
+  const syntaxes = getLinkingSyntaxes(dfn);
+  if (!syntaxes.length) return null;
+
+  // No wrapper element: `.dfn-panel > div` is a flex row, so a wrapping div
+  // would lay the heading and the list out side by side.
+  return html`<p><b>Possible linking syntaxes:</b></p>
+    <ul class="dfn-panel-lt">
+      ${syntaxes.map(
+        syntax =>
+          html`<li>
+            <code>${syntax}</code> ${createSyntaxCopyButton(syntax)}
+          </li>`
+      )}
+    </ul>`;
+}
+
+/**
  * @param {string} id dfn id
  * @param {NodeListOf<HTMLAnchorElement>} links
  * @returns {HTMLUListElement}
  */
 function referencesToHTML(id, links) {
   if (!links.length) {
-    return html`<ul>
+    return html`<ul class="dfn-panel-refs">
       <li>Not referenced in this document.</li>
     </ul>`;
   }
@@ -183,7 +300,7 @@ function referencesToHTML(id, links) {
     </li>`;
   };
 
-  return html`<ul>
+  return html`<ul class="dfn-panel-refs">
     ${[...titleToIDs].map(listItemToHTML)}
   </ul>`;
 }
