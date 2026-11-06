@@ -160,4 +160,9 @@ dfn {
 .dfn-panel .dfn-panel-copy-btn:hover {
   background: color-mix(in srgb, currentColor 15%, transparent);
 }
+
+.dfn-panel .dfn-panel-copy-btn:active {
+  background: color-mix(in srgb, currentColor 30%, transparent);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, currentColor 50%, transparent);
+}
 `;
