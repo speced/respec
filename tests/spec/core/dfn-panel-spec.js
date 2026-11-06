@@ -515,6 +515,30 @@ describe("possible linking syntaxes", () => {
     expect(pressed[0].style.boxShadow).not.toBe("");
   });
 
+  it("does not submit an author's form when a copy button inside it is clicked", async () => {
+    const body = `
+      <form id="author-form" action="#submitted"><script></script></form>
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-form">foo</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const form = doc.getElementById("author-form");
+    const panel = doc.getElementById("dfn-panel-for-test-form");
+    // Panels go before the first <script> in the body, here the one in the form.
+    expect(form.contains(panel)).toBeTrue();
+
+    let submits = 0;
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      submits++;
+    });
+    panel.querySelector(".dfn-panel-copy-btn").click();
+    expect(submits).toBe(0);
+  });
+
   it("keeps a docked panel open when a copy button is clicked", async () => {
     const body = `
       <section>
