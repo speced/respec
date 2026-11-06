@@ -187,7 +187,7 @@ function renderNotRec(conf) {
   let reviewPolicy = null;
   let endorsement = html`Publication as
   ${prefix(/** @type {string} */ (conf.textStatus))} does not imply endorsement
-  by W3C and its Members.`;
+  by W3C and its members.`;
   let updatePolicy = html`<p>
     This is a draft document and may be updated, replaced, or obsoleted by other
     documents at any time. It is inappropriate to cite this document as other
@@ -215,7 +215,7 @@ function renderNotRec(conf) {
       endorsement = html`<p>
         A W3C Statement is a specification that, after extensive
         consensus-building, is endorsed by
-        <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.
+        <abbr title="World Wide Web Consortium">W3C</abbr> and its members.
       </p>`;
       break;
     case "RY":
@@ -223,7 +223,7 @@ function renderNotRec(conf) {
         <p>
           A W3C Registry is a specification that, after extensive
           consensus-building, is endorsed by
-          <abbr title="World Wide Web Consortium">W3C</abbr> and its Members.
+          <abbr title="World Wide Web Consortium">W3C</abbr> and its members.
         </p>`;
       break;
     case "CRD":
@@ -262,7 +262,7 @@ function renderNotRec(conf) {
         <a href="${processLink}#dfn-wide-review">wide review</a>, is intended to
         gather
         <a href="${conf.implementationReportURI}">implementation experience</a>,
-        and has commitments from Working Group members to
+        and has commitments from working group members to
         <a href="https://www.w3.org/policies/patent-policy/#sec-Requirements"
           >royalty-free licensing</a
         >
@@ -301,13 +301,13 @@ function renderNotRec(conf) {
       break;
     case "DNOTE":
       endorsement = html`${conf.textStatus}s are not endorsed by
-        <abbr title="World Wide Web Consortium">W3C</abbr> nor its Members.`;
+        <abbr title="World Wide Web Consortium">W3C</abbr> nor its members.`;
       break;
     case "NOTE":
       endorsement = html`This ${conf.textStatus} is endorsed by
         ${getWgHTML(conf)}, but is not endorsed by
         <abbr title="World Wide Web Consortium">W3C</abbr> itself nor its
-        Members.`;
+        members.`;
       updatePolicy = "";
       break;
   }
@@ -334,8 +334,8 @@ function renderIsRec(conf) {
     <p>
       A W3C Recommendation is a specification that, after extensive
       consensus-building, is endorsed by
-      <abbr title="World Wide Web Consortium">W3C</abbr> and its Members, and
-      has commitments from Working Group members to
+      <abbr title="World Wide Web Consortium">W3C</abbr> and its members, and
+      has commitments from working group members to
       <a href="https://www.w3.org/policies/patent-policy/#sec-Requirements"
         >royalty-free licensing</a
       >
@@ -488,7 +488,7 @@ function noteForMemberSubmission(conf) {
 
   return html`<p>
     By publishing this document, W3C acknowledges that the
-    <a href="${conf.thisVersion}">Submitting Members</a> have made a formal
+    <a href="${conf.thisVersion}">Submitting members</a> have made a formal
     Submission request to W3C for discussion. Publication of this document by
     W3C indicates no endorsement of its content by W3C, nor that W3C has, is, or
     will be allocating any resources to the issues addressed by it. This
@@ -496,16 +496,16 @@ function noteForMemberSubmission(conf) {
     potential input to the
     <a href="https://www.w3.org/policies/process/">W3C Process</a>. A
     <a href="${teamComment}">W3C Team Comment</a> has been published in
-    conjunction with this Member Submission. Publication of acknowledged Member
-    Submissions at the W3C site is one of the benefits of
+    conjunction with this W3C Member Submission. Publication of acknowledged member
+    submissions at the W3C site is one of the benefits of
     <a href="https://www.w3.org/Consortium/Prospectus/Joining">
       W3C Membership</a
-    >. Please consult the requirements associated with Member Submissions of
+    >. Please consult the requirements associated with W3C Member submissions of
     <a href="${patentPolicyURL}#sec-submissions"
       >section 3.3 of the W3C Patent Policy</a
     >. Please consult the complete
     <a href="https://www.w3.org/Submission"
-      >list of acknowledged W3C Member Submissions</a
+      >list of acknowledged W3C Member submissions</a
     >.
   </p>`;
 }
