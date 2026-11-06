@@ -213,6 +213,7 @@ function getLinkingSyntaxes(dfn) {
  */
 function createSyntaxCopyButton(text) {
   return html`<button
+    type="button"
     class="dfn-panel-copy-btn"
     data-copy-text="${text}"
     aria-label="Copy ${text} to clipboard"

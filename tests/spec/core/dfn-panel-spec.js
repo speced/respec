@@ -473,6 +473,7 @@ describe("possible linking syntaxes", () => {
     expect(copyBtns[0].getAttribute("aria-label")).toBe(
       "Copy [=foo=] to clipboard"
     );
+    expect(copyBtns[0].type).toBe("button");
 
     // The test frame is not rendered or focused, so computed styles, :hover and
     // :focus are unavailable (Firefox returns ""): read the rules instead.
@@ -492,6 +493,26 @@ describe("possible linking syntaxes", () => {
     );
     expect(reveal).toHaveSize(1);
     expect(reveal[0].style.opacity).toBe("1");
+  });
+
+  it("styles the copy button differently while it is pressed", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-pressed">foo</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    // The test frame is not rendered, so :active cannot be driven: read the rule.
+    const rules = [...doc.querySelectorAll("style")].flatMap(style => [
+      ...(style.sheet?.cssRules ?? []),
+    ]);
+    const pressed = rules.filter(
+      rule => rule.selectorText === ".dfn-panel .dfn-panel-copy-btn:active"
+    );
+    expect(pressed).toHaveSize(1);
+    expect(pressed[0].style.boxShadow).not.toBe("");
   });
 
   it("keeps a docked panel open when a copy button is clicked", async () => {
