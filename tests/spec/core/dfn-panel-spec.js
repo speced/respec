@@ -561,6 +561,37 @@ describe("possible linking syntaxes", () => {
     expect(panel.hidden).toBeFalse();
   });
 
+  it("keeps the panel open when Enter is pressed on a copy button, and closes it on a link", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-enter" data-lt="foo|bar">foo</dfn>
+        <a>foo</a>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    // A hidden frame has no layout, and then showing a panel throws before it traps focus.
+    const doc = await makeRSDoc(ops, null, "display: block");
+    const pressEnter = target =>
+      target.dispatchEvent(
+        new doc.defaultView.KeyboardEvent("keydown", {
+          key: "Enter",
+          bubbles: true,
+        })
+      );
+    const dfn = doc.getElementById("test-enter");
+    const panel = doc.getElementById("dfn-panel-for-test-enter");
+
+    dfn.click();
+    expect(panel.contains(doc.activeElement)).toBeTrue();
+
+    pressEnter(panel.querySelector(".dfn-panel-copy-btn"));
+    expect(panel.hidden).toBeFalse();
+
+    pressEnter(panel.querySelector(".dfn-panel-refs a"));
+    expect(panel.hidden).toBeTrue();
+  });
+
   it("keeps the copy buttons in an exported document, and they copy", async () => {
     const body = `
       <section>
