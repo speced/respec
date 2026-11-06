@@ -516,6 +516,29 @@ describe("possible linking syntaxes", () => {
     expect(panel.hidden).toBeFalse();
   });
 
+  it("keeps the copy buttons in an exported document, and they copy", async () => {
+    const body = `
+      <section>
+        <h2>Test</h2>
+        <dfn id="test-export-copy" data-lt="foo|bar">foo</dfn>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const rdoc = await makeRSDoc(ops);
+    const doc = await getExportedDoc(rdoc);
+    const copied = [];
+    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+      value: { writeText: text => copied.push(text) && Promise.resolve() },
+      configurable: true,
+    });
+
+    const panel = doc.getElementById("dfn-panel-for-test-export-copy");
+    const buttons = panel.querySelectorAll(".dfn-panel-copy-btn");
+    expect(buttons).toHaveSize(2);
+    buttons[1].click();
+    expect(copied).toEqual(["[=bar=]"]);
+  });
+
   it("lists a const in {{ }} form that links back to it", async () => {
     const body = `
       <section>
