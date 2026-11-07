@@ -176,21 +176,22 @@ async function processJson(json, { feature }) {
   ]);
   const toBrowserCell = browserCellRenderer(feature);
   results.reduce(toBrowserCell, groups);
-  const out = [...groups]
+  const entries = [...groups]
     .filter(([, arr]) => arr.length)
     .map(
+      // A dl only permits dt/dd, optionally grouped in a div. The dt comes
+      // first for valid markup; the CSS puts the label back on the rule under
+      // the browsers, where it reads as a legend.
       ([key, arr]) =>
         html`<div class="caniuse-group">
-          <div class="caniuse-browsers">${arr}</div>
-          <div class="caniuse-type"><span>${key}</div>
+          <dt class="caniuse-type"><span>${key}</span></dt>
+          <dd class="caniuse-browsers">${arr}</dd>
         </div>`
     );
-  out.push(
-    html`<a class="caniuse-cell" href="https://caniuse.com/${feature}"
+  return html`<dl class="caniuse-groups">${entries}</dl>
+    <a class="caniuse-more-info" href="https://caniuse.com/${feature}"
       >More info</a
-    >`
-  );
-  return out;
+    >`;
 }
 
 /**
