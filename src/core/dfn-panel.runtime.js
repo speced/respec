@@ -12,18 +12,6 @@ function setupPanel() {
   setupCopyButtons();
 }
 
-function setupCopyButtons() {
-  document.body.addEventListener("click", event => {
-    const target = event.target;
-    const btn =
-      target instanceof HTMLElement && target.closest(".dfn-panel-copy-btn");
-    if (!(btn instanceof HTMLElement)) return;
-    const text = btn.dataset.copyText;
-    if (!text) return;
-    navigator.clipboard?.writeText(text).catch(() => {});
-  });
-}
-
 function panelListener() {
   /** @type {HTMLElement | null} */
   let panel = null;
@@ -181,7 +169,7 @@ function displayPanel(dfn, panel, { x, y }) {
  * @returns
  */
 function trapFocus(panel, dfn) {
-  /** @type NodeListOf<HTMLElement> elements */
+  /** @type NodeListOf<HTMLElement> */
   const focusableElements = panel.querySelectorAll(
     "a[href], button:not([disabled])"
   );
@@ -216,7 +204,6 @@ function trapFocus(panel, dfn) {
  */
 function createTrapListener(focusableElements, panel, dfn) {
   const lastIndex = focusableElements.length - 1;
-  let currentIndex = 0;
   /**
    * @param {KeyboardEvent} event
    */
@@ -225,13 +212,16 @@ function createTrapListener(focusableElements, panel, dfn) {
       // Hitting "Tab" traps us in a nice loop around elements.
       case "Tab": {
         event.preventDefault();
-        currentIndex += event.shiftKey ? -1 : +1;
-        if (currentIndex < 0) {
-          currentIndex = lastIndex;
-        } else if (currentIndex > lastIndex) {
-          currentIndex = 0;
+        let index = [...focusableElements].indexOf(
+          /** @type {HTMLElement} */ (document.activeElement)
+        );
+        index += event.shiftKey ? -1 : +1;
+        if (index < 0) {
+          index = lastIndex;
+        } else if (index > lastIndex) {
+          index = 0;
         }
-        focusableElements.item(currentIndex).focus();
+        focusableElements.item(index).focus();
         break;
       }
 
@@ -259,4 +249,17 @@ function hidePanel(panel) {
   if (!panel) return;
   panel.hidden = true;
   panel.classList.remove("docked");
+}
+
+function setupCopyButtons() {
+  document.body.addEventListener("click", event => {
+    // The icon is an SVG, which is an Element but not an HTMLElement.
+    const target = event.target;
+    const btn =
+      target instanceof Element && target.closest(".dfn-panel-copy-btn");
+    if (!btn) return;
+    const text = btn.previousElementSibling?.textContent;
+    if (!text) return;
+    navigator.clipboard?.writeText(text).catch(() => {});
+  });
 }

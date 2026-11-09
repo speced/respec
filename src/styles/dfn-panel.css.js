@@ -140,6 +140,11 @@ dfn {
   gap: 0.25em;
 }
 
+.dfn-panel .dfn-panel-lt code {
+  -webkit-user-select: all;
+  user-select: all;
+}
+
 .dfn-panel .dfn-panel-copy-btn {
   padding: 0 0.2em;
   border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
@@ -155,6 +160,13 @@ dfn {
 .dfn-panel .dfn-panel-lt li:hover .dfn-panel-copy-btn,
 .dfn-panel .dfn-panel-copy-btn:focus {
   opacity: 1;
+}
+
+.dfn-panel .dfn-panel-copy-btn svg {
+  display: block;
+  height: 1em;
+  width: auto;
+  fill: currentColor;
 }
 
 .dfn-panel .dfn-panel-copy-btn:hover {

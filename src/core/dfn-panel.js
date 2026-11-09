@@ -2,36 +2,14 @@
 // Constructs "dfn panels" which show all the local references to a dfn and a
 // self link to the selected dfn. Based on Bikeshed's dfn panels at
 // https://github.com/tabatkins/bikeshed/blob/ef44162c2e/bikeshed/dfnpanels.py
+import { getDfnTitles, norm } from "./utils.js";
+import { COPY_SVG } from "./clipboard.js";
 import css from "../styles/dfn-panel.css.js";
 import { fetchBase } from "./text-loader.js";
 import { html } from "./import-maps.js";
 import { insertStyle } from "./insert-style.js";
-import { norm } from "./utils.js";
 
 export const name = "core/dfn-panel";
-
-const IDL_TYPES = new Set([
-  "attribute",
-  "callback",
-  "const",
-  "constructor",
-  "dict-member",
-  "dictionary",
-  "enum-value",
-  "enum",
-  "exception",
-  "extended-attribute",
-  "interface",
-  "method",
-  "namespace",
-  "typedef",
-]);
-
-const CDDL_TYPES = new Set(["cddl-type", "cddl-key", "cddl-value"]);
-
-const ELEMENT_TYPES = new Set(["element", "element-attr", "attr-value"]);
-
-const CONCEPT_TYPES = new Set(["dfn", "abstract-op"]);
 
 export async function run() {
   insertStyle(css, { before: document.querySelector("link") });
@@ -78,7 +56,7 @@ function createPanel(dfn) {
       hidden
       role="dialog"
       aria-modal="true"
-      aria-label="Links in this document to definition: ${definition}"
+      aria-label="Details for definition: ${definition}"
     >
       <span class="caret"></span>
       <div>
@@ -154,36 +132,33 @@ function cddlMarker(dfn, links) {
 }
 
 /**
- * Returns the linking syntax string for a term given its dfn-type and dfn-for,
- * or an empty string when no inline syntax links to that type.
- * @param {string} term
- * @param {string} dfnType
- * @param {string | null} dfnFor
- * @returns {string}
+ * Renders the "Possible linking syntaxes:" section for a dfn panel.
+ * Returns null if the dfn is an index-term (external) or has no syntaxes.
+ * @param {HTMLElement} dfn
  */
-function termToSyntax(term, dfnType, dfnFor) {
-  const forPrefix = dfnFor ? `${dfnFor}/` : "";
-  if (IDL_TYPES.has(dfnType)) {
-    // Unquoted, a value like with-dash does not parse inside {{ }}.
-    const name = dfnType === "enum-value" ? `"${term}"` : term;
-    return `{{${forPrefix}${name}}}`;
-  }
-  if (CDDL_TYPES.has(dfnType)) {
-    return `{^${forPrefix}${term}^}`;
-  }
-  if (ELEMENT_TYPES.has(dfnType)) {
-    if ((dfnType === "element-attr" || dfnType === "attr-value") && dfnFor) {
-      return `[^${dfnFor}/${term}^]`;
-    }
-    return `[^${term}^]`;
-  }
-  // [= =] links only these. Types like event and http-header have no shorthand.
-  return CONCEPT_TYPES.has(dfnType) ? `[=${forPrefix}${term}=]` : "";
+function linkingSyntaxesToHTML(dfn) {
+  // Only show for local <dfn> elements, not external .index-term spans
+  if (!dfn.matches("dfn")) return null;
+  const syntaxes = getLinkingSyntaxes(dfn);
+  if (!syntaxes.length) return null;
+
+  const headingId = `dfn-panel-lt-heading-${dfn.id}`;
+  // No wrapper element: `.dfn-panel > div` is a flex row, so a wrapping div
+  // would lay the heading and the list out side by side.
+  return html`<p><b id="${headingId}">Possible linking syntaxes:</b></p>
+    <ul class="dfn-panel-lt" aria-labelledby="${headingId}">
+      ${syntaxes.map(
+        syntax =>
+          html`<li>
+            <code>${syntax}</code> ${createSyntaxCopyButton(syntax)}
+          </li>`
+      )}
+    </ul>`;
 }
 
 /**
  * Returns the list of possible linking syntax strings for a dfn element.
- * Includes the primary text and any data-lt aliases.
+ * Includes its text and its data-lt and data-local-lt aliases.
  * @param {HTMLElement} dfn
  * @returns {string[]}
  */
@@ -197,54 +172,94 @@ function getLinkingSyntaxes(dfn) {
       .map(s => s.trim())
       .filter(Boolean) ?? [];
   const forValues = forNames.length ? forNames : [null];
-  const primaryTerm = "ltNodefault" in dfn.dataset ? "" : norm(dfn.textContent);
-  const ltTerms = dfn.dataset.lt?.split("|").map(norm) ?? [];
-  const allTerms = [...new Set([primaryTerm, ...ltTerms])].filter(Boolean);
-  return allTerms
+  // getDfnTitles lists the data-lt aliases first. List the dfn's own text first.
+  const text = norm(dfn.textContent);
+  return getDfnTitles(dfn)
+    .sort((a, b) => Number(b === text) - Number(a === text))
     .flatMap(term =>
       forValues.map(forValue => termToSyntax(term, dfnType, forValue))
     )
     .filter(Boolean);
 }
 
+const IDL_TYPES = new Set([
+  "attribute",
+  "callback",
+  "const",
+  "constructor",
+  "dict-member",
+  "dictionary",
+  "enum-value",
+  "enum",
+  "exception",
+  "extended-attribute",
+  "interface",
+  "method",
+  "namespace",
+  "typedef",
+]);
+
+const CDDL_TYPES = new Set(["cddl-type", "cddl-key", "cddl-value"]);
+
+const CONCEPT_TYPES = new Set(["dfn", "abstract-op"]);
+
 /**
- * Creates a copy-to-clipboard button for a linking syntax string.
- * @param {string} text
+ * Returns the linking syntax string for a term given its dfn-type and dfn-for,
+ * or an empty string when no inline syntax links to that definition.
+ * @param {string} term
+ * @param {string} dfnType
+ * @param {string | null} dfnFor
+ * @returns {string}
  */
-function createSyntaxCopyButton(text) {
-  return html`<button
-    type="button"
-    class="dfn-panel-copy-btn"
-    data-copy-text="${text}"
-    aria-label="Copy ${text} to clipboard"
-    title="Copy to clipboard"
-  >
-    ⎘
-  </button>`;
+function termToSyntax(term, dfnType, dfnFor) {
+  const forPrefix = dfnFor ? `${dfnFor}/` : "";
+  if (CONCEPT_TYPES.has(dfnType)) {
+    return `[=${forPrefix}${term.replaceAll("/", "\\/")}=]`;
+  }
+  if (CDDL_TYPES.has(dfnType)) {
+    // The quotes of a CDDL value keep a "/" from separating a type and a member.
+    return term.includes("/") && !term.startsWith('"')
+      ? ""
+      : `{^${forPrefix}${term}^}`;
+  }
+  // Only [= =] can escape a "/". The other syntaxes read it as a separator.
+  if (term.includes("/")) return "";
+  if (IDL_TYPES.has(dfnType)) {
+    // ReSpec adds an `Interface.member` alias. After a for, it renders garbled.
+    if (dfnFor && term.startsWith(`${dfnFor}.`)) return "";
+    // The empty string is already written as "".
+    const name = dfnType === "enum-value" && term !== '""' ? `"${term}"` : term;
+    return `{{${forPrefix}${name}}}`;
+  }
+  switch (dfnType) {
+    case "element":
+      return dfnFor ? "" : `[^${term}^]`;
+    case "element-attr":
+      // A global attribute has no element: [^/role^]
+      return `[^${forPrefix || "/"}${term}^]`;
+    case "attr-value":
+      return dfnFor ? `[^${forPrefix}${term}^]` : "";
+    default:
+      // Types like event and http-header have no shorthand.
+      return "";
+  }
 }
 
 /**
- * Renders the "Possible linking syntaxes:" section for a dfn panel.
- * Returns null if the dfn is an index-term (external) or has no syntaxes.
- * @param {HTMLElement} dfn
+ * Creates a copy-to-clipboard button for a linking syntax string. The runtime
+ * script copies the text of the element before the button, so the button has
+ * to follow the `code` element that holds the syntax.
+ * @param {string} text
  */
-function linkingSyntaxesToHTML(dfn) {
-  // Only show for local <dfn> elements, not external .index-term spans
-  if (!dfn.matches("dfn")) return null;
-  const syntaxes = getLinkingSyntaxes(dfn);
-  if (!syntaxes.length) return null;
-
-  // No wrapper element: `.dfn-panel > div` is a flex row, so a wrapping div
-  // would lay the heading and the list out side by side.
-  return html`<p><b>Possible linking syntaxes:</b></p>
-    <ul class="dfn-panel-lt">
-      ${syntaxes.map(
-        syntax =>
-          html`<li>
-            <code>${syntax}</code> ${createSyntaxCopyButton(syntax)}
-          </li>`
-      )}
-    </ul>`;
+function createSyntaxCopyButton(text) {
+  const button = html`<button
+    type="button"
+    class="dfn-panel-copy-btn"
+    aria-label="Copy ${text} to clipboard"
+    title="Copy to clipboard"
+  ></button>`;
+  button.innerHTML = COPY_SVG;
+  return button;
 }
 
 /**
