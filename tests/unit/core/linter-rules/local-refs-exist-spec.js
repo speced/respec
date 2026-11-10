@@ -26,6 +26,7 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
 
     const [warning] = warnings;
     expect(warning.elements).toHaveSize(2);
+    expect(warning.hint).toContain("#ID-NOT-EXIST");
     const [offendingElement] = warning.elements;
     const { hash } = new URL(offendingElement.href);
     expect(hash).toBe("#ID-NOT-EXIST");
