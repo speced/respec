@@ -11,6 +11,8 @@ import { insertStyle } from "./insert-style.js";
 
 export const name = "core/dfn-panel";
 
+const COPY_ICON_ID = "respec-dfn-panel-copy-icon";
+
 export async function run() {
   insertStyle(css, { before: document.querySelector("link") });
 
@@ -25,6 +27,9 @@ export async function run() {
     // allowing keyboard action as needed.
     el.tabIndex = 0;
     el.setAttribute("aria-haspopup", "dialog");
+  }
+  if (panels.querySelector(".dfn-panel-copy-btn")) {
+    panels.append(createCopyIconSprite());
   }
   const firstScript = document.body.querySelector("script");
   if (firstScript) {
@@ -133,12 +138,13 @@ function cddlMarker(dfn, links) {
 
 /**
  * Renders the "Possible linking syntaxes:" section for a dfn panel.
- * Returns null if the dfn is an index-term (external) or has no syntaxes.
+ * Returns null if the dfn is not exported, is an index-term (external), or has
+ * no syntaxes.
  * @param {HTMLElement} dfn
  */
 function linkingSyntaxesToHTML(dfn) {
-  // Only show for local <dfn> elements, not external .index-term spans
-  if (!dfn.matches("dfn")) return null;
+  // Only exported definitions list syntaxes. Skips external .index-term spans.
+  if (!dfn.matches("dfn[data-export]")) return null;
   const syntaxes = getLinkingSyntaxes(dfn);
   if (!syntaxes.length) return null;
 
@@ -148,10 +154,7 @@ function linkingSyntaxesToHTML(dfn) {
   return html`<p><b id="${headingId}">Possible linking syntaxes:</b></p>
     <ul class="dfn-panel-lt" aria-labelledby="${headingId}">
       ${syntaxes.map(
-        syntax =>
-          html`<li>
-            <code>${syntax}</code> ${createSyntaxCopyButton(syntax)}
-          </li>`
+        syntax => html`<li>${createSyntaxCopyButton(syntax)}</li>`
       )}
     </ul>`;
 }
@@ -246,20 +249,41 @@ function termToSyntax(term, dfnType, dfnFor) {
 }
 
 /**
- * Creates a copy-to-clipboard button for a linking syntax string. The runtime
- * script copies the text of the element before the button, so the button has
- * to follow the `code` element that holds the syntax.
- * @param {string} text
+ * Creates the button for one row of the syntax list. The button holds the
+ * syntax, so its name reads "Copy" plus the syntax. The runtime script copies
+ * the text of the `code` inside the clicked button.
+ * @param {string} syntax
  */
-function createSyntaxCopyButton(text) {
-  const button = html`<button
-    type="button"
-    class="dfn-panel-copy-btn"
-    aria-label="Copy ${text} to clipboard"
-    title="Copy to clipboard"
-  ></button>`;
-  button.innerHTML = COPY_SVG;
+function createSyntaxCopyButton(syntax) {
+  const button = html`<button type="button" class="dfn-panel-copy-btn">
+    <span class="visually-hidden">Copy </span><code>${syntax}</code>
+  </button>`;
+  button.insertAdjacentHTML(
+    "beforeend",
+    `<svg aria-hidden="true" viewBox="0 0 14 16"><use href="#${COPY_ICON_ID}"></use></svg>`
+  );
   return button;
+}
+
+/**
+ * Puts the copy icon on the page once, as a symbol. Every button points at it
+ * with `<use>`, so the icon is not repeated for each row.
+ */
+function createCopyIconSprite() {
+  const template = document.createElement("template");
+  template.innerHTML = COPY_SVG;
+  const icon = /** @type {SVGElement} */ (template.content.firstElementChild);
+  const svgNamespace = "http://www.w3.org/2000/svg";
+  const symbol = document.createElementNS(svgNamespace, "symbol");
+  symbol.id = COPY_ICON_ID;
+  symbol.setAttribute("viewBox", icon.getAttribute("viewBox") ?? "");
+  symbol.append(...icon.childNodes);
+  const sprite = document.createElementNS(svgNamespace, "svg");
+  sprite.setAttribute("class", "dfn-panel-sprite");
+  sprite.setAttribute("aria-hidden", "true");
+  sprite.setAttribute("focusable", "false");
+  sprite.append(symbol);
+  return sprite;
 }
 
 /**

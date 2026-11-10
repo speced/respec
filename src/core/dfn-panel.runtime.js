@@ -258,8 +258,15 @@ function setupCopyButtons() {
     const btn =
       target instanceof Element && target.closest(".dfn-panel-copy-btn");
     if (!btn) return;
-    const text = btn.previousElementSibling?.textContent;
+    const text = btn.querySelector("code")?.textContent;
     if (!text) return;
-    navigator.clipboard?.writeText(text).catch(() => {});
+    // ariaNotify is missing from older browsers and from TypeScript's types.
+    const notify = /** @type {{ ariaNotify?: (message: string) => void }} */ (
+      btn
+    );
+    navigator.clipboard?.writeText(text).then(
+      () => notify.ariaNotify?.("Copied"),
+      () => {}
+    );
   });
 }

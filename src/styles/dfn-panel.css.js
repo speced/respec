@@ -134,47 +134,67 @@ dfn {
   padding: 0;
 }
 
-.dfn-panel .dfn-panel-lt li {
-  display: flex;
-  align-items: center;
-  gap: 0.25em;
-}
-
 .dfn-panel .dfn-panel-lt code {
   -webkit-user-select: all;
   user-select: all;
 }
 
 .dfn-panel .dfn-panel-copy-btn {
-  padding: 0 0.2em;
-  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
-  border-radius: 0.2em;
-  background: transparent;
-  font-size: 0.85em;
-  cursor: pointer;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
   color: inherit;
-  opacity: 0;
-}
-
-.dfn-panel .dfn-panel-lt li:hover .dfn-panel-copy-btn,
-.dfn-panel .dfn-panel-copy-btn:focus {
-  opacity: 1;
+  cursor: pointer;
+  text-align: start;
 }
 
 .dfn-panel .dfn-panel-copy-btn svg {
   display: block;
-  height: 1em;
+  box-sizing: content-box;
+  height: 0.85em;
   width: auto;
+  padding: 0 0.2em;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: 0.2em;
   fill: currentColor;
+  opacity: 0;
 }
 
-.dfn-panel .dfn-panel-copy-btn:hover {
+.dfn-panel .dfn-panel-lt li:hover .dfn-panel-copy-btn svg,
+.dfn-panel .dfn-panel-copy-btn:focus svg {
+  opacity: 1;
+}
+
+.dfn-panel .dfn-panel-copy-btn:hover svg {
   background: color-mix(in srgb, currentColor 15%, transparent);
 }
 
-.dfn-panel .dfn-panel-copy-btn:active {
+.dfn-panel .dfn-panel-copy-btn:active svg {
   background: color-mix(in srgb, currentColor 30%, transparent);
   box-shadow: inset 0 1px 2px color-mix(in srgb, currentColor 50%, transparent);
+}
+
+.dfn-panel .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.dfn-panel-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 `;

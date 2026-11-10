@@ -299,7 +299,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-concept">my concept</dfn>
+        <dfn data-export id="test-concept">my concept</dfn>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -323,7 +323,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-direct">my concept</dfn>
+        <dfn data-export id="test-direct">my concept</dfn>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -342,7 +342,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-order">my concept</dfn>
+        <dfn data-export id="test-order">my concept</dfn>
         <a>my concept</a>
       </section>
     `;
@@ -359,7 +359,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-dfn">widget</dfn>
+        <dfn data-export id="test-dfn">widget</dfn>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -373,7 +373,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-dfn" data-dfn-for="Request">mode</dfn>
+        <dfn data-export id="test-dfn" data-dfn-for="Request">mode</dfn>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -393,7 +393,7 @@ describe("possible linking syntaxes", () => {
           [Exposed=Window]
           interface Foo {};
         </pre>
-        <dfn id="test-dfn">Foo</dfn>
+        <dfn data-export id="test-dfn">Foo</dfn>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -409,7 +409,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-element" data-dfn-type="element">video</dfn>
+        <dfn data-export id="test-element" data-dfn-type="element">video</dfn>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -423,7 +423,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn
+        <dfn data-export
           id="test-attr"
           data-dfn-type="element-attr"
           data-dfn-for="video"
@@ -442,7 +442,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-lt" data-lt="widget|thing">widget</dfn>
+        <dfn data-export id="test-lt" data-lt="widget|thing">widget</dfn>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -455,70 +455,12 @@ describe("possible linking syntaxes", () => {
     expect(items[1].querySelector("code").textContent).toBe("[=thing=]");
   });
 
-  it("renders a copy button per syntax item, hidden until hover or focus", async () => {
-    const body = `
-      <section>
-        <h2>Test</h2>
-        <dfn id="test-copy" data-lt="foo|bar">foo</dfn>
-      </section>
-    `;
-    const ops = makeStandardOps(null, body);
-    const doc = await makeRSDoc(ops);
-    const panel = doc.getElementById("dfn-panel-for-test-copy");
-    const syntaxList = panel.querySelector(".dfn-panel-lt");
-    const copyBtns = syntaxList.querySelectorAll(".dfn-panel-copy-btn");
-    expect(copyBtns).toHaveSize(2);
-    expect(copyBtns[0].getAttribute("aria-label")).toBe(
-      "Copy [=foo=] to clipboard"
-    );
-    expect(copyBtns[0].type).toBe("button");
-
-    // The test frame is not rendered or focused, so computed styles, :hover and
-    // :focus are unavailable (Firefox returns ""): read the rules instead.
-    // Only <style> sheets: cssRules on a cross-origin <link> throws.
-    const rules = [...doc.querySelectorAll("style")].flatMap(style => [
-      ...(style.sheet?.cssRules ?? []),
-    ]);
-    const atRest = rules.filter(
-      rule => rule.selectorText === ".dfn-panel .dfn-panel-copy-btn"
-    );
-    expect(atRest).toHaveSize(1);
-    expect(atRest[0].style.opacity).toBe("0");
-    const reveal = rules.filter(
-      rule =>
-        rule.selectorText?.includes("li:hover .dfn-panel-copy-btn") &&
-        rule.selectorText.includes(".dfn-panel-copy-btn:focus")
-    );
-    expect(reveal).toHaveSize(1);
-    expect(reveal[0].style.opacity).toBe("1");
-  });
-
-  it("styles the copy button differently while it is pressed", async () => {
-    const body = `
-      <section>
-        <h2>Test</h2>
-        <dfn id="test-pressed">foo</dfn>
-      </section>
-    `;
-    const ops = makeStandardOps(null, body);
-    const doc = await makeRSDoc(ops);
-    // The test frame is not rendered, so :active cannot be driven: read the rule.
-    const rules = [...doc.querySelectorAll("style")].flatMap(style => [
-      ...(style.sheet?.cssRules ?? []),
-    ]);
-    const pressed = rules.filter(
-      rule => rule.selectorText === ".dfn-panel .dfn-panel-copy-btn:active"
-    );
-    expect(pressed).toHaveSize(1);
-    expect(pressed[0].style.boxShadow).not.toBe("");
-  });
-
   it("does not submit an author's form when a copy button inside it is clicked", async () => {
     const body = `
       <form id="author-form" action="#submitted"><script></script></form>
       <section>
         <h2>Test</h2>
-        <dfn id="test-form">foo</dfn>
+        <dfn data-export id="test-form">foo</dfn>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -541,7 +483,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-docked" data-lt="foo|bar">foo</dfn>
+        <dfn data-export id="test-docked" data-lt="foo|bar">foo</dfn>
         <a>foo</a>
       </section>
     `;
@@ -563,7 +505,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-enter" data-lt="foo|bar">foo</dfn>
+        <dfn data-export id="test-enter" data-lt="foo|bar">foo</dfn>
         <a>foo</a>
       </section>
     `;
@@ -588,29 +530,6 @@ describe("possible linking syntaxes", () => {
 
     pressEnter(panel.querySelector(".dfn-panel-refs a"));
     expect(panel.hidden).toBeTrue();
-  });
-
-  it("keeps the copy buttons in an exported document, and they copy", async () => {
-    const body = `
-      <section>
-        <h2>Test</h2>
-        <dfn id="test-export-copy" data-lt="foo|bar">foo</dfn>
-      </section>
-    `;
-    const ops = makeStandardOps(null, body);
-    const rdoc = await makeRSDoc(ops);
-    const doc = await getExportedDoc(rdoc);
-    const copied = [];
-    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
-      value: { writeText: text => copied.push(text) && Promise.resolve() },
-      configurable: true,
-    });
-
-    const panel = doc.getElementById("dfn-panel-for-test-export-copy");
-    const buttons = panel.querySelectorAll(".dfn-panel-copy-btn");
-    expect(buttons).toHaveSize(2);
-    buttons[1].click();
-    expect(copied).toEqual(["[=bar=]"]);
   });
 
   it("lists a const in {{ }} form that links back to it", async () => {
@@ -685,9 +604,9 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-event" data-dfn-type="event">my-event</dfn>
-        <dfn id="test-header" data-dfn-type="http-header">My-Header</dfn>
-        <dfn id="test-plain">my concept</dfn>
+        <dfn data-export id="test-event" data-dfn-type="event">my-event</dfn>
+        <dfn data-export id="test-header" data-dfn-type="http-header">My-Header</dfn>
+        <dfn data-export id="test-plain">my concept</dfn>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -704,8 +623,8 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <dfn id="test-odd" data-lt="&lt;img src=x onerror=alert(1)&gt;">hostile</dfn>
-        <dfn id="test-blank-for" data-dfn-for=" ">blank for</dfn>
+        <dfn data-export id="test-odd" data-lt="&lt;img src=x onerror=alert(1)&gt;">hostile</dfn>
+        <dfn data-export id="test-blank-for" data-dfn-for=" ">blank for</dfn>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -758,7 +677,7 @@ describe("possible linking syntaxes", () => {
 
   it("lists linking syntax for a concept containing a slash, and it round-trips", async () => {
     const body = `
-      <p><dfn id="t-io">I/O queue</dfn></p>
+      <p><dfn data-export id="t-io">I/O queue</dfn></p>
       <p id="t-io-use">[=I\\/O queue=]</p>
     `;
     const ops = makeStandardOps(null, body);
@@ -774,7 +693,7 @@ describe("possible linking syntaxes", () => {
 
   it("lists linking syntax for a for-concept containing a slash, and it round-trips", async () => {
     const body = `
-      <p><dfn id="t-io-for" data-dfn-for="Host">I/O queue</dfn></p>
+      <p><dfn data-export id="t-io-for" data-dfn-for="Host">I/O queue</dfn></p>
       <p id="ref">[=Host/I\\/O queue=]</p>
     `;
     const ops = makeStandardOps(null, body);
@@ -791,7 +710,7 @@ describe("possible linking syntaxes", () => {
   it("lists no syntax for an attribute value containing a slash", async () => {
     const body = `
       <p>
-        <dfn id="t-enc" data-dfn-type="attr-value" data-dfn-for="form/enctype">application/x-www-form-urlencoded</dfn>
+        <dfn data-export id="t-enc" data-dfn-type="attr-value" data-dfn-for="form/enctype">application/x-www-form-urlencoded</dfn>
       </p>
     `;
     const ops = makeStandardOps(null, body);
@@ -802,9 +721,9 @@ describe("possible linking syntaxes", () => {
 
   it("lists correct syntax for element attributes (global and specific)", async () => {
     const body = `
-      <p><dfn id="t-role" data-dfn-type="element-attr">role</dfn></p>
+      <p><dfn data-export id="t-role" data-dfn-type="element-attr">role</dfn></p>
       <p id="ref-role">[^/role^]</p>
-      <p><dfn id="t-allow" data-dfn-type="element-attr" data-dfn-for="iframe">allow</dfn></p>
+      <p><dfn data-export id="t-allow" data-dfn-type="element-attr" data-dfn-for="iframe">allow</dfn></p>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
@@ -824,9 +743,9 @@ describe("possible linking syntaxes", () => {
 
   it("lists no syntax for inconsistent definitions, but does for simple elements", async () => {
     const body = `
-      <p><dfn id="t-blink" data-dfn-type="element" data-dfn-for="html">blink</dfn></p>
-      <p><dfn id="t-on" data-dfn-type="attr-value">on</dfn></p>
-      <p><dfn id="t-iframe" data-dfn-type="element">iframe</dfn></p>
+      <p><dfn data-export id="t-blink" data-dfn-type="element" data-dfn-for="html">blink</dfn></p>
+      <p><dfn data-export id="t-on" data-dfn-type="attr-value">on</dfn></p>
+      <p><dfn data-export id="t-iframe" data-dfn-type="element">iframe</dfn></p>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
@@ -860,7 +779,7 @@ describe("possible linking syntaxes", () => {
 
   it("allows tabbing forward and backward between copy buttons", async () => {
     const body = `
-      <p><dfn id="t-focus" data-lt="foo|bar">foo</dfn></p>
+      <p><dfn data-export id="t-focus" data-lt="foo|bar">foo</dfn></p>
       <a>foo</a>
     `;
     const ops = makeStandardOps(null, body);
@@ -890,35 +809,8 @@ describe("possible linking syntaxes", () => {
     expect(doc.activeElement).toBe(buttons[0]);
   });
 
-  it("has copy buttons that copy the correct syntax and have correct attributes", async () => {
-    const body = `
-      <p><dfn id="t-copy" data-lt="foo|bar">foo</dfn></p>
-    `;
-    const ops = makeStandardOps(null, body);
-    const doc = await makeRSDoc(ops);
-    const panel = doc.getElementById("dfn-panel-for-t-copy");
-    const buttons = [...panel.querySelectorAll(".dfn-panel-copy-btn")];
-    buttons.forEach(button => {
-      expect(button.querySelector("svg")).not.toBeNull();
-      expect(button.hasAttribute("data-copy-text")).toBeFalse();
-      expect(button.getAttribute("type")).toBe("button");
-    });
-    const copied = [];
-    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
-      value: {
-        writeText: text => {
-          copied.push(text);
-          return Promise.resolve();
-        },
-      },
-      configurable: true,
-    });
-    buttons[1].click();
-    expect(copied).toEqual(["[=bar=]"]);
-  });
-
   it("labels the list of syntaxes with its heading", async () => {
-    const body = `<p><dfn id="t-aria" data-lt="foo">foo</dfn></p>`;
+    const body = `<p><dfn data-export id="t-aria" data-lt="foo">foo</dfn></p>`;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const panel = doc.getElementById("dfn-panel-for-t-aria");
@@ -932,7 +824,7 @@ describe("possible linking syntaxes", () => {
   });
 
   it("styles linking syntaxes to be selectable with one click", async () => {
-    const body = `<p><dfn id="t-select" data-lt="foo">foo</dfn></p>`;
+    const body = `<p><dfn data-export id="t-select" data-lt="foo">foo</dfn></p>`;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const rules = [...doc.styleSheets]
@@ -972,7 +864,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <p><dfn id="t-local" data-local-lt="loc alias">local term</dfn></p>
+        <p><dfn data-export id="t-local" data-local-lt="loc alias">local term</dfn></p>
         <p id="use-term">[=local term=]</p>
         <p id="use-alias">[=loc alias=]</p>
       </section>
@@ -1009,39 +901,9 @@ describe("possible linking syntaxes", () => {
     expect(link.getAttribute("href")).toBe("#cddl-value-attire-a-b");
   });
 
-  it("copies syntax when clicking the icon inside a copy button and keeps the panel open", async () => {
-    const body = `
-      <p><dfn id="t-icon" data-lt="foo|bar">foo</dfn></p>
-    `;
-    const ops = makeStandardOps(null, body);
-    const doc = await makeRSDoc(ops);
-    const dfn = doc.getElementById("t-icon");
-    const panel = doc.getElementById("dfn-panel-for-t-icon");
-    const copied = [];
-    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
-      value: {
-        writeText: text => {
-          copied.push(text);
-          return Promise.resolve();
-        },
-      },
-      configurable: true,
-    });
-
-    dfn.click();
-    const svg = panel.querySelectorAll(".dfn-panel-copy-btn svg")[1];
-    svg.dispatchEvent(
-      new doc.defaultView.MouseEvent("click", { bubbles: true })
-    );
-
-    // The side effect (copied.push) is synchronous in our mock.
-    expect(panel.hidden).toBeFalse();
-    expect(copied).toEqual(["[=bar=]"]);
-  });
-
   it("moves focus to the first/last control on Tab/Shift+Tab when focus is outside the panel's controls", async () => {
     const body = `
-      <p><dfn id="t-out" data-lt="foo|bar">foo</dfn></p><a>foo</a>
+      <p><dfn data-export id="t-out" data-lt="foo|bar">foo</dfn></p><a>foo</a>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops, null, "display: block");
@@ -1084,7 +946,7 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <p><dfn id="t-empty2" data-dfn-type="enum-value" data-dfn-for="Other">""</dfn></p>
+        <p><dfn data-export id="t-empty2" data-dfn-type="enum-value" data-dfn-for="Other">""</dfn></p>
         <p id="use-a">{{Other/"the-empty-string"}}</p>
         <p id="use-b">{{Other/""}}</p>
       </section>
@@ -1104,7 +966,7 @@ describe("possible linking syntaxes", () => {
 
   it("lists the definition's own text first, then data-lt aliases", async () => {
     const body = `
-      <p><dfn id="t-order" data-lt="gadget|gizmo">thing</dfn></p>
+      <p><dfn data-export id="t-order" data-lt="gadget|gizmo">thing</dfn></p>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
@@ -1117,7 +979,7 @@ describe("possible linking syntaxes", () => {
 
   it("lists the definition's own text only once, even if also in data-lt", async () => {
     const body = `
-      <p><dfn id="t-order2" data-lt="gadget|thing">thing</dfn></p>
+      <p><dfn data-export id="t-order2" data-lt="gadget|thing">thing</dfn></p>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
@@ -1160,8 +1022,8 @@ describe("possible linking syntaxes", () => {
     const body = `
       <section>
         <h2>Test</h2>
-        <p><dfn id="t-cddl-slash" data-dfn-type="cddl-type">group/subgroup</dfn></p>
-        <p><dfn id="t-cddl-plain" data-dfn-type="cddl-type">plain</dfn></p>
+        <p><dfn data-export id="t-cddl-slash" data-dfn-type="cddl-type">group/subgroup</dfn></p>
+        <p><dfn data-export id="t-cddl-plain" data-dfn-type="cddl-type">plain</dfn></p>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -1175,5 +1037,428 @@ describe("possible linking syntaxes", () => {
       c => c.textContent
     );
     expect(listed).toEqual(["{^plain^}"]);
+  });
+
+  it("renders a copy button per syntax item, with an icon hidden until hover or focus", async () => {
+    const body = `
+    <section>
+      <h2>Test</h2>
+      <dfn data-export id="test-copy" data-lt="foo|bar">foo</dfn>
+    </section>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-test-copy");
+    const syntaxList = panel.querySelector(".dfn-panel-lt");
+    const copyBtns = syntaxList.querySelectorAll(".dfn-panel-copy-btn");
+    expect(copyBtns).toHaveSize(2);
+    expect(copyBtns[0].textContent.trim().replace(/\s+/g, " ")).toBe(
+      "Copy [=foo=]"
+    );
+    expect(copyBtns[0].type).toBe("button");
+
+    const rules = [...doc.querySelectorAll("style")].flatMap(style => [
+      ...(style.sheet?.cssRules ?? []),
+    ]);
+    const atRest = rules.filter(
+      rule => rule.selectorText === ".dfn-panel .dfn-panel-copy-btn svg"
+    );
+    expect(atRest).toHaveSize(1);
+    expect(atRest[0].style.opacity).toBe("0");
+    const reveal = rules.filter(
+      rule =>
+        rule.selectorText?.includes("li:hover .dfn-panel-copy-btn svg") &&
+        rule.selectorText.includes(".dfn-panel-copy-btn:focus svg")
+    );
+    expect(reveal).toHaveSize(1);
+    expect(reveal[0].style.opacity).toBe("1");
+  });
+
+  it("styles the copy button's icon differently while it is pressed", async () => {
+    const body = `
+    <section>
+      <h2>Test</h2>
+      <dfn data-export id="test-pressed">foo</dfn>
+    </section>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const rules = [...doc.querySelectorAll("style")].flatMap(style => [
+      ...(style.sheet?.cssRules ?? []),
+    ]);
+    const pressed = rules.filter(
+      rule => rule.selectorText === ".dfn-panel .dfn-panel-copy-btn:active svg"
+    );
+    expect(pressed).toHaveSize(1);
+    expect(pressed[0].style.boxShadow).not.toBe("");
+  });
+
+  it("has copy buttons that copy the correct syntax and have correct attributes", async () => {
+    const body = `
+    <p><dfn data-export id="t-copy" data-lt="foo|bar">foo</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-t-copy");
+    const buttons = [...panel.querySelectorAll(".dfn-panel-copy-btn")];
+    buttons.forEach(button => {
+      expect(button.querySelector("svg")).not.toBeNull();
+      expect(button.hasAttribute("data-copy-text")).toBeFalse();
+      expect(button.getAttribute("type")).toBe("button");
+      expect(button.hasAttribute("aria-label")).toBeFalse();
+      expect(button.hasAttribute("title")).toBeFalse();
+    });
+    const copied = [];
+    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+      value: {
+        writeText: text => {
+          copied.push(text);
+          return Promise.resolve();
+        },
+      },
+      configurable: true,
+    });
+    buttons[1].click();
+    expect(copied).toEqual(["[=bar=]"]);
+  });
+
+  it("copies syntax when clicking the icon inside a copy button and keeps the panel open", async () => {
+    const body = `
+    <p><dfn data-export id="t-icon" data-lt="foo|bar">foo</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const dfn = doc.getElementById("t-icon");
+    const panel = doc.getElementById("dfn-panel-for-t-icon");
+    const copied = [];
+    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+      value: {
+        writeText: text => {
+          copied.push(text);
+          return Promise.resolve();
+        },
+      },
+      configurable: true,
+    });
+
+    dfn.click();
+    const svg = panel.querySelectorAll(".dfn-panel-copy-btn svg")[1];
+    svg.dispatchEvent(
+      new doc.defaultView.MouseEvent("click", { bubbles: true })
+    );
+
+    expect(panel.hidden).toBeFalse();
+    expect(copied).toEqual(["[=bar=]"]);
+  });
+
+  it("keeps the copy buttons in an exported document, and they copy", async () => {
+    const body = `
+    <section>
+      <h2>Test</h2>
+      <dfn data-export id="test-export-copy" data-lt="foo|bar">foo</dfn>
+    </section>
+  `;
+    const ops = makeStandardOps(null, body);
+    const rdoc = await makeRSDoc(ops);
+    const doc = await getExportedDoc(rdoc);
+    const copied = [];
+    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+      value: { writeText: text => copied.push(text) && Promise.resolve() },
+      configurable: true,
+    });
+
+    const panel = doc.getElementById("dfn-panel-for-test-export-copy");
+    const buttons = panel.querySelectorAll(".dfn-panel-copy-btn");
+    expect(buttons).toHaveSize(2);
+    buttons[1].click();
+    expect(copied).toEqual(["[=bar=]"]);
+  });
+
+  it("has a button per syntax as the sole child of the list item", async () => {
+    const body = `
+    <p><dfn data-export id="t-row" data-lt="foo|bar">foo</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-t-row");
+    const listItems = [...panel.querySelectorAll(".dfn-panel-lt li")];
+    expect(listItems).toHaveSize(2);
+    for (const li of listItems) {
+      expect(li.children).toHaveSize(1);
+      const button = li.firstElementChild;
+      expect(button.tagName).toBe("BUTTON");
+      expect(button.classList.contains("dfn-panel-copy-btn")).toBeTrue();
+      expect(button.querySelector("code")).not.toBeNull();
+    }
+  });
+
+  it("gives copy buttons an accessible name from their content", async () => {
+    const body = `
+    <p><dfn data-export id="t-row" data-lt="foo|bar">foo</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-t-row");
+    const buttons = panel.querySelectorAll(".dfn-panel-copy-btn");
+    expect(buttons[0].textContent.trim().replace(/\s+/g, " ")).toBe(
+      "Copy [=foo=]"
+    );
+    expect(buttons[1].textContent.trim().replace(/\s+/g, " ")).toBe(
+      "Copy [=bar=]"
+    );
+    expect(buttons[0].hasAttribute("aria-label")).toBeFalse();
+    expect(buttons[0].hasAttribute("title")).toBeFalse();
+  });
+
+  it("hides the word 'Copy ' from sighted users", async () => {
+    const body = `
+    <p><dfn data-export id="t-vhidden" data-lt="foo">foo</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const button = doc.querySelector(".dfn-panel-copy-btn");
+    const hiddenSpan = button.querySelector("span.visually-hidden");
+    expect(hiddenSpan).not.toBeNull();
+    expect(hiddenSpan.textContent).toBe("Copy ");
+    expect(hiddenSpan.nextElementSibling.tagName).toBe("CODE");
+    const rules = [...doc.querySelectorAll("style")].flatMap(style => [
+      ...(style.sheet?.cssRules ?? []),
+    ]);
+    const hiddenRule = rules.filter(
+      rule => rule.selectorText === ".dfn-panel .visually-hidden"
+    );
+    expect(hiddenRule).toHaveSize(1);
+    expect(hiddenRule[0].style.position).toBe("absolute");
+    expect(hiddenRule[0].style.width).toBe("1px");
+  });
+
+  it("uses one shared SVG icon symbol for all copy buttons", async () => {
+    const body = `
+    <p><dfn data-export id="t-a" data-lt="a1|a2">a</dfn></p>
+    <p><dfn data-export id="t-b">b</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const symbols = doc.querySelectorAll("symbol");
+    expect(symbols).toHaveSize(1);
+    const symbol = symbols[0];
+    expect(symbol.querySelector("path")).not.toBeNull();
+    const uses = [...doc.querySelectorAll(".dfn-panel-copy-btn svg use")];
+    expect(uses).toHaveSize(4);
+    for (const use of uses) {
+      const href = use.getAttribute("href");
+      expect(href.startsWith("#")).toBeTrue();
+      const target = doc.getElementById(href.substring(1));
+      expect(target).toBe(symbol);
+    }
+    doc.querySelectorAll(".dfn-panel-copy-btn svg").forEach(svg => {
+      expect(svg.getAttribute("aria-hidden")).toBe("true");
+      expect(svg.querySelector("path")).toBeNull();
+    });
+  });
+
+  it("hides the SVG sprite definition without using display:none", async () => {
+    const body = `
+    <p><dfn data-export data-lt="foo">foo</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const sprite = doc.querySelector("svg.dfn-panel-sprite");
+    expect(sprite).not.toBeNull();
+    expect(sprite.getAttribute("aria-hidden")).toBe("true");
+    expect(sprite.querySelector("symbol")).not.toBeNull();
+    const rules = [...doc.querySelectorAll("style")].flatMap(style => [
+      ...(style.sheet?.cssRules ?? []),
+    ]);
+    const spriteRule = rules.filter(
+      rule => rule.selectorText === ".dfn-panel-sprite"
+    );
+    expect(spriteRule).toHaveSize(1);
+    const style = spriteRule[0].style;
+    expect(style.position).toBe("absolute");
+    expect(style.width).toBe("0px");
+    expect(style.height).toBe("0px");
+    expect(style.display).not.toBe("none");
+  });
+
+  it("adds no SVG sprite if there are no syntaxes to list", async () => {
+    const body = `
+    <p><dfn data-export id="t-none" data-dfn-type="event">only</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector("symbol")).toBeNull();
+    expect(doc.querySelector(".dfn-panel-sprite")).toBeNull();
+  });
+
+  it("keeps the SVG sprite and buttons in an exported document", async () => {
+    const body = `
+    <p><dfn data-export id="t-exp" data-lt="foo|bar">foo</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const rdoc = await makeRSDoc(ops);
+    const doc = await getExportedDoc(rdoc);
+    const symbols = doc.querySelectorAll("symbol");
+    expect(symbols).toHaveSize(1);
+    const symbol = symbols[0];
+    const buttons = doc.querySelectorAll(".dfn-panel-copy-btn");
+    expect(buttons).toHaveSize(2);
+    const use = buttons[0].querySelector("svg use");
+    const target = doc.getElementById(use.getAttribute("href").substring(1));
+    expect(target).toBe(symbol);
+  });
+
+  it("copies syntax when clicking text inside a copy button", async () => {
+    const body = `
+    <p><dfn data-export id="t-click" data-lt="foo|bar">foo</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const copied = [];
+    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+      value: { writeText: text => copied.push(text) && Promise.resolve() },
+      configurable: true,
+    });
+    const panel = doc.getElementById("dfn-panel-for-t-click");
+    const click = target =>
+      target.dispatchEvent(
+        new doc.defaultView.MouseEvent("click", { bubbles: true })
+      );
+
+    const code = panel.querySelectorAll("code")[1];
+    click(code);
+    expect(copied).toEqual(["[=bar=]"]);
+
+    const span = panel.querySelector("span.visually-hidden");
+    click(span);
+    expect(copied).toEqual(["[=bar=]", "[=foo=]"]);
+  });
+
+  it("calls button.ariaNotify on successful copy but not on failure", async () => {
+    const body = `
+    <p><dfn data-export data-lt="foo|bar|baz">test</dfn></p>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const buttons = doc.querySelectorAll(".dfn-panel-copy-btn");
+    const wait = () => new Promise(resolve => setTimeout(resolve, 50));
+
+    const notes1 = [];
+    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+      value: { writeText: () => Promise.resolve() },
+      configurable: true,
+    });
+    buttons[0].ariaNotify = msg => notes1.push(msg);
+    buttons[0].click();
+    await wait();
+    expect(notes1).toEqual(["Copied"]);
+
+    const notes2 = [];
+    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+      value: { writeText: () => Promise.reject(new Error("fail")) },
+      configurable: true,
+    });
+    buttons[1].ariaNotify = msg => notes2.push(msg);
+    buttons[1].click();
+    await wait();
+    expect(notes2).toEqual([]);
+
+    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+      value: { writeText: () => Promise.resolve() },
+      configurable: true,
+    });
+    buttons[2].ariaNotify = undefined;
+    const fail = jasmine.createSpy("fail");
+    doc.defaultView.addEventListener("error", fail);
+    doc.defaultView.addEventListener("unhandledrejection", fail);
+    buttons[2].click();
+    await wait();
+    expect(fail).not.toHaveBeenCalled();
+    doc.defaultView.removeEventListener("error", fail);
+    doc.defaultView.removeEventListener("unhandledrejection", fail);
+  });
+
+  it("hides the IDL code-block's copy icon from assistive technology", async () => {
+    const body = `
+    <pre class="idl">[Exposed=Window] interface Thing {};</pre>
+  `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const button = doc.querySelector(".respec-button-copy-paste");
+    const svg = button.querySelector("svg");
+    expect(svg.getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it("shows no linking syntaxes section for a non-exported definition", async () => {
+    const body = `<p><dfn id="t-local" data-lt="foo|bar">foo</dfn></p>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-t-local");
+    expect(panel).not.toBeNull();
+    expect(panel.querySelector(".dfn-panel-lt")).toBeNull();
+    const hasHeading = [...panel.querySelectorAll("b")].some(
+      el => el.textContent === "Possible linking syntaxes:"
+    );
+    expect(hasHeading).toBeFalse();
+    expect(doc.querySelector("svg.dfn-panel-sprite")).toBeNull();
+  });
+
+  it("shows linking syntaxes for a definition with the data-export attribute", async () => {
+    const body = `<p><dfn id="t-exported" data-export data-lt="foo|bar">foo</dfn></p>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-t-exported");
+    const syntaxes = [...panel.querySelectorAll(".dfn-panel-lt code")].map(
+      c => c.textContent
+    );
+    expect(syntaxes).toEqual(["[=foo=]", "[=bar=]"]);
+  });
+
+  it("shows linking syntaxes for a definition with the 'export' class", async () => {
+    const body = `<p><dfn id="t-class" class="export">foo</dfn></p>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const panel = doc.getElementById("dfn-panel-for-t-class");
+    const syntaxes = [...panel.querySelectorAll(".dfn-panel-lt code")].map(
+      c => c.textContent
+    );
+    expect(syntaxes).toEqual(["[=foo=]"]);
+  });
+
+  it("shows linking syntaxes for definitions generated from WebIDL", async () => {
+    const body = `
+      <pre class="idl">
+        [Exposed=Window]
+        interface Thing {
+          attribute long attr;
+        };
+      </pre>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const thingPanel = doc.getElementById("dfn-panel-for-dom-thing");
+    const thingSyntaxes = [
+      ...thingPanel.querySelectorAll(".dfn-panel-lt code"),
+    ].map(c => c.textContent);
+    expect(thingSyntaxes).toEqual(["{{Thing}}"]);
+    const attrPanel = doc.getElementById("dfn-panel-for-dom-thing-attr");
+    const attrSyntaxes = [
+      ...attrPanel.querySelectorAll(".dfn-panel-lt code"),
+    ].map(c => c.textContent);
+    expect(attrSyntaxes).toEqual(["{{Thing/attr}}"]);
+  });
+
+  it("shows syntaxes only for exported definitions and a single icon sprite in a mixed document", async () => {
+    const body = `<p><dfn id="t-yes" data-export>yes</dfn> <dfn id="t-no">no</dfn></p>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+    const yesPanel = doc.getElementById("dfn-panel-for-t-yes");
+    const yesSyntaxes = [
+      ...yesPanel.querySelectorAll(".dfn-panel-lt code"),
+    ].map(c => c.textContent);
+    expect(yesSyntaxes).toEqual(["[=yes=]"]);
+    const noPanel = doc.getElementById("dfn-panel-for-t-no");
+    expect(noPanel.querySelector(".dfn-panel-lt")).toBeNull();
+    expect(doc.querySelectorAll("symbol").length).toBe(1);
   });
 });
