@@ -1,9 +1,15 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  makeRSDoc,
+  makeStandardOps,
+  warningFilters,
+} from "../SpecHelper.js";
 
 describe("Core — Link to definitions", () => {
   afterAll(flushIframes);
+  const warnings = warningFilters.filter("core/link-to-dfn");
 
   it("removes non-alphanum chars from fragment components", async () => {
     const bodyText = `
@@ -403,5 +409,31 @@ describe("Core — Link to definitions", () => {
     // Check there is no element with __SPEC__ in its data-cite
     const corrupt = doc.querySelector("[data-cite*='__SPEC__']");
     expect(corrupt).toBeNull();
+  });
+
+  it("hints at data-link-for scoping only when an ancestor sets it", async () => {
+    const body = `
+      <section data-link-for="Iface">
+        <h2>Scoped</h2>
+        <p><a>ancestorScope</a>, [= Iface/ownScope =], <a data-link-for="">optedOut</a></p>
+        <section data-link-for="">
+          <h3>Unscoped subsection</h3>
+          <p><a>emptyAncestor</a></p>
+        </section>
+      </section>
+      <section>
+        <h2>Unscoped</h2>
+        <p><a>noScope</a></p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps({ xref: false }, body));
+    const linkErrors = warnings(doc);
+    expect(linkErrors).toHaveSize(5);
+    const hintFor = text => linkErrors.find(w => w.message.includes(text)).hint;
+    expect(hintFor("ancestorScope")).toContain('data-link-for="Iface"');
+    expect(hintFor("ownScope")).not.toContain("data-link-for=");
+    expect(hintFor("optedOut")).not.toContain("data-link-for=");
+    expect(hintFor("emptyAncestor")).not.toContain("data-link-for=");
+    expect(hintFor("noScope")).not.toContain("data-link-for=");
   });
 });
