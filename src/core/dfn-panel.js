@@ -255,14 +255,12 @@ function termToSyntax(term, dfnType, dfnFor) {
  * @param {string} syntax
  */
 function createSyntaxCopyButton(syntax) {
-  const button = html`<button type="button" class="dfn-panel-copy-btn">
+  return html`<button type="button" class="dfn-panel-copy-btn">
     <span class="visually-hidden">Copy </span><code>${syntax}</code>
+    <svg aria-hidden="true" viewBox="0 0 14 16">
+      <use href="#${COPY_ICON_ID}"></use>
+    </svg>
   </button>`;
-  button.insertAdjacentHTML(
-    "beforeend",
-    `<svg aria-hidden="true" viewBox="0 0 14 16"><use href="#${COPY_ICON_ID}"></use></svg>`
-  );
-  return button;
 }
 
 /**
@@ -273,17 +271,11 @@ function createCopyIconSprite() {
   const template = document.createElement("template");
   template.innerHTML = COPY_SVG;
   const icon = /** @type {SVGElement} */ (template.content.firstElementChild);
-  const svgNamespace = "http://www.w3.org/2000/svg";
-  const symbol = document.createElementNS(svgNamespace, "symbol");
-  symbol.id = COPY_ICON_ID;
-  symbol.setAttribute("viewBox", icon.getAttribute("viewBox") ?? "");
-  symbol.append(...icon.childNodes);
-  const sprite = document.createElementNS(svgNamespace, "svg");
-  sprite.setAttribute("class", "dfn-panel-sprite");
-  sprite.setAttribute("aria-hidden", "true");
-  sprite.setAttribute("focusable", "false");
-  sprite.append(symbol);
-  return sprite;
+  return html`<svg class="dfn-panel-sprite" aria-hidden="true">
+    <symbol id="${COPY_ICON_ID}" viewBox="${icon.getAttribute("viewBox")}">
+      ${[...icon.childNodes]}
+    </symbol>
+  </svg>`;
 }
 
 /**

@@ -260,12 +260,8 @@ function setupCopyButtons() {
     if (!btn) return;
     const text = btn.querySelector("code")?.textContent;
     if (!text) return;
-    // ariaNotify is missing from older browsers and from TypeScript's types.
-    const notify = /** @type {{ ariaNotify?: (message: string) => void }} */ (
-      btn
-    );
     navigator.clipboard?.writeText(text).then(
-      () => notify.ariaNotify?.("Copied"),
+      () => btn.ariaNotify?.("Copied"),
       () => {}
     );
   });
