@@ -372,6 +372,7 @@ describe("possible linking syntaxes", () => {
           {
             panelId: "dfn-panel-for-test-dfn",
             syntaxes: ["[=widget=]"],
+            linkCheck: null,
           },
         ],
       },
@@ -387,6 +388,7 @@ describe("possible linking syntaxes", () => {
           {
             panelId: "dfn-panel-for-test-dfn",
             syntaxes: ["[=Request/mode=]"],
+            linkCheck: null,
           },
         ],
       },
@@ -406,6 +408,7 @@ describe("possible linking syntaxes", () => {
           {
             panelId: "dfn-panel-for-test-dfn",
             syntaxes: ["{{Foo}}"],
+            linkCheck: null,
           },
         ],
       },
@@ -421,6 +424,7 @@ describe("possible linking syntaxes", () => {
           {
             panelId: "dfn-panel-for-test-element",
             syntaxes: ["[^video^]"],
+            linkCheck: null,
           },
         ],
       },
@@ -441,6 +445,7 @@ describe("possible linking syntaxes", () => {
           {
             panelId: "dfn-panel-for-test-attr",
             syntaxes: ["[^video/src^]"],
+            linkCheck: null,
           },
         ],
       },
@@ -529,6 +534,7 @@ describe("possible linking syntaxes", () => {
           {
             panelId: "dfn-panel-for-t-allow",
             syntaxes: ["[^iframe/allow^]"],
+            linkCheck: null,
           },
         ],
       },
@@ -566,10 +572,12 @@ describe("possible linking syntaxes", () => {
           {
             panelId: "dfn-panel-for-dom-thing",
             syntaxes: ["{{Thing}}"],
+            linkCheck: null,
           },
           {
             panelId: "dfn-panel-for-dom-thing-attr",
             syntaxes: ["{{Thing/attr}}"],
+            linkCheck: null,
           },
         ],
       },
@@ -587,7 +595,8 @@ describe("possible linking syntaxes", () => {
         const actualSyntaxes = listed(panel);
         expect(actualSyntaxes).withContext(c.name).toEqual(check.syntaxes);
 
-        if (check.linkCheck) {
+        // `linkCheck: null` means this check does not test links; omitting it throws.
+        if (check.linkCheck !== null) {
           const { selector, href } = check.linkCheck;
           const link = doc.querySelector(selector);
           expect(link).withContext(c.name).toBeTruthy();
@@ -856,10 +865,16 @@ describe("possible linking syntaxes", () => {
       },
       {
         name: "imported index-term",
+        config: {
+          xref: { url: `${location.origin}/tests/data/xref/refs.json` },
+          localBiblio: {
+            infra: { id: "INFRA", href: "https://infra.spec.whatwg.org/" },
+          },
+        },
         body: `
-          <section data-cite="DOM">
+          <section>
             <h2>TEST</h2>
-            <p>{{ Event }}</p>
+            <p><a>list</a></p>
           </section>
           <section id="index"></section>
         `,
@@ -966,7 +981,7 @@ describe("possible linking syntaxes", () => {
     ];
 
     for (const c of cases) {
-      const ops = makeStandardOps(null, c.body);
+      const ops = makeStandardOps(c.config ?? null, c.body);
       const doc = await makeRSDoc(ops);
 
       if (c.noSyntaxPanels) {
