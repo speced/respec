@@ -6,12 +6,6 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
-/** Creates a document for every case at the same time and returns them in case order. */
-const makeCaseDocs = cases =>
-  Promise.all(
-    cases.map(c => makeRSDoc(makeStandardOps(c.config ?? null, c.body)))
-  );
-
 describe("Core — dfnPanel", () => {
   afterAll(flushIframes);
 
@@ -361,7 +355,7 @@ describe("possible linking syntaxes", () => {
     expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  it("lists the syntax that links back to each kind of definition", async () => {
+  describe("lists the syntax that links back to each kind of definition", () => {
     const listed = panel =>
       [...panel.querySelectorAll(".dfn-panel-lt code")].map(c => c.textContent);
 
@@ -589,30 +583,31 @@ describe("possible linking syntaxes", () => {
       },
     ];
 
-    const docs = await makeCaseDocs(cases);
-    for (const [index, c] of cases.entries()) {
-      const doc = docs[index];
+    for (const c of cases) {
+      it(c.name, async () => {
+        const doc = await makeRSDoc(makeStandardOps(c.config ?? null, c.body));
 
-      for (const check of c.checks) {
-        const panel = doc.getElementById(check.panelId);
-        expect(panel).withContext(c.name).toBeTruthy();
-        if (!panel) continue;
+        for (const check of c.checks) {
+          const panel = doc.getElementById(check.panelId);
+          expect(panel).toBeTruthy();
+          if (!panel) continue;
 
-        const actualSyntaxes = listed(panel);
-        expect(actualSyntaxes).withContext(c.name).toEqual(check.syntaxes);
+          const actualSyntaxes = listed(panel);
+          expect(actualSyntaxes).toEqual(check.syntaxes);
 
-        // `linkCheck: null` means this check does not test links; omitting it throws.
-        if (check.linkCheck !== null) {
-          const { selector, href } = check.linkCheck;
-          const link = doc.querySelector(selector);
-          expect(link).withContext(c.name).toBeTruthy();
-          expect(link.getAttribute("href")).withContext(c.name).toBe(href);
+          // `linkCheck: null` means this check does not test links; omitting it throws.
+          if (check.linkCheck !== null) {
+            const { selector, href } = check.linkCheck;
+            const link = doc.querySelector(selector);
+            expect(link).toBeTruthy();
+            expect(link.getAttribute("href")).toBe(href);
+          }
         }
-      }
+      });
     }
   });
 
-  it("lists the right terms for aliases, local aliases, ordering and special terms", async () => {
+  describe("lists the right terms for aliases, local aliases, ordering and special terms", () => {
     const listed = panel =>
       [...panel.querySelectorAll(".dfn-panel-lt code")].map(c => c.textContent);
 
@@ -625,16 +620,12 @@ describe("possible linking syntaxes", () => {
             <dfn data-export id="test-lt" data-lt="widget|thing">widget</dfn>
           </section>
         `,
-        expectations: async (doc, c) => {
+        expectations: async doc => {
           const panel = doc.getElementById("dfn-panel-for-test-lt");
           const items = panel.querySelectorAll(".dfn-panel-lt li");
-          expect(items).withContext(c.name).toHaveSize(2);
-          expect(items[0].querySelector("code").textContent)
-            .withContext(c.name)
-            .toBe("[=widget=]");
-          expect(items[1].querySelector("code").textContent)
-            .withContext(c.name)
-            .toBe("[=thing=]");
+          expect(items).toHaveSize(2);
+          expect(items[0].querySelector("code").textContent).toBe("[=widget=]");
+          expect(items[1].querySelector("code").textContent).toBe("[=thing=]");
         },
       },
       {
@@ -647,39 +638,33 @@ describe("possible linking syntaxes", () => {
             <p id="use-alias">[=loc alias=]</p>
           </section>
         `,
-        expectations: async (doc, c) => {
+        expectations: async doc => {
           const panel = doc.getElementById("dfn-panel-for-t-local");
-          expect(listed(panel))
-            .withContext(c.name)
-            .toEqual(["[=local term=]", "[=loc alias=]"]);
+          expect(listed(panel)).toEqual(["[=local term=]", "[=loc alias=]"]);
           const termLink = doc.querySelector("#use-term a");
-          expect(termLink.getAttribute("href"))
-            .withContext(c.name)
-            .toBe("#t-local");
+          expect(termLink.getAttribute("href")).toBe("#t-local");
           const aliasLink = doc.querySelector("#use-alias a");
-          expect(aliasLink.getAttribute("href"))
-            .withContext(c.name)
-            .toBe("#t-local");
+          expect(aliasLink.getAttribute("href")).toBe("#t-local");
         },
       },
       {
         name: "own text first, then data-lt",
         body: `<p><dfn data-export id="t-order" data-lt="gadget|gizmo">thing</dfn></p>`,
-        expectations: async (doc, c) => {
+        expectations: async doc => {
           const panel = doc.getElementById("dfn-panel-for-t-order");
-          expect(listed(panel))
-            .withContext(c.name)
-            .toEqual(["[=thing=]", "[=gadget=]", "[=gizmo=]"]);
+          expect(listed(panel)).toEqual([
+            "[=thing=]",
+            "[=gadget=]",
+            "[=gizmo=]",
+          ]);
         },
       },
       {
         name: "own text deduplicated from data-lt",
         body: `<p><dfn data-export id="t-order2" data-lt="gadget|thing">thing</dfn></p>`,
-        expectations: async (doc, c) => {
+        expectations: async doc => {
           const panel = doc.getElementById("dfn-panel-for-t-order2");
-          expect(listed(panel))
-            .withContext(c.name)
-            .toEqual(["[=thing=]", "[=gadget=]"]);
+          expect(listed(panel)).toEqual(["[=thing=]", "[=gadget=]"]);
         },
       },
       {
@@ -692,19 +677,16 @@ describe("possible linking syntaxes", () => {
             <p id="use-b">{{Other/""}}</p>
           </section>
         `,
-        expectations: async (doc, c) => {
+        expectations: async doc => {
           const panel = doc.getElementById("dfn-panel-for-t-empty2");
-          expect(listed(panel))
-            .withContext(c.name)
-            .toEqual(['{{Other/""}}', '{{Other/"the-empty-string"}}']);
+          expect(listed(panel)).toEqual([
+            '{{Other/""}}',
+            '{{Other/"the-empty-string"}}',
+          ]);
           const linkA = doc.querySelector("#use-a a");
-          expect(linkA.getAttribute("href"))
-            .withContext(c.name)
-            .toBe("#t-empty2");
+          expect(linkA.getAttribute("href")).toBe("#t-empty2");
           const linkB = doc.querySelector("#use-b a");
-          expect(linkB.getAttribute("href"))
-            .withContext(c.name)
-            .toBe("#t-empty2");
+          expect(linkB.getAttribute("href")).toBe("#t-empty2");
         },
       },
       {
@@ -718,29 +700,26 @@ describe("possible linking syntaxes", () => {
             };
           </pre>
         `,
-        expectations: async (doc, c) => {
+        expectations: async doc => {
           const attrPanel = doc.getElementById("dfn-panel-for-dom-parent-attr");
-          expect(listed(attrPanel))
-            .withContext(c.name)
-            .toEqual(["{{Parent/attr}}"]);
+          expect(listed(attrPanel)).toEqual(["{{Parent/attr}}"]);
           const methodPanel = doc.getElementById(
             "dfn-panel-for-dom-parent-method"
           );
-          expect(listed(methodPanel))
-            .withContext(c.name)
-            .toEqual([
-              "{{Parent/method}}",
-              "{{Parent/method()}}",
-              "{{Parent/method(arg)}}",
-            ]);
+          expect(listed(methodPanel)).toEqual([
+            "{{Parent/method}}",
+            "{{Parent/method()}}",
+            "{{Parent/method(arg)}}",
+          ]);
         },
       },
     ];
 
-    const docs = await makeCaseDocs(cases);
-    for (const [index, c] of cases.entries()) {
-      const doc = docs[index];
-      await c.expectations(doc, c);
+    for (const c of cases) {
+      it(c.name, async () => {
+        const doc = await makeRSDoc(makeStandardOps(c.config ?? null, c.body));
+        await c.expectations(doc);
+      });
     }
   });
 
@@ -821,7 +800,7 @@ describe("possible linking syntaxes", () => {
     expect(panel.hidden).toBeTrue();
   });
 
-  it("lists no syntax where none can link back, and keeps the control cases", async () => {
+  describe("lists no syntax where none can link back, and keeps the control cases", () => {
     const listed = panel => {
       return [...panel.querySelectorAll(".dfn-panel-lt code")].map(
         c => c.textContent
@@ -884,16 +863,14 @@ describe("possible linking syntaxes", () => {
           </section>
           <section id="index"></section>
         `,
-        check: (doc, c) => {
+        check: doc => {
           const term = doc.querySelector(
             "#index-defined-elsewhere .index-term"
           );
-          expect(term).withContext(c.name).not.toBeNull();
+          expect(term).not.toBeNull();
           const termPanel = doc.getElementById(`dfn-panel-for-${term?.id}`);
-          expect(termPanel).withContext(c.name).not.toBeNull();
-          expect(termPanel?.querySelector(".dfn-panel-lt"))
-            .withContext(c.name)
-            .toBeNull();
+          expect(termPanel).not.toBeNull();
+          expect(termPanel?.querySelector(".dfn-panel-lt")).toBeNull();
         },
       },
       {
@@ -960,15 +937,13 @@ describe("possible linking syntaxes", () => {
         name: "non-exported definition",
         body: `<p><dfn id="t-local" data-lt="foo|bar">foo</dfn></p>`,
         noSyntaxPanels: ["dfn-panel-for-t-local"],
-        check: (doc, c) => {
+        check: doc => {
           const panel = doc.getElementById("dfn-panel-for-t-local");
           const hasHeading = [...panel.querySelectorAll("b")].some(
             el => el.textContent === "Possible linking syntaxes:"
           );
-          expect(hasHeading).withContext(c.name).toBeFalse();
-          expect(doc.querySelector("svg.respec-visually-hidden"))
-            .withContext(c.name)
-            .toBeNull();
+          expect(hasHeading).toBeFalse();
+          expect(doc.querySelector("svg.respec-visually-hidden")).toBeNull();
         },
       },
       {
@@ -977,40 +952,39 @@ describe("possible linking syntaxes", () => {
           <p><dfn data-export id="t-none" data-dfn-type="event">only</dfn></p>
         `,
         noSyntaxPanels: ["dfn-panel-for-t-none"],
-        check: (doc, c) => {
-          expect(doc.querySelector("symbol")).withContext(c.name).toBeNull();
-          expect(doc.querySelector("svg.respec-visually-hidden"))
-            .withContext(c.name)
-            .toBeNull();
+        check: doc => {
+          expect(doc.querySelector("symbol")).toBeNull();
+          expect(doc.querySelector("svg.respec-visually-hidden")).toBeNull();
         },
       },
     ];
 
-    const docs = await makeCaseDocs(cases);
-    for (const [index, c] of cases.entries()) {
-      const doc = docs[index];
+    for (const c of cases) {
+      it(c.name, async () => {
+        const doc = await makeRSDoc(makeStandardOps(c.config ?? null, c.body));
 
-      if (c.noSyntaxPanels) {
-        for (const panelId of c.noSyntaxPanels) {
-          const panel = doc.getElementById(panelId);
-          expect(panel).withContext(c.name).not.toBeNull();
-          const lt = panel.querySelector(".dfn-panel-lt");
-          expect(lt).withContext(c.name).toBeNull();
+        if (c.noSyntaxPanels) {
+          for (const panelId of c.noSyntaxPanels) {
+            const panel = doc.getElementById(panelId);
+            expect(panel).not.toBeNull();
+            const lt = panel.querySelector(".dfn-panel-lt");
+            expect(lt).toBeNull();
+          }
         }
-      }
 
-      if (c.withSyntaxPanels) {
-        for (const panelId in c.withSyntaxPanels) {
-          const panel = doc.getElementById(panelId);
-          expect(panel).withContext(c.name).not.toBeNull();
-          const expected = c.withSyntaxPanels[panelId];
-          expect(listed(panel)).withContext(c.name).toEqual(expected);
+        if (c.withSyntaxPanels) {
+          for (const panelId in c.withSyntaxPanels) {
+            const panel = doc.getElementById(panelId);
+            expect(panel).not.toBeNull();
+            const expected = c.withSyntaxPanels[panelId];
+            expect(listed(panel)).toEqual(expected);
+          }
         }
-      }
 
-      if (c.check) {
-        c.check(doc, c);
-      }
+        if (c.check) {
+          c.check(doc);
+        }
+      });
     }
   });
 
@@ -1475,7 +1449,7 @@ describe("possible linking syntaxes", () => {
     expect(svg.getAttribute("aria-hidden")).toBe("true");
   });
 
-  it("lists syntaxes only for exported definitions", async () => {
+  describe("lists syntaxes only for exported definitions", () => {
     const listed = panel =>
       [...panel.querySelectorAll(".dfn-panel-lt code")].map(c => c.textContent);
 
@@ -1483,42 +1457,37 @@ describe("possible linking syntaxes", () => {
       {
         name: "via data-export attribute",
         body: `<p><dfn id="t-exported" data-export data-lt="foo|bar">foo</dfn></p>`,
-        expectations: async (doc, c) => {
+        expectations: async doc => {
           const panel = doc.getElementById("dfn-panel-for-t-exported");
-          expect(listed(panel))
-            .withContext(c.name)
-            .toEqual(["[=foo=]", "[=bar=]"]);
+          expect(listed(panel)).toEqual(["[=foo=]", "[=bar=]"]);
         },
       },
       {
         name: "via 'export' class",
         body: `<p><dfn id="t-class" class="export">foo</dfn></p>`,
-        expectations: async (doc, c) => {
+        expectations: async doc => {
           const panel = doc.getElementById("dfn-panel-for-t-class");
-          expect(listed(panel)).withContext(c.name).toEqual(["[=foo=]"]);
+          expect(listed(panel)).toEqual(["[=foo=]"]);
         },
       },
       {
         name: "mixed export/no-export with sprite check",
         body: `<p><dfn id="t-yes" data-export>yes</dfn> <dfn id="t-no">no</dfn></p>`,
-        expectations: async (doc, c) => {
+        expectations: async doc => {
           const yesPanel = doc.getElementById("dfn-panel-for-t-yes");
-          expect(listed(yesPanel)).withContext(c.name).toEqual(["[=yes=]"]);
+          expect(listed(yesPanel)).toEqual(["[=yes=]"]);
           const noPanel = doc.getElementById("dfn-panel-for-t-no");
-          expect(noPanel.querySelector(".dfn-panel-lt"))
-            .withContext(c.name)
-            .toBeNull();
-          expect(doc.querySelectorAll("symbol").length)
-            .withContext(c.name)
-            .toBe(1);
+          expect(noPanel.querySelector(".dfn-panel-lt")).toBeNull();
+          expect(doc.querySelectorAll("symbol").length).toBe(1);
         },
       },
     ];
 
-    const docs = await makeCaseDocs(cases);
-    for (const [index, c] of cases.entries()) {
-      const doc = docs[index];
-      await c.expectations(doc, c);
+    for (const c of cases) {
+      it(c.name, async () => {
+        const doc = await makeRSDoc(makeStandardOps(c.config ?? null, c.body));
+        await c.expectations(doc);
+      });
     }
   });
 });
