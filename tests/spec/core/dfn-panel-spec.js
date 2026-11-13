@@ -6,6 +6,12 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 
+/** Creates a document for every case at the same time and returns them in case order. */
+const makeCaseDocs = cases =>
+  Promise.all(
+    cases.map(c => makeRSDoc(makeStandardOps(c.config ?? null, c.body)))
+  );
+
 describe("Core — dfnPanel", () => {
   afterAll(flushIframes);
 
@@ -583,9 +589,9 @@ describe("possible linking syntaxes", () => {
       },
     ];
 
-    for (const c of cases) {
-      const ops = makeStandardOps(null, c.body);
-      const doc = await makeRSDoc(ops);
+    const docs = await makeCaseDocs(cases);
+    for (const [index, c] of cases.entries()) {
+      const doc = docs[index];
 
       for (const check of c.checks) {
         const panel = doc.getElementById(check.panelId);
@@ -731,9 +737,9 @@ describe("possible linking syntaxes", () => {
       },
     ];
 
-    for (const c of cases) {
-      const ops = makeStandardOps(null, c.body);
-      const doc = await makeRSDoc(ops);
+    const docs = await makeCaseDocs(cases);
+    for (const [index, c] of cases.entries()) {
+      const doc = docs[index];
       await c.expectations(doc, c);
     }
   });
@@ -960,7 +966,7 @@ describe("possible linking syntaxes", () => {
             el => el.textContent === "Possible linking syntaxes:"
           );
           expect(hasHeading).withContext(c.name).toBeFalse();
-          expect(doc.querySelector("svg.dfn-panel-sprite"))
+          expect(doc.querySelector("svg.respec-visually-hidden"))
             .withContext(c.name)
             .toBeNull();
         },
@@ -973,16 +979,16 @@ describe("possible linking syntaxes", () => {
         noSyntaxPanels: ["dfn-panel-for-t-none"],
         check: (doc, c) => {
           expect(doc.querySelector("symbol")).withContext(c.name).toBeNull();
-          expect(doc.querySelector(".dfn-panel-sprite"))
+          expect(doc.querySelector("svg.respec-visually-hidden"))
             .withContext(c.name)
             .toBeNull();
         },
       },
     ];
 
-    for (const c of cases) {
-      const ops = makeStandardOps(c.config ?? null, c.body);
-      const doc = await makeRSDoc(ops);
+    const docs = await makeCaseDocs(cases);
+    for (const [index, c] of cases.entries()) {
+      const doc = docs[index];
 
       if (c.noSyntaxPanels) {
         for (const panelId of c.noSyntaxPanels) {
@@ -1183,14 +1189,14 @@ describe("possible linking syntaxes", () => {
         nonEmpty: true,
       },
       {
-        name: "hidden 'Copy' text position",
-        selector: ".dfn-panel .visually-hidden",
+        name: "hidden text and sprite position",
+        selector: ".respec-visually-hidden",
         property: "position",
         value: "absolute",
       },
       {
-        name: "hidden 'Copy' text width",
-        selector: ".dfn-panel .visually-hidden",
+        name: "hidden text and sprite width",
+        selector: ".respec-visually-hidden",
         property: "width",
         value: "1px",
       },
@@ -1201,26 +1207,8 @@ describe("possible linking syntaxes", () => {
         value: "all",
       },
       {
-        name: "hidden sprite position",
-        selector: ".dfn-panel-sprite",
-        property: "position",
-        value: "absolute",
-      },
-      {
-        name: "hidden sprite width",
-        selector: ".dfn-panel-sprite",
-        property: "width",
-        value: "0px",
-      },
-      {
-        name: "hidden sprite height",
-        selector: ".dfn-panel-sprite",
-        property: "height",
-        value: "0px",
-      },
-      {
-        name: "hidden sprite display",
-        selector: ".dfn-panel-sprite",
+        name: "hidden text and sprite display",
+        selector: ".respec-visually-hidden",
         property: "display",
         notValue: "none",
       },
@@ -1277,7 +1265,7 @@ describe("possible linking syntaxes", () => {
     const listItems = [...panel.querySelectorAll(".dfn-panel-lt li")];
     expect(listItems.length).toBe(2);
 
-    const sprite = doc.querySelector("svg.dfn-panel-sprite");
+    const sprite = doc.querySelector("svg.respec-visually-hidden");
     expect(sprite).not.toBeNull();
     expect(sprite.getAttribute("aria-hidden")).toBe("true");
 
@@ -1311,7 +1299,7 @@ describe("possible linking syntaxes", () => {
       expect(button.hasAttribute("title")).toBeFalse();
       expect(button.hasAttribute("data-copy-text")).toBeFalse();
 
-      const hiddenSpan = button.querySelector("span.visually-hidden");
+      const hiddenSpan = button.querySelector("span.respec-visually-hidden");
       expect(hiddenSpan).not.toBeNull();
       expect(hiddenSpan.textContent).toBe("Copy ");
       expect(hiddenSpan.nextElementSibling.tagName).toBe("CODE");
@@ -1427,7 +1415,7 @@ describe("possible linking syntaxes", () => {
     click(code);
     expect(copied).toEqual(["[=bar=]"]);
 
-    const span = panel.querySelector("span.visually-hidden");
+    const span = panel.querySelector("span.respec-visually-hidden");
     click(span);
     expect(copied).toEqual(["[=bar=]", "[=foo=]"]);
   });
@@ -1527,9 +1515,9 @@ describe("possible linking syntaxes", () => {
       },
     ];
 
-    for (const c of cases) {
-      const ops = makeStandardOps(null, c.body);
-      const doc = await makeRSDoc(ops);
+    const docs = await makeCaseDocs(cases);
+    for (const [index, c] of cases.entries()) {
+      const doc = docs[index];
       await c.expectations(doc, c);
     }
   });

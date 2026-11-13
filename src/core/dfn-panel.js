@@ -256,7 +256,7 @@ function termToSyntax(term, dfnType, dfnFor) {
  */
 function createSyntaxCopyButton(syntax) {
   return html`<button type="button" class="dfn-panel-copy-btn">
-    <span class="visually-hidden">Copy </span><code>${syntax}</code>
+    <span class="respec-visually-hidden">Copy </span><code>${syntax}</code>
     <svg aria-hidden="true" viewBox="0 0 14 16">
       <use href="#${COPY_ICON_ID}"></use>
     </svg>
@@ -271,7 +271,7 @@ function createCopyIconSprite() {
   const template = document.createElement("template");
   template.innerHTML = COPY_SVG;
   const icon = /** @type {SVGElement} */ (template.content.firstElementChild);
-  return html`<svg class="dfn-panel-sprite" aria-hidden="true">
+  return html`<svg class="respec-visually-hidden" aria-hidden="true">
     <symbol id="${COPY_ICON_ID}" viewBox="${icon.getAttribute("viewBox")}">
       ${[...icon.childNodes]}
     </symbol>

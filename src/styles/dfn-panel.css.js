@@ -178,7 +178,7 @@ dfn {
   box-shadow: inset 0 1px 2px color-mix(in srgb, currentColor 50%, transparent);
 }
 
-.dfn-panel .visually-hidden {
+.respec-visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -191,10 +191,4 @@ dfn {
   border: 0;
 }
 
-.dfn-panel-sprite {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
 `;
