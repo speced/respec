@@ -2,13 +2,16 @@
 // Constructs "dfn panels" which show all the local references to a dfn and a
 // self link to the selected dfn. Based on Bikeshed's dfn panels at
 // https://github.com/tabatkins/bikeshed/blob/ef44162c2e/bikeshed/dfnpanels.py
+import { getDfnTitles, norm } from "./utils.js";
+import { COPY_SVG } from "./clipboard.js";
 import css from "../styles/dfn-panel.css.js";
 import { fetchBase } from "./text-loader.js";
 import { html } from "./import-maps.js";
 import { insertStyle } from "./insert-style.js";
-import { norm } from "./utils.js";
 
 export const name = "core/dfn-panel";
+
+const COPY_ICON_ID = "respec-dfn-panel-copy-icon";
 
 export async function run() {
   insertStyle(css, { before: document.querySelector("link") });
@@ -24,6 +27,9 @@ export async function run() {
     // allowing keyboard action as needed.
     el.tabIndex = 0;
     el.setAttribute("aria-haspopup", "dialog");
+  }
+  if (panels.querySelector(".dfn-panel-copy-btn")) {
+    panels.append(createCopyIconSprite());
   }
   const firstScript = document.body.querySelector("script");
   if (firstScript) {
@@ -55,7 +61,7 @@ function createPanel(dfn) {
       hidden
       role="dialog"
       aria-modal="true"
-      aria-label="Links in this document to definition: ${definition}"
+      aria-label="Details for definition: ${definition}"
     >
       <span class="caret"></span>
       <div>
@@ -69,7 +75,7 @@ function createPanel(dfn) {
         ${cddlMarker(dfn, links)}
       </div>
       <p><b>Referenced in:</b></p>
-      ${referencesToHTML(id, links)}
+      ${referencesToHTML(id, links)} ${linkingSyntaxesToHTML(dfn)}
     </div>
   `;
   return panel;
@@ -131,13 +137,155 @@ function cddlMarker(dfn, links) {
 }
 
 /**
+ * Renders the "Possible linking syntaxes:" section for a dfn panel.
+ * Returns null if the dfn is not exported, is an index-term (external), or has
+ * no syntaxes.
+ * @param {HTMLElement} dfn
+ */
+function linkingSyntaxesToHTML(dfn) {
+  // Only exported definitions list syntaxes. Skips external .index-term spans.
+  if (!dfn.matches("dfn[data-export]")) return null;
+  const syntaxes = getLinkingSyntaxes(dfn);
+  if (!syntaxes.length) return null;
+
+  const headingId = `dfn-panel-lt-heading-${dfn.id}`;
+  // No wrapper element: `.dfn-panel > div` is a flex row, so a wrapping div
+  // would lay the heading and the list out side by side.
+  return html`<p><b id="${headingId}">Possible linking syntaxes:</b></p>
+    <ul class="dfn-panel-lt" aria-labelledby="${headingId}">
+      ${syntaxes.map(
+        syntax => html`<li>${createSyntaxCopyButton(syntax)}</li>`
+      )}
+    </ul>`;
+}
+
+/**
+ * Returns the list of possible linking syntax strings for a dfn element.
+ * Includes its text and its data-lt and data-local-lt aliases.
+ * @param {HTMLElement} dfn
+ * @returns {string[]}
+ */
+function getLinkingSyntaxes(dfn) {
+  // No inline syntax links to an overload after the first (`!overload-N`).
+  if (/!overload-/.test(dfn.dataset.lt ?? "")) return [];
+  const dfnType = dfn.dataset.dfnType || "dfn";
+  const forNames =
+    dfn.dataset.dfnFor
+      ?.split(",")
+      .map(s => s.trim())
+      .filter(Boolean) ?? [];
+  const forValues = forNames.length ? forNames : [null];
+  // getDfnTitles lists the data-lt aliases first. List the dfn's own text first.
+  const text = norm(dfn.textContent);
+  return getDfnTitles(dfn)
+    .sort((a, b) => Number(b === text) - Number(a === text))
+    .flatMap(term =>
+      forValues.map(forValue => termToSyntax(term, dfnType, forValue))
+    )
+    .filter(Boolean);
+}
+
+const IDL_TYPES = new Set([
+  "attribute",
+  "callback",
+  "const",
+  "constructor",
+  "dict-member",
+  "dictionary",
+  "enum-value",
+  "enum",
+  "exception",
+  "extended-attribute",
+  "interface",
+  "method",
+  "namespace",
+  "typedef",
+]);
+
+const CDDL_TYPES = new Set(["cddl-type", "cddl-key", "cddl-value"]);
+
+const CONCEPT_TYPES = new Set(["dfn", "abstract-op"]);
+
+/**
+ * Returns the linking syntax string for a term given its dfn-type and dfn-for,
+ * or an empty string when no inline syntax links to that definition.
+ * @param {string} term
+ * @param {string} dfnType
+ * @param {string | null} dfnFor
+ * @returns {string}
+ */
+function termToSyntax(term, dfnType, dfnFor) {
+  const forPrefix = dfnFor ? `${dfnFor}/` : "";
+  if (CONCEPT_TYPES.has(dfnType)) {
+    return `[=${forPrefix}${term.replaceAll("/", "\\/")}=]`;
+  }
+  if (CDDL_TYPES.has(dfnType)) {
+    // The quotes of a CDDL value keep a "/" from separating a type and a member.
+    return term.includes("/") && !term.startsWith('"')
+      ? ""
+      : `{^${forPrefix}${term}^}`;
+  }
+  // Only [= =] can escape a "/". The other syntaxes read it as a separator.
+  if (term.includes("/")) return "";
+  if (IDL_TYPES.has(dfnType)) {
+    // ReSpec adds an `Interface.member` alias. After a for, it renders garbled.
+    if (dfnFor && term.startsWith(`${dfnFor}.`)) return "";
+    // The empty string is already written as "".
+    const name = dfnType === "enum-value" && term !== '""' ? `"${term}"` : term;
+    return `{{${forPrefix}${name}}}`;
+  }
+  switch (dfnType) {
+    case "element":
+      return dfnFor ? "" : `[^${term}^]`;
+    case "element-attr":
+      // A global attribute has no element: [^/role^]
+      return `[^${forPrefix || "/"}${term}^]`;
+    case "attr-value":
+      return dfnFor ? `[^${forPrefix}${term}^]` : "";
+    default:
+      // Types like event and http-header have no shorthand.
+      return "";
+  }
+}
+
+/**
+ * Creates the button for one row of the syntax list. The button holds the
+ * syntax, so its name reads "Copy" plus the syntax. The runtime script copies
+ * the text of the `code` inside the clicked button.
+ * @param {string} syntax
+ */
+function createSyntaxCopyButton(syntax) {
+  return html`<button type="button" class="dfn-panel-copy-btn">
+    <span class="respec-visually-hidden">Copy </span><code>${syntax}</code>
+    <svg aria-hidden="true" viewBox="0 0 14 16">
+      <use href="#${COPY_ICON_ID}"></use>
+    </svg>
+  </button>`;
+}
+
+/**
+ * Puts the copy icon on the page once, as a symbol. Every button points at it
+ * with `<use>`, so the icon is not repeated for each row.
+ */
+function createCopyIconSprite() {
+  const template = document.createElement("template");
+  template.innerHTML = COPY_SVG;
+  const icon = /** @type {SVGElement} */ (template.content.firstElementChild);
+  return html`<svg class="respec-visually-hidden" aria-hidden="true">
+    <symbol id="${COPY_ICON_ID}" viewBox="${icon.getAttribute("viewBox")}">
+      ${[...icon.childNodes]}
+    </symbol>
+  </svg>`;
+}
+
+/**
  * @param {string} id dfn id
  * @param {NodeListOf<HTMLAnchorElement>} links
  * @returns {HTMLUListElement}
  */
 function referencesToHTML(id, links) {
   if (!links.length) {
-    return html`<ul>
+    return html`<ul class="dfn-panel-refs">
       <li>Not referenced in this document.</li>
     </ul>`;
   }
@@ -183,7 +331,7 @@ function referencesToHTML(id, links) {
     </li>`;
   };
 
-  return html`<ul>
+  return html`<ul class="dfn-panel-refs">
     ${[...titleToIDs].map(listItemToHTML)}
   </ul>`;
 }
