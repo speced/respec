@@ -9,6 +9,7 @@ function setupPanel() {
   const listener = panelListener();
   document.body.addEventListener("keydown", listener);
   document.body.addEventListener("click", listener);
+  setupCopyButtons();
 }
 
 function panelListener() {
@@ -99,6 +100,10 @@ function deriveAction(event) {
     return hitALink ? "none" : "show";
   }
   if (target.closest(".dfn-panel")) {
+    // Copy buttons keep the panel open regardless of docked state.
+    if (target.closest(".dfn-panel-copy-btn")) {
+      return "none";
+    }
     if (hitALink) {
       return target.classList.contains("self-link") ? "hide" : "dock";
     }
@@ -164,16 +169,18 @@ function displayPanel(dfn, panel, { x, y }) {
  * @returns
  */
 function trapFocus(panel, dfn) {
-  /** @type NodeListOf<HTMLAnchorElement> elements */
-  const anchors = panel.querySelectorAll("a[href]");
+  /** @type NodeListOf<HTMLElement> */
+  const focusableElements = panel.querySelectorAll(
+    "a[href], button:not([disabled])"
+  );
   // No need to trap focus
-  if (!anchors.length) return;
+  if (!focusableElements.length) return;
 
   // Move focus to first anchor element
-  const first = anchors.item(0);
+  const first = focusableElements.item(0);
   first.focus();
 
-  const trapListener = createTrapListener(anchors, panel, dfn);
+  const trapListener = createTrapListener(focusableElements, panel, dfn);
   panel.addEventListener("keydown", trapListener);
 
   // Hiding the panel releases the trap
@@ -190,14 +197,13 @@ function trapFocus(panel, dfn) {
 
 /**
  *
- * @param {NodeListOf<HTMLAnchorElement>} anchors
+ * @param {NodeListOf<HTMLElement>} focusableElements
  * @param {HTMLElement} panel
  * @param {HTMLElement} dfn
  * @returns
  */
-function createTrapListener(anchors, panel, dfn) {
-  const lastIndex = anchors.length - 1;
-  let currentIndex = 0;
+function createTrapListener(focusableElements, panel, dfn) {
+  const lastIndex = focusableElements.length - 1;
   /**
    * @param {KeyboardEvent} event
    */
@@ -206,19 +212,27 @@ function createTrapListener(anchors, panel, dfn) {
       // Hitting "Tab" traps us in a nice loop around elements.
       case "Tab": {
         event.preventDefault();
-        currentIndex += event.shiftKey ? -1 : +1;
-        if (currentIndex < 0) {
-          currentIndex = lastIndex;
-        } else if (currentIndex > lastIndex) {
-          currentIndex = 0;
+        let index = [...focusableElements].indexOf(
+          /** @type {HTMLElement} */ (document.activeElement)
+        );
+        index += event.shiftKey ? -1 : +1;
+        if (index < 0) {
+          index = lastIndex;
+        } else if (index > lastIndex) {
+          index = 0;
         }
-        anchors.item(currentIndex).focus();
+        focusableElements.item(index).focus();
         break;
       }
 
       // Hitting "Enter" on an anchor releases the trap.
       case "Enter":
-        hidePanel(panel);
+        if (
+          event.target instanceof HTMLElement &&
+          event.target.closest("a[href]")
+        ) {
+          hidePanel(panel);
+        }
         break;
 
       // Hitting "Escape" returns focus to dfn.
@@ -235,4 +249,20 @@ function hidePanel(panel) {
   if (!panel) return;
   panel.hidden = true;
   panel.classList.remove("docked");
+}
+
+function setupCopyButtons() {
+  document.body.addEventListener("click", event => {
+    // The icon is an SVG, which is an Element but not an HTMLElement.
+    const target = event.target;
+    const btn =
+      target instanceof Element && target.closest(".dfn-panel-copy-btn");
+    if (!btn) return;
+    const text = btn.querySelector("code")?.textContent;
+    if (!text) return;
+    navigator.clipboard?.writeText(text).then(
+      () => btn.ariaNotify?.("Copied"),
+      () => {}
+    );
+  });
 }
