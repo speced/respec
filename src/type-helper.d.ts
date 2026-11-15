@@ -8,6 +8,9 @@ interface Element {
    * const parent = / @type {HTMLElement} / (child.closest(selector));
    */
   closest<T extends Element>(selector: string): T | null;
+
+  /** Missing from TypeScript's DOM types, and from older browsers. */
+  ariaNotify?(message: string): void;
 }
 
 /**
