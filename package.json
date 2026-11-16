@@ -58,7 +58,7 @@
     "rollup": "^4.67.5",
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "serve": "^14.2.6",
-    "serve-handler": "^6.1.7",
+    "serve-handler": "^6.1.8",
     "simple-git-hooks": "^2.14.0",
     "sniffy-mimetype": "^1.1.1",
     "typescript": "^7.0.2",

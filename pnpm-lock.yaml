@@ -310,8 +310,8 @@ importers:
         specifier: ^14.2.6
         version: 14.2.6(supports-color@7.2.0)
       serve-handler:
-        specifier: ^6.1.7
-        version: 6.1.7
+        specifier: ^6.1.8
+        version: 6.1.8
       simple-git-hooks:
         specifier: ^2.14.0
         version: 2.14.0
@@ -2269,6 +2269,9 @@ packages:
 
   serve-handler@6.1.7:
     resolution: {integrity: sha512-CinAq1xWb0vR3twAv9evEU8cNWkXCb9kd5ePAHUKJBkOsUpR1wt/CvGdeca7vqumL1U5cSaeVQ6zZMxiJ3yWsg==}
+
+  serve-handler@6.1.8:
+    resolution: {integrity: sha512-CYwNp8vJjDHTSQq52gHRVNkNOl89b5Q4HOHuQzbvodSyN+Y7ZgXy1pJI1PUKbSKK7NYgoPvI33EjkIxNa7kDmA==}
 
   serve-static@2.2.1:
     resolution: {integrity: sha512-xRXBn0pPqQTVQiC8wyQrKs2MOlX24zQ0POGaj0kultvoOCstBQM5yvOhAVSUwOMjQtTvsPWoNCHfPGwaaQJhTw==}
@@ -4422,6 +4425,16 @@ snapshots:
   serialize-javascript@7.1.4: {}
 
   serve-handler@6.1.7:
+    dependencies:
+      bytes: 3.0.0
+      content-disposition: 0.5.2
+      mime-types: 2.1.18
+      minimatch: 3.1.5
+      path-is-inside: 1.0.2
+      path-to-regexp: 3.3.0
+      range-parser: 1.2.0
+
+  serve-handler@6.1.8:
     dependencies:
       bytes: 3.0.0
       content-disposition: 0.5.2
