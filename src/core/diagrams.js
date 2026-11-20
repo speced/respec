@@ -64,10 +64,6 @@ const l10n = getIntlData({
   },
 });
 
-/**
- * The width Pele lays the phone layout out for. A drawing wider than this also
- * gets a phone layout.
- */
 const PHONE_LAYOUT_WIDTH = 320;
 
 let diagramCount = 0;
@@ -100,7 +96,7 @@ function loadScript(url) {
 /** @returns {Promise<boolean>} true if `self.pele` is ready to use */
 async function loadPele() {
   if (self.pele) return true;
-  // import.meta.url is the ReSpec script in the bundle. In source mode it is
+  // In the bundle, import.meta.url is the ReSpec script. In source mode it is
   // this file, where no chunk exists: the built one lives under builds/.
   const sourceMode = import.meta.url.endsWith("/src/core/diagrams.js");
   const localUrl = new URL(
@@ -385,9 +381,8 @@ function drawDiagram(pre) {
         svgs.push(svgElement(phone.svg, "mobile"));
         svgs.forEach(svg => svg.classList.add(prefix));
         const front = `.diagram-face--front .${prefix}`;
-        // The phone layout takes over once the wide drawing would shrink below
-        // three quarters of its size. Pele draws labels at 14 to 16px, so that
-        // keeps them at 10px or more.
+        // Pele draws labels at 14 to 16px, so three quarters keeps them at 10px
+        // or more.
         switchRule = `@container (max-width: ${Math.floor(desktop.width * 0.75)}px) {
   ${front}.diagram-svg--desktop { display: none; }
   ${front}.diagram-svg--mobile { display: block; }
@@ -397,7 +392,6 @@ function drawDiagram(pre) {
     card = buildDiagramBlock(source, svgs, caption?.id);
   } catch (error) {
     const { line, code, description, message } = describeError(error);
-    // A line past the end of the source marks the last line instead.
     const shownLine = Math.min(line, source.split("\n").length);
     card = buildErrorBlock(
       source,
