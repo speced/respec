@@ -31,9 +31,9 @@ export default css`
 }
 
 .diagram-container {
+  box-sizing: border-box;
   border: 2px solid transparent;
   transition: border-color 0.3s;
-  min-width: min(20em, 100%);
   perspective: 1000px;
 }
 
@@ -100,7 +100,6 @@ export default css`
    diagram-container--active, which diagrams-runtime.js manages. */
 .diagramHeader {
   display: flex;
-  align-items: stretch;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s;
@@ -165,7 +164,7 @@ export default css`
 
 /* An outline outside the button is clipped by the toolbar's overflow:hidden,
    and Safari then shows no focus ring at all. */
-.diagram-flip-btn:focus-visible,
+.diagramHeader .diagram-flip-btn:focus-visible,
 .diagramHeader .respec-button-copy-paste:focus-visible {
   outline: 2px solid var(--pele-fg);
   outline-offset: -3px;
@@ -248,7 +247,6 @@ export default css`
   display: grid;
   grid-template-columns: 1.5em 2.5em 1fr;
   padding: 0.5em 0;
-  overflow: auto;
   white-space: pre;
 }
 
@@ -343,6 +341,7 @@ export default css`
     transform: none;
     transform-style: flat;
     transition: none;
+    min-height: 0 !important;
   }
   .diagram-face {
     backface-visibility: visible;

@@ -145,15 +145,24 @@ function freshPrefix() {
   return prefix;
 }
 
+const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+
 /**
- * Delete whatever in the renderer's output can run script, so a renderer bug
- * cannot put script into every reader's copy of the document.
+ * Keep only plain SVG drawing in the renderer's output, so a renderer bug
+ * cannot put script, frames or page-wide styles into every reader's copy of
+ * the document.
  * @param {SVGSVGElement} svg
  */
 function removeActiveContent(svg) {
-  svg
-    .querySelectorAll("script, foreignObject, animate, set")
-    .forEach(el => el.remove());
+  for (const el of svg.querySelectorAll("*")) {
+    const isOutsideSvg = el.namespaceURI !== SVG_NAMESPACE;
+    if (
+      isOutsideSvg ||
+      /^(script|foreignObject|style|animate|set)$/.test(el.localName)
+    ) {
+      el.remove();
+    }
+  }
   for (const el of [svg, ...svg.querySelectorAll("*")]) {
     for (const { name, localName, value } of [...el.attributes]) {
       // A URL parser drops tabs, newlines and leading control characters, so
@@ -174,7 +183,10 @@ function removeActiveContent(svg) {
 function svgElement(svg, variant) {
   const parsed = new DOMParser().parseFromString(svg, "image/svg+xml");
   const element = document.importNode(parsed.documentElement, true);
-  if (!(element instanceof SVGSVGElement)) {
+  if (
+    parsed.querySelector("parsererror") ||
+    !(element instanceof SVGSVGElement)
+  ) {
     throw new Error("The renderer did not return valid SVG.");
   }
   removeActiveContent(element);
@@ -395,10 +407,16 @@ function drawDiagram(pre) {
     card = buildDiagramBlock(source, svgs, caption?.id);
   } catch (error) {
     const { line, code, description, message } = describeError(error);
-    card = buildErrorBlock(source, { line, description }, caption?.id);
+    // A line past the end of the source marks the last line instead.
+    const shownLine = Math.min(line, source.split("\n").length);
+    card = buildErrorBlock(
+      source,
+      { line: shownLine, description },
+      caption?.id
+    );
     failure = {
       message: `Could not draw the diagram: ${description}`,
-      hint: hintFor({ line, code }),
+      hint: hintFor({ line: shownLine, code }),
     };
     console.warn(message);
   }
