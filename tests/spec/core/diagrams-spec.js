@@ -953,15 +953,14 @@ describe("Core - Diagrams", () => {
     expect(win.getComputedStyle(toolbar).pointerEvents).toBe("none");
   });
 
-  it("ignores mouse pointer events", async () => {
-    const bodyHtml =
+  it("a mouse press clears an active card elsewhere but never activates a card", async () => {
+    const body =
       wrap(flowchart, { figId: "fig-a" }) + wrap(flowchart, { figId: "fig-b" });
     const doc = await makeRSDoc(
-      makeStandardOps(null, bodyHtml),
+      makeStandardOps(null, body),
       null,
-      "display: block; width: 900px"
+      "display: block; width: 800px"
     );
-    const win = doc.defaultView;
     const cardA = doc
       .getElementById("fig-a")
       .querySelector(".diagram-container");
@@ -969,31 +968,48 @@ describe("Core - Diagrams", () => {
       .getElementById("fig-b")
       .querySelector(".diagram-container");
 
-    cardA.querySelector(".diagram-face--front").dispatchEvent(
-      new win.PointerEvent("pointerdown", {
+    cardA.dispatchEvent(
+      new doc.defaultView.PointerEvent("pointerdown", {
         pointerType: "mouse",
         bubbles: true,
       })
     );
-    expect(cardA.classList.contains("diagram-container--active")).toBeFalse();
+    expect(cardA.classList).not.toContain("diagram-container--active");
 
-    cardA.querySelector(".diagram-face--front").dispatchEvent(
-      new win.PointerEvent("pointerdown", {
+    cardA.dispatchEvent(
+      new doc.defaultView.PointerEvent("pointerdown", {
         pointerType: "touch",
         bubbles: true,
       })
     );
-    expect(cardA.classList.contains("diagram-container--active"))
-      .withContext("premise: A activated by touch")
-      .toBeTrue();
-
-    cardB.querySelector(".diagram-face--front").dispatchEvent(
-      new win.PointerEvent("pointerdown", {
+    expect(cardA.classList)
+      .withContext("card A should be active after touch tap")
+      .toContain("diagram-container--active");
+    cardB.dispatchEvent(
+      new doc.defaultView.PointerEvent("pointerdown", {
         pointerType: "mouse",
         bubbles: true,
       })
     );
-    expect(cardA.classList.contains("diagram-container--active")).toBeTrue();
+    expect(cardA.classList).not.toContain("diagram-container--active");
+    expect(cardB.classList).not.toContain("diagram-container--active");
+
+    cardA.dispatchEvent(
+      new doc.defaultView.PointerEvent("pointerdown", {
+        pointerType: "touch",
+        bubbles: true,
+      })
+    );
+    expect(cardA.classList)
+      .withContext("card A should be active again after touch tap")
+      .toContain("diagram-container--active");
+    cardA.querySelector(".diagram-face--front").dispatchEvent(
+      new doc.defaultView.PointerEvent("pointerdown", {
+        pointerType: "mouse",
+        bubbles: true,
+      })
+    );
+    expect(cardA.classList).toContain("diagram-container--active");
   });
 
   it("treats a pen like a touch", async () => {
@@ -1065,5 +1081,143 @@ describe("Core - Diagrams", () => {
     expect(
       savedCard.classList.contains("diagram-container--active")
     ).toBeTrue();
+  });
+
+  it("keeps an error card's toolbar tappable after flipping it back", async () => {
+    const doc = await makeRSDoc(
+      makeStandardOps(null, wrap("graph TD\n  A -->")),
+      null,
+      "display: block; width: 800px"
+    );
+    const card = doc.querySelector(".diagram-container");
+    const toolbar = card.querySelector(".diagramHeader");
+    const flipBtn = card.querySelector(".diagram-flip-btn");
+
+    expect(card.classList)
+      .withContext("premise: has error class")
+      .toContain("diagram-container--error");
+    expect(card.classList)
+      .withContext("premise: has flipped class")
+      .toContain("diagram-container--flipped");
+    expect(doc.defaultView.getComputedStyle(toolbar).pointerEvents)
+      .withContext("premise: initial pointer-events is auto")
+      .toBe("auto");
+
+    flipBtn.click();
+
+    expect(card.classList)
+      .withContext("premise: flipped class removed")
+      .not.toContain("diagram-container--flipped");
+    expect(card.classList)
+      .withContext("premise: error class kept")
+      .toContain("diagram-container--error");
+
+    expect(doc.defaultView.getComputedStyle(toolbar).pointerEvents).toBe(
+      "auto"
+    );
+  });
+
+  it("removes elements outside the SVG namespace and style elements from the renderer's SVG", async () => {
+    const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><iframe xmlns="http://www.w3.org/1999/xhtml" srcdoc="&lt;script&gt;parent.__ran = 1&lt;/script&gt;"/><object xmlns="http://www.w3.org/1999/xhtml" data="javascript:parent.__ran = 2"/><embed xmlns="http://www.w3.org/1999/xhtml" src="javascript:parent.__ran = 3"/><style>*{display:none}</style><div xmlns="http://www.w3.org/1999/xhtml">x</div><g class="keep"><text>ok</text></g></svg>`;
+    const safeStr = JSON.stringify(svgStr).replace(/</g, "\\u003c");
+    const stub = `<script>window.pele = { render() { return { svg: ${safeStr}, width: 200 }; } };</script>`;
+    const doc = await makeRSDoc(
+      makeStandardOps(null, stub + wrap(flowchart)),
+      null,
+      "display: block; width: 800px"
+    );
+
+    const card = doc.querySelector(".diagram-container");
+    expect(card.classList)
+      .withContext("not an error card")
+      .not.toContain("diagram-container--error");
+    const frontSvgs = card.querySelectorAll(".diagram-face--front svg");
+    expect(frontSvgs.length).withContext("exactly one SVG").toBe(1);
+
+    const svg = frontSvgs[0];
+    const localNames = Array.from(svg.querySelectorAll("*")).map(
+      el => el.localName
+    );
+    expect(localNames).not.toContain("iframe");
+    expect(localNames).not.toContain("object");
+    expect(localNames).not.toContain("embed");
+    expect(localNames).not.toContain("style");
+    expect(localNames).not.toContain("div");
+    expect(doc.querySelectorAll("iframe").length).toBe(0);
+    expect(doc.defaultView.__ran).toBeUndefined();
+    expect(svg.querySelector("g.keep")).not.toBeNull();
+  });
+
+  it("shows an error card when the renderer's SVG is malformed after a correct start", async () => {
+    const svgStr = `<svg xmlns="http://www.w3.org/2000/svg"><text>a & b</text></svg>`;
+    const safeStr = JSON.stringify(svgStr).replace(/</g, "\\u003c");
+    const stub = `<script>window.pele = { render() { return { svg: ${safeStr}, width: 200 }; } };</script>`;
+    const doc = await makeRSDoc(
+      makeStandardOps(null, stub + wrap(flowchart)),
+      null,
+      "display: block; width: 800px"
+    );
+
+    const card = doc.querySelector(".diagram-container");
+    expect(card.classList).toContain("diagram-container--error");
+    expect(card.querySelector(".diagram-face--front svg.pele")).toBeNull();
+
+    const errors = errorFilters.filter("core/diagrams")(doc);
+    expect(errors.length).toBe(1);
+    expect(errors[0].message).toContain("did not return valid SVG");
+  });
+
+  it("marks the last source line when the renderer reports a line past the end", async () => {
+    const source = `graph TD\n  A --> B`;
+    const stub = `<script>window.pele = { render() { const e = new Error("boom"); e.line = 9; e.code = "syntax"; throw e; } };</script>`;
+    const doc = await makeRSDoc(
+      makeStandardOps(null, stub + wrap(source)),
+      null,
+      "display: block; width: 800px"
+    );
+
+    const card = doc.querySelector(".diagram-container");
+    expect(card.classList).toContain("diagram-container--error");
+
+    const errorGutter = card.querySelector(".dg-gutter--error");
+    expect(errorGutter.textContent.trim()).toBe("2");
+
+    const codeHint = card.querySelector(".dg-code--hint");
+    expect(codeHint.textContent).toContain("boom");
+
+    const errors = errorFilters.filter("core/diagrams")(doc);
+    expect(errors.length).toBe(1);
+    expect(errors[0].hint).toContain("line 2");
+  });
+
+  it("keeps good cards and error cards inside their figures", async () => {
+    const bodyHtml =
+      wrap("flowchart LR\n  X --> Y") + wrap("graph TD\n  A -->");
+    const doc = await makeRSDoc(
+      makeStandardOps(null, bodyHtml),
+      null,
+      "display: block; width: 360px"
+    );
+
+    const errorCards = doc.querySelectorAll(".diagram-container--error");
+    expect(errorCards.length).withContext("has one error card").toBe(1);
+
+    const goodCards = doc.querySelectorAll(
+      ".diagram-container:not(.diagram-container--error)"
+    );
+    expect(goodCards.length).withContext("has one other card").toBe(1);
+
+    const allCards = doc.querySelectorAll(".diagram-container");
+    for (const card of allCards) {
+      const figure = card.closest("figure");
+      const style = doc.defaultView.getComputedStyle(figure);
+      const paddingLeft = parseFloat(style.paddingLeft);
+      const paddingRight = parseFloat(style.paddingRight);
+      const contentWidth = figure.clientWidth - paddingLeft - paddingRight;
+
+      expect(card.getBoundingClientRect().width).toBeLessThanOrEqual(
+        contentWidth + 0.5
+      );
+    }
   });
 });
