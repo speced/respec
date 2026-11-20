@@ -431,4 +431,144 @@ describe("Core - Diagrams", () => {
       expect(copied).toEqual([flowchart]);
     });
   });
+
+  it("switches to the phone layout at three quarters of each diagram's own width", async () => {
+    const wide =
+      "flowchart LR\n  A[Author writes text] --> B[Validate] --> C[Render SVG] --> D[Insert in page] --> E[Save HTML] --> F[Publish]";
+    let hasAbove = false;
+    let hasBelow = false;
+    let hasBetween = false;
+
+    for (const width of [900, 760, 400]) {
+      const doc = await makeRSDoc(
+        makeStandardOps(null, wrap(wide, { figId: "fig-wide" })),
+        null,
+        `width: ${width}px; display: block`
+      );
+      const card = doc.querySelector("#fig-wide .diagram-container");
+      const desktopSvg = card.querySelector(".diagram-svg--desktop");
+      const mobileSvg = card.querySelector(".diagram-svg--mobile");
+      const W = desktopSvg.viewBox.baseVal.width;
+      const switchPoint = Math.floor(W * 0.75);
+      const front = card
+        .querySelector(".diagram-face--front")
+        .getBoundingClientRect().width;
+
+      if (front > switchPoint + 30) hasAbove = true;
+      if (front < switchPoint - 30) hasBelow = true;
+      if (front > 640 && front <= switchPoint) hasBetween = true;
+
+      const desktopDisplay =
+        doc.defaultView.getComputedStyle(desktopSvg).display;
+      const mobileDisplay = doc.defaultView.getComputedStyle(mobileSvg).display;
+
+      if (front <= switchPoint) {
+        expect(mobileDisplay).not.toBe("none");
+        expect(desktopDisplay).toBe("none");
+      } else {
+        expect(desktopDisplay).not.toBe("none");
+        expect(mobileDisplay).toBe("none");
+      }
+    }
+
+    expect(hasAbove)
+      .withContext("at least one frame is clearly above the switch point")
+      .toBeTrue();
+    expect(hasBelow)
+      .withContext("at least one frame is clearly below the switch point")
+      .toBeTrue();
+    expect(hasBetween)
+      .withContext("at least one frame is between 640px and the switch point")
+      .toBeTrue();
+  });
+
+  it("gives two diagrams of different widths different switch points", async () => {
+    const wide =
+      "flowchart LR\n  A[Author writes text] --> B[Validate] --> C[Render SVG] --> D[Insert in page] --> E[Save HTML] --> F[Publish]";
+    const medium = "flowchart LR\n  A[Start] --> B[Middle step] --> C[End]";
+    const body =
+      wrap(wide, { figId: "fig-wide" }) + wrap(medium, { figId: "fig-medium" });
+
+    const doc = await makeRSDoc(
+      makeStandardOps(null, body),
+      null,
+      "width: 760px; display: block"
+    );
+
+    const desktopWide = doc.querySelector("#fig-wide .diagram-svg--desktop");
+    const desktopMedium = doc.querySelector(
+      "#fig-medium .diagram-svg--desktop"
+    );
+
+    const wWide = desktopWide.viewBox.baseVal.width;
+    const wMedium = desktopMedium.viewBox.baseVal.width;
+
+    expect(wMedium)
+      .withContext("medium diagram must be wider than 320px")
+      .toBeGreaterThan(320);
+    expect(wMedium)
+      .withContext("medium diagram must be narrower than wide diagram")
+      .toBeLessThan(wWide);
+
+    const frontWide = doc
+      .querySelector("#fig-wide .diagram-face--front")
+      .getBoundingClientRect().width;
+    const frontMedium = doc
+      .querySelector("#fig-medium .diagram-face--front")
+      .getBoundingClientRect().width;
+
+    expect(frontWide)
+      .withContext("front-face width is at or below wide switch point")
+      .toBeLessThanOrEqual(Math.floor(wWide * 0.75));
+    expect(frontMedium)
+      .withContext("front-face width is above medium switch point")
+      .toBeGreaterThan(Math.floor(wMedium * 0.75));
+
+    const wideDesktopDisplay =
+      doc.defaultView.getComputedStyle(desktopWide).display;
+    const wideMobileDisplay = doc.defaultView.getComputedStyle(
+      doc.querySelector("#fig-wide .diagram-svg--mobile")
+    ).display;
+    expect(wideMobileDisplay).not.toBe("none");
+    expect(wideDesktopDisplay).toBe("none");
+
+    const mediumDesktopDisplay =
+      doc.defaultView.getComputedStyle(desktopMedium).display;
+    const mediumMobileDisplay = doc.defaultView.getComputedStyle(
+      doc.querySelector("#fig-medium .diagram-svg--mobile")
+    ).display;
+    expect(mediumDesktopDisplay).not.toBe("none");
+    expect(mediumMobileDisplay).toBe("none");
+  });
+
+  it("takes its colors from the page variables", async () => {
+    const style = "<style>:root:root { --text: #eee; --bg: #111; }</style>";
+    const body = style + wrap(flowchart, { figId: "fig-colors" });
+    const doc = await makeRSDoc(
+      makeStandardOps(null, body),
+      null,
+      "width: 800px; display: block"
+    );
+    const card = doc.querySelector("#fig-colors .diagram-container");
+    const computed = doc.defaultView.getComputedStyle(card);
+
+    expect(computed.getPropertyValue("--pele-fg").trim()).toBe("#eee");
+    expect(computed.getPropertyValue("--pele-bg").trim()).toBe("#111");
+  });
+
+  it("paints the error card with the page's issue color", async () => {
+    const style = "<style>:root:root { --issue-bg: rgb(1, 2, 3); }</style>";
+    const broken = "graph TD\n  A -->";
+    const body = style + wrap(broken, { figId: "fig-err" });
+    const doc = await makeRSDoc(
+      makeStandardOps(null, body),
+      null,
+      "width: 800px; display: block"
+    );
+    const errorCard = doc.querySelector("#fig-err .diagram-container--error");
+
+    expect(doc.defaultView.getComputedStyle(errorCard).backgroundColor).toBe(
+      "rgb(1, 2, 3)"
+    );
+  });
 });

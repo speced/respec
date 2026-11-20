@@ -1,93 +1,33 @@
 /* --- Diagrams --- */
 const css = String.raw;
 
-// The reader's explicit choice beats the system preference, so both sets of
-// values are applied by selector as well as by media query, the same way
-// core/styles/highlight and respec do it.
-// Untagged: a css`` fragment with no selector is dropped by the minifier.
-const lightVars = `
-  --diagram-error-border: #d73a49;
-  --diagram-error-bg: #ffeef0;
-  --diagram-error-color: #86181d;
-  --diagram-header-bg: #005a9c;
-  --diagram-header-color: #fff;
-  --diagram-back-bg: #f6f8fa;
-  --diagram-btn-bg: #f0f0f0;
-  --diagram-btn-border: #ccc;
-  --diagram-btn-color: #555;
-  --diagram-btn-hover-bg: #e0e0e0;
-  --diagram-btn-hover-color: #333;
-  --diagram-gutter-color: #57606a;
-  --diagram-pulse-from: #f0f0f0;
-  --diagram-pulse-to: #f0b8bb;
-  --pele-bg: #fff;
-  --pele-fg: #1f1f1f;
-  --pele-muted: #6e6e6e;
-  --pele-line: #1f1f1f;
-  --pele-surface: #f3f3f3;
-  --pele-surface-alt: #e6e6e6;
-  --pele-border: #8a8a8a;
-  --pele-accent: #5b7bd5;
-`;
-
-const darkVars = `
-  --diagram-error-border: #f85149;
-  --diagram-error-bg: #3d1f28;
-  --diagram-error-color: #ff7b72;
-  --diagram-header-bg: #3a6da0;
-  --diagram-header-color: #fff;
-  --diagram-back-bg: #1e1e1e;
-  --diagram-btn-bg: #2d2d2d;
-  --diagram-btn-border: #555;
-  --diagram-btn-color: #aaa;
-  --diagram-btn-hover-bg: #3d3d3d;
-  --diagram-btn-hover-color: #ddd;
-  --diagram-gutter-color: #999;
-  --diagram-pulse-from: #2d2d2d;
-  --diagram-pulse-to: #5a2d31;
-  --pele-bg: #131516;
-  --pele-fg: #e0e0e0;
-  --pele-muted: #9a9a9a;
-  --pele-line: #c8c8c8;
-  --pele-surface: #1f2223;
-  --pele-surface-alt: #2a2e30;
-  --pele-border: #5c6164;
-  --pele-accent: #7f9be0;
-`;
-
-// Untagged, like the variables above: the minifier does not know @container
-// and drops the whole rule from anything inside the css`` tag.
-const phoneRules = `
-@container (max-width: 40em) {
-  .diagram-face--front:has(.diagram-svg--mobile) .diagram-svg--desktop {
-    display: none;
-  }
-  .diagram-face--front .diagram-svg--mobile {
-    display: block;
-  }
-}
-`;
-
 // prettier-ignore
 export default css`
+/* The colors follow the page. The W3C stylesheets set --text and --bg for
+   whichever scheme is showing, and the fallbacks are the light values. */
 :root {
-  ${lightVars}
-}
-
-/* Dark when the system prefers it, or when the reader picks dark. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    ${darkVars}
-  }
-}
-body:has(input[name='color-scheme'][value='dark']:checked) {
-  ${darkVars}
-}
-
-/* Light when the document has no dark scheme, or the reader picks light. */
-head:not(:has(meta[name='color-scheme'][content~='dark'])) + body,
-body:has(input[name='color-scheme'][value='light']:checked) {
-  ${lightVars}
+  --pele-bg: var(--bg, #fff);
+  --pele-fg: var(--text, #1f1f1f);
+  --pele-line: var(--pele-fg);
+  --pele-muted: color-mix(in srgb, var(--pele-fg) 55%, var(--pele-bg));
+  --pele-surface: color-mix(in srgb, var(--pele-fg) 7%, var(--pele-bg));
+  --pele-surface-alt: color-mix(in srgb, var(--pele-fg) 14%, var(--pele-bg));
+  --pele-border: color-mix(in srgb, var(--pele-fg) 45%, var(--pele-bg));
+  --pele-accent: color-mix(in srgb, #5b7bd5 75%, var(--pele-fg));
+  --diagram-error-border: var(--issue-border, #d73a49);
+  --diagram-error-bg: var(--issue-bg, #ffeef0);
+  --diagram-error-color: var(--issueheading-text, #86181d);
+  --diagram-header-bg: var(--logo-bg, #005a9c);
+  --diagram-header-color: var(--logo-text, #fff);
+  --diagram-back-bg: var(--pele-surface);
+  --diagram-btn-bg: color-mix(in srgb, var(--pele-fg) 8%, var(--pele-bg));
+  --diagram-btn-border: color-mix(in srgb, var(--pele-fg) 25%, var(--pele-bg));
+  --diagram-btn-color: color-mix(in srgb, var(--pele-fg) 70%, var(--pele-bg));
+  --diagram-btn-hover-bg: color-mix(in srgb, var(--pele-fg) 14%, var(--pele-bg));
+  --diagram-btn-hover-color: var(--pele-fg);
+  --diagram-gutter-color: var(--pele-muted);
+  --diagram-pulse-from: var(--diagram-btn-bg);
+  --diagram-pulse-to: color-mix(in srgb, var(--diagram-error-border) 35%, var(--pele-bg));
 }
 
 .diagram-container {
@@ -132,13 +72,11 @@ body:has(input[name='color-scheme'][value='light']:checked) {
   height: auto;
 }
 
-/* Wide drawings come with a second layout for phones. The narrow one shows
-   when the card is narrower than 40em, and hides the wide one. */
+/* A wide drawing also has a phone layout. diagrams.js writes one @container
+   rule per diagram that swaps them when the card gets too narrow for the wide one. */
 .diagram-face--front .diagram-svg--mobile {
   display: none;
 }
-
-${phoneRules}
 
 .diagram-face--back {
   transform: rotateY(180deg);
@@ -216,9 +154,28 @@ ${phoneRules}
 
 .diagramHeader .respec-button-copy-paste {
   position: static;
+  width: auto;
+  height: auto;
+  min-width: 2.5em;
   border-radius: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+/* A finger needs about 44px. */
+@media (pointer: coarse) {
+  .diagramHeader {
+    height: 44px;
+  }
+  .diagram-flip-btn,
+  .diagramHeader .respec-button-copy-paste {
+    min-width: 44px;
+  }
+}
+
+.diagramHeader .respec-button-copy-paste svg {
+  fill: currentColor;
 }
 
 .diagram-flip-btn:hover,
@@ -381,6 +338,7 @@ figure:has(.diagram-container--error),
   .diagram-container--flipped .diagram-flip {
     transform: none;
     transform-style: flat;
+    transition: none;
   }
   .diagram-face {
     backface-visibility: visible;
