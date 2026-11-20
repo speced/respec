@@ -702,7 +702,7 @@ describe("Core - Clipboard", () => {
       const parsed = new DOMParser().parseFromString(html, "text/html");
       const form = parsed.createElement("form");
       form.name = "respec";
-      parsed.body.appendChild(form);
+      parsed.body.insertBefore(form, parsed.body.firstChild);
       const srcdoc = `<!DOCTYPE html>\n${parsed.documentElement.outerHTML}`;
 
       const frame = document.createElement("iframe");
