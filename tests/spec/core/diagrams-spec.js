@@ -624,4 +624,126 @@ describe("Core - Diagrams", () => {
     btn.style.color = "rgb(10, 20, 30)";
     expect(doc.defaultView.getComputedStyle(svg).fill).toBe("rgb(10, 20, 30)");
   });
+
+  it("does not insert an empty style element when no diagram needs a phone layout", async () => {
+    const narrowSource = "flowchart LR\n  X --> Y";
+    const doc = await makeRSDoc(
+      makeStandardOps(null, wrap(narrowSource) + wrap(narrowSource))
+    );
+
+    const fronts = doc.querySelectorAll(".diagram-face--front");
+    expect(fronts)
+      .withContext("premise: there are exactly 2 front faces")
+      .toHaveSize(2);
+    for (const front of fronts) {
+      expect(front.querySelectorAll("svg"))
+        .withContext("premise: exactly 1 SVG per front face")
+        .toHaveSize(1);
+    }
+
+    const styles = doc.head.querySelectorAll("style");
+    for (const style of styles) {
+      expect(style.textContent.trim()).not.toBe("");
+      expect(style.textContent).not.toContain("@container");
+    }
+  });
+
+  it("does not tell the author to flip a card that already shows its source", async () => {
+    const doc1 = await makeRSDoc(
+      makeStandardOps(null, wrap("graph TD\n  A -->"))
+    );
+    const errors1 = errorFilters.filter("core/diagrams")(doc1);
+    expect(errors1[0].hint).toContain("line 2");
+    expect(errors1[0].hint).toContain("marked");
+    expect(errors1[0].hint).not.toMatch(/flip/i);
+
+    const doc2 = await makeRSDoc(
+      makeStandardOps(null, wrap("flowhcart TD\n  A --> B"))
+    );
+    const errors2 = errorFilters.filter("core/diagrams")(doc2);
+    expect(errors2[0].hint).toContain("flowchart");
+    expect(errors2[0].hint).not.toMatch(/flip/i);
+
+    const script = `<script>window.pele = { render() { return { svg: "not svg", width: 400 }; } };</script>`;
+    const doc3 = await makeRSDoc(
+      makeStandardOps(null, script + wrap(flowchart))
+    );
+    const errors3 = errorFilters.filter("core/diagrams")(doc3);
+    expect(errors3[0].hint).toBe("The card shows the diagram source.");
+    expect(errors3[0].hint).not.toMatch(/flip/i);
+  });
+
+  it("shows the failing line inside the card when the source is long", async () => {
+    const longBrokenSource = [
+      "flowchart TD",
+      "  A1 --> A2",
+      "  A2 --> A3",
+      "  A3 --> A4",
+      "  A4 --> A5",
+      "  A5 --> A6",
+      "  A6 --> A7",
+      "  A7 --> A8",
+      "  A8 --> A9",
+      "  A9 --> A10",
+      "  A10 --> A11",
+      "  A11 --> A12",
+      "  A12 --> A13",
+      "  M[unclosed --> N",
+      "  N --> O",
+    ].join("\n");
+
+    const doc = await makeRSDoc(
+      makeStandardOps(null, wrap(longBrokenSource)),
+      null,
+      "display: block; width: 900px"
+    );
+    const container = doc.querySelector(".diagram-container");
+
+    expect(container.classList.contains("diagram-container--error"))
+      .withContext("premise: diagram failed, rendered as error card")
+      .toBeTrue();
+
+    const back = container.querySelector(".diagram-face--back");
+    expect(back.scrollHeight)
+      .withContext("premise: source is tall enough to make scrollHeight > 200")
+      .toBeGreaterThan(200);
+
+    const errLine = container.querySelector(".dg-code--error");
+    expect(errLine)
+      .withContext("premise: a marked failing line exists")
+      .toBeTruthy();
+
+    expect(back.scrollHeight).toBeLessThanOrEqual(back.clientHeight);
+
+    const backRect = back.getBoundingClientRect();
+    const errRect = errLine.getBoundingClientRect();
+    expect(errRect.top).toBeGreaterThanOrEqual(backRect.top);
+    expect(errRect.bottom).toBeLessThanOrEqual(backRect.bottom);
+  });
+
+  it("wraps a long error message instead of clipping it", async () => {
+    const doc = await makeRSDoc(
+      makeStandardOps(
+        null,
+        wrap("flowchart TD\n  M[unclosed --> N\n  N --> O")
+      ),
+      null,
+      "display: block; width: 360px"
+    );
+
+    const hintCell = doc.querySelector(".dg-code--hint");
+    expect(hintCell)
+      .withContext("premise: error message cell exists")
+      .toBeTruthy();
+    expect(hintCell.textContent.length)
+      .withContext("premise: text content is longer than 60 characters")
+      .toBeGreaterThan(60);
+
+    const grid = doc.querySelector(".diagram-source-grid");
+    const hintRect = hintCell.getBoundingClientRect();
+    const gridRect = grid.getBoundingClientRect();
+
+    expect(hintRect.right).toBeLessThanOrEqual(gridRect.right + 1);
+    expect(grid.scrollWidth).toBeLessThanOrEqual(grid.clientWidth + 1);
+  });
 });

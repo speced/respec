@@ -9,7 +9,7 @@ export default css`
   --pele-bg: var(--bg, #fff);
   --pele-fg: var(--text, #1f1f1f);
   --pele-line: var(--pele-fg);
-  --pele-muted: color-mix(in srgb, var(--pele-fg) 55%, var(--pele-bg));
+  --pele-muted: color-mix(in srgb, var(--pele-fg) 62%, var(--pele-bg));
   --pele-surface: color-mix(in srgb, var(--pele-fg) 7%, var(--pele-bg));
   --pele-surface-alt: color-mix(in srgb, var(--pele-fg) 14%, var(--pele-bg));
   --pele-border: color-mix(in srgb, var(--pele-fg) 45%, var(--pele-bg));
@@ -91,10 +91,6 @@ export default css`
   height: 100%;
   box-sizing: border-box;
   overflow: auto;
-}
-
-.diagram-face--back code {
-  white-space: pre;
 }
 
 /* Hidden with opacity only: a visibility:hidden toolbar cannot take focus, so
@@ -206,11 +202,19 @@ export default css`
   min-height: 8em;
 }
 
+/* An error card opens flipped, so its source gives the card its height. */
+.diagram-container--error.diagram-container--flipped .diagram-face--back {
+  position: relative;
+}
+
+.diagram-container--error.diagram-container--flipped .diagram-face--front {
+  position: absolute;
+}
+
 .diagram-container--error .diagramHeader {
   opacity: 1;
 }
 
-figure:has(.diagram-container--error),
 .diagram-container--error,
 .diagram-container--error * {
   text-decoration: none !important;
@@ -219,7 +223,7 @@ figure:has(.diagram-container--error),
 /* Same specificity as the plain .diagramHeader .diagram-label rule but declared
    later, so it wins on source order without needing !important. */
 .diagramHeader .diagram-label--error {
-  background: var(--diagram-error-border);
+  background: color-mix(in srgb, var(--diagram-error-border) 75%, #000);
   color: #fff;
 }
 
@@ -290,6 +294,8 @@ figure:has(.diagram-container--error),
   font-weight: bold;
   font-size: 0.9em;
   background: var(--diagram-error-bg);
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* No flip animation: the inactive face is simply not shown. */
@@ -354,6 +360,14 @@ figure:has(.diagram-container--error),
   }
   .diagram-face--front .diagram-svg--mobile {
     display: none !important;
+  }
+  .diagram-container--error .diagram-face--front {
+    display: none;
+  }
+  .diagram-container--error .diagram-face--back {
+    display: block;
+    position: relative;
+    transform: none;
   }
 }
 `;
