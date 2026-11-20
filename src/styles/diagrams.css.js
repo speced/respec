@@ -104,7 +104,6 @@ export default css`
   pointer-events: none;
   transition: opacity 0.3s;
   height: 1.75em;
-  overflow: hidden;
   border: 1px solid var(--diagram-btn-border);
   border-top: none;
   border-inline-start: none;
@@ -114,6 +113,7 @@ export default css`
 
 .diagram-container:hover .diagramHeader,
 .diagram-container:focus-within .diagramHeader,
+.diagram-container:has([data-copied]) .diagramHeader,
 .diagram-container--active .diagramHeader,
 .diagram-container--flipped .diagramHeader {
   opacity: 1;
@@ -148,22 +148,19 @@ export default css`
 }
 
 .diagramHeader .respec-button-copy-paste {
-  position: static;
+  position: relative;
+  inset: auto;
   width: auto;
   height: auto;
   min-width: 2.5em;
   border-radius: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-end-end-radius: 3px;
 }
 
 .diagramHeader .respec-button-copy-paste svg {
   fill: currentColor;
 }
 
-/* An outline outside the button is clipped by the toolbar's overflow:hidden,
-   and Safari then shows no focus ring at all. */
 .diagramHeader .diagram-flip-btn:focus-visible,
 .diagramHeader .respec-button-copy-paste:focus-visible {
   outline: 2px solid var(--pele-fg);
