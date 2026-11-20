@@ -793,4 +793,71 @@ describe("Core - Diagrams", () => {
 
     expect(doc.defaultView.__ran).toBeUndefined();
   });
+
+  it("removes obfuscated and namespaced script content from the renderer's SVG", async () => {
+    const rawSvg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:foo="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg">
+      <a href="java&#x09;script:window.__ran = 1"><text>A</text></a>
+      <a href="&#x0A; JaVaScRiPt:window.__ran = 2"><text>B</text></a>
+      <a foo:href="javascript:window.__ran = 3"><text>C</text></a>
+      <a xlink:href="data:text/html,x"><text>D</text></a>
+      <svg:script>window.__ran = 4</svg:script>
+      <animate href="#t" attributeName="href" values="javascript:window.__ran = 5"/>
+      <set href="#t" attributeName="href" to="javascript:window.__ran = 6"/>
+      <a id="t" href="https://example.com/ok"><text>E</text></a>
+    </svg>`;
+    const safeSvg = JSON.stringify(rawSvg).replace(/</g, "\\u003c");
+    const script = `<script>window.pele = { render() { return { svg: ${safeSvg}, width: 200 }; } };</script>`;
+    const doc = await makeRSDoc(
+      makeStandardOps(null, script + wrap(flowchart))
+    );
+
+    const card = doc.querySelector(".diagram-container");
+    expect(card.classList.contains("diagram-container--error"))
+      .withContext("the card is not an error card")
+      .toBeFalse();
+
+    const svgs = card.querySelectorAll(".diagram-face--front svg");
+    expect(svgs.length)
+      .withContext(".diagram-face--front holds exactly one SVG")
+      .toBe(1);
+
+    const svg = svgs[0];
+    const allElements = [svg, ...svg.querySelectorAll("*")];
+    const prohibitedLocalNames = ["script", "animate", "set", "foreignObject"];
+
+    for (const el of allElements) {
+      expect(prohibitedLocalNames).not.toContain(el.localName);
+      for (const attr of el.attributes) {
+        expect(attr.localName.toLowerCase().startsWith("on")).toBeFalse();
+        if (attr.localName === "href") {
+          const cleanVal = [...attr.value]
+            .filter(ch => ch.charCodeAt(0) > 32)
+            .join("")
+            .toLowerCase();
+          expect(cleanVal.startsWith("javascript:")).toBeFalse();
+          expect(cleanVal.startsWith("data:")).toBeFalse();
+        }
+      }
+    }
+
+    const anchors = svg.querySelectorAll("a");
+    expect(anchors.length).toBe(5);
+
+    let hrefCount = 0;
+    let hasSafeHref = false;
+    for (const a of anchors) {
+      for (const attr of a.attributes) {
+        if (attr.localName === "href") {
+          hrefCount++;
+          if (attr.value === "https://example.com/ok") {
+            hasSafeHref = true;
+          }
+        }
+      }
+    }
+
+    expect(hrefCount).toBe(1);
+    expect(hasSafeHref).toBeTrue();
+    expect(doc.defaultView.__ran).toBeUndefined();
+  });
 });

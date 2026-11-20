@@ -70,7 +70,8 @@ const LOAD_TIMEOUT_MS = 6000;
 
 /**
  * The phone layout takes over once the wide drawing would shrink below this
- * fraction of its size. Pele draws labels at 16px, so 0.75 keeps them at 12px.
+ * fraction of its size. Pele draws labels at 14 to 16px, so 0.75 keeps them at
+ * 10px or more.
  */
 const MIN_SCALE = 0.75;
 
@@ -150,12 +151,17 @@ function freshPrefix() {
  * @param {SVGSVGElement} svg
  */
 function removeActiveContent(svg) {
-  svg.querySelectorAll("script, foreignObject").forEach(el => el.remove());
+  svg
+    .querySelectorAll("script, foreignObject, animate, set")
+    .forEach(el => el.remove());
   for (const el of [svg, ...svg.querySelectorAll("*")]) {
-    for (const { name, value } of [...el.attributes]) {
+    for (const { name, localName, value } of [...el.attributes]) {
+      // A URL parser drops tabs, newlines and leading control characters, so
+      // "java<tab>script:" still runs.
+      const url = [...value].filter(ch => ch.charCodeAt(0) > 32).join("");
       const isScriptUrl =
-        /^(xlink:)?href$/i.test(name) && /^\s*(javascript|data):/i.test(value);
-      if (/^on/i.test(name) || isScriptUrl) el.removeAttribute(name);
+        localName.toLowerCase() === "href" && /^(javascript|data):/i.test(url);
+      if (/^on/i.test(localName) || isScriptUrl) el.removeAttribute(name);
     }
   }
 }
