@@ -75,6 +75,8 @@ describe("Core - Diagrams", () => {
       card.querySelector(".dg-code--hint").textContent.trim().length
     ).toBeGreaterThan(0);
 
+    expect(card.querySelector(".dg-gutter--error").textContent).toBe("2");
+
     const errors = errorFilters.filter("core/diagrams")(doc);
     expect(errors).toHaveSize(1);
     expect(errors[0].message).toMatch(/line/i);
@@ -148,7 +150,7 @@ describe("Core - Diagrams", () => {
     );
   });
 
-  it("converts click links to anchor elements without dfn warnings", async () => {
+  it("keeps click links as anchors without link-to-dfn warnings", async () => {
     const body = wrap(
       `graph TD\n  A[Start] --> B[End]\n  click A "https://example.com" "go there"`
     );
@@ -745,5 +747,50 @@ describe("Core - Diagrams", () => {
 
     expect(hintRect.right).toBeLessThanOrEqual(gridRect.right + 1);
     expect(grid.scrollWidth).toBeLessThanOrEqual(grid.clientWidth + 1);
+  });
+
+  it("removes script, event handlers, foreignObject and script URLs from the renderer's SVG", async () => {
+    const evilSvg =
+      '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onload="window.__ran = 6"><script>window.__ran = 1</script><g onclick="window.__ran = 2"></g><a href="javascript:window.__ran = 3"><text>A</text></a><a xlink:href="javascript:window.__ran = 4"></a><a href="data:text/html,x"></a><foreignObject><div xmlns="http://www.w3.org/1999/xhtml" onmouseover="window.__ran = 5">x</div></foreignObject><a href="https://example.com/ok"><text>B</text></a></svg>';
+    const script = `<script>window.pele = { render() { return { svg: ${JSON.stringify(evilSvg).replace(/</g, "\\u003c")}, width: 200 }; } };</script>`;
+    const doc = await makeRSDoc(
+      makeStandardOps(null, script + wrap(flowchart))
+    );
+    const card = doc.querySelector(".diagram-container");
+
+    expect(card.classList.contains("diagram-container--error"))
+      .withContext("card should not be an error card")
+      .toBeFalse();
+
+    const svgs = card.querySelectorAll(".diagram-face--front svg");
+    expect(svgs).toHaveSize(1);
+    const svg = svgs[0];
+
+    expect(svg.querySelectorAll("script")).toHaveSize(0);
+    expect(svg.querySelectorAll("foreignObject")).toHaveSize(0);
+
+    const allElements = [svg, ...svg.querySelectorAll("*")];
+    for (const el of allElements) {
+      for (const attr of el.attributes) {
+        expect(attr.name.toLowerCase().startsWith("on")).toBeFalse();
+        if (attr.name === "href" || attr.name === "xlink:href") {
+          const val = attr.value.trim().toLowerCase();
+          expect(val.startsWith("javascript:")).toBeFalse();
+          expect(val.startsWith("data:")).toBeFalse();
+        }
+      }
+    }
+
+    const safeLinks = svg.querySelectorAll("a");
+    let foundSafe = false;
+    for (const link of safeLinks) {
+      const href = link.getAttribute("href") || link.getAttribute("xlink:href");
+      if (href === "https://example.com/ok") {
+        foundSafe = true;
+      }
+    }
+    expect(foundSafe).toBeTrue();
+
+    expect(doc.defaultView.__ran).toBeUndefined();
   });
 });

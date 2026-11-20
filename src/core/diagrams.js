@@ -145,6 +145,22 @@ function freshPrefix() {
 }
 
 /**
+ * Delete whatever in the renderer's output can run script, so a renderer bug
+ * cannot put script into every reader's copy of the document.
+ * @param {SVGSVGElement} svg
+ */
+function removeActiveContent(svg) {
+  svg.querySelectorAll("script, foreignObject").forEach(el => el.remove());
+  for (const el of [svg, ...svg.querySelectorAll("*")]) {
+    for (const { name, value } of [...el.attributes]) {
+      const isScriptUrl =
+        /^(xlink:)?href$/i.test(name) && /^\s*(javascript|data):/i.test(value);
+      if (/^on/i.test(name) || isScriptUrl) el.removeAttribute(name);
+    }
+  }
+}
+
+/**
  * Parse the renderer's SVG as XML, which is stricter than setting innerHTML.
  * @param {string} svg
  * @param {"desktop" | "mobile"} variant
@@ -155,6 +171,7 @@ function svgElement(svg, variant) {
   if (!(element instanceof SVGSVGElement)) {
     throw new Error("The renderer did not return valid SVG.");
   }
+  removeActiveContent(element);
   element.classList.add("diagram-svg", `diagram-svg--${variant}`);
   return element;
 }
