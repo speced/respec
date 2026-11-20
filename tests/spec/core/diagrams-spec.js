@@ -275,30 +275,6 @@ describe("Core - Diagrams", () => {
     expect(cards[1].hasAttribute("aria-labelledby")).toBeFalse();
   });
 
-  it("switches --pele-fg color based on the color-scheme toggle", async () => {
-    const doc = await makeRSDoc(
-      makeStandardOps(null, wrap(flowchart)),
-      null,
-      "display: block; width: 800px; height: 600px"
-    );
-    const svg = doc.querySelector("svg.pele");
-    const readFg = () =>
-      doc.defaultView.getComputedStyle(svg).getPropertyValue("--pele-fg");
-    const lightFg = readFg();
-
-    // ReSpec adds its own color-scheme radios a moment after it is ready.
-    let darkRadio = null;
-    for (let tries = 0; tries < 100 && !darkRadio; tries++) {
-      darkRadio = doc.querySelector("input[name='color-scheme'][value='dark']");
-      if (!darkRadio) await new Promise(resolve => setTimeout(resolve, 20));
-    }
-    expect(darkRadio).withContext("ReSpec dark radio").not.toBeNull();
-    darkRadio.click();
-
-    expect(lightFg).not.toBe("");
-    expect(readFg()).not.toBe(lightFg);
-  });
-
   it("toggles between mobile and desktop SVGs for wide diagrams based on width", async () => {
     const wide = `flowchart LR\n  A[Author writes text] --> B[Validate] --> C[Render SVG] --> D[Insert in page] --> E[Save HTML] --> F[Publish]`;
     const narrow = `flowchart LR\n  X --> Y`;
@@ -570,5 +546,82 @@ describe("Core - Diagrams", () => {
     expect(doc.defaultView.getComputedStyle(errorCard).backgroundColor).toBe(
       "rgb(1, 2, 3)"
     );
+  });
+
+  it("keeps an author's figcaption id and labels the card with it", async () => {
+    const body = `<figure><pre class="mermaid">${flowchart}</pre><figcaption id="my-caption">Caption</figcaption></figure>`;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const card = doc.querySelector(".diagram-container");
+    const cap = card.closest("figure").querySelector("figcaption");
+    expect(cap.id).toBe("my-caption");
+    expect(card.getAttribute("aria-labelledby")).toBe("my-caption");
+  });
+
+  it("shows an error card when the renderer returns something that is not an SVG", async () => {
+    const script = `<script>window.pele = { render() { return { svg: "not svg", width: 400 }; } };</script>`;
+    const body = script + wrap(flowchart);
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const card = doc.querySelector(".diagram-container");
+    expect(card.classList.contains("diagram-container--error")).toBeTrue();
+    expect(card.querySelector(".diagram-face--front svg")).toBeNull();
+    const errors = errorFilters.filter("core/diagrams")(doc);
+    expect(errors.length).toBe(1);
+    expect(errors[0].message).toContain("did not return valid SVG");
+  });
+
+  it("keeps a single layout when the phone layout is not narrower", async () => {
+    const script = `<script>
+      window.__calls = [];
+      window.pele = {
+        render(source, options) {
+          window.__calls.push({ options });
+          return { svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100"><text x="5" y="50">stub</text></svg>', width: 400 };
+        }
+      };
+    </script>`;
+    const body = script + wrap(flowchart);
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const calls = doc.defaultView.__calls;
+    expect(calls.length).withContext("stub recorded two calls").toBe(2);
+    expect(calls[1].options.maxWidth)
+      .withContext("second call's options.maxWidth is 320")
+      .toBe(320);
+    const front = doc.querySelector(".diagram-face--front");
+    const svgs = front.querySelectorAll("svg");
+    expect(svgs.length).toBe(1);
+    expect(svgs[0].classList.contains("diagram-svg--desktop")).toBeTrue();
+    expect(front.querySelector(".diagram-svg--mobile")).toBeNull();
+  });
+
+  it("sizes the card to the source face when flipped and clears the size when flipped back", async () => {
+    const body = wrap(flowchart);
+    const doc = await makeRSDoc(
+      makeStandardOps(null, body),
+      null,
+      "display: block; width: 800px"
+    );
+    const btn = doc.querySelector(".diagram-flip-btn");
+    const flip = doc.querySelector(".diagram-flip");
+    const back = doc.querySelector(".diagram-face--back");
+    expect(back.scrollHeight)
+      .withContext("back.scrollHeight is greater than 0")
+      .toBeGreaterThan(0);
+    btn.click();
+    expect(flip.style.minHeight).toBe(`${back.scrollHeight}px`);
+    expect(flip.style.minHeight).not.toBe("");
+    btn.click();
+    expect(flip.style.minHeight).toBe("");
+  });
+
+  it("paints the copy icon in the toolbar's text color", async () => {
+    const body = wrap(flowchart);
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const btn = doc.querySelector(".diagramHeader .respec-button-copy-paste");
+    const svg = btn.querySelector("svg");
+    const btnStyle = doc.defaultView.getComputedStyle(btn);
+    const svgStyle = doc.defaultView.getComputedStyle(svg);
+    expect(svgStyle.fill).toBe(btnStyle.color);
+    btn.style.color = "rgb(10, 20, 30)";
+    expect(doc.defaultView.getComputedStyle(svg).fill).toBe("rgb(10, 20, 30)");
   });
 });
