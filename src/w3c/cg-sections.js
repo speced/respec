@@ -10,7 +10,11 @@
  * numbered.
  */
 
-import { cgVariant, createRegion } from "./templates/cg-headers.js";
+import {
+  cgVariant,
+  createRegion,
+  repeatedNotice,
+} from "./templates/cg-headers.js";
 import { html } from "../core/import-maps.js";
 import { isCGSpec } from "./cg-assets.js";
 
@@ -76,36 +80,45 @@ function getInvolved(conf) {
 }
 
 /**
- * Guidance for someone deciding whether to build on this. For a draft it is
- * collected data, so the section is an empty container; for every other
- * variant the answer is already in the header box, and repeating the heading
- * here gives the document's own table of contents somewhere to point.
+ * A living specification carries the collected usage guidance, so the section
+ * is an empty container for cg-metadata.js to fill.
+ */
+function draftGuidance() {
+  return html`${createRegion(
+      "usage-guidance",
+      "The usage guidance for this specification is loaded from the status metadata, which needs JavaScript."
+    )}
+    <p class="copyright">
+      <strong>Disclaimer:</strong> The data in these tables is managed outside
+      the document and is updated automatically. While W3C strives to ensure the
+      accuracy of status data, we do not guarantee that the information is
+      error-free. Any mention of specific products or services is solely for
+      informational purposes and does not imply endorsement by W3C, Inc. or its
+      Members.
+    </p>`;
+}
+
+/**
+ * Guidance for someone deciding whether to build on this.
+ *
+ * A living specification still in development has collected guidance, which
+ * cg-metadata.js fills in. The other three have none: a snapshot is archival,
+ * and a transferred or unmaintained specification is not somewhere to build
+ * on at all. For those, the section repeats the notice from the head of the
+ * document, so a reader who arrives at the foot -- from the table of contents,
+ * or a link to `#usage-guidance` -- reads it where they are.
  *
  * @param {Conf} conf
  */
+function guidance(conf) {
+  return cgVariant(conf) === "draft" ? draftGuidance() : repeatedNotice(conf);
+}
+
+/** @param {Conf} conf */
 function usageGuidance(conf) {
-  const isDraft = cgVariant(conf) === "draft";
   return html`<section class="box box--head introductory">
     <h2 id="usage-guidance">Usage guidance</h2>
-    ${
-      isDraft
-        ? html`${createRegion(
-              "usage-guidance",
-              "The usage guidance for this specification is loaded from the status metadata, which needs JavaScript."
-            )}
-            <p class="copyright">
-              <strong>Disclaimer:</strong> The data in these tables is managed
-              outside the document and is updated automatically. While W3C
-              strives to ensure the accuracy of status data, we do not guarantee
-              that the information is error-free. Any mention of specific
-              products or services is solely for informational purposes and does
-              not imply endorsement by W3C, Inc. or its Members.
-            </p>`
-        : html`<p>
-            See the notice at the head of this document: it says what this
-            document is and how much to rely on it.
-          </p>`
-    }
+    ${guidance(conf)}
   </section>`;
 }
 

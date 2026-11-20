@@ -3,8 +3,8 @@
  * The header box of a Community Group specification using the redesign, i.e.
  * one whose `specStatus` is "CG-LIVING" or "CG-SNAPSHOT".
  *
- * cg-assets' cg-metadata.js builds it into the `data-cg-region` containers at
- * load time. A container left empty renders as nothing.
+ * cg-spec-assets' cg-metadata.js builds it into the `data-cg-region`
+ * containers at load time. A container left empty renders as nothing.
  */
 
 import { W3CDate, concatDate } from "../../core/utils.js";
@@ -27,9 +27,8 @@ export const INCUBATION = "https://host-tbd.org/";
  * @param {"div" | "li"} elementName
  */
 export function createRegion(name, noScriptText, elementName = "div") {
-  const fallback = html`<noscript>
-    <p class="cg-metadata-unavailable">${noScriptText}</p>
-  </noscript>`;
+  const fallback = document.createElement("noscript");
+  fallback.append(html`<p class="cg-metadata-unavailable">${noScriptText}</p>`);
   return elementName === "li"
     ? html`<li data-cg-region="${name}">${fallback}</li>`
     : html`<div data-cg-region="${name}">${fallback}</div>`;
@@ -82,6 +81,62 @@ function transferredTo(conf) {
   return to.url ? html`<a href="${to.url}">${to.name}</a>` : to.name;
 }
 
+/**
+ * @param {Conf} conf
+ * @param {Node | string} [endorsement]
+ */
+function snapshotFacts(conf, endorsement = "") {
+  return html`<li>
+      <strong
+        >This document instance is archival and is not intended to
+        change.</strong
+      >
+    </li>
+    <li>
+      It was published on
+      <time class="dt-updated" datetime="${conf.dashDate}"
+        >${W3CDate.format(conf.publishDate)}</time
+      >.
+    </li>
+    ${
+      conf.thisVersion
+        ? html`<li>
+            The address of this snapshot is
+            <a href="${conf.thisVersion}">${conf.thisVersion}</a>.
+          </li>`
+        : ""
+    }
+    ${endorsement}`;
+}
+
+/**
+ * @param {Conf} conf
+ * @param {Node | string} [endorsement]
+ */
+function transferredFacts(conf, endorsement = "") {
+  return html`<li>
+      <strong
+        >Rather than use or reference this specification, please consult the
+        guidance of the organization to which the specification has been
+        transferred.</strong
+      >
+    </li>
+    <li>
+      ${transferredTo(conf)} has taken up the work for standardization and so
+      the W3C Community Group is no longer the “owner”.
+    </li>
+    ${endorsement}`;
+}
+
+/** @param {Node | string} [endorsement] */
+function unmaintainedFacts(endorsement = "") {
+  return html`<li><strong>Do not use or reference.</strong></li>
+    ${endorsement}
+    <li>
+      If these circumstances change in the future, we will review our guidance.
+    </li>`;
+}
+
 /** @param {Conf} conf */
 function noticeBoxSnapshot(conf) {
   return html`<div class="box box--information" id="top-status-block">
@@ -89,26 +144,13 @@ function noticeBoxSnapshot(conf) {
       This is a <a href="${LIVING_V_SNAPSHOT}">snapshot</a> of an incubation
     </h2>
     <ul>
-      <li>
-        <strong
-          >This document instance is archival and is not intended to
-          change.</strong
-        >
-      </li>
-      <li>
-        It was published on
-        <time class="dt-updated" datetime="${conf.dashDate}"
-          >${W3CDate.format(conf.publishDate)}</time
-        >.
-      </li>
-      ${
-        conf.thisVersion
-          ? html`<li>
-              The address of this snapshot is
-              <a href="${conf.thisVersion}">${conf.thisVersion}</a>.
-            </li>`
-          : ""
-      }
+      ${snapshotFacts(
+        conf,
+        html`<li>
+          This is a Community Group incubation and is not (yet) ready for
+          standardization. This specification is not endorsed by W3C.
+        </li>`
+      )}
     </ul>
   </div>`;
 }
@@ -121,17 +163,10 @@ function noticeBoxTransferred(conf) {
       <a href="${LIFECYCLE}">transferred</a>
     </h2>
     <ul>
-      <li>
-        <strong
-          >Rather than use or reference this specification, please consult the
-          guidance of the organization to which the specification has been
-          transferred.</strong
-        >
-      </li>
-      <li>
-        ${transferredTo(conf)} has taken up the work for standardization and so
-        the W3C Community Group is no longer the “owner”.
-      </li>
+      ${transferredFacts(
+        conf,
+        html`<li>This specification itself is not endorsed by W3C.</li>`
+      )}
     </ul>
   </div>`;
 }
@@ -144,13 +179,57 @@ function noticeBoxUnmaintained() {
       <a href="${LIFECYCLE}">unmaintained</a>
     </h2>
     <ul>
-      <li><strong>Do not use or reference.</strong></li>
-      <li>
-        If these circumstances change in the future, we will review our
-        guidance.
-      </li>
+      ${unmaintainedFacts(
+        html`<li>This specification is not endorsed by W3C.</li>`
+      )}
     </ul>
   </div>`;
+}
+
+/**
+ * The same notice again, at the foot, as the usage guidance of a document that
+ * has no collected guidance to show. The heading repeats the one at the head
+ * unlinked and in short form, the way the demo documents in cg-spec-assets do.
+ *
+ * A draft is not here: its guidance is collected data, and w3c/cg-sections
+ * leaves a region for it instead.
+ *
+ * @param {Conf} conf
+ */
+export function repeatedNotice(conf) {
+  switch (cgVariant(conf)) {
+    case "snapshot":
+      return html`<div class="box box--information">
+        <h3>This is a snapshot</h3>
+        <ul>
+          ${snapshotFacts(conf)}
+          <li>Updated usage guidance is in the latest version.</li>
+          ${createRegion(
+            "living-spec",
+            "The address of the living specification and its last-edited date are loaded from the status metadata, which needs JavaScript.",
+            "li"
+          )}
+        </ul>
+      </div>`;
+    case "transferred":
+      return html`<div class="box box--information">
+        <h3>This specification has been transferred</h3>
+        <ul>
+          ${transferredFacts(conf)}
+        </ul>
+      </div>`;
+    case "unmaintained":
+      return html`<div class="box box--warning">
+        <h3>
+          This specification is no longer in development and is unmaintained
+        </h3>
+        <ul>
+          ${unmaintainedFacts()}
+        </ul>
+      </div>`;
+    default:
+      return "";
+  }
 }
 
 /** The notice for a living specification still under development. */
@@ -171,8 +250,8 @@ function noticeBoxDraft() {
         "li"
       )}
       <li>
-        This is a W3C Community Group incubation and is not (yet) ready for
-        standardization.
+        This is a Community Group incubation and is not (yet) ready for
+        standardization. This specification is not endorsed by W3C.
       </li>
     </ul>
   </div>`;
@@ -227,15 +306,10 @@ function whereToLook(conf) {
       ${
         cgVariant(conf) === "draft"
           ? html`<li>
-                <a href="#usage-guidance"
-                  >Browser support details &amp; usage guidance</a
-                >
-              </li>
-              <li>
-                <a href="#cg-get-involved"
-                  >Get involved to support this incubation</a
-                >
-              </li>`
+              <a href="#cg-get-involved"
+                >Get involved to support this incubation</a
+              >
+            </li>`
           : ""
       }
     </ul>

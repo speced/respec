@@ -15,15 +15,15 @@ const cgSpecErrors = errorFilters.filter("w3c/cg-spec");
 const defaultErrors = errorFilters.filter("w3c/defaults");
 const headerErrors = errorFilters.filter("w3c/headers");
 
-const BASE = "https://w3c.github.io/cg-assets/";
+const BASE = "https://w3c.github.io/cg-spec-assets/";
 const STYLES = ["css/base.css", "css/cg-spec.css", "css/dark.css"];
 const SCRIPTS = ["js/cg-fixup.js", "js/dark.js", "js/cg-metadata.js"];
 
 const sheet = path => `link[rel~="stylesheet"][href="${BASE}${path}"]`;
 
 // Parse rather than load the export. `getExportedDoc` puts the result in an
-// iframe, where the three cg-assets scripts run again and immediately undo what
-// is being asserted -- they are doing their job, on what has become a live
+// iframe, where the three cg-spec-assets scripts run again and immediately undo
+// what is being asserted -- they are doing their job, on what has become a live
 // document for a new reader. What ships is the markup, so assert on that.
 const exportedDoc = async doc =>
   new DOMParser().parseFromString(await doc.respec.toHTML(), "text/html");
@@ -35,6 +35,16 @@ const cgOps = (config = {}) =>
     shortName: "scheduling-apis",
     ...config,
   });
+
+const norm = el => el.textContent.replace(/\s+/g, " ").trim();
+
+// The notice the usage guidance section repeats at the foot, as opposed to
+// the one in the header box.
+const footNotice = (doc, notice) =>
+  doc
+    .getElementById("usage-guidance")
+    .closest("section")
+    .querySelector(`.${notice}`);
 
 const regionsOf = doc =>
   [...doc.querySelectorAll("[data-cg-region]")].map(el => el.dataset.cgRegion);
@@ -55,6 +65,7 @@ const VARIANTS = [
     ],
     getInvolved: true,
     agreement: "Contributor License Agreement",
+    endorsement: "This specification is not endorsed by W3C.",
   },
   {
     label: "a transferred living specification",
@@ -68,6 +79,7 @@ const VARIANTS = [
     regions: ["living-spec"],
     getInvolved: true,
     agreement: "Contributor License Agreement",
+    endorsement: "This specification itself is not endorsed by W3C.",
   },
   {
     label: "an unmaintained living specification",
@@ -77,15 +89,17 @@ const VARIANTS = [
     regions: ["living-spec"],
     getInvolved: false,
     agreement: "Contributor License Agreement",
+    endorsement: "This specification is not endorsed by W3C.",
   },
   {
     label: "a snapshot",
     config: { specStatus: "CG-SNAPSHOT" },
     tag: null,
     notice: "box--information",
-    regions: ["living-spec"],
+    regions: ["living-spec", "living-spec"],
     getInvolved: true,
     agreement: "Final Specification Agreement",
+    endorsement: "This specification is not endorsed by W3C.",
   },
 ];
 
@@ -210,7 +224,7 @@ describe("W3C — CG specification redesign", () => {
   });
 
   describe("assets", () => {
-    it("loads the cg-assets style sheets and scripts", async () => {
+    it("loads the cg-spec-assets style sheets and scripts", async () => {
       const doc = await makeRSDoc(cgOps());
       for (const path of STYLES) {
         expect(doc.querySelector(sheet(path)))
@@ -264,7 +278,7 @@ describe("W3C — CG specification redesign", () => {
       expect(
         doc.querySelector(`script[src^="https://www.w3.org/scripts/TR/"]`)
       ).toBeNull();
-      // cg-assets' dark.js drives the theme from localStorage and matchMedia,
+      // cg-spec-assets' dark.js drives the theme from localStorage and matchMedia,
       // so this tag would be markup nothing reads.
       expect(doc.querySelector("meta[name='color-scheme']")).toBeNull();
     });
@@ -313,6 +327,19 @@ describe("W3C — CG specification redesign", () => {
           const box = doc.querySelector(`.box--head .${variant.notice}`);
           expect(box).toBeTruthy();
           expect(box.querySelector("h2")).toBeTruthy();
+          // cg-spec-assets' cg-fixup.js links a transferred spec's banner to
+          // `#top-status-block`, so every notice that can be linked to carries
+          // the id. The unmaintained warning is not linked to and has none.
+          expect(box.id).toBe(
+            variant.notice === "box--warning" ? "" : "top-status-block"
+          );
+        });
+
+        it("says the specification is not endorsed by W3C", () => {
+          const box = doc.querySelector(`.box--head .${variant.notice}`);
+          expect(box.textContent.replace(/\s+/g, " ")).toContain(
+            variant.endorsement
+          );
         });
 
         it(
@@ -411,12 +438,120 @@ describe("W3C — CG specification redesign", () => {
       }
     });
 
-    it("puts the usage guidance behind the header box's own link", async () => {
+    it("leaves the usage guidance to the table of contents", async () => {
+      const doc = await makeRSDoc(cgOps({ cgMaturity: "draft" }));
+      // The header box used to link to it. The link went so that the box stays
+      // short; the section itself is still there, and still in the TOC.
+      // Scoped to the box--information-alt rather than the whole header box:
+      // the usage guidance section is itself a `.box--head`, and core/structure
+      // gives its heading a self-link to the very same fragment.
+      expect(
+        doc.querySelector('.box--information-alt a[href="#usage-guidance"]')
+      ).toBeNull();
+      expect(doc.getElementById("usage-guidance")).toBeTruthy();
+    });
+
+    it("repeats the snapshot notice as the usage guidance of a snapshot", async () => {
+      // A snapshot is archival: there is no collected guidance to show, so the
+      // section says what the document is and sends the reader to the one that
+      // does carry current guidance.
+      const doc = await makeRSDoc(
+        cgOps({ specStatus: "CG-SNAPSHOT", publishDate: "2025-05-30" })
+      );
+      const box = footNotice(doc, "box--information");
+      expect(box.querySelector("h3").textContent).toContain(
+        "This is a snapshot"
+      );
+      const text = norm(box);
+      expect(text).toContain(
+        "This document instance is archival and is not intended to change."
+      );
+      expect(text).toContain("It was published on 30 May 2025.");
+      expect(
+        box.querySelector(
+          `a[href="${INCUBATION}specs/scheduling-apis-20250530/"]`
+        )
+      ).toBeTruthy();
+      expect(text).toContain(
+        "Updated usage guidance is in the latest version."
+      );
+      // The address of that latest version is status data, so it is a region
+      // rather than something the generator claims to know.
+      const region = box.querySelector('[data-cg-region="living-spec"]');
+      expect(region.localName).toBe("li");
+      expect(region.querySelector("noscript")).toBeTruthy();
+      expect(
+        box.querySelector("time.dt-updated").getAttribute("datetime")
+      ).toBe("2025-05-30");
+    });
+
+    it("repeats the transferred notice as the usage guidance", async () => {
+      const doc = await makeRSDoc(
+        cgOps({ cgMaturity: "transferred", transferredTo: "WHATWG" })
+      );
+      const box = footNotice(doc, "box--information");
+      expect(box.querySelector("h3").textContent).toContain(
+        "This specification has been transferred"
+      );
+      const text = norm(box);
+      expect(text).toContain(
+        "Rather than use or reference this specification, please consult the guidance of the organization to which the specification has been transferred."
+      );
+      expect(text).toContain(
+        "WHATWG has taken up the work for standardization"
+      );
+      expect(box.querySelector("[data-cg-region]")).toBeNull();
+    });
+
+    it("repeats the unmaintained notice as the usage guidance", async () => {
+      const doc = await makeRSDoc(cgOps({ cgMaturity: "unmaintained" }));
+      // A warning box, as at the head: the same state, said the same way.
+      const box = footNotice(doc, "box--warning");
+      expect(box.querySelector("h3").textContent).toContain(
+        "This specification is no longer in development and is unmaintained"
+      );
+      const text = norm(box);
+      expect(text).toContain("Do not use or reference.");
+      expect(text).toContain(
+        "If these circumstances change in the future, we will review our guidance."
+      );
+    });
+
+    for (const { label, config, notice } of [
+      {
+        label: "a snapshot",
+        config: { specStatus: "CG-SNAPSHOT" },
+        notice: "box--information",
+      },
+      {
+        label: "a transferred specification",
+        config: { cgMaturity: "transferred", transferredTo: "WHATWG" },
+        notice: "box--information",
+      },
+      {
+        label: "an unmaintained specification",
+        config: { cgMaturity: "unmaintained" },
+        notice: "box--warning",
+      },
+    ]) {
+      it(`says the endorsement sentence once, at the head, for ${label}`, async () => {
+        // The foot repeats the notice so a reader who lands on the usage
+        // guidance reads it there. Repeating "not endorsed by W3C" with it
+        // would say it twice in one document.
+        const doc = await makeRSDoc(cgOps(config));
+        const box = footNotice(doc, notice);
+        expect(norm(box)).not.toContain("endorsed by W3C");
+        expect(norm(doc.querySelector(`.box--head > .${notice}`))).toContain(
+          "endorsed by W3C"
+        );
+      });
+    }
+
+    it("links to Get involved from the header box of a draft", async () => {
       const doc = await makeRSDoc(cgOps({ cgMaturity: "draft" }));
       expect(
-        doc.querySelector('.box--head a[href="#usage-guidance"]')
+        doc.querySelector('.box--information-alt a[href="#cg-get-involved"]')
       ).toBeTruthy();
-      expect(doc.getElementById("usage-guidance")).toBeTruthy();
     });
   });
 
