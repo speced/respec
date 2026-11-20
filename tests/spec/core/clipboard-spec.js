@@ -277,7 +277,7 @@ describe("Core - Clipboard", () => {
           expect(region.textContent.replaceAll("\u200B", "")).toBe("Copied!");
         });
 
-        it("does not acknowledge a copy the clipboard refused", async () => {
+        it("acknowledges a refused copy with the failure text and hides it when the timer ends", async () => {
           stubClipboard(doc.defaultView, { refuse: true });
           const unhandled = [];
           doc.defaultView.addEventListener("unhandledrejection", event =>
@@ -287,13 +287,63 @@ describe("Core - Clipboard", () => {
           const announced = [];
           buttons[0].ariaNotify = message => announced.push(message);
 
-          await copyFrom(buttons[0]);
+          const [button] = buttons;
+          const view = doc.defaultView;
+          const copyIcon = button.querySelector("svg:not(.respec-copy-check)");
+          const checkIcon = button.querySelector(".respec-copy-check");
 
-          expect(buttons[0].hasAttribute("data-copied")).toBeFalse();
-          expect(announced).toEqual([]);
-          expect(clock.timers).toHaveSize(0);
+          await copyFrom(button);
+
+          expect(button.hasAttribute("data-copied")).toBeFalse();
+          expect(button.hasAttribute("data-failed")).toBeTrue();
+          expect(view.getComputedStyle(button, "::after").visibility).toBe(
+            "visible"
+          );
+          expect(view.getComputedStyle(button, "::after").content).toContain(
+            "Could not copy"
+          );
+          expect(view.getComputedStyle(checkIcon).visibility).toBe("hidden");
+          expect(view.getComputedStyle(copyIcon).visibility).toBe("visible");
+          expect(announced).toEqual(["Could not copy!"]);
+          expect(clock.timers).toHaveSize(1);
           expect(warn).toHaveBeenCalledTimes(1);
           expect(unhandled).toEqual([]);
+
+          clock.expire(0);
+
+          expect(button.hasAttribute("data-failed")).toBeFalse();
+
+          await Promise.all(
+            button.getAnimations({ subtree: true }).map(a => a.finished)
+          );
+
+          expect(view.getComputedStyle(button, "::after").visibility).toBe(
+            "hidden"
+          );
+        });
+
+        it("replaces a failure report when a later copy succeeds", async () => {
+          stubClipboard(doc.defaultView, { refuse: true });
+          const [button] = buttons;
+          const view = doc.defaultView;
+
+          button.ariaNotify = undefined;
+          await copyFrom(button);
+
+          stubClipboard(view);
+          await copyFrom(button);
+
+          expect(clock.timers[0].canceled).toBeTrue();
+          clock.expire(0);
+
+          expect(button.hasAttribute("data-failed")).toBeFalse();
+          expect(button.hasAttribute("data-copied")).toBeTrue();
+          expect(
+            view.getComputedStyle(button, "::after").content
+          ).not.toContain("Could not copy");
+          expect(view.getComputedStyle(button, "::after").content).toContain(
+            "Copied"
+          );
         });
         it("ends each button's confirmation on its own timer", async () => {
           const [first, second] = buttons;
@@ -338,6 +388,25 @@ describe("Core - Clipboard", () => {
       expect(saved.documentElement.classList).not.toContain(
         "respec-no-clipboard"
       );
+    });
+
+    it("removes a failure report in progress from a saved document", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      stubClipboard(rsDoc.defaultView, { refuse: true });
+      holdTimers(rsDoc.defaultView);
+      const button = rsDoc.querySelector("pre.idl .respec-button-copy-paste");
+
+      await copyFrom(button);
+      expect(button.hasAttribute("data-failed"))
+        .withContext("failure reported")
+        .toBeTrue();
+
+      const saved = await getExportedDoc(rsDoc);
+
+      const savedButton = saved.querySelector(
+        "pre.idl .respec-button-copy-paste"
+      );
+      expect(savedButton.hasAttribute("data-failed")).toBeFalse();
     });
 
     it("does not duplicate the live region when a browser-saved page is opened again", async () => {
@@ -428,6 +497,7 @@ describe("Core - Clipboard", () => {
       const button = rsDoc.querySelector("pre.cddl .respec-button-copy-paste");
       expect(button).not.toBeNull();
       expect(button.dataset.copiedLabel).toBe("Copié !");
+      expect(button.dataset.failedLabel).toBe("Impossible de copier !");
       expect(button.title).toBe("Copier dans le presse-papiers");
       expect(button.getAttribute("aria-label")).toBe(button.title);
     });

@@ -13,15 +13,43 @@ import { insertStyle } from "./insert-style.js";
 import { sub } from "./pubsubhub.js";
 
 const l10n = getIntlData({
-  en: { copy: "Copy to clipboard", copied: "Copied!" },
-  cs: { copy: "Kopírovat do schránky", copied: "Zkopírováno!" },
-  de: { copy: "In die Zwischenablage kopieren", copied: "Kopiert!" },
-  es: { copy: "Copiar al portapapeles", copied: "¡Copiado!" },
-  fr: { copy: "Copier dans le presse-papiers", copied: "Copié !" },
-  ja: { copy: "クリップボードにコピー", copied: "コピーしました" },
-  ko: { copy: "클립보드에 복사", copied: "복사됨" },
-  nl: { copy: "Kopiëren naar klembord", copied: "Gekopieerd!" },
-  zh: { copy: "复制到剪贴板", copied: "已复制" },
+  en: {
+    copy: "Copy to clipboard",
+    copied: "Copied!",
+    failed: "Could not copy!",
+  },
+  cs: {
+    copy: "Kopírovat do schránky",
+    copied: "Zkopírováno!",
+    failed: "Nelze kopírovat!",
+  },
+  de: {
+    copy: "In die Zwischenablage kopieren",
+    copied: "Kopiert!",
+    failed: "Kopieren fehlgeschlagen!",
+  },
+  es: {
+    copy: "Copiar al portapapeles",
+    copied: "¡Copiado!",
+    failed: "¡No se pudo copiar!",
+  },
+  fr: {
+    copy: "Copier dans le presse-papiers",
+    copied: "Copié !",
+    failed: "Impossible de copier !",
+  },
+  ja: {
+    copy: "クリップボードにコピー",
+    copied: "コピーしました",
+    failed: "コピーできませんでした",
+  },
+  ko: { copy: "클립보드에 복사", copied: "복사됨", failed: "복사 실패" },
+  nl: {
+    copy: "Kopiëren naar klembord",
+    copied: "Gekopieerd!",
+    failed: "Kopiëren mislukt!",
+  },
+  zh: { copy: "复制到剪贴板", copied: "已复制", failed: "无法复制" },
 });
 
 export const COPY_SVG =
@@ -45,6 +73,7 @@ export function createCopyButton(headerSelector, title = l10n.copy) {
       aria-label="${title}"
       data-copy-header="${headerSelector}"
       data-copied-label="${l10n.copied}"
+      data-failed-label="${l10n.failed}"
     >
       ${{ html: COPY_SVG }}<svg
         class="respec-copy-check"
@@ -84,15 +113,19 @@ export function injectCopyScript() {
 }
 
 /**
- * Remove what the live page added: a confirmation still showing, and the class
- * that hides the buttons when the live page has no clipboard API.
+ * Remove what the live page added: a confirmation or failure message still
+ * showing, and the class that hides the buttons when the live page has no
+ * clipboard API.
  * @param {HTMLElement} documentElement the clone being saved
  */
 function resetCopyState(documentElement) {
   documentElement.classList.remove("respec-no-clipboard");
   documentElement
     .querySelectorAll(".respec-button-copy-paste")
-    .forEach(button => button.removeAttribute("data-copied"));
+    .forEach(button => {
+      button.removeAttribute("data-copied");
+      button.removeAttribute("data-failed");
+    });
 }
 
 /**
@@ -135,13 +168,13 @@ function copyRuntime() {
       );
       return;
     }
-    // Acknowledge only once the clipboard has taken the text. A write is
-    // refused in a cross-origin frame or with the permission denied, and
-    // claiming a copy that did not happen is worse than silence.
+    // Claim a copy only once the clipboard has taken the text. A write is
+    // refused in a cross-origin frame or with the permission denied.
     navigator.clipboard.writeText(text).then(
-      () => acknowledge(button),
+      () => acknowledge(button, "copied"),
       error => {
         console.warn("Could not write to the clipboard.", error);
+        acknowledge(button, "failed");
       }
     );
   });
@@ -160,9 +193,16 @@ function copyRuntime() {
     return clone.textContent ?? "";
   }
 
-  /** @param {HTMLElement} button */
-  function acknowledge(button) {
-    const label = button.dataset.copiedLabel || "";
+  /**
+   * Announce an outcome and show it on the button for a moment.
+   * @param {HTMLElement} button
+   * @param {"copied" | "failed"} outcome
+   */
+  function acknowledge(button, outcome) {
+    const label =
+      (outcome === "copied"
+        ? button.dataset.copiedLabel
+        : button.dataset.failedLabel) || "";
     if (typeof button.ariaNotify === "function") {
       button.ariaNotify(label);
     } else {
@@ -170,12 +210,15 @@ function copyRuntime() {
       flip = !flip;
       status.textContent = flip ? `${label}\u200B` : label;
     }
-    // The attribute's value is the timer that removes it, so a second copy
-    // replaces the timer.
-    clearTimeout(Number(button.dataset.copied));
-    button.dataset.copied = String(
+    // The attribute's value is the timer that removes it, so a new result
+    // replaces any timer still running.
+    for (const state of ["copied", "failed"]) {
+      clearTimeout(Number(button.dataset[state]));
+      delete button.dataset[state];
+    }
+    button.dataset[outcome] = String(
       setTimeout(() => {
-        delete button.dataset.copied;
+        delete button.dataset[outcome];
         status.textContent = "";
       }, 1200)
     );

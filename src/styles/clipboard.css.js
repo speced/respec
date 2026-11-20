@@ -63,16 +63,23 @@ export default css`
   transition: opacity 0.4s, visibility 0.4s;
 }
 
-/* The script sets data-copied while a copy is confirmed. */
+/* The script sets data-copied while a copy is confirmed, and data-failed while
+   a refused copy is reported. */
 .respec-button-copy-paste[data-copied] .respec-copy-check {
   visibility: visible;
 }
 
 /* Shows at once. The transition on the rule above fades it out. */
-.respec-button-copy-paste[data-copied]::after {
+.respec-button-copy-paste[data-copied]::after,
+.respec-button-copy-paste[data-failed]::after {
   visibility: visible;
   opacity: 1;
   transition: none;
+}
+
+.respec-button-copy-paste[data-failed]::after {
+  content: attr(data-failed-label);
+  content: attr(data-failed-label) / "";
 }
 
 .respec-button-copy-paste[data-copied] > svg:not(.respec-copy-check) {
