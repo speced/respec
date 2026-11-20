@@ -417,6 +417,7 @@ function drawDiagram(pre) {
 function resetCards(documentElement) {
   documentElement.querySelectorAll(".diagram-container").forEach(card => {
     const failed = card.classList.contains("diagram-container--error");
+    card.classList.remove("diagram-container--active");
     card.classList.toggle("diagram-container--flipped", failed);
     card
       .querySelector(".diagram-flip-btn")

@@ -39,6 +39,7 @@ export default css`
 
 .diagram-container:hover,
 .diagram-container:focus-within,
+.diagram-container--active,
 .diagram-container--flipped {
   border-color: var(--diagram-header-bg);
 }
@@ -93,12 +94,15 @@ export default css`
   overflow: auto;
 }
 
-/* Hidden with opacity only: a visibility:hidden toolbar cannot take focus, so
-   keyboard users could never reach it. */
+/* Hidden with opacity, not visibility: a visibility:hidden toolbar cannot take
+   focus, so keyboard users could never reach it. pointer-events:none keeps a
+   hidden toolbar from catching a tap meant to reveal it. A tap adds
+   diagram-container--active, which diagrams-runtime.js manages. */
 .diagramHeader {
   display: flex;
   align-items: stretch;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.3s;
   height: 1.75em;
   overflow: hidden;
@@ -111,14 +115,10 @@ export default css`
 
 .diagram-container:hover .diagramHeader,
 .diagram-container:focus-within .diagramHeader,
+.diagram-container--active .diagramHeader,
 .diagram-container--flipped .diagramHeader {
   opacity: 1;
-}
-
-@media (hover: none) {
-  .diagramHeader {
-    opacity: 1;
-  }
+  pointer-events: auto;
 }
 
 .diagramHeader .diagram-label {
@@ -159,19 +159,16 @@ export default css`
   justify-content: center;
 }
 
-/* A finger needs about 44px. */
-@media (pointer: coarse) {
-  .diagramHeader {
-    height: 44px;
-  }
-  .diagram-flip-btn,
-  .diagramHeader .respec-button-copy-paste {
-    min-width: 44px;
-  }
-}
-
 .diagramHeader .respec-button-copy-paste svg {
   fill: currentColor;
+}
+
+/* An outline outside the button is clipped by the toolbar's overflow:hidden,
+   and Safari then shows no focus ring at all. */
+.diagram-flip-btn:focus-visible,
+.diagramHeader .respec-button-copy-paste:focus-visible {
+  outline: 2px solid var(--pele-fg);
+  outline-offset: -3px;
 }
 
 .diagram-flip-btn:hover,
@@ -213,6 +210,7 @@ export default css`
 
 .diagram-container--error .diagramHeader {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .diagram-container--error,

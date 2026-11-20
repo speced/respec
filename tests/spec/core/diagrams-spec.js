@@ -860,4 +860,210 @@ describe("Core - Diagrams", () => {
     expect(hasSafeHref).toBeTrue();
     expect(doc.defaultView.__ran).toBeUndefined();
   });
+
+  it("shows a card's toolbar after a touch tap and hides the others", async () => {
+    const bodyHtml =
+      wrap(flowchart, { figId: "fig-a" }) + wrap(flowchart, { figId: "fig-b" });
+    const doc = await makeRSDoc(
+      makeStandardOps(null, bodyHtml),
+      null,
+      "display: block; width: 900px"
+    );
+    const win = doc.defaultView;
+    const cardA = doc
+      .getElementById("fig-a")
+      .querySelector(".diagram-container");
+    const toolbarA = cardA.querySelector(".diagramHeader");
+    const cardB = doc
+      .getElementById("fig-b")
+      .querySelector(".diagram-container");
+    const toolbarB = cardB.querySelector(".diagramHeader");
+
+    expect(cardA.classList.contains("diagram-container--active"))
+      .withContext("premise: A not active")
+      .toBeFalse();
+    expect(win.getComputedStyle(toolbarA).pointerEvents)
+      .withContext("premise: A none")
+      .toBe("none");
+    expect(cardB.classList.contains("diagram-container--active"))
+      .withContext("premise: B not active")
+      .toBeFalse();
+    expect(win.getComputedStyle(toolbarB).pointerEvents)
+      .withContext("premise: B none")
+      .toBe("none");
+
+    cardA.querySelector(".diagram-face--front").dispatchEvent(
+      new win.PointerEvent("pointerdown", {
+        pointerType: "touch",
+        bubbles: true,
+      })
+    );
+
+    expect(cardA.classList.contains("diagram-container--active")).toBeTrue();
+    expect(win.getComputedStyle(toolbarA).pointerEvents).toBe("auto");
+    expect(cardB.classList.contains("diagram-container--active")).toBeFalse();
+    expect(win.getComputedStyle(toolbarB).pointerEvents).toBe("none");
+
+    cardB.querySelector(".diagram-face--front").dispatchEvent(
+      new win.PointerEvent("pointerdown", {
+        pointerType: "touch",
+        bubbles: true,
+      })
+    );
+
+    expect(cardB.classList.contains("diagram-container--active")).toBeTrue();
+    expect(win.getComputedStyle(toolbarB).pointerEvents).toBe("auto");
+    expect(cardA.classList.contains("diagram-container--active")).toBeFalse();
+    expect(win.getComputedStyle(toolbarA).pointerEvents).toBe("none");
+  });
+
+  it("hides the toolbar when a touch lands outside every card", async () => {
+    const bodyHtml = `${wrap(flowchart)}<p id="outside">text</p>`;
+    const doc = await makeRSDoc(
+      makeStandardOps(null, bodyHtml),
+      null,
+      "display: block; width: 900px"
+    );
+    const win = doc.defaultView;
+    const card = doc.querySelector(".diagram-container");
+    const toolbar = card.querySelector(".diagramHeader");
+    const outside = doc.getElementById("outside");
+
+    card.querySelector(".diagram-face--front").dispatchEvent(
+      new win.PointerEvent("pointerdown", {
+        pointerType: "touch",
+        bubbles: true,
+      })
+    );
+    expect(card.classList.contains("diagram-container--active"))
+      .withContext("premise: card activated")
+      .toBeTrue();
+    expect(win.getComputedStyle(toolbar).pointerEvents)
+      .withContext("premise: toolbar auto")
+      .toBe("auto");
+
+    outside.dispatchEvent(
+      new win.PointerEvent("pointerdown", {
+        pointerType: "touch",
+        bubbles: true,
+      })
+    );
+
+    expect(card.classList.contains("diagram-container--active")).toBeFalse();
+    expect(win.getComputedStyle(toolbar).pointerEvents).toBe("none");
+  });
+
+  it("ignores mouse pointer events", async () => {
+    const bodyHtml =
+      wrap(flowchart, { figId: "fig-a" }) + wrap(flowchart, { figId: "fig-b" });
+    const doc = await makeRSDoc(
+      makeStandardOps(null, bodyHtml),
+      null,
+      "display: block; width: 900px"
+    );
+    const win = doc.defaultView;
+    const cardA = doc
+      .getElementById("fig-a")
+      .querySelector(".diagram-container");
+    const cardB = doc
+      .getElementById("fig-b")
+      .querySelector(".diagram-container");
+
+    cardA.querySelector(".diagram-face--front").dispatchEvent(
+      new win.PointerEvent("pointerdown", {
+        pointerType: "mouse",
+        bubbles: true,
+      })
+    );
+    expect(cardA.classList.contains("diagram-container--active")).toBeFalse();
+
+    cardA.querySelector(".diagram-face--front").dispatchEvent(
+      new win.PointerEvent("pointerdown", {
+        pointerType: "touch",
+        bubbles: true,
+      })
+    );
+    expect(cardA.classList.contains("diagram-container--active"))
+      .withContext("premise: A activated by touch")
+      .toBeTrue();
+
+    cardB.querySelector(".diagram-face--front").dispatchEvent(
+      new win.PointerEvent("pointerdown", {
+        pointerType: "mouse",
+        bubbles: true,
+      })
+    );
+    expect(cardA.classList.contains("diagram-container--active")).toBeTrue();
+  });
+
+  it("treats a pen like a touch", async () => {
+    const doc = await makeRSDoc(
+      makeStandardOps(null, wrap(flowchart)),
+      null,
+      "display: block; width: 900px"
+    );
+    const win = doc.defaultView;
+    const card = doc.querySelector(".diagram-container");
+
+    card.querySelector(".diagram-face--front").dispatchEvent(
+      new win.PointerEvent("pointerdown", {
+        pointerType: "pen",
+        bubbles: true,
+      })
+    );
+    expect(card.classList.contains("diagram-container--active")).toBeTrue();
+  });
+
+  it("always shows the toolbar of an error card", async () => {
+    const brokenDiagram = `graph TD\n  A -->`;
+    const doc = await makeRSDoc(
+      makeStandardOps(null, wrap(brokenDiagram)),
+      null,
+      "display: block; width: 900px"
+    );
+    const win = doc.defaultView;
+    const card = doc.querySelector(".diagram-container");
+    const toolbar = card.querySelector(".diagramHeader");
+
+    expect(card.classList.contains("diagram-container--error")).toBeTrue();
+    expect(win.getComputedStyle(toolbar).pointerEvents).toBe("auto");
+  });
+
+  it("saves no active state and keeps the tap script working in the saved copy", async () => {
+    const doc = await makeRSDoc(
+      makeStandardOps(null, wrap(flowchart)),
+      null,
+      "display: block; width: 900px"
+    );
+    const win = doc.defaultView;
+    const card = doc.querySelector(".diagram-container");
+
+    card.querySelector(".diagram-face--front").dispatchEvent(
+      new win.PointerEvent("pointerdown", {
+        pointerType: "touch",
+        bubbles: true,
+      })
+    );
+    expect(card.classList.contains("diagram-container--active"))
+      .withContext("premise: card activated in live doc")
+      .toBeTrue();
+
+    const savedDoc = await getExportedDoc(doc);
+    const savedWin = savedDoc.defaultView;
+    const savedCard = savedDoc.querySelector(".diagram-container");
+
+    expect(
+      savedCard.classList.contains("diagram-container--active")
+    ).toBeFalse();
+
+    savedCard.querySelector(".diagram-face--front").dispatchEvent(
+      new savedWin.PointerEvent("pointerdown", {
+        pointerType: "touch",
+        bubbles: true,
+      })
+    );
+    expect(
+      savedCard.classList.contains("diagram-container--active")
+    ).toBeTrue();
+  });
 });

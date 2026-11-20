@@ -3,13 +3,22 @@
  * Module core/diagrams-runtime
  *
  * Runtime script injected into published specs.
- * Handles the flip buttons: toggles the flipped class, the ARIA state and the
- * inert face, and sizes the card to the back face.
+ * Shows a card's toolbar when a finger or pen touches the card, and handles
+ * the flip buttons: toggles the flipped class, the ARIA state and the inert
+ * face, and sizes the card to the back face.
  */
 
 export const runtimeScript = `
   "use strict";
   (function() {
+    document.addEventListener("pointerdown", function(event) {
+      if (event.pointerType === "mouse" || !(event.target instanceof Element)) return;
+      var tapped = event.target.closest(".diagram-container");
+      document.querySelectorAll(".diagram-container--active").forEach(function(card) {
+        if (card !== tapped) card.classList.remove("diagram-container--active");
+      });
+      if (tapped) tapped.classList.add("diagram-container--active");
+    });
     document.querySelectorAll(".diagram-flip-btn").forEach(function(button) {
       button.addEventListener("click", function() {
         const container = button.closest(".diagram-container");
