@@ -61,7 +61,6 @@ export default css`
   backface-visibility: hidden;
 }
 
-/* The query container for the desktop and mobile drawings below. */
 .diagram-face--front {
   position: relative;
   container-type: inline-size;
@@ -96,8 +95,7 @@ export default css`
 
 /* Hidden with opacity, not visibility: a visibility:hidden toolbar cannot take
    focus, so keyboard users could never reach it. pointer-events:none keeps a
-   hidden toolbar from catching a tap meant to reveal it. A tap adds
-   diagram-container--active, which diagrams-runtime.js manages. */
+   hidden toolbar from catching a tap meant to reveal it. */
 .diagramHeader {
   display: flex;
   opacity: 0;
@@ -291,7 +289,6 @@ export default css`
   overflow-wrap: anywhere;
 }
 
-/* No flip animation: the inactive face is simply not shown. */
 @media (prefers-reduced-motion: reduce) {
   .diagram-container,
   .diagramHeader,
@@ -323,8 +320,6 @@ export default css`
   }
 }
 
-/* A printed card shows the diagram, never the source, the toolbar or a
-   mirrored face, and always the wide drawing. */
 @media print {
   .diagramHeader {
     display: none;
