@@ -68,10 +68,16 @@ const l10n = getIntlData(localizationStrings);
 const PRODUCTION_PELE_URL = "https://www.w3.org/Tools/respec/respec-pele";
 const LOAD_TIMEOUT_MS = 6000;
 
-/** A drawing wider than this many CSS pixels also gets a layout for phones. */
-const PHONE_WIDTH = 360;
+/**
+ * The phone layout takes over once the wide drawing would shrink below this
+ * fraction of its size. Pele draws labels at 16px, so 0.75 keeps them at 12px.
+ */
+const MIN_SCALE = 0.75;
 
-/** The width Pele lays the phone layout out for. */
+/**
+ * The width Pele lays the phone layout out for. A drawing wider than this also
+ * gets a phone layout.
+ */
 const PHONE_LAYOUT_WIDTH = 320;
 
 // import.meta.url is the ReSpec script in the bundle. In source mode it is
@@ -314,6 +320,7 @@ function buildErrorBlock(source, { line, description }, captionId) {
 /**
  * Draw one diagram, or an error card in its place.
  * @param {HTMLElement} pre
+ * @returns {string} the rule that swaps its wide and phone layouts, or ""
  */
 function drawDiagram(pre) {
   const source = sourceOf(pre);
@@ -327,17 +334,25 @@ function drawDiagram(pre) {
   let card;
   /** @type {{ message: string, hint: string } | undefined} */
   let failure;
+  let switchRule = "";
   try {
     const desktop = pele.render(source, { fontFamily, idPrefix: prefix });
     const svgs = [svgElement(desktop.svg, "desktop")];
-    if (desktop.width > PHONE_WIDTH) {
+    if (desktop.width > PHONE_LAYOUT_WIDTH) {
       const phone = pele.render(source, {
         fontFamily,
         idPrefix: `${prefix}-phone`,
         maxWidth: PHONE_LAYOUT_WIDTH,
       });
-      if (phone.width < desktop.width)
+      if (phone.width < desktop.width) {
         svgs.push(svgElement(phone.svg, "mobile"));
+        svgs.forEach(svg => svg.classList.add(prefix));
+        const front = `.diagram-face--front .${prefix}`;
+        switchRule = `@container (max-width: ${Math.floor(desktop.width * MIN_SCALE)}px) {
+  ${front}.diagram-svg--desktop { display: none; }
+  ${front}.diagram-svg--mobile { display: block; }
+}`;
+      }
     }
     card = buildDiagramBlock(source, svgs, caption?.id);
   } catch (error) {
@@ -355,6 +370,7 @@ function drawDiagram(pre) {
   pre.replaceWith(card);
   if (failure)
     showError(failure.message, name, { ...failure, elements: [card] });
+  return switchRule;
 }
 
 /**
@@ -420,7 +436,12 @@ export async function run(conf) {
   }
   // Pele measures labels, so the fonts must be ready before it draws.
   await document.fonts?.ready;
-  drawable.forEach(drawDiagram);
+  const switchRules = drawable.map(drawDiagram).join("\n");
+  if (switchRules) {
+    insertStyle(switchRules, {
+      before: document.querySelector("head link, head > *:last-child"),
+    });
+  }
 
   sub("beforesave", resetCards);
   if (!document.getElementById("respec-diagrams-runtime")) {
