@@ -114,12 +114,13 @@ export function injectCopyScript() {
 
 /**
  * Remove what the live page added: a confirmation or failure message still
- * showing, and the class that hides the buttons when the live page has no
- * clipboard API.
+ * showing, and the class that shows the buttons. The saved page's own script
+ * sets that class again where the clipboard works, so a saved page with no
+ * script keeps its buttons hidden.
  * @param {HTMLElement} documentElement the clone being saved
  */
 function resetCopyState(documentElement) {
-  documentElement.classList.remove("respec-no-clipboard");
+  documentElement.classList.remove("respec-copy-ready");
   documentElement
     .querySelectorAll(".respec-button-copy-paste")
     .forEach(button => {
@@ -133,11 +134,14 @@ function resetCopyState(documentElement) {
  * documents, so it must not reference anything outside its own scope.
  */
 function copyRuntime() {
-  // A page without the clipboard API (a saved file served over plain http, for
-  // one) cannot copy, so its buttons are hidden rather than left to do nothing.
-  if (!navigator.clipboard) {
-    document.documentElement.classList.add("respec-no-clipboard");
-  }
+  // Buttons stay hidden until this script shows them, and only on a page with
+  // the clipboard API (a saved file served over plain http has none). A page
+  // saved by the browser may carry the class from another origin, so set it
+  // from what this page has.
+  document.documentElement.classList.toggle(
+    "respec-copy-ready",
+    Boolean(navigator.clipboard)
+  );
   let flip = false;
 
   // Created up front: a live region that is created and filled in the same
@@ -152,6 +156,14 @@ function copyRuntime() {
   const status = /** @type {HTMLElement} */ (
     document.getElementById("respec-copy-status")
   );
+
+  // A page saved by the browser during a confirmation keeps the attribute and
+  // the announcement text, but not the timer that would remove them.
+  document.querySelectorAll(".respec-button-copy-paste").forEach(button => {
+    button.removeAttribute("data-copied");
+    button.removeAttribute("data-failed");
+  });
+  status.textContent = "";
 
   document.addEventListener("click", event => {
     const target = event.target;
@@ -219,7 +231,14 @@ function copyRuntime() {
     button.dataset[outcome] = String(
       setTimeout(() => {
         delete button.dataset[outcome];
-        status.textContent = "";
+        // The live region is shared, so another button's message may still be showing.
+        if (
+          !document.querySelector(
+            ".respec-button-copy-paste[data-copied], .respec-button-copy-paste[data-failed]"
+          )
+        ) {
+          status.textContent = "";
+        }
       }, 1200)
     );
   }

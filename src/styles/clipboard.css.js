@@ -17,7 +17,7 @@ export default css`
   -webkit-appearance: none;
   top: 0;
   left: 127px;
-  display: grid;
+  display: none;
   place-items: center;
 }
 
@@ -25,8 +25,8 @@ export default css`
   grid-area: 1 / 1;
 }
 
-.respec-no-clipboard .respec-button-copy-paste {
-  display: none;
+.respec-copy-ready .respec-button-copy-paste {
+  display: grid;
 }
 
 /* Dark green: readable on the light button and on the diagram toolbar in dark mode. */

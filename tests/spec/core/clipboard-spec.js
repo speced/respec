@@ -363,31 +363,122 @@ describe("Core - Clipboard", () => {
           expect(second.hasAttribute("data-copied")).toBeFalse();
           expect(status.textContent).toBe("");
         });
+
+        it("the shared live region keeps a second button's announcement when the first button's timer ends", async () => {
+          const [first, second] = buttons;
+          first.ariaNotify = undefined;
+          second.ariaNotify = undefined;
+
+          await copyFrom(first);
+          await copyFrom(second);
+          const status = doc.getElementById("respec-copy-status");
+
+          clock.expire(0);
+          expect(status.textContent.replaceAll("\u200B", "")).toBe("Copied!");
+          expect(second.hasAttribute("data-copied")).toBeTrue();
+
+          clock.expire(1);
+          expect(status.textContent).toBe("");
+        });
       });
     }
 
-    it("removes a confirmation in progress and the hidden-buttons class from a saved document", async () => {
+    it("removes a confirmation in progress and the ready class from a saved document", async () => {
       const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
       stubClipboard(rsDoc.defaultView);
       holdTimers(rsDoc.defaultView);
       const button = rsDoc.querySelector("pre.idl .respec-button-copy-paste");
 
+      expect(rsDoc.documentElement.classList).toContain("respec-copy-ready");
+
       await copyFrom(button);
       expect(button.hasAttribute("data-copied"))
         .withContext("confirmation started")
         .toBeTrue();
-      // What a live page without a clipboard API would have set.
-      rsDoc.documentElement.classList.add("respec-no-clipboard");
 
-      const saved = await getExportedDoc(rsDoc);
+      const html = await rsDoc.respec.toHTML();
+      const saved = new DOMParser().parseFromString(html, "text/html");
 
       const savedButton = saved.querySelector(
         "pre.idl .respec-button-copy-paste"
       );
       expect(savedButton.hasAttribute("data-copied")).toBeFalse();
       expect(saved.documentElement.classList).not.toContain(
-        "respec-no-clipboard"
+        "respec-copy-ready"
       );
+    });
+
+    it("a saved document opened with scripts blocked keeps its copy buttons hidden", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      const html = await rsDoc.respec.toHTML();
+
+      const frame = document.createElement("iframe");
+      frame.sandbox = "allow-same-origin";
+      const loaded = new Promise(resolve => {
+        frame.addEventListener("load", () => resolve(frame.contentDocument));
+      });
+      frame.srcdoc = html;
+      document.body.appendChild(frame);
+      const doc = await loaded;
+
+      const button = doc.querySelector("pre.idl .respec-button-copy-paste");
+      expect(doc.defaultView.getComputedStyle(button).display).toBe("none");
+
+      frame.remove();
+    });
+
+    it("hides the buttons on a page without a clipboard even if the saved page still carries the ready class", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      let html = await rsDoc.respec.toHTML();
+      const parsed = new DOMParser().parseFromString(html, "text/html");
+      parsed.documentElement.classList.add("respec-copy-ready");
+      html = `<!DOCTYPE html>${parsed.documentElement.outerHTML}`;
+      expect(html).toContain("respec-copy-ready");
+      const removeClipboard = `<script>Object.defineProperty(navigator, "clipboard", { value: undefined, configurable: true });</script>`;
+
+      const frame = document.createElement("iframe");
+      const loaded = new Promise(resolve => {
+        frame.addEventListener("load", () => resolve(frame.contentDocument));
+      });
+      frame.srcdoc = html.replace("<head>", `<head>${removeClipboard}`);
+      document.body.appendChild(frame);
+      const doc = await loaded;
+
+      expect(doc.documentElement.classList).not.toContain("respec-copy-ready");
+      const button = doc.querySelector("pre.idl .respec-button-copy-paste");
+      expect(doc.defaultView.getComputedStyle(button).display).toBe("none");
+
+      frame.remove();
+    });
+
+    it("a page saved by the browser during a confirmation is cleaned when it is opened again", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      const doc = await getExportedDoc(rsDoc);
+
+      const button = doc.querySelector("pre.idl .respec-button-copy-paste");
+      button.setAttribute("data-copied", "123");
+      const status = doc.getElementById("respec-copy-status");
+      status.textContent = "Copied!";
+
+      const markup = doc.documentElement.outerHTML;
+
+      const frame = document.createElement("iframe");
+      const loaded = new Promise(resolve => {
+        frame.addEventListener("load", () => resolve(frame.contentDocument));
+      });
+      frame.srcdoc = markup;
+      document.body.appendChild(frame);
+      const frameDoc = await loaded;
+
+      const newButton = frameDoc.querySelector(
+        "pre.idl .respec-button-copy-paste"
+      );
+      expect(newButton.hasAttribute("data-copied")).toBeFalse();
+      expect(newButton.hasAttribute("data-failed")).toBeFalse();
+      const newStatus = frameDoc.getElementById("respec-copy-status");
+      expect(newStatus.textContent).toBe("");
+
+      frame.remove();
     });
 
     it("removes a failure report in progress from a saved document", async () => {
