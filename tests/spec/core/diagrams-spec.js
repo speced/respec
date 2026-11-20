@@ -1248,6 +1248,34 @@ describe("Core - Diagrams", () => {
     );
   });
 
+  it("keeps a diagram's toolbar showing while a refused copy is reported", async () => {
+    const doc = await makeRSDoc(
+      makeStandardOps(null, wrap(flowchart)),
+      null,
+      "display: block; width: 800px"
+    );
+    const toolbar = doc.querySelector("header.diagramHeader");
+    const copyBtn = doc.querySelector("button.respec-button-copy-paste");
+
+    expect(doc.defaultView.getComputedStyle(toolbar).pointerEvents)
+      .withContext("toolbar pointer-events is none before copy")
+      .toBe("none");
+
+    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+      value: { writeText: () => Promise.reject(new Error("refused")) },
+      configurable: true,
+    });
+    spyOn(doc.defaultView.console, "warn");
+
+    copyBtn.click();
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(copyBtn.hasAttribute("data-failed")).toBeTrue();
+    expect(doc.defaultView.getComputedStyle(toolbar).pointerEvents).toBe(
+      "auto"
+    );
+  });
+
   it("places the copy button right after the flip button in the toolbar", async () => {
     const doc = await makeRSDoc(
       makeStandardOps(null, wrap(flowchart)),
