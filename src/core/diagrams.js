@@ -183,10 +183,7 @@ function removeActiveContent(svg) {
 function svgElement(svg, variant) {
   const parsed = new DOMParser().parseFromString(svg, "image/svg+xml");
   const element = document.importNode(parsed.documentElement, true);
-  if (
-    parsed.querySelector("parsererror") ||
-    !(element instanceof SVGSVGElement)
-  ) {
+  if (!(element instanceof SVGSVGElement)) {
     throw new Error("The renderer did not return valid SVG.");
   }
   removeActiveContent(element);
