@@ -291,6 +291,9 @@ importers:
       loading-indicator:
         specifier: ^2.0.0
         version: 2.0.0
+      pele:
+        specifier: 1.13.0
+        version: 1.13.0
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
@@ -2059,6 +2062,10 @@ packages:
 
   path-to-regexp@3.3.0:
     resolution: {integrity: sha512-qyCH421YQPS2WFDxDjftfc1ZR5WKQzVzqsp4n9M2kQhVOo/ByahFoUNJfl58kOcEGfQ//7weFTDhm+ss8Ecxgw==}
+
+  pele@1.13.0:
+    resolution: {integrity: sha512-Ie8UKY9x00MsuR3jO6AzUwzK2Z6MIV3Tf4EDdITiuk8Uaz8K7g0R082WqsqNaSU8DdgkrRvZThzhit83mi/uiw==}
+    engines: {node: '>=20'}
 
   picomatch@2.3.2:
     resolution: {integrity: sha512-V7+vQEJ06Z+c5tSye8S+nHUfI51xoXIXjHQ99cQtKUkQqqO1kO/KCJUfZXuB47h/YBlDhah2H3hdUGXn8ie0oA==}
@@ -4141,6 +4148,8 @@ snapshots:
       minipass: 7.1.3
 
   path-to-regexp@3.3.0: {}
+
+  pele@1.13.0: {}
 
   picomatch@2.3.2: {}
 

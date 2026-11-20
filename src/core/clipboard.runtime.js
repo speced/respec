@@ -102,11 +102,19 @@ function setupClipboard() {
   }
 
   /**
-   * The text a button copies: its code block, minus the part it says to ignore.
+   * The text a button copies: the source stored on its container when it has
+   * one, otherwise its code block minus the part it says to ignore.
    * @param {HTMLElement} button
    * @returns {string | null}
    */
   function getCopyText(button) {
+    const containerSelector = button.dataset.copyContainer;
+    const container = containerSelector
+      ? button.closest(containerSelector)
+      : null;
+    if (container instanceof HTMLElement && container.dataset.diagramSource) {
+      return container.dataset.diagramSource;
+    }
     const pre = button.closest("pre");
     if (!pre) return null;
     const clone = /** @type {HTMLElement} */ (pre.cloneNode(true));

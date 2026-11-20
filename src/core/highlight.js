@@ -91,8 +91,8 @@ export async function run(conf) {
   const highlightables = [
     .../** @type {NodeListOf<HTMLElement>} */ (
       document.querySelectorAll(`
-    pre:not(.idl):not(.cddl):not(.nohighlight) > code:not(.nohighlight),
-    pre:not(.idl):not(.cddl):not(.nohighlight),
+    pre:not(.idl):not(.cddl):not(.mermaid):not(.nohighlight) > code:not(.nohighlight),
+    pre:not(.idl):not(.cddl):not(.mermaid):not(.nohighlight),
     code.highlight
   `)
     ),

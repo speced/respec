@@ -84,9 +84,15 @@ const createButtonIcons = () =>
  * @param {string} ignoreSelector - Selector for the part of the code block that is not copied, such as its header
  * @param {string} [title] - Accessible label and tooltip, "Copy to clipboard" in the
  *   document's language by default
+ * @param {string} [containerSelector] - Ancestor whose `data-diagram-source`
+ *   is copied instead of the code block around the button
  * @returns {HTMLButtonElement}
  */
-export function createCopyButton(ignoreSelector, title = l10n.copy) {
+export function createCopyButton(
+  ignoreSelector,
+  title = l10n.copy,
+  containerSelector
+) {
   /** @type {HTMLButtonElement} */
   const button = html`<button
     type="button"
@@ -94,6 +100,7 @@ export function createCopyButton(ignoreSelector, title = l10n.copy) {
     title="${title}"
     aria-label="${title}"
     data-copy-ignore="${ignoreSelector}"
+    data-copy-container="${containerSelector}"
     data-copied-label="${l10n.copied}"
     data-failed-label="${l10n.failed}"
   >
