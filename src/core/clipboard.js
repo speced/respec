@@ -62,9 +62,15 @@ export const COPY_SVG =
  * @param {string} headerSelector - Selector for the header to exclude from copy
  * @param {string} [title] - Accessible label and tooltip, "Copy to clipboard" in the
  *   document's language by default
+ * @param {string} [containerSelector] - Ancestor whose `data-diagram-source`
+ *   is copied instead of the code block around the button
  * @returns {HTMLButtonElement}
  */
-export function createCopyButton(headerSelector, title = l10n.copy) {
+export function createCopyButton(
+  headerSelector,
+  title = l10n.copy,
+  containerSelector
+) {
   const button = /** @type {HTMLButtonElement} */ (
     html`<button
       type="button"
@@ -74,6 +80,7 @@ export function createCopyButton(headerSelector, title = l10n.copy) {
       data-copy-header="${headerSelector}"
       data-copied-label="${l10n.copied}"
       data-failed-label="${l10n.failed}"
+      data-copy-container="${containerSelector}"
     >
       ${{ html: COPY_SVG }}<svg
         class="respec-copy-check"
@@ -226,11 +233,19 @@ function copyRuntime() {
   }
 
   /**
-   * The text a button copies: its code block, minus the header.
+   * The text a button copies: the source stored on its container when it has
+   * one, otherwise its code block minus the header.
    * @param {HTMLElement} button
    * @returns {string | null}
    */
   function sourceFor(button) {
+    const containerSelector = button.dataset.copyContainer;
+    const container = containerSelector
+      ? button.closest(containerSelector)
+      : null;
+    if (container instanceof HTMLElement && container.dataset.diagramSource) {
+      return container.dataset.diagramSource;
+    }
     const pre = button.closest("pre");
     if (!pre) return null;
     const clone = /** @type {HTMLElement} */ (pre.cloneNode(true));
