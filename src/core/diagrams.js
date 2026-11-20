@@ -142,23 +142,25 @@ function freshPrefix() {
  * @param {SVGSVGElement} svg
  */
 function removeActiveContent(svg) {
-  for (const el of svg.querySelectorAll("*")) {
-    const isOutsideSvg = el.namespaceURI !== "http://www.w3.org/2000/svg";
+  for (const element of svg.querySelectorAll("*")) {
+    const isOutsideSvg = element.namespaceURI !== "http://www.w3.org/2000/svg";
     if (
       isOutsideSvg ||
-      /^(script|foreignObject|style|animate|set)$/.test(el.localName)
+      /^(script|foreignObject|style|animate|set)$/.test(element.localName)
     ) {
-      el.remove();
+      element.remove();
     }
   }
-  for (const el of [svg, ...svg.querySelectorAll("*")]) {
-    for (const { name, localName, value } of [...el.attributes]) {
+  for (const element of [svg, ...svg.querySelectorAll("*")]) {
+    for (const { name, localName, value } of [...element.attributes]) {
       // A URL parser drops tabs, newlines and leading control characters, so
       // "java<tab>script:" still runs.
-      const url = [...value].filter(ch => ch.charCodeAt(0) > 32).join("");
+      const url = [...value]
+        .filter(character => character.charCodeAt(0) > 32)
+        .join("");
       const isScriptUrl =
         localName.toLowerCase() === "href" && /^(javascript|data):/i.test(url);
-      if (/^on/i.test(localName) || isScriptUrl) el.removeAttribute(name);
+      if (/^on/i.test(localName) || isScriptUrl) element.removeAttribute(name);
     }
   }
 }
