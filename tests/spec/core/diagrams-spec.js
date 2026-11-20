@@ -1220,4 +1220,47 @@ describe("Core - Diagrams", () => {
       );
     }
   });
+
+  it("keeps a diagram's toolbar showing while its copy is confirmed", async () => {
+    const doc = await makeRSDoc(
+      makeStandardOps(null, wrap(flowchart)),
+      null,
+      "display: block; width: 800px"
+    );
+    const toolbar = doc.querySelector("header.diagramHeader");
+    const copyBtn = doc.querySelector("button.respec-button-copy-paste");
+
+    expect(doc.defaultView.getComputedStyle(toolbar).pointerEvents)
+      .withContext("toolbar pointer-events is none before copy")
+      .toBe("none");
+
+    Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+      value: { writeText: () => Promise.resolve() },
+      configurable: true,
+    });
+
+    copyBtn.click();
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(copyBtn.hasAttribute("data-copied")).toBeTrue();
+    expect(doc.defaultView.getComputedStyle(toolbar).pointerEvents).toBe(
+      "auto"
+    );
+  });
+
+  it("places the copy button right after the flip button in the toolbar", async () => {
+    const doc = await makeRSDoc(
+      makeStandardOps(null, wrap(flowchart)),
+      null,
+      "display: block; width: 800px"
+    );
+    const flipBtn = doc.querySelector("button.diagram-flip-btn");
+    const copyBtn = doc.querySelector("button.respec-button-copy-paste");
+
+    const flipRect = flipBtn.getBoundingClientRect();
+    const copyRect = copyBtn.getBoundingClientRect();
+
+    expect(Math.abs(copyRect.left - flipRect.right)).toBeLessThanOrEqual(2);
+    expect(Math.abs(copyRect.top - flipRect.top)).toBeLessThanOrEqual(1);
+  });
 });
