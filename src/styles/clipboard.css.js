@@ -17,6 +17,75 @@ export default css`
   -webkit-appearance: none;
   top: 0;
   left: 127px;
+  display: grid;
+  place-items: center;
+}
+
+.respec-button-copy-paste > svg {
+  grid-area: 1 / 1;
+}
+
+.respec-no-clipboard .respec-button-copy-paste {
+  display: none;
+}
+
+/* Dark green: readable on the light button and on the diagram toolbar in dark mode. */
+.respec-copy-check {
+  visibility: hidden;
+}
+
+.respec-copy-check path {
+  fill: #1a7f37;
+}
+
+/* Decorative: its alternative text is empty, and the announcement below tells
+   screen readers about the copy. */
+.respec-button-copy-paste::after {
+  content: attr(data-copied-label);
+  content: attr(data-copied-label) / "";
+  position: absolute;
+  inset-inline-start: 100%;
+  top: 50%;
+  translate: 0 -50%;
+  margin-inline-start: 0.5em;
+  padding: 0.4em 0.6em;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: #24292f;
+  background: light-dark(#24292f, #e6e6e6);
+  color: #fff;
+  color: light-dark(#fff, #1c1c1c);
+  font: normal 0.75rem/1 system-ui, sans-serif;
+  white-space: nowrap;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.4s, visibility 0.4s;
+}
+
+/* The script sets data-copied while a copy is confirmed. */
+.respec-button-copy-paste[data-copied] .respec-copy-check {
+  visibility: visible;
+}
+
+/* Shows at once. The transition on the rule above fades it out. */
+.respec-button-copy-paste[data-copied]::after {
+  visibility: visible;
+  opacity: 1;
+  transition: none;
+}
+
+.respec-button-copy-paste[data-copied] > svg:not(.respec-copy-check) {
+  visibility: hidden;
+}
+
+.respec-copy-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media print {

@@ -3,63 +3,181 @@
  * Module core/clipboard
  *
  * Shared clipboard copy button for code blocks (WebIDL, CDDL, etc.).
- * Buttons survive export: a runtime script re-attaches click handlers.
+ * One delegated click listener serves every button, in the live document and,
+ * through an inlined script, in a saved copy of it.
  */
-
 import css from "../styles/clipboard.css.js";
+import { getIntlData } from "./utils.js";
+import { html } from "./import-maps.js";
 import { insertStyle } from "./insert-style.js";
+import { sub } from "./pubsubhub.js";
+
+const l10n = getIntlData({
+  en: { copy: "Copy to clipboard", copied: "Copied!" },
+  cs: { copy: "Kopírovat do schránky", copied: "Zkopírováno!" },
+  de: { copy: "In die Zwischenablage kopieren", copied: "Kopiert!" },
+  es: { copy: "Copiar al portapapeles", copied: "¡Copiado!" },
+  fr: { copy: "Copier dans le presse-papiers", copied: "Copié !" },
+  ja: { copy: "クリップボードにコピー", copied: "コピーしました" },
+  ko: { copy: "클립보드에 복사", copied: "복사됨" },
+  nl: { copy: "Kopiëren naar klembord", copied: "Gekopieerd!" },
+  zh: { copy: "复制到剪贴板", copied: "已复制" },
+});
 
 export const COPY_SVG =
   '<svg aria-hidden="true" height="16" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"/></svg>';
 
 /**
- * Create a copy-to-clipboard button for a code block.
- * The button stores the header selector in a data attribute so the
- * runtime script can re-attach the handler in exported documents.
+ * Create a copy-to-clipboard button for a code block. The delegated runtime
+ * handles its clicks, so the button carries what that runtime needs.
  *
  * @param {string} headerSelector - Selector for the header to exclude from copy
- * @param {string} [title="Copy to clipboard"] - Accessible label and tooltip
+ * @param {string} [title] - Accessible label and tooltip, "Copy to clipboard" in the
+ *   document's language by default
  * @returns {HTMLButtonElement}
  */
-export function createCopyButton(headerSelector, title = "Copy to clipboard") {
-  const button = document.createElement("button");
-  button.innerHTML = COPY_SVG;
-  button.title = title;
-  button.setAttribute("aria-label", title);
-  button.classList.add("respec-button-copy-paste");
-  button.dataset.copyHeader = headerSelector;
-  button.addEventListener("click", () => {
-    const pre = button.closest("pre");
-    if (!pre) return;
-    const clone = /** @type {HTMLElement} */ (pre.cloneNode(true));
-    clone.querySelector(headerSelector)?.remove();
-    navigator.clipboard.writeText(clone.textContent ?? "");
-  });
+export function createCopyButton(headerSelector, title = l10n.copy) {
+  const button = /** @type {HTMLButtonElement} */ (
+    html`<button
+      type="button"
+      class="respec-button-copy-paste"
+      title="${title}"
+      aria-label="${title}"
+      data-copy-header="${headerSelector}"
+      data-copied-label="${l10n.copied}"
+    >
+      ${{ html: COPY_SVG }}<svg
+        class="respec-copy-check"
+        height="16"
+        viewBox="0 0 16 16"
+        width="16"
+        aria-hidden="true"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0z"
+        />
+      </svg>
+    </button>`
+  );
   return button;
 }
 
 /**
- * Add the button stylesheet, and a script that re-attaches the copy handlers
- * in an exported document. Call this once after all copy buttons are created.
+ * Add the button stylesheet and the copy runtime, and inline the runtime so a
+ * saved copy of the document keeps working. Call this once after all copy
+ * buttons are created.
  */
 export function injectCopyScript() {
   if (document.getElementById("respec-copy-paste")) return;
   insertStyle(css, {
     before: document.querySelector("head link, head > *:last-child"),
   });
+  sub("beforesave", resetCopyState);
+  copyRuntime();
   const script = document.createElement("script");
   script.id = "respec-copy-paste";
-  script.textContent = `
-    document.querySelectorAll(".respec-button-copy-paste").forEach(function(btn) {
-      btn.addEventListener("click", function() {
-        var pre = this.closest("pre");
-        if (!pre) return;
-        var sel = this.dataset.copyHeader;
-        var clone = pre.cloneNode(true);
-        if (sel) { var h = clone.querySelector(sel); if (h) h.remove(); }
-        navigator.clipboard.writeText(clone.textContent);
-      });
-    });
-  `;
+  // ReSpec sets document.respec only while it runs the page, where the call
+  // above already installed the listener.
+  script.textContent = `if (!document.respec) (${copyRuntime})();`;
   document.body.append(script);
+}
+
+/**
+ * Remove what the live page added: a confirmation still showing, and the class
+ * that hides the buttons when the live page has no clipboard API.
+ * @param {HTMLElement} documentElement the clone being saved
+ */
+function resetCopyState(documentElement) {
+  documentElement.classList.remove("respec-no-clipboard");
+  documentElement
+    .querySelectorAll(".respec-button-copy-paste")
+    .forEach(button => button.removeAttribute("data-copied"));
+}
+
+/**
+ * Handles every copy click. It runs here, and its source is inlined into saved
+ * documents, so it must not reference anything outside its own scope.
+ */
+function copyRuntime() {
+  // A page without the clipboard API (a saved file served over plain http, for
+  // one) cannot copy, so its buttons are hidden rather than left to do nothing.
+  if (!navigator.clipboard) {
+    document.documentElement.classList.add("respec-no-clipboard");
+  }
+  let flip = false;
+
+  // Created up front: a live region that is created and filled in the same
+  // click is often not announced. It goes first in the body, so a page saved by
+  // the browser holds it before this script runs again.
+  if (!document.getElementById("respec-copy-status")) {
+    document.body.insertAdjacentHTML(
+      "afterbegin",
+      '<span id="respec-copy-status" class="respec-copy-status removeOnSave" role="status"></span>'
+    );
+  }
+  const status = /** @type {HTMLElement} */ (
+    document.getElementById("respec-copy-status")
+  );
+
+  document.addEventListener("click", event => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = /** @type {HTMLElement | null} */ (
+      target.closest(".respec-button-copy-paste")
+    );
+    if (!button) return;
+    const text = sourceFor(button);
+    if (text === null) return;
+    if (!navigator.clipboard) {
+      console.warn(
+        "Copying needs a secure page, such as one served over https."
+      );
+      return;
+    }
+    // Acknowledge only once the clipboard has taken the text. A write is
+    // refused in a cross-origin frame or with the permission denied, and
+    // claiming a copy that did not happen is worse than silence.
+    navigator.clipboard.writeText(text).then(
+      () => acknowledge(button),
+      error => {
+        console.warn("Could not write to the clipboard.", error);
+      }
+    );
+  });
+
+  /**
+   * The text a button copies: its code block, minus the header.
+   * @param {HTMLElement} button
+   * @returns {string | null}
+   */
+  function sourceFor(button) {
+    const pre = button.closest("pre");
+    if (!pre) return null;
+    const clone = /** @type {HTMLElement} */ (pre.cloneNode(true));
+    const headerSelector = button.dataset.copyHeader;
+    if (headerSelector) clone.querySelector(headerSelector)?.remove();
+    return clone.textContent ?? "";
+  }
+
+  /** @param {HTMLElement} button */
+  function acknowledge(button) {
+    const label = button.dataset.copiedLabel || "";
+    if (typeof button.ariaNotify === "function") {
+      button.ariaNotify(label);
+    } else {
+      // A live region ignores an unchanged string, so alternate a zero-width space.
+      flip = !flip;
+      status.textContent = flip ? `${label}\u200B` : label;
+    }
+    // The attribute's value is the timer that removes it, so a second copy
+    // replaces the timer.
+    clearTimeout(Number(button.dataset.copied));
+    button.dataset.copied = String(
+      setTimeout(() => {
+        delete button.dataset.copied;
+        status.textContent = "";
+      }, 1200)
+    );
+  }
 }
