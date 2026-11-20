@@ -164,8 +164,8 @@ function svgElement(svg, variant) {
  * @param {unknown} error
  */
 function describeError(error) {
-  const { message, line, snippet } =
-    /** @type {Error & { line?: number, snippet?: string }} */ (
+  const { message, line, snippet, code } =
+    /** @type {Error & { line?: number, snippet?: string, code?: string }} */ (
       error instanceof Error ? error : new Error(String(error))
     );
   const snippetLines = new Set((snippet ?? "").split("\n"));
@@ -173,7 +173,24 @@ function describeError(error) {
     .split("\n")
     .filter(text => text && !snippetLines.has(text))
     .join(" ");
-  return { line: line || 0, description: description || message, message };
+  return {
+    line: line || 0,
+    code,
+    description: description || message,
+    message,
+  };
+}
+
+/**
+ * What the author should do about a failed diagram.
+ * @param {{ line: number, code?: string }} reason
+ */
+function hintFor({ line, code }) {
+  if (line) return `The card shows the source with line ${line} marked.`;
+  if (code === "unsupported-diagram") {
+    return "Start the diagram with a type such as `flowchart`, `sequenceDiagram` or `classDiagram`.";
+  }
+  return "The card shows the diagram source.";
 }
 
 /**
@@ -207,9 +224,7 @@ function buildDiagramBlock(source, svgs, captionId) {
     <div class="diagram-flip">
       <div class="diagram-face diagram-face--front">${svgs}</div>
       <div class="diagram-face diagram-face--back">
-        <pre
-          class="nohighlight"
-        ><code class="diagram-source">${source}</code></pre>
+        <pre class="nohighlight"><code>${source}</code></pre>
       </div>
     </div>
   </div>`;
@@ -356,13 +371,11 @@ function drawDiagram(pre) {
     }
     card = buildDiagramBlock(source, svgs, caption?.id);
   } catch (error) {
-    const { line, description, message } = describeError(error);
+    const { line, code, description, message } = describeError(error);
     card = buildErrorBlock(source, { line, description }, caption?.id);
     failure = {
       message: `Could not draw the diagram: ${description}`,
-      hint: line
-        ? `Flip the diagram to see its source with line ${line} marked.`
-        : "Start the diagram with a type such as `flowchart`, `sequenceDiagram` or `classDiagram`, then flip the diagram to see its source.",
+      hint: hintFor({ line, code }),
     };
     console.warn(message);
   }
@@ -436,7 +449,7 @@ export async function run(conf) {
   }
   // Pele measures labels, so the fonts must be ready before it draws.
   await document.fonts?.ready;
-  const switchRules = drawable.map(drawDiagram).join("\n");
+  const switchRules = drawable.map(drawDiagram).filter(Boolean).join("\n");
   if (switchRules) {
     insertStyle(switchRules, {
       before: document.querySelector("head link, head > *:last-child"),
