@@ -111,7 +111,7 @@ export default css`
 
 .diagram-container:hover .diagramHeader,
 .diagram-container:focus-within .diagramHeader,
-.diagram-container:has([data-copied]) .diagramHeader,
+.diagram-container:has([data-copied], [data-failed]) .diagramHeader,
 .diagram-container--active .diagramHeader,
 .diagram-container--flipped .diagramHeader {
   opacity: 1;
