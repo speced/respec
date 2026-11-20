@@ -18,12 +18,7 @@ import { sub } from "../core/pubsubhub.js";
 
 export const name = "w3c/cg-assets";
 
-/**
- * CG specifications are to be published on w3.org eventually; until they are,
- * the assets are served from GitHub Pages. Changing where they live is this
- * one line.
- */
-export const CG_ASSETS_BASE = "https://w3c.github.io/cg-spec-assets/";
+export const CG_ASSETS_BASE = "https://incubation.w3.org/assets/specs-2026/";
 
 /** @param {string} path */
 export function cgAssetUrl(path) {

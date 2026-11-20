@@ -15,7 +15,7 @@ const cgSpecErrors = errorFilters.filter("w3c/cg-spec");
 const defaultErrors = errorFilters.filter("w3c/defaults");
 const headerErrors = errorFilters.filter("w3c/headers");
 
-const BASE = "https://w3c.github.io/cg-spec-assets/";
+const BASE = "https://incubation.w3.org/assets/specs-2026/";
 const STYLES = ["css/base.css", "css/cg-spec.css", "css/dark.css"];
 const SCRIPTS = ["js/cg-fixup.js", "js/dark.js", "js/cg-metadata.js"];
 
