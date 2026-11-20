@@ -16,7 +16,7 @@ import { sub } from "./pubsubhub.js";
 
 export const name = "core/diagrams";
 
-const localizationStrings = {
+const l10n = getIntlData({
   en: {
     diagram_error: "Diagram error",
     show_source: "Show diagram source",
@@ -62,30 +62,13 @@ const localizationStrings = {
     show_source: "显示图表源代码",
     copy_aria: "复制图表源代码",
   },
-};
-const l10n = getIntlData(localizationStrings);
-
-const PRODUCTION_PELE_URL = "https://www.w3.org/Tools/respec/respec-pele";
-const LOAD_TIMEOUT_MS = 6000;
-
-/**
- * The phone layout takes over once the wide drawing would shrink below this
- * fraction of its size. Pele draws labels at 14 to 16px, so 0.75 keeps them at
- * 10px or more.
- */
-const MIN_SCALE = 0.75;
+});
 
 /**
  * The width Pele lays the phone layout out for. A drawing wider than this also
  * gets a phone layout.
  */
 const PHONE_LAYOUT_WIDTH = 320;
-
-// import.meta.url is the ReSpec script in the bundle. In source mode it is
-// this file, where no chunk exists: the built one lives under builds/.
-const peleHref = import.meta.url.endsWith("/src/core/diagrams.js")
-  ? new URL("../../builds/respec-pele.js", import.meta.url).href
-  : new URL("respec-pele.js", import.meta.url).href;
 
 let diagramCount = 0;
 
@@ -98,7 +81,7 @@ function loadScript(url) {
     const script = document.createElement("script");
     const timer = setTimeout(
       () => finish(new Error(`Timed out loading ${url}`)),
-      LOAD_TIMEOUT_MS
+      6000
     );
     /** @param {Error} [error] */
     function finish(error) {
@@ -117,7 +100,14 @@ function loadScript(url) {
 /** @returns {Promise<boolean>} true if `self.pele` is ready to use */
 async function loadPele() {
   if (self.pele) return true;
-  for (const url of [peleHref, PRODUCTION_PELE_URL]) {
+  // import.meta.url is the ReSpec script in the bundle. In source mode it is
+  // this file, where no chunk exists: the built one lives under builds/.
+  const sourceMode = import.meta.url.endsWith("/src/core/diagrams.js");
+  const localUrl = new URL(
+    sourceMode ? "../../builds/respec-pele.js" : "respec-pele.js",
+    import.meta.url
+  ).href;
+  for (const url of [localUrl, "https://www.w3.org/Tools/respec/respec-pele"]) {
     try {
       await loadScript(url);
       if (self.pele) return true;
@@ -145,8 +135,6 @@ function freshPrefix() {
   return prefix;
 }
 
-const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-
 /**
  * Keep only plain SVG drawing in the renderer's output, so a renderer bug
  * cannot put script, frames or page-wide styles into every reader's copy of
@@ -155,7 +143,7 @@ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
  */
 function removeActiveContent(svg) {
   for (const el of svg.querySelectorAll("*")) {
-    const isOutsideSvg = el.namespaceURI !== SVG_NAMESPACE;
+    const isOutsideSvg = el.namespaceURI !== "http://www.w3.org/2000/svg";
     if (
       isOutsideSvg ||
       /^(script|foreignObject|style|animate|set)$/.test(el.localName)
@@ -395,7 +383,10 @@ function drawDiagram(pre) {
         svgs.push(svgElement(phone.svg, "mobile"));
         svgs.forEach(svg => svg.classList.add(prefix));
         const front = `.diagram-face--front .${prefix}`;
-        switchRule = `@container (max-width: ${Math.floor(desktop.width * MIN_SCALE)}px) {
+        // The phone layout takes over once the wide drawing would shrink below
+        // three quarters of its size. Pele draws labels at 14 to 16px, so that
+        // keeps them at 10px or more.
+        switchRule = `@container (max-width: ${Math.floor(desktop.width * 0.75)}px) {
   ${front}.diagram-svg--desktop { display: none; }
   ${front}.diagram-svg--mobile { display: block; }
 }`;
