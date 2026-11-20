@@ -206,13 +206,21 @@ function copyRuntime() {
   // Last, so the buttons show only once the listener is in place, and only on
   // a page with the clipboard API (a saved file served over plain http has
   // none). An adopted style sheet is not saved with the page, so a saved copy
-  // shows its buttons only while its own script runs.
+  // shows its buttons only while its own script runs. A browser without
+  // adopted style sheets gets a style element that ReSpec drops when it saves.
   if (navigator.clipboard) {
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(
-      "@media not print { .respec-button-copy-paste { display: grid; } }"
-    );
-    document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+    const rule =
+      "@media not print { .respec-button-copy-paste { display: grid; } }";
+    try {
+      const sheet = new CSSStyleSheet();
+      sheet.replaceSync(rule);
+      document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+    } catch {
+      const style = document.createElement("style");
+      style.className = "removeOnSave";
+      style.textContent = rule;
+      document.head.append(style);
+    }
   }
 
   /**

@@ -720,6 +720,34 @@ describe("Core - Clipboard", () => {
       frame.remove();
     });
 
+    it("falls back to a style element in a browser without adopted style sheets", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      const html = await rsDoc.respec.toHTML();
+      const parsed = new DOMParser().parseFromString(html, "text/html");
+      const script = parsed.createElement("script");
+      script.textContent =
+        'Object.defineProperty(window, "CSSStyleSheet", { value: undefined, configurable: true });';
+      parsed.head.insertBefore(script, parsed.head.firstChild);
+      const srcdoc = `<!DOCTYPE html>\n${parsed.documentElement.outerHTML}`;
+
+      const frame = document.createElement("iframe");
+      const loaded = new Promise(resolve => {
+        frame.addEventListener("load", () => resolve(frame.contentDocument));
+      });
+      frame.srcdoc = srcdoc;
+      document.body.appendChild(frame);
+      const doc = await loaded;
+
+      expect(doc.adoptedStyleSheets).toHaveSize(0);
+      const styles = doc.querySelectorAll("style.removeOnSave");
+      expect(styles).toHaveSize(1);
+      expect(styles[0].textContent).toContain(".respec-button-copy-paste");
+      const button = doc.querySelector("pre.idl .respec-button-copy-paste");
+      expect(doc.defaultView.getComputedStyle(button).display).toBe("grid");
+
+      frame.remove();
+    });
+
     it("cleans a saved confirmation on a button parsed after the script", async () => {
       const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
       const html = await rsDoc.respec.toHTML();
