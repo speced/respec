@@ -137,7 +137,7 @@ function restoreDarkLinkState(exportDoc) {
 export function run(conf) {
   // The CG specification redesign has its own style sheets and scripts, and
   // none of the W3C TR ones below apply to it: not the maturity-level sheet,
-  // not fixup.js, and not the `color-scheme` handling, which cg-assets' own
+  // not fixup.js, and not the `color-scheme` handling, which cg-spec-assets'
   // dark.js does not read.
   if (isCGSpec(conf)) {
     insertCGAssets();

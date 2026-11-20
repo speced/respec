@@ -3,12 +3,12 @@
  * Module w3c/cg-assets
  *
  * The style sheets and scripts of the Community Group specification redesign,
- * which live in w3c/cg-assets rather than in /StyleSheets/TR/2021/. Only the
- * `cgRedesignStatus` documents use them; `CG-DRAFT` and `CG-FINAL` keep the
- * older W3C-hosted CG styles.
+ * which live in w3c/cg-spec-assets rather than in /StyleSheets/TR/2021/. Only
+ * the `cgRedesignStatus` documents use them; `CG-DRAFT` and `CG-FINAL` keep
+ * the older W3C-hosted CG styles.
  *
- * The markup this emits is the contract documented in cg-assets' README, under
- * "How a specification uses these".
+ * The markup this emits is the contract documented in cg-spec-assets' README,
+ * under "How a specification uses these".
  */
 
 import { cgRedesignStatus } from "./headers.js";
@@ -23,7 +23,7 @@ export const name = "w3c/cg-assets";
  * the assets are served from GitHub Pages. Changing where they live is this
  * one line.
  */
-export const CG_ASSETS_BASE = "https://w3c.github.io/cg-assets/";
+export const CG_ASSETS_BASE = "https://w3c.github.io/cg-spec-assets/";
 
 /** @param {string} path */
 export function cgAssetUrl(path) {
@@ -80,8 +80,8 @@ function createResourceHints() {
 
 /**
  * The dark sheet carries `media` so that a reader without JavaScript still gets
- * a palette matching their system, and `class="dark-mode"` so that cg-assets'
- * dark.js can find the sheet it drives from the theme picker.
+ * a palette matching their system, and `class="dark-mode"` so that
+ * cg-spec-assets' dark.js can find the sheet it drives from the theme picker.
  *
  * @param {string} path
  */

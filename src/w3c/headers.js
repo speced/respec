@@ -194,8 +194,9 @@ export const recTrackStatus = [
 export const registryTrackStatus = ["DRY", "CRY", "CRYD", "RY"];
 export const tagStatus = ["draft-finding", "finding", "editor-draft-finding"];
 export const cgStatus = ["CG-DRAFT", "CG-FINAL"];
-// The two statuses of the CG specification redesign, which uses the cg-assets
-// style sheets and scripts rather than the /StyleSheets/TR/2021/cg-* ones.
+// The two statuses of the CG specification redesign, which uses the
+// cg-spec-assets style sheets and scripts rather than the
+// /StyleSheets/TR/2021/cg-* ones.
 // Deliberately kept out of `cgStatus`, so that nothing an existing Community
 // Group report does changes: these join only the lists they have to be in to be
 // treated as Community Group reports at all.

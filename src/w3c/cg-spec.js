@@ -2,7 +2,7 @@
 /**
  * Module w3c/cg-spec
  *
- * Declares what a Community Group specification is, for cg-assets'
+ * Declares what a Community Group specification is, for cg-spec-assets'
  * cg-metadata.js: which kind of document it is, which entry of the collected
  * status metadata belongs to it, and how mature it is.
  *
