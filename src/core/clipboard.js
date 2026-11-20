@@ -107,25 +107,24 @@ export function injectCopyScript() {
   const script = document.createElement("script");
   script.id = "respec-copy-paste";
   // ReSpec sets document.respec only while it runs the page, where the call
-  // above already installed the listener.
-  script.textContent = `if (!document.respec) (${copyRuntime})();`;
+  // above already installed the listener. A form named respec also answers to
+  // document.respec, so test for ReSpec's own method.
+  script.textContent = `if (typeof document.respec?.toHTML !== "function") (${copyRuntime})();`;
   document.body.append(script);
 }
 
 /**
  * Remove what the live page added: a confirmation or failure message still
- * showing, and the class that shows the buttons. The saved page's own script
- * sets that class again where the clipboard works, so a saved page with no
- * script keeps its buttons hidden.
+ * showing.
  * @param {HTMLElement} documentElement the clone being saved
  */
 function resetCopyState(documentElement) {
-  documentElement.classList.remove("respec-copy-ready");
   documentElement
     .querySelectorAll(".respec-button-copy-paste")
     .forEach(button => {
       button.removeAttribute("data-copied");
       button.removeAttribute("data-failed");
+      button.removeAttribute("data-label");
     });
 }
 
@@ -136,6 +135,7 @@ function resetCopyState(documentElement) {
 function copyRuntime() {
   let flip = false;
   const latestWrite = new WeakMap();
+  const confirmed = new WeakSet();
 
   // Created up front: a live region that is created and filled in the same
   // click is often not announced. It goes first in the body, so a page saved by
@@ -150,12 +150,20 @@ function copyRuntime() {
     document.getElementById("respec-copy-status")
   );
 
-  // A page saved by the browser during a confirmation keeps the attribute and
-  // the announcement text, but not the timer that would remove them.
-  document.querySelectorAll(".respec-button-copy-paste").forEach(button => {
-    button.removeAttribute("data-copied");
-    button.removeAttribute("data-failed");
-  });
+  // A page saved by the browser during a confirmation keeps the attributes and
+  // the announcement text, but not the timer that would remove them. This
+  // script can run before every button is parsed, so clean again once the page
+  // has loaded, leaving the buttons this script has confirmed.
+  const clearSavedConfirmations = () => {
+    document.querySelectorAll(".respec-button-copy-paste").forEach(button => {
+      if (confirmed.has(button)) return;
+      button.removeAttribute("data-copied");
+      button.removeAttribute("data-failed");
+      button.removeAttribute("data-label");
+    });
+  };
+  clearSavedConfirmations();
+  document.addEventListener("DOMContentLoaded", clearSavedConfirmations);
   status.textContent = "";
 
   // Capture phase, so an author's container that stops propagation cannot
@@ -197,12 +205,15 @@ function copyRuntime() {
 
   // Last, so the buttons show only once the listener is in place, and only on
   // a page with the clipboard API (a saved file served over plain http has
-  // none). A page saved by the browser may carry the class from another
-  // origin, so set it from what this page has.
-  document.documentElement.classList.toggle(
-    "respec-copy-ready",
-    Boolean(navigator.clipboard)
-  );
+  // none). An adopted style sheet is not saved with the page, so a saved copy
+  // shows its buttons only while its own script runs.
+  if (navigator.clipboard) {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(
+      "@media not print { .respec-button-copy-paste { display: grid; } }"
+    );
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+  }
 
   /**
    * The text a button copies: its code block, minus the header.
@@ -235,6 +246,10 @@ function copyRuntime() {
       flip = !flip;
       status.textContent = flip ? `${label}\u200B` : label;
     }
+    // The label stays on the button after the message ends, so the bubble keeps
+    // its text while it fades out.
+    button.dataset.label = label;
+    confirmed.add(button);
     // The attribute's value is the timer that removes it, so a new result
     // replaces any timer still running.
     for (const state of ["copied", "failed"]) {

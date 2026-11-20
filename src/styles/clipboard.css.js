@@ -3,6 +3,8 @@ const css = String.raw;
 
 // prettier-ignore
 export default css`
+/* Hidden until the script shows the buttons, so a saved page whose script is
+   blocked has no dead button. */
 .respec-button-copy-paste {
   position: absolute;
   height: 28px;
@@ -25,10 +27,6 @@ export default css`
   grid-area: 1 / 1;
 }
 
-.respec-copy-ready .respec-button-copy-paste {
-  display: grid;
-}
-
 /* Dark green: readable on the light button and on the diagram toolbar in dark mode. */
 .respec-copy-check {
   visibility: hidden;
@@ -41,8 +39,8 @@ export default css`
 /* Decorative: its alternative text is empty, and the announcement below tells
    screen readers about the copy. */
 .respec-button-copy-paste::after {
-  content: attr(data-copied-label);
-  content: attr(data-copied-label) / "";
+  content: attr(data-label);
+  content: attr(data-label) / "";
   position: absolute;
   inset-inline-start: 100%;
   top: 50%;
@@ -89,11 +87,6 @@ export default css`
   transition: none;
 }
 
-.respec-button-copy-paste[data-failed]::after {
-  content: attr(data-failed-label);
-  content: attr(data-failed-label) / "";
-}
-
 .respec-button-copy-paste[data-copied] > svg:not(.respec-copy-check) {
   visibility: hidden;
 }
@@ -105,12 +98,5 @@ export default css`
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
-}
-
-@media print {
-  .respec-button-copy-paste,
-  .respec-copy-ready .respec-button-copy-paste {
-    display: none;
-  }
 }
 `;
