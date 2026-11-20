@@ -345,6 +345,45 @@ describe("Core - Clipboard", () => {
             "Copied"
           );
         });
+        it("ignores a pending write that finishes after a newer one", async () => {
+          const promises = [];
+          Object.defineProperty(doc.defaultView.navigator, "clipboard", {
+            value: {
+              writeText: () => {
+                let resolve;
+                let reject;
+                const promise = new Promise((res, rej) => {
+                  resolve = res;
+                  reject = rej;
+                });
+                promises.push({ resolve, reject });
+                return promise;
+              },
+            },
+            configurable: true,
+          });
+
+          const [button] = buttons;
+          const announced = [];
+          button.ariaNotify = message => announced.push(message);
+
+          await copyFrom(button);
+          await copyFrom(button);
+
+          expect(promises).toHaveSize(2);
+
+          promises[1].resolve();
+          await new Promise(resolve => setTimeout(resolve, 0));
+
+          spyOn(doc.defaultView.console, "warn");
+          promises[0].reject(new Error("stale refusal"));
+          await new Promise(resolve => setTimeout(resolve, 0));
+
+          expect(button.hasAttribute("data-copied")).toBeTrue();
+          expect(button.hasAttribute("data-failed")).toBeFalse();
+          expect(announced).toEqual(["Copied!"]);
+        });
+
         it("ends each button's confirmation on its own timer", async () => {
           const [first, second] = buttons;
           first.ariaNotify = undefined;
@@ -492,7 +531,8 @@ describe("Core - Clipboard", () => {
         .withContext("failure reported")
         .toBeTrue();
 
-      const saved = await getExportedDoc(rsDoc);
+      const html = await rsDoc.respec.toHTML();
+      const saved = new DOMParser().parseFromString(html, "text/html");
 
       const savedButton = saved.querySelector(
         "pre.idl .respec-button-copy-paste"
@@ -515,6 +555,111 @@ describe("Core - Clipboard", () => {
 
       const regions = frameDoc.querySelectorAll("#respec-copy-status");
       expect(regions.length).toBe(1);
+
+      frame.remove();
+    });
+
+    it("copies the text even when a container stops event propagation", async () => {
+      const body = `
+        <section>
+          <div id="author-div">
+            <pre class="idl">
+              [Exposed=Window]
+              interface Foo {};
+            </pre>
+          </div>
+        </section>
+      `;
+      const rsDoc = await makeRSDoc(makeStandardOps(null, body));
+      const copied = stubClipboard(rsDoc.defaultView);
+      const div = rsDoc.getElementById("author-div");
+      div.addEventListener("click", event => event.stopPropagation());
+      const button = div.querySelector(".respec-button-copy-paste");
+
+      await copyFrom(button);
+
+      expect(copied).toHaveSize(1);
+    });
+
+    it("moves the bubble under the button on a narrow page", async () => {
+      const rsDocNarrow = await makeRSDoc(
+        makeStandardOps(null, idlBody),
+        undefined,
+        "width: 320px; height: 600px"
+      );
+      const buttonNarrow = rsDocNarrow.querySelector(
+        "pre.idl .respec-button-copy-paste"
+      );
+      expect(
+        rsDocNarrow.defaultView.getComputedStyle(buttonNarrow, "::after")
+          .translate
+      ).toBe("none");
+
+      const rsDocWide = await makeRSDoc(
+        makeStandardOps(null, idlBody),
+        undefined,
+        "width: 800px; height: 600px"
+      );
+      const buttonWide = rsDocWide.querySelector(
+        "pre.idl .respec-button-copy-paste"
+      );
+      expect(
+        rsDocWide.defaultView.getComputedStyle(buttonWide, "::after").translate
+      ).not.toBe("none");
+    });
+
+    it("hides the button on printed pages", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      let printRule = null;
+      const sheets = [...rsDoc.querySelectorAll("style")]
+        .map(style => style.sheet)
+        .filter(Boolean);
+      for (const sheet of sheets) {
+        for (const rule of sheet.cssRules) {
+          if (
+            rule instanceof rsDoc.defaultView.CSSMediaRule &&
+            rule.conditionText.includes("print")
+          ) {
+            for (const subRule of rule.cssRules) {
+              if (
+                subRule instanceof rsDoc.defaultView.CSSStyleRule &&
+                subRule.selectorText.includes(
+                  ".respec-copy-ready .respec-button-copy-paste"
+                )
+              ) {
+                printRule = subRule;
+                break;
+              }
+            }
+          }
+          if (printRule) break;
+        }
+        if (printRule) break;
+      }
+      expect(printRule).not.toBeNull();
+      expect(printRule.style.display).toBe("none");
+    });
+
+    it("keeps the buttons hidden if the start-up script throws an error", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      const html = await rsDoc.respec.toHTML();
+      const throwScript = `<script>
+        Document.prototype.querySelectorAll = () => {
+          throw new Error("start-up failed");
+        };
+      </script>`;
+
+      const frame = document.createElement("iframe");
+      const loaded = new Promise(resolve => {
+        frame.addEventListener("load", () => resolve(frame.contentDocument));
+      });
+      frame.srcdoc = html.replace("<head>", `<head>${throwScript}`);
+      document.body.appendChild(frame);
+      const doc = await loaded;
+
+      expect(doc.documentElement.classList).not.toContain("respec-copy-ready");
+      const button = doc.querySelector("pre.idl .respec-button-copy-paste");
+      expect(doc.defaultView.getComputedStyle(button).display).toBe("none");
 
       frame.remove();
     });

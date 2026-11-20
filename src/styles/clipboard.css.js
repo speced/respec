@@ -56,11 +56,23 @@ export default css`
   color: #fff;
   color: light-dark(#fff, #1c1c1c);
   font: normal 0.75rem/1 system-ui, sans-serif;
-  white-space: nowrap;
+  inline-size: max-content;
+  max-inline-size: 14em;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.4s, visibility 0.4s;
+}
+
+/* On a narrow page the bubble drops under the button, so a long message cannot
+   run past the edge of the viewport. */
+@media (max-width: 30em) {
+  .respec-button-copy-paste::after {
+    inset-inline-start: 0;
+    top: 100%;
+    translate: none;
+    margin: 0.4em 0 0;
+  }
 }
 
 /* The script sets data-copied while a copy is confirmed, and data-failed while
@@ -96,8 +108,9 @@ export default css`
 }
 
 @media print {
-  .respec-button-copy-paste {
-    visibility: hidden;
+  .respec-button-copy-paste,
+  .respec-copy-ready .respec-button-copy-paste {
+    display: none;
   }
 }
 `;

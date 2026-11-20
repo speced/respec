@@ -134,15 +134,8 @@ function resetCopyState(documentElement) {
  * documents, so it must not reference anything outside its own scope.
  */
 function copyRuntime() {
-  // Buttons stay hidden until this script shows them, and only on a page with
-  // the clipboard API (a saved file served over plain http has none). A page
-  // saved by the browser may carry the class from another origin, so set it
-  // from what this page has.
-  document.documentElement.classList.toggle(
-    "respec-copy-ready",
-    Boolean(navigator.clipboard)
-  );
   let flip = false;
+  const latestWrite = new WeakMap();
 
   // Created up front: a live region that is created and filled in the same
   // click is often not announced. It goes first in the body, so a page saved by
@@ -165,31 +158,51 @@ function copyRuntime() {
   });
   status.textContent = "";
 
-  document.addEventListener("click", event => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    const button = /** @type {HTMLElement | null} */ (
-      target.closest(".respec-button-copy-paste")
-    );
-    if (!button) return;
-    const text = sourceFor(button);
-    if (text === null) return;
-    if (!navigator.clipboard) {
-      console.warn(
-        "Copying needs a secure page, such as one served over https."
+  // Capture phase, so an author's container that stops propagation cannot
+  // stop the copy.
+  document.addEventListener(
+    "click",
+    event => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const button = /** @type {HTMLElement | null} */ (
+        target.closest(".respec-button-copy-paste")
       );
-      return;
-    }
-    // Claim a copy only once the clipboard has taken the text. A write is
-    // refused in a cross-origin frame or with the permission denied.
-    navigator.clipboard.writeText(text).then(
-      () => acknowledge(button, "copied"),
-      error => {
-        console.warn("Could not write to the clipboard.", error);
-        acknowledge(button, "failed");
+      if (!button) return;
+      const text = sourceFor(button);
+      if (text === null) return;
+      if (!navigator.clipboard) {
+        console.warn(
+          "Copying needs a secure page, such as one served over https."
+        );
+        return;
       }
-    );
-  });
+      // Claim a copy only once the clipboard has taken the text. A write is
+      // refused in a cross-origin frame or with the permission denied. Two
+      // clicks can leave writes pending together, and only the newest reports.
+      const write = (latestWrite.get(button) ?? 0) + 1;
+      latestWrite.set(button, write);
+      navigator.clipboard.writeText(text).then(
+        () => {
+          if (latestWrite.get(button) === write) acknowledge(button, "copied");
+        },
+        error => {
+          console.warn("Could not write to the clipboard.", error);
+          if (latestWrite.get(button) === write) acknowledge(button, "failed");
+        }
+      );
+    },
+    true
+  );
+
+  // Last, so the buttons show only once the listener is in place, and only on
+  // a page with the clipboard API (a saved file served over plain http has
+  // none). A page saved by the browser may carry the class from another
+  // origin, so set it from what this page has.
+  document.documentElement.classList.toggle(
+    "respec-copy-ready",
+    Boolean(navigator.clipboard)
+  );
 
   /**
    * The text a button copies: its code block, minus the header.
