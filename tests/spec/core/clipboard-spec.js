@@ -682,6 +682,24 @@ describe("Core - Clipboard", () => {
       expect(exportedAnchors).toEqual(anchors);
     });
 
+    it("sets the bubble text direction from the text itself", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      const styles = Array.from(rsDoc.querySelectorAll("style")).filter(
+        style => style.sheet
+      );
+      let targetRule;
+      for (const style of styles) {
+        const rules = Array.from(style.sheet.cssRules);
+        targetRule = rules.find(
+          rule => rule.selectorText === ".respec-button-copy-paste::after"
+        );
+        if (targetRule) {
+          break;
+        }
+      }
+      expect(targetRule.style.unicodeBidi).toBe("plaintext");
+    });
+
     it("drops the bubble under the button on a narrow page where anchoring is missing", async () => {
       const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
       const styles = Array.from(rsDoc.querySelectorAll("style")).filter(

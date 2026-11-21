@@ -56,6 +56,7 @@ export default css`
   font: normal 0.75rem/1 system-ui, sans-serif;
   inline-size: max-content;
   max-inline-size: 14em;
+  unicode-bidi: plaintext;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
