@@ -31,14 +31,18 @@ describe("Core - Clipboard", () => {
   /** @param {Element} button */
   function layoutOf(button) {
     const { display, position, top, left, width, height } =
-      getComputedStyle(button);
+      button.ownerDocument.defaultView.getComputedStyle(button);
     return { display, position, top, left, width, height };
   }
 
   describe("in an exported document", () => {
     it("keeps the WebIDL and CDDL copy buttons, laid out as in the live document", async () => {
       const blocks = ["pre.idl", "pre.cddl"];
-      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody + cddlBody));
+      const rsDoc = await makeRSDoc(
+        makeStandardOps(null, idlBody + cddlBody),
+        undefined,
+        "width: 800px; height: 600px"
+      );
       const buttonsIn = (doc, block) =>
         doc.querySelectorAll(`${block} .respec-button-copy-paste`);
       const liveLayouts = blocks.map(block => {
@@ -187,9 +191,7 @@ describe("Core - Clipboard", () => {
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
             "visible"
           );
-          expect(view.getComputedStyle(button, "::after").content).toContain(
-            "Copied"
-          );
+          expect(button.dataset.label).toBe("Copied!");
 
           expect(clock.timers).toHaveSize(1);
           clock.expire(0);
@@ -299,9 +301,7 @@ describe("Core - Clipboard", () => {
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
             "visible"
           );
-          expect(view.getComputedStyle(button, "::after").content).toContain(
-            "Could not copy"
-          );
+          expect(button.dataset.label).toBe("Could not copy!");
           expect(view.getComputedStyle(checkIcon).visibility).toBe("hidden");
           expect(view.getComputedStyle(copyIcon).visibility).toBe("visible");
           expect(announced).toEqual(["Could not copy!"]);
@@ -312,12 +312,8 @@ describe("Core - Clipboard", () => {
           clock.expire(0);
 
           expect(button.hasAttribute("data-failed")).toBeFalse();
-          expect(view.getComputedStyle(button, "::after").content).toContain(
-            "Could not copy"
-          );
-          expect(
-            view.getComputedStyle(button, "::after").content
-          ).not.toContain("Copied");
+          expect(button.dataset.label).toBe("Could not copy!");
+          expect(button.dataset.label).not.toBe("Copied!");
 
           await Promise.all(
             button.getAnimations({ subtree: true }).map(a => a.finished)
@@ -344,12 +340,8 @@ describe("Core - Clipboard", () => {
 
           expect(button.hasAttribute("data-failed")).toBeFalse();
           expect(button.hasAttribute("data-copied")).toBeTrue();
-          expect(
-            view.getComputedStyle(button, "::after").content
-          ).not.toContain("Could not copy");
-          expect(view.getComputedStyle(button, "::after").content).toContain(
-            "Copied"
-          );
+          expect(button.dataset.label).not.toBe("Could not copy!");
+          expect(button.dataset.label).toBe("Copied!");
         });
         it("ignores a pending write that finishes after a newer one", async () => {
           const promises = [];
@@ -616,6 +608,18 @@ describe("Core - Clipboard", () => {
       await copyFrom(button);
 
       expect(copied).toHaveSize(1);
+    });
+
+    it("styles the bubble from the data-label attribute", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      const rules = Array.from(rsDoc.querySelectorAll("style"))
+        .filter(style => style.sheet)
+        .flatMap(style => Array.from(style.sheet.cssRules));
+      const copyRule = rules.find(
+        rule => rule.selectorText === ".respec-button-copy-paste::after"
+      );
+      expect(copyRule).toBeDefined();
+      expect(copyRule.cssText).toContain("attr(data-label)");
     });
 
     it("moves the bubble under the button on a narrow page", async () => {
