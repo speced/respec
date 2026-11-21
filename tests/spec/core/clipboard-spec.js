@@ -738,14 +738,29 @@ describe("Core - Clipboard", () => {
       document.body.appendChild(frame);
       const doc = await loaded;
 
-      expect(doc.adoptedStyleSheets).toHaveSize(0);
       const styles = doc.querySelectorAll("style.removeOnSave");
       expect(styles).toHaveSize(1);
-      expect(styles[0].textContent).toContain(".respec-button-copy-paste");
+      expect(styles[0].textContent).toBe("");
+      expect(styles[0].sheet.cssRules[0].cssText).toContain(
+        ".respec-button-copy-paste"
+      );
       const button = doc.querySelector("pre.idl .respec-button-copy-paste");
       expect(doc.defaultView.getComputedStyle(button).display).toBe("grid");
 
+      const frame2 = document.createElement("iframe");
+      frame2.sandbox = "allow-same-origin";
+      const loaded2 = new Promise(resolve => {
+        frame2.addEventListener("load", () => resolve(frame2.contentDocument));
+      });
+      frame2.srcdoc = `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
+      document.body.appendChild(frame2);
+      const doc2 = await loaded2;
+
+      const button2 = doc2.querySelector("pre.idl .respec-button-copy-paste");
+      expect(doc2.defaultView.getComputedStyle(button2).display).toBe("none");
+
       frame.remove();
+      frame2.remove();
     });
 
     it("cleans a saved confirmation on a button parsed after the script", async () => {

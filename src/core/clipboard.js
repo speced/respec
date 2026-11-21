@@ -218,8 +218,10 @@ function copyRuntime() {
     } catch {
       const style = document.createElement("style");
       style.className = "removeOnSave";
-      style.textContent = rule;
       document.head.append(style);
+      // Inserted through the style sheet, so the rule is not in the markup that
+      // a browser saves.
+      style.sheet?.insertRule(rule);
     }
   }
 
