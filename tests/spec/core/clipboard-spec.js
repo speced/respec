@@ -644,13 +644,42 @@ describe("Core - Clipboard", () => {
       const afterRule = rules.find(
         rule => rule.selectorText === ".respec-button-copy-paste::after"
       );
-      expect(buttonRule.cssText).toContain("anchor-name: --respec-copy");
-      expect(afterRule.cssText).toContain("position-anchor: --respec-copy");
+      expect(buttonRule.cssText).toContain(
+        "anchor-name: var(--respec-copy-anchor)"
+      );
+      expect(afterRule.cssText).toContain(
+        "position-anchor: var(--respec-copy-anchor)"
+      );
       expect(afterRule.cssText).toContain("position: fixed");
       expect(afterRule.cssText).toContain("position-try-fallbacks");
       expect(afterRule.cssText).toContain("inline-start");
       expect(afterRule.cssText).toContain("block-end span-inline-end");
       expect(afterRule.cssText).toContain("block-end span-inline-start");
+    });
+
+    it("gives every copy button its own anchor name", async () => {
+      const rsDoc = await makeRSDoc(
+        makeStandardOps(null, idlBody + idlBody + cddlBody)
+      );
+      const buttons = Array.from(
+        rsDoc.querySelectorAll(".respec-button-copy-paste")
+      );
+      const anchors = buttons.map(button =>
+        button.style.getPropertyValue("--respec-copy-anchor")
+      );
+      expect(anchors.length).toBe(3);
+      for (const anchor of anchors) {
+        expect(anchor).not.toBe("");
+      }
+      expect(new Set(anchors).size).toBe(3);
+      const exportedDoc = await getExportedDoc(rsDoc);
+      const exportedButtons = Array.from(
+        exportedDoc.querySelectorAll(".respec-button-copy-paste")
+      );
+      const exportedAnchors = exportedButtons.map(button =>
+        button.style.getPropertyValue("--respec-copy-anchor")
+      );
+      expect(exportedAnchors).toEqual(anchors);
     });
 
     it("drops the bubble under the button on a narrow page where anchoring is missing", async () => {

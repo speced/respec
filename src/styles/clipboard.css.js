@@ -78,12 +78,12 @@ export default css`
    has no room. */
 @supports (position-area: inline-end) {
   .respec-button-copy-paste {
-    anchor-name: --respec-copy;
+    anchor-name: var(--respec-copy-anchor);
   }
 
   .respec-button-copy-paste::after {
     position: fixed;
-    position-anchor: --respec-copy;
+    position-anchor: var(--respec-copy-anchor);
     position-area: inline-end;
     position-try-fallbacks:
       inline-start,
