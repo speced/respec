@@ -622,31 +622,63 @@ describe("Core - Clipboard", () => {
       expect(copyRule.cssText).toContain("attr(data-label)");
     });
 
-    it("moves the bubble under the button on a narrow page", async () => {
-      const rsDocNarrow = await makeRSDoc(
-        makeStandardOps(null, idlBody),
-        undefined,
-        "width: 320px; height: 600px"
+    it("anchors the bubble to its button and gives it fallback places", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      const styles = Array.from(rsDoc.querySelectorAll("style")).filter(
+        style => style.sheet
       );
-      const buttonNarrow = rsDocNarrow.querySelector(
-        "pre.idl .respec-button-copy-paste"
+      let supportsRule;
+      for (const style of styles) {
+        supportsRule = Array.from(style.sheet.cssRules).find(
+          rule =>
+            rule.conditionText && rule.conditionText.includes("position-area")
+        );
+        if (supportsRule) {
+          break;
+        }
+      }
+      const rules = Array.from(supportsRule.cssRules);
+      const buttonRule = rules.find(
+        rule => rule.selectorText === ".respec-button-copy-paste"
       );
-      expect(
-        rsDocNarrow.defaultView.getComputedStyle(buttonNarrow, "::after")
-          .translate
-      ).toBe("none");
+      const afterRule = rules.find(
+        rule => rule.selectorText === ".respec-button-copy-paste::after"
+      );
+      expect(buttonRule.cssText).toContain("anchor-name: --respec-copy");
+      expect(afterRule.cssText).toContain("position-anchor: --respec-copy");
+      expect(afterRule.cssText).toContain("position: fixed");
+      expect(afterRule.cssText).toContain("position-try-fallbacks");
+      expect(afterRule.cssText).toContain("inline-start");
+      expect(afterRule.cssText).toContain("block-end span-inline-end");
+      expect(afterRule.cssText).toContain("block-end span-inline-start");
+    });
 
-      const rsDocWide = await makeRSDoc(
-        makeStandardOps(null, idlBody),
-        undefined,
-        "width: 800px; height: 600px"
+    it("drops the bubble under the button on a narrow page where anchoring is missing", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      const styles = Array.from(rsDoc.querySelectorAll("style")).filter(
+        style => style.sheet
       );
-      const buttonWide = rsDocWide.querySelector(
-        "pre.idl .respec-button-copy-paste"
-      );
-      expect(
-        rsDocWide.defaultView.getComputedStyle(buttonWide, "::after").translate
-      ).not.toBe("none");
+      let targetRule;
+      for (const style of styles) {
+        const mediaRules = Array.from(style.sheet.cssRules).filter(
+          rule =>
+            rule.conditionText && rule.conditionText.includes("max-width: 30em")
+        );
+        for (const mediaRule of mediaRules) {
+          const rule = Array.from(mediaRule.cssRules).find(
+            r => r.selectorText === ".respec-button-copy-paste::after"
+          );
+          if (rule) {
+            targetRule = rule;
+            break;
+          }
+        }
+        if (targetRule) break;
+      }
+      expect(targetRule).toBeDefined();
+      expect(targetRule.style.top).toBe("100%");
+      expect(targetRule.style.translate).toBe("none");
+      expect(["0", "0px"]).toContain(targetRule.style.insetInlineStart);
     });
 
     it("shows the buttons everywhere except print", async () => {

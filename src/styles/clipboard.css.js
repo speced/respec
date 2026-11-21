@@ -73,6 +73,29 @@ export default css`
   }
 }
 
+/* Where the browser can anchor the bubble to the button, it sits beside the
+   button and moves to the other side, or under the button, when the viewport
+   has no room. */
+@supports (position-area: inline-end) {
+  .respec-button-copy-paste {
+    anchor-name: --respec-copy;
+  }
+
+  .respec-button-copy-paste::after {
+    position: fixed;
+    position-anchor: --respec-copy;
+    position-area: inline-end;
+    position-try-fallbacks:
+      inline-start,
+      block-end span-inline-end,
+      block-end span-inline-start;
+    align-self: anchor-center;
+    inset: auto;
+    translate: none;
+    margin: 0 0.5em;
+  }
+}
+
 /* The script sets data-copied while a copy is confirmed, and data-failed while
    a refused copy is reported. */
 .respec-button-copy-paste[data-copied] .respec-copy-check {
