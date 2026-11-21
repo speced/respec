@@ -278,52 +278,84 @@ describe("Core - Diagrams", () => {
   });
 
   it("toggles between mobile and desktop SVGs for wide diagrams based on width", async () => {
-    const wide = `flowchart LR\n  A[Author writes text] --> B[Validate] --> C[Render SVG] --> D[Insert in page] --> E[Save HTML] --> F[Publish]`;
-    const narrow = `flowchart LR\n  X --> Y`;
+    const wide =
+      "flowchart LR\n  A[Author writes text] --> B[Validate] --> C[Render SVG] --> D[Insert in page] --> E[Save HTML] --> F[Publish] --> G[Check output] --> H[Archive]";
+    const narrow = "flowchart LR\n  X --> Y";
     const body =
       wrap(wide, { figId: "fig-wide" }) + wrap(narrow, { figId: "fig-narrow" });
 
-    const doc360 = await makeRSDoc(
+    const doc3000 = await makeRSDoc(
       makeStandardOps(null, body),
       null,
-      "width: 360px; display: block"
+      "width: 3000px; display: block"
     );
-    const wideCard360 = doc360.querySelector("#fig-wide .diagram-container");
-    expect(
-      doc360.defaultView.getComputedStyle(
-        wideCard360.querySelector(".diagram-svg--mobile")
-      ).display
-    ).not.toBe("none");
-    expect(
-      doc360.defaultView.getComputedStyle(
-        wideCard360.querySelector(".diagram-svg--desktop")
-      ).display
-    ).toBe("none");
+    const wideCard3000 = doc3000.querySelector("#fig-wide .diagram-container");
+    const desktopSvg3000 = wideCard3000.querySelector(".diagram-svg--desktop");
+    const W = desktopSvg3000.viewBox.baseVal.width;
+    expect(W).toBeGreaterThan(900);
 
-    const doc900 = await makeRSDoc(
+    const frontWidth3000 = wideCard3000
+      .querySelector(".diagram-face--front")
+      .getBoundingClientRect().width;
+    const pad = 3000 - frontWidth3000;
+    const switchPoint = Math.floor(W * 0.75);
+
+    const doc400 = await makeRSDoc(
       makeStandardOps(null, body),
       null,
-      "width: 900px; display: block"
+      "width: 400px; display: block"
     );
-    const wideCard900 = doc900.querySelector("#fig-wide .diagram-container");
+    const wideCard400 = doc400.querySelector("#fig-wide .diagram-container");
+    const front400 = wideCard400
+      .querySelector(".diagram-face--front")
+      .getBoundingClientRect().width;
     expect(
-      doc900.defaultView.getComputedStyle(
-        wideCard900.querySelector(".diagram-svg--mobile")
+      doc400.defaultView.getComputedStyle(
+        wideCard400.querySelector(".diagram-svg--mobile")
       ).display
-    ).toBe("none");
+    )
+      .withContext(`W: ${W}, front: ${front400}, switch: ${switchPoint}`)
+      .not.toBe("none");
     expect(
-      doc900.defaultView.getComputedStyle(
-        wideCard900.querySelector(".diagram-svg--desktop")
+      doc400.defaultView.getComputedStyle(
+        wideCard400.querySelector(".diagram-svg--desktop")
       ).display
-    ).not.toBe("none");
+    )
+      .withContext(`W: ${W}, front: ${front400}, switch: ${switchPoint}`)
+      .toBe("none");
 
-    const narrowCard360 = doc360.querySelector(
+    const wideFrame = W + 100 + pad;
+    const docWide = await makeRSDoc(
+      makeStandardOps(null, body),
+      null,
+      `width: ${wideFrame}px; display: block`
+    );
+    const wideCardWide = docWide.querySelector("#fig-wide .diagram-container");
+    const frontWide = wideCardWide
+      .querySelector(".diagram-face--front")
+      .getBoundingClientRect().width;
+    expect(
+      docWide.defaultView.getComputedStyle(
+        wideCardWide.querySelector(".diagram-svg--mobile")
+      ).display
+    )
+      .withContext(`W: ${W}, front: ${frontWide}, switch: ${switchPoint}`)
+      .toBe("none");
+    expect(
+      docWide.defaultView.getComputedStyle(
+        wideCardWide.querySelector(".diagram-svg--desktop")
+      ).display
+    )
+      .withContext(`W: ${W}, front: ${frontWide}, switch: ${switchPoint}`)
+      .not.toBe("none");
+
+    const narrowCard400 = doc400.querySelector(
       "#fig-narrow .diagram-container"
     );
-    expect(narrowCard360.querySelector(".diagram-svg--mobile")).toBeNull();
+    expect(narrowCard400.querySelector(".diagram-svg--mobile")).toBeNull();
     expect(
-      doc360.defaultView.getComputedStyle(
-        narrowCard360.querySelector(".diagram-svg--desktop")
+      doc400.defaultView.getComputedStyle(
+        narrowCard400.querySelector(".diagram-svg--desktop")
       ).display
     ).not.toBe("none");
   });
@@ -412,12 +444,29 @@ describe("Core - Diagrams", () => {
 
   it("switches to the phone layout at three quarters of each diagram's own width", async () => {
     const wide =
-      "flowchart LR\n  A[Author writes text] --> B[Validate] --> C[Render SVG] --> D[Insert in page] --> E[Save HTML] --> F[Publish]";
+      "flowchart LR\n  A[Author writes text] --> B[Validate] --> C[Render SVG] --> D[Insert in page] --> E[Save HTML] --> F[Publish] --> G[Check output] --> H[Archive]";
+
+    const doc3000 = await makeRSDoc(
+      makeStandardOps(null, wrap(wide, { figId: "fig-wide" })),
+      null,
+      "width: 3000px; display: block"
+    );
+    const card3000 = doc3000.querySelector("#fig-wide .diagram-container");
+    const desktopSvg3000 = card3000.querySelector(".diagram-svg--desktop");
+    const W = desktopSvg3000.viewBox.baseVal.width;
+    expect(W).toBeGreaterThan(900);
+
+    const frontWidth3000 = card3000
+      .querySelector(".diagram-face--front")
+      .getBoundingClientRect().width;
+    const pad = 3000 - frontWidth3000;
+    const switchPoint = Math.floor(W * 0.75);
+
     let hasAbove = false;
     let hasBelow = false;
     let hasBetween = false;
 
-    for (const width of [900, 760, 400]) {
+    for (const width of [W + 100 + pad, Math.floor(W * 0.75) - 20 + pad, 400]) {
       const doc = await makeRSDoc(
         makeStandardOps(null, wrap(wide, { figId: "fig-wide" })),
         null,
@@ -426,8 +475,6 @@ describe("Core - Diagrams", () => {
       const card = doc.querySelector("#fig-wide .diagram-container");
       const desktopSvg = card.querySelector(".diagram-svg--desktop");
       const mobileSvg = card.querySelector(".diagram-svg--mobile");
-      const W = desktopSvg.viewBox.baseVal.width;
-      const switchPoint = Math.floor(W * 0.75);
       const front = card
         .querySelector(".diagram-face--front")
         .getBoundingClientRect().width;
@@ -441,11 +488,19 @@ describe("Core - Diagrams", () => {
       const mobileDisplay = doc.defaultView.getComputedStyle(mobileSvg).display;
 
       if (front <= switchPoint) {
-        expect(mobileDisplay).not.toBe("none");
-        expect(desktopDisplay).toBe("none");
+        expect(mobileDisplay)
+          .withContext(`W: ${W}, front: ${front}, switch: ${switchPoint}`)
+          .not.toBe("none");
+        expect(desktopDisplay)
+          .withContext(`W: ${W}, front: ${front}, switch: ${switchPoint}`)
+          .toBe("none");
       } else {
-        expect(desktopDisplay).not.toBe("none");
-        expect(mobileDisplay).toBe("none");
+        expect(desktopDisplay)
+          .withContext(`W: ${W}, front: ${front}, switch: ${switchPoint}`)
+          .not.toBe("none");
+        expect(mobileDisplay)
+          .withContext(`W: ${W}, front: ${front}, switch: ${switchPoint}`)
+          .toBe("none");
       }
     }
 
