@@ -130,10 +130,4 @@ a.idlEnumItem {
   border-color: rgba(197, 197, 197, 0.5);
   box-shadow: none;
 }
-
-@media print {
-  .respec-button-copy-paste {
-    visibility: hidden;
-  }
-}
 `;

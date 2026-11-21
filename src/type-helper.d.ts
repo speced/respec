@@ -37,6 +37,8 @@ interface AxeViolation {
 
 declare var respecConfig: Conf;
 interface Window {
+  /** The Pele renderer, defined once core/diagrams has loaded it. */
+  pele?: typeof import("pele");
   respecVersion: string;
   respecUI: {
     show(): void;
