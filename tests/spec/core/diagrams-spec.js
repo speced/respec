@@ -617,7 +617,11 @@ describe("Core - Diagrams", () => {
 
   it("paints the copy icon in the toolbar's text color", async () => {
     const body = wrap(flowchart);
-    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const doc = await makeRSDoc(
+      makeStandardOps(null, body),
+      undefined,
+      "width: 800px; height: 600px"
+    );
     const btn = doc.querySelector(".diagramHeader .respec-button-copy-paste");
     const svg = btn.querySelector("svg");
     const btnStyle = doc.defaultView.getComputedStyle(btn);
