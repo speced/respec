@@ -158,6 +158,8 @@ describe("Core - Clipboard", () => {
       style.textContent =
         ".respec-button-copy-paste::after { transition: none !important; }";
       button.ownerDocument.head.append(style);
+      // Applies the style change now, so the caller reads the end state.
+      button.getBoundingClientRect();
     }
 
     const documents = [
@@ -331,9 +333,25 @@ describe("Core - Clipboard", () => {
 
           skipFade(button);
 
-          expect(view.getComputedStyle(button, "::after").visibility).toBe(
-            "hidden"
-          );
+          const bubble = view.getComputedStyle(button, "::after");
+          const state = JSON.stringify({
+            attributes: button.getAttributeNames(),
+            visibility: bubble.visibility,
+            opacity: bubble.opacity,
+            transition: bubble.transitionProperty,
+            animations: button
+              .getAnimations({ subtree: true })
+              .map(
+                animation =>
+                  `${animation.transitionProperty}:${animation.playState}`
+              ),
+            frame: [view.innerWidth, view.innerHeight],
+            visibilityState: doc.visibilityState,
+            injectedRules: [...doc.querySelectorAll("style")].filter(style =>
+              style.textContent.includes("transition: none !important")
+            ).length,
+          });
+          expect(bubble.visibility).withContext(state).toBe("hidden");
         });
 
         it("gives the bubble a 1px border", async () => {
