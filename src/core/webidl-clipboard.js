@@ -6,8 +6,7 @@
  * well-formatted IDL to the clipboard.
  *
  */
-import { createCopyButton, injectCopyScript } from "./clipboard.js";
-export const name = "core/webidl-clipboard";
+import { createCopyButton } from "./clipboard.js";
 
 /**
  * Adds a HTML button that copies WebIDL to the clipboard.
@@ -16,5 +15,4 @@ export const name = "core/webidl-clipboard";
  */
 export function addCopyIDLButton(idlHeader) {
   idlHeader.append(createCopyButton(".idlHeader", "Copy IDL to clipboard"));
-  injectCopyScript();
 }

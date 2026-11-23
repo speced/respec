@@ -30,10 +30,13 @@ export default css`
 /* Dark green: readable on the light button and on the diagram toolbar in dark mode. */
 .respec-copy-check {
   visibility: hidden;
+  fill: #1a7f37;
 }
 
-.respec-copy-check path {
-  fill: #1a7f37;
+.respec-copy-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
 }
 
 /* Decorative: its alternative text is empty, and the announcement below tells

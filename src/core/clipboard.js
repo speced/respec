@@ -2,15 +2,19 @@
 /**
  * Module core/clipboard
  *
- * Shared clipboard copy button for code blocks (WebIDL, CDDL, etc.).
- * One delegated click listener serves every button, in the live document and,
- * through an inlined script, in a saved copy of it.
+ * Shared clipboard copy button for code blocks (WebIDL, CDDL, diagrams). Other
+ * modules create the buttons with createCopyButton. This module then adds their
+ * style sheet, their icons and the script that serves every click, in the live
+ * document and in a saved copy of it.
  */
 import css from "../styles/clipboard.css.js";
+import { fetchBase } from "./text-loader.js";
 import { getIntlData } from "./utils.js";
 import { html } from "./import-maps.js";
 import { insertStyle } from "./insert-style.js";
 import { sub } from "./pubsubhub.js";
+
+export const name = "core/clipboard";
 
 const l10n = getIntlData({
   en: {
@@ -52,45 +56,42 @@ const l10n = getIntlData({
   zh: { copy: "复制到剪贴板", copied: "已复制", failed: "无法复制" },
 });
 
-export const COPY_SVG =
-  '<svg aria-hidden="true" height="16" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"/></svg>';
+const COPY_PATH =
+  "M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z";
+const CHECK_PATH =
+  "M55 17a3 3 0 0 1 0 4L26 50a3 3 0 0 1-4 0L9 37a3 3 0 1 1 4-4l11 11 27-27a3 3 0 0 1 4 0z";
+
+export const COPY_SVG = `<svg aria-hidden="true" height="16" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="${COPY_PATH}"/></svg>`;
+
+// Every button points at these two symbols instead of repeating their paths.
+const ICON_SPRITE = `<svg class="respec-copy-sprite" aria-hidden="true"><symbol id="respec-copy-icon" viewBox="0 0 14 16"><path fill-rule="evenodd" d="${COPY_PATH}"/></symbol><symbol id="respec-copy-check" viewBox="0 0 64 64"><path d="${CHECK_PATH}"/></symbol></svg>`;
+
+const BUTTON_ICONS = `<svg aria-hidden="true" height="16" width="14"><use href="#respec-copy-icon"/></svg><svg class="respec-copy-check" aria-hidden="true" height="16" width="16"><use href="#respec-copy-check"/></svg>`;
 
 let copyButtonCount = 0;
 
 /**
- * Create a copy-to-clipboard button for a code block. The delegated runtime
- * handles its clicks, so the button carries what that runtime needs.
+ * Create a copy-to-clipboard button for a code block. The script that serves
+ * every button handles its clicks, so the button carries what that script needs.
  *
- * @param {string} headerSelector - Selector for the header to exclude from copy
+ * @param {string} ignoreSelector - Selector for the part of the code block that is not copied, such as its header
  * @param {string} [title] - Accessible label and tooltip, "Copy to clipboard" in the
  *   document's language by default
  * @returns {HTMLButtonElement}
  */
-export function createCopyButton(headerSelector, title = l10n.copy) {
-  const button = /** @type {HTMLButtonElement} */ (
-    html`<button
-      type="button"
-      class="respec-button-copy-paste"
-      title="${title}"
-      aria-label="${title}"
-      data-copy-header="${headerSelector}"
-      data-copied-label="${l10n.copied}"
-      data-failed-label="${l10n.failed}"
-    >
-      ${{ html: COPY_SVG }}<svg
-        class="respec-copy-check"
-        height="16"
-        viewBox="0 0 16 16"
-        width="16"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0z"
-        />
-      </svg>
-    </button>`
-  );
+export function createCopyButton(ignoreSelector, title = l10n.copy) {
+  /** @type {HTMLButtonElement} */
+  const button = html`<button
+    type="button"
+    class="respec-button-copy-paste"
+    title="${title}"
+    aria-label="${title}"
+    data-copy-ignore="${ignoreSelector}"
+    data-copied-label="${l10n.copied}"
+    data-failed-label="${l10n.failed}"
+  >
+    ${{ html: BUTTON_ICONS }}
+  </button>`;
   // A name shared by every button would send each bubble to the last button.
   button.style.setProperty(
     "--respec-copy-anchor",
@@ -100,24 +101,28 @@ export function createCopyButton(headerSelector, title = l10n.copy) {
 }
 
 /**
- * Add the button stylesheet and the copy runtime, and inline the runtime so a
- * saved copy of the document keeps working. Call this once after all copy
- * buttons are created.
+ * Add the style sheet, the icons and the script for the copy buttons that other
+ * modules created. The script is part of the page, so a saved copy keeps it.
  */
-export function injectCopyScript() {
-  if (document.getElementById("respec-copy-paste")) return;
+export async function run() {
+  if (!document.querySelector(".respec-button-copy-paste")) return;
   insertStyle(css, {
     before: document.querySelector("head link, head > *:last-child"),
   });
+  document.body.insertAdjacentHTML("beforeend", ICON_SPRITE);
   sub("beforesave", resetCopyState);
-  copyRuntime();
   const script = document.createElement("script");
   script.id = "respec-copy-paste";
-  // ReSpec sets document.respec only while it runs the page, where the call
-  // above already installed the listener. A form named respec also answers to
-  // document.respec, so test for ReSpec's own method.
-  script.textContent = `if (typeof document.respec?.toHTML !== "function") (${copyRuntime})();`;
+  script.textContent = await loadScript();
   document.body.append(script);
+}
+
+async function loadScript() {
+  try {
+    return (await import("text!./clipboard.runtime.js")).default;
+  } catch {
+    return fetchBase("./src/core/clipboard.runtime.js");
+  }
 }
 
 /**
@@ -133,158 +138,4 @@ function resetCopyState(documentElement) {
       button.removeAttribute("data-failed");
       button.removeAttribute("data-label");
     });
-}
-
-/**
- * Handles every copy click. It runs here, and its source is inlined into saved
- * documents, so it must not reference anything outside its own scope.
- */
-function copyRuntime() {
-  let flip = false;
-  const latestWrite = new WeakMap();
-  const confirmed = new WeakSet();
-
-  // Created up front: a live region that is created and filled in the same
-  // click is often not announced. It goes first in the body, so a page saved by
-  // the browser holds it before this script runs again.
-  if (!document.getElementById("respec-copy-status")) {
-    document.body.insertAdjacentHTML(
-      "afterbegin",
-      '<span id="respec-copy-status" class="respec-copy-status removeOnSave" role="status"></span>'
-    );
-  }
-  const status = /** @type {HTMLElement} */ (
-    document.getElementById("respec-copy-status")
-  );
-
-  // A page saved by the browser during a confirmation keeps the attributes and
-  // the announcement text, but not the timer that would remove them. This
-  // script can run before every button is parsed, so clean again once the page
-  // has loaded, leaving the buttons this script has confirmed.
-  const clearSavedConfirmations = () => {
-    document.querySelectorAll(".respec-button-copy-paste").forEach(button => {
-      if (confirmed.has(button)) return;
-      button.removeAttribute("data-copied");
-      button.removeAttribute("data-failed");
-      button.removeAttribute("data-label");
-    });
-  };
-  clearSavedConfirmations();
-  document.addEventListener("DOMContentLoaded", clearSavedConfirmations);
-  status.textContent = "";
-
-  // Capture phase, so an author's container that stops propagation cannot
-  // stop the copy.
-  document.addEventListener(
-    "click",
-    event => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      const button = /** @type {HTMLElement | null} */ (
-        target.closest(".respec-button-copy-paste")
-      );
-      if (!button) return;
-      const text = sourceFor(button);
-      if (text === null) return;
-      if (!navigator.clipboard) {
-        console.warn(
-          "Copying needs a secure page, such as one served over https."
-        );
-        return;
-      }
-      // Claim a copy only once the clipboard has taken the text. A write is
-      // refused in a cross-origin frame or with the permission denied. Two
-      // clicks can leave writes pending together, and only the newest reports.
-      const write = (latestWrite.get(button) ?? 0) + 1;
-      latestWrite.set(button, write);
-      navigator.clipboard.writeText(text).then(
-        () => {
-          if (latestWrite.get(button) === write) acknowledge(button, "copied");
-        },
-        error => {
-          console.warn("Could not write to the clipboard.", error);
-          if (latestWrite.get(button) === write) acknowledge(button, "failed");
-        }
-      );
-    },
-    true
-  );
-
-  // Last, so the buttons show only once the listener is in place, and only on
-  // a page with the clipboard API (a saved file served over plain http has
-  // none). An adopted style sheet is not saved with the page, so a saved copy
-  // shows its buttons only while its own script runs. A browser without
-  // adopted style sheets gets a style element that ReSpec drops when it saves.
-  if (navigator.clipboard) {
-    const rule =
-      "@media not print { .respec-button-copy-paste { display: grid; } }";
-    try {
-      const sheet = new CSSStyleSheet();
-      sheet.replaceSync(rule);
-      document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
-    } catch {
-      const style = document.createElement("style");
-      style.className = "removeOnSave";
-      document.head.append(style);
-      // Inserted through the style sheet, so the rule is not in the markup that
-      // a browser saves.
-      style.sheet?.insertRule(rule);
-    }
-  }
-
-  /**
-   * The text a button copies: its code block, minus the header.
-   * @param {HTMLElement} button
-   * @returns {string | null}
-   */
-  function sourceFor(button) {
-    const pre = button.closest("pre");
-    if (!pre) return null;
-    const clone = /** @type {HTMLElement} */ (pre.cloneNode(true));
-    const headerSelector = button.dataset.copyHeader;
-    if (headerSelector) clone.querySelector(headerSelector)?.remove();
-    return clone.textContent ?? "";
-  }
-
-  /**
-   * Announce an outcome and show it on the button for a moment.
-   * @param {HTMLElement} button
-   * @param {"copied" | "failed"} outcome
-   */
-  function acknowledge(button, outcome) {
-    const label =
-      (outcome === "copied"
-        ? button.dataset.copiedLabel
-        : button.dataset.failedLabel) || "";
-    if (typeof button.ariaNotify === "function") {
-      button.ariaNotify(label);
-    } else {
-      // A live region ignores an unchanged string, so alternate a zero-width space.
-      flip = !flip;
-      status.textContent = flip ? `${label}\u200B` : label;
-    }
-    // The label stays on the button after the message ends, so the bubble keeps
-    // its text while it fades out.
-    button.dataset.label = label;
-    confirmed.add(button);
-    // The attribute's value is the timer that removes it, so a new result
-    // replaces any timer still running.
-    for (const state of ["copied", "failed"]) {
-      clearTimeout(Number(button.dataset[state]));
-      delete button.dataset[state];
-    }
-    button.dataset[outcome] = String(
-      setTimeout(() => {
-        delete button.dataset[outcome];
-        // The live region is shared, so another button's message may still be showing.
-        if (
-          !document.querySelector(
-            ".respec-button-copy-paste[data-copied], .respec-button-copy-paste[data-failed]"
-          )
-        ) {
-          status.textContent = "";
-        }
-      }, 1200)
-    );
-  }
 }
