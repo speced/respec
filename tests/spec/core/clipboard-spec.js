@@ -188,7 +188,7 @@ describe("Core - Clipboard", () => {
           }
         });
 
-        it("copies once and shows the check and the bubble, then hides them when the timer ends", async () => {
+        it("copies once and shows the check and the bubble, then hides them after the timer and the fade", async () => {
           const [button] = buttons;
           const view = doc.defaultView;
           const copyIcon = button.querySelector("svg:not(.respec-copy-check)");
@@ -203,6 +203,7 @@ describe("Core - Clipboard", () => {
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
             "visible"
           );
+          expect(view.getComputedStyle(button, "::after").opacity).toBe("1");
           expect(button.dataset.label).toBe("Copied!");
 
           expect(clock.timers).toHaveSize(1);
@@ -289,7 +290,7 @@ describe("Core - Clipboard", () => {
           expect(region.textContent.replaceAll("\u200B", "")).toBe("Copied!");
         });
 
-        it("acknowledges a refused copy with the failure text and hides it when the timer ends", async () => {
+        it("acknowledges a refused copy with the failure text and hides it after the timer and the fade", async () => {
           stubClipboard(doc.defaultView, { refuse: true });
           const unhandled = [];
           doc.defaultView.addEventListener("unhandledrejection", event =>
@@ -317,13 +318,14 @@ describe("Core - Clipboard", () => {
           expect(announced).toEqual(["Could not copy!"]);
           expect(clock.timers).toHaveSize(1);
           expect(warn).toHaveBeenCalledTimes(1);
+          // The browser reports an unhandled rejection in a later task.
+          await new Promise(resolve => setTimeout(resolve, 50));
           expect(unhandled).toEqual([]);
 
           clock.expire(0);
 
           expect(button.hasAttribute("data-failed")).toBeFalse();
           expect(button.dataset.label).toBe("Could not copy!");
-          expect(button.dataset.label).not.toBe("Copied!");
 
           skipFade(button);
 
@@ -332,7 +334,7 @@ describe("Core - Clipboard", () => {
           );
         });
 
-        it("draws the bubble with a border", async () => {
+        it("gives the bubble a 1px border", async () => {
           await copyFrom(buttons[0]);
           expect(
             doc.defaultView.getComputedStyle(buttons[0], "::after")
@@ -356,7 +358,6 @@ describe("Core - Clipboard", () => {
 
           expect(button.hasAttribute("data-failed")).toBeFalse();
           expect(button.hasAttribute("data-copied")).toBeTrue();
-          expect(button.dataset.label).not.toBe("Could not copy!");
           expect(button.dataset.label).toBe("Copied!");
         });
         it("replaces a copied report when a later copy is refused", async () => {
