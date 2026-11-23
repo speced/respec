@@ -79,24 +79,26 @@ export default css`
 
 /* Where the browser can anchor the bubble to the button, it sits beside the
    button and moves to the other side, or under the button, when the viewport
-   has no room. */
-@supports (position-area: inline-end) {
-  .respec-button-copy-paste {
-    anchor-name: var(--respec-copy-anchor);
-  }
+   has no room. A narrow page keeps the rule above. */
+@media (min-width: 30em) {
+  @supports (position-area: inline-end) {
+    .respec-button-copy-paste {
+      anchor-name: var(--respec-copy-anchor);
+    }
 
-  .respec-button-copy-paste::after {
-    position: fixed;
-    position-anchor: var(--respec-copy-anchor);
-    position-area: inline-end;
-    position-try-fallbacks:
-      inline-start,
-      block-end span-inline-end,
-      block-end span-inline-start;
-    align-self: anchor-center;
-    inset: auto;
-    translate: none;
-    margin: 0 0.5em;
+    .respec-button-copy-paste::after {
+      position: fixed;
+      position-anchor: var(--respec-copy-anchor);
+      position-area: inline-end;
+      position-try-fallbacks:
+        inline-start,
+        block-end span-inline-end,
+        block-end span-inline-start;
+      align-self: anchor-center;
+      inset: auto;
+      translate: none;
+      margin: 0 0.5em;
+    }
   }
 }
 

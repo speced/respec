@@ -680,21 +680,25 @@ describe("Core - Clipboard", () => {
       expect(copyRule.cssText).toContain("attr(data-label)");
     });
 
-    it("anchors the bubble to its button and gives it fallback places", async () => {
+    it("anchors the bubble to its button and gives it fallback places on a wide page only", async () => {
       const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
       const styles = Array.from(rsDoc.querySelectorAll("style")).filter(
         style => style.sheet
       );
-      let supportsRule;
+      let widePageRule;
       for (const style of styles) {
-        supportsRule = Array.from(style.sheet.cssRules).find(
+        widePageRule = Array.from(style.sheet.cssRules).find(
           rule =>
-            rule.conditionText && rule.conditionText.includes("position-area")
+            rule.conditionText && rule.conditionText.includes("min-width: 30em")
         );
-        if (supportsRule) {
+        if (widePageRule) {
           break;
         }
       }
+      const supportsRule = Array.from(widePageRule.cssRules).find(
+        rule =>
+          rule.conditionText && rule.conditionText.includes("position-area")
+      );
       const rules = Array.from(supportsRule.cssRules);
       const buttonRule = rules.find(
         rule => rule.selectorText === ".respec-button-copy-paste"
