@@ -690,6 +690,60 @@ describe("Core - Clipboard", () => {
       expect(exportedAnchors).toEqual(anchors);
     });
 
+    it("shares one pair of icon symbols between all copy buttons", async () => {
+      const rsDoc = await makeRSDoc(
+        makeStandardOps(null, idlBody + idlBody + cddlBody)
+      );
+      const sprites = rsDoc.querySelectorAll(".respec-copy-sprite");
+      expect(sprites.length).toBe(1);
+      const sprite = sprites[0];
+      expect(sprite.querySelector("#respec-copy-icon")).not.toBeNull();
+      expect(sprite.querySelector("#respec-copy-check")).not.toBeNull();
+      const buttons = Array.from(
+        rsDoc.querySelectorAll(".respec-button-copy-paste")
+      );
+      expect(buttons.length).toBe(3);
+      for (const button of buttons) {
+        const uses = button.querySelectorAll("use");
+        expect(uses.length).toBe(2);
+        expect(uses[0].getAttribute("href")).toBe("#respec-copy-icon");
+        expect(uses[1].getAttribute("href")).toBe("#respec-copy-check");
+        expect(button.querySelector("path")).toBeNull();
+      }
+      const exportedDoc = await getExportedDoc(rsDoc);
+      const exportedSprites = exportedDoc.querySelectorAll(
+        ".respec-copy-sprite"
+      );
+      expect(exportedSprites.length).toBe(1);
+      expect(
+        exportedSprites[0].querySelector("#respec-copy-icon")
+      ).not.toBeNull();
+      expect(
+        exportedSprites[0].querySelector("#respec-copy-check")
+      ).not.toBeNull();
+    });
+
+    it("adds no copy script, style or icons to a page without copy buttons", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, makeDefaultBody()));
+      expect(rsDoc.querySelector(".respec-copy-sprite")).toBeNull();
+      expect(rsDoc.getElementById("respec-copy-paste")).toBeNull();
+      expect(rsDoc.getElementById("respec-copy-status")).toBeNull();
+      const styles = Array.from(rsDoc.querySelectorAll("style"));
+      for (const style of styles) {
+        expect(style.textContent).not.toContain(".respec-button-copy-paste");
+      }
+    });
+
+    it("runs one copy script in the saved page", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      const exportedDoc = await getExportedDoc(rsDoc);
+      const scripts = exportedDoc.querySelectorAll("#respec-copy-paste");
+      expect(scripts.length).toBe(1);
+      const script = scripts[0];
+      expect(script.localName).toBe("script");
+      expect(script.textContent).toContain("respec-copy-status");
+    });
+
     it("sets the bubble text direction from the text itself", async () => {
       const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
       const styles = Array.from(rsDoc.querySelectorAll("style")).filter(
