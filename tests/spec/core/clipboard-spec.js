@@ -146,15 +146,15 @@ describe("Core - Clipboard", () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     }
 
-    /** @param {HTMLElement} button */
-    async function waitUntilBubbleHides(button) {
-      const view = button.ownerDocument.defaultView;
-      const deadline = Date.now() + 2000;
-      while (
-        view.getComputedStyle(button, "::after").visibility !== "hidden" &&
-        Date.now() < deadline
-      ) {
-        await new Promise(resolve => setTimeout(resolve, 25));
+    /**
+     * Removes the bubble's fade, leaving it at rest. Use this instead of
+     * waiting for the fade: it runs on the animation clock, which a frame the
+     * browser is not drawing may never advance.
+     * @param {HTMLElement} button
+     */
+    function skipFade(button) {
+      for (const animation of button.getAnimations({ subtree: true })) {
+        animation.cancel();
       }
     }
 
@@ -212,7 +212,7 @@ describe("Core - Clipboard", () => {
           expect(view.getComputedStyle(checkIcon).visibility).toBe("hidden");
           expect(view.getComputedStyle(copyIcon).visibility).toBe("visible");
 
-          await waitUntilBubbleHides(button);
+          skipFade(button);
 
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
             "hidden"
@@ -236,7 +236,7 @@ describe("Core - Clipboard", () => {
           const animations = button.getAnimations({ subtree: true });
           expect(animations.length).toBeGreaterThan(0);
 
-          await waitUntilBubbleHides(button);
+          skipFade(button);
 
           expect(view.getComputedStyle(button, "::after").opacity).toBe("0");
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
@@ -325,11 +325,19 @@ describe("Core - Clipboard", () => {
           expect(button.dataset.label).toBe("Could not copy!");
           expect(button.dataset.label).not.toBe("Copied!");
 
-          await waitUntilBubbleHides(button);
+          skipFade(button);
 
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
             "hidden"
           );
+        });
+
+        it("draws the bubble with a border", async () => {
+          await copyFrom(buttons[0]);
+          expect(
+            doc.defaultView.getComputedStyle(buttons[0], "::after")
+              .borderTopWidth
+          ).toBe("1px");
         });
 
         it("replaces a failure report when a later copy succeeds", async () => {
@@ -351,6 +359,27 @@ describe("Core - Clipboard", () => {
           expect(button.dataset.label).not.toBe("Could not copy!");
           expect(button.dataset.label).toBe("Copied!");
         });
+        it("replaces a copied report when a later copy is refused", async () => {
+          const [button] = buttons;
+          const view = doc.defaultView;
+          button.ariaNotify = undefined;
+          spyOn(view.console, "warn");
+
+          await copyFrom(button);
+          stubClipboard(view, { refuse: true });
+          await copyFrom(button);
+
+          expect(clock.timers[0].canceled).toBeTrue();
+          expect(button.hasAttribute("data-copied")).toBeFalse();
+          expect(button.hasAttribute("data-failed")).toBeTrue();
+          expect(button.dataset.label).toBe("Could not copy!");
+
+          clock.expire(1);
+
+          expect(button.hasAttribute("data-copied")).toBeFalse();
+          expect(button.hasAttribute("data-failed")).toBeFalse();
+        });
+
         it("ignores a pending write that finishes after a newer one", async () => {
           const promises = [];
           Object.defineProperty(doc.defaultView.navigator, "clipboard", {
