@@ -68,8 +68,6 @@ const ICON_SPRITE = `<svg class="respec-copy-sprite" aria-hidden="true"><symbol 
 
 const BUTTON_ICONS = `<svg aria-hidden="true" height="16" width="14"><use href="#respec-copy-icon"/></svg><svg class="respec-copy-check" aria-hidden="true" height="16" width="16"><use href="#respec-copy-check"/></svg>`;
 
-let copyButtonCount = 0;
-
 /**
  * Create a copy-to-clipboard button for a code block. The script that serves
  * every button handles its clicks, so the button carries what that script needs.
@@ -92,11 +90,6 @@ export function createCopyButton(ignoreSelector, title = l10n.copy) {
   >
     ${{ html: BUTTON_ICONS }}
   </button>`;
-  // A name shared by every button would send each bubble to the last button.
-  button.style.setProperty(
-    "--respec-copy-anchor",
-    `--respec-copy-${++copyButtonCount}`
-  );
   return button;
 }
 

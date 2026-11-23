@@ -79,16 +79,19 @@ export default css`
 
 /* Where the browser can anchor the bubble to the button, it sits beside the
    button and moves to the other side, or under the button, when the viewport
-   has no room. A narrow page keeps the rule above. */
+   has no room. Each button scopes the shared anchor name to itself: without
+   anchor-scope, every bubble anchors to the last button. A narrow page keeps
+   the rule above. */
 @media (min-width: 30em) {
-  @supports (position-area: inline-end) {
+  @supports (position-area: inline-end) and (anchor-scope: all) {
     .respec-button-copy-paste {
-      anchor-name: var(--respec-copy-anchor);
+      anchor-name: --respec-copy;
+      anchor-scope: --respec-copy;
     }
 
     .respec-button-copy-paste::after {
       position: fixed;
-      position-anchor: var(--respec-copy-anchor);
+      position-anchor: --respec-copy;
       position-area: inline-end;
       position-try-fallbacks:
         inline-start,

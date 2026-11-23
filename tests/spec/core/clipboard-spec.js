@@ -686,12 +686,10 @@ describe("Core - Clipboard", () => {
       const afterRule = rules.find(
         rule => rule.selectorText === ".respec-button-copy-paste::after"
       );
-      expect(buttonRule.cssText).toContain(
-        "anchor-name: var(--respec-copy-anchor)"
-      );
-      expect(afterRule.cssText).toContain(
-        "position-anchor: var(--respec-copy-anchor)"
-      );
+      expect(supportsRule.conditionText).toContain("anchor-scope");
+      expect(buttonRule.cssText).toContain("anchor-name: --respec-copy");
+      expect(buttonRule.cssText).toContain("anchor-scope: --respec-copy");
+      expect(afterRule.cssText).toContain("position-anchor: --respec-copy");
       expect(afterRule.cssText).toContain("position: fixed");
       expect(afterRule.cssText).toContain("position-try-fallbacks");
       expect(afterRule.cssText).toContain("inline-start");
@@ -699,29 +697,21 @@ describe("Core - Clipboard", () => {
       expect(afterRule.cssText).toContain("block-end span-inline-start");
     });
 
-    it("gives every copy button its own anchor name", async () => {
+    it("scopes the shared anchor name to each button, in a saved copy too", async () => {
       const rsDoc = await makeRSDoc(
         makeStandardOps(null, idlBody + idlBody + cddlBody)
       );
-      const buttons = Array.from(
-        rsDoc.querySelectorAll(".respec-button-copy-paste")
-      );
-      const anchors = buttons.map(button =>
-        button.style.getPropertyValue("--respec-copy-anchor")
-      );
-      expect(anchors.length).toBe(3);
-      for (const anchor of anchors) {
-        expect(anchor).not.toBe("");
-      }
-      expect(new Set(anchors).size).toBe(3);
       const exportedDoc = await getExportedDoc(rsDoc);
-      const exportedButtons = Array.from(
-        exportedDoc.querySelectorAll(".respec-button-copy-paste")
-      );
-      const exportedAnchors = exportedButtons.map(button =>
-        button.style.getPropertyValue("--respec-copy-anchor")
-      );
-      expect(exportedAnchors).toEqual(anchors);
+      for (const doc of [rsDoc, exportedDoc]) {
+        expect(doc.querySelectorAll(".respec-button-copy-paste").length).toBe(
+          3
+        );
+        const css = Array.from(doc.querySelectorAll("style"))
+          .map(style => style.textContent)
+          .join("")
+          .replace(/\s/g, "");
+        expect(css).toContain("anchor-scope:--respec-copy");
+      }
     });
 
     it("shares one pair of icon symbols between all copy buttons", async () => {
