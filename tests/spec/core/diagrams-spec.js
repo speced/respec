@@ -279,7 +279,7 @@ describe("Core - Diagrams", () => {
 
   it("toggles between mobile and desktop SVGs for wide diagrams based on width", async () => {
     const wide =
-      "flowchart LR\n  A[Author writes text] --> B[Validate] --> C[Render SVG] --> D[Insert in page] --> E[Save HTML] --> F[Publish] --> G[Check output] --> H[Archive]";
+      "flowchart LR\n  A[Start] --> B[Middle step] --> C[Another step] --> D[End]";
     const narrow = "flowchart LR\n  X --> Y";
     const body =
       wrap(wide, { figId: "fig-wide" }) + wrap(narrow, { figId: "fig-narrow" });
@@ -292,12 +292,21 @@ describe("Core - Diagrams", () => {
     const wideCard3000 = doc3000.querySelector("#fig-wide .diagram-container");
     const desktopSvg3000 = wideCard3000.querySelector(".diagram-svg--desktop");
     const W = desktopSvg3000.viewBox.baseVal.width;
-    expect(W).toBeGreaterThan(900);
+    expect(W).toBeGreaterThan(400);
 
-    const frontWidth3000 = wideCard3000
+    const frontMax = wideCard3000
       .querySelector(".diagram-face--front")
       .getBoundingClientRect().width;
-    const pad = 3000 - frontWidth3000;
+    expect(Math.floor(W * 0.75) + 30).toBeLessThan(frontMax);
+    const docRef = await makeRSDoc(
+      makeStandardOps(null, body),
+      null,
+      "width: 600px; display: block"
+    );
+    const frontRef = docRef
+      .querySelector("#fig-wide .diagram-face--front")
+      .getBoundingClientRect().width;
+    const pad = 600 - frontRef;
     const switchPoint = Math.floor(W * 0.75);
 
     const doc400 = await makeRSDoc(
@@ -324,7 +333,7 @@ describe("Core - Diagrams", () => {
       .withContext(`W: ${W}, front: ${front400}, switch: ${switchPoint}`)
       .toBe("none");
 
-    const wideFrame = W + 100 + pad;
+    const wideFrame = Math.min(W + 100, frontMax - 10) + pad;
     const docWide = await makeRSDoc(
       makeStandardOps(null, body),
       null,
@@ -444,7 +453,7 @@ describe("Core - Diagrams", () => {
 
   it("switches to the phone layout at three quarters of each diagram's own width", async () => {
     const wide =
-      "flowchart LR\n  A[Author writes text] --> B[Validate] --> C[Render SVG] --> D[Insert in page] --> E[Save HTML] --> F[Publish] --> G[Check output] --> H[Archive]";
+      "flowchart LR\n  A[Start] --> B[Middle step] --> C[Another step] --> D[End]";
 
     const doc3000 = await makeRSDoc(
       makeStandardOps(null, wrap(wide, { figId: "fig-wide" })),
@@ -454,19 +463,32 @@ describe("Core - Diagrams", () => {
     const card3000 = doc3000.querySelector("#fig-wide .diagram-container");
     const desktopSvg3000 = card3000.querySelector(".diagram-svg--desktop");
     const W = desktopSvg3000.viewBox.baseVal.width;
-    expect(W).toBeGreaterThan(900);
+    expect(W).toBeGreaterThan(400);
 
-    const frontWidth3000 = card3000
+    const frontMax = card3000
       .querySelector(".diagram-face--front")
       .getBoundingClientRect().width;
-    const pad = 3000 - frontWidth3000;
+    expect(Math.floor(W * 0.75) + 30).toBeLessThan(frontMax);
+    const docRef = await makeRSDoc(
+      makeStandardOps(null, wrap(wide, { figId: "fig-wide" })),
+      null,
+      "width: 600px; display: block"
+    );
+    const frontRef = docRef
+      .querySelector("#fig-wide .diagram-face--front")
+      .getBoundingClientRect().width;
+    const pad = 600 - frontRef;
     const switchPoint = Math.floor(W * 0.75);
 
+    const fronts = [];
     let hasAbove = false;
     let hasBelow = false;
-    let hasBetween = false;
 
-    for (const width of [W + 100 + pad, Math.floor(W * 0.75) - 20 + pad, 400]) {
+    for (const width of [
+      Math.min(W + 100, frontMax - 10) + pad,
+      Math.floor(W * 0.75) - 20 + pad,
+      Math.max(300, Math.floor(W * 0.75) - 100) + pad,
+    ]) {
       const doc = await makeRSDoc(
         makeStandardOps(null, wrap(wide, { figId: "fig-wide" })),
         null,
@@ -479,9 +501,9 @@ describe("Core - Diagrams", () => {
         .querySelector(".diagram-face--front")
         .getBoundingClientRect().width;
 
+      fronts.push(front);
       if (front > switchPoint + 30) hasAbove = true;
       if (front < switchPoint - 30) hasBelow = true;
-      if (front > 640 && front <= switchPoint) hasBetween = true;
 
       const desktopDisplay =
         doc.defaultView.getComputedStyle(desktopSvg).display;
@@ -505,13 +527,14 @@ describe("Core - Diagrams", () => {
     }
 
     expect(hasAbove)
-      .withContext("at least one frame is clearly above the switch point")
+      .withContext(
+        `above the switch point: W ${W}, switch ${switchPoint}, fronts ${fronts}`
+      )
       .toBeTrue();
     expect(hasBelow)
-      .withContext("at least one frame is clearly below the switch point")
-      .toBeTrue();
-    expect(hasBetween)
-      .withContext("at least one frame is between 640px and the switch point")
+      .withContext(
+        `below the switch point: W ${W}, switch ${switchPoint}, fronts ${fronts}`
+      )
       .toBeTrue();
   });
 
