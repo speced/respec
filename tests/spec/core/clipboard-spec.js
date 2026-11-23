@@ -148,9 +148,7 @@ describe("Core - Clipboard", () => {
 
     /**
      * Turns the bubble's transition off, so the bubble rests at its end state
-     * at once. Use this instead of waiting for the fade: it runs on the
-     * animation clock, which a frame the browser is not drawing may never
-     * advance.
+     * at once and a test never waits for the fade.
      * @param {HTMLElement} button
      */
     function skipFade(button) {
@@ -158,8 +156,6 @@ describe("Core - Clipboard", () => {
       style.textContent =
         ".respec-button-copy-paste::after { transition: none !important; }";
       button.ownerDocument.head.append(style);
-      // Applies the style change now, so the caller reads the end state.
-      button.getBoundingClientRect();
     }
 
     const documents = [
@@ -333,25 +329,9 @@ describe("Core - Clipboard", () => {
 
           skipFade(button);
 
-          const bubble = view.getComputedStyle(button, "::after");
-          const state = JSON.stringify({
-            attributes: button.getAttributeNames(),
-            visibility: bubble.visibility,
-            opacity: bubble.opacity,
-            transition: bubble.transitionProperty,
-            animations: button
-              .getAnimations({ subtree: true })
-              .map(
-                animation =>
-                  `${animation.transitionProperty}:${animation.playState}`
-              ),
-            frame: [view.innerWidth, view.innerHeight],
-            visibilityState: doc.visibilityState,
-            injectedRules: [...doc.querySelectorAll("style")].filter(style =>
-              style.textContent.includes("transition: none !important")
-            ).length,
-          });
-          expect(bubble.visibility).withContext(state).toBe("hidden");
+          expect(view.getComputedStyle(button, "::after").visibility).toBe(
+            "hidden"
+          );
         });
 
         it("gives the bubble a 1px border", async () => {
