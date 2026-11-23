@@ -159,6 +159,18 @@ export default css`
   fill: currentColor;
 }
 
+/* The shared narrow-page rule drops the bubble under the button, where the
+   diagram would cover it, so keep the bubble beside the toolbar button. */
+@media (max-width: 30em) {
+  .diagramHeader .respec-button-copy-paste::after {
+    inset-inline-start: 100%;
+    top: 50%;
+    translate: 0 -50%;
+    margin: 0;
+    margin-inline-start: 0.5em;
+  }
+}
+
 .diagramHeader .diagram-flip-btn:focus-visible,
 .diagramHeader .respec-button-copy-paste:focus-visible {
   outline: 2px solid var(--pele-fg);

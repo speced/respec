@@ -44,6 +44,29 @@ describe("Core - Diagrams", () => {
     });
   });
 
+  it("keeps the toolbar's copy bubble beside the button on a narrow page", async () => {
+    const doc = await makeRSDoc(makeStandardOps(null, wrap(flowchart)));
+    const narrowRules = [];
+    for (const style of doc.querySelectorAll("style")) {
+      for (const rule of Array.from(style.sheet?.cssRules ?? [])) {
+        if (rule.conditionText?.includes("max-width: 30em")) {
+          narrowRules.push(...rule.cssRules);
+        }
+      }
+    }
+    const bubbleRule = narrowRules.find(
+      rule =>
+        rule.selectorText === ".diagramHeader .respec-button-copy-paste::after"
+    );
+    expect(bubbleRule)
+      .withContext("a narrow-page rule for the toolbar bubble")
+      .toBeDefined();
+    expect(bubbleRule.style.getPropertyValue("inset-inline-start")).toBe(
+      "100%"
+    );
+    expect(bubbleRule.style.getPropertyValue("top")).toBe("50%");
+  });
+
   it("keeps script payloads in labels as text", async () => {
     const body = wrap(
       `graph TD\n  A["&lt;img src=x onerror=window.__xss=1&gt;"] --> B`
