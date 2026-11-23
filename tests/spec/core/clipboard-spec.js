@@ -147,15 +147,17 @@ describe("Core - Clipboard", () => {
     }
 
     /**
-     * Removes the bubble's fade, leaving it at rest. Use this instead of
-     * waiting for the fade: it runs on the animation clock, which a frame the
-     * browser is not drawing may never advance.
+     * Turns the bubble's transition off, so the bubble rests at its end state
+     * at once. Use this instead of waiting for the fade: it runs on the
+     * animation clock, which a frame the browser is not drawing may never
+     * advance.
      * @param {HTMLElement} button
      */
     function skipFade(button) {
-      for (const animation of button.getAnimations({ subtree: true })) {
-        animation.cancel();
-      }
+      const style = button.ownerDocument.createElement("style");
+      style.textContent =
+        ".respec-button-copy-paste::after { transition: none !important; }";
+      button.ownerDocument.head.append(style);
     }
 
     const documents = [
