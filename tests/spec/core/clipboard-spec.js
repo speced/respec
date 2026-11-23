@@ -146,6 +146,18 @@ describe("Core - Clipboard", () => {
       await new Promise(resolve => setTimeout(resolve, 0));
     }
 
+    /** @param {HTMLElement} button */
+    async function waitUntilBubbleHides(button) {
+      const view = button.ownerDocument.defaultView;
+      const deadline = Date.now() + 2000;
+      while (
+        view.getComputedStyle(button, "::after").visibility !== "hidden" &&
+        Date.now() < deadline
+      ) {
+        await new Promise(resolve => setTimeout(resolve, 25));
+      }
+    }
+
     const documents = [
       ["live document", rsDoc => rsDoc],
       ["exported document", rsDoc => getExportedDoc(rsDoc)],
@@ -200,9 +212,7 @@ describe("Core - Clipboard", () => {
           expect(view.getComputedStyle(checkIcon).visibility).toBe("hidden");
           expect(view.getComputedStyle(copyIcon).visibility).toBe("visible");
 
-          await Promise.all(
-            button.getAnimations({ subtree: true }).map(a => a.finished)
-          );
+          await waitUntilBubbleHides(button);
 
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
             "hidden"
@@ -226,7 +236,7 @@ describe("Core - Clipboard", () => {
           const animations = button.getAnimations({ subtree: true });
           expect(animations.length).toBeGreaterThan(0);
 
-          await Promise.all(animations.map(a => a.finished));
+          await waitUntilBubbleHides(button);
 
           expect(view.getComputedStyle(button, "::after").opacity).toBe("0");
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
@@ -315,9 +325,7 @@ describe("Core - Clipboard", () => {
           expect(button.dataset.label).toBe("Could not copy!");
           expect(button.dataset.label).not.toBe("Copied!");
 
-          await Promise.all(
-            button.getAnimations({ subtree: true }).map(a => a.finished)
-          );
+          await waitUntilBubbleHides(button);
 
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
             "hidden"
