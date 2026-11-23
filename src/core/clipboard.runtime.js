@@ -1,11 +1,11 @@
 // @ts-check
 if (typeof document.respec?.ready?.then === "function") {
-  document.respec.ready.then(setup);
+  document.respec.ready.then(setupClipboard);
 } else {
-  setup();
+  setupClipboard();
 }
 
-function setup() {
+function setupClipboard() {
   let flip = false;
   const latestWrite = new WeakMap();
   const confirmed = new WeakSet();

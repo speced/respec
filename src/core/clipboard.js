@@ -106,9 +106,7 @@ export function createCopyButton(ignoreSelector, title = l10n.copy) {
  */
 export async function run() {
   if (!document.querySelector(".respec-button-copy-paste")) return;
-  insertStyle(css, {
-    before: document.querySelector("head link, head > *:last-child"),
-  });
+  insertStyle(css, { before: document.querySelector("link") });
   document.body.insertAdjacentHTML("beforeend", ICON_SPRITE);
   sub("beforesave", resetCopyState);
   const script = document.createElement("script");
