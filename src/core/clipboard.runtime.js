@@ -10,16 +10,18 @@ function setupClipboard() {
   const timers = new WeakMap();
 
   // Created up front: a live region that is created and filled in the same
-  // click is often not announced. It goes first in the body, so a page saved by
-  // the browser holds it before this script runs again.
+  // click is often not announced. It goes first in the body, so a page the
+  // browser saves holds it before this script runs again. ReSpec's own save
+  // drops it (removeOnSave), and the saved page's script makes a new one.
   /** @type {HTMLElement} */
   const status =
     document.getElementById("respec-copy-status") ?? createStatus();
 
   // A page saved by the browser during a confirmation keeps the attributes and
-  // the announcement text, but not the timer that would remove them. This
-  // script can run before every button is parsed, so clean again once the page
-  // has loaded, leaving the buttons this script has confirmed.
+  // the announcement text, but not the timer that would remove them. In a saved
+  // page this script runs while the page is still loading, before every button
+  // is parsed, so clean again once the page has loaded, leaving the buttons
+  // this script has confirmed.
   const clearSavedConfirmations = () => {
     document.querySelectorAll(".respec-button-copy-paste").forEach(button => {
       if (timers.has(button)) return;
@@ -110,7 +112,7 @@ function setupClipboard() {
     const clone = /** @type {HTMLElement} */ (pre.cloneNode(true));
     const ignoreSelector = button.dataset.copyIgnore;
     if (ignoreSelector) clone.querySelector(ignoreSelector)?.remove();
-    return clone.textContent ?? "";
+    return clone.textContent;
   }
 
   /**

@@ -2,10 +2,12 @@
 /**
  * Module core/clipboard
  *
- * Shared clipboard copy button for code blocks (WebIDL, CDDL, diagrams). Other
- * modules create the buttons with createCopyButton. This module then adds their
- * style sheet, their icons and the script that serves every click, in the live
- * document and in a saved copy of it.
+ * Shared clipboard copy button for code blocks (WebIDL, CDDL). Other modules
+ * create the buttons with createCopyButton. This module then adds their style
+ * sheet, their icons and the script that serves every click, in the live
+ * document and in a saved copy of it. The script's live region takes its hiding
+ * style from the respec-visually-hidden rule in dfn-panel.css.js, so a profile
+ * that loads this module must also load core/dfn-panel.
  */
 import css from "../styles/clipboard.css.js";
 import { fetchBase } from "./text-loader.js";
@@ -67,7 +69,7 @@ export const COPY_SVG = `<svg aria-hidden="true" height="16" viewBox="0 0 14 16"
 // Every button points at these two symbols instead of repeating their paths.
 const ICON_SPRITE = `<svg class="respec-copy-sprite" aria-hidden="true"><symbol id="respec-copy-icon" viewBox="0 0 14 16"><path fill-rule="evenodd" d="${COPY_PATH}"/></symbol><symbol id="respec-copy-check" viewBox="0 0 64 64"><path d="${CHECK_PATH}"/></symbol></svg>`;
 
-// A function, because one DOM node cannot sit in two buttons.
+// A function, because the nodes it returns can sit in only one button.
 const createButtonIcons = () =>
   html`<svg aria-hidden="true" height="16" width="14">
       <use href="#respec-copy-icon" /></svg
