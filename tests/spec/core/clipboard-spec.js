@@ -64,6 +64,28 @@ describe("Core - Clipboard", () => {
     return { copied, held };
   }
 
+  it("styles a selected and a disabled copy button the same in WebIDL and CDDL blocks", async () => {
+    const rsDoc = await makeRSDoc(
+      makeStandardOps(null, idlBody + cddlBody),
+      undefined,
+      "width: 800px; height: 600px"
+    );
+    const looks = ["pre.idl", "pre.cddl"].map(block => {
+      const button = rsDoc.querySelector(`${block} .respec-button-copy-paste`);
+      const style = rsDoc.defaultView.getComputedStyle(button);
+      button.classList.add("selected");
+      const selected = style.backgroundColor;
+      button.classList.remove("selected");
+      button.disabled = true;
+      return { selected, disabledCursor: style.cursor };
+    });
+    const expected = {
+      selected: "rgb(220, 220, 220)",
+      disabledCursor: "default",
+    };
+    expect(looks).toEqual([expected, expected]);
+  });
+
   describe("in an exported document", () => {
     it("keeps the WebIDL and CDDL copy buttons, laid out as in the live document", async () => {
       const blocks = ["pre.idl", "pre.cddl"];
