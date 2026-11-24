@@ -2,9 +2,9 @@
 /**
  * Module core/clipboard
  *
- * Shared clipboard copy button for code blocks (WebIDL, CDDL). Other modules
- * create the buttons with createCopyButton. This module then adds their style
- * sheet, their icons and the script that serves every click, in the live
+ * Shared clipboard copy button for code blocks (WebIDL, CDDL, diagrams). Other
+ * modules create the buttons with createCopyButton. This module then adds their
+ * style sheet, their icons and the script that serves every click, in the live
  * document and in a saved copy of it. The script's live region takes its hiding
  * style from the respec-visually-hidden rule in dfn-panel.css.js, so a profile
  * that loads this module must also load core/dfn-panel.
