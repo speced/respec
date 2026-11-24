@@ -64,26 +64,39 @@ describe("Core - Clipboard", () => {
     return { copied, held };
   }
 
-  it("styles a selected and a disabled copy button the same in WebIDL and CDDL blocks", async () => {
+  it("styles the copy button on a page with only a CDDL block", async () => {
     const rsDoc = await makeRSDoc(
-      makeStandardOps(null, idlBody + cddlBody),
+      makeStandardOps(null, cddlBody),
       undefined,
       "width: 800px; height: 600px"
     );
-    const looks = ["pre.idl", "pre.cddl"].map(block => {
-      const button = rsDoc.querySelector(`${block} .respec-button-copy-paste`);
-      const style = rsDoc.defaultView.getComputedStyle(button);
-      button.classList.add("selected");
-      const selected = style.backgroundColor;
-      button.classList.remove("selected");
-      button.disabled = true;
-      return { selected, disabledCursor: style.cursor };
-    });
-    const expected = {
-      selected: "rgb(220, 220, 220)",
-      disabledCursor: "default",
-    };
-    expect(looks).toEqual([expected, expected]);
+    expect(rsDoc.querySelector("pre.idl")).withContext("IDL block").toBeNull();
+    const button = rsDoc.querySelector("pre.cddl .respec-button-copy-paste");
+    const style = rsDoc.defaultView.getComputedStyle(button);
+
+    button.classList.add("selected");
+    const selectedBackground = style.backgroundColor;
+    button.classList.remove("selected");
+    button.disabled = true;
+
+    expect(selectedBackground).toBe("rgb(220, 220, 220)");
+    expect(style.cursor).toBe("default");
+
+    const selectors = Array.from(rsDoc.querySelectorAll("style"))
+      .filter(styleElement => styleElement.sheet)
+      .flatMap(styleElement => Array.from(styleElement.sheet.cssRules))
+      .map(rule => rule.selectorText ?? "")
+      .filter(selector => selector.includes(".respec-button-copy-paste"));
+    const hasRule = matches => selectors.some(matches);
+    expect(hasRule(s => s.includes(":hover") && s.includes(":active")))
+      .withContext("hover rule")
+      .toBeTrue();
+    expect(hasRule(s => s.endsWith(":focus")))
+      .withContext("focus rule")
+      .toBeTrue();
+    expect(hasRule(s => s.endsWith(":focus-visible")))
+      .withContext("keyboard focus ring rule")
+      .toBeTrue();
   });
 
   describe("in an exported document", () => {
@@ -518,11 +531,13 @@ describe("Core - Clipboard", () => {
           doc.getElementById("respec-copy-status")
         );
 
-        expect([style.position, style.width, style.height]).toEqual([
-          "absolute",
-          "1px",
-          "1px",
-        ]);
+        expect([
+          style.position,
+          style.width,
+          style.height,
+          style.overflow,
+          style.clipPath,
+        ]).toEqual(["absolute", "1px", "1px", "hidden", "inset(50%)"]);
       });
     }
 
