@@ -11,6 +11,9 @@ const vnu = require("vnu-jar");
 const path = require("path");
 const os = require("os");
 
+const BUILD_DIR = path.join(__dirname, "../builds");
+const PROFILES = ["w3c", "dini", "aom"];
+
 // See: https://github.com/speced/respec/issues/645
 require("epipebomb")();
 
@@ -487,6 +490,40 @@ function publishToNpm() {
 }
 
 /**
+ * Merges main into the checked out gh-pages, along with the given builds.
+ * Afterwards, `tempBuilds` holds everything in gh-pages' builds/, including
+ * bundles of removed profiles that are still served
+ * @param {string} tempBuilds
+ */
+async function mergeMainWithBuilds(tempBuilds) {
+  await git(["merge", "--no-ff", "--no-commit", "main"]);
+  // builds/ is untracked on main, and merging that deletion would drop it here.
+  await git(["checkout", "HEAD", "--", "builds"]);
+  if (!DEBUG) {
+    fs.cpSync(tempBuilds, BUILD_DIR, { recursive: true });
+  }
+  await git(["add", "--force", "builds"]);
+  await git(["commit", "-m", "Merge branch 'main' into gh-pages"]);
+  if (!DEBUG) {
+    fs.cpSync(BUILD_DIR, tempBuilds, { recursive: true });
+  }
+}
+
+// respec.org (and hence W3C CDN) serve what npm has, so it must be complete
+function assertBuildsComplete() {
+  // w3c-common and geonovum are no longer built, but documents still load them.
+  const profiles = [...PROFILES, "w3c-common", "geonovum"];
+  const missing = [
+    ...profiles.flatMap(name => [`respec-${name}.js`, `respec-${name}.js.map`]),
+    "respec-highlight.js",
+    "respec-worker.js",
+  ].filter(file => !fs.existsSync(path.join(BUILD_DIR, file)));
+  if (missing.length) {
+    throw new Error(`Missing from builds/: ${missing.join(", ")}`);
+  }
+}
+
+/**
  * @param {string} version
  * @param {string} mainHead
  * @param {string} ghPagesHead
@@ -496,6 +533,10 @@ async function rollback(version, mainHead, ghPagesHead, initialBranch) {
   console.log(styleText("yellow", "\n  ⏪ Rolling back local changes...\n"));
   try {
     const currentBranch = await getCurrentBranch();
+    // An unfinished merge blocks switching branches.
+    if (ghPagesHead && currentBranch === "gh-pages") {
+      await git(["reset", "--hard", "HEAD"]);
+    }
     if (currentBranch !== "main") {
       await git(["switch", "main"]);
     }
@@ -613,8 +654,11 @@ const run = async () => {
     await pnpm(["install", "--frozen-lockfile"]);
 
     // 3b. Run the build script (node tools/builder.js).
+    // builds/ is gitignored, so leftovers (debug builds, previews) would
+    // otherwise be published.
+    if (!DEBUG) fs.rmSync(BUILD_DIR, { recursive: true, force: true });
     await npm(["run", "builddeps"]);
-    for (const name of ["w3c", "dini", "aom"]) {
+    for (const name of PROFILES) {
       await Builder.build({ name });
     }
     console.log(
@@ -637,7 +681,7 @@ const run = async () => {
     console.log(styleText("green", " Build Seems good... ✅"));
 
     // 4. Commit your changes
-    await git(["add", "builds", "package.json", "pnpm-lock.yaml"]);
+    await git(["add", "package.json", "pnpm-lock.yaml"]);
     await git(["commit", "-m", `v${version}`]);
     await git(["tag", `v${version}`]);
 
@@ -647,12 +691,20 @@ const run = async () => {
     } catch {
       // gh-pages may not exist locally yet
     }
+    const tempBuilds = fs.mkdtempSync(path.join(os.tmpdir(), "respec-builds-"));
+    if (!DEBUG) fs.cpSync(BUILD_DIR, tempBuilds, { recursive: true });
     await git(["checkout", "gh-pages"]).catch(() =>
       git(["checkout", "--track", "origin/gh-pages"])
     );
     await git(["pull", "origin", "gh-pages"]);
-    await git(["merge", "main"]);
+    await mergeMainWithBuilds(tempBuilds);
     await git(["checkout", "main"]);
+    // Checking out main deleted builds/, which gh-pages tracks. npm publish
+    // needs it back on disk.
+    if (!DEBUG) {
+      fs.cpSync(tempBuilds, BUILD_DIR, { recursive: true });
+      assertBuildsComplete();
+    }
 
     // 6. Push — point of no return after first successful push
     await Prompts.askPushAll();

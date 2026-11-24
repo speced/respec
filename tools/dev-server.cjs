@@ -6,11 +6,9 @@
  * with ability to:
  *  - build/test when a file changes
  *  - build/test on a single keypress (interactive mode)
- *  - cleanup builds/ directory after use.
  */
 
 const path = require("path");
-const { execSync } = require("child_process");
 const { createServer } = require("http");
 const chokidar = require("chokidar");
 const karma = require("karma");
@@ -103,10 +101,6 @@ async function run(args) {
     watcher.on("all", onFileChange);
     watcher.on("error", onError);
   }
-
-  process.on("exit", () => {
-    execSync("git checkout -- builds", { stdio: "inherit" });
-  });
 
   devServer.listen(SERVE_PORT);
   await printWelcomeMessage(args);

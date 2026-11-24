@@ -7,6 +7,7 @@ examples/touchevents.html
 bevy.json
 .idea
 js/deps/builds
+/builds/
 !js/profile-w3c-common.js
 !js/profile-w3c.js
 .vscode/*
