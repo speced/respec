@@ -82,8 +82,8 @@ export default css`
   height: 0;
 }
 
-/* Decorative: its alternative text is empty, and the announcement below tells
-   screen readers about the copy. */
+/* Decorative: its alternative text is empty, because the script announces the
+   copy to screen readers. */
 .respec-button-copy-paste::after {
   content: attr(data-label);
   content: attr(data-label) / "";
