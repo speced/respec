@@ -1347,7 +1347,7 @@ describe("Core - Diagrams", () => {
     copyBtn.click();
     await new Promise(resolve => setTimeout(resolve, 0));
 
-    expect(copyBtn.hasAttribute("data-copied")).toBeTrue();
+    expect(copyBtn.dataset.copyState).toBe("copied");
     expect(doc.defaultView.getComputedStyle(toolbar).pointerEvents).toBe(
       "auto"
     );
@@ -1375,7 +1375,7 @@ describe("Core - Diagrams", () => {
     copyBtn.click();
     await new Promise(resolve => setTimeout(resolve, 0));
 
-    expect(copyBtn.hasAttribute("data-failed")).toBeTrue();
+    expect(copyBtn.dataset.copyState).toBe("failed");
     expect(doc.defaultView.getComputedStyle(toolbar).pointerEvents).toBe(
       "auto"
     );
