@@ -154,7 +154,7 @@ export default css`
   visibility: visible;
 }
 
-/* Shows at once. The transition on the rule above fades it out. */
+/* Shows at once. The transition on .respec-button-copy-paste::after fades it out. */
 .respec-button-copy-paste[data-copy-state]::after {
   visibility: visible;
   opacity: 1;
