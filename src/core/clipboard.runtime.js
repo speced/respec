@@ -61,7 +61,7 @@ function setupClipboard() {
   function createStatus() {
     const span = document.createElement("span");
     span.id = "respec-copy-status";
-    span.className = "respec-copy-status removeOnSave";
+    span.className = "respec-visually-hidden removeOnSave";
     span.setAttribute("role", "status");
     document.body.prepend(span);
     return span;
