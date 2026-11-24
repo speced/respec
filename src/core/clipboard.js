@@ -61,12 +61,19 @@ const COPY_PATH =
 const CHECK_PATH =
   "M55 17a3 3 0 0 1 0 4L26 50a3 3 0 0 1-4 0L9 37a3 3 0 1 1 4-4l11 11 27-27a3 3 0 0 1 4 0z";
 
+// TODO: dfn-panel builds its own icon sprite from this SVG. Share ICON_SPRITE with it.
 export const COPY_SVG = `<svg aria-hidden="true" height="16" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="${COPY_PATH}"/></svg>`;
 
 // Every button points at these two symbols instead of repeating their paths.
 const ICON_SPRITE = `<svg class="respec-copy-sprite" aria-hidden="true"><symbol id="respec-copy-icon" viewBox="0 0 14 16"><path fill-rule="evenodd" d="${COPY_PATH}"/></symbol><symbol id="respec-copy-check" viewBox="0 0 64 64"><path d="${CHECK_PATH}"/></symbol></svg>`;
 
-const BUTTON_ICONS = `<svg aria-hidden="true" height="16" width="14"><use href="#respec-copy-icon"/></svg><svg class="respec-copy-check" aria-hidden="true" height="16" width="16"><use href="#respec-copy-check"/></svg>`;
+// A function, because one DOM node cannot sit in two buttons.
+const createButtonIcons = () =>
+  html`<svg aria-hidden="true" height="16" width="14">
+      <use href="#respec-copy-icon" /></svg
+    ><svg class="respec-copy-check" aria-hidden="true" height="16" width="16">
+      <use href="#respec-copy-check" />
+    </svg>`;
 
 /**
  * Create a copy-to-clipboard button for a code block. The script that serves
@@ -88,7 +95,7 @@ export function createCopyButton(ignoreSelector, title = l10n.copy) {
     data-copied-label="${l10n.copied}"
     data-failed-label="${l10n.failed}"
   >
-    ${{ html: BUTTON_ICONS }}
+    ${createButtonIcons()}
   </button>`;
   return button;
 }
