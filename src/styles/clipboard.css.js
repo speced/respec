@@ -105,21 +105,20 @@ export default css`
   }
 }
 
-/* The script sets data-copied while a copy is confirmed, and data-failed while
-   a refused copy is reported. */
-.respec-button-copy-paste[data-copied] .respec-copy-check {
+/* The script sets data-copy-state to copied while a copy is confirmed, and to
+   failed while a refused copy is reported. */
+.respec-button-copy-paste[data-copy-state="copied"] .respec-copy-check {
   visibility: visible;
 }
 
 /* Shows at once. The transition on the rule above fades it out. */
-.respec-button-copy-paste[data-copied]::after,
-.respec-button-copy-paste[data-failed]::after {
+.respec-button-copy-paste[data-copy-state]::after {
   visibility: visible;
   opacity: 1;
   transition: none;
 }
 
-.respec-button-copy-paste[data-copied] > svg:not(.respec-copy-check) {
+.respec-button-copy-paste[data-copy-state="copied"] > svg:not(.respec-copy-check) {
   visibility: hidden;
 }
 

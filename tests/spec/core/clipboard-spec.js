@@ -197,7 +197,7 @@ describe("Core - Clipboard", () => {
           await copyFrom(button);
 
           expect(copied).toHaveSize(1);
-          expect(button.hasAttribute("data-copied")).toBeTrue();
+          expect(button.dataset.copyState).toBe("copied");
           expect(view.getComputedStyle(checkIcon).visibility).toBe("visible");
           expect(view.getComputedStyle(copyIcon).visibility).toBe("hidden");
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
@@ -209,7 +209,7 @@ describe("Core - Clipboard", () => {
           expect(clock.timers).toHaveSize(1);
           clock.expire(0);
 
-          expect(button.hasAttribute("data-copied")).toBeFalse();
+          expect(button.dataset.copyState).toBeUndefined();
           expect(view.getComputedStyle(checkIcon).visibility).toBe("hidden");
           expect(view.getComputedStyle(copyIcon).visibility).toBe("visible");
 
@@ -254,12 +254,12 @@ describe("Core - Clipboard", () => {
           expect(clock.timers).toHaveSize(2);
 
           clock.expire(0);
-          expect(button.hasAttribute("data-copied"))
+          expect(button.dataset.copyState)
             .withContext("confirmation active after first timer ends")
-            .toBeTrue();
+            .toBe("copied");
 
           clock.expire(1);
-          expect(button.hasAttribute("data-copied")).toBeFalse();
+          expect(button.dataset.copyState).toBeUndefined();
         });
         it("announces the copy with ariaNotify where the browser has it", async () => {
           const announced = [];
@@ -307,8 +307,7 @@ describe("Core - Clipboard", () => {
 
           await copyFrom(button);
 
-          expect(button.hasAttribute("data-copied")).toBeFalse();
-          expect(button.hasAttribute("data-failed")).toBeTrue();
+          expect(button.dataset.copyState).toBe("failed");
           expect(view.getComputedStyle(button, "::after").visibility).toBe(
             "visible"
           );
@@ -324,7 +323,7 @@ describe("Core - Clipboard", () => {
 
           clock.expire(0);
 
-          expect(button.hasAttribute("data-failed")).toBeFalse();
+          expect(button.dataset.copyState).toBeUndefined();
           expect(button.dataset.label).toBe("Could not copy!");
 
           skipFade(button);
@@ -356,8 +355,7 @@ describe("Core - Clipboard", () => {
           expect(clock.timers[0].canceled).toBeTrue();
           clock.expire(0);
 
-          expect(button.hasAttribute("data-failed")).toBeFalse();
-          expect(button.hasAttribute("data-copied")).toBeTrue();
+          expect(button.dataset.copyState).toBe("copied");
           expect(button.dataset.label).toBe("Copied!");
         });
         it("replaces a copied report when a later copy is refused", async () => {
@@ -371,14 +369,12 @@ describe("Core - Clipboard", () => {
           await copyFrom(button);
 
           expect(clock.timers[0].canceled).toBeTrue();
-          expect(button.hasAttribute("data-copied")).toBeFalse();
-          expect(button.hasAttribute("data-failed")).toBeTrue();
+          expect(button.dataset.copyState).toBe("failed");
           expect(button.dataset.label).toBe("Could not copy!");
 
           clock.expire(1);
 
-          expect(button.hasAttribute("data-copied")).toBeFalse();
-          expect(button.hasAttribute("data-failed")).toBeFalse();
+          expect(button.dataset.copyState).toBeUndefined();
         });
 
         it("ignores a pending write that finishes after a newer one", async () => {
@@ -415,8 +411,7 @@ describe("Core - Clipboard", () => {
           promises[0].reject(new Error("stale refusal"));
           await new Promise(resolve => setTimeout(resolve, 0));
 
-          expect(button.hasAttribute("data-copied")).toBeTrue();
-          expect(button.hasAttribute("data-failed")).toBeFalse();
+          expect(button.dataset.copyState).toBe("copied");
           expect(announced).toEqual(["Copied!"]);
         });
 
@@ -454,8 +449,7 @@ describe("Core - Clipboard", () => {
           promises[0].resolve();
           await new Promise(resolve => setTimeout(resolve, 0));
 
-          expect(button.hasAttribute("data-copied")).toBeFalse();
-          expect(button.hasAttribute("data-failed")).toBeTrue();
+          expect(button.dataset.copyState).toBe("failed");
           expect(announced).toEqual(["Could not copy!"]);
         });
 
@@ -468,13 +462,13 @@ describe("Core - Clipboard", () => {
           const status = doc.getElementById("respec-copy-status");
 
           clock.expire(0);
-          expect(first.hasAttribute("data-copied")).toBeFalse();
-          expect(second.hasAttribute("data-copied"))
+          expect(first.dataset.copyState).toBeUndefined();
+          expect(second.dataset.copyState)
             .withContext("second confirmation still active")
-            .toBeTrue();
+            .toBe("copied");
 
           clock.expire(1);
-          expect(second.hasAttribute("data-copied")).toBeFalse();
+          expect(second.dataset.copyState).toBeUndefined();
           expect(status.textContent).toBe("");
         });
 
@@ -489,7 +483,7 @@ describe("Core - Clipboard", () => {
 
           clock.expire(0);
           expect(status.textContent.replaceAll("\u200B", "")).toBe("Copied!");
-          expect(second.hasAttribute("data-copied")).toBeTrue();
+          expect(second.dataset.copyState).toBe("copied");
 
           clock.expire(1);
           expect(status.textContent).toBe("");
@@ -504,9 +498,9 @@ describe("Core - Clipboard", () => {
       const button = rsDoc.querySelector("pre.idl .respec-button-copy-paste");
 
       await copyFrom(button);
-      expect(button.hasAttribute("data-copied"))
+      expect(button.dataset.copyState)
         .withContext("confirmation started")
-        .toBeTrue();
+        .toBe("copied");
 
       const html = await rsDoc.respec.toHTML();
       const saved = new DOMParser().parseFromString(html, "text/html");
@@ -514,8 +508,7 @@ describe("Core - Clipboard", () => {
       const savedButton = saved.querySelector(
         "pre.idl .respec-button-copy-paste"
       );
-      expect(savedButton.hasAttribute("data-copied")).toBeFalse();
-      expect(savedButton.hasAttribute("data-failed")).toBeFalse();
+      expect(savedButton.dataset.copyState).toBeUndefined();
       expect(savedButton.hasAttribute("data-label")).toBeFalse();
     });
 
@@ -562,7 +555,7 @@ describe("Core - Clipboard", () => {
       const doc = await getExportedDoc(rsDoc);
 
       const button = doc.querySelector("pre.idl .respec-button-copy-paste");
-      button.setAttribute("data-copied", "123");
+      button.setAttribute("data-copy-state", "copied");
       const status = doc.getElementById("respec-copy-status");
       status.textContent = "Copied!";
 
@@ -579,8 +572,7 @@ describe("Core - Clipboard", () => {
       const newButton = frameDoc.querySelector(
         "pre.idl .respec-button-copy-paste"
       );
-      expect(newButton.hasAttribute("data-copied")).toBeFalse();
-      expect(newButton.hasAttribute("data-failed")).toBeFalse();
+      expect(newButton.dataset.copyState).toBeUndefined();
       const newStatus = frameDoc.getElementById("respec-copy-status");
       expect(newStatus.textContent).toBe("");
 
@@ -594,9 +586,9 @@ describe("Core - Clipboard", () => {
       const button = rsDoc.querySelector("pre.idl .respec-button-copy-paste");
 
       await copyFrom(button);
-      expect(button.hasAttribute("data-failed"))
+      expect(button.dataset.copyState)
         .withContext("failure reported")
-        .toBeTrue();
+        .toBe("failed");
 
       const html = await rsDoc.respec.toHTML();
       const saved = new DOMParser().parseFromString(html, "text/html");
@@ -604,7 +596,7 @@ describe("Core - Clipboard", () => {
       const savedButton = saved.querySelector(
         "pre.idl .respec-button-copy-paste"
       );
-      expect(savedButton.hasAttribute("data-failed")).toBeFalse();
+      expect(savedButton.dataset.copyState).toBeUndefined();
     });
 
     it("does not duplicate the live region when a browser-saved page is opened again", async () => {
@@ -939,7 +931,7 @@ describe("Core - Clipboard", () => {
       const script = parsed.getElementById("respec-copy-paste");
       parsed.body.insertBefore(script, parsed.body.firstChild);
       const button = parsed.querySelector("pre.idl .respec-button-copy-paste");
-      button.setAttribute("data-copied", "1");
+      button.setAttribute("data-copy-state", "copied");
       button.setAttribute("data-label", "Copied!");
       const srcdoc = `<!DOCTYPE html>\n${parsed.documentElement.outerHTML}`;
 
@@ -954,8 +946,7 @@ describe("Core - Clipboard", () => {
       const cleanButton = doc.querySelector(
         "pre.idl .respec-button-copy-paste"
       );
-      expect(cleanButton.hasAttribute("data-copied")).toBeFalse();
-      expect(cleanButton.hasAttribute("data-failed")).toBeFalse();
+      expect(cleanButton.dataset.copyState).toBeUndefined();
       expect(cleanButton.hasAttribute("data-label")).toBeFalse();
 
       frame.remove();

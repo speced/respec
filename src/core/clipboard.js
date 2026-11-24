@@ -125,8 +125,7 @@ function resetCopyState(documentElement) {
   documentElement
     .querySelectorAll(".respec-button-copy-paste")
     .forEach(button => {
-      button.removeAttribute("data-copied");
-      button.removeAttribute("data-failed");
+      button.removeAttribute("data-copy-state");
       button.removeAttribute("data-label");
     });
 }

@@ -23,8 +23,7 @@ function setupClipboard() {
   const clearSavedConfirmations = () => {
     document.querySelectorAll(".respec-button-copy-paste").forEach(button => {
       if (timers.has(button)) return;
-      button.removeAttribute("data-copied");
-      button.removeAttribute("data-failed");
+      button.removeAttribute("data-copy-state");
       button.removeAttribute("data-label");
     });
   };
@@ -136,18 +135,14 @@ function setupClipboard() {
     button.dataset.label = label;
     // A new result replaces the one on show and the timer that would end it.
     clearTimeout(timers.get(button));
-    delete button.dataset.copied;
-    delete button.dataset.failed;
-    button.dataset[outcome] = "";
+    button.dataset.copyState = outcome;
     timers.set(
       button,
       setTimeout(() => {
-        delete button.dataset[outcome];
+        delete button.dataset.copyState;
         // The live region is shared, so another button's message may still be showing.
         if (
-          !document.querySelector(
-            ".respec-button-copy-paste[data-copied], .respec-button-copy-paste[data-failed]"
-          )
+          !document.querySelector(".respec-button-copy-paste[data-copy-state]")
         ) {
           status.textContent = "";
         }
