@@ -14,7 +14,7 @@ import {
 } from "./utils.js";
 import { decorateDfn, findDfn } from "./dfn-finder.js";
 import { html, webidl2 } from "./import-maps.js";
-import { addCopyIDLButton } from "./webidl-clipboard.js";
+import { createCopyButton } from "./clipboard.js";
 import css from "../styles/webidl.css.js";
 import { insertStyle } from "./insert-style.js";
 import { registerDefinition } from "./dfn-map.js";
@@ -377,7 +377,7 @@ export function addIDLHeader(pre) {
     ><a class="self-link" href="${`#${pre.id}`}">WebIDL</a></span
   >`;
   pre.prepend(header);
-  addCopyIDLButton(header);
+  header.append(createCopyButton(".idlHeader", "Copy IDL to clipboard"));
 }
 
 export async function run() {
