@@ -502,7 +502,68 @@ describe("Core - Clipboard", () => {
         clock.expire(1);
         expect(status.textContent).toBe("");
       });
+
+      it(`in the ${label}: keeps a confirmation showing when the page finishes loading`, async () => {
+        const { doc, buttons } = await openWithTwoButtons(label, open);
+        await copyFrom(buttons[0]);
+
+        doc.dispatchEvent(new Event("DOMContentLoaded"));
+
+        expect(buttons[0].dataset.copyState).toBe("copied");
+      });
+
+      it(`in the ${label}: keeps the live region out of sight`, async () => {
+        const { doc } = await openWithTwoButtons(label, open);
+        const style = doc.defaultView.getComputedStyle(
+          doc.getElementById("respec-copy-status")
+        );
+
+        expect([style.position, style.width, style.height]).toEqual([
+          "absolute",
+          "1px",
+          "1px",
+        ]);
+      });
     }
+
+    it("leaves the live region out of a saved document", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      expect(rsDoc.getElementById("respec-copy-status"))
+        .withContext("live document")
+        .not.toBeNull();
+
+      const html = await rsDoc.respec.toHTML();
+      const saved = new DOMParser().parseFromString(html, "text/html");
+
+      expect(saved.getElementById("respec-copy-status")).toBeNull();
+    });
+
+    it("ignores a click on a copy button that sits outside a code block", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
+      const { copied } = stubClipboard(rsDoc.defaultView);
+      const errors = [];
+      rsDoc.defaultView.addEventListener("error", event =>
+        errors.push(event.message)
+      );
+      const stray = rsDoc
+        .querySelector(".respec-button-copy-paste")
+        .cloneNode(true);
+      rsDoc.body.append(stray);
+
+      await copyFrom(stray);
+
+      expect(errors).toEqual([]);
+      expect(copied).toEqual([]);
+    });
+
+    it("titles the IDL button for IDL and gives the CDDL button the default title", async () => {
+      const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody + cddlBody));
+      const titleOf = block =>
+        rsDoc.querySelector(`${block} .respec-button-copy-paste`).title;
+
+      expect(titleOf("pre.idl")).toBe("Copy IDL to clipboard");
+      expect(titleOf("pre.cddl")).toBe("Copy to clipboard");
+    });
 
     it("removes a confirmation in progress from a saved document", async () => {
       const rsDoc = await makeRSDoc(makeStandardOps(null, idlBody));
