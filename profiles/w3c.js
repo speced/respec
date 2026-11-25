@@ -55,7 +55,7 @@ const modules = [
   import("../src/core/seo.js"),
   import("../src/w3c/seo.js"),
   import("../src/core/highlight.js"),
-  import("../src/core/webidl-clipboard.js"),
+  import("../src/core/clipboard.js"),
   import("../src/core/data-tests.js"),
   import("../src/core/list-sorter.js"),
   import("../src/core/highlight-vars.js"),
