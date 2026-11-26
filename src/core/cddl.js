@@ -12,7 +12,7 @@ import {
   CddlType,
 } from "./import-maps.js";
 import { addHashId, showError, showWarning, xmlEscape } from "./utils.js";
-import { createCopyButton, injectCopyScript } from "./clipboard.js";
+import { createCopyButton } from "./clipboard.js";
 import css from "../styles/cddl.css.js";
 import { insertStyle } from "./insert-style.js";
 import { registerDefinition } from "./dfn-map.js";
@@ -746,10 +746,7 @@ export async function run() {
   // Step 5: Register definitions with ReSpec's dfn-map
   registerCddlDfns(document, state.definitions);
 
-  // Step 6: Inject runtime copy-button script (survives export)
-  injectCopyScript();
-
-  // Step 7: Clean up CDDL-specific attributes on export
+  // Step 6: Clean up CDDL-specific attributes on export
   sub("beforesave", (/** @type {Document} */ outputDoc) => {
     outputDoc
       .querySelectorAll("[data-cddl-pending]")

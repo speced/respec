@@ -139,11 +139,6 @@ pre.cddl a:focus-visible,
   outline-offset: 2px;
 }
 
-.respec-button-copy-paste:focus-visible {
-  outline: 2px solid var(--cddl-focus);
-  outline-offset: 2px;
-}
-
 pre.cddl dfn[data-dfn-type="cddl-type"] {
   color: var(--cddl-type-dfn);
 }
