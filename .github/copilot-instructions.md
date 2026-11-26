@@ -28,7 +28,7 @@ The integration suite (`tests/spec/`) reads the bundles in `builds/`, not `src/`
 
 There is one bundle per profile. Building only `w3c` leaves the DiNI and AOM suites testing the previous code, which looks like a passing or failing test that has nothing to do with the change. If a change that provably does nothing alters a test result, suspect a stale bundle before suspecting the test.
 
-Never commit anything under `builds/`. CI rebuilds it, and a PR touching it fails a dedicated check.
+`builds/` is gitignored on `main`, so a fresh checkout has no profile bundles until you build them. The release script commits them to `gh-pages`; never force-add them anywhere else.
 
 To run a single integration suite, rebuild first, then pass the describe block. The unit config needs no rebuild:
 

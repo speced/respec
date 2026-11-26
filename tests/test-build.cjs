@@ -2,7 +2,6 @@ const {
   constants: { F_OK },
   promises: { readFile, access },
 } = require("fs");
-const { execSync } = require("child_process");
 const path = require("path");
 const { Builder } = require("../tools/builder.cjs");
 
@@ -25,10 +24,6 @@ describe("builder (tool)", () => {
     await Promise.all(
       profiles.map(profile => Builder.build({ name: profile }))
     );
-  });
-
-  afterAll(() => {
-    execSync("git restore builds", { cwd: rootDir });
   });
 
   for (const profile of profiles) {

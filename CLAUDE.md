@@ -73,13 +73,12 @@ After any rebase with conflicts, verify the working tree matches expectations:
 
 ### CI lint failures on PRs
 
-Almost always the branch being behind main. When the conflict is under `builds/`, do not resolve it: take main's bundles and rebuild if you need them, which is faster and cheaper than reading a diff of generated code.
+Almost always the branch being behind main.
 
 1. `git rebase main`
-2. For any conflict under `builds/`: `git checkout origin/main -- builds/ && git add builds/`, then `pnpm build:w3c` only if you need to run the integration suite locally
-3. `git diff main...HEAD --name-only | xargs pnpm format --write` — three dots, so it lists only what this branch changed. With one dot it also lists everything main changed, and on a stale branch that reformats files you never touched.
+2. `git diff main...HEAD --name-only | xargs pnpm format --write` — three dots, so it lists only what this branch changed. With one dot it also lists everything main changed, and on a stale branch that reformats files you never touched.
 
-Never commit `builds/`: CI rebuilds it, and a dedicated check fails a pull request that touches it.
+`builds/` is gitignored on `main`; `tools/release.cjs` commits it to `gh-pages` only. If a rebase conflicts under `builds/`, accept the deletion (`git rm -r --cached builds`).
 
 ## Pre-PR checklist
 
