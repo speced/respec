@@ -18,4 +18,13 @@ export default [
       dir: "builds/",
     },
   },
+  {
+    input: "js/deps/pele.js",
+    output: {
+      file: "builds/respec-pele.js",
+      format: "iife",
+      name: "pele",
+    },
+    plugins: [resolve(), terser()],
+  },
 ];

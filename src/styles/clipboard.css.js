@@ -70,7 +70,7 @@ export default css`
   outline-offset: 2px;
 }
 
-/* Dark green: readable on the light button. */
+/* Dark green: readable on the light button and on the diagram toolbar in dark mode. */
 .respec-copy-check {
   visibility: hidden;
   fill: #1a7f37;

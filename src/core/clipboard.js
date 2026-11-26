@@ -2,9 +2,9 @@
 /**
  * Module core/clipboard
  *
- * Shared clipboard copy button for code blocks (WebIDL, CDDL). Other modules
- * create the buttons with createCopyButton. This module then adds their style
- * sheet, their icons and the script that serves every click, in the live
+ * Shared clipboard copy button for code blocks (WebIDL, CDDL, diagrams). Other
+ * modules create the buttons with createCopyButton. This module then adds their
+ * style sheet, their icons and the script that serves every click, in the live
  * document and in a saved copy of it. The script's live region takes its hiding
  * style from the respec-visually-hidden rule in dfn-panel.css.js, so a profile
  * that loads this module must also load core/dfn-panel.
@@ -84,9 +84,15 @@ const createButtonIcons = () =>
  * @param {string} ignoreSelector - Selector for the part of the code block that is not copied, such as its header
  * @param {string} [title] - Accessible label and tooltip, "Copy to clipboard" in the
  *   document's language by default
+ * @param {string} [containerSelector] - Ancestor whose `data-diagram-source`
+ *   is copied instead of the code block around the button
  * @returns {HTMLButtonElement}
  */
-export function createCopyButton(ignoreSelector, title = l10n.copy) {
+export function createCopyButton(
+  ignoreSelector,
+  title = l10n.copy,
+  containerSelector
+) {
   /** @type {HTMLButtonElement} */
   const button = html`<button
     type="button"
@@ -94,6 +100,7 @@ export function createCopyButton(ignoreSelector, title = l10n.copy) {
     title="${title}"
     aria-label="${title}"
     data-copy-ignore="${ignoreSelector}"
+    data-copy-container="${containerSelector}"
     data-copied-label="${l10n.copied}"
     data-failed-label="${l10n.failed}"
   >
