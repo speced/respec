@@ -4,7 +4,7 @@ import { html } from "../../core/import-maps.js";
 import { status2track } from "../headers.js";
 const localizationStrings = {
   en: {
-    sotd: "Status of This Document",
+    sotd: "Status of this document",
     status_at_publication: html`This section describes the status of this
       document at the time of its publication. A list of current W3C
       publications and the latest revision of this technical report can be found
