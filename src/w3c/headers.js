@@ -386,6 +386,8 @@ export async function run(conf) {
     showWarning(msg, name, { hint });
   }
 
+  validateRenderingLocation(specStatus);
+
   const pubSpace = derivePubSpace(conf);
   if (pubSpace && !conf.thisVersion) {
     const maturity =
@@ -655,6 +657,55 @@ export async function run(conf) {
       document.getElementById("w3c-state")?.textContent ?? ""
     ),
   });
+}
+
+/**
+ * True when a document carrying a formal W3C status (a Note, or one on the
+ * Recommendation or Registry track) is rendered somewhere other than
+ * https://www.w3.org/TR/. Only an Editor's Draft (specStatus "ED") is meant
+ * to live elsewhere, e.g. on GitHub Pages; claiming any other status while
+ * hosted off /TR/ produces a broken "this version" URL.
+ * @param {string} specStatus
+ * @param {string} href window.location.href of the document being rendered
+ */
+export function isOffTR(specStatus, href) {
+  if (!trStatus.includes(specStatus)) {
+    return false;
+  }
+  let url;
+  try {
+    url = new URL(href);
+  } catch {
+    return false;
+  }
+  const isOnTR =
+    (url.origin === "https://www.w3.org" || url.origin === "https://w3.org") &&
+    url.pathname.startsWith("/TR/");
+  return !isOnTR;
+}
+
+/**
+ * Signals a pill error when a document is dynamically rendered under a
+ * status that belongs on https://www.w3.org/TR/ but isn't there. Skipped
+ * when specStatus was overridden via a query parameter (a deliberate local
+ * preview, see core/override-configuration.js), and when this isn't the
+ * top-level browsing context, since a framed document (a preview pane, or
+ * this module's own tests) isn't at its own canonical location anyway.
+ * @param {string} specStatus
+ */
+function validateRenderingLocation(specStatus) {
+  if (window.parent !== window.self) {
+    return;
+  }
+  const specStatusOverridden = new URLSearchParams(
+    document.location.search
+  ).has("specStatus");
+  if (specStatusOverridden || !isOffTR(specStatus, document.location.href)) {
+    return;
+  }
+  const msg = docLink`Document status is \`"${specStatus}"\`, but this page isn't being served from \`https://www.w3.org/TR/\`.`;
+  const hint = docLink`W3C documents with a status of \`"${specStatus}"\` must be published under \`https://www.w3.org/TR/\`. Set ${"[specStatus]"} to \`"ED"\` for the Editor's Draft, or append \`?specStatus=${specStatus}\` to the URL to preview this status locally without changing the source.`;
+  showError(msg, name, { hint });
 }
 
 /** @param {Conf} conf */
