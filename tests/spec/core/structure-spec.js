@@ -319,6 +319,19 @@ describe("Core - Structure", () => {
     expect(anchor).toBeTruthy();
   });
 
+  it("does not use role=navigation and has accessible text for back to top link", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body,
+    };
+    const doc = await makeRSDoc(ops);
+    const backToTop = doc.getElementById("back-to-top");
+    expect(backToTop).toBeTruthy();
+    expect(backToTop.getAttribute("role")).toBeNull();
+    const anchor = backToTop.querySelector("a");
+    expect(anchor.textContent.trim()).toContain("Back to Top");
+  });
+
   it("localizes table of contents", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -375,9 +388,9 @@ describe("Core - Structure", () => {
     };
     const doc = await makeRSDoc(ops);
     expect(doc.documentElement.lang).toBe("fr");
-    const abbr = doc.querySelector("#back-to-top abbr");
-    expect(abbr).toBeTruthy();
-    expect(abbr.title).toBe("Retourner en haut");
+    const link = doc.querySelector("#back-to-top a");
+    expect(link).toBeTruthy();
+    expect(link.textContent).toContain("Retourner en haut");
   });
 
   it("finds and updates empty anchors correctly", async () => {
