@@ -295,6 +295,28 @@ describe("Core — Issues and Notes", () => {
       "[href='#issue-container-number-1540']"
     );
     expect(textContent).toBe("Issue 1540");
+
+    const closedAnchor = summarySection.querySelector(
+      "[href='#this-should-exist']"
+    );
+    expect(closedAnchor).not.toBeNull();
+    const closedSummaryItem = closedAnchor.closest("li");
+    expect(closedSummaryItem.classList).toContain("closed");
+
+    const openAnchor = summarySection.querySelector(
+      "[href='#issue-container-number-1540']"
+    );
+    expect(openAnchor).not.toBeNull();
+    const openSummaryItem = openAnchor.closest("li");
+    expect(openSummaryItem.classList).not.toContain("closed");
+
+    const regularAnchor = summarySection.querySelector(
+      "[href='#i-should-be-here-too']"
+    );
+    expect(regularAnchor).not.toBeNull();
+    const regularSummaryItem = regularAnchor.closest("li");
+    expect(regularSummaryItem.classList).not.toContain("closed");
+
     const issueDiv404 = doc.getElementById("this-is-404");
     expect(issueDiv404).toBeTruthy();
     expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toBe(
