@@ -25,7 +25,7 @@ function fillWithText(el, data, { replace }) {
   const { includeFormat } = el.dataset;
   let fill = data;
   if (includeFormat === "markdown") {
-    fill = markdownToHtml(fill);
+    fill = markdownToHtml(fill, { fromHTML: false });
   }
 
   if (includeFormat === "text") {

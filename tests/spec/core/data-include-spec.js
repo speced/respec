@@ -269,6 +269,37 @@ describe("Core — Data Include", () => {
       expect(doc.getElementById("abstract")).toBeTruthy();
     });
 
+    it("does not unescape HTML entities in raw markdown content", async () => {
+      // When markdown is fetched via data-include, it's raw text (not innerHTML).
+      // The &gt; entity must not be converted to >, or it would create a
+      // blockquote where the author intended literal &gt; text.
+      const includeBody = `
+        ## Test
+
+        &gt; This is not a blockquote.
+
+        > This is a blockquote.
+      `;
+      const body = `<section
+        id="includes"
+        data-include-format="markdown"
+        data-include="${generateDataUrl(includeBody)}"
+      ></section>`;
+
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+
+      // &gt; in raw content must not become a blockquote
+      const p = doc.querySelector("#includes > p");
+      expect(p).toBeTruthy();
+      expect(p.textContent.trim()).toBe("> This is not a blockquote.");
+
+      // Literal > in raw content must still become a blockquote
+      const blockquote = doc.querySelector("#includes > blockquote");
+      expect(blockquote).toBeTruthy();
+      expect(blockquote.textContent.trim()).toBe("This is a blockquote.");
+    });
+
     it("processes markdown with unescaped html code blocks", async () => {
       const includeBody = `
         ## Test
