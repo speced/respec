@@ -57,8 +57,13 @@ export function run() {
   });
   if (bps.length) {
     if (bpSummary) {
-      bpSummary.appendChild(html`<h1>Best Practices Summary</h1>`);
-      if (summaryItems) bpSummary.appendChild(summaryItems);
+      const existingHeading = bpSummary.querySelector(
+        ":scope > :is(h1, h2, h3, h4, h5, h6)"
+      );
+      if (!existingHeading) {
+        bpSummary.prepend(html`<h1>Best Practices Summary</h1>`);
+      }
+      if (summaryItems) bpSummary.append(summaryItems);
     }
   } else if (bpSummary) {
     const msg = `Using best practices summary (#bp-summary) but no best practices found.`;
