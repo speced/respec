@@ -201,7 +201,7 @@ function renderNotRec(conf) {
   </p>`;
   if (conf.specStatus === "DISC") {
     updatePolicy = html`<p>
-      Publication as a Discontinued Draft implies that this document is no
+      Publication as a W3C Discontinued Draft implies that this document is no
       longer intended to advance or to be maintained. It is inappropriate to
       cite this document as other than abandoned work.
     </p>`;
@@ -250,7 +250,7 @@ function renderNotRec(conf) {
       reviewPolicy = html`<p>
         The W3C Membership and other interested parties are invited to review
         the document and send comments through ${conf.humanPREnd}. Advisory
-        Committee Representatives should consult their
+        Committee representatives should consult their
         <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
           >WBS questionnaires</a
         >. Note that substantive technical comments were expected during the
@@ -291,7 +291,7 @@ function renderNotRec(conf) {
         The W3C Membership and other interested parties are invited to review
         the document and send comments through
         ${W3CDate.format(/** @type {Date} */ (conf.prEnd))}. Advisory Committee
-        Representatives should consult their
+        representatives should consult their
         <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
           >WBS questionnaires</a
         >. Note that substantive technical comments were expected during the
@@ -381,7 +381,7 @@ function renderIsRec(conf) {
             The W3C Membership and other interested parties are invited to
             review the proposed ${reviewTarget} and send comments through
             ${W3CDate.format(/** @type {Date} */ (revisedRecEnd))}. Advisory
-            Committee Representatives should consult their
+            Committee representatives should consult their
             <a href="https://www.w3.org/2002/09/wbs/myQuestionnaires"
               >WBS questionnaires</a
             >.
@@ -628,7 +628,7 @@ export function linkToCommunity(conf, opts) {
     ${
       conf.github
         ? html`
-            <a href="${conf.issueBase}">GitHub Issues</a> are preferred for
+            <a href="${conf.issueBase}">GitHub issues</a> are preferred for
             discussion of this specification.
           `
         : ""
